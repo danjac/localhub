@@ -19,6 +19,15 @@ services:
     ports:
       - "8025:8025"
 
+  webpack:
+    build:
+      context: .
+      dockerfile: ./docker/webpack/Dockerfile
+    command: /start
+    volumes:
+        - .:/app
+        - /app/node_modules
+
   django: &django
     build:
       context: .
