@@ -10,8 +10,8 @@ RUN apk update \
       && apk add postgresql-client
 
 # Copy requirements to insure caching
-COPY ./requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt
+COPY ./requirements /requirements
+RUN pip install -r /requirements/local.txt
 
 WORKDIR /app
 
