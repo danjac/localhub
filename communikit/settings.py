@@ -26,7 +26,7 @@ class Base(Configuration):
 
     THIRD_PARTY_APPS = []
 
-    LOCAL_APPS = []
+    LOCAL_APPS = ["communikit.users.apps.UsersAppConfig"]
 
     MIDDLEWARE = [
         "django.middleware.security.SecurityMiddleware",
@@ -56,6 +56,8 @@ class Base(Configuration):
             },
         }
     ]
+
+    AUTH_USER_MODEL = "users.User"
 
     AUTH_PASSWORD_VALIDATORS = [
         {

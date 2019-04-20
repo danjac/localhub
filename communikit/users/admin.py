@@ -1,0 +1,18 @@
+from django.contrib import admin
+from django.contrib.auth import get_user_model, admin as auth_admin
+
+from communikit.users.forms import UserChangeForm, UserCreationForm
+
+User = get_user_model()
+
+
+@admin.register(User)
+class UserAdmin(auth_admin.UserAdmin):
+    form = UserChangeForm
+    add_form = UserCreationForm
+    fieldsets = (
+        ("User", {"fields": ("name",)}),
+    ) + auth_admin.UserAdmin.fieldsets
+
+    list_display = ["username", "name", "email", "is_superuser"]
+    search_fields = ["name", "email", "username"]
