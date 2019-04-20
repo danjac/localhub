@@ -1,0 +1,4 @@
+# -r ./base.txt : when we want to use specific requirements for dev etc
+
+django==2.2 # https://github.com/django/django
+psycopg2==2.8.2 --no-binary psycopg2  # https://github.com/psycopg/psycopg2

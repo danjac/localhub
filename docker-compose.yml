@@ -1,0 +1,35 @@
+version: '3.4'
+
+x-env:
+  &default-env
+  DATABASE_URL: postgres://postgres@db:5432/postgres
+  DJANGO_SECRET_KEY: seekrit
+
+volumes:
+  pg_data: {}
+
+services:
+  postgres:
+    image: postgres
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.0
+    ports:
+      - "8025:8025"
+
+  django: &django
+    build:
+      context: .
+      dockerfile: ./docker/django/Dockerfile
+    environment: *default-env
+    depends_on:
+      - postgres
+      - mailhog
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    command: /startapp
+
