@@ -20,11 +20,12 @@ class Base(Configuration):
         "django.contrib.auth",
         "django.contrib.contenttypes",
         "django.contrib.sessions",
+        "django.contrib.sites",
         "django.contrib.messages",
         "django.contrib.staticfiles",
     ]
 
-    THIRD_PARTY_APPS = []
+    THIRD_PARTY_APPS = ["allauth", "allauth.account", "allauth.socialaccount"]
 
     LOCAL_APPS = ["communikit.users.apps.UsersAppConfig"]
 
@@ -59,6 +60,12 @@ class Base(Configuration):
 
     AUTH_USER_MODEL = "users.User"
 
+    # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
+    AUTHENTICATION_BACKENDS = [
+        "django.contrib.auth.backends.ModelBackend",
+        "allauth.account.auth_backends.AuthenticationBackend",
+    ]
+
     AUTH_PASSWORD_VALIDATORS = [
         {
             "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"  # noqa
@@ -73,6 +80,8 @@ class Base(Configuration):
             "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"  # noqa
         },
     ]
+
+    SITE_ID = 1
 
     # Internationalization
     # https://docs.djangoproject.com/en/2.2/topics/i18n/
