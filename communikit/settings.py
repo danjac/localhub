@@ -1,5 +1,7 @@
 import os
 
+from typing import List
+
 from configurations import Configuration, values
 
 
@@ -13,7 +15,7 @@ class Base(Configuration):
 
     WSGI_APPLICATION = "communikit.wsgi.application"
 
-    INSTALLED_APPS = [
+    DJANGO_APPS = [
         "django.contrib.admin",
         "django.contrib.auth",
         "django.contrib.contenttypes",
@@ -22,8 +24,13 @@ class Base(Configuration):
         "django.contrib.staticfiles",
     ]
 
+    THIRD_PARTY_APPS = []
+
+    LOCAL_APPS = []
+
     MIDDLEWARE = [
         "django.middleware.security.SecurityMiddleware",
+        "whitenoise.middleware.WhiteNoiseMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
@@ -84,8 +91,20 @@ class Base(Configuration):
     STATIC_URL = "/static/"
 
     @property
-    def BASE_DIR(self):
+    def BASE_DIR(self) -> str:
         return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    @property
+    def INSTALLED_APPS(self) -> List[str]:
+        return self.DJANGO_APPS + self.THIRD_PARTY_APPS + self.LOCAL_APPS
+
+    @property
+    def STATIC_ROOT(self) -> str:
+        return os.path.join(self.BASE_DIR, "static")
+
+    @property
+    def STATICFILES_DIRS(self) -> List[str]:
+        return [os.path.join(self.BASE_DIR, "assets")]
 
 
 class Local(Base):
