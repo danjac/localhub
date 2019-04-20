@@ -1,0 +1,32 @@
+*.pyc
+*.egg
+
+*.sqlite3
+*.db
+
+*.DS_Store
+
+.cache
+__pycache__
+.mypy_cache/
+.pytest_cache/
+.vscode/
+
+node_modules/
+
+logs
+*log
+npm-debug.log*
+
+# Translations
+*.mo
+*.pot
+
+# Django media/static dirs
+static/
+media/
+assets/dist/
+
+.ipython/
+.env
+
