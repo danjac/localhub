@@ -4,4 +4,4 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class User(AbstractUser):
-    pass
+    name = models.CharField(_("Full name of user"), blank=True, max_length=255)
