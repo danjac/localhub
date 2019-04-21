@@ -10,6 +10,9 @@ class Base(Configuration):
     SECRET_KEY = values.SecretValue()
     DATABASES = values.DatabaseURLValue()
 
+    EMAIL_HOST = values.Value()
+    EMAIL_PORT = values.PositiveIntegerValue()
+
     DEBUG = False
     ALLOWED_HOSTS = []
 
