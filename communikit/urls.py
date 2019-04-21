@@ -5,6 +5,7 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include("allauth.urls")),
+    path("account/", include("communikit.users.urls")),
 ]
 
 if "debug_toolbar" in settings.INSTALLED_APPS:

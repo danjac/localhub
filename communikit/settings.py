@@ -1,7 +1,7 @@
 import os
 import socket
 
-from typing import List, Dict
+from typing import Sequence, Dict
 
 from configurations import Configuration, values
 
@@ -91,6 +91,8 @@ class Base(Configuration):
         },
     ]
 
+    LOGIN_REDIRECT_URL = "users:detail"
+
     SITE_ID = 1
 
     # Internationalization
@@ -116,7 +118,7 @@ class Base(Configuration):
         return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     @property
-    def INSTALLED_APPS(self) -> List[str]:
+    def INSTALLED_APPS(self) -> Sequence[str]:
         return self.DJANGO_APPS + self.THIRD_PARTY_APPS + self.LOCAL_APPS
 
     @property
@@ -124,21 +126,24 @@ class Base(Configuration):
         return os.path.join(self.BASE_DIR, "static")
 
     @property
-    def STATICFILES_DIRS(self) -> List[str]:
+    def STATICFILES_DIRS(self) -> Sequence[str]:
         return [os.path.join(self.BASE_DIR, "assets")]
 
     @property
-    def TEMPLATES(self) -> List[Dict]:
+    def TEMPLATES(self) -> Sequence[Dict]:
+        loaders = [
+            "django.template.loaders.filesystem.Loader",
+            "django.template.loaders.app_directories.Loader",
+        ]
+        if not self.DEBUG:
+            loaders = [("django.template.loaders.cached.Loader", loaders)]
         return [
             {
                 "BACKEND": "django.template.backends.django.DjangoTemplates",
                 "DIRS": [os.path.join(self.BASE_DIR, "templates")],
                 "OPTIONS": {
                     "debug": self.DEBUG,
-                    "loaders": [
-                        "django.template.loaders.filesystem.Loader",
-                        "django.template.loaders.app_directories.Loader",
-                    ],
+                    "loaders": loaders,
                     "context_processors": [
                         "django.template.context_processors.debug",
                         "django.template.context_processors.request",
@@ -152,6 +157,10 @@ class Base(Configuration):
                 },
             }
         ]
+
+
+class Testing(Base):
+    PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
 
 
 class Local(Base):
@@ -168,7 +177,7 @@ class Local(Base):
     }
 
     @property
-    def INTERNAL_IPS(self) -> List[str]:
+    def INTERNAL_IPS(self) -> Sequence[str]:
         # Docker configuration
         ips = ["127.0.0.1", "10.0.2.2"]
         hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
