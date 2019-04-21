@@ -22,7 +22,10 @@ class TestUserUpdateView:
         assert response.status_code == 200
 
     def test_post(self, client: Client, login_user: settings.AUTH_USER_MODEL):
-        response = client.post("/account/~update/", {"name": "New Name"})
+        response = client.post(
+            "/account/~update/",
+            {"name": "New Name", "username": login_user.username},
+        )
         assert response.url == "/account/"
         login_user.refresh_from_db()
         assert login_user.name == "New Name"

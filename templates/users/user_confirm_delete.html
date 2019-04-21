@@ -1,0 +1,12 @@
+{% extends "users/base.html" %}
+{% load i18n %}
+
+{% block users_content %}
+<form method="POST" action="{% url 'users:delete' %}">
+  {% csrf_token %}
+  <p>Please confirm you want to delete your account. You will also remove all your posts and comments.</p>
+  <a class="btn btn-link" href="{% url 'users:detail' %}">{% trans "Cancel" %}</a>
+  <button class="btn btn-warning" type="submit">{% trans "Delete" %}</button>
+</form>
+
+{% endblock users_content %}

@@ -1,0 +1,35 @@
+{% extends "users/base.html" %}
+
+{% load i18n %}
+{% load widget_tweaks %}
+
+{% block users_content %}
+<h1>{% trans "Update profile" %}</h1>
+
+<p>You can change your primary and other email addresses <a href="{% url 'account_email' %}">here</a>.</p>
+
+<div class="columns col-md-6 col-12">
+  <form method="POST" action="{% url 'users:update' %}">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}</label>
+      <div class="input-group">
+        <div class="input-group-addon">@</div>
+        {% render_field form.username class="form-input" placeholder=form.username.label %}
+      </div>
+      {% for error in form.username.errors %}
+      <p class="form-input-hint">{{ error }}</p>
+      {% endfor %}
+    </div>
+    <div class="form-group">
+      {% trans "Full name" as t_full_name %}
+      <label for="{{ form.name.id_for_label }}" class="form-label">{{ t_full_name }}</label>
+      {% render_field form.name class="form-input" placeholder=t_full_name %}
+      {% for error in form.name.errors %}
+      <p class="form-input-hint">{{ error }}</p>
+      {% endfor %}
+    </div>
+    <input type="submit" class="btn btn-primary" value="{% trans 'Save' %}">
+  </form>
+</div>
+{% endblock users_content %}

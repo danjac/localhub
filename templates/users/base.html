@@ -16,7 +16,10 @@
           <a href="{% url 'users:detail' %}" class="btn btn-link">{% trans "Profile" %}</a>
         </li>
         <li class="menu-item">
-          <a href="" class="btn btn-link">{% trans "Update profile" %}</a>
+            <a href="{% url 'users:update' %}" class="btn btn-link">{% trans "Update profile" %}</a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'account_email' %}" class="btn btn-link">{% trans "Email addresses" %}</a>
         </li>
         <li class="menu-item">
           <a href="{% url 'account_change_password' %}" class="btn btn-link">{% trans "Change password" %}</a>
