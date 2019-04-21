@@ -33,7 +33,6 @@ class Base(Configuration):
         "allauth",
         "allauth.account",
         "allauth.socialaccount",
-        "django_extensions",
         "widget_tweaks",
     ]
 
@@ -168,7 +167,10 @@ class Testing(Base):
 
 class Local(Base):
     DEBUG = True
-    THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + ["debug_toolbar"]
+    THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + [
+        "debug_toolbar",
+        "django_extensions",
+    ]
 
     MIDDLEWARE = Base.MIDDLEWARE + [
         "debug_toolbar.middleware.DebugToolbarMiddleware"
