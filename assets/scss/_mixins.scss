@@ -1,0 +1,7 @@
+.btn-warning {
+  @include button-variant($warning-color);
+}
+
+.btn-outline-warning {
+  @include button-outline-variant($warning-color);
+}
