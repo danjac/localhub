@@ -92,6 +92,9 @@ class Base(Configuration):
     ]
 
     LOGIN_REDIRECT_URL = "users:detail"
+    LOGIN_URL = "account_login"
+
+    ACCOUNT_EMAIL_REQUIRED = True
 
     SITE_ID = 1
 

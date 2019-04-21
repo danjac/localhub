@@ -30,7 +30,7 @@
         </section>
       </header>
       {% for message in messages %}
-      <div class="toast toast-{{ message.tags }}">{{ message }}</div>
+      <div class="text-center mb-2 toast toast-{{ message.tags }}">{{ message }}</div>
       {% endfor %}
 
       {% block content %}

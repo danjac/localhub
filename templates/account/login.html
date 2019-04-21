@@ -34,42 +34,44 @@
   <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
 {% endif %}
 
-<div class="column col-6 col-sm-12">
-  <form method="POST" action="{% url 'account_login' %}">
+<div class="columns">
+  <div class="column col-6 col-sm-12">
+    <form method="POST" action="{% url 'account_login' %}">
 
-    {% csrf_token %}
+      {% csrf_token %}
 
-    {% if redirect_field_value %}
-    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-    {% endif %}
+      {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
 
-    {% for error in form.non_field_errors %}
-    <div class="toast toast-error mb-2">
-      {{ error }}
-    </div>
-    {% endfor %}
+      {% for error in form.non_field_errors %}
+      <div class="toast toast-error mb-2">
+        {{ error }}
+      </div>
+      {% endfor %}
 
-    <div class="form-group">
-      <label for="{{ form.login.id_for_label }}" class="form-label">{{ form.login.label }}</label>
-      {% render_field form.login class="form-input" placeholder=form.login.label %}
-    </div>
+      <div class="form-group">
+        <label for="{{ form.login.id_for_label }}" class="form-label">{{ form.login.label }}</label>
+        {% render_field form.login class="form-input" placeholder=form.login.label %}
+      </div>
 
-    <div class="form-group">
-      <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
-      {% render_field form.password class="form-input" placeholder=form.password.label %}
-    </div>
-    <div class="form-group">
-      <label class="form-checkbox">
-        {{ form.remember }}
-        <i class="form-icon"></i> {{ form.remember.label }}
-      </label>
-      <p class="form-input-hint">{% trans "Remember my login session when I close the browser" %}</p>
-    </div>
+      <div class="form-group">
+        <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
+        {% render_field form.password class="form-input" placeholder=form.password.label %}
+      </div>
+      <div class="form-group">
+        <label class="form-checkbox">
+          {{ form.remember }}
+          <i class="form-icon"></i> {{ form.remember.label }}
+        </label>
+        <p class="form-input-hint">{% trans "Remember my login session when I close the browser" %}</p>
+      </div>
 
-    <a class="btn btn-link" href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a>
-    <button class="btn btn-primary" type="submit">{% trans "Sign in" %}</button>
+      <a class="btn btn-link" href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a>
+      <button class="btn btn-primary" type="submit">{% trans "Sign in" %}</button>
 
-  </form>
+    </form>
+  </div>
 </div>
 
 {% endblock content %}
