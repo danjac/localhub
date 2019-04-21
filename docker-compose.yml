@@ -40,5 +40,5 @@ services:
       - .:/app
     ports:
       - "8000:8000"
-    command: /startapp
+    command: /start
 

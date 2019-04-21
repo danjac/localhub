@@ -1,6 +1,6 @@
 import os
 
-from typing import List
+from typing import List, Dict
 
 from configurations import Configuration, values
 
@@ -25,7 +25,12 @@ class Base(Configuration):
         "django.contrib.staticfiles",
     ]
 
-    THIRD_PARTY_APPS = ["allauth", "allauth.account", "allauth.socialaccount"]
+    THIRD_PARTY_APPS = [
+        "allauth",
+        "allauth.account",
+        "allauth.socialaccount",
+        "widget_tweaks",
+    ]
 
     LOCAL_APPS = ["communikit.users.apps.UsersAppConfig"]
 
@@ -116,6 +121,32 @@ class Base(Configuration):
     @property
     def STATICFILES_DIRS(self) -> List[str]:
         return [os.path.join(self.BASE_DIR, "assets")]
+
+    @property
+    def TEMPLATES(self) -> List[Dict]:
+        return [
+            {
+                "BACKEND": "django.template.backends.django.DjangoTemplates",
+                "DIRS": [os.path.join(self.BASE_DIR, "templates")],
+                "OPTIONS": {
+                    "debug": self.DEBUG,
+                    "loaders": [
+                        "django.template.loaders.filesystem.Loader",
+                        "django.template.loaders.app_directories.Loader",
+                    ],
+                    "context_processors": [
+                        "django.template.context_processors.debug",
+                        "django.template.context_processors.request",
+                        "django.contrib.auth.context_processors.auth",
+                        "django.template.context_processors.i18n",
+                        "django.template.context_processors.media",
+                        "django.template.context_processors.static",
+                        "django.template.context_processors.tz",
+                        "django.contrib.messages.context_processors.messages",
+                    ],
+                },
+            }
+        ]
 
 
 class Local(Base):

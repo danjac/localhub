@@ -15,5 +15,5 @@ RUN pip install -r /requirements/local.txt
 
 WORKDIR /app
 
-COPY ./docker/django/startapp /startapp
-RUN chmod +x /startapp
+COPY ./docker/django/start /start
+RUN chmod +x /start
