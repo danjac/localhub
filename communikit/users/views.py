@@ -21,7 +21,7 @@ user_detail_view = UserDetailView.as_view()
 
 
 class UserUpdateView(LoginRequiredMixin, CurrentUserMixin, UpdateView):
-    fields = ("username", "name")
+    fields = ("name", )
 
     success_url = reverse_lazy("users:detail")
 
