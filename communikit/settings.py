@@ -1,4 +1,5 @@
 import os
+import socket
 
 from typing import List, Dict
 
@@ -32,6 +33,7 @@ class Base(Configuration):
         "allauth",
         "allauth.account",
         "allauth.socialaccount",
+        "django_extensions",
         "widget_tweaks",
     ]
 
@@ -154,3 +156,21 @@ class Base(Configuration):
 
 class Local(Base):
     DEBUG = True
+    THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + ["debug_toolbar"]
+
+    MIDDLEWARE = Base.MIDDLEWARE + [
+        "debug_toolbar.middleware.DebugToolbarMiddleware"
+    ]
+
+    DEBUG_TOOLBAR_CONFIG = {
+        "DISABLE_PANELS": ["debug_toolbar.panels.redirects.RedirectsPanel"],
+        "SHOW_TEMPLATE_CONTEXT": True,
+    }
+
+    @property
+    def INTERNAL_IPS(self) -> List[str]:
+        # Docker configuration
+        ips = ["127.0.0.1", "10.0.2.2"]
+        hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+        ips += [ip[:-1] + "1" for ip in ips]
+        return ips

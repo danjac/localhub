@@ -1,1 +1,5 @@
 -r ./base.txt
+
+django-debug-toolbar==1.11 # https://github.com/jazzband/django-debug-toolbar
+ipython==7.4.0 # https://github.com/ipython/ipython
+werkzeug==0.15.2 # https://github.com/pallets/werkzeug
