@@ -1,3 +1,7 @@
-/* Test js file */
-const a = 1;
-console.log(a);
+import onmount from 'onmount';
+
+import './behaviors';
+
+$(function() {
+  onmount();
+});

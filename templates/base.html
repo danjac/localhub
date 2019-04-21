@@ -16,7 +16,7 @@
       <header class="navbar">
 
         <section class="navbar-section">
-          <a class="navbar-brand mr-2" href="/">{% trans "Home" %}</a>
+          <a class="navbar-brand mr-2" href="/">communikit</a>
         </section>
         <section class="navbar-section">
           {% with current_url=request.resolver_match.url_name %}
@@ -29,6 +29,7 @@
           {% endwith %}
         </section>
       </header>
+      <div class="divider"></div>
       {% for message in messages %}
       <div class="text-center mb-2 toast toast-{{ message.tags }}">{{ message }}</div>
       {% endfor %}
@@ -36,6 +37,7 @@
       {% block content %}
       {% endblock content %}
     </div>
+    <script src="{% static 'dist/main.js' %}"></script>
   </body>
 
 </html>

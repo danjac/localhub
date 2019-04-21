@@ -4,9 +4,9 @@
 {% block users_content %}
 <form method="POST" action="{% url 'users:delete' %}">
   {% csrf_token %}
-  <p>Please confirm you want to delete your account. You will also remove all your posts and comments.</p>
+  <p>Please confirm you want to delete your account. This will also <b>permanently</b> remove all your posts and comments.</p>
   <a class="btn btn-link" href="{% url 'users:detail' %}">{% trans "Cancel" %}</a>
-  <button class="btn btn-warning" type="submit">{% trans "Delete" %}</button>
+  <button class="btn btn-warning" type="submit">{% blocktrans with username=user.username %}Delete account @{{ username }}{% endblocktrans %}</button>
 </form>
 
 {% endblock users_content %}

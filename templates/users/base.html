@@ -6,9 +6,10 @@
 {% block content %}
 <div class="container">
   <div class="columns">
-    <div class="column col-9">
+    <div class="column col-8">
       {% block users_content %}{% endblock %}
     </div>
+    <div class="divider-vert"></div>
     <div class="column col-3">
       <h3>{% trans "User Menu" %}</h3>
       <ul class="menu">
@@ -16,7 +17,7 @@
           <a href="{% url 'users:detail' %}" class="btn btn-link">{% trans "Profile" %}</a>
         </li>
         <li class="menu-item">
-            <a href="{% url 'users:update' %}" class="btn btn-link">{% trans "Update profile" %}</a>
+          <a href="{% url 'users:update' %}" class="btn btn-link">{% trans "Update profile" %}</a>
         </li>
         <li class="menu-item">
           <a href="{% url 'account_email' %}" class="btn btn-link">{% trans "Email addresses" %}</a>
