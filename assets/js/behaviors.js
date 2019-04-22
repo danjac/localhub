@@ -1,5 +1,38 @@
 import onmount from 'onmount';
 
+onmount('[data-js-confirm-dialog]', function() {
+  this.addEventListener('click', event => {
+    const { target } = event;
+    if (target.hasAttribute('data-js-confirm-dialog-confirmed')) {
+      target.removeAttribute('data-js-confirm-dialog-confirmed');
+      return true;
+    }
+    event.preventDefault();
+
+    const dialog = document.getElementById(
+      target.getAttribute('data-js-confirm-dialog')
+    );
+    dialog.classList.add('active');
+
+    dialog.querySelector('[data-js-confirm-dialog-handler]').addEventListener(
+      'click',
+      () => {
+        dialog.classList.remove('active');
+        if (target.hasAttribute('data-ic-trigger-on')) {
+          target.dispatchEvent(
+            new Event(target.getAttribute('data-ic-trigger-on'))
+          );
+        } else {
+          target.setAttribute('data-js-confirm-dialog-confirmed', true);
+          target.click();
+        }
+      },
+      { once: true }
+    );
+    return false;
+  });
+});
+
 onmount('[data-js-open-modal]', function() {
   this.addEventListener('click', event => {
     event.preventDefault();

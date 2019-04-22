@@ -32,29 +32,30 @@
   <div class="btn-group">
     <button class="btn btn-secondary" type="submit" name="action_primary">{% trans 'Make Primary' %}</button>
     <button class="btn btn-secondary" type="submit" name="action_send">{% trans 'Re-send Verification' %}</button>
-    <button class="btn btn-primary" data-js-open-modal="confirm-remove-email-modal">{% trans 'Remove' %}</button>
-  </div>
-
-  <div class="modal" id="confirm-remove-email-modal">
-    <a href="#" class="modal-overlay" aria-label="Close" data-js-close-modal></a>
-    <div class="modal-container">
-      <div class="modal-header">
-        <a href="#" class="btn btn-clear float-right" aria-label="Close" data-js-close-modal></a>
-        <div class="modal-title h5">Confirmation</div>
-      </div>
-      <div class="modal-body">
-        <div class="content">
-          {% trans 'Do you really want to remove the selected e-mail address?' %}
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-link" data-js-close-modal>Cancel</button>
-        <button class="btn btn-primary" type="submit" name="action_remove">Remove</button>
-      </div>
-    </div>
+    <button class="btn btn-primary" type="submit" name="action_remove" data-js-confirm-dialog="confirm-remove-email-dialog">{% trans 'Remove' %}</button>
   </div>
 
 </form>
+
+<div class="modal" id="confirm-remove-email-dialog">
+  <a href="#" class="modal-overlay" aria-label="Close" data-js-close-modal></a>
+  <div class="modal-container">
+    <div class="modal-header">
+      <a href="#" class="btn btn-clear float-right" aria-label="Close" data-js-close-modal></a>
+      <div class="modal-title h5">Confirmation</div>
+    </div>
+    <div class="modal-body">
+      <div class="content">
+        {% trans 'Do you really want to remove the selected e-mail address?' %}
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-link" data-js-close-modal>Cancel</button>
+      <button class="btn btn-primary" data-js-confirm-dialog-handler>Remove</button>
+    </div>
+  </div>
+</div>
+
 
 {% else %}
 <p><strong>{% trans 'Warning:'%}</strong> {% trans "You currently do not have any e-mail address set up. You should really add an e-mail address so you can receive notifications, reset your password, etc." %}</p>
