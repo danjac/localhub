@@ -19,6 +19,10 @@ onmount('[data-js-confirm-dialog]', function() {
       () => {
         dialog.classList.remove('active');
         if (target.hasAttribute('data-ic-trigger-on')) {
+          //
+          // this might not work depending on how Intercooler does the event
+          // handling; might need to wrap in jQuery i.e.
+          // $(target).trigger('event-name');
           target.dispatchEvent(
             new Event(target.getAttribute('data-ic-trigger-on'))
           );
