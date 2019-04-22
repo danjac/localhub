@@ -1,0 +1,25 @@
+{% load widget_tweaks %}
+{% with label=label|default:field.label help_text=help_text|default:field.help_text %}
+
+<div class="form-group {% if field.errors %} has-error{% endif %}">
+  {% if field.field.widget.input_type == 'checkbox' %}
+  <label class="form-checkbox">
+    {{ field }}
+    <i class="form-icon"></i> {{ label }}
+  </label>
+  {% else %}
+  <label for="{{ field.id_for_label }}" class="form-label">{{ label }}</label>
+  {% render_field field class="form-input" placeholder=label %}
+  {% endif %}
+
+  {% if field.errors %}
+
+  {% for error in field.errors %}
+  <p class="form-input-hint">{{ error }}</p>
+  {% endfor %}
+
+  {% elif help_text %}
+  <p class="form-input-hint">{{ help_text }}</p>
+  {% endif %}
+</div>
+{% endwith %}

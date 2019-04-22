@@ -50,22 +50,12 @@
       </div>
       {% endfor %}
 
-      <div class="form-group">
-        <label for="{{ form.login.id_for_label }}" class="form-label">{{ form.login.label }}</label>
-        {% render_field form.login class="form-input" placeholder=form.login.label %}
-      </div>
 
-      <div class="form-group">
-        <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
-        {% render_field form.password class="form-input" placeholder=form.password.label %}
-      </div>
-      <div class="form-group">
-        <label class="form-checkbox">
-          {{ form.remember }}
-          <i class="form-icon"></i> {{ form.remember.label }}
-        </label>
-        <p class="form-input-hint">{% trans "Remember my login session when I close the browser" %}</p>
-      </div>
+      {% include "form_group.html" with field=form.login %}
+      {% include "form_group.html" with field=form.password %}
+
+      {% trans "You will not need to log back in if you close the browser" as remember_hint_t %}
+      {% include "form_group.html" with field=form.remember help_text=remember_hint_t %}
 
       <a class="btn btn-link" href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a>
       <button class="btn btn-primary" type="submit">{% trans "Sign in" %}</button>

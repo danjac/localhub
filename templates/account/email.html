@@ -1,7 +1,6 @@
 {% extends "users/base.html" %}
 
 {% load i18n %}
-{% load widget_tweaks %}
 
 {% block title %}{% trans "Email Addresses" %}{% endblock %}
 
@@ -72,13 +71,7 @@
   <div class="column col-6 col-sm-12">
     <form method="post" action="{% url 'account_email' %}" class="add_email">
       {% csrf_token %}
-      <div class="form-group {% if form.email.errors %} has-error{% endif %}">
-        <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
-        {% render_field form.email class="form-input" placeholder=form.email.label %}
-        {% for error in form.email.errors %}
-        <p class="form-input-hint">{{ error }}</p>
-        {% endfor %}
-      </div>
+      {% include "form_group.html" with field=form.email %}
       <button name="action_add" class="btn btn-primary" type="submit">{% trans "Add E-mail" %}</button>
     </form>
   </div>

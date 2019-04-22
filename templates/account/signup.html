@@ -17,37 +17,10 @@
       <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
       {% endif %}
 
-      <div class="form-group {% if form.username.errors %} has-error{% endif %}">
-        <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}</label>
-        {% render_field form.username class="form-input" placeholder=form.username.label %}
-        {% for error in form.username.errors %}
-        <p class="form-input-hint">{{ error }}</p>
-        {% endfor %}
-      </div>
-
-      <div class="form-group {% if form.email.errors %} has-error{% endif %}">
-        <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
-        {% render_field form.email class="form-input" placeholder=form.email.label %}
-        {% for error in form.email.errors %}
-        <p class="form-input-hint">{{ error }}</p>
-        {% endfor %}
-      </div>
-
-      <div class="form-group {% if form.password1.errors %} has-error{% endif %}">
-        <label for="{{ form.password1.id_for_label }}" class="form-label">{{ form.password1.label }}</label>
-        {% render_field form.password1 class="form-input" placeholder=form.password1.label %}
-        {% for error in form.password1.errors %}
-        <p class="form-input-hint">{{ error }}</p>
-        {% endfor %}
-      </div>
-
-      <div class="form-group {% if form.password2.errors %} has-error{% endif %}">
-        <label for="{{ form.password2.id_for_label }}" class="form-label">{{ form.password2.label }}</label>
-        {% render_field form.password2 class="form-input" placeholder=form.password2.label %}
-        {% for error in form.password2.errors %}
-        <p class="form-input-hint">{{ error }}</p>
-        {% endfor %}
-      </div>
+      {% include "form_group.html" with field=form.username %}
+      {% include "form_group.html" with field=form.email %}
+      {% include "form_group.html" with field=form.password1 %}
+      {% include "form_group.html" with field=form.password2 %}
 
       <button type="submit" class="btn btn-primary">{% trans "Sign Up" %}</button>
     </form>
