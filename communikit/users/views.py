@@ -34,11 +34,8 @@ class UserUpdateView(
 user_update_view = UserUpdateView.as_view()
 
 
-class UserDeleteView(
-    LoginRequiredMixin, SuccessMessageMixin, CurrentUserMixin, DeleteView
-):
+class UserDeleteView(LoginRequiredMixin, CurrentUserMixin, DeleteView):
     success_url = reverse_lazy("account_login")
-    success_message = _("Your account has been deleted")
 
 
 user_delete_view = UserDeleteView.as_view()
