@@ -16,10 +16,10 @@
       <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
       {% endif %}
 
-      {% include "form_group.html" with field=form.username %}
-      {% include "form_group.html" with field=form.email %}
-      {% include "form_group.html" with field=form.password1 %}
-      {% include "form_group.html" with field=form.password2 %}
+      {% include "snippets/form_group.html" with field=form.username %}
+      {% include "snippets/form_group.html" with field=form.email %}
+      {% include "snippets/form_group.html" with field=form.password1 %}
+      {% include "snippets/form_group.html" with field=form.password2 %}
 
       <button type="submit" class="btn btn-primary">{% trans "Sign Up" %}</button>
     </form>
