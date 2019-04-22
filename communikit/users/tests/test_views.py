@@ -12,28 +12,28 @@ User = get_user_model()
 
 class TestUserDetailView:
     def test_get(self, client: Client, login_user: settings.AUTH_USER_MODEL):
-        response = client.get("/account/")
+        response = client.get("/users/")
         assert response.status_code == 200
 
 
 class TestUserUpdateView:
     def test_get(self, client: Client, login_user: settings.AUTH_USER_MODEL):
-        response = client.get("/account/~update/")
+        response = client.get("/users/~update/")
         assert response.status_code == 200
 
     def test_post(self, client: Client, login_user: settings.AUTH_USER_MODEL):
-        response = client.post("/account/~update/", {"name": "New Name"})
-        assert response.url == "/account/"
+        response = client.post("/users/~update/", {"name": "New Name"})
+        assert response.url == "/users/"
         login_user.refresh_from_db()
         assert login_user.name == "New Name"
 
 
 class TestUserDeleteView:
     def test_get(self, client: Client, login_user: settings.AUTH_USER_MODEL):
-        response = client.get("/account/~delete/")
+        response = client.get("/users/~delete/")
         assert response.status_code == 200
 
     def test_post(self, client: Client, login_user: settings.AUTH_USER_MODEL):
-        response = client.post("/account/~delete/")
-        assert response.url == "/auth/login/"
+        response = client.post("/users/~delete/")
+        assert response.url == "/account/login/"
         assert User.objects.filter(username=login_user.username).count() == 0

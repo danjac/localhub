@@ -5,10 +5,10 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     # placeholder
-    path("", RedirectView.as_view(url="/account/")),
+    path("", RedirectView.as_view(url="/users/")),
     path("admin/", admin.site.urls),
-    path("auth/", include("allauth.urls")),
-    path("account/", include("communikit.users.urls")),
+    path("account/", include("allauth.urls")),
+    path("users/", include("communikit.users.urls")),
 ]
 
 if "debug_toolbar" in settings.INSTALLED_APPS:
