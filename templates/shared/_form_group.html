@@ -12,14 +12,12 @@
   {% render_field field class="form-input" placeholder=label %}
   {% endif %}
 
-  {% if field.errors %}
-
   {% for error in field.errors %}
   <p class="form-input-hint">{{ error }}</p>
   {% endfor %}
 
-  {% elif help_text %}
-  <p class="form-input-hint">{{ help_text }}</p>
+  {% if help_text %}
+  <p><small>{{ help_text }}</small></p>
   {% endif %}
 </div>
 {% endwith %}

@@ -7,13 +7,12 @@
 
 <p>You can change your primary and other email addresses <a href="{% url 'account_email' %}">here</a>.</p>
 
-<div class="columns col-md-6 col-12">
+
+<div class="col-6 col-sm-12">
   <form method="POST" action="{% url 'users:update' %}">
     {% csrf_token %}
-    <div class="form-group">
-      {% trans "Full name" as full_name_t %}
-      {% include "shared/_form_group.html" with field=form.name label=full_name_t %}
-    </div>
+    {% trans "Full name" as full_name_t %}
+    {% include "shared/_form_group.html" with field=form.name label=full_name_t %}
     <input type="submit" class="btn btn-primary" value="{% trans 'Save' %}">
   </form>
 </div>

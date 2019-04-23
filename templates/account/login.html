@@ -33,34 +33,32 @@
   <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
 {% endif %}
 
-<div class="columns">
-  <div class="column col-6 col-sm-12">
-    <form method="POST" action="{% url 'account_login' %}">
+<div class="col-6 col-sm-12">
+  <form method="POST" action="{% url 'account_login' %}">
 
-      {% csrf_token %}
+    {% csrf_token %}
 
-      {% if redirect_field_value %}
-      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-      {% endif %}
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
 
-      {% for error in form.non_field_errors %}
-      <div class="toast toast-error mb-2">
-        {{ error }}
-      </div>
-      {% endfor %}
+    {% for error in form.non_field_errors %}
+    <div class="toast toast-error mb-2">
+      {{ error }}
+    </div>
+    {% endfor %}
 
 
-      {% include "shared/_form_group.html" with field=form.login %}
-      {% include "shared/_form_group.html" with field=form.password %}
+    {% include "shared/_form_group.html" with field=form.login %}
+    {% include "shared/_form_group.html" with field=form.password %}
 
-      {% trans "You will not need to log back in if you close the browser" as remember_hint_t %}
-      {% include "shared/_form_group.html" with field=form.remember help_text=remember_hint_t %}
+    {% trans "You will not need to log back in if you close the browser" as remember_hint_t %}
+    {% include "shared/_form_group.html" with field=form.remember help_text=remember_hint_t %}
 
-      <a class="btn btn-link" href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a>
-      <button class="btn btn-primary" type="submit">{% trans "Sign in" %}</button>
+    <button class="btn btn-primary" type="submit">{% trans "Sign in" %}</button>
+    <a class="btn btn-link" href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a>
 
-    </form>
-  </div>
+  </form>
 </div>
 
 {% endblock content %}
