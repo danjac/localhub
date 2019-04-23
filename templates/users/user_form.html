@@ -12,7 +12,7 @@
     {% csrf_token %}
     <div class="form-group">
       {% trans "Full name" as full_name_t %}
-      {% include "snippets/form_group.html" with field=form.name label=full_name_t %}
+      {% include "shared/_form_group.html" with field=form.name label=full_name_t %}
     </div>
     <input type="submit" class="btn btn-primary" value="{% trans 'Save' %}">
   </form>
