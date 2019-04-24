@@ -48,14 +48,14 @@ class Community(TimeStampedModel):
         if user.is_anonymous():
             return False
         # cache for this user
-        if not hasattr(user, "_community_roles_map_cache"):
-            user._community_roles_map_cache = dict(
+        if not hasattr(user, "_community_roles_cache"):
+            user._community_roles_cache = dict(
                 Membership.objects.filter(active=True, user=user).values_list(
                     "community", "role"
                 )
             )
         try:
-            return user._community_roles_map_cache[self.id] == role
+            return user._community_roles_cache[self.id] == role
         except KeyError:
             return False
 
