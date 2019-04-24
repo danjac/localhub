@@ -36,7 +36,10 @@ class Base(Configuration):
         "widget_tweaks",
     ]
 
-    LOCAL_APPS = ["communikit.users.apps.UsersAppConfig"]
+    LOCAL_APPS = [
+        "communikit.users.apps.UsersAppConfig",
+        "communikit.communities.apps.CommunitiesAppConfig",
+    ]
 
     MIDDLEWARE = [
         "django.middleware.security.SecurityMiddleware",

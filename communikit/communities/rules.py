@@ -34,5 +34,5 @@ def is_member(user, community):
 
 is_member = is_member | is_moderator
 
-rules.add_rule("can_edit_community", is_admin)
+rules.add_perm("communities.change_community", is_admin)
 
