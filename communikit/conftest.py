@@ -12,6 +12,11 @@ def req_factory() -> RequestFactory:
 
 
 @pytest.fixture
+def user() -> settings.AUTH_USER_MODEL:
+    return UserFactory()
+
+
+@pytest.fixture
 def login_user(client: Client) -> settings.AUTH_USER_MODEL:
     password = "t3SzTP4sZ"
     user = UserFactory()

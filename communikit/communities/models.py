@@ -45,14 +45,14 @@ class Community(TimeStampedModel):
         return self.name
 
     def user_has_role(self, user: settings.AUTH_USER_MODEL, role: str) -> bool:
-        if user.is_anonymous():
+        if user.is_anonymous:
             return False
         # cache for this user
         if not hasattr(user, "_community_roles_cache"):
             user._community_roles_cache = dict(
-                Membership.objects.filter(active=True, user=user).values_list(
-                    "community", "role"
-                )
+                Membership.objects.filter(
+                    active=True, member=user
+                ).values_list("community", "role")
             )
         try:
             return user._community_roles_cache[self.id] == role
