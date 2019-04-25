@@ -4,7 +4,6 @@ from django.db import models
 from django.conf import settings
 from django.http import HttpRequest
 from django.contrib.sites.models import Site
-from django.contrib.sites.shortcuts import get_current_site
 from django.utils.translation import ugettext_lazy as _
 
 from model_utils.models import TimeStampedModel
@@ -17,18 +16,19 @@ ROLES = (
 
 
 class CommunityManager(models.Manager):
-    def get_current(
-        self, request: Optional[HttpRequest]
-    ) -> Optional["Community"]:
+    use_in_migrations = True
+
+    def get_current(self, request: HttpRequest) -> Optional["Community"]:
         """
         Returns the current community linked to the site domain. Community
         must be active.
         """
-        site = get_current_site(request)
-        if site is None:
+        try:
+            return self.filter(
+                active=True, site=Site.objects.get_current(request)
+            ).first()
+        except Site.DoesNotExist:
             return None
-
-        return self.filter(active=True, site=site).first()
 
 
 class Community(TimeStampedModel):

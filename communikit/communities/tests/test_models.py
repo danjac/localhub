@@ -25,15 +25,19 @@ class TestCommunityManager:
         self, req_factory: RequestFactory
     ):
         req = req_factory.get("/", HTTP_HOST="example.com")
-        community = CommunityFactory(
-            site=Site.objects.get_current(req), active=False
-        )
+        CommunityFactory(site=Site.objects.get_current(req), active=False)
         assert Community.objects.get_current(req) is None
 
     def test_get_current_if_no_community_available(
         self, req_factory: RequestFactory
     ):
         req = req_factory.get("/", HTTP_HOST="example.com")
+        assert Community.objects.get_current(req) is None
+
+    def test_get_current_if_no_site_available(
+        self, req_factory: RequestFactory
+    ):
+        req = req_factory.get("/", HTTP_HOST="something-random.example.com")
         assert Community.objects.get_current(req) is None
 
 
