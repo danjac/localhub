@@ -3,9 +3,7 @@ from typing import Optional
 from django.db import models
 from django.conf import settings
 from django.core.validators import URLValidator, RegexValidator
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpRequest
-from django.contrib.sites.models import Site
 from django.utils.translation import ugettext_lazy as _
 
 from model_utils.models import TimeStampedModel
@@ -27,7 +25,7 @@ class CommunityManager(models.Manager):
         """
         try:
             return self.get(active=True, domain__iexact=request.get_host())
-        except ObjectDoesNotExist:
+        except self.model.DoesNotExist:
             return None
 
 
