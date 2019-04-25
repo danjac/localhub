@@ -1,0 +1,20 @@
+from typing import Callable
+
+from django.http import HttpRequest, HttpResponse
+
+from communikit.communities.models import Community
+from communikit.communities.middleware import CurrentCommunityMiddleware
+
+
+def my_view(req: HttpRequest) -> HttpResponse:
+    return HttpResponse()
+
+
+class TestCurrentCommunityMiddleware:
+    def test_if_community_available(
+        community: Community, req_factory: Callable
+    ):
+        mw = CurrentCommunityMiddleware(my_view)
+        req = req_factory("/")
+        mw(req)
+        assert req.community == community

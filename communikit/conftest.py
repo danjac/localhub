@@ -2,10 +2,14 @@ import pytest
 
 from django.conf import settings
 from django.test import Client, RequestFactory
+from django.contrib.sites.models import Site
 
 from communikit.users.tests.factories import UserFactory
 from communikit.communities.models import Community
-from communikit.communities.tests.factories import CommunityFactory
+from communikit.communities.tests.factories import (
+    CommunityFactory,
+    SiteFactory,
+)
 
 
 @pytest.fixture
@@ -19,8 +23,13 @@ def user() -> settings.AUTH_USER_MODEL:
 
 
 @pytest.fixture
-def community() -> Community:
-    return CommunityFactory()
+def site() -> Site:
+    return SiteFactory()
+
+
+@pytest.fixture
+def community(site: Site) -> Community:
+    return CommunityFactory(site=site)
 
 
 @pytest.fixture

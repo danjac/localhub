@@ -45,6 +45,8 @@ class Base(Configuration):
     MIDDLEWARE = [
         "django.middleware.security.SecurityMiddleware",
         "whitenoise.middleware.WhiteNoiseMiddleware",
+        "django.contrib.sites.middleware.CurrentSiteMiddleware",
+        "communikit.communities.middleware.CurrentCommunityMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
@@ -100,7 +102,7 @@ class Base(Configuration):
 
     ACCOUNT_EMAIL_REQUIRED = True
 
-    # SITE_ID = 1
+    SITE_ID = 1
 
     # Internationalization
     # https://docs.djangoproject.com/en/2.2/topics/i18n/
