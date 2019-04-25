@@ -2,7 +2,6 @@ import pytest
 
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
-from django.contrib.sites.models import Site
 from django.test.client import RequestFactory
 
 from communikit.communities.models import Community, Membership
@@ -18,14 +17,14 @@ class TestCommunityManager:
     ):
 
         req = req_factory.get("/", HTTP_HOST="example.com")
-        community = CommunityFactory(site=Site.objects.get_current(req))
+        community = CommunityFactory(domain="example.com")
         assert Community.objects.get_current(req) == community
 
     def test_get_current_if_inactive_community_on_site(
         self, req_factory: RequestFactory
     ):
         req = req_factory.get("/", HTTP_HOST="example.com")
-        CommunityFactory(site=Site.objects.get_current(req), active=False)
+        CommunityFactory(domain="example.com", active=False)
         assert Community.objects.get_current(req) is None
 
     def test_get_current_if_no_community_available(

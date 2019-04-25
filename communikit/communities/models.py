@@ -2,6 +2,7 @@ from typing import Optional
 
 from django.db import models
 from django.conf import settings
+from django.core.validators import URLValidator, RegexValidator
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpRequest
 from django.contrib.sites.models import Site
@@ -25,16 +26,21 @@ class CommunityManager(models.Manager):
         must be active.
         """
         try:
-            return self.get(
-                active=True, site=Site.objects.get_current(request)
-            )
+            return self.get(active=True, domain__iexact=request.get_host())
         except ObjectDoesNotExist:
             return None
 
 
 class Community(TimeStampedModel):
-    site = models.OneToOneField(
-        Site, on_delete=models.CASCADE, related_name="community"
+    domain = models.CharField(
+        unique=True,
+        max_length=100,
+        validators=[
+            RegexValidator(
+                regex=URLValidator.host_re,
+                message=_("This is not a valid domain"),
+            )
+        ],
     )
 
     name = models.CharField(max_length=255)
