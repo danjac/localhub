@@ -34,6 +34,7 @@ class Base(Configuration):
         "allauth.account",
         "allauth.socialaccount",
         "widget_tweaks",
+        "rules.apps.AutodiscoverRulesConfig",
     ]
 
     LOCAL_APPS = [
@@ -74,6 +75,7 @@ class Base(Configuration):
 
     # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
     AUTHENTICATION_BACKENDS = [
+        "rules.permissions.ObjectPermissionBackend",
         "django.contrib.auth.backends.ModelBackend",
         "allauth.account.auth_backends.AuthenticationBackend",
     ]
@@ -188,6 +190,6 @@ class Local(Base):
     def INTERNAL_IPS(self) -> Sequence[str]:
         # Docker configuration
         ips = ["127.0.0.1", "10.0.2.2"]
-        hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+        _, _, ips = socket.gethostbyname_ex(socket.gethostname())
         ips += [ip[:-1] + "1" for ip in ips]
         return ips

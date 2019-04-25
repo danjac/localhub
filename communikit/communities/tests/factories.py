@@ -14,7 +14,7 @@ class SiteFactory(DjangoModelFactory):
 
 
 class CommunityFactory(DjangoModelFactory):
-    name = Faker("name")
+    name = Faker("company")
     description = Faker("text")
     site = SubFactory(SiteFactory)
 

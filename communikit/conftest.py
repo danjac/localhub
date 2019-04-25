@@ -4,6 +4,8 @@ from django.conf import settings
 from django.test import Client, RequestFactory
 
 from communikit.users.tests.factories import UserFactory
+from communikit.communities.models import Community
+from communikit.communities.tests.factories import CommunityFactory
 
 
 @pytest.fixture
@@ -14,6 +16,11 @@ def req_factory() -> RequestFactory:
 @pytest.fixture
 def user() -> settings.AUTH_USER_MODEL:
     return UserFactory()
+
+
+@pytest.fixture
+def community() -> Community:
+    return CommunityFactory()
 
 
 @pytest.fixture
