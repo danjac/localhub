@@ -2,6 +2,7 @@ from typing import Optional
 
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpRequest
 from django.contrib.sites.models import Site
 from django.utils.translation import ugettext_lazy as _
@@ -24,10 +25,10 @@ class CommunityManager(models.Manager):
         must be active.
         """
         try:
-            return self.filter(
+            return self.get(
                 active=True, site=Site.objects.get_current(request)
-            ).first()
-        except Site.DoesNotExist:
+            )
+        except ObjectDoesNotExist:
             return None
 
 
