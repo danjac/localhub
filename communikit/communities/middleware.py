@@ -17,6 +17,6 @@ class CurrentCommunityMiddleware:
 
     def __call__(self, request: HttpRequest) -> HttpResponse:
         request.community = SimpleLazyObject(
-            lambda: Community.objects.filter(site=request.site).first()
+            lambda: Community.objects.get_current(request)
         )
         return self.get_response(request)

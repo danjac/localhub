@@ -1,6 +1,10 @@
+from typing import Optional
+
 from django.db import models
 from django.conf import settings
+from django.http import HttpRequest
 from django.contrib.sites.models import Site
+from django.contrib.sites.shortcuts import get_current_site
 from django.utils.translation import ugettext_lazy as _
 
 from model_utils.models import TimeStampedModel
@@ -10,6 +14,21 @@ ROLES = (
     ("moderator", _("Moderator")),
     ("admin", _("Admin")),
 )
+
+
+class CommunityManager(models.Manager):
+    def get_current(
+        self, request: Optional[HttpRequest]
+    ) -> Optional["Community"]:
+        """
+        Returns the current community linked to the site domain. Community
+        must be active.
+        """
+        site = get_current_site(request)
+        if site is None:
+            return None
+
+        return self.filter(active=True, site=site).first()
 
 
 class Community(TimeStampedModel):
@@ -37,6 +56,8 @@ class Community(TimeStampedModel):
     active = models.BooleanField(
         default=True, help_text=_("This community is currently live.")
     )
+
+    objects = CommunityManager()
 
     class Meta:
         verbose_name_plural = _("Communities")

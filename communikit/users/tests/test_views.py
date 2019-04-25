@@ -12,17 +12,19 @@ User = get_user_model()
 
 class TestUserDetailView:
     def test_get(self, client: Client, login_user: settings.AUTH_USER_MODEL):
-        response = client.get("/users/")
+        response = client.get("/users/", HTTP_HOST="example.com")
         assert response.status_code == 200
 
 
 class TestUserUpdateView:
     def test_get(self, client: Client, login_user: settings.AUTH_USER_MODEL):
-        response = client.get("/users/~update/")
+        response = client.get("/users/~update/", HTTP_HOST="example.com")
         assert response.status_code == 200
 
     def test_post(self, client: Client, login_user: settings.AUTH_USER_MODEL):
-        response = client.post("/users/~update/", {"name": "New Name"})
+        response = client.post(
+            "/users/~update/", {"name": "New Name"}, HTTP_HOST="example.com"
+        )
         assert response.url == "/users/"
         login_user.refresh_from_db()
         assert login_user.name == "New Name"
@@ -30,10 +32,10 @@ class TestUserUpdateView:
 
 class TestUserDeleteView:
     def test_get(self, client: Client, login_user: settings.AUTH_USER_MODEL):
-        response = client.get("/users/~delete/")
+        response = client.get("/users/~delete/", HTTP_HOST="example.com")
         assert response.status_code == 200
 
     def test_post(self, client: Client, login_user: settings.AUTH_USER_MODEL):
-        response = client.post("/users/~delete/")
+        response = client.post("/users/~delete/", HTTP_HOST="example.com")
         assert response.url == "/account/login/"
         assert User.objects.filter(username=login_user.username).count() == 0

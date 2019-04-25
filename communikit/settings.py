@@ -102,7 +102,7 @@ class Base(Configuration):
 
     ACCOUNT_EMAIL_REQUIRED = True
 
-    SITE_ID = 1
+    # SITE_ID = 1
 
     # Internationalization
     # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -170,6 +170,7 @@ class Base(Configuration):
 
 class Testing(Base):
     PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
+    ALLOWED_HOSTS = Configuration.ALLOWED_HOSTS + [".example.com"]
 
 
 class Local(Base):
