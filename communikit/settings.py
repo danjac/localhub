@@ -101,7 +101,7 @@ class Base(Configuration):
 
     ACCOUNT_EMAIL_REQUIRED = True
 
-    # SITE_ID = 1
+    SITE_ID = 1
 
     # Internationalization
     # https://docs.djangoproject.com/en/2.2/topics/i18n/
