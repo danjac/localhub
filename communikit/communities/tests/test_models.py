@@ -1,6 +1,7 @@
 import pytest
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AnonymousUser
 from django.test.client import RequestFactory
 
@@ -41,6 +42,12 @@ class TestCommunityManager:
 
 
 class TestCommunityModel:
+    def test_invalid_domain_name(self):
+
+        community = Community(name="test", domain="testing")
+        with pytest.raises(ValidationError):
+            community.clean_fields()
+
     def test_user_has_role_if_has_role(
         self, user: settings.AUTH_USER_MODEL, community: Community
     ):
