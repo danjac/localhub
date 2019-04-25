@@ -17,6 +17,14 @@ class TestCommunityModel:
         )
         assert community.user_has_role(user, "member")
 
+    def test_user_has_role_if_has_role_and_inactive(
+        self, user: settings.AUTH_USER_MODEL, community: Community
+    ):
+        Membership.objects.create(
+            member=user, community=community, role="member", active=False
+        )
+        assert not community.user_has_role(user, "member")
+
     def test_user_has_role_if_not_same_role(
         self, user: settings.AUTH_USER_MODEL, community: Community
     ):
