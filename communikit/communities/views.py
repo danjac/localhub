@@ -1,5 +1,5 @@
 from django.http import Http404
-from django.utils.functional import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 
 
 class CommunityRequiredMixin:
@@ -11,6 +11,7 @@ class CommunityRequiredMixin:
     """
 
     def dispatch(self, request, *args, **kwargs):
+        print("dispatching...")
         if not request.community:
             raise Http404(_("No community is available for this domain"))
         return super().dispatch(request, *args, **kwargs)
