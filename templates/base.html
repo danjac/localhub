@@ -16,7 +16,9 @@
       <header class="navbar">
 
         <section class="navbar-section">
-          <a class="navbar-brand mr-2" href="/">communikit</a>
+          <a class="navbar-brand mr-2" href="/">
+            {% if request.community %}{{ request.community.name }}{% else %}communikit{% endif %}
+          </a>
         </section>
         <section class="navbar-section">
           {% with current_url=request.resolver_match.url_name %}
