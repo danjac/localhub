@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class UsersAppConfig(AppConfig):
+class UsersConfig(AppConfig):
     name = "communikit.users"

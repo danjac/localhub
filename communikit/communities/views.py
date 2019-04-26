@@ -8,10 +8,17 @@ class CommunityRequiredMixin:
     the CurrentCommunityMiddleware is enabled.
 
     If no community present raises a 404.
+
+    TBD: we will need a specific route which lists available communities
+    (if any). Instead of showing a 404, we redirect to this page.
+
+    For example authentication routes (in emails etc) will be tied
+    to the domain depending on SITE_ID, so if redirected there
+    and no community matches that domain we need a page to allow user
+    to select a community/request invite etc.
     """
 
     def dispatch(self, request, *args, **kwargs):
-        print("dispatching...")
         if not request.community:
             raise Http404(_("No community is available for this domain"))
         return super().dispatch(request, *args, **kwargs)

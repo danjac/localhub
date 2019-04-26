@@ -38,8 +38,8 @@ class Base(Configuration):
     ]
 
     LOCAL_APPS = [
-        "communikit.users.apps.UsersAppConfig",
-        "communikit.communities.apps.CommunitiesAppConfig",
+        "communikit.users.apps.UsersConfig",
+        "communikit.communities.apps.CommunitiesConfig",
     ]
 
     MIDDLEWARE = [

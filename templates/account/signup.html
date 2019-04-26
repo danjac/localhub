@@ -15,10 +15,7 @@
     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
     {% endif %}
 
-    {% include "shared/_form_group.html" with field=form.username %}
-    {% include "shared/_form_group.html" with field=form.email %}
-    {% include "shared/_form_group.html" with field=form.password1 %}
-    {% include "shared/_form_group.html" with field=form.password2 %}
+    {% include "shared/forms/fields.html" %}
 
     <button type="submit" class="btn btn-primary">{% trans "Sign Up" %}</button>
   </form>

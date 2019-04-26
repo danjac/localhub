@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class CommunitiesAppConfig(AppConfig):
+class CommunitiesConfig(AppConfig):
     name = "communikit.communities"
