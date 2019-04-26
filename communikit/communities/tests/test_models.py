@@ -34,12 +34,6 @@ class TestCommunityManager:
         req = req_factory.get("/", HTTP_HOST="example.com")
         assert Community.objects.get_current(req) is None
 
-    def test_get_current_if_no_site_available(
-        self, req_factory: RequestFactory
-    ):
-        req = req_factory.get("/", HTTP_HOST="something-random.example.com")
-        assert Community.objects.get_current(req) is None
-
 
 class TestCommunityModel:
     def test_invalid_domain_name(self):
