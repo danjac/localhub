@@ -33,13 +33,15 @@ class Base(Configuration):
         "allauth",
         "allauth.account",
         "allauth.socialaccount",
-        "widget_tweaks",
+        "markdownx",
         "rules.apps.AutodiscoverRulesConfig",
+        "widget_tweaks",
     ]
 
     LOCAL_APPS = [
         "communikit.users.apps.UsersConfig",
         "communikit.communities.apps.CommunitiesConfig",
+        "communikit.content.apps.ContentConfig",
     ]
 
     MIDDLEWARE = [

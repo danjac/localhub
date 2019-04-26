@@ -9,6 +9,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("account/", include("allauth.urls")),
     path("users/", include("communikit.users.urls")),
+    path("markdownx/", include("markdownx.urls")),
 ]
 
 if "debug_toolbar" in settings.INSTALLED_APPS:
