@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="columns">
+  <div class="column col-2 d-sm-none">left panel</div>
+  <div class="divider-vert d-sm-none"></div>
+  <div class="column col-7 col-sm-12">
+    {% block content_main_panel %}{% endblock %}
+  </div>
+  <div class="divider-vert d-sm-none"></div>
+  <div class="column col-2 d-sm-none">right panel</div>
+</div>
+{% endblock %}

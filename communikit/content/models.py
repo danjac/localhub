@@ -1,7 +1,9 @@
 from django.db import models
 from django.conf import settings
+from django.utils.safestring import mark_safe
 
 from markdownx.models import MarkdownxField
+from markdownx.utils import markdownify
 
 from model_utils.models import TimeStampedModel
 from model_utils.managers import InheritanceManager
@@ -23,3 +25,8 @@ class Post(TimeStampedModel):
     published = models.DateTimeField(null=True, blank=True)
 
     objects = InheritanceManager()
+
+    @property
+    def markdown(self) -> str:
+        # TBD apply bleach!
+        return mark_safe(markdownify(self.description))

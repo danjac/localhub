@@ -1,0 +1,13 @@
+{% extends "content/base.html" %}
+{% load i18n %}
+
+{% block content_main_panel %}
+{% if perms.content.create_post %}
+<form method="POST" action="{% url 'content:create' %}">
+    {% csrf_token %}
+    {% include "shared/forms/fields.html" %}
+    <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+</form>
+{{ form.media }}
+{% endif %}
+{% endblock content_main_panel %}
