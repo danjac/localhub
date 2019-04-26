@@ -1,15 +1,18 @@
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import RedirectView
 
 urlpatterns = [
-    # placeholder
-    path("", RedirectView.as_view(url="/users/")),
-    path("admin/", admin.site.urls),
-    path("account/", include("allauth.urls")),
+    # Local
+
+    path("", include("communikit.content.urls")),
     path("users/", include("communikit.users.urls")),
+
+    # Third-party
+
+    path("account/", include("allauth.urls")),
     path("markdownx/", include("markdownx.urls")),
+    path("admin/", admin.site.urls),
 ]
 
 if "debug_toolbar" in settings.INSTALLED_APPS:
