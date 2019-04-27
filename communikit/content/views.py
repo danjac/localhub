@@ -42,9 +42,9 @@ post_create_view = PostCreateView.as_view()
 
 
 class PostListView(CommunityRequiredMixin, IntercoolerTemplateMixin, ListView):
-    paginate_by = 3
+    paginate_by = 12
     allow_empty = True
-    ic_template_name = "content/ic/post_list.html"
+    ic_template_name = "content/includes/post_list.html"
 
     def get_queryset(self) -> QuerySet:
         return (

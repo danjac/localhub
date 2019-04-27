@@ -1,11 +1,6 @@
 {% load i18n %}
 {% if form and page_obj.number == 1 %}
-<form method="POST" action="{% url 'content:create' %}">
-  {% csrf_token %}
-  {{ form.media }}
-  {% include "shared/forms/fields.html" %}
-  <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
-</form>
+{% include "content/includes/post_form.html" %}
 {% endif %}
 
 {% for post in object_list %}
