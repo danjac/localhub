@@ -4,6 +4,8 @@ from django.db import models
 from django.conf import settings
 from django.utils.safestring import mark_safe
 
+from bleach.linkifier import LinkifyFilter
+
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
 
@@ -14,6 +16,8 @@ from communikit.communities.models import Community
 
 
 ALLOWED_TAGS = bleach.ALLOWED_TAGS + ["p", "h1", "h2", "h3", "h4", "h5", "h6"]
+
+cleaner = bleach.Cleaner(ALLOWED_TAGS, filters=[LinkifyFilter])
 
 
 class Post(TimeStampedModel):
@@ -32,8 +36,4 @@ class Post(TimeStampedModel):
     objects = InheritanceManager()
 
     def markdown(self) -> str:
-        return mark_safe(
-            bleach.clean(
-                bleach.linkify(markdownify(self.description)), ALLOWED_TAGS
-            )
-        )
+        return mark_safe(cleaner.clean(markdownify(self.description)))
