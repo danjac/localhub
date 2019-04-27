@@ -13,7 +13,7 @@ from model_utils.managers import InheritanceManager
 from communikit.communities.models import Community
 
 
-ALLOWED_TAGS = bleach.ALLOWED_TAGS + ["p"]
+ALLOWED_TAGS = bleach.ALLOWED_TAGS + ["p", "h1", "h2", "h3", "h4", "h5", "h6"]
 
 
 class Post(TimeStampedModel):
