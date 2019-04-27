@@ -12,6 +12,10 @@ $(function() {
     }
   });
 
+  $(document).on('log.ic', (evt, msg, level) => {
+    console.log(msg, "level", level);
+  });
+
   Intercooler.ready(function() {
     onmount();
   });

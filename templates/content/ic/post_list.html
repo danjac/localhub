@@ -1,3 +1,13 @@
+{% load i18n %}
+{% if form and page_obj.number == 1 %}
+<form method="POST" action="{% url 'content:create' %}">
+  {% csrf_token %}
+  {{ form.media }}
+  {% include "shared/forms/fields.html" %}
+  <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+</form>
+{% endif %}
+
 {% for post in object_list %}
 <div class="card mt-1">
   {% if post.title %}
@@ -11,4 +21,4 @@
   <div class="card-footer"></div>
 </div>
 {% endfor %}
-{% include "shared/pagination.html" %}
+{% include "shared/pagination.html" with ic_target="#posts" %}

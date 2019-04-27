@@ -2,12 +2,13 @@
 {% if is_paginated %}
 <ul class="pagination">
   <li class="page-item page-prev{% if not page_obj.has_previous %} disabled{% endif %}">
-    <a {% spaceless %}
+    <a class="btn" {% spaceless %}
       {% if page_obj.has_previous %}
       href="?page={{ page_obj.previous_page_number }}"
       {% if ic_target %}
       data-ic-get-from="?page={{ page_obj.previous_page_number }}"
       data-ic-target="{{ ic_target }}"
+      data-ic-push-url="true"
       {% endif %}
       {% else %}
       href="#"
@@ -18,12 +19,13 @@
     </a>
   </li>
   <li class="page-item page-next{% if not page_obj.has_next %} disabled{% endif %}">
-    <a {% spaceless %}
+    <a class="btn" {% spaceless %}
       {% if page_obj.has_next %}
       href="?page={{ page_obj.next_page_number }}"
       {% if ic_target %}
       data-ic-get-from="?page={{ page_obj.next_page_number }}"
       data-ic-target="{{ ic_target }}"
+      data-ic-push-url="true"
       {% endif %}
       {% else %}
       href="#"

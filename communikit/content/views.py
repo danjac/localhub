@@ -42,7 +42,7 @@ post_create_view = PostCreateView.as_view()
 
 
 class PostListView(CommunityRequiredMixin, IntercoolerTemplateMixin, ListView):
-    paginate_by = 12
+    paginate_by = 3
     allow_empty = True
     ic_template_name = "content/ic/post_list.html"
 
@@ -56,7 +56,10 @@ class PostListView(CommunityRequiredMixin, IntercoolerTemplateMixin, ListView):
 
     def get_context_data(self, **kwargs) -> Dict[str, Any]:
         data = super().get_context_data(**kwargs)
-        data.update({"form": PostForm()})
+        if self.request.user.has_perm(
+            "content:create_post", self.request.community
+        ):
+            data["form"] = PostForm()
         return data
 
 

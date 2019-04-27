@@ -1,19 +1,6 @@
 {% extends "content/base.html" %}
-{% load i18n %}
-{% load rules %}
-
 {% block content_main_panel %}
-{% has_perm 'content.create_post' request.user request.community as can_create_post %}
-{% if can_create_post %}
-<form method="POST" action="{% url 'content:create' %}">
-  {% csrf_token %}
-  {% include "shared/forms/fields.html" %}
-  <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
-</form>
-{{ form.media }}
-{% endif %}
-
 <div id="posts">
-  {% include "content/ic/post_list.html" with ic_target="#posts" %}
+  {% include "content/ic/post_list.html" %}
 </div>
 {% endblock content_main_panel %}
