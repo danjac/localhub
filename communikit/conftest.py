@@ -51,3 +51,12 @@ def member(
     return Membership.objects.create(
         member=login_user, community=community, role="member"
     )
+
+
+@pytest.fixture
+def moderator(
+    client: Client, login_user: settings.AUTH_USER_MODEL, community: Community
+) -> Membership:
+    return Membership.objects.create(
+        member=login_user, community=community, role="moderator"
+    )
