@@ -20,6 +20,7 @@ class Base(Configuration):
     WSGI_APPLICATION = "communikit.wsgi.application"
 
     DJANGO_APPS = [
+        "django.forms",
         "django.contrib.admin",
         "django.contrib.auth",
         "django.contrib.contenttypes",
@@ -58,22 +59,6 @@ class Base(Configuration):
 
     ROOT_URLCONF = "communikit.urls"
 
-    TEMPLATES = [
-        {
-            "BACKEND": "django.template.backends.django.DjangoTemplates",
-            "DIRS": [],
-            "APP_DIRS": True,
-            "OPTIONS": {
-                "context_processors": [
-                    "django.template.context_processors.debug",
-                    "django.template.context_processors.request",
-                    "django.contrib.auth.context_processors.auth",
-                    "django.contrib.messages.context_processors.messages",
-                ]
-            },
-        }
-    ]
-
     AUTH_USER_MODEL = "users.User"
 
     # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
@@ -98,7 +83,7 @@ class Base(Configuration):
         },
     ]
 
-    LOGIN_REDIRECT_URL = "users:detail"
+    LOGIN_REDIRECT_URL = "/"
     LOGIN_URL = "account_login"
 
     ACCOUNT_EMAIL_REQUIRED = True
@@ -123,6 +108,10 @@ class Base(Configuration):
 
     STATIC_URL = "/static/"
 
+    # https://docs.djangoproject.com/en/1.11/ref/forms/renderers/
+
+    FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
+
     @property
     def BASE_DIR(self) -> str:
         return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -141,19 +130,13 @@ class Base(Configuration):
 
     @property
     def TEMPLATES(self) -> Sequence[Dict]:
-        loaders = [
-            "django.template.loaders.filesystem.Loader",
-            "django.template.loaders.app_directories.Loader",
-        ]
-        if not self.DEBUG:
-            loaders = [("django.template.loaders.cached.Loader", loaders)]
         return [
             {
                 "BACKEND": "django.template.backends.django.DjangoTemplates",
                 "DIRS": [os.path.join(self.BASE_DIR, "templates")],
+                "APP_DIRS": True,
                 "OPTIONS": {
                     "debug": self.DEBUG,
-                    "loaders": loaders,
                     "context_processors": [
                         "django.template.context_processors.debug",
                         "django.template.context_processors.request",
@@ -165,7 +148,7 @@ class Base(Configuration):
                         "django.contrib.messages.context_processors.messages",
                     ],
                 },
-            }
+            },
         ]
 
 

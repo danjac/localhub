@@ -1,0 +1,20 @@
+<div class="markdownx tabs">
+  <ul class="tab">
+    <li class="tab-item active">
+      <a href="#" data-js-show-tab="#{{ widget.attrs.id }}_editor">Edit</a>
+    </li>
+    <li class="tab-item">
+      <a href="#" data-js-show-tab="#{{ widget.attrs.id }}_preview">Preview</a>
+    </li>
+    <li class="tab-item">
+      <a href="#" data-js-show-tab="#{{ widget.attrs.id }}_markdown_guide">Markdown Guide</a>
+    </li>
+  </ul>
+  <div class="tab-pane" id="{{ widget.attrs.id }}_editor">
+      {% include 'django/forms/widgets/textarea.html' %}
+  </div>
+  <div class="tab-pane d-none markdownx-preview" id="{{ widget.attrs.id }}_preview"></div>
+  <div class="tab-pane d-none" id="{{ widget.attrs.id }}_markdown_guide">
+    Markdown Guide to go here....
+  </div>
+</div>

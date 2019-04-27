@@ -3,12 +3,12 @@
 
 {% block content %}
 <div class="columns">
-  <div class="column col-2 d-sm-none">left panel</div>
-  <div class="divider-vert d-sm-none"></div>
+  <div class="column col-2 hide-sm">left panel</div>
+  <div class="divider-vert hide-sm"></div>
   <div class="column col-7 col-sm-12">
     {% block content_main_panel %}{% endblock %}
   </div>
-  <div class="divider-vert d-sm-none"></div>
-  <div class="column col-2 d-sm-none">right panel</div>
+  <div class="divider-vert hide-sm"></div>
+  <div class="column col-2 hide-sm">right panel</div>
 </div>
 {% endblock %}
