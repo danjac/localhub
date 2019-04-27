@@ -1,3 +1,5 @@
+import bleach
+
 from django.db import models
 from django.conf import settings
 from django.utils.safestring import mark_safe
@@ -9,6 +11,9 @@ from model_utils.models import TimeStampedModel
 from model_utils.managers import InheritanceManager
 
 from communikit.communities.models import Community
+
+
+ALLOWED_TAGS = bleach.ALLOWED_TAGS + ["p"]
 
 
 class Post(TimeStampedModel):
@@ -26,7 +31,9 @@ class Post(TimeStampedModel):
 
     objects = InheritanceManager()
 
-    @property
     def markdown(self) -> str:
-        # TBD apply bleach!
-        return mark_safe(markdownify(self.description))
+        return mark_safe(
+            bleach.clean(
+                bleach.linkify(markdownify(self.description)), ALLOWED_TAGS
+            )
+        )

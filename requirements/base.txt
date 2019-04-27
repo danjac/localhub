@@ -1,3 +1,4 @@
+bleach==3.1.0 # https://github.com/mozilla/bleach
 dj-database-url==0.5.0 # https://github.com/kennethreitz/dj-database-url
 django-allauth==0.39.1 # https://github.com/pennersr/django-allauth
 django-configurations==2.1 # https://github.com/jazzband/django-configurations
