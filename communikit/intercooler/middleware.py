@@ -38,7 +38,7 @@ class IntercoolerRedirectMiddleware:
     def __init__(self, get_response: get_response_callable):
         self.get_response = get_response
 
-    def ic_response(self, response) -> HttpResponse:
+    def ic_response(self, response: HttpResponse) -> HttpResponse:
         location = response["Location"]
         del response["Location"]
         ic_response = HttpResponse()
