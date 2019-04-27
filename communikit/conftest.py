@@ -7,7 +7,7 @@ from django.test import Client, RequestFactory
 
 from communikit.types import get_response_callable
 from communikit.users.tests.factories import UserFactory
-from communikit.communities.models import Community
+from communikit.communities.models import Community, Membership
 from communikit.communities.tests.factories import CommunityFactory
 
 
@@ -31,7 +31,7 @@ def user() -> settings.AUTH_USER_MODEL:
 
 @pytest.fixture
 def community() -> Community:
-    return CommunityFactory()
+    return CommunityFactory(domain="testserver")
 
 
 @pytest.fixture
@@ -42,3 +42,12 @@ def login_user(client: Client) -> settings.AUTH_USER_MODEL:
     user.save()
     client.login(username=user.username, password=password)
     return user
+
+
+@pytest.fixture
+def member(
+    client: Client, login_user: settings.AUTH_USER_MODEL, community: Community
+) -> Membership:
+    return Membership.objects.create(
+        member=login_user, community=community, role="member"
+    )

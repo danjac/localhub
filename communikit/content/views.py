@@ -57,7 +57,7 @@ class PostListView(CommunityRequiredMixin, IntercoolerTemplateMixin, ListView):
     def get_context_data(self, **kwargs) -> Dict[str, Any]:
         data = super().get_context_data(**kwargs)
         if self.request.user.has_perm(
-            "content:create_post", self.request.community
+            "content.create_post", self.request.community
         ):
             data["form"] = PostForm()
         return data
