@@ -1,0 +1,32 @@
+{% extends "content/base.html" %}
+{% block content_main_panel %}
+<div class="card">
+    <div class="card-header">
+        <div class="float-right">
+            <button class="btn btn-primary">100 Likes</button>
+        </div>
+        {% if post.title %}
+        <div class="card-title h3">{{ post.title }}</div>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        {{ post.markdown }}
+    </div>
+    <div class="card-footer">
+        <div class="columns">
+            <div class="column col-mx-auto col-sm-12">
+                <div class="columns">
+                    <div class="column col-auto"><a href="">Edit</a></div>
+                    <div class="column col-auto"><a href="">Delete</a></div>
+                </div>
+            </div>
+            <div class="column col-3 col-sm-12">
+                <div class="columns">
+                    <div class="column col-auto"><a href="">{{ post.author.username }}</a></div>
+                    <div class="column col-auto">5 days ago</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content_main_panel %}

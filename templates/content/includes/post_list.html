@@ -4,16 +4,25 @@
 {% endif %}
 
 {% for post in object_list %}
-<div class="card mt-1">
-  {% if post.title %}
-  <div class="card-header">
-    <div class="card-title h5">{{ post.title }}</div>
-  </div>
-  {% endif %}
-  <div class="card-body">
-    {{ post.markdown }}
-  </div>
-  <div class="card-footer"></div>
+<div class="content card mt-1">
+    <div class="card-header">
+        <div class="float-right">
+            <button class="btn btn-primary">100 Likes</button>
+        </div>
+        {% if post.title %}
+        <div class="card-title h5"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></div>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        {{ post.markdown }}
+    </div>
+    <div class="card-footer">
+        <div class="columns">
+            <div class="column col-4"><a href="{{ post.get_absolute_url }}">10 comments</a></div>
+            <div class="column col-4"><a href="">{{ post.author.username }}</a></div>
+            <div class="column col-4">5 days ago</div>
+        </div>
+    </div>
 </div>
 {% endfor %}
 {% include "includes/pagination.html" with ic_target="#posts" %}

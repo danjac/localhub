@@ -1,11 +1,12 @@
 from typing import Dict, Any
 
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DetailView
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.db.models import QuerySet
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
+
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.communities.models import Community
@@ -13,6 +14,11 @@ from communikit.communities.views import CommunityRequiredMixin
 from communikit.intercooler.views import IntercoolerTemplateMixin
 from communikit.content.forms import PostForm
 from communikit.content.models import Post
+
+
+class CommunityPostQuerySetMixin(CommunityRequiredMixin):
+    def get_queryset(self):
+        return Post.objects.filter(community=self.request.community)
 
 
 class PostCreateView(
@@ -41,14 +47,17 @@ class PostCreateView(
 post_create_view = PostCreateView.as_view()
 
 
-class PostListView(CommunityRequiredMixin, IntercoolerTemplateMixin, ListView):
+class PostListView(
+    CommunityPostQuerySetMixin, IntercoolerTemplateMixin, ListView
+):
     paginate_by = 12
     allow_empty = True
     ic_template_name = "content/includes/post_list.html"
 
     def get_queryset(self) -> QuerySet:
         return (
-            Post.objects.filter(community=self.request.community)
+            super()
+            .get_queryset()
             .order_by("-created")
             .select_related("author", "community")
             .select_subclasses()
@@ -64,3 +73,10 @@ class PostListView(CommunityRequiredMixin, IntercoolerTemplateMixin, ListView):
 
 
 post_list_view = PostListView.as_view()
+
+
+class PostDetailView(CommunityPostQuerySetMixin, DetailView):
+    pass
+
+
+post_detail_view = PostDetailView.as_view()
