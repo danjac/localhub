@@ -42,7 +42,7 @@
     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
     {% endif %}
 
-    {% include "shared/forms/fields.html" %}
+    {% include "includes/forms/fields.html" %}
 
     <button class="btn btn-primary" type="submit">{% trans "Sign in" %}</button>
     <a class="btn btn-link" href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a>

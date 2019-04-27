@@ -12,7 +12,7 @@
   <form method="POST" action="{% url 'users:update' %}">
     {% csrf_token %}
     {% trans "Full name" as full_name_t %}
-    {% include "shared/forms/field.html" with field=form.name label=full_name_t %}
+    {% include "includes/forms/field.html" with field=form.name label=full_name_t %}
     <input type="submit" class="btn btn-primary" value="{% trans 'Save' %}">
   </form>
 </div>

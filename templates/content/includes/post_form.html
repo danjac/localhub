@@ -2,7 +2,7 @@
 <form method="POST" action="{% url 'content:create' %}">
   {% csrf_token %}
   {{ form.media }}
-  {% include "shared/forms/fields.html" %}
+  {% include "includes/forms/fields.html" %}
   <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
 </form>
 
