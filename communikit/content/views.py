@@ -41,7 +41,8 @@ post_create_view = PostCreateView.as_view()
 
 
 class PostListView(CommunityRequiredMixin, ListView):
-    paginate_by = 12
+    paginate_by = 3  # temp setting for testing
+    allow_empty = True
 
     def get_queryset(self) -> QuerySet:
         return (
