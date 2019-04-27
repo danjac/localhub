@@ -48,6 +48,7 @@ class Base(Configuration):
     MIDDLEWARE = [
         "django.middleware.security.SecurityMiddleware",
         "whitenoise.middleware.WhiteNoiseMiddleware",
+        "communikit.intercooler.middleware.IntercoolerRequestMiddleware",
         "communikit.communities.middleware.CurrentCommunityMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
         "django.middleware.common.CommonMiddleware",
@@ -55,6 +56,7 @@ class Base(Configuration):
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
+        "communikit.intercooler.middleware.IntercoolerRedirectMiddleware",
     ]
 
     ROOT_URLCONF = "communikit.urls"
