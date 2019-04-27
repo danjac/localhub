@@ -10,6 +10,7 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
+from communikit.intercooler.views import IntercoolerTemplateMixin
 from communikit.content.forms import PostForm
 from communikit.content.models import Post
 
@@ -40,9 +41,10 @@ class PostCreateView(
 post_create_view = PostCreateView.as_view()
 
 
-class PostListView(CommunityRequiredMixin, ListView):
-    paginate_by = 3  # temp setting for testing
+class PostListView(CommunityRequiredMixin, IntercoolerTemplateMixin, ListView):
+    paginate_by = 12
     allow_empty = True
+    ic_template_name = "content/ic/post_list.html"
 
     def get_queryset(self) -> QuerySet:
         return (

@@ -1,0 +1,14 @@
+{% for post in object_list %}
+<div class="card mt-1">
+  {% if post.title %}
+  <div class="card-header">
+    <div class="card-title h5">{{ post.title }}</div>
+  </div>
+  {% endif %}
+  <div class="card-body">
+    {{ post.markdown }}
+  </div>
+  <div class="card-footer"></div>
+</div>
+{% endfor %}
+{% include "shared/pagination.html" %}
