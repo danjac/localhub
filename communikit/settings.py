@@ -35,6 +35,7 @@ class Base(Configuration):
         "allauth.account",
         "allauth.socialaccount",
         "markdownx",
+        "micawber.contrib.mcdjango",
         "rules.apps.AutodiscoverRulesConfig",
         "widget_tweaks",
     ]
@@ -112,7 +113,7 @@ class Base(Configuration):
 
     # https://docs.djangoproject.com/en/1.11/ref/forms/renderers/
 
-    FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
+    FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
     @property
     def BASE_DIR(self) -> str:
@@ -150,7 +151,7 @@ class Base(Configuration):
                         "django.contrib.messages.context_processors.messages",
                     ],
                 },
-            },
+            }
         ]
 
 

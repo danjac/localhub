@@ -1,6 +1,7 @@
 {% extends "content/base.html" %}
 {% load i18n %}
 {% load rules %}
+{% load micawber_tags %}
 {% block content_main_panel %}
 <div class="card">
   <div class="card-header">
@@ -10,7 +11,10 @@
   </div>
   <div class="card-body">
     {{ post.markdown }}
-  </div>
+    {% if post.url %}
+    {{ post.url|oembed }}
+    {% endif %}
+</div>
   <div class="card-footer">
     {% include "content/includes/post_actions.html" %}
   </div>

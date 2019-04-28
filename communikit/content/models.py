@@ -31,7 +31,9 @@ class Post(TimeStampedModel):
 
     title = models.CharField(blank=True, max_length=255)
 
-    description = MarkdownxField()
+    url = models.URLField(blank=True)
+
+    description = MarkdownxField(blank=True)
 
     published = models.DateTimeField(null=True, blank=True)
 

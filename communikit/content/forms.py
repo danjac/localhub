@@ -6,9 +6,17 @@ from communikit.content.models import Post
 
 
 class PostForm(forms.ModelForm):
+    def clean(self):
+        cleaned_data = super().clean()
+        description = cleaned_data.get("description")
+        url = cleaned_data.get("url")
+        if not any((description, url)):
+            raise forms.ValidationError(
+                _("Either description or URL must be provided")
+            )
+        return cleaned_data
+
     class Meta:
         model = Post
-        fields = ("title", "description")
-        labels = {
-            "title": _("Title (Optional)"),
-        }
+        fields = ("title", "url", "description")
+        labels = {"title": _("Title (Optional)")}
