@@ -1,4 +1,6 @@
 {% extends "content/base.html" %}
+{% load i18n %}
+{% load rules %}
 {% block content_main_panel %}
 <div class="card">
     <div class="card-header">
@@ -16,8 +18,13 @@
         <div class="columns">
             <div class="column col-mx-auto col-sm-12">
                 <div class="columns">
-                    <div class="column col-auto"><a href="">Edit</a></div>
-                    <div class="column col-auto"><a href="">Delete</a></div>
+                  <div class="column col-auto"><a href="">{% trans "Edit" %}</a></div>
+                    <div class="column col-auto">
+                      <a href="#"
+                         data-ic-trigger-on="confirm-delete"
+                         data-ic-delete-from="{% url 'content:delete' post.id %}"
+                         data-js-confirm-dialog="#confirm-post-delete-dialog">{% trans "Delete" %}</a>
+                    </div>
                 </div>
             </div>
             <div class="column col-3 col-sm-12">
@@ -29,4 +36,6 @@
         </div>
     </div>
 </div>
+
+{% include "content/includes/post_delete_confirm_dialog.html" %}
 {% endblock content_main_panel %}

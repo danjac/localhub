@@ -1,4 +1,5 @@
 from typing import List
+
 from django.http import HttpRequest, HttpResponse
 from django.core.exceptions import ImproperlyConfigured
 from django.views.generic import DeleteView
@@ -24,17 +25,18 @@ class IntercoolerTemplateMixin:
 
 class IntercoolerDeletionMixin:
     """
-    If Intercooler request will pass back the X-IC-Remove
-    header.
+    If Intercooler request and target id will pass back the X-IC-Remove
+    header
 
     IntercoolerRequestMiddleware must be enabled.
     """
+    removal_delay = "500ms"
 
     def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        if request.is_intercooler():
+        if request.is_intercooler() and request.intercooler_data.target_id:
             self.get_object().delete()
             response = HttpResponse()
-            response["X-IC-Remove"] = "500ms"
+            response["X-IC-Remove"] = self.removal_delay
             return response
         return super().delete(request, *args, **kwargs)
 

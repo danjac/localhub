@@ -1,10 +1,10 @@
 {% load i18n %}
-{% load rules %}
-{% if form and page_obj.number == 1 %}
+{% if page_obj.number == 1 %}
+{% if form %}
 <button class="btn btn-primary btn-block"
         id="share-btn"
         data-js-toggle="#post-form,#share-btn"
-        >Share</button>
+        >{% trans "Share" %}</button>
 <div class="d-none" id="post-form">
   <form method="POST" action="{% url 'content:create' %}">
     {% csrf_token %}
@@ -15,99 +15,23 @@
   </form>
 </div>
 <div class="divider"></div>
-{% endif %}
 
-{% if not user.is_authenticated %}
+{% elif not user.is_authenticated %}
 <p class="bg-gray p-2 text-center">
-  Please <a href="{% url 'account_login' %}">sign in</a> to post content to this site.
+  {% url 'account_login' as login_url %}
+  {% blocktrans %}Please <a href="{{ login_url }}">sign in</a> to post content to this site.{% endblocktrans %}
 </p>
+
 {% elif not form %}
 <p class="bg-gray p-2 text-center">
-  You do not have permission to post to this site.
+  {% trans "You do not have permission to post to this site." %}
 </p>
+{% endif %}
 {% endif %}
 
 {% for post in object_list %}
-{% with post.get_permalink as permalink %}
-<div class="content card mt-1" id="post-{{ post.id }}">
-  <div class="card-header">
-    {% if post.title %}
-    <div class="card-title h5"><a href="{{ permalink }}">{{ post.title }}</a></div>
-    {% endif %}
-  </div>
-  <div class="card-body">
-    {{ post.markdown }}
-  </div>
-  <div class="card-footer">
-    <div class="columns">
-      <div class="column col-4"><a href="">{{ post.author.username }}</a></div>
-      <div class="column col-4 col-mr-auto">5 days ago</div>
-      <div class="column col-4 text-right">
-        <div class="dropdown dropdown-right">
-          <a class="btn btn-sm" data-js-dropdown-toggle href="#">Actions <i class="icon icon-caret"></i></a>
-          <ul class="menu">
-
-            {% has_perm 'content.like_post' user post as can_like_post %}
-
-            {% if can_like_post %}
-            <li class="menu-item"><a class="text-gray">Like</a></li>
-            {% endif %}
-
-            {% has_perm 'content.create_comment' user post as can_create_comment %}
-
-            {% if can_create_comment %}
-            <li class="menu-item"><a class="#">Comment</a></li>
-            {% endif %}
-
-            <li class="menu-item"><a class="text-gray">Flag</a></li>
-
-            {% has_perm 'content.change_post' user post as can_change_post %}
-
-            {% if can_change_post %}
-            <li class="menu-item"><a href="{% url 'content:update' post.id %}">Edit</a></li>
-            {% endif %}
-
-            {% has_perm 'content.delete_post' user post as can_delete_post %}
-
-            {% if can_delete_post %}
-            <li class="menu-item">
-              {% url 'content:delete' post.id as delete_url %}
-              <a href="#"
-                 data-js-confirm-dialog="#confirm-post-delete-dialog"
-                 data-ic-trigger-on="confirm-delete"
-                 data-ic-target="closest .content"
-                 data-ic-delete-from="{% url 'content:delete' post.id %}"
-                 >Delete</a>
-            </li>
-            {% endif %}
-            <li class="menu-item"><a href="{{ permalink }}">Permalink</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{% endwith %}
+{% include "content/includes/post_list_item.html" %}
 {% endfor %}
-
-<div class="modal" id="confirm-post-delete-dialog">
-  <a href="#" class="modal-overlay" aria-label="Close" data-js-close-modal></a>
-  <div class="modal-container">
-    <div class="modal-header">
-      <a href="#" class="btn btn-clear float-right" aria-label="Close" data-js-close-modal></a>
-      <div class="modal-title h5">Delete Post</div>
-    </div>
-    <div class="modal-body">
-      <div class="content">
-        {% trans 'Do you really want to delete this post?' %}
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-link" data-js-close-modal>Cancel</button>
-      <button class="btn btn-primary" data-js-confirm-dialog-handler>Delete</button>
-    </div>
-  </div>
-</div>
 
 
 {% include "includes/pagination.html" with ic_target="#posts" %}
