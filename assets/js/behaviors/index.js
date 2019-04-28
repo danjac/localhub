@@ -1,2 +1,4 @@
-import './modals'
-import './tabs'
+import './menus';
+import './modals';
+import './tabs';
+import './toggle';

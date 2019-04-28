@@ -2,5 +2,10 @@
 {% load i18n %}
 
 {% block content_main_panel %}
-{% include "content/includes/post_form.html" %}
+<form method="POST" action="{% url 'content:create' %}">
+  {% csrf_token %}
+  {{ form.media }}
+  {% include "includes/forms/fields.html" %}
+  <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+</form>
 {% endblock content_main_panel %}

@@ -1,11 +1,20 @@
 {% load i18n %}
 {% load rules %}
 {% if form and page_obj.number == 1 %}
-<button class="btn btn-primary btn-block">Share</button>
-<div class="d-none">
-  {% include "content/includes/post_form.html" %}
+<button class="btn btn-primary btn-block"
+        id="share-btn"
+        data-js-toggle="#post-form,#share-btn"
+        >Share</button>
+<div class="d-none" id="post-form">
+  <form method="POST" action="{% url 'content:create' %}">
+    {% csrf_token %}
+    {{ form.media }}
+    {% include "includes/forms/fields.html" %}
+    <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+    <button class="btn btn-secondary" data-js-toggle="#post-form,#share-btn">{% trans "Cancel" %}</button>
+  </form>
 </div>
-<button class="d-none btn btn-secondary btn-block">Cancel</button>
+<div class="divider"></div>
 {% endif %}
 
 {% if not user.is_authenticated %}
@@ -38,8 +47,8 @@
         {% has_perm 'content.change_post' user post as can_change_post %}
         {% has_perm 'content.delete_post' user post as can_delete_post %}
         {% if can_change_post or can_delete_post or can_create_comment or can_like_post %}
-        <div class="dropdown">
-          <a class="btn btn-primary btn-sm dropdown-toggle" href="">Actions <i class="icon icon-caret"></i></a>
+        <div class="dropdown dropdown-right">
+          <a class="btn btn-primary btn-sm" data-js-dropdown-toggle href="#">Actions <i class="icon icon-caret"></i></a>
           <ul class="menu">
             <li class="menu-item"><a class="text-gray">Like</a></li>
             <li class="menu-item"><a class="#">Comment</a></li>
