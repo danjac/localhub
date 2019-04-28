@@ -7,8 +7,17 @@ from django.test.client import RequestFactory
 
 
 from communikit.types import get_response_callable
-from communikit.intercooler.views import IntercoolerTemplateMixin
+
+from communikit.intercooler.views import (
+    IntercoolerTemplateMixin,
+    IntercoolerDeleteView,
+)
 from communikit.intercooler.middleware import IntercoolerRequestMiddleware
+
+
+class FakeDeletionObject:
+    def delete(self):
+        pass
 
 
 class MyView(IntercoolerTemplateMixin, TemplateView):
@@ -16,22 +25,50 @@ class MyView(IntercoolerTemplateMixin, TemplateView):
     ic_template_name = "ic/index.html"
 
 
-class TestIntercoolerTemplateMixin:
-    def make_request(
-        self,
-        req_factory: RequestFactory,
-        get_response: get_response_callable,
-        **headers
-    ) -> HttpRequest:
-        req = req_factory.get("/", **headers)
-        mw = IntercoolerRequestMiddleware(get_response)
-        mw(req)
-        return req
+class MyDeleteView(IntercoolerDeleteView):
+    success_url = "/"
 
+    def get_object(self):
+        return FakeDeletionObject()
+
+
+def make_ic_request(
+    req_factory: RequestFactory, get_response: get_response_callable, **headers
+) -> HttpRequest:
+    req = req_factory.get("/", **headers)
+    mw = IntercoolerRequestMiddleware(get_response)
+    mw(req)
+    return req
+
+
+class TestIntercoolerDeleteView:
     def test_is_intercooler(
         self, req_factory: RequestFactory, get_response: get_response_callable
     ):
-        req = self.make_request(
+        req = make_ic_request(
+            req_factory,
+            get_response,
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+            HTTP_X_IC_REQUEST="true",
+        )
+        my_view = MyDeleteView()
+        response = my_view.delete(req)
+        assert "X-IC-Remove" in response
+
+    def test_is_not_intercooler(
+        self, req_factory: RequestFactory, get_response: get_response_callable
+    ):
+        req = make_ic_request(req_factory, get_response)
+        my_view = MyDeleteView()
+        response = my_view.delete(req)
+        assert response["Location"] == "/"
+
+
+class TestIntercoolerTemplateMixin:
+    def test_is_intercooler(
+        self, req_factory: RequestFactory, get_response: get_response_callable
+    ):
+        req = make_ic_request(
             req_factory,
             get_response,
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
@@ -44,7 +81,7 @@ class TestIntercoolerTemplateMixin:
     def test_is_not_intercooler(
         self, req_factory: RequestFactory, get_response: get_response_callable
     ):
-        req = self.make_request(req_factory, get_response)
+        req = make_ic_request(req_factory, get_response)
         my_view = MyView()
         my_view.request = req
         assert my_view.get_template_names() == ["index.html"]
@@ -52,7 +89,7 @@ class TestIntercoolerTemplateMixin:
     def test_if_ic_template_name_not_defined(
         self, req_factory: RequestFactory, get_response: get_response_callable
     ):
-        req = self.make_request(
+        req = make_ic_request(
             req_factory,
             get_response,
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",

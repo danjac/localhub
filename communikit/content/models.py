@@ -3,6 +3,7 @@ import bleach
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
+from django.utils.text import slugify
 from django.utils.safestring import mark_safe
 
 from bleach.linkifier import LinkifyFilter
@@ -40,9 +41,10 @@ class Post(TimeStampedModel):
         return self.title or str(f"Post: {self.id}")
 
     def get_absolute_url(self) -> str:
-        return "http://{}{}".format(
-            self.community.domain, reverse("content:detail", args=[self.id])
-        )
+        return reverse("content:detail", args=[self.id])
+
+    def get_permalink(self) -> str:
+        return f"http://{self.community.domain}{self.get_absolute_url()}"
 
     def markdown(self) -> str:
         return mark_safe(cleaner.clean(markdownify(self.description)))

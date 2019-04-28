@@ -40,3 +40,10 @@ class TestPostListView:
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 3
         assert "form" not in response.context
+
+
+class TestDeleteView:
+    def test_delete(self, client: Client, post: Post):
+        response = client.delete(reverse("content:delete", args=[post.id]))
+        assert response.url == reverse("content:list")
+        assert Post.objects.count() == 0

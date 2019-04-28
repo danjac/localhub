@@ -1,17 +1,19 @@
 from typing import Dict, Any
 
-from django.views.generic import ListView, CreateView, DetailView
 from django.urls import reverse_lazy
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import QuerySet
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.views.generic import ListView, CreateView, DetailView
 
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
-from communikit.intercooler.views import IntercoolerTemplateMixin
+from communikit.intercooler.views import (
+    IntercoolerTemplateMixin,
+    IntercoolerDeleteView,
+)
 from communikit.content.forms import PostForm
 from communikit.content.models import Post
 
@@ -80,3 +82,13 @@ class PostDetailView(CommunityPostQuerySetMixin, DetailView):
 
 
 post_detail_view = PostDetailView.as_view()
+
+
+class PostDeleteView(
+    CommunityPostQuerySetMixin, PermissionRequiredMixin, IntercoolerDeleteView
+):
+    permission_required = "content.delete_post"
+    success_url = reverse_lazy("content:list")
+
+
+post_delete_view = PostDeleteView.as_view()

@@ -7,6 +7,8 @@ from django.test import Client, RequestFactory
 
 from communikit.types import get_response_callable
 from communikit.users.tests.factories import UserFactory
+from communikit.content.models import Post
+from communikit.content.tests.factories import PostFactory
 from communikit.communities.models import Community, Membership
 from communikit.communities.tests.factories import CommunityFactory
 
@@ -60,3 +62,8 @@ def moderator(
     return Membership.objects.create(
         member=login_user, community=community, role="moderator"
     )
+
+
+@pytest.fixture
+def post(member: Membership) -> Post:
+    return PostFactory(author=member.member, community=member.community)
