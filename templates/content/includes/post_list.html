@@ -1,28 +1,68 @@
 {% load i18n %}
+{% load rules %}
 {% if form and page_obj.number == 1 %}
-{% include "content/includes/post_form.html" %}
+<button class="btn btn-primary btn-block">Share</button>
+<div class="d-none">
+  {% include "content/includes/post_form.html" %}
+</div>
+<button class="d-none btn btn-secondary btn-block">Cancel</button>
+{% endif %}
+
+{% if not user.is_authenticated %}
+<p class="bg-gray p-2 text-center">
+  Please <a href="{% url 'account_login' %}">sign in</a> to post content to this site.
+</p>
+{% elif not form %}
+<p class="bg-gray p-2 text-center">
+  You do not have permission to post to this site.
+</p>
 {% endif %}
 
 {% for post in object_list %}
 <div class="content card mt-1">
-    <div class="card-header">
-        <div class="float-right">
-            <button class="btn btn-primary">100 Likes</button>
+  <div class="card-header">
+    {% if post.title %}
+    <div class="card-title h5"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></div>
+    {% endif %}
+  </div>
+  <div class="card-body">
+    {{ post.markdown }}
+  </div>
+  <div class="card-footer">
+    <div class="columns">
+      <div class="column col-4"><a href="">{{ post.author.username }}</a></div>
+      <div class="column col-4 col-mr-auto">5 days ago</div>
+      <div class="column col-4 text-right">
+        {% has_perm 'content.create_comment' user post as can_create_comment %}
+        {% has_perm 'content.like_post' user post as can_like_post %}
+        {% has_perm 'content.change_post' user post as can_change_post %}
+        {% has_perm 'content.delete_post' user post as can_delete_post %}
+        {% if can_change_post or can_delete_post or can_create_comment or can_like_post %}
+        <div class="dropdown">
+          <a class="btn btn-primary btn-sm dropdown-toggle" href="">Actions <i class="icon icon-caret"></i></a>
+          <ul class="menu">
+            <li class="menu-item"><a class="text-gray">Like</a></li>
+            <li class="menu-item"><a class="#">Comment</a></li>
+            <li class="menu-item"><a class="text-gray">Flag</a></li>
+            {% if can_change_post %}
+            <li class="menu-item"><a class="text-gray">Edit</a></li>
+            {% else %}
+            <li class="menu-item"><a href="#" class="disabled">Edit</a></li>
+            {% endif %}
+            {% if can_delete_post %}
+            <li class="menu-item"><a href="#">Delete</a></li>
+            {% else %}
+            <li class="menu-item"><a href="#" class="disabled">Delete</a></li>
+            {% endif %}
+            <li class="menu-item"><a href="{{ post.get_absolute_url }}">Permalink</a></li>
+          </ul>
         </div>
-        {% if post.title %}
-        <div class="card-title h5"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></div>
+        {% else %}
+        <a href="{{ post.get_absolute_url }}">Permalink</a>
         {% endif %}
+      </div>
     </div>
-    <div class="card-body">
-        {{ post.markdown }}
-    </div>
-    <div class="card-footer">
-        <div class="columns">
-            <div class="column col-4"><a href="{{ post.get_absolute_url }}">10 comments</a></div>
-            <div class="column col-4"><a href="">{{ post.author.username }}</a></div>
-            <div class="column col-4">5 days ago</div>
-        </div>
-    </div>
+  </div>
 </div>
 {% endfor %}
 {% include "includes/pagination.html" with ic_target="#posts" %}
