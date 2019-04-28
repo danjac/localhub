@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import QuerySet
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -20,7 +20,9 @@ from communikit.content.models import Post
 
 class CommunityPostQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
-        return Post.objects.filter(community=self.request.community)
+        return Post.objects.filter(
+            community=self.request.community
+        ).select_related("author", "community")
 
 
 class PostCreateView(
@@ -61,7 +63,6 @@ class PostListView(
             super()
             .get_queryset()
             .order_by("-created")
-            .select_related("author", "community")
             .select_subclasses()
         )
 
@@ -82,6 +83,14 @@ class PostDetailView(CommunityPostQuerySetMixin, DetailView):
 
 
 post_detail_view = PostDetailView.as_view()
+
+
+class PostUpdateView(CommunityPostQuerySetMixin, UpdateView):
+    form_class = PostForm
+    permission_required = "content.change_post"
+
+
+post_update_view = PostUpdateView.as_view()
 
 
 class PostDeleteView(

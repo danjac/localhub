@@ -42,6 +42,21 @@ class TestPostListView:
         assert "form" not in response.context
 
 
+class TestUpdateView:
+    def test_get(self, client: Client, post: Post):
+        response = client.get(reverse("content:update", args=[post.id]))
+        assert response.status_code == 200
+
+    def test_post(self, client: Client, post: Post):
+        response = client.post(
+            reverse("content:update", args=[post.id]),
+            {"title": "UPDATED", "description": post.description},
+        )
+        assert response.url == post.get_absolute_url()
+        post.refresh_from_db()
+        assert post.title == "UPDATED"
+
+
 class TestDeleteView:
     def test_delete(self, client: Client, post: Post):
         response = client.delete(reverse("content:delete", args=[post.id]))

@@ -64,7 +64,7 @@
             {% has_perm 'content.change_post' user post as can_change_post %}
 
             {% if can_change_post %}
-            <li class="menu-item"><a href="#">Edit</a></li>
+            <li class="menu-item"><a href="{% url 'content:update' post.id %}">Edit</a></li>
             {% endif %}
 
             {% has_perm 'content.delete_post' user post as can_delete_post %}
