@@ -5,7 +5,7 @@ from django.utils.functional import SimpleLazyObject
 
 from communikit.types import get_response_callable
 
-INTERCOOLER_PARAMS = [
+INTERCOOLER_PARAMS = (
     "ic-request",
     "ic-trigger-id",
     "ic-element-id",
@@ -14,7 +14,7 @@ INTERCOOLER_PARAMS = [
     "ic-trigger-name",
     "ic-current-url",
     "ic-prompt-value",
-]
+)
 
 
 class IntercoolerData:

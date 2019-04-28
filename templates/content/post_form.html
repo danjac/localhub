@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block content_main_panel %}
-<form method="POST" action="{% url 'content:create' %}">
+<form method="POST" action="{{ request.path }}">
   {% csrf_token %}
   {{ form.media }}
   {% include "includes/forms/fields.html" %}
