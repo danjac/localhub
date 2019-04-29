@@ -8,7 +8,7 @@
 <h3>{% trans "Email Addresses" %}</h3>
 {% with emailaddresses=user.emailaddress_set.all emailaddress_count=user.emailaddress_set.count %}
 {% if emailaddress_count %}
-<p>{% trans 'The following e-mail addresses are associated with your account:' %}</p>
+<p>{% trans "The following email addresses are associated with your account:" %}</p>
 
 <form action="{% url 'account_email' %}" method="post">
   {% csrf_token %}
@@ -41,7 +41,7 @@
   <div class="modal-container">
     <div class="modal-header">
       <a href="#" class="btn btn-clear float-right" aria-label="Close" data-js-close-modal></a>
-      <div class="modal-title h5">Confirmation</div>
+      <div class="modal-title h5">{% trans "Remove Email Address" %}</div>
     </div>
     <div class="modal-body">
       <div class="content">
@@ -49,8 +49,8 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-link" data-js-close-modal>Cancel</button>
-      <button class="btn btn-primary" data-js-confirm-dialog-handler>Remove</button>
+      <button class="btn btn-link" data-js-close-modal>{% trans "Cancel" %}</button>
+      <button class="btn btn-primary" data-js-confirm-dialog-handler>{% trans "Remove" %}</button>
     </div>
   </div>
 </div>
