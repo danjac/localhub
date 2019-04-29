@@ -49,6 +49,10 @@ class IntercoolerData:
     def trigger_name(self) -> Optional[str]:
         return self.params.get("ic-trigger-name")
 
+    @property
+    def prompt_value(self) -> Optional[str]:
+        return self.params.get("ic-prompt-value")
+
 
 def _is_intercooler(self) -> bool:
     return self.is_ajax() and "x-ic-request" in self.headers
