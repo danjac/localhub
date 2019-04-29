@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 
 from django.http import HttpRequest, HttpResponse, QueryDict
 from django.utils.functional import SimpleLazyObject
@@ -26,27 +26,27 @@ class IntercoolerData:
         return "ic-request" in self.params
 
     @property
-    def target_id(self) -> str:
+    def target_id(self) -> Optional[str]:
         return self.params.get("ic-target-id")
 
     @property
-    def current_url(self) -> str:
+    def current_url(self) -> Optional[str]:
         return self.params.get("ic-current_url")
 
     @property
-    def element_id(self) -> str:
+    def element_id(self) -> Optional[str]:
         return self.params.get("ic-element-id")
 
     @property
-    def element_name(self) -> str:
+    def element_name(self) -> Optional[str]:
         return self.params.get("ic-element-name")
 
     @property
-    def trigger_id(self) -> str:
+    def trigger_id(self) -> Optional[str]:
         return self.params.get("ic-trigger-id")
 
     @property
-    def trigger_name(self) -> str:
+    def trigger_name(self) -> Optional[str]:
         return self.params.get("ic-trigger-name")
 
 
