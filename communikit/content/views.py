@@ -59,12 +59,7 @@ class PostListView(
     ic_template_name = "content/includes/post_list.html"
 
     def get_queryset(self) -> QuerySet:
-        return (
-            super()
-            .get_queryset()
-            .order_by("-created")
-            .select_subclasses()
-        )
+        return super().get_queryset().order_by("-created").select_subclasses()
 
     def get_context_data(self, **kwargs) -> Dict[str, Any]:
         data = super().get_context_data(**kwargs)
@@ -85,7 +80,9 @@ class PostDetailView(CommunityPostQuerySetMixin, DetailView):
 post_detail_view = PostDetailView.as_view()
 
 
-class PostUpdateView(CommunityPostQuerySetMixin, UpdateView):
+class PostUpdateView(
+    LoginRequiredMixin, CommunityPostQuerySetMixin, UpdateView
+):
     form_class = PostForm
     permission_required = "content.change_post"
 
@@ -94,7 +91,10 @@ post_update_view = PostUpdateView.as_view()
 
 
 class PostDeleteView(
-    CommunityPostQuerySetMixin, PermissionRequiredMixin, IntercoolerDeleteView
+    LoginRequiredMixin,
+    CommunityPostQuerySetMixin,
+    PermissionRequiredMixin,
+    IntercoolerDeleteView,
 ):
     permission_required = "content.delete_post"
     success_url = reverse_lazy("content:list")
