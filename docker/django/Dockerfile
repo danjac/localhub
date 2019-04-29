@@ -20,5 +20,10 @@ RUN pip install -r /requirements/local.txt
 
 WORKDIR /app
 
+COPY ./docker/django/entrypoint /entrypoint
+RUN chmod +x /entrypoint
+
 COPY ./docker/django/start /start
 RUN chmod +x /start
+
+ENTRYPOINT ["/entrypoint"]
