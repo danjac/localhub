@@ -1,5 +1,24 @@
 import onmount from 'onmount';
 
+onmount('[data-js-toggle]', function() {
+  $(this).on('click', event => {
+    event.preventDefault();
+    const target = $(event.currentTarget);
+    $(document)
+      .find(target.attr('data-js-toggle'))
+      .toggleClass(target.attr('data-js-toggle-class') || 'd-none');
+  });
+});
+
+onmount('[data-js-dropdown-toggle]', function() {
+  $(this).on('click', event => {
+    event.preventDefault();
+    $(event.currentTarget)
+      .closest('.dropdown')
+      .toggleClass('active');
+  });
+});
+
 onmount('[data-js-confirm-dialog]', function() {
   $(this).on('click', event => {
     const target = $(event.currentTarget);
@@ -35,5 +54,17 @@ onmount('[data-js-close-modal]', function() {
     $(event.currentTarget)
       .closest('.modal')
       .removeClass('active');
+  });
+});
+
+onmount('[data-js-show-tab]', function() {
+  $(this).on('click', event => {
+    event.preventDefault();
+    const target = $(event.currentTarget);
+    const tabs = target.closest('.tabs');
+    tabs.find('.tab-item').removeClass('active');
+    tabs.find('.tab-pane').addClass('d-none');
+    tabs.find(target.attr('data-js-show-tab')).removeClass('d-none');
+    target.parent().addClass('active');
   });
 });
