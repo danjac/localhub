@@ -154,6 +154,12 @@ class Base(Configuration):
             }
         ]
 
+    # https://neutronx.github.io/django-markdownx/customization/
+
+    MARKDOWNX_MARKDOWNIFY_FUNCTION = (
+        "communikit.content.models.custom_markdownify"
+    )
+
 
 class Testing(Base):
     PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
