@@ -19,13 +19,22 @@
   <body>
 
     <div class="container">
-      <header class="navbar">
-
+      <header class="navbar mt-1">
         <section class="navbar-section">
           <a class="navbar-brand mr-2" href="/">
             {% if request.community %}{{ request.community.name }}{% else %}communikit{% endif %}
           </a>
         </section>
+        {% if request.community %}
+        <section class="navbar-section">
+          <form method="GET" action="/">
+            <div class="input-group input-inline">
+              <input class="form-input" name="q" type="search" placeholder="Search {{ request.community.name }}...">
+                <button class="btn btn-primary input-group-btn">Search</button>
+            </div>
+          </form>
+        </section>
+        {% endif %}
         <section class="navbar-section">
           {% with current_url=request.resolver_match.url_name %}
           {% if user.is_authenticated %}
