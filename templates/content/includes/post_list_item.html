@@ -1,10 +1,13 @@
 {% load i18n %}
 {% load micawber_tags %}
-{% with post.get_permalink as permalink %}
-<div class="content card mt-1" id="post-{{ post.id }}">
+<div class="card content-card mt-1" id="post-{{ post.id }}">
   <div class="card-header">
+    <div class="card-subtitle text-gray float-right">
+      {% blocktrans with post.created|timesince as created %}{{ created }} ago{% endblocktrans %}
+    </div>
+    <div class="card-title h6"><a href="">{{ post.author.username }}</a></div>
     {% if post.title %}
-    <div class="card-title h5"><a href="{{ permalink }}">{{ post.title }}</a></div>
+    <div class="card-subtitle"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></div>
     {% endif %}
   </div>
   <div class="card-body">
@@ -20,7 +23,7 @@
     {% endif %}
   </div>
   <div class="card-footer">
+    <div class="divider"></div>
     {% include "content/includes/post_actions.html" %}
   </div>
 </div>
-{% endwith %}

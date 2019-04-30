@@ -1,17 +1,20 @@
 {% load i18n %}
 {% if page_obj.number == 1 %}
 {% if form %}
-<button class="btn btn-primary btn-block"
-        id="share-btn"
-        data-js-toggle="#post-form,#share-btn"
-        >{% trans "Share" %}</button>
+<textarea class="form-input"
+          id="share-input"
+          rows=2
+          placeholder="{% trans 'Share...' %}"
+          data-js-toggle="#post-form,#share-input"
+          readonly
+        ></textarea>
 <div class="d-none" id="post-form">
   <form method="POST" action="{% url 'content:create' %}">
     {% csrf_token %}
     {{ form.media }}
     {% include "includes/forms/fields.html" %}
     <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
-    <button class="btn btn-secondary" data-js-toggle="#post-form,#share-btn">{% trans "Cancel" %}</button>
+    <button class="btn btn-secondary" data-js-toggle="#post-form,#share-input">{% trans "Cancel" %}</button>
   </form>
 </div>
 <div class="divider"></div>

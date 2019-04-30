@@ -23,16 +23,16 @@ class TestMarkdownifySafe:
 class TestLinkifyMentions:
     def test_linkify(self):
         content = "hello @danjac"
-        replaced = linkify_hashtags(content)
+        replaced = linkify_mentions(content)
         assert replaced == 'hello <a href="/?profile=danjac">@danjac</a>'
 
 
 class TestLinkifyHashtags:
     def test_linkify(self):
         content = "tags: #coding #opensource #coding2019"
-        replaced = linkify_mentions(content)
+        replaced = linkify_hashtags(content)
         assert (
-            replaced == 'tags: <a href="/?hashtag=coding">coding</a>'
-            '<a href="/?hashtag=opensource">opensource</a>'
-            '<a href="/?hashtag=coding2019">coding2019</a>'
+            replaced == 'tags: <a href="/?hashtag=coding">#coding</a>'
+            ' <a href="/?hashtag=opensource">#opensource</a>'
+            ' <a href="/?hashtag=coding2019">#coding2019</a>'
         )

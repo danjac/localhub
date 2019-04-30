@@ -17,9 +17,6 @@ class Comment(TimeStampedModel):
     post = models.ForeignKey(
         Post, null=True, on_delete=models.SET_NULL, db_index=True
     )
-    parent = models.ForeignKey(
-        "self", null=True, on_delete=models.SET_NULL, db_index=True
-    )
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )

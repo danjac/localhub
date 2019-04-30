@@ -1,45 +1,47 @@
 {% load i18n %}
 {% load rules %}
-<div class="columns">
-  <div class="column col-4"><a href="">{{ post.author.username }}</a></div>
-  <div class="column col-4 col-mr-auto">
-    {% blocktrans with post.created|timesince as created %}{{ created }} ago{% endblocktrans %}
-  </div>
-  <div class="column col-4 text-right">
-    <div class="dropdown dropdown-right">
-      <a class="btn btn-sm" data-js-dropdown-toggle href="#">{% trans "Actions" %} <i class="icon icon-caret"></i></a>
-      <ul class="menu">
 
-        {% has_perm 'content.like_post' user post as can_like_post %}
+{% has_perm "content.like_post" user post as can_like_post %}
+{% has_perm "content.change_post" user post as can_change_post %}
+{% has_perm "content.delete_post" user post as can_delete_post %}
+{% has_perm "content.create_comment" user post as can_create_comment %}
 
-        {% if can_like_post %}
-        <li class="menu-item"><a class="text-gray">{% trans "Like" %}</a></li>
-        {% endif %}
+<div class="d-flex content-actions">
 
-        {% has_perm 'content.create_comment' user post as can_create_comment %}
-
-        {% if can_create_comment %}
-        <li class="menu-item"><a class="#">{% trans "Comment" %}</a></li>
-        {% endif %}
-
-        <li class="menu-item"><a class="text-gray">{% trans "Flag" %}</a></li>
-
-        {% has_perm 'content.change_post' user post as can_change_post %}
-
-        {% if can_change_post %}
-        <li class="menu-item"><a href="{% url 'content:update' post.id %}">{% trans "Edit" %}</a></li>
-        {% endif %}
-
-        {% has_perm 'content.delete_post' user post as can_delete_post %}
-
-        {% if can_delete_post %}
-        <li class="menu-item">
-          {% url 'content:delete' post.id as delete_url %}
-          <a href="#" data-js-confirm-dialog="#confirm-post-delete-dialog" data-ic-trigger-on="confirm-delete" data-ic-target="closest .content" data-ic-delete-from="{% url 'content:delete' post.id %}">{% trans "Delete" %}</a>
-        </li>
-        {% endif %}
-        <li class="menu-item"><a href="{{ permalink }}">{% trans "Permalink" %}</a></li>
-      </ul>
+    {% if can_like_post %}
+    <div class="mr-2">
+        <a href="">{% trans "Like" %}</a>
     </div>
-  </div>
+    {% endif %}
+
+    {% if can_create_comment %}
+    <div class="mr-2">
+        <a href="">{% trans "Comment" %}</a>
+    </div>
+    {% endif %}
+
+    {% if can_change_post %}
+    <div class="mr-2">
+        <a href="{% url 'content:update' post.id %}">{% trans "Update" %}</a>
+    </div>
+    {% endif %}
+
+    {% if can_delete_post %}
+    {% url "content:delete" post.id as delete_url %}
+    <div class="mr-2">
+        <a href="{{ delete_url }}"
+           data-ic-delete-from="{{ delete_url }}"
+           data-ic-target="closest .content-card"
+           data-ic-trigger-on="confirm-post-delete"
+           data-js-confirm-dialog="#confirm-post-delete-dialog">{% trans "Delete" %}</a>
+    </div>
+    {% endif %}
+
+    <div class="mr-2">
+        <a href="">{% trans "Flag" %}</a>
+    </div>
+
+    <div class="">
+        <a href="{{ post.get_permalink }}">{% trans "Permalink" %}</a>
+    </div>
 </div>
