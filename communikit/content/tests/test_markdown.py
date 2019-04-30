@@ -1,7 +1,8 @@
 from django.utils.encoding import force_str
 
 from communikit.content.markdown import (
-    replace_hashtags_in_markdown,
+    linkify_hashtags,
+    linkify_mentions,
     markdownify,
 )
 
@@ -9,9 +10,7 @@ from communikit.content.markdown import (
 class TestMarkdownifySafe:
     def test_markdownify_with_safe_tags(self):
         content = "*testing*"
-        assert (
-            force_str(markdownify(content)) == "<p><em>testing</em></p>"
-        )
+        assert force_str(markdownify(content)) == "<p><em>testing</em></p>"
 
     def test_markdownify_with_dangerous_tags(self):
         content = "<script>alert('howdy');</script>"
@@ -21,15 +20,17 @@ class TestMarkdownifySafe:
         )
 
 
-class TestReplaceHashtagsInMarkdown:
-    def test_replace_mentions(self):
+class TestLinkifyMentions:
+    def test_linkify(self):
         content = "hello @danjac"
-        replaced = replace_hashtags_in_markdown(content)
+        replaced = linkify_hashtags(content)
         assert replaced == "hello [@danjac](/?profile=danjac)"
 
-    def test_replace_hashtags(self):
+
+class TestLinkifyHashtags:
+    def test_linkify(self):
         content = "tags: #coding #opensource #coding2019"
-        replaced = replace_hashtags_in_markdown(content)
+        replaced = linkify_mentions(content)
         assert (
             replaced == "tags: [\\#coding](/?hashtag=coding) "
             "[\\#opensource](/?hashtag=opensource) "
