@@ -2,7 +2,6 @@ import re
 import bleach
 
 from django.urls import reverse
-from django.utils.safestring import mark_safe
 
 from bleach.linkifier import LinkifyFilter
 from markdownx.utils import markdownify as default_markdownify
@@ -16,11 +15,9 @@ MENTIONS_RE = re.compile(r"(?:^|\s)[＠ @]{1}([^\s#<>[\]|{}]+)")
 
 
 def markdownify(content: str) -> str:
-    return default_markdownify(replace_hashtags_in_markdown(content))
-
-
-def markdownify_safe(content: str) -> str:
-    return mark_safe(cleaner.clean(markdownify(content)))
+    return cleaner.clean(
+        default_markdownify(replace_hashtags_in_markdown(content))
+    )
 
 
 def replace_hashtags_in_markdown(s: str) -> str:

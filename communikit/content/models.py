@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
+from django.utils.safestring import mark_safe
 
 
 from markdownx.models import MarkdownxField
@@ -9,7 +10,7 @@ from model_utils.models import TimeStampedModel
 from model_utils.managers import InheritanceManager
 
 from communikit.communities.models import Community
-from communikit.content.markdown import markdownify_safe
+from communikit.content.markdown import markdownify
 
 
 class Post(TimeStampedModel):
@@ -39,4 +40,4 @@ class Post(TimeStampedModel):
         return f"http://{self.community.domain}{self.get_absolute_url()}"
 
     def markdown(self) -> str:
-        return markdownify_safe(self.description)
+        return mark_safe(markdownify(self.description))

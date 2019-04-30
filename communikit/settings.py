@@ -157,7 +157,7 @@ class Base(Configuration):
     # https://neutronx.github.io/django-markdownx/customization/
 
     MARKDOWNX_MARKDOWNIFY_FUNCTION = (
-        "communikit.content.models.custom_markdownify"
+        "communikit.content.markdown.markdownify"
     )
 
 
