@@ -9,10 +9,14 @@
   </div>
   <div class="card-body">
     {% if post.description %}
-    {{ post.markdown }}
+    <div>
+      {{ post.markdown }}
+    </div>
     {% endif %}
     {% if post.url %}
-    {{ post.url|oembed }}
+    <div>
+      {{ post.url|oembed:"700x700" }}
+    </div>
     {% endif %}
   </div>
   <div class="card-footer">
