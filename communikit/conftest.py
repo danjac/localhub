@@ -65,5 +65,5 @@ def moderator(
 
 
 @pytest.fixture
-def post(member: Membership) -> Post:
-    return PostFactory(author=member.member, community=member.community)
+def post() -> Post:
+    return PostFactory()

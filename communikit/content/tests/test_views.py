@@ -11,6 +11,11 @@ from communikit.content.tests.factories import PostFactory
 pytestmark = pytest.mark.django_db
 
 
+@pytest.fixture
+def post_for_member(member: Membership) -> Post:
+    return PostFactory(author=member.member, community=member.community)
+
+
 class TestPostCreateView:
     def test_get(self, client: Client, member: Membership):
         response = client.get(reverse("content:create"))
@@ -43,22 +48,33 @@ class TestPostListView:
 
 
 class TestUpdateView:
-    def test_get(self, client: Client, post: Post):
-        response = client.get(reverse("content:update", args=[post.id]))
+    def test_get(self, client: Client, post_for_member: Post):
+        response = client.get(
+            reverse("content:update", args=[post_for_member.id])
+        )
         assert response.status_code == 200
 
-    def test_post(self, client: Client, post: Post):
+    def test_post(self, client: Client, post_for_member: Post):
         response = client.post(
-            reverse("content:update", args=[post.id]),
-            {"title": "UPDATED", "description": post.description},
+            reverse("content:update", args=[post_for_member.id]),
+            {"title": "UPDATED", "description": post_for_member.description},
         )
-        assert response.url == post.get_absolute_url()
-        post.refresh_from_db()
-        assert post.title == "UPDATED"
+        assert response.url == post_for_member.get_absolute_url()
+        post_for_member.refresh_from_db()
+        assert post_for_member.title == "UPDATED"
 
 
 class TestDeleteView:
-    def test_delete(self, client: Client, post: Post):
-        response = client.delete(reverse("content:delete", args=[post.id]))
+    def test_get(self, client: Client, post_for_member: Post):
+        # test confirmation page for non-JS clients
+        response = client.get(
+            reverse("content:delete", args=[post_for_member.id])
+        )
+        assert response.status_code == 200
+
+    def test_delete(self, client: Client, post_for_member: Post):
+        response = client.delete(
+            reverse("content:delete", args=[post_for_member.id])
+        )
         assert response.url == reverse("content:list")
         assert Post.objects.count() == 0
