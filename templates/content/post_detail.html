@@ -3,22 +3,6 @@
 {% load rules %}
 {% load micawber_tags %}
 {% block content_main_panel %}
-<div class="card">
-  <div class="card-header">
-    {% if post.title %}
-    <div class="card-title h3">{{ post.title }}</div>
-    {% endif %}
-  </div>
-  <div class="card-body">
-    {{ post.markdown }}
-    {% if post.url %}
-    {{ post.url|oembed }}
-    {% endif %}
-</div>
-  <div class="card-footer">
-    {% include "content/includes/post_actions.html" %}
-  </div>
-</div>
-
+{% include "content/includes/post_detail.html" %}
 {% include "content/includes/post_delete_confirm_dialog.html" %}
 {% endblock content_main_panel %}

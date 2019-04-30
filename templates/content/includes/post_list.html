@@ -10,9 +10,7 @@
         ></textarea>
 <div class="d-none" id="post-form">
   <form method="POST" action="{% url 'content:create' %}">
-    {% csrf_token %}
-    {{ form.media }}
-    {% include "includes/forms/fields.html" %}
+    {% include "content/includes/post_form.html" %}
     <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
     <button class="btn btn-secondary" data-js-toggle="#post-form,#share-input">{% trans "Cancel" %}</button>
   </form>
@@ -33,7 +31,7 @@
 {% endif %}
 
 {% for post in object_list %}
-{% include "content/includes/post_list_item.html" %}
+{% include "content/includes/post_detail.html" %}
 {% endfor %}
 
 
