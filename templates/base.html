@@ -19,7 +19,7 @@
   <body>
 
     <div class="container">
-      <header class="navbar mt-1">
+      <header class="navbar my-1 bg-white">
         <section class="navbar-section">
           <a class="navbar-brand mr-2" href="/">
             {% if request.community %}{{ request.community.name }}{% else %}communikit{% endif %}
@@ -46,7 +46,6 @@
           {% endwith %}
         </section>
       </header>
-      <div class="divider"></div>
       {% for message in messages %}
       <div class="text-center mb-2 toast toast-{{ message.tags }}">{{ message }}</div>
       {% endfor %}
