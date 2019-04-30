@@ -24,7 +24,7 @@ class TestLinkifyMentions:
     def test_linkify(self):
         content = "hello @danjac"
         replaced = linkify_hashtags(content)
-        assert replaced == "hello [@danjac](/?profile=danjac)"
+        assert replaced == 'hello <a href="/?profile=danjac">@danjac</a>'
 
 
 class TestLinkifyHashtags:
@@ -32,7 +32,7 @@ class TestLinkifyHashtags:
         content = "tags: #coding #opensource #coding2019"
         replaced = linkify_mentions(content)
         assert (
-            replaced == "tags: [\\#coding](/?hashtag=coding) "
-            "[\\#opensource](/?hashtag=opensource) "
-            "[\\#coding2019](/?hashtag=coding2019)"
+            replaced == 'tags: <a href="/?hashtag=coding">coding</a>'
+            '<a href="/?hashtag=opensource">opensource</a>'
+            '<a href="/?hashtag=coding2019">coding2019</a>'
         )
