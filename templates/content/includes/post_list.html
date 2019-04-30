@@ -31,7 +31,9 @@
 {% endif %}
 
 {% for post in object_list %}
+<div data-ic-target="closest .content-card">
 {% include "content/includes/post_detail.html" %}
+</div>
 {% endfor %}
 
 
