@@ -6,6 +6,11 @@ from communikit.content.models import Post
 
 
 class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ("title", "url", "description")
+        labels = {"title": _("Title (Optional)"), "url": _("Link")}
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["url"].widget.attrs.update(
@@ -21,8 +26,3 @@ class PostForm(forms.ModelForm):
                 _("Either description or URL must be provided")
             )
         return cleaned_data
-
-    class Meta:
-        model = Post
-        fields = ("title", "url", "description")
-        labels = {"title": _("Title (Optional)"), "url": _("Link")}
