@@ -17,20 +17,19 @@
   </head>
 
   <body>
-
     <div class="container">
-      <header class="navbar my-1 bg-white">
+      <header class="navbar my-1">
         <section class="navbar-section">
           <a class="navbar-brand mr-2" href="/">
             {% if request.community %}{{ request.community.name }}{% else %}communikit{% endif %}
           </a>
         </section>
         {% if request.community %}
-        <section class="navbar-section">
+        <section class="navbar-section hide-sm">
           <form method="GET" action="/">
             <div class="input-group input-inline">
-              <input class="form-input" name="q" type="search" placeholder="Search {{ request.community.name }}...">
-                <button class="btn btn-primary input-group-btn">Search</button>
+              <input class="form-input" name="q" type="search" placeholder="{% trans "Search" %}">
+              <button class="btn btn-primary input-group-btn">{% trans "Search" %}</button>
             </div>
           </form>
         </section>
@@ -46,6 +45,14 @@
           {% endwith %}
         </section>
       </header>
+      {% if request.community %}
+      <form method="GET" action="/" class="show-sm">
+        <div class="input-group input-inline">
+          <input class="form-input" name="q" type="search" placeholder="{% trans "Search" %}">
+          <button class="btn btn-primary input-group-btn">{% trans "Search" %}</button>
+        </div>
+      </form>
+      {% endif %}
       {% for message in messages %}
       <div class="text-center mb-2 toast toast-{{ message.tags }}">{{ message }}</div>
       {% endfor %}

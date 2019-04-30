@@ -8,39 +8,40 @@
 
 <div class="d-flex content-actions">
 
-    {% if can_like_post %}
-    <div class="mr-2">
-        <a href="">{% trans "Like" %}</a>
-    </div>
-    {% endif %}
+  {% if can_like_post %}
+  <div class="mr-2">
+    <a href="">{% trans "Like" %}</a>
+  </div>
+  {% endif %}
 
-    {% if can_create_comment %}
-    <div class="mr-2">
-        <a href="">{% trans "Comment" %}</a>
-    </div>
-    {% endif %}
+  {% if can_create_comment %}
+  <div class="mr-2">
+    <a href="#" data-js-toggle="#new-comment-form-{{ post.id }}">{% trans "Comment" %}</a>
+  </div>
+  {% endif %}
 
-    {% if can_change_post %}
-    <div class="mr-2">
-        <a href="{% url 'content:update' post.id %}">{% trans "Update" %}</a>
-    </div>
-    {% endif %}
+  <div class="mr-2">
+    <a href="">{% trans "Flag" %}</a>
+  </div>
 
-    {% if can_delete_post %}
-    {% url "content:delete" post.id as delete_url %}
-    <div class="mr-2">
-        <a href="{{ delete_url }}"
-           data-ic-delete-from="{{ delete_url }}"
-           data-ic-trigger-on="confirm-post-delete"
-           data-js-confirm-dialog="#confirm-post-delete-dialog">{% trans "Delete" %}</a>
-    </div>
-    {% endif %}
+  {% if can_change_post %}
+  <div class="mr-2">
+    <a href="{% url 'content:update' post.id %}">{% trans "Update" %}</a>
+  </div>
+  {% endif %}
 
-    <div class="mr-2">
-        <a href="">{% trans "Flag" %}</a>
-    </div>
+  {% if can_delete_post %}
+  {% url "content:delete" post.id as delete_url %}
+  <div class="mr-2">
+    <a href="{{ delete_url }}"
+       data-ic-delete-from="{{ delete_url }}"
+       data-ic-trigger-on="confirm-post-delete"
+       data-js-confirm-dialog="#confirm-post-delete-dialog"
+       >{% trans "Delete" %}</a>
+  </div>
+  {% endif %}
 
-    <div class="">
-        <a href="{{ post.get_permalink }}">{% trans "Permalink" %}</a>
-    </div>
+  <div class="">
+    <a href="{{ post.get_permalink }}">{% trans "Permalink" %}</a>
+  </div>
 </div>

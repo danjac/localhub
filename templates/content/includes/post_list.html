@@ -7,7 +7,7 @@
           placeholder="{% trans 'Share...' %}"
           data-js-toggle="#post-form,#share-input"
           readonly
-        ></textarea>
+          ></textarea>
 <div class="d-none" id="post-form">
   <form method="POST" action="{% url 'content:create' %}">
     {% include "content/includes/post_form.html" %}
@@ -32,7 +32,7 @@
 
 {% for post in object_list %}
 <div data-ic-target="closest .content-card">
-{% include "content/includes/post_detail.html" %}
+  {% include "content/includes/post_detail.html" %}
 </div>
 {% endfor %}
 

@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load rules %}
 {% load micawber_tags %}
 <div class="card content-card mt-1" id="post-{{ post.id }}">
   <div class="card-header">
@@ -21,9 +22,24 @@
       {{ post.url|oembed }}
     </div>
     {% endif %}
+    {% has_perm "content:create_comment" user post as can_create_comment %}
+    {% if can_create_comment %}
+    <div id="new-comment-form-{{ post.id }}" class="d-none">
+      <div class="divider"></div>
+      <form>
+        <div class="form-group">
+          <label class="form-label">Comment on this post</label>
+          <textarea class="form-input" rows=4 placeholder="Write a comment..."></textarea>
+        </div>
+        <button class="btn btn-primary">Save</button>
+        <button class="btn btn-secondary" data-js-toggle="#new-comment-form-{{ post.id }}">Cancel</button>
+      </form>
+    </div>
+    {% endif %}
   </div>
   <div class="card-footer">
     <div class="divider"></div>
     {% include "content/includes/post_actions.html" %}
   </div>
+
 </div>
