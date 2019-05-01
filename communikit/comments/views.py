@@ -1,4 +1,4 @@
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.contrib.auth.views import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.utils.functional import cached_property
@@ -45,7 +45,7 @@ class CommentCreateView(
     permission_required = "comments:create_comment"
 
     @cached_property
-    def parent(self):
+    def parent(self) -> Post:
         try:
             return Post.objects.get(
                 community=self.request.community, pk=self.kwargs["pk"]
@@ -53,10 +53,10 @@ class CommentCreateView(
         except Post.DoesNotExist:
             raise Http404
 
-    def get_permission_object(self):
+    def get_permission_object(self) -> Post:
         return self.parent
 
-    def form_valid(self, form):
+    def form_valid(self, form) -> HttpResponse:
         self.object = form.save(commit=False)
         self.object.post = self.parent
         self.object.author = self.request.user
