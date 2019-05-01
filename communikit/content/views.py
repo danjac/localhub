@@ -4,14 +4,15 @@ from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import QuerySet
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, UpdateView
 
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.intercooler.views import (
-    IntercoolerTemplateMixin,
+    IntercoolerListView,
+    IntercoolerDetailView,
     IntercoolerDeleteView,
 )
 from communikit.content.forms import PostForm
@@ -51,9 +52,7 @@ class PostCreateView(
 post_create_view = PostCreateView.as_view()
 
 
-class PostListView(
-    CommunityPostQuerySetMixin, IntercoolerTemplateMixin, ListView
-):
+class PostListView(CommunityPostQuerySetMixin, IntercoolerListView):
     paginate_by = 12
     allow_empty = True
     ic_template_name = "content/includes/post_list.html"
@@ -73,8 +72,11 @@ class PostListView(
 post_list_view = PostListView.as_view()
 
 
-class PostDetailView(CommunityPostQuerySetMixin, DetailView):
-    pass
+class PostDetailView(CommunityPostQuerySetMixin, IntercoolerDetailView):
+    ic_template_name = "content/includes/post_detail.html"
+
+    def post(self, *args, **kwargs):
+        return self.get(*args, **kwargs)
 
 
 post_detail_view = PostDetailView.as_view()
