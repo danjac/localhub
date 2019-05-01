@@ -35,13 +35,16 @@ class IntercoolerDetailView(IntercoolerTemplateMixin, DetailView):
     pass
 
 
-class IntercoolerDetailView(IntercoolerTemplateMixin, ListView):
+class IntercoolerListView(IntercoolerTemplateMixin, ListView):
     pass
 
 
 class IntercoolerModelFormMixin(IntercoolerTemplateMixin, ModelFormMixin):
     """
     Provides a get_success_response on successful form completion.
+
+    If a detail_view class is provided will render to this class if
+    Intercooler request target.
     """
 
     detail_view = None
@@ -53,7 +56,7 @@ class IntercoolerModelFormMixin(IntercoolerTemplateMixin, ModelFormMixin):
         return None
 
     def get_success_response(self) -> HttpResponse:
-        if self.request.is_intercooler() and self.intercooler_data.target_id:
+        if self.request.is_intercooler_target():
             detail_view = self.get_detail_view()
             if detail_view:
                 return detail_view.render_to_response(
@@ -85,7 +88,7 @@ class IntercoolerDeletionMixin:
     removal_delay = "500ms"
 
     def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        if request.is_intercooler() and request.intercooler_data.target_id:
+        if request.is_intercooler_target():
             self.get_object().delete()
             response = HttpResponse()
             response["X-IC-Remove"] = self.removal_delay
