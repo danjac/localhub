@@ -1,5 +1,6 @@
 from django.http import Http404
 from django.contrib.auth.views import LoginRequiredMixin
+from django.db.models import QuerySet
 from django.utils.functional import cached_property
 
 from rules.contrib.views import PermissionRequiredMixin
@@ -16,7 +17,7 @@ from communikit.comments.models import Comment
 
 
 class CommunityCommentQuerySetMixin(CommunityRequiredMixin):
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         return Comment.objects.filter(
             post__community=self.request.community
         ).select_related("author", "post", "post__community")
@@ -29,15 +30,16 @@ class CommentDetailView(CommunityCommentQuerySetMixin, IntercoolerDetailView):
 comment_detail_view = CommentDetailView.as_view()
 
 
-class CommentFormMixin:
+class CommentIntercoolerFormMixin:
     ic_template_name = "comments/includes/comment_form.html"
     detail_view = CommentDetailView
 
 
 class CommentCreateView(
     LoginRequiredMixin,
-    CommentFormMixin,
+    CommunityRequiredMixin,
     PermissionRequiredMixin,
+    CommentIntercoolerFormMixin,
     IntercoolerCreateView,
 ):
     permission_required = "comments:create_comment"
@@ -62,11 +64,14 @@ class CommentCreateView(
         return self.get_success_response()
 
 
+comment_create_view = CommentCreateView.as_view()
+
+
 class CommentUpdateView(
     LoginRequiredMixin,
-    CommentFormMixin,
     CommunityCommentQuerySetMixin,
     PermissionRequiredMixin,
+    CommentIntercoolerFormMixin,
     IntercoolerUpdateView,
 ):
     permission_required = "comments:change_comment"
