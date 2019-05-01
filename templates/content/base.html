@@ -1,13 +1,33 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load rules %}
 
 {% block content %}
+{% has_perm 'communities.change_community' request.user request.community as can_change_community %}
 <div class="columns">
   <div id="content-right-panel" class="column col-3 col-sm-12 hide-sm bg-gray p-2">
     <ul class="menu">
       <li class="menu-item"><a href="">Stream</a></li>
       <li class="menu-item"><a href="">My Activity</a></li>
+      <li class="menu-item"><a href="">Settings</a></li>
     </ul>
+    <ul class="menu mt-2">
+      <li class="divider" data-content="Communities"></li>
+      <li class="menu-item"><a href="">Retro Movie Club</a></li>
+      <li class="menu-item"><a href="">Suomen Bändit</a></li>
+      {% if can_change_community %}
+      <li class="divider"></li>
+      <li class="menu-item"><a href="">Community Settings</a></li>
+      {% endif %}
+    </ul>
+
+    <div class="panel mt-2 p-1">
+      <div class="panel-header"><strong>About Dev Community</strong></div>
+      <div class="panel-body">
+        This community is for the development of Communikit.
+      </div>
+    </div>
+
     <ul class="menu mt-2">
       <li class="menu-item"><a href="">Help</a></li>
       <li class="menu-item"><a href="">Report a Bug</a></li>
@@ -20,7 +40,7 @@
   <div id="content-left-panel" class="column col-3 col-sm-12 hide-sm bg-gray p-2">
     <h4>Mentions</h4>
 
-    <div class="tile tile-centered">
+    <div class="tile tile-centered bg-default">
       <div class="tile-content">
         <p class="tile-title"><a href="">@xyz</a> <a href="">commented on your post</a></p>
         <small class="tile-subtitle text-gray">20 minutes ago</small>
