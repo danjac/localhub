@@ -16,6 +16,18 @@ class CommunityRequiredMixin:
     to the domain depending on SITE_ID, so if redirected there
     and no community matches that domain we need a page to allow user
     to select a community/request invite etc.
+
+    TBD:
+
+    @rules.predicate
+    def is_public(community):
+        return community.public
+
+    rules.add_perm("communities.view_community", is_public | is_member)
+
+    if not request.user.has_perm(
+        request.community, "communities.view_community"):
+        return HttpResponseRedirect(reverse("communities:request_access"))
     """
 
     def dispatch(self, request, *args, **kwargs):
