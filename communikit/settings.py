@@ -1,7 +1,7 @@
 import os
 import socket
 
-from typing import Sequence, Dict
+from typing import Dict, Sequence
 
 from configurations import Configuration, values
 

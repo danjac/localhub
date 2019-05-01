@@ -5,6 +5,7 @@ from django.utils.functional import cached_property
 
 from rules.contrib.views import PermissionRequiredMixin
 
+from communikit.comments.forms import CommentForm
 from communikit.comments.models import Comment
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.content.models import Post
@@ -31,6 +32,7 @@ comment_detail_view = CommentDetailView.as_view()
 
 
 class CommentIntercoolerFormMixin:
+    form_class = CommentForm
     ic_template_name = "comments/includes/comment_form.html"
     detail_view = CommentDetailView
 
