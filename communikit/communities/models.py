@@ -1,8 +1,8 @@
 from typing import Optional
 
-from django.db import models
 from django.conf import settings
-from django.core.validators import URLValidator, RegexValidator
+from django.core.validators import RegexValidator, URLValidator
+from django.db import models
 from django.http import HttpRequest
 from django.utils.translation import ugettext_lazy as _
 

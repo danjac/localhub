@@ -1,7 +1,7 @@
 from django.test.client import RequestFactory
 
-from communikit.types import get_response_callable
 from communikit.intercooler.middleware import IntercoolerRequestMiddleware
+from communikit.types import get_response_callable
 
 
 class TestIntercoolerRequestMiddleware:

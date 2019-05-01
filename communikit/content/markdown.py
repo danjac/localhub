@@ -1,9 +1,10 @@
 import re
 import bleach
 
+from bleach.linkifier import LinkifyFilter
+
 from django.urls import reverse
 
-from bleach.linkifier import LinkifyFilter
 from markdownx.utils import markdownify as default_markdownify
 
 ALLOWED_TAGS = bleach.ALLOWED_TAGS + ["p", "h1", "h2", "h3", "h4", "h5", "h6"]

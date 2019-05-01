@@ -1,8 +1,8 @@
 from django.http import HttpRequest, HttpResponse
 from django.utils.functional import SimpleLazyObject
 
-from communikit.types import get_response_callable
 from communikit.communities.models import Community
+from communikit.types import get_response_callable
 
 
 class CurrentCommunityMiddleware:

@@ -12,11 +12,8 @@ from communikit.content.markdown import markdownify
 
 
 class Comment(TimeStampedModel):
-    # set null: if original post is deleted
-    # we can still keep the comment
-    post = models.ForeignKey(
-        Post, null=True, on_delete=models.SET_NULL, db_index=True
-    )
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )

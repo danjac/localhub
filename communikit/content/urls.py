@@ -1,11 +1,11 @@
 from django.urls import path
 
 from communikit.content.views import (
-    post_list_view,
     post_create_view,
-    post_detail_view,
-    post_update_view,
     post_delete_view,
+    post_detail_view,
+    post_list_view,
+    post_update_view,
 )
 
 app_name = "content"

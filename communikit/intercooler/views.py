@@ -2,12 +2,12 @@ from typing import List, Optional
 
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.views.generic import (
-    ModelFormMixin,
     CreateView,
-    UpdateView,
     DeleteView,
     DetailView,
     ListView,
+    ModelFormMixin,
+    UpdateView,
     View,
 )
 

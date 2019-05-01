@@ -3,13 +3,12 @@ import pytest
 from django.conf import settings
 
 from communikit.communities.models import Community
-from communikit.content.tests.factories import PostFactory
-
 from communikit.content.rules import (
-    is_post_community_moderator,
     is_author,
     is_editor,
+    is_post_community_moderator,
 )
+from communikit.content.tests.factories import PostFactory
 
 pytestmark = pytest.mark.django_db
 

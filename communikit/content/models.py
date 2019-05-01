@@ -1,13 +1,12 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-
 from markdownx.models import MarkdownxField
 
-from model_utils.models import TimeStampedModel
 from model_utils.managers import InheritanceManager
+from model_utils.models import TimeStampedModel
 
 from communikit.communities.models import Community
 from communikit.content.markdown import markdownify

@@ -1,20 +1,16 @@
 import pytest
 
-from typing import Optional, Dict
-
-from django.http import HttpRequest
 from django.core.exceptions import ImproperlyConfigured
-from django.views.generic import TemplateView
+from django.http import HttpRequest
 from django.test.client import RequestFactory
+from django.views.generic import TemplateView
 
-
-from communikit.types import get_response_callable
-
-from communikit.intercooler.views import (
-    IntercoolerTemplateMixin,
-    IntercoolerDeleteView,
-)
 from communikit.intercooler.middleware import IntercoolerRequestMiddleware
+from communikit.intercooler.views import (
+    IntercoolerDeleteView,
+    IntercoolerTemplateMixin,
+)
+from communikit.types import get_response_callable
 
 
 class FakeDeletionObject:

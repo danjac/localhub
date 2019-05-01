@@ -1,19 +1,19 @@
-from django.http import Http404, HttpResponse
 from django.contrib.auth.views import LoginRequiredMixin
 from django.db.models import QuerySet
+from django.http import Http404, HttpResponse
 from django.utils.functional import cached_property
 
 from rules.contrib.views import PermissionRequiredMixin
 
+from communikit.comments.models import Comment
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.content.models import Post
 from communikit.intercooler.views import (
     IntercoolerCreateView,
-    IntercoolerUpdateView,
     IntercoolerDeleteView,
     IntercoolerDetailView,
+    IntercoolerUpdateView,
 )
-from communikit.comments.models import Comment
 
 
 class CommunityCommentQuerySetMixin(CommunityRequiredMixin):
@@ -80,10 +80,13 @@ class CommentUpdateView(
 comment_update_view = CommentUpdateView.as_view()
 
 
-class CommunityDeleteView(
+class CommentDeleteView(
     LoginRequiredMixin,
     CommunityCommentQuerySetMixin,
     PermissionRequiredMixin,
     IntercoolerDeleteView,
 ):
     permission_required = "comments:delete_comment"
+
+
+comment_delete_view = CommentDeleteView.as_view()

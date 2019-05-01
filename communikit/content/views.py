@@ -1,22 +1,22 @@
-from typing import Dict, Any
+from typing import Any, Dict
 
-from django.urls import reverse_lazy
-from django.http import HttpResponse, HttpResponseRedirect
-from django.db.models import QuerySet
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import QuerySet
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
-from communikit.intercooler.views import (
-    IntercoolerListView,
-    IntercoolerDetailView,
-    IntercoolerDeleteView,
-)
 from communikit.content.forms import PostForm
 from communikit.content.models import Post
+from communikit.intercooler.views import (
+    IntercoolerDeleteView,
+    IntercoolerDetailView,
+    IntercoolerListView,
+)
 
 
 class CommunityPostQuerySetMixin(CommunityRequiredMixin):
