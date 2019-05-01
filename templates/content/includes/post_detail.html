@@ -1,50 +1,44 @@
 {% load i18n %}
 {% load rules %}
 {% load micawber_tags %}
-<div class="card content-card mt-1" id="post-{{ post.id }}">
-  <div class="card-header">
-    <div class="card-subtitle text-gray float-right">
-      {% blocktrans with post.created|timesince as created %}{{ created }} ago{% endblocktrans %}
-    </div>
-    <div class="card-title h6"><a href="">{{ post.author.username }}</a></div>
-    {% if post.title %}
-    <div class="card-subtitle"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></div>
-    {% endif %}
-  </div>
-  <div class="card-body">
-    {% if post.description %}
-    <div>
-      {{ post.markdown }}
-    </div>
-    {% endif %}
-    {% if post.url %}
-    <div>
-      {{ post.url|oembed }}
-    </div>
-    {% endif %}
-    {% if comment %}
-    <div>
-        COMMENT: {{ comment }}
-    </div>
-    {% endif %}
-    {% has_perm "content:create_comment" user post as can_create_comment %}
-    {% if can_create_comment %}
-    <div id="new-comment-form-{{ post.id }}" class="d-none">
-      <div class="divider"></div>
-      <form data-ic-post-to="/comment/new/{{ post.id }}/">
-        <div class="form-group">
-          <label class="form-label">Comment on this post</label>
-          <textarea class="form-input" name="comment" rows=4 placeholder="Write a comment..."></textarea>
+<form id="update-post-form-{{ post.id }}"
+      class="d-none"
+      data-ic-post-to="{% url 'content:update' post.id %}"
+      data-ic-target="#post-form-content"
+      data-ic-on-success="console.log('ok');"
+      >
+  <div id="update-post-form-content-{{ post.id }}"></div>
+  <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+  <button class="btn btn-secondary"
+          data-ic-action="toggleClass: d-none"
+          data-ic-action-target="#update-post-form-{{ post.id }}">{% trans "Cancel" %}</button>
+</form>
+<div class="card content-card my-2" id="post-{{ post.id }}">
+    <div class="card-header">
+        <div class="card-subtitle text-gray float-right">
+            {% blocktrans with post.created|timesince as created %}{{ created }} ago{% endblocktrans %}
         </div>
-        <button class="btn btn-primary">Save</button>
-        <button class="btn btn-secondary" data-js-toggle="#new-comment-form-{{ post.id }}">Cancel</button>
-      </form>
+        <div class="card-title h6"><a href="">{{ post.author.username }}</a></div>
+        {% if post.title %}
+        <div class="card-subtitle">{{ post.title }}</div>
+        {% endif %}
     </div>
-    {% endif %}
-  </div>
-  <div class="card-footer">
-    <div class="divider"></div>
-    {% include "content/includes/post_actions.html" %}
-  </div>
+    <div class="card-body">
+        <div class="divider"></div>
+        {% if post.description %}
+        <div>
+            {{ post.markdown }}
+        </div>
+        {% endif %}
+        {% if post.url %}
+        <div>
+            {{ post.url|oembed }}
+        </div>
+        {% endif %}
+    </div>
+    <div class="card-footer">
+        <div class="divider"></div>
+        {% include "content/includes/post_actions.html" %}
+    </div>
 
 </div>

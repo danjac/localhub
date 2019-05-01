@@ -4,7 +4,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -13,9 +12,11 @@ from communikit.communities.views import CommunityRequiredMixin
 from communikit.content.forms import PostForm
 from communikit.content.models import Post
 from communikit.intercooler.views import (
+    IntercoolerCreateView,
     IntercoolerDeleteView,
     IntercoolerDetailView,
     IntercoolerListView,
+    IntercoolerUpdateView,
 )
 
 
@@ -30,13 +31,14 @@ class PostCreateView(
     LoginRequiredMixin,
     CommunityRequiredMixin,
     PermissionRequiredMixin,
-    CreateView,
+    IntercoolerCreateView,
 ):
 
     model = Post
     form_class = PostForm
     permission_required = "content.create_post"
     success_url = reverse_lazy("content:list")
+    ic_template_name = "content/includes/post_form.html"
 
     def get_permission_object(self) -> Community:
         return self.request.community
@@ -83,10 +85,11 @@ post_detail_view = PostDetailView.as_view()
 
 
 class PostUpdateView(
-    LoginRequiredMixin, CommunityPostQuerySetMixin, UpdateView
+    LoginRequiredMixin, CommunityPostQuerySetMixin, IntercoolerUpdateView
 ):
     form_class = PostForm
     permission_required = "content.change_post"
+    ic_template_name = "content/includes/post_form.html"
 
 
 post_update_view = PostUpdateView.as_view()
