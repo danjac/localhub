@@ -1,7 +1,6 @@
 from typing import List, Optional
 
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.core.exceptions import ImproperlyConfigured
 from django.views.generic import (
     ModelFormMixin,
     CreateView,
@@ -15,19 +14,22 @@ from django.views.generic import (
 
 class IntercoolerTemplateMixin:
     """
-    If Intercooler header is present then uses ic_template_name
-    instead of usual template.
+    If Intercooler header is present then will try to
+    return ic_template_name if available.
 
     IntercoolerRequestMiddleware must be enabled.
     """
 
     ic_template_name = None
 
+    def get_ic_template_name(self) -> str:
+        return self.ic_template_name
+
     def get_template_names(self) -> List[str]:
         if self.request.is_intercooler():
-            if self.ic_template_name is None:
-                raise ImproperlyConfigured("ic_template_name must be defined")
-            return [self.ic_template_name]
+            ic_template_name = self.get_ic_template_name()
+            if ic_template_name:
+                return [ic_template_name]
         return super().get_template_names()
 
 
@@ -45,12 +47,13 @@ class IntercoolerModelFormMixin(IntercoolerTemplateMixin, ModelFormMixin):
 
     If a detail_view class is provided will render to this class if
     Intercooler request target.
+
+    IntercoolerRequestMiddleware must be enabled.
     """
 
     detail_view = None
 
     def get_detail_view(self) -> Optional[View]:
-
         if self.detail_view:
             return self.detail_view.as_view()
         return None
@@ -85,13 +88,13 @@ class IntercoolerDeletionMixin:
     IntercoolerRequestMiddleware must be enabled.
     """
 
-    removal_delay = "500ms"
+    delay = "500ms"
 
     def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         if request.is_intercooler_target():
             self.get_object().delete()
             response = HttpResponse()
-            response["X-IC-Remove"] = self.removal_delay
+            response["X-IC-Remove"] = self.delay
             return response
         return super().delete(request, *args, **kwargs)
 
