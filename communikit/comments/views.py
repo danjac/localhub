@@ -31,7 +31,7 @@ comment_detail_view = CommentDetailView.as_view()
 
 class CommentFormMixin:
     ic_template_name = "comments/includes/comment_form.html"
-    detail_view = CommentDetailView.as_view()
+    detail_view = CommentDetailView
 
 
 class CommentCreateView(
