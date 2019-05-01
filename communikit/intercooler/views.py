@@ -6,10 +6,10 @@ from django.views.generic import (
     DeleteView,
     DetailView,
     ListView,
-    ModelFormMixin,
     UpdateView,
     View,
 )
+from django.views.generic.edit import ModelFormMixin
 
 
 class IntercoolerTemplateMixin:

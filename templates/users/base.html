@@ -6,11 +6,7 @@
 {% block content %}
 <div class="container">
   <div class="columns">
-    <div class="column col-8 col-sm-12">
-      {% block users_content %}{% endblock %}
-    </div>
-    <div class="column col-3 col-sm-12">
-      {# TBD: use a side panel for mobile/tablet #}
+    <div class="column col-3 col-sm-12 hide-sm bg-gray p-2">
       <ul class="menu">
         <li class="menu-item">
           <a href="{% url 'users:detail' %}">{% trans "Profile" %}</a>
@@ -31,6 +27,9 @@
           <a href="{% url 'users:delete' %}" class="text-warning">{% trans "Delete account" %}</a>
         </li>
       </ul>
+    </div>
+    <div class="column col-9 col-sm-12">
+      {% block users_content %}{% endblock %}
     </div>
   </div>
   {% endblock %}

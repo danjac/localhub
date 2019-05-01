@@ -1,13 +1,13 @@
 {% load i18n %}
 {% if page_obj.number == 1 %}
 {% if form %}
-<textarea class="form-input"
-          id="share-input"
-          rows=2
-          placeholder="{% trans 'Share...' %}"
-          data-js-toggle="#post-form,#share-input"
-          readonly
-          ></textarea>
+<input type="text"
+       class="form-input"
+       id="share-input"
+       placeholder="{% trans 'Share...' %}"
+       data-js-toggle="#post-form,#share-input"
+       readonly
+       />
 <div class="d-none" id="post-form">
   <form method="POST" action="{% url 'content:create' %}">
     {% include "content/includes/post_form.html" %}

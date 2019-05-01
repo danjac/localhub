@@ -1,6 +1,3 @@
-import pytest
-
-from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpRequest
 from django.test.client import RequestFactory
 from django.views.generic import TemplateView
@@ -123,6 +120,4 @@ class TestIntercoolerTemplateMixin:
         my_view = MyView()
         my_view.ic_template_name = None
         my_view.request = req
-
-        with pytest.raises(ImproperlyConfigured):
-            my_view.get_template_names()
+        assert my_view.get_template_names() == ["index.html"]
