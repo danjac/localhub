@@ -1,4 +1,6 @@
 {% extends "content/base.html" %}
+{% load i18n %}
+{% load rules %}
 {% block content_main_panel %}
 {% if page_obj.number == 1 %}
 {% has_perm 'content:create_post' user request.community as can_create_post %}
