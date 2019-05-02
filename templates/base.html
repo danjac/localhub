@@ -10,8 +10,6 @@
       {% endblock %}
     </title>
     <meta charset="UTF-8">
-    <meta name="intercoolerjs:use-data-prefix" content="true"/>
-    <meta name="intercoolerjs:use-actual-http-method" content="true"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="{% static 'dist/main.css' %}">
   </head>
@@ -54,7 +52,7 @@
       </form>
       {% endif %}
       {% for message in messages %}
-      <div class="text-center mb-2 toast toast-{{ message.tags }}">{{ message }}</div>
+      <div class="text-center mb-2 toast toast-{{ message.tags }}" data-js-remove-after="5000">{{ message }}</div>
       {% endfor %}
 
       {% block content %}
