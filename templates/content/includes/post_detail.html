@@ -1,32 +1,78 @@
 {% load i18n %}
 {% load rules %}
 {% load micawber_tags %}
+
+{% has_perm "content.like_post" user post as can_like_post %}
+{% has_perm "content.change_post" user post as can_change_post %}
+{% has_perm "content.delete_post" user post as can_delete_post %}
+{% has_perm "content.create_comment" user post as can_create_comment %}
+
 <div class="card content-card">
-    <div class="card-header">
-        <div class="card-subtitle text-gray float-right">
-            {% blocktrans with post.created|timesince as created %}{{ created }} ago{% endblocktrans %}
-        </div>
-        <div class="card-title h6"><a href="">{{ post.author.username }}</a></div>
-        {% if post.title %}
-        <div class="card-subtitle">{{ post.title }}</div>
-        {% endif %}
+  <div class="card-header">
+    <div class="card-subtitle text-gray float-right">
+      {% blocktrans with post.created|timesince as created %}{{ created }} ago{% endblocktrans %}
     </div>
-    <div class="card-body">
-        <div class="divider"></div>
-        {% if post.description %}
-        <div>
-            {{ post.markdown }}
-        </div>
-        {% endif %}
-        {% if post.url %}
-        <div>
-            {{ post.url|oembed }}
-        </div>
-        {% endif %}
+    <div class="card-title h6"><a href="">{{ post.author.username }}</a></div>
+    {% if post.title %}
+    <div class="card-subtitle">{{ post.title }}</div>
+    {% endif %}
+  </div>
+  <div class="card-body">
+    <div class="divider"></div>
+    {% if post.description %}
+    <div>
+      {{ post.markdown }}
     </div>
-    <div class="card-footer">
-        <div class="divider"></div>
-        {% include "content/includes/post_actions.html" %}
+    {% endif %}
+    {% if post.url %}
+    <div>
+      {{ post.url|oembed }}
     </div>
+    {% endif %}
+  </div>
+  <div class="card-footer">
+    <div class="divider"></div>
+
+    <div class="d-flex content-actions">
+
+      {% if can_like_post %}
+      <div class="mr-2">
+        <a href="">{% trans "Like" %}</a>
+      </div>
+      {% endif %}
+
+      {% if can_create_comment %}
+      <div class="mr-2">
+        <a href="#" data-js-toggle="#new-comment-form-{{ post.id }}">{% trans "Comment" %}</a>
+      </div>
+      {% endif %}
+
+      <div class="mr-2">
+        <a href="">{% trans "Flag" %}</a>
+      </div>
+
+      {% if can_change_post %}
+      <div class="mr-2">
+        <a href="{% url 'content:update' post.id %}"
+           >{% trans "Update" %}</a>
+      </div>
+      {% endif %}
+
+      {% if can_delete_post %}
+      {% url "content:delete" post.id as delete_url %}
+      <div class="mr-2">
+        <a href="{{ delete_url }}"
+           data-ic-delete-from="{{ delete_url }}"
+           data-ic-trigger-on="confirm-post-delete"
+           data-js-confirm-dialog="#confirm-post-delete-dialog"
+           >{% trans "Delete" %}</a>
+      </div>
+      {% endif %}
+
+      <div class="">
+        <a href="{{ post.get_permalink }}">{% trans "Permalink" %}</a>
+      </div>
+    </div>
+  </div>
 
 </div>
