@@ -32,19 +32,11 @@ class TestPostCreateView:
 
 
 class TestPostListView:
-    def test_get_if_member(self, client: Client, member: Membership):
-        PostFactory.create_batch(3, community=member.community)
-        response = client.get(reverse("content:list"))
-        assert response.status_code == 200
-        assert len(response.context["object_list"]) == 3
-        assert "form" in response.context
-
-    def test_get_if_not_member(self, community: Community, client: Client):
+    def test_get(self, community: Community, client: Client):
         PostFactory.create_batch(3, community=community)
         response = client.get(reverse("content:list"))
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 3
-        assert "form" not in response.context
 
 
 class TestUpdateView:

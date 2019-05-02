@@ -91,7 +91,7 @@ class IntercoolerDeletionMixin:
     delay = "500ms"
 
     def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        if request.is_intercooler():
+        if request.is_intercooler() and request.intercooler_data.target_id:
             self.get_object().delete()
             response = HttpResponse()
             response["X-IC-Remove"] = self.delay
