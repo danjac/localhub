@@ -1,0 +1,10 @@
+{% load i18n %}
+<input type="text"
+       class="form-input"
+       id="share-input"
+       placeholder="{% trans 'Share...' %}"
+       data-ic-trigger-on="click"
+       data-ic-get-from="{% url 'content:create' %}"
+       data-ic-target="closest .new-post"
+       readonly
+       />

@@ -1,0 +1,5 @@
+<form data-ic-post-to="{% url 'content:update' post.id %}">
+  {% include "content/includes/post_form.html" %}
+  <button type="submit" class="btn btn-primary">Save</button>
+  <button data-ic-get-from="{% url 'content:detail' post.id %}" class="btn btn-secondary">Cancel</button>
+</form>
