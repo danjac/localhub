@@ -93,7 +93,8 @@ class PostDeleteView(
     success_url = reverse_lazy("content:list")
 
     def delete(self, request, *args, **kwargs):
-        self.get_object().delete()
+        self.object = self.get_object()
+        self.object.delete()
         if request.is_ajax():
             return HttpResponse(status=204)
         return HttpResponseRedirect(self.get_success_url())

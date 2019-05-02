@@ -1,17 +1,16 @@
+import axios from 'axios';
 import onmount from 'onmount';
 
 import './behaviors';
 
-import { csrfSafeMethod, getCookie } from './utils';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-$(function() {
-  // we'll throw in axios later, one thing at a time
-  $.ajaxSetup({
-    beforeSend(xhr, settings) {
-      if (!csrfSafeMethod(settings.type)) {
-        xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
-      }
-    }
-  });
+axios.interceptors.response.use(() => {
+  onmount();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
   onmount();
 });

@@ -63,8 +63,9 @@
       <div class="mr-2">
         <a href="{{ delete_url }}"
            data-js-delete="{{ delete_url }}"
-           data-js-delete-target=".post-list-item"
-           data-js-delete-confirm="{% trans 'Are you sure?' %}"
+           data-js-delete-target=".content-card"
+           data-js-confirm-dialog="#confirm-post-delete-dialog"
+           data-js-confirm-trigger="confirm-delete"
            >{% trans "Delete" %}</a>
       </div>
       {% endif %}

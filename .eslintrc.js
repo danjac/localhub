@@ -3,11 +3,6 @@ module.exports = {
         "browser": true,
         "es6": true
     },
-    "globals": {
-        "$": true,
-        "jQuery": true,
-        "require": true
-    },
     "extends": "eslint:recommended",
     "parserOptions": {
         "ecmaVersion": 2016,

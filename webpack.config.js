@@ -9,13 +9,13 @@ module.exports = {
   entry: ['./assets/scss/main.scss', './assets/js/main.js'],
   mode: process.env.NODE_ENV,
   optimization: {
-    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})]
   },
   module: {
     rules: [
       {
         test: /\.scss/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       },
       {
         test: /\.m?js$/,
@@ -23,22 +23,18 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env'],
-          },
-        },
-      },
-    ],
+            presets: ['@babel/preset-env']
+          }
+        }
+      }
+    ]
   },
   output: {
-    path: path.resolve('./assets/dist/'),
+    path: path.resolve('./assets/dist/')
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '[name].css',
-    }),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-    }),
-  ],
+      filename: '[name].css'
+    })
+  ]
 };
