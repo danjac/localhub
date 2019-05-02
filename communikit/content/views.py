@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import List
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
@@ -38,10 +38,15 @@ class PostCreateView(
     form_class = PostForm
     permission_required = "content.create_post"
     success_url = reverse_lazy("content:list")
-    ic_template_name = "content/includes/post_form.html"
+    ic_template_name = "content/includes/post_create.html"
 
     def get_permission_object(self) -> Community:
         return self.request.community
+
+    def get_template_names(self) -> List[str]:
+        if "cancel" in self.request.GET:
+            return ["content/includes/post_share.html"]
+        return super().get_template_names()
 
     def form_valid(self, form) -> HttpResponse:
         self.object = form.save(commit=False)
@@ -62,14 +67,6 @@ class PostListView(CommunityPostQuerySetMixin, IntercoolerListView):
     def get_queryset(self) -> QuerySet:
         return super().get_queryset().order_by("-created").select_subclasses()
 
-    def get_context_data(self, **kwargs) -> Dict[str, Any]:
-        data = super().get_context_data(**kwargs)
-        if self.request.user.has_perm(
-            "content.create_post", self.request.community
-        ):
-            data["form"] = PostForm()
-        return data
-
 
 post_list_view = PostListView.as_view()
 
@@ -89,7 +86,8 @@ class PostUpdateView(
 ):
     form_class = PostForm
     permission_required = "content.change_post"
-    ic_template_name = "content/includes/post_form.html"
+    ic_template_name = "content/includes/post_update.html"
+    ic_success_template_name = "content/includes/post_detail.html"
 
 
 post_update_view = PostUpdateView.as_view()

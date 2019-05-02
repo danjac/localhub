@@ -1,19 +1,7 @@
 {% load i18n %}
 {% load rules %}
 {% load micawber_tags %}
-<form id="update-post-form-{{ post.id }}"
-      class="d-none"
-      data-ic-post-to="{% url 'content:update' post.id %}"
-      data-ic-target="#post-form-content"
-      data-ic-on-success="console.log('ok');"
-      >
-  <div id="update-post-form-content-{{ post.id }}"></div>
-  <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
-  <button class="btn btn-secondary"
-          data-ic-action="toggleClass: d-none"
-          data-ic-action-target="#update-post-form-{{ post.id }}">{% trans "Cancel" %}</button>
-</form>
-<div class="card content-card my-2" id="post-{{ post.id }}">
+<div class="card content-card">
     <div class="card-header">
         <div class="card-subtitle text-gray float-right">
             {% blocktrans with post.created|timesince as created %}{{ created }} ago{% endblocktrans %}

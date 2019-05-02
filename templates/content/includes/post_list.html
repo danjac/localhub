@@ -1,28 +1,12 @@
 {% load i18n %}
+{% load rules %}
 {% if page_obj.number == 1 %}
-{% if form %}
+{% has_perm 'content:create_post' user request.community as can_create_post %}
+{% if can_create_post %}
 {% url 'content:create' as create_post_url %}
-<input type="text"
-       class="form-input"
-       id="share-input"
-       placeholder="{% trans 'Share...' %}"
-       data-ic-trigger-on="click"
-       data-ic-get-from="{{ create_post_url }}"
-       data-ic-target="#post-form-content"
-       data-ic-action="toggleClass: d-none"
-       data-ic-action-target="#share-input,#post-form"
-       readonly
-       />
-<form id="post-form"
-      data-ic-target="#post-form-content"
-      data-ic-post-to="{{ create_post_url }}"
-      class="d-none">
-  <div id="post-form-content"></div>
-  <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
-  <button class="btn btn-secondary"
-          data-ic-action="toggleClass: d-none"
-          data-ic-action-target="#post-form,#share-input">{% trans "Cancel" %}</button>
-</form>
+<div class="new-post">
+  {% include "content/includes/post_share.html" %}
+</div>
 <div class="divider"></div>
 
 {% elif not user.is_authenticated %}
@@ -39,7 +23,7 @@
 {% endif %}
 
 {% for post in object_list %}
-<div data-ic-target="closest .content-card">
+<div data-ic-target="closest .post-detail" class="mt-2 post-detail">
   {% include "content/includes/post_detail.html" %}
 </div>
 {% endfor %}

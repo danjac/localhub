@@ -28,9 +28,7 @@
   <div class="mr-2">
     <a href="javascript:;"
        data-ic-get-from="{% url 'content:update' post.id %}"
-       data-ic-target="#update-post-form-content-{{ post.id }}"
-       data-ic-action="toggleClass: d-none"
-       data-ic-action-target="#update-post-form-{{ post.id }}, #post-{{ post.id }}"
+       data-ic-target="closest .post-detail"
     >{% trans "Update" %}</a>
   </div>
   {% endif %}

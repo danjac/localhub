@@ -26,10 +26,6 @@ class IntercoolerData:
         return "ic-request" in self.params
 
     @property
-    def target(self) -> bool:
-        return bool(self.target_id)
-
-    @property
     def target_id(self) -> Optional[str]:
         return self.params.get("ic-target-id")
 
@@ -107,7 +103,6 @@ class IntercoolerRequestMiddleware:
         request.intercooler_data = SimpleLazyObject(
             _get_intercooler_data.__get__(request)
         )
-        request.is_intercooler_target = _is_intercooler_target.__get__(request)
         return self.get_response(request)
 
 

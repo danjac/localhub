@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.views.generic import (
@@ -7,7 +7,6 @@ from django.views.generic import (
     DetailView,
     ListView,
     UpdateView,
-    View,
 )
 from django.views.generic.edit import ModelFormMixin
 
@@ -45,26 +44,27 @@ class IntercoolerModelFormMixin(IntercoolerTemplateMixin, ModelFormMixin):
     """
     Provides a get_success_response on successful form completion.
 
-    If a detail_view class is provided will render to this class if
+    If an ic_success_template_name  is provided will render to this class if
     Intercooler request target.
 
     IntercoolerRequestMiddleware must be enabled.
     """
 
-    detail_view = None
+    ic_success_template_name = None
 
-    def get_detail_view(self) -> Optional[View]:
-        if self.detail_view:
-            return self.detail_view.as_view()
-        return None
+    def get_ic_success_template_name(self) -> str:
+        return self.ic_success_template_name
 
-    def get_success_response(self) -> HttpResponse:
-        if self.request.is_intercooler_target():
-            detail_view = self.get_detail_view()
-            if detail_view:
-                return detail_view.render_to_response(
-                    context=detail_view.get_context_data(object=self.object)
-                )
+    def get_success_response(self, **kwargs) -> HttpResponse:
+        ic_success_template_name = self.get_ic_success_template_name()
+        if self.request.is_intercooler() and ic_success_template_name:
+            return self.response_class(
+                request=self.request,
+                template=ic_success_template_name,
+                context=self.get_context_data(object=self.object),
+                using=self.template_engine,
+                **kwargs,
+            )
         return HttpResponseRedirect(self.get_success_url())
 
     def form_valid(self, form) -> HttpResponse:
@@ -91,7 +91,7 @@ class IntercoolerDeletionMixin:
     delay = "500ms"
 
     def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        if request.is_intercooler_target():
+        if request.is_intercooler():
             self.get_object().delete()
             response = HttpResponse()
             response["X-IC-Remove"] = self.delay
