@@ -1,5 +1,0 @@
-<form data-ic-post-to="{% url 'content:create' %}" data-ic-target="closest .new-post">
-  {% include "content/includes/post_form.html" %}
-  <button type="submit" class="btn btn-primary">Save</button>
-  <button data-ic-get-from="{% url 'content:create' %}?cancel=true" class="btn btn-secondary">Cancel</button>
-</form>
