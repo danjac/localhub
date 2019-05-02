@@ -1,10 +1,5 @@
 {% extends "content/base.html" %}
-{% block content_main_panel %}
-<div>
-  <div class="post-detail">
-    {% include "content/includes/post_detail.html" %}
-  </div>
-</div>
-<div>comments...</div>
+{% block content %}
+{% include "content/includes/post_detail.html" %}
 {% include "content/includes/post_delete_confirm_dialog.html" %}
-{% endblock content_main_panel %}
+{% endblock content %}

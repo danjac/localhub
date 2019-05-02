@@ -117,17 +117,23 @@ class IntercoolerRedirectMiddleware:
     def __init__(self, get_response: get_response_callable):
         self.get_response = get_response
 
-    def ic_response(self, response: HttpResponse) -> HttpResponse:
+    def ic_response(
+        self, request: HttpRequest, response: HttpResponse
+    ) -> HttpResponse:
         location = response["Location"]
         del response["Location"]
         ic_response = HttpResponse()
         for k, v in response.items():
             ic_response[k] = v
-        ic_response["X-IC-Redirect"] = location
+
+        if request.method == "DELETE" and request.intercooler_data.target_id:
+            ic_response["X-IC-Remove"] = "500ms"
+        else:
+            ic_response["X-IC-Redirect"] = location
         return ic_response
 
     def __call__(self, request: HttpRequest) -> HttpResponse:
         response = self.get_response(request)
         if "Location" in response and request.is_intercooler():
-            return self.ic_response(response)
+            return self.ic_response(request, response)
         return response

@@ -24,12 +24,7 @@
 
 {% for post in object_list %}
 <div data-ic-target="closest .post" class="mt-2 post" id="post-{{ post.id }}">
-  <div class="post-detail">
   {% include "content/includes/post_detail.html" %}
-  </div>
-  <div>
-    comments go here..
-  </div>
 </div>
 {% endfor %}
 

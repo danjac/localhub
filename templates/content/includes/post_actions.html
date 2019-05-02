@@ -26,9 +26,7 @@
 
   {% if can_change_post %}
   <div class="mr-2">
-    <a href="javascript:;"
-       data-ic-get-from="{% url 'content:update' post.id %}"
-       data-ic-target="closest .post-detail"
+    <a href="{% url 'content:update' post.id %}"
     >{% trans "Update" %}</a>
   </div>
   {% endif %}
