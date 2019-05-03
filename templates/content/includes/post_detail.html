@@ -62,10 +62,13 @@
       {% url "content:delete" post.id as delete_url %}
       <div class="mr-2">
         <a href="{{ delete_url }}"
-           data-js-delete="{{ delete_url }}"
-           data-js-delete-target=".content-card"
-           data-js-confirm-dialog="#confirm-post-delete-dialog"
-           data-js-confirm-trigger="confirm-delete"
+           data-delete-from="{{ delete_url }}"
+           data-delete-target=".content-card"
+           {% if not edit_inline %}
+           data-redirect-on-delete="{% url 'content:list' %}"
+           {% endif %}
+           data-confirm-dialog="#confirm-post-delete"
+           data-confirm-trigger-on="confirm-delete"
            >{% trans "Delete" %}</a>
       </div>
       {% endif %}

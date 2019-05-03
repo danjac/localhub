@@ -26,11 +26,11 @@
 
 {% for post in object_list %}
 <div class="mt-2 post-list-item">
-  {% include "content/includes/post_detail.html" %}
+  {% include "content/includes/post_detail.html" with edit_inline=True %}
 </div>
 {% endfor %}
 
 
 {% include "includes/pagination.html" with ic_target="#posts" %}
-{% include "content/includes/post_delete_confirm_dialog.html" %}
+{% include "content/includes/post_confirm_delete.html" %}
 {% endblock content_main_panel %}

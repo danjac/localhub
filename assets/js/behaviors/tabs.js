@@ -1,6 +1,6 @@
 import onmount from 'onmount';
 
-onmount('[data-js-show-tab]', function() {
+onmount('[data-show-tab]', function() {
   this.addEventListener('click', event => {
     event.preventDefault();
     const { target } = event;
@@ -16,7 +16,7 @@ onmount('[data-js-show-tab]', function() {
 
     // activate selected tab
     tabs
-      .querySelector(target.dataset.jsShowTab)
+      .querySelector(target.dataset.showTab)
       .classList.remove('d-none');
 
     target.parentNode.classList.add('active');

@@ -1,26 +1,24 @@
 import onmount from 'onmount';
 
-onmount('[data-js-confirm-dialog]', function() {
+onmount('[data-confirm-dialog]', function() {
   this.addEventListener('click', event => {
     const { target } = event;
-    if (target.hasAttribute('data-confirmed')) {
-      target.removeAttribute('data-confirmed');
+    const { confirmed, confirmDialog, confirmTriggerOn } = target.dataset;
+    if (confirmed) {
+      delete target.dataset.confirmed;
       return true;
     }
     event.preventDefault();
-    const dialog = document.querySelector(
-      target.getAttribute('data-js-confirm-dialog')
-    );
+    const dialog = document.querySelector(confirmDialog);
     dialog.classList.add('active');
-    dialog.querySelector('[data-js-confirm-dialog-handler]').addEventListener(
+    dialog.querySelector('[data-confirm-handler]').addEventListener(
       'click',
       () => {
         dialog.classList.remove('active');
-        const trigger = target.getAttribute('data-js-confirm-trigger');
-        if (trigger) {
-          target.dispatchEvent(new CustomEvent(trigger));
+        if (confirmTriggerOn) {
+          target.dispatchEvent(new CustomEvent(confirmTriggerOn));
         } else {
-          target.setAttribute('data-confirmed', true);
+          target.dataset.confirmed = true;
           target.click();
         }
       },

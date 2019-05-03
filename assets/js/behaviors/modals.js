@@ -1,16 +1,16 @@
 import onmount from 'onmount';
 
-onmount('[data-js-open-modal]', function() {
+onmount('[data-open-modal]', function() {
   this.addEventListener('click', event => {
     event.preventDefault();
     const { target } = event;
     document
-      .querySelector(target.getAttribute('data-js-open-modal'))
+      .querySelector(target.dataset.openModal)
       .classList.add('active');
   });
 });
 
-onmount('[data-js-close-modal]', function() {
+onmount('[data-close-modal]', function() {
   this.addEventListener('click', event => {
     event.preventDefault();
     const { target } = event;

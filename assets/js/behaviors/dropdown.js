@@ -1,6 +1,6 @@
 import onmount from 'onmount';
 
-onmount('[data-js-dropdown-toggle]', function() {
+onmount('[data-dropdown-toggle]', function() {
   this.addEventListener('click', event => {
     event.preventDefault();
     event.target.closest('.dropdown').classList.toggle('active');

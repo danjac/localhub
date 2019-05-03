@@ -224,7 +224,7 @@ module.exports = {
         "prefer-numeric-literals": "error",
         "prefer-object-spread": "error",
         "prefer-promise-reject-errors": "error",
-        "prefer-reflect": "error",
+        "prefer-reflect": "off",
         "prefer-rest-params": "error",
         "prefer-spread": "error",
         "prefer-template": "off",

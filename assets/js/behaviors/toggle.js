@@ -1,13 +1,10 @@
 import onmount from 'onmount';
 
-onmount('[data-js-toggle]', function() {
+onmount('[data-toggle]', function() {
   this.addEventListener('click', event => {
     event.preventDefault();
     const { target } = event;
-    document
-      .querySelector(target.getAttribute('data-js-toggle'))
-      .classList.toggle(
-        target.getAttribute('data-js-toggle-class') || 'd-none'
-      );
+    const { toggle, toggleClass } = target.dataset;
+    document.querySelector(toggle).classList.toggle(toggleClass || 'd-none');
   });
 });

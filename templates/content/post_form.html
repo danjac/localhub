@@ -1,9 +1,9 @@
 {% extends "content/base.html" %}
 {% load i18n %}
 
-{% block content %}
+{% block content_main_panel %}
 <form method="POST" action="{{ request.path }}">
   {% include "content/includes/post_form.html" %}
   <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
 </form>
-{% endblock content %}
+{% endblock content_main_panel %}
