@@ -6,11 +6,22 @@
 {% block content %}
 <div class="container">
   <div class="columns">
-    <div class="column col-3 col-sm-12 hide-sm bg-gray p-2">
+    <div id="user-main-panel" class="column col-9 col-sm-12">
+      <div class="show-sm hide-md float-right">
+        <a href="#"
+           class="btn btn-link"
+           data-toggle="#user-sidebar,#user-main-panel"
+           data-toggle-class="hide-sm">{% trans "Sidebar" %}</a>
+      </div>
+      <div class="clearfix"></div>
+      {% block users_content %}{% endblock %}
+    </div>
+    <div id="user-sidebar" class="column col-3 col-sm-12 hide-sm bg-gray p-2">
+      <a href="#"
+         class="btn btn-link show-sm hide-md"
+         data-toggle="#user-sidebar,#user-main-panel"
+         data-toggle-class="hide-sm">{% trans "Close Sidebar" %}</a>
       <ul class="menu">
-        <li class="menu-item">
-          <a href="{% url 'users:detail' %}">{% trans "Profile" %}</a>
-        </li>
         <li class="menu-item">
           <a href="{% url 'users:update' %}">{% trans "Edit profile" %}</a>
         </li>
@@ -27,9 +38,6 @@
           <a href="{% url 'users:delete' %}" class="text-warning">{% trans "Delete account" %}</a>
         </li>
       </ul>
-    </div>
-    <div class="column col-9 col-sm-12">
-      {% block users_content %}{% endblock %}
     </div>
   </div>
   {% endblock %}
