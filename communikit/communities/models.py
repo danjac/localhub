@@ -70,6 +70,9 @@ class Community(TimeStampedModel):
     def __str__(self) -> str:
         return self.name
 
+    def get_absolute_url(self) -> str:
+        return f"http://{self.domain}"
+
     def user_has_role(self, user: settings.AUTH_USER_MODEL, role: str) -> bool:
         if user.is_anonymous:
             return False

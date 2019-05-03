@@ -40,6 +40,10 @@ def is_membership_community_admin(
     return is_admin.test(user, membership.community)
 
 
+rules.add_rule('is_admin', is_admin)
+rules.add_rule('is_moderator', is_moderator)
+rules.add_rule('is_member', is_member)
+
 rules.add_perm("communities.change_community", is_admin)
 
 rules.add_perm("communities.create_membership", is_admin)

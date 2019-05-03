@@ -1,6 +1,8 @@
 import axios from 'axios';
 import onmount from 'onmount';
 
+import { fadeOut } from '../effects';
+
 onmount('[data-delete-from]', function() {
   // use this with data-confirm and data-confirm-trigger
   // trigger should fire confirm-delete event
@@ -9,7 +11,7 @@ onmount('[data-delete-from]', function() {
     const { target } = event;
     const { deleteTarget, deleteFrom, redirectOnDelete } = target.dataset;
     if (deleteTarget) {
-      target.closest(deleteTarget).remove();
+      fadeOut(target.closest(deleteTarget));
     }
     axios.delete(deleteFrom).then(() => {
       if (redirectOnDelete) {

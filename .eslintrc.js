@@ -268,7 +268,7 @@ module.exports = {
         ],
         "valid-jsdoc": "error",
         "vars-on-top": "error",
-        "wrap-iife": "error",
+        "wrap-iife": "off",
         "wrap-regex": "off",
         "yield-star-spacing": "error",
         "yoda": [

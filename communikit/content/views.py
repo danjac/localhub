@@ -66,8 +66,7 @@ post_list_view = PostListView.as_view()
 
 
 class PostDetailView(CommunityPostQuerySetMixin, DetailView):
-    def post(self, *args, **kwargs):
-        return self.get(*args, **kwargs)
+    pass
 
 
 post_detail_view = PostDetailView.as_view()
