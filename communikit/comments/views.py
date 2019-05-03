@@ -2,6 +2,7 @@ from django.contrib.auth.views import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.http import Http404, HttpResponse
 from django.utils.functional import cached_property
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -9,12 +10,6 @@ from communikit.comments.forms import CommentForm
 from communikit.comments.models import Comment
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.content.models import Post
-from communikit.intercooler.views import (
-    IntercoolerCreateView,
-    IntercoolerDeleteView,
-    IntercoolerDetailView,
-    IntercoolerUpdateView,
-)
 
 
 class CommunityCommentQuerySetMixin(CommunityRequiredMixin):
@@ -24,8 +19,8 @@ class CommunityCommentQuerySetMixin(CommunityRequiredMixin):
         ).select_related("author", "post", "post__community")
 
 
-class CommentDetailView(CommunityCommentQuerySetMixin, IntercoolerDetailView):
-    ic_template_name = "comments/includes/comment_detail.html"
+class CommentDetailView(CommunityCommentQuerySetMixin, DetailView):
+    pass
 
 
 comment_detail_view = CommentDetailView.as_view()
@@ -42,7 +37,7 @@ class CommentCreateView(
     CommunityRequiredMixin,
     PermissionRequiredMixin,
     CommentIntercoolerFormMixin,
-    IntercoolerCreateView,
+    CreateView,
 ):
     permission_required = "comments:create_comment"
 
@@ -63,7 +58,6 @@ class CommentCreateView(
         self.object.post = self.parent
         self.object.author = self.request.user
         self.object.save()
-        return self.get_success_response()
 
 
 comment_create_view = CommentCreateView.as_view()
@@ -74,7 +68,7 @@ class CommentUpdateView(
     CommunityCommentQuerySetMixin,
     PermissionRequiredMixin,
     CommentIntercoolerFormMixin,
-    IntercoolerUpdateView,
+    UpdateView,
 ):
     permission_required = "comments:change_comment"
 
@@ -86,7 +80,7 @@ class CommentDeleteView(
     LoginRequiredMixin,
     CommunityCommentQuerySetMixin,
     PermissionRequiredMixin,
-    IntercoolerDeleteView,
+    DeleteView,
 ):
     permission_required = "comments:delete_comment"
 
