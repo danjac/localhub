@@ -3,12 +3,13 @@
 {% load rules %}
 
 {% block content %}
-{% has_perm 'communities.change_community' request.user request.community as can_change_community %}
+{% has_perm 'communities.change_community' user request.community as can_change_community %}
 <div class="columns">
   <div id="content-main-panel" class="column col-9 col-sm-12">
     {% block content_main_panel %}{% endblock %}
   </div>
   <div id="content-right-panel" class="column col-3 col-sm-12 hide-sm bg-gray p-2">
+    {% if user.is_authenticated %}
     <ul class="menu">
       <li class="menu-item"><a href="">Stream</a></li>
       <li class="menu-item"><a href="">@Mentions</a></li>
@@ -25,6 +26,7 @@
       <li class="menu-item"><a href="">Community Settings</a></li>
       {% endif %}
     </ul>
+    {% endif %}
 
     <div class="panel mt-2 p-1">
       <div class="panel-header"><strong>About Dev Community</strong></div>

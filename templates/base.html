@@ -52,7 +52,7 @@
       </form>
       {% endif %}
       {% for message in messages %}
-      <div class="text-center mb-2 toast toast-{{ message.tags }}" data-js-remove-after="5000">{{ message }}</div>
+      <div class="text-center mb-2 toast toast-{{ message.tags }}" data-remove-after="5000">{{ message }}</div>
       {% endfor %}
 
       {% block content %}
