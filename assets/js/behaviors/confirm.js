@@ -3,7 +3,7 @@ import onmount from 'onmount';
 onmount('[data-confirm-dialog]', function() {
   this.addEventListener('click', event => {
     const { target } = event;
-    const { confirmed, confirmDialog, confirmTriggerOn } = target.dataset;
+    const { confirmed, confirmDialog, confirmTrigger } = target.dataset;
     if (confirmed) {
       delete target.dataset.confirmed;
       return true;
@@ -15,8 +15,8 @@ onmount('[data-confirm-dialog]', function() {
       'click',
       () => {
         dialog.classList.remove('active');
-        if (confirmTriggerOn) {
-          target.dispatchEvent(new CustomEvent(confirmTriggerOn));
+        if (confirmTrigger) {
+          target.dispatchEvent(new CustomEvent(confirmTrigger));
         } else {
           target.dataset.confirmed = true;
           target.click();
