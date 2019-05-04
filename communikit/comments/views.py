@@ -78,7 +78,7 @@ class CommentUpdateView(
     form_class = CommentForm
     permission_required = "comments.change_comment"
 
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         return self.object.post.get_absolute_url()
 
 

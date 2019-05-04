@@ -156,7 +156,7 @@ class PostDeleteView(
     permission_required = "content.delete_post"
     success_url = reverse_lazy("content:list")
 
-    def delete(self, request, *args, **kwargs):
+    def delete(self, request, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         self.object.delete()
         if request.is_ajax():
