@@ -25,7 +25,7 @@ class TestUserUpdateView:
         response = client.post(
             "/users/~update/", {"name": "New Name"}
         )
-        assert response.url == "/users/"
+        assert response.url == "/users/~update/"
         login_user.refresh_from_db()
         assert login_user.name == "New Name"
 

@@ -5,12 +5,14 @@ from django.conf import settings
 from django.http import HttpRequest, HttpResponse
 from django.test import Client, RequestFactory
 
-from communikit.types import get_response_callable
-from communikit.users.tests.factories import UserFactory
-from communikit.content.models import Post
-from communikit.content.tests.factories import PostFactory
+from communikit.comments.models import Comment
+from communikit.comments.tests.factories import CommentFactory
 from communikit.communities.models import Community, Membership
 from communikit.communities.tests.factories import CommunityFactory
+from communikit.content.models import Post
+from communikit.content.tests.factories import PostFactory
+from communikit.types import get_response_callable
+from communikit.users.tests.factories import UserFactory
 
 
 @pytest.fixture
@@ -67,3 +69,8 @@ def moderator(
 @pytest.fixture
 def post() -> Post:
     return PostFactory()
+
+
+@pytest.fixture
+def comment() -> Comment:
+    return CommentFactory()

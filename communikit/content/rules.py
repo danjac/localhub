@@ -32,6 +32,3 @@ rules.add_perm("content.change_post", is_editor)
 rules.add_perm("content.delete_post", is_editor)
 
 rules.add_perm("content.like_post", is_post_community_member & ~is_author)
-# this will change if we add an "allow comment" flag to post
-rules.add_perm("content.create_comment", is_post_community_member)
-

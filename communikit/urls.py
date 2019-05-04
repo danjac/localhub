@@ -6,6 +6,7 @@ urlpatterns = [
     # Local
 
     path("", include("communikit.content.urls")),
+    path("comments/", include("communikit.comments.urls")),
     path("users/", include("communikit.users.urls")),
 
     # Third-party

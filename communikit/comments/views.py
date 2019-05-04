@@ -1,6 +1,6 @@
-from django.contrib.auth.views import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.utils.functional import cached_property
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
@@ -53,11 +53,15 @@ class CommentCreateView(
     def get_permission_object(self) -> Post:
         return self.parent
 
+    def get_success_url(self):
+        return self.parent.get_absolute_url()
+
     def form_valid(self, form) -> HttpResponse:
         self.object = form.save(commit=False)
         self.object.post = self.parent
         self.object.author = self.request.user
         self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 comment_create_view = CommentCreateView.as_view()
