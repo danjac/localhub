@@ -30,7 +30,7 @@
 
       {% if can_change_comment %}
       <div class="mr-2">
-          <a href="{% url 'comments:change' comment.id %}"
+          <a href="{% url 'comments:update' comment.id %}"
            >{% trans "Update" %}</a>
       </div>
       {% endif %}
