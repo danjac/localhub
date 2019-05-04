@@ -46,7 +46,7 @@
         {% url "comments:delete" comment.id as delete_url %}
         <a href="{{ delete_url }}"
            data-delete-from="{{ delete_url }}"
-           data-delete-redirect-to="{{ comment.post.get_absolute_url }}"
+           data-redirect-on-delete="{{ comment.post.get_absolute_url }}"
            data-confirm-dialog="#confirm-comment-delete"
            data-confirm-trigger="confirm-delete"
            >{% trans "Delete" %}</a>
@@ -60,4 +60,5 @@
   </div>
 
 </div>
+{% include "comments/includes/comment_confirm_delete.html" %}
 {% endblock content_main_panel %}

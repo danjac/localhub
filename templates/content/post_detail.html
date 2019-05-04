@@ -89,7 +89,7 @@
     {% include "comments/includes/comment.html" %}
   </div>
   {% endfor %}
-
+  {% include "comments/includes/comment_confirm_delete.html" %}
   {% if comment_form %}
   <div class="divider"></div>
   <h4>{% trans "Post a Comment" %}</h4>
