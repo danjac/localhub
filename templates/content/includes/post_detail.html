@@ -31,7 +31,6 @@
     {% endif %}
   </div>
   <div class="card-footer">
-    <div class="divider"></div>
 
     <div class="d-flex content-actions">
 
@@ -41,11 +40,11 @@
       </div>
       {% endif %}
 
-      {% if can_create_comment %}
       <div class="mr-2">
-        <a href="#" data-js-toggle="#new-comment-form-{{ post.id }}">{% trans "Comment" %}</a>
+        <a href="{{ post.get_absolute_url }}#comments">
+        Comments {% if post.num_comments %}({{ post.num_comments }}){% endif %}
+        </a>
       </div>
-      {% endif %}
 
       <div class="mr-2">
         <a href="">{% trans "Flag" %}</a>

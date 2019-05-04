@@ -1,7 +1,9 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.utils.functional import cached_property
+from django.utils.translation import ugettext as _
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
 from rules.contrib.views import PermissionRequiredMixin
@@ -26,19 +28,13 @@ class CommentDetailView(CommunityCommentQuerySetMixin, DetailView):
 comment_detail_view = CommentDetailView.as_view()
 
 
-class CommentIntercoolerFormMixin:
-    form_class = CommentForm
-    ic_template_name = "comments/includes/comment_form.html"
-    detail_view = CommentDetailView
-
-
 class CommentCreateView(
     LoginRequiredMixin,
     CommunityRequiredMixin,
     PermissionRequiredMixin,
-    CommentIntercoolerFormMixin,
     CreateView,
 ):
+    form_class = CommentForm
     permission_required = "comments:create_comment"
 
     @cached_property
@@ -61,6 +57,7 @@ class CommentCreateView(
         self.object.post = self.parent
         self.object.author = self.request.user
         self.object.save()
+        messages.success(self.request, _("Your comment has been posted"))
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -71,9 +68,9 @@ class CommentUpdateView(
     LoginRequiredMixin,
     CommunityCommentQuerySetMixin,
     PermissionRequiredMixin,
-    CommentIntercoolerFormMixin,
     UpdateView,
 ):
+    form_class = CommentForm
     permission_required = "comments:change_comment"
 
 

@@ -1,6 +1,30 @@
 {% extends "content/base.html" %}
+{% load i18n %}
+{% load rules %}
 {% block content_main_panel %}
+
 {% include "content/includes/post_detail.html" %}
 {% include "content/includes/post_confirm_delete.html" %}
-{% include "comments/includes/comment_form.html" %}
+
+<div class="divider"></div>
+
+<div id="comments">
+  {% if post.comments %}
+  <h4>{% trans "Comments" %}</h4>
+  {% endif %}
+  {% for comment in post.comments %}
+  <div class="mb-2">
+    {% include "comments/includes/comment.html" %}
+  </div>
+  {% endfor %}
+
+  {% if comment_form %}
+  <div class="divider"></div>
+  <h4>{% trans "Post a Comment" %}</h4>
+  <form method="POST" action="{% url 'comments:create' post.id %}">
+    {% include "comments/includes/comment_form.html" with form=comment_form %}
+    <button class="btn btn-primary" type="submit">{% trans "Submit" %}</button>
+  </form>
+  {% endif %}
+</div>
 {% endblock content_main_panel %}

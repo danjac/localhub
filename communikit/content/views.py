@@ -1,6 +1,8 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from typing import Dict, Any
+
 from django.contrib import messages
-from django.db.models import QuerySet
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count, Prefetch, QuerySet
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -14,6 +16,8 @@ from django.views.generic import (
 
 from rules.contrib.views import PermissionRequiredMixin
 
+from communikit.comments.forms import CommentForm
+from communikit.comments.models import Comment
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.content.forms import PostForm
@@ -59,14 +63,42 @@ class PostListView(CommunityPostQuerySetMixin, ListView):
     allow_empty = True
 
     def get_queryset(self) -> QuerySet:
-        return super().get_queryset().order_by("-created").select_subclasses()
+        return (
+            super()
+            .get_queryset()
+            .annotate(num_comments=Count("comment"))
+            .order_by("-created")
+            .select_subclasses()
+        )
 
 
 post_list_view = PostListView.as_view()
 
 
 class PostDetailView(CommunityPostQuerySetMixin, DetailView):
-    pass
+    def get_queryset(self) -> QuerySet:
+        return (
+            super()
+            .get_queryset()
+            .annotate(num_comments=Count("comment"))
+            .prefetch_related(
+                Prefetch(
+                    "comment_set",
+                    to_attr="comments",
+                    queryset=Comment.objects.select_related(
+                        "author", "post", "post__community"
+                    ).order_by("created"),
+                )
+            )
+            .order_by("-created")
+            .select_subclasses()
+        )
+
+    def get_context_data(self, **kwargs) -> Dict[str, Any]:
+        data = super().get_context_data(**kwargs)
+        if self.request.user.has_perm("comments:create"):
+            data["comment_form"] = CommentForm()
+        return data
 
 
 post_detail_view = PostDetailView.as_view()

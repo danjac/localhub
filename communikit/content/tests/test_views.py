@@ -3,6 +3,7 @@ import pytest
 from django.test.client import Client
 from django.urls import reverse
 
+from communikit.comments.models import Comment
 from communikit.communities.models import Community, Membership
 from communikit.content.models import Post
 from communikit.content.tests.factories import PostFactory
@@ -38,6 +39,15 @@ class TestPostListView:
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 3
 
+    def test_with_comments(self, comment: Comment, client: Client):
+        response = client.get(
+            reverse("content:list"), HTTP_HOST=comment.post.community.domain
+        )
+
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 1
+        assert response.context["object_list"][0].num_comments == 1
+
 
 class TestUpdateView:
     def test_get(self, client: Client, post_for_member: Post):
@@ -54,6 +64,15 @@ class TestUpdateView:
         assert response.url == post_for_member.get_absolute_url()
         post_for_member.refresh_from_db()
         assert post_for_member.title == "UPDATED"
+
+
+class TestDetailView:
+    def test_get(self, client: Client, post: Post):
+        response = client.get(
+            reverse("content:detail", args=[post.id]),
+            HTTP_HOST=post.community.domain,
+        )
+        assert response.status_code == 200
 
 
 class TestDeleteView:
