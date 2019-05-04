@@ -1,5 +1,9 @@
+{% extends "content/base.html" %}
+
 {% load i18n %}
 {% load rules %}
+
+{% block content_main_panel %}
 
 {% has_perm "comments.change_comment" user comment as can_change_comment %}
 {% has_perm "comments.delete_comment" user comment as can_delete_comment %}
@@ -56,3 +60,4 @@
   </div>
 
 </div>
+{% endblock content_main_panel %}
