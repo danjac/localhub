@@ -62,11 +62,7 @@
       <div class="mr-2">
         <a href="{{ delete_url }}"
            data-delete-from="{{ delete_url }}"
-           {% if edit_inline %}
            data-delete-target=".content-card"
-           {% else %}
-           data-redirect-on-delete="{% url 'content:list' %}"
-           {% endif %}
            data-confirm-dialog="#confirm-post-delete"
            data-confirm-trigger="confirm-delete"
            >{% trans "Delete" %}</a>

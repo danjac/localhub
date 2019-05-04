@@ -1,10 +1,82 @@
 {% extends "content/base.html" %}
+
 {% load i18n %}
 {% load rules %}
+{% load micawber_tags %}
+
 {% block content_main_panel %}
 
-{% include "content/includes/post_detail.html" %}
-{% include "content/includes/post_confirm_delete.html" %}
+{% has_perm "content.like_post" user post as can_like_post %}
+{% has_perm "content.change_post" user post as can_change_post %}
+{% has_perm "content.delete_post" user post as can_delete_post %}
+{% has_perm "comments.create_comment" user post as can_create_comment %}
+
+<div class="card content-card">
+  <div class="card-header">
+    <div class="card-subtitle text-gray float-right">
+      {% blocktrans with post.created|timesince as created %}{{ created }} ago{% endblocktrans %}
+    </div>
+    {% if post.title %}
+    <div class="card-title h3">{{ post.title }}</div>
+    <div class="card-subtitle h6"><a href="">{{ post.author.username }}</a></div>
+    {% else %}
+    <div class="card-title h6"><a href="">{{ post.author.username }}</a></div>
+    {% endif %}
+  </div>
+  <div class="card-body">
+    <div class="divider"></div>
+    {% if post.description %}
+    <div>
+      {{ post.markdown }}
+    </div>
+    {% endif %}
+    {% if post.url %}
+    <div>
+      {{ post.url|oembed }}
+    </div>
+    {% endif %}
+  </div>
+  <div class="card-footer">
+
+    <div class="d-flex content-actions">
+
+      {% if can_like_post %}
+      <div class="mr-2">
+        <a href="">{% trans "Like" %}</a>
+      </div>
+      {% endif %}
+
+      <div class="mr-2">
+        <a href="">{% trans "Flag" %}</a>
+      </div>
+
+      {% if can_change_post %}
+      <div class="mr-2">
+        <a href="{% url 'content:update' post.id %}"
+           >{% trans "Update" %}</a>
+      </div>
+      {% endif %}
+
+      {% if can_delete_post %}
+      {% url "content:delete" post.id as delete_url %}
+      <div class="mr-2">
+        <a href="{{ delete_url }}"
+           data-delete-from="{{ delete_url }}"
+           data-redirect-on-delete="{% url 'content:list' %}"
+           data-confirm-dialog="#confirm-post-delete"
+           data-confirm-trigger="confirm-delete"
+           >{% trans "Delete" %}</a>
+      </div>
+      {% include "content/includes/post_confirm_delete.html" %}
+      {% endif %}
+
+      <div class="">
+        <a href="{{ post.get_permalink }}">{% trans "Permalink" %}</a>
+      </div>
+    </div>
+  </div>
+
+</div>
 
 <div class="divider"></div>
 
