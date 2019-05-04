@@ -99,7 +99,6 @@ class ProfilePostListView(PostListView):
         return super().get_queryset().filter(author=self.profile)
 
     def get_context_data(self, **kwargs) -> Dict[str, Any]:
-        print(self.get_template_names())
         data = super().get_context_data(**kwargs)
         data["profile"] = self.profile
         return data
