@@ -9,7 +9,7 @@
     <div class="card-subtitle text-gray float-right">
       {% blocktrans with comment.created|timesince as created %}{{ created }} ago{% endblocktrans %}
     </div>
-    <div class="card-title h6"><a href="">{{ comment.author.username }}</a></div>
+    <div class="card-title h6"><a href="{{ comment.author.get_profile_url }}">{{ comment.author.username }}</a></div>
   </div>
   <div class="card-body">
     <div class="divider"></div>

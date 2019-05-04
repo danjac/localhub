@@ -45,12 +45,9 @@ def linkify_mentions(content: str) -> str:
 
     tokens = content.split(" ")
     rv = []
-    # placeholder url until we have some suitable views
-    search_url = reverse("content:list")
     for token in tokens:
-
         for mention in MENTIONS_RE.findall(token):
-            url = search_url + f"?profile={mention}"
+            url = reverse("content:profile", args=[mention])
             token = token.replace(
                 "@" + mention, f'<a href="{url}">@{mention}</a>'
             )

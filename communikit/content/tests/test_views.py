@@ -1,5 +1,6 @@
 import pytest
 
+from django.conf import settings
 from django.test.client import Client
 from django.urls import reverse
 
@@ -47,6 +48,30 @@ class TestPostListView:
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 1
         assert response.context["object_list"][0].num_comments == 1
+
+
+class TestProfilePostListView:
+    def test_get(
+        self,
+        community: Community,
+        client: Client,
+        user: settings.AUTH_USER_MODEL,
+    ):
+        Membership.objects.create(member=user, community=community)
+        PostFactory.create_batch(3, community=community, author=user)
+        response = client.get(reverse("content:profile", args=[user.username]))
+        assert response.status_code == 200
+        assert response.context["profile"] == user
+        assert len(response.context["object_list"]) == 3
+
+    def test_get_if_not_member(
+        self,
+        community: Community,
+        client: Client,
+        user: settings.AUTH_USER_MODEL,
+    ):
+        response = client.get(reverse("content:profile", args=[user.username]))
+        assert response.status_code == 404
 
 
 class TestUpdateView:

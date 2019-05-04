@@ -11,7 +11,7 @@ from communikit.content.tests.factories import PostFactory
 pytestmark = pytest.mark.django_db
 
 
-class TestCommentCreate:
+class TestCommentCreateView:
     def test_post(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
         response = client.post(
@@ -22,7 +22,7 @@ class TestCommentCreate:
         assert comment.author == member.member
 
 
-class TestCommentDetail:
+class TestCommentDetailView:
     def test_get(self, client: Client, comment: Comment):
         response = client.get(
             reverse("comments:detail", args=[comment.id]),
@@ -31,7 +31,7 @@ class TestCommentDetail:
         assert response.status_code == 200
 
 
-class TestCommentUpdate:
+class TestCommentUpdateView:
     def test_get(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
         comment = CommentFactory(author=member.member, post=post)
@@ -50,7 +50,7 @@ class TestCommentUpdate:
         assert comment.content == "new content"
 
 
-class TestCommentDelete:
+class TestCommentDeleteView:
     def test_delete(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
         comment = CommentFactory(author=member.member, post=post)

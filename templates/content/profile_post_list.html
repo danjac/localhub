@@ -1,0 +1,17 @@
+{% extends "content/base.html" %}
+{% load i18n %}
+{% load rules %}
+{% block content_main_panel %}
+
+<h2>{{ profile.username }}</h2>
+
+{% for post in object_list %}
+<div class="mt-2">
+  {% include "content/includes/post.html" %}
+</div>
+{% endfor %}
+
+
+{% include "includes/pagination.html" with ic_target="#posts" %}
+{% include "content/includes/post_confirm_delete.html" %}
+{% endblock content_main_panel %}

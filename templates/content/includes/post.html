@@ -12,7 +12,7 @@
     <div class="card-subtitle text-gray float-right">
       {% blocktrans with post.created|timesince as created %}{{ created }} ago{% endblocktrans %}
     </div>
-    <div class="card-title h6"><a href="">{{ post.author.username }}</a></div>
+    <div class="card-title h6"><a href="{{ post.author.get_profile_url }}">{{ post.author.username }}</a></div>
     {% if post.title %}
     <div class="card-subtitle">{{ post.title }}</div>
     {% endif %}
