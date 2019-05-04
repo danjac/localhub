@@ -36,7 +36,7 @@ class Post(TimeStampedModel):
         return reverse("content:detail", args=[self.id])
 
     def get_permalink(self) -> str:
-        return f"http://{self.community.domain}{self.get_absolute_url()}"
+        return self.community.create_permalink(self.get_absolute_url())
 
     def markdown(self) -> str:
         return mark_safe(markdownify(self.description))

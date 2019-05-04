@@ -1,4 +1,5 @@
 from typing import Optional
+from urllib.parse import urljoin
 
 from django.conf import settings
 from django.core.validators import RegexValidator, URLValidator
@@ -72,6 +73,9 @@ class Community(TimeStampedModel):
 
     def get_absolute_url(self) -> str:
         return f"http://{self.domain}"
+
+    def create_permalink(self, url: str) -> str:
+        return urljoin(self.get_absolute_url(), url)
 
     def user_has_role(self, user: settings.AUTH_USER_MODEL, role: str) -> bool:
         if user.is_anonymous:

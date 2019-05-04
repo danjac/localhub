@@ -1,5 +1,6 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from markdownx.models import MarkdownxField
@@ -22,3 +23,9 @@ class Comment(TimeStampedModel):
 
     def markdown(self) -> str:
         return mark_safe(markdownify(self.content))
+
+    def get_absolute_url(self) -> str:
+        return reverse("comments:detail", args=[self.id])
+
+    def get_permalink(self) -> str:
+        return self.post.community.create_permalink(self.get_absolute_url())

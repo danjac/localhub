@@ -31,6 +31,25 @@ class TestCommentDetail:
         assert response.status_code == 200
 
 
+class TestCommentUpdate:
+    def test_get(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        comment = CommentFactory(author=member.member, post=post)
+        response = client.get(reverse("comments:update", args=[comment.id]))
+        assert response.status_code == 200
+
+    def test_post(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        comment = CommentFactory(author=member.member, post=post)
+        response = client.post(
+            reverse("comments:update", args=[comment.id]),
+            {"content": "new content"},
+        )
+        assert response.url == post.get_absolute_url()
+        comment.refresh_from_db()
+        assert comment.content == "new content"
+
+
 class TestCommentDelete:
     def test_delete(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)

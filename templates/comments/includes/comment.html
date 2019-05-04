@@ -1,47 +1,56 @@
 {% load i18n %}
+{% load rules %}
+
+{% has_perm "comments.change_comment" user comment as can_change_comment %}
+{% has_perm "comments.delete_comment" user comment as can_delete_comment %}
+
 <div class="card comment-card">
-    <div class="card-header">
-        <div class="card-subtitle text-gray float-right">
-            {% blocktrans with comment.created|timesince as created %}{{ created }} ago{% endblocktrans %}
-        </div>
-        <div class="card-title h6"><a href="">{{ comment.author.username }}</a></div>
+  <div class="card-header">
+    <div class="card-subtitle text-gray float-right">
+      {% blocktrans with comment.created|timesince as created %}{{ created }} ago{% endblocktrans %}
     </div>
-    <div class="card-body">
-        <div class="divider"></div>
-        {{ comment.markdown }}
+    <div class="card-title h6"><a href="">{{ comment.author.username }}</a></div>
+  </div>
+  <div class="card-body">
+    <div class="divider"></div>
+    {{ comment.markdown }}
+  </div>
+  <div class="card-footer">
+    <div class="divider"></div>
+
+    <div class="d-flex content-actions">
+
+      <div class="mr-2">
+        <a href="">{% trans "Like" %}</a>
+      </div>
+
+      <div class="mr-2">
+        <a href="">{% trans "Flag" %}</a>
+      </div>
+
+      {% if can_change_comment %}
+      <div class="mr-2">
+          <a href="{% url 'comments:change' comment.id %}"
+           >{% trans "Update" %}</a>
+      </div>
+      {% endif %}
+
+      {% if can_delete_comment %}
+      <div class="mr-2">
+        {% url "comments:delete" comment.id as delete_url %}
+        <a href="{{ delete_url }}"
+           data-delete-from="{{ delete_url }}"
+           data-delete-target=".comment-card"
+           data-confirm-dialog="#confirm-comment-delete"
+           data-confirm-trigger="confirm-delete"
+           >{% trans "Delete" %}</a>
+      </div>
+      {% endif %}
+
+      <div class="">
+        <a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a>
+      </div>
     </div>
-    <div class="card-footer">
-        <div class="divider"></div>
-
-        <div class="d-flex content-actions">
-
-            <div class="mr-2">
-                <a href="">{% trans "Like" %}</a>
-            </div>
-
-            <div class="mr-2">
-                <a href="">{% trans "Flag" %}</a>
-            </div>
-
-            <div class="mr-2">
-                <a href=""
-                   >{% trans "Update" %}</a>
-            </div>
-
-            <div class="mr-2">
-                {% url "comments:delete" comment.id as delete_url %}
-                <a href="{{ delete_url }}"
-                   data-delete-from="{{ delete_url }}"
-                   data-delete-target=".comment-card"
-                   data-confirm-dialog="#confirm-comment-delete"
-                   data-confirm-trigger="confirm-delete"
-                   >{% trans "Delete" %}</a>
-            </div>
-
-            <div class="">
-                <a href="">{% trans "Permalink" %}</a>
-            </div>
-        </div>
-    </div>
+  </div>
 
 </div>
