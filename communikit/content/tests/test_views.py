@@ -89,3 +89,11 @@ class TestDeleteView:
         )
         assert response.url == reverse("content:list")
         assert Post.objects.count() == 0
+
+    def test_delete_ajax(self, client: Client, post_for_member: Post):
+        response = client.delete(
+            reverse("content:delete", args=[post_for_member.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        assert response.status_code == 204
+        assert Post.objects.count() == 0

@@ -1,7 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import (
+    Http404,
+    HttpRequest,
+    HttpResponse,
+    HttpResponseRedirect,
+)
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
@@ -35,7 +40,7 @@ class CommentCreateView(
     CreateView,
 ):
     form_class = CommentForm
-    permission_required = "comments:create_comment"
+    permission_required = "comments.create_comment"
 
     @cached_property
     def parent(self) -> Post:
@@ -71,7 +76,7 @@ class CommentUpdateView(
     UpdateView,
 ):
     form_class = CommentForm
-    permission_required = "comments:change_comment"
+    permission_required = "comments.change_comment"
 
 
 comment_update_view = CommentUpdateView.as_view()
@@ -83,7 +88,17 @@ class CommentDeleteView(
     PermissionRequiredMixin,
     DeleteView,
 ):
-    permission_required = "comments:delete_comment"
+    permission_required = "comments.delete_comment"
+
+    def get_success_url(self) -> str:
+        return self.object.post.get_absolute_url()
+
+    def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        self.object.delete()
+        if request.is_ajax():
+            return HttpResponse(status=204)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 comment_delete_view = CommentDeleteView.as_view()
