@@ -25,6 +25,7 @@ from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.content.forms import PostForm
 from communikit.content.models import Post
+from communikit.users.views import ProfileUserMixin
 
 
 class CommunityPostQuerySetMixin(CommunityRequiredMixin):
@@ -78,30 +79,11 @@ class PostListView(CommunityPostQuerySetMixin, ListView):
 post_list_view = PostListView.as_view()
 
 
-class ProfilePostListView(PostListView):
+class ProfilePostListView(ProfileUserMixin, PostListView):
     template_name = "content/profile_post_list.html"
-
-    def get(self, request, username, *args, **kwargs) -> HttpResponse:
-        self.profile = self.get_profile()
-        return super().get(request, *args, **kwargs)
-
-    def get_profile(self) -> settings.AUTH_USER_MODEL:
-        try:
-            return (
-                get_user_model()
-                ._default_manager.filter(communities=self.request.community)
-                .get(username=self.kwargs["username"])
-            )
-        except ObjectDoesNotExist:
-            raise Http404
 
     def get_queryset(self) -> QuerySet:
         return super().get_queryset().filter(author=self.profile)
-
-    def get_context_data(self, **kwargs) -> Dict[str, Any]:
-        data = super().get_context_data(**kwargs)
-        data["profile"] = self.profile
-        return data
 
 
 profile_post_list_view = ProfilePostListView.as_view()

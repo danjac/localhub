@@ -9,7 +9,13 @@ from django.http import (
 )
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
-from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -17,6 +23,7 @@ from communikit.comments.forms import CommentForm
 from communikit.comments.models import Comment
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.content.models import Post
+from communikit.users.views import ProfileUserMixin
 
 
 class CommunityCommentQuerySetMixin(CommunityRequiredMixin):
@@ -105,3 +112,19 @@ class CommentDeleteView(
 
 
 comment_delete_view = CommentDeleteView.as_view()
+
+
+class ProfileCommentListView(ProfileUserMixin, ListView):
+    template_name = "comments/profile_comment_list.html"
+
+    def get_queryset(self) -> QuerySet:
+        return (
+            Comment.objects.filter(
+                author=self.profile, post__community=self.request.community
+            )
+            .select_related("author", "post", "post__community")
+            .order_by("-created")
+        )
+
+
+profile_comment_list_view = ProfileCommentListView.as_view()

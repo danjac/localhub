@@ -1,9 +1,16 @@
-from django.urls import reverse_lazy
+from typing import Any, Dict
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.http import Http404
+from django.urls import reverse_lazy
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import DetailView, UpdateView, DeleteView
+from django.views.generic import DeleteView, DetailView, UpdateView
+from django.views.generic.base import ContextMixin
+
+from communikit.communities.views import CommunityRequiredMixin
 
 User = get_user_model()
 
@@ -15,6 +22,22 @@ class CurrentUserMixin(LoginRequiredMixin):
 
     def get_object(self) -> User:
         return self.request.user
+
+
+class ProfileUserMixin(CommunityRequiredMixin, ContextMixin):
+    @cached_property
+    def profile(self) -> User:
+        try:
+            return User.objects.filter(communities=self.request.community).get(
+                username=self.kwargs["username"]
+            )
+        except User.DoesNotExist:
+            raise Http404
+
+    def get_context_data(self, **kwargs) -> Dict[str, Any]:
+        data = super().get_context_data(**kwargs)
+        data["profile"] = self.profile
+        return data
 
 
 class UserDetailView(CurrentUserMixin, DetailView):
