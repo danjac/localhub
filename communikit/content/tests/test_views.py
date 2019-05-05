@@ -1,8 +1,10 @@
+import json
 import pytest
 
 from django.conf import settings
 from django.test.client import Client
 from django.urls import reverse
+from django.utils.translation import ugettext as _
 
 from communikit.comments.models import Comment
 from communikit.communities.models import Community, Membership
@@ -89,7 +91,7 @@ class TestProfilePostListView:
         assert response.status_code == 404
 
 
-class TestUpdateView:
+class TestPostUpdateView:
     def test_get(self, client: Client, post_for_member: Post):
         response = client.get(
             reverse("content:update", args=[post_for_member.id])
@@ -106,16 +108,47 @@ class TestUpdateView:
         assert post_for_member.title == "UPDATED"
 
 
-class TestDetailView:
+class TestPostDetailView:
     def test_get(self, client: Client, post: Post):
         response = client.get(
             reverse("content:detail", args=[post.id]),
             HTTP_HOST=post.community.domain,
         )
         assert response.status_code == 200
+        assert "comment_form" not in response.context
+
+    def test_get_if_can_post_comment(
+        self, client: Client, post: Post, login_user: settings.AUTH_USER_MODEL
+    ):
+        Membership.objects.create(member=login_user, community=post.community)
+        response = client.get(
+            reverse("content:detail", args=[post.id]),
+            HTTP_HOST=post.community.domain,
+        )
+        assert response.status_code == 200
+        assert "comment_form" in response.context
 
 
-class TestDeleteView:
+class TestPostLikeView:
+    def test_if_unliked(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        post.like(member.member)
+        response = client.post(
+            reverse("content:like", args=[post.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        assert json.loads(response.content)["status"] == _("Like")
+
+    def test_if_liked(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        response = client.post(
+            reverse("content:like", args=[post.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        assert json.loads(response.content)["status"] == _("Unlike")
+
+
+class TestPostDeleteView:
     def test_get(self, client: Client, post_for_member: Post):
         # test confirmation page for non-JS clients
         response = client.get(

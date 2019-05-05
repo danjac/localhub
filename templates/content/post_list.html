@@ -2,8 +2,7 @@
 {% load i18n %}
 {% load rules %}
 {% block content_main_panel %}
-{% if page_obj.number == 1 %}
-{% has_perm 'content:create_post' user request.community as can_create_post %}
+{% has_perm 'content.create_post' user request.community as can_create_post %}
 {% if can_create_post %}
 {% url 'content:create' as create_post_url %}
 <div class="new-post">
@@ -21,7 +20,6 @@
 <p class="bg-gray p-2 text-center">
   {% trans "You do not have permission to post to this site." %}
 </p>
-{% endif %}
 {% endif %}
 
 {% for post in object_list %}

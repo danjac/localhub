@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
-from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError, models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
@@ -44,3 +45,18 @@ class Post(TimeStampedModel):
 
     def markdown(self) -> str:
         return mark_safe(markdownify(self.description))
+
+    def like(self, user: settings.AUTH_USER_MODEL) -> bool:
+        """
+        If like already exists, deletes the like, otherwise
+        creates new one. Returns whether user likes object or not.
+        """
+        try:
+            self.likes.get(user=user).delete()
+            return False
+        except ObjectDoesNotExist:
+            try:
+                self.likes.create(user=user)
+            except IntegrityError:
+                pass
+        return True

@@ -3,7 +3,6 @@ from typing import Dict, Any
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Prefetch, QuerySet
-from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -25,7 +24,6 @@ from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.content.forms import PostForm
 from communikit.content.models import Post
-from communikit.likes.models import Like
 from communikit.users.views import ProfileUserMixin
 
 
@@ -118,7 +116,7 @@ class PostDetailView(CommunityPostQuerySetMixin, DetailView):
 
     def get_context_data(self, **kwargs) -> Dict[str, Any]:
         data = super().get_context_data(**kwargs)
-        if self.request.user.has_perm("comments:create"):
+        if self.request.user.has_perm("comments.create_comment", self.object):
             data["comment_form"] = CommentForm()
         return data
 
@@ -167,21 +165,11 @@ class PostLikeView(
 
     def post(self, request, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
-        # if user has already liked this post then delete,
-        # otherwise make new like
-        like_deleted = False
-        try:
-            created, like = Like.objects.get_or_create(
-                content_object=self.object, user=request.user
-            )
-            if created:
-                like.delete()
-                like_deleted = True
-        except IntegrityError:
-            # in case of race condition, just ignore
-            pass
+        is_liked = self.object.like(request.user)
         if request.is_ajax():
-            return JsonResponse({"like_deleted": like_deleted})
+            return JsonResponse(
+                {"status": _("Unlike") if is_liked else _("Like")}
+            )
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self) -> str:
