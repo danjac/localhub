@@ -174,6 +174,20 @@ class TestPostDeleteView:
         assert Post.objects.count() == 0
 
 
+class TestPostSearchView:
+    def test_get_for_query(self, client: Client, community: Community):
+        PostFactory(community=community, description="random")
+        response = client.get(reverse("content:search"), {"q": "random"})
+        assert len(response.context["object_list"]) == 1
+        assert response.context["search_query"] == "random"
+
+    def test_get_for_hashtag(self, client: Client, community: Community):
+        PostFactory(community=community, description="#random")
+        response = client.get(reverse("content:search"), {"hashtag": "random"})
+        assert len(response.context["object_list"]) == 1
+        assert response.context["search_query"] == "#random"
+
+
 class TestActivityView:
     def test_get(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)

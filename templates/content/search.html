@@ -1,0 +1,22 @@
+{% extends "content/base.html" %}
+{% load i18n %}
+{% load rules %}
+{% block content_main_panel %}
+
+{% if search_query %}
+<h3>Search for {{ search_query }}</h3>
+{% endif %}
+
+{% for post in object_list %}
+<div class="mt-2">
+  {% include "content/includes/post.html" %}
+</div>
+{% empty %}
+<p class="p-2 bg-gray text-center">
+  {% trans "Sorry, no results found for this search" %}
+</p>
+{% endfor %}
+
+{% include "includes/pagination.html" %}
+{% include "content/includes/post_confirm_delete.html" %}
+{% endblock content_main_panel %}

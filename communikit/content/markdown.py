@@ -63,8 +63,7 @@ def linkify_hashtags(content: str) -> str:
     """
     tokens = content.split(" ")
     rv = []
-    # placeholder url until we have some suitable views
-    search_url = reverse("content:list")
+    search_url = reverse("content:search")
     for token in tokens:
 
         for tag in HASHTAGS_RE.findall(token):

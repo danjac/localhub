@@ -3,6 +3,11 @@ from typing import Dict, Any
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.postgres.search import (
+    SearchQuery,
+    SearchRank,
+    SearchVector,
+)
 from django.db.models import Count, Prefetch, QuerySet
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
@@ -27,6 +32,7 @@ from communikit.comments.forms import CommentForm
 from communikit.comments.models import Comment
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
+from communikit.content import app_settings
 from communikit.content.forms import PostForm
 from communikit.content.models import Post
 from communikit.users.views import ProfileUserMixin
@@ -74,7 +80,7 @@ post_create_view = PostCreateView.as_view()
 
 
 class PostListView(CommunityPostQuerySetMixin, ListView):
-    paginate_by = 12
+    paginate_by = app_settings.PAGINATE_BY
     allow_empty = True
 
     def get_queryset(self) -> QuerySet:
@@ -90,7 +96,48 @@ class PostListView(CommunityPostQuerySetMixin, ListView):
 post_list_view = PostListView.as_view()
 
 
+class PostSearchView(CommunityPostQuerySetMixin, ListView):
+    template_name = "content/search.html"
+
+    def get_queryset(self):
+
+        hashtag = self.request.GET.get("hashtag", "").strip()
+        if hashtag:
+            self.query = "#" + hashtag
+        else:
+            self.query = self.request.GET.get("q", "").strip()
+
+        if not self.query:
+            return Post.objects.none()
+        search_vector = SearchVector("title", "description")
+        search_query = SearchQuery(self.query)
+        return (
+            super()
+            .get_queryset()
+            .annotate(
+                num_comments=Count("comment"),
+                num_likes=Count("likes"),
+                search=search_vector,
+                rank=SearchRank(search_vector, search_query),
+            )
+            .filter(search=search_query)
+            .order_by("-rank")
+            .select_subclasses()
+        )
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data.update({"search_query": self.query})
+        return data
+
+
+post_search_view = PostSearchView.as_view()
+
+
 class ProfilePostListView(ProfileUserMixin, ListView):
+    paginate_by = app_settings.PAGINATE_BY
+    allow_empty = True
+
     template_name = "content/profile_post_list.html"
 
     def get_queryset(self) -> QuerySet:
@@ -207,6 +254,7 @@ class ActivityView(LoginRequiredMixin, CommunityRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
 
+        # TBD: performance here is horrible, fix duplicate queries etc
         data["notifications"] = Notification.objects.filter(
             recipient=self.request.user,
             target_content_type=ContentType.objects.get_for_model(

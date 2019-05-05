@@ -24,7 +24,7 @@
         </section>
         {% if request.community %}
         <section class="navbar-section hide-sm">
-          <form method="GET" action="/">
+            <form method="GET" action="{% url 'content:search' %}">
             <div class="input-group input-inline">
               <input class="form-input" name="q" type="search" placeholder="{% trans "Search" %}">
               <button class="btn bg-gray text-dark input-group-btn">{% trans "Search" %}</button>
