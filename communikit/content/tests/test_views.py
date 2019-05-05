@@ -6,6 +6,8 @@ from django.test.client import Client
 from django.urls import reverse
 from django.utils.translation import ugettext as _
 
+from notifications.models import Notification
+
 from communikit.comments.models import Comment
 from communikit.communities.models import Community, Membership
 from communikit.content.models import Post
@@ -170,3 +172,17 @@ class TestPostDeleteView:
         )
         assert response.status_code == 204
         assert Post.objects.count() == 0
+
+
+class TestActivityView:
+    def test_get(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        Notification.objects.create(
+            actor=post.author,
+            recipient=member.member,
+            verb="post_created",
+            target=member.community,
+            action_object=post,
+        )
+        response = client.get(reverse("content:activity"))
+        assert response.status_code == 200

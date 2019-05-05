@@ -2,7 +2,7 @@
 {% load i18n %}
 {% block content_main_panel %}
 {% if notifications %}
-<a class="btn btn-link float-right" href="{% url 'notifications:mark_all_as_read' %}">
+<a class="btn btn-link float-right" href="{% url 'notifications:mark_all_as_read' %}?next={{ request.path }}">
   {% trans "Mark all as read" %}
 </a>
 {% endif %}

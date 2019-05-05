@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load rules %}
-{% load notifications_tags %}
 {% load communities_tags %}
 
 {% block content %}
@@ -26,13 +25,8 @@
     {% if user.is_authenticated %}
     <ul class="menu">
       <li class="menu-item"><a href="">{% trans "Stream" %}</a></li>
-      {% notifications_unread as unread_count %}
       <li class="menu-item">
-        <a href="{% url 'content:activity' %}">
-          <span{% if unread_count %} class="badge" data-badge="{{ unread_count }}"{% endif %}>
-          {% trans "Activity" %}
-          </span>
-        </a>
+        <a href="{% url 'content:activity' %}">{% trans "Activity" %}</a>
       </li>
       <li class="menu-item"><a href="{{ user.get_profile_url }}">{% trans "My Profile" %}</a></li>
     </ul>
