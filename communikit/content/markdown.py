@@ -1,6 +1,8 @@
 import re
 import bleach
 
+from typing import Set
+
 from bleach.linkifier import LinkifyFilter
 
 from django.urls import reverse
@@ -35,6 +37,19 @@ def markdownify(content: str) -> str:
     """
     return cleaner.clean(
         default_markdownify(linkify_hashtags(linkify_mentions(content)))
+    )
+
+
+def extract_mentions(content: str) -> Set[str]:
+    """
+    Returns set of @mentions in text
+    """
+    return set(
+        [
+            mention
+            for token in content.split(" ")
+            for mention in MENTIONS_RE.findall(token)
+        ]
     )
 
 

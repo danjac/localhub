@@ -1,6 +1,7 @@
 from django.utils.encoding import force_str
 
 from communikit.content.markdown import (
+    extract_mentions,
     linkify_hashtags,
     linkify_mentions,
     markdownify,
@@ -18,6 +19,12 @@ class TestMarkdownifySafe:
             force_str(markdownify(content))
             == "&lt;script&gt;alert('howdy');&lt;/script&gt;"
         )
+
+
+class TestExtractMentions:
+    def test_extract(self):
+        content = "hello @danjac and @weegill"
+        assert extract_mentions(content) == {"danjac", "weegill"}
 
 
 class TestLinkifyMentions:

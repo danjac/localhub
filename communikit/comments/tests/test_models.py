@@ -14,6 +14,10 @@ class TestComments:
         comment = Comment(content="*testing*")
         assert force_str(comment.markdown()) == "<p><em>testing</em></p>"
 
+    def test_extract_mentions(self):
+        comment = Comment(content="hello @danjac")
+        assert comment.extract_mentions() == {"danjac"}
+
     def test_like(self, comment: Comment, user: settings.AUTH_USER_MODEL):
         assert comment.like(user)
         assert Like.objects.count() == 1

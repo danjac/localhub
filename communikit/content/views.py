@@ -59,18 +59,40 @@ class PostCreateView(
     def get_permission_object(self) -> Community:
         return self.request.community
 
-    def form_valid(self, form) -> HttpResponse:
-        self.object = form.save(commit=False)
-        self.object.author = self.request.user
-        self.object.community = self.request.community
-        self.object.save()
+    def notify(self):
+
+        members = self.request.community.members.all().exclude(
+            pk=self.request.user.pk
+        )
+
         notify.send(
             self.request.user,
-            recipient=self.request.community.members.all(),
+            recipient=members,
             verb="post_created",
             action_object=self.object,
             target=self.request.community,
         )
+
+        mentions = self.object.extract_mentions()
+
+        if mentions:
+            notify.send(
+                self.request.user,
+                recipient=members.filter(username__in=mentions),
+                verb="post_mentioned",
+                action_object=self.object,
+                target=self.request.community,
+            )
+
+    def form_valid(self, form) -> HttpResponse:
+
+        self.object = form.save(commit=False)
+        self.object.author = self.request.user
+        self.object.community = self.request.community
+        self.object.save()
+
+        self.notify()
+
         messages.success(self.request, _("Your update has been posted"))
         return HttpResponseRedirect(self.get_success_url())
 

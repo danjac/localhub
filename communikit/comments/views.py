@@ -65,11 +65,8 @@ class CommentCreateView(
     def get_success_url(self):
         return self.object.get_absolute_url()
 
-    def form_valid(self, form) -> HttpResponse:
-        comment = form.save(commit=False)
-        comment.post = self.object
-        comment.author = self.request.user
-        comment.save()
+    def notify(self, comment: Comment):
+
         notify.send(
             self.request.user,
             recipient=comment.post.author,
@@ -77,6 +74,25 @@ class CommentCreateView(
             action_object=self.object,
             target=self.request.community,
         )
+        mentions = comment.extract_mentions()
+
+        if mentions:
+            notify.send(
+                self.request.user,
+                recipient=self.request.community.members.exclude(
+                    pk=self.request.user.pk
+                ).filter(username__in=mentions),
+                verb="comment_mentioned",
+                action_object=comment,
+                target=self.request.community,
+            )
+
+    def form_valid(self, form) -> HttpResponse:
+        comment = form.save(commit=False)
+        comment.post = self.object
+        comment.author = self.request.user
+        comment.save()
+        self.notify(comment)
         messages.success(self.request, _("Your comment has been posted"))
         return HttpResponseRedirect(self.get_success_url())
 

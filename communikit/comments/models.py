@@ -1,7 +1,9 @@
+from typing import Set
+
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import models, IntegrityError
+from django.db import IntegrityError, models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
@@ -9,8 +11,8 @@ from markdownx.models import MarkdownxField
 
 from model_utils.models import TimeStampedModel
 
+from communikit.content.markdown import markdownify, extract_mentions
 
-from communikit.content.markdown import markdownify
 from communikit.content.models import Post
 from communikit.likes.models import Like
 
@@ -28,6 +30,9 @@ class Comment(TimeStampedModel):
 
     def markdown(self) -> str:
         return mark_safe(markdownify(self.content))
+
+    def extract_mentions(self) -> Set[str]:
+        return extract_mentions(self.content)
 
     def get_absolute_url(self) -> str:
         return reverse("comments:detail", args=[self.id])

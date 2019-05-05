@@ -1,3 +1,5 @@
+from typing import Set
+
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ObjectDoesNotExist
@@ -11,7 +13,7 @@ from model_utils.managers import InheritanceManager
 from model_utils.models import TimeStampedModel
 
 from communikit.communities.models import Community
-from communikit.content.markdown import markdownify
+from communikit.content.markdown import markdownify, extract_mentions
 from communikit.likes.models import Like
 
 
@@ -45,6 +47,12 @@ class Post(TimeStampedModel):
 
     def markdown(self) -> str:
         return mark_safe(markdownify(self.description))
+
+    def extract_mentions(self) -> Set[str]:
+        """
+        Return all @mentions in description
+        """
+        return extract_mentions(self.description)
 
     def like(self, user: settings.AUTH_USER_MODEL) -> bool:
         """

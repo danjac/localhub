@@ -26,6 +26,10 @@ class TestPostModel:
         post = Post(description="*testing*")
         assert force_str(post.markdown()) == "<p><em>testing</em></p>"
 
+    def test_extract_mentions(self):
+        post = Post(description="hello @danjac")
+        assert post.extract_mentions() == {"danjac"}
+
     def test_markdown_with_dangerous_tags(self):
         post = Post(description="<script>alert('howdy');</script>")
         assert (

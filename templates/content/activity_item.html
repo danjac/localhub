@@ -7,10 +7,14 @@
             {% blocktrans %}<a href="{{ profile_url }}">{{ actor }}</a> liked your <a href="{{ object_url }}">post</a>{% endblocktrans %}
             {% elif verb == "post_created" %}
             {% blocktrans %}<a href="{{ profile_url }}">{{ actor }}</a> published a <a href="{{ object_url }}">post</a>{% endblocktrans %}
-            {% elif verb == "comment_created" %}
+            {% elif verb == "post_mentioned" %}
+            {% blocktrans %}<a href="{{ profile_url }}">{{ actor }}</a> mentioned you in a <a href="{{ object_url }}">post</a>{% endblocktrans %}
+             {% elif verb == "comment_created" %}
             {% blocktrans %}<a href="{{ profile_url }}">{{ actor }}</a> added a comment to your <a href="{{ object_url }}">post</a>{% endblocktrans %}
             {% elif verb == "comment_liked" %}
             {% blocktrans %}<a href="{{ profile_url }}">{{ actor }}</a> liked your <a href="{{ object_url }}">comment</a>{% endblocktrans %}
+            {% elif verb == "comment_mentioned" %}
+            {% blocktrans %}<a href="{{ profile_url }}">{{ actor }}</a> mentioned you in a <a href="{{ object_url }}">comment</a>{% endblocktrans %}
             {% endif %}
             {% endwith %}
         </div>
