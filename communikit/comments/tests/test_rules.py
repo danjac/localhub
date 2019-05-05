@@ -48,6 +48,22 @@ class TestIsCommentCommunityModerator:
 
 
 class TestPermissions:
+    def test_can_like_comment_if_author(self, comment: Comment):
+        assert not comment.author.has_perm("comments.like_comment", comment)
+
+    def test_can_like_comment_if_member(
+        self, comment: Comment, user: settings.AUTH_USER_MODEL
+    ):
+        Membership.objects.create(
+            member=user, community=comment.post.community
+        )
+        assert user.has_perm("comments.like_comment", comment)
+
+    def test_can_like_comment_if_not_member(
+        self, comment: Comment, user: settings.AUTH_USER_MODEL
+    ):
+        assert not user.has_perm("comments.like_comment", comment)
+
     def test_can_create_comment_if_member(
         self, post: PostFactory, user: settings.AUTH_USER_MODEL
     ):

@@ -10,10 +10,15 @@ from communikit.content.rules import (
 
 
 @rules.predicate
-def is_author(
+def is_author(user: settings.AUTH_USER_MODEL, comment: Comment) -> bool:
+    return user.id == comment.author_id
+
+
+@rules.predicate
+def is_comment_community_member(
     user: settings.AUTH_USER_MODEL, comment: Comment
 ) -> bool:
-    return user.id == comment.author_id
+    return is_post_community_member.test(user, comment.post)
 
 
 @rules.predicate
@@ -26,6 +31,8 @@ def is_comment_community_moderator(
 rules.add_perm("comments.create_comment", is_post_community_member)
 rules.add_perm("comments.change_comment", is_author)
 rules.add_perm(
-    "comments.delete_comment",
-    is_author | is_comment_community_moderator,
+    "comments.delete_comment", is_author | is_comment_community_moderator
+)
+rules.add_perm(
+    "comments.like_comment", is_comment_community_member & ~is_author
 )

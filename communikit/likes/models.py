@@ -30,7 +30,7 @@ class Like(TimeStampedModel):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
+    object_id = models.PositiveIntegerField(db_index=True)
     content_object = GenericForeignKey("content_type", "object_id")
 
     objects = LikeManager()

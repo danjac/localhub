@@ -5,6 +5,7 @@ from django.http import (
     HttpRequest,
     HttpResponse,
     HttpResponseRedirect,
+    JsonResponse,
 )
 from django.utils.translation import ugettext as _
 from django.views.generic import (
@@ -13,6 +14,7 @@ from django.views.generic import (
     DetailView,
     ListView,
     UpdateView,
+    View,
 )
 from django.views.generic.detail import SingleObjectMixin
 
@@ -125,3 +127,28 @@ class ProfileCommentListView(ProfileUserMixin, ListView):
 
 
 profile_comment_list_view = ProfileCommentListView.as_view()
+
+
+class CommentLikeView(
+    LoginRequiredMixin,
+    CommunityCommentQuerySetMixin,
+    PermissionRequiredMixin,
+    SingleObjectMixin,
+    View,
+):
+    permission_required = "comments.like_comment"
+
+    def post(self, request, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        is_liked = self.object.like(request.user)
+        if request.is_ajax():
+            return JsonResponse(
+                {"status": _("Unlike") if is_liked else _("Like")}
+            )
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self) -> str:
+        return self.object.get_absolute_url()
+
+
+comment_like_view = CommentLikeView.as_view()
