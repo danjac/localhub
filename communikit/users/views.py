@@ -1,14 +1,11 @@
-from typing import Any, Dict
-
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import Http404
+from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DeleteView, DetailView, UpdateView
-from django.views.generic.base import ContextMixin
+from django.views.generic.detail import SingleObjectMixin
 
 from communikit.communities.views import CommunityRequiredMixin
 
@@ -24,20 +21,16 @@ class CurrentUserMixin(LoginRequiredMixin):
         return self.request.user
 
 
-class ProfileUserMixin(CommunityRequiredMixin, ContextMixin):
-    @cached_property
-    def profile(self) -> User:
-        try:
-            return User.objects.filter(communities=self.request.community).get(
-                username=self.kwargs["username"]
-            )
-        except User.DoesNotExist:
-            raise Http404
+class ProfileUserMixin(CommunityRequiredMixin, SingleObjectMixin):
+    slug_field = "username"
+    slug_url_kwarg = "username"
+    context_object_name = "profile"
 
-    def get_context_data(self, **kwargs) -> Dict[str, Any]:
-        data = super().get_context_data(**kwargs)
-        data["profile"] = self.profile
-        return data
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object(
+            queryset=User.objects.filter(communities=request.community)
+        )
+        return super().get(request, *args, **kwargs)
 
 
 class UserDetailView(CurrentUserMixin, DetailView):

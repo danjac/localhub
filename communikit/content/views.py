@@ -79,11 +79,18 @@ class PostListView(CommunityPostQuerySetMixin, ListView):
 post_list_view = PostListView.as_view()
 
 
-class ProfilePostListView(ProfileUserMixin, PostListView):
+class ProfilePostListView(ProfileUserMixin, ListView):
     template_name = "content/profile_post_list.html"
 
     def get_queryset(self) -> QuerySet:
-        return super().get_queryset().filter(author=self.profile)
+        return (
+            Post.objects.filter(
+                author=self.object, community=self.request.community
+            )
+            .annotate(num_comments=Count("comment"))
+            .order_by("-created")
+            .select_subclasses()
+        )
 
 
 profile_post_list_view = ProfilePostListView.as_view()

@@ -120,7 +120,7 @@ class ProfileCommentListView(ProfileUserMixin, ListView):
     def get_queryset(self) -> QuerySet:
         return (
             Comment.objects.filter(
-                author=self.profile, post__community=self.request.community
+                author=self.object, post__community=self.request.community
             )
             .select_related("author", "post", "post__community")
             .order_by("-created")
