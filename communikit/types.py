@@ -1,5 +1,7 @@
-from typing import Callable
+from typing import Any, Callable, Dict
 
 from django.http import HttpRequest, HttpResponse
 
-get_response_callable = Callable[[HttpRequest], HttpResponse]
+HttpRequestResponse = Callable[[HttpRequest], HttpResponse]
+
+ContextDict = Dict[str, Any]

@@ -1,5 +1,3 @@
-from typing import Dict, Any
-
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
@@ -35,6 +33,7 @@ from communikit.communities.views import CommunityRequiredMixin
 from communikit.content import app_settings
 from communikit.content.forms import PostForm
 from communikit.content.models import Post
+from communikit.types import ContextDict
 from communikit.users.views import ProfileUserMixin
 
 
@@ -99,7 +98,7 @@ post_list_view = PostListView.as_view()
 class PostSearchView(CommunityPostQuerySetMixin, ListView):
     template_name = "content/search.html"
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
 
         hashtag = self.request.GET.get("hashtag", "").strip()
         if hashtag:
@@ -125,7 +124,7 @@ class PostSearchView(CommunityPostQuerySetMixin, ListView):
             .select_subclasses()
         )
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
         data.update({"search_query": self.query})
         return data
@@ -175,7 +174,7 @@ class PostDetailView(CommunityPostQuerySetMixin, DetailView):
             .select_subclasses()
         )
 
-    def get_context_data(self, **kwargs) -> Dict[str, Any]:
+    def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
         if self.request.user.has_perm("comments.create_comment", self.object):
             data["comment_form"] = CommentForm()
@@ -251,7 +250,7 @@ post_like_view = PostLikeView.as_view()
 class ActivityView(LoginRequiredMixin, CommunityRequiredMixin, TemplateView):
     template_name = "content/activity.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
 
         # TBD: performance here is horrible, fix duplicate queries etc

@@ -2,11 +2,11 @@ from django.http import HttpRequest, HttpResponse
 from django.utils.functional import SimpleLazyObject
 
 from communikit.communities.models import Community
-from communikit.types import get_response_callable
+from communikit.types import HttpRequestResponse
 
 
 class CurrentCommunityMiddleware:
-    def __init__(self, get_response: get_response_callable):
+    def __init__(self, get_response: HttpRequestResponse):
         self.get_response = get_response
 
     def __call__(self, request: HttpRequest) -> HttpResponse:

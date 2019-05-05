@@ -1,15 +1,14 @@
-from typing import Dict, Any
-
 from django import template
 from django.db.models import QuerySet
 
 from communikit.communities.models import Community
+from communikit.types import ContextDict
 
 register = template.Library()
 
 
 @register.simple_tag(takes_context=True)
-def get_communities(context: Dict[str, Any]) -> QuerySet:
+def get_communities(context: ContextDict) -> QuerySet:
     """
     Returns list of communities a user belongs to
     """

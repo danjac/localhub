@@ -11,12 +11,12 @@ from communikit.communities.models import Community, Membership
 from communikit.communities.tests.factories import CommunityFactory
 from communikit.content.models import Post
 from communikit.content.tests.factories import PostFactory
-from communikit.types import get_response_callable
+from communikit.types import HttpRequestResponse
 from communikit.users.tests.factories import UserFactory
 
 
 @pytest.fixture
-def get_response() -> get_response_callable:
+def get_response() -> HttpRequestResponse:
     def _get_response(req: HttpRequest) -> HttpResponse:
         return HttpResponse()
 
