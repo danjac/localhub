@@ -13,6 +13,11 @@ pytestmark = pytest.mark.django_db
 
 
 class TestCommentCreateView:
+    def test_get(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        response = client.get(reverse("comments:create", args=[post.id]))
+        assert response.status_code == 200
+
     def test_post(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
         response = client.post(

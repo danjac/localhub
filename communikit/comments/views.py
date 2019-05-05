@@ -48,6 +48,7 @@ class CommentCreateView(
     FormView,
 ):
     form_class = CommentForm
+    template_name = "comments/comment_form.html"
     permission_required = "comments.create_comment"
 
     def dispatch(self, request, *args, **kwargs):
