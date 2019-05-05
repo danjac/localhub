@@ -20,7 +20,7 @@ class LikeManager(models.Manager):
             user._likes_cache = collections.defaultdict(set)
             for like in self.filter(user=user).select_related("content_type"):
                 user._likes_cache[like.content_type.name].add(like.object_id)
-        # this call is also cached
+        # this call is also cached by ContentType manager
         content_type = ContentType.objects.get_for_model(obj)
         return obj.id in user._likes_cache.get(content_type.name, set())
 
