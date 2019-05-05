@@ -1,8 +1,10 @@
 {% load i18n %}
 {% load rules %}
+{% load likes_tags %}
 
 {% has_perm "comments.change_comment" user comment as can_change_comment %}
 {% has_perm "comments.delete_comment" user comment as can_delete_comment %}
+{% has_perm "comments.like_comment" user comment as can_like_comment %}
 
 <div class="card comment-card">
   <div class="card-header">
@@ -20,9 +22,14 @@
 
     <div class="d-flex content-actions">
 
+      {% if comment.author_id == user.id %}
+      <div class="mr-2">{% trans "Likes" %} ({{ comment.num_likes }})</div>
+      {% elif can_like_comment %}
       <div class="mr-2">
-        <a href="">{% trans "Like" %}</a>
+        {% has_liked user comment as has_liked_comment %}
+        <a href="#" data-like="{% url 'comments:like' comment.id %}">{% if has_liked_comment %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}</a>
       </div>
+      {% endif %}
 
       <div class="mr-2">
         <a href="">{% trans "Flag" %}</a>
@@ -30,7 +37,7 @@
 
       {% if can_change_comment %}
       <div class="mr-2">
-          <a href="{% url 'comments:update' comment.id %}"
+        <a href="{% url 'comments:update' comment.id %}"
            >{% trans "Update" %}</a>
       </div>
       {% endif %}

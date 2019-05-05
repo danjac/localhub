@@ -3,12 +3,14 @@
 {% load i18n %}
 {% load rules %}
 {% load micawber_tags %}
+{% load likes_tags %}
 
 {% block content_main_panel %}
 
 {% has_perm "content.like_post" user post as can_like_post %}
 {% has_perm "content.change_post" user post as can_change_post %}
 {% has_perm "content.delete_post" user post as can_delete_post %}
+{% has_perm "content.like_post" user post as can_delete_post %}
 {% has_perm "comments.create_comment" user post as can_create_comment %}
 
 <div class="card content-card">
@@ -44,7 +46,8 @@
       <div class="mr-2">{% trans "Likes" %} ({{ post.num_likes }})</div>
       {% elif can_like_post %}
       <div class="mr-2">
-        <a href="">{% trans "Like" %}</a>
+        {% has_liked user post as has_liked_post %}
+        <a href="#" data-like="{% url 'content:like' post.id %}">{% if has_liked_post %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}</a>
       </div>
       {% endif %}
 

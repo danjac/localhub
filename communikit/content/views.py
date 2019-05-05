@@ -107,7 +107,9 @@ class PostDetailView(CommunityPostQuerySetMixin, DetailView):
                     to_attr="comments",
                     queryset=Comment.objects.select_related(
                         "author", "post", "post__community"
-                    ).order_by("created"),
+                    )
+                    .annotate(num_likes=Count("likes"))
+                    .order_by("created"),
                 )
             )
             .order_by("-created")

@@ -1,8 +1,10 @@
+import json
 import pytest
 
 from django.conf import settings
 from django.test.client import Client
 from django.urls import reverse
+from django.utils.translation import ugettext as _
 
 from communikit.comments.models import Comment
 from communikit.comments.tests.factories import CommentFactory
@@ -102,3 +104,24 @@ class TestProfileCommentListView:
             reverse("comments:profile", args=[user.username])
         )
         assert response.status_code == 404
+
+
+class TestCommentLikeView:
+    def test_if_unliked(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        comment = CommentFactory(post=post)
+        comment.like(member.member)
+        response = client.post(
+            reverse("comments:like", args=[comment.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        assert json.loads(response.content)["status"] == _("Like")
+
+    def test_if_liked(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        comment = CommentFactory(post=post)
+        response = client.post(
+            reverse("comments:like", args=[comment.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        assert json.loads(response.content)["status"] == _("Unlike")
