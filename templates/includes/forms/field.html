@@ -8,9 +8,21 @@
     {{ field }}
     <i class="form-icon"></i> {{ label }}
   </label>
+  {% elif widget.input_type == 'radio' %}
+  <label class="form-label">{{ label }}</label>
+  {% for choice in field %}
+  <label class="form-radio">
+    {{ choice.tag }}
+    <i class="form-icon"></i> {{ choice.choice_label }}
+  </label>
+  {% endfor %}
   {% else %}
   <label for="{{ field.id_for_label }}" class="form-label">{{ label }}</label>
+  {% if widget.input_type == 'select' %}
+  {% render_field field class="form-select" %}
+  {% else %}
   {% render_field field class="form-input" placeholder=widget.attrs.placeholder|default:label %}
+  {% endif %}
   {% endif %}
 
   {% for error in field.errors %}

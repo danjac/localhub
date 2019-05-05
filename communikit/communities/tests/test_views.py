@@ -36,17 +36,15 @@ class TestCommunityRequiredMixin:
 
 class TestCommunityUpdateView:
     def test_get(self, client: Client, admin: Membership):
-        assert client.get(reverse("communities:update")).status_code == 200
+        assert (
+            client.get(reverse("communities:community_update")).status_code
+            == 200
+        )
 
     def test_post(self, client: Client, admin: Membership):
-        url = reverse("communities:update")
+        url = reverse("communities:community_update")
         response = client.post(
-            url,
-            {
-                "name": "New name",
-                "description": "",
-                "public": True,
-            },
+            url, {"name": "New name", "description": "", "public": True}
         )
         assert response.url == url
         admin.community.refresh_from_db()

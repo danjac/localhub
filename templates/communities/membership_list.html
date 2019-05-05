@@ -1,0 +1,38 @@
+{% extends "communities/base.html" %}
+{% load i18n %}
+{% load rules %}
+
+{% block settings_content %}
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>{% trans "Username" %}</th>
+      <th>{% trans "Role" %}</th>
+      <th>{% trans "Active" %}</th>
+      <th>{% trans "Actions" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for member in object_list %}
+    <tr>
+      <td>{{ member.member.username }}</td>
+      <td>{{ member.get_role_display }}</td>
+      <td>
+        <input type="checkbox" disabled{% if member.active %} checked{% endif %}><i class="form-icon"></i>
+      </td>
+      <td>
+        {% has_perm 'communities.change_membership' user member as can_change_membership %}
+        {% has_perm 'communities.delete_membership' user member as can_delete_membership %}
+        {% if can_change_membership %}
+        <a href="{% url 'communities:membership_update' member.pk %}" class="btn btn-sm">{% trans "Update" %}</a>
+        {% endif %}
+        {% if can_delete_membership %}
+        <a href="{% url 'communities:membership_delete' member.pk %}" class="btn btn-sm btn-warning">{% trans "Delete" %}</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock settings_content %}
+

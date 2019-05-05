@@ -110,18 +110,18 @@ class TestIsMembershipCommunityAdmin:
 
 
 class TestCommunityPermissions:
-    def test_can_change_community_if_user_is_not_admin(
+    def test_can_manage_community_if_user_is_not_admin(
         self, user: settings.AUTH_USER_MODEL, community: Community
     ):
-        assert not user.has_perm("communities.change_community", community)
+        assert not user.has_perm("communities.manage_community", community)
 
-    def test_can_change_community_if_user_is_admin(
+    def test_can_manage_community_if_user_is_admin(
         self, user: settings.AUTH_USER_MODEL, community: Community
     ):
         Membership.objects.create(
             member=user, community=community, role="admin"
         )
-        assert user.has_perm("communities.change_community", community)
+        assert user.has_perm("communities.manage_community", community)
 
 
 class TestMembershipPermissions:

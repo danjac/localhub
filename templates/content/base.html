@@ -4,8 +4,7 @@
 {% load communities_tags %}
 
 {% block content %}
-{% test_rule 'is_admin' user request.community as is_community_admin %}
-{% has_perm 'communities.change_community' user request.community as can_change_community %}
+{% has_perm 'communities.manage_community' user request.community as can_manage_community %}
 <div class="columns">
     <div id="content-main-panel" class="column col-9 col-sm-12">
         <div class="show-sm hide-md float-right">
@@ -29,8 +28,8 @@
                 <a href="{% url 'content:activity' %}">{% trans "Activity" %}</a>
             </li>
             <li class="menu-item"><a href="{{ user.get_profile_url }}">{% trans "My Profile" %}</a></li>
-            {% if is_community_admin %}
-            <li class="menu-item"><a href="{% url 'communities:update' %}">{% trans "Community Settings" %}</a></li>
+            {% if can_manage_community %}
+            <li class="menu-item"><a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a></li>
             {% endif %}
         </ul>
 

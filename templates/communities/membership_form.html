@@ -3,10 +3,10 @@
 {% load i18n %}
 
 {% block settings_content %}
-<h3>{% trans "Community Settings" %}</h3>
+<h3>{% blocktrans with username=membership.member.username %}Membership Settings for {{ username }}{% endblocktrans %}</h3>
 
 <div class="col-6 col-sm-12">
-  <form method="POST" action="{% url 'communities:community_update' %}">
+  <form method="POST" action="{{ request.path }}">
     {% csrf_token %}
     {% include "includes/forms/fields.html" %}
     <input type="submit" class="btn btn-primary" value="{% trans 'Save' %}">

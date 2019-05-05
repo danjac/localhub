@@ -1,0 +1,14 @@
+
+{% extends "content/base.html" %}
+{% load i18n %}
+{% block content_main_panel %}
+<h3>{% trans "Delete Membership" %}</h3>
+
+<form method="POST" action="{{ request.path }}">
+  {% csrf_token %}
+  <p>{% trans "Do you really want to delete this membership?" %}</p>
+  <a class="btn btn-link" href="{% url 'communities:membership_list' %}">{% trans "Cancel" %}</a>
+  <button class="btn btn-primary" type="submit">{% trans "Delete" %}</button>
+</form>
+
+{% endblock content_main_panel %}
