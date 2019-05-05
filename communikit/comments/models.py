@@ -28,4 +28,4 @@ class Comment(TimeStampedModel):
         return reverse("comments:detail", args=[self.id])
 
     def get_permalink(self) -> str:
-        return self.post.community.create_permalink(self.get_absolute_url())
+        return self.post.community.domain_url(self.get_absolute_url())
