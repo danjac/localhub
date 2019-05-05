@@ -1,12 +1,9 @@
 from typing import Dict, Any
 
-from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Prefetch, QuerySet
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import (

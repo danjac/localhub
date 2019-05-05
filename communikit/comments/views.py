@@ -2,20 +2,19 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.http import (
-    Http404,
     HttpRequest,
     HttpResponse,
     HttpResponseRedirect,
 )
-from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
 from django.views.generic import (
-    CreateView,
+    FormView,
     DeleteView,
     DetailView,
     ListView,
     UpdateView,
 )
+from django.views.generic.detail import SingleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -23,6 +22,7 @@ from communikit.comments.forms import CommentForm
 from communikit.comments.models import Comment
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.content.models import Post
+from communikit.content.views import CommunityPostQuerySetMixin
 from communikit.users.views import ProfileUserMixin
 
 
@@ -42,33 +42,29 @@ comment_detail_view = CommentDetailView.as_view()
 
 class CommentCreateView(
     LoginRequiredMixin,
-    CommunityRequiredMixin,
     PermissionRequiredMixin,
-    CreateView,
+    CommunityPostQuerySetMixin,
+    SingleObjectMixin,
+    FormView,
 ):
     form_class = CommentForm
     permission_required = "comments.create_comment"
 
-    @cached_property
-    def parent(self) -> Post:
-        try:
-            return Post.objects.get(
-                community=self.request.community, pk=self.kwargs["pk"]
-            )
-        except Post.DoesNotExist:
-            raise Http404
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
 
     def get_permission_object(self) -> Post:
-        return self.parent
+        return self.object
 
     def get_success_url(self):
-        return self.parent.get_absolute_url()
+        return self.object.get_absolute_url()
 
     def form_valid(self, form) -> HttpResponse:
-        self.object = form.save(commit=False)
-        self.object.post = self.parent
-        self.object.author = self.request.user
-        self.object.save()
+        comment = form.save(commit=False)
+        comment.post = self.object
+        comment.author = self.request.user
+        comment.save()
         messages.success(self.request, _("Your comment has been posted"))
         return HttpResponseRedirect(self.get_success_url())
 
