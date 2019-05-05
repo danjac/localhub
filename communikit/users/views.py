@@ -32,6 +32,14 @@ class ProfileUserMixin(CommunityRequiredMixin, SingleObjectMixin):
         )
         return super().get(request, *args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data()
+        data["is_own_profile"] = (
+            self.request.user.is_authenticated
+            and self.request.user == self.object
+        )
+        return data
+
 
 class UserDetailView(CurrentUserMixin, DetailView):
     pass

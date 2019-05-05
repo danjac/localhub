@@ -10,14 +10,22 @@
         <a href="#">Posts</a>
     </li>
     <li class="tab-item">
-      <a href="{% url 'comments:profile' profile.username %}">Comments</a>
+        <a href="{% url 'comments:profile' profile.username %}">Comments</a>
     </li>
 </ul>
 
 {% for post in object_list %}
 <div class="mt-2">
-  {% include "content/includes/post.html" %}
+    {% include "content/includes/post.html" %}
 </div>
+{% empty %}
+<p class="p-2 bg-gray text-center">
+    {% if is_own_profile %}
+    {% trans "You have not posted any content yet" %}
+    {% else %}
+    {% trans "This user has not posted any content yet" %}
+    {% endif %}
+</p>
 {% endfor %}
 
 

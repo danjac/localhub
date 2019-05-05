@@ -38,6 +38,7 @@ class Base(Configuration):
         "allauth.socialaccount",
         "markdownx",
         "micawber.contrib.mcdjango",
+        "notifications",
         "rules.apps.AutodiscoverRulesConfig",
         "widget_tweaks",
     ]

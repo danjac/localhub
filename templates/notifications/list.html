@@ -1,0 +1,15 @@
+{% extends "content/base.html" %}
+{% load i18n %}
+{% block content_main_panel %}
+<h3>{% trans "Activity" %}</h3>
+<div class="column col-6 col-sm-12">
+{% for notice in notifications %}
+  {% include 'notifications/notice.html' %}
+  {% if not forloop.last %}
+  <div class="divider"></div>
+  {% endif %}
+{% empty %}
+{% trans "No new activity" %}
+{% endfor %}
+</div>
+{% endblock content_main_panel %}

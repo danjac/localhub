@@ -16,6 +16,8 @@ from django.views.generic import (
 )
 from django.views.generic.detail import SingleObjectMixin
 
+from notifications.signals import notify
+
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.comments.forms import CommentForm
@@ -54,6 +56,12 @@ class PostCreateView(
         self.object.author = self.request.user
         self.object.community = self.request.community
         self.object.save()
+        notify.send(
+            self.request.user,
+            recipient=self.request.community.members.all(),
+            verb="post_created",
+            action_object=self.object,
+        )
         messages.success(self.request, _("Your update has been posted"))
         return HttpResponseRedirect(self.get_success_url())
 
@@ -168,6 +176,13 @@ class PostLikeView(
     def post(self, request, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         is_liked = self.object.like(request.user)
+        if is_liked:
+            notify.send(
+                self.request.user,
+                recipient=self.object.author,
+                verb="post_liked",
+                action_object=self.object,
+            )
         if request.is_ajax():
             return JsonResponse(
                 {"status": _("Unlike") if is_liked else _("Like")}
