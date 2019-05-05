@@ -3,7 +3,8 @@ from typing import Dict, Any
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Prefetch, QuerySet
-from django.http import HttpResponse, HttpResponseRedirect
+from django.db import IntegrityError
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import (
@@ -12,7 +13,9 @@ from django.views.generic import (
     DetailView,
     ListView,
     UpdateView,
+    View,
 )
+from django.views.generic.detail import SingleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -22,6 +25,7 @@ from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.content.forms import PostForm
 from communikit.content.models import Post
+from communikit.likes.models import Like
 from communikit.users.views import ProfileUserMixin
 
 
@@ -67,7 +71,7 @@ class PostListView(CommunityPostQuerySetMixin, ListView):
         return (
             super()
             .get_queryset()
-            .annotate(num_comments=Count("comment"))
+            .annotate(num_comments=Count("comment"), num_likes=Count("likes"))
             .order_by("-created")
             .select_subclasses()
         )
@@ -84,7 +88,7 @@ class ProfilePostListView(ProfileUserMixin, ListView):
             Post.objects.filter(
                 author=self.object, community=self.request.community
             )
-            .annotate(num_comments=Count("comment"))
+            .annotate(num_comments=Count("comment"), num_likes=Count("likes"))
             .order_by("-created")
             .select_subclasses()
         )
@@ -98,7 +102,7 @@ class PostDetailView(CommunityPostQuerySetMixin, DetailView):
         return (
             super()
             .get_queryset()
-            .annotate(num_comments=Count("comment"))
+            .annotate(num_comments=Count("comment"), num_likes=Count("likes"))
             .prefetch_related(
                 Prefetch(
                     "comment_set",
@@ -150,3 +154,38 @@ class PostDeleteView(
 
 
 post_delete_view = PostDeleteView.as_view()
+
+
+class PostLikeView(
+    LoginRequiredMixin,
+    CommunityPostQuerySetMixin,
+    PermissionRequiredMixin,
+    SingleObjectMixin,
+    View,
+):
+    permission_required = "content.like_post"
+
+    def post(self, request, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        # if user has already liked this post then delete,
+        # otherwise make new like
+        like_deleted = False
+        try:
+            created, like = Like.objects.get_or_create(
+                content_object=self.object, user=request.user
+            )
+            if created:
+                like.delete()
+                like_deleted = True
+        except IntegrityError:
+            # in case of race condition, just ignore
+            pass
+        if request.is_ajax():
+            return JsonResponse({"like_deleted": like_deleted})
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self) -> str:
+        return self.object.get_absolute_url()
+
+
+post_like_view = PostLikeView.as_view()

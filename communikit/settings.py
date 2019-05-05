@@ -11,6 +11,8 @@ class Base(Configuration):
     SECRET_KEY = values.SecretValue()
     DATABASES = values.DatabaseURLValue()
 
+    ATOMIC_REQUESTS = True
+
     EMAIL_HOST = values.Value()
     EMAIL_PORT = values.PositiveIntegerValue()
 
@@ -44,6 +46,7 @@ class Base(Configuration):
         "communikit.comments.apps.CommentsConfig",
         "communikit.communities.apps.CommunitiesConfig",
         "communikit.content.apps.ContentConfig",
+        "communikit.likes.apps.LikesConfig",
         "communikit.users.apps.UsersConfig",
     ]
 

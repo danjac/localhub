@@ -2,7 +2,8 @@ import pytest
 
 from django.conf import settings
 
-from communikit.communities.models import Community
+from communikit.communities.models import Community, Membership
+from communikit.content.models import Post
 from communikit.content.rules import (
     is_author,
     is_editor,
@@ -38,7 +39,14 @@ class TestIsPostCommunityModerator:
 
 
 class TestPermissions:
-    def test_member_can_create_post(self, member: settings.AUTH_USER_MODEL):
+    def test_author_can_like_post(self, post: Post):
+        assert not post.author.has_perm("content.like_post", post)
+
+    def test_member_can_like_post(self, member: Membership):
+        post = PostFactory(community=member.community)
+        assert member.member.has_perm("content.like_post", post)
+
+    def test_member_can_create_post(self, member: Membership):
         assert member.member.has_perm("content.create_post", member.community)
 
     def test_non_member_can_create_post(

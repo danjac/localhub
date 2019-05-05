@@ -8,6 +8,7 @@ from communikit.comments.models import Comment
 from communikit.communities.models import Community, Membership
 from communikit.content.models import Post
 from communikit.content.tests.factories import PostFactory
+from communikit.likes.models import Like
 
 
 pytestmark = pytest.mark.django_db
@@ -48,6 +49,20 @@ class TestPostListView:
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 1
         assert response.context["object_list"][0].num_comments == 1
+
+    def test_with_likes(
+        self, post: Post, user: settings.AUTH_USER_MODEL, client: Client
+    ):
+
+        Like.objects.create(content_object=post, user=user)
+
+        response = client.get(
+            reverse("content:list"), HTTP_HOST=post.community.domain
+        )
+
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 1
+        assert response.context["object_list"][0].num_likes == 1
 
 
 class TestProfilePostListView:

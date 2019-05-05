@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -10,6 +11,7 @@ from model_utils.models import TimeStampedModel
 
 from communikit.communities.models import Community
 from communikit.content.markdown import markdownify
+from communikit.likes.models import Like
 
 
 class Post(TimeStampedModel):
@@ -26,6 +28,8 @@ class Post(TimeStampedModel):
     description = MarkdownxField(blank=True)
 
     published = models.DateTimeField(null=True, blank=True)
+
+    likes = GenericRelation(Like, related_query_name="post")
 
     objects = InheritanceManager()
 

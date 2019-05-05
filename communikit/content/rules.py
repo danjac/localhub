@@ -30,5 +30,4 @@ is_editor = is_author | is_post_community_moderator
 rules.add_perm("content.create_post", is_member)
 rules.add_perm("content.change_post", is_editor)
 rules.add_perm("content.delete_post", is_editor)
-
 rules.add_perm("content.like_post", is_post_community_member & ~is_author)
