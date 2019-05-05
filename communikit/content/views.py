@@ -2,6 +2,7 @@ from typing import Dict, Any
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Prefetch, QuerySet
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
@@ -11,11 +12,13 @@ from django.views.generic import (
     DeleteView,
     DetailView,
     ListView,
+    TemplateView,
     UpdateView,
     View,
 )
 from django.views.generic.detail import SingleObjectMixin
 
+from notifications.models import Notification
 from notifications.signals import notify
 
 from rules.contrib.views import PermissionRequiredMixin
@@ -61,6 +64,7 @@ class PostCreateView(
             recipient=self.request.community.members.all(),
             verb="post_created",
             action_object=self.object,
+            target=self.request.community,
         )
         messages.success(self.request, _("Your update has been posted"))
         return HttpResponseRedirect(self.get_success_url())
@@ -182,6 +186,7 @@ class PostLikeView(
                 recipient=self.object.author,
                 verb="post_liked",
                 action_object=self.object,
+                target=self.request.community,
             )
         if request.is_ajax():
             return JsonResponse(
@@ -194,3 +199,22 @@ class PostLikeView(
 
 
 post_like_view = PostLikeView.as_view()
+
+
+class ActivityView(LoginRequiredMixin, CommunityRequiredMixin, TemplateView):
+    template_name = "content/activity.html"
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+
+        data["notifications"] = Notification.objects.filter(
+            recipient=self.request.user,
+            target_content_type=ContentType.objects.get_for_model(
+                self.request.community
+            ),
+            target_object_id=self.request.community.id,
+        )
+        return data
+
+
+activity_view = ActivityView.as_view()

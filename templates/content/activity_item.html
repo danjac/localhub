@@ -2,7 +2,7 @@
 <div class="tile tile-centered">
   <div class="tile-content">
     <div class="tile-title">
-      {% with actor=notice.actor verb=notice.verb profile_url=notice.actor.get_profile_url object_url=notice.action_object.get_absolute_url %}
+      {% with actor=notice.actor verb=notice.verb profile_url=notice.actor.get_profile_url object_url=notice.action_object.get_permalink %}
       {% if verb == "post_liked" %}
       {% blocktrans %}<a href="{{ profile_url }}">{{ actor }}</a> liked your <a href="{{ object_url }}">post</a>{% endblocktrans %}
       {% elif verb == "post_created" %}
@@ -18,11 +18,9 @@
       {% blocktrans with since=notice.timesince %}{{ since }} ago{% endblocktrans %}
     </small>
   </div>
-  {% if notice.unread %}
   <div class="tile-action">
     <a class="btn-btn-link" href="{% url 'notifications:mark_as_read' notice.slug %}">
       <i class="icon icon-check"></i>
     </a>
   </div>
-  {% endif %}
 </div>

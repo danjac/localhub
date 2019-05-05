@@ -13,7 +13,7 @@ urlpatterns = [
     path("account/", include("allauth.urls")),
     path("markdownx/", include("markdownx.urls")),
     path(
-        "inbox/notifications/",
+        "notifications/",
         include(notifications.urls, namespace="notifications"),
     ),
     path("admin/", admin.site.urls),

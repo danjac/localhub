@@ -1,0 +1,20 @@
+{% extends "content/base.html" %}
+{% load i18n %}
+{% block content_main_panel %}
+{% if notifications %}
+<a class="btn btn-link float-right" href="{% url 'notifications:mark_all_as_read' %}">
+  {% trans "Mark all as read" %}
+</a>
+{% endif %}
+<h3>{% trans "Activity" %}</h3>
+<div class="column col-6 col-sm-12">
+  {% for notice in notifications %}
+  {% include "content/activity_item.html" %}
+  {% if not forloop.last %}
+  <div class="divider"></div>
+  {% endif %}
+  {% empty %}
+  {% trans "No new activity" %}
+  {% endfor %}
+</div>
+{% endblock content_main_panel %}

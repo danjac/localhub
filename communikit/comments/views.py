@@ -75,6 +75,7 @@ class CommentCreateView(
             recipient=comment.post.author,
             verb="comment_created",
             action_object=self.object,
+            target=self.request.community,
         )
         messages.success(self.request, _("Your comment has been posted"))
         return HttpResponseRedirect(self.get_success_url())
@@ -155,6 +156,7 @@ class CommentLikeView(
                 recipient=self.object.author,
                 verb="comment_liked",
                 action_object=self.object,
+                target=self.request.community,
             )
         if request.is_ajax():
             return JsonResponse(
