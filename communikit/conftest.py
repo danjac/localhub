@@ -67,6 +67,15 @@ def moderator(
 
 
 @pytest.fixture
+def admin(
+    client: Client, login_user: settings.AUTH_USER_MODEL, community: Community
+) -> Membership:
+    return Membership.objects.create(
+        member=login_user, community=community, role="admin"
+    )
+
+
+@pytest.fixture
 def post() -> Post:
     return PostFactory()
 

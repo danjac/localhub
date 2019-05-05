@@ -1,5 +1,11 @@
+from django.contrib.messages.views import SuccessMessageMixin
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
+from django.views.generic import UpdateView
+
+from rules.contrib.views import PermissionRequiredMixin
+
+from communikit.communities.models import Community
 
 
 class CommunityRequiredMixin:
@@ -34,3 +40,24 @@ class CommunityRequiredMixin:
         if not request.community:
             raise Http404(_("No community is available for this domain"))
         return super().dispatch(request, *args, **kwargs)
+
+
+class CommunityUpdateView(
+    CommunityRequiredMixin,
+    PermissionRequiredMixin,
+    SuccessMessageMixin,
+    UpdateView,
+):
+    fields = ("name", "description", "public")
+
+    permission_required = "communities.change_community"
+    success_message = _("Community settings have been updated")
+
+    def get_object(self) -> Community:
+        return self.request.community
+
+    def get_success_url(self):
+        return self.request.path
+
+
+community_update_view = CommunityUpdateView.as_view()

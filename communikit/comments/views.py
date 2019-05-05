@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import QuerySet
+from django.db.models import Count, QuerySet
 from django.http import (
     HttpRequest,
     HttpResponse,
@@ -9,9 +9,9 @@ from django.http import (
 )
 from django.utils.translation import ugettext as _
 from django.views.generic import (
-    FormView,
     DeleteView,
     DetailView,
+    FormView,
     ListView,
     UpdateView,
     View,
@@ -146,6 +146,7 @@ class ProfileCommentListView(ProfileUserMixin, ListView):
             Comment.objects.filter(
                 author=self.object, post__community=self.request.community
             )
+            .annotate(num_likes=Count("likes"))
             .select_related("author", "post", "post__community")
             .order_by("-created")
         )

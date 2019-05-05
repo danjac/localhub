@@ -7,70 +7,69 @@
 {% test_rule 'is_admin' user request.community as is_community_admin %}
 {% has_perm 'communities.change_community' user request.community as can_change_community %}
 <div class="columns">
-  <div id="content-main-panel" class="column col-9 col-sm-12">
-    <div class="show-sm hide-md float-right">
-      <a href="#"
-         class="btn btn-link"
-         data-toggle="#content-sidebar,#content-main-panel"
-         data-toggle-class="hide-sm">{% trans "Sidebar" %}</a>
+    <div id="content-main-panel" class="column col-9 col-sm-12">
+        <div class="show-sm hide-md float-right">
+            <a href="#"
+               class="btn btn-link"
+               data-toggle="#content-sidebar,#content-main-panel"
+               data-toggle-class="hide-sm">{% trans "Sidebar" %}</a>
+        </div>
+        <div class="clearfix"></div>
+        {% block content_main_panel %}{% endblock %}
     </div>
-    <div class="clearfix"></div>
-    {% block content_main_panel %}{% endblock %}
-  </div>
-  <div id="content-sidebar" class="column col-3 col-sm-12 hide-sm bg-gray p-2">
-    <a href="#"
-       class="btn btn-link show-sm hide-md"
-       data-toggle="#content-sidebar,#content-main-panel"
-       data-toggle-class="hide-sm">{% trans "Close Sidebar" %}</a>
-    {% if user.is_authenticated %}
-    <ul class="menu">
-      <li class="menu-item"><a href="">{% trans "Stream" %}</a></li>
-      <li class="menu-item">
-        <a href="{% url 'content:activity' %}">{% trans "Activity" %}</a>
-      </li>
-      <li class="menu-item"><a href="{{ user.get_profile_url }}">{% trans "My Profile" %}</a></li>
-    </ul>
+    <div id="content-sidebar" class="column col-3 col-sm-12 hide-sm bg-gray p-2">
+        <a href="#"
+           class="btn btn-link show-sm hide-md"
+           data-toggle="#content-sidebar,#content-main-panel"
+           data-toggle-class="hide-sm">{% trans "Close Sidebar" %}</a>
+        {% if user.is_authenticated %}
+        <ul class="menu">
+            <li class="menu-item"><a href="">{% trans "Stream" %}</a></li>
+            <li class="menu-item">
+                <a href="{% url 'content:activity' %}">{% trans "Activity" %}</a>
+            </li>
+            <li class="menu-item"><a href="{{ user.get_profile_url }}">{% trans "My Profile" %}</a></li>
+            {% if is_community_admin %}
+            <li class="menu-item"><a href="{% url 'communities:update' %}">{% trans "Community Settings" %}</a></li>
+            {% endif %}
+        </ul>
 
-    {% get_communities as communities %}
-    {% if communities %}
-    <ul class="menu mt-2">
-      <li class="divider" data-content="Communities"></li>
-      {% for community in communities %}
-      <li class="menu-item">
-        {% if community.id == request.community.id %}
-        <strong>{{ community.name }}</strong>
-        {% else %}
-        <a href="{{ community.get_absolute_url }}">
-          {{ community.name }}
-        </a>
+        {% get_communities as communities %}
+        {% if communities %}
+        <ul class="menu mt-2">
+            <li class="divider" data-content="Communities"></li>
+            {% for community in communities %}
+            <li class="menu-item">
+                {% if community.id == request.community.id %}
+                <strong>{{ community.name }}</strong>
+                {% else %}
+                <a href="{{ community.get_absolute_url }}">
+                    {{ community.name }}
+                </a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
         {% endif %}
-      </li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-    {% endif %}
+        {% endif %}
 
-    {% if request.community.description %}
-    <div class="panel mt-2 p-1">
-      <div class="panel-header">
-        <h4>
-          {% blocktrans with name=request.community.name %}About {{ name }}{% endblocktrans %}
-        </h4>
-      </div>
-      <div class="panel-body">
-        <p>
-          {{ request.community.description }}
-        </p>
-      </div>
+        {% if request.community.description %}
+        <div class="panel mt-2 p-1">
+            <div class="panel-header h5">{% trans "About Us" %}</div>
+            <div class="panel-body">
+                <p>
+                    {{ request.community.description }}
+                </p>
+            </div>
+        </div>
+        {% endif %}
+
+        <ul class="menu mt-2">
+            <li class="menu-item"><a href="">{% trans "Help" %}</a></li>
+            <li class="menu-item"><a href="">{% trans "Contribute" %}</a></li>
+            <li class="menu-item"><a href="">{% trans "Report a Bug" %}</a></li>
+            <li class="menu-item"><a href="">{% trans "Donate" %}</a></li>
+        </ul>
     </div>
-    {% endif %}
-
-    <ul class="menu mt-2">
-      <li class="menu-item"><a href="">{% trans "Help" %}</a></li>
-      <li class="menu-item"><a href="">{% trans "Contribute" %}</a></li>
-      <li class="menu-item"><a href="">{% trans "Report a Bug" %}</a></li>
-      <li class="menu-item"><a href="">{% trans "Donate" %}</a></li>
-    </ul>
-  </div>
 </div>
 {% endblock %}
