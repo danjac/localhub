@@ -2,11 +2,13 @@
 
 {% load i18n %}
 {% load rules %}
+{% load likes_tags %}
 
 {% block content_main_panel %}
 
 {% has_perm "comments.change_comment" user comment as can_change_comment %}
 {% has_perm "comments.delete_comment" user comment as can_delete_comment %}
+{% has_perm "comments.like_comment" user comment as can_like_comment %}
 
 <div class="card comment-card">
   <div class="card-header">

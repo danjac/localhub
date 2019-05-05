@@ -10,7 +10,7 @@
 {% has_perm "content.like_post" user post as can_like_post %}
 {% has_perm "content.change_post" user post as can_change_post %}
 {% has_perm "content.delete_post" user post as can_delete_post %}
-{% has_perm "content.like_post" user post as can_delete_post %}
+{% has_perm "content.like_post" user post as can_like_post %}
 {% has_perm "comments.create_comment" user post as can_create_comment %}
 
 <div class="card content-card">
