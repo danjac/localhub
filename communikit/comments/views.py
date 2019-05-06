@@ -55,25 +55,26 @@ class CommentCreateView(
     template_name = "comments/comment_form.html"
     permission_required = "comments.create_comment"
 
-    def dispatch(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         return super().dispatch(request, *args, **kwargs)
 
     def get_permission_object(self) -> Post:
         return self.object
 
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         return self.object.get_absolute_url()
 
     def notify(self, comment: Comment):
 
-        notify.send(
-            self.request.user,
-            recipient=comment.post.author,
-            verb="comment_created",
-            action_object=self.object,
-            target=self.request.community,
-        )
+        if comment.post.author != self.request.user:
+            notify.send(
+                self.request.user,
+                recipient=comment.post.author,
+                verb="comment_created",
+                action_object=self.object,
+                target=self.request.community,
+            )
         mentions = comment.extract_mentions()
 
         if mentions:

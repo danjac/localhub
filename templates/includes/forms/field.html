@@ -11,7 +11,7 @@
   {% elif widget.input_type == 'radio' %}
   <label class="form-label">{{ label }}</label>
   {% for choice in field %}
-  <label class="form-radio">
+  <label class="form-radio form-inline">
     {{ choice.tag }}
     <i class="form-icon"></i> {{ choice.choice_label }}
   </label>
