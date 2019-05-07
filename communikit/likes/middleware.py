@@ -12,14 +12,11 @@ def _has_liked(self, obj: Model) -> bool:
         return False
     if not hasattr(self, "_likes"):
         self._likes = collections.defaultdict(set)
-        for like in Like.objects.filter(user=self.request.user).select_related(
+        for like in Like.objects.filter(user=self.user).select_related(
             "content_type"
         ):
             self._likes[like.content_type.name].add(like.object_id)
-    try:
-        return self._likes[obj._meta.verbose_name] == obj.id
-    except KeyError:
-        return False
+    return obj.id in self._likes.get(obj._meta.verbose_name, set())
 
 
 class LikesMiddleware:

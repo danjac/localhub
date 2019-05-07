@@ -125,13 +125,6 @@ class TestCommunityPermissions:
 
 
 class TestMembershipPermissions:
-    def test_can_create_membership_if_is_admin(
-        self, user: settings.AUTH_USER_MODEL, community: Community
-    ):
-        Membership.objects.create(
-            member=user, community=community, role="admin"
-        )
-        assert user.has_perm("communities.create_membership", community)
 
     def test_can_change_membership_if_is_admin_and_is_other_membership(
         self, user: settings.AUTH_USER_MODEL, community: Community
@@ -180,7 +173,7 @@ class TestMembershipPermissions:
         membership = Membership.objects.create(
             member=user, community=community, role="member"
         )
-        assert user.has_perm("communities.delete_membership", membership)
+        assert not user.has_perm("communities.delete_membership", membership)
 
     def test_can_delete_membership_if_is_admin_and_is_own_membership(
         self, user: settings.AUTH_USER_MODEL, community: Community
@@ -188,4 +181,4 @@ class TestMembershipPermissions:
         membership = Membership.objects.create(
             member=user, community=community, role="admin"
         )
-        assert user.has_perm("communities.delete_membership", membership)
+        assert not user.has_perm("communities.delete_membership", membership)

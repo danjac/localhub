@@ -46,7 +46,7 @@
       <div class="mr-2">{% trans "Likes" %} ({{ post.num_likes }})</div>
       {% elif can_like_post %}
       <div class="mr-2">
-        {% has_liked user post as has_liked_post %}
+        {% has_liked post as has_liked_post %}
         <a href="#" data-like="{% url 'content:like' post.id %}">{% if has_liked_post %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}</a>
       </div>
       {% endif %}

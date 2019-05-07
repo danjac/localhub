@@ -47,7 +47,7 @@ class TestLikeModel:
         post: Post,
         user: settings.AUTH_USER_MODEL,
     ):
-        post.likes(user)
+        post.like(user)
         mw = LikesMiddleware(get_response)
         req = req_factory.get("/")
         req.user = user
@@ -64,7 +64,7 @@ class TestLikeModel:
         PostFactory.create_batch(5)
         posts = list(Post.objects.all())
         for post in posts:
-            post.likes(user)
+            post.like(user)
 
         req = req_factory.get("/")
         mw = LikesMiddleware(get_response)
