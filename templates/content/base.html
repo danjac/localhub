@@ -54,21 +54,14 @@
 
         {% if request.community.description %}
         <div class="panel mt-2 p-1">
-            <div class="panel-header h5">{% trans "About Us" %}</div>
             <div class="panel-body">
                 <p>
-                    {{ request.community.description }}
+                    {{ request.community.markdown }}
                 </p>
             </div>
         </div>
         {% endif %}
 
-        <ul class="menu mt-2">
-            <li class="menu-item"><a href="">{% trans "Help" %}</a></li>
-            <li class="menu-item"><a href="">{% trans "Contribute" %}</a></li>
-            <li class="menu-item"><a href="">{% trans "Report a Bug" %}</a></li>
-            <li class="menu-item"><a href="">{% trans "Donate" %}</a></li>
-        </ul>
     </div>
 </div>
 {% endblock %}

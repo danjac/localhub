@@ -5,9 +5,15 @@ from django.conf import settings
 from django.core.validators import RegexValidator, URLValidator
 from django.db import models
 from django.http import HttpRequest
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
+from markdownx.models import MarkdownxField
+
 from model_utils.models import TimeStampedModel
+
+from communikit.content.markdown import markdownify
+
 
 ROLES = (
     ("member", _("Member")),
@@ -43,7 +49,7 @@ class Community(TimeStampedModel):
     )
 
     name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
+    description = MarkdownxField(blank=True)
 
     members = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
@@ -76,6 +82,9 @@ class Community(TimeStampedModel):
 
     def domain_url(self, url: str) -> str:
         return urljoin(self.get_absolute_url(), url)
+
+    def markdown(self) -> str:
+        return mark_safe(markdownify(self.description))
 
     def user_has_role(self, user: settings.AUTH_USER_MODEL, role: str) -> bool:
         if user.is_anonymous:
