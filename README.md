@@ -7,6 +7,7 @@ Proposed features
 -----------------
 
 * Posts
+* Comments
 * Markdown content
 * Events/calendar
 * Notifications
