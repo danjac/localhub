@@ -9,6 +9,8 @@ from model_utils.models import TimeStampedModel
 
 
 class LikeManager(models.Manager):
+    # TBD: move this into a "LikesMiddleware which lazily
+    # builds dict per request
     def user_has_liked(
         self, user: settings.AUTH_USER_MODEL, obj: models.Model
     ) -> bool:
