@@ -34,7 +34,7 @@
         </ul>
 
         {% get_communities as communities %}
-        {% if communities %}
+        {% if communities|length > 1 %}
         <ul class="menu mt-2">
             <li class="divider" data-content="Communities"></li>
             {% for community in communities %}

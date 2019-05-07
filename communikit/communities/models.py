@@ -10,16 +10,10 @@ from django.utils.translation import ugettext_lazy as _
 
 from markdownx.models import MarkdownxField
 
+from model_utils import Choices
 from model_utils.models import TimeStampedModel
 
 from communikit.content.markdown import markdownify
-
-
-ROLES = (
-    ("member", _("Member")),
-    ("moderator", _("Moderator")),
-    ("admin", _("Admin")),
-)
 
 
 class CommunityManager(models.Manager):
@@ -103,12 +97,18 @@ class Community(TimeStampedModel):
 
 
 class Membership(TimeStampedModel):
+    ROLES = Choices(
+        ("member", _("Member")),
+        ("moderator", _("Moderator")),
+        ("admin", _("Admin")),
+    )
+
     member = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
-    role = models.CharField(choices=ROLES, max_length=9, default="member")
+    role = models.CharField(choices=ROLES, max_length=9, default=ROLES.member)
     active = models.BooleanField(default=True)
 
     class Meta:

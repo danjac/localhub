@@ -7,12 +7,12 @@ from communikit.communities.models import Community, Membership
 
 @rules.predicate
 def is_admin(user: settings.AUTH_USER_MODEL, community: Community) -> bool:
-    return community.user_has_role(user, "admin")
+    return community.user_has_role(user, Membership.ROLES.admin)
 
 
 @rules.predicate
 def is_moderator(user, community: Community) -> bool:
-    return community.user_has_role(user, "moderator")
+    return community.user_has_role(user, Membership.ROLES.moderator)
 
 
 is_moderator = is_moderator | is_admin
@@ -20,7 +20,7 @@ is_moderator = is_moderator | is_admin
 
 @rules.predicate
 def is_member(user: settings.AUTH_USER_MODEL, community: Community) -> bool:
-    return community.user_has_role(user, "member")
+    return community.user_has_role(user, Membership.ROLES.member)
 
 
 is_member = is_member | is_moderator
@@ -40,9 +40,9 @@ def is_membership_community_admin(
     return is_admin.test(user, membership.community)
 
 
-rules.add_rule('is_admin', is_admin)
-rules.add_rule('is_moderator', is_moderator)
-rules.add_rule('is_member', is_member)
+rules.add_rule("is_admin", is_admin)
+rules.add_rule("is_moderator", is_moderator)
+rules.add_rule("is_member", is_member)
 
 rules.add_perm("communities.manage_community", is_admin)
 

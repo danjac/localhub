@@ -53,7 +53,7 @@ def member(
     client: Client, login_user: settings.AUTH_USER_MODEL, community: Community
 ) -> Membership:
     return Membership.objects.create(
-        member=login_user, community=community, role="member"
+        member=login_user, community=community, role=Membership.ROLES.member
     )
 
 
@@ -62,7 +62,7 @@ def moderator(
     client: Client, login_user: settings.AUTH_USER_MODEL, community: Community
 ) -> Membership:
     return Membership.objects.create(
-        member=login_user, community=community, role="moderator"
+        member=login_user, community=community, role=Membership.ROLES.moderator
     )
 
 
@@ -71,7 +71,7 @@ def admin(
     client: Client, login_user: settings.AUTH_USER_MODEL, community: Community
 ) -> Membership:
     return Membership.objects.create(
-        member=login_user, community=community, role="admin"
+        member=login_user, community=community, role=Membership.ROLES.admin
     )
 
 
