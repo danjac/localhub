@@ -1,5 +1,6 @@
 import pytest
 
+from django.conf import settings
 from django.http import Http404, HttpResponse
 from django.test.client import Client, RequestFactory
 from django.urls import reverse
@@ -49,3 +50,71 @@ class TestCommunityUpdateView:
         assert response.url == url
         admin.community.refresh_from_db()
         assert admin.community.name == "New name"
+
+
+class TestMembershipListView:
+    def test_get(
+        self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
+    ):
+        Membership.objects.create(member=user, community=admin.community)
+        assert (
+            client.get(reverse("communities:membership_list")).status_code
+            == 200
+        )
+
+
+class TestMembershipUpdateView:
+    def test_get(
+        self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
+    ):
+        membership = Membership.objects.create(
+            member=user, community=admin.community
+        )
+        assert (
+            client.get(
+                reverse("communities:membership_update", args=[membership.id])
+            ).status_code
+            == 200
+        )
+
+    def test_post(
+        self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
+    ):
+        membership = Membership.objects.create(
+            member=user, community=admin.community
+        )
+        response = client.post(
+            reverse("communities:membership_update", args=[membership.id]),
+            {"active": True, "role": "moderator"},
+        )
+        assert response.url == reverse("communities:membership_list")
+        membership.refresh_from_db()
+        assert membership.role == "moderator"
+
+
+class TestMembershipDeleteView:
+    def test_get(
+        self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
+    ):
+        membership = Membership.objects.create(
+            member=user, community=admin.community
+        )
+        assert (
+            client.get(
+                reverse("communities:membership_delete", args=[membership.id])
+            ).status_code
+            == 200
+        )
+
+    def test_delete(
+        self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
+    ):
+        membership = Membership.objects.create(
+            member=user, community=admin.community
+        )
+        response = client.post(
+            reverse("communities:membership_delete", args=[membership.id])
+        )
+
+        assert response.url == reverse("communities:membership_list")
+        assert not Membership.objects.filter(pk=membership.pk).exists()
