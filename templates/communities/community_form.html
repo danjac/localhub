@@ -7,7 +7,6 @@
 
 <div class="col-6 col-sm-12">
   <form method="POST" action="{% url 'communities:community_update' %}">
-    {% csrf_token %}
     {% include "includes/forms/fields.html" %}
     <input type="submit" class="btn btn-primary" value="{% trans 'Save' %}">
   </form>

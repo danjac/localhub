@@ -100,7 +100,7 @@
   <div class="divider"></div>
   <h4>{% trans "Post a Comment" %}</h4>
   <form method="POST" action="{% url 'comments:create' post.id %}">
-    {% include "comments/includes/comment_form.html" with form=comment_form %}
+    {% include "includes/forms/fields.html" with form=comment_form %}
     <button class="btn btn-primary" type="submit">{% trans "Submit" %}</button>
   </form>
   {% elif not user.is_authenticated %}

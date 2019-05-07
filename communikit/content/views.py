@@ -193,7 +193,6 @@ class PostDetailView(CommunityPostQuerySetMixin, DetailView):
                 )
             )
             .order_by("-created")
-            .select_subclasses()
         )
 
     def get_context_data(self, **kwargs) -> ContextDict:

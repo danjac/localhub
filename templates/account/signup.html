@@ -10,7 +10,6 @@
 
 <div class="col-6 col-sm-12">
   <form method="post" action="{% url 'account_signup' %}">
-    {% csrf_token %}
     {% if redirect_field_value %}
     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
     {% endif %}

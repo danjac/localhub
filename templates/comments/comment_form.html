@@ -3,7 +3,7 @@
 
 {% block content_main_panel %}
 <form method="POST" action="{{ request.path }}">
-  {% include "comments/includes/comment_form.html" %}
+  {% include "includes/forms/fields.html" %}
   <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
 </form>
 {% endblock content_main_panel %}
