@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import QuerySet
 from django.http import Http404
@@ -46,6 +47,7 @@ class CommunityRequiredMixin:
 
 
 class CommunityUpdateView(
+    LoginRequiredMixin,
     CommunityRequiredMixin,
     PermissionRequiredMixin,
     SuccessMessageMixin,
@@ -74,7 +76,10 @@ class CommunityMembershipQuerySetMixin(CommunityRequiredMixin):
 
 
 class MembershipListView(
-    CommunityMembershipQuerySetMixin, PermissionRequiredMixin, ListView
+    LoginRequiredMixin,
+    CommunityMembershipQuerySetMixin,
+    PermissionRequiredMixin,
+    ListView,
 ):
     paginate_by = 30
     allow_empty = True
@@ -91,6 +96,7 @@ membership_list_view = MembershipListView.as_view()
 
 
 class MembershipUpdateView(
+    LoginRequiredMixin,
     CommunityMembershipQuerySetMixin,
     PermissionRequiredMixin,
     SuccessMessageMixin,
@@ -106,7 +112,10 @@ membership_update_view = MembershipUpdateView.as_view()
 
 
 class MembershipDeleteView(
-    CommunityMembershipQuerySetMixin, PermissionRequiredMixin, DeleteView
+    LoginRequiredMixin,
+    CommunityMembershipQuerySetMixin,
+    PermissionRequiredMixin,
+    DeleteView,
 ):
     fields = ("role", "active")
     permission_required = "communities.delete_membership"

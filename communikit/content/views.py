@@ -192,7 +192,6 @@ class PostDetailView(CommunityPostQuerySetMixin, DetailView):
                     .order_by("created"),
                 )
             )
-            .order_by("-created")
         )
 
     def get_context_data(self, **kwargs) -> ContextDict:

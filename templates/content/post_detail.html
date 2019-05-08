@@ -70,7 +70,7 @@
            data-delete-from="{{ delete_url }}"
            data-redirect-on-delete="{% url 'content:list' %}"
            data-confirm-dialog="#confirm-post-delete"
-           data-confirm-trigger="confirm-delete"
+           data-confirm-trigger="delete:confirm"
            >{% trans "Delete" %}</a>
       </div>
       {% include "content/includes/post_confirm_delete.html" %}

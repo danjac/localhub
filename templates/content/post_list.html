@@ -28,6 +28,10 @@
 <div class="mt-2">
   {% include "content/includes/post.html" %}
 </div>
+{% empty %}
+<p class="p-2 bg-gray text-center">
+{% trans "Nothing to show right now." %}
+</p>
 {% endfor %}
 
 

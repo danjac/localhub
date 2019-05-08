@@ -107,7 +107,7 @@ module.exports = {
         "new-cap": "error",
         "new-parens": "error",
         "newline-after-var": [
-            "error",
+            "off",
             "never"
         ],
         "newline-before-return": "off",
@@ -233,7 +233,7 @@ module.exports = {
         "radix": "error",
         "require-atomic-updates": "error",
         "require-await": "error",
-        "require-jsdoc": "error",
+        "require-jsdoc": "off",
         "require-unicode-regexp": "off",
         "rest-spread-spacing": "error",
         "semi": "off",

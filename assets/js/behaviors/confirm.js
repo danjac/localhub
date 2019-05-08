@@ -11,19 +11,30 @@ onmount('[data-confirm-dialog]', function() {
     event.preventDefault();
     const dialog = document.querySelector(confirmDialog);
     dialog.classList.add('active');
-    dialog.querySelector('[data-confirm-handler]').addEventListener(
-      'click',
-      () => {
-        dialog.classList.remove('active');
-        if (confirmTrigger) {
-          target.dispatchEvent(new CustomEvent(confirmTrigger));
-        } else {
-          target.dataset.confirmed = true;
-          target.click();
-        }
-      },
-      { once: true }
-    );
+
+    const confirmEvent = confirmTrigger
+      ? new CustomEvent(confirmTrigger)
+      : null;
+
+    /* eslint-disable-next-line func-style */
+    function onConfirm() {
+      dialog.classList.remove('active');
+      if (confirmTrigger) {
+        target.dispatchEvent(confirmEvent);
+      } else {
+        target.dataset.confirmed = true;
+        target.click();
+      }
+    }
+
+    const handler = dialog.querySelector('[data-confirm-handler]');
+
+    handler.addEventListener('click', onConfirm, { once: true });
+
+    dialog.addEventListener('modal:close', () => {
+      handler.removeEventListener('click', onConfirm, { once: true });
+    });
+
     return false;
   });
 });
