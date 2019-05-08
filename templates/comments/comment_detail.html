@@ -55,7 +55,9 @@
         <a href="{{ delete_url }}"
            data-delete-from="{{ delete_url }}"
            data-redirect-on-delete="{{ comment.post.get_absolute_url }}"
-           data-confirm-dialog="#confirm-comment-delete"
+           data-confirm-dialog
+           data-confirm-title="{% trans 'Delete Comment' %}"
+           data-confirm-content="{% trans 'Are you sure you want to delete this comment?' %}"
            data-confirm-trigger="delete:confirm"
            >{% trans "Delete" %}</a>
       </div>
