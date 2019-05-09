@@ -1,18 +1,19 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.contrib.auth.views import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from django.utils.translation import _
+from django.utils.translation import ugettext as _
 from django.views.generic import CreateView, DetailView, ListView
 
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.communities.views import CommunityRequiredMixin
-from communikit.invites.forms import InviteForm
+
+# from communikit.invites.forms import InviteForm
 from communikit.invites.models import Invite
-from communities.models import Membership
+from communikit.communities.models import Membership
 
 
 class CommunityInviteQuerySetMixin(CommunityRequiredMixin):
@@ -38,9 +39,11 @@ class InviteCreateView(
     PermissionRequiredMixin,
     CreateView,
 ):
-    form_class = InviteForm
+    # form_class = InviteForm
+    model = Invite
     success_url = reverse_lazy("invites:list")
     permission_required = "invites.create_invite"
+    fields = ("email",)
 
     def form_valid(self, form) -> HttpResponse:
         invite = form.save(commit=False)
