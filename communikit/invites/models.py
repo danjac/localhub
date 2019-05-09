@@ -31,5 +31,8 @@ class Invite(TimeStampedModel):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
+    class Meta:
+        unique_together = ("email", "community")
+
     def __str__(self) -> str:
         return self.email

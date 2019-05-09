@@ -1,19 +1,21 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import send_mail
 from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.template import loader
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext as _
 from django.views.generic import CreateView, DetailView, ListView
 
 from rules.contrib.views import PermissionRequiredMixin
 
-from communikit.communities.views import CommunityRequiredMixin
-
-# from communikit.invites.forms import InviteForm
-from communikit.invites.models import Invite
 from communikit.communities.models import Membership
+from communikit.communities.views import CommunityRequiredMixin
+from communikit.invites.forms import InviteForm
+from communikit.invites.models import Invite
+from communikit.types import ContextDict
 
 
 class CommunityInviteQuerySetMixin(CommunityRequiredMixin):
@@ -39,19 +41,36 @@ class InviteCreateView(
     PermissionRequiredMixin,
     CreateView,
 ):
-    # form_class = InviteForm
     model = Invite
+    form_class = InviteForm
     success_url = reverse_lazy("invites:list")
     permission_required = "invites.create_invite"
-    fields = ("email",)
+
+    def get_form_kwargs(self) -> ContextDict:
+        kwargs = super().get_form_kwargs()
+        kwargs.update({"community": self.request.community})
+        return kwargs
 
     def form_valid(self, form) -> HttpResponse:
-        invite = form.save(commit=False)
-        invite.sender = self.request.user
-        invite.community = self.request.community
-        invite.save()
+        self.object = form.save(commit=False)
+        self.object.sender = self.request.user
+        self.object.community = self.request.community
+        self.object.save()
 
         # send email to recipient
+        template = loader.get_template("invites/emails/invitation.txt")
+
+        send_mail(
+            _("Invitation to join"),
+            template.render({"invite": self.object}),
+            "from@example.com",
+            [self.object.email],
+        )
+
+        messages.success(
+            self.request,
+            _("Your invitation has been sent to %s") % self.object.email,
+        )
 
         return HttpResponseRedirect(self.get_success_url())
 

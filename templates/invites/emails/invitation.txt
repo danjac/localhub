@@ -1,0 +1,9 @@
+{% load i18n %}
+
+Hi,
+
+You've been invited to join the community {{ invite.community.name }}.
+
+Invite ID: {{ invite.id }}
+
+
