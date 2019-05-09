@@ -1,14 +1,18 @@
-from django.db.models import QuerySet
+from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.views import LoginRequiredMixin
+from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView
+from django.urls import reverse, reverse_lazy
+from django.utils.translation import _
+from django.views.generic import CreateView, DetailView, ListView
 
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.invites.forms import InviteForm
 from communikit.invites.models import Invite
+from communities.models import Membership
 
 
 class CommunityInviteQuerySetMixin(CommunityRequiredMixin):
