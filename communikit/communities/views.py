@@ -40,6 +40,12 @@ class CommunityRequiredMixin:
         return HttpResponseRedirect(reverse("communities:request_access"))
     """
 
+    # communities marked private would normally redirect to 403/membership
+    # require page. The CommunityRequiredMixin flag allow_if_private on a view
+    # skips this check, as we need to allow the user to accept the invite as
+    # not yet a member.
+    allow_if_private = False
+
     def dispatch(self, request, *args, **kwargs):
         if not request.community:
             raise Http404(_("No community is available for this domain"))

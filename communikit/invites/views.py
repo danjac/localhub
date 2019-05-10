@@ -138,6 +138,8 @@ class InviteAcceptView(CommunityRequiredMixin, SingleObjectMixin, View):
     Flash message in all cases should differ based on situation.
     """
 
+    allow_if_private = True
+
     def get_queryset(self) -> QuerySet:
         # TBD: add a deadline of e.g. 3 days
         return super().get_queryset().filter(status=Invite.STATUS.pending)
