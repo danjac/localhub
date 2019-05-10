@@ -3,7 +3,6 @@
 {% load rules %}
 
 {% block settings_content %}
-{% has_perm "invites.create_invite" user request.community as can_create_invite %}
 
 <table class="table table-striped table-hover">
   <thead>
@@ -38,11 +37,9 @@
 </table>
 
 
-{% if can_create_invite %}
 <div class="mt-2">
   <a class="btn btn-primary" href="{% url 'invites:create' %}">{% trans "Send an invite" %}</a>
 </div>
-{% endif %}
 
 {% endblock settings_content %}
 

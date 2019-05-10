@@ -40,3 +40,9 @@ class Invite(TimeStampedModel):
 
     def is_pending(self) -> bool:
         return self.status == self.STATUS.pending
+
+    def is_accepted(self) -> bool:
+        return self.status == self.STATUS.accepted
+
+    def is_rejected(self) -> bool:
+        return self.status == self.STATUS.rejected

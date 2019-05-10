@@ -13,7 +13,7 @@ from django.views.generic.detail import SingleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
-from communikit.communities.models import Membership
+from communikit.communities.models import Community, Membership
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.invites.forms import InviteForm
 from communikit.invites.models import Invite
@@ -33,6 +33,9 @@ class InviteListView(
 ):
     permission_required = "communities.manage_community"
 
+    def get_permission_object(self) -> Community:
+        return self.request.community
+
 
 invite_list_view = InviteListView.as_view()
 
@@ -46,7 +49,10 @@ class InviteCreateView(
     model = Invite
     form_class = InviteForm
     success_url = reverse_lazy("invites:list")
-    permission_required = "invites.create_invite"
+    permission_required = "communities.manage_community"
+
+    def get_permission_object(self) -> Community:
+        return self.request.community
 
     def get_form_kwargs(self) -> ContextDict:
         kwargs = super().get_form_kwargs()
@@ -83,6 +89,9 @@ class InviteResendView(
 ):
     permission_required = "communities.manage_community"
 
+    def get_permission_object(self) -> Community:
+        return self.request.community
+
     def get_queryset(self) -> QuerySet:
         return super().get_queryset().filter(status=Invite.STATUS.pending)
 
@@ -113,6 +122,9 @@ class InviteDeleteView(
 ):
     permission_required = "communities.manage_community"
     success_url = reverse_lazy("invites:list")
+
+    def get_permission_object(self) -> Community:
+        return self.request.community
 
 
 invite_delete_view = InviteDeleteView.as_view()
@@ -164,16 +176,12 @@ class InviteAcceptView(CommunityInviteQuerySetMixin, SingleObjectMixin, View):
 
     def handle_new_user(self) -> HttpResponse:
         messages.info(self.request, _("Sign up to join this community"))
-        redirect_url = (
-            reverse("account_signup") + f"?next={self.request.path}"
-        )
+        redirect_url = reverse("account_signup") + f"?next={self.request.path}"
         return HttpResponseRedirect(redirect_url)
 
     def handle_logged_out_user(self) -> HttpResponse:
         messages.info(self.request, _("Login to join this community"))
-        redirect_url = (
-            reverse("account_login") + f"?next={self.request.path}"
-        )
+        redirect_url = reverse("account_login") + f"?next={self.request.path}"
         return HttpResponseRedirect(redirect_url)
 
     def handle_current_user(self) -> HttpResponse:
