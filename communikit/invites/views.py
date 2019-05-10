@@ -8,13 +8,8 @@ from django.template import loader
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import ugettext as _
-from django.views.generic import (
-    CreateView,
-    DeleteView,
-    ListView,
-    SingleObjectMixin,
-    View,
-)
+from django.views.generic import CreateView, DeleteView, ListView, View
+from django.views.generic.detail import SingleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
