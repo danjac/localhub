@@ -1,5 +1,6 @@
 import onmount from 'onmount';
 
+/* eslint-disable-next-line max-lines-per-function */
 onmount('[data-confirm-dialog]', function() {
   this.addEventListener('click', event => {
     const { target } = event;
@@ -39,10 +40,12 @@ onmount('[data-confirm-dialog]', function() {
       }
     }
 
-    handler.addEventListener('click', onConfirm, { once: true });
+    const listenerArgs = ['click', onConfirm, { once: true }];
+
+    handler.addEventListener.apply(listenerArgs);
 
     dialog.addEventListener('modal:close', () => {
-      handler.removeEventListener('click', onConfirm, { once: true });
+      handler.removeEventListener.apply(listenerArgs);
     });
 
     dialog.classList.add('active');
