@@ -4,6 +4,8 @@ Hi,
 
 You've been invited to join the community {{ invite.community.name }}.
 
-Invite ID: {{ invite.id }}
+Click on this link or copy and paste into your browser navbar:
+
+{% url 'invites:invite_accept' invite.id %}
 
 

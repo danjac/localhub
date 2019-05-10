@@ -143,58 +143,75 @@ class InviteAcceptView(CommunityRequiredMixin, SingleObjectMixin, View):
         return super().get_queryset().filter(status=Invite.STATUS.pending)
 
     def get(self, request, *args, **kwargs):
-        invite = self.get_object()
+        self.object = self.get_object()
         user = (
             get_user_model()
-            .filter(emailaddress__email__iexact=invite.email)
+            .filter(emailaddress__email__iexact=self.object.email)
             .first()
         )
 
         if not user:
-            messages.info(request, "Sign up to join this community")
-            redirect_url = (
-                reverse("account_signup") + f"?redirect={request.path}"
-            )
-            return HttpResponseRedirect(redirect_url)
+            return self.handle_new_user()
 
         if request.user.is_anonymous:
-            messages.info(request, "Login to join this community")
-            redirect_url = (
-                reverse("account_login") + f"?redirect={request.path}"
-            )
-            return HttpResponseRedirect(redirect_url)
-
-        redirect_url = reverse("content:list")
+            return self.handle_non_loggedin_user()
 
         if user == request.user:
-            _membership, created = Membership.objects.get_or_create(
-                member=user, community=request.community
-            )
-            if created:
-                message = _("Welcome to %s") % request.community.name
-            else:
-                message = _("You are already a member of this community")
-            status = Invite.STATUS.pending
-        else:
-            # maybe security breach, reject this invite
-            message = _("This invite is invalid")
-            status = Invite.STATUS.rejected
+            return self.handle_current_user()
 
-        invite.status = status
-        invite.save()
-        messages.info(request, message)
+        return self.handle_invalid_invite()
+
+    def handle_new_user(self) -> HttpResponse:
+        messages.info(self.request, _("Sign up to join this community"))
+        redirect_url = (
+            reverse("account_signup") + f"?redirect={self.request.path}"
+        )
         return HttpResponseRedirect(redirect_url)
+
+    def handle_logged_out_user(self) -> HttpResponse:
+        messages.info(self.request, "Login to join this community")
+        redirect_url = (
+            reverse("account_login") + f"?redirect={self.request.path}"
+        )
+        return HttpResponseRedirect(redirect_url)
+
+    def handle_current_user(self) -> HttpResponse:
+        _membership, created = Membership.objects.get_or_create(
+            member=self.request.user, community=self.request.community
+        )
+
+        if created:
+            message = _("Welcome to %s") % self.request.community.name
+        else:
+            message = _("You are already a member of this community")
+
+        messages.success(self.request, message)
+
+        self.object.status = Invite.STATUS.accepted
+        self.object.save()
+
+        return HttpResponseRedirect(reverse("content:post_list"))
+
+    def handle_invalid_invite(self) -> HttpResponse:
+        messages.error(self.request, _("This invite is invalid"))
+
+        self.object.status = Invite.STATUS.rejected
+        self.object.save()
+
+        return HttpResponseRedirect(reverse("content:post_list"))
 
 
 invite_accept_view = InviteAcceptView.as_view()
 
 
 def send_invitation_email(invite: Invite):
+    # tbd: we'll use django-templated-mail at some point
     send_mail(
         _("Invitation to join"),
         loader.get_template("invites/emails/invitation.txt").render(
             {"invite": invite}
         ),
-        "from@example.com",  # TBD: need email domain setting for commty.
+        # TBD: need separate email domain setting for commty.
+        f"support@{invite.community.domain}",
         [invite.email],
     )
