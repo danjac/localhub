@@ -1,4 +1,5 @@
 from django import forms
+from django.db.models import Q
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
@@ -18,7 +19,7 @@ class InviteForm(forms.ModelForm):
     def clean_email(self) -> str:
         email = self.cleaned_data["email"]
         if self.community.members.filter(
-            emailaddress__email__iexact=email
+            Q(emailaddress__email__iexact=email) | Q(email__iexact=email)
         ).exists():
             raise ValidationError(
                 _(
