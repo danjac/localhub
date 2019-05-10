@@ -6,8 +6,15 @@ from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from django.utils.translation import ugettext as _
-from django.views.generic import CreateView, DetailView, ListView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    ListView,
+    SingleObjectMixin,
+    View,
+)
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -55,17 +62,11 @@ class InviteCreateView(
         self.object = form.save(commit=False)
         self.object.sender = self.request.user
         self.object.community = self.request.community
+        self.object.sent = timezone.utcnow()
         self.object.save()
 
         # send email to recipient
-        template = loader.get_template("invites/emails/invitation.txt")
-
-        send_mail(
-            _("Invitation to join"),
-            template.render({"invite": self.object}),
-            "from@example.com",
-            [self.object.email],
-        )
+        send_invitation_email(self.object)
 
         messages.success(
             self.request,
@@ -78,42 +79,122 @@ class InviteCreateView(
 invite_create_view = InviteCreateView.as_view()
 
 
-class InviteActionView(CommunityRequiredMixin, DetailView):
-    template_name = "invites/action.html"
+class InviteResendView(
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    CommunityInviteQuerySetMixin,
+    SingleObjectMixin,
+    View,
+):
+    permission_required = "communities.manage_community"
 
     def get_queryset(self) -> QuerySet:
         return super().get_queryset().filter(status=Invite.STATUS.pending)
 
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        # tbd: check if user logged in...
+        self.object = self.get_object()
+        self.object.sent = timezone.utcnow()
+        self.object.save()
+
+        send_invitation_email(self.object)
+        messages.success(
+            self.request, _("Email has been re-sent to %s") % self.object.email
+        )
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self) -> str:
+        return reverse("invites:list")
+
+
+invite_resend_view = InviteResendView.as_view()
+
+
+class InviteDeleteView(
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    CommunityInviteQuerySetMixin,
+    DeleteView,
+):
+    permission_required = "communities.manage_community"
+
+
+invite_delete_view = InviteDeleteView.as_view()
+
+
+class InviteAcceptView(CommunityRequiredMixin, SingleObjectMixin, View):
+    """
+    Click-thtorugh from link in email.
+
+    If user is not logged in:
+        - check if user with email address exists
+        - if exists, redirect to login with ?redirect= back to this view
+        - if not exists, redirect to signup with ?redirect= back here
+    If user is logged in:
+        - if another user matches email redirect to default
+        - if user already belongs to community then just redirect to default
+        - if user does not belong to the community then add the user as
+          member and redirect to default
+        "default" for now is just the content stream page.
+    Flash message in all cases should differ based on situation.
+    """
+
+    def get_queryset(self) -> QuerySet:
+        # TBD: add a deadline of e.g. 3 days
+        return super().get_queryset().filter(status=Invite.STATUS.pending)
+
+    def get(self, request, *args, **kwargs):
         invite = self.get_object()
-        # check if email belongs to user...
-        # does this user exist? do this if not current user
         user = (
             get_user_model()
-            .filter(email_addresses__email__iexact=invite.email)
+            .filter(emailaddress__email__iexact=invite.email)
             .first()
         )
-        if user and request.user.is_authenticated and request.user != user:
-            pass  # error page
 
-        invite.status = (
-            Invite.STATUS.rejected
-            if "action_reject" in request.POST
-            else Invite.STATUS.accepted
-        )
-        invite.save()
+        if not user:
+            messages.info(request, "Sign up to join this community")
+            redirect_url = (
+                reverse("account_signup") + f"?redirect={request.path}"
+            )
+            return HttpResponseRedirect(redirect_url)
+
+        if request.user.is_anonymous:
+            messages.info(request, "Login to join this community")
+            redirect_url = (
+                reverse("account_login") + f"?redirect={request.path}"
+            )
+            return HttpResponseRedirect(redirect_url)
+
         redirect_url = reverse("content:list")
 
-        if invite.status == Invite.STATUS.accepted:
-            if user:
-                Membership.objects.create(
-                    member=user, community=invite.community
-                )
-                messages.success(_("You have been signed into...."))
-                # if not auth, redirect to login page
+        if user == request.user:
+            _membership, created = Membership.objects.get_or_create(
+                member=user, community=request.community
+            )
+            if created:
+                message = _("Welcome to %s") % request.community.name
             else:
-                # redirect to page that
-                redirect_url = reverse("account_signup") + "?redirect="
-                messages.success(_("Please sign in to continue"))
+                message = _("You are already a member of this community")
+            status = Invite.STATUS.pending
+        else:
+            # maybe security breach, reject this invite
+            message = _("This invite is invalid")
+            status = Invite.STATUS.rejected
+
+        invite.status = status
+        invite.save()
+        messages.info(request, message)
         return HttpResponseRedirect(redirect_url)
+
+
+invite_accept_view = InviteAcceptView.as_view()
+
+
+def send_invitation_email(invite: Invite):
+    send_mail(
+        _("Invitation to join"),
+        loader.get_template("invites/emails/invitation.txt").render(
+            {"invite": invite}
+        ),
+        "from@example.com",  # TBD: need email domain setting for commty.
+        [invite.email],
+    )

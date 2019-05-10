@@ -16,14 +16,15 @@ class Invite(TimeStampedModel):
         ("pending", _("Pending")),
         ("accepted", _("Accepted")),
         ("rejected", _("Rejected")),
-        ("canceled", _("Canceled")),
     )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField()
 
-    status = StatusField()
+    status = StatusField(db_index=True)
     status_changed = MonitorField(monitor="status")
+
+    sent = models.DateTimeField(null=True, blank=True)
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 

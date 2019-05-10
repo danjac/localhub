@@ -18,7 +18,10 @@
     <tr>
       <td>{{ invite.email }}</td>
       <td>{{ invite.get_status_display }}</td>
-      <td></td>
+      <td>
+        <a class="btn" href="">{% trans "Re-send" %}</a>
+        <button class="btn btn-warning" href="">{% trans "Delete" %}</a>
+      </td>
     </tr>
     {% endfor %}
   </tbody>
