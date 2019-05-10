@@ -37,3 +37,6 @@ class Invite(TimeStampedModel):
 
     def __str__(self) -> str:
         return self.email
+
+    def is_pending(self) -> bool:
+        return self.status == self.STATUS.pending

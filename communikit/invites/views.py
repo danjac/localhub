@@ -57,7 +57,7 @@ class InviteCreateView(
         self.object = form.save(commit=False)
         self.object.sender = self.request.user
         self.object.community = self.request.community
-        self.object.sent = timezone.utcnow()
+        self.object.sent = timezone.now()
         self.object.save()
 
         # send email to recipient
@@ -86,9 +86,10 @@ class InviteResendView(
     def get_queryset(self) -> QuerySet:
         return super().get_queryset().filter(status=Invite.STATUS.pending)
 
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        # should be a POST, but whatever
         self.object = self.get_object()
-        self.object.sent = timezone.utcnow()
+        self.object.sent = timezone.now()
         self.object.save()
 
         send_invitation_email(self.object)
@@ -111,12 +112,13 @@ class InviteDeleteView(
     DeleteView,
 ):
     permission_required = "communities.manage_community"
+    success_url = reverse_lazy("invites:list")
 
 
 invite_delete_view = InviteDeleteView.as_view()
 
 
-class InviteAcceptView(CommunityRequiredMixin, SingleObjectMixin, View):
+class InviteAcceptView(CommunityInviteQuerySetMixin, SingleObjectMixin, View):
     """
     Click-thtorugh from link in email.
 
@@ -143,7 +145,9 @@ class InviteAcceptView(CommunityRequiredMixin, SingleObjectMixin, View):
         self.object = self.get_object()
         user = (
             get_user_model()
-            .filter(emailaddress__email__iexact=self.object.email)
+            ._default_manager.filter(
+                emailaddress__email__iexact=self.object.email
+            )
             .first()
         )
 
@@ -161,24 +165,24 @@ class InviteAcceptView(CommunityRequiredMixin, SingleObjectMixin, View):
     def handle_new_user(self) -> HttpResponse:
         messages.info(self.request, _("Sign up to join this community"))
         redirect_url = (
-            reverse("account_signup") + f"?redirect={self.request.path}"
+            reverse("account_signup") + f"?next={self.request.path}"
         )
         return HttpResponseRedirect(redirect_url)
 
     def handle_logged_out_user(self) -> HttpResponse:
         messages.info(self.request, _("Login to join this community"))
         redirect_url = (
-            reverse("account_login") + f"?redirect={self.request.path}"
+            reverse("account_login") + f"?next={self.request.path}"
         )
         return HttpResponseRedirect(redirect_url)
 
     def handle_current_user(self) -> HttpResponse:
         _membership, created = Membership.objects.get_or_create(
-            member=self.request.user, community=self.request.community
+            member=self.request.user, community=self.object.community
         )
 
         if created:
-            message = _("Welcome to %s") % self.request.community.name
+            message = _("Welcome to %s") % self.object.community.name
         else:
             message = _("You are already a member of this community")
 
@@ -187,7 +191,7 @@ class InviteAcceptView(CommunityRequiredMixin, SingleObjectMixin, View):
         self.object.status = Invite.STATUS.accepted
         self.object.save()
 
-        return HttpResponseRedirect(reverse("content:post_list"))
+        return HttpResponseRedirect(reverse("content:list"))
 
     def handle_invalid_invite(self) -> HttpResponse:
         messages.error(self.request, _("This invite is invalid"))
@@ -195,7 +199,7 @@ class InviteAcceptView(CommunityRequiredMixin, SingleObjectMixin, View):
         self.object.status = Invite.STATUS.rejected
         self.object.save()
 
-        return HttpResponseRedirect(reverse("content:post_list"))
+        return HttpResponseRedirect(reverse("content:list"))
 
 
 invite_accept_view = InviteAcceptView.as_view()
@@ -206,7 +210,12 @@ def send_invitation_email(invite: Invite):
     send_mail(
         _("Invitation to join"),
         loader.get_template("invites/emails/invitation.txt").render(
-            {"invite": invite}
+            {
+                "invite": invite,
+                "accept_url": invite.community.domain_url(
+                    reverse("invites:accept", args=[invite.id])
+                ),
+            }
         ),
         # TBD: need separate email domain setting for commty.
         f"support@{invite.community.domain}",

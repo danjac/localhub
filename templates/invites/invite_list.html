@@ -10,6 +10,7 @@
     <tr>
       <th>{% trans "Email" %}</th>
       <th>{% trans "Status" %}</th>
+      <th>{% trans "Email Sent" %}</th>
       <th>{% trans "Actions" %}</th>
     </tr>
   </thead>
@@ -18,10 +19,19 @@
     <tr>
       <td>{{ invite.email }}</td>
       <td>{{ invite.get_status_display }}</td>
+      <td>{{ invite.sent|date }}</td>
       <td>
-        <a class="btn" href="{% url 'invites:resend' invite.id %}">{% trans "Re-send" %}</a>
-        <button class="btn btn-warning" href="{% url 'invites:delete' invite.id %}">{% trans "Delete" %}</a>
+        {% if invite.is_pending %}
+        <a class="btn btn-sm" href="{% url 'invites:resend' invite.id %}">{% trans "Re-send" %}</a>
+        {% else %}
+        <a class="btn btn-sm disabled" href="#">{% trans "Re-send" %}</a>
+        {% endif %}
+        <a class="btn btn-sm btn-warning" href="{% url 'invites:delete' invite.id %}">{% trans "Delete" %}</a>
       </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="4" class="text-center">{% trans "No invites at the moment" %}</td>
     </tr>
     {% endfor %}
   </tbody>
