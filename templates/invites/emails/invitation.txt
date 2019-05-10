@@ -6,6 +6,6 @@ You've been invited to join the community {{ invite.community.name }}.
 
 Click on this link or copy and paste into your browser navbar:
 
-{% url 'invites:invite_accept' invite.id %}
+{% url 'invites:accept' invite.id %}
 
 
