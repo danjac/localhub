@@ -171,7 +171,7 @@ class InviteAcceptView(CommunityRequiredMixin, SingleObjectMixin, View):
         return HttpResponseRedirect(redirect_url)
 
     def handle_logged_out_user(self) -> HttpResponse:
-        messages.info(self.request, "Login to join this community")
+        messages.info(self.request, _("Login to join this community"))
         redirect_url = (
             reverse("account_login") + f"?redirect={self.request.path}"
         )
