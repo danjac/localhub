@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Q
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse, reverse_lazy
@@ -158,7 +158,8 @@ class InviteAcceptView(CommunityInviteQuerySetMixin, SingleObjectMixin, View):
         user = (
             get_user_model()
             ._default_manager.filter(
-                emailaddress__email__iexact=self.object.email
+                Q(emailaddress__email__iexact=self.object.email)
+                | Q(email__iexact=self.object.email)
             )
             .first()
         )
@@ -167,7 +168,7 @@ class InviteAcceptView(CommunityInviteQuerySetMixin, SingleObjectMixin, View):
             return self.handle_new_user()
 
         if request.user.is_anonymous:
-            return self.handle_non_loggedin_user()
+            return self.handle_logged_out_user()
 
         if user == request.user:
             return self.handle_current_user()
