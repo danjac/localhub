@@ -47,9 +47,7 @@ class JoinRequestListView(
 join_request_list_view = JoinRequestListView.as_view()
 
 
-class JoinRequestCreateView(
-    LoginRequiredMixin, CommunityRequiredMixin, CreateView
-):
+class JoinRequestCreateView(CommunityRequiredMixin, CreateView):
     model = JoinRequest
     form_class = JoinRequestForm
     success_url = settings.COMMUNIKIT_HOME_PAGE_URL
@@ -86,6 +84,9 @@ class JoinRequestActionView(
 
     permission_required = "communities.manage_community"
     success_url = reverse_lazy("join_requests:list")
+
+    def get_permission_object(self) -> Community:
+        return self.request.community
 
     def get_queryset(self) -> QuerySet:
         return super().get_queryset().filter(status=JoinRequest.STATUS.pending)

@@ -23,10 +23,11 @@
                data-toggle-class="hide-sm">{% trans "Close Sidebar" %}</a>
             <ul class="menu">
                 <li class="menu-item">
-                    <a href="{% url 'communities:community_update' %}">Community Settings</a>
-                    <a href="{% url 'communities:membership_list' %}">Memberships</a>
-                    <a href="{% url 'invites:list' %}">Invite New Members</a>
-                    <a href="" class="text-warning">Deactivate Community</a>
+                    <a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
+                    <a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
+                    <a href="{% url 'invites:list' %}">{% trans "Invite New Members" %}</a>
+                    <a href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
+                    <a href="" class="text-warning">{% trans "Deactivate Community" %}</a>
                 </li>
             </ul>
         </div>

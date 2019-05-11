@@ -36,6 +36,16 @@ class TestCommunityManager:
 
 
 class TestCommunityModel:
+
+    def test_get_members(self, member: Membership):
+        assert member.community.get_members().first() == member.member
+
+    def test_get_moderators(self, moderator: Membership):
+        assert moderator.community.get_moderators().first() == moderator.member
+
+    def test_get_admins(self, admin: Membership):
+        assert admin.community.get_admins().first() == admin.member
+
     def test_invalid_domain_name(self):
 
         community = Community(name="test", domain="testing")
