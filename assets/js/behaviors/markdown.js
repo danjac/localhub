@@ -1,6 +1,6 @@
 import onmount from 'onmount';
 
-onmount('[data-markdown]', function() {
+onmount('[data-markdown-shortcut]', function() {
   this.addEventListener('click', event => {
     event.preventDefault();
     const { target } = event;
@@ -8,8 +8,10 @@ onmount('[data-markdown]', function() {
       'textarea.markdownx-editor'
     );
     const { selectionStart, selectionEnd } = textarea;
-    const { markdown } = target.dataset;
-    const [markdownStart, markdownEnd] = markdown.split(/\[SELECTION\]/);
+    const { markdownShortcut } = target.dataset;
+    const [markdownStart, markdownEnd] = markdownShortcut.split(
+      /\[SELECTION\]/
+    );
     const selectedText = textarea.value.substring(selectionStart, selectionEnd);
     const markdownText = markdownStart + selectedText + markdownEnd;
     textarea.value =

@@ -13,12 +13,12 @@
   </ul>
   <div class="tab-pane" id="{{ widget.attrs.id }}_editor">
       <div class="text-right">
-        <a class="btn btn-link btn-sm" href="#" data-markdown="**[SELECTION]**">{% trans "Bold" %}</a>
-        <a class="btn btn-link btn-sm" href="#" data-markdown="_[SELECTION]_">{% trans "Italic" %}</a>
-        <a class="btn btn-link btn-sm" href="#" data-markdown="[[SELECTION]](url)">{% trans "Link" %}</a>
-        <a class="btn btn-link btn-sm" href="#" data-markdown="`[SELECTION]`">{% trans "Quote" %}</a>
-        <a class="btn btn-link btn-sm" href="#" data-markdown="* [SELECTION]">{% trans "List (Bullets)" %}</a>
-        <a class="btn btn-link btn-sm" href="#" data-markdown="1. [SELECTION]">{% trans "List (Numbers)" %}</a>
+        <a class="btn btn-link btn-sm" href="#" data-markdown-shortcut="**[SELECTION]**">{% trans "Bold" %}</a>
+        <a class="btn btn-link btn-sm" href="#" data-markdown-shortcut="_[SELECTION]_">{% trans "Italic" %}</a>
+        <a class="btn btn-link btn-sm" href="#" data-markdown-shortcut="[[SELECTION]](url)">{% trans "Link" %}</a>
+        <a class="btn btn-link btn-sm" href="#" data-markdown-shortcut="`[SELECTION]`">{% trans "Quote" %}</a>
+        <a class="btn btn-link btn-sm" href="#" data-markdown-shortcut="* [SELECTION]">{% trans "List (Bullets)" %}</a>
+        <a class="btn btn-link btn-sm" href="#" data-markdown-shortcut="1. [SELECTION]">{% trans "List (Numbers)" %}</a>
       </div>
       {% include 'django/forms/widgets/textarea.html' %}
   </div>
