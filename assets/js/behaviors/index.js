@@ -2,6 +2,7 @@ import './confirm';
 import './delete';
 import './dropdown';
 import './like';
+import './markdown';
 import './modals';
 import './remove-after';
 import './tabs';

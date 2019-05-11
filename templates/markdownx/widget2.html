@@ -12,6 +12,14 @@
     </li>
   </ul>
   <div class="tab-pane" id="{{ widget.attrs.id }}_editor">
+      <div class="text-right">
+        <a class="btn btn-link btn-sm" href="#" data-markdown="**[SELECTION]**">Bold</a>
+        <a class="btn btn-link btn-sm" href="#" data-markdown="_[SELECTION]_">Italic</a>
+        <a class="btn btn-link btn-sm" href="#" data-markdown="[[SELECTION]](url)">Link</a>
+        <a class="btn btn-link btn-sm" href="#" data-markdown="`[SELECTION]`">Quote</a>
+        <a class="btn btn-link btn-sm" href="#" data-markdown="* [SELECTION]">List (Numbers)</a>
+        <a class="btn btn-link btn-sm" href="#" data-markdown="1. [SELECTION]">List (Bullets)</a>
+      </div>
       {% include 'django/forms/widgets/textarea.html' %}
   </div>
   <div class="tab-pane d-none markdownx-preview" id="{{ widget.attrs.id }}_preview"></div>
