@@ -40,12 +40,10 @@ onmount('[data-confirm-dialog]', function() {
       }
     }
 
-    const listenerArgs = ['click', onConfirm, { once: true }];
-
-    handler.addEventListener.apply(listenerArgs);
+    handler.addEventListener('click', onConfirm, { once: true });
 
     dialog.addEventListener('modal:close', () => {
-      handler.removeEventListener.apply(listenerArgs);
+      handler.removeEventListener('click', onConfirm, { once: true });
     });
 
     dialog.classList.add('active');
