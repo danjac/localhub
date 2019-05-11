@@ -28,7 +28,6 @@ test:django:
   stage: test
   script:
     # suppress whitenoise warnings
-    - docker-compose run django ./manage.py collectstatic
-    - docker-compose run django pytest
+    - docker-compose run django "./manage.py collectstatic && pytest"
   only:
     - master
