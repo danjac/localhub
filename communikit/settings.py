@@ -117,6 +117,7 @@ class Base(Configuration):
     # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
     STATIC_URL = "/static/"
+    MEDIA_URL = "/media/"
 
     # https://docs.djangoproject.com/en/1.11/ref/forms/renderers/
 
@@ -129,6 +130,10 @@ class Base(Configuration):
     @property
     def INSTALLED_APPS(self) -> Sequence[str]:
         return self.DJANGO_APPS + self.THIRD_PARTY_APPS + self.LOCAL_APPS
+
+    @property
+    def MEDIA_ROOT(self) -> str:
+        return os.path.join(self.BASE_DIR, "media")
 
     @property
     def STATIC_ROOT(self) -> str:

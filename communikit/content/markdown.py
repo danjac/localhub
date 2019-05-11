@@ -17,11 +17,17 @@ ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
     "h4",
     "h5",
     "h6",
+    "img",
     "p",
     "pre",
 ]
 
-cleaner = bleach.Cleaner(ALLOWED_TAGS, filters=[LinkifyFilter])
+ALLOWED_ATTRIBUTES = bleach.ALLOWED_ATTRIBUTES.copy()
+ALLOWED_ATTRIBUTES.update({"img": ["alt", "src"]})
+
+cleaner = bleach.Cleaner(
+    tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, filters=[LinkifyFilter]
+)
 
 HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")
 MENTIONS_RE = re.compile(r"(?:^|\s)[＠ @]{1}([^\s#<>[\]|{}]+)")
