@@ -7,7 +7,7 @@
     <head>
         <title>
             {% block title %}
-            {% if request.community %}{{ request.community.name }}{% else %}communikit{% endif %}
+            {% if request.community %}{{ request.community.name }}{% else %}{{ request.site.name }}{% endif %}
             {% endblock %}
         </title>
         <meta charset="UTF-8">
