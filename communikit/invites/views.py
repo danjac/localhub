@@ -2,10 +2,8 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import redirect_to_login
-from django.core.mail import send_mail
 from django.db.models import Q, QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.template import loader
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import ugettext as _
@@ -16,6 +14,7 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.communities.models import Community, Membership
 from communikit.communities.views import CommunityRequiredMixin
+from communikit.invites.emails import send_invitation_email
 from communikit.invites.forms import InviteForm
 from communikit.invites.models import Invite
 from communikit.types import ContextDict
@@ -60,7 +59,7 @@ class InviteCreateView(
         kwargs.update({"community": self.request.community})
         return kwargs
 
-    def form_valid(self, form) -> HttpResponse:
+    def form_valid(self, form: InviteForm) -> HttpResponse:
         self.object = form.save(commit=False)
         self.object.sender = self.request.user
         self.object.community = self.request.community
@@ -213,21 +212,3 @@ class InviteAcceptView(CommunityInviteQuerySetMixin, SingleObjectMixin, View):
 
 
 invite_accept_view = InviteAcceptView.as_view()
-
-
-def send_invitation_email(invite: Invite):
-    # tbd: we'll use django-templated-mail at some point
-    send_mail(
-        _("Invitation to join"),
-        loader.get_template("invites/emails/invitation.txt").render(
-            {
-                "invite": invite,
-                "accept_url": invite.community.domain_url(
-                    reverse("invites:accept", args=[invite.id])
-                ),
-            }
-        ),
-        # TBD: need separate email domain setting for commty.
-        f"support@{invite.community.domain}",
-        [invite.email],
-    )

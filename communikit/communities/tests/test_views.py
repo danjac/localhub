@@ -51,15 +51,22 @@ class TestCommunityRequiredMixin:
         req.user = AnonymousUser()
         assert my_view(req).url.startswith(reverse("account_login"))
 
+    def test_community_access_denied_if_private_allowed(
+        self, req_factory: RequestFactory, user: settings.AUTH_USER_MODEL
+    ):
+        req = req_factory.get("/")
+        req.community = CommunityFactory(public=False)
+        req.user = user
+        my_public_view = MyView.as_view(allow_if_private=True)
+        assert my_public_view(req).status_code == 200
+
     def test_community_access_denied_if_authenticated(
         self, req_factory: RequestFactory, user: settings.AUTH_USER_MODEL
     ):
         req = req_factory.get("/")
         req.community = CommunityFactory(public=False)
         req.user = user
-        assert my_view(req).url == reverse(
-            "community_access_denied"
-        )
+        assert my_view(req).url == reverse("community_access_denied")
 
     def test_community_access_denied_if_ajax(
         self, req_factory: RequestFactory, user: settings.AUTH_USER_MODEL

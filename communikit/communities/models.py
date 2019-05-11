@@ -95,6 +95,15 @@ class Community(TimeStampedModel):
         except KeyError:
             return False
 
+    def get_members(self) -> models.QuerySet:
+        return self.members.filter(role=Membership.ROLES.member)
+
+    def get_moderators(self) -> models.QuerySet:
+        return self.members.filter(role=Membership.ROLES.moderator)
+
+    def get_admins(self) -> models.QuerySet:
+        return self.members.filter(role=Membership.ROLES.admin)
+
 
 class Membership(TimeStampedModel):
     ROLES = Choices(
