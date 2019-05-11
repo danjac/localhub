@@ -1,0 +1,3 @@
+Hi,
+
+Sorry, you have not been accepted to join {{ join_request.community.name }}.

@@ -95,14 +95,17 @@ class Community(TimeStampedModel):
         except KeyError:
             return False
 
+    def get_members_by_role(self, role: str) -> models.QuerySet:
+        return self.members.filter(membership__role=role)
+
     def get_members(self) -> models.QuerySet:
-        return self.members.filter(role=Membership.ROLES.member)
+        return self.get_members_by_role(Membership.ROLES.member)
 
     def get_moderators(self) -> models.QuerySet:
-        return self.members.filter(role=Membership.ROLES.moderator)
+        return self.get_members_by_role(Membership.ROLES.moderator)
 
     def get_admins(self) -> models.QuerySet:
-        return self.members.filter(role=Membership.ROLES.admin)
+        return self.get_members_by_role(Membership.ROLES.admin)
 
 
 class Membership(TimeStampedModel):
@@ -117,7 +120,9 @@ class Membership(TimeStampedModel):
     )
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
-    role = models.CharField(choices=ROLES, max_length=9, default=ROLES.member)
+    role = models.CharField(
+        choices=ROLES, max_length=9, default=ROLES.member, db_index=True
+    )
     active = models.BooleanField(default=True)
 
     class Meta:

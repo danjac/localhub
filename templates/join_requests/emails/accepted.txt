@@ -1,0 +1,3 @@
+Hi,
+
+You have been accepted to join {{ join_request.community.name }}!

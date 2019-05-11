@@ -1,5 +1,8 @@
+from typing import Optional
+
 from django.db import models
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
@@ -39,9 +42,16 @@ class JoinRequest(TimeStampedModel):
     def __str__(self) -> str:
         return self.email or self.sender.email
 
-    def clean(self):
-        if not any((self.email, self.sender_id)):
-            raise ValidationError(_("Must include email or current user"))
+    def get_sender(self) -> Optional[settings.AUTH_USER_MODEL]:
+        qs = get_user_model()._default_manager
+        if self.sender_id:
+            qs = qs.filter(pk=self.sender_id)
+        else:
+            qs = qs.filter(
+                models.Q(emailaddress__email__iexact=self.email)
+                | models.Q(email__iexact=self.email)
+            )
+        return qs.first()
 
     def is_pending(self) -> bool:
         return self.status == self.STATUS.pending

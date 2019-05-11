@@ -1,10 +1,7 @@
-from typing import Optional
-
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q, QuerySet
+from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext as _
@@ -43,15 +40,15 @@ class JoinRequestListView(
     def get_permission_object(self) -> Community:
         return self.request.community
 
+    def get_queryset(self) -> QuerySet:
+        return super().get_queryset().select_related("community", "sender")
+
 
 join_request_list_view = JoinRequestListView.as_view()
 
 
 class JoinRequestCreateView(
-    LoginRequiredMixin,
-    CommunityRequiredMixin,
-    PermissionRequiredMixin,
-    CreateView,
+    LoginRequiredMixin, CommunityRequiredMixin, CreateView
 ):
     model = JoinRequest
     form_class = JoinRequestForm
@@ -96,30 +93,15 @@ class JoinRequestActionView(
     def get_success_url(self) -> str:
         return self.success_url
 
-    def get_join_request_user(self) -> Optional[settings.AUTH_USER_MODEL]:
-        qs = get_user_model()._default_manager
-
-        if self.object.sender_id:
-            qs = qs.filter(pk=self.object.sender_id)
-        else:
-            qs = qs.filter(
-                Q(emailaddress__email__iexact=self.object.email)
-                | Q(email__iexact=self.object.email)
-            )
-        return qs.first()
-
 
 class JoinRequestAcceptView(JoinRequestActionView):
-    def get_queryset(self) -> QuerySet:
-        # TBD: add a deadline of e.g. 3 days
-        return super().get_queryset().filter(status=JoinRequest.STATUS.pending)
-
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        # TBD: needs to be ajax POST/confirm page
         self.object = self.get_object()
         self.object.status = JoinRequest.STATUS.accepted
         self.object.save()
 
-        user = self.get_join_request_user()
+        user = self.object.get_sender()
 
         if user:
             _membership, created = Membership.objects.get_or_create(
@@ -152,17 +134,14 @@ join_request_accept_view = JoinRequestAcceptView.as_view()
 
 
 class JoinRequestRejectView(JoinRequestActionView):
+    # TBD: needs to be ajax POST/confirm page
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
-
-        user = self.get_join_request_user()
 
         self.object.status = JoinRequest.STATUS.rejected
         self.object.save()
 
-        send_rejection_email(
-            user.email if user else self.object.email, self.object
-        )
+        send_rejection_email(self.object)
 
         messages.info(self.request, _("Join request has been rejected"))
 

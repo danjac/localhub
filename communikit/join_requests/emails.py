@@ -1,4 +1,5 @@
 from django.core.mail import send_mail
+from django.urls import reverse
 from django.template import loader
 from django.utils.translation import ugettext as _
 
@@ -8,9 +9,20 @@ from communikit.join_requests.models import JoinRequest
 def send_join_request_email(join_request: JoinRequest):
     # tbd: we'll use django-templated-mail at some point
     send_mail(
-        _("Your request has been approved"),
+        _("A request has been received"),
         loader.get_template("join_requests/emails/join_request.txt").render(
-            {"join_request": join_request}
+            {
+                "join_request": join_request,
+                "list_url": join_request.community.domain_url(
+                    reverse("join_requests:list")
+                ),
+                "accept_url": join_request.community.domain_url(
+                    reverse("join_requests:accept", args=[join_request.id])
+                ),
+                "reject_url": join_request.community.domain_url(
+                    reverse("join_requests:reject", args=[join_request.id])
+                ),
+            }
         ),
         # TBD: need separate email domain setting for commty.
         f"support@{join_request.community.domain}",
@@ -31,8 +43,9 @@ def send_acceptance_email(join_request: JoinRequest):
     )
 
 
-def send_rejection_email(email: str, join_request: JoinRequest):
+def send_rejection_email(join_request: JoinRequest):
     # tbd: we'll use django-templated-mail at some point
+    user = join_request.get_sender()
     send_mail(
         _("Your request has been rejected"),
         loader.get_template("join_requests/emails/rejected.txt").render(
@@ -40,5 +53,5 @@ def send_rejection_email(email: str, join_request: JoinRequest):
         ),
         # TBD: need separate email domain setting for commty.
         f"support@{join_request.community.domain}",
-        [email],
+        [user.email if user else join_request.email],
     )

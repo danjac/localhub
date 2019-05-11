@@ -1,0 +1,21 @@
+Hi,
+
+{% if join_request.sender %}
+User {{ join_request.sender.username }} has requested to join this community.
+{% else %}
+You have received a request from {{ join_request.email }} to join this community.
+{% endif %}
+
+To accept this request:
+
+{{ accept_url }}
+
+To reject this request:
+
+{{ reject_url }}
+
+To review all requests:
+
+{{ list_url }}
+
+
