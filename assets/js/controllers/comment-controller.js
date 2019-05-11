@@ -13,21 +13,15 @@ export default class extends ApplicationController {
   }
 
   confirmDelete() {
-    const url = this.data.get('delete-redirect');
-    axios.delete(this.data.get('delete-url')).then(() => {
-      if (url) {
-        this.redirectTo(url);
-      } else {
-        fadeOut(this.element);
-      }
-    });
+    fadeOut(this.element);
+    axios.delete(this.data.get('delete-url'));
   }
 
   delete(event) {
     event.preventDefault();
     this.getConfirmController().open({
-      body: this.data.get('delete-confirm-body'),
-      header: this.data.get('delete-confirm-header'),
+      body: this.data.get("delete-confirm-body"),
+      header: this.data.get("delete-confirm-header"),
       onConfirm: this.confirmDelete.bind(this)
     });
   }
