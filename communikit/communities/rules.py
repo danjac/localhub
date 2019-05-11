@@ -27,6 +27,11 @@ is_member = is_member | is_moderator
 
 
 @rules.predicate
+def is_visitor(user: settings.AUTH_USER_MODEL, community: Community) -> bool:
+    return community.public or is_member.test(user, community)
+
+
+@rules.predicate
 def is_own_membership(
     user: settings.AUTH_USER_MODEL, membership: Membership
 ) -> bool:
@@ -44,6 +49,7 @@ rules.add_rule("is_admin", is_admin)
 rules.add_rule("is_moderator", is_moderator)
 rules.add_rule("is_member", is_member)
 
+rules.add_perm("communities.view_community", is_visitor)
 rules.add_perm("communities.manage_community", is_admin)
 
 rules.add_perm(

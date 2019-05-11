@@ -1,12 +1,15 @@
 import pytest
 
 from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
+from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponse
 from django.test.client import Client, RequestFactory
 from django.urls import reverse
 from django.views.generic import View
 
 from communikit.communities.models import Community, Membership
+from communikit.communities.tests.factories import CommunityFactory
 from communikit.communities.views import CommunityRequiredMixin
 
 pytestmark = pytest.mark.django_db
@@ -26,12 +29,45 @@ class TestCommunityRequiredMixin:
     ):
         req = req_factory.get("/")
         req.community = community
+        req.user = AnonymousUser()
         assert my_view(req).status_code == 200
 
-    def test_community_not_available(self, req_factory: RequestFactory):
+    def test_community_not_found(self, req_factory: RequestFactory):
         req = req_factory.get("/")
         req.community = None
+        assert my_view(req).url == reverse("communities:community_not_found")
+
+    def test_community_not_found_if_ajax(self, req_factory: RequestFactory):
+        req = req_factory.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+        req.community = None
         with pytest.raises(Http404):
+            my_view(req)
+
+    def test_community_access_denied_if_anonymous(
+        self, req_factory: RequestFactory
+    ):
+        req = req_factory.get("/")
+        req.community = CommunityFactory(public=False)
+        req.user = AnonymousUser()
+        assert my_view(req).url.startswith(reverse("account_login"))
+
+    def test_community_access_denied_if_authenticated(
+        self, req_factory: RequestFactory, user: settings.AUTH_USER_MODEL
+    ):
+        req = req_factory.get("/")
+        req.community = CommunityFactory(public=False)
+        req.user = user
+        assert my_view(req).url == reverse(
+            "communities:community_access_denied"
+        )
+
+    def test_community_access_denied_if_ajax(
+        self, req_factory: RequestFactory, user: settings.AUTH_USER_MODEL
+    ):
+        req = req_factory.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+        req.community = CommunityFactory(public=False)
+        req.user = user
+        with pytest.raises(PermissionDenied):
             my_view(req)
 
 

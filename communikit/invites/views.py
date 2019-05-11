@@ -1,8 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import redirect_to_login
 from django.core.mail import send_mail
-from django.db.models import QuerySet, Q
+from django.db.models import Q, QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse, reverse_lazy
@@ -177,13 +178,13 @@ class InviteAcceptView(CommunityInviteQuerySetMixin, SingleObjectMixin, View):
 
     def handle_new_user(self) -> HttpResponse:
         messages.info(self.request, _("Sign up to join this community"))
-        redirect_url = reverse("account_signup") + f"?next={self.request.path}"
-        return HttpResponseRedirect(redirect_url)
+        return redirect_to_login(
+            self.request.get_full_path(), reverse("account_signup")
+        )
 
     def handle_logged_out_user(self) -> HttpResponse:
         messages.info(self.request, _("Login to join this community"))
-        redirect_url = reverse("account_login") + f"?next={self.request.path}"
-        return HttpResponseRedirect(redirect_url)
+        return redirect_to_login(self.request.get_full_path())
 
     def handle_current_user(self) -> HttpResponse:
         _membership, created = Membership.objects.get_or_create(

@@ -1,6 +1,8 @@
 from django.urls import path
 
 from communikit.communities.views import (
+    community_access_denied_view,
+    community_not_found_view,
     community_update_view,
     membership_delete_view,
     membership_list_view,
@@ -10,6 +12,14 @@ from communikit.communities.views import (
 app_name = "communities"
 
 urlpatterns = [
+    path(
+        "access-denied/",
+        view=community_access_denied_view,
+        name="community_access_denied",
+    ),
+    path(
+        "not-found/", view=community_not_found_view, name="community_not_found"
+    ),
     path("~update/", view=community_update_view, name="community_update"),
     path("memberships/", view=membership_list_view, name="membership_list"),
     path(

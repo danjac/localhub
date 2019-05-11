@@ -1,10 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import redirect_to_login
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
-from django.http import Http404
-from django.urls import reverse_lazy
+from django.http import Http404, HttpResponseRedirect
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import DeleteView, ListView, UpdateView
+from django.views.generic import DeleteView, ListView, TemplateView, UpdateView
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -16,40 +18,58 @@ class CommunityRequiredMixin:
     """
     Ensures that a community is available on this domain. This requires
     the CurrentCommunityMiddleware is enabled.
-
-    If no community present raises a 404.
-
-    TBD: we will need a specific route which lists available communities
-    (if any). Instead of showing a 404, we redirect to this page.
-
-    For example authentication routes (in emails etc) will be tied
-    to the domain depending on SITE_ID, so if redirected there
-    and no community matches that domain we need a page to allow user
-    to select a community/request invite etc.
-
-    TBD:
-
-    @rules.predicate
-    def is_public(community):
-        return community.public
-
-    rules.add_perm("communities.view_community", is_public | is_member)
-
-    if not request.user.has_perm(
-        request.community, "communities.view_community"):
-        return HttpResponseRedirect(reverse("communities:request_access"))
     """
 
-    # communities marked private would normally redirect to 403/membership
-    # require page. The CommunityRequiredMixin flag allow_if_private on a view
-    # skips this check, as we need to allow the user to accept the invite as
-    # not yet a member.
     allow_if_private = False
 
     def dispatch(self, request, *args, **kwargs):
         if not request.community:
-            raise Http404(_("No community is available for this domain"))
+            return self.handle_community_not_found()
+
+        if (
+            not request.user.has_perm(
+                "communities.view_community", request.community
+            )
+            and not self.allow_if_private
+        ):
+            return self.handle_community_access_denied()
         return super().dispatch(request, *args, **kwargs)
+
+    def handle_community_access_denied(self):
+        if self.request.is_ajax():
+            raise PermissionDenied(_("You must be a member of this community"))
+        if self.request.user.is_anonymous:
+            return redirect_to_login(self.request.get_full_path())
+        return HttpResponseRedirect(
+            reverse("communities:community_access_denied")
+        )
+
+    def handle_community_not_found(self):
+        if self.request.is_ajax():
+            raise Http404(_("No community is available for this domain"))
+        return HttpResponseRedirect(reverse("communities:community_not_found"))
+
+
+class CommunityNotFoundView(TemplateView):
+    """
+    This is shown if no community exists for this domain.
+    """
+
+    template_name = "communities/not_found.html"
+
+
+community_not_found_view = CommunityNotFoundView.as_view()
+
+
+class CommunityAccessDeniedView(TemplateView):
+    """
+    This is shown if no community exists for this domain.
+    """
+
+    template_name = "communities/access_denied.html"
+
+
+community_access_denied_view = CommunityAccessDeniedView.as_view()
 
 
 class CommunityUpdateView(

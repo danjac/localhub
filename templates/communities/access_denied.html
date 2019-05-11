@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h3>{% trans "Access Denied" %}</h3>
+<p class="bg-gray p-2 text-center">
+  {% trans "You do not have permission to view this community" %}
+  {# add invite request form here #}
+</p>
+{% endblock %}
