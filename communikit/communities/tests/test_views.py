@@ -35,7 +35,7 @@ class TestCommunityRequiredMixin:
     def test_community_not_found(self, req_factory: RequestFactory):
         req = req_factory.get("/")
         req.community = None
-        assert my_view(req).url == reverse("communities:community_not_found")
+        assert my_view(req).url == reverse("community_not_found")
 
     def test_community_not_found_if_ajax(self, req_factory: RequestFactory):
         req = req_factory.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
@@ -58,7 +58,7 @@ class TestCommunityRequiredMixin:
         req.community = CommunityFactory(public=False)
         req.user = user
         assert my_view(req).url == reverse(
-            "communities:community_access_denied"
+            "community_access_denied"
         )
 
     def test_community_access_denied_if_ajax(

@@ -4,9 +4,22 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 
+from communikit.communities.views import (
+    community_access_denied_view,
+    community_not_found_view,
+)
+
 urlpatterns = [
     # Local
     path("", include("communikit.content.urls")),
+    path(
+        "access-denied/",
+        view=community_access_denied_view,
+        name="community_access_denied",
+    ),
+    path(
+        "not-found/", view=community_not_found_view, name="community_not_found"
+    ),
     path("comments/", include("communikit.comments.urls")),
     path("settings/", include("communikit.communities.urls")),
     path("invites/", include("communikit.invites.urls")),

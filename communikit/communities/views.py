@@ -41,13 +41,13 @@ class CommunityRequiredMixin:
         if self.request.user.is_anonymous:
             return redirect_to_login(self.request.get_full_path())
         return HttpResponseRedirect(
-            reverse("communities:community_access_denied")
+            reverse("community_access_denied")
         )
 
     def handle_community_not_found(self):
         if self.request.is_ajax():
             raise Http404(_("No community is available for this domain"))
-        return HttpResponseRedirect(reverse("communities:community_not_found"))
+        return HttpResponseRedirect(reverse("community_not_found"))
 
 
 class CommunityNotFoundView(TemplateView):
