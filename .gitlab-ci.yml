@@ -23,10 +23,10 @@ variables:
     - docker info
 
 
-test:backend:
+test:django:
   extends: .docker_compose
   stage: test
   script:
-    - docker-compose run backend pytest
+    - docker-compose run django pytest
   only:
     - master
