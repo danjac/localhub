@@ -1,18 +1,17 @@
 {% load i18n %}
-<div class="modal" id="confirm-dialog">
-  <a href="#" class="modal-overlay" aria-label="{% trans 'Close' %}" data-close-modal></a>
+<div class="modal" id="confirm-dialog" data-controller="confirm">
+  <a href="#" class="modal-overlay" aria-label="{% trans 'Close' %}" data-action="confirm#cancel"></a>
   <div class="modal-container">
     <div class="modal-header">
-      <a href="#" class="btn btn-clear float-right" aria-label="{% trans 'Close' %}" data-close-modal></a>
-      <div class="modal-title h5" data-confirm-title></div>
+      <a href="#" class="btn btn-clear float-right" aria-label="{% trans 'Close' %}" data-action="confirm#cancel"></a>
+      <div class="modal-title h5" data-target="confirm.header"></div>
     </div>
     <div class="modal-body">
-      <div class="content" data-confirm-content>
-      </div>
+      <div class="content" data-target="confirm.body"></div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-link" data-close-modal>{% trans "Cancel" %}</button>
-      <button class="btn btn-primary" data-confirm-handler></button>
+      <button class="btn btn-link" data-action="confirm#cancel">{% trans "Cancel" %}</button>
+      <button class="btn btn-primary" data-target="confirm.confirm" data-action="confirm#confirm">{% trans "Confirm" %}</button>
     </div>
   </div>
 </div>

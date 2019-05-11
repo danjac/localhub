@@ -1,8 +1,10 @@
 import { Controller } from 'stimulus';
 
 export default class extends Controller {
-  connect() {
-    console.log('connected, baby', this);
+  getConfirmController() {
+    return this.application.getControllerForElementAndIdentifier(
+      document.getElementById('confirm-dialog'),
+      'confirm'
+    );
   }
 }
-
