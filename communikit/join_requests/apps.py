@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class JoinRequestsConfig(AppConfig):
-    name = "communkit.join_requests"
+    name = "communikit.join_requests"

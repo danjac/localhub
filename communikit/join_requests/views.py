@@ -56,6 +56,7 @@ class JoinRequestCreateView(
     model = JoinRequest
     form_class = JoinRequestForm
     success_url = reverse_lazy("content:list")
+    allow_if_private = True
 
     def get_form_kwargs(self) -> ContextDict:
         kwargs = super().get_form_kwargs()
@@ -137,7 +138,7 @@ class JoinRequestAcceptView(JoinRequestActionView):
 
             else:
                 messages.error(_("User already belongs to this community"))
-        if not user:
+        else:
             invite, created = Invite.objects.get_or_create(
                 community=self.object.community,
                 sender=self.request.user,

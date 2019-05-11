@@ -49,6 +49,7 @@ class Base(Configuration):
         "communikit.communities.apps.CommunitiesConfig",
         "communikit.content.apps.ContentConfig",
         "communikit.invites.apps.InvitesConfig",
+        "communikit.join_requests.apps.JoinRequestsConfig",
         "communikit.likes.apps.LikesConfig",
         "communikit.users.apps.UsersConfig",
     ]
