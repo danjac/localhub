@@ -5,6 +5,8 @@ from typing import Dict, Sequence
 
 from configurations import Configuration, values
 
+from django.urls import reverse_lazy
+
 
 class Base(Configuration):
 
@@ -94,7 +96,8 @@ class Base(Configuration):
         },
     ]
 
-    LOGIN_REDIRECT_URL = "/"
+    COMMUNIKIT_HOME_PAGE_URL = reverse_lazy("content:list")
+
     LOGIN_URL = "account_login"
 
     ACCOUNT_EMAIL_REQUIRED = True
@@ -123,6 +126,10 @@ class Base(Configuration):
     # https://docs.djangoproject.com/en/1.11/ref/forms/renderers/
 
     FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
+
+    @property
+    def LOGIN_REDIRECT_URL(self) -> str:
+        return self.COMMUNIKIT_HOME_PAGE_URL
 
     @property
     def BASE_DIR(self) -> str:

@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, QuerySet
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext as _
 from django.views.generic import CreateView, ListView, View
@@ -55,7 +55,7 @@ class JoinRequestCreateView(
 ):
     model = JoinRequest
     form_class = JoinRequestForm
-    success_url = reverse_lazy("content:list")
+    success_url = settings.COMMUNIKIT_HOME_PAGE_URL
     allow_if_private = True
 
     def get_form_kwargs(self) -> ContextDict:
@@ -66,12 +66,7 @@ class JoinRequestCreateView(
         return kwargs
 
     def form_valid(self, form: JoinRequestForm) -> HttpResponse:
-        self.object = form.save(commit=False)
-        if self.request.user.is_authenticated():
-            self.object.sender = self.request.user
-        self.object.community = self.request.community
-        self.object.save()
-
+        self.object = form.save()
         send_join_request_email(self.object)
 
         messages.success(
@@ -119,7 +114,7 @@ class JoinRequestAcceptView(JoinRequestActionView):
         # TBD: add a deadline of e.g. 3 days
         return super().get_queryset().filter(status=JoinRequest.STATUS.pending)
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         self.object.status = JoinRequest.STATUS.accepted
         self.object.save()
@@ -132,16 +127,16 @@ class JoinRequestAcceptView(JoinRequestActionView):
             )
             if created:
                 send_acceptance_email(self.object)
-                messages.success(
-                    self.request, _("Join request has been accepted")
-                )
+                messages.success(request, _("Join request has been accepted"))
 
             else:
-                messages.error(_("User already belongs to this community"))
+                messages.error(
+                    request, _("User already belongs to this community")
+                )
         else:
             invite, created = Invite.objects.get_or_create(
+                sender=request.user,
                 community=self.object.community,
-                sender=self.request.user,
                 email=self.object.email,
             )
             if created:
@@ -157,7 +152,7 @@ join_request_accept_view = JoinRequestAcceptView.as_view()
 
 
 class JoinRequestRejectView(JoinRequestActionView):
-    def get(self, request, *args, **kwargs):
+    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
 
         user = self.get_join_request_user()

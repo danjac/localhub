@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -200,7 +201,7 @@ class InviteAcceptView(CommunityInviteQuerySetMixin, SingleObjectMixin, View):
         self.object.status = Invite.STATUS.accepted
         self.object.save()
 
-        return HttpResponseRedirect(reverse("content:list"))
+        return HttpResponseRedirect(settings.COMMUNIKIT_HOME_PAGE_URL)
 
     def handle_invalid_invite(self) -> HttpResponse:
         messages.error(self.request, _("This invite is invalid"))
@@ -208,7 +209,7 @@ class InviteAcceptView(CommunityInviteQuerySetMixin, SingleObjectMixin, View):
         self.object.status = Invite.STATUS.rejected
         self.object.save()
 
-        return HttpResponseRedirect(reverse("content:list"))
+        return HttpResponseRedirect(settings.COMMUNIKIT_HOME_PAGE_URL)
 
 
 invite_accept_view = InviteAcceptView.as_view()
