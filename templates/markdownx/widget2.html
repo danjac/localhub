@@ -1,29 +1,61 @@
 {% load i18n %}
-<div class="markdownx tabs">
+<div class="markdownx tabs" data-controller="tabs">
   <ul class="tab">
-    <li class="tab-item active">
-      <a href="#" data-show-tab="#{{ widget.attrs.id }}_editor">{% trans "Edit" %}</a>
+    <li class="tab-item active" data-target="tabs.tab" data-tab="editor">
+      <a href="#" data-action="tabs#select" data-tab="editor">{% trans "Edit" %}</a>
     </li>
-    <li class="tab-item">
-      <a href="#" data-show-tab="#{{ widget.attrs.id }}_preview">{% trans "Preview" %}</a>
+    <li class="tab-item" data-target="tabs.tab" data-tab="preview">
+      <a href="#" data-action="tabs#select" data-tab="preview">{% trans "Preview" %}</a>
     </li>
-    <li class="tab-item">
-      <a href="#" data-show-tab="#{{ widget.attrs.id }}_markdown_guide">{% trans "Formatting Help" %}</a>
+    <li class="tab-item" data-target="tabs.tab" data-tab="guide">
+      <a href="#" data-action="tabs#select" data-tab="guide">{% trans "Formatting Help" %}</a>
     </li>
   </ul>
-  <div class="tab-pane" id="{{ widget.attrs.id }}_editor">
-      <div class="text-right">
-        <a class="btn btn-link btn-sm" href="#" data-markdown-shortcut="**[SELECTION]**">{% trans "Bold" %}</a>
-        <a class="btn btn-link btn-sm" href="#" data-markdown-shortcut="_[SELECTION]_">{% trans "Italic" %}</a>
-        <a class="btn btn-link btn-sm" href="#" data-markdown-shortcut="[[SELECTION]](url)">{% trans "Link" %}</a>
-        <a class="btn btn-link btn-sm" href="#" data-markdown-shortcut="`[SELECTION]`">{% trans "Quote" %}</a>
-        <a class="btn btn-link btn-sm" href="#" data-markdown-shortcut="* [SELECTION]">{% trans "List (Bullets)" %}</a>
-        <a class="btn btn-link btn-sm" href="#" data-markdown-shortcut="1. [SELECTION]">{% trans "List (Numbers)" %}</a>
-      </div>
-      {% include 'django/forms/widgets/textarea.html' %}
+  <div class="tab-pane" data-target="tabs.pane" data-tab="editor" data-controller="markdown">
+    <div class="text-right">
+
+      <a class="btn btn-link btn-sm"
+         href="#"
+         data-action="markdown#select"
+         data-markdown="**[SELECTION]**"
+         >{% trans "Bold" %}</a>
+
+      <a class="btn btn-link btn-sm"
+         href="#"
+         data-action="markdown#select"
+         data-markdown="_[SELECTION]_"
+         >{% trans "Italic" %}</a>
+
+      <a class="btn btn-link btn-sm"
+         href="#"
+         data-action="markdown#select"
+         data-markdown="[[SELECTION]](url)"
+         >{% trans "Link" %}</a>
+
+      <a class="btn btn-link btn-sm"
+         href="#"
+         data-action="markdown#select"
+         data-markdown="`[SELECTION]`"
+         >{% trans "Quote" %}</a>
+
+      <a class="btn btn-link btn-sm"
+         href="#"
+         data-action="markdown#select"
+         data-markdown="* [SELECTION]"
+         >{% trans "List (Bullets)" %}</a>
+
+      <a class="btn btn-link btn-sm"
+         href="#"
+         data-action="markdown#select"
+         data-markdown="1. [SELECTION]"
+         >{% trans "List (Numbers)" %}</a>
+
+    </div>
+    <textarea name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %} data-target="markdown.textarea">
+    {% if widget.value %}{{ widget.value }}{% endif %}</textarea>
   </div>
-  <div class="tab-pane d-none markdownx-preview" id="{{ widget.attrs.id }}_preview"></div>
-  <div class="tab-pane d-none" id="{{ widget.attrs.id }}_markdown_guide">
+  <div class="tab-pane d-none markdownx-preview" data-target="tabs.pane" data-tab="preview"></div>
+  <div class="tab-pane d-none" data-target="tabs.pane" data-tab="guide">
     Markdown Guide to go here....
   </div>
 </div>

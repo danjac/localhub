@@ -4,8 +4,9 @@ module.exports = {
         "es6": true
     },
     "extends": "eslint:recommended",
+    "parser": "babel-eslint",
     "parserOptions": {
-        "ecmaVersion": 2016,
+        "ecmaVersion": 2017,
         "sourceType": "module"
     },
     "rules": {
@@ -32,7 +33,7 @@ module.exports = {
         "callback-return": "error",
         "camelcase": "error",
         "capitalized-comments": "off",
-        "class-methods-use-this": "error",
+        "class-methods-use-this": "off",
         "comma-dangle": "error",
         "comma-spacing": [
             "error",
