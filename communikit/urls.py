@@ -24,6 +24,7 @@ urlpatterns = [
     path("comments/", include("communikit.comments.urls")),
     path("settings/", include("communikit.communities.urls")),
     path("invites/", include("communikit.invites.urls")),
+    path("join-requests/", include("communikit.join_requests.urls")),
     path("users/", include("communikit.users.urls")),
     # Third-party
     path("account/", include("allauth.urls")),

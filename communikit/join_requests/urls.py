@@ -8,3 +8,10 @@ from communikit.join_requests.views import (
 )
 
 app_name = "join_requests"
+
+urlpatterns = [
+    path("", view=join_request_list_view, name="list"),
+    path("~create/", view=join_request_create_view, name="create"),
+    path("~<int:pk>/~accept/", view=join_request_accept_view, name="accept"),
+    path("~<int:pk>/~accept/", view=join_request_reject_view, name="reject"),
+]
