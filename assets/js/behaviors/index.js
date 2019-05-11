@@ -5,5 +5,6 @@ import './like';
 import './markdown';
 import './modals';
 import './remove-after';
+import './submit.js'
 import './tabs';
 import './toggle';

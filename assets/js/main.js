@@ -1,5 +1,6 @@
 import axios from 'axios';
 import onmount from 'onmount';
+import Turbolinks from 'turbolinks';
 
 import './behaviors';
 
@@ -16,3 +17,9 @@ axios.interceptors.response.use(data => {
 document.addEventListener('DOMContentLoaded', () => {
   onmount();
 });
+
+document.addEventListener('turbolinks:load', () => {
+  onmount();
+});
+
+Turbolinks.start();

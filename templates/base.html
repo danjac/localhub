@@ -13,6 +13,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="stylesheet" href="{% static 'dist/main.css' %}">
+        <script src="{% static 'dist/main.js' %}"></script>
     </head>
 
     <body>
@@ -66,7 +67,6 @@
             {% endblock content %}
         </div>
         {% include "includes/confirm_dialog.html" %}
-        <script src="{% static 'dist/main.js' %}"></script>
     </body>
 
 </html>

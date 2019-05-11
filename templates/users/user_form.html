@@ -9,7 +9,7 @@
 
 
 <div class="col-6 col-sm-12">
-  <form method="POST" action="{% url 'users:update' %}">
+  <form method="POST" action="{% url 'users:update' %}" data-turbolinks-submit>
     {% include "includes/forms/fields.html" %}
     <input type="submit" class="btn btn-primary" value="{% trans 'Save' %}">
   </form>
