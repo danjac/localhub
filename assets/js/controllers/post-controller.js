@@ -20,8 +20,8 @@ export default class extends ApplicationController {
   delete(event) {
     event.preventDefault();
     this.getConfirmController().open({
-      body: 'Are you sure you want to delete this post?',
-      header: 'Delete Post',
+      body: this.data.get("delete-confirm-body"),
+      header: this.data.get("delete-confirm-header"),
       onConfirm: this.confirmDelete.bind(this)
     });
   }
