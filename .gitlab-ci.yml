@@ -27,6 +27,8 @@ test:django:
   extends: .docker_compose
   stage: test
   script:
+    # suppress whitenoise warnings
+    - docker-compose run django ./manage.py collectstatic
     - docker-compose run django pytest
   only:
     - master
