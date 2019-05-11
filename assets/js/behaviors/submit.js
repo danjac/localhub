@@ -2,7 +2,6 @@ import onmount from 'onmount';
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-
 // https://vanillajstoolkit.com/helpers/serialize/
 //
 
@@ -61,16 +60,23 @@ onmount('[data-turbolinks-submit]', function() {
     const { target } = event;
     const method = target.getAttribute('method');
     const url = target.getAttribute('action');
+    const referrer = location.href;
 
     axios({
       data: serialize(target),
       headers: {
-        'Turbolinks-Referrer': location.href
+        'Turbolinks-Referrer': referrer
       },
       method,
       url
     }).then(response => {
-      Turbolinks.visit(response.headers['Turbolinks-Location']);
+      if (response.headers['content-type'].match(/html/)) {
+        Turbolinks.controller.cache.put(
+          referrer,
+          Turbolinks.Snapshot.wrap(response.data)
+        );
+        Turbolinks.visit(referrer, { action: 'restore' });
+      }
     });
   });
 });

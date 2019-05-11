@@ -5,7 +5,7 @@
 {% block settings_content %}
 <h3>{% trans "Community Settings" %}</h3>
 
-<form method="POST" action="{% url 'communities:community_update' %}">
+<form method="POST" action="{% url 'communities:community_update' %}" data-turbolinks-submit>
   {% include "includes/forms/fields.html" %}
   <input type="submit" class="btn btn-primary" value="{% trans 'Save' %}">
 </form>

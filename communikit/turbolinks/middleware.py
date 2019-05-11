@@ -18,13 +18,16 @@ class TurbolinksMiddleware:
         turbolinks_redirect = request.session.pop(self.session_key, None)
 
         if self.referrer_header in request.headers:
+            print("turbolinksreferer", request.headers[self.referrer_header])
 
             if "Location" in response:
                 location = response["Location"]
                 if turbolinks_redirect and location.startswith("."):
                     location = turbolinks_redirect.split("?")[0] + location
                 request.session[self.session_key] = location
+                print("saving session", location)
             elif turbolinks_redirect:
+                print("redirect to", turbolinks_redirect)
                 response[self.location_header] = turbolinks_redirect
 
         return response

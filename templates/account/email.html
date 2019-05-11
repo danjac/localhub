@@ -31,29 +31,10 @@
   <div class="btn-group">
     <button class="btn btn-secondary" type="submit" name="action_primary">{% trans 'Make Primary' %}</button>
     <button class="btn btn-secondary" type="submit" name="action_send">{% trans 'Re-send Verification' %}</button>
-    <button class="btn btn-primary" type="submit" name="action_remove" data-confirm-dialog="#confirm-remove-email-dialog">{% trans 'Remove' %}</button>
+    <button class="btn btn-primary" type="submit" name="action_remove">{% trans 'Remove' %}</button>
   </div>
 
 </form>
-
-<div class="modal" id="confirm-remove-email-dialog">
-  <a href="#" class="modal-overlay" aria-label="Close" data-close-modal></a>
-  <div class="modal-container">
-    <div class="modal-header">
-      <a href="#" class="btn btn-clear float-right" aria-label="Close" data-close-modal></a>
-      <div class="modal-title h5">{% trans "Remove Email Address" %}</div>
-    </div>
-    <div class="modal-body">
-      <div class="content">
-        {% trans 'Do you really want to remove the selected e-mail address?' %}
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-link" data-close-modal>{% trans "Cancel" %}</button>
-      <button class="btn btn-primary" data-confirm-handler>{% trans "Remove" %}</button>
-    </div>
-  </div>
-</div>
 
 
 {% else %}
