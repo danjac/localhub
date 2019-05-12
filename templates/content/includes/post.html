@@ -8,11 +8,17 @@
 {% has_perm "content.like_post" user post as can_like_post %}
 {% has_perm "content.create_comment" user post as can_create_comment %}
 
+<!--
+  <div class="card content-card"
+       data-controller="deleteable likeable"
+       data-likeable-url="..."
+       data-deleteable-url="..."
+       data-deleteable-redirect="..."
+-->
 <div class="card content-card"
      data-controller="post"
      data-post-like-url="{% url 'content:like' post.id %}"
      data-post-delete-url="{% url 'content:delete' post.id %}"
-     data-post-delete-redirect={% url 'content:list' %}
      data-post-delete-confirm-header="{% trans 'Delete Post' %}"
      data-post-delete-confirm-body="{% trans 'Are you sure you want to delete this post?' %}"
      >

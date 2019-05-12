@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.postgres.search import (
     SearchQuery,
     SearchRank,
@@ -205,10 +206,14 @@ post_detail_view = PostDetailView.as_view()
 
 
 class PostUpdateView(
-    LoginRequiredMixin, CommunityPostQuerySetMixin, UpdateView
+    LoginRequiredMixin,
+    SuccessMessageMixin,
+    CommunityPostQuerySetMixin,
+    UpdateView,
 ):
     form_class = PostForm
     permission_required = "content.change_post"
+    success_message = _("Your post has been saved")
 
 
 post_update_view = PostUpdateView.as_view()
@@ -226,8 +231,11 @@ class PostDeleteView(
     def delete(self, request, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         self.object.delete()
-        if request.is_ajax():
-            return HttpResponse(status=204)
+
+        messages.success(self.request, _("Your post has been deleted"))
+
+        # if request.is_ajax():
+        # return HttpResponse(status=204)
         return HttpResponseRedirect(self.get_success_url())
 
 

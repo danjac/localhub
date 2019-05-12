@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { fadeOut } from '../effects';
+import Turbolinks from 'turbolinks';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
@@ -13,14 +13,30 @@ export default class extends ApplicationController {
   }
 
   confirmDelete() {
-    const url = this.data.get('delete-redirect');
-    axios.delete(this.data.get('delete-url')).then(() => {
-      if (url) {
-        this.redirectTo(url);
-      } else {
-        fadeOut(this.element);
-      }
-    });
+  // TBD: we should have a generic DeleteController for this
+    const referrer = location.href;
+
+    axios
+      .delete(this.data.get('delete-url'), {
+        headers: {
+          'Turbolinks-Referrer': referrer
+        }
+      })
+      .then(response => {
+        // if no local redirect override specified...
+        eval(response.data);
+      /*
+        const redirect = this.data.get('delete-redirect');
+        if (redirect) {
+          Turbolinks.visit(redirect, { action: 'replace' });
+        } else {
+          Turbolinks.visit(referrer, { action: 'restore' });
+        }
+        */
+      })
+      .catch(xhr => {
+        console.log('err', xhr);
+      });
   }
 
   delete(event) {

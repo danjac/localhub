@@ -18,12 +18,17 @@ export default class extends ApplicationController {
       method,
       url
     }).then(response => {
-      if (response.headers['content-type'].match(/html/)) {
+      const contentType = response.headers['content-type'];
+      // errors in form, re-render
+      if (contentType.match(/html/)) {
         Turbolinks.controller.cache.put(
           referrer,
           Turbolinks.Snapshot.wrap(response.data)
         );
         Turbolinks.visit(referrer, { action: 'restore' });
+      } else if (contentType.match(/javascript/)) {
+        /* eslint-disable-next-line no-eval */
+        eval(response.data);
       }
     });
   }

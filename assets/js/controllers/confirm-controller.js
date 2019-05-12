@@ -3,8 +3,9 @@ import { Controller } from 'stimulus';
 export default class extends Controller {
   static targets = ['header', 'body'];
 
-  initialize() {
+  connect() {
     this.onConfirm = null;
+    // TBD: prob. need to remove listener in disconnect
     document.addEventListener('keydown', event => {
       // escape key
       if (event.keyCode === 27) {
