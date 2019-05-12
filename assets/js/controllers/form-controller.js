@@ -15,6 +15,10 @@ export default class extends Controller {
       .querySelectorAll('input,textarea')
       .forEach(el => el.setAttribute('disabled', true));
 
+    if (method === "GET") {
+      return Turbolinks.visit(`${url}?${data}`)
+    }
+
     axios({
       data,
       headers: {

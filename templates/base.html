@@ -29,7 +29,12 @@
                 {% has_perm "communities.view_community" user request.community as can_view_community %}
                 {% if can_view_community %}
                 <section class="navbar-section hide-sm">
-                    <form method="GET" action="{% url 'content:search' %}">
+                    <form method="GET"
+                          action="{% url 'content:search' %}"
+                          data-controller="form"
+                          data-method="GET"
+                          data-action="form#submit"
+                          >
                         <div class="input-group input-inline">
                             <input class="form-input" name="q" type="search" placeholder="{% trans "Search" %}">
                             <button class="btn bg-gray text-dark input-group-btn">{% trans "Search" %}</button>
