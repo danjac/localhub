@@ -1,12 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, QuerySet
-from django.http import (
-    HttpRequest,
-    HttpResponse,
-    HttpResponseRedirect,
-    JsonResponse,
-)
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from django.views.generic import (
     DeleteView,
@@ -169,12 +164,14 @@ class CommentLikeView(
         is_liked = self.object.like(request.user)
         if is_liked:
             notify.send(
-                self.request.user,
+                request.user,
                 recipient=self.object.author,
                 verb="comment_liked",
                 action_object=self.object,
-                target=self.request.community,
+                target=request.community,
             )
+        if request.is_ajax():
+            return HttpResponse(_("Unlike") if is_liked else _("Like"))
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self) -> str:

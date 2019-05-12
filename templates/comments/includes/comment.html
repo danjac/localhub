@@ -32,6 +32,7 @@
            <a href="#"
               data-controller="fetch"
               data-action="fetch#send"
+              data-fetch-replace="true"
               data-fetch-url="{% url 'comments:like' comment.id %}"
               data-fetch-redirect="{{ request.get_full_path }}"
              >{% if has_liked_comment %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}</a>

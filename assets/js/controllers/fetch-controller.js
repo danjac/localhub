@@ -24,8 +24,6 @@ export default class extends Controller {
     const url = this.data.get('url');
     const method = this.data.get('method') || 'POST';
     const redirect = this.data.get('redirect');
-    // TBD: "replace" if we just want to insert content
-    // this.element.innerHTML = response.data
 
     axios({
       headers: {
@@ -34,7 +32,9 @@ export default class extends Controller {
       method,
       url
     }).then(response => {
-      if (redirect) {
+      if (this.data.has('replace')) {
+        this.element.innerHTML = response.data;
+      } else if (redirect) {
         Turbolinks.visit(redirect);
       } else if (response.headers['content-type'].match(/javascript/)) {
         /* eslint-disable-next-line no-eval */
