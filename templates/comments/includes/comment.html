@@ -8,11 +8,6 @@
 
 {# IDEA: have "likeable" and "deletable" controllers e.g. data-deletable-url data-deletable-redirect etc #}
 <div class="card comment-card"
-     data-controller="comment"
-     data-comment-like-url="{% url 'comments:like' comment.id %}"
-     data-comment-delete-url="{% url 'comments:delete' comment.id %}"
-     data-comment-delete-confirm-header="{% trans 'Delete Comment' %}"
-     data-comment-delete-confirm-body="{% trans 'Are you sure you want to delete this comment?' %}"
      >
      <div class="card-header">
        <div class="card-subtitle text-gray float-right">
@@ -34,7 +29,11 @@
          {% elif can_like_comment %}
          <div class="mr-2">
            {% has_liked comment as has_liked_comment %}
-           <a href="#" data-action="comment#like">{% if has_liked_comment %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}</a>
+           <a href="#"
+              data-controller="like"
+              data-action="like#like"
+              data-like-url="{% url 'comments:like' comment.id %}"
+             >{% if has_liked_comment %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}</a>
          </div>
          {% endif %}
 
@@ -52,7 +51,11 @@
          {% if can_delete_comment %}
          <div class="mr-2">
            <a href="#"
-              data-action="comment#delete"
+              data-controller="delete"
+              data-action="delete#delete"
+              data-delete-url="{% url 'comments:delete' comment.id %}"
+              data-delete-confirm-header="{% trans 'Delete Comment' %}"
+              data-delete-confirm-body="{% trans 'Are you sure you want to delete this comment?' %}"
               >{% trans "Delete" %}</a>
          </div>
          {% endif %}

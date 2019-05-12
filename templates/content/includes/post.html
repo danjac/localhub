@@ -10,86 +10,87 @@
 
 <!--
   <div class="card content-card"
-       data-controller="deleteable likeable"
-       data-likeable-url="..."
-       data-deleteable-url="..."
-       data-deleteable-redirect="..."
+  data-controller="deleteable likeable"
+  data-likeable-url="..."
+  data-deleteable-url="..."
+  data-deleteable-redirect="..."
 -->
-<div class="card content-card"
-     data-controller="delete"
-     data-delete-url="{% url 'content:delete' post.id %}"
-     data-delete-redirect="{{ request.path }}"
-     data-delete-confirm-header="{% trans 'Delete Post' %}"
-     data-delete-confirm-body="{% trans 'Are you sure you want to delete this post?' %}"
-     >
-  <div class="card-header">
-    <div class="card-subtitle text-gray float-right">
-      {% blocktrans with post.created|timesince as created %}{{ created }} ago{% endblocktrans %}
-    </div>
-    {% if post.title %}
-    <div class="card-title h6">{{ post.title }}</div>
-    <div class="card-subtitle h6"><a href="{{ post.author.get_profile_url }}">{{ post.author.username }}</a></div>
-    {% else %}
-    <div class="card-title h6"><a href="{{ post.author.get_profile_url }}">{{ post.author.username }}</a></div>
-    {% endif %}
-  </div>
-  <div class="card-body">
-    <div class="divider"></div>
-    {% if post.description %}
-    <div>
-      {{ post.markdown }}
-    </div>
-    {% endif %}
-    {% if post.url %}
-    <div>
-      {{ post.url|oembed }}
-    </div>
-    {% endif %}
-  </div>
-  <div class="card-footer">
-
-    <div class="d-flex content-actions">
-
-      {% if post.author_id == user.id %}
-      <div class="mr-2">{% trans "Likes" %} ({{ post.num_likes }})</div>
-      {% elif can_like_post %}
-      <div class="mr-2">
-        {% has_liked post as has_liked_post %}
-        <a href="#"
-           data-target="post.likes"
-           data-action="post#like"
-           >{% if has_liked_post %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}</a>
-      </div>
+    <div class="card content-card"
+         >
+         <div class="card-header">
+           <div class="card-subtitle text-gray float-right">
+             {% blocktrans with post.created|timesince as created %}{{ created }} ago{% endblocktrans %}
+           </div>
+      {% if post.title %}
+      <div class="card-title h6">{{ post.title }}</div>
+      <div class="card-subtitle h6"><a href="{{ post.author.get_profile_url }}">{{ post.author.username }}</a></div>
+      {% else %}
+      <div class="card-title h6"><a href="{{ post.author.get_profile_url }}">{{ post.author.username }}</a></div>
       {% endif %}
+         </div>
+         <div class="card-body">
+           <div class="divider"></div>
+           {% if post.description %}
+           <div>
+             {{ post.markdown }}
+           </div>
+           {% endif %}
+           {% if post.url %}
+           <div>
+             {{ post.url|oembed }}
+           </div>
+           {% endif %}
+         </div>
+         <div class="card-footer">
 
-      <div class="mr-2">
-        <a href="{{ post.get_absolute_url }}#comments">
-          {% trans "Comments" %} {% if post.num_comments %}({{ post.num_comments }}){% endif %}
-        </a>
-      </div>
+           <div class="d-flex content-actions">
 
-      <div class="mr-2">
-        <a href="">{% trans "Flag" %}</a>
-      </div>
+             {% if post.author_id == user.id %}
+             <div class="mr-2">{% trans "Likes" %} ({{ post.num_likes }})</div>
+             {% elif can_like_post %}
+             <div class="mr-2">
+               {% has_liked post as has_liked_post %}
+               <a href="#"
+                  data-target="post.likes"
+                  data-action="post#like"
+                  >{% if has_liked_post %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}</a>
+             </div>
+             {% endif %}
 
-      {% if can_change_post %}
-      <div class="mr-2">
-        <a href="{% url 'content:update' post.id %}"
-           >{% trans "Update" %}</a>
-      </div>
-      {% endif %}
+             <div class="mr-2">
+               <a href="{{ post.get_absolute_url }}#comments">
+                 {% trans "Comments" %} {% if post.num_comments %}({{ post.num_comments }}){% endif %}
+               </a>
+             </div>
 
-      {% if can_delete_post %}
-      <div class="mr-2">
-        <a href="#" data-action="delete#delete"
-          >{% trans "Delete" %}</a>
-      </div>
-      {% endif %}
+             <div class="mr-2">
+               <a href="">{% trans "Flag" %}</a>
+             </div>
 
-      <div class="">
-        <a href="{{ post.get_permalink }}">{% trans "Permalink" %}</a>
-      </div>
+             {% if can_change_post %}
+             <div class="mr-2">
+               <a href="{% url 'content:update' post.id %}"
+                  >{% trans "Update" %}</a>
+             </div>
+             {% endif %}
+
+             {% if can_delete_post %}
+             <div class="mr-2">
+               <a href="#"
+                  data-controller="delete"
+                  data-delete-url="{% url 'content:delete' post.id %}"
+                  data-delete-redirect="{{ request.get_full_path }}"
+                  data-delete-confirm-header="{% trans 'Delete Post' %}"
+                  data-delete-confirm-body="{% trans 'Are you sure you want to delete this post?' %}"
+                  data-action="delete#delete"
+                  >{% trans "Delete" %}</a>
+             </div>
+             {% endif %}
+
+             <div class="">
+               <a href="{{ post.get_permalink }}">{% trans "Permalink" %}</a>
+             </div>
+           </div>
+         </div>
+
     </div>
-  </div>
-
-</div>

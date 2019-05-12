@@ -131,8 +131,7 @@ class CommentDeleteView(
     def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         self.object.delete()
-        if request.is_ajax():
-            return HttpResponse(status=204)
+        messages.success(request, _("Your comment has been deleted"))
         return HttpResponseRedirect(self.get_success_url())
 
 
