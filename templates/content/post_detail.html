@@ -49,9 +49,10 @@
          <div class="mr-2">
            {% has_liked post as has_liked_post %}
            <a href="#"
-              data-controller="like"
-              data-action="like#like"
-              data-like-url="{% url 'content:like' post.id %}"
+              data-controller="fetch"
+              data-action="fetch#send"
+              data-fetch-replace="true"
+              data-fetch-url="{% url 'content:like' post.id %}"
               >{% if has_liked_post %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}</a>
          </div>
          {% endif %}
@@ -72,11 +73,12 @@
          {% url "content:delete" post.id as delete_url %}
          <div class="mr-2">
            <a href="#"
-              data-controller="delete"
-              data-delete-url="{% url 'content:delete' post.id %}"
-              data-delete-confirm-header="{% trans 'Delete Post' %}"
-              data-delete-confirm-body="{% trans 'Are you sure you want to delete this post?' %}"
-              data-action="delete#delete"
+              data-controller="fetch"
+              data-action="fetch#send"
+              data-fetch-url="{% url 'content:delete' post.id %}"
+              data-fetch-method="delete"
+              data-fetch-confirm-header="{% trans 'Delete Post' %}"
+              data-fetch-confirm-body="{% trans 'Are you sure you want to delete this post?' %}"
               >{% trans "Delete" %}</a>
          </div>
          {% endif %}

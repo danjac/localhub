@@ -8,7 +8,7 @@ from django.contrib.postgres.search import (
     SearchVector,
 )
 from django.db.models import Count, Prefetch, QuerySet
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import (
@@ -234,8 +234,6 @@ class PostDeleteView(
 
         messages.success(self.request, _("Your post has been deleted"))
 
-        # if request.is_ajax():
-        # return HttpResponse(status=204)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -263,9 +261,7 @@ class PostLikeView(
                 target=self.request.community,
             )
         if request.is_ajax():
-            return JsonResponse(
-                {"status": _("Unlike") if is_liked else _("Like")}
-            )
+            return HttpResponse(_("Unlike") if is_liked else _("Like"))
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self) -> str:
