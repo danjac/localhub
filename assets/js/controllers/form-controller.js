@@ -1,23 +1,31 @@
+import { Controller } from 'stimulus';
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-import ApplicationController from './application-controller';
-
-export default class extends ApplicationController {
+export default class extends Controller {
   submit(event) {
     event.preventDefault();
     const method = this.element.getAttribute('method');
     const url = this.element.getAttribute('action');
     const referrer = location.href;
 
+    const data = this.serialize();
+
+    this.element
+      .querySelectorAll('input,textarea')
+      .forEach(el => el.setAttribute('disabled', true));
+
     axios({
-      data: this.serialize(),
+      data,
       headers: {
         'Turbolinks-Referrer': referrer
       },
       method,
       url
     }).then(response => {
+      this.element
+        .querySelectorAll('input,textarea')
+        .forEach(el => el.removeAttribute('disabled'));
       const contentType = response.headers['content-type'];
       // errors in form, re-render
       if (contentType.match(/html/)) {
@@ -34,7 +42,7 @@ export default class extends ApplicationController {
   }
 
   // https://vanillajstoolkit.com/helpers/serialize/
-  //
+  // use FormData for multipart forms?
 
   serialize() {
     const serialized = [];
@@ -71,6 +79,7 @@ export default class extends ApplicationController {
   }
 
   serializable(field) {
+    // allow file type if multipart...
     if (
       !field.name ||
       field.disabled ||

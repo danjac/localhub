@@ -16,11 +16,11 @@
        data-deleteable-redirect="..."
 -->
 <div class="card content-card"
-     data-controller="post"
-     data-post-like-url="{% url 'content:like' post.id %}"
-     data-post-delete-url="{% url 'content:delete' post.id %}"
-     data-post-delete-confirm-header="{% trans 'Delete Post' %}"
-     data-post-delete-confirm-body="{% trans 'Are you sure you want to delete this post?' %}"
+     data-controller="delete"
+     data-delete-url="{% url 'content:delete' post.id %}"
+     data-delete-redirect="{{ request.path }}"
+     data-delete-confirm-header="{% trans 'Delete Post' %}"
+     data-delete-confirm-body="{% trans 'Are you sure you want to delete this post?' %}"
      >
   <div class="card-header">
     <div class="card-subtitle text-gray float-right">
@@ -81,7 +81,7 @@
 
       {% if can_delete_post %}
       <div class="mr-2">
-        <a href="#" data-action="post#delete"
+        <a href="#" data-action="delete#delete"
           >{% trans "Delete" %}</a>
       </div>
       {% endif %}
