@@ -1,10 +1,10 @@
-import json
 import pytest
 
 from django.conf import settings
 from django.test.client import Client
 from django.urls import reverse
 from django.utils.translation import ugettext as _
+from django.utils.encoding import smart_text
 
 from notifications.models import Notification
 
@@ -139,7 +139,7 @@ class TestPostLikeView:
             reverse("content:like", args=[post.id]),
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
-        assert json.loads(response.content)["status"] == _("Like")
+        assert smart_text(response.content) == _("Like")
 
     def test_if_liked(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
@@ -147,7 +147,7 @@ class TestPostLikeView:
             reverse("content:like", args=[post.id]),
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
-        assert json.loads(response.content)["status"] == _("Unlike")
+        assert smart_text(response.content) == _("Unlike")
 
 
 class TestPostDeleteView:
@@ -163,14 +163,6 @@ class TestPostDeleteView:
             reverse("content:delete", args=[post_for_member.id])
         )
         assert response.url == reverse("content:list")
-        assert Post.objects.count() == 0
-
-    def test_delete_ajax(self, client: Client, post_for_member: Post):
-        response = client.delete(
-            reverse("content:delete", args=[post_for_member.id]),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-        )
-        assert response.status_code == 204
         assert Post.objects.count() == 0
 
 

@@ -15,7 +15,9 @@ class TurbolinksMiddleware:
     def __call__(self, request: HttpRequest) -> HttpResponse:
 
         response = self.get_response(request)
-        if response.status_code in (301, 302) and "Location" in response:
+        if response.status_code in (301, 302) and response.has_header(
+            "Location"
+        ):
             return self.handle_redirect(request, response)
         if response.status_code in range(200, 299):
             location = request.session.pop(self.session_key, None)

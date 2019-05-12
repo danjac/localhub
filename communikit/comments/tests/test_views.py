@@ -1,10 +1,10 @@
-import json
 import pytest
 
 from django.conf import settings
 from django.test.client import Client
 from django.urls import reverse
 from django.utils.translation import ugettext as _
+from django.utils.encoding import smart_text
 
 from communikit.comments.models import Comment
 from communikit.comments.tests.factories import CommentFactory
@@ -66,16 +66,6 @@ class TestCommentDeleteView:
         assert response.url == post.get_absolute_url()
         assert Comment.objects.count() == 0
 
-    def test_delete_ajax(self, client: Client, member: Membership):
-        post = PostFactory(community=member.community)
-        comment = CommentFactory(author=member.member, post=post)
-        response = client.delete(
-            reverse("comments:delete", args=[comment.id]),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-        )
-        assert response.status_code == 204
-        assert Comment.objects.count() == 0
-
 
 class TestProfileCommentListView:
     def test_get(
@@ -115,7 +105,7 @@ class TestCommentLikeView:
             reverse("comments:like", args=[comment.id]),
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
-        assert json.loads(response.content)["status"] == _("Like")
+        assert smart_text(response.content) == _("Like")
 
     def test_if_liked(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
@@ -124,4 +114,4 @@ class TestCommentLikeView:
             reverse("comments:like", args=[comment.id]),
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
-        assert json.loads(response.content)["status"] == _("Unlike")
+        assert smart_text(response.content) == _("Unlike")
