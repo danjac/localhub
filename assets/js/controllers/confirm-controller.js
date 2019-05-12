@@ -14,8 +14,7 @@ export default class extends Controller {
     });
   }
 
-  open(options) {
-    const { header, body, onConfirm } = options;
+  open({ header, body, onConfirm }) {
     this.headerTarget.innerText = header;
     this.bodyTarget.innerText = body;
     this.onConfirm = onConfirm;
