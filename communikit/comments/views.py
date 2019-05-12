@@ -175,10 +175,6 @@ class CommentLikeView(
                 action_object=self.object,
                 target=self.request.community,
             )
-        if request.is_ajax():
-            return JsonResponse(
-                {"status": _("Unlike") if is_liked else _("Like")}
-            )
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self) -> str:

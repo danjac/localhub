@@ -2,6 +2,13 @@ import { Controller } from 'stimulus';
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
+// TBD: create a single "AJAX" action controller: ("fetch-controller")
+// data-controller="ajax-action"
+// data-action="ajax-action#start"
+// data-ajax-action-url
+// data-ajax-action-method (default POST)
+// data-ajax-action-redirect (override server)
+// data-ajax-action-confirm-header ..-body(if absent no confirmation)
 export default class extends Controller {
   confirmDelete() {
     const referrer = location.href;
