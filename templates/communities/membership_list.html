@@ -27,7 +27,13 @@
         <a href="{% url 'communities:membership_update' member.pk %}" class="btn btn-sm">{% trans "Update" %}</a>
         {% endif %}
         {% if can_delete_membership %}
-        <a href="{% url 'communities:membership_delete' member.pk %}" class="btn btn-sm btn-warning">{% trans "Delete" %}</a>
+        <a href="{% url 'communities:membership_delete' member.pk %}"
+           data-controller="delete"
+           data-action="delete#delete"
+           data-delete-url="{% url 'communities:membership_delete' member.pk %}"
+           data-delete-confirm-header="{% trans 'Delete Membership' %}"
+           data-delete-confirm-body="{% trans 'Are you sure you want to remove this membership?' %}"
+           class="btn btn-sm btn-warning">{% trans "Delete" %}</a>
         {% endif %}
       </td>
     </tr>
