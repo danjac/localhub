@@ -64,9 +64,11 @@ export default class extends Controller {
             }
             break;
           case 'select-multiple':
-            field.options.filter(option => option.selected).forEach(option => {
-              data.append(field.name, option.value);
-            });
+            Array.from(field.options)
+              .filter(option => option.selected)
+              .forEach(option => {
+                data.append(field.name, option.value);
+              });
             break;
           default:
             data.append(field.name, field.value);
