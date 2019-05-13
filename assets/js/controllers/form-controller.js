@@ -60,7 +60,7 @@ export default class extends Controller {
             break;
           case 'file':
             if (multipart) {
-              data.append(field.files[0]);
+              data.append(field.name, field.files[0]);
             }
             break;
           case 'select-multiple':
