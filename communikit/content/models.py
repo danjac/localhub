@@ -39,6 +39,9 @@ class Post(TimeStampedModel):
     def __str__(self) -> str:
         return self.title or str(f"Post: {self.id}")
 
+    def get_model_name(self) -> str:
+        return self._meta.model_name
+
     def get_absolute_url(self) -> str:
         return reverse("content:detail", args=[self.id])
 
