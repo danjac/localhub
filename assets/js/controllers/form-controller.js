@@ -77,6 +77,6 @@ export default class extends Controller {
   }
 
   get formElements() {
-    return this.element.querySelectorAll('button,input,select,textarea');
+    return Array.from(this.element.elements);
   }
 }
