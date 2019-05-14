@@ -30,3 +30,5 @@ assets/dist/
 .ipython/
 .env
 
+celerybeat.pid
+celerybeat-schedule

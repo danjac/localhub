@@ -1,16 +1,20 @@
 beautifulsoup4==4.7.1 # http://www.crummy.com/software/BeautifulSoup/bs4/
 bleach==3.1.0 # https://github.com/mozilla/bleach
+celery==4.3.0 # https://github.com/celery/celery
 dj-database-url==0.5.0 # https://github.com/kennethreitz/dj-database-url
 django-allauth==0.39.1 # https://github.com/pennersr/django-allauth
+django-celery-email==2.0.1 # https://github.com/pmclanahan/django-celery-email
 django-configurations==2.1 # https://github.com/jazzband/django-configurations
 django-markdownx===2.0.28 # https://github.com/neutronX/django-markdownx
 django-model-utils==3.1.2 # https://github.com/jazzband/django-model-utils
 django-notifications-hq==1.5.0 # https://github.com/django-notifications/django-notifications
 django-widget-tweaks==1.4.3 # https://github.com/jazzband/django-widget-tweaks
 django==2.2 # https://github.com/django/django
+flower==0.9.3 # https://github.com/mher/flower
 geocoder==1.38.1 #https://github.com/DenisCarriere/geocoder
 micawber==0.4.0 # https://github.com/coleifer/micawber
 psycopg2==2.8.2 --no-binary psycopg2  # https://github.com/psycopg/psycopg2
+redis==3.2.1 # https://github.com/andymccurdy/redis-py
 rules==2.0.1 # https://github.com/dfunckt/django-rules
 whitenoise==4.1.2 # https://github.com/evansd/whitenoise
 

@@ -23,7 +23,16 @@ WORKDIR /app
 COPY ./docker/django/entrypoint /entrypoint
 RUN chmod +x /entrypoint
 
-COPY ./docker/django/start /start
-RUN chmod +x /start
+COPY ./docker/django/start-django /start-django
+RUN chmod +x /start-django
+
+COPY ./docker/django/start-celeryworker /start-celeryworker
+RUN chmod +x /start-celeryworker
+
+COPY ./docker/django/start-celerybeat /start-celerybeat
+RUN chmod +x /start-celerybeat
+
+COPY ./docker/django/start-flower /start-flower
+RUN chmod +x /start-flower
 
 ENTRYPOINT ["/entrypoint"]

@@ -18,6 +18,8 @@ class Base(Configuration):
     EMAIL_HOST = values.Value()
     EMAIL_PORT = values.PositiveIntegerValue()
 
+    EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
+
     DEBUG = False
     ALLOWED_HOSTS = []
 
@@ -39,6 +41,7 @@ class Base(Configuration):
         "allauth",
         "allauth.account",
         "allauth.socialaccount",
+        "djcelery_email",
         "markdownx",
         "micawber.contrib.mcdjango",
         "notifications",
@@ -179,6 +182,11 @@ class Base(Configuration):
     # https://neutronx.github.io/django-markdownx/customization/
 
     MARKDOWNX_MARKDOWNIFY_FUNCTION = "communikit.content.markdown.markdownify"
+
+    # Celery
+
+    CELERY_BROKER_URL = values.Value()
+    CELERY_RESULT_BACKEND = values.Value()
 
 
 class Testing(Base):
