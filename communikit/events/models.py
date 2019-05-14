@@ -1,7 +1,3 @@
-import geocoder
-
-from typing import Optional, Tuple
-
 from django.db import models
 
 from model_utils import FieldTracker
