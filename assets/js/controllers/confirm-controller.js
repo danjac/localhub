@@ -1,41 +1,56 @@
 import { Controller } from 'stimulus';
 
 export default class extends Controller {
-  static targets = ['header', 'body'];
-
-  connect() {
-    this.onConfirm = null;
-    // TBD: prob. need to remove listener in disconnect
-    document.addEventListener('keydown', event => {
-      // escape key
-      if (event.keyCode === 27) {
-        this.close();
-      }
-    });
+  // use with an action 'chain' e.g. data-action="confirm#check ajax#delete"
+  check(event) {
+    return this.confirm(event, () =>
+      this.element.dispatchEvent(new Event(event.type))
+    );
   }
 
-  open({ header, body, onConfirm }) {
-    this.headerTarget.innerText = header;
-    this.bodyTarget.innerText = body;
-    this.onConfirm = onConfirm;
-    this.element.classList.add('active');
+  // "native" events: just fire native click, submit etc
+  // e.g. data-action="confirm#submit"
+  click(event) {
+    return this.confirm(event, () => this.element.click());
   }
 
-  close() {
-    this.onConfirm = null;
-    this.element.classList.remove('active');
+  submit(event) {
+    return this.confirm(event, () => this.element.submit());
   }
 
-  cancel(event) {
-    event.preventDefault();
-    this.close();
+  reset(event) {
+    return this.confirm(event, () => this.element.reset());
   }
 
-  confirm(event) {
-    event.preventDefault();
-    if (this.onConfirm) {
-      this.onConfirm();
+  confirm(event, handler) {
+    // check confirmed flag, just run if set
+    if (this.data.has('confirmed')) {
+      this.data.delete('confirmed');
+      return true;
     }
-    this.close();
+    // stop both "native" event and any other events in chain
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const header = this.data.get('header');
+    const body = this.data.get('body');
+
+    const onConfirm = () => {
+      this.data.set('confirmed', true);
+      handler();
+    };
+
+    const dialog = this.application.getControllerForElementAndIdentifier(
+      document.getElementById('confirm-dialog'),
+      'confirm-dialog'
+    );
+
+    dialog.open({
+      body,
+      header,
+      onConfirm
+    });
+
+    return false;
   }
 }

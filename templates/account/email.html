@@ -31,7 +31,14 @@
   <div class="btn-group">
     <button class="btn btn-secondary" type="submit" name="action_primary">{% trans 'Make Primary' %}</button>
     <button class="btn btn-secondary" type="submit" name="action_send">{% trans 'Re-send Verification' %}</button>
-    <button class="btn btn-primary" type="submit" name="action_remove">{% trans 'Remove' %}</button>
+    <button class="btn btn-primary"
+            type="submit"
+            name="action_remove"
+            data-controller="confirm"
+            data-action="confirm#click"
+            data-confirm-header="{% trans 'Remove Email'%}"
+            data-confirm-body="{% trans 'Are you sure you want to delete this email address?' %}"
+            >{% trans 'Remove' %}</button>
   </div>
 
 </form>

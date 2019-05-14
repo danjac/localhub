@@ -5,6 +5,10 @@ import Turbolinks from 'turbolinks';
 export default class extends Controller {
   send(event) {
     event.preventDefault();
+    // TBD: use a "check" or "confirm" controller with data-action
+    // TBD: instead of "send" have "get" , "post", "delete" etc.
+    // e.g. data-controller="confirm ajax"
+    // data-action="confirm#check ajax#delete"
     const header = this.data.get('confirm-header');
     const body = this.data.get('confirm-body');
     if (header && body) {
@@ -46,7 +50,7 @@ export default class extends Controller {
   getConfirmController() {
     return this.application.getControllerForElementAndIdentifier(
       document.getElementById('confirm-dialog'),
-      'confirm'
+      'confirm-dialog'
     );
   }
 }
