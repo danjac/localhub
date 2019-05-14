@@ -63,6 +63,12 @@ export default class extends Controller {
               data.append(field.name, field.files[0]);
             }
             break;
+          case 'radio':
+          case 'checkbox':
+            if (field.checked) {
+              data.append(field.name, field.value);
+            }
+            break;
           case 'select-multiple':
             Array.from(field.options)
               .filter(option => option.selected)
