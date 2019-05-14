@@ -30,18 +30,19 @@
          <div class="mr-2">
            {% has_liked comment as has_liked_comment %}
            <a href="#"
-              data-controller="fetch"
-              data-action="fetch#send"
-              data-fetch-replace="true"
-              data-fetch-url="{% url 'comments:like' comment.id %}"
-              data-fetch-redirect="{{ request.get_full_path }}"
-             >{% if has_liked_comment %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}</a>
+              data-controller="ajax"
+              data-action="ajax#post"
+              data-ajax-url="{% url 'comments:like' comment.id %}"
+              data-ajax-replace="true"
+              >{% if has_liked_comment %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}</a>
          </div>
          {% endif %}
 
+        <!--
          <div class="mr-2">
            <a href="">{% trans "Flag" %}</a>
          </div>
+        -->
 
          {% if can_change_comment %}
          <div class="mr-2">
@@ -52,13 +53,13 @@
 
          {% if can_delete_comment %}
          <div class="mr-2">
-           <a href="#"
-              data-controller="fetch"
-              data-action="fetch#send"
-              data-fetch-url="{% url 'comments:delete' comment.id %}"
-              data-fetch-method="DELETE"
-              data-fetch-confirm-header="{% trans 'Delete Comment' %}"
-              data-fetch-confirm-body="{% trans 'Are you sure you want to delete this comment?' %}"
+           {% url 'comments:delete' comment.id as delete_url %}
+           <a href="{{ delete_url }}"
+              data-controller="ajax confirm"
+              data-action="confirm#check ajax#delete"
+              data-ajax-url="{{ delete_url }}"
+              data-confirm-header="{% trans 'Delete Comment' %}"
+              data-confirm-body="{% trans 'Are you sure you want to delete this comment?' %}"
               >{% trans "Delete" %}</a>
          </div>
          {% endif %}
