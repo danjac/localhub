@@ -1,3 +1,5 @@
+import geocoder
+
 from django.db import models
 from django.utils.encoding import smart_text
 from django.utils.translation import ugettext_lazy as _
@@ -10,7 +12,6 @@ from communikit.content.models import Post
 
 
 class Event(Post):
-
     LOCATION_FIELDS = (
         "street_address",
         "locality",
@@ -37,6 +38,17 @@ class Event(Post):
 
     def __str__(self) -> str:
         return self.title or self.location
+
+    def update_coordinates(self):
+        if self.location:
+            result = geocoder.osm(self.location)
+            self.latitude, self.longitude = result.lat, result.lng
+        else:
+            self.latitude, self.longitude = None, None
+        self._default_manager.filter(pk=self.id).update(
+            latitude=self.latitude, longitude=self.longitude
+        )
+        return self.latitude, self.longitude
 
     @property
     def location(self):
