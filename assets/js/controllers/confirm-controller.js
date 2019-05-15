@@ -7,7 +7,7 @@ export default class extends Controller {
       this.data.delete('confirmed');
       return true;
     }
-    // stop both "native" event and any other events in chain
+    // stop both underlying "native" event and any other events in chain
     event.preventDefault();
     event.stopImmediatePropagation();
 
@@ -16,19 +16,9 @@ export default class extends Controller {
 
     const onConfirm = () => {
       this.data.set('confirmed', true);
-      switch (event.type) {
-        case 'click':
-          this.element.click();
-          break;
-        case 'submit':
-          this.element.submit();
-          break;
-        case 'reset':
-          this.element.reset();
-          break;
-        default:
-          this.element.dispatchEvent(new Event(event.type));
-      }
+      // note: this doesn't work with "native" events, just with
+      // stimulus events in the same data-action.
+      this.element.dispatchEvent(new Event(event.type));
     };
 
     const dialog = this.application.getControllerForElementAndIdentifier(
