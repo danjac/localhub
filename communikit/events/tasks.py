@@ -17,7 +17,7 @@ def update_event_coordinates(event_id: int):
         return
 
     if not event.location:
-        logger.info("event does not have location")
+        Event.objects.filter(pk=event.id).update(latitude=None, longitude=None)
         return
 
     result = geocoder.osm(event.location)
