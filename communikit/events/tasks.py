@@ -6,10 +6,9 @@ from communikit.events.models import Event
 logger = get_task_logger(__name__)
 
 
-@shared_task
+@shared_task(name="events.update_event_coordinates")
 def update_event_coordinates(event_id: int):
     try:
-        event = Event.objects.get(pk=event_id)
-        event.update_coordinates()
+        Event.objects.get(pk=event_id).update_coordinates()
     except Event.DoesNotExist:
         logger.info("event not found:%s", event_id)

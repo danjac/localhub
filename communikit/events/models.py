@@ -1,5 +1,7 @@
 import geocoder
 
+from typing import Optional, Tuple
+
 from django.db import models
 from django.utils.encoding import smart_text
 from django.utils.translation import ugettext_lazy as _
@@ -39,25 +41,24 @@ class Event(Post):
     def __str__(self) -> str:
         return self.title or self.location
 
-    def update_coordinates(self):
+    def update_coordinates(self) -> Tuple[Optional[float], Optional[float]]:
         if self.location:
             result = geocoder.osm(self.location)
             self.latitude, self.longitude = result.lat, result.lng
         else:
             self.latitude, self.longitude = None, None
-        self._default_manager.filter(pk=self.id).update(
+        self.__class__._default_manager.filter(pk=self.id).update(
             latitude=self.latitude, longitude=self.longitude
         )
         return self.latitude, self.longitude
 
     @property
-    def location(self):
+    def location(self) -> str:
         return ", ".join(
             [
-                value
+                smart_text(value)
                 for value in [
-                    smart_text(getattr(self, field))
-                    for field in self.LOCATION_FIELDS
+                    getattr(self, field) for field in self.LOCATION_FIELDS
                 ]
                 if value
             ]

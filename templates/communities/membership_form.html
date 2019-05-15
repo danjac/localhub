@@ -6,7 +6,7 @@
 <h3>{% blocktrans with username=membership.member.username %}Membership Settings for {{ username }}{% endblocktrans %}</h3>
 
 <div class="col-6 col-sm-12">
-  <form method="POST" action="{{ request.path }}">
+  <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
     {% include "includes/forms/fields.html" %}
     <input type="submit" class="btn btn-primary" value="{% trans 'Save' %}">
   </form>

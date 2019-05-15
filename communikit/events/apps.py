@@ -5,4 +5,4 @@ class EventsConfig(AppConfig):
     name = "communikit.events"
 
     def ready(self):
-        from communikit.events import signals  # noqa
+        import communikit.events.signals # noqa

@@ -1,3 +1,4 @@
 factory-boy==2.11.1 # https://github.com/FactoryBoy/factory_boy
 pytest-django==3.4.8 # https://github.com/pytest-dev/pytest-django
+pytest-mock==1.10.4 # https://github.com/pytest-dev/pytest-mock/
 pytest==4.4.1  # https://github.com/pytest-dev/pytest

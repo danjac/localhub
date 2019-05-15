@@ -25,7 +25,15 @@
         {% else %}
         <a class="btn btn-sm disabled" href="#">{% trans "Re-send" %}</a>
         {% endif %}
-        <a class="btn btn-sm btn-warning" href="{% url 'invites:delete' invite.id %}">{% trans "Delete" %}</a>
+        {% url 'invites:delete' invite.id as delete_url %}
+        <a class="btn btn-sm btn-warning"
+           href="{% url 'invites:delete' invite.id %}"
+           data-controller="ajax confirm"
+           data-action="confirm#check ajax#delete"
+           data-ajax-url="{{ delete_url }}"
+           data-confirm-header="{% trans 'Delete invite' %}"
+           data-confirm-body="{% trans 'You sure you want to delete this invite?' %}"
+           >{% trans "Delete" %}</a>
       </td>
     </tr>
     {% empty %}

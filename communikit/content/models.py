@@ -25,12 +25,8 @@ class Post(TimeStampedModel):
     )
 
     title = models.CharField(blank=True, max_length=255)
-
-    url = models.URLField(blank=True)
-
     description = MarkdownxField(blank=True)
-
-    published = models.DateTimeField(null=True, blank=True)
+    url = models.URLField(blank=True)
 
     likes = GenericRelation(Like, related_query_name="post")
 

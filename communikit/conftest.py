@@ -1,6 +1,5 @@
 import pytest
 
-
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse
 from django.test import Client, RequestFactory
@@ -11,6 +10,8 @@ from communikit.communities.models import Community, Membership
 from communikit.communities.tests.factories import CommunityFactory
 from communikit.content.models import Post
 from communikit.content.tests.factories import PostFactory
+from communikit.events.models import Event
+from communikit.events.tests.factories import EventFactory
 from communikit.types import HttpRequestResponse
 from communikit.users.tests.factories import UserFactory
 
@@ -83,3 +84,8 @@ def post() -> Post:
 @pytest.fixture
 def comment() -> Comment:
     return CommentFactory()
+
+
+@pytest.fixture
+def event() -> Event:
+    return EventFactory()
