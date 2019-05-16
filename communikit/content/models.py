@@ -42,11 +42,10 @@ class PostQuerySetMixin:
         self, search_term: str, order_by: str = "-rank"
     ) -> models.QuerySet:
         search_vector = SearchVector(self.model.SEARCH_FIELDS)
-        search_query = SearchQuery(self.query)
+        search_query = SearchQuery(search_term)
         return (
             self.annotate(
                 search=search_vector,
-                rank=SearchRank(search_vector, search_query),
             )
             .filter(search=search_query)
         )

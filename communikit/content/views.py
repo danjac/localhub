@@ -16,7 +16,11 @@ from django.views.generic import (
     View,
 )
 from django.views.generic.detail import SingleObjectMixin
-
+from django.contrib.postgres.search import (
+    SearchQuery,
+    SearchRank,
+    SearchVector,
+)
 from notifications.models import Notification
 from notifications.signals import notify
 
