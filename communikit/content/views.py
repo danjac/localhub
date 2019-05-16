@@ -2,11 +2,6 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.postgres.search import (
-    SearchQuery,
-    SearchRank,
-    SearchVector,
-)
 from django.db.models import Count, Prefetch, QuerySet
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -28,7 +23,6 @@ from notifications.signals import notify
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.comments.forms import CommentForm
-from communikit.comments.models import Comment
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.content import app_settings
@@ -38,11 +32,65 @@ from communikit.types import ContextDict
 from communikit.users.views import ProfileUserMixin
 
 
-class CommunityPostQuerySetMixin(CommunityRequiredMixin):
+class CommunityContentQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
-        return Post.objects.filter(
+        return Post.stream_objects.for_community(
             community=self.request.community
         ).select_related("author", "community")
+
+
+class CommunityPostQuerySetMixin(CommunityRequiredMixin):
+    def get_queryset(self):
+        return Post.objects.for_community(
+            community=self.request.community
+        ).select_related("author", "community")
+
+
+class ContentListView(CommunityContentQuerySetMixin, ListView):
+    paginate_by = app_settings.PAGINATE_BY
+    allow_empty = True
+
+    def get_queryset(self) -> QuerySet:
+        return (
+            super()
+            .get_queryset()
+            .with_num_comments()
+            .with_num_likes()
+            .order_by("-created")
+            .select_subclasses()
+        )
+
+
+content_list_view = ContentListView.as_view()
+
+
+class ContentSearchView(CommunityContentQuerySetMixin, ListView):
+    template_name = "content/search.html"
+
+    def get_queryset(self) -> QuerySet:
+        hashtag = self.request.GET.get("hashtag", "").strip()
+        if hashtag:
+            self.query = "#" + hashtag
+        else:
+            self.query = self.request.GET.get("q", "").strip()
+
+        qs = super().get_queryset()
+        if not self.query:
+            return qs.none()
+        return (
+            qs.with_num_likes()
+            .with_num_comments()
+            .search(self.query)
+            .select_subclasses()
+        )
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data.update({"search_query": self.query})
+        return data
+
+
+content_search_view = ContentSearchView.as_view()
 
 
 class PostCreateView(
@@ -101,61 +149,6 @@ class PostCreateView(
 post_create_view = PostCreateView.as_view()
 
 
-class PostListView(CommunityPostQuerySetMixin, ListView):
-    paginate_by = app_settings.PAGINATE_BY
-    allow_empty = True
-
-    def get_queryset(self) -> QuerySet:
-        return (
-            super()
-            .get_queryset()
-            .annotate(num_comments=Count("comment"), num_likes=Count("likes"))
-            .order_by("-created")
-            .select_subclasses()
-        )
-
-
-post_list_view = PostListView.as_view()
-
-
-class PostSearchView(CommunityPostQuerySetMixin, ListView):
-    template_name = "content/search.html"
-
-    def get_queryset(self) -> QuerySet:
-
-        hashtag = self.request.GET.get("hashtag", "").strip()
-        if hashtag:
-            self.query = "#" + hashtag
-        else:
-            self.query = self.request.GET.get("q", "").strip()
-
-        if not self.query:
-            return Post.objects.none()
-        search_vector = SearchVector("title", "description")
-        search_query = SearchQuery(self.query)
-        return (
-            super()
-            .get_queryset()
-            .annotate(
-                num_comments=Count("comment"),
-                num_likes=Count("likes"),
-                search=search_vector,
-                rank=SearchRank(search_vector, search_query),
-            )
-            .filter(search=search_query)
-            .order_by("-rank")
-            .select_subclasses()
-        )
-
-    def get_context_data(self, **kwargs) -> ContextDict:
-        data = super().get_context_data(**kwargs)
-        data.update({"search_query": self.query})
-        return data
-
-
-post_search_view = PostSearchView.as_view()
-
-
 class ProfilePostListView(ProfileUserMixin, ListView):
     paginate_by = app_settings.PAGINATE_BY
     allow_empty = True
@@ -182,21 +175,21 @@ class PostDetailView(CommunityPostQuerySetMixin, DetailView):
             super()
             .get_queryset()
             .annotate(num_comments=Count("comment"), num_likes=Count("likes"))
-            .prefetch_related(
-                Prefetch(
-                    "comment_set",
-                    to_attr="comments",
-                    queryset=Comment.objects.select_related(
-                        "author", "post", "post__community"
-                    )
-                    .annotate(num_likes=Count("likes"))
-                    .order_by("created"),
-                )
+            .prefetch_related(Prefetch("comment_set", to_attr="comments"))
+        )
+
+    def get_comments(self) -> QuerySet:
+        return (
+            self.object.comment_set.select_related(
+                "author", "post", "post__community"
             )
+            .annotate(num_likes=Count("likes"))
+            .order_by("created"),
         )
 
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
+        data["comments"] = self.get_comments()
         if self.request.user.has_perm("comments.create_comment", self.object):
             data["comment_form"] = CommentForm()
         return data

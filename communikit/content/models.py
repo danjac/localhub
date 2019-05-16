@@ -2,6 +2,11 @@ from typing import Set
 
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.postgres.search import (
+    SearchQuery,
+    SearchRank,
+    SearchVector,
+)
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError, models
 from django.urls import reverse
@@ -9,15 +14,61 @@ from django.utils.safestring import mark_safe
 
 from markdownx.models import MarkdownxField
 
-from model_utils.managers import InheritanceManager
+from model_utils.managers import InheritanceManager, InheritanceQuerySetMixin
 from model_utils.models import TimeStampedModel
 
 from communikit.communities.models import Community
 from communikit.content.markdown import markdownify, extract_mentions
 from communikit.likes.models import Like
 
+"""
+TBD: create ContentItem base abstract class. Comments should
+be generic relations.
+Create base views/mixins for e.g. likes/adding comments
+"""
+
+
+class PostQuerySetMixin:
+    def for_community(self, community: Community) -> models.QuerySet:
+        return self.filter(community=community)
+
+    def with_num_likes(self) -> models.QuerySet:
+        return self.annotate(num_likes=models.Count("likes"))
+
+    def with_num_comments(self) -> models.QuerySet:
+        return self.annotate(num_comments=models.Count("comment"))
+
+    def search(
+        self, search_term: str, order_by: str = "-rank"
+    ) -> models.QuerySet:
+        search_vector = SearchVector(self.model.SEARCH_FIELDS)
+        search_query = SearchQuery(self.query)
+        return (
+            self.annotate(
+                search=search_vector,
+                rank=SearchRank(search_vector, search_query),
+            )
+            .filter(search=search_query)
+        )
+
+
+class PostQuerySet(PostQuerySetMixin, models.QuerySet):
+    pass
+
+
+class StreamQuerySet(
+    PostQuerySetMixin, InheritanceQuerySetMixin, models.QuerySet
+):
+    pass
+
 
 class Post(TimeStampedModel):
+    """
+    Basic content Post with title, description and URL.
+    """
+
+    SEARCH_FIELDS = ("title", "description")
+
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
     author = models.ForeignKey(
@@ -30,7 +81,8 @@ class Post(TimeStampedModel):
 
     likes = GenericRelation(Like, related_query_name="post")
 
-    objects = InheritanceManager()
+    stream_objects = StreamQuerySet.as_manager()
+    objects = PostQuerySet.as_manager()
 
     def __str__(self) -> str:
         return self.title or str(f"Post: {self.id}")
