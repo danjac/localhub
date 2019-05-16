@@ -27,7 +27,10 @@
             <li class="menu-item">
                 <a href="{% url 'content:activity' %}">{% trans "Activity" %}</a>
             </li>
-            <li class="menu-item"><a href="{{ user.get_profile_url }}">{% trans "My Profile" %}</a></li>
+            <li class="menu-item">
+                <a href="">{% trans "Events" %}</a>
+            </li>
+             <li class="menu-item"><a href="{{ user.get_profile_url }}">{% trans "My Profile" %}</a></li>
             {% if can_manage_community %}
             <li class="menu-item"><a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a></li>
             {% endif %}
