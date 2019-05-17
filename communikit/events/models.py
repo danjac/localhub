@@ -10,10 +10,10 @@ from django_countries.fields import CountryField
 
 from model_utils import FieldTracker
 
-from communikit.content.models import Post
+from communikit.activities.models import Activity
 
 
-class Event(Post):
+class Event(Activity):
     LOCATION_FIELDS = (
         "street_address",
         "locality",
@@ -21,13 +21,9 @@ class Event(Post):
         "region",
         "country",
     )
-    # TBD: we probably need to have a tsvector field instead
-    SEARCH_FIELDS = Post.SEARCH_FIELDS + (
-        "street_address",
-        "locality",
-        "postal_code",
-        "region",
-    )
+
+    title = models.CharField(max_length=200)
+    url = models.URLField(null=True, blank=True)
 
     starts = models.DateTimeField()
     ends = models.DateTimeField(null=True, blank=True)
@@ -47,6 +43,9 @@ class Event(Post):
 
     def __str__(self) -> str:
         return self.title or self.location
+
+    def get_search_index_components(self):
+        return {"A": self.title, "B": self.location}
 
     def update_coordinates(self) -> Tuple[Optional[float], Optional[float]]:
         if self.location:
