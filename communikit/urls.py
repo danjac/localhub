@@ -12,7 +12,7 @@ from communikit.communities.views import (
 
 urlpatterns = [
     # Local
-    path("", include("communikit.content.urls")),
+    # path("", include("communikit.content.urls")),
     path(
         "access-denied/",
         view=community_access_denied_view,
@@ -21,7 +21,7 @@ urlpatterns = [
     path(
         "not-found/", view=community_not_found_view, name="community_not_found"
     ),
-    path("comments/", include("communikit.comments.urls")),
+    # path("comments/", include("communikit.comments.urls")),
     path("settings/", include("communikit.communities.urls")),
     path("invites/", include("communikit.invites.urls")),
     path("join-requests/", include("communikit.join_requests.urls")),

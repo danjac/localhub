@@ -2,7 +2,7 @@ import operator
 
 from collections import defaultdict
 from functools import reduce
-from typing import Set, Callable, List, Dict
+from typing import Set, Callable, Dict
 
 from django.conf import settings
 from django.core.paginator import Paginator, Page
@@ -22,6 +22,7 @@ from markdownx.models import MarkdownxField
 from model_utils.models import TimeStampedModel
 
 from communikit.communities.models import Community
+from communikit.likes.models import Like
 from communikit.content.markdown import markdownify, extract_mentions
 
 
@@ -71,36 +72,6 @@ class Activity(TimeStampedModel):
 """
 Example:
 """
-
-
-def activity_stream(limit: int, **kwargs) -> List:
-    querysets = []
-    for key, queryset in kwargs.items():
-        querysets.append(
-            queryset.annotate(
-                activity_type=models.Value(
-                    key, output_field=models.CharField()
-                )
-            ).values("pk", "activity_type", "created")
-        )
-    union_qs = querysets[0].union(*querysets[1:])
-    # TBD: pagination required
-    results = [
-        {"activity_type", "created", "pk"}
-        for row in union_qs.order_by("-created")[:limit]
-    ]
-    # bulk load each object type
-    to_load = defaultdict(set)
-    for result in results:
-        to_load[result["activity_type"]].add(result["pk"])
-    fetched = {}
-    for key, pks in to_load.items():
-        for item in kwargs[key].filter(pk__in=pks):
-            fetched[(key, item.pk)] = item
-    # annotate results with object
-    for result in results:
-        result["object"] = fetched[(result["activity_type"], result["pk"])]
-    return results
 
 
 """
@@ -177,6 +148,7 @@ def paginated_activity_stream(
         for key, queryset in queryset_dict.items()
     ]
     union_qs = querysets[0].union(*querysets[1:]).order_by(f"-{order_by}")
+    # NB: for a simple activity stream we would just pass in a limit.
     page = Paginator(union_qs, **paginator_kwargs).get_page(page_number)
     # bulk load each object type
     to_load = defaultdict(set)
@@ -216,3 +188,55 @@ class Post(Activity):
         Return all @mentions in description
         """
         return extract_mentions(self.description)
+
+
+"""
+Problem: we want to be able to calculate "karma" for
+all "likeable" models without using a denormalized field.
+
+1. Like uses content types.
+2. We can use GenericRelation.
+3. For each relation use the exists thing
+4. Recipient should be additional denorm field ("owner")
+
+class LikeManager(models.Manager):
+
+    def for_recipient(self, user):
+        return self.filter(
+            Q(post__owner=user) |
+            Q(photo__owner=user) |
+            Q(event__owner=user) |
+            Q(comment__owner=user) |
+        )
+
+class Like(TimeStampedModel):
+    # sender is the person who "liked" the thing;
+    # recipient is the owner of the thing;
+    # likeable is the thing itself.
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, ...)
+
+    post = models.OneToOneField(Post, null=True, related_name="likes")
+    photo = models.OneToOneField(Photo, null=True, related_name="likes")
+    event = models.OneToOneField(Event, null=True, related_name="likes")
+    comment = models.OneToOneField(Comment, null=True, related_name="likes")
+
+    class Meta:
+        unique_together = (
+            "user",
+            "post",
+            "photo",
+            "event",
+            "comment",
+        )
+
+
+
+class Activity(....)
+    ....
+
+    likeable = OneToOneField(
+        Likeable,
+        related_query_name="%(app_label)s_%(class)s"),
+        on_delete=models.CASCADE,
+    )
+"""
