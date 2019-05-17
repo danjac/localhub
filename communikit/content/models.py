@@ -2,14 +2,19 @@ import operator
 
 from collections import defaultdict
 from functools import reduce
-from typing import Set, Callable, List, Tuple, Dict
+from typing import Set, Callable, List, Dict
 
 from django.conf import settings
 from django.core.paginator import Paginator, Page
 from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from django.contrib.postgres.search import SearchVectorField, SearchVector
+from django.contrib.postgres.search import (
+    SearchVectorField,
+    SearchVector,
+    SearchQuery,
+    SearchRank,
+)
 from django.contrib.postgres.indexes import GinIndex
 
 from markdownx.models import MarkdownxField
@@ -101,7 +106,7 @@ def activity_stream(limit: int, **kwargs) -> List:
 """
 Example:
 
-page, activities = paginated_activity_stream(
+page = paginated_activity_stream(
     {
         "post":
         Post.objects.for_community(community=self.request.community),
@@ -110,9 +115,7 @@ page, activities = paginated_activity_stream(
         "event":
         Event.objects.for_community(community=self.request.community),
     },
-    page_number=page_number,
-    allow_empty_first_page=True,
-    page_size=app_settings.ACTIVITIES_PAGE_SIZE,
+    **self.get_pagination_kwargs(),
 )
 
 {% for activity in activities %}
@@ -130,21 +133,50 @@ page, activities = paginated_activity_stream(
 ....
 {% endfor %}
 
+
+Search:
+
+page = paginated_activity_search(
+    self.search_query,
+    self.get_querysets(),
+    **self.get_pagination_kwargs(),
+)
+
 """
+
+
+def paginated_activity_search(
+    search_term: str,
+    queryset_dict: Dict[str, models.QuerySet],
+    page_number: int,
+    **paginator_kwargs,
+) -> Page:
+
+    query = SearchQuery(search_term)
+    rank = SearchRank(models.F("search_vector"), query)
+
+    queryset_dicts = {
+        key: qs.annotate(rank=rank).filter(search_vector=query)
+        for key, qs in queryset_dict.items()
+    }
+    return paginated_activity_stream(
+        queryset_dicts, page_number, order_by="rank", **paginator_kwargs
+    )
 
 
 def paginated_activity_stream(
     queryset_dict: Dict[str, models.QuerySet],
     page_number: int,
-    **paginator_kwargs
-) -> Tuple[Page, List]:
+    order_by: str = "created",
+    **paginator_kwargs,
+) -> Page:
     querysets = [
         queryset.annotate(
             activity_type=models.Value(key, output_field=models.CharField())
-        ).values("pk", "activity_type", "created")
+        ).values("pk", "activity_type", order_by)
         for key, queryset in queryset_dict.items()
     ]
-    union_qs = querysets[0].union(*querysets[1:]).order_by("-created")
+    union_qs = querysets[0].union(*querysets[1:]).order_by(f"-{order_by}")
     page = Paginator(union_qs, **paginator_kwargs).get_page(page_number)
     # bulk load each object type
     to_load = defaultdict(set)
