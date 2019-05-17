@@ -45,8 +45,12 @@
         <a href="#"
            data-controller="ajax"
            data-action="ajax#post"
+           {% if has_liked_post %}
+           data-ajax-url="{% url 'content:dislike' post.id %}"
+           {% else %}
            data-ajax-url="{% url 'content:like' post.id %}"
-           data-ajax-replace="true"
+           {% endif %}
+           data-ajax-redirect="{{ request.get_full_path }}"
            >{% if has_liked_post %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}</a>
       </div>
       {% endif %}

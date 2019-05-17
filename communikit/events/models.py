@@ -21,6 +21,13 @@ class Event(Post):
         "region",
         "country",
     )
+    # TBD: we probably need to have a tsvector field instead
+    SEARCH_FIELDS = Post.SEARCH_FIELDS + (
+        "street_address",
+        "locality",
+        "postal_code",
+        "region",
+    )
 
     starts = models.DateTimeField()
     ends = models.DateTimeField(null=True, blank=True)

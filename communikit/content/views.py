@@ -2,7 +2,8 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.messages.views import SuccessMessageMixin
-from django.db.models import Count, Prefetch, QuerySet
+from django.db import IntegrityError
+from django.db.models import Count, QuerySet
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -16,11 +17,6 @@ from django.views.generic import (
     View,
 )
 from django.views.generic.detail import SingleObjectMixin
-from django.contrib.postgres.search import (
-    SearchQuery,
-    SearchRank,
-    SearchVector,
-)
 from notifications.models import Notification
 from notifications.signals import notify
 
@@ -36,21 +32,19 @@ from communikit.types import ContextDict
 from communikit.users.views import ProfileUserMixin
 
 
-class CommunityContentQuerySetMixin(CommunityRequiredMixin):
-    def get_queryset(self):
-        return Post.stream_objects.for_community(
-            community=self.request.community
-        ).select_related("author", "community")
-
-
 class CommunityPostQuerySetMixin(CommunityRequiredMixin):
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         return Post.objects.for_community(
             community=self.request.community
         ).select_related("author", "community")
 
 
-class ContentListView(CommunityContentQuerySetMixin, ListView):
+class CommunityInheritanceQuerySetMixin(CommunityPostQuerySetMixin):
+    def get_queryset(self) -> QuerySet:
+        return super().get_queryset().select_subclasses()
+
+
+class ContentListView(CommunityInheritanceQuerySetMixin, ListView):
     paginate_by = app_settings.PAGINATE_BY
     allow_empty = True
 
@@ -68,7 +62,7 @@ class ContentListView(CommunityContentQuerySetMixin, ListView):
 content_list_view = ContentListView.as_view()
 
 
-class ContentSearchView(CommunityContentQuerySetMixin, ListView):
+class ContentSearchView(ContentListView):
     template_name = "content/search.html"
 
     def get_queryset(self) -> QuerySet:
@@ -95,6 +89,26 @@ class ContentSearchView(CommunityContentQuerySetMixin, ListView):
 
 
 content_search_view = ContentSearchView.as_view()
+
+
+class ProfileContentListView(ProfileUserMixin, ListView):
+    paginate_by = app_settings.PAGINATE_BY
+    allow_empty = True
+
+    template_name = "content/profile_post_list.html"
+
+    def get_queryset(self) -> QuerySet:
+        return (
+            Post.inherited_objects.for_community(self.request.community)
+            .filter(author=self.object)
+            .with_num_comments()
+            .with_num_likes()
+            .order_by("-created")
+            .select_subclasses()
+        )
+
+
+profile_content_list_view = ProfileContentListView.as_view()
 
 
 class PostCreateView(
@@ -153,34 +167,9 @@ class PostCreateView(
 post_create_view = PostCreateView.as_view()
 
 
-class ProfilePostListView(ProfileUserMixin, ListView):
-    paginate_by = app_settings.PAGINATE_BY
-    allow_empty = True
-
-    template_name = "content/profile_post_list.html"
-
-    def get_queryset(self) -> QuerySet:
-        return (
-            Post.objects.filter(
-                author=self.object, community=self.request.community
-            )
-            .annotate(num_comments=Count("comment"), num_likes=Count("likes"))
-            .order_by("-created")
-            .select_subclasses()
-        )
-
-
-profile_post_list_view = ProfilePostListView.as_view()
-
-
 class PostDetailView(CommunityPostQuerySetMixin, DetailView):
     def get_queryset(self) -> QuerySet:
-        return (
-            super()
-            .get_queryset()
-            .annotate(num_comments=Count("comment"), num_likes=Count("likes"))
-            .prefetch_related(Prefetch("comment_set", to_attr="comments"))
-        )
+        return super().get_queryset().with_num_comments().with_num_likes()
 
     def get_comments(self) -> QuerySet:
         return (
@@ -237,9 +226,45 @@ class PostDeleteView(
 post_delete_view = PostDeleteView.as_view()
 
 
-class PostLikeView(
+class ContentLikeView(
     LoginRequiredMixin,
-    CommunityPostQuerySetMixin,
+    CommunityInheritanceQuerySetMixin,
+    PermissionRequiredMixin,
+    SingleObjectMixin,
+    View,
+):
+    permission_required = "content.like_post"
+
+    """
+    TBD: we need separate views for event here..
+    """
+
+    def post(self, request, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        try:
+            self.object.likes.create(user=request.user)
+            notify.send(
+                self.request.user,
+                recipient=self.object.author,
+                verb="post_liked",
+                action_object=self.object,
+                target=self.request.community,
+            )
+        except IntegrityError:
+            # already exists
+            pass
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self) -> str:
+        return self.object.get_absolute_url()
+
+
+content_like_view = ContentLikeView.as_view()
+
+
+class ContentDislikeView(
+    LoginRequiredMixin,
+    CommunityInheritanceQuerySetMixin,
     PermissionRequiredMixin,
     SingleObjectMixin,
     View,
@@ -248,24 +273,14 @@ class PostLikeView(
 
     def post(self, request, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
-        is_liked = self.object.like(request.user)
-        if is_liked:
-            notify.send(
-                self.request.user,
-                recipient=self.object.author,
-                verb="post_liked",
-                action_object=self.object,
-                target=self.request.community,
-            )
-        if request.is_ajax():
-            return HttpResponse(_("Unlike") if is_liked else _("Like"))
+        self.object.likes.filter(user=request.user).delete()
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self) -> str:
         return self.object.get_absolute_url()
 
 
-post_like_view = PostLikeView.as_view()
+content_dislike_view = ContentDislikeView.as_view()
 
 
 class ActivityView(LoginRequiredMixin, CommunityRequiredMixin, TemplateView):
