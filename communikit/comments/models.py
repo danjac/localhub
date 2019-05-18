@@ -24,11 +24,9 @@ class Comment(TimeStampedModel):
 
     content = MarkdownField()
 
-    activity_content_type = models.ForeignKey(
-        ContentType, on_delete=models.CASCADE
-    )
+    activity_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     activity_id = models.PositiveIntegerField(db_index=True)
-    activity = GenericForeignKey("activity_content_type", "activity_id")
+    activity = GenericForeignKey("activity_type", "activity_id")
 
     likes = GenericRelation(Like, related_query_name="comment")
 
