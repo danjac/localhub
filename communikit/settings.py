@@ -51,12 +51,14 @@ class Base(Configuration):
 
     LOCAL_APPS = [
         # "communikit.comments.apps.CommentsConfig",
+        "communikit.activities.apps.ActivitiesConfig",
         "communikit.communities.apps.CommunitiesConfig",
         # "communikit.content.apps.ContentConfig",
-        # "communikit.events.apps.EventsConfig",
+        "communikit.events.apps.EventsConfig",
         "communikit.invites.apps.InvitesConfig",
         "communikit.join_requests.apps.JoinRequestsConfig",
-        # "communikit.likes.apps.LikesConfig",
+        "communikit.likes.apps.LikesConfig",
+        "communikit.posts.apps.PostsConfig",
         "communikit.users.apps.UsersConfig",
     ]
 
@@ -70,7 +72,6 @@ class Base(Configuration):
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
-        "communikit.likes.middleware.LikesMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
     ]

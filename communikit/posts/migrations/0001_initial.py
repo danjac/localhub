@@ -7,7 +7,6 @@ import django.contrib.postgres.search
 from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
-import django_countries.fields
 import model_utils.fields
 
 
@@ -22,24 +21,15 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Event',
+            name='Post',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
                 ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
                 ('search_document', django.contrib.postgres.search.SearchVectorField(null=True)),
-                ('title', models.CharField(max_length=200)),
-                ('url', models.URLField(blank=True, null=True)),
+                ('title', models.CharField(blank=True, max_length=300)),
                 ('description', communikit.markdown.fields.MarkdownField(blank=True)),
-                ('starts', models.DateTimeField()),
-                ('ends', models.DateTimeField(blank=True, null=True)),
-                ('street_address', models.CharField(blank=True, max_length=200)),
-                ('locality', models.CharField(blank=True, max_length=200, verbose_name='City or town')),
-                ('postal_code', models.CharField(blank=True, max_length=20)),
-                ('region', models.CharField(blank=True, max_length=200)),
-                ('country', django_countries.fields.CountryField(blank=True, max_length=2, null=True)),
-                ('latitude', models.FloatField(blank=True, null=True)),
-                ('longitude', models.FloatField(blank=True, null=True)),
+                ('url', models.URLField(blank=True)),
                 ('community', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='communities.Community')),
                 ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
@@ -48,7 +38,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.AddIndex(
-            model_name='event',
-            index=django.contrib.postgres.indexes.GinIndex(fields=['search_document'], name='events_even_search__232c1d_gin'),
+            model_name='post',
+            index=django.contrib.postgres.indexes.GinIndex(fields=['search_document'], name='posts_post_search__adec96_gin'),
         ),
     ]

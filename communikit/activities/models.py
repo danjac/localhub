@@ -1,7 +1,7 @@
 import operator
 
 from collections import defaultdict
-from itertools import reduce
+from functools import reduce
 from typing import Callable, Dict
 
 from django.conf import settings
@@ -30,7 +30,7 @@ class Activity(TimeStampedModel):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
     # all activities are created by someone (this will become "owner" later)
-    author = models.ForeignKey(
+    owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
@@ -74,7 +74,7 @@ def activity_stream(
     page = activity_stream({
         "post": Post.objects.all(),
         "event": Event.objects.all(),
-    }, page_number)
+    }, page_number=1)
     """
     querysets = [
         queryset.annotate(
@@ -109,7 +109,7 @@ def activity_search(
     querysets.
     """
     query = SearchQuery(search_term)
-    rank = SearchRank(models.F("search_vector"), query)
+    rank = SearchRank(models.F("search_document"), query)
 
     queryset_dicts = {
         key: qs.annotate(rank=rank).filter(search_vector=query)

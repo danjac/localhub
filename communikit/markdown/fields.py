@@ -1,7 +1,7 @@
 from typing import Set, Optional
 
 from django.db.models import Model, Field
-from django.utils.encoding import mark_safe
+from django.utils.safestring import mark_safe
 
 from markdownx.models import MarkdownxField
 

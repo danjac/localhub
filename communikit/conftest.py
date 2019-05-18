@@ -8,10 +8,10 @@ from communikit.comments.models import Comment
 from communikit.comments.tests.factories import CommentFactory
 from communikit.communities.models import Community, Membership
 from communikit.communities.tests.factories import CommunityFactory
-from communikit.content.models import Post
-from communikit.content.tests.factories import PostFactory
 from communikit.events.models import Event
 from communikit.events.tests.factories import EventFactory
+from communikit.posts.models import Post
+from communikit.posts.tests.factories import PostFactory
 from communikit.types import HttpRequestResponse
 from communikit.users.tests.factories import UserFactory
 
