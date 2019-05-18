@@ -14,3 +14,10 @@ def update_event_coordinates(instance: Event, created: bool = False, **kwargs):
         transaction.on_commit(
             lambda: tasks.update_event_coordinates.delay(instance.id)
         )
+
+
+@receiver(
+    post_save, sender=Event, dispatch_uid="events.update_search_document"
+)
+def update_search_document(instance: Event, **kwargs):
+    transaction.on_commit(instance.make_search_updater())

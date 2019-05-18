@@ -47,7 +47,7 @@ class Event(Activity):
         return self.title or self.location
 
     def get_search_index_components(self):
-        return {"A": self.title, "B": self.location}
+        return {"A": self.title, "B": self.location, "C": self.description}
 
     def update_coordinates(self) -> Tuple[Optional[float], Optional[float]]:
         if self.location:
