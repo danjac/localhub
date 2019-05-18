@@ -19,7 +19,6 @@ from django.db import models
 from model_utils.models import TimeStampedModel
 
 
-from communikit.comments.models import Comment
 from communikit.communities.models import Community
 from communikit.likes.models import Like
 
@@ -35,16 +34,12 @@ class Activity(TimeStampedModel):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
-    comments = GenericRelation(
-        Comment, related_query_name="%(app_label)s_%(class)s"
-    )
-
     likes = GenericRelation(Like, related_query_name="%(app_label)s_%(class)s")
 
     search_document = SearchVectorField(null=True)
 
     class Meta:
-        abstract = True
+        # abstract = True
         indexes = [GinIndex(fields=["search_document"])]
 
     # https://simonwillison.net/2017/Oct/5/django-postgresql-faceted-search/

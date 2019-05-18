@@ -1,14 +1,11 @@
 from django.conf import settings
-from django.contrib.contenttypes.fields import (
-    GenericForeignKey,
-    GenericRelation,
-)
-from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
 
 from model_utils.models import TimeStampedModel
 
+from communikit.activities.models import Activity
 from communikit.communities.models import Community
 from communikit.likes.models import Like
 from communikit.markdown.fields import MarkdownField
@@ -16,17 +13,17 @@ from communikit.markdown.fields import MarkdownField
 
 class Comment(TimeStampedModel):
 
-    community = models.ForeignKey(Community, on_delete=models.CASCADE)
-
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
-    content = MarkdownField()
+    activity = models.ForeignKey(
+        Activity,
+        related_query_name="%s(app_label)s_%(class)s",
+        on_delete=models.CASCADE,
+    )
 
-    activity_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    activity_id = models.PositiveIntegerField(db_index=True)
-    activity = GenericForeignKey("activity_type", "activity_id")
+    content = MarkdownField()
 
     likes = GenericRelation(Like, related_query_name="comment")
 
