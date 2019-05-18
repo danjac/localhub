@@ -11,6 +11,7 @@ from django_countries.fields import CountryField
 from model_utils import FieldTracker
 
 from communikit.activities.models import Activity
+from communikit.markdown.fields import MarkdownField
 
 
 class Event(Activity):
@@ -24,6 +25,7 @@ class Event(Activity):
 
     title = models.CharField(max_length=200)
     url = models.URLField(null=True, blank=True)
+    description = MarkdownField(blank=True)
 
     starts = models.DateTimeField()
     ends = models.DateTimeField(null=True, blank=True)

@@ -1,5 +1,8 @@
-from typing import Set
+from typing import Set, Optional
+
+from django.db.models import Model, Field
 from django.utils.encoding import mark_safe
+
 from markdownx.models import MarkdownxField
 
 from communikit.markdown.utils import markdownify, extract_mentions
@@ -14,10 +17,10 @@ class MarkdownProxy(str):
 
 
 class MarkdownFieldDescriptor(object):
-    def __init__(self, field):
+    def __init__(self, field: Field):
         self.field = field
 
-    def __get__(self, instance=None, owner=None):
+    def __get__(self, instance=None, owner=None) -> Optional[MarkdownProxy]:
         value = instance.__dict__[self.field]
         if value is None:
             return value
@@ -28,6 +31,6 @@ class MarkdownFieldDescriptor(object):
 
 
 class MarkdownField(MarkdownxField):
-    def contribute_to_class(self, cls, name):
+    def contribute_to_class(self, cls: Model, name: str):
         super(MarkdownField, self).contribute_to_class(cls, name)
         setattr(cls, self.name, MarkdownFieldDescriptor(self.name))
