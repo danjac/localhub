@@ -38,7 +38,7 @@ class Activity(TimeStampedModel):
 
     class Meta:
         abstract = True
-        indexes = [GinIndex(fields=["search_vector"])]
+        indexes = [GinIndex(fields=["search_document"])]
 
     # https://simonwillison.net/2017/Oct/5/django-postgresql-faceted-search/
     def search_index_components(self):
