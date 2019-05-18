@@ -11,4 +11,5 @@ class User(AbstractUser):
         """
         Link to (public) profile content page
         """
-        return reverse("content:profile", args=[self.username])
+        # return reverse("content:profile", args=[self.username])
+        return "/"

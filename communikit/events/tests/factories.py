@@ -8,7 +8,7 @@ from communikit.events.models import Event
 from communikit.users.tests.factories import UserFactory
 
 
-class EventFactory:
+class EventFactory(DjangoModelFactory):
     title = Faker("text")
     description = Faker("text")
     community = SubFactory(CommunityFactory)

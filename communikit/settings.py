@@ -101,7 +101,7 @@ class Base(Configuration):
         },
     ]
 
-    COMMUNIKIT_HOME_PAGE_URL = reverse_lazy("content:list")
+    COMMUNIKIT_HOME_PAGE_URL = "/"
 
     LOGIN_URL = "account_login"
 

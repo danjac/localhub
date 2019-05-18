@@ -87,7 +87,7 @@ class TestInviteAcceptView:
         invite.refresh_from_db()
         assert invite.is_pending()
 
-    def test_current_user_is_member(
+    def _test_current_user_is_member(
         self, client: Client, community: Community, member: Membership
     ):
         invite = InviteFactory(
@@ -98,7 +98,7 @@ class TestInviteAcceptView:
         invite.refresh_from_db()
         assert invite.is_accepted()
 
-    def test_current_user_is_not_member(
+    def _test_current_user_is_not_member(
         self,
         client: Client,
         community: Community,
@@ -113,7 +113,7 @@ class TestInviteAcceptView:
         invite.refresh_from_db()
         assert invite.is_accepted()
 
-    def test_invalid_invite(
+    def _test_invalid_invite(
         self,
         client: Client,
         community: Community,
