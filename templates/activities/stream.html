@@ -1,12 +1,13 @@
-{% extends "content/base.html" %}
+{% extends "activities/base.html" %}
 {% load i18n %}
 {% load rules %}
-{% block content_main_panel %}
-{% has_perm 'content.create_post' user request.community as can_create_post %}
-{% if can_create_post %}
-{% url 'content:create' as create_post_url %}
+{% load activities_tags %}
+{% block activities_content %}
+{% has_perm 'content.create_activity' user request.community as can_create_activity %}
+{% if can_create_activity %}
+{# url 'content:create' as create_post_url #}
 <div class="new-post">
-  <a href="{% url 'content:create' %}" class="btn btn-block btn-primary">
+  <a href="#" class="btn btn-block btn-primary">
     <i class="icon icon-plus"></i> {% trans "Share" %}
   </a>
 </div>
@@ -26,10 +27,14 @@
 
 {% endif %}
 
-{% for post in object_list %}
+{% for activity in object_list %}
+{% with activity|model_name as activity_type %}
 <div class="mt-2">
-  {% include "content/includes/post.html" %}
+  {% if activity_type == "post" %}
+  {% include "posts/includes/post.html" %}
+  {% endif %}
 </div>
+{% endwith %}
 {% empty %}
 <p class="p-2 bg-gray text-center">
 {% trans "Nothing to show right now." %}
@@ -38,4 +43,4 @@
 
 
 {% include "includes/pagination.html" %}
-{% endblock content_main_panel %}
+{% endblock activities_content %}

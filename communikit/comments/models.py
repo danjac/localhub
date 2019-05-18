@@ -6,7 +6,6 @@ from django.urls import reverse
 from model_utils.models import TimeStampedModel
 
 from communikit.activities.models import Activity
-from communikit.communities.models import Community
 from communikit.likes.models import Like
 from communikit.markdown.fields import MarkdownField
 
@@ -17,11 +16,7 @@ class Comment(TimeStampedModel):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
-    activity = models.ForeignKey(
-        Activity,
-        related_query_name="%s(app_label)s_%(class)s",
-        on_delete=models.CASCADE,
-    )
+    activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
 
     content = MarkdownField()
 

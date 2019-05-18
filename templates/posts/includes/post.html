@@ -1,7 +1,6 @@
 {% load i18n %}
 {% load rules %}
 {% load micawber_tags %}
-{% load likes_tags %}
 
 {% has_perm "content.change_post" user post as can_change_post %}
 {% has_perm "content.delete_post" user post as can_delete_post %}
@@ -41,17 +40,12 @@
       <div class="mr-2">{% trans "Likes" %} ({{ post.num_likes }})</div>
       {% elif can_like_post %}
       <div class="mr-2">
-        {% has_liked post as has_liked_post %}
         <a href="#"
            data-controller="ajax"
            data-action="ajax#post"
-           {% if has_liked_post %}
-           data-ajax-url="{% url 'content:dislike' post.id %}"
-           {% else %}
            data-ajax-url="{% url 'content:like' post.id %}"
-           {% endif %}
            data-ajax-redirect="{{ request.get_full_path }}"
-           >{% if has_liked_post %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}</a>
+           >{% trans "Like" %}</a>
       </div>
       {% endif %}
 
