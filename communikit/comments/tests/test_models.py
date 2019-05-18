@@ -10,19 +10,15 @@ pytestmark = pytest.mark.django_db
 
 
 class TestComments:
+    """
+    TBD: move these tests under MarkdownField tests
+    """
     def test_markdown(self):
         comment = Comment(content="*testing*")
-        assert force_str(comment.markdown()) == "<p><em>testing</em></p>"
+        assert (
+            force_str(comment.content.markdown()) == "<p><em>testing</em></p>"
+        )
 
     def test_extract_mentions(self):
         comment = Comment(content="hello @danjac")
-        assert comment.extract_mentions() == {"danjac"}
-
-    def test_like(self, comment: Comment, user: settings.AUTH_USER_MODEL):
-        assert comment.like(user)
-        assert Like.objects.count() == 1
-
-    def test_unlike(self, comment: Comment, user: settings.AUTH_USER_MODEL):
-        Like.objects.create(content_object=comment, user=user)
-        assert not comment.like(user)
-        assert Like.objects.count() == 0
+        assert comment.content.extract_mentions() == {"danjac"}

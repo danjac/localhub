@@ -84,7 +84,8 @@ def linkify_hashtags(content: str) -> str:
     """
     tokens = content.split(" ")
     rv = []
-    search_url = reverse("content:search")
+    # TBD: this should prob. be configurable
+    search_url = "/search/"
     for token in tokens:
 
         for tag in HASHTAGS_RE.findall(token):

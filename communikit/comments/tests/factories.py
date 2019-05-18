@@ -9,6 +9,7 @@ from factory import (
 )
 
 from communikit.comments.models import Comment
+from communikit.communities.tests.factories import CommunityFactory
 from communikit.posts.tests.factories import PostFactory
 from communikit.users.tests.factories import UserFactory
 
@@ -16,6 +17,7 @@ from communikit.users.tests.factories import UserFactory
 class CommentFactory(DjangoModelFactory):
     content = Faker("text")
     owner = SubFactory(UserFactory)
+    community = SubFactory(CommunityFactory)
     activity = SubFactory(PostFactory)
     activity_id = SelfAttribute("activity.id")
     activity_type = LazyAttribute(

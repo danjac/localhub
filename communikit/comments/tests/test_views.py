@@ -9,7 +9,7 @@ from django.utils.encoding import smart_text
 from communikit.comments.models import Comment
 from communikit.comments.tests.factories import CommentFactory
 from communikit.communities.models import Community, Membership
-from communikit.content.tests.factories import PostFactory
+from communikit.posts.tests.factories import PostFactory
 
 pytestmark = pytest.mark.django_db
 
