@@ -5,6 +5,7 @@ from functools import reduce
 from typing import Callable, Dict
 
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import (
     SearchQuery,
@@ -18,7 +19,9 @@ from django.db import models
 from model_utils.models import TimeStampedModel
 
 
+from communikit.comments.models import Comment
 from communikit.communities.models import Community
+from communikit.likes.models import Like
 
 
 class Activity(TimeStampedModel):
@@ -26,13 +29,17 @@ class Activity(TimeStampedModel):
     Base class for all activity-related entities e.g. posts, events, photos.
     """
 
-    # all activities belong to a single community (at this point)
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
-    # all activities are created by someone (this will become "owner" later)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
+
+    comments = GenericRelation(
+        Comment, related_query_name="%(app_label)s_%(class)s"
+    )
+
+    likes = GenericRelation(Like, related_query_name="%(app_label)s_%(class)s")
 
     search_document = SearchVectorField(null=True)
 

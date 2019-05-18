@@ -50,10 +50,9 @@ class Base(Configuration):
     ]
 
     LOCAL_APPS = [
-        # "communikit.comments.apps.CommentsConfig",
         "communikit.activities.apps.ActivitiesConfig",
+        "communikit.comments.apps.CommentsConfig",
         "communikit.communities.apps.CommunitiesConfig",
-        # "communikit.content.apps.ContentConfig",
         "communikit.events.apps.EventsConfig",
         "communikit.invites.apps.InvitesConfig",
         "communikit.join_requests.apps.JoinRequestsConfig",
