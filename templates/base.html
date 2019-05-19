@@ -30,7 +30,7 @@
         {% if can_view_community %}
         <section class="navbar-section hide-sm">
           <form method="GET"
-                action=""
+                action="{% url 'activities:search' %}"
                 data-controller="form"
                 data-action="form#submit"
                 >
@@ -57,7 +57,7 @@
       {% has_perm "communities.view_community" user request.community as can_view_community %}
       {% if can_view_community %}
       <form method="GET"
-            action=""
+            action="{% url 'activities:search' %}"
             class="form-horizontal show-sm mb-2"
             data-controller="form"
             data-action="form#submit"

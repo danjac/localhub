@@ -17,3 +17,17 @@ class TestActivityStreamView:
 
         response = client.get(reverse("activities:stream"))
         assert response.status_code == 200
+        assert len(response.context["object_list"]) == 2
+
+
+class TestActivitySearchView:
+    def test_get(self, client: Client, community: Community):
+        post = PostFactory(community=community, title="test")
+        event = EventFactory(community=community, title="test")
+
+        for item in (post, event):
+            item.make_search_updater()()
+
+        response = client.get(reverse("activities:search"), {"q": "test"})
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 2

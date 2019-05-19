@@ -5,7 +5,12 @@ from typing import Callable
 
 from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import SearchVector, SearchVectorField
+from django.contrib.postgres.search import (
+    SearchVector,
+    SearchVectorField,
+    SearchRank,
+    SearchQuery,
+)
 from django.db import models
 
 from model_utils.managers import InheritanceQuerySetMixin
@@ -34,6 +39,12 @@ class ActivityQuerySet(InheritanceQuerySetMixin, models.QuerySet):
         return self.annotate(
             has_liked=models.Value(False, output_field=models.BooleanField())
         )
+
+    def search(self, search_term: str) -> models.QuerySet:
+        query = SearchQuery(search_term)
+        return self.annotate(
+            rank=SearchRank(models.F("search_document"), query=query)
+        ).filter(search_document=query)
 
 
 class Activity(TimeStampedModel):

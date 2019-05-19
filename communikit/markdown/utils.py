@@ -85,8 +85,9 @@ def linkify_hashtags(content: str) -> str:
     """
     tokens = content.split(" ")
     rv = []
-    # TBD: this should prob. be configurable
-    search_url = "/search/"
+    # TBD: we might want to make this configurable, e.g. diff between
+    # tags in comments vs activities
+    search_url = reverse("activities:search")
     for token in tokens:
 
         for tag in HASHTAGS_RE.findall(token):

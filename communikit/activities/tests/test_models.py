@@ -6,6 +6,7 @@ from django.contrib.auth.models import AnonymousUser
 from communikit.activities.models import Activity, Like
 from communikit.comments.models import Comment
 from communikit.posts.models import Post
+from communikit.posts.tests.factories import PostFactory
 from communikit.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
@@ -42,3 +43,10 @@ class TestActivityManager:
         Like.objects.create(user=user, activity=post)
         activity = Activity.objects.with_has_liked(user).get()
         assert activity.has_liked
+
+    def test_search(self):
+        post = PostFactory(title="random thing")
+        # normally fired when transaction commits
+        post.make_search_updater()()
+        result = Activity.objects.search("random thing").get()
+        assert result.rank

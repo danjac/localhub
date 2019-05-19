@@ -46,7 +46,7 @@ class Event(Activity):
     def __str__(self) -> str:
         return self.title or self.location
 
-    def get_search_index_components(self):
+    def search_index_components(self):
         return {"A": self.title, "B": self.location, "C": self.description}
 
     def update_coordinates(self) -> Tuple[Optional[float], Optional[float]]:

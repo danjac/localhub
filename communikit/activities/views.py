@@ -43,8 +43,7 @@ class ActivityQuerySetMixin(CommunityRequiredMixin):
         return qs
 
 
-class ActivityStreamView(ActivityQuerySetMixin, ListView):
-    template_name = "activities/stream.html"
+class BaseActivityListView(ActivityQuerySetMixin, ListView):
     paginate_by = app_settings.COMMUNIKIT_ACTIVITIES_PAGE_SIZE
     allow_empty = True
 
@@ -56,29 +55,7 @@ class ActivityStreamView(ActivityQuerySetMixin, ListView):
             .with_num_comments()
             .with_num_likes()
             .with_has_liked(self.request.user)
-            .order_by("-created")
         )
-
-
-activity_stream_view = ActivityStreamView.as_view()
-
-
-class ActivityDetailRouterView(SingleObjectMixin, RedirectView):
-    """
-    In cases where we don't know the subclass of an activity ahead of time,
-    or where it is too inefficient to do so, this will look up the
-    correct subclass (post, event etc) and redirect to the correct absolute
-    url for that subclass.
-    """
-
-    def get_queryset(self) -> QuerySet:
-        return Activity.objects.select_subclasses()
-
-    def get_redirect_url(self):
-        return self.get_object().get_absolute_url()
-
-
-activity_detail_router_view = ActivityDetailRouterView.as_view()
 
 
 class BaseActivityCreateView(
@@ -203,3 +180,52 @@ class BaseActivityDislikeView(
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
+
+
+class ActivityStreamView(BaseActivityListView):
+    template_name = "activities/stream.html"
+
+    def get_queryset(self) -> QuerySet:
+        return super().get_queryset().order_by("-created")
+
+
+activity_stream_view = ActivityStreamView.as_view()
+
+
+class ActivitySearchView(BaseActivityListView):
+    template_name = "activities/search.html"
+
+    def get_queryset(self) -> QuerySet:
+        self.search_query = self.request.GET.get("q", "").strip()
+        if not self.search_query:
+            return Activity.objects.none()
+
+        return (
+            super().get_queryset().search(self.search_query).order_by("-rank")
+        )
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["search_query"] = self.search_query
+        return data
+
+
+activity_search_view = ActivitySearchView.as_view()
+
+
+class ActivityDetailRouterView(SingleObjectMixin, RedirectView):
+    """
+    In cases where we don't know the subclass of an activity ahead of time,
+    or where it is too inefficient to do so, this will look up the
+    correct subclass (post, event etc) and redirect to the correct absolute
+    url for that subclass.
+    """
+
+    def get_queryset(self) -> QuerySet:
+        return Activity.objects.select_subclasses()
+
+    def get_redirect_url(self):
+        return self.get_object().get_absolute_url()
+
+
+activity_detail_router_view = ActivityDetailRouterView.as_view()

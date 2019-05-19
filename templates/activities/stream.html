@@ -1,42 +1,35 @@
 {% extends "activities/base.html" %}
 {% load i18n %}
 {% load rules %}
-{% load activities_tags %}
 {% block activities_content %}
 {% has_perm 'activities.create_activity' user request.community as can_create_activity %}
 {% if can_create_activity %}
 <div class="new-post">
-  <a href="{% url 'posts:create' %}" class="btn btn-block btn-primary">
-    <i class="icon icon-plus"></i> {% trans "Share" %}
-  </a>
+    <a href="{% url 'posts:create' %}" class="btn btn-block btn-primary">
+        <i class="icon icon-plus"></i> {% trans "Share" %}
+    </a>
 </div>
 <div class="divider"></div>
 
 {% elif user.is_authenticated %}
 <p class="bg-gray p-2 text-center">
-  {% url 'join_requests:create' as join_request_url %}
-  {% blocktrans %}You do not have permission to post to this site. You can send a request to join this community <a href="{{ join_request_url }}">here</a>.{% endblocktrans %}
+    {% url 'join_requests:create' as join_request_url %}
+    {% blocktrans %}You do not have permission to post to this site. You can send a request to join this community <a href="{{ join_request_url }}">here</a>.{% endblocktrans %}
 </p>
 
 {% else %}
 <p class="bg-gray p-2 text-center">
-  {% url 'account_login' as login_url %}
-  {% blocktrans %}Please <a href="{{ login_url }}">sign in</a> to post content to this site.{% endblocktrans %}
+    {% url 'account_login' as login_url %}
+    {% blocktrans %}Please <a href="{{ login_url }}">sign in</a> to post content to this site.{% endblocktrans %}
 </p>
 
 {% endif %}
 
 {% for activity in object_list %}
-{% with activity|model_name as activity_type %}
-<div class="mt-2">
-  {% if activity_type == "post" %}
-  {% include "posts/includes/post.html" with post=activity %}
-  {% endif %}
-</div>
-{% endwith %}
+{% include "activities/includes/activity.html" %}
 {% empty %}
 <p class="p-2 bg-gray text-center">
-{% trans "Nothing to show right now." %}
+    {% trans "Nothing to show right now." %}
 </p>
 {% endfor %}
 

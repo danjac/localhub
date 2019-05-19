@@ -1,21 +1,21 @@
-{% extends "content/base.html" %}
+{% extends "activities/base.html" %}
 {% load i18n %}
 {% load rules %}
-{% block content_main_panel %}
+{% block activities_content %}
 
 {% if search_query %}
 <h3>Search for {{ search_query }}</h3>
 {% endif %}
 
-{% for post in object_list %}
+{% for activity in object_list %}
 <div class="mt-2">
-  {% include "content/includes/post.html" %}
+{% include "activities/includes/activity.html" %}
 </div>
 {% empty %}
 <p class="p-2 bg-gray text-center">
-  {% trans "Sorry, no results found for this search" %}
+    {% trans "Sorry, no results found for this search" %}
 </p>
 {% endfor %}
 
 {% include "includes/pagination.html" %}
-{% endblock content_main_panel %}
+{% endblock activities_content %}
