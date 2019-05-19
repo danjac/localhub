@@ -28,3 +28,31 @@ class TestCommentCreateView:
         assert response.url == post.get_absolute_url()
         comment = post.comment_set.get()
         assert comment.owner == member.member
+
+
+class TestCommentUpdateView:
+    def test_get(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        comment = CommentFactory(owner=member.member, activity=post)
+        response = client.get(reverse("comments:update", args=[comment.id]))
+        assert response.status_code == 200
+
+    def test_post(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        comment = CommentFactory(owner=member.member, activity=post)
+        response = client.post(
+            reverse("comments:update", args=[comment.id]),
+            {"content": "new content"},
+        )
+        assert response.url == post.get_absolute_url()
+        comment.refresh_from_db()
+        assert comment.content == "new content"
+
+
+class TestCommentDeleteView:
+    def test_delete(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        comment = CommentFactory(owner=member.member, activity=post)
+        response = client.delete(reverse("comments:delete", args=[comment.id]))
+        assert response.url == post.get_absolute_url()
+        assert Comment.objects.count() == 0

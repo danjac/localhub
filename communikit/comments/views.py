@@ -21,10 +21,32 @@ from communikit.activities.models import Activity
 from communikit.comments.forms import CommentForm
 from communikit.comments.models import Comment
 from communikit.communities.views import CommunityRequiredMixin
+from communikit.types import ContextDict
+
+
+class SingleCommentMixin(CommunityRequiredMixin):
+    def get_queryset(self) -> QuerySet:
+        return Comment.objects.filter(
+            activity__community=self.request.community
+        ).select_related("owner")
+
+    def get_parent(self) -> Activity:
+        return Activity.objects.select_related(
+            "community", "owner"
+        ).get_subclass(pk=self.object.activity_id)
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["parent"] = self.get_parent()
+        return data
 
 
 class CommentCreateView(
-    LoginRequiredMixin, PermissionRequiredMixin, SingleObjectMixin, FormView
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    CommunityRequiredMixin,
+    SingleObjectMixin,
+    FormView,
 ):
     form_class = CommentForm
     template_name = "comments/comment_form.html"
@@ -58,25 +80,25 @@ comment_create_view = CommentCreateView.as_view()
 
 
 class CommentUpdateView(
-    LoginRequiredMixin, PermissionRequiredMixin, UpdateView
+    LoginRequiredMixin, PermissionRequiredMixin, SingleCommentMixin, UpdateView
 ):
     form_class = CommentForm
     permission_required = "comments.change_comment"
 
     def get_success_url(self) -> str:
-        return self.object.post.get_absolute_url()
+        return self.get_parent().get_absolute_url()
 
 
 comment_update_view = CommentUpdateView.as_view()
 
 
 class CommentDeleteView(
-    LoginRequiredMixin, PermissionRequiredMixin, DeleteView
+    LoginRequiredMixin, PermissionRequiredMixin, SingleCommentMixin, DeleteView
 ):
     permission_required = "comments.delete_comment"
 
     def get_success_url(self) -> str:
-        return self.object.post.get_absolute_url()
+        return self.get_parent().get_absolute_url()
 
     def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()

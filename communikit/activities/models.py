@@ -37,6 +37,11 @@ class Activity(TimeStampedModel):
     class Meta:
         indexes = [GinIndex(fields=["search_document"])]
 
+    def get_absolute_url(self) -> str:
+        # TBD: we should have a "routing" URL for activities that finds
+        # the correct subclass and redirects there.
+        return "/"
+
     # https://simonwillison.net/2017/Oct/5/django-postgresql-faceted-search/
     def search_index_components(self):
         return {}
