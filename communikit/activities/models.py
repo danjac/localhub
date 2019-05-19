@@ -8,7 +8,7 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import models
 
-from model_utils.managers import InheritanceManager, InheritanceQuerySetMixin
+from model_utils.managers import InheritanceQuerySetMixin
 from model_utils.models import TimeStampedModel
 
 
@@ -18,6 +18,22 @@ from communikit.communities.models import Community
 class ActivityQuerySet(InheritanceQuerySetMixin, models.QuerySet):
     def with_num_comments(self) -> models.QuerySet:
         return self.annotate(num_comments=models.Count("comment"))
+
+    def with_num_likes(self) -> models.QuerySet:
+        return self.annotate(num_likes=models.Count("like"))
+
+    def with_has_liked(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> models.QuerySet:
+        if user.is_authenticated:
+            return self.annotate(
+                has_liked=models.Exists(
+                    user.like_set.filter(activity=models.OuterRef("pk"))
+                )
+            )
+        return self.annotate(
+            has_liked=models.Value(False, output_field=models.BooleanField())
+        )
 
 
 class Activity(TimeStampedModel):
