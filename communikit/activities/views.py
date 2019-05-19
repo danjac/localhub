@@ -1,10 +1,11 @@
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, QuerySet
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import CreateView, DetailView, ListView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -59,6 +60,16 @@ class BaseActivityCreateView(
 
         messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
+
+
+class BaseActivityUpdateView(
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    SuccessMessageMixin,
+    UpdateView,
+):
+    permission_required = "activities.change_activity"
+    success_message = _("Your changes have been saved")
 
 
 class BaseActivityDetailView(DetailView):

@@ -5,9 +5,15 @@ from django.test.client import Client
 from django.urls import reverse
 
 from communikit.communities.models import Membership
+from communikit.posts.tests.factories import PostFactory
 from communikit.posts.models import Post
 
 pytestmark = pytest.mark.django_db
+
+
+@pytest.fixture
+def post_for_member(member: Membership) -> Post:
+    return PostFactory(owner=member.member, community=member.community)
 
 
 class TestPostCreateView:
@@ -23,6 +29,23 @@ class TestPostCreateView:
         post = Post.objects.get()
         assert post.owner == member.member
         assert post.community == member.community
+
+
+class TestPostUpdateView:
+    def test_get(self, client: Client, post_for_member: Post):
+        response = client.get(
+            reverse("posts:update", args=[post_for_member.id])
+        )
+        assert response.status_code == 200
+
+    def test_post(self, client: Client, post_for_member: Post):
+        response = client.post(
+            reverse("posts:update", args=[post_for_member.id]),
+            {"title": "UPDATED", "description": post_for_member.description},
+        )
+        assert response.url == post_for_member.get_absolute_url()
+        post_for_member.refresh_from_db()
+        assert post_for_member.title == "UPDATED"
 
 
 class TestPostDetailView:
