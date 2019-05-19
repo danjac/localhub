@@ -1,4 +1,3 @@
-
 from django.utils.encoding import force_str
 
 from communikit.markdown.utils import (
