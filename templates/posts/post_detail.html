@@ -51,7 +51,7 @@
               data-action="ajax#post"
               data-ajax-url=""
               data-ajax-replace="true"
-              >{% if has_liked_post %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}</a>
+              >{% trans "Like" %}</a>
          </div>
          {% endif %}
 
@@ -63,13 +63,14 @@
 
          {% if can_change_post %}
          <div class="mr-2">
-           <a href=""
+           <a href="{% url 'posts:update' post.id %}"
               >{% trans "Update" %}</a>
          </div>
          {% endif %}
 
          {% if can_delete_post %}
          <div class="mr-2">
+           {% url 'posts:delete' post.id as delete_url %}
            <a href="{{ delete_url }}"
               data-controller="ajax confirm"
               data-action="confirm#check ajax#delete"

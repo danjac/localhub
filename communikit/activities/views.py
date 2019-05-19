@@ -1,11 +1,17 @@
 from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Count, QuerySet
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -70,6 +76,27 @@ class BaseActivityUpdateView(
 ):
     permission_required = "activities.change_activity"
     success_message = _("Your changes have been saved")
+
+
+class BaseActivityDeleteView(
+    LoginRequiredMixin, PermissionRequiredMixin, DeleteView
+):
+    permission_required = "activities.delete_activity"
+    success_url = reverse_lazy("activities:stream")
+    success_message = None
+
+    def get_success_message(self):
+        return self.success_message
+
+    def delete(self, request, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        self.object.delete()
+
+        message = self.get_success_message()
+        if message:
+            messages.success(self.request, message)
+
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class BaseActivityDetailView(DetailView):

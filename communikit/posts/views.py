@@ -1,15 +1,9 @@
-from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, QuerySet
-from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import DeleteView
-
-from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.activities.views import (
     BaseActivityCreateView,
+    BaseActivityDeleteView,
     BaseActivityDetailView,
     BaseActivityUpdateView,
 )
@@ -52,23 +46,8 @@ class PostUpdateView(CommunityPostQuerySetMixin, BaseActivityUpdateView):
 post_update_view = PostUpdateView.as_view()
 
 
-class PostDeleteView(
-    LoginRequiredMixin,
-    CommunityPostQuerySetMixin,
-    PermissionRequiredMixin,
-    DeleteView,
-):
-    # TBD: make a base activity delete view
-    permission_required = "activities.delete_activity"
-    success_url = reverse_lazy("activities:stream")
-
-    def delete(self, request, *args, **kwargs) -> HttpResponse:
-        self.object = self.get_object()
-        self.object.delete()
-
-        messages.success(self.request, _("Your post has been deleted"))
-
-        return HttpResponseRedirect(self.get_success_url())
+class PostDeleteView(CommunityPostQuerySetMixin, BaseActivityDeleteView):
+    success_message = _("Your post has been deleted")
 
 
 post_delete_view = PostDeleteView.as_view()

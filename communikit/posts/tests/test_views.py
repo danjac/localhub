@@ -48,6 +48,22 @@ class TestPostUpdateView:
         assert post_for_member.title == "UPDATED"
 
 
+class TestPostDeleteView:
+    def test_get(self, client: Client, post_for_member: Post):
+        # test confirmation page for non-JS clients
+        response = client.get(
+            reverse("posts:delete", args=[post_for_member.id])
+        )
+        assert response.status_code == 200
+
+    def test_delete(self, client: Client, post_for_member: Post):
+        response = client.delete(
+            reverse("posts:delete", args=[post_for_member.id])
+        )
+        assert response.url == reverse("activities:stream")
+        assert Post.objects.count() == 0
+
+
 class TestPostDetailView:
     def test_get(self, client: Client, post: Post):
         response = client.get(
