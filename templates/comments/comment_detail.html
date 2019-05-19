@@ -14,7 +14,7 @@
     <div class="card-subtitle text-gray float-right">
       {% blocktrans with comment.created|timesince as created %}{{ created }} ago{% endblocktrans %}
     </div>
-    <div class="card-title"><a href="{{ comment.post.get_absolute_url }}">{% trans "Parent" %}</div>
+    <div class="card-title"><a href="{{ parent.get_absolute_url }}">{{ parent }}</div>
     <div class="card-subtitle h6"><a href="{{ comment.owner.get_profile_url }}">{{ comment.owner.username }}</a></div>
   </div>
   <div class="card-body">

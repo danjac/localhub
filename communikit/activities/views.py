@@ -10,8 +10,10 @@ from django.views.generic import (
     DeleteView,
     DetailView,
     ListView,
+    RedirectView,
     UpdateView,
 )
+from django.views.generic.detail import SingleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -23,22 +25,53 @@ from communikit.communities.views import CommunityRequiredMixin
 from communikit.types import ContextDict
 
 
-class ActivityStreamView(CommunityRequiredMixin, ListView):
+class ActivityQuerySetMixin(CommunityRequiredMixin):
+    select_subclasses = True
+
+    def get_queryset(self) -> QuerySet:
+        qs = Activity.objects.filter(
+            community=self.request.community
+        ).select_related("owner", "community")
+
+        if self.select_subclasses:
+            qs = qs.select_subclasses()
+        return qs
+
+
+class ActivityStreamView(ActivityQuerySetMixin, ListView):
     template_name = "activities/stream.html"
     paginate_by = app_settings.COMMUNIKIT_ACTIVITIES_PAGE_SIZE
     allow_empty = True
 
     def get_queryset(self) -> QuerySet:
         return (
-            Activity.objects.filter(community=self.request.community)
+            super()
+            .get_queryset()
+            .filter(community=self.request.community)
             .annotate(num_likes=Count("likes"), num_comments=Count("comment"))
-            .select_related("community", "owner")
             .order_by("-created")
-            .select_subclasses()
         )
 
 
 activity_stream_view = ActivityStreamView.as_view()
+
+
+class ActivityDetailRouterView(SingleObjectMixin, RedirectView):
+    """
+    In cases where we don't know the subclass of an activity ahead of time,
+    or where it is too inefficient to do so, this will look up the
+    correct subclass (post, event etc) and redirect to the correct absolute
+    url for that subclass.
+    """
+
+    def get_queryset(self) -> QuerySet:
+        return Activity.objects.select_subclasses()
+
+    def get_redirect_url(self):
+        return self.get_object().get_absolute_url()
+
+
+activity_detail_router_view = ActivityDetailRouterView.as_view()
 
 
 class BaseActivityCreateView(
@@ -72,6 +105,7 @@ class BaseActivityUpdateView(
     LoginRequiredMixin,
     PermissionRequiredMixin,
     SuccessMessageMixin,
+    ActivityQuerySetMixin,
     UpdateView,
 ):
     permission_required = "activities.change_activity"
@@ -79,7 +113,10 @@ class BaseActivityUpdateView(
 
 
 class BaseActivityDeleteView(
-    LoginRequiredMixin, PermissionRequiredMixin, DeleteView
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    ActivityQuerySetMixin,
+    DeleteView,
 ):
     permission_required = "activities.delete_activity"
     success_url = reverse_lazy("activities:stream")
@@ -99,7 +136,7 @@ class BaseActivityDeleteView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class BaseActivityDetailView(DetailView):
+class BaseActivityDetailView(ActivityQuerySetMixin, DetailView):
     def get_comments(self) -> QuerySet:
         return (
             self.object.comment_set.select_related(
@@ -107,6 +144,13 @@ class BaseActivityDetailView(DetailView):
             )
             .annotate(num_likes=Count("likes"))
             .order_by("created")
+        )
+
+    def get_queryset(self) -> QuerySet:
+        return (
+            super()
+            .get_queryset()
+            .annotate(num_likes=Count("likes"), num_comments=Count("comment"))
         )
 
     def get_context_data(self, **kwargs) -> ContextDict:

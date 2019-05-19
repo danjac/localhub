@@ -3,17 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.utils.translation import ugettext as _
-from django.views.generic import (
-    DeleteView,
-    DetailView,
-    FormView,
-    ListView,
-    UpdateView,
-    View,
-)
+from django.views.generic import DeleteView, DetailView, FormView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
-
-from notifications.signals import notify
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -28,7 +19,7 @@ class SingleCommentMixin(CommunityRequiredMixin):
     def get_queryset(self) -> QuerySet:
         return Comment.objects.filter(
             activity__community=self.request.community
-        ).select_related("owner")
+        ).select_related("owner", "activity", "activity__community")
 
     def get_parent(self) -> Activity:
         return Activity.objects.select_related(
