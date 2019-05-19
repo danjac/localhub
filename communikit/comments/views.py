@@ -79,6 +79,13 @@ class CommentCreateView(
 comment_create_view = CommentCreateView.as_view()
 
 
+class CommentDetailView(SingleCommentMixin, DetailView):
+    pass
+
+
+comment_detail_view = CommentDetailView.as_view()
+
+
 class CommentUpdateView(
     LoginRequiredMixin, PermissionRequiredMixin, SingleCommentMixin, UpdateView
 ):

@@ -1,10 +1,9 @@
-{% extends "content/base.html" %}
+{% extends "activities/base.html" %}
 
 {% load i18n %}
 {% load rules %}
-{% load likes_tags %}
 
-{% block content_main_panel %}
+{% block activities_content %}
 
 {% has_perm "comments.change_comment" user comment as can_change_comment %}
 {% has_perm "comments.delete_comment" user comment as can_delete_comment %}
@@ -16,7 +15,7 @@
       {% blocktrans with comment.created|timesince as created %}{{ created }} ago{% endblocktrans %}
     </div>
     <div class="card-title"><a href="{{ comment.post.get_absolute_url }}">{% trans "Parent" %}</div>
-    <div class="card-subtitle h6"><a href="{{ comment.author.get_profile_url }}">{{ comment.author.username }}</a></div>
+    <div class="card-subtitle h6"><a href="{{ comment.owner.get_profile_url }}">{{ comment.owner.username }}</a></div>
   </div>
   <div class="card-body">
     <div class="divider"></div>
@@ -27,16 +26,15 @@
 
     <div class="d-flex content-actions">
 
-      {% if comment.author_id == user.id and num_likes %}
+      {% if comment.owner_id == user.id and comment.num_likes %}
       <div class="mr-2">{% trans "Likes" %} ({{ comment.num_likes }})</div>
       {% elif can_like_comment %}
       <div class="mr-2">
-        {% has_liked comment as has_liked_comment %}
         <a href="#"
            data-controller="ajax"
-           data-ajax-url="{% url 'comments:like' comment.id %}"
+           data-ajax-url=""
            data-ajax-replace="true"
-          >{% if has_liked_comment %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}</a>
+          >{% trans "Like" %}</a>
       </div>
       {% endif %}
 
@@ -75,4 +73,4 @@
   </div>
 
 </div>
-{% endblock content_main_panel %}
+{% endblock activities_content %}

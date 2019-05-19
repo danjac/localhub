@@ -23,8 +23,7 @@ class Comment(TimeStampedModel):
     likes = GenericRelation(Like, related_query_name="comment")
 
     def get_absolute_url(self) -> str:
-        # return reverse("comments:detail", args=[self.id])
-        return "/"
+        return reverse("comments:detail", args=[self.id])
 
     def get_permalink(self) -> str:
         return self.activity.community.domain_url(self.get_absolute_url())
