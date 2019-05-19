@@ -51,7 +51,6 @@ class BaseActivityListView(ActivityQuerySetMixin, ListView):
         return (
             super()
             .get_queryset()
-            .filter(community=self.request.community)
             .with_num_comments()
             .with_num_likes()
             .with_has_liked(self.request.user)
