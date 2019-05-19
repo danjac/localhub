@@ -4,14 +4,16 @@ from django.db.models import Count, QuerySet
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, DetailView, ListView
 
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.activities import app_settings
 from communikit.activities.models import Activity
+from communikit.comments.forms import CommentForm
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
+from communikit.types import ContextDict
 
 
 class ActivityStreamView(CommunityRequiredMixin, ListView):
@@ -57,3 +59,21 @@ class BaseActivityCreateView(
 
         messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
+
+
+class BaseActivityDetailView(DetailView):
+    def get_comments(self) -> QuerySet:
+        return (
+            self.object.comment_set.select_related(
+                "owner", "post", "post__community"
+            )
+            .annotate(num_likes=Count("likes"))
+            .order_by("created"),
+        )
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["comments"] = self.get_comments()
+        if self.request.user.has_perm("comments.create_comment", self.object):
+            data["comment_form"] = CommentForm()
+        return data

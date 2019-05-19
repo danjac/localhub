@@ -5,16 +5,17 @@ from django.db.models import Count, QuerySet
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import DeleteView, DetailView, UpdateView
+from django.views.generic import DeleteView, UpdateView
 
 from rules.contrib.views import PermissionRequiredMixin
 
-from communikit.activities.views import BaseActivityCreateView
-from communikit.comments.forms import CommentForm
+from communikit.activities.views import (
+    BaseActivityCreateView,
+    BaseActivityDetailView,
+)
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.posts.forms import PostForm
 from communikit.posts.models import Post
-from communikit.types import ContextDict
 
 
 class CommunityPostQuerySetMixin(CommunityRequiredMixin):
@@ -24,7 +25,7 @@ class CommunityPostQuerySetMixin(CommunityRequiredMixin):
                 num_likes=Count("likes"), num_comments=Count("comment")
             )
             .filter(community=self.request.community)
-            .select_related("author", "community")
+            .select_related("owner", "community")
         )
 
 
@@ -36,23 +37,8 @@ class PostCreateView(BaseActivityCreateView):
 post_create_view = PostCreateView.as_view()
 
 
-class PostDetailView(CommunityPostQuerySetMixin, DetailView):
-    # TBD: make a base activity detail view
-    def get_comments(self) -> QuerySet:
-        return (
-            self.object.comment_set.select_related(
-                "author", "post", "post__community"
-            )
-            .annotate(num_likes=Count("likes"))
-            .order_by("created"),
-        )
-
-    def get_context_data(self, **kwargs) -> ContextDict:
-        data = super().get_context_data(**kwargs)
-        data["comments"] = self.get_comments()
-        if self.request.user.has_perm("comments.create_comment", self.object):
-            data["comment_form"] = CommentForm()
-        return data
+class PostDetailView(CommunityPostQuerySetMixin, BaseActivityDetailView):
+    pass
 
 
 post_detail_view = PostDetailView.as_view()
