@@ -42,7 +42,6 @@ class Base(Configuration):
         "djcelery_email",
         "markdownx",
         "micawber.contrib.mcdjango",
-        "notifications",
         "rules.apps.AutodiscoverRulesConfig",
         "widget_tweaks",
     ]

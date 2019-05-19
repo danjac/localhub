@@ -1,5 +1,3 @@
-import notifications.urls
-
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -30,10 +28,6 @@ urlpatterns = [
     # Third-party
     path("account/", include("allauth.urls")),
     path("markdownx/", include("markdownx.urls")),
-    path(
-        "notifications/",
-        include(notifications.urls, namespace="notifications"),
-    ),
     path("admin/", admin.site.urls),
 ]
 

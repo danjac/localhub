@@ -8,6 +8,24 @@ from communikit.activities.models import Activity
 from communikit.markdown.fields import MarkdownField
 
 
+class CommentQuerySet(models.QuerySet):
+    def with_num_likes(self) -> models.QuerySet:
+        return self.annotate(num_likes=models.Count("like"))
+
+    def with_has_liked(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> models.QuerySet:
+        if user.is_authenticated:
+            return self.annotate(
+                has_liked=models.Exists(
+                    user.like_set.filter(activity=models.OuterRef("pk"))
+                )
+            )
+        return self.annotate(
+            has_liked=models.Value(False, output_field=models.BooleanField())
+        )
+
+
 class Comment(TimeStampedModel):
 
     owner = models.ForeignKey(
@@ -18,8 +36,20 @@ class Comment(TimeStampedModel):
 
     content = MarkdownField()
 
+    objects = CommentQuerySet.as_manager()
+
     def get_absolute_url(self) -> str:
         return reverse("comments:detail", args=[self.id])
 
     def get_permalink(self) -> str:
         return self.activity.community.domain_url(self.get_absolute_url())
+
+
+class Like(TimeStampedModel):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("user", "comment")
