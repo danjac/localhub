@@ -21,6 +21,12 @@ from communikit.communities.models import Community
 
 
 class ActivityQuerySet(InheritanceQuerySetMixin, models.QuerySet):
+    """
+    TBD: InheritanceQuerySet is buggy, it doesn't handle
+    multple annotations:
+    https://github.com/jazzband/django-model-utils/issues/312
+    so we'll use it only when absolutely necessary.
+    """
     def with_num_comments(self) -> models.QuerySet:
         return self.annotate(num_comments=models.Count("comment"))
 

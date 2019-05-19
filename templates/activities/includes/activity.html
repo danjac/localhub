@@ -1,9 +1,6 @@
-{% load activities_tags %}
-{% with activity|model_name as activity_type %}
 <div class="mt-2">
-  {% if activity_type == "post" %}
-  {% include "posts/includes/post.html" with post=activity %}
-  {% endif %}
+    {% if activity.activity_type == "post" %}
+    {% include "posts/includes/post.html" with post=activity.object %}
+    {% endif %}
 </div>
-{% endwith %}
 

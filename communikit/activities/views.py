@@ -1,8 +1,12 @@
+from collections import defaultdict
+from typing import Dict
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.paginator import Page, Paginator
 from django.db import IntegrityError
-from django.db.models import QuerySet
+from django.db.models import CharField, QuerySet, Value
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -10,8 +14,8 @@ from django.views.generic import (
     CreateView,
     DeleteView,
     DetailView,
-    ListView,
     RedirectView,
+    TemplateView,
     UpdateView,
     View,
 )
@@ -24,36 +28,18 @@ from communikit.activities.models import Activity, Like
 from communikit.comments.forms import CommentForm
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
+from communikit.events.models import Event
+from communikit.posts.models import Post
 from communikit.types import ContextDict
 
 
 class ActivityQuerySetMixin(CommunityRequiredMixin):
-    select_subclass = None
-
-    def get_queryset(self) -> QuerySet:
-        qs = Activity.objects.filter(
-            community=self.request.community
-        ).select_related("owner", "community")
-
-        if self.select_subclass:
-            qs = qs.select_subclasses(self.select_subclass)
-        else:
-            qs = qs.select_subclasses()
-
-        return qs
-
-
-class BaseActivityListView(ActivityQuerySetMixin, ListView):
-    paginate_by = app_settings.COMMUNIKIT_ACTIVITIES_PAGE_SIZE
-    allow_empty = True
-
     def get_queryset(self) -> QuerySet:
         return (
             super()
             .get_queryset()
-            .with_num_comments()
-            .with_num_likes()
-            .with_has_liked(self.request.user)
+            .filter(community=self.request.community)
+            .select_related("owner", "community")
         )
 
 
@@ -181,27 +167,95 @@ class BaseActivityDislikeView(
         return self.post(request, *args, **kwargs)
 
 
-class ActivityStreamView(BaseActivityListView):
+class ActivityStreamView(CommunityRequiredMixin, TemplateView):
     template_name = "activities/stream.html"
+    order_field = "created"
 
-    def get_queryset(self) -> QuerySet:
-        return super().get_queryset().order_by("-created")
+    def get_queryset(self, model: Activity) -> QuerySet:
+        return (
+            model.objects.filter(community=self.request.community)
+            .with_num_comments()
+            .with_num_likes()
+            .with_has_liked(self.request.user)
+            .select_related("owner", "community")
+        )
+
+    def get_queryset_dict(self) -> Dict[str, QuerySet]:
+        return {
+            model._meta.model_name: self.get_queryset(model)
+            for model in (Post, Event)
+        }
+
+    def get_pagination_kwargs(self) -> ContextDict:
+        return {
+            "per_page": app_settings.COMMUNIKIT_ACTIVITIES_PAGE_SIZE,
+            "allow_empty_first_page": True,
+        }
+
+    def get_page(self) -> Page:
+        """
+        https://simonwillison.net/2018/Mar/25/combined-recent-additions/
+        """
+        queryset_dict = self.get_queryset_dict()
+
+        querysets = [
+            qs.annotate(
+                activity_type=Value(key, output_field=CharField())
+            ).values("pk", "activity_type", self.order_field)
+            for key, qs in queryset_dict.items()
+        ]
+        union_qs = (
+            querysets[0].union(*querysets[1:]).order_by(f"-{self.order_field}")
+        )
+        page = Paginator(union_qs, **self.get_pagination_kwargs()).get_page(
+            self.request.GET.get("page", 1)
+        )
+
+        bulk_load = defaultdict(set)
+
+        for item in page:
+            bulk_load[item["activity_type"]].add(item["pk"])
+
+        fetched = {}
+
+        for activity_type, pks in bulk_load.items():
+            for activity in queryset_dict[activity_type].filter(pk__in=pks):
+                fetched[(activity_type, activity.pk)] = activity
+
+        for item in page:
+            item["object"] = fetched[(item["activity_type"], item["pk"])]
+
+        return page
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        page = self.get_page()
+        data.update(
+            {
+                "page": page,
+                "paginator": page.paginator,
+                "object_list": page.object_list,
+                "is_paginated": page.has_other_pages(),
+            }
+        )
+        return data
 
 
 activity_stream_view = ActivityStreamView.as_view()
 
 
-class ActivitySearchView(BaseActivityListView):
+class ActivitySearchView(ActivityStreamView):
     template_name = "activities/search.html"
+    order_field = "rank"
 
-    def get_queryset(self) -> QuerySet:
-        self.search_query = self.request.GET.get("q", "").strip()
-        if not self.search_query:
-            return Activity.objects.none()
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        self.search_query = request.GET.get("q").strip()
+        return super().get(request, *args, **kwargs)
 
-        return (
-            super().get_queryset().search(self.search_query).order_by("-rank")
-        )
+    def get_queryset(self, model: Activity) -> QuerySet:
+        if self.search_query:
+            return super().get_queryset(model).search(self.search_query)
+        return model.objects.none()
 
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
