@@ -14,6 +14,11 @@ urlpatterns = [
     # Local
     path("", include("communikit.activities.urls")),
     path("posts/", include("communikit.posts.urls")),
+    path("comments/", include("communikit.comments.urls")),
+    path("settings/", include("communikit.communities.urls")),
+    path("invites/", include("communikit.invites.urls")),
+    path("join-requests/", include("communikit.join_requests.urls")),
+    path("users/", include("communikit.users.urls")),
     path(
         "access-denied/",
         view=community_access_denied_view,
@@ -22,11 +27,6 @@ urlpatterns = [
     path(
         "not-found/", view=community_not_found_view, name="community_not_found"
     ),
-    # path("comments/", include("communikit.comments.urls")),
-    path("settings/", include("communikit.communities.urls")),
-    path("invites/", include("communikit.invites.urls")),
-    path("join-requests/", include("communikit.join_requests.urls")),
-    path("users/", include("communikit.users.urls")),
     # Third-party
     path("account/", include("allauth.urls")),
     path("markdownx/", include("markdownx.urls")),

@@ -103,10 +103,10 @@ class BaseActivityDetailView(DetailView):
     def get_comments(self) -> QuerySet:
         return (
             self.object.comment_set.select_related(
-                "owner", "post", "post__community"
+                "owner", "activity", "activity__community"
             )
             .annotate(num_likes=Count("likes"))
-            .order_by("created"),
+            .order_by("created")
         )
 
     def get_context_data(self, **kwargs) -> ContextDict:

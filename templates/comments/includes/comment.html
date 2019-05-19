@@ -1,23 +1,21 @@
 {% load i18n %}
 {% load rules %}
-{% load likes_tags %}
 
 {% has_perm "comments.change_comment" user comment as can_change_comment %}
 {% has_perm "comments.delete_comment" user comment as can_delete_comment %}
 {% has_perm "comments.like_comment" user comment as can_like_comment %}
 
-{# IDEA: have "likeable" and "deletable" controllers e.g. data-deletable-url data-deletable-redirect etc #}
 <div class="card comment-card"
      >
      <div class="card-header">
        <div class="card-subtitle text-gray float-right">
          {% blocktrans with comment.created|timesince as created %}{{ created }} ago{% endblocktrans %}
        </div>
-  <div class="card-title h6"><a href="{{ comment.author.get_profile_url }}">{{ comment.author.username }}</a></div>
+  <div class="card-title h6"><a href="">{{ comment.owner.username }}</a></div>
      </div>
      <div class="card-body">
        <div class="divider"></div>
-       {{ comment.markdown }}
+       {{ comment.content.markdown }}
      </div>
      <div class="card-footer">
        <div class="divider"></div>
@@ -28,13 +26,12 @@
          <div class="mr-2">{% trans "Likes" %} ({{ comment.num_likes }})</div>
          {% elif can_like_comment %}
          <div class="mr-2">
-           {% has_liked comment as has_liked_comment %}
            <a href="#"
               data-controller="ajax"
               data-action="ajax#post"
-              data-ajax-url="{% url 'comments:like' comment.id %}"
+              data-ajax-url=""
               data-ajax-replace="true"
-              >{% if has_liked_comment %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}</a>
+              >{% trans "Like" %}</a>
          </div>
          {% endif %}
 
@@ -46,14 +43,14 @@
 
          {% if can_change_comment %}
          <div class="mr-2">
-           <a href="{% url 'comments:update' comment.id %}"
+           <a href="{# url 'comments:update' comment.id #}"
               >{% trans "Update" %}</a>
          </div>
          {% endif %}
 
          {% if can_delete_comment %}
          <div class="mr-2">
-           {% url 'comments:delete' comment.id as delete_url %}
+           {# url 'comments:delete' comment.id as delete_url #}
            <a href="{{ delete_url }}"
               data-controller="ajax confirm"
               data-action="confirm#check ajax#delete"

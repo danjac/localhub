@@ -92,10 +92,10 @@
 <div class="divider"></div>
 
 <div id="comments">
-  {% if post.comments %}
+  {% if comments %}
   <h4>{% trans "Comments" %}</h4>
   {% endif %}
-  {% for comment in post.comments %}
+  {% for comment in comments %}
   <div class="mb-2">
     {% include "comments/includes/comment.html" %}
   </div>
@@ -103,7 +103,7 @@
   {% if comment_form %}
   <div class="divider"></div>
   <h4>{% trans "Post a Comment" %}</h4>
-  <form method="POST" action="" data-controller="form" data-action="form#submit">
+  <form method="POST" action="{% url 'comments:create' post.id %}" data-controller="form" data-action="form#submit">
     {% include "includes/forms/fields.html" with form=comment_form %}
     <button class="btn btn-primary" type="submit">{% trans "Submit" %}</button>
   </form>
