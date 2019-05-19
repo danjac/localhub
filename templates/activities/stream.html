@@ -31,7 +31,7 @@
 {% with activity|model_name as activity_type %}
 <div class="mt-2">
   {% if activity_type == "post" %}
-  {% include "posts/includes/post.html" %}
+  {% include "posts/includes/post.html" with post=activity %}
   {% endif %}
 </div>
 {% endwith %}
