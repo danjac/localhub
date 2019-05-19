@@ -1,10 +1,8 @@
 import pytest
 
-from django.conf import settings
 from django.utils.encoding import force_str
 
 from communikit.comments.models import Comment
-from communikit.likes.models import Like
 
 pytestmark = pytest.mark.django_db
 

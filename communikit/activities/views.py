@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db import IntegrityError
 from django.db.models import Count, QuerySet
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -12,13 +13,14 @@ from django.views.generic import (
     ListView,
     RedirectView,
     UpdateView,
+    View,
 )
 from django.views.generic.detail import SingleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.activities import app_settings
-from communikit.activities.models import Activity
+from communikit.activities.models import Activity, Like
 from communikit.comments.forms import CommentForm
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
@@ -26,15 +28,18 @@ from communikit.types import ContextDict
 
 
 class ActivityQuerySetMixin(CommunityRequiredMixin):
-    select_subclasses = True
+    select_subclass = None
 
     def get_queryset(self) -> QuerySet:
         qs = Activity.objects.filter(
             community=self.request.community
         ).select_related("owner", "community")
 
-        if self.select_subclasses:
+        if self.select_subclass:
+            qs = qs.select_subclasses(self.select_subclass)
+        else:
             qs = qs.select_subclasses()
+
         return qs
 
 
@@ -48,7 +53,7 @@ class ActivityStreamView(ActivityQuerySetMixin, ListView):
             super()
             .get_queryset()
             .filter(community=self.request.community)
-            .annotate(num_likes=Count("likes"), num_comments=Count("comment"))
+            .annotate(num_likes=Count("like"), num_comments=Count("comment"))
             .order_by("-created")
         )
 
@@ -142,7 +147,7 @@ class BaseActivityDetailView(ActivityQuerySetMixin, DetailView):
             self.object.comment_set.select_related(
                 "owner", "activity", "activity__community"
             )
-            .annotate(num_likes=Count("likes"))
+            # .annotate(num_likes=Count("like"))
             .order_by("created")
         )
 
@@ -150,7 +155,7 @@ class BaseActivityDetailView(ActivityQuerySetMixin, DetailView):
         return (
             super()
             .get_queryset()
-            .annotate(num_likes=Count("likes"), num_comments=Count("comment"))
+            .annotate(num_likes=Count("like"), num_comments=Count("comment"))
         )
 
     def get_context_data(self, **kwargs) -> ContextDict:
@@ -159,3 +164,38 @@ class BaseActivityDetailView(ActivityQuerySetMixin, DetailView):
         if self.request.user.has_perm("comments.create_comment", self.object):
             data["comment_form"] = CommentForm()
         return data
+
+
+class BaseActivityLikeView(
+    ActivityQuerySetMixin,
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    SingleObjectMixin,
+    View,
+):
+    permission_required = "activities.like_activity"
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        try:
+            Like.objects.create(user=request.user, activity=self.object)
+        except IntegrityError:
+            # dupe, ignore
+            pass
+        if request.is_ajax():
+            return HttpResponse(status=204)
+        return HttpResponseRedirect(self.object.get_absolute_url())
+
+
+class BaseActivityDislikeView(
+    ActivityQuerySetMixin, LoginRequiredMixin, SingleObjectMixin, View
+):
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        Like.objects.filter(user=request.user, activity=self.object).delete()
+        if request.is_ajax():
+            return HttpResponse(status=204)
+        return HttpResponseRedirect(self.object.get_absolute_url())
+
+    def delete(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)

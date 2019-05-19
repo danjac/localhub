@@ -1,11 +1,9 @@
 import os
 import socket
 
-from typing import Dict, Sequence
+from typing import Dict, List
 
 from configurations import Configuration, values
-
-from django.urls import reverse_lazy
 
 
 class Base(Configuration):
@@ -56,7 +54,6 @@ class Base(Configuration):
         "communikit.events.apps.EventsConfig",
         "communikit.invites.apps.InvitesConfig",
         "communikit.join_requests.apps.JoinRequestsConfig",
-        "communikit.likes.apps.LikesConfig",
         "communikit.posts.apps.PostsConfig",
         "communikit.users.apps.UsersConfig",
     ]
@@ -141,7 +138,7 @@ class Base(Configuration):
         return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     @property
-    def INSTALLED_APPS(self) -> Sequence[str]:
+    def INSTALLED_APPS(self) -> List[str]:
         return self.DJANGO_APPS + self.THIRD_PARTY_APPS + self.LOCAL_APPS
 
     @property
@@ -153,11 +150,11 @@ class Base(Configuration):
         return os.path.join(self.BASE_DIR, "static")
 
     @property
-    def STATICFILES_DIRS(self) -> Sequence[str]:
+    def STATICFILES_DIRS(self) -> List[str]:
         return [os.path.join(self.BASE_DIR, "assets")]
 
     @property
-    def TEMPLATES(self) -> Sequence[Dict]:
+    def TEMPLATES(self) -> List[Dict]:
         return [
             {
                 "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -211,7 +208,7 @@ class Local(Base):
     }
 
     @property
-    def INTERNAL_IPS(self) -> Sequence[str]:
+    def INTERNAL_IPS(self) -> List[str]:
         # Docker configuration
         ips = ["127.0.0.1", "10.0.2.2"]
         _, _, ips = socket.gethostbyname_ex(socket.gethostname())

@@ -83,3 +83,27 @@ class TestPostDetailView:
         )
         assert response.status_code == 200
         assert "comment_form" in response.context
+
+
+class TestPostLikeView:
+    def test_post(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        response = client.post(
+            reverse("posts:like", args=[post.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        assert response.status_code == 204
+        like = post.like_set.get()
+        assert like.user == member.member
+
+
+class TestPostDislikeView:
+    def test_post(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        post.like_set.create(user=member.member)
+        response = client.post(
+            reverse("posts:dislike", args=[post.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        assert response.status_code == 204
+        assert post.like_set.count() == 0

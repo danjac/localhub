@@ -4,7 +4,6 @@ from functools import reduce
 from typing import Callable
 
 from django.conf import settings
-from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import models
@@ -14,7 +13,6 @@ from model_utils.models import TimeStampedModel
 
 
 from communikit.communities.models import Community
-from communikit.likes.models import Like
 
 
 class Activity(TimeStampedModel):
@@ -27,8 +25,6 @@ class Activity(TimeStampedModel):
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
-
-    likes = GenericRelation(Like, related_query_name="%(app_label)s_%(class)s")
 
     search_document = SearchVectorField(null=True)
 
@@ -59,3 +55,13 @@ class Activity(TimeStampedModel):
             )
 
         return on_commit
+
+
+class Like(TimeStampedModel):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )
+    activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("user", "activity")
