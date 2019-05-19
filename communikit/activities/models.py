@@ -33,7 +33,9 @@ class ActivityQuerySet(InheritanceQuerySetMixin, models.QuerySet):
         if user.is_authenticated:
             return self.annotate(
                 has_liked=models.Exists(
-                    user.like_set.filter(activity=models.OuterRef("pk"))
+                    Like.objects.filter(
+                        user=user, activity=models.OuterRef("pk")
+                    )
                 )
             )
         return self.annotate(
@@ -91,7 +93,7 @@ class Activity(TimeStampedModel):
 
 class Like(TimeStampedModel):
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+"
     )
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
 
