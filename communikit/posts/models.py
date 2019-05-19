@@ -21,5 +21,5 @@ class Post(Activity):
     def get_permalink(self) -> str:
         return self.community.domain_url(self.get_absolute_url())
 
-    def get_search_index_components(self):
+    def search_index_components(self):
         return {"A": self.title, "B": self.description}

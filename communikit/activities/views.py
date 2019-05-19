@@ -1,8 +1,16 @@
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, QuerySet
-from django.views.generic import ListView
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse_lazy
+from django.utils.translation import ugettext_lazy as _
+from django.views.generic import CreateView, ListView
+
+from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.activities import app_settings
 from communikit.activities.models import Activity
+from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
 
 
@@ -22,3 +30,30 @@ class ActivityStreamView(CommunityRequiredMixin, ListView):
 
 
 activity_stream_view = ActivityStreamView.as_view()
+
+
+class BaseActivityCreateView(
+    LoginRequiredMixin,
+    CommunityRequiredMixin,
+    PermissionRequiredMixin,
+    CreateView,
+):
+    permission_required = "activities.create_activity"
+    success_url = reverse_lazy("activities:stream")
+    success_message = _("Your update has been posted")
+
+    def get_permission_object(self) -> Community:
+        return self.request.community
+
+    def get_success_message(self) -> str:
+        return self.success_message
+
+    def form_valid(self, form) -> HttpResponse:
+
+        self.object = form.save(commit=False)
+        self.object.owner = self.request.user
+        self.object.community = self.request.community
+        self.object.save()
+
+        messages.success(self.request, self.get_success_message())
+        return HttpResponseRedirect(self.get_success_url())

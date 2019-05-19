@@ -5,9 +5,8 @@
 {% block activities_content %}
 {% has_perm 'content.create_activity' user request.community as can_create_activity %}
 {% if can_create_activity %}
-{# url 'content:create' as create_post_url #}
 <div class="new-post">
-  <a href="#" class="btn btn-block btn-primary">
+  <a href="{% url 'posts:create' %}" class="btn btn-block btn-primary">
     <i class="icon icon-plus"></i> {% trans "Share" %}
   </a>
 </div>

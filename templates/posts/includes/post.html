@@ -2,10 +2,10 @@
 {% load rules %}
 {% load micawber_tags %}
 
-{% has_perm "content.change_post" user post as can_change_post %}
-{% has_perm "content.delete_post" user post as can_delete_post %}
-{% has_perm "content.like_post" user post as can_like_post %}
-{% has_perm "content.create_comment" user post as can_create_comment %}
+{% has_perm "activities.change_post" user post as can_change_post %}
+{% has_perm "activities.delete_post" user post as can_delete_post %}
+{% has_perm "activities.like_post" user post as can_like_post %}
+{% has_perm "activities.create_comment" user post as can_create_comment %}
 
 <div class="card content-card">
   <div class="card-header">
@@ -14,9 +14,9 @@
     </div>
     {% if post.title %}
     <div class="card-title h6">{{ post.title }}</div>
-    <div class="card-subtitle h6"><a href="{{ post.author.get_profile_url }}">{{ post.author.username }}</a></div>
+    <div class="card-subtitle h6"><a href="">{{ post.owner.username }}</a></div>
     {% else %}
-    <div class="card-title h6"><a href="{{ post.author.get_profile_url }}">{{ post.author.username }}</a></div>
+    <div class="card-title h6"><a href="">{{ post.owner.username }}</a></div>
     {% endif %}
   </div>
   <div class="card-body">
@@ -36,14 +36,14 @@
 
     <div class="d-flex content-actions">
 
-      {% if post.author_id == user.id %}
+      {% if post.owner_id == user.id %}
       <div class="mr-2">{% trans "Likes" %} ({{ post.num_likes }})</div>
       {% elif can_like_post %}
       <div class="mr-2">
         <a href="#"
            data-controller="ajax"
            data-action="ajax#post"
-           data-ajax-url="{% url 'content:like' post.id %}"
+           data-ajax-url=""
            data-ajax-redirect="{{ request.get_full_path }}"
            >{% trans "Like" %}</a>
       </div>
@@ -63,13 +63,12 @@
 
       {% if can_change_post %}
       <div class="mr-2">
-        <a href="{% url 'content:update' post.id %}"
+        <a href=""
            >{% trans "Update" %}</a>
       </div>
       {% endif %}
 
       {% if can_delete_post %}
-      {% url 'content:delete' post.id as delete_url %}
       <div class="mr-2">
         <a href="{{ delete_url }}"
            data-controller="ajax confirm"
