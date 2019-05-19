@@ -3,7 +3,7 @@
 {% load rules %}
 {% load activities_tags %}
 {% block activities_content %}
-{% has_perm 'content.create_activity' user request.community as can_create_activity %}
+{% has_perm 'activities.create_activity' user request.community as can_create_activity %}
 {% if can_create_activity %}
 <div class="new-post">
   <a href="{% url 'posts:create' %}" class="btn btn-block btn-primary">

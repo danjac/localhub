@@ -2,10 +2,9 @@
 {% load rules %}
 {% load micawber_tags %}
 
-{% has_perm "activities.change_post" user post as can_change_post %}
-{% has_perm "activities.delete_post" user post as can_delete_post %}
-{% has_perm "activities.like_post" user post as can_like_post %}
-{% has_perm "activities.create_comment" user post as can_create_comment %}
+{% has_perm "activities.change_activity" user post as can_change_post %}
+{% has_perm "activities.delete_activity" user post as can_delete_post %}
+{% has_perm "activities.like_activity" user post as can_like_post %}
 
 <div class="card content-card">
   <div class="card-header">
@@ -43,9 +42,15 @@
         <a href="#"
            data-controller="ajax"
            data-action="ajax#post"
-           data-ajax-url=""
+           {% if post.has_liked %}
+           data-ajax-url="{% url 'posts:dislike' post.id %}"
+           {% else %}
+           data-ajax-url="{% url 'posts:like' post.id %}"
+           {% endif %}
            data-ajax-redirect="{{ request.get_full_path }}"
-           >{% trans "Like" %}</a>
+           >
+           {% if post.has_liked %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}
+        </a>
       </div>
       {% endif %}
 

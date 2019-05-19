@@ -2,7 +2,14 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
-from django.db.models import Count, QuerySet
+from django.db.models import (
+    Count,
+    QuerySet,
+    OuterRef,
+    Exists,
+    Value,
+    BooleanField,
+)
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -49,13 +56,26 @@ class ActivityStreamView(ActivityQuerySetMixin, ListView):
     allow_empty = True
 
     def get_queryset(self) -> QuerySet:
-        return (
+        qs = (
             super()
             .get_queryset()
             .filter(community=self.request.community)
-            .annotate(num_likes=Count("like"), num_comments=Count("comment"))
+            .with_num_comments()
+            .annotate(num_likes=Count("like"))
             .order_by("-created")
         )
+
+        if self.request.user.is_authenticated:
+            qs = qs.annotate(
+                has_liked=Exists(
+                    self.request.user.like_set.filter(activity=OuterRef("pk"))
+                )
+            )
+        else:
+            qs = qs.annotate(
+                has_liked=Value(False, output_field=BooleanField())
+            )
+        return qs
 
 
 activity_stream_view = ActivityStreamView.as_view()
@@ -155,7 +175,8 @@ class BaseActivityDetailView(ActivityQuerySetMixin, DetailView):
         return (
             super()
             .get_queryset()
-            .annotate(num_likes=Count("like"), num_comments=Count("comment"))
+            .with_num_comments()
+            .annotate(num_likes=Count("like"))
         )
 
     def get_context_data(self, **kwargs) -> ContextDict:

@@ -8,11 +8,16 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import models
 
-from model_utils.managers import InheritanceManager
+from model_utils.managers import InheritanceManager, InheritanceQuerySetMixin
 from model_utils.models import TimeStampedModel
 
 
 from communikit.communities.models import Community
+
+
+class ActivityQuerySet(InheritanceQuerySetMixin, models.QuerySet):
+    def with_num_comments(self) -> models.QuerySet:
+        return self.annotate(num_comments=models.Count("comment"))
 
 
 class Activity(TimeStampedModel):
@@ -28,7 +33,7 @@ class Activity(TimeStampedModel):
 
     search_document = SearchVectorField(null=True)
 
-    objects = InheritanceManager()
+    objects = ActivityQuerySet.as_manager()
 
     class Meta:
         indexes = [GinIndex(fields=["search_document"])]
