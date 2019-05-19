@@ -19,7 +19,7 @@ class CommentQuerySet(models.QuerySet):
             return self.annotate(
                 has_liked=models.Exists(
                     Like.objects.filter(
-                        user=user, activity=models.OuterRef("pk")
+                        user=user, comment=models.OuterRef("pk")
                     )
                 )
             )

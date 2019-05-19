@@ -1,22 +1,40 @@
 import pytest
 
-from django.utils.encoding import force_str
+from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
 
-from communikit.comments.models import Comment
+from communikit.comments.models import Comment, Like
+from communikit.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 
 
-class TestComments:
-    """
-    TBD: move these tests under MarkdownField tests
-    """
-    def test_markdown(self):
-        comment = Comment(content="*testing*")
-        assert (
-            force_str(comment.content.markdown()) == "<p><em>testing</em></p>"
-        )
+class TestCommentManager:
+    def test_with_num_likes(
+        self, comment: Comment, user: settings.AUTH_USER_MODEL
+    ):
+        Like.objects.create(user=user, comment=comment)
 
-    def test_extract_mentions(self):
-        comment = Comment(content="hello @danjac")
-        assert comment.content.extract_mentions() == {"danjac"}
+        comment = Comment.objects.with_num_likes().get()
+        assert comment.num_likes == 1
+
+    def test_with_has_liked_if_user_anonymous(
+        self, comment: Comment, user: settings.AUTH_USER_MODEL
+    ):
+        Like.objects.create(user=user, comment=comment)
+        comment = Comment.objects.with_has_liked(AnonymousUser()).get()
+        assert not comment.has_liked
+
+    def test_with_has_liked_if_user_has_not_liked(
+        self, comment: Comment, user: settings.AUTH_USER_MODEL
+    ):
+        Like.objects.create(user=user, comment=comment)
+        comment = Comment.objects.with_has_liked(UserFactory()).get()
+        assert not comment.has_liked
+
+    def test_with_has_liked_if_user_has_liked(
+        self, comment: Comment, user: settings.AUTH_USER_MODEL
+    ):
+        Like.objects.create(user=user, comment=comment)
+        comment = Comment.objects.with_has_liked(user).get()
+        assert comment.has_liked
