@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Dict
+from typing import Dict, Type
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -171,7 +171,7 @@ class ActivityStreamView(CommunityRequiredMixin, TemplateView):
     template_name = "activities/stream.html"
     order_field = "created"
 
-    def get_queryset(self, model: Activity) -> QuerySet:
+    def get_queryset(self, model: Type[Activity]) -> QuerySet:
         return (
             model.objects.filter(community=self.request.community)
             .with_num_comments()
@@ -252,7 +252,7 @@ class ActivitySearchView(ActivityStreamView):
         self.search_query = request.GET.get("q").strip()
         return super().get(request, *args, **kwargs)
 
-    def get_queryset(self, model: Activity) -> QuerySet:
+    def get_queryset(self, model: Type[Activity]) -> QuerySet:
         if self.search_query:
             return super().get_queryset(model).search(self.search_query)
         return model.objects.none()
