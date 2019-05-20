@@ -43,7 +43,6 @@ class ActivityQuerySetMixin(CommunityRequiredMixin):
 
 
 class BaseActivityCreateView(
-    LoginRequiredMixin,
     CommunityRequiredMixin,
     PermissionRequiredMixin,
     CreateView,
@@ -70,7 +69,6 @@ class BaseActivityCreateView(
 
 
 class BaseActivityUpdateView(
-    LoginRequiredMixin,
     PermissionRequiredMixin,
     SuccessMessageMixin,
     ActivityQuerySetMixin,
@@ -81,7 +79,6 @@ class BaseActivityUpdateView(
 
 
 class BaseActivityDeleteView(
-    LoginRequiredMixin,
     PermissionRequiredMixin,
     ActivityQuerySetMixin,
     DeleteView,
@@ -110,7 +107,7 @@ class BaseActivityDetailView(ActivityQuerySetMixin, DetailView):
             self.object.comment_set.select_related(
                 "owner", "activity", "activity__community"
             )
-            .with_likes()
+            .with_num_likes()
             .with_has_liked(self.request.user)
             .order_by("created")
         )
@@ -134,7 +131,6 @@ class BaseActivityDetailView(ActivityQuerySetMixin, DetailView):
 
 class BaseActivityLikeView(
     ActivityQuerySetMixin,
-    LoginRequiredMixin,
     PermissionRequiredMixin,
     SingleObjectMixin,
     View,

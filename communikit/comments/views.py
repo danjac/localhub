@@ -40,7 +40,6 @@ class SingleCommentMixin(CommunityRequiredMixin):
 
 
 class CommentCreateView(
-    LoginRequiredMixin,
     PermissionRequiredMixin,
     CommunityRequiredMixin,
     SingleObjectMixin,
@@ -82,7 +81,7 @@ class CommentDetailView(SingleCommentMixin, DetailView):
         return (
             super()
             .get_queryset()
-            .with_likes()
+            .with_num_likes()
             .with_has_liked(self.request.user)
         )
 
@@ -91,7 +90,7 @@ comment_detail_view = CommentDetailView.as_view()
 
 
 class CommentUpdateView(
-    LoginRequiredMixin, PermissionRequiredMixin, SingleCommentMixin, UpdateView
+    PermissionRequiredMixin, SingleCommentMixin, UpdateView
 ):
     form_class = CommentForm
     permission_required = "comments.change_comment"
@@ -104,7 +103,7 @@ comment_update_view = CommentUpdateView.as_view()
 
 
 class CommentDeleteView(
-    LoginRequiredMixin, PermissionRequiredMixin, SingleCommentMixin, DeleteView
+    PermissionRequiredMixin, SingleCommentMixin, DeleteView
 ):
     permission_required = "comments.delete_comment"
 
@@ -122,7 +121,7 @@ comment_delete_view = CommentDeleteView.as_view()
 
 
 class CommentLikeView(
-    LoginRequiredMixin, PermissionRequiredMixin, SingleCommentMixin, View
+    PermissionRequiredMixin, SingleCommentMixin, SingleObjectMixin, View
 ):
     permission_required = "comments.like_comment"
 
@@ -141,7 +140,9 @@ class CommentLikeView(
 comment_like_view = CommentLikeView.as_view()
 
 
-class CommentDislikeView(LoginRequiredMixin, SingleCommentMixin, View):
+class CommentDislikeView(
+    LoginRequiredMixin, SingleCommentMixin, SingleObjectMixin, View
+):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         Like.objects.filter(user=request.user, comment=self.object).delete()

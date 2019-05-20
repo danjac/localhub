@@ -3,7 +3,7 @@ import pytest
 from django.test.client import Client
 from django.urls import reverse
 
-from communikit.comments.models import Comment
+from communikit.comments.models import Comment, Like
 from communikit.comments.tests.factories import CommentFactory
 from communikit.communities.models import Membership
 from communikit.posts.tests.factories import PostFactory
@@ -62,3 +62,29 @@ class TestCommentDeleteView:
         response = client.delete(reverse("comments:delete", args=[comment.id]))
         assert response.url == post.get_absolute_url()
         assert Comment.objects.count() == 0
+
+
+class TestCommentLikeView:
+    def test_post(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        comment = CommentFactory(activity=post)
+        response = client.post(
+            reverse("comments:like", args=[comment.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        assert response.status_code == 204
+        like = comment.like_set.get()
+        assert like.user == member.member
+
+
+class TestCommentDislikeView:
+    def test_post(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        comment = CommentFactory(activity=post)
+        Like.objects.create(user=member.member, comment=comment)
+        response = client.post(
+            reverse("comments:dislike", args=[comment.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        assert response.status_code == 204
+        assert comment.like_set.count() == 0
