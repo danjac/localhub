@@ -1,4 +1,3 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import redirect_to_login
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
@@ -73,7 +72,6 @@ community_access_denied_view = CommunityAccessDeniedView.as_view()
 
 
 class CommunityUpdateView(
-    LoginRequiredMixin,
     CommunityRequiredMixin,
     PermissionRequiredMixin,
     SuccessMessageMixin,
@@ -102,7 +100,6 @@ class CommunityMembershipQuerySetMixin(CommunityRequiredMixin):
 
 
 class MembershipListView(
-    LoginRequiredMixin,
     CommunityMembershipQuerySetMixin,
     PermissionRequiredMixin,
     ListView,
@@ -122,7 +119,6 @@ membership_list_view = MembershipListView.as_view()
 
 
 class MembershipUpdateView(
-    LoginRequiredMixin,
     CommunityMembershipQuerySetMixin,
     PermissionRequiredMixin,
     SuccessMessageMixin,
@@ -138,7 +134,6 @@ membership_update_view = MembershipUpdateView.as_view()
 
 
 class MembershipDeleteView(
-    LoginRequiredMixin,
     CommunityMembershipQuerySetMixin,
     PermissionRequiredMixin,
     DeleteView,

@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import redirect_to_login
 from django.db.models import Q, QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
@@ -27,7 +26,6 @@ class CommunityInviteQuerySetMixin(CommunityRequiredMixin):
 
 
 class InviteListView(
-    LoginRequiredMixin,
     CommunityInviteQuerySetMixin,
     PermissionRequiredMixin,
     ListView,
@@ -42,7 +40,6 @@ invite_list_view = InviteListView.as_view()
 
 
 class InviteCreateView(
-    LoginRequiredMixin,
     CommunityRequiredMixin,
     PermissionRequiredMixin,
     CreateView,
@@ -82,7 +79,6 @@ invite_create_view = InviteCreateView.as_view()
 
 
 class InviteResendView(
-    LoginRequiredMixin,
     PermissionRequiredMixin,
     CommunityInviteQuerySetMixin,
     SingleObjectMixin,
@@ -116,7 +112,6 @@ invite_resend_view = InviteResendView.as_view()
 
 
 class InviteDeleteView(
-    LoginRequiredMixin,
     PermissionRequiredMixin,
     CommunityInviteQuerySetMixin,
     DeleteView,
