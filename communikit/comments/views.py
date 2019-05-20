@@ -1,16 +1,23 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import IntegrityError
 from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.utils.translation import ugettext as _
-from django.views.generic import DeleteView, DetailView, FormView, UpdateView
+from django.views.generic import (
+    DeleteView,
+    DetailView,
+    FormView,
+    UpdateView,
+    View,
+)
 from django.views.generic.detail import SingleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.activities.models import Activity
 from communikit.comments.forms import CommentForm
-from communikit.comments.models import Comment
+from communikit.comments.models import Comment, Like
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.types import ContextDict
 
@@ -71,7 +78,13 @@ comment_create_view = CommentCreateView.as_view()
 
 
 class CommentDetailView(SingleCommentMixin, DetailView):
-    pass
+    def get_queryset(self) -> QuerySet:
+        return (
+            super()
+            .get_queryset()
+            .with_likes()
+            .with_has_liked(self.request.user)
+        )
 
 
 comment_detail_view = CommentDetailView.as_view()
@@ -106,3 +119,38 @@ class CommentDeleteView(
 
 
 comment_delete_view = CommentDeleteView.as_view()
+
+
+class CommentLikeView(
+    LoginRequiredMixin, PermissionRequiredMixin, SingleCommentMixin, View
+):
+    permission_required = "comments.like_comment"
+
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        try:
+            Like.objects.create(user=request.user, comment=self.object)
+        except IntegrityError:
+            # dupe, ignore
+            pass
+        if request.is_ajax():
+            return HttpResponse(status=204)
+        return HttpResponseRedirect(self.object.get_absolute_url())
+
+
+comment_like_view = CommentLikeView.as_view()
+
+
+class CommentDislikeView(LoginRequiredMixin, SingleCommentMixin, View):
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        Like.objects.filter(user=request.user, comment=self.object).delete()
+        if request.is_ajax():
+            return HttpResponse(status=204)
+        return HttpResponseRedirect(self.object.get_absolute_url())
+
+    def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        return self.post(request, *args, **kwargs)
+
+
+comment_dislike_view = CommentDislikeView.as_view()

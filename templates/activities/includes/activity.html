@@ -1,6 +1,3 @@
-<div class="mt-2">
-    {% if activity.activity_type == "post" %}
-    {% include "posts/includes/post.html" with post=activity.object %}
-    {% endif %}
-</div>
-
+{% if activity.activity_type == "post" %}
+{% include "posts/includes/post.html" with post=activity.object %}
+{% endif %}

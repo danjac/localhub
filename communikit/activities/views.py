@@ -7,14 +7,13 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Page, Paginator
 from django.db import IntegrityError
 from django.db.models import CharField, QuerySet, Value
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import (
     CreateView,
     DeleteView,
     DetailView,
-    RedirectView,
     TemplateView,
     UpdateView,
     View,
@@ -94,7 +93,7 @@ class BaseActivityDeleteView(
     def get_success_message(self):
         return self.success_message
 
-    def delete(self, request, *args, **kwargs) -> HttpResponse:
+    def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         self.object.delete()
 
@@ -111,7 +110,8 @@ class BaseActivityDetailView(ActivityQuerySetMixin, DetailView):
             self.object.comment_set.select_related(
                 "owner", "activity", "activity__community"
             )
-            # .annotate(num_likes=Count("like"))
+            .with_likes()
+            .with_has_liked(self.request.user)
             .order_by("created")
         )
 
@@ -141,7 +141,7 @@ class BaseActivityLikeView(
 ):
     permission_required = "activities.like_activity"
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         try:
             Like.objects.create(user=request.user, activity=self.object)
@@ -156,20 +156,23 @@ class BaseActivityLikeView(
 class BaseActivityDislikeView(
     ActivityQuerySetMixin, LoginRequiredMixin, SingleObjectMixin, View
 ):
-    def post(self, request, *args, **kwargs):
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         Like.objects.filter(user=request.user, activity=self.object).delete()
         if request.is_ajax():
             return HttpResponse(status=204)
         return HttpResponseRedirect(self.object.get_absolute_url())
 
-    def delete(self, request, *args, **kwargs):
+    def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         return self.post(request, *args, **kwargs)
 
 
 class ActivityStreamView(CommunityRequiredMixin, TemplateView):
     template_name = "activities/stream.html"
     order_field = "created"
+    # we could use __subclasses__ or similar but easier
+    # to be explicit
+    models = (Post, Event)
 
     def get_queryset(self, model: Type[Activity]) -> QuerySet:
         return (
@@ -183,7 +186,7 @@ class ActivityStreamView(CommunityRequiredMixin, TemplateView):
     def get_queryset_dict(self) -> Dict[str, QuerySet]:
         return {
             model._meta.model_name: self.get_queryset(model)
-            for model in (Post, Event)
+            for model in self.models
         }
 
     def get_pagination_kwargs(self) -> ContextDict:
@@ -216,11 +219,11 @@ class ActivityStreamView(CommunityRequiredMixin, TemplateView):
         for item in page:
             bulk_load[item["activity_type"]].add(item["pk"])
 
-        fetched = {}
-
-        for activity_type, pks in bulk_load.items():
-            for activity in queryset_dict[activity_type].filter(pk__in=pks):
-                fetched[(activity_type, activity.pk)] = activity
+        fetched = {
+            (activity_type, activity.pk): activity
+            for activity_type, pks in bulk_load.items()
+            for activity in queryset_dict[activity_type].filter(pk__in=pks)
+        }
 
         for item in page:
             item["object"] = fetched[(item["activity_type"], item["pk"])]
@@ -248,7 +251,7 @@ class ActivitySearchView(ActivityStreamView):
     template_name = "activities/search.html"
     order_field = "rank"
 
-    def get(self, request, *args, **kwargs) -> HttpResponse:
+    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.search_query = request.GET.get("q").strip()
         return super().get(request, *args, **kwargs)
 
@@ -264,21 +267,3 @@ class ActivitySearchView(ActivityStreamView):
 
 
 activity_search_view = ActivitySearchView.as_view()
-
-
-class ActivityDetailRouterView(SingleObjectMixin, RedirectView):
-    """
-    In cases where we don't know the subclass of an activity ahead of time,
-    or where it is too inefficient to do so, this will look up the
-    correct subclass (post, event etc) and redirect to the correct absolute
-    url for that subclass.
-    """
-
-    def get_queryset(self) -> QuerySet:
-        return Activity.objects.select_subclasses()
-
-    def get_redirect_url(self):
-        return self.get_object().get_absolute_url()
-
-
-activity_detail_router_view = ActivityDetailRouterView.as_view()
