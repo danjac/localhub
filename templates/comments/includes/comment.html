@@ -30,9 +30,9 @@
                     data-controller="ajax"
                     data-action="ajax#post"
                     {% if comment.has_liked %}
-                    data-ajax-url="{% url 'comments:dislike' post.id %}"
+                    data-ajax-url="{% url 'comments:dislike' comment.id %}"
                     {% else %}
-                    data-ajax-url="{% url 'comments:like' post.id %}"
+                    data-ajax-url="{% url 'comments:like' comment.id %}"
                     {% endif %}
                     data-ajax-redirect="{{ request.get_full_path }}"
                     >

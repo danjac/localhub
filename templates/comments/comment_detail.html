@@ -19,7 +19,7 @@
   </div>
   <div class="card-body">
     <div class="divider"></div>
-    {{ comment.markdown }}
+    {{ comment.content.markdown }}
   </div>
   <div class="card-footer">
     <div class="divider"></div>
@@ -32,23 +32,31 @@
       <div class="mr-2">
         <a href="#"
            data-controller="ajax"
-           data-ajax-url=""
-           data-ajax-replace="true"
-          >{% trans "Like" %}</a>
+           data-action="ajax#post"
+           {% if comment.has_liked %}
+           data-ajax-url="{% url 'comments:dislike' comment.id %}"
+           {% else %}
+           data-ajax-url="{% url 'comments:like' comment.id %}"
+           {% endif %}
+           data-ajax-redirect="{{ request.get_full_path }}"
+           >
+           {% if comment.has_liked %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}
+        </a>
       </div>
+
       {% endif %}
 
 
       <!--
-      <div class="mr-2">
+        <div class="mr-2">
         <a href="">{% trans "Flag" %}</a>
-      </div>
+        </div>
       -->
 
 
       {% if can_change_comment %}
       <div class="mr-2">
-          <a href="{% url 'comments:update' comment.id %}"
+        <a href="{% url 'comments:update' comment.id %}"
            >{% trans "Update" %}</a>
       </div>
       {% endif %}
