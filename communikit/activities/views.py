@@ -14,6 +14,7 @@ from django.views.generic import (
     CreateView,
     DeleteView,
     DetailView,
+    ListView,
     TemplateView,
     UpdateView,
     View,
@@ -43,9 +44,7 @@ class ActivityQuerySetMixin(CommunityRequiredMixin):
 
 
 class BaseActivityCreateView(
-    CommunityRequiredMixin,
-    PermissionRequiredMixin,
-    CreateView,
+    CommunityRequiredMixin, PermissionRequiredMixin, CreateView
 ):
     permission_required = "activities.create_activity"
     success_url = reverse_lazy("activities:stream")
@@ -68,6 +67,11 @@ class BaseActivityCreateView(
         return HttpResponseRedirect(self.get_success_url())
 
 
+class BaseActivityListView(ActivityQuerySetMixin, ListView):
+    allow_empty = True
+    paginate_by = app_settings.COMMUNIKIT_ACTIVITIES_PAGE_SIZE
+
+
 class BaseActivityUpdateView(
     PermissionRequiredMixin,
     SuccessMessageMixin,
@@ -79,9 +83,7 @@ class BaseActivityUpdateView(
 
 
 class BaseActivityDeleteView(
-    PermissionRequiredMixin,
-    ActivityQuerySetMixin,
-    DeleteView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, DeleteView
 ):
     permission_required = "activities.delete_activity"
     success_url = reverse_lazy("activities:stream")
@@ -130,10 +132,7 @@ class BaseActivityDetailView(ActivityQuerySetMixin, DetailView):
 
 
 class BaseActivityLikeView(
-    ActivityQuerySetMixin,
-    PermissionRequiredMixin,
-    SingleObjectMixin,
-    View,
+    ActivityQuerySetMixin, PermissionRequiredMixin, SingleObjectMixin, View
 ):
     permission_required = "activities.like_activity"
 
@@ -166,9 +165,9 @@ class BaseActivityDislikeView(
 class ActivityStreamView(CommunityRequiredMixin, TemplateView):
     template_name = "activities/stream.html"
     order_field = "created"
-    # we could use __subclasses__ or similar but easier
-    # to be explicit
     models = (Post, Event)
+    allow_empty = True
+    paginate_by = app_settings.COMMUNIKIT_ACTIVITIES_PAGE_SIZE
 
     def get_queryset(self, model: Type[Activity]) -> QuerySet:
         return (
@@ -187,8 +186,8 @@ class ActivityStreamView(CommunityRequiredMixin, TemplateView):
 
     def get_pagination_kwargs(self) -> ContextDict:
         return {
-            "per_page": app_settings.COMMUNIKIT_ACTIVITIES_PAGE_SIZE,
-            "allow_empty_first_page": True,
+            "per_page": self.paginate_by,
+            "allow_empty_first_page": self.allow_empty,
         }
 
     def get_page(self) -> Page:

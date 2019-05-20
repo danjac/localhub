@@ -6,12 +6,11 @@ from communikit.activities.views import (
     BaseActivityDetailView,
     BaseActivityDislikeView,
     BaseActivityLikeView,
+    BaseActivityListView,
     BaseActivityUpdateView,
 )
 from communikit.events.forms import EventForm
 from communikit.events.models import Event
-
-# TBD: ListView, calendar view
 
 
 class EventCreateView(BaseActivityCreateView):
@@ -20,6 +19,13 @@ class EventCreateView(BaseActivityCreateView):
 
 
 event_create_view = EventCreateView.as_view()
+
+
+class EventListView(BaseActivityListView):
+    model = Event
+
+
+event_list_view = EventListView.as_view()
 
 
 class EventDetailView(BaseActivityDetailView):
