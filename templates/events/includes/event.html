@@ -10,8 +10,17 @@
   <div class="card-header">
     <div class="card-subtitle text-gray float-right">
       {% blocktrans with event.created|timesince as created %}{{ created }} ago{% endblocktrans %}
+      {{ event.latitude }}, {{ event.longitude }}
     </div>
-    <div class="card-title h6">{{ event.title }}</div>
+    <div class="card-title h6"><a href="{{ event.get_absolute_url }}">{{ event.title }}</a></div>
+    <div class="card-subtitle h6">
+      {{ event.starts|date:"SHORT_DATETIME_FORMAT" }}
+      {% if event.ends %}
+      - {{ event.ends|date:"SHORT_DATETIME_FORMAT" }}
+      {% endif %}
+    </div>
+    {% trans "Remote" as remote_t %}
+    <div class="card-subtitle h6">{{ event.location|default:remote_t }}</div>
     <div class="card-subtitle h6"><a href="">{{ event.owner.username }}</a></div>
   </div>
   <div class="card-body">
@@ -33,7 +42,7 @@
 
       {% if event.owner_id == user.id %}
       <div class="mr-2">{% trans "Likes" %} ({{ event.num_likes }})</div>
-      {% elif can_like_post %}
+      {% elif can_like_event %}
       <div class="mr-2">
         <a href="#"
            data-controller="ajax"
@@ -62,14 +71,14 @@
         </div>
       -->
 
-      {% if can_change_post %}
+      {% if can_change_event %}
       <div class="mr-2">
         <a href="{% url 'events:update' event.id %}"
            >{% trans "Update" %}</a>
       </div>
       {% endif %}
 
-      {% if can_delete_post %}
+      {% if can_delete_event %}
       <div class="mr-2">
         {% url 'events:delete' event.id as delete_url %}
         <a href="{{ delete_url }}"

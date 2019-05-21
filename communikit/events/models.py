@@ -16,6 +16,7 @@ from communikit.markdown.fields import MarkdownField
 
 class Event(Activity):
     LOCATION_FIELDS = (
+        "venue",
         "street_address",
         "locality",
         "postal_code",
@@ -24,11 +25,13 @@ class Event(Activity):
     )
 
     title = models.CharField(max_length=200)
-    url = models.URLField(null=True, blank=True)
+    url = models.URLField(verbose_name=_("Link"), null=True, blank=True)
     description = MarkdownField(blank=True)
 
     starts = models.DateTimeField()
     ends = models.DateTimeField(null=True, blank=True)
+
+    venue = models.CharField(max_length=200, blank=True)
 
     street_address = models.CharField(max_length=200, blank=True)
     locality = models.CharField(

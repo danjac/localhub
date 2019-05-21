@@ -8,13 +8,14 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = (
             "title",
-            "description",
-            "url",
             "starts",
             "ends",
+            "url",
+            "venue",
             "street_address",
             "locality",
             "postal_code",
             "region",
             "country",
+            "description",
         )

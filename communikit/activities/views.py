@@ -71,6 +71,15 @@ class BaseActivityListView(ActivityQuerySetMixin, ListView):
     allow_empty = True
     paginate_by = app_settings.COMMUNIKIT_ACTIVITIES_PAGE_SIZE
 
+    def get_queryset(self) -> QuerySet:
+        return (
+            super()
+            .get_queryset()
+            .with_num_comments()
+            .with_num_likes()
+            .with_has_liked(self.request.user)
+        )
+
 
 class BaseActivityUpdateView(
     PermissionRequiredMixin,
