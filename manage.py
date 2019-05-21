@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 """Django's command-line utility for administrative tasks."""
 import os
 import sys

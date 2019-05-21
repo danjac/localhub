@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin

@@ -1,5 +1,9 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from collections import defaultdict
 from typing import Dict, Type
+
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
