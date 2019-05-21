@@ -14,8 +14,17 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.scss/,
+        test: /\.(scss|css)/,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 8192
+          }
+        }
       },
       {
         test: /\.m?js$/,

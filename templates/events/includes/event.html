@@ -24,6 +24,14 @@
     <div class="card-subtitle h6"><a href="">{{ event.owner.username }}</a></div>
   </div>
   <div class="card-body">
+    {% if event.latitude and event.longitude %}
+    <div id="map-for-event-{{ event.id }}"
+         class="event-map"
+         data-controller="map"
+         data-map-latitude="{{ event.latitude }}"
+         data-map-longitude="{{ event.longitude }}"
+         ></div>
+    {% endif %}
     <div class="divider"></div>
     {% if event.description %}
     <div>
