@@ -1,0 +1,9 @@
+{% extends "activities/base.html" %}
+{% load i18n %}
+
+{% block activities_content %}
+<form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
+  {% include "includes/forms/fields.html" %}
+  <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+</form>
+{% endblock activities_content %}

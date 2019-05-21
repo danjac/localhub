@@ -1,0 +1,40 @@
+{% extends "activities/base.html" %}
+{% load i18n %}
+{% load rules %}
+{% block activities_content %}
+{% has_perm 'activities.create_activity' user request.community as can_create_activity %}
+{% if can_create_activity %}
+<div class="new-post">
+  <a href="{% url 'events:create' %}" class="btn btn-block btn-primary">
+    <i class="icon icon-plus"></i> {% trans "Create Event" %}
+  </a>
+</div>
+<div class="divider"></div>
+
+{% elif user.is_authenticated %}
+<p class="bg-gray p-2 text-center">
+  {% url 'join_requests:create' as join_request_url %}
+  {% blocktrans %}You do not have permission to post events to this site. You can send a request to join this community <a href="{{ join_request_url }}">here</a>.{% endblocktrans %}
+</p>
+
+{% else %}
+<p class="bg-gray p-2 text-center">
+  {% url 'account_login' as login_url %}
+  {% blocktrans %}Please <a href="{{ login_url }}?next={{ request.get_full_path }}">sign in</a> to post events to this site.{% endblocktrans %}
+</p>
+
+{% endif %}
+
+{% for event in object_list %}
+<div class="mt-2">
+  {% include "events/includes/event.html" %}
+</div>
+{% empty %}
+<p class="p-2 bg-gray text-center">
+  {% trans "No events at the moment." %}
+</p>
+{% endfor %}
+
+
+{% include "includes/pagination.html" %}
+{% endblock activities_content %}

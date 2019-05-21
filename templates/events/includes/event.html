@@ -1,0 +1,92 @@
+{% load i18n %}
+{% load rules %}
+{% load micawber_tags %}
+
+{% has_perm "activities.change_activity" user event as can_change_event %}
+{% has_perm "activities.delete_activity" user event as can_delete_event %}
+{% has_perm "activities.like_activity" user event as can_like_event %}
+
+<div class="card content-card">
+  <div class="card-header">
+    <div class="card-subtitle text-gray float-right">
+      {% blocktrans with event.created|timesince as created %}{{ created }} ago{% endblocktrans %}
+    </div>
+    <div class="card-title h6">{{ event.title }}</div>
+    <div class="card-subtitle h6"><a href="">{{ event.owner.username }}</a></div>
+  </div>
+  <div class="card-body">
+    <div class="divider"></div>
+    {% if event.description %}
+    <div>
+      {{ event.description.markdown }}
+    </div>
+    {% endif %}
+    {% if event.url %}
+    <div>
+      {{ event.url|oembed }}
+    </div>
+    {% endif %}
+  </div>
+  <div class="card-footer">
+
+    <div class="d-flex content-actions">
+
+      {% if event.owner_id == user.id %}
+      <div class="mr-2">{% trans "Likes" %} ({{ event.num_likes }})</div>
+      {% elif can_like_post %}
+      <div class="mr-2">
+        <a href="#"
+           data-controller="ajax"
+           data-action="ajax#post"
+           {% if event.has_liked %}
+           data-ajax-url="{% url 'events:dislike' event.id %}"
+           {% else %}
+           data-ajax-url="{% url 'events:like' event.id %}"
+           {% endif %}
+           data-ajax-redirect="{{ request.get_full_path }}"
+           >
+           {% if event.has_liked %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}
+        </a>
+      </div>
+      {% endif %}
+
+      <div class="mr-2">
+        <a href="{{ event.get_absolute_url }}#comments">
+          {% trans "Comments" %} {% if event.num_comments %}({{ event.num_comments }}){% endif %}
+        </a>
+      </div>
+
+      <!--
+        <div class="mr-2">
+        <a href="">{% trans "Flag" %}</a>
+        </div>
+      -->
+
+      {% if can_change_post %}
+      <div class="mr-2">
+        <a href="{% url 'events:update' event.id %}"
+           >{% trans "Update" %}</a>
+      </div>
+      {% endif %}
+
+      {% if can_delete_post %}
+      <div class="mr-2">
+        {% url 'events:delete' event.id as delete_url %}
+        <a href="{{ delete_url }}"
+           data-controller="ajax confirm"
+           data-action="confirm#check ajax#delete"
+           data-ajax-url="{{ delete_url }}"
+           data-ajax-redirect="{{ request.get_full_path }}"
+           data-confirm-header="{% trans 'Delete Event' %}"
+           data-confirm-body="{% trans 'Are you sure you want to delete this event?' %}"
+           >{% trans "Delete" %}</a>
+      </div>
+      {% endif %}
+
+      <div class="">
+        <a href="{{ event.get_permalink }}">{% trans "Permalink" %}</a>
+      </div>
+    </div>
+  </div>
+
+</div>
