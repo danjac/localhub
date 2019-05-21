@@ -28,7 +28,7 @@
         <a href="">{% trans "Mentions" %}</a>
       </li>
       <li class="menu-item">
-        <a href="">{% trans "Events" %}</a>
+        <a href="{% url 'events:list' %}">{% trans "Events" %}</a>
       </li>
       <li class="menu-item"><a href="{{ user.get_profile_url }}">{% trans "My Profile" %}</a></li>
       {% if can_manage_community %}
