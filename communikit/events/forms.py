@@ -1,6 +1,10 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from django import forms
 
 from communikit.events.models import Event
+from communikit.events.widgets import CalendarWidget
 
 
 class EventForm(forms.ModelForm):
@@ -19,3 +23,4 @@ class EventForm(forms.ModelForm):
             "country",
             "description",
         )
+        widgets = {"starts": CalendarWidget(), "ends": CalendarWidget()}
