@@ -12,6 +12,7 @@ urlpatterns = [
     # Local
     path("", include("communikit.activities.urls")),
     path("posts/", include("communikit.posts.urls")),
+    path("events/", include("communikit.events.urls")),
     path("comments/", include("communikit.comments.urls")),
     path("settings/", include("communikit.communities.urls")),
     path("invites/", include("communikit.invites.urls")),
