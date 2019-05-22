@@ -16,7 +16,6 @@ from communikit.markdown.fields import MarkdownField
 
 class Event(Activity):
     LOCATION_FIELDS = (
-        "venue",
         "street_address",
         "locality",
         "postal_code",

@@ -8,6 +8,10 @@ from communikit.events.widgets import CalendarWidget
 
 
 class EventForm(forms.ModelForm):
+
+    starts = forms.SplitDateTimeField(widget=CalendarWidget())
+    ends = forms.SplitDateTimeField(widget=CalendarWidget())
+
     class Meta:
         model = Event
         fields = (
@@ -23,4 +27,4 @@ class EventForm(forms.ModelForm):
             "country",
             "description",
         )
-        widgets = {"starts": CalendarWidget(), "ends": CalendarWidget()}
+        # widgets = {"starts": CalendarWidget(), "ends": CalendarWidget()}

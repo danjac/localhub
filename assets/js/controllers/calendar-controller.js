@@ -19,12 +19,12 @@ import {
 import { Controller } from 'stimulus';
 
 export default class extends Controller {
-  static targets = ['calendar', 'input', 'currentMonth', 'days'];
+  static targets = ['calendar', 'dateInput', 'currentMonth', 'days'];
 
   open(event) {
     event.preventDefault();
     if (!this.calendarTarget.classList.toggle('d-none')) {
-      const { value } = this.inputTarget;
+      const { value } = this.dateInputTarget;
 
       this.selectedDate = value ? parse(value) : null;
       this.firstOfMonthDate = startOfMonth(this.selectedDate || new Date());
@@ -49,8 +49,10 @@ export default class extends Controller {
     event.preventDefault();
     const btn = event.currentTarget;
     const selectedDate = btn.getAttribute('data-calendar-date');
-    // not sure what format: pass the required format as a data item
-    this.inputTarget.value = selectedDate;
+    this.dateInputTarget.value = format(
+      selectedDate,
+      this.data.get('date-format')
+    );
     this.calendarTarget.classList.add('d-none');
   }
 

@@ -10,7 +10,6 @@
   <div class="card-header">
     <div class="card-subtitle text-gray float-right">
       {% blocktrans with event.created|timesince as created %}{{ created }} ago{% endblocktrans %}
-      {{ event.latitude }}, {{ event.longitude }}
     </div>
     <div class="card-title h6"><a href="{{ event.get_absolute_url }}">{{ event.title }}</a></div>
     <div class="card-subtitle h6">

@@ -3,9 +3,10 @@
 from django import forms
 
 
-class CalendarWidget(forms.DateTimeInput):
+class CalendarWidget(forms.SplitDateTimeWidget):
     template_name = "includes/forms/widgets/calendar.html"
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.attrs.update({"data-target": "calendar.input"})
+        date_attrs = kwargs.pop("date_attrs", {})
+        date_attrs.update({"data-target": "calendar.dateInput"})
+        super().__init__(date_attrs=date_attrs, *args, **kwargs)

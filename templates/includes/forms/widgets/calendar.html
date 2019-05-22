@@ -1,13 +1,16 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
-<div data-controller="calendar">
+<div data-controller="calendar" data-calendar-date-format="YYYY-MM-DD">
+  {{ widget.subwidgets.0.format }}
   <div class="input-group">
-    {% include "django/forms/widgets/input.html" %}
+    {% include widget.subwidgets.0.template_name with widget=widget.subwidgets.0 %}
     <button type="button" class="btn input-group-btn" data-action="calendar#open">{% trans "Calendar" %}</button>
+    {% include  widget.subwidgets.1.template_name with widget=widget.subwidgets.1 %}
+    <!--<button type="button" class="btn input-group-btn" data-action="calendar#open">{% trans "Clock" %}</button>-->
   </div>
   <div class="columns d-none pt-2" data-target="calendar.calendar">
-    <div class="column col-ml-auto col-4 col-md-12">
+    <div class="column col-mr-auto col-4 col-md-12">
       <div class="calendar">
         <div class="calendar-nav navbar">
           <button class="btn btn-action btn-link btn-lg" data-action="calendar#prevMonth"><i class="icon icon-arrow-left"></i></button>
