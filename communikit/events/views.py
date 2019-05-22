@@ -1,4 +1,4 @@
-# # from django.utils.translation import ugettext_lazy as _
+from django.urls import reverse_lazy
 
 from communikit.activities.views import (
     BaseActivityCreateView,
@@ -16,6 +16,7 @@ from communikit.events.models import Event
 class EventCreateView(BaseActivityCreateView):
     model = Event
     form_class = EventForm
+    success_url = reverse_lazy("events:list")
 
 
 event_create_view = EventCreateView.as_view()
@@ -45,6 +46,7 @@ event_update_view = EventUpdateView.as_view()
 
 class EventDeleteView(BaseActivityDeleteView):
     model = Event
+    success_url = reverse_lazy("events:list")
 
 
 event_delete_view = EventDeleteView.as_view()

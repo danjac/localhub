@@ -6,7 +6,6 @@
 
 {% block activities_content %}
 
-{% has_perm "activities.like_activity" user post as can_like_post %}
 {% has_perm "activities.change_activity" user post as can_change_post %}
 {% has_perm "activities.delete_activity" user post as can_delete_post %}
 {% has_perm "activities.like_activity" user post as can_like_post %}
