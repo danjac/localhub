@@ -27,6 +27,7 @@ event_create_view = EventCreateView.as_view()
 
 class EventListView(BaseActivityListView):
     model = Event
+    order_by = "starts"
 
 
 event_list_view = EventListView.as_view()
