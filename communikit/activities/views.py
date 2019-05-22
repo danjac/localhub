@@ -74,6 +74,7 @@ class BaseActivityCreateView(
 class BaseActivityListView(ActivityQuerySetMixin, ListView):
     allow_empty = True
     paginate_by = app_settings.COMMUNIKIT_ACTIVITIES_PAGE_SIZE
+    order_by = "-created"
 
     def get_queryset(self) -> QuerySet:
         return (
@@ -82,6 +83,7 @@ class BaseActivityListView(ActivityQuerySetMixin, ListView):
             .with_num_comments()
             .with_num_likes()
             .with_has_liked(self.request.user)
+            .order_by(self.order_by)
         )
 
 

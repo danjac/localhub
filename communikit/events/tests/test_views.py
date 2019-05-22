@@ -7,7 +7,7 @@ from django.conf import settings
 from django.test.client import Client
 from django.urls import reverse
 
-from communikit.communities.models import Membership
+from communikit.communities.models import Community, Membership
 from communikit.events.models import Event
 from communikit.events.tests.factories import EventFactory
 
@@ -40,6 +40,14 @@ class TestEventCreateView:
         event = Event.objects.get()
         assert event.owner == member.member
         assert event.community == member.community
+
+
+class TestEventListView:
+    def test_get(self, client: Client, community: Community):
+        EventFactory.create_batch(3, community=community)
+        response = client.get(reverse("events:list"))
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 3
 
 
 class TestEventUpdateView:
