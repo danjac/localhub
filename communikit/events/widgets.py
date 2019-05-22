@@ -5,3 +5,7 @@ from django import forms
 
 class CalendarWidget(forms.DateTimeInput):
     template_name = "includes/forms/widgets/calendar.html"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.attrs.update({"data-target": "calendar.input"})
