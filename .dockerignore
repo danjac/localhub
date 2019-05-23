@@ -4,3 +4,6 @@
 !.pylintrc
 __pycache__
 node_modules
+npm-debug.log
+LICENSE
+README.md
