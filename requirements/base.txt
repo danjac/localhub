@@ -8,7 +8,6 @@ django-configurations==2.1 # https://github.com/jazzband/django-configurations
 django-countries==5.3.3 # https://github.com/SmileyChris/django-countries
 django-markdownx===2.0.28 # https://github.com/neutronX/django-markdownx
 django-model-utils==3.1.2 # https://github.com/jazzband/django-model-utils
-django-notifications-hq==1.5.0 # https://github.com/django-notifications/django-notifications
 django-widget-tweaks==1.4.3 # https://github.com/jazzband/django-widget-tweaks
 django==2.2 # https://github.com/django/django
 flower==0.9.3 # https://github.com/mher/flower
