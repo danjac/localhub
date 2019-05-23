@@ -4,13 +4,13 @@
 from django import forms
 
 from communikit.events.models import Event
-from communikit.events.widgets import CalendarWidget
+from communikit.forms.fields import CalendarField
 
 
 class EventForm(forms.ModelForm):
 
-    starts = forms.SplitDateTimeField(widget=CalendarWidget())
-    ends = forms.SplitDateTimeField(widget=CalendarWidget())
+    starts = CalendarField()
+    ends = CalendarField()
 
     class Meta:
         model = Event

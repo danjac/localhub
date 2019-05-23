@@ -21,19 +21,23 @@ L.Icon.Default.mergeOptions({
   shadowUrl
 });
 
+const DEFAULT_ZOOM = 13;
+
 export default class extends Controller {
   connect() {
-    const map = L.map(this.element.id).setView(
-      [this.latitude, this.longitude],
-      13
-    );
+    const coords = [this.latitude, this.longitude];
+    const map = L.map(this.element.id).setView(coords, this.defaultZoom);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
         'Map data &copy; <a href="https://www.openstreetmap.org/">' +
         'OpenStreetMap</a> contributors,' +
         '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
     }).addTo(map);
-    L.marker([this.latitude, this.longitude]).addTo(map);
+    L.marker(coords).addTo(map);
+  }
+
+  get defaultZoom() {
+    return parseInt(this.data.get('zoom') || DEFAULT_ZOOM, 10);
   }
 
   get latitude() {

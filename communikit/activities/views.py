@@ -73,7 +73,7 @@ class BaseActivityCreateView(
 
 class BaseActivityListView(ActivityQuerySetMixin, ListView):
     allow_empty = True
-    paginate_by = app_settings.COMMUNIKIT_ACTIVITIES_PAGE_SIZE
+    paginate_by = app_settings.DEFAULT_PAGE_SIZE
     order_by = "-created"
 
     def get_queryset(self) -> QuerySet:
@@ -182,7 +182,7 @@ class ActivityStreamView(CommunityRequiredMixin, TemplateView):
     order_field = "created"
     models = (Post, Event)
     allow_empty = True
-    paginate_by = app_settings.COMMUNIKIT_ACTIVITIES_PAGE_SIZE
+    paginate_by = app_settings.DEFAULT_PAGE_SIZE
 
     def get_queryset(self, model: Type[Activity]) -> QuerySet:
         return (

@@ -1,3 +1,6 @@
+// Copyright (c) 2019 by Dan Jacob
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Controller } from 'stimulus';
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
