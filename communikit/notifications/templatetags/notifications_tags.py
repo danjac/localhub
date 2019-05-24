@@ -19,10 +19,14 @@ def get_unread_notifications_count(context: ContextDict) -> int:
         return 0
 
     querysets = [
-        model.objects.filter(
+        CommentNotification.objects.filter(
+            recipient=request.user,
+            comment__activity__community=request.community,
+            is_read=False,
+        ),
+        PostNotification.objects.filter(
             recipient=request.user, community=request.community, is_read=False
-        )
-        for model in (CommentNotification, PostNotification)
+        ),
     ]
 
     return querysets[0].union(*querysets[1:]).count()

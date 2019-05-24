@@ -1,16 +1,14 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from collections import defaultdict
-from typing import Dict, Type
+from typing import List, Type
 
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.paginator import Page, Paginator
 from django.db import IntegrityError
-from django.db.models import CharField, QuerySet, Value
+from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -19,7 +17,6 @@ from django.views.generic import (
     DeleteView,
     DetailView,
     ListView,
-    TemplateView,
     UpdateView,
     View,
 )
@@ -35,6 +32,7 @@ from communikit.communities.views import CommunityRequiredMixin
 from communikit.events.models import Event
 from communikit.posts.models import Post
 from communikit.types import ContextDict
+from communikit.views import CombinedQuerySetListView
 
 
 class ActivityQuerySetMixin(CommunityRequiredMixin):
@@ -177,10 +175,9 @@ class BaseActivityDislikeView(
         return self.post(request, *args, **kwargs)
 
 
-class ActivityStreamView(CommunityRequiredMixin, TemplateView):
+class ActivityStreamView(CommunityRequiredMixin, CombinedQuerySetListView):
     template_name = "activities/stream.html"
     order_field = "created"
-    models = (Post, Event)
     allow_empty = True
     paginate_by = app_settings.DEFAULT_PAGE_SIZE
 
@@ -193,65 +190,8 @@ class ActivityStreamView(CommunityRequiredMixin, TemplateView):
             .select_related("owner", "community")
         )
 
-    def get_queryset_dict(self) -> Dict[str, QuerySet]:
-        return {
-            model._meta.model_name: self.get_queryset(model)
-            for model in self.models
-        }
-
-    def get_pagination_kwargs(self) -> ContextDict:
-        return {
-            "per_page": self.paginate_by,
-            "allow_empty_first_page": self.allow_empty,
-        }
-
-    def get_page(self) -> Page:
-        """
-        https://simonwillison.net/2018/Mar/25/combined-recent-additions/
-        """
-        queryset_dict = self.get_queryset_dict()
-
-        querysets = [
-            qs.annotate(
-                activity_type=Value(key, output_field=CharField())
-            ).values("pk", "activity_type", self.order_field)
-            for key, qs in queryset_dict.items()
-        ]
-        union_qs = (
-            querysets[0].union(*querysets[1:]).order_by(f"-{self.order_field}")
-        )
-        page = Paginator(union_qs, **self.get_pagination_kwargs()).get_page(
-            self.request.GET.get("page", 1)
-        )
-
-        bulk_load = defaultdict(set)
-
-        for item in page:
-            bulk_load[item["activity_type"]].add(item["pk"])
-
-        fetched = {
-            (activity_type, activity.pk): activity
-            for activity_type, pks in bulk_load.items()
-            for activity in queryset_dict[activity_type].filter(pk__in=pks)
-        }
-
-        for item in page:
-            item["object"] = fetched[(item["activity_type"], item["pk"])]
-
-        return page
-
-    def get_context_data(self, **kwargs) -> ContextDict:
-        data = super().get_context_data(**kwargs)
-        page = self.get_page()
-        data.update(
-            {
-                "page": page,
-                "paginator": page.paginator,
-                "object_list": page.object_list,
-                "is_paginated": page.has_other_pages(),
-            }
-        )
-        return data
+    def get_querysets(self) -> List[QuerySet]:
+        return [self.get_queryset(model) for model in (Post, Event)]
 
 
 activity_stream_view = ActivityStreamView.as_view()

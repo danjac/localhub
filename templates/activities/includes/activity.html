@@ -1,5 +1,5 @@
-{% if activity.activity_type == "post" %}
+{% if activity.object_type == "post" %}
 {% include "posts/includes/post.html" with post=activity.object %}
-{% elif activity.activity_type == "event" %}
+{% elif activity.object_type == "event" %}
 {% include "events/includes/event.html" with event=activity.object %}
 {% endif %}
