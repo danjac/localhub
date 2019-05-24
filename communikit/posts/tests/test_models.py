@@ -16,9 +16,14 @@ pytestmark = pytest.mark.django_db
 class TestPostModel:
     @factory.django.mute_signals(signals.post_save)
     def test_notify(self, community: Community):
+        # owner should not receive any notifications from their own posts
+        owner = UserFactory(username="owner")
         moderator = UserFactory()
         mentioned = UserFactory(username="danjac")
 
+        Membership.objects.create(
+            member=owner, community=community, role=Membership.ROLES.moderator
+        )
         Membership.objects.create(
             member=moderator,
             community=community,
@@ -28,7 +33,11 @@ class TestPostModel:
             member=mentioned, community=community, role=Membership.ROLES.member
         )
 
-        post = PostFactory(community=community, description="hello @danjac")
+        post = PostFactory(
+            owner=owner,
+            community=community,
+            description="hello @danjac from @owner",
+        )
         notifications = post.notify(created=True)
 
         assert notifications[0].recipient == mentioned

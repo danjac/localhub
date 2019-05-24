@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.template import loader
@@ -7,7 +10,6 @@ from communikit.join_requests.models import JoinRequest
 
 
 def send_join_request_email(join_request: JoinRequest):
-    # tbd: we'll use django-templated-mail at some point
     send_mail(
         _("A request has been received"),
         loader.get_template("join_requests/emails/join_request.txt").render(

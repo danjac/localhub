@@ -45,13 +45,15 @@ class Post(Activity):
                 )
                 for recipient in self.community.members.matches_usernames(
                     self.description.extract_mentions()
-                )
+                ).exclude(pk=self.owner_id)
             ]
         # notify all community moderators
         verb = "created" if created else "updated"
         notifications += [
             PostNotification(post=self, recipient=recipient, verb=verb)
-            for recipient in self.community.get_moderators()
+            for recipient in self.community.get_moderators().exclude(
+                pk=self.owner_id
+            )
         ]
         PostNotification.objects.bulk_create(notifications)
         return notifications
