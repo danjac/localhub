@@ -22,19 +22,37 @@ class Notification(TimeStampedModel):
             name="mark-read"
         )
 
-        notify function:
-        notification = PostNotification.objects.create(
-            post=post,
-            community=post.community,
-            recipient=mentioned,
-            verb="mention",
-        )
-    """
+    def match_usernames(self, names: Sequence[str]) -> QuerySet:
+        return self.filter(username__regex=r'^(%s) +' % '|'.join(names))
+
+    def notify(self, created: bool) -> List["PostNotification"]:
+        notifications = []
+        if self.description_tracker.changed:
+            notifications += [
+                PostNotification(
+                    post=self,
+                    recipient=recipient,
+                    verb="mentioned",
+                ) for recipient in self.community.members.match_usernames(
+                    self.description.extract_mentions()
+                )
+            ]
+        verb = "created" if created else "updated"
+        notifications += [
+            PostNotification(
+                post=self,
+                community=self.community,
+                recipient=recipient,
+                verb=verb,
+            ) for recipient in self.community.get_moderators()
+        ]
+        PostNotification.objects.bulk_create(notifications)
+        return notifications
+        """
 
     recipient = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
-    community = models.ForeignKey(Community, on_delete=models.CASCADE)
     verb = models.CharField(max_length=20)
     is_read = models.BooleanField(default=False)
 
