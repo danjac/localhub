@@ -56,6 +56,7 @@ class Base(Configuration):
         "communikit.events.apps.EventsConfig",
         "communikit.invites.apps.InvitesConfig",
         "communikit.join_requests.apps.JoinRequestsConfig",
+        "communikit.notifications.apps.NotificationsConfig",
         "communikit.posts.apps.PostsConfig",
         "communikit.users.apps.UsersConfig",
     ]

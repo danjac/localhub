@@ -3,6 +3,7 @@ from django.urls import reverse
 
 from communikit.activities.models import Activity
 from communikit.markdown.fields import MarkdownField
+from communikit.notifications.models import Notification
 
 
 class Post(Activity):
@@ -22,3 +23,7 @@ class Post(Activity):
 
     def search_index_components(self):
         return {"A": self.title, "B": self.description}
+
+
+class PostNotification(Notification):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
