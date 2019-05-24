@@ -1,10 +1,16 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% load i18n %}
+{% autoescape off %}
 
-Hi,
+{% trans "Hi" %,
 
-You've been invited to join the community {{ invite.community.name }}.
+{% blocktrans with community=invite.community.name %}
+You've been invited to join the community {{ community }}.
+{% endblocktrans %}
 
-Click on this link or copy and paste into your browser navbar:
+{% trans "Click on this link or copy and paste into your browser navbar" %}
 
 {{ accept_url }}
-
+{% endautoescape %}

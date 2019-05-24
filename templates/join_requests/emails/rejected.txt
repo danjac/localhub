@@ -1,3 +1,8 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% autoescape off %}
 Hi,
 
 Sorry, you have not been accepted to join {{ join_request.community.name }}.
+{% endautoescape %}

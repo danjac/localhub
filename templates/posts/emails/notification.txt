@@ -1,4 +1,8 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% load i18n %}
+{% autoescape off %}
 {% blocktrans with username=notification.recipient.username %}
 Hi {{ username }},
 {% endblocktrans %}
@@ -26,3 +30,4 @@ User {{ owner }} has edited a post.
 {% endwith %}
 
 Link to post: {{ post_url }}
+{% endautoescape %}

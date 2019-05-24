@@ -2,8 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.core.mail import send_mail
-from django.urls import reverse
-from django.template import loader
+from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 
 from communikit.posts.models import PostNotification
@@ -19,14 +18,15 @@ def send_notification_email(notification: PostNotification):
     }[notification.verb]
     send_mail(
         subject,
-        loader.get_template("posts/emails/notification.txt").render(
+        render_to_string(
+            "posts/emails/notification.txt",
             {
                 "notification": notification,
                 "post_url": notification.post.get_permalink(),
                 # "owner_url": notification.post.owner.get_permalink(
                 # notification.post.community
                 # ),
-            }
+            },
         ),
         # TBD: need separate email domain setting for commty.
         f"support@{notification.post.community.domain}",
