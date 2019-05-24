@@ -9,7 +9,7 @@ from django.urls import reverse
 from model_utils import FieldTracker
 
 from communikit.activities.models import Activity
-from communikit.markdown.fields import MarkdownField
+from communikit.core.markdown.fields import MarkdownField
 from communikit.notifications.models import Notification
 
 

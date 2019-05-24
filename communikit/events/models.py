@@ -14,7 +14,7 @@ from django_countries.fields import CountryField
 from model_utils import FieldTracker
 
 from communikit.activities.models import Activity
-from communikit.markdown.fields import MarkdownField
+from communikit.core.markdown.fields import MarkdownField
 
 
 class Event(Activity):

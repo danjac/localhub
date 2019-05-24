@@ -11,7 +11,7 @@ from model_utils import FieldTracker
 from model_utils.models import TimeStampedModel
 
 from communikit.activities.models import Activity
-from communikit.markdown.fields import MarkdownField
+from communikit.core.markdown.fields import MarkdownField
 from communikit.notifications.models import Notification
 
 

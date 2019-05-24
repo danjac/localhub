@@ -181,7 +181,7 @@ class Base(Configuration):
 
     # https://neutronx.github.io/django-markdownx/customization/
 
-    MARKDOWNX_MARKDOWNIFY_FUNCTION = "communikit.markdown.utils.markdownify"
+    MARKDOWNX_MARKDOWNIFY_FUNCTION = "communikit.core.markdown.utils.markdownify"
 
     # Celery
 

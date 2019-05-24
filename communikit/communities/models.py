@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from model_utils import Choices
 from model_utils.models import TimeStampedModel
 
-from communikit.markdown.fields import MarkdownField
+from communikit.core.markdown.fields import MarkdownField
 
 
 class CommunityManager(models.Manager):
