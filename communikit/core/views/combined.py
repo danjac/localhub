@@ -1,18 +1,13 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Dict, List
-
 from collections import defaultdict
 
 from django.core.paginator import Page, Paginator
 from django.db.models import CharField, QuerySet, Value
 from django.views.generic import TemplateView
 
-from communikit.core.types import ContextDict
-
-
-QuerySetDict = Dict[str, QuerySet]
+from communikit.core.types import ContextDict, QuerySetDict, QuerySetList
 
 
 class CombinedQuerySetMixin:
@@ -20,13 +15,14 @@ class CombinedQuerySetMixin:
     Pattern adapted from:
     https://simonwillison.net/2018/Mar/25/combined-recent-additions/
     """
-    order_field = None
-    paginate_by = None
+
     allow_empty = True
     limit = None
+    order_field = None
+    paginate_by = None
 
-    def get_querysets(self) -> List[QuerySet]:
-        return []
+    def get_querysets(self) -> QuerySetList:
+        raise NotImplementedError
 
     def get_order_field(self) -> str:
         return self.order_field

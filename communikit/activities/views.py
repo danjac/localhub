@@ -1,8 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import List, Type
-
+from typing import Type
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -29,10 +28,10 @@ from communikit.activities.models import Activity, Like
 from communikit.comments.forms import CommentForm
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
+from communikit.core.types import ContextDict, QuerySetList
 from communikit.core.views import CombinedQuerySetListView
 from communikit.events.models import Event
 from communikit.posts.models import Post
-from communikit.core.types import ContextDict
 
 
 class ActivityQuerySetMixin(CommunityRequiredMixin):
@@ -102,7 +101,7 @@ class BaseActivityDeleteView(
     success_url = reverse_lazy("activities:stream")
     success_message = None
 
-    def get_success_message(self):
+    def get_success_message(self) -> str:
         return self.success_message
 
     def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
@@ -190,7 +189,7 @@ class ActivityStreamView(CommunityRequiredMixin, CombinedQuerySetListView):
             .select_related("owner", "community")
         )
 
-    def get_querysets(self) -> List[QuerySet]:
+    def get_querysets(self) -> QuerySetList:
         return [self.get_queryset(model) for model in (Post, Event)]
 
 
