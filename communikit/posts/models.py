@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import List
+from typing import Dict, List
 
 from django.db import models
 from django.urls import reverse
@@ -30,7 +30,7 @@ class Post(Activity):
     def get_permalink(self) -> str:
         return self.community.domain_url(self.get_absolute_url())
 
-    def search_index_components(self):
+    def search_index_components(self) -> Dict[str, str]:
         return {"A": self.title, "B": self.description}
 
     def notify(self, created: bool) -> List["PostNotification"]:
