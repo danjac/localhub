@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class UserManager(BaseUserManager):
-    def match_usernames(self, names=Sequence[str]) -> models.QuerySet:
+    def matches_usernames(self, names=Sequence[str]) -> models.QuerySet:
         return self.filter(username__iregex=r"^(%s)+" % "|".join(names))
 
 

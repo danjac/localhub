@@ -13,14 +13,14 @@ User = get_user_model()
 
 
 class TestUserManager:
-    def test_match_usernames(self):
+    def test_matches_usernames(self):
         user_1 = UserFactory(username="first")
         user_2 = UserFactory(username="second")
         user_3 = UserFactory(username="third")
 
         names = ["second", "FIRST", "SEconD"]  # duplicate
 
-        users = User.objects.match_usernames(names)
+        users = User.objects.matches_usernames(names)
         assert len(users) == 2
         assert user_1 in users
         assert user_2 in users
