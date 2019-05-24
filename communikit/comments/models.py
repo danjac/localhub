@@ -78,10 +78,12 @@ class Comment(TimeStampedModel):
             )
         ]
         # notify the activity owner
-        if self.owner_id != self.activity.owner_id:
+        if created and self.owner_id != self.activity.owner_id:
             notifications.append(
                 CommentNotification(
-                    comment=self, recipient=self.activity.owner, verb=verb
+                    comment=self,
+                    recipient=self.activity.owner,
+                    verb="commented",
                 )
             )
         CommentNotification.objects.bulk_create(notifications)

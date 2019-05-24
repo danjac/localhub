@@ -11,6 +11,7 @@ from communikit.comments.models import CommentNotification
 def send_notification_email(notification: CommentNotification):
     subject = {
         "mentioned": _("You have been mentioned in a comment"),
+        "commented": _("A user has commented on your content"),
         "created": _("A user has posted a comment to the %s community")
         % notification.comment.activity.community.name,
         "updated": _("A user has updated their comment in the %s community")
