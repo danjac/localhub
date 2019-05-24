@@ -1,0 +1,12 @@
+<div class="card mb-2">
+  <div class="card-header">
+    <div class="card-title">
+      {% with post=notification.post verb=notification.verb %}
+      {% if verb == 'mentioned' %}
+      User <strong>{{ post.owner.username }}</strong> has mentioned you in a <a href="{{ post.get_absolute_url }}">post</a>.
+      {% endif %}
+      {% endwith %}
+      <button class="btn btn-primary float-right">Mark as Read</button>
+    </div>
+  </div>
+</div>

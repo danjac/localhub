@@ -9,12 +9,15 @@
 
 {% for activity in object_list %}
 <div class="mt-2">
-{% include "activities/includes/activity.html" %}
+  {% include "activities/includes/activity.html" %}
 </div>
 {% empty %}
-<p class="p-2 bg-gray text-center">
-    {% trans "Sorry, no results found for this search" %}
-</p>
+<div class="empty">
+  <div class="empty-icon">
+    <i class="icon icon-search"></i>
+  </div>
+  <p class="empty-title h5">{% trans "Sorry, no results found for your search" %}</p>
+</div>
 {% endfor %}
 
 {% include "includes/pagination.html" %}

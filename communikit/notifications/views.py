@@ -22,11 +22,11 @@ class NotificationListView(
             PostNotification.objects.filter(
                 recipient=self.request.user,
                 post__community=self.request.community,
-            ).select_related("owner"),
+            ).select_related("post", "post__owner"),
             CommentNotification.objects.filter(
                 recipient=self.request.user,
                 comment__activity__community=self.request.community,
-            ).select_related("owner", "activity__owner"),
+            ).select_related("comment", "comment__owner"),
         ]
 
 
