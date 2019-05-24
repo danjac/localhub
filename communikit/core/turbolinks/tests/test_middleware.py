@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.test.client import RequestFactory
 
-from communikit.turbolinks.middleware import TurbolinksMiddleware
+from communikit.core.turbolinks.middleware import TurbolinksMiddleware
 from communikit.types import HttpRequestResponse
 
 

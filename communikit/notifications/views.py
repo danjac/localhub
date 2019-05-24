@@ -8,9 +8,9 @@ from django.db.models import QuerySet
 
 from communikit.comments.models import CommentNotification
 from communikit.communities.views import CommunityRequiredMixin
+from communikit.core.views import CombinedQuerySetListView
 from communikit.notifications import app_settings
 from communikit.posts.models import PostNotification
-from communikit.views import CombinedQuerySetListView
 
 
 class NotificationsView(

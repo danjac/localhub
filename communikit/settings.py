@@ -66,7 +66,7 @@ class Base(Configuration):
         "whitenoise.middleware.WhiteNoiseMiddleware",
         "django.contrib.sites.middleware.CurrentSiteMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
-        "communikit.turbolinks.middleware.TurbolinksMiddleware",
+        "communikit.core.turbolinks.middleware.TurbolinksMiddleware",
         "communikit.communities.middleware.CurrentCommunityMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",

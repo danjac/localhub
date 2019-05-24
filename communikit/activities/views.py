@@ -29,10 +29,10 @@ from communikit.activities.models import Activity, Like
 from communikit.comments.forms import CommentForm
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
+from communikit.core.views import CombinedQuerySetListView
 from communikit.events.models import Event
 from communikit.posts.models import Post
 from communikit.types import ContextDict
-from communikit.views import CombinedQuerySetListView
 
 
 class ActivityQuerySetMixin(CommunityRequiredMixin):

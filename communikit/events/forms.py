@@ -3,8 +3,8 @@
 
 from django import forms
 
+from communikit.core.forms.fields import CalendarField
 from communikit.events.models import Event
-from communikit.forms.fields import CalendarField
 
 
 class EventForm(forms.ModelForm):
