@@ -25,7 +25,9 @@ def get_unread_notifications_count(context: ContextDict) -> int:
             is_read=False,
         ),
         PostNotification.objects.filter(
-            recipient=request.user, community=request.community, is_read=False
+            recipient=request.user,
+            post__community=request.community,
+            is_read=False,
         ),
     ]
 

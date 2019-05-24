@@ -1,0 +1,20 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "notifications/base.html" %}
+{% load i18n %}
+
+{% block activities_content %}
+
+{% for notification in object_list %}
+{% empty %}
+<div class="empty">
+  <div class="empty-icon">
+    <i class="icon icon-mail"></i>
+  </div>
+  <p class="empty-title h5">{% trans "You have no new notifications" %}</p>
+</div>
+{% endfor %}
+
+{% include "includes/pagination.html" %}
+{% endblock %}

@@ -14,12 +14,13 @@ from communikit.communities.views import (
 urlpatterns = [
     # Local
     path("", include("communikit.activities.urls")),
-    path("posts/", include("communikit.posts.urls")),
-    path("events/", include("communikit.events.urls")),
     path("comments/", include("communikit.comments.urls")),
-    path("settings/", include("communikit.communities.urls")),
+    path("events/", include("communikit.events.urls")),
     path("invites/", include("communikit.invites.urls")),
     path("join-requests/", include("communikit.join_requests.urls")),
+    path("notifications/", include("communikit.notifications.urls")),
+    path("posts/", include("communikit.posts.urls")),
+    path("settings/", include("communikit.communities.urls")),
     path("users/", include("communikit.users.urls")),
     path(
         "access-denied/",
