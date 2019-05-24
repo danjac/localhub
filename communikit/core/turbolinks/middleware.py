@@ -1,6 +1,6 @@
 from django.http import HttpRequest, HttpResponse
 
-from communikit.types import HttpRequestResponse
+from communikit.core.types import HttpRequestResponse
 
 
 class TurbolinksMiddleware:

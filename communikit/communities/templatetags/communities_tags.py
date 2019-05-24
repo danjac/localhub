@@ -2,7 +2,7 @@ from django import template
 from django.db.models import QuerySet
 
 from communikit.communities.models import Community
-from communikit.types import ContextDict
+from communikit.core.types import ContextDict
 
 register = template.Library()
 

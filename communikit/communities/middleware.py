@@ -2,7 +2,7 @@ from django.http import HttpRequest, HttpResponse
 from django.utils.functional import SimpleLazyObject
 
 from communikit.communities.models import Community
-from communikit.types import HttpRequestResponse
+from communikit.core.types import HttpRequestResponse
 
 
 class CurrentCommunityMiddleware:

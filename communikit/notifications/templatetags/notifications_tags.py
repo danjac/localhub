@@ -5,7 +5,7 @@ from django import template
 
 from communikit.comments.models import CommentNotification
 from communikit.posts.models import PostNotification
-from communikit.types import ContextDict
+from communikit.core.types import ContextDict
 
 register = template.Library()
 

@@ -4,7 +4,7 @@ from django.test.client import RequestFactory
 
 from communikit.communities.middleware import CurrentCommunityMiddleware
 from communikit.communities.models import Community
-from communikit.types import HttpRequestResponse
+from communikit.core.types import HttpRequestResponse
 
 pytestmark = pytest.mark.django_db
 

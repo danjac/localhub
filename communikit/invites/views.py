@@ -17,7 +17,7 @@ from communikit.communities.views import CommunityRequiredMixin
 from communikit.invites.emails import send_invitation_email
 from communikit.invites.forms import InviteForm
 from communikit.invites.models import Invite
-from communikit.types import ContextDict
+from communikit.core.types import ContextDict
 
 
 class CommunityInviteQuerySetMixin(CommunityRequiredMixin):

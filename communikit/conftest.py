@@ -15,7 +15,7 @@ from communikit.events.models import Event
 from communikit.events.tests.factories import EventFactory
 from communikit.posts.models import Post
 from communikit.posts.tests.factories import PostFactory
-from communikit.types import HttpRequestResponse
+from communikit.core.types import HttpRequestResponse
 from communikit.users.tests.factories import UserFactory
 
 

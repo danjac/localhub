@@ -20,7 +20,7 @@ from communikit.join_requests.emails import (
 )
 from communikit.join_requests.forms import JoinRequestForm
 from communikit.join_requests.models import JoinRequest
-from communikit.types import ContextDict
+from communikit.core.types import ContextDict
 
 
 class CommunityJoinRequestQuerySetMixin(CommunityRequiredMixin):

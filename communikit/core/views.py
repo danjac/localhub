@@ -9,7 +9,7 @@ from django.core.paginator import Page, Paginator
 from django.db.models import CharField, QuerySet, Value
 from django.views.generic import TemplateView
 
-from communikit.types import ContextDict
+from communikit.core.types import ContextDict
 
 
 QuerySetDict = Dict[str, QuerySet]

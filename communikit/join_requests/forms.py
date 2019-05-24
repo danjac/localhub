@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 
 from communikit.communities.models import Community
 from communikit.join_requests.models import JoinRequest
-from communikit.types import ContextDict
+from communikit.core.types import ContextDict
 
 
 class JoinRequestForm(forms.ModelForm):

@@ -32,7 +32,7 @@ from communikit.communities.views import CommunityRequiredMixin
 from communikit.core.views import CombinedQuerySetListView
 from communikit.events.models import Event
 from communikit.posts.models import Post
-from communikit.types import ContextDict
+from communikit.core.types import ContextDict
 
 
 class ActivityQuerySetMixin(CommunityRequiredMixin):

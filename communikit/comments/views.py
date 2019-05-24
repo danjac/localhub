@@ -19,7 +19,7 @@ from communikit.activities.models import Activity
 from communikit.comments.forms import CommentForm
 from communikit.comments.models import Comment, Like
 from communikit.communities.views import CommunityRequiredMixin
-from communikit.types import ContextDict
+from communikit.core.types import ContextDict
 
 
 class SingleCommentMixin(CommunityRequiredMixin):
