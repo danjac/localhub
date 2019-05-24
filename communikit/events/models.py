@@ -46,7 +46,7 @@ class Event(Activity):
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
 
-    tracker = FieldTracker(LOCATION_FIELDS)
+    location_tracker = FieldTracker(LOCATION_FIELDS)
 
     def __str__(self) -> str:
         return self.title or self.location

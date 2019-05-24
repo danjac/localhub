@@ -10,7 +10,7 @@ from communikit.events.models import Event
     post_save, sender=Event, dispatch_uid="events.update_event_coordinates"
 )
 def update_event_coordinates(instance: Event, created: bool = False, **kwargs):
-    if created or instance.tracker.changed():
+    if created or instance.location_tracker.changed():
         transaction.on_commit(
             lambda: tasks.update_event_coordinates.delay(instance.id)
         )
