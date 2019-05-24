@@ -14,26 +14,20 @@ Hi {{ username }},
 User {{ owner }} has mentioned you in a comment.
 {% endblocktrans %}
 
-{% if notification.verb == 'commented' %}
-
-{% blocktrans %}
-User {{ owner }} has commented on content you have submitted.
-{% endblocktrans %}
-
 {% elif notification.verb == 'created' %}
 
 {% blocktrans %}
-User {{ owner }} has posted a comment.
+User {{ owner }} has published a comment.
 {% endblocktrans %}
 
 {% elif notification.verb == 'updated' %}
 
 {% blocktrans %}
-User {{ owner }} has updated their comment.
+User {{ owner }} has edited a comment.
 {% endblocktrans %}
 
 {% endif %}
 {% endwith %}
 
-Link to post: {{ post_url }}
+Link to comment: {{ comment_url }}
 {% endautoescape %}

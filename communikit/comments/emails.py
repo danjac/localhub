@@ -20,10 +20,10 @@ def send_notification_email(notification: CommentNotification):
     send_mail(
         subject,
         render_to_string(
-            "comment/emails/notification.txt",
+            "comments/emails/notification.txt",
             {
                 "notification": notification,
-                "comment": notification.comment.get_permalink(),
+                "comment_url": notification.comment.get_permalink(),
                 # "owner_url": notification.post.owner.get_permalink(
                 # notification.post.community
                 # ),

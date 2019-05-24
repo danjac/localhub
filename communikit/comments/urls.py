@@ -1,5 +1,6 @@
 from django.urls import path
 
+from communikit.comments.models import CommentNotification
 from communikit.comments.views import (
     comment_create_view,
     comment_delete_view,
@@ -8,6 +9,7 @@ from communikit.comments.views import (
     comment_like_view,
     comment_update_view,
 )
+from communikit.notifications.views import NotificationMarkReadView
 
 app_name = "comments"
 
@@ -19,4 +21,9 @@ urlpatterns = [
     path("comment/<int:pk>/~delete/", comment_delete_view, name="delete"),
     path("comment/<int:pk>/~like/", comment_like_view, name="like"),
     path("comment/<int:pk>/~dislike/", comment_dislike_view, name="dislike"),
+    path(
+        "notifications/<int:pk>/~mark-read/",
+        NotificationMarkReadView.as_view(model=CommentNotification),
+        name="mark_notification_read",
+    ),
 ]

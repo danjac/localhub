@@ -9,6 +9,8 @@
 {% for item in object_list %}
 {% if item.object_type == "postnotification" %}
 {% include "posts/includes/notification.html" with notification=item.object %}
+{% elif item.object_type == "commentnotification" %}
+{% include "comments/includes/notification.html" with notification=item.object %}
 {% endif %}
 {% empty %}
 <div class="empty">

@@ -5,8 +5,8 @@
 <div class="card mb-2">
   <div class="card-header">
     <div class="card-title">
-      {% with post=notification.post verb=notification.verb %}
-      User <strong>{{ post.owner.username }}</strong>
+      {% with comment=notification.comment verb=notification.verb %}
+      User <strong>{{ comment.owner.username }}</strong>
       {% if verb == 'mentioned' %}
       has mentioned you in a
       {% elif verb == 'created' %}
@@ -14,13 +14,13 @@
       {% elif verb == 'updated' %}
       has updated their
       {% endif %}
-      <a href="{{ post.get_absolute_url }}">post</a>.
+      <a href="{{ comment.get_absolute_url }}">comment</a>.
       {% endwith %}
       {% if not notification.is_read %}
       <button class="btn btn-primary float-right"
               data-controller="ajax"
               data-action="ajax#post"
-              data-ajax-url="{% url 'posts:mark_notification_read' notification.pk %}"
+              data-ajax-url="{% url 'comments:mark_notification_read' notification.pk %}"
               >{% trans "Mark as Read" %}</button>
       {% endif %}
     </div>

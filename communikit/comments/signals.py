@@ -17,4 +17,4 @@ def send_notifications(instance: Comment, created: bool, **kwargs):
         for notification in instance.notify(created):
             send_notification_email(notification)
 
-    transaction.on_commit(lambda: notify)
+    transaction.on_commit(notify)
