@@ -26,6 +26,9 @@ class TestUserManager:
         assert user_2 in users
         assert user_3 not in users
 
+        # check empty set returns no results
+        assert User.objects.matches_usernames([]).count() == 0
+
 
 class TestUserModel:
     def _test_get_profile_url(self, user: User):
