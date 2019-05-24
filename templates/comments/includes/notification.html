@@ -13,6 +13,8 @@
       has published a
       {% elif verb == 'updated' %}
       has updated their
+      {% elif verb == 'commented' %}
+      has posted a
       {% endif %}
       <a href="{{ comment.get_absolute_url }}">comment</a>.
       {% endwith %}

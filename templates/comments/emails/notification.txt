@@ -26,6 +26,12 @@ User {{ owner }} has published a comment.
 User {{ owner }} has edited a comment.
 {% endblocktrans %}
 
+{% elif notification.verb == 'commented' %}
+
+{% blocktrans %}
+User {{ owner }} has commented on your post.
+{% endblocktrans %}
+
 {% endif %}
 {% endwith %}
 
