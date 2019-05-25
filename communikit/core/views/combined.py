@@ -3,8 +3,11 @@
 
 from collections import defaultdict
 
+from typing import Optional, DefaultDict, Set
+
 from django.core.paginator import Page, Paginator
 from django.db.models import CharField, QuerySet, Value
+from django.http import HttpRequest
 from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 
@@ -18,15 +21,16 @@ class CombinedQuerySetMixin:
     """
 
     allow_empty = True
-    limit = None
-    ordering = None
-    paginate_by = None
+    limit: Optional[int] = None
+    ordering: Optional[str] = None
+    paginate_by: Optional[int] = None
     page_kwarg = "page"
+    request: HttpRequest
 
     def get_querysets(self) -> QuerySetList:
         raise NotImplementedError
 
-    def get_ordering(self) -> str:
+    def get_ordering(self) -> Optional[str]:
         return self.ordering
 
     def get_queryset_dict(self) -> QuerySetDict:
@@ -55,7 +59,7 @@ class CombinedQuerySetMixin:
         return qs
 
     def load_objects(self, items: QuerySet, queryset_dict: QuerySetDict):
-        bulk_load = defaultdict(set)
+        bulk_load: DefaultDict[str, Set] = defaultdict(set)
 
         for item in items:
             bulk_load[item["object_type"]].add(item["pk"])
@@ -76,7 +80,7 @@ class CombinedQuerySetMixin:
         if self.limit:
             union_qs = union_qs[: self.limit]
 
-        self.load_objects(union_qs)
+        self.load_objects(union_qs, queryset_dict)
         return union_qs
 
     def get_page(self) -> Page:
@@ -117,4 +121,4 @@ class CombinedQuerySetContextMixin(CombinedQuerySetMixin, ContextMixin):
 
 
 class CombinedQuerySetListView(CombinedQuerySetContextMixin, TemplateView):
-    pass
+    ...

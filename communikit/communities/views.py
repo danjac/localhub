@@ -1,8 +1,18 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+from typing import no_type_check
+
 from django.contrib.auth.views import redirect_to_login
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
-from django.http import Http404, HttpResponseRedirect
+from django.http import (
+    Http404,
+    HttpRequest,
+    HttpResponse,
+    HttpResponseRedirect,
+)
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DeleteView, ListView, TemplateView, UpdateView
@@ -20,8 +30,10 @@ class CommunityRequiredMixin:
     """
 
     allow_if_private = False
+    request: HttpRequest
 
-    def dispatch(self, request, *args, **kwargs):
+    @no_type_check
+    def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         if not request.community:
             return self.handle_community_not_found()
 
@@ -34,16 +46,14 @@ class CommunityRequiredMixin:
             return self.handle_community_access_denied()
         return super().dispatch(request, *args, **kwargs)
 
-    def handle_community_access_denied(self):
+    def handle_community_access_denied(self) -> HttpResponse:
         if self.request.is_ajax():
             raise PermissionDenied(_("You must be a member of this community"))
         if self.request.user.is_anonymous:
             return redirect_to_login(self.request.get_full_path())
-        return HttpResponseRedirect(
-            reverse("community_access_denied")
-        )
+        return HttpResponseRedirect(reverse("community_access_denied"))
 
-    def handle_community_not_found(self):
+    def handle_community_not_found(self) -> HttpResponse:
         if self.request.is_ajax():
             raise Http404(_("No community is available for this domain"))
         return HttpResponseRedirect(reverse("community_not_found"))
@@ -100,9 +110,7 @@ class CommunityMembershipQuerySetMixin(CommunityRequiredMixin):
 
 
 class MembershipListView(
-    CommunityMembershipQuerySetMixin,
-    PermissionRequiredMixin,
-    ListView,
+    CommunityMembershipQuerySetMixin, PermissionRequiredMixin, ListView
 ):
     paginate_by = 30
     allow_empty = True
@@ -134,9 +142,7 @@ membership_update_view = MembershipUpdateView.as_view()
 
 
 class MembershipDeleteView(
-    CommunityMembershipQuerySetMixin,
-    PermissionRequiredMixin,
-    DeleteView,
+    CommunityMembershipQuerySetMixin, PermissionRequiredMixin, DeleteView
 ):
     fields = ("role", "active")
     permission_required = "communities.delete_membership"

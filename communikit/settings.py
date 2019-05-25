@@ -22,7 +22,7 @@ class Base(Configuration):
     EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
 
     DEBUG = False
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS: List[str] = []
 
     WSGI_APPLICATION = "communikit.wsgi.application"
 
@@ -181,7 +181,9 @@ class Base(Configuration):
 
     # https://neutronx.github.io/django-markdownx/customization/
 
-    MARKDOWNX_MARKDOWNIFY_FUNCTION = "communikit.core.markdown.utils.markdownify"
+    MARKDOWNX_MARKDOWNIFY_FUNCTION = (
+        "communikit.core.markdown.utils.markdownify"
+    )
 
     # Celery
 

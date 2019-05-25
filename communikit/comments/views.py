@@ -11,6 +11,7 @@ from django.views.generic import (
     UpdateView,
     View,
 )
+from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
@@ -23,7 +24,7 @@ from communikit.core.types import ContextDict
 from communikit.notifications.views import NotificationMarkReadView
 
 
-class SingleCommentMixin(CommunityRequiredMixin):
+class SingleCommentMixin(CommunityRequiredMixin, ContextMixin):
     def get_queryset(self) -> QuerySet:
         return Comment.objects.filter(
             activity__community=self.request.community

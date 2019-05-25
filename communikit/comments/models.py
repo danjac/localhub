@@ -56,7 +56,7 @@ class Comment(TimeStampedModel):
         return self.activity.community.domain_url(self.get_absolute_url())
 
     def notify(self, created: bool) -> List["CommentNotification"]:
-        notifications = []
+        notifications: List[CommentNotification] = []
         # notify anyone @mentioned in the description
         if self.content and (created or self.content_tracker.changed()):
             notifications += [

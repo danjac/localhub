@@ -1,13 +1,13 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Type
+from typing import Optional, Type, no_type_check
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Model
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -20,6 +20,7 @@ from django.views.generic import (
     View,
 )
 from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.list import MultipleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -34,7 +35,8 @@ from communikit.events.models import Event
 from communikit.posts.models import Post
 
 
-class ActivityQuerySetMixin(CommunityRequiredMixin):
+class ActivityQuerySetMixin:
+    @no_type_check
     def get_queryset(self) -> QuerySet:
         return (
             super()
@@ -42,6 +44,18 @@ class ActivityQuerySetMixin(CommunityRequiredMixin):
             .filter(community=self.request.community)
             .select_related("owner", "community")
         )
+
+
+class SingleActivityMixin(
+    CommunityRequiredMixin, ActivityQuerySetMixin, SingleObjectMixin
+):
+    ...
+
+
+class MultipleActivityMixin(
+    CommunityRequiredMixin, ActivityQuerySetMixin, MultipleObjectMixin
+):
+    ...
 
 
 class ActivityCreateView(
@@ -68,7 +82,7 @@ class ActivityCreateView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityListView(ActivityQuerySetMixin, ListView):
+class ActivityListView(MultipleActivityMixin, ListView):
     allow_empty = True
     paginate_by = app_settings.DEFAULT_PAGE_SIZE
     order_by = "-created"
@@ -87,7 +101,7 @@ class ActivityListView(ActivityQuerySetMixin, ListView):
 class ActivityUpdateView(
     PermissionRequiredMixin,
     SuccessMessageMixin,
-    ActivityQuerySetMixin,
+    SingleActivityMixin,
     UpdateView,
 ):
     permission_required = "activities.change_activity"
@@ -95,13 +109,13 @@ class ActivityUpdateView(
 
 
 class ActivityDeleteView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, DeleteView
+    PermissionRequiredMixin, SingleActivityMixin, DeleteView
 ):
     permission_required = "activities.delete_activity"
     success_url = reverse_lazy("activities:stream")
-    success_message = None
+    success_message: Optional[str] = None
 
-    def get_success_message(self) -> str:
+    def get_success_message(self) -> Optional[str]:
         return self.success_message
 
     def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
@@ -115,7 +129,7 @@ class ActivityDeleteView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityDetailView(ActivityQuerySetMixin, DetailView):
+class ActivityDetailView(SingleActivityMixin, DetailView):
     def get_comments(self) -> QuerySet:
         return (
             self.object.comment_set.select_related(
@@ -143,9 +157,7 @@ class ActivityDetailView(ActivityQuerySetMixin, DetailView):
         return data
 
 
-class ActivityLikeView(
-    ActivityQuerySetMixin, PermissionRequiredMixin, SingleObjectMixin, View
-):
+class ActivityLikeView(PermissionRequiredMixin, SingleActivityMixin, View):
     permission_required = "activities.like_activity"
 
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
@@ -160,9 +172,7 @@ class ActivityLikeView(
         return HttpResponseRedirect(self.object.get_absolute_url())
 
 
-class ActivityDislikeView(
-    ActivityQuerySetMixin, LoginRequiredMixin, SingleObjectMixin, View
-):
+class ActivityDislikeView(LoginRequiredMixin, SingleActivityMixin, View):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         Like.objects.filter(user=request.user, activity=self.object).delete()
@@ -180,7 +190,7 @@ class ActivityStreamView(CommunityRequiredMixin, CombinedQuerySetListView):
     allow_empty = True
     paginate_by = app_settings.DEFAULT_PAGE_SIZE
 
-    def get_queryset(self, model: Type[Activity]) -> QuerySet:
+    def get_queryset(self, model: Type[Model]) -> QuerySet:
         return (
             model.objects.filter(community=self.request.community)
             .with_num_comments()

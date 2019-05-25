@@ -34,7 +34,7 @@ class Post(Activity):
         return {"A": self.title, "B": self.description}
 
     def notify(self, created: bool) -> List["PostNotification"]:
-        notifications = []
+        notifications: List[PostNotification] = []
         # notify anyone @mentioned in the description
         if self.description and (
             created or self.description_tracker.changed()

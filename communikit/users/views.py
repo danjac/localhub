@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -9,15 +10,13 @@ from django.views.generic.detail import SingleObjectMixin
 
 from communikit.communities.views import CommunityRequiredMixin
 
-User = get_user_model()
-
 
 class CurrentUserMixin(LoginRequiredMixin):
     """
     Always returns the current logged in user.
     """
 
-    def get_object(self) -> User:
+    def get_object(self) -> settings.AUTH_USER_MODEL:
         return self.request.user
 
 
@@ -28,7 +27,9 @@ class ProfileUserMixin(CommunityRequiredMixin, SingleObjectMixin):
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object(
-            queryset=User.objects.filter(communities=request.community)
+            queryset=get_user_model().objects.filter(
+                communities=request.community
+            )
         )
         return super().get(request, *args, **kwargs)
 
