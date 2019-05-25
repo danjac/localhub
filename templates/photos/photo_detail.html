@@ -27,7 +27,7 @@
   </div>
   <div class="card-body">
     {% thumbnail photo.image "800" crop="center" as image %}
-    <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}">
+    <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="{{ photo.title }}">
     {% empty %}
     <em>No photo available</em>
     {% endthumbnail %}

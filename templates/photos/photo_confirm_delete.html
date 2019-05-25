@@ -1,0 +1,13 @@
+{% extends "activities/base.html" %}
+{% load i18n %}
+{% block activities_content %}
+<h3>{% trans "Delete Photo" %}</h3>
+
+<form method="POST" action="{{ request.path }}">
+  {% csrf_token %}
+  <p>{% trans "Do you really want to delete this photo?" %}</p>
+  <a class="btn btn-link" href="{{ photo.get_absolute_url }}">{% trans "Cancel" %}</a>
+  <button class="btn btn-primary" type="submit">{% trans "Delete" %}</button>
+</form>
+
+{% endblock activities_content %}

@@ -13,6 +13,8 @@ from communikit.communities.models import Community, Membership
 from communikit.communities.tests.factories import CommunityFactory
 from communikit.events.models import Event
 from communikit.events.tests.factories import EventFactory
+from communikit.photos.models import Photo
+from communikit.photos.tests.factories import PhotoFactory
 from communikit.posts.models import Post
 from communikit.posts.tests.factories import PostFactory
 from communikit.core.types import HttpRequestResponse
@@ -82,6 +84,11 @@ def admin(
 @pytest.fixture
 def post() -> Post:
     return PostFactory()
+
+
+@pytest.fixture
+def photo() -> Photo:
+    return PhotoFactory()
 
 
 @pytest.fixture
