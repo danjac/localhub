@@ -3,11 +3,24 @@ import pytest
 from django.test.client import Client
 from django.urls import reverse
 
-from communikit.communities.models import Community
+from communikit.communities.models import Membership, Community
 from communikit.events.tests.factories import EventFactory
 from communikit.posts.tests.factories import PostFactory
 
 pytestmark = pytest.mark.django_db
+
+
+class TestActivityProfileView:
+    def test_get(self, client: Client, member: Membership):
+        PostFactory(community=member.community, owner=member.member)
+        EventFactory(community=member.community, owner=member.member)
+
+        response = client.get(
+            reverse("activities:profile", args=[member.member.username])
+        )
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 2
+        assert response.context["is_own_profile"]
 
 
 class TestActivityStreamView:

@@ -5,8 +5,7 @@ from typing import Sequence
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
-
-# from django.urls import reverse
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -27,5 +26,4 @@ class User(AbstractUser):
         """
         Link to (public) profile content page
         """
-        # return reverse("content:profile", args=[self.username])
-        return "/"
+        return reverse("activities:profile", args=[self.username])

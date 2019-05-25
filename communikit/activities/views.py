@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
-from django.db.models import QuerySet, Model
+from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -33,6 +33,7 @@ from communikit.core.types import ContextDict, QuerySetList
 from communikit.core.views import CombinedQuerySetListView
 from communikit.events.models import Event
 from communikit.posts.models import Post
+from communikit.users.views import UserProfileMixin
 
 
 class ActivityQuerySetMixin:
@@ -190,7 +191,7 @@ class ActivityStreamView(CommunityRequiredMixin, CombinedQuerySetListView):
     allow_empty = True
     paginate_by = app_settings.DEFAULT_PAGE_SIZE
 
-    def get_queryset(self, model: Type[Model]) -> QuerySet:
+    def get_queryset(self, model: Type[Activity]) -> QuerySet:
         return (
             model.objects.filter(community=self.request.community)
             .with_num_comments()
@@ -226,3 +227,11 @@ class ActivitySearchView(ActivityStreamView):
 
 
 activity_search_view = ActivitySearchView.as_view()
+
+
+class ActivityProfileView(UserProfileMixin, ActivityStreamView):
+    def get_queryset(self, model: Type[Activity]) -> QuerySet:
+        return super().get_queryset(model).filter(owner=self.object)
+
+
+activity_profile_view = ActivityProfileView.as_view()

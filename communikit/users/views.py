@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -20,7 +23,7 @@ class CurrentUserMixin(LoginRequiredMixin):
         return self.request.user
 
 
-class ProfileUserMixin(CommunityRequiredMixin, SingleObjectMixin):
+class UserProfileMixin(CommunityRequiredMixin, SingleObjectMixin):
     slug_field = "username"
     slug_url_kwarg = "username"
     context_object_name = "profile"
