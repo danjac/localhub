@@ -44,7 +44,7 @@ class ActivityQuerySetMixin(CommunityRequiredMixin):
         )
 
 
-class BaseActivityCreateView(
+class ActivityCreateView(
     CommunityRequiredMixin, PermissionRequiredMixin, CreateView
 ):
     permission_required = "activities.create_activity"
@@ -68,7 +68,7 @@ class BaseActivityCreateView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class BaseActivityListView(ActivityQuerySetMixin, ListView):
+class ActivityListView(ActivityQuerySetMixin, ListView):
     allow_empty = True
     paginate_by = app_settings.DEFAULT_PAGE_SIZE
     order_by = "-created"
@@ -84,7 +84,7 @@ class BaseActivityListView(ActivityQuerySetMixin, ListView):
         )
 
 
-class BaseActivityUpdateView(
+class ActivityUpdateView(
     PermissionRequiredMixin,
     SuccessMessageMixin,
     ActivityQuerySetMixin,
@@ -94,7 +94,7 @@ class BaseActivityUpdateView(
     success_message = _("Your changes have been saved")
 
 
-class BaseActivityDeleteView(
+class ActivityDeleteView(
     PermissionRequiredMixin, ActivityQuerySetMixin, DeleteView
 ):
     permission_required = "activities.delete_activity"
@@ -115,7 +115,7 @@ class BaseActivityDeleteView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class BaseActivityDetailView(ActivityQuerySetMixin, DetailView):
+class ActivityDetailView(ActivityQuerySetMixin, DetailView):
     def get_comments(self) -> QuerySet:
         return (
             self.object.comment_set.select_related(
@@ -143,7 +143,7 @@ class BaseActivityDetailView(ActivityQuerySetMixin, DetailView):
         return data
 
 
-class BaseActivityLikeView(
+class ActivityLikeView(
     ActivityQuerySetMixin, PermissionRequiredMixin, SingleObjectMixin, View
 ):
     permission_required = "activities.like_activity"
@@ -160,7 +160,7 @@ class BaseActivityLikeView(
         return HttpResponseRedirect(self.object.get_absolute_url())
 
 
-class BaseActivityDislikeView(
+class ActivityDislikeView(
     ActivityQuerySetMixin, LoginRequiredMixin, SingleObjectMixin, View
 ):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:

@@ -23,17 +23,3 @@ class TestNotificationListView:
         response = client.get(reverse("notifications:list"))
         assert len(response.context["object_list"]) == 2
         assert response.status_code == 200
-
-
-class TestNotificationMarkReadView:
-    def test_post(self, client: Client, member: Membership):
-        post = PostFactory(community=member.community)
-        notification = PostNotification.objects.create(
-            post=post, recipient=member.member
-        )
-        response = client.post(
-            reverse("posts:mark_notification_read", args=[notification.id])
-        )
-        assert response.url == reverse("notifications:list")
-        notification.refresh_from_db()
-        assert notification.is_read

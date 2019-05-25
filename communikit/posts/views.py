@@ -1,57 +1,32 @@
 from django.utils.translation import ugettext_lazy as _
 
 from communikit.activities.views import (
-    BaseActivityCreateView,
-    BaseActivityDeleteView,
-    BaseActivityDetailView,
-    BaseActivityDislikeView,
-    BaseActivityLikeView,
-    BaseActivityUpdateView,
+    ActivityCreateView,
+    ActivityDeleteView,
+    ActivityDetailView,
+    ActivityDislikeView,
+    ActivityLikeView,
+    ActivityUpdateView,
 )
+from communikit.notifications.views import NotificationMarkReadView
 from communikit.posts.forms import PostForm
-from communikit.posts.models import Post
+from communikit.posts.models import Post, PostNotification
 
 
-class PostCreateView(BaseActivityCreateView):
-    model = Post
-    form_class = PostForm
+post_create_view = ActivityCreateView.as_view(model=Post, form_class=PostForm)
 
+post_detail_view = ActivityDetailView.as_view(model=Post)
 
-post_create_view = PostCreateView.as_view()
+post_update_view = ActivityUpdateView.as_view(model=Post, form_class=PostForm)
 
+post_delete_view = ActivityDeleteView.as_view(
+    model=Post, success_message=_("Your post has been deleted")
+)
 
-class PostDetailView(BaseActivityDetailView):
-    model = Post
+post_like_view = ActivityLikeView.as_view(model=Post)
 
+post_dislike_view = ActivityDislikeView.as_view(model=Post)
 
-post_detail_view = PostDetailView.as_view()
-
-
-class PostUpdateView(BaseActivityUpdateView):
-    model = Post
-    form_class = PostForm
-
-
-post_update_view = PostUpdateView.as_view()
-
-
-class PostDeleteView(BaseActivityDeleteView):
-    model = Post
-    success_message = _("Your post has been deleted")
-
-
-post_delete_view = PostDeleteView.as_view()
-
-
-class PostLikeView(BaseActivityLikeView):
-    model = Post
-
-
-post_like_view = PostLikeView.as_view()
-
-
-class PostDislikeView(BaseActivityDislikeView):
-    model = Post
-
-
-post_dislike_view = PostDislikeView.as_view()
+post_notification_mark_read_view = NotificationMarkReadView.as_view(
+    model=PostNotification
+)

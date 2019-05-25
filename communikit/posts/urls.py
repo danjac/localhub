@@ -1,13 +1,12 @@
 from django.urls import path
 
-from communikit.notifications.views import NotificationMarkReadView
-from communikit.posts.models import PostNotification
 from communikit.posts.views import (
     post_create_view,
     post_delete_view,
     post_detail_view,
     post_dislike_view,
     post_like_view,
+    post_notification_mark_read_view,
     post_update_view,
 )
 
@@ -22,7 +21,7 @@ urlpatterns = [
     path("<int:pk>/~dislike/", post_dislike_view, name="dislike"),
     path(
         "notifications/<int:pk>/~mark-read/",
-        NotificationMarkReadView.as_view(model=PostNotification),
+        post_notification_mark_read_view,
         name="mark_notification_read",
     ),
 ]

@@ -17,9 +17,10 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.activities.models import Activity
 from communikit.comments.forms import CommentForm
-from communikit.comments.models import Comment, Like
+from communikit.comments.models import Comment, CommentNotification, Like
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.core.types import ContextDict
+from communikit.notifications.views import NotificationMarkReadView
 
 
 class SingleCommentMixin(CommunityRequiredMixin):
@@ -155,3 +156,7 @@ class CommentDislikeView(
 
 
 comment_dislike_view = CommentDislikeView.as_view()
+
+comment_notification_mark_read_view = NotificationMarkReadView.as_view(
+    model=CommentNotification
+)
