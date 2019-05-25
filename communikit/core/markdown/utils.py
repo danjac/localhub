@@ -8,6 +8,7 @@ from typing import Set
 
 from bleach.linkifier import LinkifyFilter
 
+from django.http import QueryDict
 from django.urls import reverse
 
 from markdownx.utils import markdownify as default_markdownify
@@ -87,13 +88,13 @@ def linkify_hashtags(content: str) -> str:
     """
     tokens = content.split(" ")
     rv = []
-    # TBD: we might want to make this configurable, e.g. diff between
-    # tags in comments vs activities
     search_url = reverse("activities:search")
     for token in tokens:
 
         for tag in HASHTAGS_RE.findall(token):
-            url = search_url + f"?hashtag={tag}"
+            qd = QueryDict(mutable=True)
+            qd["q"] = f"#{tag}"
+            url = search_url + f"?{qd.urlencode()}"
             token = token.replace("#" + tag, f'<a href="{url}">#{tag}</a>')
 
         rv.append(token)

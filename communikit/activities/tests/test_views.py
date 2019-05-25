@@ -44,6 +44,15 @@ class TestActivitySearchView:
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 2
 
+    def test_get_hashtag(self, client: Client, community: Community):
+        post = PostFactory(community=community, description="#testme")
+        post.make_search_updater()()
+        response = client.get(
+            reverse("activities:search"), {"q": "#testme"}
+        )
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 1
+
     def test_get_if_search_string_empty(
         self, client: Client, community: Community
     ):
