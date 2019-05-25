@@ -16,5 +16,4 @@ micawber==0.4.0 # https://github.com/coleifer/micawber
 psycopg2==2.8.2 --no-binary psycopg2  # https://github.com/psycopg/psycopg2
 redis==3.2.1 # https://github.com/andymccurdy/redis-py
 rules==2.0.1 # https://github.com/dfunckt/django-rules
-whitenoise==4.1.2 # https://github.com/evansd/whitenoise
 

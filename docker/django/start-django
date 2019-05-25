@@ -5,4 +5,4 @@ set -o pipefail
 set -o nounset
 
 ./manage.py migrate
-./manage.py runserver_plus --nostatic 0.0.0.0:8000
+./manage.py runserver_plus 0.0.0.0:8000
