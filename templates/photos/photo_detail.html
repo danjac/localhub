@@ -1,0 +1,116 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/base.html" %}
+
+{% load i18n %}
+{% load rules %}
+{% load thumbnail %}
+
+{% block activities_content %}
+
+{% has_perm "activities.change_activity" user photo as can_change_photo %}
+{% has_perm "activities.delete_activity" user photo as can_delete_photo %}
+{% has_perm "activities.like_activity" user photo as can_like_photo %}
+{% has_perm "comments.create_comment" user photo as can_create_comment %}
+
+<div class="card content-card">
+  <div class="card-header">
+    <div class="card-subtitle text-gray float-right">
+      {% blocktrans with photo.created|timesince as created %}{{ created }} ago{% endblocktrans %}
+    </div>
+    <div class="card-title h6">{{ photo.title }}</div>
+    <div class="card-subtitle h6"><a href="{{ photo.owner.get_absolute_url }}">{{ photo.owner.username }}</a></div>
+    {% if photo.tags %}
+    <div class="card-title h6">{{ photo.linkify_tags }}</div>
+    {% endif %}
+  </div>
+  <div class="card-body">
+    {% thumbnail photo.image "800" crop="center" as image %}
+    <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}">
+    {% empty %}
+    <em>No photo available</em>
+    {% endthumbnail %}
+  </div>
+  <div class="card-footer">
+
+    <div class="d-flex content-actions">
+
+      {% if photo.owner_id == user.id %}
+      <div class="mr-2">{% trans "Likes" %} ({{ photo.num_likes }})</div>
+      {% elif can_like_photo %}
+      <div class="mr-2">
+        <a href="#"
+           data-controller="ajax"
+           data-action="ajax#post"
+           data-ajax-url=""
+           data-ajax-replace="true"
+           >{% trans "Like" %}</a>
+      </div>
+      {% endif %}
+
+      <!--
+        <div class="mr-2">
+        <a href="">{% trans "Flag" %}</a>
+        </div>
+      -->
+
+      {% if can_change_photo %}
+      <div class="mr-2">
+        <a href="{% url 'photos:update' photo.id %}"
+           >{% trans "Update" %}</a>
+      </div>
+      {% endif %}
+
+      {% if can_delete_photo %}
+      <div class="mr-2">
+        {% url 'photos:delete' photo.id as delete_url %}
+        <a href="{{ delete_url }}"
+           data-controller="ajax confirm"
+           data-action="confirm#check ajax#delete"
+           data-ajax-url="{{ delete_url }}"
+           data-confirm-header="{% trans 'Delete photo' %}"
+           data-confirm-body="{% trans 'Are you sure you want to delete this photo?' %}"
+           >{% trans "Delete" %}</a>
+      </div>
+      {% endif %}
+
+      <div class="">
+        <a href="{{ photo.get_permalink }}">{% trans "Permalink" %}</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<div id="comments">
+  {% if comments %}
+  <h4>{% trans "Comments" %}</h4>
+  {% endif %}
+  {% for comment in comments %}
+  <div class="mb-2">
+    {% include "comments/includes/comment.html" %}
+  </div>
+  {% endfor %}
+  {% if comment_form %}
+  <div class="divider"></div>
+  <h4>{% trans "Post a Comment" %}</h4>
+  <form method="POST" action="{% url 'comments:create' photo.id %}" data-controller="form" data-action="form#submit">
+    {% include "includes/forms/fields.html" with form=comment_form %}
+    <button class="btn btn-primary" type="submit">{% trans "Submit" %}</button>
+  </form>
+  {% elif not user.is_authenticated %}
+  <p class="bg-gray p-2 text-center">
+    {% url 'account_login' as login_url %}
+    {% blocktrans %}Please <a href="{{ login_url }}">sign in</a> to post comments.{% endblocktrans %}
+  </p>
+  {% else %}
+  <p class="bg-gray p-2 text-center">
+    {% trans "You do not have permission to post comments on this site." %}
+  </p>
+
+  {% endif %}
+</div>
+{% endblock activities_content %}

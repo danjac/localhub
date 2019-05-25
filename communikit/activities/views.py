@@ -211,7 +211,9 @@ activity_stream_view = ActivityStreamView.as_view()
 
 class ActivitySearchView(ActivityStreamView):
     template_name = "activities/search.html"
-    ordering = "rank"
+
+    def get_ordering(self) -> Optional[str]:
+        return "rank" if self.search_query else None
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.search_query = request.GET.get("q", "").strip()

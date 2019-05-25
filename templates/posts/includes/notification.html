@@ -2,29 +2,32 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-<div class="tile">
-  <div class="tile-content">
-    <div class="tile-title">
-      {% with post=notification.post verb=notification.verb %}
-      User <strong>{{ post.owner.username }}</strong>
-      {% if verb == 'mentioned' %}
-      has mentioned you in a
-      {% elif verb == 'created' %}
-      has published a
-      {% elif verb == 'updated' %}
-      has updated their
-      {% endif %}
-      <a href="{{ post.get_absolute_url }}">post</a>.
-      {% endwith %}
+<div class="tile tile-centered">
+    <div class="tile-content">
+        <div class="tile-title">
+            {% with post=notification.post verb=notification.verb %}
+            User <strong>{{ post.owner.username }}</strong>
+            {% if verb == 'mentioned' %}
+            has mentioned you in a
+            {% elif verb == 'created' %}
+            has published a
+            {% elif verb == 'updated' %}
+            has updated their
+            {% endif %}
+            <a href="{{ post.get_absolute_url }}">post</a>.
+            {% endwith %}
+        </div>
+        <div class="tile-subtitle text-gray">
+            {{ notification.created|timesince }} ago
+        </div>
     </div>
-  </div>
-  {% if not notification.is_read %}
-  <div class="tile-action">
-    <button class="btn btn-primary float-right"
-            data-controller="ajax"
-            data-action="ajax#post"
-            data-ajax-url="{% url 'posts:mark_notification_read' notification.pk %}"
-            >{% trans "Mark as Read" %}</button>
-  </div>
-  {% endif %}
+    {% if not notification.is_read %}
+    <div class="tile-action">
+        <button class="btn btn-primary float-right"
+                data-controller="ajax"
+                data-action="ajax#post"
+                data-ajax-url="{% url 'posts:mark_notification_read' notification.pk %}"
+                >{% trans "Mark as Read" %}</button>
+    </div>
+    {% endif %}
 </div>

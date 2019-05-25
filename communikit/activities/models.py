@@ -30,6 +30,7 @@ class ActivityQuerySet(InheritanceQuerySetMixin, models.QuerySet):
     https://github.com/jazzband/django-model-utils/issues/312
     so we'll use it only when absolutely necessary.
     """
+
     def with_num_comments(self) -> models.QuerySet:
         return self.annotate(num_comments=models.Count("comment"))
 
@@ -52,6 +53,8 @@ class ActivityQuerySet(InheritanceQuerySetMixin, models.QuerySet):
         )
 
     def search(self, search_term: str) -> models.QuerySet:
+        if not search_term:
+            return self.none()
         query = SearchQuery(search_term)
         return self.annotate(
             rank=SearchRank(models.F("search_document"), query=query)

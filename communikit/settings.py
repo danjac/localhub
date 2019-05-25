@@ -46,6 +46,7 @@ class Base(Configuration):
         "markdownx",
         "micawber.contrib.mcdjango",
         "rules.apps.AutodiscoverRulesConfig",
+        "sorl.thumbnail",
         "widget_tweaks",
     ]
 
@@ -189,6 +190,11 @@ class Base(Configuration):
 
     CELERY_BROKER_URL = values.Value()
     CELERY_RESULT_BACKEND = values.Value()
+
+    # Sorl-thumbnail
+
+    def THUMBNAIL_DEBUG(self) -> bool:
+        return self.DEBUG
 
 
 class Testing(Base):

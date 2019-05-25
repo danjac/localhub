@@ -4,6 +4,7 @@
 from typing import Dict, List
 
 from django.db import models
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from sorl.thumbnail import ImageField
@@ -16,11 +17,14 @@ from communikit.notifications.models import Notification
 class Photo(Activity):
 
     title = models.CharField(max_length=300)
-    image = ImageField(upload_to="photos/")
+    image = ImageField(upload_to="photos")
     tags = models.CharField(max_length=300, blank=True)
 
     def __str__(self) -> str:
         return self.title
+
+    def get_absolute_url(self) -> str:
+        return reverse('photos:detail', args=[self.id])
 
     def search_index_components(self) -> Dict[str, str]:
         return {"A": self.title, "B": self.tags}

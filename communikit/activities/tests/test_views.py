@@ -43,3 +43,11 @@ class TestActivitySearchView:
         response = client.get(reverse("activities:search"), {"q": "test"})
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 2
+
+    def test_get_if_search_string_empty(
+        self, client: Client, community: Community
+    ):
+
+        response = client.get(reverse("activities:search"))
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 0
