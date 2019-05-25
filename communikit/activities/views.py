@@ -176,7 +176,7 @@ class BaseActivityDislikeView(
 
 class ActivityStreamView(CommunityRequiredMixin, CombinedQuerySetListView):
     template_name = "activities/stream.html"
-    order_field = "created"
+    ordering = "created"
     allow_empty = True
     paginate_by = app_settings.DEFAULT_PAGE_SIZE
 
@@ -198,7 +198,7 @@ activity_stream_view = ActivityStreamView.as_view()
 
 class ActivitySearchView(ActivityStreamView):
     template_name = "activities/search.html"
-    order_field = "rank"
+    ordering = "rank"
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.search_query = request.GET.get("q").strip()

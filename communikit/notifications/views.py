@@ -21,7 +21,7 @@ class NotificationListView(
 ):
     paginate_by = app_settings.DEFAULT_PAGE_SIZE
     template_name = "notifications/notification_list.html"
-    order_field = "created"
+    ordering = "created"
 
     def get_querysets(self) -> QuerySetList:
         return [

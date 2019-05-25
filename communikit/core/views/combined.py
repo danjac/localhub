@@ -6,6 +6,7 @@ from collections import defaultdict
 from django.core.paginator import Page, Paginator
 from django.db.models import CharField, QuerySet, Value
 from django.views.generic import TemplateView
+from django.views.generic.base import ContextMixin
 
 from communikit.core.types import ContextDict, QuerySetDict, QuerySetList
 
@@ -18,14 +19,15 @@ class CombinedQuerySetMixin:
 
     allow_empty = True
     limit = None
-    order_field = None
+    ordering = None
     paginate_by = None
+    page_kwarg = "page"
 
     def get_querysets(self) -> QuerySetList:
         raise NotImplementedError
 
-    def get_order_field(self) -> str:
-        return self.order_field
+    def get_ordering(self) -> str:
+        return self.ordering
 
     def get_queryset_dict(self) -> QuerySetDict:
         return {
@@ -36,10 +38,10 @@ class CombinedQuerySetMixin:
     def get_combined_queryset(self, queryset_dict: QuerySetDict) -> QuerySet:
         values = ["pk", "object_type"]
 
-        order_field = self.get_order_field()
+        ordering = self.get_ordering()
 
-        if order_field:
-            values.append(order_field)
+        if ordering:
+            values.append(ordering)
 
         querysets = [
             qs.annotate(
@@ -48,8 +50,8 @@ class CombinedQuerySetMixin:
             for key, qs in queryset_dict.items()
         ]
         qs = querysets[0].union(*querysets[1:])
-        if order_field:
-            qs = qs.order_by(f"-{order_field}")
+        if ordering:
+            qs = qs.order_by(f"-{ordering}")
         return qs
 
     def load_objects(self, items: QuerySet, queryset_dict: QuerySetDict):
@@ -82,7 +84,7 @@ class CombinedQuerySetMixin:
         union_qs = self.get_combined_queryset(queryset_dict)
 
         page = Paginator(union_qs, **self.get_pagination_kwargs()).get_page(
-            self.request.GET.get("page", 1)
+            self.request.GET.get(self.page_kwarg, 1)
         )
 
         self.load_objects(page, queryset_dict)
@@ -96,7 +98,7 @@ class CombinedQuerySetMixin:
         }
 
 
-class CombinedQuerySetContextMixin(CombinedQuerySetMixin):
+class CombinedQuerySetContextMixin(CombinedQuerySetMixin, ContextMixin):
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
         if self.paginate_by:
