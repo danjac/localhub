@@ -38,7 +38,7 @@ class CommentQuerySet(models.QuerySet):
 class Comment(TimeStampedModel):
 
     owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+"
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)

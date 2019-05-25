@@ -1,0 +1,25 @@
+{% extends "users/profile_base.html" %}
+{% load i18n %}
+{% block profile_content %}
+
+{% for comment in object_list %}
+<div class="mt-2">
+    {% include "comments/includes/comment.html" %}
+</div>
+{% empty %}
+<div class="empty">
+    <div class="empty-icon">
+        <i class="icon icon-user"></i>
+    </div>
+    <p class="empty-title h5">
+        {% if profile == user %}
+        {% trans "You haven't posted anything yet" %}
+        {% else %}
+        {% trans "This user hasn't posted anything yet" %}
+        {% endif %}
+    </p>
+</div>
+{% endfor %}
+
+{% include "includes/pagination.html" %}
+{% endblock profile_content %}

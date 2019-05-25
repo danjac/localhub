@@ -1,0 +1,17 @@
+{% extends "activities/base.html" %}
+{% load i18n %}
+{% block activities_content %}
+
+<h3>{{ profile.username }}</h3>
+
+<ul class="tab tab-block">
+  <li class="tab-item{% if view.active_tab == 'posts' %} active{% endif %}">
+    <a href="{% url 'activities:profile' object.username %}">{% trans "Posts" %}</a>
+  </li>
+  <li class="tab-item{% if view.active_tab == 'comments' %} active{% endif %}">
+    <a href="{% url 'comments:profile' object.username %}">{% trans "Comments" %}</a>
+  </li>
+</ul>
+
+{% block profile_content %}{% endblock %}
+{% endblock activities_content %}

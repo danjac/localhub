@@ -20,7 +20,6 @@ class TestActivityProfileView:
         )
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 2
-        assert response.context["is_own_profile"]
 
 
 class TestActivityStreamView:

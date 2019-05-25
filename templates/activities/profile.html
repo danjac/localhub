@@ -1,9 +1,6 @@
-{% extends "activities/base.html" %}
+{% extends "users/profile_base.html" %}
 {% load i18n %}
-{% load rules %}
-{% block activities_content %}
-
-<h3>{{ object.username }}</h3>
+{% block profile_content %}
 
 {% for activity in object_list %}
 <div class="mt-2">
@@ -14,9 +11,15 @@
   <div class="empty-icon">
     <i class="icon icon-user"></i>
   </div>
-  <p class="empty-title h5">{% trans "This user hasn't posted anything yet" %}</p>
+  <p class="empty-title h5">
+      {% if profile == user %}
+      {% trans "You haven't posted anything yet" %}
+      {% else %}
+      {% trans "This user hasn't posted anything yet" %}
+      {% endif %}
+  </p>
 </div>
 {% endfor %}
 
 {% include "includes/pagination.html" %}
-{% endblock activities_content %}
+{% endblock profile_content %}

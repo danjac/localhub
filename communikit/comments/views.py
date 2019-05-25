@@ -1,3 +1,5 @@
+from typing import no_type_check
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
@@ -8,11 +10,13 @@ from django.views.generic import (
     DeleteView,
     DetailView,
     FormView,
+    ListView,
     UpdateView,
     View,
 )
 from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.list import MultipleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -22,14 +26,25 @@ from communikit.comments.models import Comment, CommentNotification, Like
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.core.types import ContextDict
 from communikit.notifications.views import NotificationMarkReadView
+from communikit.users.views import UserProfileMixin
 
 
-class SingleCommentMixin(CommunityRequiredMixin, ContextMixin):
+class CommentQuerySetMixin(CommunityRequiredMixin):
+    @no_type_check
     def get_queryset(self) -> QuerySet:
-        return Comment.objects.filter(
-            activity__community=self.request.community
-        ).select_related("owner", "activity", "activity__community")
+        return (
+            Comment.objects
+            .get_queryset()
+            .filter(activity__community=self.request.community)
+            .select_related("owner", "activity", "activity__community")
+        )
 
+
+class SingleCommentMixin(CommentQuerySetMixin, SingleObjectMixin):
+    ...
+
+
+class SingleCommentContextMixin(SingleCommentMixin, ContextMixin):
     def get_parent(self) -> Activity:
         return Activity.objects.select_related(
             "community", "owner"
@@ -39,6 +54,10 @@ class SingleCommentMixin(CommunityRequiredMixin, ContextMixin):
         data = super().get_context_data(**kwargs)
         data["parent"] = self.get_parent()
         return data
+
+
+class MultipleCommentMixin(CommentQuerySetMixin, MultipleObjectMixin):
+    ...
 
 
 class CommentCreateView(
@@ -78,7 +97,7 @@ class CommentCreateView(
 comment_create_view = CommentCreateView.as_view()
 
 
-class CommentDetailView(SingleCommentMixin, DetailView):
+class CommentDetailView(SingleCommentContextMixin, DetailView):
     def get_queryset(self) -> QuerySet:
         return (
             super()
@@ -92,7 +111,7 @@ comment_detail_view = CommentDetailView.as_view()
 
 
 class CommentUpdateView(
-    PermissionRequiredMixin, SingleCommentMixin, UpdateView
+    PermissionRequiredMixin, SingleCommentContextMixin, UpdateView
 ):
     form_class = CommentForm
     permission_required = "comments.change_comment"
@@ -105,7 +124,7 @@ comment_update_view = CommentUpdateView.as_view()
 
 
 class CommentDeleteView(
-    PermissionRequiredMixin, SingleCommentMixin, DeleteView
+    PermissionRequiredMixin, SingleCommentContextMixin, DeleteView
 ):
     permission_required = "comments.delete_comment"
 
@@ -122,9 +141,7 @@ class CommentDeleteView(
 comment_delete_view = CommentDeleteView.as_view()
 
 
-class CommentLikeView(
-    PermissionRequiredMixin, SingleCommentMixin, SingleObjectMixin, View
-):
+class CommentLikeView(PermissionRequiredMixin, SingleCommentMixin, View):
     permission_required = "comments.like_comment"
 
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
@@ -142,9 +159,7 @@ class CommentLikeView(
 comment_like_view = CommentLikeView.as_view()
 
 
-class CommentDislikeView(
-    LoginRequiredMixin, SingleCommentMixin, SingleObjectMixin, View
-):
+class CommentDislikeView(LoginRequiredMixin, SingleCommentMixin, View):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         Like.objects.filter(user=request.user, comment=self.object).delete()
@@ -161,3 +176,21 @@ comment_dislike_view = CommentDislikeView.as_view()
 comment_notification_mark_read_view = NotificationMarkReadView.as_view(
     model=CommentNotification
 )
+
+
+class CommentProfileView(MultipleCommentMixin, UserProfileMixin, ListView):
+    active_tab = "comments"
+    template_name = "comments/profile.html"
+
+    def get_queryset(self) -> QuerySet:
+        return (
+            super()
+            .get_queryset()
+            .filter(owner=self.object)
+            .with_num_likes()
+            .with_has_liked(self.request.user)
+            .order_by("-created")
+        )
+
+
+comment_profile_view = CommentProfileView.as_view()

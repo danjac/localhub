@@ -5,6 +5,7 @@
 {% load notifications_tags %}
 
 {% block content %}
+{% test_rule 'is_member' user request.community as is_member %}
 {% has_perm 'communities.manage_community' user request.community as can_manage_community %}
 <div class="columns" data-controller="sidebar">
   <div class="column col-9 col-sm-12" data-target="sidebar.main">
@@ -38,7 +39,9 @@
          <li class="menu-item">
            <a href="{% url 'events:list' %}">{% trans "Events" %}</a>
          </li>
+         {% if is_member %}
          <li class="menu-item"><a href="{{ user.get_profile_url }}">{% trans "My Profile" %}</a></li>
+         {% endif %}
          {% if can_manage_community %}
          <li class="menu-item"><a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a></li>
          {% endif %}

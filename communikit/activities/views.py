@@ -230,6 +230,9 @@ activity_search_view = ActivitySearchView.as_view()
 
 
 class ActivityProfileView(UserProfileMixin, ActivityStreamView):
+    active_tab = "posts"
+    template_name = "activities/profile.html"
+
     def get_queryset(self, model: Type[Activity]) -> QuerySet:
         return super().get_queryset(model).filter(owner=self.object)
 

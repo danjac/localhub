@@ -28,7 +28,9 @@ class TestCommentCreateView:
 
 
 class TestCommentDetailView:
-    def test_get(self, client: Client, comment: Comment):
+    def test_get(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        comment = CommentFactory(owner=member.member, activity=post)
         response = client.get(
             reverse("comments:detail", args=[comment.id]),
             HTTP_HOST=comment.activity.community.domain,
@@ -88,6 +90,17 @@ class TestCommentDislikeView:
         )
         assert response.status_code == 204
         assert comment.like_set.count() == 0
+
+
+class TestCommentProfileView:
+    def test_get(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        comment = CommentFactory(activity=post, owner=member.member)
+        response = client.get(
+            reverse("comments:profile", args=[comment.owner.username]),
+        )
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 1
 
 
 class TestCommentNotificationMarkReadView:
