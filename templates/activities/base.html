@@ -40,7 +40,7 @@
            <a href="{% url 'events:list' %}">{% trans "Events" %}</a>
          </li>
          <li class="menu-item">
-           <a href="">{% trans "Gallery" %}</a>
+             <a href="{% url 'photos:list' %}">{% trans "Gallery" %}</a>
          </li>
          {% if is_member %}
          <li class="menu-item"><a href="{{ user.get_profile_url }}">{% trans "My Profile" %}</a></li>

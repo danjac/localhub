@@ -7,17 +7,19 @@
 {% block activities_content %}
 
 {% for item in object_list %}
-{% if item.object_type == "postnotification" %}
-{% include "posts/includes/notification.html" with notification=item.object %}
-{% elif item.object_type == "commentnotification" %}
-{% include "comments/includes/notification.html" with notification=item.object %}
-{% endif %}
+<div class="mb-2">
+    {% if item.object_type == "postnotification" %}
+    {% include "posts/includes/notification.html" with notification=item.object %}
+    {% elif item.object_type == "commentnotification" %}
+    {% include "comments/includes/notification.html" with notification=item.object %}
+    {% endif %}
+</div>
 {% empty %}
 <div class="empty">
-  <div class="empty-icon">
-    <i class="icon icon-mail"></i>
-  </div>
-  <p class="empty-title h5">{% trans "You have no new notifications" %}</p>
+    <div class="empty-icon">
+        <i class="icon icon-mail"></i>
+    </div>
+    <p class="empty-title h5">{% trans "You have no new notifications" %}</p>
 </div>
 {% endfor %}
 

@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from typing import Dict, List
 
 from django.db import models
@@ -6,7 +9,7 @@ from django.utils.safestring import mark_safe
 from sorl.thumbnail import ImageField
 
 from communikit.activities.models import Activity
-from communikit.markdown.utils import linkify_hashtags
+from communikit.core.markdown.utils import linkify_hashtags
 from communikit.notifications.models import Notification
 
 

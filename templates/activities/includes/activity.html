@@ -2,4 +2,6 @@
 {% include "posts/includes/post.html" with post=activity.object %}
 {% elif activity.object_type == "event" %}
 {% include "events/includes/event.html" with event=activity.object %}
+{% elif activity.object_type == "photo" %}
+{% include "photos/includes/photo.html" with photo=activity.object %}
 {% endif %}

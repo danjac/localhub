@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Optional, Type, no_type_check
+from typing import List, Optional, Type, no_type_check
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -32,6 +32,7 @@ from communikit.communities.views import CommunityRequiredMixin
 from communikit.core.types import ContextDict, QuerySetList
 from communikit.core.views import CombinedQuerySetListView
 from communikit.events.models import Event
+from communikit.photos.models import Photo
 from communikit.posts.models import Post
 from communikit.users.views import UserProfileMixin
 
@@ -189,6 +190,7 @@ class ActivityStreamView(CommunityRequiredMixin, CombinedQuerySetListView):
     template_name = "activities/stream.html"
     ordering = "created"
     allow_empty = True
+    models: List[Type[Activity]] = [Photo, Post, Event]
     paginate_by = app_settings.DEFAULT_PAGE_SIZE
 
     def get_queryset(self, model: Type[Activity]) -> QuerySet:
@@ -201,7 +203,7 @@ class ActivityStreamView(CommunityRequiredMixin, CombinedQuerySetListView):
         )
 
     def get_querysets(self) -> QuerySetList:
-        return [self.get_queryset(model) for model in (Post, Event)]
+        return [self.get_queryset(model) for model in self.models]
 
 
 activity_stream_view = ActivityStreamView.as_view()
@@ -212,7 +214,7 @@ class ActivitySearchView(ActivityStreamView):
     ordering = "rank"
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        self.search_query = request.GET.get("q").strip()
+        self.search_query = request.GET.get("q", "").strip()
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self, model: Type[Activity]) -> QuerySet:
