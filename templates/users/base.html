@@ -5,22 +5,22 @@
 
 {% block content %}
 <div class="container">
-  <div class="columns">
-    <div id="user-main-panel" class="column col-9 col-sm-12">
+  <div class="columns" data-controller="sidebar">
+    <div class="column col-9 col-sm-12" data-target="sidebar.main">
       <div class="show-sm hide-md float-right">
         <a href="#"
            class="btn btn-link"
-           data-toggle="#user-sidebar,#user-main-panel"
-           data-toggle-class="hide-sm">{% trans "Sidebar" %}</a>
+           data-action="sidebar#toggle"
+           >{% trans "Sidebar" %}</a>
       </div>
       <div class="clearfix"></div>
       {% block users_content %}{% endblock %}
     </div>
-    <div id="user-sidebar" class="column col-3 col-sm-12 hide-sm bg-gray p-2">
+    <div class="column col-3 col-sm-12 hide-sm bg-gray p-2" data-target="sidebar.nav">
       <a href="#"
          class="btn btn-link show-sm hide-md"
-         data-toggle="#user-sidebar,#user-main-panel"
-         data-toggle-class="hide-sm">{% trans "Close Sidebar" %}</a>
+         data-action="sidebar#toggle"
+         >{% trans "Close Sidebar" %}</a>
       <ul class="menu">
         <li class="menu-item">
           <a href="{% url 'users:update' %}">{% trans "Edit profile" %}</a>
