@@ -39,11 +39,14 @@
          <li class="menu-item">
            <a href="{% url 'events:list' %}">{% trans "Events" %}</a>
          </li>
+         <li class="menu-item">
+           <a href="">{% trans "Gallery" %}</a>
+         </li>
          {% if is_member %}
          <li class="menu-item"><a href="{{ user.get_profile_url }}">{% trans "My Profile" %}</a></li>
          {% endif %}
          {% if can_manage_community %}
-         <li class="menu-item"><a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a></li>
+         <li class="menu-item"><a href="{% url 'communities:community_update' %}">{% trans "Settings" %}</a></li>
          {% endif %}
        </ul>
 

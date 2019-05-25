@@ -14,6 +14,7 @@ flower==0.9.3 # https://github.com/mher/flower
 geocoder==1.38.1 #https://github.com/DenisCarriere/geocoder
 micawber==0.4.0 # https://github.com/coleifer/micawber
 psycopg2==2.8.2 --no-binary psycopg2  # https://github.com/psycopg/psycopg2
+sorl-thumbnail==12.5.0 # https://github.com/jazzband/sorl-thumbnail
 redis==3.2.1 # https://github.com/andymccurdy/redis-py
 rules==2.0.1 # https://github.com/dfunckt/django-rules
 

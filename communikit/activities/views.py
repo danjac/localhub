@@ -114,10 +114,10 @@ class ActivityDeleteView(
 ):
     permission_required = "activities.delete_activity"
     success_url = reverse_lazy("activities:stream")
-    success_message: Optional[str] = None
+    success_message = _("Your %s has been deleted")
 
     def get_success_message(self) -> Optional[str]:
-        return self.success_message
+        return self.success_message % self.object._meta.verbose_name
 
     def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()

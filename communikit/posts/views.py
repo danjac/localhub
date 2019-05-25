@@ -1,5 +1,3 @@
-from django.utils.translation import ugettext_lazy as _
-
 from communikit.activities.views import (
     ActivityCreateView,
     ActivityDeleteView,
@@ -20,7 +18,7 @@ post_detail_view = ActivityDetailView.as_view(model=Post)
 post_update_view = ActivityUpdateView.as_view(model=Post, form_class=PostForm)
 
 post_delete_view = ActivityDeleteView.as_view(
-    model=Post, success_message=_("Your post has been deleted")
+    model=Post
 )
 
 post_like_view = ActivityLikeView.as_view(model=Post)

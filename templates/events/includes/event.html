@@ -13,11 +13,12 @@
     </div>
     <div class="card-title h6"><a href="{{ event.get_absolute_url }}">{{ event.title }}</a></div>
     <div class="card-subtitle h6">
-      {{ event.starts|date:"SHORT_DATETIME_FORMAT" }}
+      {% trans "From" %} {{ event.starts|date:"SHORT_DATE_FORMAT" }} @ {{ event.starts|date:"TIME_FORMAT" }}
       {% if event.ends %}
-      - {{ event.ends|date:"SHORT_DATETIME_FORMAT" }}
+      {% trans "To" %} {{ event.ends|date:"SHORT_DATE_FORMAT" }} @ {{ event.ends|date:"TIME_FORMAT" }}
       {% endif %}
     </div>
+
     {% trans "Remote" as remote_t %}
     <div class="card-subtitle h6">{{ event.location|default:remote_t }}</div>
     <div class="card-subtitle h6"><a href="">{{ event.owner.username }}</a></div>
