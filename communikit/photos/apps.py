@@ -6,3 +6,6 @@ from django.apps import AppConfig
 
 class PhotosConfig(AppConfig):
     name = "communikit.photos"
+
+    def ready(self):
+        import communikit.photos.signals # noqa
