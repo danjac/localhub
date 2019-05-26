@@ -16,9 +16,9 @@
     </div>
     {% if post.title %}
     <div class="card-title h6"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></div>
-    <div class="card-subtitle h6"><a href="{{ post.owner.get_absolute_url }}">{{ post.owner.username }}</a></div>
+    <div class="card-subtitle h6"><a href="{{ post.owner.get_profile_url }}">{{ post.owner.username }}</a></div>
     {% else %}
-    <div class="card-title h6"><a href="{{ post.owner.get_absolute_url }}">{{ post.owner.username }}</a></div>
+    <div class="card-title h6"><a href="{{ post.owner.get_profile_url }}">{{ post.owner.username }}</a></div>
     {% endif %}
   </div>
   <div class="card-body">

@@ -12,6 +12,9 @@ pytestmark = pytest.mark.django_db
 
 
 class TestEventModel:
+    def test_get_absolute_url(self, event: Event):
+        assert event.get_absolute_url() == f"/events/{event.id}/"
+
     def test_location(self):
         event = Event(
             street_address="Areenankuja 1",
