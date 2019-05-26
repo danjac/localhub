@@ -27,23 +27,23 @@
           >{% trans "Close Sidebar" %}</a>
        {% if user.is_authenticated %}
        <ul class="menu">
-         <li class="menu-item"><a href="{% url 'activities:stream' %}">{% trans "Stream" %}</a></li>
+         <li class="menu-item"><a data-target="sidebar.exactMatch" href="{% url 'activities:stream' %}">{% trans "Stream" %}</a></li>
          <li class="menu-item">
            {% get_unread_notifications_count as unread_notifications %}
-           <a href="{% url 'notifications:list' %}">
+           <a data-target="sidebar.match" href="{% url 'notifications:list' %}">
              <span {% if unread_notifications %}class="badge" data-badge="{{ unread_notifications }}"{% endif %}>
                {% trans "Notifications" %}
              </span>
            </a>
          </li>
          <li class="menu-item">
-           <a href="{% url 'events:list' %}">{% trans "Events" %}</a>
+           <a data-target="sidebar.match" href="{% url 'events:list' %}">{% trans "Events" %}</a>
          </li>
          <li class="menu-item">
-             <a href="{% url 'photos:list' %}">{% trans "Gallery" %}</a>
+           <a data-target="sidebar.match" href="{% url 'photos:list' %}">{% trans "Gallery" %}</a>
          </li>
          {% if is_member %}
-         <li class="menu-item"><a href="{{ user.get_profile_url }}">{% trans "My Profile" %}</a></li>
+         <li class="menu-item"><a data-target="sidebar.exactMatch" href="{{ user.get_profile_url }}">{% trans "My Profile" %}</a></li>
          {% endif %}
          {% if can_manage_community %}
          <li class="menu-item"><a href="{% url 'communities:community_update' %}">{% trans "Settings" %}</a></li>
