@@ -37,7 +37,7 @@ from communikit.posts.models import Post
 from communikit.users.views import UserProfileMixin
 
 
-class ActivityQuerySetMixin:
+class ActivityQuerySetMixin(CommunityRequiredMixin):
     @no_type_check
     def get_queryset(self) -> QuerySet:
         return (
@@ -48,15 +48,15 @@ class ActivityQuerySetMixin:
         )
 
 
-class SingleActivityMixin(
-    CommunityRequiredMixin, ActivityQuerySetMixin, SingleObjectMixin
-):
+class SingleActivityMixin(ActivityQuerySetMixin, SingleObjectMixin):
     ...
 
 
-class MultipleActivityMixin(
-    CommunityRequiredMixin, ActivityQuerySetMixin, MultipleObjectMixin
-):
+class MultipleActivityMixin(ActivityQuerySetMixin, MultipleObjectMixin):
+    ...
+
+
+class SingleActivityView(SingleActivityMixin, View):
     ...
 
 
@@ -159,7 +159,7 @@ class ActivityDetailView(SingleActivityMixin, DetailView):
         return data
 
 
-class ActivityLikeView(PermissionRequiredMixin, SingleActivityMixin, View):
+class ActivityLikeView(PermissionRequiredMixin, SingleActivityView):
     permission_required = "activities.like_activity"
 
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
@@ -174,7 +174,7 @@ class ActivityLikeView(PermissionRequiredMixin, SingleActivityMixin, View):
         return HttpResponseRedirect(self.object.get_absolute_url())
 
 
-class ActivityDislikeView(LoginRequiredMixin, SingleActivityMixin, View):
+class ActivityDislikeView(LoginRequiredMixin, SingleActivityView):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         Like.objects.filter(user=request.user, activity=self.object).delete()
