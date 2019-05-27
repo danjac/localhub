@@ -7,7 +7,7 @@
 {% block content %}
 {% test_rule 'is_member' user request.community as is_member %}
 {% has_perm 'communities.manage_community' user request.community as can_manage_community %}
-<div class="columns" data-controller="sidebar active-link">
+<div class="columns" data-controller="sidebar">
   <div class="column col-9 col-sm-12" data-target="sidebar.main">
     <div class="show-sm hide-md float-right">
       <a href="#"
@@ -27,7 +27,7 @@
           >{% trans "Close Sidebar" %}</a>
        <ul class="menu">
          <li class="menu-item">
-           <a data-target="active-link.match"
+           <a data-controller="active-link"
               data-active-link-exact
               href="{% url 'activities:stream' %}">{% trans "Stream" %}
            </a>
@@ -35,7 +35,7 @@
          {% if is_member %}
          <li class="menu-item">
            {% get_unread_notifications_count as unread_notifications %}
-           <a data-target="active-link.match" href="{% url 'notifications:list' %}">
+           <a data-controller="active-link" href="{% url 'notifications:list' %}">
              <span {% if unread_notifications %}class="badge" data-badge="{{ unread_notifications }}"{% endif %}>
                {% trans "Notifications" %}
              </span>
@@ -43,14 +43,14 @@
          </li>
          {% endif %}
          <li class="menu-item">
-           <a data-target="active-link.match" href="{% url 'events:list' %}">{% trans "Events" %}</a>
+           <a data-controller="active-link" href="{% url 'events:list' %}">{% trans "Events" %}</a>
          </li>
          <li class="menu-item">
-           <a data-target="active-link.match" href="{% url 'photos:list' %}">{% trans "Gallery" %}</a>
+           <a data-controller="active-link" href="{% url 'photos:list' %}">{% trans "Gallery" %}</a>
          </li>
          {% if is_member %}
          <li class="menu-item">
-           <a data-target="active-link.match"
+           <a data-controller="active-link"
               data-active-link-exact
               href="{{ user.get_profile_url }}">{% trans "My Profile" %}</a></li>
          {% endif %}

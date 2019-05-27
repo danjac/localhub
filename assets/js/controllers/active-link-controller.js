@@ -4,19 +4,16 @@ export default class extends Controller {
   static targets = ['match'];
 
   connect() {
-    this.matchTargets.forEach(el => {
-      if (this.matches(el)) {
-        el.classList.add('active');
-      }
-    });
-  }
-
-  matches(el) {
     const { pathname } = window.location;
-    const href = el.getAttribute('href');
-    if (el.hasAttribute('data-active-link-exact')) {
-      return pathname === href;
+    // if element is a link i.e. <a> then just use that href
+    const href =
+      this.element.getAttribute('href') ||
+      this.matchTarget.getAttribute('href');
+    const matches = this.data.has('exact')
+      ? pathname === href
+      : pathname.startsWith(href);
+    if (matches) {
+      this.element.classList.add(this.data.get('active-class') || 'active');
     }
-    return pathname.startsWith(href);
   }
 }
