@@ -2,12 +2,10 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
 <div data-controller="calendar" data-calendar-date-format="YYYY-MM-DD">
-  {{ widget.subwidgets.0.format }}
   <div class="input-group">
     {% include widget.subwidgets.0.template_name with widget=widget.subwidgets.0 %}
-    <button type="button" class="btn input-group-btn" data-action="calendar#open">{% trans "Calendar" %}</button>
     {% include  widget.subwidgets.1.template_name with widget=widget.subwidgets.1 %}
-    <!--<button type="button" class="btn input-group-btn" data-action="calendar#open">{% trans "Clock" %}</button>-->
+    <button type="button" class="btn input-group-btn" data-action="calendar#open">{% trans "Calendar" %}</button>
   </div>
   <div class="columns d-none pt-2" data-target="calendar.calendar">
     <div class="column col-mr-auto col-4 col-md-12">

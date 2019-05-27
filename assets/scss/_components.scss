@@ -10,5 +10,8 @@
 
 .event-map {
   height: $map-height;
+  &-lg {
+    height: $map-height * 2;
+  }
 }
 
