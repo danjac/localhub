@@ -54,6 +54,7 @@ class Base(Configuration):
         "communikit.activities.apps.ActivitiesConfig",
         "communikit.comments.apps.CommentsConfig",
         "communikit.communities.apps.CommunitiesConfig",
+        "communikit.core.apps.CoreConfig",
         "communikit.events.apps.EventsConfig",
         "communikit.invites.apps.InvitesConfig",
         "communikit.join_requests.apps.JoinRequestsConfig",
@@ -102,8 +103,6 @@ class Base(Configuration):
         },
     ]
 
-    COMMUNIKIT_HOME_PAGE_URL = "/"
-
     LOGIN_URL = "account_login"
 
     ACCOUNT_EMAIL_REQUIRED = True
@@ -135,7 +134,9 @@ class Base(Configuration):
 
     @property
     def LOGIN_REDIRECT_URL(self) -> str:
-        return self.COMMUNIKIT_HOME_PAGE_URL
+        return "/"
+        # from communikit.core import app_settings
+        # return app_settings.HOME_PAGE_URL
 
     @property
     def BASE_DIR(self) -> str:

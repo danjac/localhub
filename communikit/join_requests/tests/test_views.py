@@ -7,6 +7,7 @@ from django.test.client import Client
 from django.urls import reverse
 
 from communikit.communities.models import Community, Membership
+from communikit.core import app_settings
 from communikit.users.tests.factories import UserFactory
 from communikit.join_requests.models import JoinRequest
 from communikit.join_requests.tests.factories import JoinRequestFactory
@@ -44,7 +45,7 @@ class TestJoinRequestCreateView:
             community=community, member=admin, role=Membership.ROLES.admin
         )
         response = client.post(reverse("join_requests:create"))
-        assert response.url == settings.COMMUNIKIT_HOME_PAGE_URL
+        assert response.url == app_settings.HOME_PAGE_URL
         join_request = JoinRequest.objects.get()
         assert join_request.sender == login_user
         assert join_request.community == community

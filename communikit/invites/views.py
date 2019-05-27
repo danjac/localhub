@@ -1,7 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import redirect_to_login
@@ -18,6 +17,7 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.communities.models import Community, Membership
 from communikit.communities.views import CommunityRequiredMixin
+from communikit.core import app_settings
 from communikit.core.types import ContextDict
 from communikit.invites.emails import send_invitation_email
 from communikit.invites.forms import InviteForm
@@ -197,7 +197,7 @@ class InviteAcceptView(SingleInviteView):
         self.object.status = Invite.STATUS.accepted
         self.object.save()
 
-        return HttpResponseRedirect(settings.COMMUNIKIT_HOME_PAGE_URL)
+        return HttpResponseRedirect(app_settings.HOME_PAGE_URL)
 
     def handle_invalid_invite(self) -> HttpResponse:
         messages.error(self.request, _("This invite is invalid"))
@@ -205,7 +205,7 @@ class InviteAcceptView(SingleInviteView):
         self.object.status = Invite.STATUS.rejected
         self.object.save()
 
-        return HttpResponseRedirect(settings.COMMUNIKIT_HOME_PAGE_URL)
+        return HttpResponseRedirect(app_settings.HOME_PAGE_URL)
 
 
 invite_accept_view = InviteAcceptView.as_view()

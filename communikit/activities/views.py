@@ -24,11 +24,11 @@ from django.views.generic.list import MultipleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
-from communikit.activities import app_settings
 from communikit.activities.models import Activity, Like
 from communikit.comments.forms import CommentForm
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
+from communikit.core import app_settings
 from communikit.core.types import ContextDict, QuerySetList
 from communikit.core.views import CombinedQuerySetListView
 from communikit.events.models import Event
