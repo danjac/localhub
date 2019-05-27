@@ -33,14 +33,17 @@ class CommentQuerySetMixin(CommunityRequiredMixin):
     @no_type_check
     def get_queryset(self) -> QuerySet:
         return (
-            Comment.objects
-            .get_queryset()
+            Comment.objects.get_queryset()
             .filter(activity__community=self.request.community)
             .select_related("owner", "activity", "activity__community")
         )
 
 
 class SingleCommentMixin(CommentQuerySetMixin, SingleObjectMixin):
+    ...
+
+
+class MultipleCommentMixin(CommentQuerySetMixin, MultipleObjectMixin):
     ...
 
 
@@ -56,7 +59,7 @@ class SingleCommentContextMixin(SingleCommentMixin, ContextMixin):
         return data
 
 
-class MultipleCommentMixin(CommentQuerySetMixin, MultipleObjectMixin):
+class SingleCommentView(SingleCommentMixin, View):
     ...
 
 
@@ -141,7 +144,7 @@ class CommentDeleteView(
 comment_delete_view = CommentDeleteView.as_view()
 
 
-class CommentLikeView(PermissionRequiredMixin, SingleCommentMixin, View):
+class CommentLikeView(PermissionRequiredMixin, SingleCommentView):
     permission_required = "comments.like_comment"
 
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
@@ -159,7 +162,7 @@ class CommentLikeView(PermissionRequiredMixin, SingleCommentMixin, View):
 comment_like_view = CommentLikeView.as_view()
 
 
-class CommentDislikeView(LoginRequiredMixin, SingleCommentMixin, View):
+class CommentDislikeView(LoginRequiredMixin, SingleCommentView):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         Like.objects.filter(user=request.user, comment=self.object).delete()
