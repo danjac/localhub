@@ -190,8 +190,8 @@ class ActivityStreamView(CommunityRequiredMixin, CombinedQuerySetListView):
     template_name = "activities/stream.html"
     ordering = "created"
     allow_empty = True
-    models: List[Type[Activity]] = [Photo, Post, Event]
     paginate_by = app_settings.DEFAULT_PAGE_SIZE
+    models: List[Type[Activity]] = [Photo, Post, Event]
 
     def get_queryset(self, model: Type[Activity]) -> QuerySet:
         return (
