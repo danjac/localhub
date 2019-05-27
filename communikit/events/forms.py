@@ -10,7 +10,7 @@ from communikit.events.models import Event
 class EventForm(forms.ModelForm):
 
     starts = CalendarField()
-    ends = CalendarField()
+    ends = CalendarField(required=False)
 
     class Meta:
         model = Event
@@ -27,4 +27,3 @@ class EventForm(forms.ModelForm):
             "country",
             "description",
         )
-        # widgets = {"starts": CalendarWidget(), "ends": CalendarWidget()}

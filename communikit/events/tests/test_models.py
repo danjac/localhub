@@ -4,6 +4,11 @@
 import geocoder
 import pytest
 
+from datetime import timedelta
+
+from django.core.exceptions import ValidationError
+from django.utils import timezone
+
 from pytest_mock import MockFixture
 
 from communikit.events.models import Event
@@ -14,6 +19,19 @@ pytestmark = pytest.mark.django_db
 class TestEventModel:
     def test_get_absolute_url(self, event: Event):
         assert event.get_absolute_url() == f"/events/{event.id}/"
+
+    def test_clean_if_ok(self):
+        event = Event(
+            starts=timezone.now(), ends=timezone.now() + timedelta(days=3)
+        )
+        event.clean()
+
+    def test_clean_if_ends_before_starts(self):
+        event = Event(
+            starts=timezone.now(), ends=timezone.now() - timedelta(days=3)
+        )
+        with pytest.raises(ValidationError):
+            event.clean()
 
     def test_location(self):
         event = Event(

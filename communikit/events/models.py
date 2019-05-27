@@ -5,6 +5,7 @@ import geocoder
 
 from typing import Optional, Tuple
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 from django.utils.encoding import smart_text
@@ -51,6 +52,10 @@ class Event(Activity):
 
     def __str__(self) -> str:
         return self.title or self.location
+
+    def clean(self):
+        if self.ends and self.ends < self.starts:
+            raise ValidationError(_("End date cannot be before start date"))
 
     def get_absolute_url(self) -> str:
         return reverse("events:detail", args=[self.id])
