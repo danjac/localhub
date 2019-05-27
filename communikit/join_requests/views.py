@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import QuerySet
@@ -6,11 +9,13 @@ from django.urls import reverse_lazy
 from django.utils.translation import ugettext as _
 from django.views.generic import CreateView, ListView, View
 from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.list import MultipleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.communities.models import Community, Membership
 from communikit.communities.views import CommunityRequiredMixin
+from communikit.core.types import ContextDict
 from communikit.invites.emails import send_invitation_email
 from communikit.invites.models import Invite
 from communikit.join_requests.emails import (
@@ -20,18 +25,27 @@ from communikit.join_requests.emails import (
 )
 from communikit.join_requests.forms import JoinRequestForm
 from communikit.join_requests.models import JoinRequest
-from communikit.core.types import ContextDict
 
 
-class CommunityJoinRequestQuerySetMixin(CommunityRequiredMixin):
+class JoinRequestQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self) -> QuerySet:
         return JoinRequest.objects.filter(community=self.request.community)
 
 
+class SingleJoinRequestMixin(JoinRequestQuerySetMixin, SingleObjectMixin):
+    ...
+
+
+class MultipleJoinRequestMixin(JoinRequestQuerySetMixin, MultipleObjectMixin):
+    ...
+
+
+class SingleJoinRequestView(SingleJoinRequestMixin, View):
+    ...
+
+
 class JoinRequestListView(
-    CommunityJoinRequestQuerySetMixin,
-    PermissionRequiredMixin,
-    ListView,
+    PermissionRequiredMixin, MultipleJoinRequestMixin, ListView
 ):
     permission_required = "communities.manage_community"
 
@@ -74,10 +88,7 @@ join_request_create_view = JoinRequestCreateView.as_view()
 
 
 class JoinRequestActionView(
-    CommunityJoinRequestQuerySetMixin,
-    PermissionRequiredMixin,
-    SingleObjectMixin,
-    View,
+    PermissionRequiredMixin, SingleJoinRequestView
 ):
 
     permission_required = "communities.manage_community"

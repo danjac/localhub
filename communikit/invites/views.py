@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -9,27 +12,36 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 from django.views.generic import CreateView, DeleteView, ListView, View
 from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.list import MultipleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.communities.models import Community, Membership
 from communikit.communities.views import CommunityRequiredMixin
+from communikit.core.types import ContextDict
 from communikit.invites.emails import send_invitation_email
 from communikit.invites.forms import InviteForm
 from communikit.invites.models import Invite
-from communikit.core.types import ContextDict
 
 
-class CommunityInviteQuerySetMixin(CommunityRequiredMixin):
+class InviteQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self) -> QuerySet:
         return Invite.objects.filter(community=self.request.community)
 
 
-class InviteListView(
-    CommunityInviteQuerySetMixin,
-    PermissionRequiredMixin,
-    ListView,
-):
+class SingleInviteMixin(InviteQuerySetMixin, SingleObjectMixin):
+    ...
+
+
+class MultipleInviteMixin(InviteQuerySetMixin, MultipleObjectMixin):
+    ...
+
+
+class SingleInviteView(SingleInviteMixin, View):
+    ...
+
+
+class InviteListView(PermissionRequiredMixin, MultipleInviteMixin, ListView):
     permission_required = "communities.manage_community"
 
     def get_permission_object(self) -> Community:
@@ -40,9 +52,7 @@ invite_list_view = InviteListView.as_view()
 
 
 class InviteCreateView(
-    CommunityRequiredMixin,
-    PermissionRequiredMixin,
-    CreateView,
+    CommunityRequiredMixin, PermissionRequiredMixin, CreateView
 ):
     model = Invite
     form_class = InviteForm
@@ -78,12 +88,7 @@ class InviteCreateView(
 invite_create_view = InviteCreateView.as_view()
 
 
-class InviteResendView(
-    PermissionRequiredMixin,
-    CommunityInviteQuerySetMixin,
-    SingleObjectMixin,
-    View,
-):
+class InviteResendView(PermissionRequiredMixin, SingleInviteView):
     permission_required = "communities.manage_community"
 
     def get_permission_object(self) -> Community:
@@ -111,11 +116,7 @@ class InviteResendView(
 invite_resend_view = InviteResendView.as_view()
 
 
-class InviteDeleteView(
-    PermissionRequiredMixin,
-    CommunityInviteQuerySetMixin,
-    DeleteView,
-):
+class InviteDeleteView(PermissionRequiredMixin, SingleInviteMixin, DeleteView):
     permission_required = "communities.manage_community"
     success_url = reverse_lazy("invites:list")
 
@@ -126,7 +127,7 @@ class InviteDeleteView(
 invite_delete_view = InviteDeleteView.as_view()
 
 
-class InviteAcceptView(CommunityInviteQuerySetMixin, SingleObjectMixin, View):
+class InviteAcceptView(SingleInviteView):
     """
     Click-thtorugh from link in email.
 
