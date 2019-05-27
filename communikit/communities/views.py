@@ -16,6 +16,8 @@ from django.http import (
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DeleteView, ListView, TemplateView, UpdateView
+from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.list import MultipleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -102,15 +104,23 @@ class CommunityUpdateView(
 community_update_view = CommunityUpdateView.as_view()
 
 
-class CommunityMembershipQuerySetMixin(CommunityRequiredMixin):
+class MembershipQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self) -> QuerySet:
         return Membership.objects.filter(
             community=self.request.community
         ).select_related("community", "member")
 
 
+class SingleMembershipMixin(MembershipQuerySetMixin, SingleObjectMixin):
+    ...
+
+
+class MultipleMembershipMixin(MembershipQuerySetMixin, MultipleObjectMixin):
+    ...
+
+
 class MembershipListView(
-    CommunityMembershipQuerySetMixin, PermissionRequiredMixin, ListView
+    PermissionRequiredMixin, MultipleMembershipMixin, ListView
 ):
     paginate_by = 30
     allow_empty = True
@@ -127,8 +137,8 @@ membership_list_view = MembershipListView.as_view()
 
 
 class MembershipUpdateView(
-    CommunityMembershipQuerySetMixin,
     PermissionRequiredMixin,
+    SingleMembershipMixin,
     SuccessMessageMixin,
     UpdateView,
 ):
@@ -142,7 +152,7 @@ membership_update_view = MembershipUpdateView.as_view()
 
 
 class MembershipDeleteView(
-    CommunityMembershipQuerySetMixin, PermissionRequiredMixin, DeleteView
+    PermissionRequiredMixin, SingleMembershipMixin, DeleteView
 ):
     fields = ("role", "active")
     permission_required = "communities.delete_membership"
