@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="container">
-  <div class="columns" data-controller="sidebar">
+  <div class="columns" data-controller="sidebar active-link">
     <div class="column col-9 col-sm-12" data-target="sidebar.main">
       <div class="show-sm hide-md float-right">
         <a href="#"
@@ -22,16 +22,16 @@
          data-action="sidebar#toggle">{% trans "Close Sidebar" %}</a>
       <ul class="menu">
         <li class="menu-item">
-          <a data-target="sidebar.match" href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
+          <a data-target="active-link.match" href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
         </li>
         <li class="menu-item">
-          <a data-target="sidebar.match" href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
+          <a data-target="active-link.match" href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
         </li>
         <li class="menu-item">
-          <a data-target="sidebar.match" href="{% url 'invites:list' %}">{% trans "Invite New Members" %}</a>
+          <a data-target="active-link.match" href="{% url 'invites:list' %}">{% trans "Invite New Members" %}</a>
         </li>
         <li class="menu-item">
-          <a data-target="sidebar.match" href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
+          <a data-target="active-link.match" href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
         </li>
       </ul>
     </div>
