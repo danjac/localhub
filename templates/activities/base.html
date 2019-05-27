@@ -25,9 +25,10 @@
           class="btn btn-link show-sm hide-md"
           data-action="sidebar#toggle"
           >{% trans "Close Sidebar" %}</a>
-       {% if user.is_authenticated %}
        <ul class="menu">
          <li class="menu-item"><a data-target="sidebar.exactMatch" href="{% url 'activities:stream' %}">{% trans "Stream" %}</a></li>
+
+         {% if is_member %}
          <li class="menu-item">
            {% get_unread_notifications_count as unread_notifications %}
            <a data-target="sidebar.match" href="{% url 'notifications:list' %}">
@@ -36,6 +37,7 @@
              </span>
            </a>
          </li>
+         {% endif %}
          <li class="menu-item">
            <a data-target="sidebar.match" href="{% url 'events:list' %}">{% trans "Events" %}</a>
          </li>
@@ -66,7 +68,6 @@
          </li>
          {% endfor %}
        </ul>
-       {% endif %}
        {% endif %}
 
        {% if request.community.description %}
