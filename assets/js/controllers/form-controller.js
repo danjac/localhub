@@ -32,11 +32,11 @@ export default class extends Controller {
       method,
       url
     }).then(response => {
-      this.formElements.forEach(el => el.removeAttribute('disabled'));
 
       const contentType = response.headers['content-type'];
 
       if (contentType.match(/html/)) {
+        this.formElements.forEach(el => el.removeAttribute('disabled'));
         // errors in form, re-render
         Turbolinks.controller.cache.put(
           referrer,
