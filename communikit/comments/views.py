@@ -21,6 +21,7 @@ from django.views.generic.list import MultipleObjectMixin
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.activities.models import Activity
+from communikit.activities.views import SingleActivityMixin
 from communikit.comments.forms import CommentForm
 from communikit.comments.models import Comment, CommentNotification, Like
 from communikit.communities.views import CommunityRequiredMixin
@@ -64,23 +65,19 @@ class SingleCommentView(SingleCommentMixin, View):
 
 
 class CommentCreateView(
-    PermissionRequiredMixin,
-    CommunityRequiredMixin,
-    SingleObjectMixin,
-    FormView,
+    PermissionRequiredMixin, SingleActivityMixin, FormView
 ):
     form_class = CommentForm
     template_name = "comments/comment_form.html"
     permission_required = "comments.create_comment"
+    model = Activity
 
     def dispatch(self, request, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self) -> QuerySet:
-        return Activity.objects.filter(
-            community=self.request.community
-        ).select_subclasses()
+        return super().get_queryset().select_subclasses()
 
     def get_permission_object(self) -> Activity:
         return self.object
