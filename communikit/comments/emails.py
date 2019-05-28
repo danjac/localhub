@@ -9,6 +9,10 @@ from communikit.comments.models import CommentNotification
 
 
 def send_notification_email(notification: CommentNotification):
+    # https://docs.djangoproject.com/en/2.2/topics/i18n/translation/#using-translations-outside-views-and-templates
+    # language = notification.get_language()
+    # returns recipient lang, community default lang or whatever global setting
+    # with translation.override(language):
     subject = {
         "mentioned": _("You have been mentioned in a comment"),
         "commented": _("A user has commented on your content"),

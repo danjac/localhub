@@ -3,7 +3,7 @@
 
 import geocoder
 
-from typing import Optional, List, Tuple
+from typing import Dict, Optional, List, Tuple
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -67,7 +67,7 @@ class Event(Activity):
             (self.get_absolute_url(), smart_text(self)),
         ]
 
-    def search_index_components(self):
+    def search_index_components(self) -> Dict[str, str]:
         return {"A": self.title, "B": self.location, "C": self.description}
 
     def update_coordinates(self) -> Tuple[Optional[float], Optional[float]]:
@@ -83,12 +83,14 @@ class Event(Activity):
 
     @property
     def location(self) -> str:
-        return ", ".join(
-            [
-                smart_text(value)
-                for value in [
-                    getattr(self, field) for field in self.LOCATION_FIELDS
-                ]
-                if value
+        rv: List[str] = [
+            smart_text(value)
+            for value in [
+                getattr(self, field) for field in self.LOCATION_FIELDS[:-1]
             ]
-        )
+            if value
+        ]
+
+        if self.country:
+            rv.append(smart_text(self.country.name))
+        return ", ".join(rv)

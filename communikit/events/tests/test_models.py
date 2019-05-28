@@ -50,8 +50,20 @@ class TestEventModel:
             country="FI",
         )
         assert (
-            event.location == "Areenankuja 1, Helsinki, 00240, Uusimaa, FI"
+            event.location
+            == "Areenankuja 1, Helsinki, 00240, Uusimaa, Finland"
         ), "location property should include all event location fields"
+
+    def test_location_no_country(self):
+        event = Event(
+            street_address="Areenankuja 1",
+            locality="Helsinki",
+            postal_code="00240",
+            region="Uusimaa",
+        )
+        assert (
+            event.location == "Areenankuja 1, Helsinki, 00240, Uusimaa"
+        ), "location property should include all event location fields except country"  # noqa
 
     def test_partial_location(self):
         event = Event(
@@ -61,7 +73,7 @@ class TestEventModel:
             country="FI",
         )
         assert (
-            event.location == "Areenankuja 1, Helsinki, Uusimaa, FI"
+            event.location == "Areenankuja 1, Helsinki, Uusimaa, Finland"
         ), "location property should include all available location fields"
 
     def test_update_coordinates_ok(self, mocker: MockFixture, event: Event):
