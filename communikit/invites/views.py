@@ -4,7 +4,7 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import redirect_to_login
-from django.db.models import Q, QuerySet
+from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -134,16 +134,9 @@ class InviteAcceptView(SingleInviteView):
         # TBD: add a deadline of e.g. 3 days
         return super().get_queryset().filter(status=Invite.STATUS.pending)
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
-        user = (
-            get_user_model()
-            ._default_manager.filter(
-                Q(emailaddress__email__iexact=self.object.email)
-                | Q(email__iexact=self.object.email)
-            )
-            .first()
-        )
+        user = get_user_model().objects.for_email(self.object.email).first()
 
         if not user:
             return self.handle_new_user()

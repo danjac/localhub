@@ -10,6 +10,12 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class UserManager(BaseUserManager):
+    def for_email(self, email: str) -> models.QuerySet():
+        return self.filter(
+            models.Q(emailaddress__email__iexact=email)
+            | models.Q(email__iexact=email)
+        )
+
     def matches_usernames(self, names=Sequence[str]) -> models.QuerySet:
         # sanity check
         if not names:

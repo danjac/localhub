@@ -6,12 +6,31 @@ import pytest
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
+from allauth.account.models import EmailAddress
+
 from communikit.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 
 
 class TestUserManager:
+    def test_for_email_matching_email_field(self):
+
+        user = UserFactory(email="test@gmail.com")
+        assert (
+            get_user_model().objects.for_email("test@gmail.com").first()
+            == user
+        )
+
+    def test_for_email_matching_email_address_instance(self):
+
+        user = UserFactory()
+        EmailAddress.objects.create(user=user, email="test@gmail.com")
+        assert (
+            get_user_model().objects.for_email("test@gmail.com").first()
+            == user
+        )
+
     def test_matches_usernames(self):
         user_1 = UserFactory(username="first")
         user_2 = UserFactory(username="second")

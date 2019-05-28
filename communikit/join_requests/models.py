@@ -47,10 +47,7 @@ class JoinRequest(TimeStampedModel):
         if self.sender_id:
             qs = qs.filter(pk=self.sender_id)
         else:
-            qs = qs.filter(
-                models.Q(emailaddress__email__iexact=self.email)
-                | models.Q(email__iexact=self.email)
-            )
+            qs = qs.for_email(self.email)
         return qs.first()
 
     def is_pending(self) -> bool:

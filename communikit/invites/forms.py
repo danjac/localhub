@@ -1,5 +1,7 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from django import forms
-from django.db.models import Q
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
@@ -18,9 +20,7 @@ class InviteForm(forms.ModelForm):
 
     def clean_email(self) -> str:
         email = self.cleaned_data["email"]
-        if self.community.members.filter(
-            Q(emailaddress__email__iexact=email) | Q(email__iexact=email)
-        ).exists():
+        if self.community.members.for_email(email).exists():
             raise ValidationError(
                 _(
                     "A user with this email address already belongs to "
