@@ -1,9 +1,11 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from typing import Optional
 
 from django.db import models
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from model_utils import Choices
@@ -40,7 +42,9 @@ class JoinRequest(TimeStampedModel):
         unique_together = ("email", "community", "sender")
 
     def __str__(self) -> str:
-        return self.email or self.sender.email
+        if self.sender_id:
+            return self.sender.email
+        return self.email
 
     def get_sender(self) -> Optional[settings.AUTH_USER_MODEL]:
         qs = get_user_model()._default_manager
