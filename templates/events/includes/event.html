@@ -1,10 +1,5 @@
 {% load i18n %}
-{% load rules %}
 {% load micawber_tags %}
-
-{% has_perm "activities.change_activity" user event as can_change_event %}
-{% has_perm "activities.delete_activity" user event as can_delete_event %}
-{% has_perm "activities.like_activity" user event as can_like_event %}
 
 <div class="card content-card">
   <div class="card-header">
