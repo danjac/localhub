@@ -2,12 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-{% load rules %}
 {% load micawber_tags %}
-
-{% has_perm "activities.change_activity" user post as can_change_post %}
-{% has_perm "activities.delete_activity" user post as can_delete_post %}
-{% has_perm "activities.like_activity" user post as can_like_post %}
 
 <div class="card content-card">
   <div class="card-header">
@@ -35,65 +30,7 @@
     {% endif %}
   </div>
   <div class="card-footer">
-
-    <div class="d-flex content-actions">
-
-      {% if post.owner_id == user.id %}
-      <div class="mr-2">{% trans "Likes" %} ({{ post.num_likes }})</div>
-      {% elif can_like_post %}
-      <div class="mr-2">
-        <a href="#"
-           data-controller="ajax"
-           data-action="ajax#post"
-           {% if post.has_liked %}
-           data-ajax-url="{% url 'posts:dislike' post.id %}"
-           {% else %}
-           data-ajax-url="{% url 'posts:like' post.id %}"
-           {% endif %}
-           data-ajax-redirect="{{ request.get_full_path }}"
-           >
-           {% if post.has_liked %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}
-        </a>
-      </div>
-      {% endif %}
-
-      <div class="mr-2">
-        <a href="{{ post.get_absolute_url }}#comments">
-          {% trans "Comments" %} {% if post.num_comments %}({{ post.num_comments }}){% endif %}
-        </a>
-      </div>
-
-      <!--
-      <div class="mr-2">
-        <a href="">{% trans "Flag" %}</a>
-      </div>
-      -->
-
-      {% if can_change_post %}
-      <div class="mr-2">
-        <a href="{% url 'posts:update' post.id %}"
-           >{% trans "Update" %}</a>
-      </div>
-      {% endif %}
-
-      {% if can_delete_post %}
-      <div class="mr-2">
-        {% url 'posts:delete' post.id as delete_url %}
-        <a href="{{ delete_url }}"
-           data-controller="ajax confirm"
-           data-action="confirm#check ajax#delete"
-           data-ajax-url="{{ delete_url }}"
-           data-ajax-redirect="{{ request.get_full_path }}"
-           data-confirm-header="{% trans 'Delete Post' %}"
-           data-confirm-body="{% trans 'Are you sure you want to delete this post?' %}"
-           >{% trans "Delete" %}</a>
-      </div>
-      {% endif %}
-
-      <div class="">
-        <a href="{{ post.get_permalink }}">{% trans "Permalink" %}</a>
-      </div>
-    </div>
+    {% include "posts/includes/actions.html" with show_comments=True %}
   </div>
 
 </div>

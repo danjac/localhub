@@ -1,0 +1,32 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+<div class="comments">
+  {% if comments %}
+  <h4>{% trans "Comments" %}</h4>
+  {% endif %}
+  {% for comment in comments %}
+  <div class="mb-2">
+    {% include "comments/includes/comment.html" %}
+  </div>
+  {% endfor %}
+  {% if comment_form %}
+  <div class="divider"></div>
+  <h4>{% trans "Post a Comment" %}</h4>
+  <form method="POST" action="{{ create_comment_url }}" data-controller="form" data-action="form#submit">
+    {% include "includes/forms/fields.html" with form=comment_form %}
+    <button class="btn btn-primary" type="submit">{% trans "Submit" %}</button>
+  </form>
+  {% elif not user.is_authenticated %}
+  <p class="bg-gray p-2 text-center">
+    {% url 'account_login' as login_url %}
+    {% blocktrans %}Please <a href="{{ login_url }}">sign in</a> to post comments.{% endblocktrans %}
+  </p>
+  {% else %}
+  <p class="bg-gray p-2 text-center">
+    {% trans "You do not have permission to post comments on this site." %}
+  </p>
+  {% endif %}
+</div>
+

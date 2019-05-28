@@ -9,7 +9,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import (
     CreateView,
@@ -155,7 +155,15 @@ class ActivityDetailView(SingleActivityMixin, DetailView):
         data = super().get_context_data(**kwargs)
         data["comments"] = self.get_comments()
         if self.request.user.has_perm("comments.create_comment", self.object):
-            data["comment_form"] = CommentForm()
+            data.update(
+                {
+                    "comment_form": CommentForm(),
+                    "create_comment_url": reverse(
+                        "comments:create", args=[self.object.id]
+                    ),
+                }
+            )
+
         return data
 
 
