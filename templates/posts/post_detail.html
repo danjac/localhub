@@ -11,6 +11,8 @@
 {% has_perm "activities.like_activity" user post as can_like_post %}
 {% has_perm "comments.create_comment" user post as can_create_comment %}
 
+{% include "activities/includes/breadcrumbs.html" with activity=post %}
+
 <div class="card content-card"
      >
      <div class="card-header">

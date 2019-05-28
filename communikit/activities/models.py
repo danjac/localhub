@@ -4,17 +4,20 @@
 import operator
 
 from functools import reduce
-from typing import Callable
+from typing import Callable, List, Tuple
 
 from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import (
+    SearchQuery,
+    SearchRank,
     SearchVector,
     SearchVectorField,
-    SearchRank,
-    SearchQuery,
 )
 from django.db import models
+from django.urls import reverse
+from django.utils.encoding import smart_text
+from django.utils.translation import ugettext as _
 
 from model_utils.managers import InheritanceQuerySetMixin
 from model_utils.models import TimeStampedModel
@@ -83,6 +86,12 @@ class Activity(TimeStampedModel):
         # TBD: we should have a "routing" URL for activities that finds
         # the correct subclass and redirects there.
         return "/"
+
+    def get_breadcrumbs(self) -> List[Tuple[str, str]]:
+        return [
+            (reverse("activities:stream"), _("Home")),
+            (self.get_absolute_url(), smart_text(self)),
+        ]
 
     # https://simonwillison.net/2017/Oct/5/django-postgresql-faceted-search/
     def search_index_components(self):

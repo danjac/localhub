@@ -14,6 +14,8 @@
 {% has_perm "activities.like_activity" user photo as can_like_photo %}
 {% has_perm "comments.create_comment" user photo as can_create_comment %}
 
+{% include "activities/includes/breadcrumbs.html" with activity=photo %}
+
 <div class="card content-card">
   <div class="card-header">
     <div class="card-subtitle text-gray float-right">

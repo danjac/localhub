@@ -8,6 +8,7 @@ from datetime import timedelta
 
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from django.utils.encoding import force_str
 
 from pytest_mock import MockFixture
 
@@ -19,6 +20,13 @@ pytestmark = pytest.mark.django_db
 class TestEventModel:
     def test_get_absolute_url(self, event: Event):
         assert event.get_absolute_url() == f"/events/{event.id}/"
+
+    def test_get_breadcrumbs(self, event: Event):
+        assert event.get_breadcrumbs() == [
+            ("/", "Home"),
+            ("/events/", "Events"),
+            (f"/events/{event.id}/", force_str(event.title)),
+        ]
 
     def test_clean_if_ok(self):
         event = Event(

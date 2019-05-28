@@ -5,8 +5,10 @@ import factory
 import pytest
 
 from django.db.models import signals
+from django.utils.encoding import force_str
 
 from communikit.communities.models import Community, Membership
+from communikit.posts.models import Post
 from communikit.posts.tests.factories import PostFactory
 from communikit.users.tests.factories import UserFactory
 
@@ -14,6 +16,12 @@ pytestmark = pytest.mark.django_db
 
 
 class TestPostModel:
+    def test_breadcrumbs(self, post: Post):
+        assert post.get_breadcrumbs() == [
+            ("/", "Home"),
+            (f"/posts/{post.id}/", force_str(post.title)),
+        ]
+
     @factory.django.mute_signals(signals.post_save)
     def test_notify(self, community: Community):
         # owner should not receive any notifications from their own posts

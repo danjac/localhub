@@ -128,22 +128,6 @@ invite_delete_view = InviteDeleteView.as_view()
 
 
 class InviteAcceptView(SingleInviteView):
-    """
-    Click-thtorugh from link in email.
-
-    If user is not logged in:
-        - check if user with email address exists
-        - if exists, redirect to login with ?redirect= back to this view
-        - if not exists, redirect to signup with ?redirect= back here
-    If user is logged in:
-        - if another user matches email redirect to default
-        - if user already belongs to community then just redirect to default
-        - if user does not belong to the community then add the user as
-          member and redirect to default
-        "default" for now is just the content stream page.
-    Flash message in all cases should differ based on situation.
-    """
-
     allow_if_private = True
 
     def get_queryset(self) -> QuerySet:

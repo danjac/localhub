@@ -3,7 +3,7 @@
 
 import geocoder
 
-from typing import Optional, Tuple
+from typing import Optional, List, Tuple
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -59,6 +59,13 @@ class Event(Activity):
 
     def get_absolute_url(self) -> str:
         return reverse("events:detail", args=[self.id])
+
+    def get_breadcrumbs(self) -> List[Tuple[str, str]]:
+        return [
+            (reverse("activities:stream"), _("Home")),
+            (reverse("events:list"), _("Events")),
+            (self.get_absolute_url(), smart_text(self)),
+        ]
 
     def search_index_components(self):
         return {"A": self.title, "B": self.location, "C": self.description}

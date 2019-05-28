@@ -11,6 +11,9 @@
 {% has_perm "activities.like_activity" user event as can_like_event %}
 {% has_perm "comments.create_comment" user event as can_create_comment %}
 
+
+{% include "activities/includes/breadcrumbs.html" with activity=event %}
+
 <div class="card content-card">
   <div class="card-header">
     <div class="card-subtitle text-gray float-right">
