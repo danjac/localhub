@@ -1,6 +1,8 @@
 *.pyc
 *.egg
 
+*.lock
+
 *.sqlite3
 *.db
 
