@@ -20,7 +20,8 @@
     <div class="divider"></div>
     {% if post.description %}
     <div>
-      {{ post.description.markdown }}
+      {{ post.description.markdown|truncatewords_html:60 }}
+      <a href="{{ post.get_absolute_url }}">{% trans "Read more" %}</a>
     </div>
     {% endif %}
     {% if post.url %}
