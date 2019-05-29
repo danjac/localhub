@@ -8,7 +8,7 @@
 {% has_perm 'activities.create_activity' user request.community as can_create_activity %}
 {% if can_create_activity %}
 <div class="btn-group btn-group-block">
-    {% with next_url=request.full_path|urlencode %}
+    {% with next_url=request.get_full_path|urlencode %}
     <a href="{% url 'posts:create' %}?next={{ next_url }}" class="btn btn-primary">
         <i class="icon icon-link"></i> {% trans "Submit Post" %}
     </a>
