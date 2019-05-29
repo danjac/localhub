@@ -16,15 +16,15 @@
 
   {% if photo.owner_id == user.id %}
   <div class="mr-2">{% trans "Likes" %} ({{ photo.num_likes }})</div>
-  {% elif can_like_post %}
+  {% elif can_like_photo %}
   <div class="mr-2">
     <a href="#"
        data-controller="ajax"
        data-action="ajax#post"
        {% if photo.has_liked %}
-       data-ajax-url="{% url 'posts:dislike' photo.id %}"
+       data-ajax-url="{% url 'photos:dislike' photo.id %}"
        {% else %}
-       data-ajax-url="{% url 'posts:like' photo.id %}"
+       data-ajax-url="{% url 'photos:like' photo.id %}"
        {% endif %}
        data-ajax-redirect="{{ request.get_full_path }}"
        >
