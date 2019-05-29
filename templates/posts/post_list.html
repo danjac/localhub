@@ -5,8 +5,8 @@
 {% has_perm 'activities.create_activity' user request.community as can_create_activity %}
 {% if can_create_activity %}
 <div class="new-post">
-  <a href="{% url 'photos:create' %}" class="btn btn-block btn-primary">
-    <i class="icon icon-photo"></i> {% trans "Upload Photo" %}
+  <a href="{% url 'posts:create' %}" class="btn btn-block btn-primary">
+    <i class="icon icon-link"></i> {% trans "Submit Post" %}
   </a>
 </div>
 <div class="divider"></div>
@@ -14,24 +14,27 @@
 {% elif user.is_authenticated %}
 <p class="bg-gray p-2 text-center">
   {% url 'join_requests:create' as join_request_url %}
-  {% blocktrans %}You do not have permission to post events to this site. You can send a request to join this community <a href="{{ join_request_url }}">here</a>.{% endblocktrans %}
+  {% blocktrans %}You do not have permission to submit posts to this site. You can send a request to join this community <a href="{{ join_request_url }}">here</a>.{% endblocktrans %}
 </p>
 
 {% else %}
 <p class="bg-gray p-2 text-center">
   {% url 'account_login' as login_url %}
-  {% blocktrans %}Please <a href="{{ login_url }}?next={{ request.get_full_path }}">sign in</a> to post events to this site.{% endblocktrans %}
+  {% blocktrans %}Please <a href="{{ login_url }}?next={{ request.get_full_path }}">sign in</a> to submit posts to this site.{% endblocktrans %}
 </p>
+
 {% endif %}
 
-{% for photo in object_list %}
+{% for post in object_list %}
 <div class="mt-2">
-  {% include "photos/includes/photo.html" %}
+  {% include "posts/includes/post.html" %}
 </div>
 {% empty %}
 <div class="empty">
-  <p class="empty-title h5">{% trans "No photos have been uploaded." %}</p>
+  <p class="empty-title h5">{% trans "No posts have been submitted yet" %}</p>
 </div>
 {% endfor %}
+
+
 {% include "includes/pagination.html" %}
 {% endblock activities_content %}

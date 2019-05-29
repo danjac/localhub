@@ -4,7 +4,7 @@ from django.conf import settings
 from django.test.client import Client
 from django.urls import reverse
 
-from communikit.communities.models import Membership
+from communikit.communities.models import Community, Membership
 from communikit.posts.tests.factories import PostFactory
 from communikit.posts.models import Post, PostNotification
 
@@ -16,6 +16,13 @@ def post_for_member(member: Membership) -> Post:
     return PostFactory(owner=member.member, community=member.community)
 
 
+class TestPostListView:
+    def test_get(self, client: Client, community: Community):
+        PostFactory.create_batch(3, community=community)
+        response = client.get(reverse("posts:list"))
+        assert len(response.context["object_list"]) == 3
+
+
 class TestPostCreateView:
     def test_get(self, client: Client, member: Membership):
         response = client.get(reverse("posts:create"))
@@ -25,7 +32,7 @@ class TestPostCreateView:
         response = client.post(
             reverse("posts:create"), {"title": "test", "description": "test"}
         )
-        assert response.url == reverse("activities:stream")
+        assert response.url == reverse("posts:list")
         post = Post.objects.get()
         assert post.owner == member.member
         assert post.community == member.community

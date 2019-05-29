@@ -43,6 +43,9 @@
          </li>
          {% endif %}
          <li class="menu-item">
+           <a data-controller="active-link" href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
+         </li>
+         <li class="menu-item">
            <a data-controller="active-link" href="{% url 'events:list' %}">{% trans "Events" %}</a>
          </li>
          <li class="menu-item">

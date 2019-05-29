@@ -6,6 +6,7 @@ from communikit.posts.views import (
     post_detail_view,
     post_dislike_view,
     post_like_view,
+    post_list_view,
     post_notification_mark_read_view,
     post_update_view,
 )
@@ -13,6 +14,7 @@ from communikit.posts.views import (
 app_name = "posts"
 
 urlpatterns = [
+    path("", post_list_view, name="list"),
     path("~create", post_create_view, name="create"),
     path("<int:pk>/", post_detail_view, name="detail"),
     path("<int:pk>/~update/", post_update_view, name="update"),
