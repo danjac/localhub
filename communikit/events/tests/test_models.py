@@ -12,7 +12,11 @@ from django.utils.encoding import force_str
 
 from pytest_mock import MockFixture
 
+from communikit.communities.models import Community, Membership
 from communikit.events.models import Event
+from communikit.events.tests.factories import EventFactory
+from communikit.users.tests.factories import UserFactory
+
 
 pytestmark = pytest.mark.django_db
 
@@ -20,6 +24,50 @@ pytestmark = pytest.mark.django_db
 class TestEventModel:
     def test_get_absolute_url(self, event: Event):
         assert event.get_absolute_url() == f"/events/{event.id}/"
+
+    def test_notify(self, community: Community):
+        owner = UserFactory(username="owner")
+        moderator = UserFactory()
+        mentioned = UserFactory(username="danjac")
+
+        Membership.objects.create(
+            member=owner, community=community, role=Membership.ROLES.moderator
+        )
+        Membership.objects.create(
+            member=moderator,
+            community=community,
+            role=Membership.ROLES.moderator,
+        )
+        Membership.objects.create(
+            member=mentioned, community=community, role=Membership.ROLES.member
+        )
+
+        event = EventFactory(
+            owner=owner,
+            community=community,
+            description="hello @danjac from @owner",
+        )
+        notifications = event.notify(created=True)
+
+        assert notifications[0].recipient == mentioned
+        assert notifications[0].verb == "mentioned"
+
+        assert notifications[1].recipient == moderator
+        assert notifications[1].verb == "created"
+
+        # ensure saved to db
+        assert event.notifications.count() == 2
+
+        # change the description and remove the mention
+        event.description = "hello!"
+        event.save()
+
+        notifications = event.notify(created=False)
+
+        assert notifications[0].recipient == moderator
+        assert notifications[0].verb == "updated"
+
+        assert event.notifications.count() == 3
 
     def test_get_breadcrumbs(self, event: Event):
         assert event.get_breadcrumbs() == [

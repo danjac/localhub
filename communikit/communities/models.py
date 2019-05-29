@@ -72,7 +72,7 @@ class Community(TimeStampedModel):
     def get_absolute_url(self) -> str:
         return f"http://{self.domain}"
 
-    def domain_url(self, url: str) -> str:
+    def resolve_url(self, url: str) -> str:
         return urljoin(self.get_absolute_url(), url)
 
     def user_has_role(self, user: settings.AUTH_USER_MODEL, role: str) -> bool:

@@ -1,0 +1,33 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% autoescape off %}
+{% blocktrans with username=notification.recipient.username %}
+Hi {{ username }},
+{% endblocktrans %}
+
+{% with notification.event.owner.username as owner %}
+{% if notification.verb == 'mentioned' %}
+
+{% blocktrans %}
+User {{ owner }} has mentioned you in an event.
+{% endblocktrans %}
+
+{% elif notification.verb == 'created' %}
+
+{% blocktrans %}
+User {{ owner }} has published an event.
+{% endblocktrans %}
+
+{% elif notification.verb == 'updated' %}
+
+{% blocktrans %}
+User {{ owner }} has edited an event.
+{% endblocktrans %}
+
+{% endif %}
+{% endwith %}
+
+Link to event: {{ event_url }}
+{% endautoescape %}

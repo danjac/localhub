@@ -16,7 +16,7 @@ def send_invitation_email(invite: Invite):
             "invites/emails/invitation.txt",
             {
                 "invite": invite,
-                "accept_url": invite.community.domain_url(
+                "accept_url": invite.community.resolve_url(
                     reverse("invites:accept", args=[invite.id])
                 ),
             },
