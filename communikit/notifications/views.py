@@ -13,6 +13,8 @@ from communikit.communities.views import CommunityRequiredMixin
 from communikit.core import app_settings
 from communikit.core.types import QuerySetList
 from communikit.core.views import CombinedQuerySetListView
+from communikit.events.models import EventNotification
+from communikit.photos.models import PhotoNotification
 from communikit.posts.models import PostNotification
 
 
@@ -25,6 +27,14 @@ class NotificationListView(
 
     def get_querysets(self) -> QuerySetList:
         return [
+            EventNotification.objects.filter(
+                recipient=self.request.user,
+                event__community=self.request.community,
+            ).select_related("event", "event__owner"),
+            PhotoNotification.objects.filter(
+                recipient=self.request.user,
+                photo__community=self.request.community,
+            ).select_related("photo", "photo__owner"),
             PostNotification.objects.filter(
                 recipient=self.request.user,
                 post__community=self.request.community,

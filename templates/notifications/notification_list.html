@@ -10,6 +10,8 @@
 <div class="mb-2">
     {% if item.object_type == "postnotification" %}
     {% include "posts/includes/notification.html" with notification=item.object %}
+    {% elif item.object_type == "photonotification" %}
+    {% include "photos/includes/notification.html" with notification=item.object %}
     {% elif item.object_type == "eventnotification" %}
     {% include "events/includes/notification.html" with notification=item.object %}
     {% elif item.object_type == "commentnotification" %}
