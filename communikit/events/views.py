@@ -11,7 +11,8 @@ from communikit.activities.views import (
     ActivityUpdateView,
 )
 from communikit.events.forms import EventForm
-from communikit.events.models import Event
+from communikit.events.models import Event, EventNotification
+from communikit.notifications.views import NotificationMarkReadView
 
 
 event_create_view = ActivityCreateView.as_view(
@@ -31,3 +32,7 @@ event_delete_view = ActivityDeleteView.as_view(model=Event)
 event_like_view = ActivityLikeView.as_view(model=Event)
 
 event_dislike_view = ActivityDislikeView.as_view(model=Event)
+
+event_notification_mark_read_view = NotificationMarkReadView.as_view(
+    model=EventNotification
+)

@@ -10,6 +10,7 @@ from communikit.events.views import (
     event_dislike_view,
     event_like_view,
     event_list_view,
+    event_notification_mark_read_view,
     event_update_view,
 )
 
@@ -23,4 +24,9 @@ urlpatterns = [
     path("<int:pk>/~delete/", event_delete_view, name="delete"),
     path("<int:pk>/~like/", event_like_view, name="like"),
     path("<int:pk>/~dislike/", event_dislike_view, name="dislike"),
+    path(
+        "notifications/<int:pk>/~mark-read/",
+        event_notification_mark_read_view,
+        name="mark_notification_read",
+    ),
 ]

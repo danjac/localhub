@@ -4,6 +4,7 @@
 from django import template
 
 from communikit.comments.models import CommentNotification
+from communikit.events.models import EventNotification
 from communikit.posts.models import PostNotification
 from communikit.core.types import ContextDict
 
@@ -22,6 +23,11 @@ def get_unread_notifications_count(context: ContextDict) -> int:
         CommentNotification.objects.filter(
             recipient=request.user,
             comment__activity__community=request.community,
+            is_read=False,
+        ),
+        EventNotification.objects.filter(
+            recipient=request.user,
+            event__community=request.community,
             is_read=False,
         ),
         PostNotification.objects.filter(

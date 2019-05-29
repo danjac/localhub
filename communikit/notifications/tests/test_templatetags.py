@@ -9,6 +9,8 @@ from communikit.communities.models import Membership
 from communikit.notifications.templatetags.notifications_tags import (
     get_unread_notifications_count,
 )
+from communikit.events.tests.factories import EventFactory
+from communikit.events.models import EventNotification
 from communikit.posts.models import PostNotification
 from communikit.posts.tests.factories import PostFactory
 
@@ -26,7 +28,11 @@ class TestGetUnreadNotificationsCount:
     ):
         post = PostFactory(community=member.community)
         comment = CommentFactory(activity=post)
+        event = EventFactory(community=member.community)
+
         PostNotification.objects.create(post=post, recipient=member.member)
+        EventNotification.objects.create(event=event, recipient=member.member)
+
         CommentNotification.objects.create(
             comment=comment, recipient=member.member
         )
@@ -37,4 +43,4 @@ class TestGetUnreadNotificationsCount:
         request = req_factory.get("/")
         request.user = member.member
         request.community = member.community
-        assert get_unread_notifications_count({"request": request}) == 2
+        assert get_unread_notifications_count({"request": request}) == 3

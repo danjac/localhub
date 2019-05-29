@@ -1,0 +1,33 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+<div class="tile tile-centered">
+  <div class="tile-content">
+    <div class="tile-title">
+      {% with event=notification.event verb=notification.verb %}
+      User <strong>{{ event.owner.username }}</strong>
+      {% if verb == 'mentioned' %}
+      has mentioned you in an
+      {% elif verb == 'created' %}
+      has published an
+      {% elif verb == 'updated' %}
+      has updated their
+      {% endif %}
+      <a href="{{ event.get_absolute_url }}">event</a>.
+      {% endwith %}
+    </div>
+    <div class="tile-subtitle text-gray">
+      {{ notification.created|timesince }} ago
+    </div>
+  </div>
+  {% if not notification.is_read %}
+  <div class="tile-action">
+    <button class="btn btn-primary float-right"
+            data-controller="ajax"
+            data-action="ajax#event"
+            data-ajax-url="{% url 'events:mark_notification_read' notification.pk %}"
+            >{% trans "Mark as Read" %}</button>
+  </div>
+  {% endif %}
+</div>
