@@ -7,6 +7,9 @@
       enctype="multipart/form-data"
       data-controller="form"
       data-action="form#submit">
+  {% if view.next_url %}
+  <input type="hidden" name="next" value="{{ view.next_url }}">
+  {% endif %}
   {% include "includes/forms/fields.html" %}
   <button type="submit" class="btn btn-primary">{% trans "Upload" %}</button>
 </form>

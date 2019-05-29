@@ -1,8 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.urls import reverse_lazy
-
 from communikit.activities.views import (
     ActivityCreateView,
     ActivityDeleteView,
@@ -17,9 +15,7 @@ from communikit.posts.forms import PostForm
 from communikit.posts.models import Post, PostNotification
 
 
-post_create_view = ActivityCreateView.as_view(
-    model=Post, form_class=PostForm, success_url=reverse_lazy("posts:list")
-)
+post_create_view = ActivityCreateView.as_view(model=Post, form_class=PostForm)
 
 post_list_view = ActivityListView.as_view(model=Post)
 

@@ -32,7 +32,20 @@ class TestPostCreateView:
         response = client.post(
             reverse("posts:create"), {"title": "test", "description": "test"}
         )
-        assert response.url == reverse("posts:list")
+        post = Post.objects.get()
+        assert response.url == post.get_absolute_url()
+        assert post.owner == member.member
+        assert post.community == member.community
+
+    def test_post_and_redirect_to_home_page(
+        self, client: Client, member: Membership
+    ):
+        next_url = reverse("activities:stream")
+        response = client.post(
+            reverse("posts:create"),
+            {"title": "test", "description": "test", "next": next_url},
+        )
+        assert response.url == next_url
         post = Post.objects.get()
         assert post.owner == member.member
         assert post.community == member.community

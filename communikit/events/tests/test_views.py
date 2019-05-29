@@ -36,8 +36,8 @@ class TestEventCreateView:
                 "ends_1": "10:00",
             },
         )
-        assert response.url == reverse("events:list")
         event = Event.objects.get()
+        assert response.url == event.get_absolute_url()
         assert event.owner == member.member
         assert event.community == member.community
 
@@ -86,7 +86,7 @@ class TestEventDeleteView:
         response = client.delete(
             reverse("events:delete", args=[event_for_member.id])
         )
-        assert response.url == reverse("events:list")
+        assert response.url == reverse("activities:stream")
         assert Event.objects.count() == 0
 
 

@@ -38,8 +38,8 @@ class TestPhotoCreateView:
         response = client.post(
             reverse("photos:create"), {"title": "test", "image": fake_image}
         )
-        assert response.url == reverse("photos:list")
         photo = Photo.objects.get()
+        assert response.url == photo.get_absolute_url()
         assert photo.owner == member.member
         assert photo.community == member.community
 

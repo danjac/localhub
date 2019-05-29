@@ -64,14 +64,22 @@ class ActivityCreateView(
     CommunityRequiredMixin, PermissionRequiredMixin, CreateView
 ):
     permission_required = "activities.create_activity"
-    success_url = reverse_lazy("activities:stream")
     success_message = _("Your update has been posted")
+
+    def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.next_url = request.POST.get("next", request.GET.get("next"))
+        return super().dispatch(request, *args, **kwargs)
 
     def get_permission_object(self) -> Community:
         return self.request.community
 
     def get_success_message(self) -> str:
         return self.success_message
+
+    def get_success_url(self) -> str:
+        if self.next_url:
+            return self.next_url
+        return super().get_success_url()
 
     def form_valid(self, form) -> HttpResponse:
 
