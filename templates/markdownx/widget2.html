@@ -35,8 +35,14 @@
       <a class="btn btn-link btn-sm"
          href="#"
          data-action="markdown#select"
-         data-markdown="`[SELECTION]`"
+         data-markdown="> [SELECTION]"
          >{% trans "Quote" %}</a>
+
+      <a class="btn btn-link btn-sm"
+         href="#"
+         data-action="markdown#select"
+         data-markdown="`[SELECTION]`"
+         >{% trans "Code" %}</a>
 
       <a class="btn btn-link btn-sm"
          href="#"
@@ -51,11 +57,86 @@
          >{% trans "List (Numbers)" %}</a>
 
     </div>
-    <textarea name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %} data-target="markdown.textarea">
-    {% if widget.value %}{{ widget.value }}{% endif %}</textarea>
+    <textarea
+      data-target="markdown.textarea"
+      name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}
+      >{% spaceless %}{% if widget.value %}{{ widget.value }}{% endif %}{% endspaceless %}</textarea>
   </div>
   <div class="tab-pane d-none markdownx-preview" data-target="tabs.pane" data-tab="preview"></div>
   <div class="tab-pane d-none" data-target="tabs.pane" data-tab="guide">
-    Markdown Guide to go here....
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>{% trans "Markdown" %}</th>
+          <th>{% trans "Output" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td># Header</td>
+          <td><h1>Header (h1)</h1></td>
+        </tr>
+        <tr>
+          <td>## Header</td>
+          <td><h2>Header (h2)</h2></td>
+        </tr>
+        <tr>
+          <td>### Header</td>
+          <td><h3>Header (h3)</h3></td>
+        </tr>
+        <tr>
+          <td>*Bold*</td>
+          <td><strong>Bold</strong></td>
+        </tr>
+        <tr>
+          <td>_Italic_</td>
+          <td><em>Italic</em></td>
+        </tr>
+        <tr>
+          <td>(Link)[http://example.com]</td>
+          <td><a href="#">Link</a></td>
+        </tr>
+        <tr>
+          <td>@mention</td>
+          <td><a href="#">@mention</a> (link to profile)</td>
+        </tr>
+        <tr>
+          <td>#hashtag</td>
+          <td><a href="#">#hashtag</a> (link to hashtag)</td>
+        </tr>
+        <tr>
+          <td>`Code`</td>
+          <td><code>Code</code></td>
+        </tr>
+        <tr>
+          <td>&gt; Quote</td>
+          <td><blockquote>Quote</blockquote></td>
+        </tr>
+        <tr>
+          <td>
+            * List item 1 <br>
+            * List item 2
+          </td>
+          <td>
+            <ul>
+              <li>List item 1</li>
+              <li>List item 2</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            1. List item 1 <br>
+            1. List item 2
+          </td>
+          <td>
+            <ol>
+              <li>List item 1</li>
+              <li>List item 2</li>
+            </ol>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
