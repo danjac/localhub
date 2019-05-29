@@ -53,7 +53,7 @@ class Comment(TimeStampedModel):
         return reverse("comments:detail", args=[self.id])
 
     def get_permalink(self) -> str:
-        return self.activity.community.domain_url(self.get_absolute_url())
+        return self.activity.community.resolve_url(self.get_absolute_url())
 
     def notify(self, created: bool) -> List["CommentNotification"]:
         notifications: List[CommentNotification] = []

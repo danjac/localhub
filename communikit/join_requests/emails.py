@@ -16,13 +16,13 @@ def send_join_request_email(join_request: JoinRequest):
             "join_requests/emails/join_request.txt",
             {
                 "join_request": join_request,
-                "list_url": join_request.community.domain_url(
+                "list_url": join_request.community.resolve_url(
                     reverse("join_requests:list")
                 ),
-                "accept_url": join_request.community.domain_url(
+                "accept_url": join_request.community.resolve_url(
                     reverse("join_requests:accept", args=[join_request.id])
                 ),
-                "reject_url": join_request.community.domain_url(
+                "reject_url": join_request.community.resolve_url(
                     reverse("join_requests:reject", args=[join_request.id])
                 ),
             },

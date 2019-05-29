@@ -17,6 +17,7 @@ from model_utils import FieldTracker
 
 from communikit.activities.models import Activity
 from communikit.core.markdown.fields import MarkdownField
+from communikit.notifications.models import Notification
 
 
 class Event(Activity):
@@ -48,6 +49,7 @@ class Event(Activity):
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
 
+    description_tracker = FieldTracker(["description"])
     location_tracker = FieldTracker(LOCATION_FIELDS)
 
     def __str__(self) -> str:
@@ -59,6 +61,9 @@ class Event(Activity):
 
     def get_absolute_url(self) -> str:
         return reverse("events:detail", args=[self.id])
+
+    def get_permalink(self) -> str:
+        return self.community.resolve_url(self.get_absolute_url())
 
     def get_breadcrumbs(self) -> List[Tuple[str, str]]:
         return [
@@ -94,3 +99,36 @@ class Event(Activity):
         if self.country:
             rv.append(smart_text(self.country.name))
         return ", ".join(rv)
+
+    def notify(self, created: bool) -> List["EventNotification"]:
+        notifications: List[EventNotification] = []
+        # notify anyone @mentioned in the description
+        if self.description and (
+            created or self.description_tracker.changed()
+        ):
+            notifications += [
+                EventNotification(
+                    event=self, recipient=recipient, verb="mentioned"
+                )
+                for recipient in self.community.members.matches_usernames(
+                    self.description.extract_mentions()
+                ).exclude(pk=self.owner_id)
+            ]
+
+        # notify all community moderators
+        verb = "created" if created else "updated"
+        notifications += [
+            EventNotification(event=self, recipient=recipient, verb=verb)
+            for recipient in self.community.get_moderators().exclude(
+                pk=self.owner_id
+            )
+        ]
+        EventNotification.objects.bulk_create(notifications)
+        return notifications
+
+
+class EventNotification(Notification):
+
+    event = models.ForeignKey(
+        Event, on_delete=models.CASCADE, related_name="notifications"
+    )

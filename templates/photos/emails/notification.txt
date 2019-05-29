@@ -1,0 +1,27 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% autoescape off %}
+{% blocktrans with username=notification.recipient.username %}
+Hi {{ username }},
+{% endblocktrans %}
+
+{% with notification.photo.owner.username as owner %}
+{% if notification.verb == 'created' %}
+
+{% blocktrans %}
+User {{ owner }} has published an photo.
+{% endblocktrans %}
+
+{% elif notification.verb == 'updated' %}
+
+{% blocktrans %}
+User {{ owner }} has edited an photo.
+{% endblocktrans %}
+
+{% endif %}
+{% endwith %}
+
+Link to photo: {{ photo_url }}
+{% endautoescape %}
