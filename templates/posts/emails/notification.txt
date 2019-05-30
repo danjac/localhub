@@ -7,23 +7,23 @@
 Hi {{ username }},
 {% endblocktrans %}
 
-{% with notification.post.owner.username as owner %}
+{% with notification.actor.username as actor %}
 {% if notification.verb == 'mentioned' %}
 
 {% blocktrans %}
-User {{ owner }} has mentioned you in a post.
+User {{ actor }} has mentioned you in a post.
 {% endblocktrans %}
 
 {% elif notification.verb == 'created' %}
 
 {% blocktrans %}
-User {{ owner }} has published a post.
+User {{ actor }} has published a post.
 {% endblocktrans %}
 
 {% elif notification.verb == 'updated' %}
 
 {% blocktrans %}
-User {{ owner }} has edited a post.
+User {{ actor }} has edited a post.
 {% endblocktrans %}
 
 {% endif %}

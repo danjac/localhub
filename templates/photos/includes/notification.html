@@ -6,9 +6,9 @@
 {% load i18n %}
 {% block notification_title %}
 User <strong>{{ notification.actor.username }}</strong>
-{% if verb == 'created' %}
+{% if notification.verb == 'created' %}
 has published a
-{% elif verb == 'updated' %}
+{% elif notification.verb == 'updated' %}
 has updated their
 {% endif %}
 <a href="{{ photo.get_absolute_url }}">photo</a>.

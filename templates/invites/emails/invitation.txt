@@ -4,7 +4,7 @@
 {% load i18n %}
 {% autoescape off %}
 
-{% trans "Hi" %,
+{% trans "Hi" %},
 
 {% blocktrans with community=invite.community.name %}
 You've been invited to join the community {{ community }}.

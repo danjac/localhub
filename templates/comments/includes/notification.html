@@ -4,13 +4,13 @@
 {% extends "notifications/includes/notification.html" %}
 {% block "notification_title" %}
 User <strong>{{ comment.owner.username }}</strong>
-{% if verb == 'mentioned' %}
+{% if notification.verb == 'mentioned' %}
 has mentioned you in a
-{% elif verb == 'created' %}
+{% elif notification.verb == 'created' %}
 has published a
-{% elif verb == 'updated' %}
+{% elif notification.verb == 'updated' %}
 has updated their
-{% elif verb == 'commented' %}
+{% elif notification.verb == 'commented' %}
 has posted a
 {% endif %}
 <a href="{{ comment.get_absolute_url }}">comment</a>.

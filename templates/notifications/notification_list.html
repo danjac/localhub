@@ -8,7 +8,7 @@
 
 {% for notification in object_list %}
 <div class="mb-2">
-    {% with content_type=notification.content_type.name %}
+    {% with content_type=notification.content_type.name content_object=notification.content_object %}
     {% if content_type == "post" %}
     {% include "posts/includes/notification.html" with post=content_object %}
     {% elif content_type == "photo" %}
