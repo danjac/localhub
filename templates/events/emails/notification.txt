@@ -29,5 +29,5 @@ User {{ actor }} has edited an event.
 {% endif %}
 {% endwith %}
 
-Link to event: {{ event_url }}
+Link to event: {{ object_url }}
 {% endautoescape %}

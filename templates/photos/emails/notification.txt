@@ -23,5 +23,5 @@ User {{ actor }} has edited an photo.
 {% endif %}
 {% endwith %}
 
-Link to photo: {{ photo_url }}
+Link to photo: {{ object_url }}
 {% endautoescape %}

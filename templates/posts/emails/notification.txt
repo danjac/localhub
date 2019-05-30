@@ -29,5 +29,5 @@ User {{ actor }} has edited a post.
 {% endif %}
 {% endwith %}
 
-Link to post: {{ post_url }}
+Link to post: {{ object_url }}
 {% endautoescape %}

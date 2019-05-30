@@ -35,5 +35,5 @@ User {{ actor }} has commented on your post.
 {% endif %}
 {% endwith %}
 
-Link to comment: {{ comment_url }}
+Link to comment: {{ object_url }}
 {% endautoescape %}
