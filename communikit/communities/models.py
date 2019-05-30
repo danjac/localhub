@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from typing import Optional
 from urllib.parse import urljoin
 
@@ -28,20 +31,30 @@ class CommunityManager(models.Manager):
             return None
 
 
+domain_validator = RegexValidator(
+    regex=URLValidator.host_re, message=_("This is not a valid domain")
+)
+
+
 class Community(TimeStampedModel):
     domain = models.CharField(
-        unique=True,
-        max_length=100,
-        validators=[
-            RegexValidator(
-                regex=URLValidator.host_re,
-                message=_("This is not a valid domain"),
-            )
-        ],
+        unique=True, max_length=100, validators=[domain_validator]
     )
 
     name = models.CharField(max_length=255)
     description = MarkdownField(blank=True)
+
+    email_domain = models.CharField(
+        null=True,
+        blank=True,
+        max_length=100,
+        validators=[domain_validator],
+        help_text=_(
+            "Will add domain to notification emails from this site, e.g. "
+            "notifications@this-domain.com. If left empty will use the site "
+            "domain by default."
+        ),
+    )
 
     members = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
@@ -72,8 +85,14 @@ class Community(TimeStampedModel):
     def get_absolute_url(self) -> str:
         return f"http://{self.domain}"
 
+    def get_email_domain(self) -> str:
+        return self.email_domain or self.domain
+
     def resolve_url(self, url: str) -> str:
         return urljoin(self.get_absolute_url(), url)
+
+    def resolve_email(self, local_part: str) -> str:
+        return f"{local_part}@{self.get_email_domain()}"
 
     def user_has_role(self, user: settings.AUTH_USER_MODEL, role: str) -> bool:
         if user.is_anonymous:

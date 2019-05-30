@@ -19,7 +19,6 @@ def send_notification_email(
             template_name,
             {"notification": notification, "object_url": object_url},
         ),
-        # TBD: need separate email domain setting for commty.
-        f"support@{notification.community.domain}",
+        notification.community.resolve_email("notifications"),
         [notification.recipient.email],
     )

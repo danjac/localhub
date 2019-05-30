@@ -27,8 +27,7 @@ def send_join_request_email(join_request: JoinRequest):
                 ),
             },
         ),
-        # TBD: need separate email domain setting for commty.
-        f"support@{join_request.community.domain}",
+        join_request.community.resolve_email("requests"),
         [u.email for u in join_request.community.get_admins()],
     )
 
@@ -40,8 +39,7 @@ def send_acceptance_email(join_request: JoinRequest):
         render_to_string(
             "join_requests/emails/accepted.txt", {"join_request": join_request}
         ),
-        # TBD: need separate email domain setting for commty.
-        f"support@{join_request.community.domain}",
+        join_request.community.resolve_email("requests"),
         [join_request.sender.email],
     )
 

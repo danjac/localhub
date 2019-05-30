@@ -21,7 +21,6 @@ def send_invitation_email(invite: Invite):
                 ),
             },
         ),
-        # TBD: need separate email domain setting for commty.
-        f"support@{invite.community.domain}",
+        invite.community.resolve_email("invites"),
         [invite.email],
     )
