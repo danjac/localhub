@@ -89,7 +89,7 @@ class CommunityUpdateView(
     SuccessMessageMixin,
     UpdateView,
 ):
-    fields = ("name", "description", "public")
+    fields = ("name", "description", "public", "email_domain")
 
     permission_required = "communities.manage_community"
     success_message = _("Community settings have been updated")

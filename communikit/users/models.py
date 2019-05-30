@@ -11,6 +11,8 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class UserManager(BaseUserManager):
+    use_in_migrations = True
+
     def create_user(
         self,
         username: str,

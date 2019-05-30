@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import pytest
 
 from django.conf import settings
@@ -36,7 +39,6 @@ class TestCommunityManager:
 
 
 class TestCommunityModel:
-
     def test_get_members(self, member: Membership):
         assert member.community.get_members().first() == member.member
 
@@ -45,6 +47,20 @@ class TestCommunityModel:
 
     def test_get_admins(self, admin: Membership):
         assert admin.community.get_admins().first() == admin.member
+
+    def test_get_email_domain_if_none_set(self):
+
+        community = CommunityFactory()
+        assert community.get_email_domain() == community.domain
+
+    def test_get_email_domain_if_set(self):
+
+        community = CommunityFactory(email_domain="gmail.com")
+        assert community.get_email_domain() == "gmail.com"
+
+    def test_resolve_email(self):
+        community = CommunityFactory(email_domain="gmail.com")
+        assert community.resolve_email("support") == "support@gmail.com"
 
     def test_invalid_domain_name(self):
 
