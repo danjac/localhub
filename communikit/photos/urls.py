@@ -10,7 +10,6 @@ from communikit.photos.views import (
     photo_dislike_view,
     photo_like_view,
     photo_list_view,
-    photo_notification_mark_read_view,
     photo_update_view,
 )
 
@@ -24,9 +23,4 @@ urlpatterns = [
     path("<int:pk>/~delete/", photo_delete_view, name="delete"),
     path("<int:pk>/~like/", photo_like_view, name="like"),
     path("<int:pk>/~dislike/", photo_dislike_view, name="dislike"),
-    path(
-        "notifications/<int:pk>/~mark-read/",
-        photo_notification_mark_read_view,
-        name="mark_notification_read",
-    ),
 ]

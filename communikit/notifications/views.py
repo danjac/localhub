@@ -3,47 +3,31 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
-from django.views.generic import View
+from django.views.generic import ListView, View
 from django.views.generic.detail import SingleObjectMixin
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 
-from communikit.comments.models import CommentNotification
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.core import app_settings
-from communikit.core.types import QuerySetList
-from communikit.core.views import CombinedQuerySetListView
-from communikit.events.models import EventNotification
-from communikit.photos.models import PhotoNotification
-from communikit.posts.models import PostNotification
+from communikit.notifications.models import Notification
 
 
 class NotificationListView(
-    CommunityRequiredMixin, LoginRequiredMixin, CombinedQuerySetListView
+    CommunityRequiredMixin, LoginRequiredMixin, ListView
 ):
     paginate_by = app_settings.DEFAULT_PAGE_SIZE
     template_name = "notifications/notification_list.html"
-    ordering = "created"
 
-    def get_querysets(self) -> QuerySetList:
-        return [
-            EventNotification.objects.filter(
-                recipient=self.request.user,
-                event__community=self.request.community,
-            ).select_related("event", "event__owner"),
-            PhotoNotification.objects.filter(
-                recipient=self.request.user,
-                photo__community=self.request.community,
-            ).select_related("photo", "photo__owner"),
-            PostNotification.objects.filter(
-                recipient=self.request.user,
-                post__community=self.request.community,
-            ).select_related("post", "post__owner"),
-            CommentNotification.objects.filter(
-                recipient=self.request.user,
-                comment__activity__community=self.request.community,
-            ).select_related("comment", "comment__owner"),
-        ]
+    def get_queryset(self) -> QuerySet:
+        return (
+            Notification.objects.filter(
+                recipient=self.request.user, community=self.request.community
+            )
+            .prefetch_related("content_object")
+            .select_related("actor", "content_type")
+            .order_by("-created")
+        )
 
 
 notification_list_view = NotificationListView.as_view()
@@ -51,10 +35,8 @@ notification_list_view = NotificationListView.as_view()
 
 class NotificationMarkReadView(LoginRequiredMixin, SingleObjectMixin, View):
     def get_queryset(self) -> QuerySet:
-        return (
-            super()
-            .get_queryset()
-            .filter(recipient=self.request.user, is_read=False)
+        return Notification.objects.filter(
+            recipient=self.request.user, is_read=False
         )
 
     def get_success_url(self) -> str:
@@ -65,3 +47,6 @@ class NotificationMarkReadView(LoginRequiredMixin, SingleObjectMixin, View):
         self.object.is_read = True
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
+
+
+notification_mark_read_view = NotificationMarkReadView.as_view()

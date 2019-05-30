@@ -6,7 +6,6 @@ from communikit.comments.views import (
     comment_detail_view,
     comment_dislike_view,
     comment_like_view,
-    comment_notification_mark_read_view,
     comment_profile_view,
     comment_update_view,
 )
@@ -21,10 +20,5 @@ urlpatterns = [
     path("comment/<int:pk>/~delete/", comment_delete_view, name="delete"),
     path("comment/<int:pk>/~like/", comment_like_view, name="like"),
     path("comment/<int:pk>/~dislike/", comment_dislike_view, name="dislike"),
-    path(
-        "notifications/<int:pk>/~mark-read/",
-        comment_notification_mark_read_view,
-        name="mark_notification_read",
-    ),
     path("profile/<username>/", comment_profile_view, name="profile"),
 ]

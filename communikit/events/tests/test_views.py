@@ -8,7 +8,7 @@ from django.test.client import Client
 from django.urls import reverse
 
 from communikit.communities.models import Community, Membership
-from communikit.events.models import Event, EventNotification
+from communikit.events.models import Event
 from communikit.events.tests.factories import EventFactory
 
 pytestmark = pytest.mark.django_db
@@ -137,17 +137,3 @@ class TestEventDislikeView:
         )
         assert response.status_code == 204
         assert event.like_set.count() == 0
-
-
-class TestEventNotificationMarkReadView:
-    def test_post(self, client: Client, member: Membership):
-        event = EventFactory(community=member.community)
-        notification = EventNotification.objects.create(
-            event=event, recipient=member.member
-        )
-        response = client.post(
-            reverse("events:mark_notification_read", args=[notification.id])
-        )
-        assert response.url == reverse("notifications:list")
-        notification.refresh_from_db()
-        assert notification.is_read

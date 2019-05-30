@@ -6,12 +6,11 @@
 {% load i18n %}
 {% block notification_title %}
 User <strong>{{ notification.actor.username }}</strong>
-{% if verb == 'mentioned' %}
-has mentioned you in a
-{% elif verb == 'created' %}
+{% if verb == 'created' %}
 has published a
 {% elif verb == 'updated' %}
 has updated their
 {% endif %}
-<a href="{{ post.get_absolute_url }}">post</a>.
+<a href="{{ photo.get_absolute_url }}">photo</a>.
+{% endwith %}
 {% endblock notification_title %}

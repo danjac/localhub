@@ -4,9 +4,10 @@
 from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.translation import ugettext as _
 
-from communikit.comments.emails import send_notification_email
 from communikit.comments.models import Comment
+from communikit.notifications.emails import send_notification_email
 
 
 @receiver(
@@ -14,7 +15,18 @@ from communikit.comments.models import Comment
 )
 def send_notifications(instance: Comment, created: bool, **kwargs):
     def notify():
+        subjects = {
+            "mentioned": _("You have been mentioned in a comment"),
+            "created": _("A new comment has been added"),
+            "updated": _("A comment has been updated"),
+        }
+        comment_url = instance.get_permalink()
         for notification in instance.notify(created):
-            send_notification_email(notification)
+            send_notification_email(
+                notification,
+                subjects[notification.verb],
+                comment_url,
+                "comments/emails/notification.txt",
+            )
 
     transaction.on_commit(notify)

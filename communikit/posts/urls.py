@@ -7,7 +7,6 @@ from communikit.posts.views import (
     post_dislike_view,
     post_like_view,
     post_list_view,
-    post_notification_mark_read_view,
     post_update_view,
 )
 
@@ -21,9 +20,4 @@ urlpatterns = [
     path("<int:pk>/~delete/", post_delete_view, name="delete"),
     path("<int:pk>/~like/", post_like_view, name="like"),
     path("<int:pk>/~dislike/", post_dislike_view, name="dislike"),
-    path(
-        "notifications/<int:pk>/~mark-read/",
-        post_notification_mark_read_view,
-        name="mark_notification_read",
-    ),
 ]

@@ -10,9 +10,8 @@ from communikit.activities.views import (
     ActivityListView,
     ActivityUpdateView,
 )
-from communikit.notifications.views import NotificationMarkReadView
 from communikit.photos.forms import PhotoForm
-from communikit.photos.models import Photo, PhotoNotification
+from communikit.photos.models import Photo
 
 
 photo_create_view = ActivityCreateView.as_view(
@@ -32,7 +31,3 @@ photo_delete_view = ActivityDeleteView.as_view(model=Photo)
 photo_like_view = ActivityLikeView.as_view(model=Photo)
 
 photo_dislike_view = ActivityDislikeView.as_view(model=Photo)
-
-photo_notification_mark_read_view = NotificationMarkReadView.as_view(
-    model=PhotoNotification
-)

@@ -4,8 +4,9 @@
 from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.translation import ugettext as _
 
-from communikit.posts.emails import send_notification_email
+from communikit.notifications.emails import send_notification_email
 from communikit.posts.models import Post
 
 
@@ -17,7 +18,18 @@ def update_search_document(instance: Post, **kwargs):
 @receiver(post_save, sender=Post, dispatch_uid="posts.send_notifications")
 def send_notifications(instance: Post, created: bool, **kwargs):
     def notify():
+        subjects = {
+            "mentioned": _("You have been mentioned in a post"),
+            "created": _("A new post has been added"),
+            "updated": _("A post has been updated"),
+        }
+        post_url = instance.get_permalink()
         for notification in instance.notify(created):
-            send_notification_email(notification)
+            send_notification_email(
+                notification,
+                subjects[notification.verb],
+                post_url,
+                "posts/emails/notification.txt",
+            )
 
     transaction.on_commit(notify)

@@ -3,6 +3,7 @@
 
 from typing import Dict, List
 
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
 
@@ -19,6 +20,8 @@ class Post(Activity):
     description = MarkdownField(blank=True)
     url = models.URLField(blank=True)
 
+    notifications = GenericRelation(Notification, related_query_name="post")
+
     description_tracker = FieldTracker(["description"])
 
     def __str__(self) -> str:
@@ -33,15 +36,19 @@ class Post(Activity):
     def search_index_components(self) -> Dict[str, str]:
         return {"A": self.title, "B": self.description}
 
-    def notify(self, created: bool) -> List["PostNotification"]:
-        notifications: List[PostNotification] = []
+    def notify(self, created: bool) -> List[Notification]:
+        notifications: List[Notification] = []
         # notify anyone @mentioned in the description
         if self.description and (
             created or self.description_tracker.changed()
         ):
             notifications += [
-                PostNotification(
-                    post=self, recipient=recipient, verb="mentioned"
+                Notification(
+                    content_object=self,
+                    actor=self.owner,
+                    community=self.community,
+                    recipient=recipient,
+                    verb="mentioned",
                 )
                 for recipient in self.community.members.matches_usernames(
                     self.description.extract_mentions()
@@ -50,16 +57,16 @@ class Post(Activity):
         # notify all community moderators
         verb = "created" if created else "updated"
         notifications += [
-            PostNotification(post=self, recipient=recipient, verb=verb)
+            Notification(
+                content_object=self,
+                recipient=recipient,
+                actor=self.owner,
+                community=self.community,
+                verb=verb,
+            )
             for recipient in self.community.get_moderators().exclude(
                 pk=self.owner_id
             )
         ]
-        PostNotification.objects.bulk_create(notifications)
+        Notification.objects.bulk_create(notifications)
         return notifications
-
-
-class PostNotification(Notification):
-    post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name="notifications"
-    )

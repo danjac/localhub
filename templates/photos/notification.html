@@ -1,31 +1,15 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{% extends "notifications/includes/notification.html" %}
+
 {% load i18n %}
-<div class="tile tile-centered">
-  <div class="tile-content">
-    <div class="tile-title">
-      {% with photo=notification.photo verb=notification.verb %}
-      User <strong>{{ photo.owner.username }}</strong>
-      {% if verb == 'created' %}
-      has published a
-      {% elif verb == 'updated' %}
-      has updated their
-      {% endif %}
-      <a href="{{ photo.get_absolute_url }}">photo</a>.
-      {% endwith %}
-    </div>
-    <div class="tile-subtitle text-gray">
-      {{ notification.created|timesince }} ago
-    </div>
-  </div>
-  {% if not notification.is_read %}
-  <div class="tile-action">
-    <button class="btn btn-primary float-right"
-            data-controller="ajax"
-            data-action="ajax#photo"
-            data-ajax-url="{% url 'photos:mark_notification_read' notification.pk %}"
-            >{% trans "Mark as Read" %}</button>
-  </div>
-  {% endif %}
-</div>
+{% block notification_title %}
+User <strong>{{ notification.actor.username }}</strong>
+{% if verb == 'created' %}
+has published an
+{% elif verb == 'updated' %}
+has updated their
+{% endif %}
+<a href="{{ photo.get_absolute_url }}">photo</a>.
+{% endblock notification_title %}

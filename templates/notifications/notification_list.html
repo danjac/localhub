@@ -6,17 +6,19 @@
 
 {% block activities_content %}
 
-{% for item in object_list %}
+{% for notification in object_list %}
 <div class="mb-2">
-    {% if item.object_type == "postnotification" %}
-    {% include "posts/includes/notification.html" with notification=item.object %}
-    {% elif item.object_type == "photonotification" %}
-    {% include "photos/includes/notification.html" with notification=item.object %}
-    {% elif item.object_type == "eventnotification" %}
-    {% include "events/includes/notification.html" with notification=item.object %}
-    {% elif item.object_type == "commentnotification" %}
-    {% include "comments/includes/notification.html" with notification=item.object %}
+    {% with content_type=notification.content_type.name %}
+    {% if content_type == "post" %}
+    {% include "posts/includes/notification.html" with post=content_object %}
+    {% elif content_type == "photo" %}
+    {% include "photos/includes/notification.html" with photo=content_object %}
+    {% elif content_type == "event" %}
+    {% include "events/includes/notification.html" with event=content_object %}
+    {% elif content_type == "comment" %}
+    {% include "comments/includes/notification.html" with comment=content_object %}
     {% endif %}
+    {% endwith %}
 </div>
 {% empty %}
 <div class="empty">

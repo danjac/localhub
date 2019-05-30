@@ -5,6 +5,7 @@ import geocoder
 
 from typing import Dict, Optional, List, Tuple
 
+from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
@@ -48,6 +49,8 @@ class Event(Activity):
 
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
+
+    notifications = GenericRelation(Notification, related_query_name="event")
 
     description_tracker = FieldTracker(["description"])
     location_tracker = FieldTracker(LOCATION_FIELDS)
@@ -100,15 +103,19 @@ class Event(Activity):
             rv.append(smart_text(self.country.name))
         return ", ".join(rv)
 
-    def notify(self, created: bool) -> List["EventNotification"]:
-        notifications: List[EventNotification] = []
+    def notify(self, created: bool) -> List[Notification]:
+        notifications: List[Notification] = []
         # notify anyone @mentioned in the description
         if self.description and (
             created or self.description_tracker.changed()
         ):
             notifications += [
-                EventNotification(
-                    event=self, recipient=recipient, verb="mentioned"
+                Notification(
+                    content_object=self,
+                    actor=self.owner,
+                    community=self.community,
+                    recipient=recipient,
+                    verb="mentioned",
                 )
                 for recipient in self.community.members.matches_usernames(
                     self.description.extract_mentions()
@@ -118,17 +125,16 @@ class Event(Activity):
         # notify all community moderators
         verb = "created" if created else "updated"
         notifications += [
-            EventNotification(event=self, recipient=recipient, verb=verb)
+            Notification(
+                content_object=self,
+                actor=self.owner,
+                community=self.community,
+                recipient=recipient,
+                verb=verb,
+            )
             for recipient in self.community.get_moderators().exclude(
                 pk=self.owner_id
             )
         ]
-        EventNotification.objects.bulk_create(notifications)
+        Notification.objects.bulk_create(notifications)
         return notifications
-
-
-class EventNotification(Notification):
-
-    event = models.ForeignKey(
-        Event, on_delete=models.CASCADE, related_name="notifications"
-    )

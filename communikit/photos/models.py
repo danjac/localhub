@@ -3,6 +3,7 @@
 
 from typing import Dict, List, Tuple
 
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -21,6 +22,8 @@ class Photo(Activity):
     title = models.CharField(max_length=300)
     image = ImageField(upload_to="photos")
     tags = models.CharField(max_length=300, blank=True)
+
+    notifications = GenericRelation(Notification, related_query_name="photo")
 
     def __str__(self) -> str:
         return self.title
@@ -44,21 +47,20 @@ class Photo(Activity):
     def linkify_tags(self) -> str:
         return mark_safe(linkify_hashtags(self.tags))
 
-    def notify(self, created: bool) -> List["PhotoNotification"]:
-        notifications: List[PhotoNotification] = []
+    def notify(self, created: bool) -> List[Notification]:
+        notifications: List[Notification] = []
         verb = "created" if created else "updated"
         notifications += [
-            PhotoNotification(photo=self, recipient=recipient, verb=verb)
+            Notification(
+                content_object=self,
+                recipient=recipient,
+                actor=self.owner,
+                community=self.community,
+                verb=verb,
+            )
             for recipient in self.community.get_moderators().exclude(
                 pk=self.owner_id
             )
         ]
-        PhotoNotification.objects.bulk_create(notifications)
+        Notification.objects.bulk_create(notifications)
         return notifications
-
-
-class PhotoNotification(Notification):
-
-    photo = models.ForeignKey(
-        Photo, on_delete=models.CASCADE, related_name="notifications"
-    )

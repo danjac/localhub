@@ -23,10 +23,9 @@ from rules.contrib.views import PermissionRequiredMixin
 from communikit.activities.models import Activity
 from communikit.activities.views import SingleActivityMixin
 from communikit.comments.forms import CommentForm
-from communikit.comments.models import Comment, CommentNotification, Like
+from communikit.comments.models import Comment, Like
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.core.types import ContextDict
-from communikit.notifications.views import NotificationMarkReadView
 from communikit.users.views import UserProfileMixin
 
 
@@ -172,10 +171,6 @@ class CommentDislikeView(LoginRequiredMixin, SingleCommentView):
 
 
 comment_dislike_view = CommentDislikeView.as_view()
-
-comment_notification_mark_read_view = NotificationMarkReadView.as_view(
-    model=CommentNotification
-)
 
 
 class CommentProfileView(MultipleCommentMixin, UserProfileMixin, ListView):

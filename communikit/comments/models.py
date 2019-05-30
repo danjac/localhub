@@ -4,6 +4,7 @@
 from typing import List
 
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
 
@@ -44,8 +45,9 @@ class Comment(TimeStampedModel):
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
 
     content = MarkdownField()
-
     content_tracker = FieldTracker(["content"])
+
+    notifications = GenericRelation(Notification, related_query_name="comment")
 
     objects = CommentQuerySet.as_manager()
 
@@ -55,13 +57,17 @@ class Comment(TimeStampedModel):
     def get_permalink(self) -> str:
         return self.activity.community.resolve_url(self.get_absolute_url())
 
-    def notify(self, created: bool) -> List["CommentNotification"]:
-        notifications: List[CommentNotification] = []
+    def notify(self, created: bool) -> List[Notification]:
+        notifications: List[Notification] = []
         # notify anyone @mentioned in the description
         if self.content and (created or self.content_tracker.changed()):
             notifications += [
-                CommentNotification(
-                    comment=self, recipient=recipient, verb="mentioned"
+                Notification(
+                    content_object=self,
+                    recipient=recipient,
+                    actor=self.owner,
+                    community=self.activity.community,
+                    verb="mentioned",
                 )
                 for recipient in self.activity.community.members.matches_usernames(  # noqa
                     self.content.extract_mentions()
@@ -72,7 +78,13 @@ class Comment(TimeStampedModel):
         # notify all community moderators
         verb = "created" if created else "updated"
         notifications += [
-            CommentNotification(comment=self, recipient=recipient, verb=verb)
+            Notification(
+                content_object=self,
+                recipient=recipient,
+                actor=self.owner,
+                community=self.activity.community,
+                verb=verb,
+            )
             for recipient in self.activity.community.get_moderators().exclude(
                 pk=self.owner_id
             )
@@ -80,13 +92,15 @@ class Comment(TimeStampedModel):
         # notify the activity owner
         if created and self.owner_id != self.activity.owner_id:
             notifications.append(
-                CommentNotification(
-                    comment=self,
+                Notification(
+                    content_object=self,
+                    actor=self.owner,
                     recipient=self.activity.owner,
+                    community=self.activity.community,
                     verb="commented",
                 )
             )
-        CommentNotification.objects.bulk_create(notifications)
+        Notification.objects.bulk_create(notifications)
         return notifications
 
 
@@ -98,9 +112,3 @@ class Like(TimeStampedModel):
 
     class Meta:
         unique_together = ("user", "comment")
-
-
-class CommentNotification(Notification):
-    comment = models.ForeignKey(
-        Comment, on_delete=models.CASCADE, related_name="notifications"
-    )

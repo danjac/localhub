@@ -10,7 +10,7 @@ from django.urls import reverse
 
 from communikit.communities.models import Membership
 from communikit.photos.tests.factories import PhotoFactory
-from communikit.photos.models import Photo, PhotoNotification
+from communikit.photos.models import Photo
 
 pytestmark = pytest.mark.django_db
 
@@ -125,17 +125,3 @@ class TestPhotoDislikeView:
         )
         assert response.status_code == 204
         assert photo.like_set.count() == 0
-
-
-class TestPhotoNotificationMarkReadView:
-    def test_post(self, client: Client, member: Membership):
-        photo = PhotoFactory(community=member.community)
-        notification = PhotoNotification.objects.create(
-            photo=photo, recipient=member.member
-        )
-        response = client.post(
-            reverse("photos:mark_notification_read", args=[notification.id])
-        )
-        assert response.url == reverse("notifications:list")
-        notification.refresh_from_db()
-        assert notification.is_read

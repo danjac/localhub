@@ -3,7 +3,7 @@ import pytest
 from django.test.client import Client
 from django.urls import reverse
 
-from communikit.comments.models import Comment, CommentNotification, Like
+from communikit.comments.models import Comment, Like
 from communikit.comments.tests.factories import CommentFactory
 from communikit.communities.models import Membership
 from communikit.posts.tests.factories import PostFactory
@@ -101,18 +101,3 @@ class TestCommentProfileView:
         )
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 1
-
-
-class TestCommentNotificationMarkReadView:
-    def test_post(self, client: Client, member: Membership):
-        post = PostFactory(community=member.community)
-        comment = CommentFactory(activity=post)
-        notification = CommentNotification.objects.create(
-            comment=comment, recipient=member.member
-        )
-        response = client.post(
-            reverse("comments:mark_notification_read", args=[notification.id])
-        )
-        assert response.url == reverse("notifications:list")
-        notification.refresh_from_db()
-        assert notification.is_read

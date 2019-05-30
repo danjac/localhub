@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import pytest
 
 from django.conf import settings
@@ -6,7 +9,7 @@ from django.urls import reverse
 
 from communikit.communities.models import Community, Membership
 from communikit.posts.tests.factories import PostFactory
-from communikit.posts.models import Post, PostNotification
+from communikit.posts.models import Post
 
 pytestmark = pytest.mark.django_db
 
@@ -127,17 +130,3 @@ class TestPostDislikeView:
         )
         assert response.status_code == 204
         assert post.like_set.count() == 0
-
-
-class TestPostNotificationMarkReadView:
-    def test_post(self, client: Client, member: Membership):
-        post = PostFactory(community=member.community)
-        notification = PostNotification.objects.create(
-            post=post, recipient=member.member
-        )
-        response = client.post(
-            reverse("posts:mark_notification_read", args=[notification.id])
-        )
-        assert response.url == reverse("notifications:list")
-        notification.refresh_from_db()
-        assert notification.is_read

@@ -3,11 +3,8 @@
 
 from django import template
 
-from communikit.comments.models import CommentNotification
 from communikit.core.types import ContextDict
-from communikit.events.models import EventNotification
-from communikit.photos.models import PhotoNotification
-from communikit.posts.models import PostNotification
+from communikit.notifications.models import Notification
 
 register = template.Library()
 
@@ -19,28 +16,8 @@ def get_unread_notifications_count(context: ContextDict) -> int:
 
     if request.user.is_anonymous:
         return 0
-
-    querysets = [
-        CommentNotification.objects.filter(
-            recipient=request.user,
-            comment__activity__community=request.community,
-            is_read=False,
-        ),
-        EventNotification.objects.filter(
-            recipient=request.user,
-            event__community=request.community,
-            is_read=False,
-        ),
-        PhotoNotification.objects.filter(
-            recipient=request.user,
-            photo__community=request.community,
-            is_read=False,
-        ),
-        PostNotification.objects.filter(
-            recipient=request.user,
-            post__community=request.community,
-            is_read=False,
-        ),
-    ]
-
-    return querysets[0].union(*querysets[1:]).count()
+    return Notification.objects.filter(
+        recipient=request.user,
+        community=request.community,
+        is_read=False,
+    ).count()
