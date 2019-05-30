@@ -30,9 +30,6 @@ class Post(Activity):
     def get_absolute_url(self) -> str:
         return reverse("posts:detail", args=[self.id])
 
-    def get_permalink(self) -> str:
-        return self.community.resolve_url(self.get_absolute_url())
-
     def search_index_components(self) -> Dict[str, str]:
         return {"A": self.title, "B": self.description}
 

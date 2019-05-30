@@ -65,9 +65,6 @@ class Event(Activity):
     def get_absolute_url(self) -> str:
         return reverse("events:detail", args=[self.id])
 
-    def get_permalink(self) -> str:
-        return self.community.resolve_url(self.get_absolute_url())
-
     def get_breadcrumbs(self) -> List[Tuple[str, str]]:
         return [
             (reverse("activities:stream"), _("Home")),
