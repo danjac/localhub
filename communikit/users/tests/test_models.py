@@ -14,6 +14,21 @@ pytestmark = pytest.mark.django_db
 
 
 class TestUserManager:
+    def test_create_user(self):
+
+        user = get_user_model().objects.create_user(
+            username="tester", email="tester@gmail.com", password="t3ZtP4s31"
+        )
+        assert user.check_password("t3ZtP4s31")
+
+    def test_create_superuser(self):
+
+        user = get_user_model().objects.create_superuser(
+            username="tester", email="tester@gmail.com", password="t3ZtP4s31"
+        )
+        assert user.is_superuser
+        assert user.is_staff
+
     def test_for_email_matching_email_field(self):
 
         user = UserFactory(email="test@gmail.com")
