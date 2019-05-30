@@ -2,8 +2,8 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "notifications/includes/notification.html" %}
-{% block "notification_title" %}
-User <strong>{{ comment.owner.username }}</strong>
+{% block notification_title %}
+User <strong>{{ notification.actor.username }}</strong>
 {% if notification.verb == 'mentioned' %}
 has mentioned you in a
 {% elif notification.verb == 'created' %}
@@ -14,4 +14,4 @@ has updated their
 has posted a
 {% endif %}
 <a href="{{ comment.get_absolute_url }}">comment</a>.
-{% endblock "notification_title" %}
+{% endblock notification_title %}

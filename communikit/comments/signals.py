@@ -19,6 +19,7 @@ def send_notifications(instance: Comment, created: bool, **kwargs):
             "mentioned": _("You have been mentioned in a comment"),
             "created": _("A new comment has been added"),
             "updated": _("A comment has been updated"),
+            "commented": _("Someone has commmented on one of your posts"),
         }
         comment_url = instance.get_permalink()
         for notification in instance.notify(created):

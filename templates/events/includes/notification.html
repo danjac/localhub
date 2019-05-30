@@ -7,7 +7,7 @@
 {% block notification_title %}
 User <strong>{{ notification.actor.username }}</strong>
 {% if notification.verb == 'mentioned' %}
-has mentioned you in a
+has mentioned you in an
 {% elif notification.verb == 'created' %}
 has published an
 {% elif notification.verb == 'updated' %}
