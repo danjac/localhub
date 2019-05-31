@@ -1,4 +1,4 @@
-{% extends "communities/base.html" %}
+{% extends "settings/base.html" %}
 {% load i18n %}
 {% load rules %}
 
@@ -27,12 +27,13 @@
         <a href="{% url 'communities:membership_update' member.pk %}" class="btn btn-sm">{% trans "Update" %}</a>
         {% endif %}
         {% if can_delete_membership %}
-        <a href="{% url 'communities:membership_delete' member.pk %}"
-           data-controller="delete"
-           data-action="delete#delete"
-           data-delete-url="{% url 'communities:membership_delete' member.pk %}"
-           data-delete-confirm-header="{% trans 'Delete Membership' %}"
-           data-delete-confirm-body="{% trans 'Are you sure you want to remove this membership?' %}"
+        {% url 'communities:membership_delete' member.pk as delete_url %}
+        <a href="{{ delete_url }}"
+           data-controller="ajax confirm"
+           data-action="confirm#check ajax#delete"
+           data-ajax-url="{{ delete_url }}"
+           data-confirm-header="{% trans 'Delete Membership' %}"
+           data-confirm-body="{% trans 'Are you sure you want to delete this membership?' %}"
            class="btn btn-sm btn-warning">{% trans "Delete" %}</a>
         {% endif %}
       </td>
@@ -41,4 +42,3 @@
   </tbody>
 </table>
 {% endblock settings_content %}
-

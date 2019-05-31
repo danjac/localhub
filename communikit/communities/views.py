@@ -3,6 +3,7 @@
 
 from typing import no_type_check
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import redirect_to_login
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
@@ -23,6 +24,7 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.communities.forms import MembershipForm
 from communikit.communities.models import Community, Membership
+from communikit.core import app_settings
 
 
 class CommunityRequiredMixin:
@@ -104,6 +106,24 @@ class CommunityUpdateView(
 community_update_view = CommunityUpdateView.as_view()
 
 
+class UserMembershipListView(LoginRequiredMixin, ListView):
+    """
+    Returns all communities a user belongs to
+    """
+
+    paginate_by = app_settings.DEFAULT_PAGE_SIZE
+    allow_empty = True
+    template_name = "communities/user_membership_list.html"
+
+    def get_queryset(self) -> QuerySet:
+        return self.request.user.membership_set.select_related(
+            "community"
+        ).order_by("community__name")
+
+
+user_membership_list_view = UserMembershipListView.as_view()
+
+
 class MembershipQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self) -> QuerySet:
         return Membership.objects.filter(
@@ -119,12 +139,17 @@ class MultipleMembershipMixin(MembershipQuerySetMixin, MultipleObjectMixin):
     ...
 
 
-class MembershipListView(
+class CommunityMembershipListView(
     PermissionRequiredMixin, MultipleMembershipMixin, ListView
 ):
-    paginate_by = 30
+    """
+    Returns all members in the current community
+    """
+
+    paginate_by = app_settings.DEFAULT_PAGE_SIZE
     allow_empty = True
     permission_required = "communities.manage_community"
+    template_name = "communities/community_membership_list.html"
 
     def get_permission_object(self) -> Community:
         return self.request.community
@@ -133,7 +158,7 @@ class MembershipListView(
         return super().get_queryset().order_by("member__username")
 
 
-membership_list_view = MembershipListView.as_view()
+community_membership_list_view = CommunityMembershipListView.as_view()
 
 
 class MembershipUpdateView(
@@ -144,7 +169,7 @@ class MembershipUpdateView(
 ):
     form_class = MembershipForm
     permission_required = "communities.change_membership"
-    success_url = reverse_lazy("communities:membership_list")
+    success_url = reverse_lazy("communities:community_membership_list")
     success_message = _("Membership has been updated")
 
 
@@ -156,7 +181,12 @@ class MembershipDeleteView(
 ):
     fields = ("role", "active")
     permission_required = "communities.delete_membership"
-    success_url = reverse_lazy("communities:membership_list")
+    success_url = reverse_lazy("communities:community_membership_list")
+
+    def get_success_url(self):
+        if self.object.member == self.request.user:
+            return reverse("communities:user_membership_list")
+        return reverse("communities:community_membership_list")
 
 
 membership_delete_view = MembershipDeleteView.as_view()
