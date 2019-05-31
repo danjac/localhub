@@ -22,8 +22,7 @@ class CommunityManager(models.Manager):
 
     def get_current(self, request: HttpRequest) -> Optional["Community"]:
         """
-        Returns the current community linked to the site domain. Community
-        must be active.
+        Returns current community matching request domain.
         """
         try:
             return self.get(active=True, domain__iexact=request.get_host())
@@ -31,14 +30,14 @@ class CommunityManager(models.Manager):
             return None
 
 
-domain_validator = RegexValidator(
+DOMAIN_VALIDATOR = RegexValidator(
     regex=URLValidator.host_re, message=_("This is not a valid domain")
 )
 
 
 class Community(TimeStampedModel):
     domain = models.CharField(
-        unique=True, max_length=100, validators=[domain_validator]
+        unique=True, max_length=100, validators=[DOMAIN_VALIDATOR]
     )
 
     name = models.CharField(max_length=255)
@@ -48,7 +47,7 @@ class Community(TimeStampedModel):
         null=True,
         blank=True,
         max_length=100,
-        validators=[domain_validator],
+        validators=[DOMAIN_VALIDATOR],
         help_text=_(
             "Will add domain to notification emails from this site, e.g. "
             "notifications@this-domain.com. If left empty will use the site "
@@ -86,12 +85,21 @@ class Community(TimeStampedModel):
         return f"http://{self.domain}"
 
     def get_email_domain(self) -> str:
+        """
+        Returns email domain if available, else the community domain
+        """
         return self.email_domain or self.domain
 
     def resolve_url(self, url: str) -> str:
+        """
+        Prepends the community domain to create a complete URL string
+        """
         return urljoin(self.get_absolute_url(), url)
 
     def resolve_email(self, local_part: str) -> str:
+        """
+        Appends the email domain to create a full email address
+        """
         return f"{local_part}@{self.get_email_domain()}"
 
     def user_has_role(self, user: settings.AUTH_USER_MODEL, role: str) -> bool:
