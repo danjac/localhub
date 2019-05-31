@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import pytest
 
 from django.conf import settings
@@ -173,7 +176,7 @@ class TestMembershipPermissions:
         membership = Membership.objects.create(
             member=user, community=community, role="member"
         )
-        assert not user.has_perm("communities.delete_membership", membership)
+        assert user.has_perm("communities.delete_membership", membership)
 
     def test_can_delete_membership_if_is_admin_and_is_own_membership(
         self, user: settings.AUTH_USER_MODEL, community: Community
@@ -181,4 +184,4 @@ class TestMembershipPermissions:
         membership = Membership.objects.create(
             member=user, community=community, role="admin"
         )
-        assert not user.has_perm("communities.delete_membership", membership)
+        assert user.has_perm("communities.delete_membership", membership)

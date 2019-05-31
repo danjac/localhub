@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import rules
 
 from django.conf import settings
@@ -58,5 +61,5 @@ rules.add_perm(
 )
 rules.add_perm(
     "communities.delete_membership",
-    is_membership_community_admin & ~is_own_membership,
+    is_membership_community_admin | is_own_membership,
 )

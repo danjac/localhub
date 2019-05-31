@@ -1,3 +1,6 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% extends "base.html" %}
 {% load i18n %}
 
@@ -30,6 +33,9 @@
         </li>
         <li class="menu-item">
           <a data-controller="active-link" href="{% url 'account_change_password' %}">{% trans "Change password" %}</a>
+        </li>
+        <li class="menu-item">
+          <a data-controller="active-link" href="{% url 'communities:user_membership_list' %}">{% trans "Communities" %}</a>
         </li>
         <li class="menu-item">
           <a data-controller="active-link" href="{% url 'account_logout' %}">{% trans "Logout" %}</a>

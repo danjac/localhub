@@ -11,6 +11,7 @@ from django.views.generic import View
 from communikit.communities.models import Community, Membership
 from communikit.communities.tests.factories import CommunityFactory
 from communikit.communities.views import CommunityRequiredMixin
+from communikit.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -95,13 +96,29 @@ class TestCommunityUpdateView:
         assert admin.community.name == "New name"
 
 
-class TestMembershipListView:
+class TestCommunityMembershipListView:
     def test_get(
         self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
     ):
         Membership.objects.create(member=user, community=admin.community)
         assert (
-            client.get(reverse("communities:membership_list")).status_code
+            client.get(
+                reverse("communities:community_membership_list")
+            ).status_code
+            == 200
+        )
+
+
+class TestUserMembershipListView:
+    def test_get(
+        self,
+        client: Client,
+        member: Membership,
+        user: settings.AUTH_USER_MODEL,
+    ):
+        Membership.objects.create(member=user, community=member.community)
+        assert (
+            client.get(reverse("communities:user_membership_list")).status_code
             == 200
         )
 
@@ -130,7 +147,7 @@ class TestMembershipUpdateView:
             reverse("communities:membership_update", args=[membership.id]),
             {"active": True, "role": "moderator"},
         )
-        assert response.url == reverse("communities:membership_list")
+        assert response.url == reverse("communities:community_membership_list")
         membership.refresh_from_db()
         assert membership.role == "moderator"
 
@@ -153,11 +170,19 @@ class TestMembershipDeleteView:
         self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
     ):
         membership = Membership.objects.create(
-            member=user, community=admin.community
+            member=UserFactory(), community=admin.community
         )
         response = client.post(
             reverse("communities:membership_delete", args=[membership.id])
         )
 
-        assert response.url == reverse("communities:membership_list")
+        assert response.url == reverse("communities:community_membership_list")
         assert not Membership.objects.filter(pk=membership.pk).exists()
+
+    def test_delete_own_membership(self, client: Client, member: Membership):
+        response = client.post(
+            reverse("communities:membership_delete", args=[member.id])
+        )
+
+        assert response.url == reverse("communities:user_membership_list")
+        assert not Membership.objects.filter(pk=member.id).exists()
