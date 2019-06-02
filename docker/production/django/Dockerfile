@@ -1,4 +1,5 @@
 FROM python:3.7-alpine
+MAINTAINER danjac2018@gmail.com
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -19,6 +20,9 @@ COPY ./requirements /requirements
 RUN pip install -r /requirements/production.txt
 
 WORKDIR /app
+
+RUN adduser -D communikit_user
+USER communikit_user
 
 COPY ./docker/local/django/entrypoint /entrypoint
 RUN chmod +x /entrypoint

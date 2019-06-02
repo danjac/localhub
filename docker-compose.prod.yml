@@ -1,0 +1,38 @@
+version: '3.4'
+
+services:
+  django: &django
+    build:
+      context: .
+      dockerfile: ./docker/production/django/Dockerfile
+    environment:
+      DJANGO_CONFIGURATION: Production
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
+    command: /start-django
+
+  celeryworker:
+    <<: *django
+    ports: []
+    command: /start-celeryworker
+
+  celerybeat:
+    <<: *django
+    ports: []
+    command: /start-celerybeat
+
+  flower:
+    <<: *django
+    ports:
+      - "5555:5555"
+    command: /start-flower
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/production/nginx:/etc/nginx/conf.d

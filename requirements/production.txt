@@ -1,3 +1,4 @@
 -r ./base.txt
 
+django-storages==1.7.1 # https://github.com/jschneier/django-storages
 gunicorn==19.9.0 # https://github.com/benoitc/gunicorn

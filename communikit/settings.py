@@ -226,3 +226,13 @@ class Local(Base):
         _, _, ips = socket.gethostbyname_ex(socket.gethostname())
         ips += [ip[:-1] + "1" for ip in ips]
         return ips
+
+
+class Production(Base):
+
+    DEFAULT_FILE_STORAGE = "communikit.core.storage_backends.MediaStorage"
+    STATICFILES_STORAGE = "communikit.core.storage_backends.StaticStorage"
+
+    AWS_ACCESS_KEY_ID = values.Value()
+    AWS_SECRET_ACCESS_KEY = values.Value()
+    AWS_STORAGE_BUCKET_NAME = values.Value()

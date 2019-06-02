@@ -2,6 +2,7 @@ image: docker
 
 stages:
   - test
+  - build
 
 services:
   - docker:stable-dind
@@ -10,10 +11,11 @@ cache:
   key: ${CI_COMMIT_REF_SLUG}
 
 variables:
-  # SECRET_KEY: "${SECRET_KEY}"
-  SECRET_KEY: "seekrit"
-  DATABASE_URL: postgres://postgres@db:5432/postgres
   DOCKER_DRIVER: overlay2
+  SECRET_KEY: "${SECRET_KEY}"
+  # AWS KEYS?
+  HEROKU_APP_NAME: ${HEROKU_APP_NAME}
+  HEROKU_REGISTRY_IMAGE: registry.heroku.com/${HEROKU_APP_NAME}/web
 
 .docker_compose:
   before_script:
@@ -22,13 +24,32 @@ variables:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
     - docker info
 
-
 test:django:
   extends: .docker_compose
   stage: test
   script:
-    # suppress whitenoise warnings
-    - docker-compose run django ./manage.py collectstatic --noinput
     - docker-compose run django pytest
+  only:
+    - master
+
+build:assets:
+  extends: .docker_compose
+  stage: build
+  script:
+    - docker-compose run webpack npm run build
+    # inject AWS keys into env
+    - docker-compose run django ./manage.py collectstatic --file docker-compose.prod.yml
+  only:
+    - master
+
+build:django:
+  extends: .docker_compose
+  stage: build
+  script:
+    - docker-compose build
+      --tag $HEROKU_REGISTRY_IMAGE
+      --file docker-compose.prod.yml
+    - docker login -u _ -p $HEROKU_AUTH_TOKEN registry.heroku.com
+    - docker push $HEROKU_REGISTRY_IMAGE
   only:
     - master
