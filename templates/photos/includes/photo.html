@@ -5,26 +5,28 @@
 {% load thumbnail %}
 
 <div class="card content-card">
-    <div class="card-header">
-        <div class="card-subtitle text-gray float-right">
-            {% blocktrans with photo.created|timesince as created %}{{ created }} ago{% endblocktrans %}
-        </div>
-        <div class="card-title h6"><a href="{{ photo.get_absolute_url }}">{{ photo.title }}</a></div>
-        <div class="card-subtitle h6"><a href="{{ photo.owner.get_profile_url }}">{{ photo.owner.username }}</a></div>
-        {% if photo.tags %}
-        <div class="card-title h6">{{ photo.linkify_tags }}</div>
-        {% endif %}
+  <div class="card-header">
+    <div class="card-subtitle text-gray float-right">
+      {% blocktrans with photo.created|timesince as created %}{{ created }} ago{% endblocktrans %}
     </div>
-    <div class="card-body">
-        {% thumbnail photo.image "600" crop="center" as image %}
-        <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="{{ photo.title }}">
-        {% empty %}
-        <em>No photo available</em>
-        {% endthumbnail %}
-    </div>
-    <div class="card-footer">
-      {% include "photos/includes/actions.html" with show_comments=True %}
-    </div>
+    <div class="card-title h6"><a href="{{ photo.get_absolute_url }}">{{ photo.title }}</a></div>
+    <div class="card-subtitle h6"><a href="{{ photo.owner.get_profile_url }}">{{ photo.owner.username }}</a></div>
+    {% if photo.tags %}
+    <div class="card-title h6">{{ photo.linkify_tags }}</div>
+    {% endif %}
+  </div>
+  <div class="card-body">
+    {% thumbnail photo.image "600" crop="center" as image %}
+    <a href="{{ photo.get_absolute_url }}">
+      <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="{{ photo.title }}">
+    </a>
+    {% empty %}
+    <em>No photo available</em>
+    {% endthumbnail %}
+  </div>
+  <div class="card-footer">
+    {% include "photos/includes/actions.html" with show_comments=True %}
+  </div>
 
 </div>
 

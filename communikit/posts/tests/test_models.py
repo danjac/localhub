@@ -19,6 +19,7 @@ class TestPostModel:
     def test_breadcrumbs(self, post: Post):
         assert post.get_breadcrumbs() == [
             ("/", "Home"),
+            ("/posts/", "Posts"),
             (f"/posts/{post.id}/", force_str(post.title)),
         ]
 
