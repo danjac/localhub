@@ -29,7 +29,7 @@ services:
   webpack:
     build:
       context: .
-      dockerfile: ./docker/webpack/Dockerfile
+      dockerfile: ./docker/local/webpack/Dockerfile
     command: /start
     volumes:
         - .:/app
@@ -38,7 +38,7 @@ services:
   django: &django
     build:
       context: .
-      dockerfile: ./docker/django/Dockerfile
+      dockerfile: ./docker/local/django/Dockerfile
     environment: *default-env
     depends_on:
       - postgres
