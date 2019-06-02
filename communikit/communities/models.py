@@ -25,7 +25,9 @@ class CommunityManager(models.Manager):
         Returns current community matching request domain.
         """
         try:
-            return self.get(active=True, domain__iexact=request.get_host())
+            return self.get(
+                active=True, domain__iexact=request.get_host().split(":")[0]
+            )
         except self.model.DoesNotExist:
             return None
 

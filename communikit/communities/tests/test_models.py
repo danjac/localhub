@@ -24,6 +24,12 @@ class TestCommunityManager:
         community = CommunityFactory(domain="example.com")
         assert Community.objects.get_current(req) == community
 
+    def test_get_current_with_port(self, req_factory: RequestFactory):
+
+        req = req_factory.get("/", HTTP_HOST="example.com:8000")
+        community = CommunityFactory(domain="example.com")
+        assert Community.objects.get_current(req) == community
+
     def test_get_current_if_inactive_community_on_site(
         self, req_factory: RequestFactory
     ):
