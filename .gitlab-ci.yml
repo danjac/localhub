@@ -15,7 +15,7 @@ variables:
   DOCKER_DRIVER: overlay2
   # AWS KEYS?
   #
-  REGISTRY_NAME: registry.gitlab.com/${CI_REGISTRY_USER}/communikit
+  REGISTRY_NAME: registry.gitlab.com/danjac/communikit
   CONTAINER_IMAGE: ${REGISTRY_NAME}:$CI_BUILD_REF_NAME
   HEROKU_APP_NAME: ${HEROKU_APP_NAME}
   HEROKU_REGISTRY_IMAGE: registry.heroku.com/${HEROKU_APP_NAME}/web
