@@ -104,7 +104,10 @@ class Activity(TimeStampedModel):
     def make_search_updater(self) -> Callable:
         def on_commit():
             search_vectors = [
-                SearchVector(models.Value(text), weight=weight)
+                SearchVector(
+                    models.Value(text, output_field=models.CharField()),
+                    weight=weight,
+                )
                 for (weight, text) in self.search_index_components().items()
             ]
             self.__class__.objects.filter(pk=self.pk).update(
