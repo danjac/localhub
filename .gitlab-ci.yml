@@ -65,7 +65,7 @@ build:django:
 
 deploy:assets:
   extends: .docker_compose
-  stage: build
+  stage: deploy
   script:
     - docker-compose run django ./manage.py collectstatic --file docker-compose.prod.yml
   only:
