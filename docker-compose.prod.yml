@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/production/django/Dockerfile
+    image: ${REGISTRY_NAME}:${CI_BUILD_REF_NAME}
     environment:
       DJANGO_CONFIGURATION: Production
     volumes:

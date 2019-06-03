@@ -58,7 +58,7 @@ build:django:
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker-compose -f docker-compose.prod.yml build django
-    - docker-compose -f docker-compose.prod.yml push django $CONTAINER_IMAGE
+    - docker-compose -f docker-compose.prod.yml push django
   only:
     - heroku
     # - master
