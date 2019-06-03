@@ -16,7 +16,7 @@ variables:
   # AWS KEYS?
   #
   REGISTRY_NAME: registry.gitlab.com/communikit
-  CONTAINER_IMAGE: REGISTRY_NAME:$CI_BUILD_REF_NAME
+  CONTAINER_IMAGE: ${REGISTRY_NAME}:$CI_BUILD_REF_NAME
   HEROKU_APP_NAME: ${HEROKU_APP_NAME}
   HEROKU_REGISTRY_IMAGE: registry.heroku.com/${HEROKU_APP_NAME}/web
   HEROKU_API_KEY: ${HEROKU_API_KEY}
@@ -42,7 +42,7 @@ build:assets:
   stage: build
   artifacts:
     paths:
-      - django/assets
+      - assets
   script:
     - docker-compose run webpack npm run build
     # inject AWS keys into env
