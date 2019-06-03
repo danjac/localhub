@@ -34,8 +34,8 @@ test:django:
   script:
     - docker-compose run django pytest
   only:
-    - heroku
-    # - master
+    # - heroku
+    - master
 
 build:assets:
   extends: .docker_compose
@@ -49,16 +49,16 @@ build:assets:
     # add in deploy
     # - docker-compose run django ./manage.py collectstatic --file docker-compose.prod.yml
   only:
-    - heroku
-    # - master
+    # - heroku
+    - master
 
 build:django:
   extends: .docker_compose
   stage: build
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
-    - docker build -t $CONTAINER_IMAGE .
-    - docker push $CONTAINER_IMAGE
+    - docker-compose -f docker-compose.prod.yml build django
+    - docker-compose -f docker-compose.prod.yml push django $CONTAINER_IMAGE
   only:
     - heroku
     # - master
@@ -69,8 +69,8 @@ deploy:assets:
   script:
     - docker-compose run django ./manage.py collectstatic --file docker-compose.prod.yml
   only:
-    - heroku
-    # - master
+    # - heroku
+    - master
 
 deploy:django:
   extends: .docker_compose
