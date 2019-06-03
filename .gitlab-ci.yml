@@ -40,7 +40,8 @@ build:assets:
   extends: .docker_compose
   stage: build
   artifacts:
-    - assets
+    paths:
+      - django/assets
   script:
     - docker-compose run webpack npm run build
     # inject AWS keys into env
@@ -62,10 +63,7 @@ build:django:
 deploy:assets:
   extends: .docker_compose
   stage: build
-  artifacts:
-    - assets
   script:
-    # AWS Env required
     - docker-compose run django ./manage.py collectstatic --file docker-compose.prod.yml
   only:
     - master
