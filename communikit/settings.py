@@ -198,12 +198,21 @@ class Base(Configuration):
         return self.DEBUG
 
 
+class DockerConfigMixin:
+    @property
+    def INTERNAL_IPS(self) -> List[str]:
+        ips = ["127.0.0.1", "10.0.2.2"]
+        _, _, ips = socket.gethostbyname_ex(socket.gethostname())
+        ips += [ip[:-1] + "1" for ip in ips]
+        return ips
+
+
 class Testing(Base):
     PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
     ALLOWED_HOSTS = Configuration.ALLOWED_HOSTS + [".example.com"]
 
 
-class Local(Base):
+class Local(DockerConfigMixin, Base):
     DEBUG = True
     THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + [
         "debug_toolbar",
@@ -219,19 +228,11 @@ class Local(Base):
         "SHOW_TEMPLATE_CONTEXT": True,
     }
 
-    @property
-    def INTERNAL_IPS(self) -> List[str]:
-        # Docker configuration
-        ips = ["127.0.0.1", "10.0.2.2"]
-        _, _, ips = socket.gethostbyname_ex(socket.gethostname())
-        ips += [ip[:-1] + "1" for ip in ips]
-        return ips
 
+class Production(DockerConfigMixin, Base):
 
-class Production(Base):
-
-    DEFAULT_FILE_STORAGE = "communikit.core.storage_backends.MediaStorage"
-    STATICFILES_STORAGE = "communikit.core.storage_backends.StaticStorage"
+    DEFAULT_FILE_STORAGE = "communikit.core.storages.MediaStorage"
+    STATICFILES_STORAGE = "communikit.core.storages.StaticStorage"
 
     AWS_ACCESS_KEY_ID = values.Value()
     AWS_SECRET_ACCESS_KEY = values.Value()
