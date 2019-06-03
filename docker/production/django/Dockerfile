@@ -36,7 +36,7 @@ RUN chmod +x /start-celerybeat
 COPY ./docker/local/django/start-flower /start-flower
 RUN chmod +x /start-flower
 
-RUN adduser -D communikit_user
-USER communikit_user
+RUN adduser -D user
+USER user
 
 ENTRYPOINT ["/entrypoint"]
