@@ -3,6 +3,7 @@ image: docker
 stages:
   - test
   - build
+  - deploy
 
 services:
   - docker:stable-dind
@@ -12,10 +13,13 @@ cache:
 
 variables:
   DOCKER_DRIVER: overlay2
-  SECRET_KEY: "${SECRET_KEY}"
   # AWS KEYS?
+  #
+  REGISTRY_NAME: registry.gitlab.com/communikit
+  CONTAINER_IMAGE: REGISTRY_NAME:$CI_BUILD_REF_NAME
   HEROKU_APP_NAME: ${HEROKU_APP_NAME}
   HEROKU_REGISTRY_IMAGE: registry.heroku.com/${HEROKU_APP_NAME}/web
+  HEROKU_API_KEY: ${HEROKU_API_KEY}
 
 .docker_compose:
   before_script:
@@ -35,10 +39,13 @@ test:django:
 build:assets:
   extends: .docker_compose
   stage: build
+  artifacts:
+    - assets
   script:
     - docker-compose run webpack npm run build
     # inject AWS keys into env
-    - docker-compose run django ./manage.py collectstatic --file docker-compose.prod.yml
+    # add in deploy
+    # - docker-compose run django ./manage.py collectstatic --file docker-compose.prod.yml
   only:
     - master
 
@@ -46,10 +53,31 @@ build:django:
   extends: .docker_compose
   stage: build
   script:
-    - docker-compose build
-      --tag $HEROKU_REGISTRY_IMAGE
-      --file docker-compose.prod.yml
-    - docker login -u _ -p $HEROKU_AUTH_TOKEN registry.heroku.com
-    - docker push $HEROKU_REGISTRY_IMAGE
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+    - docker build -t $CONTAINER_IMAGE .
+    - docker push $CONTAINER_IMAGE
   only:
     - master
+
+deploy:assets:
+  extends: .docker_compose
+  stage: build
+  artifacts:
+    - assets
+  script:
+    # AWS Env required
+    - docker-compose run django ./manage.py collectstatic --file docker-compose.prod.yml
+  only:
+    - master
+
+deploy:django:
+  extends: .docker_compose
+  stage: deploy
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+    - docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
+    - docker pull $CONTAINER_IMAGE
+    - docker tag $CONTAINER_IMAGE registry.heroku.com/${HEROKU_APP_NAME}/web
+    - docker-compose run django -f docker-compose.prod.yml sh -c "python manage.py migrate"
+    - docker push registry.heroku.com/${HEROKU_APP_NAME}/web
+    - docker run --rm -e HEROKU_API_KEY=$HEROKU_API_KEY wingrunr21/alpine-heroku-cli container:release web --app ${HEROKU_APP_NAME}
