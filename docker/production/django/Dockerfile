@@ -25,18 +25,18 @@ RUN adduser -D communikit_user
 USER communikit_user
 
 COPY ./docker/local/django/entrypoint /app/entrypoint
-RUN chmod +x /entrypoint
+RUN chmod +x /app/entrypoint
 
 COPY ./docker/local/django/start-django /app/start-django
-RUN chmod +x /start-django
+RUN chmod +x /app/start-django
 
 COPY ./docker/local/django/start-celeryworker /app/start-celeryworker
-RUN chmod +x /start-celeryworker
+RUN chmod +x /app/start-celeryworker
 
 COPY ./docker/local/django/start-celerybeat /app/start-celerybeat
-RUN chmod +x /start-celerybeat
+RUN chmod +x /app/start-celerybeat
 
 COPY ./docker/local/django/start-flower /app/start-flower
-RUN chmod +x /start-flower
+RUN chmod +x /app/start-flower
 
 ENTRYPOINT ["/app/entrypoint"]
