@@ -15,10 +15,10 @@ variables:
   DOCKER_DRIVER: overlay2
   # for testing/deployment only
   DATABASE_URL: postgres://postgres@postgres:5432/postgres
-  DJANGO_SECRET_KEY: ${SECRET_KEY}
-  DJANGO_AWS_SECRET_KEY: ${AWS_SECRET_KEY}
-  DJANGO_AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-  DJANGO_AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}
+  SECRET_KEY: ${SECRET_KEY}
+  AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+  AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+  AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}
   REGISTRY_NAME: registry.gitlab.com/danjac/communikit
   CONTAINER_IMAGE: ${REGISTRY_NAME}:$CI_BUILD_REF_NAME
   HEROKU_DEBUG: 1
@@ -72,7 +72,14 @@ deploy:assets:
   extends: .docker_compose
   stage: deploy
   script:
-    - docker-compose -f docker-compose.prod.yml run django ./manage.py collectstatic
+    - docker-compose
+      -f docker-compose.prod.yml
+      -e DATABASE_URL=${DATABASE_URL}
+      -e DJANGO_SECRET_KEY=${SECRET_KEY}
+      -e DJANGO_AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+      -e DJANGO_AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      -e DJANGO_AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}
+      run django ./manage.py collectstatic
   only:
     - heroku
     # - master
