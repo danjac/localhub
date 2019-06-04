@@ -82,8 +82,8 @@ deploy:django:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
     - docker pull ${REGISTRY_NAME}:latest
     - docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
-    - docker tag ${REGISTRY_NAME}:latest registry.heroku.com/communikit:latest
-    - docker push registry.heroku.com/communikit:latest
+    - docker tag ${REGISTRY_NAME}:latest registry.heroku.com/communikit/web
+    - docker push registry.heroku.com/communikit/web
   only:
     - heroku
     # - master
