@@ -52,10 +52,11 @@ deploy:assets:
     - master
 
 deploy:django:
+  image: node:11
   stage: deploy
   script:
     apt-get update -qy
-    apt-get install -y ruby-dev
+    apt-get install -y rubygems
     gem install dpl
     dpl --provider=heroku --app=${HEROKU_APP_NAME} --app-key=${HEROKU_API_KEY} --skip-cleanup
   only:
