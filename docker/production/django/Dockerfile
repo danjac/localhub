@@ -22,6 +22,8 @@ RUN pip install -r /requirements/production.txt
 ADD . /app
 WORKDIR /app
 
+ENV DJANGO_CONFIGURATION Production
+
 #COPY ./docker/local/django/start-django /start-django
 #RUN chmod +x /start-django
 
