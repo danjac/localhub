@@ -42,14 +42,14 @@ test:django:
     - heroku
 
 
-# deploy:assets:
-  # extends: .docker_compose
-  # stage: deploy
-  # artifacts:
-    # paths:
-      #- assets
-  # script:
-    #- docker-compose run webpack npm run build
-    #- docker-compose run -e DJANGO_CONFIGURATION=Production -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
-   # only:
-    #- heroku
+deploy:assets:
+  extends: .docker_compose
+  stage: deploy
+  artifacts:
+    paths:
+      - assets
+  script:
+    - docker-compose run webpack npm run build
+    - docker-compose run -e DJANGO_CONFIGURATION=Production -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
+  only:
+    - heroku
