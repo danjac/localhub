@@ -19,6 +19,7 @@ COPY ./requirements /requirements
 
 RUN pip install -r /requirements/production.txt
 
+ADD . /app
 WORKDIR /app
 
 #COPY ./docker/local/django/start-django /start-django
