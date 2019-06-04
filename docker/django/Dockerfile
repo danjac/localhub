@@ -14,25 +14,25 @@ RUN apk update \
 RUN pip install -U pip
 
 # Copy requirements to insure caching
-COPY ./requirements /requirements
+COPY ./requirements.txt /requirements.txt
 
-RUN pip install -r /requirements/local.txt
+RUN pip install -r /requirements.txt
 
 WORKDIR /app
 
-COPY ./docker/local/django/entrypoint /entrypoint
+COPY ./docker/django/entrypoint /entrypoint
 RUN chmod +x /entrypoint
 
-COPY ./docker/local/django/start-django /start-django
+COPY ./docker/django/start-django /start-django
 RUN chmod +x /start-django
 
-COPY ./docker/local/django/start-celeryworker /start-celeryworker
+COPY ./docker/django/start-celeryworker /start-celeryworker
 RUN chmod +x /start-celeryworker
 
-COPY ./docker/local/django/start-celerybeat /start-celerybeat
+COPY ./docker/django/start-celerybeat /start-celerybeat
 RUN chmod +x /start-celerybeat
 
-COPY ./docker/local/django/start-flower /start-flower
+COPY ./docker/django/start-flower /start-flower
 RUN chmod +x /start-flower
 
 ENTRYPOINT ["/entrypoint"]

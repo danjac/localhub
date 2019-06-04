@@ -2,7 +2,6 @@ image: docker
 
 stages:
   - test
-  - build
   - deploy
 
 services:
@@ -39,52 +38,33 @@ test:django:
   script:
     - docker-compose run django pytest
   only:
-    # - heroku
-    - master
+    - heroku
+    # - master
 
-build:assets:
+deploy:assets:
   extends: .docker_compose
-  stage: build
+  stage: deploy
   artifacts:
     paths:
       - assets
   script:
     - docker-compose run webpack npm run build
-  only:
-    # - heroku
-    - master
-
-build:django:
-  extends: .docker_compose
-  stage: build
-  script:
-    - docker-compose -f docker-compose.prod.yml build
-    - docker-compose -f docker-compose.prod.yml push
-  only:
+    - docker-compose run -e DJANGO_CONFIGURATION=Production -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
+   only:
     - heroku
     # - master
-    # - tags
 
-deploy:assets:
-  extends: .docker_compose
-  stage: deploy
-  script:
-    # TBD: just pull image pushed in build:django rather than use docker-compose
-    - docker-compose -f docker-compose.prod.yml run -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
-  only:
-    # - heroku
-    - master
 
 deploy:django:
   # extends: .docker_compose
   stage: deploy
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
-    - docker pull ${REGISTRY_NAME}:latest
+    - docker pull ${CONTAINER_IMAGE}
     - docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
-    - docker tag ${REGISTRY_NAME}:latest registry.heroku.com/communikit/web
+    - docker tag ${CONTAINER_IMAGE} registry.heroku.com/communikit/web
     - docker push registry.heroku.com/communikit/web
     - docker run --rm -e HEROKU_API_KEY=$HEROKU_API_KEY wingrunr21/alpine-heroku-cli container:release web --app communikit
   only:
-    - heroku
-    # - master
+    # - heroku
+    - master

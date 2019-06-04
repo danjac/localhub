@@ -1,21 +1,31 @@
+Pillow==6.0.0 # https://github.com/python-pillow/Pillow
 beautifulsoup4==4.7.1 # http://www.crummy.com/software/BeautifulSoup/bs4/
 bleach==3.1.0 # https://github.com/mozilla/bleach
+boto3==1.9.160 # https://github.com/boto/boto3
 celery==4.3.0 # https://github.com/celery/celery
 dj-database-url==0.5.0 # https://github.com/kennethreitz/dj-database-url
 django-allauth==0.39.1 # https://github.com/pennersr/django-allauth
 django-celery-email==2.0.1 # https://github.com/pmclanahan/django-celery-email
 django-configurations==2.1 # https://github.com/jazzband/django-configurations
 django-countries==5.3.3 # https://github.com/SmileyChris/django-countries
+django-debug-toolbar==1.11 # https://github.com/jazzband/django-debug-toolbar
+django-extensions==2.1.6 # https://github.com/django-extensions/django-extensions
 django-markdownx===2.0.28 # https://github.com/neutronX/django-markdownx
 django-model-utils==3.1.2 # https://github.com/jazzband/django-model-utils
+django-storages==1.7.1 # https://github.com/jschneier/django-storages
 django-widget-tweaks==1.4.3 # https://github.com/jazzband/django-widget-tweaks
 django==2.2.2 # https://github.com/django/django
+factory-boy==2.11.1 # https://github.com/FactoryBoy/factory_boy
 flower==0.9.3 # https://github.com/mher/flower
 geocoder==1.38.1 #https://github.com/DenisCarriere/geocoder
+gunicorn==19.9.0 # https://github.com/benoitc/gunicorn
+ipython==7.4.0 # https://github.com/ipython/ipython
 micawber==0.4.0 # https://github.com/coleifer/micawber
-Pillow==6.0.0 # https://github.com/python-pillow/Pillow
 psycopg2==2.8.2 --no-binary psycopg2  # https://github.com/psycopg/psycopg2
-sorl-thumbnail==12.5.0 # https://github.com/jazzband/sorl-thumbnail
+pytest-django==3.4.8 # https://github.com/pytest-dev/pytest-django
+pytest-mock==1.10.4 # https://github.com/pytest-dev/pytest-mock/
+pytest==4.4.1  # https://github.com/pytest-dev/pytest
 redis==3.2.1 # https://github.com/andymccurdy/redis-py
 rules==2.0.1 # https://github.com/dfunckt/django-rules
-
+sorl-thumbnail==12.5.0 # https://github.com/jazzband/sorl-thumbnail
+werkzeug==0.15.2 # https://github.com/pallets/werkzeug
