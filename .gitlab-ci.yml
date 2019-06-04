@@ -18,11 +18,7 @@ variables:
   AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
   AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
   AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}
-  REGISTRY_NAME: registry.gitlab.com/danjac/communikit
-  CONTAINER_IMAGE: ${REGISTRY_NAME}:$CI_BUILD_REF_NAME
-  HEROKU_DEBUG: 1
   HEROKU_APP_NAME: ${HEROKU_APP_NAME}
-  HEROKU_REGISTRY_IMAGE: registry.heroku.com/${HEROKU_APP_NAME}/web
   HEROKU_API_KEY: ${HEROKU_API_KEY}
 
 .docker_compose:
@@ -39,8 +35,8 @@ test:django:
   script:
     - docker-compose run django pytest
   only:
-    - heroku
-
+    # - heroku
+    - master
 
 deploy:assets:
   extends: .docker_compose
@@ -52,4 +48,18 @@ deploy:assets:
     - docker-compose run webpack npm run build
     - docker-compose run -e DJANGO_CONFIGURATION=Production -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
   only:
+    #- heroku
+    - master
+
+deploy:django:
+  stage: deploy
+  script:
+    apt-get update -qy
+    apt-get install -y ruby-dev
+    gem install dpl
+    dpl --provider=heroku --app=${HEROKU_APP_NAME} --app-key=${HEROKU_API_KEY} --skip-cleanup
+  only:
     - heroku
+
+
+
