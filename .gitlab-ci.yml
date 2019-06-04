@@ -72,7 +72,7 @@ deploy:assets:
   extends: .docker_compose
   stage: deploy
   script:
-    - docker-compose
+    - docker-compose >
       -f docker-compose.prod.yml
       -e DATABASE_URL=${DATABASE_URL}
       -e DJANGO_SECRET_KEY=${SECRET_KEY}
