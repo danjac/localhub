@@ -246,6 +246,8 @@ class Production(DockerConfigMixin, Base):
 
     ALLOWED_HOSTS = Configuration.ALLOWED_HOSTS + [".herokuapp.com"]
 
+    ADMINS = values.ListValue()
+
     @property
     def s3_url(self) -> str:
         return (
