@@ -68,7 +68,7 @@ deploy:assets:
   extends: .docker_compose
   stage: deploy
   script:
-    - docker-compose run django ./manage.py collectstatic --file docker-compose.prod.yml
+    - docker-compose -f docker-compose.prod.yml run -rm django ./manage.py collectstatic
   only:
     - heroku
     # - master
