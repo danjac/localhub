@@ -17,6 +17,7 @@ variables:
   #
   REGISTRY_NAME: registry.gitlab.com/danjac/communikit
   CONTAINER_IMAGE: ${REGISTRY_NAME}:$CI_BUILD_REF_NAME
+  HEROKU_DEBUG: 1
   HEROKU_APP_NAME: ${HEROKU_APP_NAME}
   HEROKU_REGISTRY_IMAGE: registry.heroku.com/${HEROKU_APP_NAME}/web
   HEROKU_API_KEY: ${HEROKU_API_KEY}
