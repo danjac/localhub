@@ -1,0 +1,12 @@
+build:
+  config:
+    DJANGO_CONFIGURATION: Production
+  docker:
+    web: docker/django/Dockerfile
+
+release:
+  command:
+    - python manage.py migrate
+
+run:
+  web: gunicorn -b 0.0.0.0:$PORT communikit.wsgi
