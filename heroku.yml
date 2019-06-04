@@ -2,8 +2,7 @@ build:
   config:
     DJANGO_CONFIGURATION: Production
   docker:
-    web:
-      dockerfile: docker/django/Dockerfile
+    web: Dockerfile.heroku
 
 release:
   command:
