@@ -2,7 +2,7 @@ image: docker
 
 stages:
   - test
-  - deploy
+  - build
 
 services:
   - docker:stable-dind
@@ -42,9 +42,9 @@ test:django:
     - heroku
 
 
-deploy:assets:
+build:assets:
   extends: .docker_compose
-  stage: deploy
+  stage: build
   artifacts:
     paths:
       - assets
