@@ -50,8 +50,8 @@ build:assets:
     # add in deploy
     # - docker-compose run django ./manage.py collectstatic --file docker-compose.prod.yml
   only:
-    # - heroku
-    - master
+    - heroku
+    # - master
 
 build:django:
   extends: .docker_compose
@@ -70,8 +70,8 @@ deploy:assets:
   script:
     - docker-compose run django ./manage.py collectstatic --file docker-compose.prod.yml
   only:
-    # - heroku
-    - master
+    - heroku
+    # - master
 
 deploy:django:
   # extends: .docker_compose
@@ -83,5 +83,5 @@ deploy:django:
     - docker tag ${REGISTRY_NAME}:latest registry.heroku.com/communikit:latest
     - docker push registry.heroku.com/communikit:latest
   only:
-    - heroku
-    # - master
+    # - heroku
+    - master
