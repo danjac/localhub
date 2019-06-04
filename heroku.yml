@@ -4,7 +4,6 @@ build:
   docker:
     web:
       dockerfile: docker/django/Dockerfile
-      context: .
 
 release:
   command:
