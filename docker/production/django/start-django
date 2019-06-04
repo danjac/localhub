@@ -6,5 +6,5 @@ set -o nounset
 
 echo "RUNNING GUNICORN UNDER PORT $PORT"
 # move this migrate command to gitlab config
-./manage.py migrate
+# ./manage.py migrate
 gunicorn --bind=0.0.0.0:$PORT --workers=4 communikit:wsgi
