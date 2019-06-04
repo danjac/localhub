@@ -244,6 +244,8 @@ class Production(DockerConfigMixin, Base):
     AWS_S3_REGION_NAME = values.Value("eu-north-1")
     # AWS_DEFAULT_ACL = None
 
+    ALLOWED_HOSTS = Configuration.ALLOWED_HOSTS + [".herokuapp.com"]
+
     @property
     def s3_url(self) -> str:
         return (
