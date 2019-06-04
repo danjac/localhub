@@ -73,12 +73,12 @@ deploy:assets:
     - master
 
 deploy:django:
-  extends: .docker_compose
+  # extends: .docker_compose
   stage: deploy
   script:
     - docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
-    - docker tag ${REGISTRY_NAME}:latest registry.heroku.com/danjac/communikit:latest
-    - docker push registry.heroku.com/danjac/communikit:latest
+    - docker tag ${REGISTRY_NAME}:latest registry.heroku.com/communikit:latest
+    - docker push registry.heroku.com/communikit:latest
   only:
     - heroku
     # - master
