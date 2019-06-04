@@ -2,7 +2,9 @@ build:
   config:
     DJANGO_CONFIGURATION: Production
   docker:
-    web: docker/django/Dockerfile
+    web:
+      dockerfile: docker/django/Dockerfile
+      context: .
 
 release:
   command:
