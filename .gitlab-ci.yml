@@ -15,6 +15,10 @@ variables:
   DOCKER_DRIVER: overlay2
   # for testing/deployment only
   DATABASE_URL: postgres://postgres@postgres:5432/postgres
+  DJANGO_SECRET_KEY: ${SECRET_KEY}
+  DJANGO_AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+  DJANGO_AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+  DJANGO_AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}
   REGISTRY_NAME: registry.gitlab.com/danjac/communikit
   CONTAINER_IMAGE: ${REGISTRY_NAME}:$CI_BUILD_REF_NAME
   HEROKU_DEBUG: 1
