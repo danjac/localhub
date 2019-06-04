@@ -255,8 +255,8 @@ class Production(DockerConfigMixin, Base):
 
     @property
     def MEDIA_URL(self) -> str:
-        return f"{self.s3_url}/${self.AWS_MEDIA_LOCATION}/"
+        return f"{self.s3_url}{self.AWS_MEDIA_LOCATION}/"
 
     @property
     def STATIC_URL(self) -> str:
-        return f"{self.s3_url}/${self.AWS_STATIC_LOCATION}/"
+        return f"{self.s3_url}{self.AWS_STATIC_LOCATION}/"
