@@ -13,8 +13,8 @@ cache:
 
 variables:
   DOCKER_DRIVER: overlay2
-  # AWS KEYS?
-  #
+  # for testing/deployment only
+  DATABASE_URL: postgres://postgres@postgres:5432/postgres
   REGISTRY_NAME: registry.gitlab.com/danjac/communikit
   CONTAINER_IMAGE: ${REGISTRY_NAME}:$CI_BUILD_REF_NAME
   HEROKU_DEBUG: 1
