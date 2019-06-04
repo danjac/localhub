@@ -234,7 +234,27 @@ class Production(DockerConfigMixin, Base):
     DEFAULT_FILE_STORAGE = "communikit.core.storages.MediaStorage"
     STATICFILES_STORAGE = "communikit.core.storages.StaticStorage"
 
+    AWS_MEDIA_LOCATION = "media"
+    AWS_STATIC_LOCATION = "static"
+
     AWS_ACCESS_KEY_ID = values.Value()
     AWS_SECRET_ACCESS_KEY = values.Value()
     AWS_STORAGE_BUCKET_NAME = values.Value()
+
+    AWS_S3_REGION_NAME = values.Value("eu-north-1")
     # AWS_DEFAULT_ACL = None
+
+    @property
+    def s3_url(self) -> str:
+        return (
+            f"https://{self.AWS_STORAGE_BUCKET_NAME}."
+            f"s3.{self.AWS_S3_REGION_NAME}.amazonaws.com/"
+        )
+
+    @property
+    def MEDIA_URL(self) -> str:
+        return f"{self.s3_url}/${self.AWS_MEDIA_LOCATION}/"
+
+    @property
+    def STATIC_URL(self) -> str:
+        return f"{self.s3_url}/${self.AWS_STATIC_LOCATION}/"

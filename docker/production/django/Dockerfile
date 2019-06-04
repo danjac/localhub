@@ -21,9 +21,6 @@ RUN pip install -r /requirements/production.txt
 
 WORKDIR /app
 
-#COPY ./docker/local/django/entrypoint /entrypoint
-#RUN chmod +x /entrypoint
-
 COPY ./docker/local/django/start-django /start-django
 RUN chmod +x /start-django
 
@@ -33,10 +30,5 @@ RUN chmod +x /start-celeryworker
 COPY ./docker/local/django/start-celerybeat /start-celerybeat
 RUN chmod +x /start-celerybeat
 
-COPY ./docker/local/django/start-flower /start-flower
-RUN chmod +x /start-flower
-
 RUN adduser -D user
 USER user
-
-#ENTRYPOINT ["/entrypoint"]

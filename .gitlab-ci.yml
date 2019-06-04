@@ -50,12 +50,9 @@ build:assets:
       - assets
   script:
     - docker-compose run webpack npm run build
-    # inject AWS keys into env
-    # add in deploy
-    # - docker-compose run django ./manage.py collectstatic --file docker-compose.prod.yml
   only:
-    - heroku
-    # - master
+    # - heroku
+    - master
 
 build:django:
   extends: .docker_compose
@@ -64,18 +61,19 @@ build:django:
     - docker-compose -f docker-compose.prod.yml build
     - docker-compose -f docker-compose.prod.yml push
   only:
-    # - heroku
-    - master
+    - heroku
+    # - master
     # - tags
 
 deploy:assets:
   extends: .docker_compose
   stage: deploy
   script:
+    # TBD: just pull image pushed in build:django rather than use docker-compose
     - docker-compose -f docker-compose.prod.yml run -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
   only:
-    - heroku
-    # - master
+    # - heroku
+    - master
 
 deploy:django:
   # extends: .docker_compose
@@ -87,5 +85,5 @@ deploy:django:
     - docker tag ${REGISTRY_NAME}:latest registry.heroku.com/communikit:latest
     - docker push registry.heroku.com/communikit:latest
   only:
-    # - heroku
-    - master
+    - heroku
+    # - master

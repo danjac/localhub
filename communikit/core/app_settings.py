@@ -11,11 +11,3 @@ DEFAULT_PAGE_SIZE = getattr(settings, f"{APP_PREFIX}DEFAULT_PAGE_SIZE", 15)
 HOME_PAGE_URL = getattr(
     settings, f"{APP_PREFIX}HOME_PAGE_URL", reverse_lazy("activities:stream")
 )
-
-AWS_MEDIA_LOCATION = getattr(
-    settings, f"{APP_PREFIX}AWS_MEDIA_LOCATION", "media"
-)
-
-AWS_STATIC_LOCATION = getattr(
-    settings, f"{APP_PREFIX}AWS_STATIC_LOCATION", "static"
-)

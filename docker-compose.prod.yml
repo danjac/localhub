@@ -5,14 +5,12 @@ services:
     build:
       context: .
       dockerfile: ./docker/production/django/Dockerfile
-      # image: ${REGISTRY_NAME}:${CI_BUILD_REF_NAME}
+    # image: ${REGISTRY_NAME}:${CI_BUILD_REF_NAME}
     image: ${REGISTRY_NAME}:latest
     environment:
       DJANGO_CONFIGURATION: Production
     volumes:
       - .:/app
-    ports:
-      - "5000:5000"
     command: /start-django
 
   celeryworker:
@@ -24,17 +22,3 @@ services:
     <<: *django
     ports: []
     command: /start-celerybeat
-
-  flower:
-    <<: *django
-    ports:
-      - "5555:5555"
-    command: /start-flower
-
-  nginx:
-    image: nginx:latest
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./docker/production/nginx:/etc/nginx/conf.d
