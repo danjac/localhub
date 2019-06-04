@@ -11,14 +11,13 @@ RUN apk update \
       && apk add gettext \
       && apk add postgresql-client
 
-RUN pip install -U pip
 
 # Copy requirements to insure caching
 COPY ./requirements.txt /requirements.txt
-
-RUN pip install -r /requirements.txt
+RUN pip install -U pip && pip install -r /requirements.txt
 
 WORKDIR /app
+COPY . /app
 
 COPY ./docker/django/entrypoint /entrypoint
 RUN chmod +x /entrypoint
