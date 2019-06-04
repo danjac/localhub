@@ -84,6 +84,7 @@ deploy:django:
     - docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
     - docker tag ${REGISTRY_NAME}:latest registry.heroku.com/communikit/web
     - docker push registry.heroku.com/communikit/web
+    - docker run --rm -e HEROKU_API_KEY=$HEROKU_API_KEY wingrunr21/alpine-heroku-cli container:release web --app communikit
   only:
     - heroku
     # - master
