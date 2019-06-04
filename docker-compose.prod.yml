@@ -1,11 +1,12 @@
 version: '3.4'
 
 services:
-  web: &django
+  django: &django
     build:
       context: .
       dockerfile: ./docker/production/django/Dockerfile
-    image: ${REGISTRY_NAME}:${CI_BUILD_REF_NAME}
+      # image: ${REGISTRY_NAME}:${CI_BUILD_REF_NAME}
+    image: ${REGISTRY_NAME}:latest
     environment:
       DJANGO_CONFIGURATION: Production
     volumes:

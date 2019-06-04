@@ -57,11 +57,11 @@ build:django:
   extends: .docker_compose
   stage: build
   script:
-    - docker-compose -f docker-compose.prod.yml build django
-    - docker-compose -f docker-compose.prod.yml push django
+    - docker-compose -f docker-compose.prod.yml build
+    - docker-compose -f docker-compose.prod.yml push
   only:
-    # - heroku
-    - master
+    - heroku
+    # - master
 
 deploy:assets:
   extends: .docker_compose
@@ -77,11 +77,8 @@ deploy:django:
   stage: deploy
   script:
     - docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
-    - docker pull $CONTAINER_IMAGE
-    - docker tag $CONTAINER_IMAGE registry.heroku.com/${HEROKU_APP_NAME}/web
-    # - docker-compose -f docker-compose.prod.yml run django sh -c "python manage.py migrate"
-    - docker push registry.heroku.com/${HEROKU_APP_NAME}/web
-    - docker run --rm -e HEROKU_API_KEY=$HEROKU_API_KEY wingrunr21/alpine-heroku-cli container:release web --app ${HEROKU_APP_NAME}
+    - docker tag ${REGISTRY_NAME}:latest registry.heroku.com/danjac/communikit:latest
+    - docker push registry.heroku.com/danjac/communikit:latest
   only:
     - heroku
     # - master
