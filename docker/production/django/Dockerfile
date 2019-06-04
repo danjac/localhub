@@ -21,14 +21,16 @@ RUN pip install -r /requirements/production.txt
 
 WORKDIR /app
 
-COPY ./docker/local/django/start-django /start-django
-RUN chmod +x /start-django
+#COPY ./docker/local/django/start-django /start-django
+#RUN chmod +x /start-django
 
-COPY ./docker/local/django/start-celeryworker /start-celeryworker
-RUN chmod +x /start-celeryworker
+#COPY ./docker/local/django/start-celeryworker /start-celeryworker
+#RUN chmod +x /start-celeryworker
 
-COPY ./docker/local/django/start-celerybeat /start-celerybeat
-RUN chmod +x /start-celerybeat
+#COPY ./docker/local/django/start-celerybeat /start-celerybeat
+#RUN chmod +x /start-celerybeat
 
 RUN adduser -D user
 USER user
+
+CMD gunicorn --bind 0.0.0.0:$PORT communikit:wsgi

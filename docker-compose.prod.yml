@@ -11,7 +11,7 @@ services:
       DJANGO_CONFIGURATION: Production
     volumes:
       - .:/app
-    command: /start-django
+    # command: /start-django
 
   celeryworker:
     <<: *django
