@@ -29,16 +29,16 @@ services:
   webpack:
     build:
       context: .
-      dockerfile: ./docker/webpack/Dockerfile
-    command: /start
+      dockerfile: Dockerfile.webpack
+    command: npm run dev
     volumes:
         - .:/app
         - /app/node_modules
 
   django: &django
-    build:
-      context: .
-      dockerfile: ./docker/django/Dockerfile
+    #build:
+      #context: .
+      #dockerfile: ./docker/django/Dockerfile
     environment: *default-env
     depends_on:
       - postgres
@@ -47,7 +47,7 @@ services:
       - .:/app
     ports:
       - "8000:8000"
-    command: /start-django
+    command: ./manage.py migrate && ./manage.py runserver 0.0.0.0:8000
 
   celeryworker:
     <<: *django
@@ -56,7 +56,7 @@ services:
       - mailhog
       - redis
     ports: []
-    command: /start-celeryworker
+    command: celery -A communikit.celery worker -l INFO
 
   celerybeat:
     <<: *django
@@ -65,10 +65,10 @@ services:
       - mailhog
       - redis
     ports: []
-    command: /start-celerybeat
+    command: rm -f './celerybeat.pid' && celery -A communikit.celery beat -l INFO
 
   flower:
     <<: *django
     ports:
       - "5555:5555"
-    command: /start-flower
+    command: celery flower --app=communikit.celery --broker="${DJANGO_CELERY_BROKER_URL}"
