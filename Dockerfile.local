@@ -11,9 +11,27 @@ RUN apk update \
       && apk add gettext \
       && apk add postgresql-client
 
+RUN pip install -U pip
+
 # Copy requirements to insure caching
 COPY ./requirements.txt /requirements.txt
 RUN pip install -U pip && pip install -r /requirements.txt
 
 WORKDIR /app
-COPY . /app
+
+COPY ./scripts/entrypoint /entrypoint
+RUN chmod +x /entrypoint
+
+COPY ./scripts/start-django /start-django
+RUN chmod +x /start-django
+
+COPY ./scripts/start-celeryworker /start-celeryworker
+RUN chmod +x /start-celeryworker
+
+COPY ./scripts/start-celerybeat /start-celerybeat
+RUN chmod +x /start-celerybeat
+
+COPY ./scripts/start-flower /start-flower
+RUN chmod +x /start-flower
+
+ENTRYPOINT ["/entrypoint"]
