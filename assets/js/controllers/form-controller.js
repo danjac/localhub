@@ -32,7 +32,6 @@ export default class extends Controller {
       method,
       url
     }).then(response => {
-      console.log('RESPONSE', response.data);
       const contentType = response.headers['content-type'];
 
       if (contentType.match(/html/)) {
