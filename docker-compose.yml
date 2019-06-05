@@ -36,9 +36,8 @@ services:
         - /app/node_modules
 
   django: &django
-    #build:
-      #context: .
-      #dockerfile: ./docker/django/Dockerfile
+    build:
+      context: .
     environment: *default-env
     depends_on:
       - postgres
