@@ -71,5 +71,5 @@ services:
     ports:
       - "5555:5555"
     environment:
-      BROKER_URL=${DJANGO_CELERY_BROKER_URL}
+      - BROKER_URL=redis://redis:6379/0
     command: ['celery', 'flower', '--app=communikit.celery', '--broker="${BROKER_URL}"']
