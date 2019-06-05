@@ -6,12 +6,7 @@ import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
 export default class extends Controller {
-  initialize() {
-    console.log('initializing form controller');
-  }
-
   submit(event) {
-    console.log('submitting event', event);
     event.preventDefault();
 
     const method = this.element.getAttribute('method');
