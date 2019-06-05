@@ -70,4 +70,6 @@ services:
     <<: *django
     ports:
       - "5555:5555"
-    command: celery flower --app=communikit.celery --broker="${DJANGO_CELERY_BROKER_URL}"
+    environment:
+      BROKER_URL=${DJANGO_CELERY_BROKER_URL}
+    command: ['celery', 'flower', '--app=communikit.celery', '--broker="${BROKER_URL}"']
