@@ -231,6 +231,11 @@ class Local(DockerConfigMixin, Base):
 
 class Production(DockerConfigMixin, Base):
 
+    THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + ["anymail"]
+
+    ALLOWED_HOSTS = values.ListValue()
+    ADMINS = values.ListValue()
+
     DEFAULT_FILE_STORAGE = "communikit.core.storages.MediaStorage"
     STATICFILES_STORAGE = "communikit.core.storages.StaticStorage"
 
@@ -244,8 +249,9 @@ class Production(DockerConfigMixin, Base):
     AWS_S3_REGION_NAME = values.Value("eu-north-1")
     AWS_DEFAULT_ACL = "public-read"
 
-    ALLOWED_HOSTS = values.ListValue()
-    ADMINS = values.ListValue()
+    CELERY_EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+    DEFAULT_EMAIL_DOMAIN = values.Value()
+    MAILGUN_API_KEY = values.Value()
 
     LOGGING = {
         "version": 1,
@@ -268,3 +274,7 @@ class Production(DockerConfigMixin, Base):
     @property
     def STATIC_URL(self) -> str:
         return f"{self.s3_url}{self.AWS_STATIC_LOCATION}/"
+
+    @property
+    def ANYMAIL(self) -> Dict[str, str]:
+        return {"MAILGUN_API_KEY": self.MAILGUN_API_KEY}
