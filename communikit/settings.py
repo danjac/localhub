@@ -236,7 +236,7 @@ class Production(DockerConfigMixin, Base):
     ALLOWED_HOSTS = values.ListValue()
     ADMINS = values.ListValue()
 
-    # Breaks in Heroku
+    # Breaks in Heroku !!!
     # SECURE_SSL_REDIRECT = True
     # SECURE_PROXY_SSL_HEADER = ('X-FORWARDED-PROTO', 'https')
 
