@@ -236,8 +236,9 @@ class Production(DockerConfigMixin, Base):
     ALLOWED_HOSTS = values.ListValue()
     ADMINS = values.ListValue()
 
-    SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ('X-FORWARDED-PROTO', 'https')
+    # Breaks in Heroku
+    # SECURE_SSL_REDIRECT = True
+    # SECURE_PROXY_SSL_HEADER = ('X-FORWARDED-PROTO', 'https')
 
     DEFAULT_FILE_STORAGE = "communikit.core.storages.MediaStorage"
     STATICFILES_STORAGE = "communikit.core.storages.StaticStorage"
