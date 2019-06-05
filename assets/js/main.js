@@ -21,3 +21,4 @@ application.load(definitionsFromContext(context));
 // Turbolinks setup
 Turbolinks.start();
 
+console.log('setup complete');
