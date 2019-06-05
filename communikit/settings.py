@@ -242,17 +242,16 @@ class Production(DockerConfigMixin, Base):
     AWS_STORAGE_BUCKET_NAME = values.Value()
 
     AWS_S3_REGION_NAME = values.Value("eu-north-1")
-    # AWS_DEFAULT_ACL = None
+    AWS_DEFAULT_ACL = "public-read"
 
-    ALLOWED_HOSTS = Configuration.ALLOWED_HOSTS + [".herokuapp.com"]
-
+    ALLOWED_HOSTS = values.ListValue()
     ADMINS = values.ListValue()
 
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": False,
         "handlers": {"console": {"class": "logging.StreamHandler"}},
-        "loggers": {"django": {"handlers": ["console"], "level": "DEBUG"}},
+        "loggers": {"django": {"handlers": ["console"], "level": "ERROR"}},
     }
 
     @property
