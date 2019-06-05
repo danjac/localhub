@@ -36,6 +36,7 @@ test:django:
     - docker-compose run django pytest
   only:
     - master
+    - tags
 
 deploy:assets:
   extends: .docker_compose
