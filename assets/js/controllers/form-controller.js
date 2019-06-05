@@ -6,7 +6,12 @@ import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
 export default class extends Controller {
+  initialize() {
+    console.log('initializing form controller');
+  }
+
   submit(event) {
+    console.log('submitting event', event);
     event.preventDefault();
 
     const method = this.element.getAttribute('method');
@@ -32,7 +37,7 @@ export default class extends Controller {
       method,
       url
     }).then(response => {
-
+      console.log('RESPONSE', response.data);
       const contentType = response.headers['content-type'];
 
       if (contentType.match(/html/)) {

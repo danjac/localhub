@@ -236,6 +236,8 @@ class Production(DockerConfigMixin, Base):
     ALLOWED_HOSTS = values.ListValue()
     ADMINS = values.ListValue()
 
+    SECURE_SSL_REDIRECT = True
+
     DEFAULT_FILE_STORAGE = "communikit.core.storages.MediaStorage"
     STATICFILES_STORAGE = "communikit.core.storages.StaticStorage"
 

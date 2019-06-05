@@ -50,7 +50,7 @@ services:
       - .:/app
     ports:
       - "8000:8000"
-    command: ./start-django
+    command: /start-django
 
   celeryworker:
     <<: *django
@@ -59,7 +59,7 @@ services:
       - mailhog
       - redis
     ports: []
-    command: ./start-celeryworker
+    command: /start-celeryworker
 
   celerybeat:
     <<: *django
@@ -68,10 +68,10 @@ services:
       - mailhog
       - redis
     ports: []
-    command: ./start-celerybeat
+    command: /start-celerybeat
 
   flower:
     <<: *django
     ports:
       - "5555:5555"
-    command: ./start-flower
+    command: /start-flower
