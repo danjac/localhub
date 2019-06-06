@@ -9,10 +9,10 @@
     <div class="card-subtitle text-gray float-right">
       {% blocktrans with photo.created|timesince as created %}{{ created }} ago{% endblocktrans %}
     </div>
-    <div class="card-title h6"><a href="{{ photo.get_absolute_url }}">{{ photo.title }}</a></div>
+    <div class="card-title h5"><a href="{{ photo.get_absolute_url }}">{{ photo.title }}</a></div>
     <div class="card-subtitle h6"><a href="{{ photo.owner.get_profile_url }}">{{ photo.owner.username }}</a></div>
     {% if photo.tags %}
-    <div class="card-title h6">{{ photo.linkify_tags }}</div>
+    <div class="card-title h5">{{ photo.linkify_tags }}</div>
     {% endif %}
   </div>
   <div class="card-body">

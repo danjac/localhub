@@ -7,7 +7,7 @@
     <div class="card-subtitle text-gray float-right">
       {% blocktrans with event.created|timesince as created %}{{ created }} ago{% endblocktrans %}
     </div>
-    <div class="card-title h6"><a href="{{ event.get_absolute_url }}">{{ event.title }}</a></div>
+    <div class="card-title h5"><a href="{{ event.get_absolute_url }}">{{ event.title }}</a></div>
     <div class="card-subtitle">
       <strong>{% trans "Starts" %}</strong> {{ event.starts|date:"SHORT_DATE_FORMAT" }} @ {{ event.starts|date:"TIME_FORMAT" }}
     </div>
