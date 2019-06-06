@@ -16,9 +16,7 @@
     </div>
     {% endif %}
     <div class="card-subtitle h6 text-gray">
-      {% blocktrans with created=post.created|timesince owner=post.owner.username profile_url=post.owner.get_profile_url  %}
-      Posted {{ created }} ago by <a href="{{ profile_url }}">{{ owner }}</a>
-      {% endblocktrans %}
+      {% include "activities/includes/timesince.html" with timestamp=post.created owner=post.owner %}
     </div>
   </div>
   <div class="card-body">
@@ -51,18 +49,11 @@
     </div>
     {% endif %}
     <div class="mb-2">
-    {% if is_detail %}
-    <a href="{{ post.get_permalink }}">{% trans "Permalink" %}</a>
-    {% else %}
-      <a href="{{ post.get_absolute_url }}#comments">
-        {% if post.num_comments %}{{ post.num_comments }}{% endif %}
-        {% blocktrans count counter=post.num_comments %}
-        Comment
-        {% plural %}
-        Comments
-        {% endblocktrans %}
-      </a>
-    {% endif %}
+      {% if is_detail %}
+      <a href="{{ post.get_permalink }}">{% trans "Permalink" %}</a>
+      {% else %}
+      {% include "activities/includes/comments_count.html" with object=post %}
+      {% endif %}
     </div>
     {% include "posts/includes/actions.html" with show_comments=True %}
   </div>

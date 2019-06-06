@@ -13,7 +13,7 @@
   {% endfor %}
   {% if comment_form %}
   <div class="divider"></div>
-  <h4>{% trans "Post a Comment" %}</h4>
+  <h6>{% trans "Post a Comment" %}</h6>
   <form method="POST" action="{{ create_comment_url }}" data-controller="form" data-action="form#submit">
     {% include "includes/forms/fields.html" with form=comment_form %}
     <button class="btn btn-primary" type="submit">{% trans "Submit" %}</button>
