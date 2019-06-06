@@ -191,6 +191,8 @@ class Base(Configuration):
 
     CELERY_BROKER_URL = values.Value()
     CELERY_RESULT_BACKEND = values.Value()
+    CELERY_TASK_SERIALIZER = "json"
+    CELERY_RESULT_SERIALIZER = "json"
 
     # Sorl-thumbnail
 
@@ -257,7 +259,6 @@ class Production(DockerConfigMixin, Base):
     )
 
     CELERY_EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
-    DEFAULT_EMAIL_DOMAIN = values.Value()
     MAILGUN_API_KEY = values.Value()
 
     LOGGING = {
