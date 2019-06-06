@@ -23,7 +23,6 @@ from communikit.notifications.models import Notification
 
 class Event(Activity):
     LOCATION_FIELDS = (
-        "venue",
         "street_address",
         "locality",
         "postal_code",
@@ -76,7 +75,7 @@ class Event(Activity):
     def search_index_components(self) -> Dict[str, str]:
         return {
             "A": self.title,
-            "B": self.location,
+            "B": self.full_location,
             "C": self.description,
         }
 
@@ -104,6 +103,19 @@ class Event(Activity):
         if self.country:
             rv.append(smart_text(self.country.name))
         return ", ".join(rv)
+
+    @property
+    def full_location(self) -> str:
+        """
+        Includes venue if available
+        """
+        return ", ".join(
+            [
+                smart_text(value)
+                for value in [self.venue, self.location]
+                if value
+            ]
+        )
 
     def notify(self, created: bool) -> List[Notification]:
         notifications: List[Notification] = []

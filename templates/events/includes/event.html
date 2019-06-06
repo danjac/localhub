@@ -18,7 +18,7 @@
     </div>
 
     {% trans "Remote" as remote_t %}
-    <div class="card-subtitle h6">{% if event.venue %}{{ event.venue }}{% endif %} {{ event.location|default:remote_t }}</div>
+    <div class="card-subtitle h6">{{ event.full_location|default:remote_t }}</div>
     <div class="card-subtitle h6"><a href="{{ event.owner.get_profile_url }}">{{ event.owner.username }}</a></div>
   </div>
   <div class="card-body">

@@ -102,6 +102,23 @@ class TestEventModel:
             == "Areenankuja 1, Helsinki, 00240, Uusimaa, Finland"
         ), "location property should include all event location fields"
 
+    def test_full_location(self):
+        event = Event(
+            venue="Hartwall Arena",
+            street_address="Areenankuja 1",
+            locality="Helsinki",
+            postal_code="00240",
+            region="Uusimaa",
+            country="FI",
+        )
+        assert event.full_location == (
+            "Hartwall Arena, Areenankuja 1, "
+            "Helsinki, 00240, Uusimaa, Finland"
+        ), (
+            "location property should include all event "
+            "location fields plus venue"
+        )
+
     def test_location_no_country(self):
         event = Event(
             street_address="Areenankuja 1",
