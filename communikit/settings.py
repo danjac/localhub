@@ -252,7 +252,7 @@ class Production(DockerConfigMixin, Base):
     AWS_QUERYSTRING_AUTH = False
     AWS_DEFAULT_ACL = "public-read"
 
-    CELERY_BROKER_URL = values.Value(
+    CELERY_RESULT_BACKEND = CELERY_BROKER_URL = values.Value(
         environ_name="REDIS_URL", environ_prefix=None
     )
 

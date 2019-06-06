@@ -36,6 +36,9 @@
     {% endif %}
   </div>
   <div class="card-footer">
+    <div class="mb-2">
+      <a href="{{ post.get_permalink }}">{% trans "Permalink" %}</a>
+    </div>
     {% include "posts/includes/actions.html" %}
   </div>
 

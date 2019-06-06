@@ -31,6 +31,9 @@
     {% endif %}
   </div>
   <div class="card-footer">
+    <div class="mb-2">
+      <a href="{{ post.get_absolute_url }}#comments">{% trans "Comments" %} ({{ post.num_comments }})</a>
+    </div>
     {% include "posts/includes/actions.html" with show_comments=True %}
   </div>
 
