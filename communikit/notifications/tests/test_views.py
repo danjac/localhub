@@ -6,6 +6,7 @@ import pytest
 from django.test.client import Client
 from django.urls import reverse
 
+from communikit.comments.tests.factories import CommentFactory
 from communikit.communities.models import Membership
 from communikit.events.tests.factories import EventFactory
 from communikit.notifications.models import Notification
@@ -22,6 +23,14 @@ class TestNotificationListView:
             content_object=post,
             recipient=member.member,
             actor=post.owner,
+            community=post.community,
+            verb="created",
+        )
+        comment = CommentFactory(post=post)
+        Notification.objects.create(
+            content_object=comment,
+            recipient=member.member,
+            actor=comment.owner,
             community=post.community,
             verb="created",
         )
