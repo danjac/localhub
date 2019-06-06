@@ -252,6 +252,10 @@ class Production(DockerConfigMixin, Base):
     AWS_QUERYSTRING_AUTH = False
     AWS_DEFAULT_ACL = "public-read"
 
+    CELERY_BROKER_URL = values.Value(
+        environ_name="REDIS_URL", environ_prefix=None
+    )
+
     CELERY_EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
     DEFAULT_EMAIL_DOMAIN = values.Value()
     MAILGUN_API_KEY = values.Value()
