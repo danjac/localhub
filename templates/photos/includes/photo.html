@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load thumbnail %}
 
-<div class="card content-card">
+<div class="card bg-gray">
   <div class="card-header">
     <div class="card-subtitle text-gray float-right">
       {% blocktrans with photo.created|timesince as created %}{{ created }} ago{% endblocktrans %}
@@ -17,15 +17,20 @@
   </div>
   <div class="card-body">
     {% thumbnail photo.image "600" crop="center" as image %}
-    <a href="{{ photo.get_absolute_url }}">
-      <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="{{ photo.title }}">
-    </a>
+    <div class="photo-container">
+      <a href="{{ photo.get_absolute_url }}">
+        <img class="photo" src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="{{ photo.title }}">
+      </a>
+    </div>
     {% empty %}
     <em>No photo available</em>
     {% endthumbnail %}
   </div>
   <div class="card-footer">
-    {% include "photos/includes/actions.html" with show_comments=True %}
+    <div class="mb-2">
+      <a href="{{ photo.get_absolute_url }}#comments">{% trans "Comments" %} ({{ photo.num_comments }})</a>
+    </div>
+    {% include "photos/includes/actions.html" %}
   </div>
 
 </div>

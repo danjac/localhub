@@ -5,55 +5,49 @@
 {% has_perm "comments.delete_comment" user comment as can_delete_comment %}
 {% has_perm "comments.like_comment" user comment as can_like_comment %}
 
-<div class="d-flex content-actions">
-  {% if comment.author_id == user.id %}
-  <div class="mr-2">{% trans "Likes" %} ({{ comment.num_likes }})</div>
-  {% elif can_like_comment %}
-  <div class="mr-2">
-    <a href="#"
-       data-controller="ajax"
-       data-action="ajax#post"
-       {% if comment.has_liked %}
-       data-ajax-url="{% url 'comments:dislike' comment.id %}"
-       {% else %}
-       data-ajax-url="{% url 'comments:like' comment.id %}"
-       {% endif %}
-       data-ajax-redirect="{{ request.get_full_path }}"
-       >
-       {% if comment.has_liked %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}
-    </a>
-  </div>
+<div class="btn-group">
+  {% if can_like_comment %}
+  <a class="btn btn-sm btn-primary"
+     href="#"
+     data-controller="ajax"
+     data-action="ajax#post"
+     {% if comment.has_liked %}
+     data-ajax-url="{% url 'comments:dislike' comment.id %}"
+     {% else %}
+     data-ajax-url="{% url 'comments:like' comment.id %}"
+     {% endif %}
+     data-ajax-redirect="{{ request.get_full_path }}"
+     >
+     {% if comment.has_liked %}
+     <i class="icon icon-cross"></i>
+     {% trans "Unlike" %}
+     {% else %}
+     <i class="icon icon-check"></i>
+     {% trans "Like" %}
+     {% endif %}
+  </a>
   {% endif %}
 
-  <!--
-    <div class="mr-2">
-    <a href="">{% trans "Flag" %}</a>
-    </div>
-  -->
-
   {% if can_change_comment %}
-  <div class="mr-2">
-    <a href="{% url 'comments:update' comment.id %}"
-       >{% trans "Update" %}</a>
-  </div>
+  <a class="btn btn-sm" href="{% url 'comments:update' comment.id %}">
+    <i class="icon icon-edit"></i>
+    {% trans "Update" %}
+  </a>
   {% endif %}
 
   {% if can_delete_comment %}
-  <div class="mr-2">
-    {% url 'comments:delete' comment.id as delete_url %}
-    <a href="{{ delete_url }}"
-       data-controller="ajax confirm"
-       data-action="confirm#check ajax#delete"
-       data-ajax-url="{{ delete_url }}"
-       data-ajax-redirect="{{ request.get_full_path }}"
-       data-confirm-header="{% trans 'Delete Comment' %}"
-       data-confirm-body="{% trans 'Are you sure you want to delete this comment?' %}"
-       >{% trans "Delete" %}</a>
-  </div>
+  {% url 'comments:delete' comment.id as delete_url %}
+  <a class="btn btn-sm"
+     href="{{ delete_url }}"
+     data-controller="ajax confirm"
+     data-action="confirm#check ajax#delete"
+     data-ajax-url="{{ delete_url }}"
+     data-ajax-redirect="{{ request.get_full_path }}"
+     data-confirm-header="{% trans 'Delete Comment' %}"
+     data-confirm-body="{% trans 'Are you sure you want to delete this comment?' %}"
+     ><i class="icon icon-delete"></i>
+     {% trans "Delete" %}
+  </a>
   {% endif %}
-
-  <div class="">
-    <a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a>
-  </div>
 </div>
 
