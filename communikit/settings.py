@@ -290,3 +290,11 @@ class Production(DockerConfigMixin, Base):
             "MAILGUN_API_KEY": self.MAILGUN_API_KEY,
             "MAILGUN_SENDER_DOMAIN": self.MAILGUN_SENDER_DOMAIN,
         }
+
+    @property
+    def SERVER_EMAIL(self) -> str:
+        return f"errors@{self.MAILGUN_SENDER_DOMAIN}"
+
+    @property
+    def DEFAULT_FROM_EMAIL(self) -> str:
+        return f"support@{self.MAILGUN_SENDER_DOMAIN}"
