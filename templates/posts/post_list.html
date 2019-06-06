@@ -9,7 +9,6 @@
     <i class="icon icon-link"></i> {% trans "Submit Post" %}
   </a>
 </div>
-<div class="divider"></div>
 
 {% elif user.is_authenticated %}
 <p class="bg-gray p-2 text-center">
@@ -30,7 +29,7 @@
   {% include "posts/includes/post.html" %}
 </div>
 {% empty %}
-<div class="empty">
+<div class="empty mt-2">
   <p class="empty-title h5">{% trans "No posts have been submitted yet" %}</p>
 </div>
 {% endfor %}

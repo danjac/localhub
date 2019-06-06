@@ -20,7 +20,6 @@
     </a>
     {% endwith %}
 </div>
-<div class="divider"></div>
 
 {% elif user.is_authenticated %}
 <p class="bg-gray p-2 text-center">
@@ -41,9 +40,9 @@
     {% include "activities/includes/activity.html" %}
 </div>
 {% empty %}
-<p class="p-2 bg-gray text-center">
-    {% trans "Nothing to show right now." %}
-</p>
+<div class="empty mt-2">
+  <p class="empty-title h5">{% trans "Nothing has been posted yet" %}</p>
+</div>
 {% endfor %}
 
 

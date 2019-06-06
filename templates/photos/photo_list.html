@@ -9,7 +9,6 @@
     <i class="icon icon-photo"></i> {% trans "Upload Photo" %}
   </a>
 </div>
-<div class="divider"></div>
 
 {% elif user.is_authenticated %}
 <p class="bg-gray p-2 text-center">
@@ -29,7 +28,7 @@
   {% include "photos/includes/photo.html" %}
 </div>
 {% empty %}
-<div class="empty">
+<div class="empty mt-2">
   <p class="empty-title h5">{% trans "No photos have been uploaded." %}</p>
 </div>
 {% endfor %}
