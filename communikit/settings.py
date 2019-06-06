@@ -265,7 +265,7 @@ class Production(DockerConfigMixin, Base):
         "version": 1,
         "disable_existing_loggers": False,
         "handlers": {"console": {"class": "logging.StreamHandler"}},
-        "loggers": {"django": {"handlers": ["console"], "level": "ERROR"}},
+        "loggers": {"django": {"handlers": ["console"], "level": "INFO"}},
     }
 
     @property
