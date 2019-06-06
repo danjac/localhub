@@ -260,6 +260,7 @@ class Production(DockerConfigMixin, Base):
 
     CELERY_EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
     MAILGUN_API_KEY = values.Value()
+    MAILGUN_SENDER_DOMAIN = values.Value()
 
     LOGGING = {
         "version": 1,
@@ -285,4 +286,7 @@ class Production(DockerConfigMixin, Base):
 
     @property
     def ANYMAIL(self) -> Dict[str, str]:
-        return {"MAILGUN_API_KEY": self.MAILGUN_API_KEY}
+        return {
+            "MAILGUN_API_KEY": self.MAILGUN_API_KEY,
+            "MAILGUN_SENDER_DOMAIN": self.MAILGUN_SENDER_DOMAIN,
+        }
