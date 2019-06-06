@@ -23,6 +23,7 @@ from communikit.notifications.models import Notification
 
 class Event(Activity):
     LOCATION_FIELDS = (
+        "venue",
         "street_address",
         "locality",
         "postal_code",
@@ -73,7 +74,11 @@ class Event(Activity):
         ]
 
     def search_index_components(self) -> Dict[str, str]:
-        return {"A": self.title, "B": self.location, "C": self.description}
+        return {
+            "A": self.title,
+            "B": self.location,
+            "C": self.description,
+        }
 
     def update_coordinates(self) -> Tuple[Optional[float], Optional[float]]:
         if self.location:
