@@ -3,8 +3,7 @@ build:
     DJANGO_CONFIGURATION: Production
   docker:
     web: Dockerfile.heroku
-    celeryworker: Dockerfile.heroku
-    # celerybeat: Dockerfile.heroku
+    worker: Dockerfile.heroku
 
 release:
   command:
@@ -13,5 +12,4 @@ release:
 
 run:
   web: gunicorn -b 0.0.0.0:$PORT communikit.wsgi
-  celeryworker: celery -A communikit.celery worker -l INFO
-  # celerybeat: celery -A communikit.celery beat -l INFO
+  worker: celery -A communikit.celery worker -l INFO
