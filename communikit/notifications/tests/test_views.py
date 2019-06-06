@@ -26,7 +26,7 @@ class TestNotificationListView:
             community=post.community,
             verb="created",
         )
-        comment = CommentFactory(post=post)
+        comment = CommentFactory(activity=post)
         Notification.objects.create(
             content_object=comment,
             recipient=member.member,
