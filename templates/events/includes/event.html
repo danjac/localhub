@@ -78,8 +78,10 @@
       {% endblocktrans %}
     </div>
     {% endif %}
-    {% if not is_detail %}
     <div class="mb-2">
+      {% if is_detail %}
+      <a href="{{ event.get_permalink }}">{% trans "Permalink" %}</a>
+      {% else %}
       <a href="{{ event.get_absolute_url }}#comments">
         {% if event.num_comments %}{{ event.num_comments }}{% endif %}
         {% blocktrans count counter=event.num_comments %}
@@ -88,8 +90,8 @@
         Comments
         {% endblocktrans %}
       </a>
+      {% endif %}
     </div>
-    {% endif %}
     <div>
       {% include "events/includes/actions.html" %}
     </div>

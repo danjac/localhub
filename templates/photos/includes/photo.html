@@ -44,8 +44,11 @@
     {% if photo.tags %}
     <div class="mb-2">{{ photo.linkify_tags }}</div>
     {% endif %}
-    {% if not is_detail %}
+
     <div class="mb-2">
+      {% if is_detail %}
+      <a href="{{ photo.get_permalink }}">{% trans "Permalink" %}</a>
+      {% else %}
       <a href="{{ photo.get_absolute_url }}#comments">
         {% if photo.num_comments %}{{ photo.num_comments }}{% endif %}
         {% blocktrans count counter=photo.num_comments %}
@@ -54,8 +57,8 @@
         Comments
         {% endblocktrans %}
       </a>
+      {% endif %}
     </div>
-    {% endif %}
     {% include "photos/includes/actions.html" %}
   </div>
 

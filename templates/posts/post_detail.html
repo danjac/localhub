@@ -10,40 +10,7 @@
 
 {% include "activities/includes/breadcrumbs.html" with activity=post %}
 
-<div class="card bg-gray">
-  <div class="card-header">
-    <div class="card-subtitle text-gray float-right">
-      {% blocktrans with post.created|timesince as created %}{{ created }} ago{% endblocktrans %}
-    </div>
-    {% if post.title %}
-    <div class="card-title h3">{{ post.title }}</div>
-    <div class="card-subtitle h6"><a href="{{ post.owner.get_profile_url }}">{{ post.owner.username }}</a></div>
-    {% else %}
-    <div class="card-title h6"><a href="{{ post.owner.get_profile_url }}">{{ post.owner.username }}</a></div>
-    {% endif %}
-  </div>
-  <div class="card-body">
-    <div class="divider"></div>
-    {% if post.description %}
-    <div>
-      {{ post.description.markdown }}
-    </div>
-    {% endif %}
-    {% if post.url %}
-    <div>
-      {{ post.url|oembed }}
-    </div>
-    {% endif %}
-  </div>
-  <div class="card-footer">
-    <div class="mb-2">
-      <a href="{{ post.get_permalink }}">{% trans "Permalink" %}</a>
-    </div>
-    {% include "posts/includes/actions.html" %}
-  </div>
+{% include "posts/includes/post.html" with is_detail=True %}
 
-</div>
-
-<div class="divider"></div>
 {% include "activities/includes/comments.html" %}
 {% endblock activities_content %}

@@ -6,22 +6,31 @@
 
 <div class="card bg-gray">
   <div class="card-header">
-    <div class="card-subtitle text-gray float-right">
-      {% blocktrans with post.created|timesince as created %}{{ created }} ago{% endblocktrans %}
-    </div>
     {% if post.title %}
-    <div class="card-title h5"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></div>
-    <div class="card-subtitle h6"><a href="{{ post.owner.get_profile_url }}">{{ post.owner.username }}</a></div>
-    {% else %}
-    <div class="card-title h5"><a href="{{ post.owner.get_profile_url }}">{{ post.owner.username }}</a></div>
+    <div class="card-title h5">
+      {% if is_detail %}
+      {{ post.title }}
+      {% else %}
+      <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+      {% endif %}
+    </div>
     {% endif %}
+    <div class="card-subtitle h6 text-gray">
+      {% blocktrans with created=post.created|timesince owner=post.owner.username profile_url=post.owner.get_profile_url  %}
+      Posted {{ created }} ago by <a href="{{ profile_url }}">{{ owner }}</a>
+      {% endblocktrans %}
+    </div>
   </div>
   <div class="card-body">
     <div class="divider"></div>
     {% if post.description %}
     <div>
+      {% if is_detail %}
+      {{ post.description.markdown }}
+      {% else %}
       {{ post.description.markdown|truncatewords_html:60 }}
       <a href="{{ post.get_absolute_url }}">{% trans "Read more" %}</a>
+      {% endif %}
     </div>
     {% endif %}
     {% if post.url %}
@@ -31,8 +40,29 @@
     {% endif %}
   </div>
   <div class="card-footer">
+    {% if post.num_likes and post.owner == user %}
+    <div class="mb-2 text-gray">
+      {{ post.num_likes }}
+      {% blocktrans count counter=post.num_likes %}
+      person liked this post
+      {% plural %}
+      people liked this post
+      {% endblocktrans %}
+    </div>
+    {% endif %}
     <div class="mb-2">
-      <a href="{{ post.get_absolute_url }}#comments">{% trans "Comments" %} ({{ post.num_comments }})</a>
+    {% if is_detail %}
+    <a href="{{ post.get_permalink }}">{% trans "Permalink" %}</a>
+    {% else %}
+      <a href="{{ post.get_absolute_url }}#comments">
+        {% if post.num_comments %}{{ post.num_comments }}{% endif %}
+        {% blocktrans count counter=post.num_comments %}
+        Comment
+        {% plural %}
+        Comments
+        {% endblocktrans %}
+      </a>
+    {% endif %}
     </div>
     {% include "posts/includes/actions.html" with show_comments=True %}
   </div>
