@@ -1,6 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.views.generic import ListView, View
@@ -9,14 +10,13 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 
 from communikit.communities.views import CommunityRequiredMixin
-from communikit.core import app_settings
 from communikit.notifications.models import Notification
 
 
 class NotificationListView(
     CommunityRequiredMixin, LoginRequiredMixin, ListView
 ):
-    paginate_by = app_settings.DEFAULT_PAGE_SIZE
+    paginate_by = settings.DEFAULT_PAGE_SIZE
     template_name = "notifications/notification_list.html"
 
     def get_queryset(self) -> QuerySet:

@@ -1,6 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from django.conf import settings
 from django.contrib import messages
 from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
@@ -14,7 +15,6 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.communities.models import Community, Membership
 from communikit.communities.views import CommunityRequiredMixin
-from communikit.core import app_settings
 from communikit.core.types import ContextDict
 from communikit.invites.emails import send_invitation_email
 from communikit.invites.models import Invite
@@ -62,7 +62,7 @@ join_request_list_view = JoinRequestListView.as_view()
 class JoinRequestCreateView(CommunityRequiredMixin, CreateView):
     model = JoinRequest
     form_class = JoinRequestForm
-    success_url = app_settings.HOME_PAGE_URL
+    success_url = settings.HOME_PAGE_URL
     allow_if_private = True
 
     def get_form_kwargs(self) -> ContextDict:

@@ -4,7 +4,9 @@
 import os
 import socket
 
-from typing import Dict, List
+from typing import Any, Dict, List
+
+from django.urls import reverse_lazy
 
 from configurations import Configuration, values
 
@@ -13,6 +15,7 @@ class Base(Configuration):
 
     SECRET_KEY = values.SecretValue()
     DATABASES = values.DatabaseURLValue()
+    REDIS_URL = values.Value(environ_name="REDIS_URL", environ_prefix=None)
 
     ATOMIC_REQUESTS = True
 
@@ -132,11 +135,11 @@ class Base(Configuration):
 
     FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
-    @property
-    def LOGIN_REDIRECT_URL(self) -> str:
-        return "/"
-        # from communikit.core import app_settings
-        # return app_settings.HOME_PAGE_URL
+    # project-specific
+
+    DEFAULT_PAGE_SIZE = 15
+
+    LOGIN_REDIRECT_URL = HOME_PAGE_URL = reverse_lazy("activities:stream")
 
     @property
     def BASE_DIR(self) -> str:
@@ -189,15 +192,26 @@ class Base(Configuration):
 
     # Celery
 
-    CELERY_BROKER_URL = values.Value()
-    CELERY_RESULT_BACKEND = values.Value()
-    CELERY_TASK_SERIALIZER = "json"
-    CELERY_RESULT_SERIALIZER = "json"
+    CELERY_RESULT_BACKEND = CELERY_BROKER_URL = REDIS_URL
+    CELERY_TASK_SERIALIZER = CELERY_RESULT_SERIALIZER = "json"
 
     # Sorl-thumbnail
 
+    @property
     def THUMBNAIL_DEBUG(self) -> bool:
         return self.DEBUG
+
+    @property
+    def CACHES(self) -> Dict[str, Any]:
+        return {
+            "default": {
+                "BACKEND": "django_redis.cache.RedisCache",
+                "LOCATION": self.REDIS_URL,
+                "OPTIONS": {
+                    "CLIENT_CLASS": "django_redis.client.DefaultClient"
+                },
+            }
+        }
 
 
 class DockerConfigMixin:
@@ -212,6 +226,9 @@ class DockerConfigMixin:
 class Testing(Base):
     PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
     ALLOWED_HOSTS = Configuration.ALLOWED_HOSTS + [".example.com"]
+    CACHES = {
+        "default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}
+    }
 
 
 class Local(DockerConfigMixin, Base):
@@ -253,10 +270,6 @@ class Production(DockerConfigMixin, Base):
     AWS_S3_REGION_NAME = values.Value("eu-north-1")
     AWS_QUERYSTRING_AUTH = False
     AWS_DEFAULT_ACL = "public-read"
-
-    CELERY_RESULT_BACKEND = CELERY_BROKER_URL = values.Value(
-        environ_name="REDIS_URL", environ_prefix=None
-    )
 
     CELERY_EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
     MAILGUN_API_KEY = values.Value()

@@ -6,10 +6,10 @@ version: '3.4'
 x-env:
   &default-env
   DATABASE_URL: postgres://postgres@postgres:5432/postgres
+  REDIS_URL: redis://redis:6379/0
   DJANGO_EMAIL_HOST: mailhog
   DJANGO_EMAIL_PORT: 1025
   DJANGO_SECRET_KEY: seekrit
-  DJANGO_CELERY_BROKER_URL: redis://redis:6379/0
 
 volumes:
   pg_data: {}

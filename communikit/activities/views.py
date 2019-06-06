@@ -3,6 +3,7 @@
 
 from typing import List, Optional, Type, no_type_check
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -28,7 +29,6 @@ from communikit.activities.models import Activity, Like
 from communikit.comments.forms import CommentForm
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
-from communikit.core import app_settings
 from communikit.core.types import ContextDict, QuerySetList
 from communikit.core.views import CombinedQuerySetListView
 from communikit.events.models import Event
@@ -94,7 +94,7 @@ class ActivityCreateView(
 
 class ActivityListView(MultipleActivityMixin, ListView):
     allow_empty = True
-    paginate_by = app_settings.DEFAULT_PAGE_SIZE
+    paginate_by = settings.DEFAULT_PAGE_SIZE
     order_by = "-created"
 
     def get_queryset(self) -> QuerySet:
@@ -206,7 +206,7 @@ class ActivityStreamView(CommunityRequiredMixin, CombinedQuerySetListView):
     template_name = "activities/stream.html"
     ordering = "created"
     allow_empty = True
-    paginate_by = app_settings.DEFAULT_PAGE_SIZE
+    paginate_by = settings.DEFAULT_PAGE_SIZE
     models: List[Type[Activity]] = [Photo, Post, Event]
 
     def get_queryset(self, model: Type[Activity]) -> QuerySet:

@@ -24,7 +24,6 @@ from model_utils.models import TimeStampedModel
 
 
 from communikit.communities.models import Community
-from communikit.core import app_settings
 
 
 class ActivityQuerySet(InheritanceQuerySetMixin, models.QuerySet):
@@ -84,7 +83,7 @@ class Activity(TimeStampedModel):
         indexes = [GinIndex(fields=["search_document"])]
 
     def get_absolute_url(self) -> str:
-        return app_settings.HOME_PAGE_URL
+        return settings.HOME_PAGE_URL
 
     def get_permalink(self) -> str:
         return self.community.resolve_url(self.get_absolute_url())

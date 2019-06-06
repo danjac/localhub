@@ -3,6 +3,7 @@
 
 from typing import no_type_check
 
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import redirect_to_login
 from django.contrib.messages.views import SuccessMessageMixin
@@ -24,7 +25,6 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.communities.forms import MembershipForm
 from communikit.communities.models import Community, Membership
-from communikit.core import app_settings
 
 
 class CommunityRequiredMixin:
@@ -111,7 +111,7 @@ class UserMembershipListView(LoginRequiredMixin, ListView):
     Returns all communities a user belongs to
     """
 
-    paginate_by = app_settings.DEFAULT_PAGE_SIZE
+    paginate_by = settings.DEFAULT_PAGE_SIZE
     allow_empty = True
     template_name = "communities/user_membership_list.html"
 
@@ -146,7 +146,7 @@ class CommunityMembershipListView(
     Returns all members in the current community
     """
 
-    paginate_by = app_settings.DEFAULT_PAGE_SIZE
+    paginate_by = settings.DEFAULT_PAGE_SIZE
     allow_empty = True
     permission_required = "communities.manage_community"
     template_name = "communities/community_membership_list.html"
