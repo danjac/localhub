@@ -44,14 +44,14 @@ class TestNotificationListView:
         )
         photo = PhotoFactory(community=member.community)
         Notification.objects.create(
-            content_object=event,
+            content_object=photo,
             recipient=member.member,
             actor=photo.owner,
             community=photo.community,
             verb="created",
         )
         response = client.get(reverse("notifications:list"))
-        assert len(response.context["object_list"]) == 3
+        assert len(response.context["object_list"]) == 4
         assert response.status_code == 200
 
 
