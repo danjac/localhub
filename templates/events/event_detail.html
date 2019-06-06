@@ -8,64 +8,9 @@
 
 {% block activities_content %}
 
-
 {% include "activities/includes/breadcrumbs.html" with activity=event %}
 
-<div class="card bg-gray">
-  <div class="card-header">
-    <div class="card-subtitle text-gray float-right">
-      {% blocktrans with event.created|timesince as created %}{{ created }} ago{% endblocktrans %}
-    </div>
-    <div class="card-title h3">{{ event.title }}</div>
-
-    <div class="card-subtitle">
-      <strong>{% trans "Starts" %}</strong> {{ event.starts|date:"SHORT_DATE_FORMAT" }} @ {{ event.starts|date:"TIME_FORMAT" }}
-    </div>
-    <div class="card-subtitle">
-      {% if event.ends %}
-      <strong>{% trans "Ends" %}</strong> {{ event.ends|date:"SHORT_DATE_FORMAT" }} @ {{ event.ends|date:"TIME_FORMAT" }}
-      {% endif %}
-    </div>
-
-    {% trans "Remote" as remote_t %}
-    <div class="card-subtitle h6">{{ event.full_location|default:remote_t }}</div>
-
-    <div class="card-subtitle h6"><a href="{{ event.owner.get_profile_url }}">{{ event.owner.username }}</a></div>
-  </div>
-  <div class="card-body">
-    {% if event.latitude and event.longitude %}
-    <div id="event-map"
-         class="event-map event-map-lg"
-         data-controller="map"
-         data-map-latitude="{{ event.latitude }}"
-         data-map-longitude="{{ event.longitude }}"
-         ></div>
-    {% endif %}
-    <div class="divider"></div>
-    {% if event.description %}
-    <div>
-      {{ event.description.markdown }}
-    </div>
-    {% endif %}
-    {% if event.url %}
-    <div>
-      {{ event.url|oembed }}
-    </div>
-    {% endif %}
-  </div>
-  <div class="card-footer">
-    <div class="mb-2">
-      <a href="{{ event.get_permalink }}">{% trans "Permalink" %}</a>
-    </div>
-    <div>
-    {% include "events/includes/actions.html" %}
-    </div>
-  </div>
-
-</div>
-
-
-<div class="divider"></div>
+{% include "events/includes/event.html" with is_detail=True %}
 
 {% include "activities/includes/comments.html" %}
 

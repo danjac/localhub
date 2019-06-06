@@ -10,36 +10,7 @@
 
 {% include "activities/includes/breadcrumbs.html" with activity=photo %}
 
-<div class="card bg-gray">
-  <div class="card-header">
-    <div class="card-subtitle text-gray float-right">
-      {% blocktrans with photo.created|timesince as created %}{{ created }} ago{% endblocktrans %}
-    </div>
-    <div class="card-title h6">{{ photo.title }}</div>
-    <div class="card-subtitle h6"><a href="{{ photo.owner.get_profile_url }}">{{ photo.owner.username }}</a></div>
-    {% if photo.tags %}
-    <div class="card-title h6">{{ photo.linkify_tags }}</div>
-    {% endif %}
-  </div>
-  <div class="card-body">
-    {% thumbnail photo.image "800" crop="center" as image %}
-    <div class="photo-container">
-      <img class="photo" src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="{{ photo.title }}">
-    </div>
-    {% empty %}
-    <em>No photo available</em>
-    {% endthumbnail %}
-  </div>
-  <div class="card-footer">
-    <div class="mb-2">
-      <a href="{{ photo.get_permalink }}">{% trans "Permalink" %}</a>
-    </div>
-    {% include "photos/includes/actions.html" %}
-  </div>
-
-</div>
-
-<div class="divider"></div>
+{% include "photos/includes/photo.html" with is_detail=True %}
 
 {% include "activities/includes/comments.html" %}
 

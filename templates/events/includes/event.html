@@ -1,40 +1,34 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% load i18n %}
 {% load micawber_tags %}
 
 <div class="card bg-gray">
   <div class="card-header">
 
-    <div class="card-subtitle text-gray float-right">
-      {% blocktrans with event.created|timesince as created %}{{ created }} ago{% endblocktrans %}
-    </div>
-    <div class="card-title h5"><a href="{{ event.get_absolute_url }}">{{ event.title }}</a></div>
-    <div class="card-subtitle">
-      <strong>{% trans "Starts" %}</strong> {{ event.starts|date:"SHORT_DATE_FORMAT" }} @ {{ event.starts|date:"TIME_FORMAT" }}
-    </div>
-    <div class="card-subtitle">
-      {% if event.ends %}
-      <strong>{% trans "Ends" %}</strong> {{ event.ends|date:"SHORT_DATE_FORMAT" }} @ {{ event.ends|date:"TIME_FORMAT" }}
+    <div class="card-title h5">
+      {% if is_detail %}
+      {{ event.title }}
+      {% else %}
+      <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
       {% endif %}
     </div>
+    <div class="card-subtitle h6 text-gray">
+      {% blocktrans with created=event.created|timesince owner=event.owner.username profile_url=event.owner.get_profile_url  %}
+      Posted {{ created }} ago by <a href="{{ profile_url }}">{{ owner }}</a>
+      {% endblocktrans %}
+    </div>
 
-    {% trans "Remote" as remote_t %}
-    <div class="card-subtitle h6">{{ event.full_location|default:remote_t }}</div>
-    <div class="card-subtitle h6"><a href="{{ event.owner.get_profile_url }}">{{ event.owner.username }}</a></div>
-  </div>
-  <div class="card-body">
-    {% if event.latitude and event.longitude %}
-    <div id="map-for-event-{{ event.id }}"
-         class="event-map"
-         data-controller="map"
-         data-map-latitude="{{ event.latitude }}"
-         data-map-longitude="{{ event.longitude }}"
-         ></div>
-    {% endif %}
     <div class="divider"></div>
     {% if event.description %}
     <div>
+      {% if is_detail %}
+      {{ event.description.markdown }}
+      {% else %}
       {{ event.description.markdown|truncatewords_html:60 }}
       <a href="{{ event.get_absolute_url }}">{% trans "Read more" %}</a>
+      {% endif %}
     </div>
     {% endif %}
     {% if event.url %}
@@ -42,11 +36,60 @@
       {{ event.url|oembed }}
     </div>
     {% endif %}
+    <div class="divider"></div>
+    <dl>
+      <dt>{% trans "Starts" %}</dt>
+      <dd>{{ event.starts|date:"SHORT_DATE_FORMAT" }} @ {{ event.starts|date:"TIME_FORMAT" }}</dd>
+
+      {% if event.ends %}
+      <dt>{% trans "Ends" %}</dt>
+      <dd>{{ event.ends|date:"SHORT_DATE_FORMAT" }} @ {{ event.ends|date:"TIME_FORMAT" }}</dd>
+      {% endif %}
+
+      <dt>{% trans "Location" %}</dt>
+      <dd>
+      {% with location=event.full_location %}
+      {% if location %}
+      {{ location }}
+      {% else %}
+      {% trans "Online" %}
+      {% endif %}
+      {% endwith %}
+      </dd>
+    </dl>
+    {% if event.latitude and event.longitude %}
+    <div id="map-for-event-{{ event.id }}"
+         class="event-map{% if is_detail %} event-map-lg{% endif %}"
+         data-controller="map"
+         data-map-latitude="{{ event.latitude }}"
+         data-map-longitude="{{ event.longitude }}"
+         ></div>
+    {% endif %}
   </div>
   <div class="card-footer">
-    <div class="mb-2">
-      <a href="{{ event.get_absolute_url }}#comments">{% trans "Comments" %} ({{ event.num_comments }})</a>
+
+    {% if event.num_likes and event.owner == user %}
+    <div class="mb-2 text-gray">
+      {{ event.num_likes }}
+      {% blocktrans count counter=event.num_likes %}
+      person liked this event
+      {% plural %}
+      people liked this event
+      {% endblocktrans %}
     </div>
+    {% endif %}
+    {% if not is_detail %}
+    <div class="mb-2">
+      <a href="{{ event.get_absolute_url }}#comments">
+        {% if event.num_comments %}{{ event.num_comments }}{% endif %}
+        {% blocktrans count counter=event.num_comments %}
+        Comment
+        {% plural %}
+        Comments
+        {% endblocktrans %}
+      </a>
+    </div>
+    {% endif %}
     <div>
       {% include "events/includes/actions.html" %}
     </div>

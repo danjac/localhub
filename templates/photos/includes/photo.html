@@ -6,17 +6,21 @@
 
 <div class="card bg-gray">
   <div class="card-header">
-    <div class="card-subtitle text-gray float-right">
-      {% blocktrans with photo.created|timesince as created %}{{ created }} ago{% endblocktrans %}
+    <div class="card-title h5">
+      {% if is_detail %}
+      {{ photo.title }}
+      {% else %}
+      <a href="{{ photo.get_absolute_url }}">{{ photo.title }}</a>
+      {% endif %}
     </div>
-    <div class="card-title h5"><a href="{{ photo.get_absolute_url }}">{{ photo.title }}</a></div>
-    <div class="card-subtitle h6"><a href="{{ photo.owner.get_profile_url }}">{{ photo.owner.username }}</a></div>
-    {% if photo.tags %}
-    <div class="card-title h5">{{ photo.linkify_tags }}</div>
-    {% endif %}
+    <div class="card-subtitle h6 text-gray">
+      {% blocktrans with created=photo.created|timesince owner=photo.owner.username profile_url=photo.owner.get_profile_url  %}
+      Posted {{ created }} ago by <a href="{{ profile_url }}">{{ owner }}</a>
+      {% endblocktrans %}
+    </div>
   </div>
   <div class="card-body">
-    {% thumbnail photo.image "600" crop="center" as image %}
+    {% thumbnail photo.image is_detail|yesno:"800,600" crop="center" as image %}
     <div class="photo-container">
       <a href="{{ photo.get_absolute_url }}">
         <img class="photo" src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="{{ photo.title }}">
@@ -27,9 +31,31 @@
     {% endthumbnail %}
   </div>
   <div class="card-footer">
-    <div class="mb-2">
-      <a href="{{ photo.get_absolute_url }}#comments">{% trans "Comments" %} ({{ photo.num_comments }})</a>
+    {% if photo.num_likes and photo.owner == user %}
+    <div class="mb-2 text-gray">
+      {{ photo.num_likes }}
+      {% blocktrans count counter=photo.num_likes %}
+      person liked this photo
+      {% plural %}
+      people liked this photo
+      {% endblocktrans %}
     </div>
+    {% endif %}
+    {% if photo.tags %}
+    <div class="mb-2">{{ photo.linkify_tags }}</div>
+    {% endif %}
+    {% if not is_detail %}
+    <div class="mb-2">
+      <a href="{{ photo.get_absolute_url }}#comments">
+        {% if photo.num_comments %}{{ photo.num_comments }}{% endif %}
+        {% blocktrans count counter=photo.num_comments %}
+        Comment
+        {% plural %}
+        Comments
+        {% endblocktrans %}
+      </a>
+    </div>
+    {% endif %}
     {% include "photos/includes/actions.html" %}
   </div>
 
