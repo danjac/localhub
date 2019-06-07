@@ -26,6 +26,7 @@ services:
 
   mailhog:
     image: mailhog/mailhog:v1.0.0
+    restart: always
     ports:
       - "8025:8025"
 
@@ -42,6 +43,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.local
+    restart: on-failure
     environment: *default-env
     depends_on:
       - postgres
