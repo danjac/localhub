@@ -82,6 +82,12 @@ class Base(Configuration):
 
     ROOT_URLCONF = "communikit.urls"
 
+    # project-specific
+
+    DEFAULT_PAGE_SIZE = 15
+
+    HOME_PAGE_URL = reverse_lazy("activities:stream")
+
     AUTH_USER_MODEL = "users.User"
 
     # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
@@ -107,6 +113,7 @@ class Base(Configuration):
     ]
 
     LOGIN_URL = "account_login"
+    LOGIN_REDIRECT_URL = HOME_PAGE_URL
 
     ACCOUNT_EMAIL_REQUIRED = True
 
@@ -135,11 +142,22 @@ class Base(Configuration):
 
     FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
-    # project-specific
+    # https://neutronx.github.io/django-markdownx/customization/
 
-    DEFAULT_PAGE_SIZE = 15
+    MARKDOWNX_MARKDOWNIFY_FUNCTION = (
+        "communikit.core.markdown.utils.markdownify"
+    )
 
-    LOGIN_REDIRECT_URL = HOME_PAGE_URL = reverse_lazy("activities:stream")
+    # https://celery.readthedocs.io/en/latest/userguide/configuration.html
+
+    CELERY_RESULT_BACKEND = CELERY_BROKER_URL = REDIS_URL
+    CELERY_TASK_SERIALIZER = CELERY_RESULT_SERIALIZER = "json"
+
+    # https://micawber.readthedocs.io/en/latest/django.html
+
+    MICAWBER_PROVIDERS = (
+        "communikit.activities.micawber_providers.bootstrap_embed"
+    )
 
     @property
     def BASE_DIR(self) -> str:
@@ -183,17 +201,6 @@ class Base(Configuration):
                 },
             }
         ]
-
-    # https://neutronx.github.io/django-markdownx/customization/
-
-    MARKDOWNX_MARKDOWNIFY_FUNCTION = (
-        "communikit.core.markdown.utils.markdownify"
-    )
-
-    # Celery
-
-    CELERY_RESULT_BACKEND = CELERY_BROKER_URL = REDIS_URL
-    CELERY_TASK_SERIALIZER = CELERY_RESULT_SERIALIZER = "json"
 
     # Sorl-thumbnail
 

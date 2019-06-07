@@ -6,5 +6,5 @@ from django.core.cache import cache
 from micawber import providers
 
 
-def bootstrap_noembed():
-    return providers.bootstrap_noembed(cache, nowrap=1)
+def bootstrap_embed():
+    return providers.bootstrap_embed(cache)
