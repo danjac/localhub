@@ -12,7 +12,6 @@
 
   {% if can_like_post %}
   <a href="#"
-     id="like-post-{{ post.id }}"
      class="btn btn-sm btn-primary"
      data-controller="ajax"
      data-action="ajax#post"
@@ -21,7 +20,7 @@
      {% else %}
      data-ajax-url="{% url 'posts:like' post.id %}"
      {% endif %}
-     data-ajax-redirect="{{ request.get_full_path }}#like-post-{{ post.id }}"
+     data-ajax-redirect="{{ request.get_full_path }}#post-{{ post.id }}"
      >
      {% if post.has_liked %}
      <i class="icon icon-cross"></i> {% trans "Unlike" %}

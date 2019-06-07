@@ -17,7 +17,6 @@
 
   {% if can_like_photo %}
   <a href="#"
-     id="like-photo-{{ photo.id }}"
      class="btn btn-sm"
      data-controller="ajax"
      data-action="ajax#post"
@@ -26,7 +25,7 @@
      {% else %}
      data-ajax-url="{% url 'photos:like' photo.id %}"
      {% endif %}
-     data-ajax-redirect="{{ request.get_full_path }}#like-photo-{{ photo.id }}"
+     data-ajax-redirect="{{ request.get_full_path }}#photo-{{ photo.id }}"
      >
      {% if photo.has_liked %}
      <i class="icon icon-cross"></i> {% trans "Unlike" %}

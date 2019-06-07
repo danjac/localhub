@@ -8,7 +8,6 @@
 
   {% if can_like_event %}
   <a href="#"
-     id="like-event-{{ event.id }}"
      class="btn btn-sm btn-primary"
      data-controller="ajax"
      data-action="ajax#post"
@@ -17,7 +16,7 @@
      {% else %}
      data-ajax-url="{% url 'events:like' event.id %}"
      {% endif %}
-     data-ajax-redirect="{{ request.get_full_path }}#like-event-{{ event.id }}"
+     data-ajax-redirect="{{ request.get_full_path }}#event-{{ event.id }}"
      >
      {% if event.has_liked %}
      <i class="icon icon-cross"></i> {% trans "Unlike" %}

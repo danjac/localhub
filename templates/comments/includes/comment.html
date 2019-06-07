@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="card bg-gray">
+<div class="card bg-gray" id="comment-{{ comment.id }}">
   <div class="card-header">
     <div class="card-title h6 text-gray">
       {% include "activities/includes/timesince.html" with timestamp=comment.created owner=comment.owner %}
