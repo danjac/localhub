@@ -1,5 +1,0 @@
-{% if response.title == response.url %}
-{{ response.url|urlizetrunc:30 }}
-{% else %}
-<a rel="nofollow" href="{{ response.url }}" title="{{ response.title }}">{{ response.title }}</a>
-{% endif %}
