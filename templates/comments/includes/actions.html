@@ -8,6 +8,7 @@
 <div class="btn-group">
   {% if can_like_comment %}
   <a class="btn btn-sm btn-primary"
+     id="like-comment-{{ comment.id }}"
      href="#"
      data-controller="ajax"
      data-action="ajax#post"
@@ -16,7 +17,7 @@
      {% else %}
      data-ajax-url="{% url 'comments:like' comment.id %}"
      {% endif %}
-     data-ajax-redirect="{{ request.get_full_path }}"
+     data-ajax-redirect="{{ request.get_full_path }}#like-comment-{{ comment.id }}"
      >
      {% if comment.has_liked %}
      <i class="icon icon-cross"></i>
