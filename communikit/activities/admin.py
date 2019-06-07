@@ -1,3 +1,10 @@
 from django.contrib import admin
 
-# Register your models here.
+
+from communikit.core.markdown.admin import MarkdownFieldMixin
+
+
+class ActivityAdmin(MarkdownFieldMixin, admin.ModelAdmin):
+    raw_id_fields = ("owner",)
+    list_display = ("__str__", "owner", "community", "created")
+    ordering = ("-created",)

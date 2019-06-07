@@ -75,7 +75,7 @@ class Activity(TimeStampedModel):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
-    search_document = SearchVectorField(null=True)
+    search_document = SearchVectorField(null=True, editable=False)
 
     objects = ActivityQuerySet.as_manager()
 
