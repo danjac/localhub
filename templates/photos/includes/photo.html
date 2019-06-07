@@ -27,6 +27,7 @@
     {% empty %}
     <em>No photo available</em>
     {% endthumbnail %}
+    {% include "activities/includes/description.html" with object=photo %}
   </div>
   <div class="card-footer">
     {% if photo.num_likes and photo.owner == user %}
@@ -38,9 +39,6 @@
       people liked this photo
       {% endblocktrans %}
     </div>
-    {% endif %}
-    {% if photo.tags %}
-    <div class="mb-2">{{ photo.linkify_tags }}</div>
     {% endif %}
 
     <div class="mb-2">

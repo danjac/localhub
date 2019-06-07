@@ -2,7 +2,6 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-{% load micawber_tags %}
 
 <div class="card bg-gray" id="post-{{ post.id }}">
   <div class="card-header">
@@ -20,22 +19,8 @@
     </div>
   </div>
   <div class="card-body">
-    <div class="divider"></div>
-    {% if post.description %}
-    <div>
-      {% if is_detail or post.description|wordcount < 60 %}
-      {{ post.description.markdown }}
-      {% else %}
-      {{ post.description.markdown|truncatewords_html:60 }}
-      <a href="{{ post.get_absolute_url }}">{% trans "Read more" %}</a>
-      {% endif %}
-    </div>
-    {% endif %}
-    {% if post.url %}
-    <div>
-      {{ post.url|oembed }}
-    </div>
-    {% endif %}
+    {% include "activities/includes/description.html" with object=post %}
+    {% include "activities/includes/oembed.html" with object=post %}
   </div>
   <div class="card-footer">
     {% if post.num_likes and post.owner == user %}

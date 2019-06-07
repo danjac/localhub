@@ -1,0 +1,11 @@
+{% load i18n %}
+{% if object.description %}
+<div>
+  {% if is_detail or object.description|wordcount < 60 %}
+  {{ object.description.markdown }}
+  {% else %}
+  {{ object.description.markdown|truncatewords_html:60 }}
+  <a href="{{ object.get_absolute_url }}">{% trans "Read more" %}</a>
+  {% endif %}
+</div>
+

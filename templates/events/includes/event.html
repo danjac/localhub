@@ -17,23 +17,11 @@
     <div class="card-subtitle h6 text-gray">
       {% include "activities/includes/timesince.html" with timestamp=event.created owner=event.owner %}
     </div>
-
     <div class="divider"></div>
-    {% if event.description %}
-    <div>
-      {% if is_detail or event.description|wordcount < 60 %}
-      {{ event.description.markdown }}
-      {% else %}
-      {{ event.description.markdown|truncatewords_html:60 }}
-      <a href="{{ event.get_absolute_url }}">{% trans "Read more" %}</a>
-      {% endif %}
-    </div>
-    {% endif %}
-    {% if event.url %}
-    <div>
-      {{ event.url|oembed_html }}
-    </div>
-    {% endif %}
+  </div>
+  <div class="card-body">
+    {% include "activities/includes/description.html" with object=event %}
+    {% include "activities/includes/oembed.html" with object=event %}
     <div class="divider"></div>
     <dl>
       <dt>{% trans "Starts" %}</dt>

@@ -13,7 +13,7 @@ from django.utils.translation import ugettext as _
 from sorl.thumbnail import ImageField
 
 from communikit.activities.models import Activity
-from communikit.core.markdown.utils import linkify_hashtags
+from communikit.core.markdown.fields import MarkdownField
 from communikit.notifications.models import Notification
 
 
@@ -21,7 +21,7 @@ class Photo(Activity):
 
     title = models.CharField(max_length=300)
     image = ImageField(upload_to="photos")
-    tags = models.CharField(max_length=300, blank=True)
+    description = MarkdownField(blank=True)
 
     notifications = GenericRelation(Notification, related_query_name="photo")
 
@@ -39,10 +39,7 @@ class Photo(Activity):
         ]
 
     def search_index_components(self) -> Dict[str, str]:
-        return {"A": self.title, "B": self.tags}
-
-    def linkify_tags(self) -> str:
-        return mark_safe(linkify_hashtags(self.tags))
+        return {"A": self.title, "B": self.description}
 
     def notify(self, created: bool) -> List[Notification]:
         notifications: List[Notification] = []
