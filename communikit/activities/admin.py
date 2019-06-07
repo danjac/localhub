@@ -1,5 +1,7 @@
-from django.contrib import admin
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
 
+from django.contrib import admin
 
 from communikit.core.markdown.admin import MarkdownFieldMixin
 
