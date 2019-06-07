@@ -23,7 +23,7 @@
     <div class="divider"></div>
     {% if post.description %}
     <div>
-      {% if is_detail or post.description|length < 200 %}
+      {% if is_detail or post.description|wordcount < 60 %}
       {{ post.description.markdown }}
       {% else %}
       {{ post.description.markdown|truncatewords_html:60 }}
