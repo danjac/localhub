@@ -153,12 +153,6 @@ class Base(Configuration):
     CELERY_RESULT_BACKEND = CELERY_BROKER_URL = REDIS_URL
     CELERY_TASK_SERIALIZER = CELERY_RESULT_SERIALIZER = "json"
 
-    # https://micawber.readthedocs.io/en/latest/django.html
-
-    MICAWBER_PROVIDERS = (
-        "communikit.activities.micawber_providers.bootstrap_embed"
-    )
-
     @property
     def BASE_DIR(self) -> str:
         return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
