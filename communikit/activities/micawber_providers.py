@@ -7,4 +7,4 @@ from micawber import providers
 
 
 def bootstrap_embed():
-    return providers.bootstrap_embed(cache)
+    return providers.bootstrap_oembed(cache)
