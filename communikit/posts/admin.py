@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from communikit.activities.admin import ActivityAdmin
+from communikit.posts.models import Post
+
+
+@admin.register(Post)
+class PostAdmin(ActivityAdmin):
+    ...

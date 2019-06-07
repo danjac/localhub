@@ -1,3 +1,11 @@
 from django.contrib import admin
 
-# Register your models here.
+from sorl.thumbnail.admin import AdminImageMixin
+
+from communikit.activities.admin import ActivityAdmin
+from communikit.photos.models import Photo
+
+
+@admin.register(Photo)
+class PhotoAdmin(AdminImageMixin, ActivityAdmin):
+    ...
