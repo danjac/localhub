@@ -1,5 +1,7 @@
 {% load i18n %}
-{% blocktrans with created=timestamp|timesince owner=owner.username profile_url=owner.get_profile_url  %}
-Posted {{ created }} ago by <a href="{{ profile_url }}">{{ owner }}</a>
+{% load users_tags %}
+{% blocktrans with created=timestamp|timesince %}
+Posted {{ created }} ago by
 {% endblocktrans %}
+<a href="{{ owner.get_profile_url }}">{% avatar owner "avatar-xs" %} {{ owner }}</a>
 
