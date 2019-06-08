@@ -6,7 +6,6 @@ from typing import Dict, List, Tuple
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
-from django.utils.safestring import mark_safe
 from django.utils.encoding import smart_text
 from django.utils.translation import ugettext as _
 

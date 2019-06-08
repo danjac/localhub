@@ -9,6 +9,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
+from sorl.thumbnail import ImageField
+
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -54,6 +56,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     name = models.CharField(_("Full name of user"), blank=True, max_length=255)
+    avatar = ImageField(upload_to="avatars", null=True, blank=True)
 
     objects = UserManager()
 

@@ -9,7 +9,11 @@
 
 
 <div class="col-6 col-sm-12">
-  <form method="POST" action="{% url 'users:update' %}" data-controller="form" data-action="form#submit">
+  <form method="POST"
+        action="{% url 'users:update' %}"
+        enctype="multipart/form-data"
+        data-controller="form"
+        data-action="form#submit">
     {% include "includes/forms/fields.html" %}
     <input type="submit" class="btn btn-primary" value="{% trans 'Save' %}">
   </form>

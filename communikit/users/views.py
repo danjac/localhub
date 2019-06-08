@@ -45,7 +45,7 @@ user_detail_view = UserDetailView.as_view()
 
 
 class UserUpdateView(CurrentUserMixin, SuccessMessageMixin, UpdateView):
-    fields = ("name",)
+    fields = ("name", "avatar")
 
     success_url = reverse_lazy("users:update")
     success_message = _("Your details have been updated")

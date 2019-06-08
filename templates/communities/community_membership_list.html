@@ -1,6 +1,7 @@
 {% extends "settings/base.html" %}
 {% load i18n %}
 {% load rules %}
+{% load users_tags %}
 
 {% block settings_content %}
 <table class="table table-striped table-hover">
@@ -15,7 +16,10 @@
   <tbody>
     {% for member in object_list %}
     <tr>
-      <td>{{ member.member.username }}</td>
+      <td>
+        {% avatar member.member %}
+        {{ member.member.username }}
+      </td>
       <td>{{ member.get_role_display }}</td>
       <td>
         <input type="checkbox" disabled{% if member.active %} checked{% endif %}><i class="form-icon"></i>
