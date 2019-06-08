@@ -6,6 +6,26 @@
 
 {% block activities_content %}
 
+{% if object_list %}
+<div class="btn-group mb-2 float-right">
+    {% if is_unread_notifications %}
+    <button class="btn btn-primary"
+            data-controller="ajax"
+            data-action="ajax#post"
+            data-ajax-url="{% url 'notifications:mark_all_read' %}"
+            >{% trans "Mark All as Read" %}</button>
+    {% endif %}
+    <button class="btn btn-warning"
+            data-controller="confirm ajax"
+            data-action="confirm#check ajax#delete"
+            data-ajax-url="{% url 'notifications:delete_all' %}"
+            data-confirm-header="{% trans 'Delete All' %}"
+            data-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}"
+            >{% trans "Delete All" %}</button>
+</div>
+<div class="clearfix"></div>
+{% endif %}
+
 {% for notification in object_list %}
 <div class="mb-2">
     {% with content_type=notification.content_type.name content_object=notification.content_object %}

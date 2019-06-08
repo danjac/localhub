@@ -1,3 +1,6 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% extends "base.html" %}
 {% load i18n %}
 
@@ -5,7 +8,7 @@
 {% block content %}
 <h3>{% trans "Request invitation" %}</h3>
 <div class="col-6 col-sm-12">
-  <form method="POST" action="{{ request.path }}">
+  <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
     {% include "includes/forms/fields.html" %}
     <button type="submit" class="btn btn-primary">{% trans "Send invite" %}</button>
   </form>

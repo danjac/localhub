@@ -66,10 +66,56 @@ class TestNotificationMarkReadView:
             verb="created",
         )
         response = client.post(
-            reverse(
-                "notifications:mark_notification_read", args=[notification.id]
-            )
+            reverse("notifications:mark_read", args=[notification.id])
         )
         assert response.url == reverse("notifications:list")
         notification.refresh_from_db()
         assert notification.is_read
+
+
+class TestNotificationMarkAllReadView:
+    def test_post(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        notification = Notification.objects.create(
+            content_object=post,
+            recipient=member.member,
+            actor=post.owner,
+            community=post.community,
+            verb="created",
+        )
+        response = client.post(reverse("notifications:mark_all_read"))
+        assert response.url == reverse("notifications:list")
+        notification.refresh_from_db()
+        assert notification.is_read
+
+
+class TestNotificationDeleteView:
+    def test_delete(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        notification = Notification.objects.create(
+            content_object=post,
+            recipient=member.member,
+            actor=post.owner,
+            community=post.community,
+            verb="created",
+        )
+        response = client.delete(
+            reverse("notifications:delete", args=[notification.id])
+        )
+        assert response.url == reverse("notifications:list")
+        assert not Notification.objects.exists()
+
+
+class TestNotificationDeleteAllView:
+    def test_delete(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        Notification.objects.create(
+            content_object=post,
+            recipient=member.member,
+            actor=post.owner,
+            community=post.community,
+            verb="created",
+        )
+        response = client.delete(reverse("notifications:delete_all"))
+        assert response.url == reverse("notifications:list")
+        assert not Notification.objects.exists()

@@ -5,7 +5,7 @@
 <div class="tile tile-centered">
     <div class="tile-content">
         <div class="tile-title">
-          {% block notification_title %}{% endblock %}
+            {% block notification_title %}{% endblock %}
         </div>
         <div class="tile-subtitle text-gray">
             {% blocktrans with created=notification.created|timesince %}
@@ -13,13 +13,20 @@
             {% endblocktrans %}
         </div>
     </div>
-    {% if not notification.is_read %}
     <div class="tile-action">
-        <button class="btn btn-primary float-right"
-                data-controller="ajax"
-                data-action="ajax#post"
-                data-ajax-url="{% url 'notifications:mark_notification_read' notification.pk %}"
-                >{% trans "Mark as Read" %}</button>
+        <div class="btn-group float-right">
+            {% if not notification.is_read %}
+            <button class="btn btn-primary btn-sm"
+                    data-controller="ajax"
+                    data-action="ajax#post"
+                    data-ajax-url="{% url 'notifications:mark_read' notification.pk %}"
+                    >{% trans "Mark as Read" %}</button>
+            {% endif %}
+            <button class="btn btn-warning btn-sm"
+                    data-controller="ajax"
+                    data-action="ajax#delete"
+                    data-ajax-url="{% url 'notifications:delete' notification.pk %}"
+                    >{% trans "Delete" %}</button>
+        </div>
     </div>
-    {% endif %}
 </div>
