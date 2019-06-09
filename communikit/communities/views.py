@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import no_type_check
+from typing import no_type_check, Sequence
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -25,6 +25,7 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.communities.forms import MembershipForm
 from communikit.communities.models import Community, Membership
+from communikit.communities.rules import is_admin
 
 
 class CommunityRequiredMixin:
@@ -162,6 +163,11 @@ class CommunityMembershipListView(MembershipListView):
 
     def get_queryset(self) -> QuerySet:
         return super().get_queryset().order_by("member__username")
+
+    def get_template_names(self) -> Sequence[str]:
+        if is_admin(self.request.user, self.request.community):
+            return ["communities/admin_community_membership_list.html"]
+        return ["communities/member_community_membership_list.html"]
 
 
 community_membership_list_view = CommunityMembershipListView.as_view()
