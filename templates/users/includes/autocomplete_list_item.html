@@ -1,0 +1,16 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load users_tags %}
+<li class="menu-item">
+  <a href="#" data-action="mention-typeahead#select" data-mention-typeahead-value="{{ user.username }}">
+    <div class="tile tile-centered">
+      <div class="tile-icon">
+        {% avatar user %}
+      </div>
+      <div class="tile-content">
+        {{ user.username }}
+      </div>
+    </div>
+  </a>
+</li>

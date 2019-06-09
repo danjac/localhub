@@ -139,26 +139,51 @@ class MultipleMembershipMixin(MembershipQuerySetMixin, MultipleObjectMixin):
     ...
 
 
-class CommunityMembershipListView(
+class MembershipListView(
     PermissionRequiredMixin, MultipleMembershipMixin, ListView
 ):
+    permission_required = "communities.view_memberships"
+
+    def get_permission_object(self) -> Community:
+        return self.request.community
+
+
+class CommunityMembershipListView(MembershipListView):
     """
     Returns all members in the current community
+
+    For now this requires admin priv, but will change to allow all
+    members.
     """
 
     paginate_by = settings.DEFAULT_PAGE_SIZE
     allow_empty = True
-    permission_required = "communities.manage_community"
     template_name = "communities/community_membership_list.html"
-
-    def get_permission_object(self) -> Community:
-        return self.request.community
 
     def get_queryset(self) -> QuerySet:
         return super().get_queryset().order_by("member__username")
 
 
 community_membership_list_view = CommunityMembershipListView.as_view()
+
+
+class MemberAutocompleteListView(MembershipListView):
+    template_name = "communities/member_autocomplete_list.html"
+
+    def get_queryset(self) -> QuerySet:
+        qs = super().get_queryset()
+        search_term = self.request.GET.get("q", "").strip()
+        # TBD: add users to full text search
+        if search_term:
+            return (
+                qs.filter(member__username__icontains=search_term)
+                .select_related("member")
+                .order_by("member__username")
+            )
+        return qs.none()
+
+
+member_autocomplete_list_view = MemberAutocompleteListView.as_view()
 
 
 class MembershipUpdateView(

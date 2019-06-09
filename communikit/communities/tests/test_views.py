@@ -101,12 +101,23 @@ class TestCommunityMembershipListView:
         self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
     ):
         Membership.objects.create(member=user, community=admin.community)
-        assert (
-            client.get(
-                reverse("communities:community_membership_list")
-            ).status_code
-            == 200
+        response = client.get(reverse("communities:community_membership_list"))
+        assert len(response.context["object_list"]) == 2
+
+
+class TestMemberAutocompleteListView:
+    def test_get(
+        self,
+        client: Client,
+        member: Membership,
+        user: settings.AUTH_USER_MODEL,
+    ):
+        Membership.objects.create(member=user, community=member.community)
+        response = client.get(
+            reverse("communities:member_autocomplete_list"),
+            {"q": user.username},
         )
+        assert len(response.context["object_list"]) == 1
 
 
 class TestUserMembershipListView:

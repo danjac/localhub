@@ -1,5 +1,10 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% load i18n %}
-<div class="markdownx tabs" data-controller="tabs">
+<div class="markdownx tabs"
+     data-controller="tabs mention-typeahead"
+     data-mention-typeahead-search-url="{% url 'communities:member_autocomplete_list' %}">
   <ul class="tab">
     <li class="tab-item active" data-target="tabs.tab" data-tab="editor">
       <a href="#" data-action="tabs#select" data-tab="editor">{% trans "Edit" %}</a>
@@ -57,8 +62,10 @@
          >{% trans "List (Numbers)" %}</a>
 
     </div>
+  <ul class="menu d-hide" data-target="mention-typeahead.selector"></ul>
     <textarea
-      data-target="markdown.textarea"
+      data-target="markdown.textarea mention-typeahead.input"
+      data-action="keyup->mention-typeahead#typeahead"
       name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}
       >{% spaceless %}{% if widget.value %}{{ widget.value }}{% endif %}{% endspaceless %}</textarea>
   </div>
