@@ -97,11 +97,29 @@ class TestCommunityUpdateView:
 
 
 class TestCommunityMembershipListView:
-    def test_get(
+    def test_get_if_admin(
         self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
     ):
         Membership.objects.create(member=user, community=admin.community)
         response = client.get(reverse("communities:community_membership_list"))
+        assert (
+            "communities/admin_community_membership_list.html"
+            in [t.name for t in response.templates]
+        )
+        assert len(response.context["object_list"]) == 2
+
+    def test_get_if_member(
+        self,
+        client: Client,
+        member: Membership,
+        user: settings.AUTH_USER_MODEL,
+    ):
+        Membership.objects.create(member=user, community=member.community)
+        response = client.get(reverse("communities:community_membership_list"))
+        assert (
+            "communities/member_community_membership_list.html"
+            in [t.name for t in response.templates]
+        )
         assert len(response.context["object_list"]) == 2
 
 
