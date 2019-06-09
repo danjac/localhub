@@ -22,7 +22,7 @@ flower==0.9.3 # https://github.com/mher/flower
 geocoder==1.38.1 #https://github.com/DenisCarriere/geocoder
 gunicorn==19.9.0 # https://github.com/benoitc/gunicorn
 ipython==7.4.0 # https://github.com/ipython/ipython
-micawber==0.4.0 # https://github.com/coleifer/micawber
+micawber==0.4.1 # https://github.com/coleifer/micawber
 psycopg2==2.8.2 --no-binary psycopg2  # https://github.com/psycopg/psycopg2
 pytest-django==3.4.8 # https://github.com/pytest-dev/pytest-django
 pytest-mock==1.10.4 # https://github.com/pytest-dev/pytest-mock/

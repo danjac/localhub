@@ -148,6 +148,9 @@ class Base(Configuration):
         "communikit.core.markdown.utils.markdownify"
     )
 
+    # https://micawber.readthedocs.io/en/latest/django.html
+    MICAWBER_PROVIDERS = "communikit.activities.providers.bootstrap_oembed"
+
     # https://celery.readthedocs.io/en/latest/userguide/configuration.html
 
     CELERY_RESULT_BACKEND = CELERY_BROKER_URL = REDIS_URL
