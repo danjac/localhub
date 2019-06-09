@@ -84,7 +84,7 @@ class Base(Configuration):
 
     # project-specific
 
-    DEFAULT_PAGE_SIZE = 15
+    DEFAULT_PAGE_SIZE = 12
 
     HOME_PAGE_URL = reverse_lazy("activities:stream")
 
