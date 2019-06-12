@@ -1,3 +1,6 @@
+// Copyright (c) 2019 by Dan Jacob
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Controller } from 'stimulus';
 
 export default class extends Controller {
@@ -6,13 +9,21 @@ export default class extends Controller {
   select(event) {
     event.preventDefault();
 
-    const { markdown } = event.currentTarget.dataset;
+    const { dataset } = event.currentTarget;
+    const { markdown } = dataset;
     const [markdownStart, markdownEnd] = markdown.split(/\[SELECTION\]/);
 
     const { selectionStart, selectionEnd, value } = this.textareaTarget;
 
     const selectedText = value.substring(selectionStart, selectionEnd);
-    const markdownText = markdownStart + selectedText + markdownEnd;
+
+    const markdownText =
+      'multiline' in dataset
+        ? selectedText
+            .split('\n')
+            .map(item => markdownStart + item + markdownEnd)
+            .join('\n')
+        : markdownStart + selectedText + markdownEnd;
 
     this.textareaTarget.value =
       value.substring(0, selectionStart) +
