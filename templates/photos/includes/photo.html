@@ -45,7 +45,7 @@
       {% if is_detail %}
       <a href="{{ photo.get_permalink }}">{% trans "Permalink" %}</a>
       {% else %}
-      {% include "activities/includes/comments_count.html" with object=event %}
+      {% include "activities/includes/comments_count.html" with object=photo %}
       {% endif %}
     </div>
     {% include "photos/includes/actions.html" %}
