@@ -18,7 +18,7 @@
     {% for member in object_list %}
     <tr>
       <td>
-        <a href="{{ member.member.get_profile_url }}">
+        <a href="{{ member.member.get_absolute_url }}">
           {% avatar member.member %}
           {{ member.member.username }}
         </a>

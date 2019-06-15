@@ -29,7 +29,7 @@
         </li>
         {% if request.community %}
         <li class="menu-item">
-          <a data-controller="active-link" href="{{ user.get_profile_url }}">{% trans "My Profile" %}</a>
+          <a data-controller="active-link" href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
         </li>
         {% endif %}
         <li class="menu-item">

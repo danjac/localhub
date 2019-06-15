@@ -50,7 +50,7 @@
          <li class="menu-item">
            <a data-controller="active-link"
               data-active-link-exact
-              href="{{ user.get_profile_url }}">{% trans "My Profile" %}</a></li>
+              href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a></li>
          {% endif %}
          {% if can_view_memberships and not is_admin %}
          <li class="menu-item">

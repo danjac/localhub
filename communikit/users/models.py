@@ -66,6 +66,3 @@ class User(AbstractUser):
 
     def get_absolute_url(self) -> str:
         return reverse("users:detail", args=[self.username])
-
-    # DEPRECATED
-    get_profile_url = get_absolute_url

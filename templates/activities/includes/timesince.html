@@ -1,7 +1,10 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% load i18n %}
 {% load users_tags %}
 {% blocktrans with created=timestamp|timesince %}
 Posted {{ created }} ago by
 {% endblocktrans %}
-<a href="{{ owner.get_profile_url }}">{% avatar owner "avatar-xs" %} {{ owner }}</a>
+<a href="{{ owner.get_absolute_url }}">{% avatar owner "avatar-xs" %} {{ owner }}</a>
 
