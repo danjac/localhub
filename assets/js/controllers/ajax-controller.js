@@ -32,8 +32,6 @@ export default class extends Controller {
     const referrer = location.href;
 
     const url = this.data.get('url');
-    const redirect = this.data.get('redirect');
-
     axios({
       headers: {
         'Turbolinks-Referrer': referrer
@@ -41,7 +39,17 @@ export default class extends Controller {
       method,
       url
     }).then(response => {
-      if (this.data.has('replace')) {
+
+      const toggle = this.data.get('toggle');
+      const redirect = this.data.get('redirect');
+
+      if (toggle !== null) {
+        this.element.classList.toggle('d-hide');
+        const target = toggle && document.querySelector(toggle);
+        if (target) {
+          target.classList.toggle('d-hide');
+        }
+      } else if (this.data.has('replace')) {
         this.element.innerHTML = response.data;
       } else if (redirect) {
         Turbolinks.visit(redirect);
