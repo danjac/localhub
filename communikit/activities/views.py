@@ -256,5 +256,12 @@ class ActivityProfileView(UserProfileMixin, ActivityStreamView):
     def get_queryset(self, model: Type[Activity]) -> QuerySet:
         return super().get_queryset(model).filter(owner=self.object)
 
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["num_likes"] = Like.objects.filter(
+            activity__owner=self.object
+        ).count()
+        return data
+
 
 activity_profile_view = ActivityProfileView.as_view()

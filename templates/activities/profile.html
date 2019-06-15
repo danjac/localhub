@@ -2,6 +2,24 @@
 {% load i18n %}
 {% block profile_content %}
 
+{% if num_likes %}
+<p class="mt-2">
+{% if profile == user %}
+{% blocktrans count counter=num_likes %}
+You have received a total of <strong>1 like</strong> for your posts.
+{% plural %}
+You have received a total of <strong>{{ num_likes }} likes</strong> for your posts.
+{% endblocktrans %}
+{% else %}
+{% blocktrans count counter=num_likes %}
+This user has received <strong>1 like</strong> for their posts.
+{% plural %}
+This user has received <strong>{{ num_likes }} likes</strong> for their posts.
+{% endblocktrans %}
+{% endif %}
+</p>
+{% endif %}
+
 {% for activity in object_list %}
 <div class="mt-2">
   {% include "activities/includes/activity.html" %}

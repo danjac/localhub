@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import pytest
 
 from django.test.client import Client
@@ -7,6 +10,7 @@ from communikit.comments.models import Comment, Like
 from communikit.comments.tests.factories import CommentFactory
 from communikit.communities.models import Membership
 from communikit.posts.tests.factories import PostFactory
+from communikit.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -96,8 +100,10 @@ class TestCommentProfileView:
     def test_get(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
         comment = CommentFactory(activity=post, owner=member.member)
+        Like.objects.create(comment=comment, user=UserFactory())
         response = client.get(
-            reverse("comments:profile", args=[comment.owner.username]),
+            reverse("comments:profile", args=[comment.owner.username])
         )
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 1
+        assert response.context["num_likes"] == 1

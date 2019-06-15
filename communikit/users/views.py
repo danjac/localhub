@@ -5,7 +5,8 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponse
+from django.db.models import QuerySet
+from django.http import HttpRequest, HttpResponse
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DeleteView, DetailView, UpdateView
@@ -23,29 +24,34 @@ class CurrentUserMixin(LoginRequiredMixin):
         return self.request.user
 
 
-class UserProfileMixin(CommunityRequiredMixin, SingleObjectMixin):
+class UserQuerySetMixin(CommunityRequiredMixin, SingleObjectMixin):
+
     slug_field = "username"
     slug_url_kwarg = "username"
     context_object_name = "profile"
 
-    def get(self, request, *args, **kwargs) -> HttpResponse:
-        self.object = self.get_object(
-            queryset=get_user_model().objects.filter(
-                communities=request.community
-            )
+    def get_user_queryset(self) -> QuerySet:
+        return get_user_model().objects.filter(
+            is_active=True, communities=self.request.community
         )
+
+
+class UserProfileMixin(UserQuerySetMixin):
+    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object(queryset=self.get_user_queryset())
         return super().get(request, *args, **kwargs)
 
 
-class UserDetailView(CurrentUserMixin, DetailView):
-    pass
+class UserDetailView(UserQuerySetMixin, DetailView):
+    def get_queryset(self) -> QuerySet:
+        return self.get_user_queryset()
 
 
 user_detail_view = UserDetailView.as_view()
 
 
 class UserUpdateView(CurrentUserMixin, SuccessMessageMixin, UpdateView):
-    fields = ("name", "avatar")
+    fields = ("name", "avatar", "bio")
 
     success_url = reverse_lazy("users:update")
     success_message = _("Your details have been updated")
