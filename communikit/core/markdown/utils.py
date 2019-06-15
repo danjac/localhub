@@ -34,7 +34,7 @@ cleaner = bleach.Cleaner(
 )
 
 HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")
-MENTIONS_RE = re.compile(r"(?:^|\s)[＠ @]{1}([^\s#<>[\]|{}]+)")
+MENTIONS_RE = re.compile(r"(?:^|\s)[＠ @]{1}([^\s#<>!.?[\]|{}]+)")
 
 
 def markdownify(content: str) -> str:

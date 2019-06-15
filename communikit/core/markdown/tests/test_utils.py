@@ -23,8 +23,12 @@ class TestMarkdownifySafe:
 
 class TestExtractMentions:
     def test_extract(self):
-        content = "hello @danjac and @weegill"
-        assert extract_mentions(content) == {"danjac", "weegill"}
+        content = "hello @danjac and @weegill and @someone-else!"
+        assert extract_mentions(content) == {
+            "danjac",
+            "weegill",
+            "someone-else",
+        }
 
 
 class TestLinkifyMentions:
