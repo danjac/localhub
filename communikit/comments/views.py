@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from typing import no_type_check
 
 from django.contrib import messages
@@ -186,6 +189,13 @@ class CommentProfileView(MultipleCommentMixin, UserProfileMixin, ListView):
             .with_has_liked(self.request.user)
             .order_by("-created")
         )
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["num_likes"] = Like.objects.filter(
+            comment__owner=self.object
+        ).count()
+        return data
 
 
 comment_profile_view = CommentProfileView.as_view()

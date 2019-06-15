@@ -12,6 +12,9 @@ from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail import ImageField
 
 
+from communikit.core.markdown.fields import MarkdownField
+
+
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
@@ -56,12 +59,13 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     name = models.CharField(_("Full name of user"), blank=True, max_length=255)
+    bio = MarkdownField(blank=True)
     avatar = ImageField(upload_to="avatars", null=True, blank=True)
 
     objects = UserManager()
 
-    def get_profile_url(self) -> str:
-        """
-        Link to (public) profile content page
-        """
-        return reverse("activities:profile", args=[self.username])
+    def get_absolute_url(self) -> str:
+        return reverse("users:detail", args=[self.username])
+
+    # DEPRECATED
+    get_profile_url = get_absolute_url

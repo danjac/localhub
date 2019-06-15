@@ -11,7 +11,7 @@ app_name = "users"
 
 
 urlpatterns = [
-    path("", view=user_detail_view, name="detail"),
     path("~update/", view=user_update_view, name="update"),
     path("~delete/", view=user_delete_view, name="delete"),
+    path("<username>/", view=user_detail_view, name="detail"),
 ]
