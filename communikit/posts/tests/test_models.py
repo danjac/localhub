@@ -5,7 +5,6 @@ import factory
 import pytest
 
 from django.db.models import signals
-from django.utils.encoding import force_str
 
 from communikit.communities.models import Community, Membership
 from communikit.posts.models import Post
@@ -20,7 +19,7 @@ class TestPostModel:
         assert post.get_breadcrumbs() == [
             ("/", "Home"),
             ("/posts/", "Posts"),
-            (f"/posts/{post.id}/", force_str(post.title)),
+            (f"/posts/{post.id}/", "Post"),
         ]
 
     @factory.django.mute_signals(signals.post_save)
