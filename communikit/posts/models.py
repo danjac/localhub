@@ -27,7 +27,7 @@ class Post(Activity):
     description_tracker = FieldTracker(["description"])
 
     def __str__(self) -> str:
-        return self.title or self.url
+        return self.title or self.url or _("Post")
 
     def get_absolute_url(self) -> str:
         return reverse("posts:detail", args=[self.id])

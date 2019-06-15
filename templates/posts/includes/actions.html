@@ -10,24 +10,21 @@
 
 <div class="btn-group">
 
-  {% if can_like_post %}
-  <a href="#"
-     class="btn btn-sm btn-primary"
-     data-controller="ajax"
-     data-action="ajax#post"
-     {% if post.has_liked %}
-     data-ajax-url="{% url 'posts:dislike' post.id %}"
-     {% else %}
-     data-ajax-url="{% url 'posts:like' post.id %}"
-     {% endif %}
-     data-ajax-redirect="{{ request.get_full_path }}#post-{{ post.id }}"
-     >
-     {% if post.has_liked %}
-     <i class="icon icon-cross"></i> {% trans "Unlike" %}
-     {% else %}
-     <i class="icon icon-check"></i> {% trans "Like" %}
-     {% endif %}
-  </a>
+    {% if can_like_post %}
+    <button class="btn btn-sm{% if post.has_liked %} d-hide{% endif %}"
+            id="post-like-btn-{{ post.id }}"
+            data-controller="ajax"
+            data-action="ajax#post"
+            data-ajax-url="{% url 'posts:like' post.id %}"
+            data-ajax-toggle="#post-dislike-btn-{{ post.id }}"
+            ><i class="icon icon-check"></i> {% trans "Like" %}</button>
+    <button class="btn btn-sm{% if not post.has_liked %} d-hide{% endif %}"
+            id="post-dislike-btn-{{ post.id }}"
+            data-controller="ajax"
+            data-action="ajax#post"
+            data-ajax-url="{% url 'posts:dislike' post.id %}"
+            data-ajax-toggle="#post-like-btn-{{ post.id }}"
+            ><i class="icon icon-cross"></i> {% trans "Unlike" %}</button>
     {% endif %}
 
     {% if can_change_post %}

@@ -7,25 +7,20 @@
 
 <div class="btn-group">
   {% if can_like_comment %}
-  <a class="btn btn-sm btn-primary"
-     href="#"
-     data-controller="ajax"
-     data-action="ajax#post"
-     {% if comment.has_liked %}
-     data-ajax-url="{% url 'comments:dislike' comment.id %}"
-     {% else %}
-     data-ajax-url="{% url 'comments:like' comment.id %}"
-     {% endif %}
-     data-ajax-redirect="{{ request.get_full_path }}#comment-{{ comment.id }}"
-     >
-     {% if comment.has_liked %}
-     <i class="icon icon-cross"></i>
-     {% trans "Unlike" %}
-     {% else %}
-     <i class="icon icon-check"></i>
-     {% trans "Like" %}
-     {% endif %}
-  </a>
+  <button class="btn btn-sm{% if comment.has_liked %} d-hide{% endif %}"
+          id="comment-like-btn-{{ comment.id }}"
+          data-controller="ajax"
+          data-action="ajax#post"
+          data-ajax-url="{% url 'comments:like' comment.id %}"
+          data-ajax-toggle="#comment-dislike-btn-{{ comment.id }}"
+          ><i class="icon icon-check"></i> {% trans "Like" %}</button>
+  <button class="btn btn-sm{% if not comment.has_liked %} d-hide{% endif %}"
+          id="comment-dislike-btn-{{ comment.id }}"
+          data-controller="ajax"
+          data-action="ajax#post"
+          data-ajax-url="{% url 'comments:dislike' comment.id %}"
+          data-ajax-toggle="#comment-like-btn-{{ comment.id }}"
+          ><i class="icon icon-cross"></i> {% trans "Unlike" %}</button>
   {% endif %}
 
   {% if can_change_comment %}

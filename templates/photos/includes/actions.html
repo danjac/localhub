@@ -9,36 +9,34 @@
 {% has_perm "activities.like_activity" user photo as can_like_photo %}
 <div class="btn-group">
 
-  <a class="btn btn-sm btn-primary"
-     href="{{ photo.image.url }}"
-     download>
-    <i class="icon icon-download"></i> {% trans "Download" %}
-  </a>
+    <a class="btn btn-sm"
+       href="{{ photo.image.url }}"
+       download>
+        <i class="icon icon-download"></i> {% trans "Download" %}
+    </a>
 
-  {% if can_like_photo %}
-  <a href="#"
-     class="btn btn-sm"
-     data-controller="ajax"
-     data-action="ajax#post"
-     {% if photo.has_liked %}
-     data-ajax-url="{% url 'photos:dislike' photo.id %}"
-     {% else %}
-     data-ajax-url="{% url 'photos:like' photo.id %}"
-     {% endif %}
-     data-ajax-redirect="{{ request.get_full_path }}#photo-{{ photo.id }}"
-     >
-     {% if photo.has_liked %}
-     <i class="icon icon-cross"></i> {% trans "Unlike" %}
-     {% else %}
-     <i class="icon icon-check"></i> {% trans "Like" %}
-     {% endif %}
-  </a>
+    {% if can_like_photo %}
+    <button class="btn btn-sm{% if photo.has_liked %} d-hide{% endif %}"
+            id="photo-like-btn-{{ photo.id }}"
+            data-controller="ajax"
+            data-action="ajax#post"
+            data-ajax-url="{% url 'photos:like' photo.id %}"
+            data-ajax-toggle="#photo-dislike-btn-{{ photo.id }}"
+            ><i class="icon icon-check"></i> {% trans "Like" %}</button>
+    <button class="btn btn-sm{% if not photo.has_liked %} d-hide{% endif %}"
+            id="photo-dislike-btn-{{ photo.id }}"
+            data-controller="ajax"
+            data-action="ajax#post"
+            data-ajax-url="{% url 'photos:dislike' photo.id %}"
+            data-ajax-toggle="#photo-like-btn-{{ photo.id }}"
+            ><i class="icon icon-cross"></i> {% trans "Unlike" %}</button>
+
     {% endif %}
 
     {% if can_change_photo %}
     <a class="btn btn-sm"
        href="{% url 'photos:update' photo.id %}">
-      <i class="icon icon-edit"></i> {% trans "Edit" %}
+        <i class="icon icon-edit"></i> {% trans "Edit" %}
     </a>
     {% endif %}
 
