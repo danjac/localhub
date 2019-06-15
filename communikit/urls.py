@@ -5,6 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import TemplateView
 
 from communikit.communities.views import (
     community_access_denied_view,
@@ -48,3 +49,25 @@ if settings.DEBUG:
     urlpatterns += static(
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
     )
+
+# allow debugging of error views in development
+
+if settings.DEBUG:
+    urlpatterns += [
+        path(
+            "errors/400/",
+            TemplateView.as_view(template_name="400.html"),
+        ),
+        path(
+            "errors/403/",
+            TemplateView.as_view(template_name="403.html"),
+        ),
+        path(
+            "errors/404/",
+            TemplateView.as_view(template_name="404.html"),
+        ),
+        path(
+            "errors/500/",
+            TemplateView.as_view(template_name="500.html"),
+        ),
+    ]
