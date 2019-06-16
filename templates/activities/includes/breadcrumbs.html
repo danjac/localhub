@@ -1,9 +1,11 @@
+{% if breadcrumbs %}
 <ul class="breadcrumb">
-  {% for url, label in activity.get_breadcrumbs %}
+  {% for url, label in breadcrumbs %}
   <li class="breadcrumb-item">
     <a href="{{ url }}">{{ label }}</a>
   </li>
   {% endfor %}
 </ul>
+{% endif %}
 
 

@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import List, Optional, Type, no_type_check
+from typing import List, Optional, Tuple, Type, no_type_check
 
 from django.conf import settings
 from django.contrib import messages
@@ -11,7 +11,7 @@ from django.db import IntegrityError
 from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -81,6 +81,14 @@ class ActivityCreateView(
             return self.next_url
         return super().get_success_url()
 
+    def get_breadcrumbs(self) -> List[Tuple[str, str]]:
+        return []
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["breadcrumbs"] = self.get_breadcrumbs()
+        return data
+
     def form_valid(self, form) -> HttpResponse:
 
         self.object = form.save(commit=False)
@@ -116,6 +124,19 @@ class ActivityUpdateView(
 ):
     permission_required = "activities.change_activity"
     success_message = _("Your changes have been saved")
+
+    def get_breadcrumbs(self) -> List[Tuple[str, str]]:
+        return self.object.get_breadcrumbs() + [
+            (
+                self.request.path,
+                _("Edit %s" % self.object._meta.verbose_name.title()),
+            )
+        ]
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["breadcrumbs"] = self.get_breadcrumbs()
+        return data
 
 
 class ActivityDeleteView(

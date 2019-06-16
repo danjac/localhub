@@ -4,7 +4,7 @@
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.template.loader import render_to_string
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from communikit.join_requests.models import JoinRequest
 

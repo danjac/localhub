@@ -8,7 +8,7 @@
 
 {% block activities_content %}
 
-{% include "activities/includes/breadcrumbs.html" with activity=photo %}
+{% include "activities/includes/breadcrumbs.html" with breadcrumbs=photo.get_breadcrumbs %}
 
 {% include "photos/includes/photo.html" with is_detail=True %}
 
