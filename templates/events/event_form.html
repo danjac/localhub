@@ -2,6 +2,8 @@
 {% load i18n %}
 
 {% block activities_content %}
+{% include "activities/includes/breadcrumbs.html" %}
+
 <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
   {% if view.next_url %}
   <input type="hidden" name="next" value="{{ view.next_url }}">

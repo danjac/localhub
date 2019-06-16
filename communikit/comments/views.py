@@ -1,14 +1,14 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import no_type_check
+from typing import List, Tuple, no_type_check
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.views.generic import (
     DeleteView,
     DetailView,
@@ -120,6 +120,16 @@ class CommentUpdateView(
 
     def get_success_url(self) -> str:
         return self.get_parent().get_absolute_url()
+
+    def get_breadcrumbs(self) -> List[Tuple[str, str]]:
+        return self.get_parent().get_breadcrumbs() + [
+            (self.request.path, _("Edit Comment"))
+        ]
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["breadcrumbs"] = self.get_breadcrumbs()
+        return data
 
 
 comment_update_view = CommentUpdateView.as_view()

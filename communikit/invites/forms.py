@@ -3,7 +3,7 @@
 
 from django import forms
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from communikit.communities.models import Community
 from communikit.invites.models import Invite

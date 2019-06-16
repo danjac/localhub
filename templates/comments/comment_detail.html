@@ -7,16 +7,7 @@
 
 {% block activities_content %}
 
-<ul class="breadcrumb">
-  {% for url, label in parent.get_breadcrumbs %}
-  <li class="breadcrumb-item">
-    <a href="{{ url }}">{{ label }}</a>
-  </li>
-  {% endfor %}
-  <li class="breadcrumb-item">
-    <a href="#">{% trans "Comment" %}</a>
-  </li>
-</ul>
+{% include "activities/includes/breadcrumbs.html" with breadcrumbs=comment.get_breadcrumbs %}
 
 <div class="card comment-card">
   <div class="card-header">
