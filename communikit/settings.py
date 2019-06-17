@@ -149,7 +149,7 @@ class Base(Configuration):
     )
 
     # https://micawber.readthedocs.io/en/latest/django.html
-    MICAWBER_PROVIDERS = "communikit.activities.providers.bootstrap_oembed"
+    MICAWBER_PROVIDERS = "communikit.activities.oembed.bootstrap_oembed"
 
     # https://celery.readthedocs.io/en/latest/userguide/configuration.html
 
