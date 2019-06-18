@@ -1,9 +1,11 @@
 {% extends "communities/base.html" %}
 
 {% load i18n %}
+{% load account %}
 
 {% block settings_content %}
-<h3>{% blocktrans with username=membership.member.username %}Membership Settings for {{ username }}{% endblocktrans %}</h3>
+{% user_display membership.member as member %}
+<h3>{% blocktrans %}Membership Settings for {{ member }}{% endblocktrans %}</h3>
 
 <div class="col-6 col-sm-12">
   <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">

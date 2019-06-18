@@ -1,6 +1,7 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{% load account %}
 {% load users_tags %}
 <li class="menu-item">
   <a href="#" data-action="mention-typeahead#select" data-mention-typeahead-value="{{ user.username }}">
@@ -9,7 +10,8 @@
         {% avatar user %}
       </div>
       <div class="tile-content">
-        {{ user.username }}
+        {% user_display user as username %}
+        {{ username }}
       </div>
     </div>
   </a>

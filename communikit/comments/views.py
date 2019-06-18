@@ -100,6 +100,11 @@ comment_create_view = CommentCreateView.as_view()
 
 
 class CommentDetailView(SingleCommentContextMixin, DetailView):
+    def get_breadcrumbs(self) -> List[Tuple[str, str]]:
+        return self.get_parent().get_breadcrumbs() + [
+            (self.request.path, _("Comment"))
+        ]
+
     def get_queryset(self) -> QuerySet:
         return (
             super()
@@ -107,6 +112,11 @@ class CommentDetailView(SingleCommentContextMixin, DetailView):
             .with_num_likes()
             .with_has_liked(self.request.user)
         )
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["breadcrumbs"] = self.get_breadcrumbs()
+        return data
 
 
 comment_detail_view = CommentDetailView.as_view()
@@ -123,7 +133,8 @@ class CommentUpdateView(
 
     def get_breadcrumbs(self) -> List[Tuple[str, str]]:
         return self.get_parent().get_breadcrumbs() + [
-            (self.request.path, _("Edit Comment"))
+            (self.object.get_absolute_url(), _("Comment")),
+            (self.request.path, _("Edit")),
         ]
 
     def get_context_data(self, **kwargs) -> ContextDict:

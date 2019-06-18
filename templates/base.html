@@ -3,6 +3,7 @@
 
 {% load static %}
 {% load i18n %}
+{% load account %}
 {% load rules %}
 {% load users_tags %}
 <!DOCTYPE html>
@@ -51,7 +52,8 @@
           {% if user.is_authenticated %}
           <a class="btn btn-link text-light" href="{% url 'users:update' %}">
               {% avatar user %}
-              {{ user.username }}
+              {% user_display user as username %}
+              {{ username }}
           </a>
           <a class="btn btn-link text-light" href="{% url 'account_logout' %}">{% trans "logout" %}</a>
           {% else %}

@@ -1,27 +1,9 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% load i18n %}
-{% autoescape off %}
-{% blocktrans with username=notification.recipient.username %}
-Hi {{ username }},
-{% endblocktrans %}
-
-{% with notification.actor.username as actor %}
-{% if notification.verb == 'created' %}
-
-{% blocktrans %}
-User {{ actor }} has published an photo.
-{% endblocktrans %}
-
-{% elif notification.verb == 'updated' %}
-
-{% blocktrans %}
-User {{ actor }} has edited an photo.
-{% endblocktrans %}
-
+{% load i18n %}{% load account %}{% autoescape off %}{% user_display notification.recipient as recipient %}
+{% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
+{% user_display notification.actor as actor %}
+{% if notification.verb == 'created' %}{% blocktrans %}User {{ actor }} has published an photo.{% endblocktrans %}
+{% elif notification.verb == 'updated' %}{% blocktrans %}User {{ actor }} has edited an photo.{% endblocktrans %}
 {% endif %}
-{% endwith %}
-
-Link to photo: {{ object_url }}
-{% endautoescape %}
+Link to photo: {{ object_url }}{% endautoescape %}
