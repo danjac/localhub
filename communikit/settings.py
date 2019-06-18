@@ -115,6 +115,7 @@ class Base(Configuration):
     LOGIN_URL = "account_login"
     LOGIN_REDIRECT_URL = HOME_PAGE_URL
 
+    ACCOUNT_USER_DISPLAY = "communikit.users.utils.user_display"
     ACCOUNT_EMAIL_REQUIRED = True
 
     SITE_ID = 1
