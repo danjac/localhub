@@ -7,23 +7,7 @@
 
 {% block activities_content %}
 
-{% include "activities/includes/breadcrumbs.html" with breadcrumbs=comment.get_breadcrumbs %}
+{% include "activities/includes/breadcrumbs.html" %}
+{% include "comments/includes/comment.html" %}
 
-<div class="card comment-card">
-  <div class="card-header">
-    <div class="card-subtitle text-gray float-right">
-      {% blocktrans with comment.created|timesince as created %}{{ created }} ago{% endblocktrans %}
-    </div>
-    <div class="card-subtitle h6"><a href="{{ comment.owner.get_absolute_url }}">{{ comment.owner.username }}</a></div>
-  </div>
-  <div class="card-body">
-    <div class="divider"></div>
-    {{ comment.content.markdown }}
-  </div>
-  <div class="card-footer">
-    <div class="divider"></div>
-    {% include "comments/includes/actions.html" %}
-  </div>
-
-</div>
 {% endblock activities_content %}

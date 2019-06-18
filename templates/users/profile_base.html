@@ -1,9 +1,12 @@
 {% extends "activities/base.html" %}
 {% load i18n %}
+{% load account %}
 {% load users_tags %}
 {% block activities_content %}
 
-<h3>{% avatar profile "avatar-lg" %}{{ profile.username }}</h3>
+{% user_display object as profile_name %}
+
+<h3>{% avatar profile "avatar-lg" %}{{ profile_name }}</h3>
 
 <ul class="tab tab-block">
   <li class="tab-item" data-controller="active-link">

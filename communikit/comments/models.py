@@ -1,13 +1,12 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import List, Tuple
+from typing import List
 
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
-from django.utils.translation import gettext as _
 
 from model_utils import FieldTracker
 from model_utils.models import TimeStampedModel

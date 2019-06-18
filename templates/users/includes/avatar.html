@@ -1,7 +1,9 @@
 {% load thumbnail %}
+{% load account %}
 {% thumbnail user.avatar "100" crop="center" as avatar %}
+{% user_display user as username %}
 <figure class="avatar {{ avatar_class }}">
-  <img src="{{ avatar.url }}" width="{{ avatar.width }}" height="{{ avatar.height }}" alt="{{ user.username }}">
+  <img src="{{ avatar.url }}" width="{{ avatar.width }}" height="{{ avatar.height }}" alt="{{ username }}">
 </figure>
 {% empty %}
 <figure class="avatar {{ avatar_class }}" data-initial="{{ initials }}"></figure>
