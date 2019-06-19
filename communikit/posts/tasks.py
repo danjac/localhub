@@ -23,7 +23,9 @@ def fetch_title_from_url(post_id: int):
             response = requests.get(post.url)
             if response.ok:
                 soup = BeautifulSoup(response.content, "html.parser")
-                post.title = soup.title.string or urlparse(post.url).netloc
+                post.title = (soup.title.string or urlparse(post.url).netloc)[
+                    :300
+                ]
                 post.save()
     except Post.DoesNotExist:
         logger.info("post not found:%s", post_id)
