@@ -2,6 +2,15 @@
 {% load i18n %}
 {% load account %}
 {% load users_tags %}
+
+{% block activities_sidebar %}
+{% if user == profile %}
+{% include "users/includes/settings_sidebar.html" %}
+{% else %}
+{{ block.super }}
+{% endif %}
+{% endblock activities_sidebar %}
+
 {% block activities_content %}
 
 {% user_display object as profile_name %}

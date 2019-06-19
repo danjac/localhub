@@ -5,22 +5,26 @@
 {{ profile.bio.markdown }}
 {% if profile == user %}
 <p class="mt-2">
-  <a href="{% url 'users:update' %}" class="btn btn-primary">Update your profile</a>
+    <a href="{% url 'users:update' %}" class="btn btn-primary">
+        <i class="icon icon-edit"></i> Update your profile
+    </a>
 </p>
 {% endif %}
 {% else %}
 <div class="empty">
-  <div class="empty-icon">
-    <i class="icon icon-people"></i>
-  </div>
-  {% if profile == user %}
-  <p class="empty-title h5">You do not have a bio</p>
-  <div class="empty-action">
-    <a href="{% url 'users:update' %}" class="btn btn-primary">Update your profile</a>
-  </div>
-  {% else %}
-  <p class="empty-title h5">This user has not added any information.</p>
-  {% endif %}
+    <div class="empty-icon">
+        <i class="icon icon-people"></i>
+    </div>
+    {% if profile == user %}
+    <p class="empty-title h5">You do not have a bio</p>
+    <div class="empty-action">
+        <a href="{% url 'users:update' %}" class="btn btn-primary">
+            <i class="icon icon-edit"></i> Update your profile
+        </a>
+    </div>
+    {% else %}
+    <p class="empty-title h5">This user has not added any information.</p>
+    {% endif %}
 </div>
 {% endif %}
 {% endblock profile_content %}

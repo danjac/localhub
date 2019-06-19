@@ -1,0 +1,82 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% load rules %}
+{% load communities_tags %}
+{% load notifications_tags %}
+
+{% test_rule 'is_admin' user request.community as is_admin %}
+{% test_rule 'is_member' user request.community as is_member %}
+{% has_perm 'communities.view_memberships' user request.community as can_view_memberships %}
+{% has_perm 'communities.manage_community' user request.community as can_manage_community %}
+
+<ul class="menu">
+  <li class="menu-item">
+    <a data-controller="active-link"
+       data-active-link-exact
+       href="{% url 'activities:stream' %}">{% trans "Home" %}
+    </a>
+  </li>
+  {% if is_member %}
+  <li class="menu-item">
+    <a data-controller="active-link"
+       data-active-link-exact
+       href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a></li>
+  <li class="menu-item">
+    {% get_unread_notifications_count as unread_notifications %}
+    <a data-controller="active-link" href="{% url 'notifications:list' %}">
+      <span {% if unread_notifications %}class="badge" data-badge="{{ unread_notifications }}"{% endif %}>
+        {% trans "Notifications" %}
+      </span>
+    </a>
+  </li>
+  {% endif %}
+  {% if can_view_memberships and not is_admin %}
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'communities:community_membership_list' %}">{% trans "Members" %}</a>
+  </li>
+  {% endif %}
+  {% if can_manage_community %}
+  <li class="menu-item"><a href="{% url 'communities:community_update' %}">{% trans "Settings" %}</a></li>
+  {% endif %}
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'events:list' %}">{% trans "Events" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
+  </li>
+</ul>
+{% get_communities as communities %}
+{% if communities|length > 1 %}
+<ul class="menu mt-2">
+  <li class="divider" data-content="Communities"></li>
+  {% for community in communities %}
+  <li class="menu-item">
+    {% if community.id == request.community.id %}
+    <strong>{{ community.name }}</strong>
+    {% else %}
+    <a href="{{ community.get_absolute_url }}">
+      {{ community.name }}
+    </a>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% if request.community.description %}
+<div class="panel mt-2 p-1">
+  <div class="panel-body">
+    <p>
+      {{ request.community.description.markdown }}
+    </p>
+  </div>
+</div>
+{% endif %}
+
+

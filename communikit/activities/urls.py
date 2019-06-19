@@ -14,5 +14,5 @@ app_name = "activities"
 urlpatterns = [
     path("", activity_stream_view, name="stream"),
     path("search/", activity_search_view, name="search"),
-    path("profile/<username>/", activity_profile_view, name="profile"),
+    path("posts/profile/<username>/", activity_profile_view, name="profile"),
 ]
