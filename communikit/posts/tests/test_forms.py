@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from communikit.posts.forms import PostForm
 
 
@@ -10,20 +13,19 @@ class TestPostForm:
 
         assert form.is_valid()
 
-    def test_description_missing(self):
+    def test_title_missing(self):
 
         form = PostForm(
             {
-                "title": "something",
+                "title": "",
                 "url": "http://google.com",
-                "description": "",
             }
         )
 
         assert form.is_valid()
 
-    def test_description_and_url_both_missing(self):
+    def test_title_and_url_both_missing(self):
 
-        form = PostForm({"title": "something", "url": "", "description": ""})
+        form = PostForm({"title": "", "url": "", "description": ""})
 
         assert not form.is_valid()

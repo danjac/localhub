@@ -18,6 +18,7 @@ from model_utils import FieldTracker
 
 from communikit.activities.models import Activity
 from communikit.core.markdown.fields import MarkdownField
+from communikit.core.types import BreadcrumbList
 from communikit.notifications.models import Notification
 
 
@@ -65,7 +66,7 @@ class Event(Activity):
     def get_absolute_url(self) -> str:
         return reverse("events:detail", args=[self.id])
 
-    def get_breadcrumbs(self) -> List[Tuple[str, str]]:
+    def get_breadcrumbs(self) -> BreadcrumbList:
         return [
             (reverse("activities:stream"), _("Home")),
             (reverse("events:list"), _("Events")),

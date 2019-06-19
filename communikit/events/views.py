@@ -1,8 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import List, Tuple
-
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
@@ -15,6 +13,7 @@ from communikit.activities.views import (
     ActivityListView,
     ActivityUpdateView,
 )
+from communikit.core.types import BreadcrumbList
 from communikit.events.forms import EventForm
 from communikit.events.models import Event
 
@@ -23,7 +22,7 @@ class EventCreateView(ActivityCreateView):
     model = Event
     form_class = EventForm
 
-    def get_breadcrumbs(self) -> List[Tuple[str, str]]:
+    def get_breadcrumbs(self) -> BreadcrumbList:
         return [
             (reverse("activities:stream"), _("Home")),
             (reverse("events:list"), _("Events")),

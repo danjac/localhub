@@ -7,7 +7,13 @@ from django.dispatch import receiver
 from django.utils.translation import gettext as _
 
 from communikit.notifications.emails import send_notification_email
+from communikit.posts import tasks
 from communikit.posts.models import Post
+
+
+@receiver(post_save, sender=Post, dispatch_uid="posts.fetch_title_from_link")
+def fetch_title_from_url(instance: Post, **kwargs):
+    tasks.fetch_title_from_url(instance.id)
 
 
 @receiver(post_save, sender=Post, dispatch_uid="posts.update_search_document")

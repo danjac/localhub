@@ -1,10 +1,11 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
+from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils.encoding import smart_text
 from django.utils.translation import gettext as _
@@ -13,6 +14,7 @@ from model_utils import FieldTracker
 
 from communikit.activities.models import Activity
 from communikit.core.markdown.fields import MarkdownField
+from communikit.core.types import BreadcrumbList
 from communikit.notifications.models import Notification
 
 
@@ -32,11 +34,11 @@ class Post(Activity):
     def get_absolute_url(self) -> str:
         return reverse("posts:detail", args=[self.id])
 
-    def get_breadcrumbs(self) -> List[Tuple[str, str]]:
+    def get_breadcrumbs(self) -> BreadcrumbList:
         return [
             (reverse("activities:stream"), _("Home")),
             (reverse("posts:list"), _("Posts")),
-            (self.get_absolute_url(), smart_text(self)),
+            (self.get_absolute_url(), truncatechars(smart_text(self), 140)),
         ]
 
     def search_index_components(self) -> Dict[str, str]:

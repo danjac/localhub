@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import List, Tuple, no_type_check
+from typing import no_type_check
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -28,7 +28,7 @@ from communikit.activities.views import SingleActivityMixin
 from communikit.comments.forms import CommentForm
 from communikit.comments.models import Comment, Like
 from communikit.communities.views import CommunityRequiredMixin
-from communikit.core.types import ContextDict
+from communikit.core.types import BreadcrumbList, ContextDict
 from communikit.users.views import UserProfileMixin
 
 
@@ -100,7 +100,7 @@ comment_create_view = CommentCreateView.as_view()
 
 
 class CommentDetailView(SingleCommentContextMixin, DetailView):
-    def get_breadcrumbs(self) -> List[Tuple[str, str]]:
+    def get_breadcrumbs(self) -> BreadcrumbList:
         return self.get_parent().get_breadcrumbs() + [
             (self.request.path, _("Comment"))
         ]
@@ -131,7 +131,7 @@ class CommentUpdateView(
     def get_success_url(self) -> str:
         return self.get_parent().get_absolute_url()
 
-    def get_breadcrumbs(self) -> List[Tuple[str, str]]:
+    def get_breadcrumbs(self) -> BreadcrumbList:
         return self.get_parent().get_breadcrumbs() + [
             (self.object.get_absolute_url(), _("Comment")),
             (self.request.path, _("Edit")),

@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import List, Optional, Tuple, Type, no_type_check
+from typing import List, Optional, Type, no_type_check
 
 from django.conf import settings
 from django.contrib import messages
@@ -29,7 +29,7 @@ from communikit.activities.models import Activity, Like
 from communikit.comments.forms import CommentForm
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
-from communikit.core.types import ContextDict, QuerySetList
+from communikit.core.types import BreadcrumbList, ContextDict, QuerySetList
 from communikit.core.views import CombinedQuerySetListView
 from communikit.events.models import Event
 from communikit.photos.models import Photo
@@ -81,7 +81,7 @@ class ActivityCreateView(
             return self.next_url
         return super().get_success_url()
 
-    def get_breadcrumbs(self) -> List[Tuple[str, str]]:
+    def get_breadcrumbs(self) -> BreadcrumbList:
         return []
 
     def get_context_data(self, **kwargs) -> ContextDict:
@@ -125,7 +125,7 @@ class ActivityUpdateView(
     permission_required = "activities.change_activity"
     success_message = _("Your changes have been saved")
 
-    def get_breadcrumbs(self) -> List[Tuple[str, str]]:
+    def get_breadcrumbs(self) -> BreadcrumbList:
         return self.object.get_breadcrumbs() + [
             (
                 self.request.path,

@@ -4,7 +4,7 @@
 import operator
 
 from functools import reduce
-from typing import Callable, List, Tuple
+from typing import Callable
 
 from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
@@ -24,6 +24,7 @@ from model_utils.models import TimeStampedModel
 
 
 from communikit.communities.models import Community
+from communikit.core.types import BreadcrumbList
 
 
 class ActivityQuerySet(InheritanceQuerySetMixin, models.QuerySet):
@@ -88,7 +89,7 @@ class Activity(TimeStampedModel):
     def get_permalink(self) -> str:
         return self.community.resolve_url(self.get_absolute_url())
 
-    def get_breadcrumbs(self) -> List[Tuple[str, str]]:
+    def get_breadcrumbs(self) -> BreadcrumbList:
         return [
             (reverse("activities:stream"), _("Home")),
             (self.get_absolute_url(), smart_text(self)),
