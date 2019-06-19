@@ -9,7 +9,7 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ("title", "url", "description")
-        labels = {"title": _("Title (Optional)"), "url": _("Link")}
+        labels = {"title": _("Title"), "url": _("Link")}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -19,10 +19,10 @@ class PostForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        description = cleaned_data.get("description")
+        title = cleaned_data.get("title")
         url = cleaned_data.get("url")
-        if not any((description, url)):
+        if not any((title, url)):
             raise forms.ValidationError(
-                _("Either description or URL must be provided")
+                _("Either title or URL must be provided")
             )
         return cleaned_data

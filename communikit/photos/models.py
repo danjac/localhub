@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
@@ -13,6 +13,7 @@ from sorl.thumbnail import ImageField
 
 from communikit.activities.models import Activity
 from communikit.core.markdown.fields import MarkdownField
+from communikit.core.types import BreadcrumbList
 from communikit.notifications.models import Notification
 
 
@@ -30,7 +31,7 @@ class Photo(Activity):
     def get_absolute_url(self) -> str:
         return reverse("photos:detail", args=[self.id])
 
-    def get_breadcrumbs(self) -> List[Tuple[str, str]]:
+    def get_breadcrumbs(self) -> BreadcrumbList:
         return [
             (reverse("activities:stream"), _("Home")),
             (reverse("photos:list"), _("Photos")),
