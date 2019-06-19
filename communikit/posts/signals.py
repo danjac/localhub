@@ -11,9 +11,9 @@ from communikit.posts import tasks
 from communikit.posts.models import Post
 
 
-@receiver(post_save, sender=Post, dispatch_uid="posts.fetch_title_from_link")
+@receiver(post_save, sender=Post, dispatch_uid="posts.fetch_title_from_url")
 def fetch_title_from_url(instance: Post, **kwargs):
-    tasks.fetch_title_from_url(instance.id)
+    tasks.fetch_post_title_from_url(instance.id)
 
 
 @receiver(post_save, sender=Post, dispatch_uid="posts.update_search_document")

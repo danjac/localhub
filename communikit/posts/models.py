@@ -1,7 +1,9 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Dict, List
+from typing import Dict, List, Optional
+
+from urllib.parse import urlparse
 
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
@@ -40,6 +42,11 @@ class Post(Activity):
             (reverse("posts:list"), _("Posts")),
             (self.get_absolute_url(), truncatechars(smart_text(self), 140)),
         ]
+
+    def get_domain(self) -> Optional[str]:
+        if not self.url:
+            return None
+        return urlparse(self.url).netloc
 
     def search_index_components(self) -> Dict[str, str]:
         return {"A": self.title, "B": self.description}
