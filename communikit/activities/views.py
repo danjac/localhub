@@ -39,6 +39,18 @@ from communikit.posts.models import Post
 from communikit.users.views import UserProfileMixin
 
 
+class BreadcrumbsMixin:
+    breadcrumbs: Optional[BreadcrumbList] = None
+
+    def get_breadcrumbs(self) -> BreadcrumbList:
+        return self.breadcrumbs or []
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data()
+        data["breadcrumbs"] = self.get_breadcrumbs()
+        return data
+
+
 class ActivityQuerySetMixin(CommunityRequiredMixin):
     @no_type_check
     def get_queryset(self) -> QuerySet:
@@ -63,7 +75,10 @@ class SingleActivityView(SingleActivityMixin, View):
 
 
 class ActivityCreateView(
-    CommunityRequiredMixin, PermissionRequiredMixin, CreateView
+    CommunityRequiredMixin,
+    PermissionRequiredMixin,
+    BreadcrumbsMixin,
+    CreateView,
 ):
     permission_required = "activities.create_activity"
     success_message = _("Your update has been posted")
@@ -82,14 +97,6 @@ class ActivityCreateView(
         if self.next_url:
             return self.next_url
         return super().get_success_url()
-
-    def get_breadcrumbs(self) -> BreadcrumbList:
-        return []
-
-    def get_context_data(self, **kwargs) -> ContextDict:
-        data = super().get_context_data(**kwargs)
-        data["breadcrumbs"] = self.get_breadcrumbs()
-        return data
 
     def form_valid(self, form) -> HttpResponse:
 
@@ -122,6 +129,7 @@ class ActivityUpdateView(
     PermissionRequiredMixin,
     SuccessMessageMixin,
     SingleActivityMixin,
+    BreadcrumbsMixin,
     UpdateView,
 ):
     permission_required = "activities.change_activity"
@@ -134,11 +142,6 @@ class ActivityUpdateView(
                 _("Edit %s" % self.object._meta.verbose_name.title()),
             )
         ]
-
-    def get_context_data(self, **kwargs) -> ContextDict:
-        data = super().get_context_data(**kwargs)
-        data["breadcrumbs"] = self.get_breadcrumbs()
-        return data
 
 
 class ActivityDeleteView(

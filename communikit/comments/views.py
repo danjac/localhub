@@ -24,7 +24,7 @@ from django.views.generic.list import MultipleObjectMixin
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.activities.models import Activity
-from communikit.activities.views import SingleActivityMixin
+from communikit.activities.views import BreadcrumbsMixin, SingleActivityMixin
 from communikit.comments.forms import CommentForm
 from communikit.comments.models import Comment, Like
 from communikit.communities.views import CommunityRequiredMixin
@@ -99,7 +99,9 @@ class CommentCreateView(
 comment_create_view = CommentCreateView.as_view()
 
 
-class CommentDetailView(SingleCommentContextMixin, DetailView):
+class CommentDetailView(
+    SingleCommentContextMixin, BreadcrumbsMixin, DetailView
+):
     def get_breadcrumbs(self) -> BreadcrumbList:
         return self.get_parent().get_breadcrumbs() + [
             (self.request.path, _("Comment"))
@@ -113,17 +115,15 @@ class CommentDetailView(SingleCommentContextMixin, DetailView):
             .with_has_liked(self.request.user)
         )
 
-    def get_context_data(self, **kwargs) -> ContextDict:
-        data = super().get_context_data(**kwargs)
-        data["breadcrumbs"] = self.get_breadcrumbs()
-        return data
-
 
 comment_detail_view = CommentDetailView.as_view()
 
 
 class CommentUpdateView(
-    PermissionRequiredMixin, SingleCommentContextMixin, UpdateView
+    PermissionRequiredMixin,
+    SingleCommentContextMixin,
+    BreadcrumbsMixin,
+    UpdateView,
 ):
     form_class = CommentForm
     permission_required = "comments.change_comment"
@@ -136,11 +136,6 @@ class CommentUpdateView(
             (self.object.get_absolute_url(), _("Comment")),
             (self.request.path, _("Edit")),
         ]
-
-    def get_context_data(self, **kwargs) -> ContextDict:
-        data = super().get_context_data(**kwargs)
-        data["breadcrumbs"] = self.get_breadcrumbs()
-        return data
 
 
 comment_update_view = CommentUpdateView.as_view()
