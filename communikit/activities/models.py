@@ -38,10 +38,12 @@ class ActivityQuerySet(InheritanceQuerySetMixin, models.QuerySet):
     """
 
     def with_num_comments(self) -> models.QuerySet:
-        return self.annotate(num_comments=models.Count("comment"))
+        return self.annotate(
+            num_comments=models.Count("comment", distinct=True)
+        )
 
     def with_num_likes(self) -> models.QuerySet:
-        return self.annotate(num_likes=models.Count("like"))
+        return self.annotate(num_likes=models.Count("like", distinct=True))
 
     def with_has_liked(
         self, user: settings.AUTH_USER_MODEL
