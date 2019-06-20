@@ -42,7 +42,7 @@
       {% endwith %}
       </dd>
     </dl>
-    {% if event.latitude and event.longitude %}
+    {% if is_detail and event.latitude and event.longitude %}
     <div id="map-for-event-{{ event.id }}"
          class="event-map{% if is_detail %} event-map-lg{% endif %}"
          data-controller="map"

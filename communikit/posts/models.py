@@ -3,8 +3,6 @@
 
 from typing import Dict, List, Optional
 
-from urllib.parse import urlparse
-
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.template.defaultfilters import truncatechars
@@ -15,6 +13,7 @@ from django.utils.translation import gettext as _
 from model_utils import FieldTracker
 
 from communikit.activities.models import Activity
+from communikit.activities.utils import get_domain
 from communikit.core.markdown.fields import MarkdownField
 from communikit.core.types import BreadcrumbList
 from communikit.notifications.models import Notification
@@ -44,9 +43,7 @@ class Post(Activity):
         ]
 
     def get_domain(self) -> Optional[str]:
-        if not self.url:
-            return None
-        return urlparse(self.url).netloc
+        return get_domain(self.url)
 
     def search_index_components(self) -> Dict[str, str]:
         return {"A": self.title, "B": self.description}

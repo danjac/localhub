@@ -17,6 +17,7 @@ from django_countries.fields import CountryField
 from model_utils import FieldTracker
 
 from communikit.activities.models import Activity
+from communikit.activities.utils import get_domain
 from communikit.core.markdown.fields import MarkdownField
 from communikit.core.types import BreadcrumbList
 from communikit.notifications.models import Notification
@@ -62,6 +63,9 @@ class Event(Activity):
     def clean(self):
         if self.ends and self.ends < self.starts:
             raise ValidationError(_("End date cannot be before start date"))
+
+    def get_domain(self) -> Optional[str]:
+        return get_domain(self.url)
 
     def get_absolute_url(self) -> str:
         return reverse("events:detail", args=[self.id])

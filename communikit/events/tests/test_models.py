@@ -25,6 +25,12 @@ class TestEventModel:
     def test_get_absolute_url(self, event: Event):
         assert event.get_absolute_url() == f"/events/{event.id}/"
 
+    def test_get_domain_if_no_url(self):
+        assert Event().get_domain() is None
+
+    def test_get_domain_if_url(self):
+        assert Event(url="http://google.com").get_domain() == "google.com"
+
     def test_notify(self, community: Community):
         owner = UserFactory(username="owner")
         moderator = UserFactory()

@@ -22,6 +22,12 @@ class TestPostModel:
             (f"/posts/{post.id}/", "Post"),
         ]
 
+    def test_get_domain_if_no_url(self):
+        assert Post().get_domain() is None
+
+    def test_get_domain_if_url(self):
+        assert Post(url="http://google.com").get_domain() == "google.com"
+
     @factory.django.mute_signals(signals.post_save)
     def test_notify(self, community: Community):
         # owner should not receive any notifications from their own posts
