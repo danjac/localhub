@@ -5,15 +5,11 @@ from typing import Dict, List
 
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
-from django.urls import reverse
-from django.utils.encoding import smart_text
-from django.utils.translation import gettext as _
 
 from sorl.thumbnail import ImageField
 
 from communikit.activities.models import Activity
 from communikit.core.markdown.fields import MarkdownField
-from communikit.core.types import BreadcrumbList
 from communikit.notifications.models import Notification
 
 
@@ -25,18 +21,11 @@ class Photo(Activity):
 
     notifications = GenericRelation(Notification, related_query_name="photo")
 
+    list_url_name = "photos:list"
+    detail_url_name = "photos:detail"
+
     def __str__(self) -> str:
         return self.title
-
-    def get_absolute_url(self) -> str:
-        return reverse("photos:detail", args=[self.id])
-
-    def get_breadcrumbs(self) -> BreadcrumbList:
-        return [
-            (reverse("activities:stream"), _("Home")),
-            (reverse("photos:list"), _("Photos")),
-            (self.get_absolute_url(), smart_text(self)),
-        ]
 
     def search_index_components(self) -> Dict[str, str]:
         return {"A": self.title, "B": self.description}

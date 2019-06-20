@@ -6,6 +6,8 @@
 {% load i18n %}
 {% load micawber_tags %}
 
+{% block subtitle %} - {{ event }}{% endblock %}
+
 {% block activities_content %}
 
 {% include "activities/includes/breadcrumbs.html" with breadcrumbs=event.get_breadcrumbs %}

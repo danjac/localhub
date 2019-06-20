@@ -13,6 +13,7 @@
     <title>
       {% block title %}
       {% if request.community %}{{ request.community.name }}{% else %}{{ request.site.name }}{% endif %}
+      {% block subtitle %}{% endblock %}
       {% endblock %}
     </title>
     <meta charset="UTF-8">

@@ -18,9 +18,9 @@ app_name = "events"
 urlpatterns = [
     path("", event_list_view, name="list"),
     path("~create", event_create_view, name="create"),
-    path("<int:pk>/", event_detail_view, name="detail"),
     path("<int:pk>/~update/", event_update_view, name="update"),
     path("<int:pk>/~delete/", event_delete_view, name="delete"),
     path("<int:pk>/~like/", event_like_view, name="like"),
     path("<int:pk>/~dislike/", event_dislike_view, name="dislike"),
+    path("<int:pk>/<slug:slug>/", event_detail_view, name="detail"),
 ]

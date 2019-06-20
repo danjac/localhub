@@ -4,7 +4,7 @@
 import operator
 
 from functools import reduce
-from typing import Callable
+from typing import Callable, Optional
 
 from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
@@ -15,8 +15,10 @@ from django.contrib.postgres.search import (
     SearchVectorField,
 )
 from django.db import models
+from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils.encoding import smart_text
+from django.utils.text import slugify
 from django.utils.translation import gettext as _
 
 from model_utils.managers import InheritanceQuerySetMixin
@@ -80,11 +82,17 @@ class Activity(TimeStampedModel):
 
     objects = ActivityQuerySet.as_manager()
 
+    list_url_name: Optional[str] = None
+    detail_url_name: Optional[str] = None
+
     class Meta:
         indexes = [GinIndex(fields=["search_document"])]
 
+    def slugify(self) -> str:
+        return slugify(smart_text(self), allow_unicode=False)
+
     def get_absolute_url(self) -> str:
-        return settings.HOME_PAGE_URL
+        return reverse(self.detail_url_name, args=[self.id, self.slugify()])
 
     def get_permalink(self) -> str:
         return self.community.resolve_url(self.get_absolute_url())
@@ -92,7 +100,11 @@ class Activity(TimeStampedModel):
     def get_breadcrumbs(self) -> BreadcrumbList:
         return [
             (reverse("activities:stream"), _("Home")),
-            (self.get_absolute_url(), smart_text(self)),
+            (
+                reverse(self.list_url_name),
+                _(self._meta.verbose_name_plural.title()),
+            ),
+            (self.get_absolute_url(), truncatechars(smart_text(self), 60)),
         ]
 
     # https://simonwillison.net/2017/Oct/5/django-postgresql-faceted-search/

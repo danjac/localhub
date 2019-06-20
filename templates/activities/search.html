@@ -1,10 +1,17 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% extends "activities/base.html" %}
 {% load i18n %}
 {% load rules %}
+{% block subtitle %} - {% trans "Search" %}{% endblock %}
 {% block activities_content %}
 
 {% if search_query %}
-<h3>Search for {{ search_query }}</h3>
+<h3>{% blocktrans %}Search for "{{ search_query }}"{% endblocktrans %}</h3>
+{% with total=paginator.count %}
+<h4 class="text-gray">{% blocktrans count counter=total %}{{ total }} result{% plural %}{{ total }} results{% endblocktrans %}</h4>
+{% endwith %}
 {% endif %}
 
 {% for activity in object_list %}

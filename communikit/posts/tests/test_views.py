@@ -66,8 +66,8 @@ class TestPostUpdateView:
             reverse("posts:update", args=[post_for_member.id]),
             {"title": "UPDATED", "description": post_for_member.description},
         )
-        assert response.url == post_for_member.get_absolute_url()
         post_for_member.refresh_from_db()
+        assert response.url == post_for_member.get_absolute_url()
         assert post_for_member.title == "UPDATED"
 
 
@@ -90,8 +90,7 @@ class TestPostDeleteView:
 class TestPostDetailView:
     def test_get(self, client: Client, post: Post):
         response = client.get(
-            reverse("posts:detail", args=[post.id]),
-            HTTP_HOST=post.community.domain,
+            post.get_absolute_url(), HTTP_HOST=post.community.domain
         )
         assert response.status_code == 200
         assert "comment_form" not in response.context
@@ -101,8 +100,7 @@ class TestPostDetailView:
     ):
         Membership.objects.create(member=login_user, community=post.community)
         response = client.get(
-            reverse("posts:detail", args=[post.id]),
-            HTTP_HOST=post.community.domain,
+            post.get_absolute_url(), HTTP_HOST=post.community.domain
         )
         assert response.status_code == 200
         assert "comment_form" in response.context

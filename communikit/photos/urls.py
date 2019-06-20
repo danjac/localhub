@@ -18,9 +18,9 @@ app_name = "photos"
 urlpatterns = [
     path("", photo_list_view, name="list"),
     path("~create", photo_create_view, name="create"),
-    path("<int:pk>/", photo_detail_view, name="detail"),
     path("<int:pk>/~update/", photo_update_view, name="update"),
     path("<int:pk>/~delete/", photo_delete_view, name="delete"),
     path("<int:pk>/~like/", photo_like_view, name="like"),
     path("<int:pk>/~dislike/", photo_dislike_view, name="dislike"),
+    path("<int:pk>/<slug:slug>/", photo_detail_view, name="detail"),
 ]

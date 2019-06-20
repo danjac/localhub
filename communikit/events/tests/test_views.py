@@ -69,8 +69,8 @@ class TestEventUpdateView:
                 "ends_1": "10:00",
             },
         )
-        assert response.url == event_for_member.get_absolute_url()
         event_for_member.refresh_from_db()
+        assert response.url == event_for_member.get_absolute_url()
         assert event_for_member.title == "UPDATED"
 
 
@@ -93,8 +93,7 @@ class TestEventDeleteView:
 class TestEventDetailView:
     def test_get(self, client: Client, event: Event):
         response = client.get(
-            reverse("events:detail", args=[event.id]),
-            HTTP_HOST=event.community.domain,
+            event.get_absolute_url(), HTTP_HOST=event.community.domain
         )
         assert response.status_code == 200
         assert "comment_form" not in response.context
@@ -108,8 +107,7 @@ class TestEventDetailView:
         Membership.objects.create(member=login_user, community=event.community)
 
         response = client.get(
-            reverse("events:detail", args=[event.id]),
-            HTTP_HOST=event.community.domain,
+            event.get_absolute_url(), HTTP_HOST=event.community.domain
         )
         assert response.status_code == 200
         assert "comment_form" in response.context

@@ -16,11 +16,9 @@ pytestmark = pytest.mark.django_db
 
 class TestPostModel:
     def test_breadcrumbs(self, post: Post):
-        assert post.get_breadcrumbs() == [
-            ("/", "Home"),
-            ("/posts/", "Posts"),
-            (f"/posts/{post.id}/", "Post"),
-        ]
+        breadcrumbs = post.get_breadcrumbs()
+        assert len(breadcrumbs) == 3
+        assert breadcrumbs[2][0] == post.get_absolute_url()
 
     def test_get_domain_if_no_url(self):
         assert Post().get_domain() is None
