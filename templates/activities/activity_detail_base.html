@@ -1,0 +1,10 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/base.html" %}
+{% block subtitle %} - {{ object }}{% endblock %}
+{% block activities_content %}
+{% include "activities/includes/breadcrumbs.html" %}
+{% block activities_detail_content %}{% endblock %}
+{% include "activities/includes/comments.html" %}
+{% endblock activities_content %}

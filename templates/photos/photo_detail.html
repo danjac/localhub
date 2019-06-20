@@ -1,19 +1,8 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "activities/base.html" %}
+{% extends "activities/activity_detail_base.html" %}
 
-{% load i18n %}
-{% load thumbnail %}
-
-{% block subtitle %} - {{ photo }}{% endblock %}
-
-{% block activities_content %}
-
-{% include "activities/includes/breadcrumbs.html" with breadcrumbs=photo.get_breadcrumbs %}
-
+{% block activities_detail_content %}
 {% include "photos/includes/photo.html" with is_detail=True %}
-
-{% include "activities/includes/comments.html" %}
-
-{% endblock activities_content %}
+{% endblock activities_detail_content %}

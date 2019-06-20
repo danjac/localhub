@@ -165,7 +165,10 @@ class ActivityDeleteView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityDetailView(SingleActivityMixin, DetailView):
+class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
+    def get_breadcrumbs(self) -> BreadcrumbList:
+        return self.object.get_breadcrumbs()
+
     def get_comments(self) -> QuerySet:
         return (
             self.object.comment_set.select_related(
