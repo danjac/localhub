@@ -10,7 +10,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.urls import path, reverse, reverse_lazy
+from django.urls import URLPattern, path, reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     CreateView,
@@ -31,7 +31,12 @@ from communikit.activities.models import Activity, Like
 from communikit.comments.forms import CommentForm
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
-from communikit.core.types import BreadcrumbList, ContextDict, QuerySetList
+from communikit.core.types import (
+    BreadcrumbList,
+    ContextDict,
+    HttpRequestResponse,
+    QuerySetList,
+)
 from communikit.core.views import CombinedQuerySetListView
 from communikit.events.models import Event
 from communikit.photos.models import Photo
@@ -310,39 +315,39 @@ class ActivityViewSet:
             setattr(self, key, value)
 
     @property
-    def create_view(self):
+    def create_view(self) -> HttpRequestResponse:
         return self.create_view_class.as_view(
             model=self.model, form_class=self.form_class
         )
 
     @property
-    def update_view(self):
+    def update_view(self) -> HttpRequestResponse:
         return self.update_view_class.as_view(
             model=self.model, form_class=self.form_class
         )
 
     @property
-    def list_view(self):
+    def list_view(self) -> HttpRequestResponse:
         return self.list_view_class.as_view(model=self.model)
 
     @property
-    def detail_view(self):
+    def detail_view(self) -> HttpRequestResponse:
         return self.detail_view_class.as_view(model=self.model)
 
     @property
-    def delete_view(self):
+    def delete_view(self) -> HttpRequestResponse:
         return self.delete_view_class.as_view(model=self.model)
 
     @property
-    def like_view(self):
+    def like_view(self) -> HttpRequestResponse:
         return self.like_view_class.as_view(model=self.model)
 
     @property
-    def dislike_view(self):
+    def dislike_view(self) -> HttpRequestResponse:
         return self.dislike_view_class.as_view(model=self.model)
 
     @property
-    def urls(self) -> List[str]:
+    def urls(self) -> List[URLPattern]:
         return [
             path("", self.list_view, name="list"),
             path("~create", self.create_view, name="create"),
