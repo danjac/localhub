@@ -5,9 +5,36 @@ import { Controller } from 'stimulus';
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
+// should be prop
+const unloadMsg =
+  'Are you sure you want to leave this page? All your changes will be lost.';
+
 export default class extends Controller {
+  connect() {
+    this.formElements.forEach(element =>
+      element.addEventListener('change', () => this.data.set('changed', true))
+    );
+  }
+
+  unload(event) {
+    if (this.data.has('changed')) {
+      if (event.type === 'turbolinks:before-visit') {
+        if (!window.confirm(unloadMsg)) {
+          event.preventDefault();
+          return false;
+        }
+        return true;
+      }
+      event.returnValue = unloadMsg;
+      return event.returnValue;
+    }
+    return true;
+  }
+
   submit(event) {
     event.preventDefault();
+
+    this.data.delete('changed');
 
     const method = this.element.getAttribute('method');
     const url = this.element.getAttribute('action');
@@ -32,6 +59,7 @@ export default class extends Controller {
       method,
       url
     }).then(response => {
+      window.onbeforeunload = null;
       const contentType = response.headers['content-type'];
 
       if (contentType.match(/html/)) {
@@ -88,5 +116,13 @@ export default class extends Controller {
 
   get formElements() {
     return Array.from(this.element.elements);
+  }
+
+  set changed(isChanged) {
+    this.data.set('changed', isChanged);
+  }
+
+  get changed() {
+    return this.data.get('changed') === true;
   }
 }

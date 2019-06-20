@@ -9,7 +9,7 @@
       action="{{ request.path }}"
       enctype="multipart/form-data"
       data-controller="form"
-      data-action="form#submit">
+      data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload">
   {% if view.next_url %}
   <input type="hidden" name="next" value="{{ view.next_url }}">
   {% endif %}

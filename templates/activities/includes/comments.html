@@ -14,7 +14,10 @@
   {% if comment_form %}
   <div class="divider"></div>
   <h6>{% trans "Post a Comment" %}</h6>
-  <form method="POST" action="{{ create_comment_url }}" data-controller="form" data-action="form#submit">
+  <form method="POST"
+        action="{{ create_comment_url }}"
+        data-controller="form"
+        data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload">
     {% include "includes/forms/fields.html" with form=comment_form %}
     <button class="btn btn-primary" type="submit">{% trans "Submit" %}</button>
   </form>
