@@ -15,9 +15,9 @@ app_name = "posts"
 urlpatterns = [
     path("", post_list_view, name="list"),
     path("~create", post_create_view, name="create"),
-    path("<int:pk>/", post_detail_view, name="detail"),
     path("<int:pk>/~update/", post_update_view, name="update"),
     path("<int:pk>/~delete/", post_delete_view, name="delete"),
     path("<int:pk>/~like/", post_like_view, name="like"),
     path("<int:pk>/~dislike/", post_dislike_view, name="dislike"),
+    path("<int:pk>/<slug:slug>/", post_detail_view, name="detail"),
 ]

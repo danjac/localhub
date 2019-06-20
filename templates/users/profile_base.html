@@ -3,12 +3,18 @@
 {% load account %}
 {% load users_tags %}
 
+{% block subtitle %}
+{% user_display object as profile_name %} - {{ profile_name }}
+{% endblock %}
+
 {% block activities_sidebar %}
+
 {% if user == profile %}
 {% include "users/includes/settings_sidebar.html" %}
 {% else %}
 {{ block.super }}
 {% endif %}
+
 {% endblock activities_sidebar %}
 
 {% block activities_content %}

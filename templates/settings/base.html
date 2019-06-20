@@ -4,8 +4,6 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}Community Settings{% endblock %}
-
 {% block content %}
 <div class="container">
   <div class="columns" data-controller="sidebar">
@@ -14,6 +12,9 @@
          class="btn btn-link show-sm hide-md"
          data-action="sidebar#toggle">{% trans "Close Sidebar" %}</a>
       <ul class="menu">
+        <li class="menu-item">
+          <a href="{% url 'activities:stream' %}">{% trans "Home" %}</a>
+        </li>
         <li class="menu-item">
           <a data-controller="active-link" href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
         </li>

@@ -8,7 +8,6 @@ from typing import Dict, Optional, List, Tuple
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.urls import reverse
 from django.utils.encoding import smart_text
 from django.utils.translation import gettext_lazy as _
 
@@ -19,7 +18,6 @@ from model_utils import FieldTracker
 from communikit.activities.models import Activity
 from communikit.activities.utils import get_domain
 from communikit.core.markdown.fields import MarkdownField
-from communikit.core.types import BreadcrumbList
 from communikit.notifications.models import Notification
 
 
@@ -57,6 +55,9 @@ class Event(Activity):
     description_tracker = FieldTracker(["description"])
     location_tracker = FieldTracker(LOCATION_FIELDS)
 
+    list_url_name = "events:list"
+    detail_url_name = "events:detail"
+
     def __str__(self) -> str:
         return self.title or self.location
 
@@ -66,16 +67,6 @@ class Event(Activity):
 
     def get_domain(self) -> Optional[str]:
         return get_domain(self.url)
-
-    def get_absolute_url(self) -> str:
-        return reverse("events:detail", args=[self.id])
-
-    def get_breadcrumbs(self) -> BreadcrumbList:
-        return [
-            (reverse("activities:stream"), _("Home")),
-            (reverse("events:list"), _("Events")),
-            (self.get_absolute_url(), smart_text(self)),
-        ]
 
     def search_index_components(self) -> Dict[str, str]:
         return {

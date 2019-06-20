@@ -34,3 +34,5 @@ assets/dist/
 
 celerybeat.pid
 celerybeat-schedule
+
+:w

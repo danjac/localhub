@@ -3,8 +3,6 @@
 
 import pytest
 
-from django.utils.encoding import force_str
-
 from communikit.communities.models import Community, Membership
 from communikit.photos.models import Photo
 from communikit.photos.tests.factories import PhotoFactory
@@ -15,11 +13,9 @@ pytestmark = pytest.mark.django_db
 
 class TestPhotoModel:
     def test_breadcrumbs(self, photo: Photo):
-        assert photo.get_breadcrumbs() == [
-            ("/", "Home"),
-            ("/photos/", "Photos"),
-            (f"/photos/{photo.id}/", force_str(photo.title)),
-        ]
+        breadcrumbs = photo.get_breadcrumbs()
+        assert len(breadcrumbs) == 3
+        assert breadcrumbs[2][0] == photo.get_absolute_url()
 
     def test_notify(self, community: Community):
         owner = UserFactory(username="owner")
@@ -34,10 +30,7 @@ class TestPhotoModel:
             role=Membership.ROLES.moderator,
         )
 
-        photo = PhotoFactory(
-            owner=owner,
-            community=community,
-        )
+        photo = PhotoFactory(owner=owner, community=community)
         notifications = photo.notify(created=True)
 
         assert notifications[0].recipient == moderator

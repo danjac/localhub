@@ -5,9 +5,6 @@ from typing import Dict, List, Optional
 
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
-from django.template.defaultfilters import truncatechars
-from django.urls import reverse
-from django.utils.encoding import smart_text
 from django.utils.translation import gettext as _
 
 from model_utils import FieldTracker
@@ -15,7 +12,6 @@ from model_utils import FieldTracker
 from communikit.activities.models import Activity
 from communikit.activities.utils import get_domain
 from communikit.core.markdown.fields import MarkdownField
-from communikit.core.types import BreadcrumbList
 from communikit.notifications.models import Notification
 
 
@@ -29,18 +25,11 @@ class Post(Activity):
 
     description_tracker = FieldTracker(["description"])
 
+    list_url_name = "posts:list"
+    detail_url_name = "posts:detail"
+
     def __str__(self) -> str:
-        return self.title or self.url or _("Post")
-
-    def get_absolute_url(self) -> str:
-        return reverse("posts:detail", args=[self.id])
-
-    def get_breadcrumbs(self) -> BreadcrumbList:
-        return [
-            (reverse("activities:stream"), _("Home")),
-            (reverse("posts:list"), _("Posts")),
-            (self.get_absolute_url(), truncatechars(smart_text(self), 140)),
-        ]
+        return self.title or self.get_domain() or _("Post")
 
     def get_domain(self) -> Optional[str]:
         return get_domain(self.url)

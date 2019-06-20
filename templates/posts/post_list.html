@@ -1,6 +1,7 @@
 {% extends "activities/base.html" %}
 {% load i18n %}
 {% load rules %}
+{% block subtitle %} - {% trans "Posts" %}{% endblock %}
 {% block activities_content %}
 {% has_perm 'activities.create_activity' user request.community as can_create_activity %}
 {% if can_create_activity %}

@@ -58,8 +58,8 @@ class TestPhotoUpdateView:
             reverse("photos:update", args=[photo_for_member.id]),
             {"title": "UPDATED", "image": fake_image},
         )
-        assert response.url == photo_for_member.get_absolute_url()
         photo_for_member.refresh_from_db()
+        assert response.url == photo_for_member.get_absolute_url()
         assert photo_for_member.title == "UPDATED"
 
 
@@ -82,8 +82,7 @@ class TestPhotoDeleteView:
 class TestPhotoDetailView:
     def test_get(self, client: Client, photo: Photo):
         response = client.get(
-            reverse("photos:detail", args=[photo.id]),
-            HTTP_HOST=photo.community.domain,
+            photo.get_absolute_url(), HTTP_HOST=photo.community.domain
         )
         assert response.status_code == 200
         assert "comment_form" not in response.context
@@ -96,8 +95,7 @@ class TestPhotoDetailView:
     ):
         Membership.objects.create(member=login_user, community=photo.community)
         response = client.get(
-            reverse("photos:detail", args=[photo.id]),
-            HTTP_HOST=photo.community.domain,
+            photo.get_absolute_url(), HTTP_HOST=photo.community.domain
         )
         assert response.status_code == 200
         assert "comment_form" in response.context
