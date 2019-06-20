@@ -9,19 +9,16 @@
 {% has_perm 'activities.create_activity' user request.community as can_create_activity %}
 {% if can_create_activity %}
 <div class="btn-group btn-group-block">
-    {% with next_url=request.get_full_path|urlencode %}
-    <a href="{% url 'posts:create' %}?next={{ next_url }}" class="btn btn-primary">
+    <a href="{% url 'posts:create' %}" class="btn btn-primary">
         <i class="icon icon-link"></i> {% trans "Submit Post" %}
     </a>
-    <a href="{% url 'events:create' %}?next={{ next_url }}" class="btn">
+    <a href="{% url 'events:create' %}" class="btn">
         <i class="icon icon-time"></i> {% trans "Submit Event" %}
     </a>
-    <a href="{% url 'photos:create' %}?next={{ next_url }}" class="btn">
-        <i class="icon icon-photo"></i> {% trans "Upload Photo" %}
+    <a href="{% url 'photos:create' %}" class="btn">
+        <i class="icon icon-photo"></i> {% trans "Submit Photo" %}
     </a>
-    {% endwith %}
 </div>
-
 {% elif user.is_authenticated %}
 <p class="bg-gray p-2 text-center">
     {% url 'join_requests:create' as join_request_url %}
@@ -42,7 +39,7 @@
 </div>
 {% empty %}
 <div class="empty mt-2">
-  <p class="empty-title h5">{% trans "Nothing has been posted yet" %}</p>
+    <p class="empty-title h5">{% trans "Nothing has been posted yet" %}</p>
 </div>
 {% endfor %}
 

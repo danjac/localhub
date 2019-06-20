@@ -10,7 +10,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.urls import reverse, reverse_lazy
+from django.urls import path, reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     CreateView,
@@ -83,20 +83,21 @@ class ActivityCreateView(
     permission_required = "activities.create_activity"
     success_message = _("Your update has been posted")
 
-    def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        self.next_url = request.POST.get("next", request.GET.get("next"))
-        return super().dispatch(request, *args, **kwargs)
-
     def get_permission_object(self) -> Community:
         return self.request.community
 
     def get_success_message(self) -> str:
         return self.success_message
 
-    def get_success_url(self) -> str:
-        if self.next_url:
-            return self.next_url
-        return super().get_success_url()
+    def get_breadcrumbs(self) -> BreadcrumbList:
+        return [
+            (reverse("activities:stream"), _("Home")),
+            (
+                reverse(self.model.list_url_name),
+                _(self.model._meta.verbose_name_plural.title()),
+            ),
+            (self.request.path, _("Submit")),
+        ]
 
     def form_valid(self, form) -> HttpResponse:
 
@@ -136,12 +137,7 @@ class ActivityUpdateView(
     success_message = _("Your changes have been saved")
 
     def get_breadcrumbs(self) -> BreadcrumbList:
-        return self.object.get_breadcrumbs() + [
-            (
-                self.request.path,
-                _("Edit %s" % self.object._meta.verbose_name.title()),
-            )
-        ]
+        return self.object.get_breadcrumbs() + [(self.request.path, _("Edit"))]
 
 
 class ActivityDeleteView(
@@ -294,3 +290,65 @@ class ActivityProfileView(UserProfileMixin, ActivityStreamView):
 
 
 activity_profile_view = ActivityProfileView.as_view()
+
+
+class ActivityViewSet:
+
+    model = None
+    form_class = None
+
+    create_view_class = ActivityCreateView
+    delete_view_class = ActivityDeleteView
+    detail_view_class = ActivityDetailView
+    dislike_view_class = ActivityDislikeView
+    like_view_class = ActivityLikeView
+    list_view_class = ActivityListView
+    update_view_class = ActivityUpdateView
+
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+    @property
+    def create_view(self):
+        return self.create_view_class.as_view(
+            model=self.model, form_class=self.form_class
+        )
+
+    @property
+    def update_view(self):
+        return self.update_view_class.as_view(
+            model=self.model, form_class=self.form_class
+        )
+
+    @property
+    def list_view(self):
+        return self.list_view_class.as_view(model=self.model)
+
+    @property
+    def detail_view(self):
+        return self.detail_view_class.as_view(model=self.model)
+
+    @property
+    def delete_view(self):
+        return self.delete_view_class.as_view(model=self.model)
+
+    @property
+    def like_view(self):
+        return self.like_view_class.as_view(model=self.model)
+
+    @property
+    def dislike_view(self):
+        return self.dislike_view_class.as_view(model=self.model)
+
+    @property
+    def urls(self) -> List[str]:
+        return [
+            path("", self.list_view, name="list"),
+            path("~create", self.create_view, name="create"),
+            path("<int:pk>/~update/", self.update_view, name="update"),
+            path("<int:pk>/~delete/", self.delete_view, name="delete"),
+            path("<int:pk>/~like/", self.like_view, name="like"),
+            path("<int:pk>/~dislike/", self.dislike_view, name="dislike"),
+            path("<int:pk>/<slug:slug>/", self.detail_view, name="detail"),
+        ]

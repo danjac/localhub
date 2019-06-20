@@ -1,23 +1,12 @@
-from django.urls import path
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
 
-from communikit.posts.views import (
-    post_create_view,
-    post_delete_view,
-    post_detail_view,
-    post_dislike_view,
-    post_like_view,
-    post_list_view,
-    post_update_view,
-)
+
+from communikit.activities.views import ActivityViewSet
+from communikit.posts.forms import PostForm
+from communikit.posts.models import Post
 
 app_name = "posts"
 
-urlpatterns = [
-    path("", post_list_view, name="list"),
-    path("~create", post_create_view, name="create"),
-    path("<int:pk>/~update/", post_update_view, name="update"),
-    path("<int:pk>/~delete/", post_delete_view, name="delete"),
-    path("<int:pk>/~like/", post_like_view, name="like"),
-    path("<int:pk>/~dislike/", post_dislike_view, name="dislike"),
-    path("<int:pk>/<slug:slug>/", post_detail_view, name="detail"),
-]
+
+urlpatterns = ActivityViewSet(model=Post, form_class=PostForm).urls
