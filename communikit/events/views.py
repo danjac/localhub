@@ -13,24 +13,19 @@ from communikit.activities.views import (
     ActivityListView,
     ActivityUpdateView,
 )
-from communikit.core.types import BreadcrumbList
 from communikit.events.forms import EventForm
 from communikit.events.models import Event
 
 
-class EventCreateView(ActivityCreateView):
-    model = Event
-    form_class = EventForm
-
-    def get_breadcrumbs(self) -> BreadcrumbList:
-        return [
-            (reverse("activities:stream"), _("Home")),
-            (reverse("events:list"), _("Events")),
-            (self.request.path, _("Submit Event")),
-        ]
-
-
-event_create_view = EventCreateView.as_view()
+event_create_view = ActivityCreateView.as_view(
+    model=Event,
+    form_class=EventForm,
+    breadcrumbs=[
+        (reverse("activities:stream"), _("Home")),
+        (reverse("events:list"), _("Events")),
+        (reverse("events:create"), _("Submit Event")),
+    ],
+)
 
 
 event_list_view = ActivityListView.as_view(model=Event, order_by="starts")

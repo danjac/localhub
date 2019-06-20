@@ -13,24 +13,19 @@ from communikit.activities.views import (
     ActivityListView,
     ActivityUpdateView,
 )
-from communikit.core.types import BreadcrumbList
 from communikit.posts.forms import PostForm
 from communikit.posts.models import Post
 
 
-class PostCreateView(ActivityCreateView):
-    model = Post
-    form_class = PostForm
-
-    def get_breadcrumbs(self) -> BreadcrumbList:
-        return [
-            (reverse("activities:stream"), _("Home")),
-            (reverse("posts:list"), _("Posts")),
-            (self.request.path, _("Submit Post")),
-        ]
-
-
-post_create_view = PostCreateView.as_view()
+post_create_view = ActivityCreateView.as_view(
+    model=Post,
+    form_class=PostForm,
+    breadcrumbs=[
+        (reverse("activities:stream"), _("Home")),
+        (reverse("posts:list"), _("Posts")),
+        (reverse("posts:create"), _("Submit Post")),
+    ],
+)
 
 post_list_view = ActivityListView.as_view(model=Post)
 
