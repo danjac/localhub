@@ -6,7 +6,10 @@
 {% block activities_content %}
 {% include "activities/includes/breadcrumbs.html" %}
 
-<form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
+<form method="POST"
+      action="{{ request.path }}"
+      data-controller="form"
+      data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload">
   {% if view.next_url %}
   <input type="hidden" name="next" value="{{ view.next_url }}">
   {% endif %}
