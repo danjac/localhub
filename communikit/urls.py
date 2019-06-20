@@ -38,36 +38,24 @@ urlpatterns = [
     path("admin/", admin.site.urls),
 ]
 
-if "debug_toolbar" in settings.INSTALLED_APPS:
+if settings.DEBUG:
+
+    # debug toolbar
     import debug_toolbar
 
     urlpatterns = [
         path("__debug__/", include(debug_toolbar.urls))
     ] + urlpatterns
 
-if settings.DEBUG:
+    # static views
     urlpatterns += static(
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
     )
 
-# allow debugging of error views in development
-
-if settings.DEBUG:
+    # allow preview/debugging of error views in development
     urlpatterns += [
-        path(
-            "errors/400/",
-            TemplateView.as_view(template_name="400.html"),
-        ),
-        path(
-            "errors/403/",
-            TemplateView.as_view(template_name="403.html"),
-        ),
-        path(
-            "errors/404/",
-            TemplateView.as_view(template_name="404.html"),
-        ),
-        path(
-            "errors/500/",
-            TemplateView.as_view(template_name="500.html"),
-        ),
+        path("errors/400/", TemplateView.as_view(template_name="400.html")),
+        path("errors/403/", TemplateView.as_view(template_name="403.html")),
+        path("errors/404/", TemplateView.as_view(template_name="404.html")),
+        path("errors/500/", TemplateView.as_view(template_name="500.html")),
     ]

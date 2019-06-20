@@ -3,7 +3,7 @@
 {% block profile_content %}
 
 {% if num_likes %}
-<p class="mt-2">
+<div class="mt-2 toast text-center">
 {% if profile == user %}
 {% blocktrans count counter=num_likes %}
 You have received a total of <strong>1 like</strong> for your comments.
@@ -17,7 +17,7 @@ This user has received <strong>1 like</strong> for their comments.
 This user has received <strong>{{ num_likes }} likes</strong> for their comments.
 {% endblocktrans %}
 {% endif %}
-</p>
+</div>
 {% endif %}
 
 
