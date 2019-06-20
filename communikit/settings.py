@@ -237,20 +237,26 @@ class Testing(Base):
 
 
 class Local(DockerConfigMixin, Base):
+
     DEBUG = True
+
     THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + [
         "debug_toolbar",
         "django_extensions",
+        "silk",
     ]
 
     MIDDLEWARE = Base.MIDDLEWARE + [
-        "debug_toolbar.middleware.DebugToolbarMiddleware"
+        "silk.middleware.SilkyMiddleware",
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
     ]
 
     DEBUG_TOOLBAR_CONFIG = {
         "DISABLE_PANELS": ["debug_toolbar.panels.redirects.RedirectsPanel"],
         "SHOW_TEMPLATE_CONTEXT": True,
     }
+
+    SILKY_PYTHON_PROFILER = True
 
 
 class Production(DockerConfigMixin, Base):

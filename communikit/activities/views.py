@@ -25,6 +25,8 @@ from django.views.generic.list import MultipleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
+# from silk.profiling.profiler import silk_profile
+
 from communikit.activities.models import Activity, Like
 from communikit.comments.forms import CommentForm
 from communikit.communities.models import Community

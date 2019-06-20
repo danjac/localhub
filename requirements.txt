@@ -14,6 +14,7 @@ django-extensions==2.1.6 # https://github.com/django-extensions/django-extension
 django-markdownx===2.0.28 # https://github.com/neutronX/django-markdownx
 django-model-utils==3.1.2 # https://github.com/jazzband/django-model-utils
 django-redis==4.10.0 # https://github.com/niwinz/django-redis
+django-silk==3.0.2 # https://github.com/jazzband/django-silk
 django-storages==1.7.1 # https://github.com/jschneier/django-storages
 django-widget-tweaks==1.4.3 # https://github.com/jazzband/django-widget-tweaks
 django==2.2.2 # https://github.com/django/django
