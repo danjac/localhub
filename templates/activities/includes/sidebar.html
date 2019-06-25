@@ -42,7 +42,7 @@
     </li>
     {% endif %}
     {% if can_manage_community %}
-    <li class="menu-item"><a href="{% url 'communities:community_update' %}">{% trans "Settings" %}</a></li>
+    <li class="menu-item"><a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a></li>
     {% endif %}
     {% if can_moderate_community %}
     {% get_flags_count as num_flags %}
