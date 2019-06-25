@@ -1,0 +1,18 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/base.html" %}
+{% load i18n %}
+
+{% block activities_content %}
+{% include "activities/includes/breadcrumbs.html" %}
+
+<form method="POST"
+      action="{{ request.path }}"
+      data-controller="form"
+      data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload"
+      {% block form_extra_attrs %}{% endblock %}>
+  {% include "includes/forms/fields.html" %}
+  <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+</form>
+{% endblock activities_content %}

@@ -3,12 +3,17 @@
 
 import pytest
 
+from typing import Callable
+
+from django.core import mail
 from django.test.client import Client
 from django.urls import reverse
 
 from communikit.comments.models import Comment, Like
 from communikit.comments.tests.factories import CommentFactory
 from communikit.communities.models import Membership
+from communikit.flags.models import Flag
+from communikit.notifications.models import Notification
 from communikit.posts.tests.factories import PostFactory
 from communikit.users.tests.factories import UserFactory
 
@@ -21,7 +26,9 @@ class TestCommentCreateView:
         response = client.get(reverse("comments:create", args=[post.id]))
         assert response.status_code == 200
 
-    def test_post(self, client: Client, member: Membership):
+    def test_post(
+        self, client: Client, member: Membership, transactional_db: Callable
+    ):
         post = PostFactory(community=member.community)
         response = client.post(
             reverse("comments:create", args=[post.id]), {"content": "test"}
@@ -29,6 +36,12 @@ class TestCommentCreateView:
         assert response.url == post.get_absolute_url()
         comment = post.comment_set.get()
         assert comment.owner == member.member
+
+        notification = Notification.objects.get(recipient=post.owner)
+        assert notification.verb == "commented"
+
+        assert len(mail.outbox) == 1
+        assert mail.outbox[0].to[0] == post.owner.email
 
 
 class TestCommentDetailView:
@@ -68,6 +81,18 @@ class TestCommentDeleteView:
         response = client.delete(reverse("comments:delete", args=[comment.id]))
         assert response.url == post.get_absolute_url()
         assert Comment.objects.count() == 0
+        assert len(mail.outbox) == 0
+
+    def test_delete_by_moderator(self, client: Client, moderator: Membership):
+        post = PostFactory(community=moderator.community)
+        comment = CommentFactory(owner=UserFactory(), activity=post)
+        response = client.delete(reverse("comments:delete", args=[comment.id]))
+
+        assert response.url == post.get_absolute_url()
+        assert Comment.objects.count() == 0
+
+        assert len(mail.outbox) == 1
+        assert mail.outbox[0].to[0] == comment.owner.email
 
 
 class TestCommentLikeView:
@@ -107,3 +132,37 @@ class TestCommentProfileView:
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 1
         assert response.context["num_likes"] == 1
+
+
+class TestFlagView:
+    def test_get(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        comment = CommentFactory(activity=post)
+        response = client.get(reverse("comments:flag", args=[comment.id]))
+        assert response.status_code == 200
+
+    def test_post(
+        self, client: Client, member: Membership, transactional_db: Callable
+    ):
+        post = PostFactory(community=member.community)
+        comment = CommentFactory(activity=post)
+        moderator = Membership.objects.create(
+            member=UserFactory(),
+            community=post.community,
+            role=Membership.ROLES.moderator,
+        )
+        response = client.post(
+            reverse("comments:flag", args=[comment.id]),
+            data={"reason": "spam"},
+        )
+        assert response.url == post.get_absolute_url()
+
+        flag = Flag.objects.get()
+        assert flag.user == member.member
+
+        notification = Notification.objects.get(recipient=moderator.member)
+        assert notification.verb == "flagged"
+
+        # commented + flagged
+        assert len(mail.outbox) == 2
+        assert mail.outbox[1].to[0] == moderator.member.email

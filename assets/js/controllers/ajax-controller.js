@@ -29,9 +29,10 @@ export default class extends Controller {
 
   send(method, event) {
     event.preventDefault();
-    const referrer = location.href;
 
-    const url = this.data.get('url');
+    const referrer = location.href;
+    const url = this.data.get('url') || this.element.getAttribute('href');
+
     axios({
       headers: {
         'Turbolinks-Referrer': referrer
@@ -39,7 +40,6 @@ export default class extends Controller {
       method,
       url
     }).then(response => {
-
       const toggle = this.data.get('toggle');
       const redirect = this.data.get('redirect');
 

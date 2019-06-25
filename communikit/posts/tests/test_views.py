@@ -3,13 +3,19 @@
 
 import pytest
 
+from typing import Callable
+
+from django.core import mail
 from django.conf import settings
 from django.test.client import Client
 from django.urls import reverse
 
 from communikit.communities.models import Community, Membership
+from communikit.flags.models import Flag
+from communikit.notifications.models import Notification
 from communikit.posts.tests.factories import PostFactory
 from communikit.posts.models import Post
+from communikit.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -115,3 +121,33 @@ class TestPostDislikeView:
         )
         assert response.status_code == 204
         assert post.like_set.count() == 0
+
+
+class TestFlagView:
+    def test_get(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        response = client.get(reverse("posts:flag", args=[post.id]))
+        assert response.status_code == 200
+
+    def test_post(
+        self, client: Client, member: Membership, transactional_db: Callable
+    ):
+        post = PostFactory(community=member.community)
+        moderator = Membership.objects.create(
+            member=UserFactory(),
+            community=post.community,
+            role=Membership.ROLES.moderator,
+        )
+        response = client.post(
+            reverse("posts:flag", args=[post.id]), data={"reason": "spam"}
+        )
+        assert response.url == post.get_absolute_url()
+
+        flag = Flag.objects.get()
+        assert flag.user == member.member
+
+        notification = Notification.objects.get()
+        assert notification.recipient == moderator.member
+
+        assert len(mail.outbox) == 1
+        assert mail.outbox[0].to[0] == moderator.member.email

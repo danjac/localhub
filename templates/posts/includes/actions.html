@@ -6,6 +6,7 @@
 
 {% has_perm "activities.change_activity" user post as can_change_post %}
 {% has_perm "activities.delete_activity" user post as can_delete_post %}
+{% has_perm "activities.flag_activity" user post as can_flag_post %}
 {% has_perm "activities.like_activity" user post as can_like_post %}
 
 <div class="btn-group">
@@ -25,6 +26,12 @@
             data-ajax-url="{% url 'posts:dislike' post.id %}"
             data-ajax-toggle="#post-like-btn-{{ post.id }}"
             ><i class="icon icon-cross"></i> {% trans "Unlike" %}</button>
+    {% endif %}
+
+    {% if can_flag_post and not post.has_flagged %}
+    <a class="btn btn-sm" href="{% url 'posts:flag' post.id %}">
+        <i class="icon icon-flag"></i> {% trans "Flag" %}
+    </a>
     {% endif %}
 
     {% if can_change_post %}

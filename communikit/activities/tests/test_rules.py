@@ -46,6 +46,13 @@ class TestPermissions:
         post = PostFactory(community=member.community)
         assert member.member.has_perm("activities.like_activity", post)
 
+    def test_owner_can_flag_activity(self, post: Post):
+        assert not post.owner.has_perm("activities.flag_activity", post)
+
+    def test_member_can_flag_activity(self, member: Membership):
+        post = PostFactory(community=member.community)
+        assert member.member.has_perm("activities.flag_activity", post)
+
     def test_member_can_create_activity(self, member: Membership):
         assert member.member.has_perm(
             "activities.create_activity", member.community
