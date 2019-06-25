@@ -6,7 +6,9 @@
 
 {% has_perm "activities.change_activity" user photo as can_change_photo %}
 {% has_perm "activities.delete_activity" user photo as can_delete_photo %}
+{% has_perm "activities.flag_activity" user photo as can_flag_photo %}
 {% has_perm "activities.like_activity" user photo as can_like_photo %}
+
 <div class="btn-group">
 
     <a class="btn btn-sm"
@@ -31,6 +33,12 @@
             data-ajax-toggle="#photo-like-btn-{{ photo.id }}"
             ><i class="icon icon-cross"></i> {% trans "Unlike" %}</button>
 
+    {% endif %}
+
+    {% if can_flag_photo and not photo.has_flagged %}
+    <a class="btn btn-sm" href="{% url 'photos:flag' photo.id %}">
+        <i class="icon icon-flag"></i> {% trans "Flag" %}
+    </a>
     {% endif %}
 
     {% if can_change_photo %}
