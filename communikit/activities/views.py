@@ -16,6 +16,7 @@ from django.views.generic import (
     CreateView,
     DeleteView,
     DetailView,
+    FormView,
     ListView,
     UpdateView,
     View,
@@ -39,6 +40,7 @@ from communikit.core.types import (
 )
 from communikit.core.views import CombinedQuerySetListView
 from communikit.events.models import Event
+from communikit.flags.forms import FlagForm
 from communikit.photos.models import Photo
 from communikit.posts.models import Post
 from communikit.users.views import UserProfileMixin
@@ -124,9 +126,7 @@ class ActivityListView(MultipleActivityMixin, ListView):
         return (
             super()
             .get_queryset()
-            .with_num_comments()
-            .with_num_likes()
-            .with_has_liked(self.request.user)
+            .with_common_annotations(self.request.community, self.request.user)
             .order_by(self.order_by)
         )
 
@@ -170,13 +170,17 @@ class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
     def get_breadcrumbs(self) -> BreadcrumbList:
         return self.object.get_breadcrumbs()
 
+    def get_flags(self) -> QuerySet:
+        return (
+            self.object.get_flags().select_related("user").order_by("-created")
+        )
+
     def get_comments(self) -> QuerySet:
         return (
-            self.object.comment_set.select_related(
-                "owner", "activity", "activity__community"
+            self.object.comment_set.with_common_annotations(
+                self.request.community, self.request.user
             )
-            .with_num_likes()
-            .with_has_liked(self.request.user)
+            .select_related("owner", "activity", "activity__community")
             .order_by("created")
         )
 
@@ -184,13 +188,16 @@ class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
         return (
             super()
             .get_queryset()
-            .with_num_comments()
-            .with_num_likes()
-            .with_has_liked(self.request.user)
+            .with_common_annotations(self.request.community, self.request.user)
         )
 
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
+        if self.request.user.has_perm(
+            "communities.moderate_community", self.request.community
+        ):
+            data["flags"] = self.get_flags()
+
         data["comments"] = self.get_comments()
         if self.request.user.has_perm("comments.create_comment", self.object):
             data.update(
@@ -232,6 +239,57 @@ class ActivityDislikeView(LoginRequiredMixin, SingleActivityView):
         return self.post(request, *args, **kwargs)
 
 
+class ActivityFlagView(
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    SingleActivityMixin,
+    BreadcrumbsMixin,
+    FormView,
+):
+    form_class = FlagForm
+    template_name = "flags/flag_form.html"
+    permission_required = "activities.flag_activity"
+
+    def dispatch(self, request, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self) -> QuerySet:
+        return (
+            super()
+            .get_queryset()
+            .with_has_flagged(self.request.user)
+            .exclude(has_flagged=True)
+        )
+
+    def get_permission_object(self) -> Activity:
+        return self.object
+
+    def get_breadcrumbs(self) -> BreadcrumbList:
+        return self.object.get_breadcrumbs() + [(self.request.path, _("Flag"))]
+
+    def get_success_url(self) -> str:
+        return self.object.get_absolute_url()
+
+    def form_valid(self, form) -> HttpResponse:
+        flag = form.save(commit=False)
+        flag.content_object = self.object
+        flag.community = self.request.community
+        flag.user = self.request.user
+        flag.save()
+        messages.success(
+            self.request,
+            _(
+                "This %s has been flagged to the moderators"
+                % self.object._meta.verbose_name
+            ),
+        )
+        return HttpResponseRedirect(self.get_success_url())
+
+
+activity_flag_view = ActivityFlagView.as_view()
+
+
 class ActivityStreamView(CommunityRequiredMixin, CombinedQuerySetListView):
     template_name = "activities/stream.html"
     ordering = "created"
@@ -242,9 +300,7 @@ class ActivityStreamView(CommunityRequiredMixin, CombinedQuerySetListView):
     def get_queryset(self, model: Type[Activity]) -> QuerySet:
         return (
             model.objects.filter(community=self.request.community)
-            .with_num_comments()
-            .with_num_likes()
-            .with_has_liked(self.request.user)
+            .with_common_annotations(self.request.community, self.request.user)
             .select_related("owner", "community")
         )
 
@@ -306,6 +362,7 @@ class ActivityViewSet:
     delete_view_class = ActivityDeleteView
     detail_view_class = ActivityDetailView
     dislike_view_class = ActivityDislikeView
+    flag_view_class = ActivityFlagView
     like_view_class = ActivityLikeView
     list_view_class = ActivityListView
     update_view_class = ActivityUpdateView
@@ -347,13 +404,18 @@ class ActivityViewSet:
         return self.dislike_view_class.as_view(model=self.model)
 
     @property
+    def flag_view(self) -> HttpRequestResponse:
+        return self.flag_view_class.as_view(model=self.model)
+
+    @property
     def urls(self) -> List[URLPattern]:
         return [
             path("", self.list_view, name="list"),
             path("~create", self.create_view, name="create"),
-            path("<int:pk>/~update/", self.update_view, name="update"),
             path("<int:pk>/~delete/", self.delete_view, name="delete"),
-            path("<int:pk>/~like/", self.like_view, name="like"),
             path("<int:pk>/~dislike/", self.dislike_view, name="dislike"),
+            path("<int:pk>/~flag/", self.flag_view, name="flag"),
+            path("<int:pk>/~like/", self.like_view, name="like"),
+            path("<int:pk>/~update/", self.update_view, name="update"),
             path("<int:pk>/<slug:slug>/", self.detail_view, name="detail"),
         ]

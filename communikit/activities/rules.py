@@ -31,5 +31,8 @@ rules.add_perm("activities.create_activity", is_member)
 rules.add_perm("activities.change_activity", is_editor)
 rules.add_perm("activities.delete_activity", is_editor)
 rules.add_perm(
+    "activities.flag_activity", is_activity_community_member & ~is_owner
+)
+rules.add_perm(
     "activities.like_activity", is_activity_community_member & ~is_owner
 )

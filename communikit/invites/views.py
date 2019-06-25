@@ -4,6 +4,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import redirect_to_login
 from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
@@ -41,7 +42,9 @@ class SingleInviteView(SingleInviteMixin, View):
     ...
 
 
-class InviteListView(PermissionRequiredMixin, MultipleInviteMixin, ListView):
+class InviteListView(
+    LoginRequiredMixin, PermissionRequiredMixin, MultipleInviteMixin, ListView
+):
     permission_required = "communities.manage_community"
 
     def get_permission_object(self) -> Community:
@@ -52,7 +55,10 @@ invite_list_view = InviteListView.as_view()
 
 
 class InviteCreateView(
-    CommunityRequiredMixin, PermissionRequiredMixin, CreateView
+    LoginRequiredMixin,
+    CommunityRequiredMixin,
+    PermissionRequiredMixin,
+    CreateView,
 ):
     model = Invite
     form_class = InviteForm
@@ -88,7 +94,9 @@ class InviteCreateView(
 invite_create_view = InviteCreateView.as_view()
 
 
-class InviteResendView(PermissionRequiredMixin, SingleInviteView):
+class InviteResendView(
+    LoginRequiredMixin, PermissionRequiredMixin, SingleInviteView
+):
     permission_required = "communities.manage_community"
 
     def get_permission_object(self) -> Community:
@@ -116,7 +124,9 @@ class InviteResendView(PermissionRequiredMixin, SingleInviteView):
 invite_resend_view = InviteResendView.as_view()
 
 
-class InviteDeleteView(PermissionRequiredMixin, SingleInviteMixin, DeleteView):
+class InviteDeleteView(
+    LoginRequiredMixin, PermissionRequiredMixin, SingleInviteMixin, DeleteView
+):
     permission_required = "communities.manage_community"
     success_url = reverse_lazy("invites:list")
 

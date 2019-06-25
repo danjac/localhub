@@ -1,15 +1,28 @@
 {% load i18n %}
-<div class="card bg-gray" id="comment-{{ comment.id }}">
-  <div class="card-header">
-    <div class="card-title h6 text-gray">
-      {% include "activities/includes/timesince.html" with timestamp=comment.created owner=comment.owner %}
-    </div>
-  </div>
-  <div class="card-body">
-    {{ comment.content.markdown }}
-  </div>
-  <div class="card-footer">
-    {% include "comments/includes/actions.html" %}
-  </div>
+{% load rules %}
 
+{% has_perm "communities.moderate_community" user request.community as can_moderate_community %}
+
+<div class="card bg-gray" id="comment-{{ comment.id }}">
+    <div class="card-header">
+        {% if comment.is_flagged and can_moderate_community %}
+        <div class="toast toast-warning text-center">
+          <a href="{{ comment.get_absolute_url }}">{% trans "This comment has been flagged" %}</a>
+        </div>
+        {% endif %}
+
+        <div class="card-title h6 text-gray">
+            {% include "activities/includes/timesince.html" with timestamp=comment.created owner=comment.owner %}
+
+        </div>
+    </div>
+    <div class="card-body">
+        {{ comment.content.markdown }}
+    </div>
+    <div class="card-footer">
+        <div class="mb-2">
+            <a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a>
+        </div>
+        {% include "comments/includes/actions.html" %}
+    </div>
 </div>

@@ -7,6 +7,7 @@ from functools import reduce
 from typing import Callable, Optional
 
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import (
     SearchQuery,
@@ -27,6 +28,7 @@ from model_utils.models import TimeStampedModel
 
 from communikit.communities.models import Community
 from communikit.core.types import BreadcrumbList
+from communikit.flags.models import Flag
 
 
 class ActivityQuerySet(InheritanceQuerySetMixin, models.QuerySet):
@@ -37,6 +39,24 @@ class ActivityQuerySet(InheritanceQuerySetMixin, models.QuerySet):
     so we'll use it only when absolutely necessary.
     """
 
+    def with_common_annotations(
+        self, community: Community, user: settings.AUTH_USER_MODEL
+    ) -> models.QuerySet:
+        """
+        Combines all common annotations into a single call. Applies annotations
+        conditionally e.g. if user is authenticated or not.
+        """
+
+        qs = self.with_num_comments()
+        if user.is_authenticated:
+            qs = (
+                qs.with_num_likes().with_has_liked(user).with_has_flagged(user)
+            )
+
+            if user.has_perm("communities.moderate_community", community):
+                qs = qs.with_is_flagged()
+        return qs
+
     def with_num_comments(self) -> models.QuerySet:
         return self.annotate(
             num_comments=models.Count("comment", distinct=True)
@@ -45,19 +65,33 @@ class ActivityQuerySet(InheritanceQuerySetMixin, models.QuerySet):
     def with_num_likes(self) -> models.QuerySet:
         return self.annotate(num_likes=models.Count("like", distinct=True))
 
+    def is_flagged(
+        self, user: Optional[settings.AUTH_USER_MODEL] = None
+    ) -> models.Exists:
+
+        qs = Flag.objects.filter(
+            object_id=models.OuterRef("pk"),
+            content_type=ContentType.objects.get_for_model(self.model),
+        )
+        if user:
+            qs = qs.filter(user=user)
+        return models.Exists(qs)
+
+    def with_is_flagged(self) -> models.QuerySet:
+        return self.annotate(is_flagged=self.is_flagged())
+
+    def with_has_flagged(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> models.QuerySet:
+        return self.annotate(has_flagged=self.is_flagged(user))
+
     def with_has_liked(
         self, user: settings.AUTH_USER_MODEL
     ) -> models.QuerySet:
-        if user.is_authenticated:
-            return self.annotate(
-                has_liked=models.Exists(
-                    Like.objects.filter(
-                        user=user, activity=models.OuterRef("pk")
-                    )
-                )
-            )
         return self.annotate(
-            has_liked=models.Value(False, output_field=models.BooleanField())
+            has_liked=models.Exists(
+                Like.objects.filter(user=user, activity=models.OuterRef("pk"))
+            )
         )
 
     def search(self, search_term: str) -> models.QuerySet:
@@ -85,6 +119,7 @@ class Activity(TimeStampedModel):
     objects = ActivityQuerySet.as_manager()
 
     list_url_name: Optional[str] = None
+
     detail_url_name: Optional[str] = None
 
     class Meta:
@@ -98,6 +133,12 @@ class Activity(TimeStampedModel):
 
     def get_permalink(self) -> str:
         return self.community.resolve_url(self.get_absolute_url())
+
+    def get_flags(self) -> models.QuerySet:
+        return Flag.objects.filter(
+            object_id=self.pk,
+            content_type=ContentType.objects.get_for_model(self),
+        )
 
     def get_breadcrumbs(self) -> BreadcrumbList:
         return [

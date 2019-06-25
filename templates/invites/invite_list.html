@@ -27,7 +27,7 @@
         {% endif %}
         {% url 'invites:delete' invite.id as delete_url %}
         <a class="btn btn-sm btn-warning"
-           href="{% url 'invites:delete' invite.id %}"
+           href="{{ delete_url }}"
            data-controller="ajax confirm"
            data-action="confirm#check ajax#delete"
            data-ajax-url="{{ delete_url }}"

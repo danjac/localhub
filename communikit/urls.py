@@ -17,6 +17,7 @@ urlpatterns = [
     path("", include("communikit.activities.urls")),
     path("comments/", include("communikit.comments.urls")),
     path("events/", include("communikit.events.urls")),
+    path("flags/", include("communikit.flags.urls")),
     path("invites/", include("communikit.invites.urls")),
     path("join-requests/", include("communikit.join_requests.urls")),
     path("notifications/", include("communikit.notifications.urls")),
