@@ -23,8 +23,9 @@ urlpatterns = [
     path("notifications/", include("communikit.notifications.urls")),
     path("photos/", include("communikit.photos.urls")),
     path("posts/", include("communikit.posts.urls")),
-    path("settings/", include("communikit.communities.urls")),
-    path("users/", include("communikit.users.urls")),
+    path("profile/", include("communikit.users.profile_urls")),
+    path("community/settings/", include("communikit.communities.urls")),
+    path("user/settings/", include("communikit.users.settings_urls")),
     path(
         "access-denied/",
         view=community_access_denied_view,

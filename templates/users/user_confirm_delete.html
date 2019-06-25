@@ -5,14 +5,14 @@
 {% load i18n %}
 
 {% block users_content %}
-<form method="POST" action="{% url 'users:delete' %}">
+<form method="POST" action="{% url 'settings:delete' %}">
   {% csrf_token %}
   <p>
   {% blocktrans %}
   Please confirm you want to delete your account. This will also <b>permanently</b> remove all your posts and comments.
   {% endblocktrans %}
   </p>
-  <a class="btn btn-secondary" href="{% url 'users:detail' user.username %}">{% trans "Cancel" %}</a>
+  <a class="btn btn-secondary" href="{% url 'profile:detail' user.username %}">{% trans "Cancel" %}</a>
   <button class="btn btn-warning" type="submit">{% trans "Delete account" %}</button>
 </form>
 

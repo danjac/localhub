@@ -13,7 +13,7 @@
   </li>
   {% endif %}
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'users:update' %}">{% trans "Edit profile" %}</a>
+    <a data-controller="active-link" href="{% url 'settings:update' %}">{% trans "Edit profile" %}</a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'account_email' %}">{% trans "Email addresses" %}</a>
@@ -28,7 +28,7 @@
     <a data-controller="active-link" href="{% url 'account_logout' %}">{% trans "Logout" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'users:delete' %}" class="text-warning">{% trans "Delete account" %}</a>
+    <a data-controller="active-link" href="{% url 'settings:delete' %}" class="text-warning">{% trans "Delete account" %}</a>
   </li>
 </ul>
 

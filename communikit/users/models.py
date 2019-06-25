@@ -65,4 +65,4 @@ class User(AbstractUser):
     objects = UserManager()
 
     def get_absolute_url(self) -> str:
-        return reverse("users:detail", args=[self.username])
+        return reverse("profile:detail", args=[self.username])

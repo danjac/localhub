@@ -72,7 +72,7 @@ def linkify_mentions(content: str) -> str:
     rv = []
     for token in tokens:
         for mention in MENTIONS_RE.findall(token):
-            url = reverse("users:detail", args=[mention])
+            url = reverse("profile:detail", args=[mention])
             token = token.replace(
                 "@" + mention, f'<a href="{url}">@{mention}</a>'
             )

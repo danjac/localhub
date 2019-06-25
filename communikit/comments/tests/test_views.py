@@ -127,7 +127,7 @@ class TestCommentProfileView:
         comment = CommentFactory(activity=post, owner=member.member)
         Like.objects.create(comment=comment, user=UserFactory())
         response = client.get(
-            reverse("comments:profile", args=[comment.owner.username])
+            reverse("profile:comments", args=[comment.owner.username])
         )
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 1

@@ -53,8 +53,10 @@ user_detail_view = UserDetailView.as_view()
 class UserUpdateView(CurrentUserMixin, SuccessMessageMixin, UpdateView):
     fields = ("name", "avatar", "bio")
 
-    success_url = reverse_lazy("users:update")
     success_message = _("Your details have been updated")
+
+    def get_success_url(self) -> str:
+        return self.object.get_absolute_url()
 
 
 user_update_view = UserUpdateView.as_view()

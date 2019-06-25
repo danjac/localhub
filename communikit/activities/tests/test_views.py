@@ -23,7 +23,7 @@ class TestActivityProfileView:
         Like.objects.create(user=UserFactory(), activity=post)
 
         response = client.get(
-            reverse("activities:profile", args=[member.member.username])
+            reverse("profile:activities", args=[member.member.username])
         )
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 2

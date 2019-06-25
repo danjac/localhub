@@ -52,7 +52,7 @@
         <section class="navbar-section">
           {% with current_url=request.resolver_match.url_name %}
           {% if user.is_authenticated %}
-          <a class="btn btn-link text-light" href="{% url 'users:detail' user.username %}">
+          <a class="btn btn-link text-light" href="{% url 'profile:detail' user.username %}">
               {% avatar user %}
               {% user_display user as username %}
               {{ username }}

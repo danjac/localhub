@@ -11,7 +11,7 @@ from communikit.posts.tests.factories import PostFactory
 pytestmark = pytest.mark.django_db
 
 
-class TestIsowner:
+class TestIsOwner:
     def test_is_owner(self, comment: Comment):
         assert is_owner.test(comment.owner, comment)
 

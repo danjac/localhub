@@ -11,7 +11,7 @@
 <p>You can change your primary and other email addresses <a href="{% url 'account_email' %}">here</a>.</p>
 
 <form method="POST"
-      action="{% url 'users:update' %}"
+      action="{% url 'settings:update' %}"
       enctype="multipart/form-data"
       data-controller="form"
       data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload">

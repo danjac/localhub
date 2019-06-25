@@ -5,7 +5,7 @@
 {{ profile.bio.markdown }}
 {% if profile == user %}
 <p class="mt-2">
-    <a href="{% url 'users:update' %}" class="btn btn-primary btn-block">
+    <a href="{% url 'settings:update' %}" class="btn btn-primary btn-block">
         <i class="icon icon-edit"></i> Update your profile
     </a>
 </p>
@@ -18,7 +18,7 @@
     {% if profile == user %}
     <p class="empty-title h5">You do not have a bio</p>
     <div class="empty-action">
-        <a href="{% url 'users:update' %}" class="btn btn-primary btn-block">
+        <a href="{% url 'settings:update' %}" class="btn btn-primary btn-block">
             <i class="icon icon-edit"></i> Update your profile
         </a>
     </div>

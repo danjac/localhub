@@ -65,4 +65,4 @@ class TestUserManager:
 
 class TestUserModel:
     def test_get_absolute_url(self, user: settings.AUTH_USER_MODEL):
-        assert user.get_absolute_url() == f"/users/{user.username}/"
+        assert user.get_absolute_url() == f"/profile/{user.username}/"

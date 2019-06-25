@@ -3,9 +3,19 @@
 
 {% load i18n %}
 {% load thumbnail %}
+{% load rules %}
+
+{% has_perm "communities.moderate_community" user request.community as can_moderate_community %}
 
 <div class="card bg-gray" id="photo-{{ photo.id }}">
   <div class="card-header">
+
+    {% if photo.is_flagged and can_moderate_community %}
+    <div class="toast toast-warning text-center">
+        <a href="{{ photo.get_absolute_url }}">{% trans "This photo has been flagged" %}</a>
+    </div>
+    {% endif %}
+
     <div class="card-title h5">
       {% if is_detail %}
       {{ photo.title }}
