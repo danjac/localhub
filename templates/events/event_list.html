@@ -15,13 +15,13 @@
 {% elif user.is_authenticated %}
 <p class="bg-gray p-2 text-center">
   {% url 'join_requests:create' as join_request_url %}
-  {% blocktrans %}You do not have permission to post events to this site. You can send a request to join this community <a href="{{ join_request_url }}">here</a>.{% endblocktrans %}
+  {% blocktrans %}You do not have permission to submit events to this site. You can send a request to join this community <a href="{{ join_request_url }}">here</a>.{% endblocktrans %}
 </p>
 
 {% else %}
 <p class="bg-gray p-2 text-center">
   {% url 'account_login' as login_url %}
-  {% blocktrans %}Please <a href="{{ login_url }}?next={{ request.get_full_path }}">sign in</a> to post events to this site.{% endblocktrans %}
+  {% blocktrans %}Please <a href="{{ login_url }}?next={{ request.get_full_path }}">sign in</a> to submit events to this site.{% endblocktrans %}
 </p>
 
 {% endif %}
