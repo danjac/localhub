@@ -24,15 +24,15 @@
 <h3>{% avatar profile "avatar-lg" %}{{ profile_name }}</h3>
 
 <ul class="tab tab-block">
-  <li class="tab-item" data-controller="active-link">
+  <li class="tab-item" data-controller="active-link" data-active-link-exact>
     <a data-target="active-link.match"
        href="{% url 'profile:detail' object.username %}">{% trans "About" %}</a>
   </li>
-  <li class="tab-item" data-controller="active-link">
+  <li class="tab-item" data-controller="active-link" data-active-link-exact>
     <a data-target="active-link.match"
        href="{% url 'profile:activities' object.username %}">{% trans "Posts" %}</a>
   </li>
-  <li class="tab-item" data-controller="active-link">
+  <li class="tab-item" data-controller="active-link" data-active-link-exact>
     <a data-target="active-link.match"
        href="{% url 'profile:comments' object.username %}">{% trans "Comments" %}</a>
   </li>
