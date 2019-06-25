@@ -38,24 +38,12 @@ from communikit.core.types import (
     HttpRequestResponse,
     QuerySetList,
 )
-from communikit.core.views import CombinedQuerySetListView
+from communikit.core.views import BreadcrumbsMixin, CombinedQuerySetListView
 from communikit.events.models import Event
 from communikit.flags.forms import FlagForm
 from communikit.photos.models import Photo
 from communikit.posts.models import Post
 from communikit.users.views import UserProfileMixin
-
-
-class BreadcrumbsMixin:
-    breadcrumbs: Optional[BreadcrumbList] = None
-
-    def get_breadcrumbs(self) -> BreadcrumbList:
-        return self.breadcrumbs or []
-
-    def get_context_data(self, **kwargs) -> ContextDict:
-        data = super().get_context_data()
-        data["breadcrumbs"] = self.get_breadcrumbs()
-        return data
 
 
 class ActivityQuerySetMixin(CommunityRequiredMixin):

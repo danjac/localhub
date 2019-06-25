@@ -24,12 +24,13 @@ from django.views.generic.list import MultipleObjectMixin
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.activities.models import Activity
-from communikit.activities.views import BreadcrumbsMixin, SingleActivityMixin
+from communikit.activities.views import SingleActivityMixin
 from communikit.comments.emails import send_deletion_email
 from communikit.comments.forms import CommentForm
 from communikit.comments.models import Comment, Like
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.core.types import BreadcrumbList, ContextDict
+from communikit.core.views import BreadcrumbsMixin
 from communikit.flags.forms import FlagForm
 from communikit.users.views import UserProfileMixin
 
