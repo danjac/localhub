@@ -14,7 +14,7 @@ RUN apk update \
       && apk add gettext \
       && apk add postgresql-client
 
-RUN pip install -U pip
+RUN pip install -U pip pip-tools
 
 # Copy requirements to insure caching
 COPY ./requirements.txt /requirements.txt
