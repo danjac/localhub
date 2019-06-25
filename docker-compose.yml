@@ -48,6 +48,7 @@ services:
     depends_on:
       - postgres
       - mailhog
+      - redis
     volumes:
       - .:/app
     ports:
