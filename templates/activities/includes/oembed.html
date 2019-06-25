@@ -4,10 +4,6 @@
 {% load micawber_tags %}
 {% if object.url %}
 <div>
-  {% if is_detail %}
   {{ object.url|oembed }}
-  {% else %}
-  <a href="{{ object.url }}" target="_blank" rel="nofollow noopener noreferrer">{{ object.get_domain }}</a>
-  {% endif %}
 </div>
 {% endif %}
