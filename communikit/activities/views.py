@@ -86,9 +86,9 @@ class ActivityCreateView(
 
     def get_breadcrumbs(self) -> BreadcrumbList:
         return [
-            (reverse("activities:stream"), _("Home")),
+            (settings.HOME_PAGE_URL, _("Home")),
             (
-                reverse(self.model.list_url_name),
+                self.model.list_url,
                 _(self.model._meta.verbose_name_plural.title()),
             ),
             (self.request.path, _("Submit")),
@@ -137,7 +137,7 @@ class ActivityDeleteView(
     PermissionRequiredMixin, SingleActivityMixin, DeleteView
 ):
     permission_required = "activities.delete_activity"
-    success_url = reverse_lazy("activities:stream")
+    success_url = settings.HOME_PAGE_URL
     success_message = _("Your %s has been deleted")
 
     def get_success_message(self) -> Optional[str]:

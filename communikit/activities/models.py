@@ -118,9 +118,7 @@ class Activity(TimeStampedModel):
 
     objects = ActivityQuerySet.as_manager()
 
-    list_url_name: Optional[str] = None
-
-    detail_url_name: Optional[str] = None
+    list_url: Optional[str] = None
 
     class Meta:
         indexes = [GinIndex(fields=["search_document"])]
@@ -129,7 +127,7 @@ class Activity(TimeStampedModel):
         return slugify(smart_text(self), allow_unicode=False)
 
     def get_absolute_url(self) -> str:
-        return reverse(self.detail_url_name, args=[self.id, self.slugify()])
+        raise NotImplementedError
 
     def get_permalink(self) -> str:
         return self.community.resolve_url(self.get_absolute_url())
@@ -142,11 +140,8 @@ class Activity(TimeStampedModel):
 
     def get_breadcrumbs(self) -> BreadcrumbList:
         return [
-            (reverse("activities:stream"), _("Home")),
-            (
-                reverse(self.list_url_name),
-                _(self._meta.verbose_name_plural.title()),
-            ),
+            (settings.HOME_PAGE_URL, _("Home")),
+            (self.list_url, _(self._meta.verbose_name_plural.title())),
             (self.get_absolute_url(), truncatechars(smart_text(self), 60)),
         ]
 

@@ -5,6 +5,7 @@ from typing import Dict, List
 
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
+from django.urls import reverse, reverse_lazy
 
 from sorl.thumbnail import ImageField
 
@@ -21,11 +22,13 @@ class Photo(Activity):
 
     notifications = GenericRelation(Notification, related_query_name="photo")
 
-    list_url_name = "photos:list"
-    detail_url_name = "photos:detail"
+    list_url = reverse_lazy("photos:list")
 
     def __str__(self) -> str:
         return self.title
+
+    def get_absolute_url(self) -> str:
+        return reverse("photos:detail", args=[self.id, self.slugify()])
 
     def search_index_components(self) -> Dict[str, str]:
         return {"A": self.title, "B": self.description}

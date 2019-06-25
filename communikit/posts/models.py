@@ -5,6 +5,7 @@ from typing import Dict, List, Optional
 
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 
 from model_utils import FieldTracker
@@ -25,11 +26,13 @@ class Post(Activity):
 
     description_tracker = FieldTracker(["description"])
 
-    list_url_name = "posts:list"
-    detail_url_name = "posts:detail"
+    list_url = reverse_lazy("posts:list")
 
     def __str__(self) -> str:
         return self.title or self.get_domain() or _("Post")
+
+    def get_absolute_url(self) -> str:
+        return reverse("posts:detail", args=[self.id, self.slugify()])
 
     def get_domain(self) -> Optional[str]:
         return get_domain(self.url)

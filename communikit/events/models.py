@@ -8,6 +8,7 @@ from typing import Dict, Optional, List, Tuple
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.urls import reverse, reverse_lazy
 from django.utils.encoding import smart_text
 from django.utils.translation import gettext_lazy as _
 
@@ -55,11 +56,13 @@ class Event(Activity):
     description_tracker = FieldTracker(["description"])
     location_tracker = FieldTracker(LOCATION_FIELDS)
 
-    list_url_name = "events:list"
-    detail_url_name = "events:detail"
+    list_url = reverse_lazy("events:list")
 
     def __str__(self) -> str:
         return self.title or self.location
+
+    def get_absolute_url(self) -> str:
+        return reverse("events:detail", args=[self.id, self.slugify()])
 
     def clean(self):
         if self.ends and self.ends < self.starts:
