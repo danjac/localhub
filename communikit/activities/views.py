@@ -348,7 +348,7 @@ class ActivityProfileView(UserProfileMixin, ActivityStreamView):
         data["num_likes"] = (
             Like.objects.for_models(*self.models)
             .filter(
-                recipient=self.request.user, community=self.request.community
+                recipient=self.object, community=self.request.community
             )
             .count()
         )

@@ -254,7 +254,7 @@ class CommentProfileView(MultipleCommentMixin, UserProfileMixin, ListView):
         data["num_likes"] = (
             Like.objects.for_models(Comment)
             .filter(
-                recipient=self.request.user, community=self.request.community
+                recipient=self.object, community=self.request.community
             )
             .count()
         )
