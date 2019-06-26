@@ -119,28 +119,31 @@ class Activity(TimeStampedModel):
     def slugify(self) -> str:
         return slugify(smart_text(self), allow_unicode=False)
 
-    def get_absolute_url(self) -> str:
+    def resolve_url(self, view_name: str, *args) -> str:
         return reverse(
-            f"{self.url_prefix}:detail", args=[self.id, self.slugify()]
+            f"{self.url_prefix}:{view_name}", args=[self.id] + list(args)
         )
 
+    def get_absolute_url(self) -> str:
+        return self.resolve_url("detail", self.slugify())
+
     def get_create_comment_url(self) -> str:
-        return reverse(f"{self.url_prefix}:comment", args=[self.id])
-
-    def get_like_url(self) -> str:
-        return reverse(f"{self.url_prefix}:like", args=[self.id])
-
-    def get_flag_url(self) -> str:
-        return reverse(f"{self.url_prefix}:flag", args=[self.id])
+        return self.resolve_url("comment")
 
     def get_dislike_url(self) -> str:
-        return reverse(f"{self.url_prefix}:dislike", args=[self.id])
+        return self.resolve_url("dislike")
+
+    def get_like_url(self) -> str:
+        return self.resolve_url("like")
+
+    def get_flag_url(self) -> str:
+        return self.resolve_url("flag")
 
     def get_update_url(self) -> str:
-        return reverse(f"{self.url_prefix}:update", args=[self.id])
+        return self.resolve_url("update")
 
     def get_delete_url(self) -> str:
-        return reverse(f"{self.url_prefix}:delete", args=[self.id])
+        return self.resolve_url("delete")
 
     def get_permalink(self) -> str:
         return self.community.resolve_url(self.get_absolute_url())
