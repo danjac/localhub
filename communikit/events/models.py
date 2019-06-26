@@ -59,8 +59,6 @@ class Event(Activity):
     location_tracker = FieldTracker(LOCATION_FIELDS)
     description_tracker = FieldTracker(["description"])
 
-    url_prefix = "events"
-
     def __str__(self) -> str:
         return self.title or self.location
 

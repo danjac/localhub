@@ -29,8 +29,6 @@ class Photo(Activity):
     likes = GenericRelation(Like, related_query_name="post")
     notifications = GenericRelation(Notification, related_query_name="post")
 
-    url_prefix = "photos"
-
     def __str__(self) -> str:
         return self.title
 

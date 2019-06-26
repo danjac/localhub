@@ -29,8 +29,6 @@ class Post(Activity):
 
     description_tracker = FieldTracker(["description"])
 
-    url_prefix = "posts"
-
     def __str__(self) -> str:
         return self.title or self.get_domain() or _("Post")
 

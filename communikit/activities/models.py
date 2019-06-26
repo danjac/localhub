@@ -95,19 +95,17 @@ class Activity(TimeStampedModel):
     # description for notifications etc.
     # description_tracker = FieldTracker(["description"])
 
-    url_prefix: Optional[str] = None
-
     class Meta:
         indexes = [GinIndex(fields=["search_document"])]
         abstract = True
 
     @classmethod
     def get_list_url(cls) -> str:
-        return reverse(f"{cls.url_prefix}:list")
+        return reverse(f"{cls._meta.app_label}:list")
 
     @classmethod
     def get_create_url(cls) -> str:
-        return reverse(f"{cls.url_prefix}:create")
+        return reverse(f"{cls._meta.app_label}:create")
 
     @classmethod
     def get_breadcrumbs_for_model(cls) -> BreadcrumbList:
@@ -121,7 +119,7 @@ class Activity(TimeStampedModel):
 
     def resolve_url(self, view_name: str, *args) -> str:
         return reverse(
-            f"{self.url_prefix}:{view_name}", args=[self.id] + list(args)
+            f"{self._meta.app_label}:{view_name}", args=[self.id] + list(args)
         )
 
     def get_absolute_url(self) -> str:
