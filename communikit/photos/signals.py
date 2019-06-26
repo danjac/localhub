@@ -22,6 +22,11 @@ def update_search_document(instance: Photo, **kwargs):
     transaction.on_commit(instance.make_search_updater())
 
 
+@receiver(post_save, sender=Photo, dispatch_uid="photos.taggit")
+def taggit(instance: Photo, created: bool, **kwargs):
+    transaction.on_commit(lambda: instance.taggit(created))
+
+
 @receiver(post_save, sender=Photo, dispatch_uid="photos.send_notifications")
 def send_notifications(instance: Photo, created: bool, **kwargs):
     def notify():

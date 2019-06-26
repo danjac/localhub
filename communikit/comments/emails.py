@@ -12,6 +12,6 @@ def send_deletion_email(comment: Comment):
     send_mail(
         _("Your comment has been deleted by a moderator"),
         render_to_string("comments/emails/deletion.txt", {"comment": comment}),
-        comment.activity.community.resolve_email("notifications"),
+        comment.community.resolve_email("notifications"),
         [comment.owner.email],
     )

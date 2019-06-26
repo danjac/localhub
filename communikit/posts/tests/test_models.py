@@ -6,6 +6,8 @@ import pytest
 
 from django.db.models import signals
 
+from communikit.comments.models import Comment
+from communikit.comments.tests.factories import CommentFactory
 from communikit.communities.models import Community, Membership
 from communikit.posts.models import Post
 from communikit.posts.tests.factories import PostFactory
@@ -15,6 +17,11 @@ pytestmark = pytest.mark.django_db
 
 
 class TestPostModel:
+    def test_delete_comments_on_delete(self, post: Post):
+        CommentFactory(content_object=post)
+        post.delete()
+        assert Comment.objects.count() == 0
+
     def test_breadcrumbs(self, post: Post):
         breadcrumbs = post.get_breadcrumbs()
         assert len(breadcrumbs) == 3

@@ -9,6 +9,7 @@ from django.test.client import Client
 from django.urls import reverse
 
 from communikit.communities.models import Membership
+from communikit.likes.models import Like
 from communikit.photos.tests.factories import PhotoFactory
 from communikit.photos.models import Photo
 
@@ -109,17 +110,23 @@ class TestPhotoLikeView:
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
         assert response.status_code == 204
-        like = photo.like_set.get()
+        like = Like.objects.get()
         assert like.user == member.member
+        assert like.recipient == photo.owner
 
 
 class TestPhotoDislikeView:
     def test_post(self, client: Client, member: Membership):
         photo = PhotoFactory(community=member.community)
-        photo.like_set.create(user=member.member)
+        Like.objects.create(
+            user=member.member,
+            content_object=photo,
+            community=photo.community,
+            recipient=photo.owner,
+        )
         response = client.post(
             reverse("photos:dislike", args=[photo.id]),
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
         assert response.status_code == 204
-        assert photo.like_set.count() == 0
+        assert Like.objects.count() == 0

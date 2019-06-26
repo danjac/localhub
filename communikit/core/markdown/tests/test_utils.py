@@ -43,7 +43,7 @@ class TestLinkifyHashtags:
         content = "tags: #coding #opensource #coding2019"
         replaced = linkify_hashtags(content)
         assert (
-            replaced == 'tags: <a href="/search/?q=%23coding">#coding</a>'
-            ' <a href="/search/?q=%23opensource">#opensource</a>'
-            ' <a href="/search/?q=%23coding2019">#coding2019</a>'
+            replaced == 'tags: <a href="/tag/coding/">#coding</a>'
+            ' <a href="/tag/opensource/">#opensource</a>'
+            ' <a href="/tag/coding2019/">#coding2019</a>'
         )

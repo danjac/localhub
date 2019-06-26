@@ -4,7 +4,7 @@
 import operator
 
 from functools import reduce
-from typing import Callable, Optional
+from typing import Callable, List, Optional
 
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
@@ -22,23 +22,25 @@ from django.utils.encoding import smart_text
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
 
-from model_utils.managers import InheritanceQuerySetMixin
 from model_utils.models import TimeStampedModel
 
+from taggit.managers import TaggableManager
 
+from communikit.comments.models import Comment, CommentAnnotationsQuerySetMixin
 from communikit.communities.models import Community
+from communikit.core.markdown.fields import MarkdownField
 from communikit.core.types import BreadcrumbList
-from communikit.flags.models import Flag
+from communikit.flags.models import Flag, FlagAnnotationsQuerySetMixin
+from communikit.likes.models import Like, LikeAnnotationsQuerySetMixin
+from communikit.notifications.models import Notification
 
 
-class ActivityQuerySet(InheritanceQuerySetMixin, models.QuerySet):
-    """
-    Note: InheritanceQuerySet is buggy, it doesn't handle
-    multple annotations:
-    https://github.com/jazzband/django-model-utils/issues/312
-    so we'll use it only when absolutely necessary.
-    """
-
+class ActivityQuerySet(
+    CommentAnnotationsQuerySetMixin,
+    FlagAnnotationsQuerySetMixin,
+    LikeAnnotationsQuerySetMixin,
+    models.QuerySet,
+):
     def with_common_annotations(
         self, community: Community, user: settings.AUTH_USER_MODEL
     ) -> models.QuerySet:
@@ -56,43 +58,6 @@ class ActivityQuerySet(InheritanceQuerySetMixin, models.QuerySet):
             if user.has_perm("communities.moderate_community", community):
                 qs = qs.with_is_flagged()
         return qs
-
-    def with_num_comments(self) -> models.QuerySet:
-        return self.annotate(
-            num_comments=models.Count("comment", distinct=True)
-        )
-
-    def with_num_likes(self) -> models.QuerySet:
-        return self.annotate(num_likes=models.Count("like", distinct=True))
-
-    def is_flagged(
-        self, user: Optional[settings.AUTH_USER_MODEL] = None
-    ) -> models.Exists:
-
-        qs = Flag.objects.filter(
-            object_id=models.OuterRef("pk"),
-            content_type=ContentType.objects.get_for_model(self.model),
-        )
-        if user:
-            qs = qs.filter(user=user)
-        return models.Exists(qs)
-
-    def with_is_flagged(self) -> models.QuerySet:
-        return self.annotate(is_flagged=self.is_flagged())
-
-    def with_has_flagged(
-        self, user: settings.AUTH_USER_MODEL
-    ) -> models.QuerySet:
-        return self.annotate(has_flagged=self.is_flagged(user))
-
-    def with_has_liked(
-        self, user: settings.AUTH_USER_MODEL
-    ) -> models.QuerySet:
-        return self.annotate(
-            has_liked=models.Exists(
-                Like.objects.filter(user=user, activity=models.OuterRef("pk"))
-            )
-        )
 
     def search(self, search_term: str) -> models.QuerySet:
         if not search_term:
@@ -114,34 +79,89 @@ class Activity(TimeStampedModel):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
+    description = MarkdownField(blank=True)
+
+    tags = TaggableManager()
+
     search_document = SearchVectorField(null=True, editable=False)
 
     objects = ActivityQuerySet.as_manager()
 
-    list_url: Optional[str] = None
+    # Note: due to bug in FieldTracker we can't define it in abstract base
+    # class and have to define on each subclass.
+    # https://github.com/jazzband/django-model-utils/issues/275
+
+    # add following to all Activity subclasses in order to track
+    # description for notifications etc.
+    # description_tracker = FieldTracker(["description"])
+
+    url_prefix: Optional[str] = None
 
     class Meta:
         indexes = [GinIndex(fields=["search_document"])]
+        abstract = True
+
+    @classmethod
+    def get_list_url(cls) -> str:
+        return reverse(f"{cls.url_prefix}:list")
+
+    @classmethod
+    def get_create_url(cls) -> str:
+        return reverse(f"{cls.url_prefix}:create")
+
+    @classmethod
+    def get_breadcrumbs_for_model(cls) -> BreadcrumbList:
+        return [
+            (settings.HOME_PAGE_URL, _("Home")),
+            (cls.get_list_url(), _(cls._meta.verbose_name_plural.title())),
+        ]
 
     def slugify(self) -> str:
         return slugify(smart_text(self), allow_unicode=False)
 
     def get_absolute_url(self) -> str:
-        raise NotImplementedError
+        return reverse(
+            f"{self.url_prefix}:detail", args=[self.id, self.slugify()]
+        )
+
+    def get_create_comment_url(self) -> str:
+        return reverse(f"{self.url_prefix}:comment", args=[self.id])
+
+    def get_like_url(self) -> str:
+        return reverse(f"{self.url_prefix}:like", args=[self.id])
+
+    def get_flag_url(self) -> str:
+        return reverse(f"{self.url_prefix}:flag", args=[self.id])
+
+    def get_dislike_url(self) -> str:
+        return reverse(f"{self.url_prefix}:dislike", args=[self.id])
+
+    def get_update_url(self) -> str:
+        return reverse(f"{self.url_prefix}:update", args=[self.id])
+
+    def get_delete_url(self) -> str:
+        return reverse(f"{self.url_prefix}:delete", args=[self.id])
 
     def get_permalink(self) -> str:
         return self.community.resolve_url(self.get_absolute_url())
 
-    def get_flags(self) -> models.QuerySet:
-        return Flag.objects.filter(
+    def get_generic_related(self, model: models.Model) -> models.QuerySet:
+        return model.objects.filter(
             object_id=self.pk,
             content_type=ContentType.objects.get_for_model(self),
         )
 
+    def get_likes(self) -> models.QuerySet:
+        return self.get_generic_related(Like)
+
+    def get_flags(self) -> models.QuerySet:
+        return self.get_generic_related(Flag)
+
+    def get_comments(self) -> models.QuerySet:
+        return self.get_generic_related(Comment)
+
     def get_breadcrumbs(self) -> BreadcrumbList:
-        return [
-            (settings.HOME_PAGE_URL, _("Home")),
-            (self.list_url, _(self._meta.verbose_name_plural.title())),
+        return self.__class__.get_breadcrumbs_for_model() + [
             (self.get_absolute_url(), truncatechars(smart_text(self), 60)),
         ]
 
@@ -166,12 +186,45 @@ class Activity(TimeStampedModel):
 
         return on_commit
 
+    def taggit(self, created: bool):
+        if created or self.description_tracker.changed():
+            hashtags = self.description.extract_hashtags()
+            if hashtags:
+                self.tags.set(*hashtags, clear=True)
+            else:
+                self.tags.clear()
 
-class Like(TimeStampedModel):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+"
-    )
-    activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = ("user", "activity")
+    def notify(self, created: bool) -> List[Notification]:
+        notifications: List[Notification] = []
+        # notify anyone @mentioned in the description
+        if self.description and (
+            created or self.description_tracker.changed()
+        ):
+            notifications += [
+                Notification(
+                    content_object=self,
+                    actor=self.owner,
+                    community=self.community,
+                    recipient=recipient,
+                    verb="mentioned",
+                )
+                for recipient in self.community.members.matches_usernames(
+                    self.description.extract_mentions()
+                ).exclude(pk=self.owner_id)
+            ]
+        # notify all community moderators
+        verb = "created" if created else "updated"
+        notifications += [
+            Notification(
+                content_object=self,
+                recipient=recipient,
+                actor=self.owner,
+                community=self.community,
+                verb=verb,
+            )
+            for recipient in self.community.get_moderators().exclude(
+                pk=self.owner_id
+            )
+        ]
+        Notification.objects.bulk_create(notifications)
+        return notifications

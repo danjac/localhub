@@ -10,8 +10,10 @@ from django.conf import settings
 from django.test.client import Client
 from django.urls import reverse
 
+from communikit.comments.models import Comment
 from communikit.communities.models import Community, Membership
 from communikit.flags.models import Flag
+from communikit.likes.models import Like
 from communikit.notifications.models import Notification
 from communikit.posts.tests.factories import PostFactory
 from communikit.posts.models import Post
@@ -64,6 +66,31 @@ class TestPostUpdateView:
         assert post_for_member.title == "UPDATED"
 
 
+class TestPostCommentCreateView:
+    def test_get(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community)
+        response = client.get(reverse("posts:comment", args=[post.id]))
+        assert response.status_code == 200
+
+    def test_post(
+        self, client: Client, member: Membership, transactional_db: Callable
+    ):
+        post = PostFactory(community=member.community)
+        response = client.post(
+            reverse("posts:comment", args=[post.id]), {"content": "test"}
+        )
+        assert response.url == post.get_absolute_url()
+        comment = Comment.objects.get()
+        assert comment.owner == member.member
+        assert comment.content_object == post
+
+        notification = Notification.objects.get(recipient=post.owner)
+        assert notification.verb == "commented"
+
+        assert len(mail.outbox) == 1
+        assert mail.outbox[0].to[0] == post.owner.email
+
+
 class TestPostDeleteView:
     def test_get(self, client: Client, post_for_member: Post):
         # test confirmation page for non-JS clients
@@ -107,20 +134,25 @@ class TestPostLikeView:
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
         assert response.status_code == 204
-        like = post.like_set.get()
+        like = Like.objects.get()
         assert like.user == member.member
 
 
 class TestPostDislikeView:
     def test_post(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
-        post.like_set.create(user=member.member)
+        Like.objects.create(
+            user=member.member,
+            content_object=post,
+            community=post.community,
+            recipient=post.owner,
+        )
         response = client.post(
             reverse("posts:dislike", args=[post.id]),
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
         assert response.status_code == 204
-        assert post.like_set.count() == 0
+        assert Like.objects.count() == 0
 
 
 class TestFlagView:

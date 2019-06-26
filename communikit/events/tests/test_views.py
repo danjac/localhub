@@ -10,6 +10,7 @@ from django.urls import reverse
 from communikit.communities.models import Community, Membership
 from communikit.events.models import Event
 from communikit.events.tests.factories import EventFactory
+from communikit.likes.models import Like
 
 pytestmark = pytest.mark.django_db
 
@@ -121,17 +122,22 @@ class TestEventLikeView:
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
         assert response.status_code == 204
-        like = event.like_set.get()
+        like = Like.objects.get()
         assert like.user == member.member
 
 
 class TestEventDislikeView:
     def test_post(self, client: Client, member: Membership):
         event = EventFactory(community=member.community)
-        event.like_set.create(user=member.member)
+        Like.objects.create(
+            user=member.member,
+            content_object=event,
+            community=event.community,
+            recipient=event.owner,
+        )
         response = client.post(
             reverse("events:dislike", args=[event.id]),
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
         assert response.status_code == 204
-        assert event.like_set.count() == 0
+        assert Like.objects.count() == 0

@@ -24,14 +24,14 @@ from django.views.generic.list import MultipleObjectMixin
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.activities.models import Activity
-from communikit.activities.views import SingleActivityMixin
 from communikit.comments.emails import send_deletion_email
 from communikit.comments.forms import CommentForm
-from communikit.comments.models import Comment, Like
+from communikit.comments.models import Comment
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.core.types import BreadcrumbList, ContextDict
 from communikit.core.views import BreadcrumbsMixin
 from communikit.flags.forms import FlagForm
+from communikit.likes.models import Like
 from communikit.users.views import UserProfileMixin
 
 
@@ -40,8 +40,8 @@ class CommentQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self) -> QuerySet:
         return (
             Comment.objects.get_queryset()
-            .filter(activity__community=self.request.community)
-            .select_related("owner", "activity", "activity__community")
+            .filter(community=self.request.community)
+            .select_related("owner", "community")
         )
 
 
@@ -56,9 +56,7 @@ class SingleCommentMixin(CommentQuerySetMixin, SingleObjectMixin):
 class CommentParentMixin:
     @cached_property
     def parent(self) -> Activity:
-        return Activity.objects.select_related(
-            "community", "owner"
-        ).get_subclass(pk=self.object.activity_id)
+        return self.object.content_object
 
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
@@ -68,39 +66,6 @@ class CommentParentMixin:
 
 class SingleCommentView(SingleCommentMixin, View):
     ...
-
-
-class CommentCreateView(
-    PermissionRequiredMixin, SingleActivityMixin, FormView
-):
-    form_class = CommentForm
-    template_name = "comments/comment_form.html"
-    permission_required = "comments.create_comment"
-    model = Activity
-
-    def dispatch(self, request, *args, **kwargs) -> HttpResponse:
-        self.object = self.get_object()
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_queryset(self) -> QuerySet:
-        return super().get_queryset().select_subclasses()
-
-    def get_permission_object(self) -> Activity:
-        return self.object
-
-    def get_success_url(self) -> str:
-        return self.object.get_absolute_url()
-
-    def form_valid(self, form) -> HttpResponse:
-        comment = form.save(commit=False)
-        comment.activity = self.object
-        comment.owner = self.request.user
-        comment.save()
-        messages.success(self.request, _("Your comment has been posted"))
-        return HttpResponseRedirect(self.get_success_url())
-
-
-comment_create_view = CommentCreateView.as_view()
 
 
 class CommentDetailView(
@@ -189,7 +154,12 @@ class CommentLikeView(
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         try:
-            Like.objects.create(user=request.user, comment=self.object)
+            Like.objects.create(
+                user=request.user,
+                community=request.community,
+                recipient=self.object.owner,
+                content_object=self.object,
+            )
         except IntegrityError:
             # dupe, ignore
             pass
@@ -281,9 +251,13 @@ class CommentProfileView(MultipleCommentMixin, UserProfileMixin, ListView):
 
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
-        data["num_likes"] = Like.objects.filter(
-            comment__owner=self.object
-        ).count()
+        data["num_likes"] = (
+            Like.objects.for_models(Comment)
+            .filter(
+                recipient=self.request.user, community=self.request.community
+            )
+            .count()
+        )
         return data
 
 

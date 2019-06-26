@@ -26,7 +26,7 @@ class TestFlagModel:
         self, user: settings.AUTH_USER_MODEL, moderator: Membership
     ):
         post = PostFactory(community=moderator.community)
-        comment = CommentFactory(activity=post)
+        comment = CommentFactory(content_object=post)
         flag = Flag.objects.create(
             content_object=comment, user=user, community=post.community
         )

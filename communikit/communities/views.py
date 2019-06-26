@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import redirect_to_login
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import QuerySet
+from django.db.models import Q, QuerySet
 from django.http import (
     Http404,
     HttpRequest,
@@ -179,10 +179,14 @@ class MemberAutocompleteListView(MembershipListView):
     def get_queryset(self) -> QuerySet:
         qs = super().get_queryset()
         search_term = self.request.GET.get("q", "").strip()
-        # TBD: add users to full text search
         if search_term:
             return (
-                qs.filter(member__username__icontains=search_term)
+                qs.filter(
+                    Q(
+                        Q(member__username__icontains=search_term)
+                        | Q(member__name__icontains=search_term)
+                    )
+                )
                 .select_related("member")
                 .order_by("member__username")
             )

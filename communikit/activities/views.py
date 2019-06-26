@@ -10,7 +10,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.urls import URLPattern, path, reverse, reverse_lazy
+from django.urls import URLPattern, path
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     CreateView,
@@ -26,9 +26,7 @@ from django.views.generic.list import MultipleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
-# from silk.profiling.profiler import silk_profile
-
-from communikit.activities.models import Activity, Like
+from communikit.activities.models import Activity  # , Like
 from communikit.comments.forms import CommentForm
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
@@ -41,6 +39,7 @@ from communikit.core.types import (
 from communikit.core.views import BreadcrumbsMixin, CombinedQuerySetListView
 from communikit.events.models import Event
 from communikit.flags.forms import FlagForm
+from communikit.likes.models import Like
 from communikit.photos.models import Photo
 from communikit.posts.models import Post
 from communikit.users.views import UserProfileMixin
@@ -85,13 +84,8 @@ class ActivityCreateView(
         return self.success_message
 
     def get_breadcrumbs(self) -> BreadcrumbList:
-        return [
-            (settings.HOME_PAGE_URL, _("Home")),
-            (
-                self.model.list_url,
-                _(self.model._meta.verbose_name_plural.title()),
-            ),
-            (self.request.path, _("Submit")),
+        return self.model.get_breadcrumbs_for_model() + [
+            (self.request.path, _("Submit"))
         ]
 
     def form_valid(self, form) -> HttpResponse:
@@ -155,6 +149,28 @@ class ActivityDeleteView(
 
 
 class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        if self.request.user.has_perm(
+            "communities.moderate_community", self.request.community
+        ):
+            data["flags"] = self.get_flags()
+
+        data["comments"] = self.get_comments()
+        if self.request.user.has_perm(
+            "comments.create_comment", self.request.community
+        ):
+            data.update({"comment_form": CommentForm()})
+
+        return data
+
+    def get_queryset(self) -> QuerySet:
+        return (
+            super()
+            .get_queryset()
+            .with_common_annotations(self.request.community, self.request.user)
+        )
+
     def get_breadcrumbs(self) -> BreadcrumbList:
         return self.object.get_breadcrumbs()
 
@@ -165,39 +181,11 @@ class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
 
     def get_comments(self) -> QuerySet:
         return (
-            self.object.comment_set.with_common_annotations(
-                self.request.community, self.request.user
-            )
-            .select_related("owner", "activity", "activity__community")
+            self.object.get_comments()
+            .with_common_annotations(self.request.community, self.request.user)
+            .select_related("owner", "community")
             .order_by("created")
         )
-
-    def get_queryset(self) -> QuerySet:
-        return (
-            super()
-            .get_queryset()
-            .with_common_annotations(self.request.community, self.request.user)
-        )
-
-    def get_context_data(self, **kwargs) -> ContextDict:
-        data = super().get_context_data(**kwargs)
-        if self.request.user.has_perm(
-            "communities.moderate_community", self.request.community
-        ):
-            data["flags"] = self.get_flags()
-
-        data["comments"] = self.get_comments()
-        if self.request.user.has_perm("comments.create_comment", self.object):
-            data.update(
-                {
-                    "comment_form": CommentForm(),
-                    "create_comment_url": reverse(
-                        "comments:create", args=[self.object.id]
-                    ),
-                }
-            )
-
-        return data
 
 
 class ActivityLikeView(PermissionRequiredMixin, SingleActivityView):
@@ -206,7 +194,12 @@ class ActivityLikeView(PermissionRequiredMixin, SingleActivityView):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         try:
-            Like.objects.create(user=request.user, activity=self.object)
+            Like.objects.create(
+                user=request.user,
+                community=request.community,
+                recipient=self.object.owner,
+                content_object=self.object,
+            )
         except IntegrityError:
             # dupe, ignore
             pass
@@ -218,7 +211,7 @@ class ActivityLikeView(PermissionRequiredMixin, SingleActivityView):
 class ActivityDislikeView(LoginRequiredMixin, SingleActivityView):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
-        Like.objects.filter(user=request.user, activity=self.object).delete()
+        self.object.get_likes().filter(user=request.user).delete()
         if request.is_ajax():
             return HttpResponse(status=204)
         return HttpResponseRedirect(self.object.get_absolute_url())
@@ -299,6 +292,26 @@ class ActivityStreamView(CommunityRequiredMixin, CombinedQuerySetListView):
 activity_stream_view = ActivityStreamView.as_view()
 
 
+class ActivityTagView(ActivityStreamView):
+
+    template_name = "activities/tag.html"
+
+    def get_queryset(self, model: Type[Activity]) -> QuerySet:
+        return (
+            super()
+            .get_queryset(model)
+            .filter(tags__name__in=[self.kwargs["tag"]])
+        )
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["tag"] = self.kwargs["tag"]
+        return data
+
+
+activity_tag_view = ActivityTagView.as_view()
+
+
 class ActivitySearchView(ActivityStreamView):
     template_name = "activities/search.html"
 
@@ -332,21 +345,57 @@ class ActivityProfileView(UserProfileMixin, ActivityStreamView):
 
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
-        data["num_likes"] = Like.objects.filter(
-            activity__owner=self.object
-        ).count()
+        data["num_likes"] = (
+            Like.objects.for_models(*self.models)
+            .filter(
+                recipient=self.request.user, community=self.request.community
+            )
+            .count()
+        )
         return data
 
 
 activity_profile_view = ActivityProfileView.as_view()
 
 
+class ActivityCommentCreateView(
+    PermissionRequiredMixin, SingleActivityMixin, FormView
+):
+    form_class = CommentForm
+    template_name = "comments/comment_form.html"
+    permission_required = "comments.create_comment"
+    model = Activity
+
+    def dispatch(self, request, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_permission_object(self) -> Activity:
+        # TBD: we probably want the ability to "lock" comments
+        # and permission should prob. move to activities
+        return self.request.community
+
+    def get_success_url(self) -> str:
+        return self.object.get_absolute_url()
+
+    def form_valid(self, form) -> HttpResponse:
+        comment = form.save(commit=False)
+        comment.content_object = self.object
+        comment.community = self.request.community
+        comment.owner = self.request.user
+        comment.save()
+        messages.success(self.request, _("Your comment has been posted"))
+        return HttpResponseRedirect(self.get_success_url())
+
+
 class ActivityViewSet:
 
     model = None
     form_class = None
+    url_prefix = None
 
     create_view_class = ActivityCreateView
+    create_comment_view_class = ActivityCommentCreateView
     delete_view_class = ActivityDeleteView
     detail_view_class = ActivityDetailView
     dislike_view_class = ActivityDislikeView
@@ -364,6 +413,10 @@ class ActivityViewSet:
         return self.create_view_class.as_view(
             model=self.model, form_class=self.form_class
         )
+
+    @property
+    def create_comment_view(self) -> HttpRequestResponse:
+        return self.create_comment_view_class.as_view(model=self.model)
 
     @property
     def update_view(self) -> HttpRequestResponse:
@@ -400,6 +453,9 @@ class ActivityViewSet:
         return [
             path("", self.list_view, name="list"),
             path("~create", self.create_view, name="create"),
+            path(
+                "<int:pk>/~comment/", self.create_comment_view, name="comment"
+            ),
             path("<int:pk>/~delete/", self.delete_view, name="delete"),
             path("<int:pk>/~dislike/", self.dislike_view, name="dislike"),
             path("<int:pk>/~flag/", self.flag_view, name="flag"),

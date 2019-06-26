@@ -8,7 +8,7 @@ from django.utils.safestring import mark_safe
 
 from markdownx.models import MarkdownxField
 
-from .utils import markdownify, extract_mentions
+from .utils import markdownify, extract_mentions, extract_hashtags
 
 
 class MarkdownProxy(str):
@@ -17,6 +17,9 @@ class MarkdownProxy(str):
 
     def extract_mentions(self) -> Set[str]:
         return extract_mentions(self)
+
+    def extract_hashtags(self) -> Set[str]:
+        return extract_hashtags(self)
 
 
 class MarkdownFieldDescriptor:

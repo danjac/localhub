@@ -50,6 +50,7 @@ class Base(Configuration):
         "micawber.contrib.mcdjango",
         "rules.apps.AutodiscoverRulesConfig",
         "sorl.thumbnail",
+        "taggit",
         "widget_tweaks",
     ]
 
@@ -62,6 +63,7 @@ class Base(Configuration):
         "communikit.flags.apps.FlagsConfig",
         "communikit.invites.apps.InvitesConfig",
         "communikit.join_requests.apps.JoinRequestsConfig",
+        "communikit.likes.apps.LikesConfig",
         "communikit.notifications.apps.NotificationsConfig",
         "communikit.photos.apps.PhotosConfig",
         "communikit.posts.apps.PostsConfig",
@@ -157,6 +159,10 @@ class Base(Configuration):
 
     CELERY_RESULT_BACKEND = CELERY_BROKER_URL = REDIS_URL
     CELERY_TASK_SERIALIZER = CELERY_RESULT_SERIALIZER = "json"
+
+    # https://django-taggit.readthedocs.io/en/latest/getting_started.html
+
+    TAGGIT_CASE_INSENSITIVE = True
 
     @property
     def BASE_DIR(self) -> str:
