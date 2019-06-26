@@ -145,24 +145,26 @@ class Activity(TimeStampedModel):
     def get_permalink(self) -> str:
         return self.community.resolve_url(self.get_absolute_url())
 
-    def get_generic_related(self, model: models.Model) -> models.QuerySet:
+    def get_generic_related_objects(
+        self, model: models.Model
+    ) -> models.QuerySet:
         return model.objects.filter(
             object_id=self.pk,
             content_type=ContentType.objects.get_for_model(self),
         )
 
     def get_likes(self) -> models.QuerySet:
-        return self.get_generic_related(Like)
+        return self.get_generic_related_objects(Like)
 
     def get_flags(self) -> models.QuerySet:
-        return self.get_generic_related(Flag)
+        return self.get_generic_related_objects(Flag)
 
     def get_comments(self) -> models.QuerySet:
-        return self.get_generic_related(Comment)
+        return self.get_generic_related_objects(Comment)
 
     def get_breadcrumbs(self) -> BreadcrumbList:
         return self.__class__.get_breadcrumbs_for_model() + [
-            (self.get_absolute_url(), truncatechars(smart_text(self), 60)),
+            (self.get_absolute_url(), truncatechars(smart_text(self), 60))
         ]
 
     # https://simonwillison.net/2017/Oct/5/django-postgresql-faceted-search/

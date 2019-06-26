@@ -76,17 +76,6 @@ class TestPermissions:
     ):
         assert not user.has_perm("comments.flag_comment", comment)
 
-    def test_can_create_comment_if_member(
-        self, post: PostFactory, user: settings.AUTH_USER_MODEL
-    ):
-        Membership.objects.create(member=user, community=post.community)
-        assert user.has_perm("comments.create_comment", post.community)
-
-    def test_can_create_comment_if_not_member(
-        self, post: PostFactory, user: settings.AUTH_USER_MODEL
-    ):
-        assert not user.has_perm("comments.create_comment", post.community)
-
     def test_can_change_comment_if_owner(self, comment: Comment):
         assert comment.owner.has_perm("comments.change_comment", comment)
 

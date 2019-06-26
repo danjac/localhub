@@ -28,7 +28,6 @@ def is_comment_community_moderator(
     return is_moderator.test(user, comment.community)
 
 
-rules.add_perm("comments.create_comment", is_member)
 rules.add_perm("comments.change_comment", is_owner)
 rules.add_perm(
     "comments.delete_comment", is_owner | is_comment_community_moderator

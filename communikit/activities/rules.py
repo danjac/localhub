@@ -36,3 +36,4 @@ rules.add_perm(
 rules.add_perm(
     "activities.like_activity", is_activity_community_member & ~is_owner
 )
+rules.add_perm("activities.create_comment", is_activity_community_member)

@@ -158,7 +158,7 @@ class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
 
         data["comments"] = self.get_comments()
         if self.request.user.has_perm(
-            "comments.create_comment", self.request.community
+            "activities.create_comment", self.object
         ):
             data.update({"comment_form": CommentForm()})
 
@@ -363,7 +363,7 @@ class ActivityCommentCreateView(
 ):
     form_class = CommentForm
     template_name = "comments/comment_form.html"
-    permission_required = "comments.create_comment"
+    permission_required = "activities.create_comment"
     model = Activity
 
     def dispatch(self, request, *args, **kwargs) -> HttpResponse:
@@ -371,9 +371,7 @@ class ActivityCommentCreateView(
         return super().dispatch(request, *args, **kwargs)
 
     def get_permission_object(self) -> Activity:
-        # TBD: we probably want the ability to "lock" comments
-        # and permission should prob. move to activities
-        return self.request.community
+        return self.object
 
     def get_success_url(self) -> str:
         return self.object.get_absolute_url()
