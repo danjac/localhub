@@ -8,7 +8,6 @@ from typing import Set
 
 from bleach.linkifier import LinkifyFilter
 
-from django.http import QueryDict
 from django.urls import reverse
 
 from markdownx.utils import markdownify as default_markdownify
@@ -82,19 +81,26 @@ def linkify_mentions(content: str) -> str:
     return " ".join(rv)
 
 
+def extract_hashtags(content: str) -> Set[str]:
+    return set(
+        [
+            hashtag
+            for token in content.split(" ")
+            for hashtag in HASHTAGS_RE.findall(token)
+        ]
+    )
+
+
 def linkify_hashtags(content: str) -> str:
     """
     Replace all #hashtags in text with links to some tag search page.
     """
     tokens = content.split(" ")
     rv = []
-    search_url = reverse("activities:search")
     for token in tokens:
 
         for tag in HASHTAGS_RE.findall(token):
-            qd = QueryDict(mutable=True)
-            qd["q"] = f"#{tag}"
-            url = search_url + f"?{qd.urlencode()}"
+            url = reverse("activities:tag", args=[tag])
             token = token.replace("#" + tag, f'<a href="{url}">#{tag}</a>')
 
         rv.append(token)

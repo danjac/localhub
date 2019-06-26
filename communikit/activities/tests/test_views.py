@@ -6,9 +6,9 @@ import pytest
 from django.test.client import Client
 from django.urls import reverse
 
-from communikit.activities.models import Like
-from communikit.communities.models import Membership, Community
+from communikit.communities.models import Community, Membership
 from communikit.events.tests.factories import EventFactory
+from communikit.likes.models import Like
 from communikit.posts.tests.factories import PostFactory
 from communikit.users.tests.factories import UserFactory
 
@@ -20,7 +20,12 @@ class TestActivityProfileView:
         post = PostFactory(community=member.community, owner=member.member)
         EventFactory(community=member.community, owner=member.member)
 
-        Like.objects.create(user=UserFactory(), activity=post)
+        Like.objects.create(
+            user=UserFactory(),
+            content_object=post,
+            community=post.community,
+            recipient=post.owner,
+        )
 
         response = client.get(
             reverse("profile:activities", args=[member.member.username])

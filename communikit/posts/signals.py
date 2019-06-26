@@ -11,6 +11,7 @@ from communikit.posts import tasks
 from communikit.posts.models import Post
 
 
+
 @receiver(post_delete, sender=Post, dispatch_uid="posts.delete_flags")
 def delete_flags(instance: Post, **kwargs):
     transaction.on_commit(lambda: instance.get_flags().delete())
@@ -26,6 +27,11 @@ def fetch_title_from_url(instance: Post, **kwargs):
 @receiver(post_save, sender=Post, dispatch_uid="posts.update_search_document")
 def update_search_document(instance: Post, **kwargs):
     transaction.on_commit(instance.make_search_updater())
+
+
+@receiver(post_save, sender=Post, dispatch_uid="posts.taggit")
+def taggit(instance: Post, created: bool, **kwargs):
+    transaction.on_commit(lambda: instance.taggit(created))
 
 
 @receiver(post_save, sender=Post, dispatch_uid="posts.send_notifications")

@@ -17,6 +17,7 @@ django-model-utils
 django-redis
 django-silk
 django-storages
+django-taggit
 django-widget-tweaks
 factory-boy
 flower

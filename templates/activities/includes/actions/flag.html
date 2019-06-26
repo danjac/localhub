@@ -1,0 +1,13 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% load rules %}
+{% has_perm "activities.flag_activity" user object as can_flag %}
+{% if can_flag and not object.has_flagged %}
+<a class="btn btn-sm" href="{{ object.get_flag_url }}">
+  <i class="icon icon-flag"></i> {% trans "Flag" %}
+</a>
+{% endif %}
+
+

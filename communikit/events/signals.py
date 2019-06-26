@@ -33,6 +33,11 @@ def update_search_document(instance: Event, **kwargs):
     transaction.on_commit(instance.make_search_updater())
 
 
+@receiver(post_save, sender=Event, dispatch_uid="events.taggit")
+def taggit(instance: Event, created: bool, **kwargs):
+    transaction.on_commit(lambda: instance.taggit(created))
+
+
 @receiver(post_save, sender=Event, dispatch_uid="events.send_notifications")
 def send_notifications(instance: Event, created: bool, **kwargs):
     def notify():
