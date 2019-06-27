@@ -51,10 +51,10 @@ class Event(Activity):
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
 
-    comments = GenericRelation(Comment, related_query_name="post")
-    flags = GenericRelation(Flag, related_query_name="post")
-    likes = GenericRelation(Like, related_query_name="post")
-    notifications = GenericRelation(Notification, related_query_name="post")
+    comments = GenericRelation(Comment, related_query_name="event")
+    flags = GenericRelation(Flag, related_query_name="event")
+    likes = GenericRelation(Like, related_query_name="event")
+    notifications = GenericRelation(Notification, related_query_name="event")
 
     location_tracker = FieldTracker(LOCATION_FIELDS)
     description_tracker = FieldTracker(["description"])

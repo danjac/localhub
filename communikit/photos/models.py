@@ -24,10 +24,10 @@ class Photo(Activity):
 
     description_tracker = FieldTracker(["description"])
 
-    comments = GenericRelation(Comment, related_query_name="post")
-    flags = GenericRelation(Flag, related_query_name="post")
-    likes = GenericRelation(Like, related_query_name="post")
-    notifications = GenericRelation(Notification, related_query_name="post")
+    comments = GenericRelation(Comment, related_query_name="photo")
+    flags = GenericRelation(Flag, related_query_name="photo")
+    likes = GenericRelation(Like, related_query_name="photo")
+    notifications = GenericRelation(Notification, related_query_name="photo")
 
     def __str__(self) -> str:
         return self.title
