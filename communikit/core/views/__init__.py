@@ -3,15 +3,15 @@
 
 from .breadcrumbs import BreadcrumbsMixin
 
-from .combined import (
-    CombinedQuerySetContextMixin,
-    CombinedQuerySetListView,
-    CombinedQuerySetMixin,
+from .multiple_queryset import (
+    MultpleQuerySetContextMixin,
+    MultpleQuerySetListView,
+    MultpleQuerySetMixin,
 )
 
 __all__ = [
     "BreadcrumbsMixin",
-    "CombinedQuerySetContextMixin",
-    "CombinedQuerySetListView",
-    "CombinedQuerySetMixin",
+    "MultpleQuerySetContextMixin",
+    "MultpleQuerySetListView",
+    "MultpleQuerySetMixin",
 ]

@@ -36,7 +36,7 @@ from communikit.core.types import (
     HttpRequestResponse,
     QuerySetList,
 )
-from communikit.core.views import BreadcrumbsMixin, CombinedQuerySetListView
+from communikit.core.views import BreadcrumbsMixin, MultipleQuerySetListView
 from communikit.events.models import Event
 from communikit.flags.forms import FlagForm
 from communikit.likes.models import Like
@@ -271,7 +271,7 @@ class ActivityFlagView(
 activity_flag_view = ActivityFlagView.as_view()
 
 
-class ActivityStreamView(CommunityRequiredMixin, CombinedQuerySetListView):
+class ActivityStreamView(CommunityRequiredMixin, MultipleQuerySetListView):
     template_name = "activities/stream.html"
     ordering = "created"
     allow_empty = True
@@ -347,9 +347,7 @@ class ActivityProfileView(UserProfileMixin, ActivityStreamView):
         data = super().get_context_data(**kwargs)
         data["num_likes"] = (
             Like.objects.for_models(*self.models)
-            .filter(
-                recipient=self.object, community=self.request.community
-            )
+            .filter(recipient=self.object, community=self.request.community)
             .count()
         )
         return data
