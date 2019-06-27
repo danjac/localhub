@@ -388,7 +388,6 @@ class ActivityViewSet:
 
     model = None
     form_class = None
-    url_prefix = None
 
     create_view_class = ActivityCreateView
     create_comment_view_class = ActivityCommentCreateView
