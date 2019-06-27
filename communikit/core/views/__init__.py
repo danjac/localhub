@@ -4,14 +4,14 @@
 from .breadcrumbs import BreadcrumbsMixin
 
 from .multiple_queryset import (
-    MultpleQuerySetContextMixin,
-    MultpleQuerySetListView,
-    MultpleQuerySetMixin,
+    MultipleQuerySetContextMixin,
+    MultipleQuerySetListView,
+    MultipleQuerySetMixin,
 )
 
 __all__ = [
     "BreadcrumbsMixin",
-    "MultpleQuerySetContextMixin",
-    "MultpleQuerySetListView",
-    "MultpleQuerySetMixin",
+    "MultipleQuerySetContextMixin",
+    "MultipleQuerySetListView",
+    "MultipleQuerySetMixin",
 ]

@@ -14,7 +14,7 @@ from django.views.generic.base import ContextMixin
 from communikit.core.types import ContextDict, QuerySetDict, QuerySetList
 
 
-class MultpleQuerySetMixin:
+class MultipleQuerySetMixin:
     """
     Pattern adapted from:
     https://simonwillison.net/2018/Mar/25/combined-recent-additions/
@@ -102,7 +102,7 @@ class MultpleQuerySetMixin:
         }
 
 
-class MultpleQuerySetContextMixin(MultpleQuerySetMixin, ContextMixin):
+class MultipleQuerySetContextMixin(MultipleQuerySetMixin, ContextMixin):
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
         if self.paginate_by:
@@ -120,5 +120,5 @@ class MultpleQuerySetContextMixin(MultpleQuerySetMixin, ContextMixin):
         return data
 
 
-class MultpleQuerySetListView(MultpleQuerySetContextMixin, TemplateView):
+class MultipleQuerySetListView(MultipleQuerySetContextMixin, TemplateView):
     ...
