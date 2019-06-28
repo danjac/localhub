@@ -26,8 +26,8 @@
     </div>
   </div>
   <div class="card-body">
-    {% include "activities/includes/description.html" with object=post %}
     {% include "activities/includes/oembed.html" with object=post %}
+    {% include "activities/includes/description.html" with object=post %}
   </div>
   <div class="card-footer">
     {% if post.num_likes and post.owner == user %}

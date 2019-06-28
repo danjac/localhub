@@ -28,8 +28,8 @@
     </div>
   </div>
   <div class="card-body">
-    {% include "activities/includes/description.html" with object=event %}
     {% include "activities/includes/oembed.html" with object=event %}
+    {% include "activities/includes/description.html" with object=event %}
     <div class="divider"></div>
     <dl>
       <dt>{% trans "Starts" %}</dt>
