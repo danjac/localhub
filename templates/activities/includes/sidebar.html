@@ -5,7 +5,6 @@
 {% load rules %}
 {% load communities_tags %}
 {% load flags_tags %}
-{% load notifications_tags %}
 
 {% test_rule 'is_admin' user request.community as is_admin %}
 {% test_rule 'is_member' user request.community as is_member %}
@@ -27,7 +26,6 @@
            data-active-link-exact
            href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a></li>
     <li class="menu-item">
-        {% get_unread_notifications_count as unread_notifications %}
         <a data-controller="active-link" href="{% url 'notifications:list' %}">
             <span {% if unread_notifications %}class="badge" data-badge="{{ unread_notifications }}"{% endif %}>
                 {% trans "Notifications" %}

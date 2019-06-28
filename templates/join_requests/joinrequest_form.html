@@ -9,6 +9,7 @@
 <h3>{% trans "Request invitation" %}</h3>
 <div class="col-6 col-sm-12">
   <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
+    <p>{% trans "Your request will be sent to the site admins." %}</p>
     {% include "includes/forms/fields.html" %}
     <button type="submit" class="btn btn-primary">{% trans "Send invite" %}</button>
   </form>
