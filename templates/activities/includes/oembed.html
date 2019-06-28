@@ -4,6 +4,6 @@
 {% load micawber_tags %}
 {% if object.url %}
 <div>
-  {{ object.url|oembed }}
+  {{ object.url|oembed:"300" }}
 </div>
 {% endif %}
