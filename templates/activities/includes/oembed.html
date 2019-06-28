@@ -3,10 +3,7 @@
 
 {% load micawber_tags %}
 {% if object.url %}
- <div class="media-container">
+ <div>
   {{ object.url|oembed:"320" }}
-</div>
-<div>
-  <a href="{{ object.url }}" rel="noopener noreferrer" target="_blank">{{ object.get_domain }}</a>
 </div>
 {% endif %}
