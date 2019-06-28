@@ -4,7 +4,7 @@
 {% load micawber_tags %}
 {% if object.url %}
  <div class="media-container">
-  {{ object.url|oembed }}
+  {{ object.url|oembed:width:"320" }}
 </div>
 <div>
   <a href="{{ object.url }}" rel="noopener noreferrer" target="_blank">{{ object.get_domain }}</a>
