@@ -9,6 +9,7 @@ from django.urls import reverse
 from communikit.communities.models import Community, Membership
 from communikit.events.tests.factories import EventFactory
 from communikit.likes.models import Like
+from communikit.photos.tests.factories import PhotoFactory
 from communikit.posts.tests.factories import PostFactory
 from communikit.users.tests.factories import UserFactory
 
@@ -71,3 +72,17 @@ class TestActivitySearchView:
         response = client.get(reverse("activities:search"))
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 0
+
+
+class TestTagAutocompleteListView:
+    def test_get(self, client: Client, community: Community):
+
+        PostFactory(community=community).tags.add("movies")
+        EventFactory(community=community).tags.add("movies")
+        PhotoFactory(community=community).tags.add("movies")
+
+        response = client.get(
+            reverse("activities:tag_autocomplete_list"), {"q": "movie"}
+        )
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 1

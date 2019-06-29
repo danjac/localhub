@@ -1,3 +1,6 @@
+// Copyright (c) 2019 by Dan Jacob
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Controller } from 'stimulus';
 import axios from 'axios';
 
@@ -8,6 +11,7 @@ export default class extends Controller {
 
   select(event) {
     event.preventDefault();
+    // should be handled from returned HTML
     this.handleSelection(event.currentTarget);
     this.inputTarget.focus();
   }
@@ -15,39 +19,51 @@ export default class extends Controller {
   typeahead(event) {
     if (event.keyCode === TAB_KEY) {
       this.handleSelection(
-        this.selectorTarget.querySelector('[data-mention-typeahead-value]')
+        this.selectorTarget.querySelector('[data-typeahead-value]')
       );
       event.preventDefault();
       return false;
     }
 
-    const { value, selectionStart } = this.inputTarget;
-    const index = value.lastIndexOf('@', selectionStart) + 1;
-
-    if (index === 0) {
+    if (!this.handleMentions() && !this.handleTags()) {
       this.closeSelector();
       return true;
+    }
+
+    return false;
+  }
+
+  handleMentions() {
+    return this.handleTypeahead(this.data.get('mention-search-url'), '@');
+  }
+
+  handleTags() {
+    return this.handleTypeahead(this.data.get('tag-search-url'), '#');
+  }
+
+  handleTypeahead(searchUrl, key) {
+    const { value, selectionStart } = this.inputTarget;
+    const index = value.lastIndexOf(key, selectionStart) + 1;
+
+    if (index === 0) {
+      return false;
     }
 
     const text = value.slice(index, selectionStart);
     if (!text || text.match(/[\s#<>!.?[\]|{}]+/)) {
-      this.closeSelector();
-      return true;
+      return false;
     }
 
-    this.doSearch(text);
-    return false;
+    this.doSearch(text, searchUrl);
+    return true;
   }
 
-  doSearch(text) {
-    const searchUrl = this.data.get('search-url');
-
+  doSearch(text, searchUrl) {
     axios.get(searchUrl, { params: { q: text } }).then(response => {
       if (response.data) {
         this.selectorTarget.innerHTML = response.data;
         if (
-          this.selectorTarget.querySelectorAll('[data-mention-typeahead-value]')
-            .length
+          this.selectorTarget.querySelectorAll('[data-typeahead-value]').length
         ) {
           this.openSelector();
         } else {
@@ -58,26 +74,27 @@ export default class extends Controller {
   }
 
   handleSelection(item) {
-    const mention = item && item.getAttribute('data-mention-typeahead-value');
-    if (mention) {
+    const selection = item && item.getAttribute('data-typeahead-value');
+    const key = item && item.getAttribute('data-typeahead-key');
+    if (selection && key) {
       const { value, selectionStart } = this.inputTarget;
-      const index = value.lastIndexOf('@', selectionStart);
+      const index = value.lastIndexOf(key, selectionStart);
       const tokens = value
         .replace('\t', '')
         .slice(index)
         .split(/ /);
       const [firstToken] = tokens;
-      const remainer = firstToken.match(/\n/)
+      const remainder = firstToken.match(/\n/)
         ? firstToken.slice(firstToken.indexOf('\n'))
         : '';
       this.inputTarget.value =
         value.slice(0, index) +
-        '@' +
-        mention +
-        remainer +
+        key +
+        selection +
+        remainder +
         ' ' +
         tokens.slice(1).join(' ');
-      this.inputTarget.selectionEnd = index + mention.length + 1;
+      this.inputTarget.selectionEnd = index + selection.length + 1;
     }
     this.closeSelector();
   }

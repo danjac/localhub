@@ -1,14 +1,19 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import operator
+
 from typing import List, Optional, Type, no_type_check
+
+from functools import reduce
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
-from django.db.models import QuerySet
+from django.db.models import Q, QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import URLPattern, path
 from django.utils.translation import gettext_lazy as _
@@ -25,6 +30,8 @@ from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import MultipleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
+
+from taggit.models import Tag, TaggedItem
 
 from communikit.activities.models import Activity  # , Like
 from communikit.comments.forms import CommentForm
@@ -271,6 +278,44 @@ class ActivityFlagView(
 activity_flag_view = ActivityFlagView.as_view()
 
 
+class TagAutocompleteListView(CommunityRequiredMixin, ListView):
+    template_name = "activities/tag_autocomplete_list.html"
+
+    def get_queryset(self) -> QuerySet:
+        search_term = self.request.GET.get("q", "").strip()
+        if not search_term:
+            return Tag.objects.none()
+
+        q = Q(
+            reduce(
+                operator.or_,
+                [
+                    Q(
+                        object_id__in=model.objects.filter(
+                            community=self.request.community
+                        ).values("id"),
+                        content_type=content_type,
+                    )
+                    for model, content_type in ContentType.objects.get_for_models(  # noqa
+                        Post, Event, Photo
+                    ).items()
+                ],
+            )
+        )
+
+        return (
+            Tag.objects.filter(
+                taggit_taggeditem_items__in=TaggedItem.objects.filter(q),
+                name__istartswith=search_term,
+            )
+            .order_by("name")
+            .distinct()
+        )
+
+
+tag_autocomplete_list_view = TagAutocompleteListView.as_view()
+
+
 class ActivityStreamView(CommunityRequiredMixin, MultipleQuerySetListView):
     template_name = "activities/stream.html"
     ordering = "created"
@@ -294,7 +339,7 @@ activity_stream_view = ActivityStreamView.as_view()
 
 class ActivityTagView(ActivityStreamView):
 
-    template_name = "activities/tag.html"
+    template_name = "activities/tag_detail.html"
 
     def get_queryset(self, model: Type[Activity]) -> QuerySet:
         return (

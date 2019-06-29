@@ -1,21 +1,17 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% load account %}
-{% load users_tags %}
+{% for tag in object_list %}
 <li class="menu-item">
   <a href="#"
      data-action="typeahead#select"
-     data-typeahead-value="{{ user.username }}"
-     data-typeahead-key="@">
+     data-typeahead-value="{{ tag.slug }}"
+     data-typeahead-key="#">
     <div class="tile tile-centered">
-      <div class="tile-icon">
-        {% avatar user %}
-      </div>
       <div class="tile-content">
-        {% user_display user as username %}
-        {{ username }}
+        #{{ tag.name }}
       </div>
     </div>
   </a>
 </li>
+{% endfor %}
