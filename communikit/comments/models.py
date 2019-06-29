@@ -24,19 +24,19 @@ from communikit.notifications.models import Notification
 
 class CommentAnnotationsQuerySetMixin:
     def with_num_comments(self) -> models.QuerySet:
-        comment_count = (
-            Comment.objects.filter(
-                object_id=models.OuterRef("pk"),
-                content_type=ContentType.objects.get_for_model(self.model),
-            )
-            .values("id")
-            .order_by()
-            .annotate(num_comments=models.Count("*"))
-            .values("num_comments")[:1]
-        )
         return self.annotate(
             num_comments=models.Subquery(
-                comment_count, output_field=models.IntegerField()
+                Comment.objects.filter(
+                    object_id=models.OuterRef("pk"),
+                    content_type=ContentType.objects.get_for_model(self.model),
+                )
+                # GROUP BY object id, filtering by object_id and content type
+                # so subquery just has one row
+                .values("object_id")
+                # how many rows per group
+                .annotate(count=models.Count("pk"))
+                .values("count"),
+                output_field=models.IntegerField(),
             )
         )
 

@@ -27,19 +27,19 @@ class LikeAnnotationsQuerySetMixin:
         )
 
     def with_num_likes(self) -> models.QuerySet:
-        like_count = (
-            Like.objects.filter(
-                object_id=models.OuterRef("pk"),
-                content_type=ContentType.objects.get_for_model(self.model),
-            )
-            .values("id")
-            .order_by()
-            .annotate(num_likes=models.Count("*"))
-            .values("num_likes")[:1]
-        )
         return self.annotate(
             num_likes=models.Subquery(
-                like_count, output_field=models.IntegerField()
+                Like.objects.filter(
+                    object_id=models.OuterRef("pk"),
+                    content_type=ContentType.objects.get_for_model(self.model),
+                )
+                # GROUP BY object id, filtering by object_id and content type
+                # so subquery just has one row
+                .values("object_id")
+                # how many rows per group
+                .annotate(count=models.Count("pk"))
+                .values("count"),
+                output_field=models.IntegerField(),
             )
         )
 

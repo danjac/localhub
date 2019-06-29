@@ -6,11 +6,11 @@ import pytest
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 
-from communikit.comments.models import Comment
 from communikit.communities.models import Membership
 from communikit.flags.models import Flag
 from communikit.likes.models import Like
 from communikit.posts.models import Post
+from communikit.comments.tests.factories import CommentFactory
 from communikit.posts.tests.factories import PostFactory
 from communikit.users.tests.factories import UserFactory
 
@@ -18,20 +18,21 @@ pytestmark = pytest.mark.django_db
 
 
 class TestActivityManager:
-    def test_with_num_comments(self, comment: Comment):
-        activity = Post.objects.with_num_comments().get()
-        assert activity.num_comments == 1
+    def test_with_num_comments(self):
+        post = PostFactory()
+        CommentFactory.create_batch(2, content_object=post)
+        assert Post.objects.with_num_comments().get().num_comments == 2
 
-    def test_with_num_likes(self, post: Post, user: settings.AUTH_USER_MODEL):
-        Like.objects.create(
-            user=user,
-            content_object=post,
-            community=post.community,
-            recipient=post.owner,
-        )
+    def test_with_num_likes(self, post: Post):
+        for _ in range(2):
+            Like.objects.create(
+                user=UserFactory(),
+                content_object=post,
+                community=post.community,
+                recipient=post.owner,
+            )
 
-        activity = Post.objects.with_num_likes().get()
-        assert activity.num_likes == 1
+        assert Post.objects.with_num_likes().get().num_likes == 2
 
     def test_with_has_flagged_if_user_has_not_flagged(
         self, post: Post, user: settings.AUTH_USER_MODEL
