@@ -3,8 +3,10 @@
 
 {% load i18n %}
 <div class="markdownx tabs"
-     data-controller="tabs mention-typeahead"
-     data-mention-typeahead-search-url="{% url 'communities:member_autocomplete_list' %}">
+     data-controller="tabs typeahead"
+     data-typeahead-mention-search-url="{% url 'communities:member_autocomplete_list' %}"
+     data-typeahead-tag-search-url="{% url 'activities:tag_autocomplete_list' %}"
+     >
   <ul class="tab">
     <li class="tab-item active" data-target="tabs.tab" data-tab="editor">
       <a href="#" data-action="tabs#select" data-tab="editor">{% trans "Edit" %}</a>
@@ -64,10 +66,10 @@
          >{% trans "List (Numbers)" %}</a>
 
     </div>
-  <ul class="menu d-hide" data-target="mention-typeahead.selector"></ul>
+  <ul class="menu d-hide" data-target="typeahead.selector"></ul>
     <textarea
-      data-target="markdown.textarea mention-typeahead.input"
-      data-action="keyup->mention-typeahead#typeahead"
+      data-target="markdown.textarea typeahead.input"
+      data-action="keyup->typeahead#typeahead"
       name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}
       >{% spaceless %}{% if widget.value %}{{ widget.value }}{% endif %}{% endspaceless %}</textarea>
   </div>
