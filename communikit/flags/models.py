@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import List, Optional
+from typing import List
 
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -13,29 +13,24 @@ from model_utils import Choices
 from model_utils.models import TimeStampedModel
 
 from communikit.communities.models import Community
+from communikit.core.utils.content_types import get_content_type_exists
 from communikit.notifications.models import Notification
 
 
 class FlagAnnotationsQuerySetMixin:
-    def is_flagged(
-        self, user: Optional[settings.AUTH_USER_MODEL] = None
-    ) -> models.Exists:
-
-        qs = Flag.objects.filter(
-            object_id=models.OuterRef("pk"),
-            content_type=ContentType.objects.get_for_model(self.model),
-        )
-        if user:
-            qs = qs.filter(user=user)
-        return models.Exists(qs)
-
     def with_is_flagged(self) -> models.QuerySet:
-        return self.annotate(is_flagged=self.is_flagged())
+        return self.annotate(
+            is_flagged=get_content_type_exists(self.model, Flag.objects.all())
+        )
 
     def with_has_flagged(
         self, user: settings.AUTH_USER_MODEL
     ) -> models.QuerySet:
-        return self.annotate(has_flagged=self.is_flagged(user))
+        return self.annotate(
+            has_flagged=get_content_type_exists(
+                self.model, Flag.objects.filter(user=user)
+            )
+        )
 
 
 class Flag(TimeStampedModel):

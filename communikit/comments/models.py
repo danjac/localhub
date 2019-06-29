@@ -17,6 +17,7 @@ from model_utils.models import TimeStampedModel
 
 from communikit.communities.models import Community
 from communikit.core.markdown.fields import MarkdownField
+from communikit.core.utils.content_types import get_content_type_count_subquery
 from communikit.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from communikit.likes.models import Like, LikeAnnotationsQuerySetMixin
 from communikit.notifications.models import Notification
@@ -25,18 +26,8 @@ from communikit.notifications.models import Notification
 class CommentAnnotationsQuerySetMixin:
     def with_num_comments(self) -> models.QuerySet:
         return self.annotate(
-            num_comments=models.Subquery(
-                Comment.objects.filter(
-                    object_id=models.OuterRef("pk"),
-                    content_type=ContentType.objects.get_for_model(self.model),
-                )
-                # GROUP BY object id, filtering by object_id and content type
-                # so subquery just has one row
-                .values("object_id")
-                # how many rows per group
-                .annotate(count=models.Count("pk"))
-                .values("count"),
-                output_field=models.IntegerField(),
+            num_comments=get_content_type_count_subquery(
+                self.model, Comment.objects.all()
             )
         )
 

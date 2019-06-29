@@ -10,6 +10,10 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 from communikit.communities.models import Community
+from communikit.core.utils.content_types import (
+    get_content_type_count_subquery,
+    get_content_type_exists,
+)
 
 
 class LikeAnnotationsQuerySetMixin:
@@ -17,29 +21,15 @@ class LikeAnnotationsQuerySetMixin:
         self, user: settings.AUTH_USER_MODEL
     ) -> models.QuerySet:
         return self.annotate(
-            has_liked=models.Exists(
-                Like.objects.filter(
-                    user=user,
-                    object_id=models.OuterRef("pk"),
-                    content_type=ContentType.objects.get_for_model(self.model),
-                )
+            has_liked=get_content_type_exists(
+                self.model, Like.objects.filter(user=user)
             )
         )
 
     def with_num_likes(self) -> models.QuerySet:
         return self.annotate(
-            num_likes=models.Subquery(
-                Like.objects.filter(
-                    object_id=models.OuterRef("pk"),
-                    content_type=ContentType.objects.get_for_model(self.model),
-                )
-                # GROUP BY object id, filtering by object_id and content type
-                # so subquery just has one row
-                .values("object_id")
-                # how many rows per group
-                .annotate(count=models.Count("pk"))
-                .values("count"),
-                output_field=models.IntegerField(),
+            num_likes=get_content_type_count_subquery(
+                self.model, Like.objects.all()
             )
         )
 
