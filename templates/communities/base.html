@@ -1,7 +1,47 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "communities/settings_base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 
-{% block subtitle %} - {% trans "Community Settings" %}{% endblock %}
+{% block content %}
+
+<div class="container">
+  <div class="columns" data-controller="sidebar">
+    <div class="column col-3 col-sm-12 hide-sm bg-gray p-2" data-target="sidebar.nav">
+      <a href="#"
+         class="btn btn-link show-sm hide-md"
+         data-action="sidebar#toggle">{% trans "Close Sidebar" %}</a>
+      <ul class="menu">
+        <li class="menu-item">
+          <a href="{% url 'activities:stream' %}">{% trans "Home" %}</a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+        </li>
+        <li class="menu-item">
+          <a data-controller="active-link" href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
+        </li>
+        <li class="menu-item">
+          <a data-controller="active-link" href="{% url 'communities:membership_list' %}">{% trans "Members" %}</a>
+        </li>
+        <li class="menu-item">
+          <a data-controller="active-link" href="{% url 'invites:list' %}">{% trans "Invite New Members" %}</a>
+        </li>
+        <li class="menu-item">
+          <a data-controller="active-link" href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
+        </li>
+      </ul>
+    </div>
+    <div class="column col-9 col-sm-12" data-target="sidebar.main">
+      <div class="show-sm hide-md float-right">
+        <a href="#"
+           class="btn btn-link"
+           data-action="sidebar#toggle"
+           >{% trans "Sidebar" %}</a>
+      </div>
+      <div class="clearfix"></div>
+      {% block settings_content %}{% endblock %}
+    </div>
+  </div>
+  {% endblock %}

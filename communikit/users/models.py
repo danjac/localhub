@@ -5,6 +5,7 @@ from typing import Optional, Sequence
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -12,7 +13,9 @@ from django.utils.translation import gettext_lazy as _
 from sorl.thumbnail import ImageField
 
 
+from communikit.communities.models import Community
 from communikit.core.markdown.fields import MarkdownField
+from communikit.subscriptions.models import Subscription
 
 
 class UserManager(BaseUserManager):
@@ -56,13 +59,28 @@ class UserManager(BaseUserManager):
             return self.none()
         return self.filter(username__iregex=r"^(%s)+" % "|".join(names))
 
+    def active(self, community: Community) -> models.QuerySet:
+        """
+        Returns only users which are a) active and b) have active
+        membership with given community.
+        """
+
+        return self.filter(
+            # test with more than 1 community
+            membership__community=community,
+            membership__active=True,
+            is_active=True,
+        )
+
 
 class User(AbstractUser):
     name = models.CharField(_("Full name of user"), blank=True, max_length=255)
     bio = MarkdownField(blank=True)
     avatar = ImageField(upload_to="avatars", null=True, blank=True)
 
+    subscriptions = GenericRelation(Subscription, related_query_name="user")
+
     objects = UserManager()
 
     def get_absolute_url(self) -> str:
-        return reverse("profile:detail", args=[self.username])
+        return reverse("users:detail", args=[self.username])

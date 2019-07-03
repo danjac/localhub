@@ -1,6 +1,6 @@
 from django.http import HttpRequest, HttpResponse
 
-from communikit.core.types import HttpRequestResponse
+from communikit.core.types import DjangoView
 
 
 class TurbolinksMiddleware:
@@ -9,7 +9,7 @@ class TurbolinksMiddleware:
     location_header = "Turbolinks-Location"
     referrer_header = "Turbolinks-Referrer"
 
-    def __init__(self, get_response: HttpRequestResponse):
+    def __init__(self, get_response: DjangoView):
         self.get_response = get_response
 
     def __call__(self, request: HttpRequest) -> HttpResponse:

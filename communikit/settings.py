@@ -67,6 +67,7 @@ class Base(Configuration):
         "communikit.notifications.apps.NotificationsConfig",
         "communikit.photos.apps.PhotosConfig",
         "communikit.posts.apps.PostsConfig",
+        "communikit.subscriptions.apps.SubscriptionsConfig",
         "communikit.users.apps.UsersConfig",
     ]
 

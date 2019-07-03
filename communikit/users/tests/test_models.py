@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 
 from allauth.account.models import EmailAddress
 
+from communikit.communities.models import Community, Membership
 from communikit.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
@@ -20,6 +21,26 @@ class TestUserManager:
             username="tester", email="tester@gmail.com", password="t3ZtP4s31"
         )
         assert user.check_password("t3ZtP4s31")
+
+    def test_active(self, community: Community):
+        Membership.objects.create(member=UserFactory(), community=community)
+        assert get_user_model().objects.active(community).exists()
+
+    def test_active_if_not_member(self, community: Community):
+        UserFactory()
+        assert not get_user_model().objects.active(community).exists()
+
+    def test_active_if_not_active_member(self, community: Community):
+        Membership.objects.create(
+            member=UserFactory(), community=community, active=False
+        )
+        assert not get_user_model().objects.active(community).exists()
+
+    def test_active_if_not_active(self, community: Community):
+        Membership.objects.create(
+            member=UserFactory(is_active=False), community=community
+        )
+        assert not get_user_model().objects.active(community).exists()
 
     def test_create_superuser(self):
 
@@ -65,4 +86,4 @@ class TestUserManager:
 
 class TestUserModel:
     def test_get_absolute_url(self, user: settings.AUTH_USER_MODEL):
-        assert user.get_absolute_url() == f"/profile/{user.username}/"
+        assert user.get_absolute_url() == f"/people/{user.username}/"

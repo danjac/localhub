@@ -4,10 +4,9 @@
 import operator
 
 from functools import reduce
-from typing import Callable, List, Optional
+from typing import Callable, List
 
 from django.conf import settings
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import (
     SearchQuery,
@@ -30,6 +29,7 @@ from communikit.comments.models import Comment, CommentAnnotationsQuerySetMixin
 from communikit.communities.models import Community
 from communikit.core.markdown.fields import MarkdownField
 from communikit.core.types import BreadcrumbList
+from communikit.core.utils.content_types import get_generic_related_queryset
 from communikit.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from communikit.likes.models import Like, LikeAnnotationsQuerySetMixin
 from communikit.notifications.models import Notification
@@ -146,22 +146,14 @@ class Activity(TimeStampedModel):
     def get_permalink(self) -> str:
         return self.community.resolve_url(self.get_absolute_url())
 
-    def get_generic_related_objects(
-        self, model: models.Model
-    ) -> models.QuerySet:
-        return model.objects.filter(
-            object_id=self.pk,
-            content_type=ContentType.objects.get_for_model(self),
-        )
-
-    def get_likes(self) -> models.QuerySet:
-        return self.get_generic_related_objects(Like)
+    def get_comments(self) -> models.QuerySet:
+        return get_generic_related_queryset(self, Comment)
 
     def get_flags(self) -> models.QuerySet:
-        return self.get_generic_related_objects(Flag)
+        return get_generic_related_queryset(self, Flag)
 
-    def get_comments(self) -> models.QuerySet:
-        return self.get_generic_related_objects(Comment)
+    def get_likes(self) -> models.QuerySet:
+        return get_generic_related_queryset(self, Like)
 
     def get_breadcrumbs(self) -> BreadcrumbList:
         return self.__class__.get_breadcrumbs_for_model() + [

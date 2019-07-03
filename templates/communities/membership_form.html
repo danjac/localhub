@@ -1,16 +1,25 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% extends "communities/base.html" %}
 
 {% load i18n %}
 {% load account %}
 
 {% block settings_content %}
-{% user_display membership.member as member %}
-<h3>{% blocktrans %}Membership Settings for {{ member }}{% endblocktrans %}</h3>
+{% user_display membership.member as display_name %}
+
+<ul class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'communities:membership_list' %}">Memberships</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'communities:membership_update' membership.id %}">{{ display_name }}</a></li>
+</ul>
+
+<h3>{% blocktrans with url=membership.member.get_absolute_url %}Membership Settings for <a href="{{ url }}">{{ display_name }}</a>{% endblocktrans %}</h3>
 
 <div class="col-6 col-sm-12">
-  <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
-    {% include "includes/forms/fields.html" %}
-    <input type="submit" class="btn btn-primary" value="{% trans 'Save' %}">
-  </form>
+    <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
+        {% include "includes/forms/fields.html" %}
+        <input type="submit" class="btn btn-primary" value="{% trans 'Save' %}">
+    </form>
 </div>
 {% endblock settings_content %}

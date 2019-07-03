@@ -1,0 +1,19 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "users/account_base.html" %}
+{% load i18n %}
+
+{% block users_content %}
+<form method="POST" action="{{ request.path }}">
+  {% csrf_token %}
+  <p>
+  {% blocktrans %}
+  Please confirm you want to leave this community.  Your posts and comments will not be deleted until you delete your account.
+  {% endblocktrans %}
+  </p>
+  <a class="btn btn-secondary" href="{{ user.get_absolute_url }}">{% trans "Cancel" %}</a>
+  <button class="btn btn-warning" type="submit">{% trans "Leave" %}</button>
+</form>
+
+{% endblock users_content %}

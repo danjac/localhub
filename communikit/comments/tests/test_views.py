@@ -123,28 +123,6 @@ class TestCommentDislikeView:
         assert Like.objects.count() == 0
 
 
-class TestCommentProfileView:
-    def test_get(self, client: Client, member: Membership):
-        post = PostFactory(community=member.community)
-        comment = CommentFactory(
-            content_object=post,
-            owner=member.member,
-            community=member.community,
-        )
-        Like.objects.create(
-            content_object=comment,
-            user=UserFactory(),
-            community=comment.community,
-            recipient=comment.owner,
-        )
-        response = client.get(
-            reverse("profile:comments", args=[comment.owner.username])
-        )
-        assert response.status_code == 200
-        assert len(response.context["object_list"]) == 1
-        assert response.context["num_likes"] == 1
-
-
 class TestFlagView:
     def test_get(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)

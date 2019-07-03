@@ -1,0 +1,64 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "communities/base.html" %}
+
+{% load i18n %}
+{% load account %}
+{% load rules %}
+{% load users_tags %}
+
+
+{% block settings_content %}
+<h3>{% trans "Members" %}</h3>
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>{% trans "Member" %}</th>
+            <th>{% trans "Status" %}</th>
+            <th>{% trans "Role" %}</th>
+            <th>{% trans "Actions" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for member in object_list %}
+        <tr>
+            <td>
+                <a href="{{ member.member.get_absolute_url }}">
+                    {% avatar member.member %}
+                    {% user_display member.member as member_name %}
+                    {{ member_name }}
+                </a>
+            </td>
+            {% if member.active %}
+            <td>{% trans "Active" %}</td>
+            {% else %}
+            <td class="text-gray">{% trans "Inactive" %}</td>
+            {% endif %}
+            <td {% if not member.active %} class="text-gray"{% endif %}>{{ member.get_role_display }}</td>
+            <td>
+                {% has_perm "communties.change_membership" user request.community as can_change %}
+                {% has_perm "communties.delete_membership" user request.community as can_delete %}
+                {% if can_change %}
+                <a href="{% url 'communities:membership_update' member.id %}" class="btn btn-sm btn-primary">
+                    <i class="icon icon-edit"></i>
+                    {% trans "Edit" %}
+                </a>
+                {% endif %}
+                {% if can_delete %}
+                <a href="{% url 'communities:membership_delete' member.id %}"
+                   class="btn btn-sm"
+                   data-controller="ajax confirm"
+                   data-action="confirm#check ajax#delete"
+                   data-confirm-header="{% trans 'Delete' %}"
+                   data-confirm-body="{% trans 'Are you sure you want to delete this membership?' %}"
+                   ><i class="icon icon-delete"></i> {% trans "Delete" %}</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% include "includes/pagination.html" %}
+{% endblock settings_content %}

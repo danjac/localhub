@@ -8,6 +8,8 @@ from communikit.activities.views import (
     activity_stream_view,
     activity_tag_view,
     tag_autocomplete_list_view,
+    tag_subscribe_view,
+    tag_unsubscribe_view,
 )
 
 app_name = "activities"
@@ -20,5 +22,13 @@ urlpatterns = [
         tag_autocomplete_list_view,
         name="tag_autocomplete_list",
     ),
-    path("tag/<slug:tag>/", activity_tag_view, name="tag"),
+    path("tag/<slug:slug>/", activity_tag_view, name="tag"),
+    path(
+        "tag/<slug:slug>/subscribe/", tag_subscribe_view, name="subscribe_tag"
+    ),
+    path(
+        "tag/<slug:slug>/unsubscribe/",
+        tag_unsubscribe_view,
+        name="unsubscribe_tag",
+    ),
 ]

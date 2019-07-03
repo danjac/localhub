@@ -22,7 +22,7 @@
               data-ajax-url="{% url 'notifications:mark_read' notification.pk %}"
               ><i class="icon icon-check"></i> {% trans "Mark as Read" %}</button>
       {% endif %}
-      <button class="btn btn-warning btn-sm"
+      <button class="btn btn-sm"
               data-controller="ajax"
               data-action="ajax#delete"
               data-ajax-url="{% url 'notifications:delete' notification.pk %}"

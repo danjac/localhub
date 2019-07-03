@@ -11,8 +11,8 @@ from django.contrib.contenttypes.models import ContentType
 
 from communikit.communities.models import Community
 from communikit.core.utils.content_types import (
-    get_content_type_count_subquery,
-    get_content_type_exists,
+    get_generic_related_count_subquery,
+    get_generic_related_exists,
 )
 
 
@@ -21,16 +21,14 @@ class LikeAnnotationsQuerySetMixin:
         self, user: settings.AUTH_USER_MODEL
     ) -> models.QuerySet:
         return self.annotate(
-            has_liked=get_content_type_exists(
+            has_liked=get_generic_related_exists(
                 self.model, Like.objects.filter(user=user)
             )
         )
 
     def with_num_likes(self) -> models.QuerySet:
         return self.annotate(
-            num_likes=get_content_type_count_subquery(
-                self.model, Like.objects.all()
-            )
+            num_likes=get_generic_related_count_subquery(self.model, Like)
         )
 
 

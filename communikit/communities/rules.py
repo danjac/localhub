@@ -56,8 +56,6 @@ rules.add_perm("communities.view_community", is_visitor)
 rules.add_perm("communities.manage_community", is_admin)
 rules.add_perm("communities.moderate_community", is_moderator)
 
-rules.add_perm("communities.view_memberships", is_member)
-
 rules.add_perm(
     "communities.change_membership",
     is_membership_community_admin & ~is_own_membership,

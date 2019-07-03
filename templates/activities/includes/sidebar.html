@@ -9,7 +9,6 @@
 {% test_rule 'is_admin' user request.community as is_admin %}
 {% test_rule 'is_member' user request.community as is_member %}
 
-{% has_perm 'communities.view_memberships' user request.community as can_view_memberships %}
 {% has_perm 'communities.moderate_community' user request.community as can_moderate_community %}
 {% has_perm 'communities.manage_community' user request.community as can_manage_community %}
 
@@ -32,11 +31,14 @@
             </span>
         </a>
     </li>
-    {% endif %}
-    {% if can_view_memberships and not is_admin %}
+    <li class="menu-item">
+      <a data-controller="active-link" href="{% url 'subscriptions:user_list' %}">
+            {% trans "Following" %}
+        </a>
+    </li>
     <li class="menu-item">
         <a data-controller="active-link"
-           href="{% url 'communities:community_membership_list' %}">{% trans "Members" %}</a>
+           href="{% url 'users:list' %}">{% trans "Members" %}</a>
     </li>
     {% endif %}
     {% if can_manage_community %}

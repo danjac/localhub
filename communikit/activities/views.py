@@ -15,7 +15,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.db.models import Q, QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.urls import URLPattern, path
+from django.urls import URLPattern, path, reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     CreateView,
@@ -33,14 +33,14 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from taggit.models import Tag, TaggedItem
 
-from communikit.activities.models import Activity  # , Like
+from communikit.activities.models import Activity
 from communikit.comments.forms import CommentForm
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.core.types import (
     BreadcrumbList,
     ContextDict,
-    HttpRequestResponse,
+    DjangoView,
     QuerySetList,
 )
 from communikit.core.views import BreadcrumbsMixin, MultipleQuerySetListView
@@ -49,7 +49,7 @@ from communikit.flags.forms import FlagForm
 from communikit.likes.models import Like
 from communikit.photos.models import Photo
 from communikit.posts.models import Post
-from communikit.users.views import UserProfileMixin
+from communikit.subscriptions.models import Subscription
 
 
 class ActivityQuerySetMixin(CommunityRequiredMixin):
@@ -323,7 +323,7 @@ class ActivityStreamView(CommunityRequiredMixin, MultipleQuerySetListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
     models: List[Type[Activity]] = [Photo, Post, Event]
 
-    def get_queryset(self, model: Type[Activity]) -> QuerySet:
+    def get_queryset_for_model(self, model: Type[Activity]) -> QuerySet:
         return (
             model.objects.filter(community=self.request.community)
             .with_common_annotations(self.request.community, self.request.user)
@@ -331,30 +331,97 @@ class ActivityStreamView(CommunityRequiredMixin, MultipleQuerySetListView):
         )
 
     def get_querysets(self) -> QuerySetList:
-        return [self.get_queryset(model) for model in self.models]
+        return [self.get_queryset_for_model(model) for model in self.models]
 
 
 activity_stream_view = ActivityStreamView.as_view()
 
 
-class ActivityTagView(ActivityStreamView):
+class SingleTagMixin(SingleObjectMixin):
+    model = Tag
 
+
+class ActivityTagView(SingleTagMixin, ActivityStreamView):
     template_name = "activities/tag_detail.html"
 
-    def get_queryset(self, model: Type[Activity]) -> QuerySet:
+    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset_for_model(self, model: Type[Activity]) -> QuerySet:
         return (
             super()
-            .get_queryset(model)
-            .filter(tags__name__in=[self.kwargs["tag"]])
+            .get_queryset_for_model(model)
+            .filter(tags__name__in=[self.object.name])
+            .distinct()
         )
+
+    def is_subscribed(self):
+        if not self.request.user.is_authenticated:
+            return False
+
+        return Subscription.objects.filter(
+            content_type=ContentType.objects.get_for_model(self.object),
+            object_id=self.object.id,
+            subscriber=self.request.user,
+            community=self.request.community,
+        ).exists()
 
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
-        data["tag"] = self.kwargs["tag"]
+        data["tag"] = self.object
+        data["is_subscribed"] = self.is_subscribed()
         return data
 
 
 activity_tag_view = ActivityTagView.as_view()
+
+
+class TagSubscribeView(
+    LoginRequiredMixin, PermissionRequiredMixin, SingleTagMixin, View
+):
+    permission_required = "subscriptions.create_subscription"
+
+    def get_permission_object(self) -> Community:
+        return self.request.community
+
+    def get_success_url(self) -> str:
+        return reverse("activities:tag", args=[self.object.slug])
+
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+
+        Subscription.objects.create(
+            subscriber=self.request.user,
+            content_object=self.object,
+            community=self.request.community,
+        )
+
+        messages.success(self.request, _("You are now following this tag"))
+        return HttpResponseRedirect(self.get_success_url())
+
+
+tag_subscribe_view = TagSubscribeView.as_view()
+
+
+class TagUnsubscribeView(LoginRequiredMixin, SingleTagMixin, View):
+    def get_success_url(self) -> str:
+        return reverse("activities:tag", args=[self.object.slug])
+
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        Subscription.objects.filter(
+            object_id=self.object.id,
+            content_type=ContentType.objects.get_for_model(self.object),
+            subscriber=self.request.user,
+        ).delete()
+        messages.success(
+            self.request, _("You have stopped following this tag")
+        )
+        return HttpResponseRedirect(self.get_success_url())
+
+
+tag_unsubscribe_view = TagUnsubscribeView.as_view()
 
 
 class ActivitySearchView(ActivityStreamView):
@@ -367,9 +434,11 @@ class ActivitySearchView(ActivityStreamView):
         self.search_query = request.GET.get("q", "").strip()
         return super().get(request, *args, **kwargs)
 
-    def get_queryset(self, model: Type[Activity]) -> QuerySet:
+    def get_queryset_for_model(self, model: Type[Activity]) -> QuerySet:
         if self.search_query:
-            return super().get_queryset(model).search(self.search_query)
+            return (
+                super().get_queryset_for_model(model).search(self.search_query)
+            )
         return model.objects.none()
 
     def get_context_data(self, **kwargs) -> ContextDict:
@@ -379,26 +448,6 @@ class ActivitySearchView(ActivityStreamView):
 
 
 activity_search_view = ActivitySearchView.as_view()
-
-
-class ActivityProfileView(UserProfileMixin, ActivityStreamView):
-    active_tab = "posts"
-    template_name = "activities/profile.html"
-
-    def get_queryset(self, model: Type[Activity]) -> QuerySet:
-        return super().get_queryset(model).filter(owner=self.object)
-
-    def get_context_data(self, **kwargs) -> ContextDict:
-        data = super().get_context_data(**kwargs)
-        data["num_likes"] = (
-            Like.objects.for_models(*self.models)
-            .filter(recipient=self.object, community=self.request.community)
-            .count()
-        )
-        return data
-
-
-activity_profile_view = ActivityProfileView.as_view()
 
 
 class ActivityCommentCreateView(
@@ -449,43 +498,43 @@ class ActivityViewSet:
             setattr(self, key, value)
 
     @property
-    def create_view(self) -> HttpRequestResponse:
+    def create_view(self) -> DjangoView:
         return self.create_view_class.as_view(
             model=self.model, form_class=self.form_class
         )
 
     @property
-    def create_comment_view(self) -> HttpRequestResponse:
+    def create_comment_view(self) -> DjangoView:
         return self.create_comment_view_class.as_view(model=self.model)
 
     @property
-    def update_view(self) -> HttpRequestResponse:
+    def update_view(self) -> DjangoView:
         return self.update_view_class.as_view(
             model=self.model, form_class=self.form_class
         )
 
     @property
-    def list_view(self) -> HttpRequestResponse:
+    def list_view(self) -> DjangoView:
         return self.list_view_class.as_view(model=self.model)
 
     @property
-    def detail_view(self) -> HttpRequestResponse:
+    def detail_view(self) -> DjangoView:
         return self.detail_view_class.as_view(model=self.model)
 
     @property
-    def delete_view(self) -> HttpRequestResponse:
+    def delete_view(self) -> DjangoView:
         return self.delete_view_class.as_view(model=self.model)
 
     @property
-    def like_view(self) -> HttpRequestResponse:
+    def like_view(self) -> DjangoView:
         return self.like_view_class.as_view(model=self.model)
 
     @property
-    def dislike_view(self) -> HttpRequestResponse:
+    def dislike_view(self) -> DjangoView:
         return self.dislike_view_class.as_view(model=self.model)
 
     @property
-    def flag_view(self) -> HttpRequestResponse:
+    def flag_view(self) -> DjangoView:
         return self.flag_view_class.as_view(model=self.model)
 
     @property

@@ -11,6 +11,7 @@ from communikit.communities.views import (
     community_access_denied_view,
     community_not_found_view,
 )
+from communikit.users.views import user_update_view, user_delete_view
 
 urlpatterns = [
     # Local
@@ -21,11 +22,13 @@ urlpatterns = [
     path("invites/", include("communikit.invites.urls")),
     path("join-requests/", include("communikit.join_requests.urls")),
     path("notifications/", include("communikit.notifications.urls")),
+    path("following/", include("communikit.subscriptions.urls")),
     path("photos/", include("communikit.photos.urls")),
     path("posts/", include("communikit.posts.urls")),
-    path("profile/", include("communikit.users.profile_urls")),
-    path("community/settings/", include("communikit.communities.urls")),
-    path("user/settings/", include("communikit.users.settings_urls")),
+    path("people/", include("communikit.users.urls")),
+    path("community/", include("communikit.communities.urls")),
+    path("account/~update", user_update_view, name="user_update"),
+    path("account/~delete", user_delete_view, name="user_delete"),
     path(
         "access-denied/",
         view=community_access_denied_view,

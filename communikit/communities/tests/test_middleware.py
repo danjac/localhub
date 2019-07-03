@@ -4,7 +4,7 @@ from django.test.client import RequestFactory
 
 from communikit.communities.middleware import CurrentCommunityMiddleware
 from communikit.communities.models import Community
-from communikit.core.types import HttpRequestResponse
+from communikit.core.types import DjangoView
 
 pytestmark = pytest.mark.django_db
 
@@ -14,7 +14,7 @@ class TestCurrentCommunityMiddleware:
         self,
         community: Community,
         req_factory: RequestFactory,
-        get_response: HttpRequestResponse,
+        get_response: DjangoView,
     ):
         mw = CurrentCommunityMiddleware(get_response)
         req = req_factory.get("/", HTTP_HOST=community.domain)
@@ -22,7 +22,7 @@ class TestCurrentCommunityMiddleware:
         assert req.community == community
 
     def test_if_no_community_available(
-        self, req_factory: RequestFactory, get_response: HttpRequestResponse
+        self, req_factory: RequestFactory, get_response: DjangoView
     ):
         mw = CurrentCommunityMiddleware(get_response)
         req = req_factory.get("/", HTTP_HOST="example.com")

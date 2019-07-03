@@ -13,21 +13,21 @@ from model_utils import Choices
 from model_utils.models import TimeStampedModel
 
 from communikit.communities.models import Community
-from communikit.core.utils.content_types import get_content_type_exists
+from communikit.core.utils.content_types import get_generic_related_exists
 from communikit.notifications.models import Notification
 
 
 class FlagAnnotationsQuerySetMixin:
     def with_is_flagged(self) -> models.QuerySet:
         return self.annotate(
-            is_flagged=get_content_type_exists(self.model, Flag.objects.all())
+            is_flagged=get_generic_related_exists(self.model, Flag)
         )
 
     def with_has_flagged(
         self, user: settings.AUTH_USER_MODEL
     ) -> models.QuerySet:
         return self.annotate(
-            has_flagged=get_content_type_exists(
+            has_flagged=get_generic_related_exists(
                 self.model, Flag.objects.filter(user=user)
             )
         )

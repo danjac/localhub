@@ -1,12 +1,12 @@
-{% extends "users/profile_base.html" %}
+{% extends "users/base.html" %}
 {% load i18n %}
 
 
-{% block profile_content %}
+{% block user_content %}
 
 {% if num_likes %}
 <div class="mt-2 toast text-center">
-{% if profile == user %}
+{% if is_auth_user %}
 {% blocktrans count counter=num_likes %}
 You have received a total of <strong>1 like</strong> for your comments.
 {% plural %}
@@ -33,7 +33,7 @@ This user has received <strong>{{ num_likes }} likes</strong> for their comments
         <i class="icon icon-user"></i>
     </div>
     <p class="empty-title h5">
-        {% if profile == user %}
+        {% if is_auth_user %}
         {% trans "You haven't posted anything yet" %}
         {% else %}
         {% trans "This user hasn't posted anything yet" %}
@@ -43,4 +43,4 @@ This user has received <strong>{{ num_likes }} likes</strong> for their comments
 {% endfor %}
 
 {% include "includes/pagination.html" %}
-{% endblock profile_content %}
+{% endblock user_content %}

@@ -126,15 +126,6 @@ class TestCommunityPermissions:
         )
         assert user.has_perm("communities.manage_community", community)
 
-    def test_can_view_memberships_if_member(
-        self, user: settings.AUTH_USER_MODEL, community: Community
-    ):
-        Membership.objects.create(
-            member=user, community=community, role="member"
-        )
-
-        assert user.has_perm("communities.view_memberships", community)
-
 
 class TestMembershipPermissions:
     def test_can_change_membership_if_is_admin_and_is_other_membership(

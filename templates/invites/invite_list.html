@@ -29,7 +29,7 @@
         <a class="btn btn-sm disabled" href="#">{% trans "Re-send" %}</a>
         {% endif %}
         {% url 'invites:delete' invite.id as delete_url %}
-        <a class="btn btn-sm btn-warning"
+        <a class="btn btn-sm"
            href="{{ delete_url }}"
            data-controller="ajax confirm"
            data-action="confirm#check ajax#delete"
