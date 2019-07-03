@@ -1,15 +1,18 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% extends "activities/base.html" %}
 {% load i18n %}
 {% load account %}
 {% load users_tags %}
 
 {% block subtitle %}
-{% user_display object as profile_name %} - {{ profile_name }}
+{% user_display user_obj as display_name %} - {{ display_name }}
 {% endblock %}
 
 {% block activities_sidebar %}
 
-{% if user == profile %}
+{% if is_auth_user %}
 {% include "users/includes/sidebar.html" %}
 {% else %}
 {{ block.super }}
@@ -19,24 +22,24 @@
 
 {% block activities_content %}
 
-{% user_display object as profile_name %}
+{% user_display user_obj as display_name %}
 
-<h3>{% avatar profile "avatar-lg" %}{{ profile_name }}</h3>
+<h3>{% avatar user_obj "avatar-lg" %}{{ display_name }}</h3>
 
 <ul class="tab tab-block">
   <li class="tab-item" data-controller="active-link" data-active-link-exact>
     <a data-target="active-link.match"
-       href="{% url 'profile:detail' object.username %}">{% trans "About" %}</a>
+       href="{% url 'users:detail' user_obj.username %}">{% trans "About" %}</a>
   </li>
   <li class="tab-item" data-controller="active-link" data-active-link-exact>
     <a data-target="active-link.match"
-       href="{% url 'profile:activities' object.username %}">{% trans "Posts" %}</a>
+       href="{% url 'users:activities' user_obj.username %}">{% trans "Posts" %}</a>
   </li>
   <li class="tab-item" data-controller="active-link" data-active-link-exact>
     <a data-target="active-link.match"
-       href="{% url 'profile:comments' object.username %}">{% trans "Comments" %}</a>
+       href="{% url 'users:comments' user_obj.username %}">{% trans "Comments" %}</a>
   </li>
 </ul>
 
-{% block profile_content %}{% endblock %}
+{% block user_content %}{% endblock %}
 {% endblock activities_content %}

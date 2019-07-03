@@ -1,0 +1,29 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "subscriptions/base.html" %}
+{% load i18n %}
+
+{% block subscriptions_content %}
+{% if object_list %}
+<table class="table table-striped table-hover">
+    <tbody>
+        {% for tag in object_list %}
+        <tr>
+            <td>
+                <a href="{% url 'activities:tag' tag.slug %}">
+                    #{{ tag.name }}
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="empty">
+    <p class="empty-title h5">{% trans "You are not following any tags right now" %}</p>
+</div>
+{% endif %}
+
+{% include "includes/pagination.html" %}
+{% endblock subscriptions_content %}

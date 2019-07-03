@@ -1,14 +1,14 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import no_type_check, Sequence
+from typing import no_type_check
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import redirect_to_login
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q, QuerySet
+from django.db.models import QuerySet
 from django.http import (
     Http404,
     HttpRequest,
@@ -19,13 +19,11 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DeleteView, ListView, TemplateView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.list import MultipleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.communities.forms import MembershipForm
 from communikit.communities.models import Community, Membership
-from communikit.communities.rules import is_admin
 
 
 class CommunityRequiredMixin:
@@ -107,14 +105,13 @@ class CommunityUpdateView(
 community_update_view = CommunityUpdateView.as_view()
 
 
-class UserMembershipListView(LoginRequiredMixin, ListView):
+class CommunityListView(LoginRequiredMixin, ListView):
     """
     Returns all communities a user belongs to
     """
 
     paginate_by = settings.DEFAULT_PAGE_SIZE
     allow_empty = True
-    template_name = "communities/user_membership_list.html"
 
     def get_queryset(self) -> QuerySet:
         return self.request.user.membership_set.select_related(
@@ -122,7 +119,7 @@ class UserMembershipListView(LoginRequiredMixin, ListView):
         ).order_by("community__name")
 
 
-user_membership_list_view = UserMembershipListView.as_view()
+community_list_view = CommunityListView.as_view()
 
 
 class MembershipQuerySetMixin(CommunityRequiredMixin):
@@ -136,67 +133,29 @@ class SingleMembershipMixin(MembershipQuerySetMixin, SingleObjectMixin):
     ...
 
 
-class MultipleMembershipMixin(MembershipQuerySetMixin, MultipleObjectMixin):
-    ...
-
-
 class MembershipListView(
-    PermissionRequiredMixin, MultipleMembershipMixin, ListView
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    MembershipQuerySetMixin,
+    ListView,
 ):
-    permission_required = "communities.view_memberships"
+    paginate_by = settings.DEFAULT_PAGE_SIZE
+    permission_required = "communities.manage_community"
+
+    def get_queryset(self) -> QuerySet:
+        return (
+            super().get_queryset().order_by("member__name", "member__username")
+        )
 
     def get_permission_object(self) -> Community:
         return self.request.community
 
 
-class CommunityMembershipListView(MembershipListView):
-    """
-    Returns all members in the current community
-
-    For now this requires admin priv, but will change to allow all
-    members.
-    """
-
-    paginate_by = settings.DEFAULT_PAGE_SIZE
-    allow_empty = True
-    template_name = "communities/community_membership_list.html"
-
-    def get_queryset(self) -> QuerySet:
-        return super().get_queryset().order_by("member__username")
-
-    def get_template_names(self) -> Sequence[str]:
-        if is_admin(self.request.user, self.request.community):
-            return ["communities/admin_community_membership_list.html"]
-        return ["communities/member_community_membership_list.html"]
-
-
-community_membership_list_view = CommunityMembershipListView.as_view()
-
-
-class MemberAutocompleteListView(MembershipListView):
-    template_name = "communities/member_autocomplete_list.html"
-
-    def get_queryset(self) -> QuerySet:
-        qs = super().get_queryset()
-        search_term = self.request.GET.get("q", "").strip()
-        if search_term:
-            return (
-                qs.filter(
-                    Q(
-                        Q(member__username__icontains=search_term)
-                        | Q(member__name__icontains=search_term)
-                    )
-                )
-                .select_related("member")
-                .order_by("member__username")
-            )
-        return qs.none()
-
-
-member_autocomplete_list_view = MemberAutocompleteListView.as_view()
+membership_list_view = MembershipListView.as_view()
 
 
 class MembershipUpdateView(
+    LoginRequiredMixin,
     PermissionRequiredMixin,
     SingleMembershipMixin,
     SuccessMessageMixin,
@@ -204,7 +163,7 @@ class MembershipUpdateView(
 ):
     form_class = MembershipForm
     permission_required = "communities.change_membership"
-    success_url = reverse_lazy("communities:community_membership_list")
+    success_url = reverse_lazy("communities:membership_list")
     success_message = _("Membership has been updated")
 
 
@@ -212,16 +171,35 @@ membership_update_view = MembershipUpdateView.as_view()
 
 
 class MembershipDeleteView(
-    PermissionRequiredMixin, SingleMembershipMixin, DeleteView
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    SingleMembershipMixin,
+    DeleteView,
 ):
-    fields = ("role", "active")
     permission_required = "communities.delete_membership"
-    success_url = reverse_lazy("communities:community_membership_list")
 
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         if self.object.member == self.request.user:
-            return reverse("communities:user_membership_list")
-        return reverse("communities:community_membership_list")
+            return reverse("communities:community_list")
+        return reverse("communities:membership_list")
 
 
 membership_delete_view = MembershipDeleteView.as_view()
+
+
+class CommunityLeaveView(MembershipDeleteView):
+    template_name = "communities/leave.html"
+
+    def get_object(self) -> Membership:
+        return (
+            super()
+            .get_queryset()
+            .filter(member__pk=self.request.user.id)
+            .get()
+        )
+
+    def get_success_url(self) -> str:
+        return settings.HOME_PAGE_URL
+
+
+community_leave_view = CommunityLeaveView.as_view()

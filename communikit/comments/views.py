@@ -14,7 +14,6 @@ from django.views.generic import (
     DeleteView,
     DetailView,
     FormView,
-    ListView,
     UpdateView,
     View,
 )
@@ -32,7 +31,6 @@ from communikit.core.types import BreadcrumbList, ContextDict
 from communikit.core.views import BreadcrumbsMixin
 from communikit.flags.forms import FlagForm
 from communikit.likes.models import Like
-from communikit.users.views import UserProfileMixin
 
 
 class CommentQuerySetMixin(CommunityRequiredMixin):
@@ -234,31 +232,3 @@ class CommentFlagView(
 
 
 comment_flag_view = CommentFlagView.as_view()
-
-
-class CommentProfileView(MultipleCommentMixin, UserProfileMixin, ListView):
-    active_tab = "comments"
-    template_name = "comments/profile.html"
-
-    def get_queryset(self) -> QuerySet:
-        return (
-            super()
-            .get_queryset()
-            .filter(owner=self.object)
-            .with_common_annotations(self.request.community, self.request.user)
-            .order_by("-created")
-        )
-
-    def get_context_data(self, **kwargs) -> ContextDict:
-        data = super().get_context_data(**kwargs)
-        data["num_likes"] = (
-            Like.objects.for_models(Comment)
-            .filter(
-                recipient=self.object, community=self.request.community
-            )
-            .count()
-        )
-        return data
-
-
-comment_profile_view = CommentProfileView.as_view()

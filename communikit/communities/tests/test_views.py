@@ -96,58 +96,30 @@ class TestCommunityUpdateView:
         assert admin.community.name == "New name"
 
 
-class TestCommunityMembershipListView:
-    def test_get_if_admin(
+class TestCommunityListView:
+    def test_get(
+        self,
+        client: Client,
+        member: Membership,
+        user: settings.AUTH_USER_MODEL,
+    ):
+        Membership.objects.create(member=user, community=member.community)
+        assert (
+            client.get(reverse("communities:community_list")).status_code
+            == 200
+        )
+
+
+class TestMembershipListView:
+    def test_get(
         self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
     ):
-        Membership.objects.create(member=user, community=admin.community)
-        response = client.get(reverse("communities:community_membership_list"))
+        for _ in range(3):
+            Membership.objects.create(
+                member=UserFactory(), community=admin.community
+            )
         assert (
-            "communities/admin_community_membership_list.html"
-            in [t.name for t in response.templates]
-        )
-        assert len(response.context["object_list"]) == 2
-
-    def test_get_if_member(
-        self,
-        client: Client,
-        member: Membership,
-        user: settings.AUTH_USER_MODEL,
-    ):
-        Membership.objects.create(member=user, community=member.community)
-        response = client.get(reverse("communities:community_membership_list"))
-        assert (
-            "communities/member_community_membership_list.html"
-            in [t.name for t in response.templates]
-        )
-        assert len(response.context["object_list"]) == 2
-
-
-class TestMemberAutocompleteListView:
-    def test_get(
-        self,
-        client: Client,
-        member: Membership,
-        user: settings.AUTH_USER_MODEL,
-    ):
-        Membership.objects.create(member=user, community=member.community)
-        response = client.get(
-            reverse("communities:member_autocomplete_list"),
-            {"q": user.username},
-        )
-        assert len(response.context["object_list"]) == 1
-
-
-class TestUserMembershipListView:
-    def test_get(
-        self,
-        client: Client,
-        member: Membership,
-        user: settings.AUTH_USER_MODEL,
-    ):
-        Membership.objects.create(member=user, community=member.community)
-        assert (
-            client.get(reverse("communities:user_membership_list")).status_code
+            client.get(reverse("communities:membership_list")).status_code
             == 200
         )
 
@@ -176,7 +148,7 @@ class TestMembershipUpdateView:
             reverse("communities:membership_update", args=[membership.id]),
             {"active": True, "role": "moderator"},
         )
-        assert response.url == reverse("communities:community_membership_list")
+        assert response.url == reverse("communities:membership_list")
         membership.refresh_from_db()
         assert membership.role == "moderator"
 
@@ -205,7 +177,7 @@ class TestMembershipDeleteView:
             reverse("communities:membership_delete", args=[membership.id])
         )
 
-        assert response.url == reverse("communities:community_membership_list")
+        assert response.url == reverse("communities:membership_list")
         assert not Membership.objects.filter(pk=membership.pk).exists()
 
     def test_delete_own_membership(self, client: Client, member: Membership):
@@ -213,5 +185,34 @@ class TestMembershipDeleteView:
             reverse("communities:membership_delete", args=[member.id])
         )
 
-        assert response.url == reverse("communities:user_membership_list")
+        assert response.url == reverse("communities:community_list")
+        assert not Membership.objects.filter(pk=member.id).exists()
+
+
+class TestCommunityLeaveView:
+    def test_get(
+        self,
+        client: Client,
+        member: Membership,
+        user: settings.AUTH_USER_MODEL,
+    ):
+        assert client.get(reverse("communities:leave")).status_code == 200
+
+    def test_delete(
+        self,
+        client: Client,
+        member: Membership,
+        user: settings.AUTH_USER_MODEL,
+    ):
+        response = client.post(reverse("communities:leave"))
+
+        assert response.url == "/"
+        assert not Membership.objects.filter(pk=member.pk).exists()
+
+    def test_delete_own_membership(self, client: Client, member: Membership):
+        response = client.post(
+            reverse("communities:membership_delete", args=[member.id])
+        )
+
+        assert response.url == reverse("communities:community_list")
         assert not Membership.objects.filter(pk=member.id).exists()

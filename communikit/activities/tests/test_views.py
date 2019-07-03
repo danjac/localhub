@@ -6,34 +6,16 @@ import pytest
 from django.test.client import Client
 from django.urls import reverse
 
+from taggit.models import Tag
+
 from communikit.communities.models import Community, Membership
 from communikit.events.tests.factories import EventFactory
-from communikit.likes.models import Like
 from communikit.photos.tests.factories import PhotoFactory
 from communikit.posts.tests.factories import PostFactory
-from communikit.users.tests.factories import UserFactory
+from communikit.subscriptions.models import Subscription
+
 
 pytestmark = pytest.mark.django_db
-
-
-class TestActivityProfileView:
-    def test_get(self, client: Client, member: Membership):
-        post = PostFactory(community=member.community, owner=member.member)
-        EventFactory(community=member.community, owner=member.member)
-
-        Like.objects.create(
-            user=UserFactory(),
-            content_object=post,
-            community=post.community,
-            recipient=post.owner,
-        )
-
-        response = client.get(
-            reverse("profile:activities", args=[member.member.username])
-        )
-        assert response.status_code == 200
-        assert len(response.context["object_list"]) == 2
-        assert response.context["num_likes"] == 1
 
 
 class TestActivityStreamView:
@@ -86,3 +68,31 @@ class TestTagAutocompleteListView:
         )
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 1
+
+
+class TestTagSubscribeView:
+    def test_post(self, client: Client, member: Membership):
+        tag = Tag.objects.create(name="movies")
+        response = client.post(
+            reverse("activities:subscribe_tag", args=[tag.slug])
+        )
+        assert response.url == reverse("activities:tag", args=[tag.slug])
+        sub = Subscription.objects.get()
+        assert sub.content_object == tag
+        assert sub.subscriber == member.member
+        assert sub.community == member.community
+
+
+class TestTagUnsubscribeView:
+    def test_post(self, client: Client, member: Membership):
+        tag = Tag.objects.create(name="movies")
+        Subscription.objects.create(
+            content_object=tag,
+            subscriber=member.member,
+            community=member.community,
+        )
+        response = client.post(
+            reverse("activities:unsubscribe_tag", args=[tag.slug])
+        )
+        assert response.url == reverse("activities:tag", args=[tag.slug])
+        assert not Subscription.objects.exists()

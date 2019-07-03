@@ -1,11 +1,6 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% load i18n %}
-{% load account %}
-{% load rules %}
-{% load users_tags %}
-
 <table class="table table-striped table-hover">
   <thead>
     <tr>
@@ -43,7 +38,7 @@
            data-ajax-url="{{ delete_url }}"
            data-confirm-header="{% trans 'Delete Membership' %}"
            data-confirm-body="{% trans 'Are you sure you want to delete this membership?' %}"
-           class="btn btn-sm btn-warning">{% trans "Delete" %}</a>
+           class="btn btn-sm">{% trans "Delete" %}</a>
         {% endif %}
       </td>
     </tr>

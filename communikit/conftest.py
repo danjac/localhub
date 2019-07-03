@@ -17,12 +17,12 @@ from communikit.photos.models import Photo
 from communikit.photos.tests.factories import PhotoFactory
 from communikit.posts.models import Post
 from communikit.posts.tests.factories import PostFactory
-from communikit.core.types import HttpRequestResponse
+from communikit.core.types import DjangoView
 from communikit.users.tests.factories import UserFactory
 
 
 @pytest.fixture
-def get_response() -> HttpRequestResponse:
+def get_response() -> DjangoView:
     def _get_response(req: HttpRequest) -> HttpResponse:
         return HttpResponse()
 

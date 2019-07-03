@@ -6,8 +6,8 @@
 {% load i18n %}
 {% load account %}
 {% block notification_title %}
-{% user_display notification.actor as actor %}
-User <strong>{{ actor }}</strong>
+{% user_display notification.actor as display_name %}
+User <strong><a href="{{ notification.actor.get_absolute_url }}">{{ display_name }}</a></strong>
 {% if notification.verb == 'mentioned' %}
 has mentioned you in a
 {% elif notification.verb == 'created' %}

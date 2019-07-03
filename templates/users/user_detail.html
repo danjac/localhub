@@ -1,12 +1,40 @@
-{% extends "users/profile_base.html" %}
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% block profile_content %}
-{% if profile.bio %}
-{{ profile.bio.markdown }}
-{% if profile == user %}
+{% extends "users/base.html" %}
+{% load i18n %}
+{% load rules %}
+
+{% block user_content %}
+
+{% has_perm "subscriptions.create_subscription" user request.community as can_create_subscription %}
+
+{% if can_create_subscription and not is_auth_user and not is_subscribed %}
 <p class="mt-2">
-    <a href="{% url 'settings:update' %}" class="btn btn-primary btn-block">
-        <i class="icon icon-edit"></i> Update your profile
+    <a href="{% url 'users:subscribe' user_obj.username %}"
+       class="btn btn-primary btn-block"
+       data-controller="ajax"
+       data-action="ajax#post">
+        <i class="icon icon-plus"></i> {% trans "Follow this user" %}
+    </a>
+</p>
+{% elif is_subscribed %}
+<p class="mt-2">
+    <a href="{% url 'users:unsubscribe' user_obj.username %}"
+       class="btn btn-block"
+       data-controller="ajax"
+       data-action="ajax#post">
+        <i class="icon icon-stop"></i> {% trans "Stop following this user" %}
+    </a>
+</p>
+{% endif %}
+
+{% if user_obj.bio %}
+{{ user_obj.bio.markdown }}
+{% if is_auth_user %}
+<p class="mt-2">
+    <a href="{% url 'user_update' %}" class="btn btn-primary btn-block">
+        <i class="icon icon-edit"></i> {% trans "Update your profile" %}
     </a>
 </p>
 {% endif %}
@@ -15,16 +43,16 @@
     <div class="empty-icon">
         <i class="icon icon-people"></i>
     </div>
-    {% if profile == user %}
-    <p class="empty-title h5">You do not have a bio</p>
+    {% if is_auth_user %}
+    <p class="empty-title h5">{% trans "You do not have a bio" %}</p>
     <div class="empty-action">
-        <a href="{% url 'settings:update' %}" class="btn btn-primary btn-block">
-            <i class="icon icon-edit"></i> Update your profile
+        <a href="{% url 'user_update' %}" class="btn btn-primary btn-block">
+            <i class="icon icon-edit"></i> {% trans "Update your profile" %}
         </a>
     </div>
     {% else %}
-    <p class="empty-title h5">This user has not added any information.</p>
+    <p class="empty-title h5">{% trans "This user has not added any information." %}</p>
     {% endif %}
 </div>
 {% endif %}
-{% endblock profile_content %}
+{% endblock user_content %}

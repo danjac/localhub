@@ -1,21 +1,42 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+
+from typing import Type
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.messages.views import SuccessMessageMixin
-from django.db.models import QuerySet
-from django.http import HttpRequest, HttpResponse
-from django.urls import reverse_lazy
+from django.db.models import Q, QuerySet
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DeleteView, DetailView, UpdateView
+from django.views.generic import (
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+    View,
+)
+from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
 
+from rules.contrib.views import PermissionRequiredMixin
+
+from communikit.activities.models import Activity
+from communikit.activities.views import ActivityStreamView
+from communikit.comments.models import Comment
+from communikit.comments.views import MultipleCommentMixin
+from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
+from communikit.core.types import ContextDict
+from communikit.likes.models import Like
+from communikit.subscriptions.models import Subscription
 
 
-class CurrentUserMixin(LoginRequiredMixin):
+class AuthenticatedUserMixin(LoginRequiredMixin):
     """
     Always returns the current logged in user.
     """
@@ -24,33 +45,7 @@ class CurrentUserMixin(LoginRequiredMixin):
         return self.request.user
 
 
-class UserQuerySetMixin(CommunityRequiredMixin, SingleObjectMixin):
-
-    slug_field = "username"
-    slug_url_kwarg = "username"
-    context_object_name = "profile"
-
-    def get_user_queryset(self) -> QuerySet:
-        return get_user_model().objects.filter(
-            is_active=True, communities=self.request.community
-        )
-
-
-class UserProfileMixin(UserQuerySetMixin):
-    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        self.object = self.get_object(queryset=self.get_user_queryset())
-        return super().get(request, *args, **kwargs)
-
-
-class UserDetailView(UserQuerySetMixin, DetailView):
-    def get_queryset(self) -> QuerySet:
-        return self.get_user_queryset()
-
-
-user_detail_view = UserDetailView.as_view()
-
-
-class UserUpdateView(CurrentUserMixin, SuccessMessageMixin, UpdateView):
+class UserUpdateView(AuthenticatedUserMixin, SuccessMessageMixin, UpdateView):
     fields = ("name", "avatar", "bio")
 
     success_message = _("Your details have been updated")
@@ -62,8 +57,192 @@ class UserUpdateView(CurrentUserMixin, SuccessMessageMixin, UpdateView):
 user_update_view = UserUpdateView.as_view()
 
 
-class UserDeleteView(CurrentUserMixin, DeleteView):
-    success_url = reverse_lazy("account_login")
+class UserDeleteView(AuthenticatedUserMixin, DeleteView):
+    success_url = settings.HOME_PAGE_URL
 
 
 user_delete_view = UserDeleteView.as_view()
+
+
+class UserSlugMixin:
+    slug_field = "username"
+
+
+class UserContextMixin(ContextMixin):
+    context_object_name = "user_obj"
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["is_auth_user"] = self.request.user == self.object
+        return data
+
+
+class UserQuerySetMixin(CommunityRequiredMixin):
+    def get_queryset(self) -> QuerySet:
+        return get_user_model().objects.active(self.request.community)
+
+
+class UserDetailView(
+    UserSlugMixin, UserContextMixin, UserQuerySetMixin, DetailView
+):
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        if (
+            self.request.user.is_authenticated
+            and self.object != self.request.user
+        ):
+            data["is_subscribed"] = Subscription.objects.filter(
+                user=self.object, subscriber=self.request.user
+            ).exists()
+        return data
+
+
+user_detail_view = UserDetailView.as_view()
+
+
+class SingleUserView(
+    UserSlugMixin, UserQuerySetMixin, SingleObjectMixin, View
+):
+    ...
+
+
+class UserSubscribeView(
+    LoginRequiredMixin, PermissionRequiredMixin, SingleUserView
+):
+    permission_required = "subscriptions.create_subscription"
+
+    def get_permission_object(self) -> Community:
+        return self.request.community
+
+    def get_queryset(self) -> QuerySet:
+        return super().get_queryset().exclude(pk=self.request.user.id)
+
+    def get_success_url(self) -> str:
+        return self.object.get_absolute_url()
+
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+
+        Subscription.objects.create(
+            subscriber=self.request.user,
+            content_object=self.object,
+            community=self.request.community,
+        )
+
+        messages.success(self.request, _("You are now following this user"))
+        return HttpResponseRedirect(self.get_success_url())
+
+
+user_subscribe_view = UserSubscribeView.as_view()
+
+
+class UserUnsubscribeView(LoginRequiredMixin, SingleUserView):
+    def get_success_url(self) -> str:
+        return self.object.get_absolute_url()
+
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        Subscription.objects.filter(
+            object_id=self.object.id,
+            content_type=ContentType.objects.get_for_model(self.object),
+            subscriber=self.request.user,
+        ).delete()
+        messages.success(
+            self.request, _("You have stopped following this user")
+        )
+        return HttpResponseRedirect(self.get_success_url())
+
+
+user_unsubscribe_view = UserUnsubscribeView.as_view()
+
+
+class BaseUserListView(UserQuerySetMixin, ListView):
+    def get_queryset(self) -> QuerySet:
+        return super().get_queryset().order_by("name", "username")
+
+
+class UserListView(BaseUserListView):
+    paginate_by = settings.DEFAULT_PAGE_SIZE
+
+
+user_list_view = UserListView.as_view()
+
+
+class UserAutocompleteListView(BaseUserListView):
+    template_name = "users/user_autocomplete_list.html"
+
+    def get_queryset(self) -> QuerySet:
+        qs = super().get_queryset()
+        search_term = self.request.GET.get("q", "").strip()
+        if search_term:
+            return qs.filter(
+                Q(
+                    Q(username__icontains=search_term)
+                    | Q(name__icontains=search_term)
+                )
+            )
+        return qs.none()
+
+
+user_autocomplete_list_view = UserAutocompleteListView.as_view()
+
+
+class SingleUserMixin(
+    CommunityRequiredMixin, UserSlugMixin, UserContextMixin, SingleObjectMixin
+):
+    """
+    Used to mix with views using non-user querysets
+    """
+
+    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object(
+            queryset=get_user_model().objects.active(self.request.community)
+        )
+        return super().get(request, *args, **kwargs)
+
+
+class UserActivityStreamView(SingleUserMixin, ActivityStreamView):
+
+    active_tab = "posts"
+    template_name = "users/activities.html"
+
+    def get_queryset_for_model(self, model: Type[Activity]) -> QuerySet:
+        return super().get_queryset_for_model(model).filter(owner=self.object)
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["num_likes"] = (
+            Like.objects.for_models(*self.models)
+            .filter(recipient=self.object, community=self.request.community)
+            .count()
+        )
+        return data
+
+
+user_activity_stream_view = UserActivityStreamView.as_view()
+
+
+class UserCommentListView(MultipleCommentMixin, SingleUserMixin, ListView):
+    active_tab = "comments"
+    template_name = "users/comments.html"
+
+    def get_queryset(self) -> QuerySet:
+        return (
+            super()
+            .get_queryset()
+            .filter(owner=self.object)
+            .with_common_annotations(self.request.community, self.request.user)
+            .order_by("-created")
+        )
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["num_likes"] = (
+            Like.objects.for_models(Comment)
+            .filter(recipient=self.object, community=self.request.community)
+            .count()
+        )
+        return data
+
+
+user_comment_list_view = UserCommentListView.as_view()

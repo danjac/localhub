@@ -14,7 +14,7 @@
           data-ajax-url="{% url 'notifications:mark_all_read' %}"
           ><i class="icon icon-check"></i> {% trans "Mark All as Read" %}</button>
   {% endif %}
-  <button class="btn btn-warning"
+  <button class="btn"
           data-controller="confirm ajax"
           data-action="confirm#check ajax#delete"
           data-ajax-url="{% url 'notifications:delete_all' %}"

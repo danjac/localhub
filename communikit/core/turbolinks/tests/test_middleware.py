@@ -2,12 +2,12 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.test.client import RequestFactory
 
 from communikit.core.turbolinks.middleware import TurbolinksMiddleware
-from communikit.core.types import HttpRequestResponse
+from communikit.core.types import DjangoView
 
 
 class TestTurbolinksMiddleware:
     def test_location_header(
-        self, req_factory: RequestFactory, get_response: HttpRequestResponse
+        self, req_factory: RequestFactory, get_response: DjangoView
     ):
         mw = TurbolinksMiddleware(get_response)
         req = req_factory.get("/")

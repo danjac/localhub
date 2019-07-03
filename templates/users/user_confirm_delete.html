@@ -1,18 +1,18 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "users/settings_base.html" %}
+{% extends "users/account_base.html" %}
 {% load i18n %}
 
 {% block users_content %}
-<form method="POST" action="{% url 'settings:delete' %}">
+<form method="POST" action="{% url 'user_delete' %}">
   {% csrf_token %}
   <p>
   {% blocktrans %}
   Please confirm you want to delete your account. This will also <b>permanently</b> remove all your posts and comments.
   {% endblocktrans %}
   </p>
-  <a class="btn btn-secondary" href="{% url 'profile:detail' user.username %}">{% trans "Cancel" %}</a>
+  <a class="btn btn-secondary" href="{{ user.get_absolute_url }}">{% trans "Cancel" %}</a>
   <button class="btn btn-warning" type="submit">{% trans "Delete account" %}</button>
 </form>
 
