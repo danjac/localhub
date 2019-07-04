@@ -11,7 +11,6 @@ from communikit.posts import tasks
 from communikit.posts.models import Post
 
 
-
 @receiver(post_delete, sender=Post, dispatch_uid="posts.delete_flags")
 def delete_flags(instance: Post, **kwargs):
     transaction.on_commit(lambda: instance.get_flags().delete())
@@ -41,6 +40,7 @@ def send_notifications(instance: Post, created: bool, **kwargs):
             "mentioned": _("You have been mentioned in a post"),
             "created": _("A new post has been added"),
             "updated": _("A post has been updated"),
+            "tagged": _("A post has been added with a tag you are following"),
         }
         post_url = instance.get_permalink()
         for notification in instance.notify(created):

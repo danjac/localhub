@@ -29,11 +29,11 @@
 <div class="mb-2">
   {% with content_type=notification.content_type.name content_object=notification.content_object %}
   {% if content_type == "post" %}
-  {% include "posts/includes/notification.html" with post=content_object %}
+  {% include "activities/includes/notification.html" with activity=content_object activity_name="post" %}
   {% elif content_type == "photo" %}
-  {% include "photos/includes/notification.html" with photo=content_object %}
+  {% include "activities/includes/notification.html" with activity=content_object activity_name="photo" %}
   {% elif content_type == "event" %}
-  {% include "events/includes/notification.html" with event=content_object %}
+  {% include "activities/includes/notification.html" with activity=content_object activity_name="event" %}
   {% elif content_type == "comment" %}
   {% include "comments/includes/notification.html" with comment=content_object %}
   {% endif %}

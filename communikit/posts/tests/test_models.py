@@ -6,11 +6,14 @@ import pytest
 
 from django.db.models import signals
 
+from taggit.models import Tag
+
 from communikit.comments.models import Comment
 from communikit.comments.tests.factories import CommentFactory
 from communikit.communities.models import Community, Membership
 from communikit.posts.models import Post
 from communikit.posts.tests.factories import PostFactory
+from communikit.subscriptions.models import Subscription
 from communikit.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
@@ -55,18 +58,52 @@ class TestPostModel:
         post = PostFactory(
             owner=owner,
             community=community,
-            description="hello @danjac from @owner",
+            description="hello @danjac from @owner #movies #reviews",
         )
+
+        movies = Tag.objects.create(name="movies")
+        reviews = Tag.objects.create(name="reviews")
+
+        tag_subscriber = UserFactory()
+
+        # ensure we just have one notification for multiple tags
+
+        Subscription.objects.create(
+            subscriber=tag_subscriber,
+            content_object=movies,
+            community=post.community,
+        )
+
+        Subscription.objects.create(
+            subscriber=tag_subscriber,
+            content_object=reviews,
+            community=post.community,
+        )
+
+        user_subscriber = UserFactory()
+
+        Subscription.objects.create(
+            subscriber=user_subscriber,
+            content_object=post.owner,
+            community=post.community,
+        )
+
         notifications = post.notify(created=True)
+
+        # ensure saved to db
+        assert len(notifications) == 4
 
         assert notifications[0].recipient == mentioned
         assert notifications[0].verb == "mentioned"
 
-        assert notifications[1].recipient == moderator
-        assert notifications[1].verb == "created"
+        assert notifications[1].recipient == tag_subscriber
+        assert notifications[1].verb == "tagged"
 
-        # ensure saved to db
-        assert post.notifications.count() == 2
+        assert notifications[2].recipient == moderator
+        assert notifications[2].verb == "created"
+
+        assert notifications[3].recipient == user_subscriber
+        assert notifications[3].verb == "created"
 
         # change the description and remove the mention
         post.description = "hello!"
@@ -77,4 +114,4 @@ class TestPostModel:
         assert notifications[0].recipient == moderator
         assert notifications[0].verb == "updated"
 
-        assert post.notifications.count() == 3
+        assert post.notifications.count() == 5

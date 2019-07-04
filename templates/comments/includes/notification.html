@@ -2,18 +2,23 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "notifications/includes/notification.html" %}
+
+{% load i18n %}
 {% load account %}
+{% load users_tags %}
+
 {% block notification_title %}
-{% user_display notification.actor as actor %}
-User <strong>{{ actor }}</strong>
+{% with actor=notification.actor %}
+{% user_display actor as display_name %}
+<a href="{{ actor.get_absolute_url }}">{% avatar actor "avatar-xs" %} {{ display_name }}</a>
 {% if notification.verb == 'mentioned' %}
-has mentioned you in a
+has mentioned you in a <a href="{{ comment.get_absolute_url }}">comment</a>.
 {% elif notification.verb == 'created' %}
-has published a
+has published a <a href="{{ comment.get_absolute_url }}">comment</a>.
 {% elif notification.verb == 'updated' %}
-has updated their
+has updated their <a href="{{ comment.get_absolute_url }}">comment</a>.
 {% elif notification.verb == 'commented' %}
-has posted a
+has <a href="{{ comment.get_absolute_url }}">commented</a> on one of your posts.
 {% endif %}
-<a href="{{ comment.get_absolute_url }}">comment</a>.
+{% endwith %}
 {% endblock notification_title %}

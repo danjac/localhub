@@ -3,8 +3,9 @@
 {% load i18n %}{% load account %}{% autoescape off %}
 {% user_display notification.recipient as recipient %}{% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
 {% user_display notification.actor as actor %}
-{% if notification.verb == 'mentioned' %}{% blocktrans %}User {{ actor }} has mentioned you in a post.{% endblocktrans %}
-{% elif notification.verb == 'created' %}{% blocktrans %}User {{ actor }} has published a post.{% endblocktrans %}
-{% elif notification.verb == 'updated' %}{% blocktrans %}User {{ actor }} has edited a post.{% endblocktrans %}
+{% if notification.verb == 'mentioned' %}{% blocktrans %}{{ actor }} has mentioned you in a post.{% endblocktrans %}
+{% elif notification.verb == 'tagged' %}{% blocktrans %}{{ actor }} has added a post containing tags you follow.{% endblocktrans %}
+{% elif notification.verb == 'created' %}{% blocktrans %}{{ actor }} has added a post.{% endblocktrans %}
+{% elif notification.verb == 'updated' %}{% blocktrans %}{{ actor }} has edited a post.{% endblocktrans %}
 {% endif %}
 Link to post: {{ object_url }}{% endautoescape %}

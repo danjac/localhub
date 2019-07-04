@@ -31,8 +31,10 @@ def taggit(instance: Photo, created: bool, **kwargs):
 def send_notifications(instance: Photo, created: bool, **kwargs):
     def notify():
         subjects = {
+            "mentioned": _("You have been mentioned in a photo"),
             "created": _("A new photo has been added"),
             "updated": _("A photo has been updated"),
+            "tagged": _("A photo has been added with a tag you are following"),
         }
         photo_url = instance.get_permalink()
         for notification in instance.notify(created):

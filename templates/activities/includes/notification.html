@@ -5,15 +5,21 @@
 
 {% load i18n %}
 {% load account %}
+{% load users_tags %}
+
 {% block notification_title %}
-{% user_display notification.actor as actor %}
-User <strong>{{ actor }}</strong>
+{% with actor=notification.actor %}
+{% user_display actor as display_name %}
+<a href="{{ actor.get_absolute_url }}">{% avatar actor "avatar-xs" %} {{ display_name }}</a>
 {% if notification.verb == 'mentioned' %}
-has mentioned you in an
+has mentioned you in a
 {% elif notification.verb == 'created' %}
-has published an
+has published a
 {% elif notification.verb == 'updated' %}
 has updated their
+{% elif notification.verb == 'tagged' %}
+has added tags you follow in their
 {% endif %}
-<a href="{{ event.get_absolute_url }}">event</a>.
+<a href="{{ activity.get_absolute_url }}">{{ activity_name }}</a>.
+{% endwith %}
 {% endblock notification_title %}

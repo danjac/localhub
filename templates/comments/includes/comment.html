@@ -7,7 +7,7 @@
     <div class="card-header">
         {% if comment.is_flagged and can_moderate_community %}
         <div class="toast toast-warning text-center">
-          <a href="{{ comment.get_absolute_url }}">{% trans "This comment has been flagged" %}</a>
+            <a href="{{ comment.get_absolute_url }}">{% trans "This comment has been flagged" %}</a>
         </div>
         {% endif %}
 
@@ -20,6 +20,16 @@
         {{ comment.content.markdown }}
     </div>
     <div class="card-footer">
+        {% if comment.num_likes and comment.owner == user %}
+        <div class="mb-2 text-gray">
+            {{ comment.num_likes }}
+            {% blocktrans count counter=comment.num_likes %}
+            person liked this comment
+            {% plural %}
+            people liked this comment
+            {% endblocktrans %}
+        </div>
+        {% endif %}
         <div class="mb-2">
             <a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a>
         </div>

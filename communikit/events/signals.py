@@ -45,6 +45,9 @@ def send_notifications(instance: Event, created: bool, **kwargs):
             "mentioned": _("You have been mentioned in an event"),
             "created": _("A new event has been added"),
             "updated": _("An event has been updated"),
+            "tagged": _(
+                "An event has been added with a tag you are following"
+            ),
         }
         event_url = instance.get_permalink()
         for notification in instance.notify(created):
