@@ -109,7 +109,7 @@ class MultipleQuerySetContextMixin(MultipleQuerySetMixin, ContextMixin):
             page = self.get_page()
             data.update(
                 {
-                    "page": page,
+                    "page_obj": page,
                     "paginator": page.paginator,
                     "object_list": page.object_list,
                     "is_paginated": page.has_other_pages(),
