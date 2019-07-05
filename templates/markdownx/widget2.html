@@ -5,8 +5,7 @@
 <div class="markdownx tabs"
      data-controller="tabs typeahead"
      data-typeahead-mention-search-url="{% url 'users:autocomplete_list' %}"
-     data-typeahead-tag-search-url="{% url 'activities:tag_autocomplete_list' %}"
-     >
+     data-typeahead-tag-search-url="{% url 'activities:tag_autocomplete_list' %}">
   <ul class="tab">
     <li class="tab-item active" data-target="tabs.tab" data-tab="editor">
       <a href="#" data-action="tabs#select" data-tab="editor">{% trans "Edit" %}</a>
@@ -66,7 +65,7 @@
          >{% trans "List (Numbers)" %}</a>
 
     </div>
-  <ul class="menu d-hide" data-target="typeahead.selector"></ul>
+    <ul class="menu d-hide" data-target="typeahead.selector"></ul>
     <textarea
       data-target="markdown.textarea typeahead.input"
       data-action="keyup->typeahead#typeahead"

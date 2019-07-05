@@ -6,6 +6,7 @@ import pytest
 from django.conf import settings
 from django.test.client import Client
 from django.urls import reverse
+from django.utils.encoding import force_str
 
 from communikit.communities.models import Community, Membership
 from communikit.events.models import Event
@@ -141,3 +142,13 @@ class TestEventDislikeView:
         )
         assert response.status_code == 204
         assert Like.objects.count() == 0
+
+
+class TestEventDownloadView:
+    def test_get(self, client: Client, event: Event):
+        response = client.get(
+            reverse("events:download", args=[event.id]),
+            HTTP_HOST=event.community.domain,
+        )
+        assert response.status_code == 200
+        assert "DTSTART" in force_str(response.content)

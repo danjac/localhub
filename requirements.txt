@@ -48,6 +48,7 @@ future==0.17.1            # via geocoder
 geocoder==1.38.1
 gprof2dot==2017.9.19      # via django-silk
 gunicorn==19.9.0
+icalendar==4.0.3
 idna==2.8                 # via requests
 importlib-metadata==0.18  # via pluggy
 ipython-genutils==0.2.0   # via traitlets
@@ -75,9 +76,9 @@ pygments==2.4.2           # via django-silk, ipython
 pytest-django==3.4.8
 pytest-mock==1.10.4
 pytest==4.4.1
-python-dateutil==2.8.0    # via botocore, django-silk, faker
+python-dateutil==2.8.0    # via botocore, django-silk, faker, icalendar
 python3-openid==3.1.0     # via django-allauth
-pytz==2019.1              # via babel, celery, django, django-silk, flower
+pytz==2019.1              # via babel, celery, django, django-silk, flower, icalendar
 ratelim==0.1.6            # via geocoder
 redis==3.2.1
 requests-oauthlib==1.2.0  # via django-allauth
