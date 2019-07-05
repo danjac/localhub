@@ -1,7 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.views.generic import ListView
@@ -15,7 +14,6 @@ from communikit.users.views import BaseUserListView
 
 
 class SubscribedUserListView(LoginRequiredMixin, BaseUserListView):
-    paginate_by = settings.DEFAULT_PAGE_SIZE
     template_name = "subscriptions/user_list.html"
 
     def get_queryset(self) -> QuerySet:
@@ -33,7 +31,6 @@ subscribed_user_list_view = SubscribedUserListView.as_view()
 class SubscribedTagListView(
     CommunityRequiredMixin, LoginRequiredMixin, ListView
 ):
-    paginate_by = settings.DEFAULT_PAGE_SIZE
     template_name = "subscriptions/tag_list.html"
 
     def get_queryset(self) -> QuerySet:
