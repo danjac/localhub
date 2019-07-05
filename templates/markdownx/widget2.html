@@ -73,8 +73,7 @@
       name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}
       >{% spaceless %}{% if widget.value %}{{ widget.value }}{% endif %}{% endspaceless %}</textarea>
   </div>
-  <div class="tab-pane d-none markdownx-preview"
-       data-controller="media"
+  <div class="tab-pane d-none markdownx-preview markdown-content"
        data-target="tabs.pane"
        data-tab="preview"></div>
   <div class="tab-pane d-none" data-target="tabs.pane" data-tab="guide">

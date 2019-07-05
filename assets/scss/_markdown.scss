@@ -3,3 +3,7 @@
     min-height: 280px;
   }
 }
+
+.markdown-content img {
+  @extend .img-responsive;
+}
