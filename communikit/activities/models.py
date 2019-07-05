@@ -99,7 +99,10 @@ class Activity(TimeStampedModel):
     # description_tracker = FieldTracker(["description"])
 
     class Meta:
-        indexes = [GinIndex(fields=["search_document"])]
+        indexes = [
+            GinIndex(fields=["search_document"]),
+            models.Index(fields=["owner", "community"]),
+        ]
         abstract = True
 
     @classmethod

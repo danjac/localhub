@@ -26,3 +26,16 @@ class Notification(TimeStampedModel):
 
     verb = models.CharField(max_length=20)
     is_read = models.BooleanField(default=False)
+
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=[
+                    "content_type",
+                    "object_id",
+                    "community",
+                    "actor",
+                    "recipient",
+                ]
+            )
+        ]

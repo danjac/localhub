@@ -21,5 +21,18 @@ class Subscription(TimeStampedModel):
     )
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField(db_index=True)
+    object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey("content_type", "object_id")
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["subscriber", "content_type", "object_id"],
+                name="unique_subscription",
+            )
+        ]
+        indexes = [
+            models.Index(
+                fields=["content_type", "object_id", "subscriber", "community"]
+            )
+        ]

@@ -74,6 +74,11 @@ class Flag(TimeStampedModel):
                 name="unique_flag",
             )
         ]
+        indexes = [
+            models.Index(
+                fields=["user", "content_type", "object_id", "community"]
+            )
+        ]
 
     def notify(self) -> List[Notification]:
         notifications = [

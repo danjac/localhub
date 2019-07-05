@@ -150,7 +150,12 @@ class Membership(TimeStampedModel):
     active = models.BooleanField(default=True)
 
     class Meta:
-        unique_together = ("community", "member")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["member", "community"], name="unique_membership"
+            )
+        ]
+        indexes = [models.Index(fields=["member", "community", "active"])]
 
     def __str__(self) -> str:
         return self.get_role_display()

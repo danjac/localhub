@@ -17,7 +17,9 @@
         </div>
     </div>
     <div class="card-body">
-        {{ comment.content.markdown }}
+        <div class="markdown-content">
+            {{ comment.content.markdown }}
+        </div>
     </div>
     <div class="card-footer">
         {% if comment.num_likes and comment.owner == user %}

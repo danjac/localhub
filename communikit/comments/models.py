@@ -67,7 +67,7 @@ class Comment(TimeStampedModel):
     )
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField(db_index=True)
+    object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey("content_type", "object_id")
 
     content = MarkdownField()
@@ -78,6 +78,13 @@ class Comment(TimeStampedModel):
     notifications = GenericRelation(Notification, related_query_name="comment")
 
     objects = CommentQuerySet.as_manager()
+
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=["content_type", "object_id", "owner", "community"]
+            )
+        ]
 
     def get_absolute_url(self) -> str:
         return reverse("comments:detail", args=[self.id])
