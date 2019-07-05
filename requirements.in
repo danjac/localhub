@@ -23,6 +23,7 @@ factory-boy
 flower
 geocoder
 gunicorn
+icalendar
 ipython
 micawber
 psycopg2

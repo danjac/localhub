@@ -2,33 +2,33 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
 <div data-controller="calendar" data-calendar-date-format="YYYY-MM-DD">
-  <div class="input-group">
-    {% include widget.subwidgets.0.template_name with widget=widget.subwidgets.0 %}
-    {% include  widget.subwidgets.1.template_name with widget=widget.subwidgets.1 %}
-    <button type="button" class="btn input-group-btn" data-action="calendar#open">{% trans "Calendar" %}</button>
-  </div>
-  <div class="columns d-none pt-2" data-target="calendar.calendar">
-    <div class="column col-mr-auto col-4 col-md-12">
-      <div class="calendar">
-        <div class="calendar-nav navbar">
-          <button class="btn btn-action btn-link btn-lg" data-action="calendar#prevMonth"><i class="icon icon-arrow-left"></i></button>
-          <div class="navbar-primary" data-target="calendar.currentMonth">March 2017</div>
-          <button class="btn btn-action btn-link btn-lg" data-action="calendar#nextMonth"><i class="icon icon-arrow-right"></i></button>
-        </div>
-        <div class="calendar-container">
-          <div class="calendar-header">
-            <div class="calendar-date">Sun</div>
-            <div class="calendar-date">Mon</div>
-            <div class="calendar-date">Tue</div>
-            <div class="calendar-date">Wed</div>
-            <div class="calendar-date">Thu</div>
-            <div class="calendar-date">Fri</div>
-            <div class="calendar-date">Sat</div>
-          </div>
-          <div class="calendar-body" data-target="calendar.days"></div>
-        </div>
-      </div>
+    <div class="input-group">
+        {% include widget.subwidgets.0.template_name with widget=widget.subwidgets.0 %}
+        {% include  widget.subwidgets.1.template_name with widget=widget.subwidgets.1 %}
+        <button type="button" class="btn input-group-btn" data-action="calendar#open">{% trans "Calendar" %}</button>
     </div>
-  </div>
+    <div class="columns d-none pt-2" data-target="calendar.calendar">
+        <div class="column col-mr-auto col-4 col-md-12">
+            <div class="calendar">
+                <div class="calendar-nav navbar">
+                    <button class="btn btn-action btn-link btn-lg" data-action="calendar#prevMonth"><i class="icon icon-arrow-left"></i></button>
+                    <div class="navbar-primary" data-target="calendar.currentMonth">March 2017</div>
+                    <button class="btn btn-action btn-link btn-lg" data-action="calendar#nextMonth"><i class="icon icon-arrow-right"></i></button>
+                </div>
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <div class="calendar-date">Sun</div>
+                        <div class="calendar-date">Mon</div>
+                        <div class="calendar-date">Tue</div>
+                        <div class="calendar-date">Wed</div>
+                        <div class="calendar-date">Thu</div>
+                        <div class="calendar-date">Fri</div>
+                        <div class="calendar-date">Sat</div>
+                    </div>
+                    <div class="calendar-body" data-target="calendar.days"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
