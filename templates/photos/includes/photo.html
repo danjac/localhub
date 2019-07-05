@@ -8,62 +8,80 @@
 {% has_perm "communities.moderate_community" user request.community as can_moderate_community %}
 
 <div class="card bg-gray" id="photo-{{ photo.id }}">
-  <div class="card-header">
+    <div class="card-header">
 
-    {% if photo.is_flagged and can_moderate_community %}
-    <div class="toast toast-warning text-center">
-        <a href="{{ photo.get_absolute_url }}">{% trans "This photo has been flagged" %}</a>
-    </div>
-    {% endif %}
+        {% if photo.is_flagged and can_moderate_community %}
+        <div class="toast toast-warning text-center">
+            <a href="{{ photo.get_absolute_url }}">{% trans "This photo has been flagged" %}</a>
+        </div>
+        {% endif %}
 
-    <div class="card-title h5">
-      {% if is_detail %}
-      {{ photo.title }}
-      {% else %}
-      <a href="{{ photo.get_absolute_url }}">{{ photo.title }}</a>
-      {% endif %}
+        <div class="card-title h5">
+            {% if is_detail %}
+            {{ photo.title }}
+            {% else %}
+            <a href="{{ photo.get_absolute_url }}">{{ photo.title }}</a>
+            {% endif %}
+        </div>
+        <div class="card-subtitle h6 text-gray">
+            {% include "activities/includes/timesince.html" with timestamp=photo.created owner=photo.owner %}
+        </div>
     </div>
-    <div class="card-subtitle h6 text-gray">
-      {% include "activities/includes/timesince.html" with timestamp=photo.created owner=photo.owner %}
+    <div class="card-body">
+        {% thumbnail photo.image is_detail|yesno:"800,600" crop="center" as image %}
+        <div>
+            <a href="{{ photo.get_absolute_url }}">
+                <img class="img-responsive"
+                     src="{{ image.url }}"
+                     width="{{ image.width }}"
+                     height="{{ image.height }}"
+                     alt="{{ photo.title }}">
+            </a>
+        </div>
+        {% empty %}
+        <em>No photo available</em>
+        {% endthumbnail %}
+        {% include "activities/includes/description.html" with object=photo %}
+        {% if photo.has_attribution %}
+        <div class="mb-2">
+            <dl>
+                {% if photo.artist %}
+                <dt>{% trans "Artist" %}</dt>
+                <dd>{{ photo.artist }}</dd>
+                {% endif %}
+                {% if photo.original_url %}
+                <dt>{% trans "Original URL" %}</dt>
+                <dd><a href="{{ photo.original_url }}" rel="noopener nofollow" target="_blank">{{ photo.original_url }}</a></dd>
+                {% endif %}
+                {% if photo.cc_license %}
+                <dt>{% trans "Creative Commons License" %}</dt>
+                <dd>{{ photo.get_cc_license_display }}</dd>
+                {% endif %}
+            </dl>
+        </div>
+        {% endif %}
     </div>
-  </div>
-  <div class="card-body">
-    {% thumbnail photo.image is_detail|yesno:"800,600" crop="center" as image %}
-    <div>
-      <a href="{{ photo.get_absolute_url }}">
-        <img class="img-responsive"
-             src="{{ image.url }}"
-             width="{{ image.width }}"
-             height="{{ image.height }}"
-             alt="{{ photo.title }}">
-      </a>
-    </div>
-    {% empty %}
-    <em>No photo available</em>
-    {% endthumbnail %}
-    {% include "activities/includes/description.html" with object=photo %}
-  </div>
-  <div class="card-footer">
-    {% if photo.num_likes and photo.owner == user %}
-    <div class="mb-2 text-gray">
-      {{ photo.num_likes }}
-      {% blocktrans count counter=photo.num_likes %}
-      person liked this photo
-      {% plural %}
-      people liked this photo
-      {% endblocktrans %}
-    </div>
-    {% endif %}
+    <div class="card-footer">
+        {% if photo.num_likes and photo.owner == user %}
+        <div class="mb-2 text-gray">
+            {{ photo.num_likes }}
+            {% blocktrans count counter=photo.num_likes %}
+            person liked this photo
+            {% plural %}
+            people liked this photo
+            {% endblocktrans %}
+        </div>
+        {% endif %}
 
-    <div class="mb-2">
-      {% if is_detail %}
-      <a href="{{ photo.get_permalink }}">{% trans "Permalink" %}</a>
-      {% else %}
-      {% include "activities/includes/comments_count.html" with object=photo %}
-      {% endif %}
+        <div class="mb-2">
+            {% if is_detail %}
+            <a href="{{ photo.get_permalink }}">{% trans "Permalink" %}</a>
+            {% else %}
+            {% include "activities/includes/comments_count.html" with object=photo %}
+            {% endif %}
+        </div>
+        {% include "photos/includes/actions.html" %}
     </div>
-    {% include "photos/includes/actions.html" %}
-  </div>
 
 </div>
 
