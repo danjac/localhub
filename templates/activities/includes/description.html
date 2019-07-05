@@ -1,6 +1,6 @@
 {% load i18n %}
 {% if object.description %}
-<div>
+<div data-controller="oembed">
   {% if is_detail or object.description|wordcount < 60 %}
   {{ object.description.markdown }}
   {% else %}
