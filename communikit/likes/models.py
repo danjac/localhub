@@ -9,6 +9,8 @@ from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
+from model_utils.models import TimeStampedModel
+
 from communikit.communities.models import Community
 from communikit.core.utils.content_types import (
     get_generic_related_count_subquery,
@@ -41,7 +43,7 @@ class LikeQuerySet(models.QuerySet):
         )
 
 
-class Like(models.Model):
+class Like(TimeStampedModel):
 
     community = models.ForeignKey(
         Community, related_name="+", on_delete=models.CASCADE
@@ -56,7 +58,16 @@ class Like(models.Model):
     )
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField(db_index=True)
+    object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey("content_type", "object_id")
 
     objects = LikeQuerySet.as_manager()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "content_type", "object_id"],
+                name="unique_like",
+            )
+        ]
+        indexes = [models.Index(fields=["content_type", "object_id", "user"])]
