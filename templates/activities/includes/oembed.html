@@ -3,7 +3,7 @@
 
 {% load micawber_tags %}
 {% if object.url %}
- <div class="video-responsive">
+ <div data-controller="oembed">
   {{ object.url|oembed }}
 </div>
 {% endif %}
