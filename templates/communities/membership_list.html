@@ -37,8 +37,8 @@
             {% endif %}
             <td {% if not member.active %} class="text-gray"{% endif %}>{{ member.get_role_display }}</td>
             <td>
-                {% has_perm "communties.change_membership" user request.community as can_change %}
-                {% has_perm "communties.delete_membership" user request.community as can_delete %}
+                {% has_perm "communities.change_membership" user request.community as can_change %}
+                {% has_perm "communities.delete_membership" user request.community as can_delete %}
                 {% if can_change %}
                 <a href="{% url 'communities:membership_update' member.id %}" class="btn btn-sm btn-primary">
                     <i class="icon icon-edit"></i>
