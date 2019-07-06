@@ -2,18 +2,13 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.db import transaction
-from django.db.models.signals import post_delete, post_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext as _
 
 from communikit.events import tasks
 from communikit.events.models import Event
 from communikit.notifications.emails import send_notification_email
-
-
-@receiver(post_delete, sender=Event, dispatch_uid="events.delete_flags")
-def delete_flags(instance: Event, **kwargs):
-    transaction.on_commit(lambda: instance.get_flags().delete())
 
 
 @receiver(
