@@ -43,7 +43,9 @@
                 >
                 <div class="input-group input-inline">
                   <input class="form-input" name="q" type="search" placeholder="{% trans "Search" %}">
-                  <button class="btn bg-gray text-dark input-group-btn">{% trans "Search" %}</button>
+                  <button class="btn bg-gray text-dark input-group-btn">
+                    <i class="icon icon-search"></i>
+                  </button>
                 </div>
           </form>
         </section>
@@ -53,9 +55,9 @@
           {% with current_url=request.resolver_match.url_name %}
           {% if user.is_authenticated %}
           <a class="btn btn-link text-light" href="{{ user.get_absolute_url }}">
-              {% avatar user %}
-              {% user_display user as display_name %}
-              {{ display_name }}
+            {% avatar user %}
+            {% user_display user as display_name %}
+            {{ display_name }}
           </a>
           <a class="btn btn-link text-light" href="{% url 'account_logout' %}">{% trans "logout" %}</a>
           {% else %}
@@ -76,7 +78,9 @@
             >
             <div class="input-group">
               <input class="form-input" name="q" type="search" placeholder="{% trans "Search" %}">
-              <button class="btn btn-primary input-group-btn">{% trans "Search" %}</button>
+              <button class="btn btn-primary input-group-btn">
+                <i class="icon icon-search"></i>
+              </button>
             </div>
       </form>
       {% endif %}
