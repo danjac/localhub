@@ -4,13 +4,9 @@
 {% extends "notifications/includes/notification.html" %}
 
 {% load i18n %}
-{% load account %}
-{% load users_tags %}
 
 {% block notification_title %}
-{% with actor=notification.actor %}
-{% user_display actor as display_name %}
-<a href="{{ actor.get_absolute_url }}">{% avatar actor "avatar-xs" %} {{ display_name }}</a>
+{% include "users/includes/chip.html" with profile=notification.actor %}
 {% if notification.verb == 'mentioned' %}
 has mentioned you in a
 {% elif notification.verb == 'created' %}
@@ -21,5 +17,4 @@ has updated their
 has added tags you follow in their
 {% endif %}
 <a href="{{ activity.get_absolute_url }}">{{ activity_name }}</a>.
-{% endwith %}
 {% endblock notification_title %}

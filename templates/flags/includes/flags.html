@@ -1,6 +1,4 @@
 {% load i18n %}
-{% load account %}
-{% load users_tags %}
 
 {% if flags %}
 <h5 class="mt-2">{% trans "The following users have flagged this comment" %}</h5>
@@ -18,11 +16,7 @@
     <tr>
       <td>{{ flag.created|date }}</td>
       <td>
-        <a href="{{ flag.user.get_absolute_url }}" target="_blank">
-          {% user_display flag.user as username %}
-          {% avatar flag.user %}
-          {{ username }}
-        </a>
+        {% include "users/includes/chip.html" with profile=flag.user %}
       </td>
       <td>{{ flag.get_reason_display }}</td>
       <td>

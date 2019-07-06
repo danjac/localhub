@@ -3,7 +3,6 @@
 
 {% extends "flags/base.html" %}
 {% load i18n %}
-{% load account %}
 {% block activities_content %}
 <table class="table table-striped table-hover">
     <thead>
@@ -19,8 +18,7 @@
         <tr>
             <td><a href="{{ flag.content_object.get_absolute_url }}">{{ flag.created|date }}</a></td>
             <td>
-                {% user_display flag.user as username %}
-                {{ username }}
+              {% include "users/includes/chip.html" with profile=flag.user %}
             </td>
             <td>{{ flag.content_type.name }}</td>
             <td>{{ flag.get_reason_display }}</td>

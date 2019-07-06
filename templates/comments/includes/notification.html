@@ -4,13 +4,9 @@
 {% extends "notifications/includes/notification.html" %}
 
 {% load i18n %}
-{% load account %}
-{% load users_tags %}
 
 {% block notification_title %}
-{% with actor=notification.actor %}
-{% user_display actor as display_name %}
-<a href="{{ actor.get_absolute_url }}">{% avatar actor "avatar-xs" %} {{ display_name }}</a>
+{% include "users/includes/chip.html" with profile=notification.actor %}
 {% if notification.verb == 'mentioned' %}
 has mentioned you in a <a href="{{ comment.get_absolute_url }}">comment</a>.
 {% elif notification.verb == 'created' %}
@@ -20,5 +16,4 @@ has updated their <a href="{{ comment.get_absolute_url }}">comment</a>.
 {% elif notification.verb == 'commented' %}
 has <a href="{{ comment.get_absolute_url }}">commented</a> on one of your posts.
 {% endif %}
-{% endwith %}
 {% endblock notification_title %}

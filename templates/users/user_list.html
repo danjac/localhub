@@ -4,9 +4,7 @@
 {% extends "activities/base.html" %}
 
 {% load i18n %}
-{% load account %}
 {% load rules %}
-{% load users_tags %}
 
 
 {% block activities_content %}
@@ -24,11 +22,7 @@
         {% for member in object_list %}
         <tr>
             <td>
-                <a href="{{ member.get_absolute_url }}">
-                    {% avatar member %}
-                    {% user_display member as member_name %}
-                    {{ member_name }}
-                </a>
+              {% include "users/includes/chip.html" with profile=member %}
             </td>
         </tr>
         {% endfor %}

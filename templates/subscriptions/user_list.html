@@ -4,8 +4,6 @@
 {% extends "subscriptions/base.html" %}
 
 {% load i18n %}
-{% load account %}
-{% load users_tags %}
 
 {% block subscriptions_content %}
 {% if object_list %}
@@ -14,11 +12,7 @@
         {% for user_obj in object_list %}
         <tr>
             <td>
-                <a href="{{ user_obj.get_absolute_url }}">
-                    {% avatar user_obj %}
-                    {% user_display user_obj as display_name %}
-                    {{ display_name }}
-                </a>
+              {% include "users/includes/chip.html" with profile=user_obj %}
             </td>
         </tr>
         {% endfor %}
