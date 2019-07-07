@@ -1,14 +1,15 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import datetime
 import geocoder
+import pytz
 import pytest
 
 from datetime import timedelta
 
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from django.utils.encoding import force_str
 
 from pytest_mock import MockFixture
 
@@ -22,6 +23,22 @@ pytestmark = pytest.mark.django_db
 
 
 class TestEventModel:
+    def test_get_starts_with_tz(self):
+        event = EventFactory(timezone=pytz.timezone("Europe/Helsinki"))
+        assert event.get_starts_with_tz().tzinfo.zone == "Europe/Helsinki"
+
+    def test_get_ends_with_tz_if_none(self):
+        event = EventFactory(ends=None)
+        assert event.get_ends_with_tz() is None
+
+    def test_get_ends_with_tz(self):
+        event = EventFactory(
+            ends=timezone.now() + datetime.timedelta(days=30),
+            timezone=pytz.timezone("Europe/Helsinki"),
+        )
+
+        assert event.get_ends_with_tz().tzinfo.zone == "Europe/Helsinki"
+
     def test_get_absolute_url(self, event: Event):
         assert event.get_absolute_url().startswith(f"/events/{event.id}/")
 

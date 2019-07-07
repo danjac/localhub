@@ -1,10 +1,12 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import datetime
 import geocoder
 
 from typing import Dict, Optional, List, Tuple
 
+from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -12,6 +14,8 @@ from django.utils.encoding import smart_text
 from django.utils.translation import gettext_lazy as _
 
 from django_countries.fields import CountryField
+
+from timezone_field import TimeZoneField
 
 from model_utils import FieldTracker
 
@@ -37,6 +41,7 @@ class Event(Activity):
 
     starts = models.DateTimeField()
     ends = models.DateTimeField(null=True, blank=True)
+    timezone = TimeZoneField(default=settings.TIME_ZONE)
 
     venue = models.CharField(max_length=200, blank=True)
 
@@ -50,6 +55,11 @@ class Event(Activity):
 
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
+
+    ticket_price = models.CharField(max_length=200, blank=True)
+    ticket_vendor = models.TextField(
+        verbose_name=_("Tickets available from"), blank=True
+    )
 
     comments = GenericRelation(Comment, related_query_name="event")
     flags = GenericRelation(Flag, related_query_name="event")
@@ -68,6 +78,12 @@ class Event(Activity):
 
     def get_domain(self) -> Optional[str]:
         return get_domain(self.url)
+
+    def get_starts_with_tz(self) -> datetime.datetime:
+        return self.starts.astimezone(self.timezone)
+
+    def get_ends_with_tz(self) -> Optional[datetime.datetime]:
+        return self.ends.astimezone(self.timezone) if self.ends else None
 
     def search_index_components(self) -> Dict[str, str]:
         return {

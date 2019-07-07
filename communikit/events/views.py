@@ -17,10 +17,13 @@ class EventDownloadView(SingleActivityView):
 
         event = CalendarEvent()
 
-        event.add("dtstart", self.object.starts)
-        event.add("dtstamp", self.object.starts)
-        if self.object.ends:
-            event.add("dtend", self.object.ends)
+        starts = self.object.get_starts_with_tz()
+        ends = self.object.get_ends_with_tz()
+
+        event.add("dtstart", starts)
+        event.add("dtstamp", starts)
+        if ends:
+            event.add("dtend", ends)
         event.add("summary", self.object.title)
 
         location = self.object.full_location
