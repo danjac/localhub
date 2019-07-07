@@ -14,6 +14,7 @@ from django.views.generic import (
     DeleteView,
     DetailView,
     FormView,
+    ListView,
     UpdateView,
     View,
 )
@@ -232,3 +233,7 @@ class CommentFlagView(
 
 
 comment_flag_view = CommentFlagView.as_view()
+
+
+class CommentListView(MultipleCommentMixin, ListView):
+    ...

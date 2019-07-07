@@ -1,0 +1,24 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "likes/base.html" %}
+{% load i18n %}
+{% block likes_content %}
+
+{% for activity in object_list %}
+<div class="mt-2">
+  {% include "activities/includes/activity.html" %}
+</div>
+{% empty %}
+<div class="empty">
+  <div class="empty-icon">
+    <i class="icon icon-user"></i>
+  </div>
+  <p class="empty-title h5">
+      {% trans "You haven't liked any posts yet" %}
+  </p>
+</div>
+{% endfor %}
+
+{% include "includes/pagination.html" %}
+{% endblock likes_content %}

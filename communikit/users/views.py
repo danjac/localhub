@@ -28,7 +28,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from communikit.activities.models import Activity
 from communikit.activities.views import ActivityStreamView
 from communikit.comments.models import Comment
-from communikit.comments.views import MultipleCommentMixin
+from communikit.comments.views import CommentListView
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
 from communikit.core.types import ContextDict
@@ -222,7 +222,7 @@ class UserActivityStreamView(SingleUserMixin, ActivityStreamView):
 user_activity_stream_view = UserActivityStreamView.as_view()
 
 
-class UserCommentListView(MultipleCommentMixin, SingleUserMixin, ListView):
+class UserCommentListView(SingleUserMixin, CommentListView):
     active_tab = "comments"
     template_name = "users/comments.html"
 

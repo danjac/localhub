@@ -32,6 +32,11 @@
         </a>
     </li>
     <li class="menu-item">
+      <a data-controller="active-link" href="{% url 'likes:activities' %}">
+            {% trans "Favorites" %}
+        </a>
+    </li>
+    <li class="menu-item">
       <a data-controller="active-link" href="{% url 'subscriptions:user_list' %}">
             {% trans "Following" %}
         </a>
