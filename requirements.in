@@ -18,6 +18,7 @@ django-redis
 django-silk
 django-storages
 django-taggit
+django-timezone-field
 django-widget-tweaks
 factory-boy
 flower
@@ -30,6 +31,7 @@ psycopg2
 pytest
 pytest-django
 pytest-mock
+pytz
 redis
 rules
 sorl-thumbnail

@@ -38,6 +38,7 @@ django-redis==4.10.0
 django-silk==3.0.2
 django-storages==1.7.1
 django-taggit==1.1.0
+django-timezone-field==3.0
 django-widget-tweaks==1.4.3
 django==2.2.2
 docutils==0.14            # via botocore
@@ -78,7 +79,7 @@ pytest-mock==1.10.4
 pytest==4.4.1
 python-dateutil==2.8.0    # via botocore, django-silk, faker, icalendar
 python3-openid==3.1.0     # via django-allauth
-pytz==2019.1              # via babel, celery, django, django-silk, flower, icalendar
+pytz==2019.1
 ratelim==0.1.6            # via geocoder
 redis==3.2.1
 requests-oauthlib==1.2.0  # via django-allauth

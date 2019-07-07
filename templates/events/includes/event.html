@@ -2,6 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
+{% load tz %}
 {% load micawber_tags %}
 {% load rules %}
 
@@ -32,6 +33,8 @@
     {% include "activities/includes/description.html" with object=event %}
     <div class="divider"></div>
     <dl>
+      {% timezone event.timezone %}
+
       <dt>{% trans "Starts" %}</dt>
       <dd>{{ event.starts|date:"SHORT_DATE_FORMAT" }} @ {{ event.starts|date:"TIME_FORMAT" }}</dd>
 
@@ -39,6 +42,11 @@
       <dt>{% trans "Ends" %}</dt>
       <dd>{{ event.ends|date:"SHORT_DATE_FORMAT" }} @ {{ event.ends|date:"TIME_FORMAT" }}</dd>
       {% endif %}
+
+      {% endtimezone %}
+
+      <dt>{% trans "Timezone" %}</dt>
+      <dd>{{ event.timezone }}</dd>
 
       <dt>{% trans "Location" %}</dt>
       <dd>
@@ -50,6 +58,17 @@
       {% endif %}
       {% endwith %}
       </dd>
+
+      {% if event.ticket_price %}
+      <dt>{% trans "Admission" %}</dt>
+      <dd>{{ event.ticket_price }}</dd>
+      {% endif %}
+
+      {% if event.ticket_vendor %}
+      <dt>{% trans "Tickets available from" %}</dt>
+      <dd>{{ event.ticket_vendor|linebreaksbr }}</dd>
+      {% endif %}
+
     </dl>
     {% if is_detail and event.latitude and event.longitude %}
     <div id="map-for-event-{{ event.id }}"

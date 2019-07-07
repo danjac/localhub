@@ -36,6 +36,7 @@ class TestEventCreateView:
                 "starts_1": "10:00",
                 "ends_0": "2019-2-2",
                 "ends_1": "10:00",
+                "timezone": "Europe/Helsinki",
             },
         )
         event = Event.objects.get()
@@ -69,6 +70,7 @@ class TestEventUpdateView:
                 "starts_1": "10:00",
                 "ends_0": "2019-2-2",
                 "ends_1": "10:00",
+                "timezone": "Europe/Helsinki",
             },
         )
         event_for_member.refresh_from_db()

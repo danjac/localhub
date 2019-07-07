@@ -18,7 +18,7 @@ RUN pip install -U pip pip-tools
 
 # Copy requirements to insure caching
 COPY ./requirements.txt /requirements.txt
-RUN pip install -U pip && pip install -r /requirements.txt
+RUN pip install -r /requirements.txt
 
 WORKDIR /app
 
