@@ -23,6 +23,7 @@ urlpatterns = [
     path("join-requests/", include("communikit.join_requests.urls")),
     path("notifications/", include("communikit.notifications.urls")),
     path("following/", include("communikit.subscriptions.urls")),
+    path("likes/", include("communikit.likes.urls")),
     path("photos/", include("communikit.photos.urls")),
     path("posts/", include("communikit.posts.urls")),
     path("people/", include("communikit.users.urls")),

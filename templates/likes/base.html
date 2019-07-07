@@ -1,0 +1,24 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/base.html" %}
+{% load i18n %}
+
+{% block subtitle %}{% trans "Favorites" %}{% endblock %}
+
+{% block activities_content %}
+
+<h3>{% trans "Favorites" %}</h3>
+
+<ul class="tab tab-block">
+  <li class="tab-item" data-controller="active-link" data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'likes:activities' %}">{% trans "Posts" %}</a>
+  </li>
+  <li class="tab-item" data-controller="active-link" data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'likes:comments' %}">{% trans "Comments" %}</a>
+  </li>
+</ul>
+{% block likes_content %}{% endblock %}
+{% endblock activities_content %}
