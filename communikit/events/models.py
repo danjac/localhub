@@ -28,6 +28,7 @@ from communikit.notifications.models import Notification
 
 
 class Event(Activity):
+
     LOCATION_FIELDS = (
         "street_address",
         "locality",
@@ -39,7 +40,7 @@ class Event(Activity):
     title = models.CharField(max_length=200)
     url = models.URLField(verbose_name=_("Link"), null=True, blank=True)
 
-    starts = models.DateTimeField()
+    starts = models.DateTimeField(verbose_name=_("Starts on (UTC)"))
     ends = models.DateTimeField(null=True, blank=True)
     timezone = TimeZoneField(default=settings.TIME_ZONE)
 
