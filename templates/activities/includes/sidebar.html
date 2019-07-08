@@ -22,7 +22,6 @@
     {% if is_member %}
     <li class="menu-item">
         <a data-controller="active-link"
-           data-active-link-exact
            href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a></li>
     <li class="menu-item">
         <a data-controller="active-link" href="{% url 'notifications:list' %}">
