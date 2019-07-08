@@ -10,16 +10,6 @@
 {% user_display user_obj as display_name %} - {{ display_name }}
 {% endblock %}
 
-{% block activities_sidebar %}
-
-{% if is_auth_user %}
-{% include "users/includes/sidebar.html" %}
-{% else %}
-{{ block.super }}
-{% endif %}
-
-{% endblock activities_sidebar %}
-
 {% block activities_content %}
 
 {% user_display user_obj as display_name %}
