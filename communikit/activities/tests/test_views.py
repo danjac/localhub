@@ -33,31 +33,32 @@ class TestActivityStreamView:
         EventFactory(community=member.community)
 
         post = PostFactory(community=member.community)
+        PostFactory(community=member.community, owner=member.member)
 
         Subscription.objects.create(
-            user=member.member,
+            subscriber=member.member,
             community=member.community,
             content_object=post.owner,
         )
         response = client.get(reverse("activities:stream"))
         assert response.status_code == 200
-        assert len(response.context["object_list"]) == 1
+        assert len(response.context["object_list"]) == 2
 
     def test_get_if_authenticated_show_all(
         self, client: Client, member: Membership
     ):
         EventFactory(community=member.community)
-
         post = PostFactory(community=member.community)
+        PostFactory(community=member.community, owner=member.member)
 
         Subscription.objects.create(
-            user=member.member,
+            subscriber=member.member,
             community=member.community,
             content_object=post.owner,
         )
         response = client.get(reverse("activities:stream"), {"all": "1"})
         assert response.status_code == 200
-        assert len(response.context["object_list"]) == 2
+        assert len(response.context["object_list"]) == 3
 
 
 class TestActivitySearchView:

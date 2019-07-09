@@ -12,12 +12,29 @@ from communikit.likes.models import Like
 from communikit.posts.models import Post
 from communikit.comments.tests.factories import CommentFactory
 from communikit.posts.tests.factories import PostFactory
+from communikit.subscriptions.models import Subscription
 from communikit.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 
 
 class TestActivityManager:
+    def test_following(self, user: settings.AUTH_USER_MODEL):
+        not_followed = PostFactory()
+        my_post = PostFactory(owner=user)
+        followed = PostFactory()
+        Subscription.objects.create(
+            subscriber=user,
+            community=followed.community,
+            content_object=followed.owner,
+        )
+
+        posts = Post.objects.following(user)
+        assert posts.count() == 2
+        assert not_followed not in posts
+        assert my_post in posts
+        assert followed in posts
+
     def test_with_num_comments(self):
         post = PostFactory()
         CommentFactory.create_batch(2, content_object=post)

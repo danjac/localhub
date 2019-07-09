@@ -38,25 +38,27 @@ class TestPostListView:
         self, client: Client, member: Membership
     ):
 
+        PostFactory(owner=member.member, community=member.community)
         post = PostFactory(community=member.community)
 
         Subscription.objects.create(
-            user=member.member,
+            subscriber=member.member,
             community=member.community,
             content_object=post.owner,
         )
         response = client.get(reverse("posts:list"))
         assert response.status_code == 200
-        assert len(response.context["object_list"]) == 1
+        assert len(response.context["object_list"]) == 2
 
     def test_get_if_authenticated_show_all(
         self, client: Client, member: Membership
     ):
 
+        PostFactory(owner=member.member, community=member.community)
         PostFactory(community=member.community)
         response = client.get(reverse("posts:list"), {"all": "1"})
         assert response.status_code == 200
-        assert len(response.context["object_list"]) == 1
+        assert len(response.context["object_list"]) == 2
 
 
 class TestPostCreateView:

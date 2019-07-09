@@ -123,7 +123,7 @@ class ActivityListView(MultipleActivityMixin, ListView):
         )
         if self.show_all:
             return qs
-        return qs.filter(owner__subscriptions__subscriber=self.request.user)
+        return qs.following(self.request.user)
 
 
 class ActivityUpdateView(
@@ -350,7 +350,7 @@ class ActivityStreamView(BaseActivityStreamView):
         )
         if self.show_all:
             return qs
-        return qs.filter(owner__subscriptions__subscriber=self.request.user)
+        return qs.following(self.request.user)
 
 
 activity_stream_view = ActivityStreamView.as_view()

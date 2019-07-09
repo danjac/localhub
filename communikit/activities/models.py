@@ -62,6 +62,12 @@ class ActivityQuerySet(
                 qs = qs.with_is_flagged()
         return qs
 
+    def following(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
+        return self.filter(
+            models.Q(owner__subscriptions__subscriber=user)
+            | models.Q(owner=user)
+        )
+
     def search(self, search_term: str) -> models.QuerySet:
         if not search_term:
             return self.none()

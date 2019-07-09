@@ -14,6 +14,7 @@ from communikit.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 
+
 class TestSubscribedUserListView:
     def test_get(self, client: Client, member: Membership):
         user = UserFactory()
