@@ -3,6 +3,7 @@
 
 from typing import no_type_check
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
@@ -236,4 +237,4 @@ comment_flag_view = CommentFlagView.as_view()
 
 
 class CommentListView(MultipleCommentMixin, ListView):
-    ...
+    paginate_by = settings.DEFAULT_PAGE_SIZE

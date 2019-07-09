@@ -5,23 +5,36 @@
 {% load i18n %}
 {% block user_content %}
 
-{% if num_likes %}
 <div class="mt-2 toast text-center">
+
 {% if is_auth_user %}
-{% blocktrans count counter=num_likes %}
-You have received a total of <strong>1 like</strong> for your posts.
+
+{% blocktrans count counter=paginator.count %}
+You have published <strong>1 post</strong>
 {% plural %}
-You have received a total of <strong>{{ num_likes }} likes</strong> for your posts.
+You have published <strong>{{ counter }} posts</strong>
 {% endblocktrans %}
+{% blocktrans count counter=num_likes %}
+and have a total of <strong>1 like</strong> for your posts.
+{% plural %}
+and have a total of <strong>{{ counter }} likes</strong> for your posts.
+{% endblocktrans %}
+
 {% else %}
-{% blocktrans count counter=num_likes %}
-This user has received <strong>1 like</strong> for their posts.
+{% blocktrans count counter=paginator.count %}
+This user has published <strong>1 post</strong>
 {% plural %}
-This user has received <strong>{{ num_likes }} likes</strong> for their posts.
+This user has published <strong>{{ counter }} posts</strong>
 {% endblocktrans %}
+{% blocktrans count counter=num_likes %}
+and has a total of <strong>1 like</strong> for their posts.
+{% plural %}
+and has a total of <strong>{{ counter }} likes</strong> for their posts.
+{% endblocktrans %}
+
+
 {% endif %}
 </div>
-{% endif %}
 
 {% for activity in object_list %}
 <div class="mt-2">
