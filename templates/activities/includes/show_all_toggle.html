@@ -1,0 +1,29 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% load rules %}
+
+{% test_rule 'is_member' user request.community as is_member %}
+
+{% if is_member %}
+<div class="mt-2">
+  <label class="form-switch">
+    <input type="checkbox"
+           data-controller="location-switch"
+           data-action="location-switch#switch"
+           {% if view.show_all %}
+           data-location-switch-url="{{ request.path }}?following"
+           checked
+           {% else %}
+           data-location-switch-url="{{ request.path }}"
+           {% endif %}>
+    <i class="form-icon"></i> {% trans "Show all" %}
+  </label>
+</div>
+{% if not view.show_all %}
+<p class="bg-gray p-2 text-center">
+  {% trans "You are viewing content only from yourself and people you are following." %}
+</p>
+{% endif %}
+{% endif %}

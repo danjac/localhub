@@ -46,7 +46,7 @@ class TestPostListView:
             community=member.community,
             content_object=post.owner,
         )
-        response = client.get(reverse("posts:list"))
+        response = client.get(reverse("posts:list"), {"following": "1"})
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 2
 
@@ -56,7 +56,7 @@ class TestPostListView:
 
         PostFactory(owner=member.member, community=member.community)
         PostFactory(community=member.community)
-        response = client.get(reverse("posts:list"), {"all": "1"})
+        response = client.get(reverse("posts:list"))
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 2
 

@@ -40,7 +40,7 @@ class TestActivityStreamView:
             community=member.community,
             content_object=post.owner,
         )
-        response = client.get(reverse("activities:stream"))
+        response = client.get(reverse("activities:stream"), {"following": 1})
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 2
 
@@ -56,7 +56,7 @@ class TestActivityStreamView:
             community=member.community,
             content_object=post.owner,
         )
-        response = client.get(reverse("activities:stream"), {"all": "1"})
+        response = client.get(reverse("activities:stream"))
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 3
 

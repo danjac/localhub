@@ -9,9 +9,9 @@
 {% has_perm 'activities.create_activity' user request.community as can_create_activity %}
 {% if can_create_activity %}
 <div class="mb-1">
-<a href="{% url 'posts:create' %}" class="btn btn-primary btn-block">
-    <i class="icon icon-link"></i> {% trans "Submit Post" %}
-</a>
+    <a href="{% url 'posts:create' %}" class="btn btn-primary btn-block">
+        <i class="icon icon-link"></i> {% trans "Submit Post" %}
+    </a>
 </div>
 <div class="btn-group btn-group-block">
     <a href="{% url 'events:create' %}" class="btn">
@@ -32,18 +32,9 @@
     {% url 'account_login' as login_url %}
     {% blocktrans %}Please <a href="{{ login_url }}">sign in</a> to post content to this site.{% endblocktrans %}
 </p>
-
 {% endif %}
 
-{% if user.is_authenticated %}
-<div class="mt-2">
-    {% if view.show_all %}
-    <a href="{{ request.path }}">{% trans "Show Following" %}</a>
-    {% else %}
-    <a href="{{ request.path }}?all">{% trans "Show All" %}</a>
-    {% endif %}
-</div>
-{% endif %}
+{% include "activities/includes/show_all_toggle.html" %}
 
 {% for activity in object_list %}
 <div class="mt-2">
@@ -51,11 +42,11 @@
 </div>
 {% empty %}
 <div class="empty mt-2">
-  {% if view.show_all and user.is_authenticated %}
+    {% if view.show_all and user.is_authenticated %}
     <p class="empty-title h5">{% trans "Nothing has been posted yet by people you are following. Click 'Show All' to see all content." %}</p>
-  {% else %}
+    {% else %}
     <p class="empty-title h5">{% trans "Nothing has been posted yet" %}</p>
-  {% endif %}
+    {% endif %}
 </div>
 {% endfor %}
 

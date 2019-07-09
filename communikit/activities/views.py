@@ -119,7 +119,8 @@ class ActivityListView(MultipleActivityMixin, ListView):
             .order_by(self.order_by)
         )
         self.show_all = (
-            "all" in self.request.GET or self.request.user.is_anonymous
+            "following" not in self.request.GET
+            or self.request.user.is_anonymous
         )
         if self.show_all:
             return qs
@@ -346,7 +347,8 @@ class ActivityStreamView(BaseActivityStreamView):
         qs = super().get_queryset_for_model(model)
 
         self.show_all = (
-            "all" in self.request.GET or self.request.user.is_anonymous
+            "following" not in self.request.GET
+            or self.request.user.is_anonymous
         )
         if self.show_all:
             return qs
