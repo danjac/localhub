@@ -5,6 +5,12 @@ from django.utils.translation import gettext_lazy as _
 
 
 class CalendarWidget(forms.SplitDateTimeWidget):
+    """
+    Custom SplitDateTimeWidget using a Javascript-generated
+    calendar. Note that the CSS/JS code is bundled as part of the
+    project assets and frontend framework and so is not
+    included as separate Media assets with this widget.
+    """
     template_name = "includes/forms/widgets/calendar.html"
     input_type = "calendar"
 

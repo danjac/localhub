@@ -7,4 +7,7 @@ from .widgets import CalendarWidget
 
 
 class CalendarField(forms.SplitDateTimeField):
+    """
+    Form field using the Calendar widget.
+    """
     widget = CalendarWidget

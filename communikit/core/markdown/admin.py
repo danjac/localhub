@@ -11,6 +11,11 @@ from communikit.core.markdown.fields import MarkdownField
 
 
 class MarkdownFieldMixin:
+    """
+    This strips out the custom HTML form rendering for the
+    Markdown form field, as it is not compatible with the
+    Django admin. Instead we just use a plain TEXTAREA.
+    """
     def get_form(
         self, request: HttpRequest, obj: Optional[models.Model], **kwargs
     ) -> forms.ModelForm:

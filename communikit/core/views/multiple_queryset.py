@@ -16,6 +16,34 @@ from communikit.core.types import ContextDict, QuerySetDict, QuerySetList
 
 class MultipleQuerySetMixin:
     """
+    An efficient approach to combining multiple querysets
+    from different models into a single QuerySet that can be rendered
+    in a view. SQL UNION is used to combine the querysets into a single
+    SQL query.
+
+    If ordering/pagination is used, the querysets must share the same
+    ordering field names. For example, if you wish to set the ordering
+    by "-created" then all models in all the querysets must have a
+    "created" field (or create one as an annotation).
+
+    Each model instance returned from the combined queryset will include
+    an `object_type` annotation (same as the model's Meta.model_name) that
+    can be used in templates and elsewhere to handle display logic specific
+    to that model e.g.
+
+    {% for item in object_list %}
+    {% if item.object_type == "post" %}
+    {# do Post specific content... #}
+
+    The method `get_querysets` must be implemented by returning a list
+    of QuerySet instances.
+
+    Pagination is handled in same way as for ListView, i.e. just set the
+    `paginate_by` variable.
+
+    For a complete example see BaseActivityStreamView in
+    communikit/activities/views.py.
+
     Pattern adapted from:
     https://simonwillison.net/2018/Mar/25/combined-recent-additions/
     """
@@ -28,6 +56,10 @@ class MultipleQuerySetMixin:
     request: HttpRequest
 
     def get_querysets(self) -> QuerySetList:
+        """
+        This must be implemented by returning a list of QuerySets, one
+        for each different model.
+        """
         raise NotImplementedError
 
     def get_ordering(self) -> Optional[str]:
@@ -103,6 +135,16 @@ class MultipleQuerySetMixin:
 
 
 class MultipleQuerySetContextMixin(MultipleQuerySetMixin, ContextMixin):
+    """
+    Provides additional mixin functionality multiple queryset for use
+    in templates. Template context is same as for a ListView i.e.:
+
+    - page_obj
+    - paginator
+    - object_list
+    - is_paginated
+
+    """
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
         if self.paginate_by:

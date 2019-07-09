@@ -1,6 +1,10 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+"""
+Custom Markdown-related functions.
+"""
+
 import re
 import bleach
 
@@ -64,7 +68,7 @@ def extract_mentions(content: str) -> Set[str]:
 
 def linkify_mentions(content: str) -> str:
     """
-    Replace all @mentions in the text with links to profile page.
+    Replace all @mentions in the text with links to user profile page.
     """
 
     tokens = content.split(" ")
@@ -82,6 +86,10 @@ def linkify_mentions(content: str) -> str:
 
 
 def extract_hashtags(content: str) -> Set[str]:
+    """
+    Extracts tags (prefixed with "#") in string into a set of tags.
+    The extracted tags do not include the hash("#") prefix.
+    """
     return set(
         [
             hashtag

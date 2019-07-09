@@ -1,6 +1,11 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+"""
+Functions for more efficient handling of ContentType related
+objects with querysets.
+"""
+
 from typing import Any, Union
 
 from django.contrib.contenttypes.models import ContentType
@@ -23,6 +28,14 @@ def get_generic_related_exists(
     related_object_id_field: str = "object_id",
     related_content_type_field: str = "content_type",
 ) -> Exists:
+    """
+    Used with QuerySet.annotate() to add an EXISTS clause
+    to a QuerySet where you want to select based on a ContentType
+    relation.
+
+    For an example see LikesAnnotationQuerySetMixin in
+    communikit/likes/models.py.
+    """
     return Exists(
         _get_generic_related_by_id_and_content_type(
             OuterRef("pk"),
@@ -40,6 +53,14 @@ def get_generic_related_count_subquery(
     related_object_id_field: str = "object_id",
     related_content_type_field: str = "content_type",
 ) -> Subquery:
+    """
+    Used with QuerySet.annotate() to add a COUNT subquery
+    to a QuerySet where you want to select based on a ContentType
+    relation.
+
+    For an example see LikesAnnotationQuerySetMixin in
+    communikit/likes/models.py.
+    """
     return Subquery(
         _get_generic_related_by_id_and_content_type(
             OuterRef("pk"),
@@ -61,6 +82,10 @@ def get_generic_related_queryset(
     related_object_id_field: str = "object_id",
     related_content_type_field: str = "content_type",
 ) -> QuerySet:
+    """
+    Used inside a model instance to provide all instances
+    of a related content type matching the object's primary key.
+    """
     return _get_generic_related_by_id_and_content_type(
         model.pk,
         model,

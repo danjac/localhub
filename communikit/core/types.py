@@ -1,6 +1,10 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+"""
+Custom type annotations for the project.
+"""
+
 from typing import Any, Callable, Dict, List, Tuple, Type, Union
 
 from django.db.models import Model, QuerySet

@@ -1,6 +1,13 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+"""
+Custom Django S3 storage backends for media and static.
+
+These allow both media and storage to use the same S3
+bucket safely with different sub-locations.
+"""
+
 from django.conf import settings
 
 from storages.backends.s3boto3 import S3Boto3Storage

@@ -4,6 +4,13 @@ from communikit.core.types import DjangoView
 
 
 class TurbolinksMiddleware:
+    """
+    This provides backend Django complement to the Turbolinks JS framework:
+
+    https://github.com/turbolinks/turbolinks
+
+    In particular redirects are handled correctly as per the documentation.
+    """
 
     session_key = "_turbolinks_redirect"
     location_header = "Turbolinks-Location"

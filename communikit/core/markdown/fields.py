@@ -1,6 +1,17 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+
+"""
+Custom functionality for the Markdownx field.
+
+This provides additional methods on the field:
+
+- obj.description.markdown() -> returns safe HTML string
+- obj.description.extract_mentions() -> returns set of "@" mention strings
+- obj.description.extract_hashtags() -> returns set of "#" tag strings
+"""
+
 from typing import Set, Optional, Type
 
 from django.db.models import Model, Field
