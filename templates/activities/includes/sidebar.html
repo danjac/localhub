@@ -103,8 +103,9 @@
 <div class="panel mt-2 p-1">
     <div class="panel-body">
         <p>
-            {{ request.community.description.markdown }}
+            {{ request.community.description.markdown|truncatewords_html:30 }}
         </p>
+        <a href="{% url 'communities:community_detail' %}">{% trans "More Details" %}</a>
     </div>
 </div>
 {% endif %}

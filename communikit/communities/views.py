@@ -17,7 +17,13 @@ from django.http import (
 )
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DeleteView, ListView, TemplateView, UpdateView
+from django.views.generic import (
+    DeleteView,
+    DetailView,
+    ListView,
+    TemplateView,
+    UpdateView,
+)
 from django.views.generic.detail import SingleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
@@ -71,6 +77,14 @@ class CommunityRequiredMixin:
         return HttpResponseRedirect(reverse("community_not_found"))
 
 
+class CommunityDetailView(CommunityRequiredMixin, DetailView):
+    def get_object(self) -> Community:
+        return self.request.community
+
+
+community_detail_view = CommunityDetailView.as_view()
+
+
 class CommunityNotFoundView(TemplateView):
     """
     This is shown if no community exists for this domain.
@@ -99,7 +113,7 @@ class CommunityUpdateView(
     SuccessMessageMixin,
     UpdateView,
 ):
-    fields = ("name", "description", "public", "email_domain")
+    fields = ("name", "description", "terms", "public", "email_domain")
 
     permission_required = "communities.manage_community"
     success_message = _("Community settings have been updated")
@@ -200,6 +214,7 @@ class CommunityLeaveView(MembershipDeleteView):
     """
     Allows the current user to be able to leave the community.
     """
+
     template_name = "communities/leave.html"
 
     def get_object(self) -> Membership:

@@ -3,7 +3,7 @@
 
 import pytest
 
-from django.core import mail
+from typing import List
 
 from communikit.comments.models import Comment
 from communikit.events.models import Event
@@ -18,7 +18,12 @@ pytestmark = pytest.mark.django_db
 
 class TestSendNotificationEmail:
     def test_send_emails(
-        self, comment: Comment, event: Event, post: Post, photo: Photo
+        self,
+        comment: Comment,
+        event: Event,
+        post: Post,
+        photo: Photo,
+        mailoutbox: List,
     ):
         recipient = UserFactory()
 
@@ -39,4 +44,5 @@ class TestSendNotificationEmail:
                 notification, "test", item.get_permalink(), template_name
             )
 
-        assert len(mail.outbox) == 4
+        assert len(mailoutbox) == 4
+        assert mailoutbox[0].to == [recipient.email]

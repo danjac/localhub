@@ -44,6 +44,12 @@ class Community(TimeStampedModel):
 
     name = models.CharField(max_length=255)
     description = MarkdownField(blank=True)
+    terms = MarkdownField(
+        blank=True,
+        help_text=_(
+            "Terms and conditions, code of conduct and other membership terms."
+        ),
+    )
 
     email_domain = models.CharField(
         null=True,

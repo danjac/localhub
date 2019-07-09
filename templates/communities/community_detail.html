@@ -1,0 +1,36 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/base.html" %}
+{% load i18n %}
+{% load rules %}
+
+{% block activities_content %}
+
+<h3>{{ community.name }}</h3>
+
+{% if community.description %}
+<hr />
+<h4>{% trans "Description" %}</h4>
+<p>
+  {{ community.description.markdown }}
+</p>
+{% endif %}
+
+{% if community.terms %}
+<hr />
+<h4>{% trans "Terms & Conditions" %}</h4>
+<p>
+  {{ community.terms.markdown }}
+</p>
+{% endif %}
+
+{% has_perm "communities.manage_community" user community as can_manage %}
+{% if can_manage %}
+<a href="{% url "communities:community_update" %}" class="btn btn-primary btn-block">
+    <i class="icon icon-edit"></i>
+    {% trans "Edit Community Settings" %}
+</a>
+{% endif %}
+
+{% endblock activities_content %}
