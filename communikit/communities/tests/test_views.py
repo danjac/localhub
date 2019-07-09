@@ -79,6 +79,14 @@ class TestCommunityRequiredMixin:
             my_view(req)
 
 
+class TestCommunityDetailView:
+    def test_get(self, client: Client, community: Community):
+        assert (
+            client.get(reverse("communities:community_detail")).status_code
+            == 200
+        )
+
+
 class TestCommunityUpdateView:
     def test_get(self, client: Client, admin: Membership):
         assert (
