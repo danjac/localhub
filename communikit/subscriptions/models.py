@@ -10,6 +10,21 @@ from model_utils.models import TimeStampedModel
 
 
 from communikit.communities.models import Community
+from communikit.core.utils.content_types import get_generic_related_exists
+
+
+class SubscriptionAnnotationsQuerySetMixin:
+    def with_has_subscribed(
+        self, user: settings.AUTH_USER_MODEL, community: Community
+    ) -> models.QuerySet:
+        return self.annotate(
+            has_subscribed=get_generic_related_exists(
+                self.model,
+                Subscription.objects.filter(
+                    subscriber=user, community=community
+                ),
+            )
+        )
 
 
 class Subscription(TimeStampedModel):

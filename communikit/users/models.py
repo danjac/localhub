@@ -15,10 +15,13 @@ from sorl.thumbnail import ImageField
 
 from communikit.communities.models import Community
 from communikit.core.markdown.fields import MarkdownField
-from communikit.subscriptions.models import Subscription
+from communikit.subscriptions.models import (
+    Subscription,
+    SubscriptionAnnotationsQuerySetMixin,
+)
 
 
-class UserManager(BaseUserManager):
+class UserManager(SubscriptionAnnotationsQuerySetMixin, BaseUserManager):
     use_in_migrations = True
 
     def create_user(

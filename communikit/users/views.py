@@ -164,6 +164,15 @@ class BaseUserListView(UserQuerySetMixin, ListView):
 class UserListView(BaseUserListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
+    def get_queryset(self) -> QuerySet:
+
+        qs = super().get_queryset()
+        if self.request.user.is_authenticated:
+            qs = qs.with_has_subscribed(
+                self.request.user, self.request.community
+            )
+        return qs
+
 
 user_list_view = UserListView.as_view()
 

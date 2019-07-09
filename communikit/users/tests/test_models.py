@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 from allauth.account.models import EmailAddress
 
 from communikit.communities.models import Community, Membership
+from communikit.subscriptions.models import Subscription
 from communikit.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
@@ -82,6 +83,27 @@ class TestUserManager:
 
         # check empty set returns no results
         assert get_user_model().objects.matches_usernames([]).count() == 0
+
+    def test_has_subscribed(self, member: Membership):
+
+        subscribed = UserFactory()
+        UserFactory()
+
+        Subscription.objects.create(
+            subscriber=member.member,
+            community=member.community,
+            content_object=subscribed,
+        )
+
+        users = get_user_model().objects.with_has_subscribed(
+            member.member, member.community
+        )
+
+        for user in users:
+            if user == subscribed:
+                assert user.has_subscribed
+            else:
+                assert not user.has_subscribed
 
 
 class TestUserModel:

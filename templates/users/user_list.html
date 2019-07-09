@@ -18,12 +18,32 @@
 
 <h3>{% trans "Members" %}</h3>
 <table class="table table-striped table-hover">
+    {% if user.is_authenticated %}
+    <thead>
+        <tr>
+            <th>{% trans "Member" %}</th>
+            <th>{% trans "Following?" %}</th>
+        </tr>
+    </thead>
+    {% endif %}
     <tbody>
         {% for member in object_list %}
         <tr>
             <td>
-              {% include "users/includes/chip.html" with profile=member %}
+                {% include "users/includes/chip.html" with profile=member %}
             </td>
+            {% if user.is_authenticated %}
+            <td>
+                {% if user == member %}
+                -
+                {% else %}
+                <label class="form-checkbox">
+                    <input type="checkbox" disabled {% if member.has_subscribed %} checked {% endif %}>
+                    <i class="form-icon"></i>
+                </label>
+                {% endif %}
+            </td>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody>

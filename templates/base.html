@@ -29,7 +29,7 @@
       <header class="navbar bg-dark px-2 py-1 my-2">
         <section class="navbar-section">
           <a class="navbar-brand mr-2 text-light" href="/">
-            {% if request.community %}{{ request.community.name }}{% else %}communikit{% endif %}
+            {% if request.community %}{{ request.community.name }}{% else %}Communikit{% endif %}
           </a>
         </section>
         {% if request.community %}
@@ -59,10 +59,10 @@
             {% user_display user as display_name %}
             {{ display_name }}
           </a>
-          <a class="btn btn-link text-light" href="{% url 'account_logout' %}">{% trans "logout" %}</a>
+          <a class="btn btn-link text-light" href="{% url 'account_logout' %}">{% trans "Logout" %}</a>
           {% else %}
-          <a class="btn btn-link text-light" href="{% url 'account_login' %}">{% trans "login" %}</a>
-          <a class="btn btn-link text-light" href="{% url 'account_signup' %}">{% trans "signup" %}</a>
+          <a class="btn btn-link text-light" href="{% url 'account_login' %}">{% trans "Login" %}</a>
+          <a class="btn btn-link text-light" href="{% url 'account_signup' %}">{% trans "Signup" %}</a>
           {% endif %}
           {% endwith %}
         </section>
