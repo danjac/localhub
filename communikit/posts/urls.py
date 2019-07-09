@@ -9,4 +9,4 @@ from communikit.posts.models import Post
 app_name = "posts"
 
 
-urlpatterns = create_activity_urls(model=Post, form_class=PostForm)
+urlpatterns = create_activity_urls(Post, PostForm)

@@ -13,7 +13,7 @@ from communikit.events.views import event_download_view
 app_name = "events"
 
 
-urlpatterns = create_activity_urls(model=Event, form_class=EventForm)
+urlpatterns = create_activity_urls(Event, EventForm)
 
 urlpatterns += [
     path("<int:pk>~download/", event_download_view, name="download")

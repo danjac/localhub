@@ -7,14 +7,18 @@ from django.utils.translation import gettext_lazy as _
 from communikit.core.forms.fields import CalendarField
 from communikit.events.models import Event
 
+calendar_help_text = _(
+    "Time will be stored in UTC timezone. It will be shown in the timezone you select below."  # noqa
+)
+
 
 class EventForm(forms.ModelForm):
 
     starts = CalendarField(
-        label=_("Event starts"), help_text=_("Timezone UTC")
+        label=_("Event starts"), help_text=calendar_help_text
     )
     ends = CalendarField(
-        label=_("Event ends"), help_text=_("Timezone UTC"), required=False
+        label=_("Event ends"), help_text=calendar_help_text, required=False
     )
 
     class Meta:
@@ -37,5 +41,5 @@ class EventForm(forms.ModelForm):
         )
 
         help_texts = {
-            "timezone": _("All times will be shown in this timezone")
+            "timezone": _("Start and end times will be shown in this timezone")
         }

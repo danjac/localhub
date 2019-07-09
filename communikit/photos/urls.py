@@ -9,4 +9,4 @@ from communikit.photos.models import Photo
 app_name = "photos"
 
 
-urlpatterns = create_activity_urls(model=Photo, form_class=PhotoForm)
+urlpatterns = create_activity_urls(Photo, PhotoForm)
