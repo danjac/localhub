@@ -95,8 +95,10 @@ class TestUserManager:
             content_object=subscribed,
         )
 
-        users = get_user_model().objects.with_has_subscribed(
-            member.member, member.community
+        users = (
+            get_user_model()
+            .objects.all()
+            .with_has_subscribed(member.member, member.community)
         )
 
         for user in users:

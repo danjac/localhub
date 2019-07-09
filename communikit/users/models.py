@@ -54,6 +54,15 @@ class UserManager(BaseUserManager):
     def get_queryset(self) -> models.QuerySet:
         return UserQuerySet(self.model, using=self._db)
 
+    def active(self, community: Community) -> models.QuerySet:
+        return self.get_queryset().active(community)
+
+    def for_email(self, email: str) -> models.QuerySet:
+        return self.get_queryset().for_email(email)
+
+    def matches_usernames(self, names=Sequence[str]) -> models.QuerySet:
+        return self.get_queryset().matches_usernames(names)
+
     def create_user(
         self,
         username: str,
