@@ -4,7 +4,7 @@
 import operator
 
 from functools import reduce
-from typing import Callable, List
+from typing import Callable, Dict, List
 
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
@@ -63,12 +63,20 @@ class ActivityQuerySet(
         return qs
 
     def following(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
+        """
+        Includes only instances where the activity owner is subscribed by
+        the user.
+        """
         return self.filter(
             models.Q(owner__subscriptions__subscriber=user)
             | models.Q(owner=user)
         )
 
     def search(self, search_term: str) -> models.QuerySet:
+        """
+        Returns result of search on indexed fields. Annotates with
+        `rank` to allow ordering by search result accuracy.
+        """
         if not search_term:
             return self.none()
         query = SearchQuery(search_term)
@@ -113,14 +121,23 @@ class Activity(TimeStampedModel):
 
     @classmethod
     def get_list_url(cls) -> str:
+        """
+        Returns the default list view URL of the model.
+        """
         return reverse(f"{cls._meta.app_label}:list")
 
     @classmethod
     def get_create_url(cls) -> str:
+        """
+        Returns the default create view URL of the model.
+        """
         return reverse(f"{cls._meta.app_label}:create")
 
     @classmethod
     def get_breadcrumbs_for_model(cls) -> BreadcrumbList:
+        """
+        Creates a default breadcrumb navigation for the model class.
+        """
         return [
             (settings.HOME_PAGE_URL, _("Home")),
             (cls.get_list_url(), _(cls._meta.verbose_name_plural.title())),
@@ -168,17 +185,34 @@ class Activity(TimeStampedModel):
         return get_generic_related_queryset(self, Like)
 
     def get_breadcrumbs(self) -> BreadcrumbList:
+        """
+        Returns breadcrumb navigation for individual instance.
+        """
         return self.__class__.get_breadcrumbs_for_model() + [
             (self.get_absolute_url(), truncatechars(smart_text(self), 60))
         ]
 
-    # https://simonwillison.net/2017/Oct/5/django-postgresql-faceted-search/
-    def search_index_components(self):
+    def search_index_components(self) -> Dict[str, str]:
+        """
+        Return a dict of text elements for inclusion in the search document.
+        Dict keys should be A, B, C and so forth depending on weighting.
+
+        e.g.
+
+        {"A": self.title, "B": self.description}
+        """
         return {}
 
-    # in post_save: transaction.on_commit(instance.make_search_updater())
-    # set up signal for each subclass
     def make_search_updater(self) -> Callable:
+        """
+        Returns an indexing function to update the PostgreSQL search document
+        for this instance.
+
+        In post_save signal:
+
+        transaction.on_commit(instance.make_search_updater())
+        """
+
         def on_commit():
             search_vectors = [
                 SearchVector(
@@ -194,6 +228,10 @@ class Activity(TimeStampedModel):
         return on_commit
 
     def taggit(self, created: bool):
+        """
+        Generates Tag instances from #hashtags in the description field when
+        changed. Pre-existing tags are deleted.
+        """
         if created or self.description_tracker.changed():
             hashtags = self.description.extract_hashtags()
             if hashtags:
@@ -213,8 +251,22 @@ class Activity(TimeStampedModel):
         )
 
     def notify(self, created: bool) -> List[Notification]:
+        """
+        Generates user notifications when instance is created
+        or updated.
+
+        The following notifications may be created:
+
+        - any users @mentioned in the description field
+        - any users subscribed to hashtags in the description field
+        - any users subscribed to the owner (only on create)
+        - all commmunity moderators
+        """
         notifications: List[Notification] = []
         # notify anyone @mentioned in the description
+        # TBD: should probably be a separate method to
+        # return mentions - if we have multiple fields
+        # in subclasses for example
         if self.description and (
             created or self.description_tracker.changed()
         ):
