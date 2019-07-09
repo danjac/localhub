@@ -8,12 +8,12 @@
 {% block notification_title %}
 {% include "users/includes/chip.html" with profile=notification.actor %}
 {% if notification.verb == 'mentioned' %}
-has mentioned you in a <a href="{{ comment.get_absolute_url }}">comment</a>.
+has mentioned you in their <a href="{{ comment.get_absolute_url }}">comment</a>.
 {% elif notification.verb == 'created' %}
-has published a <a href="{{ comment.get_absolute_url }}">comment</a>.
+has published a new <a href="{{ comment.get_absolute_url }}">comment</a>.
 {% elif notification.verb == 'updated' %}
 has updated their <a href="{{ comment.get_absolute_url }}">comment</a>.
 {% elif notification.verb == 'commented' %}
-has <a href="{{ comment.get_absolute_url }}">commented</a> on one of your posts.
+has just <a href="{{ comment.get_absolute_url }}">commented</a> on one of your posts.
 {% endif %}
 {% endblock notification_title %}

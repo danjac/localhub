@@ -8,9 +8,9 @@
 {% block notification_title %}
 {% include "users/includes/chip.html" with profile=notification.actor %}
 {% if notification.verb == 'mentioned' %}
-has mentioned you in a
+has mentioned you in their
 {% elif notification.verb == 'created' %}
-has published a
+has published a new
 {% elif notification.verb == 'updated' %}
 has updated their
 {% elif notification.verb == 'tagged' %}

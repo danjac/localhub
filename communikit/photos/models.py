@@ -39,7 +39,7 @@ class Photo(Activity):
         choices=CC_LICENSES,
         null=True,
         blank=True,
-        verbose_name="Creative Commons License",
+        verbose_name="Creative Commons license",
     )
 
     comments = GenericRelation(Comment, related_query_name="photo")
