@@ -9,6 +9,7 @@
 {% test_rule 'is_admin' user request.community as is_admin %}
 {% test_rule 'is_member' user request.community as is_member %}
 
+{% has_perm 'activities.create_activity' user request.community as can_create_activity %}
 {% has_perm 'communities.moderate_community' user request.community as can_moderate_community %}
 {% has_perm 'communities.manage_community' user request.community as can_manage_community %}
 
@@ -19,6 +20,11 @@
            href="{% url 'activities:stream' %}">{% trans "Home" %}
         </a>
     </li>
+    {% if can_create_activity %}
+    <li class="menu-item">
+        <a href="{% url 'posts:create' %}">{% trans "Submit Post" %}</a>
+    </li>
+    {% endif %}
     {% if is_member %}
     <li class="menu-item">
         <a data-controller="active-link"
