@@ -4,7 +4,7 @@
 
 from django.urls import path
 
-from communikit.activities.views import ActivityViewSet
+from communikit.activities.utils import create_activity_urls
 from communikit.events.forms import EventForm
 from communikit.events.models import Event
 from communikit.events.views import event_download_view
@@ -13,7 +13,7 @@ from communikit.events.views import event_download_view
 app_name = "events"
 
 
-urlpatterns = ActivityViewSet(model=Event, form_class=EventForm).urls
+urlpatterns = create_activity_urls(model=Event, form_class=EventForm)
 
 urlpatterns += [
     path("<int:pk>~download/", event_download_view, name="download")

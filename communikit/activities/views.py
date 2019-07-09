@@ -15,7 +15,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.db.models import Q, QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.urls import URLPattern, path, reverse
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     CreateView,
@@ -37,12 +37,7 @@ from communikit.activities.models import Activity
 from communikit.comments.forms import CommentForm
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
-from communikit.core.types import (
-    BreadcrumbList,
-    ContextDict,
-    DjangoView,
-    QuerySetList,
-)
+from communikit.core.types import BreadcrumbList, ContextDict, QuerySetList
 from communikit.core.views import BreadcrumbsMixin, MultipleQuerySetListView
 from communikit.events.models import Event
 from communikit.flags.forms import FlagForm
@@ -497,79 +492,3 @@ class ActivityCommentCreateView(
         comment.save()
         messages.success(self.request, _("Your comment has been posted"))
         return HttpResponseRedirect(self.get_success_url())
-
-
-class ActivityViewSet:
-
-    model = None
-    form_class = None
-
-    create_view_class = ActivityCreateView
-    create_comment_view_class = ActivityCommentCreateView
-    delete_view_class = ActivityDeleteView
-    detail_view_class = ActivityDetailView
-    dislike_view_class = ActivityDislikeView
-    flag_view_class = ActivityFlagView
-    like_view_class = ActivityLikeView
-    list_view_class = ActivityListView
-    update_view_class = ActivityUpdateView
-
-    def __init__(self, **kwargs):
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
-    @property
-    def create_view(self) -> DjangoView:
-        return self.create_view_class.as_view(
-            model=self.model, form_class=self.form_class
-        )
-
-    @property
-    def create_comment_view(self) -> DjangoView:
-        return self.create_comment_view_class.as_view(model=self.model)
-
-    @property
-    def update_view(self) -> DjangoView:
-        return self.update_view_class.as_view(
-            model=self.model, form_class=self.form_class
-        )
-
-    @property
-    def list_view(self) -> DjangoView:
-        return self.list_view_class.as_view(model=self.model)
-
-    @property
-    def detail_view(self) -> DjangoView:
-        return self.detail_view_class.as_view(model=self.model)
-
-    @property
-    def delete_view(self) -> DjangoView:
-        return self.delete_view_class.as_view(model=self.model)
-
-    @property
-    def like_view(self) -> DjangoView:
-        return self.like_view_class.as_view(model=self.model)
-
-    @property
-    def dislike_view(self) -> DjangoView:
-        return self.dislike_view_class.as_view(model=self.model)
-
-    @property
-    def flag_view(self) -> DjangoView:
-        return self.flag_view_class.as_view(model=self.model)
-
-    @property
-    def urls(self) -> List[URLPattern]:
-        return [
-            path("", self.list_view, name="list"),
-            path("~create", self.create_view, name="create"),
-            path(
-                "<int:pk>/~comment/", self.create_comment_view, name="comment"
-            ),
-            path("<int:pk>/~delete/", self.delete_view, name="delete"),
-            path("<int:pk>/~dislike/", self.dislike_view, name="dislike"),
-            path("<int:pk>/~flag/", self.flag_view, name="flag"),
-            path("<int:pk>/~like/", self.like_view, name="like"),
-            path("<int:pk>/~update/", self.update_view, name="update"),
-            path("<int:pk>/<slug:slug>/", self.detail_view, name="detail"),
-        ]

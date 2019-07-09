@@ -9,6 +9,7 @@ from typing import Any, Callable, Dict, List, Tuple, Type, Union
 
 from django.db.models import Model, QuerySet
 from django.http import HttpRequest, HttpResponse
+from django.views.generic import View
 
 DjangoView = Callable[[HttpRequest], HttpResponse]
 
@@ -20,5 +21,7 @@ QuerySetDict = Dict[str, QuerySet]
 QuerySetList = List[QuerySet]
 
 
-ModelClass = Type[Model]
-ModelOrQuerySet = Union[ModelClass, QuerySet]
+ModelType = Type[Model]
+ModelOrQuerySet = Union[ModelType, QuerySet]
+
+ViewType = Type[View]

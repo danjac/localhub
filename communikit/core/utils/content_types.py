@@ -19,11 +19,11 @@ from django.db.models import (
     QuerySet,
 )
 
-from communikit.core.types import ModelClass, ModelOrQuerySet
+from communikit.core.types import ModelType, ModelOrQuerySet
 
 
 def get_generic_related_exists(
-    model: ModelClass,
+    model: ModelType,
     related: ModelOrQuerySet,
     related_object_id_field: str = "object_id",
     related_content_type_field: str = "content_type",
@@ -48,7 +48,7 @@ def get_generic_related_exists(
 
 
 def get_generic_related_count_subquery(
-    model: ModelClass,
+    model: ModelType,
     related: ModelOrQuerySet,
     related_object_id_field: str = "object_id",
     related_content_type_field: str = "content_type",
@@ -97,7 +97,7 @@ def get_generic_related_queryset(
 
 def _get_generic_related_by_id_and_content_type(
     pk: Any,
-    model: Union[ModelClass, Model],
+    model: Union[ModelType, Model],
     related: ModelOrQuerySet,
     related_object_id_field: str = "object_id",
     related_content_type_field: str = "content_type",
