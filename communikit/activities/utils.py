@@ -9,7 +9,7 @@ from django.forms import ModelForm
 from django.urls import URLPattern, path
 
 from communikit.activities import views
-from communikit.activities.models import Activity
+from communikit.activities.types import ActivityType
 from communikit.core.types import ViewType
 
 
@@ -27,7 +27,7 @@ def get_domain(url: str) -> Optional[str]:
 
 
 def create_activity_urls(
-    model: Type[Activity],
+    model: ActivityType,
     form_class: Optional[Type[ModelForm]] = None,
     list_view_class: ViewType = views.ActivityListView,
     create_view_class: ViewType = views.ActivityCreateView,

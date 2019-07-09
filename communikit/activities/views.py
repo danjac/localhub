@@ -3,7 +3,7 @@
 
 import operator
 
-from typing import List, Optional, Type, no_type_check
+from typing import List, Optional, no_type_check
 
 from functools import reduce
 
@@ -34,6 +34,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from taggit.models import Tag, TaggedItem
 
 from communikit.activities.models import Activity
+from communikit.activities.types import ActivityType
 from communikit.comments.forms import CommentForm
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
@@ -322,9 +323,9 @@ class BaseActivityStreamView(CommunityRequiredMixin, MultipleQuerySetListView):
     ordering = "created"
     allow_empty = True
     paginate_by = settings.DEFAULT_PAGE_SIZE
-    models: List[Type[Activity]] = [Photo, Post, Event]
+    models: List[ActivityType] = [Photo, Post, Event]
 
-    def get_queryset_for_model(self, model: Type[Activity]) -> QuerySet:
+    def get_queryset_for_model(self, model: ActivityType) -> QuerySet:
         return (
             model.objects.filter(community=self.request.community)
             .with_common_annotations(self.request.community, self.request.user)
@@ -338,7 +339,7 @@ class BaseActivityStreamView(CommunityRequiredMixin, MultipleQuerySetListView):
 class ActivityStreamView(BaseActivityStreamView):
     template_name = "activities/stream.html"
 
-    def get_queryset_for_model(self, model: Type[Activity]) -> QuerySet:
+    def get_queryset_for_model(self, model: ActivityType) -> QuerySet:
         qs = super().get_queryset_for_model(model)
 
         self.show_all = (
@@ -364,7 +365,7 @@ class ActivityTagView(SingleTagMixin, BaseActivityStreamView):
         self.object = self.get_object()
         return super().get(request, *args, **kwargs)
 
-    def get_queryset_for_model(self, model: Type[Activity]) -> QuerySet:
+    def get_queryset_for_model(self, model: ActivityType) -> QuerySet:
         return (
             super()
             .get_queryset_for_model(model)
@@ -450,7 +451,7 @@ class ActivitySearchView(BaseActivityStreamView):
         self.search_query = request.GET.get("q", "").strip()
         return super().get(request, *args, **kwargs)
 
-    def get_queryset_for_model(self, model: Type[Activity]) -> QuerySet:
+    def get_queryset_for_model(self, model: ActivityType) -> QuerySet:
         if self.search_query:
             return (
                 super().get_queryset_for_model(model).search(self.search_query)
