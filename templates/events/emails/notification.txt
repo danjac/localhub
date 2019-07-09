@@ -1,11 +1,12 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% load i18n %}{% load account }{% autoescape off %}{% user_display notification.recipient as recipient %}{% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
+{% load i18n %}{% load account %}{% autoescape off %}{% user_display notification.recipient as recipient %}{% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
 {% user_display notification.actor as actor %}
 
 {% if notification.verb == 'mentioned' %}{% blocktrans %}{{ actor }} has mentioned you in an event.{% endblocktrans %}
 {% elif notification.verb == 'tagged' %}{% blocktrans %}{{ actor }} has added an event containing tags you follow.{% endblocktrans %}
 {% elif notification.verb == 'created' %}{% blocktrans %}{{ actor }} has added an event.{% endblocktrans %}
 {% elif notification.verb == 'updated' %}{% blocktrans %}{{ actor }} has edited an event.{% endblocktrans %}
+{% endif %}
 
 Link to event: {{ object_url }}{% endautoescape %}

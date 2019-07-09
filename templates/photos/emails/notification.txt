@@ -7,5 +7,6 @@
 {% elif notification.verb == 'tagged' %}{% blocktrans %}{{ actor }} has added a photo containing tags you follow.{% endblocktrans %}
 {% elif notification.verb == 'created' %}{% blocktrans %}{{ actor }} has added a photo.{% endblocktrans %}
 {% elif notification.verb == 'updated' %}{% blocktrans %}{{ actor }} has edited a photo.{% endblocktrans %}
+{% endif %}
 
 Link to photo: {{ object_url }}{% endautoescape %}
