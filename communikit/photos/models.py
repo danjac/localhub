@@ -35,7 +35,11 @@ class Photo(Activity):
     artist = models.CharField(max_length=100, blank=True)
     original_url = models.URLField(null=True, blank=True)
     cc_license = models.CharField(
-        max_length=10, choices=CC_LICENSES, null=True, blank=True
+        max_length=10,
+        choices=CC_LICENSES,
+        null=True,
+        blank=True,
+        verbose_name="Creative Commons License",
     )
 
     comments = GenericRelation(Comment, related_query_name="photo")
