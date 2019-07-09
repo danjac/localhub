@@ -23,9 +23,9 @@ Installation
 
 Development installation requires Docker and Docker-Compose. Assuming both are installed and running you should be able to just do:
 
-`
-  > docker-compose up -d --build
-`
+
+`docker-compose up -d --build`
+
 
 Deployment
 ----------
