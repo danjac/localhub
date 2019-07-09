@@ -26,7 +26,7 @@ from django.views.generic.detail import SingleObjectMixin
 from rules.contrib.views import PermissionRequiredMixin
 
 from communikit.activities.models import Activity
-from communikit.activities.views import ActivityStreamView
+from communikit.activities.views import BaseActivityStreamView
 from communikit.comments.models import Comment
 from communikit.comments.views import CommentListView
 from communikit.communities.models import Community
@@ -201,7 +201,7 @@ class SingleUserMixin(
         return super().get(request, *args, **kwargs)
 
 
-class UserActivityStreamView(SingleUserMixin, ActivityStreamView):
+class UserActivityStreamView(SingleUserMixin, BaseActivityStreamView):
 
     active_tab = "posts"
     template_name = "users/activities.html"

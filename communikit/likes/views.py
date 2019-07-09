@@ -7,11 +7,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 
 from communikit.activities.models import Activity
-from communikit.activities.views import ActivityStreamView
+from communikit.activities.views import BaseActivityStreamView
 from communikit.comments.views import CommentListView
 
 
-class LikedActivityStreamView(LoginRequiredMixin, ActivityStreamView):
+class LikedActivityStreamView(LoginRequiredMixin, BaseActivityStreamView):
     template_name = "likes/activities.html"
 
     def get_queryset_for_model(self, model: Type[Activity]) -> QuerySet:

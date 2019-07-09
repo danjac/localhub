@@ -19,11 +19,43 @@ pytestmark = pytest.mark.django_db
 
 
 class TestActivityStreamView:
-    def test_get(self, client: Client, community: Community):
+    def test_get_if_anonymous(self, client: Client, community: Community):
         PostFactory(community=community)
         EventFactory(community=community)
 
         response = client.get(reverse("activities:stream"))
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 2
+
+    def test_get_if_authenticated_following(
+        self, client: Client, member: Membership
+    ):
+        EventFactory(community=member.community)
+
+        post = PostFactory(community=member.community)
+
+        Subscription.objects.create(
+            user=member.member,
+            community=member.community,
+            content_object=post.owner,
+        )
+        response = client.get(reverse("activities:stream"))
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 1
+
+    def test_get_if_authenticated_show_all(
+        self, client: Client, member: Membership
+    ):
+        EventFactory(community=member.community)
+
+        post = PostFactory(community=member.community)
+
+        Subscription.objects.create(
+            user=member.member,
+            community=member.community,
+            content_object=post.owner,
+        )
+        response = client.get(reverse("activities:stream"), {"all": "1"})
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 2
 

@@ -20,7 +20,10 @@ class SubscribedUserListView(LoginRequiredMixin, BaseUserListView):
         return (
             super()
             .get_queryset()
-            .filter(subscriptions__subscriber=self.request.user)
+            .filter(
+                subscriptions__subscriber=self.request.user,
+                subscriptions__community=self.request.community,
+            )
             .distinct()
         )
 

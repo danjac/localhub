@@ -26,6 +26,17 @@
 
 {% endif %}
 
+{% if user.is_authenticated %}
+<p class="mt-2">
+    {% if view.show_all %}
+    <a href="{{ request.path }}?all">{% trans "Show All" %}</a>
+    {% else %}
+    <a href="{{ request.path }}">{% trans "Show Following" %}</a>
+    {% endif %}
+</p>
+{% endif %}
+
+
 {% for event in object_list %}
 <div class="mt-2">
   {% include "events/includes/event.html" %}

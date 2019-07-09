@@ -17,6 +17,7 @@ from communikit.likes.models import Like
 from communikit.notifications.models import Notification
 from communikit.posts.tests.factories import PostFactory
 from communikit.posts.models import Post
+from communikit.subscriptions.models import Subscription
 from communikit.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
@@ -28,10 +29,34 @@ def post_for_member(member: Membership) -> Post:
 
 
 class TestPostListView:
-    def test_get(self, client: Client, community: Community):
+    def test_get_if_anonymous(self, client: Client, community: Community):
         PostFactory.create_batch(3, community=community)
         response = client.get(reverse("posts:list"))
         assert len(response.context["object_list"]) == 3
+
+    def test_get_if_authenticated_following(
+        self, client: Client, member: Membership
+    ):
+
+        post = PostFactory(community=member.community)
+
+        Subscription.objects.create(
+            user=member.member,
+            community=member.community,
+            content_object=post.owner,
+        )
+        response = client.get(reverse("posts:list"))
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 1
+
+    def test_get_if_authenticated_show_all(
+        self, client: Client, member: Membership
+    ):
+
+        PostFactory(community=member.community)
+        response = client.get(reverse("posts:list"), {"all": "1"})
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 1
 
 
 class TestPostCreateView:

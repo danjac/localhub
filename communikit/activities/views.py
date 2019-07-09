@@ -112,12 +112,18 @@ class ActivityListView(MultipleActivityMixin, ListView):
     order_by = "-created"
 
     def get_queryset(self) -> QuerySet:
-        return (
+        qs = (
             super()
             .get_queryset()
             .with_common_annotations(self.request.community, self.request.user)
             .order_by(self.order_by)
         )
+        self.show_all = (
+            "all" in self.request.GET or self.request.user.is_anonymous
+        )
+        if self.show_all:
+            return qs
+        return qs.filter(owner__subscriptions__subscriber=self.request.user)
 
 
 class ActivityUpdateView(
@@ -316,8 +322,7 @@ class TagAutocompleteListView(CommunityRequiredMixin, ListView):
 tag_autocomplete_list_view = TagAutocompleteListView.as_view()
 
 
-class ActivityStreamView(CommunityRequiredMixin, MultipleQuerySetListView):
-    template_name = "activities/stream.html"
+class BaseActivityStreamView(CommunityRequiredMixin, MultipleQuerySetListView):
     ordering = "created"
     allow_empty = True
     paginate_by = settings.DEFAULT_PAGE_SIZE
@@ -334,6 +339,20 @@ class ActivityStreamView(CommunityRequiredMixin, MultipleQuerySetListView):
         return [self.get_queryset_for_model(model) for model in self.models]
 
 
+class ActivityStreamView(BaseActivityStreamView):
+    template_name = "activities/stream.html"
+
+    def get_queryset_for_model(self, model: Type[Activity]) -> QuerySet:
+        qs = super().get_queryset_for_model(model)
+
+        self.show_all = (
+            "all" in self.request.GET or self.request.user.is_anonymous
+        )
+        if self.show_all:
+            return qs
+        return qs.filter(owner__subscriptions__subscriber=self.request.user)
+
+
 activity_stream_view = ActivityStreamView.as_view()
 
 
@@ -341,7 +360,7 @@ class SingleTagMixin(SingleObjectMixin):
     model = Tag
 
 
-class ActivityTagView(SingleTagMixin, ActivityStreamView):
+class ActivityTagView(SingleTagMixin, BaseActivityStreamView):
     template_name = "activities/tag_detail.html"
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
@@ -424,7 +443,7 @@ class TagUnsubscribeView(LoginRequiredMixin, SingleTagMixin, View):
 tag_unsubscribe_view = TagUnsubscribeView.as_view()
 
 
-class ActivitySearchView(ActivityStreamView):
+class ActivitySearchView(BaseActivityStreamView):
     template_name = "activities/search.html"
 
     def get_ordering(self) -> Optional[str]:
