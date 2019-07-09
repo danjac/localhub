@@ -506,13 +506,13 @@ def create_activity_urls(
     form_class: Optional[Type[ModelForm]] = None,
     list_view_class: ViewType = ActivityListView,
     create_view_class: ViewType = ActivityCreateView,
-    create_comment_view_class: ViewType = ActivityCommentCreateView,
+    update_view_class: ViewType = ActivityUpdateView,
+    detail_view_class: ViewType = ActivityDetailView,
     delete_view_class: ViewType = ActivityDeleteView,
     dislike_view_class: ViewType = ActivityDislikeView,
     flag_view_class: ViewType = ActivityFlagView,
     like_view_class: ViewType = ActivityLikeView,
-    update_view_class: ViewType = ActivityUpdateView,
-    detail_view_class: ViewType = ActivityDetailView,
+    create_comment_view_class: ViewType = ActivityCommentCreateView,
 ) -> List[URLPattern]:
     """
     Generates default URL patterns for activity subclasses.
