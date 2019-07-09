@@ -21,8 +21,38 @@ from communikit.subscriptions.models import (
 )
 
 
-class UserManager(SubscriptionAnnotationsQuerySetMixin, BaseUserManager):
+class UserQuerySet(SubscriptionAnnotationsQuerySetMixin, models.QuerySet):
     use_in_migrations = True
+
+    def for_email(self, email: str) -> models.QuerySet:
+        return self.filter(
+            models.Q(emailaddress__email__iexact=email)
+            | models.Q(email__iexact=email)
+        )
+
+    def matches_usernames(self, names=Sequence[str]) -> models.QuerySet:
+        # sanity check
+        if not names:
+            return self.none()
+        return self.filter(username__iregex=r"^(%s)+" % "|".join(names))
+
+    def active(self, community: Community) -> models.QuerySet:
+        """
+        Returns only users which are a) active and b) have active
+        membership with given community.
+        """
+
+        return self.filter(
+            # test with more than 1 community
+            membership__community=community,
+            membership__active=True,
+            is_active=True,
+        )
+
+
+class UserManager(BaseUserManager):
+    def get_queryset(self) -> models.QuerySet:
+        return UserQuerySet(self.model, using=self._db)
 
     def create_user(
         self,
@@ -48,31 +78,6 @@ class UserManager(SubscriptionAnnotationsQuerySetMixin, BaseUserManager):
             is_staff=True,
             is_superuser=True,
             **kwargs
-        )
-
-    def for_email(self, email: str) -> models.QuerySet:
-        return self.filter(
-            models.Q(emailaddress__email__iexact=email)
-            | models.Q(email__iexact=email)
-        )
-
-    def matches_usernames(self, names=Sequence[str]) -> models.QuerySet:
-        # sanity check
-        if not names:
-            return self.none()
-        return self.filter(username__iregex=r"^(%s)+" % "|".join(names))
-
-    def active(self, community: Community) -> models.QuerySet:
-        """
-        Returns only users which are a) active and b) have active
-        membership with given community.
-        """
-
-        return self.filter(
-            # test with more than 1 community
-            membership__community=community,
-            membership__active=True,
-            is_active=True,
         )
 
 
