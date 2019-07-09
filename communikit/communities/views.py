@@ -30,6 +30,15 @@ class CommunityRequiredMixin:
     """
     Ensures that a community is available on this domain. This requires
     the CurrentCommunityMiddleware is enabled.
+
+    If the community is private and the user is not a member then they
+    are shown an "Access Denied" screen. If they are not yet logged in,
+    then they are redirected to the login page first to authenticate so
+    their membership can be properly verified.
+
+    If the view has the `allow_if_private` property *True* then the above
+    rule is overriden - for example in some cases where we want to allow
+    the user to be able to handle an invitation.
     """
 
     allow_if_private = False
@@ -188,6 +197,9 @@ membership_delete_view = MembershipDeleteView.as_view()
 
 
 class CommunityLeaveView(MembershipDeleteView):
+    """
+    Allows the current user to be able to leave the community.
+    """
     template_name = "communities/leave.html"
 
     def get_object(self) -> Membership:

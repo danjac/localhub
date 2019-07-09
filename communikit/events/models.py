@@ -81,9 +81,15 @@ class Event(Activity):
         return get_domain(self.url)
 
     def get_starts_with_tz(self) -> datetime.datetime:
+        """
+        Returns start datetime adjusted for the timezone field value.
+        """
         return self.starts.astimezone(self.timezone)
 
     def get_ends_with_tz(self) -> Optional[datetime.datetime]:
+        """
+        Returns start datetime adjusted for the timezone field value.
+        """
         return self.ends.astimezone(self.timezone) if self.ends else None
 
     def search_index_components(self) -> Dict[str, str]:
@@ -94,6 +100,9 @@ class Event(Activity):
         }
 
     def update_coordinates(self) -> Tuple[Optional[float], Optional[float]]:
+        """
+        Fetches the lat/lng coordinates from Open Street Map API.
+        """
         if self.location:
             result = geocoder.osm(self.location)
             self.latitude, self.longitude = result.lat, result.lng
@@ -106,6 +115,9 @@ class Event(Activity):
 
     @property
     def location(self) -> str:
+        """
+        Returns a concatenated string of location fields.
+        """
         rv: List[str] = [
             smart_text(value)
             for value in [

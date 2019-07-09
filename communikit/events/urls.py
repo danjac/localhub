@@ -4,7 +4,7 @@
 
 from django.urls import path
 
-from communikit.activities.utils import create_activity_urls
+from communikit.activities.views import create_activity_urls
 from communikit.events.forms import EventForm
 from communikit.events.models import Event
 from communikit.events.views import event_download_view

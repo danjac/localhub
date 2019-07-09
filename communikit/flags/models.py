@@ -18,7 +18,13 @@ from communikit.notifications.models import Notification
 
 
 class FlagAnnotationsQuerySetMixin:
+    """
+    Adds annotation methods to related model query set.
+    """
     def with_is_flagged(self) -> models.QuerySet:
+        """
+        Adds True if the object has been flagged by a user.
+        """
         return self.annotate(
             is_flagged=get_generic_related_exists(self.model, Flag)
         )
@@ -26,6 +32,9 @@ class FlagAnnotationsQuerySetMixin:
     def with_has_flagged(
         self, user: settings.AUTH_USER_MODEL
     ) -> models.QuerySet:
+        """
+        Adds True if the user in question has flagged the object.
+        """
         return self.annotate(
             has_flagged=get_generic_related_exists(
                 self.model, Flag.objects.filter(user=user)
@@ -81,6 +90,9 @@ class Flag(TimeStampedModel):
         ]
 
     def notify(self) -> List[Notification]:
+        """
+        Sends notification to community moderators.
+        """
         notifications = [
             Notification(
                 content_object=self.content_object,

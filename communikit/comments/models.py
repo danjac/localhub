@@ -26,7 +26,14 @@ from communikit.notifications.models import Notification
 
 
 class CommentAnnotationsQuerySetMixin:
+    """
+    Adds comment-related annotation methods to a related model
+    queryset.
+    """
     def with_num_comments(self) -> models.QuerySet:
+        """
+        Annotates `num_comments` to the model.
+        """
         return self.annotate(
             num_comments=get_generic_related_count_subquery(
                 self.model, Comment
@@ -90,12 +97,26 @@ class Comment(TimeStampedModel):
         return reverse("comments:detail", args=[self.id])
 
     def get_permalink(self) -> str:
+        """
+        Returns absolute URL including the community domain.
+        """
         return self.community.resolve_url(self.get_absolute_url())
 
     def get_flags(self) -> models.QuerySet:
         return Flag.objects.filter(comment=self)
 
     def notify(self, created: bool) -> List[Notification]:
+        """
+        Creates user notifications:
+
+        - anyone @mentioned in the changed content field
+        - anyone subscribed to the comment owner (on create only)
+        - the owner of the parent object
+        - all community moderators
+
+        Note that the comment owner themselves should never be
+        notified of their own comment.
+        """
         notifications: List[Notification] = []
         # notify anyone @mentioned in the description
         if self.content and (created or self.content_tracker.changed()):

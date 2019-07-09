@@ -19,9 +19,16 @@ from communikit.core.utils.content_types import (
 
 
 class LikeAnnotationsQuerySetMixin:
+    """
+    Annotation methods for related model query sets.
+    """
     def with_has_liked(
         self, user: settings.AUTH_USER_MODEL
     ) -> models.QuerySet:
+        """
+        Checks if user has liked the object, adding `has_liked`
+        annotation.
+        """
         return self.annotate(
             has_liked=get_generic_related_exists(
                 self.model, Like.objects.filter(user=user)
@@ -29,6 +36,9 @@ class LikeAnnotationsQuerySetMixin:
         )
 
     def with_num_likes(self) -> models.QuerySet:
+        """
+        Appends the total number of likes each object has received.
+        """
         return self.annotate(
             num_likes=get_generic_related_count_subquery(self.model, Like)
         )
@@ -36,6 +46,9 @@ class LikeAnnotationsQuerySetMixin:
 
 class LikeQuerySet(models.QuerySet):
     def for_models(self, *models: Sequence[models.Model]) -> models.QuerySet:
+        """
+        Returns instances of a Like for a given set of models.
+        """
         return self.filter(
             content_type__in=ContentType.objects.get_for_models(
                 *models

@@ -5,6 +5,7 @@ from django import template
 from django.conf import settings
 
 from communikit.core.types import ContextDict
+from communikit.users.utils import user_display
 
 register = template.Library()
 
@@ -13,10 +14,11 @@ register = template.Library()
 def avatar(
     user: settings.AUTH_USER_MODEL, avatar_class: str = "avatar-sm"
 ) -> ContextDict:
+    """
+    Displays the avatar if any for a given user. If no image available
+    will render initials (based on name/username)
+    """
 
-    if user.name:
-        initials = "".join([n[0].upper() for n in user.name.split()][:2])
-    else:
-        initials = user.username[0].upper()
+    initials = "".join([n[0].upper() for n in user_display(user).split()][:2])
 
     return {"user": user, "avatar_class": avatar_class, "initials": initials}

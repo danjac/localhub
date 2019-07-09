@@ -3,7 +3,7 @@
 
 import operator
 
-from typing import List, Optional, no_type_check
+from typing import List, Optional, Type, no_type_check
 
 from functools import reduce
 
@@ -14,8 +14,9 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.db.models import Q, QuerySet
+from django.forms import ModelForm
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.urls import reverse
+from django.urls import URLPattern, path, reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     CreateView,
@@ -38,7 +39,12 @@ from communikit.activities.types import ActivityType
 from communikit.comments.forms import CommentForm
 from communikit.communities.models import Community
 from communikit.communities.views import CommunityRequiredMixin
-from communikit.core.types import BreadcrumbList, ContextDict, QuerySetList
+from communikit.core.types import (
+    BreadcrumbList,
+    ContextDict,
+    QuerySetList,
+    ViewType,
+)
 from communikit.core.views import BreadcrumbsMixin, MultipleQuerySetListView
 from communikit.events.models import Event
 from communikit.flags.forms import FlagForm
@@ -493,3 +499,69 @@ class ActivityCommentCreateView(
         comment.save()
         messages.success(self.request, _("Your comment has been posted"))
         return HttpResponseRedirect(self.get_success_url())
+
+
+def create_activity_urls(
+    model: ActivityType,
+    form_class: Optional[Type[ModelForm]] = None,
+    list_view_class: ViewType = ActivityListView,
+    create_view_class: ViewType = ActivityCreateView,
+    create_comment_view_class: ViewType = ActivityCommentCreateView,
+    delete_view_class: ViewType = ActivityDeleteView,
+    dislike_view_class: ViewType = ActivityDislikeView,
+    flag_view_class: ViewType = ActivityFlagView,
+    like_view_class: ViewType = ActivityLikeView,
+    update_view_class: ViewType = ActivityUpdateView,
+    detail_view_class: ViewType = ActivityDetailView,
+) -> List[URLPattern]:
+    """
+    Generates default URL patterns for activity subclasses.
+
+    Simple usage (in a urls.py)
+
+    urlpatterns = create_activity_urls(Post)
+    # add more urlpatterns...
+    """
+    return [
+        path("", list_view_class.as_view(model=model), name="list"),
+        path(
+            "~create",
+            create_view_class.as_view(model=model, form_class=form_class),
+            name="create",
+        ),
+        path(
+            "<int:pk>/~comment/",
+            create_comment_view_class.as_view(model=model),
+            name="comment",
+        ),
+        path(
+            "<int:pk>/~delete/",
+            delete_view_class.as_view(model=model),
+            name="delete",
+        ),
+        path(
+            "<int:pk>/~dislike/",
+            dislike_view_class.as_view(model=model),
+            name="dislike",
+        ),
+        path(
+            "<int:pk>/~flag/",
+            flag_view_class.as_view(model=model),
+            name="flag",
+        ),
+        path(
+            "<int:pk>/~like/",
+            like_view_class.as_view(model=model),
+            name="like",
+        ),
+        path(
+            "<int:pk>/~update/",
+            update_view_class.as_view(model=model, form_class=form_class),
+            name="update",
+        ),
+        path(
+            "<int:pk>/<slug:slug>/",
+            detail_view_class.as_view(model=model),
+            name="detail",
+        ),
+    ]

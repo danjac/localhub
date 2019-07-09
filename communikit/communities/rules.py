@@ -1,6 +1,10 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+"""
+Rulesets for communities/memberships
+"""
+
 import rules
 
 from django.conf import settings

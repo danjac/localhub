@@ -22,7 +22,7 @@ class CommunityManager(models.Manager):
 
     def get_current(self, request: HttpRequest) -> Optional["Community"]:
         """
-        Returns current community matching request domain.
+        Returns current community matching request domain if active.
         """
         try:
             return self.get(

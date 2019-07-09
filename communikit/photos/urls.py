@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from communikit.activities.utils import create_activity_urls
+from communikit.activities.views import create_activity_urls
 from communikit.photos.forms import PhotoForm
 from communikit.photos.models import Photo
 

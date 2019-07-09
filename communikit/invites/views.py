@@ -138,6 +138,16 @@ invite_delete_view = InviteDeleteView.as_view()
 
 
 class InviteAcceptView(SingleInviteView):
+    """
+    Handles an invite accept action.
+
+    If no current user matches the invite email, then redirects
+    the user to sign up (on sign up they are redirected back here to complete
+    the invite process).
+
+    If user matches then a new membership instance is created for the
+    community and the invite is flagged accordingly.
+    """
     allow_if_private = True
 
     def get_queryset(self) -> QuerySet:

@@ -11,6 +11,10 @@ register = template.Library()
 
 @register.simple_tag(takes_context=True)
 def get_unread_notifications_count(context: ContextDict) -> int:
+    """
+    Returns a count of the total number of *unread* notifications
+    for the current user. If user not logged in just returns 0.
+    """
 
     request = context["request"]
 

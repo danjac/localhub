@@ -25,13 +25,19 @@ class UserQuerySet(SubscriptionAnnotationsQuerySetMixin, models.QuerySet):
     use_in_migrations = True
 
     def for_email(self, email: str) -> models.QuerySet:
+        """
+        Returns all users with primary or additional emails matching
+        this email (case insensitive).
+        """
         return self.filter(
             models.Q(emailaddress__email__iexact=email)
             | models.Q(email__iexact=email)
         )
 
     def matches_usernames(self, names=Sequence[str]) -> models.QuerySet:
-        # sanity check
+        """
+        Returns any users matching username (case insensitive).
+        """
         if not names:
             return self.none()
         return self.filter(username__iregex=r"^(%s)+" % "|".join(names))

@@ -10,6 +10,9 @@ from communikit.events.models import Event
 
 
 class EventDownloadView(SingleActivityView):
+    """
+    Generates a calendar .ics file.
+    """
     model = Event
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:

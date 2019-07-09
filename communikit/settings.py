@@ -275,6 +275,7 @@ class Production(DockerConfigMixin, Base):
     ADMINS = values.ListValue()
 
     SECURE_SSL_REDIRECT = True
+    # This is required for Heroku SSL.
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
     DEFAULT_FILE_STORAGE = "communikit.core.storages.MediaStorage"

@@ -14,9 +14,17 @@ from communikit.core.utils.content_types import get_generic_related_exists
 
 
 class SubscriptionAnnotationsQuerySetMixin:
+    """
+    Adds annotation methods to related model query set.
+    """
+
     def with_has_subscribed(
         self, user: settings.AUTH_USER_MODEL, community: Community
     ) -> models.QuerySet:
+        """
+        Adds `has_subscribed` Boolean value whether user has subscribed
+        to each object.
+        """
         return self.annotate(
             has_subscribed=get_generic_related_exists(
                 self.model,
