@@ -5,5 +5,5 @@ set -o nounset
 
 
 celery flower \
-    --app=communikit.celery \
+    --app=localite.celery \
     --broker="${DJANGO_CELERY_BROKER_URL}"
