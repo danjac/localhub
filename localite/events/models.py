@@ -108,9 +108,7 @@ class Event(Activity):
             self.latitude, self.longitude = result.lat, result.lng
         else:
             self.latitude, self.longitude = None, None
-        self.__class__._default_manager.filter(pk=self.id).update(
-            latitude=self.latitude, longitude=self.longitude
-        )
+        self.save(update_fields=["latitude", "longitude"])
         return self.latitude, self.longitude
 
     @property
