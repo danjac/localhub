@@ -11,6 +11,6 @@ from localite.likes.views import (
 app_name = "likes"
 
 urlpatterns = [
-    path("posts/", liked_activity_stream_view, name="activities"),
+    path("", liked_activity_stream_view, name="activities"),
     path("comments/", liked_comment_list_view, name="comments"),
 ]

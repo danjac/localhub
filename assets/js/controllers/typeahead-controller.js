@@ -16,12 +16,20 @@ export default class extends Controller {
     this.inputTarget.focus();
   }
 
-  typeahead(event) {
+  handleTab(event) {
+    // explicitly add this as keydown-> action if element does not already handle tabs.
     if (event.keyCode === TAB_KEY) {
       this.handleSelection(
         this.selectorTarget.querySelector('[data-typeahead-value]')
       );
       event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  typeahead(event) {
+    if (!this.handleTab(event)) {
       return false;
     }
 
@@ -42,6 +50,10 @@ export default class extends Controller {
   }
 
   handleTypeahead(searchUrl, key) {
+    if (!searchUrl) {
+      return false;
+    }
+
     const { value, selectionStart } = this.inputTarget;
     const index = value.lastIndexOf(key, selectionStart) + 1;
 

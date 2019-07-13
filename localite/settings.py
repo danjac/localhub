@@ -64,6 +64,7 @@ class Base(Configuration):
         "localite.invites.apps.InvitesConfig",
         "localite.join_requests.apps.JoinRequestsConfig",
         "localite.likes.apps.LikesConfig",
+        "localite.messageboard.apps.MessageboardConfig",
         "localite.notifications.apps.NotificationsConfig",
         "localite.photos.apps.PhotosConfig",
         "localite.posts.apps.PostsConfig",

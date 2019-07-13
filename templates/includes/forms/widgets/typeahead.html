@@ -1,0 +1,19 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+<div data-controller="typeahead"
+     {% if mention_search_url %}
+     data-typeahead-mention-search-url="{{ mention_search_url }}"
+     {% endif %}
+     {% if tag_search_url %}
+     data-typeahead-tag-search-url="{{ tag_search_url }}"
+     {% endif %}
+     >
+    <ul class="menu d-hide" data-target="typeahead.selector"></ul>
+    <textarea
+      data-target="typeahead.input"
+      data-action="keyup->typeahead#typeahead keydown->typeahead#handleTab"
+      name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}
+      >{% spaceless %}{% if widget.value %}{{ widget.value }}{% endif %}{% endspaceless %}</textarea>
+</div>

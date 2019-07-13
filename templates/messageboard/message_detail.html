@@ -1,0 +1,40 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "messageboard/base.html" %}
+
+{% load i18n %}
+
+{% block messageboard_header %}{% endblock %}
+
+{% block messageboard_content %}
+<ul class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="{% url 'messageboard:message_list' %}">{% trans "Outbox" %}</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="#">{{ message.subject|truncatechars:60 }}</a>
+  </li>
+</ul>
+
+<dl>
+  <dt>{% trans "Subject" %}</dt>
+  <dd>{{ object.subject }}</dd>
+  <dt>{% trans "Sent" %}</dt>
+  <dd>{{ object.created|date:"DATETIME_FORMAT" }}</dd>
+  <dt>{% trans "Recipients" %}</dt>
+  <dd>
+  {% for recipient in recipients %}
+  {% include "users/includes/chip.html" with profile=recipient.recipient %}&nbsp;
+  {% endfor %}
+  </dd>
+
+</dl>
+
+<hr />
+
+<div class="markdown-content">
+{{ object.message.markdown }}
+</div>
+
+{% endblock messageboard_content %}
