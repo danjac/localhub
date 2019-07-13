@@ -1,0 +1,53 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "messageboard/base.html" %}
+
+{% load i18n %}
+
+{% block messageboard_header %}{% endblock %}
+
+{% block messageboard_content %}
+{% with message=object.message %}
+<ul class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{% url 'messageboard:message_recipient_list' %}">{% trans "Inbox" %}</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="#">{{ message.subject|truncatechars:60 }}</a>
+    </li>
+</ul>
+
+<div class="btn-group btn-group-block">
+    <a href="{% url 'messageboard:message_create_reply' message.id %}" class="btn btn-primary">
+        <i class="icon icon-share"></i> {% trans "Reply" %}
+    </a>
+    <a href="{% url 'messageboard:message_recipient_delete' object.id %}"
+       class="btn"
+       data-controller="ajax confirm"
+       data-action="confirm#check ajax#delete"
+       data-confirm-header="{% trans 'Delete' %}"
+       data-confirm-body="{% trans 'Are you sure you want to delete this message?' %}"
+       >
+       <i class="icon icon-delete"></i> {% trans "Delete" %}
+    </a>
+</div>
+
+<dl>
+    <dt>{% trans "Subject" %}</dt>
+    <dd>{{ message.subject }}</dd>
+    <dt>{% trans "From" %}</dt>
+    <dd>{% include "users/includes/chip.html" with profile=message.sender %}</dd>
+    <dt>{% trans "Received" %}</dt>
+    <dd>{{ message.created|date:"DATETIME_FORMAT" }}</dd>
+</dl>
+
+<hr />
+
+<div class="markdown-content">
+    {{ message.message.markdown }}
+</div>
+
+{% endwith %}
+{% endblock messageboard_content %}
+

@@ -24,6 +24,7 @@ urlpatterns = [
     path("notifications/", include("localite.notifications.urls")),
     path("following/", include("localite.subscriptions.urls")),
     path("likes/", include("localite.likes.urls")),
+    path("messages/", include("localite.messageboard.urls")),
     path("photos/", include("localite.photos.urls")),
     path("posts/", include("localite.posts.urls")),
     path("people/", include("localite.users.urls")),

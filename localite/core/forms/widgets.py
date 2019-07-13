@@ -1,7 +1,39 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
+
+from typing import Any
+
 from django import forms
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+
+from localite.core.types import ContextDict
+
+
+class TypeaheadInput(forms.Textarea):
+    template_name = "includes/forms/widgets/typeahead.html"
+
+    def __init__(
+        self,
+        attrs: ContextDict = None,
+        search_mentions: bool = True,
+        search_hashtags: bool = True,
+    ):
+        super().__init__(attrs)
+        self.search_mentions = search_mentions
+        self.search_hashtags = search_hashtags
+
+    def get_context(
+        self, name: str, value: Any, attrs: ContextDict
+    ) -> ContextDict:
+        data = super().get_context(name, value, attrs)
+        if self.search_mentions:
+            data["mention_search_url"] = reverse("users:autocomplete_list")
+        if self.search_hashtags:
+            data["tag_search_url"] = reverse(
+                "activities:tag_autocomplete_list"
+            )
+        return data
 
 
 class CalendarWidget(forms.SplitDateTimeWidget):
@@ -11,6 +43,7 @@ class CalendarWidget(forms.SplitDateTimeWidget):
     project assets and frontend framework and so is not
     included as separate Media assets with this widget.
     """
+
     template_name = "includes/forms/widgets/calendar.html"
     input_type = "calendar"
 

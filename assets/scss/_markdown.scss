@@ -6,4 +6,5 @@
 
 .markdown-content img {
   @extend .img-responsive;
+  word-wrap: break-word;
 }

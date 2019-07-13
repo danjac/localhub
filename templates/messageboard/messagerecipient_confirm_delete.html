@@ -1,0 +1,15 @@
+{% extends "messageboard/base.html" %}
+{% load i18n %}
+
+{% block messageboard_header %}{% endblock %}
+{% block messageboard_content %}
+<h3>{% trans "Delete Message" %}</h3>
+
+<form method="POST" action="{{ request.path }}">
+  {% csrf_token %}
+  <p>{% trans "Do you really want to delete this message?" %}</p>
+  <a class="btn btn-link" href="{{ object.get_absolute_url }}">{% trans "Cancel" %}</a>
+  <button class="btn btn-primary" type="submit">{% trans "Delete" %}</button>
+</form>
+
+{% endblock messageboard_content %}

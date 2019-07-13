@@ -7,26 +7,34 @@
 
 {% block user_content %}
 
+{% if user.is_authenticated and not is_auth_user %}
+
+{% has_perm "messageboard.create_message" user request.community as can_create_message %}
 {% has_perm "subscriptions.create_subscription" user request.community as can_create_subscription %}
 
-{% if can_create_subscription and not is_auth_user and not is_subscribed %}
-<p class="mt-2">
+<div class="btn-group btn-group-block">
+{% if can_create_message %}
+    <a href="{% url 'messageboard:message_create_pm' user_obj.username %}"
+       class="btn btn-primary">
+        <i class="icon icon-mail"></i> {% trans "Send Message" %}
+    </a>
+{% endif %}
+{% if can_create_subscription and not is_subscribed %}
     <a href="{% url 'users:subscribe' user_obj.username %}"
-       class="btn btn-primary btn-block"
+       class="btn"
        data-controller="ajax"
        data-action="ajax#post">
-        <i class="icon icon-plus"></i> {% trans "Follow this user" %}
+        <i class="icon icon-plus"></i> {% trans "Follow" %}
     </a>
-</p>
 {% elif is_subscribed %}
-<p class="mt-2">
     <a href="{% url 'users:unsubscribe' user_obj.username %}"
-       class="btn btn-block"
+       class="btn"
        data-controller="ajax"
        data-action="ajax#post">
-        <i class="icon icon-stop"></i> {% trans "Stop following this user" %}
+        <i class="icon icon-stop"></i> {% trans "Unfollow" %}
     </a>
-</p>
+{% endif %}
+</div>
 {% endif %}
 
 {% if user_obj.bio %}

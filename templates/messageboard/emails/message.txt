@@ -1,0 +1,13 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load i18n %}{% load account %}{% autoescape off %}
+{% user_display recipient.recipient as recipient_name %}
+{% user_display message.sender as sender %}
+{% blocktrans with subject=message.subject %}
+Hi {{ recipient_name }},
+
+{{ sender }} has sent you a message:
+{{ subject }}
+To see the message in full, please click on the link below:
+{% endblocktrans %}
+{{ recipient.get_permalink }}{% endautoescape %}

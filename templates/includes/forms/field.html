@@ -1,39 +1,44 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% load widget_tweaks %}
 {% with label=label|default:field.label help_text=help_text|default:field.help_text %}
 
 <div class="form-group {% if field.errors %} has-error{% endif %}">
-    {% with widget=field.field.widget %}
-    {% if widget.input_type == 'checkbox' %}
-    <label class="form-checkbox">
-        {{ field }}
-        <i class="form-icon"></i> {{ label }}
-    </label>
-    {% elif widget.input_type == 'radio' %}
-    <label class="form-label">{{ label }}</label>
-    {% for choice in field %}
-    <label class="form-radio form-inline">
-        {{ choice.tag }}
-        <i class="form-icon"></i> {{ choice.choice_label }}
-    </label>
-    {% endfor %}
-    {% else %}
-    <label for="{{ field.id_for_label }}" class="form-label">{{ label }}</label>
-    {% if widget.input_type == 'select' %}
-    {% render_field field class="form-select" %}
-    {% elif widget.input_type == 'calendar' %}
-    {% render_field field class="form-input form-calendar" %}
-    {% else %}
-    {% render_field field class="form-input" placeholder=widget.attrs.placeholder|default:label %}
-    {% endif %}
-    {% endif %}
+  {% with widget=field.field.widget %}
+  {% if widget.input_type == 'checkbox' %}
+  {% if widget.allow_multiple_selected %}
+  <label for="{{ field.id_for_label }}" class="form-label">{{ label }}</label>
+  {% render_field field %}
+  {% else %}
+  {% include "includes/forms/widgets/checkbox_input.html" %}
+  {% endif %}
+  {% elif widget.input_type == 'radio' %}
+  <label class="form-label">{{ label }}</label>
+  {% for choice in field %}
+  <label class="form-radio form-inline">
+    {{ choice.tag }}
+    <i class="form-icon"></i> {{ choice.choice_label }}
+  </label>
+  {% endfor %}
+  {% else %}
+  <label for="{{ field.id_for_label }}" class="form-label">{{ label }}</label>
+  {% if widget.input_type == 'select' %}
+  {% render_field field class="form-select" %}
+  {% elif widget.input_type == 'calendar' %}
+  {% render_field field class="form-input form-calendar" %}
+  {% else %}
+  {% render_field field class="form-input" placeholder=widget.attrs.placeholder|default:label %}
+  {% endif %}
+  {% endif %}
 
-    {% for error in field.errors %}
-    <p class="form-input-hint">{{ error }}</p>
-    {% endfor %}
+  {% for error in field.errors %}
+  <p class="form-input-hint">{{ error }}</p>
+  {% endfor %}
 
-    {% if help_text %}
-    <p><small>{{ help_text }}</small></p>
-    {% endif %}
-    {% endwith %}
+  {% if help_text %}
+  <p><small>{{ help_text }}</small></p>
+  {% endif %}
+  {% endwith %}
 </div>
 {% endwith %}
