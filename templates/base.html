@@ -29,7 +29,7 @@
       <header class="navbar bg-dark px-2 py-1 my-2">
         <section class="navbar-section">
           <a class="navbar-brand mr-2 text-light" href="/">
-            {% if request.community %}{{ request.community.name }}{% else %}Localite{% endif %}
+            {% if request.community %}{{ request.community.name }}{% else %}Localhub{% endif %}
           </a>
         </section>
         {% if request.community %}
@@ -103,7 +103,7 @@
       {% endblock content %}
     </div>
     <footer class="text-center p-2 text-gray">
-      &copy; Dan Jacob {% now "Y" %}. <a href="https://gitlab.com/danjac/localite/">Open software</a> licensed under <a href="http://www.affero.org/oagpl.html">AGPL</a>.
+      &copy; Dan Jacob {% now "Y" %}. <a href="https://gitlab.com/danjac/localhub/">Open software</a> licensed under <a href="http://www.affero.org/oagpl.html">AGPL</a>.
     </footer>
     {% include "includes/confirm_dialog.html" %}
   </body>
