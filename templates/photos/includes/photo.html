@@ -2,7 +2,6 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-{% load thumbnail %}
 {% load rules %}
 
 {% has_perm "communities.moderate_community" user request.community as can_moderate_community %}
@@ -28,20 +27,7 @@
         </div>
     </div>
     <div class="card-body">
-        {% thumbnail photo.image is_detail|yesno:"800,600" crop="center" as image %}
-        <div>
-            <a href="{{ photo.get_absolute_url }}">
-                <img class="img-responsive"
-                     src="{{ image.url }}"
-                     width="{{ image.width }}"
-                     height="{{ image.height }}"
-                     alt="{{ photo.title }}">
-            </a>
-        </div>
-        {% empty %}
-        <em>No photo available</em>
-        {% endthumbnail %}
-        {% include "activities/includes/description.html" with object=photo %}
+        {% include "photos/includes/content.html" with object=photo %}
         {% if photo.has_attribution %}
         <div class="mb-2">
             <dl>

@@ -4,7 +4,7 @@
 import operator
 
 from functools import reduce
-from typing import Callable, Dict, List
+from typing import Callable, Dict, List, Set
 
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
@@ -191,6 +191,15 @@ class Activity(TimeStampedModel):
         return self.__class__.get_breadcrumbs_for_model() + [
             (self.get_absolute_url(), truncatechars(smart_text(self), 60))
         ]
+
+    def get_content_warning_tags(self) -> Set[str]:
+        """
+        Checks if any tags matching in description
+        """
+        return (
+            self.description.extract_hashtags()
+            & self.community.get_content_warning_tags()
+        )
 
     def search_index_components(self) -> Dict[str, str]:
         """
