@@ -6,15 +6,23 @@
 {% load i18n %}
 
 {% block notification_title %}
-{% include "users/includes/chip.html" with profile=notification.actor %}
+{% with activity_url=activity.get_absolute_url %}
 {% if notification.verb == 'mentioned' %}
-has mentioned you in their
+{% blocktrans %}
+Someone has mentioned you in their <a href="{{ activity_url }}">{{ activity_name }}</a>
+{% endblocktrans %}
 {% elif notification.verb == 'created' %}
-has published a new
+{% blocktrans %}
+Someone has published a new <a href="{{ activity_url }}">{{ activity_name }}</a>
+{% endblocktrans %}
 {% elif notification.verb == 'updated' %}
-has updated their
+{% blocktrans %}
+Someone has updated their <a href="{{ activity_url }}">{{ activity_name }}</a>
+{% endblocktrans %}
 {% elif notification.verb == 'tagged' %}
-has added tags you follow in their
+{% blocktrans %}
+Someone has tagged content you are following in their <a href="{{ activity_url }}">{{ activity_name }}</a>
+{% endblocktrans %}
 {% endif %}
-<a href="{{ activity.get_absolute_url }}">{{ activity_name }}</a>.
+{% endwith %}
 {% endblock notification_title %}

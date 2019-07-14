@@ -6,7 +6,7 @@
 {% block activities_content %}
 
 {% if object_list %}
-<div class="mb-2 float-right">
+<div class="mb-2 btn-group btn-group-block">
   {% if is_unread_notifications %}
   <button class="btn btn-primary"
           data-controller="ajax"
@@ -38,9 +38,6 @@
   {% include "comments/includes/notification.html" with comment=content_object %}
   {% endif %}
   {% endwith %}
-  {% if not forloop.last %}
-  <hr />
-  {% endif %}
 </div>
 {% empty %}
 <div class="empty">

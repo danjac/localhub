@@ -6,14 +6,23 @@
 {% load i18n %}
 
 {% block notification_title %}
-{% include "users/includes/chip.html" with profile=notification.actor %}
+{% with comment_url=comment.get_absolute_url %}
 {% if notification.verb == 'mentioned' %}
-has mentioned you in their <a href="{{ comment.get_absolute_url }}">comment</a>.
+{% blocktrans %}
+Someone has mentioned you in their <a href="{{ comment_url }}">comment</a>
+{% endblocktrans %}
 {% elif notification.verb == 'created' %}
-has published a new <a href="{{ comment.get_absolute_url }}">comment</a>.
+{% blocktrans %}
+Someone has published a new  <a href="{{ comment_url }}">comment</a>
+{% endblocktrans %}
 {% elif notification.verb == 'updated' %}
-has updated their <a href="{{ comment.get_absolute_url }}">comment</a>.
+{% blocktrans %}
+Someone has updated their  <a href="{{ comment_url }}">comment</a>
+{% endblocktrans %}
 {% elif notification.verb == 'commented' %}
-has just <a href="{{ comment.get_absolute_url }}">commented</a> on one of your posts.
+{% blocktrans %}
+Someone has  <a href="{{ comment_url }}">commented</a> on one of your posts
+{% endblocktrans %}
 {% endif %}
+{% endwith %}
 {% endblock notification_title %}
