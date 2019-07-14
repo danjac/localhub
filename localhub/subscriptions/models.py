@@ -1,6 +1,8 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from typing import no_type_check
+
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -18,6 +20,7 @@ class SubscriptionAnnotationsQuerySetMixin:
     Adds annotation methods to related model query set.
     """
 
+    @no_type_check
     def with_has_subscribed(
         self, user: settings.AUTH_USER_MODEL, community: Community
     ) -> models.QuerySet:

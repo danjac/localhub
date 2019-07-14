@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Sequence
+from typing import Sequence, no_type_check
 
 from django.db import models
 
@@ -22,6 +22,8 @@ class LikeAnnotationsQuerySetMixin:
     """
     Annotation methods for related model query sets.
     """
+
+    @no_type_check
     def with_has_liked(
         self, user: settings.AUTH_USER_MODEL
     ) -> models.QuerySet:
@@ -35,6 +37,7 @@ class LikeAnnotationsQuerySetMixin:
             )
         )
 
+    @no_type_check
     def with_num_likes(self) -> models.QuerySet:
         """
         Appends the total number of likes each object has received.

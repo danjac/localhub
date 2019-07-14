@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Optional
+from typing import Optional, no_type_check
 
 from localhub.core.types import BreadcrumbList, ContextDict
 
@@ -37,6 +37,7 @@ class BreadcrumbsMixin:
         """
         return self.breadcrumbs or []
 
+    @no_type_check
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data()
         data["breadcrumbs"] = self.get_breadcrumbs()
