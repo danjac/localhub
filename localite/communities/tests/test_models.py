@@ -68,6 +68,10 @@ class TestCommunityModel:
         community = CommunityFactory(email_domain="gmail.com")
         assert community.resolve_email("support") == "support@gmail.com"
 
+    def test_get_content_warning_tags(self):
+        community = Community(content_warning_tags="#nsfw #politics")
+        assert community.get_content_warning_tags() == {"nsfw", "politics"}
+
     def test_invalid_domain_name(self):
 
         community = Community(name="test", domain="testing")

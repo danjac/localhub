@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Optional
+from typing import Optional, Set
 from urllib.parse import urljoin
 
 from django.conf import settings
@@ -15,6 +15,7 @@ from model_utils import Choices
 from model_utils.models import TimeStampedModel
 
 from localite.core.markdown.fields import MarkdownField
+from localite.core.markdown.utils import extract_hashtags
 
 
 class CommunityManager(models.Manager):
@@ -48,6 +49,14 @@ class Community(TimeStampedModel):
         blank=True,
         help_text=_(
             "Terms and conditions, code of conduct and other membership terms."
+        ),
+    )
+
+    content_warning_tags = models.TextField(
+        blank=True,
+        default="#nsfw",
+        help_text=_(
+            "Any posts containing these tags in their description will be automatically hidden by default"  # noqa
         ),
     )
 
@@ -97,6 +106,9 @@ class Community(TimeStampedModel):
         Returns email domain if available, else the community domain
         """
         return self.email_domain or self.domain
+
+    def get_content_warning_tags(self) -> Set[str]:
+        return extract_hashtags(self.content_warning_tags)
 
     def resolve_url(self, url: str) -> str:
         """

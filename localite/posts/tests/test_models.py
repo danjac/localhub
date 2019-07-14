@@ -36,6 +36,14 @@ class TestPostModel:
     def test_get_domain_if_url(self):
         assert Post(url="http://google.com").get_domain() == "google.com"
 
+    def test_get_content_warning_tags_if_any(self):
+        post = PostFactory(description="This post is #nsfw!")
+        assert post.get_content_warning_tags() == {"nsfw"}
+
+    def test_get_content_warning_tags_if_none(self):
+        post = PostFactory(description="This post is #legit")
+        assert post.get_content_warning_tags() == set()
+
     @factory.django.mute_signals(signals.post_save)
     def test_notify(self, community: Community):
         # owner should not receive any notifications from their own posts

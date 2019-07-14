@@ -10,7 +10,7 @@
   <div class="card-header">
     {% if post.is_flagged and can_moderate_community %}
     <div class="toast toast-warning text-center">
-        <a href="{{ post.get_absolute_url }}">{% trans "This post has been flagged" %}</a>
+      <a href="{{ post.get_absolute_url }}">{% trans "This post has been flagged" %}</a>
     </div>
     {% endif %}
 
@@ -26,8 +26,7 @@
     </div>
   </div>
   <div class="card-body">
-    {% include "activities/includes/oembed.html" with object=post %}
-    {% include "activities/includes/description.html" with object=post %}
+    {% include "posts/includes/content.html" with object=post %}
   </div>
   <div class="card-footer">
     {% if post.num_likes and post.owner == user %}
