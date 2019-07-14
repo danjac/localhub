@@ -27,6 +27,7 @@ gunicorn
 icalendar
 ipython
 micawber
+mypy
 psycopg2
 pytest
 pytest-django
