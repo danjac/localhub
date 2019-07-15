@@ -7,12 +7,18 @@ from localhub.messageboard.views import (
     message_recipient_delete_view,
     message_recipient_detail_view,
     message_recipient_list_view,
+    sender_message_recipient_list_view,
 )
 
 app_name = "messageboard"
 
 urlpatterns = [
     path("", message_recipient_list_view, name="message_recipient_list"),
+    path(
+        "inbox/sender/<slug:username>/",
+        sender_message_recipient_list_view,
+        name="sender_message_recipient_list",
+    ),
     path(
         "inbox/<int:pk>/",
         message_recipient_detail_view,

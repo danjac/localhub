@@ -22,6 +22,7 @@ from localhub.core.types import ContextDict
 from localhub.messageboard.emails import send_message_email
 from localhub.messageboard.forms import MessageForm
 from localhub.messageboard.models import Message, MessageRecipient
+from localhub.users.views import SingleUserMixin
 
 
 class MessageRecipientQuerySetMixin(
@@ -49,6 +50,18 @@ class MessageRecipientListView(MessageRecipientQuerySetMixin, ListView):
 
 
 message_recipient_list_view = MessageRecipientListView.as_view()
+
+
+class SenderMessageRecipientListView(
+    SingleUserMixin, MessageRecipientListView
+):
+    template_name = "messageboard/sender_messagerecipient_list.html"
+
+    def get_queryset(self) -> models.QuerySet:
+        return super().get_queryset().filter(message__sender=self.object)
+
+
+sender_message_recipient_list_view = SenderMessageRecipientListView.as_view()
 
 
 class MessageRecipientDetailView(MessageRecipientQuerySetMixin, DetailView):

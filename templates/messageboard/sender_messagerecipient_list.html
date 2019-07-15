@@ -1,0 +1,30 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "messageboard/messagerecipient_list.html" %}
+
+{% load i18n %}
+
+{% block messageboard_header %}
+{% user_display user_obj as sender %}
+<ul class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{% url 'messageboard:message_recipient_list' %}">{% trans "Inbox" %}</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="#">{{ sender }}</a>
+    </li>
+</ul>
+
+{% has_perm "messageboard.create_message" user request.community as can_create_message %}
+
+{% if can_create_message %}
+<a href="{% url 'messageboard:message_create_pm' user_obj.username %}" class="btn btn-primary btn-block">
+  <i class="icon icon-plus"></i>
+  {% trans "Send message" %}
+</a>
+{% endif %}
+
+
+{% endblock messageboard_header %}
+

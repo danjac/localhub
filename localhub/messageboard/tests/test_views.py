@@ -27,6 +27,19 @@ class TestMessageRecipientListView:
         assert len(response.context["object_list"]) == 1
 
 
+class TestSenderMessageRecipientListView:
+    def test_get(self, client: Client, member: Membership):
+        message = MessageFactory(community=member.community)
+        MessageRecipientFactory(message=message, recipient=member.member)
+        response = client.get(
+            reverse(
+                "messageboard:sender_message_recipient_list",
+                args=[message.sender.username],
+            )
+        )
+        assert len(response.context["object_list"]) == 1
+
+
 class TestMessageRecipientDetailView:
     def test_get(self, client: Client, member: Membership):
         message = MessageFactory(community=member.community)
