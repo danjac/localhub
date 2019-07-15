@@ -41,10 +41,12 @@
 <dl>
     <dt>{% trans "Subject" %}</dt>
     <dd>{{ message.subject }}</dd>
+    {% with parent=message.parent %}
     {% if parent.sender == user %}
     <dt>{% trans "Reply to" %}</dt>
     <dd><a href="{{ parent.get_absolute_url }}">{{ parent.subject }}</a></dd>
     {% endif %}
+    {% endwith %}
     <dt>{% trans "From" %}</dt>
     <dd>
     {% include "users/includes/chip.html" with profile=message.sender %}
