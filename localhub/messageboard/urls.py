@@ -15,7 +15,7 @@ app_name = "messageboard"
 urlpatterns = [
     path("", message_recipient_list_view, name="message_recipient_list"),
     path(
-        "inbox/sender/<slug:username>/",
+        "inbox/sender/<slug:slug>/",
         sender_message_recipient_list_view,
         name="sender_message_recipient_list",
     ),
