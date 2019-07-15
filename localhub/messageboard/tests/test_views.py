@@ -29,7 +29,9 @@ class TestMessageRecipientListView:
 
 class TestSenderMessageRecipientListView:
     def test_get(self, client: Client, member: Membership):
-        message = MessageFactory(community=member.community)
+        sender = UserFactory()
+        Membership.objects.create(community=member.community, member=sender)
+        message = MessageFactory(community=member.community, sender=sender)
         MessageRecipientFactory(message=message, recipient=member.member)
         response = client.get(
             reverse(
