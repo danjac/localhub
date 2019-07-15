@@ -16,7 +16,7 @@
         <a href="{% url 'messageboard:message_recipient_list' %}">{% trans "Inbox" %}</a>
     </li>
     <li class="breadcrumb-item">
-        <a href="{% url 'messageboard:sender_message_recipient_list' sender.username %}">{{ sender }}</a>
+        <a href="{% url 'messageboard:sender_message_recipient_list' message.sender.username %}">{{ sender }}</a>
     </li>
     <li class="breadcrumb-item">
         <a href="#">{{ message.subject|truncatechars:60 }}</a>
@@ -44,7 +44,7 @@
     <dt>{% trans "From" %}</dt>
     <dd>
         {% include "users/includes/chip.html" with profile=message.sender %}
-        <a href="{% url 'messageboard:sender_message_recipient_list' sender.username %}">{% trans "See all from this user" %}</a>
+        <a href="{% url 'messageboard:sender_message_recipient_list' message.sender.username %}">{% trans "See all from this user" %}</a>
     </dd>
     <dt>{% trans "Received" %}</dt>
     <dd>{{ message.created|date:"DATETIME_FORMAT" }}</dd>
