@@ -41,10 +41,14 @@
 <dl>
     <dt>{% trans "Subject" %}</dt>
     <dd>{{ message.subject }}</dd>
+    {% if parent.sender == user %}
+    <dt>{% trans "Reply to" %}</dt>
+    <dd><a href="{{ parent.get_absolute_url }}">{{ parent.subject }}</a></dd>
+    {% endif %}
     <dt>{% trans "From" %}</dt>
     <dd>
-        {% include "users/includes/chip.html" with profile=message.sender %}
-        <a href="{% url 'messageboard:sender_message_recipient_list' message.sender.username %}">{% trans "See all from this user" %}</a>
+    {% include "users/includes/chip.html" with profile=message.sender %}
+    <a href="{% url 'messageboard:sender_message_recipient_list' message.sender.username %}">{% trans "See all from this user" %}</a>
     </dd>
     <dt>{% trans "Received" %}</dt>
     <dd>{{ message.created|date:"DATETIME_FORMAT" }}</dd>

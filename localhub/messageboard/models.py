@@ -30,7 +30,7 @@ class Message(TimeStampedModel):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name="children",
+        related_name="replies",
     )
 
     def __str__(self) -> str:

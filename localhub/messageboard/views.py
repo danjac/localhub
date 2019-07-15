@@ -72,6 +72,13 @@ class MessageRecipientDetailView(MessageRecipientQuerySetMixin, DetailView):
             self.object.save(update_fields=["read"])
         return response
 
+    def get_queryset(self) -> models.QuerySet:
+        return (
+            super()
+            .get_queryset()
+            .select_related("message__parent", "message__parent__sender")
+        )
+
 
 message_recipient_detail_view = MessageRecipientDetailView.as_view()
 
