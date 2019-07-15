@@ -17,6 +17,7 @@ django-model-utils
 django-redis
 django-silk
 django-storages
+django-stubs
 django-taggit
 django-timezone-field
 django-widget-tweaks

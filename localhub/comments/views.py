@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Model
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
@@ -54,6 +54,8 @@ class SingleCommentMixin(CommentQuerySetMixin, SingleObjectMixin):
 
 
 class CommentParentMixin:
+    object: Model
+
     @cached_property
     def parent(self) -> Activity:
         return self.object.content_object
