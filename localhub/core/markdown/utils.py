@@ -10,6 +10,7 @@ import bleach
 
 from typing import Set
 
+from bleach import Cleaner  # type: ignore
 from bleach.linkifier import LinkifyFilter
 
 from django.urls import reverse
@@ -32,7 +33,7 @@ ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
 ALLOWED_ATTRIBUTES = bleach.ALLOWED_ATTRIBUTES.copy()
 ALLOWED_ATTRIBUTES.update({"img": ["alt", "src"]})
 
-cleaner = bleach.Cleaner(
+cleaner = Cleaner(
     tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, filters=[LinkifyFilter]
 )
 

@@ -40,8 +40,8 @@ class TestUserCommentsView:
             reverse("users:comments", args=[comment.owner.username])
         )
         assert response.status_code == 200
-        assert len(response.context["object_list"]) == 1
-        assert response.context["num_likes"] == 1
+        assert len(dict(response.context or {})["object_list"]) == 1
+        assert dict(response.context or {})["num_likes"] == 1
 
 
 class TestUserActivitiesView:
@@ -60,8 +60,8 @@ class TestUserActivitiesView:
             reverse("users:activities", args=[member.member.username])
         )
         assert response.status_code == 200
-        assert len(response.context["object_list"]) == 2
-        assert response.context["num_likes"] == 1
+        assert len(dict(response.context or {})["object_list"]) == 2
+        assert dict(response.context or {})["num_likes"] == 1
 
 
 class TestUserDetailView:
@@ -143,7 +143,7 @@ class TestUserListView:
     ):
         Membership.objects.create(member=user, community=member.community)
         response = client.get(reverse("users:list"))
-        assert len(response.context["object_list"]) == 2
+        assert len(dict(response.context or {})["object_list"]) == 2
 
 
 class TestUserAutocompleteListView:
@@ -157,4 +157,4 @@ class TestUserAutocompleteListView:
         response = client.get(
             reverse("users:autocomplete_list"), {"q": user.username}
         )
-        assert len(response.context["object_list"]) == 1
+        assert len(dict(response.context or {})["object_list"]) == 1

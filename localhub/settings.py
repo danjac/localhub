@@ -138,21 +138,13 @@ class Base(Configuration):
 
     USE_TZ = True
 
-    # Static files (CSS, JavaScript, Images)
-    # https://docs.djangoproject.com/en/2.2/howto/static-files/
-
-    STATIC_URL = "/static/"
-    MEDIA_URL = "/media/"
-
     # https://docs.djangoproject.com/en/1.11/ref/forms/renderers/
 
     FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
     # https://neutronx.github.io/django-markdownx/customization/
 
-    MARKDOWNX_MARKDOWNIFY_FUNCTION = (
-        "localhub.core.markdown.utils.markdownify"
-    )
+    MARKDOWNX_MARKDOWNIFY_FUNCTION = "localhub.core.markdown.utils.markdownify"
 
     # https://micawber.readthedocs.io/en/latest/django.html
     MICAWBER_PROVIDERS = "localhub.activities.oembed.bootstrap_oembed"
@@ -173,6 +165,17 @@ class Base(Configuration):
     @property
     def INSTALLED_APPS(self) -> List[str]:
         return self.DJANGO_APPS + self.THIRD_PARTY_APPS + self.LOCAL_APPS
+
+    # Static files (CSS, JavaScript, Images)
+    # https://docs.djangoproject.com/en/2.2/howto/static-files/
+
+    @property
+    def MEDIA_URL(self) -> str:
+        return "/media/"
+
+    @property
+    def STATIC_URL(self) -> str:
+        return "/static/"
 
     @property
     def MEDIA_ROOT(self) -> str:

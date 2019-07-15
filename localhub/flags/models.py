@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import List, no_type_check
+from typing import List
 
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -13,15 +13,16 @@ from model_utils import Choices
 from model_utils.models import TimeStampedModel
 
 from localhub.communities.models import Community
+from localhub.core.types import BaseQuerySetMixin
 from localhub.core.utils.content_types import get_generic_related_exists
 from localhub.notifications.models import Notification
 
 
-class FlagAnnotationsQuerySetMixin:
+class FlagAnnotationsQuerySetMixin(BaseQuerySetMixin):
     """
     Adds annotation methods to related model query set.
     """
-    @no_type_check
+
     def with_is_flagged(self) -> models.QuerySet:
         """
         Adds True if the object has been flagged by a user.
@@ -30,7 +31,6 @@ class FlagAnnotationsQuerySetMixin:
             is_flagged=get_generic_related_exists(self.model, Flag)
         )
 
-    @no_type_check
     def with_has_flagged(
         self, user: settings.AUTH_USER_MODEL
     ) -> models.QuerySet:

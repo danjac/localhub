@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from typing import Type
+from typing import Optional, Type
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -41,7 +41,9 @@ class AuthenticatedUserMixin(LoginRequiredMixin):
     Always returns the current logged in user.
     """
 
-    def get_object(self) -> settings.AUTH_USER_MODEL:
+    def get_object(
+        self, queryset: Optional[QuerySet] = None
+    ) -> settings.AUTH_USER_MODEL:
         return self.request.user
 
 

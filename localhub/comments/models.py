@@ -17,6 +17,7 @@ from model_utils.models import TimeStampedModel
 
 from localhub.communities.models import Community
 from localhub.core.markdown.fields import MarkdownField
+from localhub.core.types import BaseQuerySetMixin
 from localhub.core.utils.content_types import (
     get_generic_related_count_subquery,
 )
@@ -25,11 +26,12 @@ from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.notifications.models import Notification
 
 
-class CommentAnnotationsQuerySetMixin:
+class CommentAnnotationsQuerySetMixin(BaseQuerySetMixin):
     """
     Adds comment-related annotation methods to a related model
     queryset.
     """
+
     def with_num_comments(self) -> models.QuerySet:
         """
         Annotates `num_comments` to the model.

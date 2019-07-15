@@ -3,7 +3,7 @@
 
 import pytest
 
-from typing import List
+from typing import List, no_type_check
 
 from localhub.comments.models import Comment
 from localhub.events.models import Event
@@ -17,6 +17,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestSendNotificationEmail:
+    @no_type_check
     def test_send_emails(
         self,
         comment: Comment,

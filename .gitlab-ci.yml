@@ -33,6 +33,7 @@ test:django:
   extends: .docker_compose
   stage: test
   script:
+    - docker-compose run django mypy localhub/
     - docker-compose run django pytest
   only:
     - master

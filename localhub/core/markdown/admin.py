@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Optional
+from typing import Optional, no_type_check
 
 from django import forms
 from django.db import models
@@ -16,6 +16,10 @@ class MarkdownFieldMixin:
     Markdown form field, as it is not compatible with the
     Django admin. Instead we just use a plain TEXTAREA.
     """
+
+    model: models.Model
+
+    @no_type_check
     def get_form(
         self, request: HttpRequest, obj: Optional[models.Model], **kwargs
     ) -> forms.ModelForm:

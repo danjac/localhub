@@ -1,8 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import no_type_check
-
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -12,15 +10,15 @@ from model_utils.models import TimeStampedModel
 
 
 from localhub.communities.models import Community
+from localhub.core.types import BaseQuerySetMixin
 from localhub.core.utils.content_types import get_generic_related_exists
 
 
-class SubscriptionAnnotationsQuerySetMixin:
+class SubscriptionAnnotationsQuerySetMixin(BaseQuerySetMixin):
     """
     Adds annotation methods to related model query set.
     """
 
-    @no_type_check
     def with_has_subscribed(
         self, user: settings.AUTH_USER_MODEL, community: Community
     ) -> models.QuerySet:

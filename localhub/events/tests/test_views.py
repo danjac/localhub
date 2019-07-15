@@ -50,7 +50,7 @@ class TestEventListView:
         EventFactory.create_batch(3, community=community)
         response = client.get(reverse("events:list"))
         assert response.status_code == 200
-        assert len(response.context["object_list"]) == 3
+        assert len(dict(response.context or {})["object_list"]) == 3
 
 
 class TestEventUpdateView:
@@ -100,7 +100,7 @@ class TestEventDetailView:
             event.get_absolute_url(), HTTP_HOST=event.community.domain
         )
         assert response.status_code == 200
-        assert "comment_form" not in response.context
+        assert "comment_form" not in dict(response.context or {})
 
     def test_get_if_can_post_comment(
         self,
@@ -114,7 +114,7 @@ class TestEventDetailView:
             event.get_absolute_url(), HTTP_HOST=event.community.domain
         )
         assert response.status_code == 200
-        assert "comment_form" in response.context
+        assert "comment_form" in dict(response.context or {})
 
 
 class TestEventLikeView:

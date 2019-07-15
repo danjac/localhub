@@ -6,7 +6,7 @@ from typing import Optional
 from urllib.parse import urlparse
 
 
-def get_domain(url: str) -> Optional[str]:
+def get_domain(url: Optional[str]) -> Optional[str]:
     """
     Returns the domain of a URL. Removes any "www." at the start.
     Returns None if invalid.

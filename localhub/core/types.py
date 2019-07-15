@@ -5,11 +5,14 @@
 Custom type annotations for the project.
 """
 
-from typing import Any, Callable, Dict, List, Tuple, Type, Union
+from abc import abstractmethod
+
+from typing import Any, Callable, Dict, List, Tuple, Type, Union, TYPE_CHECKING
 
 from django.db.models import Model, QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.views.generic import View
+from django.views.generic.base import ContextMixin
 
 DjangoView = Callable[[HttpRequest], HttpResponse]
 
@@ -25,3 +28,21 @@ ModelType = Type[Model]
 ModelOrQuerySet = Union[ModelType, QuerySet]
 
 ViewType = Type[View]
+
+
+class _BaseQuerySetViewMixin:
+    @abstractmethod
+    def get_queryset(self) -> QuerySet:
+        pass
+
+
+if TYPE_CHECKING:
+    BaseContextMixin = ContextMixin
+    BaseQuerySetMixin = QuerySet
+    BaseQuerySetViewMixin = _BaseQuerySetViewMixin
+    BaseViewMixin = View
+else:
+    BaseContextMixin = object
+    BaseQuerySetMixin = object
+    BaseQuerySetViewMixin = object
+    BaseViewMixin = object

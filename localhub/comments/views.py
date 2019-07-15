@@ -1,8 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import no_type_check
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -29,14 +27,18 @@ from localhub.comments.emails import send_deletion_email
 from localhub.comments.forms import CommentForm
 from localhub.comments.models import Comment
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.core.types import BreadcrumbList, ContextDict
+from localhub.core.types import (
+    BaseContextMixin,
+    BaseQuerySetViewMixin,
+    BreadcrumbList,
+    ContextDict,
+)
 from localhub.core.views import BreadcrumbsMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
 
 
-class CommentQuerySetMixin(CommunityRequiredMixin):
-    @no_type_check
+class CommentQuerySetMixin(CommunityRequiredMixin, BaseQuerySetViewMixin):
     def get_queryset(self) -> QuerySet:
         return (
             Comment.objects.get_queryset()
@@ -53,7 +55,7 @@ class SingleCommentMixin(CommentQuerySetMixin, SingleObjectMixin):
     ...
 
 
-class CommentParentMixin:
+class CommentParentMixin(BaseContextMixin):
     object: Model
 
     @cached_property

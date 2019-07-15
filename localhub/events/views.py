@@ -13,10 +13,11 @@ class EventDownloadView(SingleActivityView):
     """
     Generates a calendar .ics file.
     """
+
     model = Event
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        self.object = self.get_object()
+        self.object: Event = self.get_object()
 
         event = CalendarEvent()
 

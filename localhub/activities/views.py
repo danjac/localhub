@@ -3,7 +3,7 @@
 
 import operator
 
-from typing import List, Optional, Type, no_type_check
+from typing import List, Optional, Type
 
 from functools import reduce
 
@@ -40,6 +40,7 @@ from localhub.comments.forms import CommentForm
 from localhub.communities.models import Community
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.types import (
+    BaseQuerySetViewMixin,
     BreadcrumbList,
     ContextDict,
     QuerySetList,
@@ -54,8 +55,7 @@ from localhub.posts.models import Post
 from localhub.subscriptions.models import Subscription
 
 
-class ActivityQuerySetMixin(CommunityRequiredMixin):
-    @no_type_check
+class ActivityQuerySetMixin(CommunityRequiredMixin, BaseQuerySetViewMixin):
     def get_queryset(self) -> QuerySet:
         return (
             super()
