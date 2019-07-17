@@ -3,7 +3,7 @@
 
 import { Controller } from 'stimulus';
 import axios from 'axios';
-import caretXY from 'caret-xy';
+import getCaretPosition from 'textarea-caret';
 
 const TAB_KEY = 9;
 const RETURN_KEY = 13;
@@ -150,10 +150,13 @@ export default class extends Controller {
   }
 
   openSelector() {
-    const { top, left, height } = caretXY(this.inputTarget);
-    const rect = this.inputTarget.getBoundingClientRect();
-    this.selectorTarget.style.top = rect.top + top + height + 'px';
-    this.selectorTarget.style.left = left + 'px';
+    const { top, left, height } = getCaretPosition(
+      this.inputTarget,
+      this.inputTarget.selectionEnd
+    );
+    const { offsetTop, offsetLeft, scrollTop, scrollLeft } = this.inputTarget;
+    this.selectorTarget.style.top = offsetTop - scrollTop + height + top + 'px';
+    this.selectorTarget.style.left = offsetLeft - scrollLeft + left + 'px';
     this.selectorTarget.classList.remove('d-hide');
   }
 
