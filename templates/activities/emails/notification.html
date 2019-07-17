@@ -1,0 +1,39 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "emails/base.html" %}
+
+{% load i18n %}
+{% load account %}
+
+{% block content %}
+{% user_display notification.recipient as recipient %}
+
+<p>
+{% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
+</p>
+
+<p>
+{% if notification.verb == 'mentioned' %}
+{% blocktrans %}
+Someone has mentioned you in their <a href="{{ object_url }}">{{ activity_name }}</a>
+{% endblocktrans %}
+{% elif notification.verb == 'flagged' %}
+{% blocktrans %}
+Someone has flagged this <a href="{{ object_url }}">{{ activity_name }}</a>
+{% endblocktrans %}
+{% elif notification.verb == 'created' %}
+{% blocktrans %}
+Someone has published a new <a href="{{ object_url }}">{{ activity_name }}</a>
+{% endblocktrans %}
+{% elif notification.verb == 'updated' %}
+{% blocktrans %}
+Someone has updated their <a href="{{ object_url }}">{{ activity_name }}</a>
+{% endblocktrans %}
+{% elif notification.verb == 'tagged' %}
+{% blocktrans %}
+Someone has tagged content you are following in their <a href="{{ object_url }}">{{ activity_name }}</a>
+{% endblocktrans %}
+{% endif %}
+</p>
+{% endblock content %}

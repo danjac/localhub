@@ -34,6 +34,7 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from taggit.models import Tag, TaggedItem
 
+from localhub.activities.emails import send_activity_notification_email
 from localhub.activities.models import Activity
 from localhub.activities.types import ActivityType
 from localhub.comments.forms import CommentForm
@@ -274,6 +275,10 @@ class ActivityFlagView(
         flag.community = self.request.community
         flag.user = self.request.user
         flag.save()
+
+        for notification in flag.notify():
+            send_activity_notification_email(self.object, notification)
+
         messages.success(
             self.request,
             _(

@@ -29,10 +29,10 @@ class TestSendNotificationEmail:
         recipient = UserFactory()
 
         for item, template_name in [
-            (comment, "comments/emails/notification.txt"),
-            (event, "events/emails/notification.txt"),
-            (post, "posts/emails/notification.txt"),
-            (photo, "photos/emails/notification.txt"),
+            (comment, "comments/emails/notification"),
+            (event, "activities/emails/notification"),
+            (post, "activities/emails/notification"),
+            (photo, "activities/emails/notification"),
         ]:
             notification = Notification.objects.create(
                 recipient=recipient,
@@ -42,7 +42,11 @@ class TestSendNotificationEmail:
                 content_object=item,
             )
             send_notification_email(
-                notification, "test", item.get_permalink(), template_name
+                notification,
+                "test",
+                item.get_permalink(),
+                template_name + ".txt",
+                template_name + ".html",
             )
 
         assert len(mailoutbox) == 4

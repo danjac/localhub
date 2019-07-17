@@ -3,8 +3,12 @@
 
 import { Controller } from 'stimulus';
 import axios from 'axios';
+import caretXY from 'caret-xy';
 
 const TAB_KEY = 9;
+const RETURN_KEY = 13;
+const ARROW_UP = 38;
+const ARROW_DOWN = 40;
 
 export default class extends Controller {
   static targets = ['selector', 'input'];
@@ -16,20 +20,54 @@ export default class extends Controller {
     this.inputTarget.focus();
   }
 
-  handleTab(event) {
-    // explicitly add this as keydown-> action if element does not already handle tabs.
-    if (event.keyCode === TAB_KEY) {
-      this.handleSelection(
-        this.selectorTarget.querySelector('[data-typeahead-value]')
-      );
-      event.preventDefault();
-      return false;
+  keypress(event) {
+    if (!this.selectorOpen) {
+      return true;
     }
-    return true;
+
+    let firstItem = null;
+    let nextItem = null;
+    let prevItem = null;
+
+    switch (event.which) {
+      case TAB_KEY:
+      case RETURN_KEY:
+        this.handleSelection(
+          this.selectorTarget.querySelector(
+            'li.selected > [data-typeahead-value]'
+          )
+        );
+        event.preventDefault();
+        return false;
+      case ARROW_UP:
+        event.preventDefault();
+        firstItem = this.selectorTarget.querySelector('li.selected');
+        if (firstItem) {
+          prevItem = firstItem.previousElementSibling;
+          if (prevItem) {
+            firstItem.classList.remove('selected');
+            prevItem.classList.add('selected');
+          }
+        }
+        return false;
+      case ARROW_DOWN:
+        event.preventDefault();
+        firstItem = this.selectorTarget.querySelector('li.selected');
+        if (firstItem) {
+          nextItem = firstItem.nextElementSibling;
+          if (nextItem) {
+            firstItem.classList.remove('selected');
+            nextItem.classList.add('selected');
+          }
+        }
+        return false;
+      default:
+        return true;
+    }
   }
 
   typeahead(event) {
-    if (!this.handleTab(event)) {
+    if (!this.keypress(event)) {
       return false;
     }
 
@@ -113,12 +151,23 @@ export default class extends Controller {
 
   openSelector() {
     this.selectorTarget.classList.remove('d-hide');
+    const { top, left } = caretXY(this.inputTarget);
+    this.selectorTarget.style.top = top + 10 + 'px';
+    this.selectorTarget.style.left = left + 'px';
   }
 
   closeSelector() {
     this.selectorTarget.classList.add('d-hide');
-    while (this.selectorTarget.firstChild) {
-      this.selectorTarget.removeChild(this.selectorTarget.firstChild);
+    this.removeChildNodes(this.selectorTarget);
+  }
+
+  removeChildNodes(node) {
+    while (node.firstChild) {
+      node.removeChild(node.firstChild);
     }
+  }
+
+  get selectorOpen() {
+    return !this.selectorTarget.classList.contains('d-hide');
   }
 }

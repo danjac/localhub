@@ -5,7 +5,7 @@
 {% load users_tags %}
 
 {% for user_obj in object_list %}
-<li class="menu-item">
+<li class="menu-item{% if forloop.first %} selected{% endif %}">
   <a href="#"
      data-action="typeahead#select"
      data-typeahead-value="{{ user_obj.username }}"

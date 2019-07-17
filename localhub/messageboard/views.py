@@ -6,7 +6,7 @@ from typing import Optional
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import IntegrityError, models
+from django.db import models
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
@@ -175,8 +175,10 @@ class MessageCreateView(
 
     def form_valid(self, form) -> HttpResponse:
 
-        users = form.get_recipients(self.request.user, self.request.community)
-        num_recipients = users.count()
+        recipients = form.get_recipients(
+            self.request.user, self.request.community
+        )
+        num_recipients = recipients.count()
 
         if num_recipients == 0:
             messages.error(
@@ -191,15 +193,19 @@ class MessageCreateView(
         message.parent = self.parent
         message.save()
 
-        # we can't do a bulk create here as we need the ID to the message
-        for user in users:
-            try:
-                recipient = MessageRecipient.objects.create(
-                    message=message, recipient=user
-                )
-                send_message_email(recipient)
-            except IntegrityError:
-                pass
+        MessageRecipient.objects.bulk_create(
+            [
+                MessageRecipient(message=message, recipient=recipient)
+                for recipient in recipients
+            ],
+            ignore_conflicts=True,
+        )
+
+        # fetch again so we have IDs
+        for recipient in message.messagerecipient_set.select_related(
+            "message", "message__community", "message__sender", "recipient"
+        ):
+            send_message_email(recipient)
 
         messages.success(
             self.request, self.get_success_message(num_recipients)

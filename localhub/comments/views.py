@@ -23,7 +23,10 @@ from django.views.generic.list import MultipleObjectMixin
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.activities.models import Activity
-from localhub.comments.emails import send_deletion_email
+from localhub.comments.emails import (
+    send_deletion_email,
+    send_comment_notification_email,
+)
 from localhub.comments.forms import CommentForm
 from localhub.comments.models import Comment
 from localhub.communities.views import CommunityRequiredMixin
@@ -231,6 +234,9 @@ class CommentFlagView(
         flag.community = self.request.community
         flag.user = self.request.user
         flag.save()
+
+        for notification in flag.notify():
+            send_comment_notification_email(self.object, notification)
         messages.success(
             self.request, _("This comment has been flagged to the moderators")
         )

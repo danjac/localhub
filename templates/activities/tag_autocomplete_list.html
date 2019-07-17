@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% for tag in object_list %}
-<li class="menu-item">
+<li class="menu-item{% if forloop.first %} selected{% endif %}">
   <a href="#"
      data-action="typeahead#select"
      data-typeahead-value="{{ tag.slug }}"

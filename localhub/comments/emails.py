@@ -6,6 +6,8 @@ from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
 
 from localhub.comments.models import Comment
+from localhub.notifications.emails import send_notification_email
+from localhub.notifications.models import Notification
 
 
 def send_deletion_email(comment: Comment):
@@ -14,4 +16,26 @@ def send_deletion_email(comment: Comment):
         render_to_string("comments/emails/deletion.txt", {"comment": comment}),
         comment.community.resolve_email("notifications"),
         [comment.owner.email],
+    )
+
+
+def send_comment_notification_email(
+    comment: Comment, notification: Notification
+):
+
+    SUBJECTS = {
+        "mentioned": _("Someone has mentioned you in their comment"),
+        "created": _("Someone has published a new comment"),
+        "commented": _("Someone has made a comment on one of your posts"),
+        "updated": _("Someone has updated their comment"),
+        "flagged": _("Someone has flagged this comment"),
+    }
+
+    send_notification_email(
+        notification,
+        SUBJECTS[notification.verb],
+        comment.get_permalink(),
+        "comments/emails/notification.txt",
+        "comments/emails/notification.html",
+        {"comment": comment},
     )

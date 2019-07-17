@@ -4,11 +4,10 @@
 from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.utils.translation import gettext as _
 
 from localhub.events import tasks
 from localhub.events.models import Event
-from localhub.notifications.emails import send_notification_email
+from localhub.activities.emails import send_activity_notification_email
 
 
 @receiver(
@@ -36,21 +35,7 @@ def taggit(instance: Event, created: bool, **kwargs):
 @receiver(post_save, sender=Event, dispatch_uid="events.send_notifications")
 def send_notifications(instance: Event, created: bool, **kwargs):
     def notify():
-        subjects = {
-            "mentioned": _("You have been mentioned in an event"),
-            "created": _("A new event has been added"),
-            "updated": _("An event has been updated"),
-            "tagged": _(
-                "An event has been added with a tag you are following"
-            ),
-        }
-        event_url = instance.get_permalink()
         for notification in instance.notify(created):
-            send_notification_email(
-                notification,
-                subjects[notification.verb],
-                event_url,
-                "events/emails/notification.txt",
-            )
+            send_activity_notification_email(instance, notification)
 
     transaction.on_commit(notify)

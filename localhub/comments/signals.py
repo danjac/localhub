@@ -6,8 +6,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext as _
 
+from localhub.comments.emails import send_comment_notification_email
 from localhub.comments.models import Comment
-from localhub.notifications.emails import send_notification_email
 
 
 @receiver(
@@ -15,19 +15,7 @@ from localhub.notifications.emails import send_notification_email
 )
 def send_notifications(instance: Comment, created: bool, **kwargs):
     def notify():
-        subjects = {
-            "mentioned": _("You have been mentioned in a comment"),
-            "created": _("A new comment has been added"),
-            "updated": _("A comment has been updated"),
-            "commented": _("Someone has commmented on one of your posts"),
-        }
-        comment_url = instance.get_permalink()
         for notification in instance.notify(created):
-            send_notification_email(
-                notification,
-                subjects[notification.verb],
-                comment_url,
-                "comments/emails/notification.txt",
-            )
+            send_comment_notification_email(instance, notification)
 
     transaction.on_commit(notify)

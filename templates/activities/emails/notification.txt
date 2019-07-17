@@ -7,24 +7,24 @@
 {% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
 {% if notification.verb == 'mentioned' %}
 {% blocktrans %}
-Someone has mentioned you in their comment.
+Someone has mentioned you in their {{ activity_name }}
 {% endblocktrans %}
 {% elif notification.verb == 'created' %}
 {% blocktrans %}
-Someone has published a new comment.
+Someone has published a new {{ activity_name }}
 {% endblocktrans %}
 {% elif notification.verb == 'flagged' %}
 {% blocktrans %}
-Someone has flagged this comment.
+Someone has flagged this {{ activity_name }}
 {% endblocktrans %}
 {% elif notification.verb == 'updated' %}
 {% blocktrans %}
-Someone has updated their comment.
+Someone has updated their {{ activity_name }}
 {% endblocktrans %}
-{% elif notification.verb == 'commented' %}
+{% elif notification.verb == 'tagged' %}
 {% blocktrans %}
-Someone has commented on one of your posts.
+Someone has tagged content you are following in their {{ activity_name }}
 {% endblocktrans %}
 {% endif %}
-Link to comment: {{ object_url }}
+Link to {{ activity_name }}: {{ object_url }}
 {% endautoescape %}

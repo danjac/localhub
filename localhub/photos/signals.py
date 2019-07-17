@@ -4,9 +4,8 @@
 from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.utils.translation import gettext as _
 
-from localhub.notifications.emails import send_notification_email
+from localhub.activities.emails import send_activity_notification_email
 from localhub.photos.models import Photo
 
 
@@ -25,19 +24,7 @@ def taggit(instance: Photo, created: bool, **kwargs):
 @receiver(post_save, sender=Photo, dispatch_uid="photos.send_notifications")
 def send_notifications(instance: Photo, created: bool, **kwargs):
     def notify():
-        subjects = {
-            "mentioned": _("You have been mentioned in a photo"),
-            "created": _("A new photo has been added"),
-            "updated": _("A photo has been updated"),
-            "tagged": _("A photo has been added with a tag you are following"),
-        }
-        photo_url = instance.get_permalink()
         for notification in instance.notify(created):
-            send_notification_email(
-                notification,
-                subjects[notification.verb],
-                photo_url,
-                "photos/emails/notification.txt",
-            )
+            send_activity_notification_email(instance, notification)
 
     transaction.on_commit(notify)

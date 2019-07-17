@@ -10,10 +10,10 @@
      data-typeahead-tag-search-url="{{ tag_search_url }}"
      {% endif %}
      >
-    <ul class="menu d-hide" data-target="typeahead.selector"></ul>
-    <textarea
-      data-target="typeahead.input"
-      data-action="keyup->typeahead#typeahead keydown->typeahead#handleTab"
-      name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}
-      >{% spaceless %}{% if widget.value %}{{ widget.value }}{% endif %}{% endspaceless %}</textarea>
+     <ul class="menu d-hide p-absolute" data-target="typeahead.selector"></ul>
+     <textarea
+       data-target="typeahead.input"
+       data-action="keyup->typeahead#typeahead keydown->typeahead#keypress"
+       name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}
+       >{% spaceless %}{% if widget.value %}{{ widget.value }}{% endif %}{% endspaceless %}</textarea>
 </div>

@@ -9,12 +9,14 @@ from localhub.messageboard.models import MessageRecipient
 
 def send_message_email(recipient: MessageRecipient):
 
+    context = {"recipient": recipient, "message": recipient.message}
+
     send_mail(
         recipient.message.subject,
-        render_to_string(
-            "messageboard/emails/message.txt",
-            {"recipient": recipient, "message": recipient.message},
-        ),
+        render_to_string("messageboard/emails/message.txt", context),
         recipient.message.community.resolve_email("messages"),
         [recipient.recipient.email],
+        html_message=render_to_string(
+            "messageboard/emails/message.html", context
+        ),
     )

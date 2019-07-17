@@ -1,30 +1,41 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "emails/base.html" %}
+
 {% load i18n %}
 {% load account %}
-{% autoescape off %}
+
+{% block title %}{% trans "Notification" %}{% endblock %}
+
+{% block content %}
 {% user_display notification.recipient as recipient %}
+
+<p>
 {% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
+</p>
+
+<p>
 {% if notification.verb == 'mentioned' %}
 {% blocktrans %}
-Someone has mentioned you in their comment.
+Someone has mentioned you in their <a href="{{ object_url }}">comment</a>
 {% endblocktrans %}
 {% elif notification.verb == 'created' %}
 {% blocktrans %}
-Someone has published a new comment.
+Someone has published a new <a href="{{ object_url }}">comment</a>
 {% endblocktrans %}
 {% elif notification.verb == 'flagged' %}
 {% blocktrans %}
-Someone has flagged this comment.
+Someone has flagged this <a href="{{ object_url }}">comment</a>
 {% endblocktrans %}
 {% elif notification.verb == 'updated' %}
 {% blocktrans %}
-Someone has updated their comment.
+Someone has updated their <a href="{{ object_url }}">comment</a>
 {% endblocktrans %}
 {% elif notification.verb == 'commented' %}
 {% blocktrans %}
-Someone has commented on one of your posts.
+Someone has <a href="{{ object_url }}">commented</a> on one of your posts.
 {% endblocktrans %}
 {% endif %}
-Link to comment: {{ object_url }}
-{% endautoescape %}
+</p>
+{% endblock content %}

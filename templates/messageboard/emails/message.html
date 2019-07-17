@@ -1,0 +1,23 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load i18n %}
+{% load account %}
+
+{% block title %}{{ message.subject }}{% endblock %}
+
+{% block content %}
+{% user_display recipient.recipient as recipient_name %}
+{% user_display message.sender as sender %}
+
+<div>
+{% blocktrans %}
+Hi {{ recipient_name }},
+</div>
+{% endblocktrans %}
+
+<div>
+{% blocktrans with subject=message.subject url=recipient.get_permalink %}
+{{ sender }} has sent you a message <a href="{{ url }}"{{ subject }}</a>.
+{% endblocktrans %}
+</div>
+{% endblock content %}
