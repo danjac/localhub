@@ -150,11 +150,11 @@ export default class extends Controller {
   }
 
   openSelector() {
-    this.selectorTarget.classList.remove('d-hide');
-    const { top, left } = caretXY(this.inputTarget);
-    const { x } = this.inputTarget.getBoundingClientRect();
-    this.selectorTarget.style.top = x + top + 'px';
+    const { top, left, height } = caretXY(this.inputTarget);
+    const rect = this.inputTarget.getBoundingClientRect();
+    this.selectorTarget.style.top = rect.top + top + height + 'px';
     this.selectorTarget.style.left = left + 'px';
+    this.selectorTarget.classList.remove('d-hide');
   }
 
   closeSelector() {
