@@ -152,7 +152,7 @@ export default class extends Controller {
   openSelector() {
     this.selectorTarget.classList.remove('d-hide');
     const { top, left } = caretXY(this.inputTarget);
-    this.selectorTarget.style.top = top + 10 + 'px';
+    this.selectorTarget.style.top = top + 30 + 'px';
     this.selectorTarget.style.left = left + 'px';
   }
 
