@@ -3,13 +3,19 @@
 
 import { Controller } from 'stimulus';
 
+import { HTMLElementEvent } from '../types';
+
 export default class extends Controller {
   static targets = ['textarea'];
 
-  select(event) {
+  textareaTarget: HTMLInputElement;
+
+  select(event: HTMLElementEvent) {
+    const target = event.currentTarget;
+
     event.preventDefault();
 
-    const { dataset } = event.currentTarget;
+    const { dataset } = target;
     const { markdown } = dataset;
     const [markdownStart, markdownEnd] = markdown.split(/\[SELECTION\]/);
 

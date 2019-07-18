@@ -1,5 +1,7 @@
 import { Controller } from 'stimulus';
 
+import { HTMLElementEvent } from '../types';
+
 /* global NodeListOf */
 
 export default class extends Controller {
@@ -9,10 +11,9 @@ export default class extends Controller {
 
   tabTargets: NodeListOf<HTMLElement>;
 
-  select(event: Event) {
+  select(event: HTMLElementEvent) {
     event.preventDefault();
-    const target = event.currentTarget;
-    const activeTab = target instanceof HTMLElement ? target.dataset.tab : null;
+    const activeTab = event.currentTarget.dataset.tab;
     this.tabTargets.forEach((tab: HTMLElement) => {
       if (tab.dataset.tab === activeTab) {
         tab.classList.add('active');
