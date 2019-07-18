@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Controller } from 'stimulus';
+import Openable from './confirm-dialog-controller';
 
 export default class extends Controller {
-  check(event) {
+  check(event: Event): Boolean {
     // check confirmed flag, just run if set
     if (this.data.has('confirmed')) {
       this.data.delete('confirmed');
@@ -18,7 +19,7 @@ export default class extends Controller {
     const body = this.data.get('body');
 
     const onConfirm = () => {
-      this.data.set('confirmed', true);
+      this.data.set('confirmed', 'confirmed');
       // note: this doesn't work with "native" events, just with
       // stimulus events in the same data-action.
       this.element.dispatchEvent(new Event(event.type));
@@ -29,11 +30,13 @@ export default class extends Controller {
       'confirm-dialog'
     );
 
-    dialog.open({
-      body,
-      header,
-      onConfirm
-    });
+    if (dialog instanceof Openable) {
+      dialog.open({
+        body,
+        header,
+        onConfirm
+      });
+    }
 
     return false;
   }

@@ -3,8 +3,24 @@
 
 import { Controller } from 'stimulus';
 
-export default class extends Controller {
+interface Confirmable {
+  header: string,
+  body: string,
+  onConfirm(): void
+}
+
+interface Openable {
+  open(config: Confirmable): void
+}
+
+export default class extends Controller implements Openable {
   static targets = ['header', 'body'];
+
+  headerTarget: HTMLElement;
+
+  bodyTarget: HTMLElement;
+
+  onConfirm: Function;
 
   connect() {
     this.onConfirm = null;
@@ -17,7 +33,7 @@ export default class extends Controller {
     });
   }
 
-  open({ header, body, onConfirm }) {
+  open({ header, body, onConfirm }: Confirmable) {
     this.headerTarget.innerText = header;
     this.bodyTarget.innerText = body;
     this.onConfirm = onConfirm;
@@ -29,12 +45,12 @@ export default class extends Controller {
     this.element.classList.remove('active');
   }
 
-  cancel(event) {
+  cancel(event: Event) {
     event.preventDefault();
     this.close();
   }
 
-  confirm(event) {
+  confirm(event: Event) {
     event.preventDefault();
     if (this.onConfirm) {
       this.onConfirm();
