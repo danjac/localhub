@@ -37,7 +37,8 @@ export default class extends Controller {
   }
 
   get defaultZoom() {
-    return parseInt(this.data.get('zoom') || DEFAULT_ZOOM, 10);
+    const zoom = this.data.get('zoom');
+    return zoom ? parseInt(zoom, 10) : DEFAULT_ZOOM;
   }
 
   get latitude() {
