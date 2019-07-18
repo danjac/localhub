@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "lib": ["es6", "dom", "dom.iterable"],
     "sourceMap": true,
     "noImplicitAny": true,
     "target": "es6",
