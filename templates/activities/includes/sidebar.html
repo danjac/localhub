@@ -36,7 +36,7 @@
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'messageboard:message_recipient_list' %}">
       <span {% if unread_messages %}class="badge" data-badge="{{ unread_messages }}"{% endif %}>
-        {% trans "Message Board" %}
+        {% trans "Direct Messages" %}
       </span>
     </a>
   </li>
