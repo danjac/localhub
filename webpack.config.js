@@ -14,6 +14,9 @@ module.exports = {
   optimization: {
     minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})]
   },
+  resolve: {
+    extensions: ['.ts', '.js', '.scss', '.css']
+  },
   module: {
     rules: [
       {
@@ -27,6 +30,13 @@ module.exports = {
           options: {
             limit: 8192
           }
+        }
+      },
+      {
+        test: /\.tsx?$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'awesome-typescript-loader'
         }
       },
       {
@@ -45,6 +55,7 @@ module.exports = {
   output: {
     path: path.resolve('./assets/dist/')
   },
+  devtool: 'source-map',
   plugins: [
     new MiniCssExtractPlugin({
       filename: '[name].css'

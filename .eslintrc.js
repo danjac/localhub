@@ -64,7 +64,10 @@ module.exports = {
         "func-names": "off",
         "func-style": [
             "error",
-            "expression"
+            "declaration",
+            {
+              "allowArrowFunctions": true
+            }
         ],
         "function-paren-newline": "off",
         "generator-star-spacing": "error",

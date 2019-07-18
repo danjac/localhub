@@ -6,6 +6,8 @@ import { Controller } from 'stimulus';
 export default class extends Controller {
   static targets = ['match'];
 
+  matchTarget: HTMLElement;
+
   connect() {
     const { pathname } = window.location;
     // if element is a link i.e. <a> then just use that href

@@ -9,7 +9,7 @@ export default class extends Controller {
   }
 
   accept() {
-    Cookies.set('accept-cookies', true, {
+    Cookies.set('accept-cookies', 'accepted', {
       domain: this.data.get('domain'),
       expires: 360
     });

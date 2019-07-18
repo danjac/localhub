@@ -15,7 +15,7 @@ axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 // Stimulus setup
 const application = Application.start();
-const context = require.context('./controllers', true, /\.js$/);
+const context = require.context('./controllers', true, /\.(js|ts)$/);
 application.load(definitionsFromContext(context));
 
 // Turbolinks setup
