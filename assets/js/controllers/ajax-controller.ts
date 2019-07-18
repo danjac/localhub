@@ -2,44 +2,44 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Controller } from 'stimulus';
-import axios from 'axios';
+import axios, { AxiosResponse, Method } from 'axios';
 import Turbolinks from 'turbolinks';
 
 export default class extends Controller {
   // handles simple non-form AJAX interactions
-  get(event) {
+  get(event: Event) {
     this.send('GET', event);
   }
 
-  post(event) {
+  post(event: Event) {
     this.send('POST', event);
   }
 
-  delete(event) {
+  delete(event: Event) {
     this.send('DELETE', event);
   }
 
-  put(event) {
+  put(event: Event) {
     this.send('PUT', event);
   }
 
-  patch(event) {
+  patch(event: Event) {
     this.send('PATCH', event);
   }
 
-  send(method, event) {
+  send(method: Method, event: Event) {
     event.preventDefault();
 
     const referrer = location.href;
     const url = this.data.get('url') || this.element.getAttribute('href');
 
-    axios({
+    axios.request({
       headers: {
         'Turbolinks-Referrer': referrer
       },
       method,
       url
-    }).then(response => {
+    }).then((response: AxiosResponse) => {
       const toggle = this.data.get('toggle');
       const redirect = this.data.get('redirect');
 
