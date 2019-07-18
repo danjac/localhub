@@ -13,7 +13,7 @@ import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
 /* eslint-disable-next-line no-underscore-dangle */
-delete L.Icon.Default.prototype._getIconUrl;
+// delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl,
@@ -25,7 +25,7 @@ const DEFAULT_ZOOM = 13;
 
 export default class extends Controller {
   connect() {
-    const coords = [this.latitude, this.longitude];
+    const coords = new L.LatLng(this.latitude, this.longitude);
     const map = L.map(this.element.id).setView(coords, this.defaultZoom);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
