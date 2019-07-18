@@ -6,7 +6,9 @@ import Turbolinks from 'turbolinks';
 
 export default class extends Controller {
   switch() {
-    this.element.disabled = true;
+    if (this.element instanceof HTMLInputElement) {
+      this.element.disabled = true;
+    }
     Turbolinks.visit(this.data.get('url'));
   }
 }

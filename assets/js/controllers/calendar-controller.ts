@@ -18,10 +18,24 @@ import {
 
 import { Controller } from 'stimulus';
 
+import { HTMLElementEvent } from '../types';
+
 export default class extends Controller {
   static targets = ['calendar', 'dateInput', 'currentMonth', 'days'];
 
-  open(event) {
+  calendarTarget: HTMLElement;
+
+  currentMonthTarget: HTMLElement;
+
+  daysTarget: HTMLElement;
+
+  dateInputTarget: HTMLInputElement;
+
+  selectedDate: Date;
+
+  firstOfMonthDate: Date;
+
+  open(event: HTMLElementEvent) {
     event.preventDefault();
     if (!this.calendarTarget.classList.toggle('d-none')) {
       const { value } = this.dateInputTarget;
@@ -33,19 +47,19 @@ export default class extends Controller {
     }
   }
 
-  nextMonth(event) {
+  nextMonth(event: HTMLElementEvent) {
     event.preventDefault();
     this.firstOfMonthDate = addMonths(this.firstOfMonthDate, 1);
     this.render();
   }
 
-  prevMonth(event) {
+  prevMonth(event: HTMLElementEvent) {
     event.preventDefault();
     this.firstOfMonthDate = subMonths(this.firstOfMonthDate, 1);
     this.render();
   }
 
-  select(event) {
+  select(event: HTMLElementEvent) {
     event.preventDefault();
     const btn = event.currentTarget;
     const selectedDate = btn.getAttribute('data-calendar-date');
