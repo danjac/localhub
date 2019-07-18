@@ -2,15 +2,20 @@ import { Controller } from 'stimulus';
 import { fadeOut } from '../effects';
 
 export default class extends Controller {
+  timeout: any;
+
   connect() {
-    const removeAfter = parseInt(this.data.get('remove-after') || 5000, 10);
+    const removeAfter = this.data.get('remove-after');
+    const delay = removeAfter ? parseInt(removeAfter, 10) : 5000;
     this.timeout = setTimeout(() => {
       this.dismiss();
       clearTimeout(this.timeout);
-    }, removeAfter);
+    }, delay);
   }
 
   dismiss() {
-    fadeOut(this.element);
+    if (this.element instanceof HTMLElement) {
+      fadeOut(this.element);
+    }
   }
 }
