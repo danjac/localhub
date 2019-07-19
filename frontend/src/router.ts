@@ -4,6 +4,28 @@ import Home from './views/Home.vue';
 
 Vue.use(Router);
 
+// Routes we'll need:
+// Home/activity stream
+// Search
+// Tag detail
+// Community about page/not found/permission required
+// Authentication: login/signup/recover password
+// Posts: list/submit/edit/detail
+// Photos: list/submit/edit/detail
+// Events: list/submit/edit/detail
+// Notifications
+// Direct messages: inbox/outbox/create/reply/detail
+// Comments: detail/edit
+// Favorites: posts/comments
+// Following: users/tags
+// Profile: about/posts/comments
+// Members
+// Profile settings: edit/emails/password
+// Community settings: edit
+// Membership settings: list/edit
+// Invites: list/create
+// Join requests: list
+//
 export default new Router({
   mode: 'history',
   routes: [

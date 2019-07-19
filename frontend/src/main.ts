@@ -2,12 +2,22 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import VueI18n from 'vue-i18n';
 import './registerServiceWorker';
 
 Vue.config.productionTip = false;
 
+// ROADMAP:
+// spectre css+sass setup
+// routes
+// components
+//
+Vue.use(VueI18n);
+const i18n = new VueI18n({ locale: 'en-US' });
+
 new Vue({
   router,
   store,
-  render: (h) => h(App),
+  i18n,
+  render: h => h(App)
 }).$mount('#app');
