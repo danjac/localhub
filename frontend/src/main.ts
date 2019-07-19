@@ -5,6 +5,8 @@ import store from './store';
 import VueI18n from 'vue-i18n';
 import './registerServiceWorker';
 
+import './scss/main.scss';
+
 Vue.config.productionTip = false;
 
 // ROADMAP:

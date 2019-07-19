@@ -1,0 +1,10 @@
+.markdownx {
+  .tab-pane {
+    min-height: 280px;
+  }
+}
+
+.markdown-content img {
+  @extend .img-responsive;
+  word-wrap: break-word;
+}

@@ -1,0 +1,36 @@
+.content {
+  &-actions {
+    font-size: $font-size-sm;
+    color: $gray-color-dark;
+    a {
+      color: $gray-color-dark;
+    }
+  }
+}
+
+.event-map {
+  height: $map-height;
+  &-lg {
+    height: $map-height * 2;
+  }
+}
+
+.wordwrap {
+  word-wrap: break-word;
+}
+
+.menu-item.selected {
+  @extend .bg-secondary;
+}
+
+.phantom {
+  position: absolute;
+  display: inline-block;
+  word-wrap: break-word;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  visibility: hidden;
+  border: none;
+}
