@@ -4,26 +4,27 @@
 {% load account %}
 {% autoescape off %}
 {% user_display notification.recipient as recipient %}
+{% user_display notification.actor as actor %}
 {% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
 {% if notification.verb == 'mentioned' %}
 {% blocktrans %}
-Someone has mentioned you in their comment.
+{{ actor }} has mentioned you in their comment.
 {% endblocktrans %}
 {% elif notification.verb == 'created' %}
 {% blocktrans %}
-Someone has published a new comment.
+{{ actor }} has published a new comment.
 {% endblocktrans %}
 {% elif notification.verb == 'flagged' %}
 {% blocktrans %}
-Someone has flagged this comment.
+{{ actor }} has flagged this comment.
 {% endblocktrans %}
 {% elif notification.verb == 'updated' %}
 {% blocktrans %}
-Someone has updated their comment.
+{{ actor }} has updated their comment.
 {% endblocktrans %}
 {% elif notification.verb == 'commented' %}
 {% blocktrans %}
-Someone has commented on one of your posts.
+{{ actor }} has commented on one of your posts.
 {% endblocktrans %}
 {% endif %}
 Link to comment: {{ object_url }}

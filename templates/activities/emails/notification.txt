@@ -4,26 +4,27 @@
 {% load account %}
 {% autoescape off %}
 {% user_display notification.recipient as recipient %}
+{% user_display notification.actor as actor %}
 {% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
 {% if notification.verb == 'mentioned' %}
 {% blocktrans %}
-Someone has mentioned you in their {{ activity_name }}
+{{ actor }} has mentioned you in their {{ activity_name }}
 {% endblocktrans %}
 {% elif notification.verb == 'created' %}
 {% blocktrans %}
-Someone has published a new {{ activity_name }}
+{{ actor }} has published a new {{ activity_name }}
 {% endblocktrans %}
 {% elif notification.verb == 'flagged' %}
 {% blocktrans %}
-Someone has flagged this {{ activity_name }}
+{{ actor }} has flagged this {{ activity_name }}
 {% endblocktrans %}
 {% elif notification.verb == 'updated' %}
 {% blocktrans %}
-Someone has updated their {{ activity_name }}
+{{ actor }} has updated their {{ activity_name }}
 {% endblocktrans %}
 {% elif notification.verb == 'tagged' %}
 {% blocktrans %}
-Someone has tagged content you are following in their {{ activity_name }}
+{{ actor }} has tagged content you are following in their {{ activity_name }}
 {% endblocktrans %}
 {% endif %}
 Link to {{ activity_name }}: {{ object_url }}

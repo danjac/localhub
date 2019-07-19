@@ -8,6 +8,7 @@
 
 {% block content %}
 {% user_display notification.recipient as recipient %}
+{% user_display notification.actor as actor %}
 
 <p>
 {% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
@@ -16,23 +17,23 @@
 <p>
 {% if notification.verb == 'mentioned' %}
 {% blocktrans %}
-Someone has mentioned you in their <a href="{{ object_url }}">{{ activity_name }}</a>
+{{ actor }} has mentioned you in their <a href="{{ object_url }}">{{ activity_name }}</a>
 {% endblocktrans %}
 {% elif notification.verb == 'flagged' %}
 {% blocktrans %}
-Someone has flagged this <a href="{{ object_url }}">{{ activity_name }}</a>
+{{ actor }} has flagged this <a href="{{ object_url }}">{{ activity_name }}</a>
 {% endblocktrans %}
 {% elif notification.verb == 'created' %}
 {% blocktrans %}
-Someone has published a new <a href="{{ object_url }}">{{ activity_name }}</a>
+{{ actor }} has published a new <a href="{{ object_url }}">{{ activity_name }}</a>
 {% endblocktrans %}
 {% elif notification.verb == 'updated' %}
 {% blocktrans %}
-Someone has updated their <a href="{{ object_url }}">{{ activity_name }}</a>
+{{ actor }} has updated their <a href="{{ object_url }}">{{ activity_name }}</a>
 {% endblocktrans %}
 {% elif notification.verb == 'tagged' %}
 {% blocktrans %}
-Someone has tagged content you are following in their <a href="{{ object_url }}">{{ activity_name }}</a>
+{{ actor }} has tagged content you are following in their <a href="{{ object_url }}">{{ activity_name }}</a>
 {% endblocktrans %}
 {% endif %}
 </p>

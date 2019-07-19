@@ -1,5 +1,7 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "emails/base.html" %}
 {% load i18n %}
 {% load account %}
 
@@ -17,7 +19,7 @@ Hi {{ recipient_name }},
 
 <div>
 {% blocktrans with subject=message.subject url=recipient.get_permalink %}
-{{ sender }} has sent you a message <a href="{{ url }}"{{ subject }}</a>.
+{{ sender }} has sent you a message <a href="{{ url }}">{{ subject }}</a>.
 {% endblocktrans %}
 </div>
 {% endblock content %}
