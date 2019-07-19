@@ -213,3 +213,7 @@ class TestEventModel:
         assert event.longitude is None
 
         assert geocoder.osm.call_count == 0
+
+    def test_to_ical(self, event: Event):
+        result = event.to_ical()
+        assert "DTSTART" in result
