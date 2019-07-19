@@ -22,6 +22,10 @@
 {% blocktrans %}
 {{ actor }} has updated their {{ activity_name }}
 {% endblocktrans %}
+{% elif notification.verb == 'moderated' %}
+{% blocktrans %}
+{{ actor }} has edited your {{ activity_name }}
+{% endblocktrans %}
 {% elif notification.verb == 'tagged' %}
 {% blocktrans %}
 {{ actor }} has tagged content you are following in their {{ activity_name }}

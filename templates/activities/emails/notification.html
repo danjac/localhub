@@ -31,6 +31,10 @@
 {% blocktrans %}
 {{ actor }} has updated their <a href="{{ object_url }}">{{ activity_name }}</a>
 {% endblocktrans %}
+{% elif notification.verb == 'moderated' %}
+{% blocktrans %}
+{{ actor }} has edited your <a href="{{ object_url }}">{{ activity_name }}</a>
+{% endblocktrans %}
 {% elif notification.verb == 'tagged' %}
 {% blocktrans %}
 {{ actor }} has tagged content you are following in their <a href="{{ object_url }}">{{ activity_name }}</a>

@@ -10,7 +10,7 @@ from localhub.notifications.emails import send_notification_email
 from localhub.notifications.models import Notification
 
 
-def send_deletion_email(comment: Comment):
+def send_comment_deletion_email(comment: Comment):
     send_mail(
         _("Your comment has been deleted by a moderator"),
         render_to_string("comments/emails/deletion.txt", {"comment": comment}),

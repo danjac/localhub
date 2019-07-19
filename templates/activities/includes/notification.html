@@ -4,24 +4,30 @@
 {% extends "notifications/includes/notification.html" %}
 
 {% load i18n %}
+{% load account %}
 
 {% block notification_title %}
 {% with activity_url=activity.get_absolute_url %}
+{% user_display notification.actor as actor %}
 {% if notification.verb == 'mentioned' %}
 {% blocktrans %}
-Someone has mentioned you in their <a href="{{ activity_url }}">{{ activity_name }}</a>
+{{ actor }} has mentioned you in their <a href="{{ activity_url }}">{{ activity_name }}</a>
 {% endblocktrans %}
 {% elif notification.verb == 'created' %}
 {% blocktrans %}
-Someone has published a new <a href="{{ activity_url }}">{{ activity_name }}</a>
+{{ actor }} has published a new <a href="{{ activity_url }}">{{ activity_name }}</a>
 {% endblocktrans %}
 {% elif notification.verb == 'updated' %}
 {% blocktrans %}
-Someone has updated their <a href="{{ activity_url }}">{{ activity_name }}</a>
+{{ actor }} has updated their <a href="{{ activity_url }}">{{ activity_name }}</a>
+{% endblocktrans %}
+{% elif notification.verb == 'moderated' %}
+{% blocktrans %}
+{{ actor }} has edited your <a href="{{ activity_url }}">{{ activity_name }}</a>
 {% endblocktrans %}
 {% elif notification.verb == 'tagged' %}
 {% blocktrans %}
-Someone has tagged content you are following in their <a href="{{ activity_url }}">{{ activity_name }}</a>
+{{ actor }} has tagged content you are following in their <a href="{{ activity_url }}">{{ activity_name }}</a>
 {% endblocktrans %}
 {% endif %}
 {% endwith %}

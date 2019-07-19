@@ -8,11 +8,12 @@ from localhub.notifications.emails import send_notification_email
 from localhub.notifications.models import Notification
 
 SUBJECTS = {
-    "mentioned": _("Someone has mentioned you in their %s"),
     "created": _("Someone has published a new %s"),
-    "updated": _("Someone has updated their %s"),
     "flagged": _("Someone has flagged this %s"),
+    "mentioned": _("Someone has mentioned you in their %s"),
+    "moderated": _("Someone has edited your %s"),
     "tagged": _("Someone has published a new %s you might be interested in"),
+    "updated": _("Someone has updated their %s"),
 }
 
 

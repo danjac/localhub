@@ -11,7 +11,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.db.models import Q, QuerySet
 from django.forms import ModelForm
@@ -98,7 +97,7 @@ class ActivityCreateView(
             (self.request.path, _("Submit"))
         ]
 
-    def form_valid(self, form) -> HttpResponse:
+    def form_valid(self, form: ModelForm) -> HttpResponse:
 
         self.object = form.save(commit=False)
         self.object.owner = self.request.user
@@ -131,17 +130,25 @@ class ActivityListView(MultipleActivityMixin, ListView):
 
 
 class ActivityUpdateView(
-    PermissionRequiredMixin,
-    SuccessMessageMixin,
-    SingleActivityMixin,
-    BreadcrumbsMixin,
-    UpdateView,
+    PermissionRequiredMixin, SingleActivityMixin, BreadcrumbsMixin, UpdateView
 ):
     permission_required = "activities.change_activity"
     success_message = _("Your changes have been saved")
 
     def get_breadcrumbs(self) -> BreadcrumbList:
         return self.object.get_breadcrumbs() + [(self.request.path, _("Edit"))]
+
+    def get_success_message(self) -> str:
+        return self.success_message
+
+    def form_valid(self, form: ModelForm) -> HttpResponse:
+
+        self.object = form.save(commit=False)
+        self.object.editor = self.request.user
+        self.object.save()
+
+        messages.success(self.request, self.get_success_message())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class ActivityDeleteView(
@@ -269,7 +276,7 @@ class ActivityFlagView(
     def get_success_url(self) -> str:
         return self.object.get_absolute_url()
 
-    def form_valid(self, form) -> HttpResponse:
+    def form_valid(self, form: ModelForm) -> HttpResponse:
         flag = form.save(commit=False)
         flag.content_object = self.object
         flag.community = self.request.community
@@ -496,7 +503,7 @@ class ActivityCommentCreateView(
     def get_success_url(self) -> str:
         return self.object.get_absolute_url()
 
-    def form_valid(self, form) -> HttpResponse:
+    def form_valid(self, form: ModelForm) -> HttpResponse:
         comment = form.save(commit=False)
         comment.content_object = self.object
         comment.community = self.request.community

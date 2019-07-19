@@ -92,6 +92,17 @@ class TestPostUpdateView:
         assert response.url == post_for_member.get_absolute_url()
         assert post_for_member.title == "UPDATED"
 
+    def test_post_moderator(self, client: Client, moderator: Membership):
+        post = PostFactory(community=moderator.community)
+        response = client.post(
+            reverse("posts:update", args=[post.id]),
+            {"title": "UPDATED", "description": post.description},
+        )
+        post.refresh_from_db()
+        assert response.url == post.get_absolute_url()
+        assert post.title == "UPDATED"
+        assert post.editor == moderator.member
+
 
 class TestPostCommentCreateView:
     def test_get(self, client: Client, member: Membership):

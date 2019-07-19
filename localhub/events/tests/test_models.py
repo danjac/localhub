@@ -10,6 +10,7 @@ from datetime import timedelta
 
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from django.utils.encoding import force_str
 
 from pytest_mock import MockFixture
 
@@ -215,5 +216,5 @@ class TestEventModel:
         assert geocoder.osm.call_count == 0
 
     def test_to_ical(self, event: Event):
-        result = event.to_ical()
+        result = force_str(event.to_ical())
         assert "DTSTART" in result

@@ -107,10 +107,10 @@ class TestPostModel:
         assert notifications[1].recipient == tag_subscriber
         assert notifications[1].verb == "tagged"
 
-        assert notifications[2].recipient == moderator
+        assert notifications[2].recipient == user_subscriber
         assert notifications[2].verb == "created"
 
-        assert notifications[3].recipient == user_subscriber
+        assert notifications[3].recipient == moderator
         assert notifications[3].verb == "created"
 
         # change the description and remove the mention
@@ -122,4 +122,14 @@ class TestPostModel:
         assert notifications[0].recipient == moderator
         assert notifications[0].verb == "updated"
 
-        assert post.notifications.count() == 5
+        # moderator makes a change, notify the owner
+        post.editor = moderator
+        post.save()
+
+        notifications = post.notify(created=False)
+
+        assert notifications[0].recipient == post.owner
+        assert notifications[0].actor == moderator
+        assert notifications[0].verb == "moderated"
+
+        assert post.notifications.count() == 6

@@ -24,7 +24,7 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.activities.models import Activity
 from localhub.comments.emails import (
-    send_deletion_email,
+    send_comment_deletion_email,
     send_comment_notification_email,
 )
 from localhub.comments.forms import CommentForm
@@ -144,7 +144,7 @@ class CommentDeleteView(
         self.object = self.get_object()
         self.object.delete()
         if request.user != self.object.owner:
-            send_deletion_email(self.object)
+            send_comment_deletion_email(self.object)
 
         messages.success(request, _("Comment has been deleted"))
         return HttpResponseRedirect(self.get_success_url())
