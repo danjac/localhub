@@ -18,6 +18,10 @@
 {% blocktrans %}
 {{ actor }} has flagged this comment.
 {% endblocktrans %}
+{% elif notification.verb == 'liked' %}
+{% blocktrans %}
+{{ actor }} has liked this comment.
+{% endblocktrans %}
 {% elif notification.verb == 'updated' %}
 {% blocktrans %}
 {{ actor }} has updated their comment.

@@ -27,6 +27,10 @@
 {% blocktrans %}
 {{ actor }} has published a new <a href="{{ object_url }}">{{ activity_name }}</a>
 {% endblocktrans %}
+{% elif notification.verb == 'liked' %}
+{% blocktrans %}
+{{ actor }} has liked your <a href="{{ object_url }}">{{ activity_name }}</a>
+{% endblocktrans %}
 {% elif notification.verb == 'updated' %}
 {% blocktrans %}
 {{ actor }} has updated their <a href="{{ object_url }}">{{ activity_name }}</a>

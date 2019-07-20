@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Sequence
+from typing import List, Sequence
 
 from django.db import models
 
@@ -17,6 +17,7 @@ from localhub.core.utils.content_types import (
     get_generic_related_count_subquery,
     get_generic_related_exists,
 )
+from localhub.notifications.models import Notification
 
 
 class LikeAnnotationsQuerySetMixin(BaseQuerySetMixin):
@@ -86,3 +87,16 @@ class Like(TimeStampedModel):
             )
         ]
         indexes = [models.Index(fields=["content_type", "object_id", "user"])]
+
+    def notify(self) -> List[Notification]:
+        """
+        Sends notification to community moderators.
+        """
+        notification = Notification.objects.create(
+            content_object=self.content_object,
+            recipient=self.recipient,
+            actor=self.user,
+            community=self.community,
+            verb="liked",
+        )
+        return [notification]

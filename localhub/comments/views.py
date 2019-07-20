@@ -171,12 +171,14 @@ class CommentLikeView(
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         try:
-            Like.objects.create(
+            like = Like.objects.create(
                 user=request.user,
                 community=request.community,
                 recipient=self.object.owner,
                 content_object=self.object,
             )
+            for notification in like.notify():
+                send_comment_notification_email(self.object, notification)
         except IntegrityError:
             # dupe, ignore
             pass

@@ -84,7 +84,7 @@ class TestCommentDeleteView:
 
 
 class TestCommentLikeView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client: Client, member: Membership, mailoutbox: List):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             content_object=post, community=member.community
@@ -96,6 +96,7 @@ class TestCommentLikeView:
         assert response.status_code == 204
         like = Like.objects.get()
         assert like.user == member.member
+        assert mailoutbox[0].to == [comment.owner.email]
 
 
 class TestCommentDislikeView:

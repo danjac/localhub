@@ -25,9 +25,10 @@ def send_activity_deleted_email(activity: Activity):
     )
 
 
-SUBJECTS = {
+NOTIFICATION_SUBJECTS = {
     "created": _("Someone has published a new %s"),
     "flagged": _("Someone has flagged this %s"),
+    "liked": _("Someone has liked your %s"),
     "mentioned": _("Someone has mentioned you in their %s"),
     "moderated": _("Someone has edited your %s"),
     "tagged": _("Someone has published a new %s you might be interested in"),
@@ -43,7 +44,7 @@ def send_activity_notification_email(
 
     send_notification_email(
         notification,
-        SUBJECTS[notification.verb] % activity_name,
+        NOTIFICATION_SUBJECTS[notification.verb] % activity_name,
         activity.get_permalink(),
         "activities/emails/notification.txt",
         "activities/emails/notification.html",

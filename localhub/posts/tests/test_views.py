@@ -191,7 +191,7 @@ class TestPostDetailView:
 
 
 class TestPostLikeView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client: Client, member: Membership, mailoutbox: List):
         post = PostFactory(community=member.community)
         response = client.post(
             reverse("posts:like", args=[post.id]),
@@ -200,6 +200,7 @@ class TestPostLikeView:
         assert response.status_code == 204
         like = Like.objects.get()
         assert like.user == member.member
+        assert mailoutbox[0].to == [post.owner.email]
 
 
 class TestPostDislikeView:

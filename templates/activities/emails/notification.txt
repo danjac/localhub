@@ -14,6 +14,10 @@
 {% blocktrans %}
 {{ actor }} has published a new {{ activity_name }}
 {% endblocktrans %}
+{% elif notification.verb == 'liked' %}
+{% blocktrans %}
+{{ actor }} has liked your {{ activity_name }}
+{% endblocktrans %}
 {% elif notification.verb == 'flagged' %}
 {% blocktrans %}
 {{ actor }} has flagged this {{ activity_name }}

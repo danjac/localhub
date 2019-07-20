@@ -25,6 +25,10 @@
 {% blocktrans %}
 {{ actor }} has published a new <a href="{{ object_url }}">comment</a>
 {% endblocktrans %}
+{% elif notification.verb == 'liked' %}
+{% blocktrans %}
+{{ actor }} has liked this <a href="{{ object_url }}">comment</a>
+{% endblocktrans %}
 {% elif notification.verb == 'flagged' %}
 {% blocktrans %}
 {{ actor }} has flagged this <a href="{{ object_url }}">comment</a>

@@ -31,6 +31,7 @@ def send_comment_notification_email(
         "commented": _("Someone has made a comment on one of your posts"),
         "created": _("Someone has published a new comment"),
         "flagged": _("Someone has flagged this comment"),
+        "liked": _("Someone has liked your comment"),
         "mentioned": _("Someone has mentioned you in their comment"),
         "moderated": _("Someone has edited your comment"),
         "updated": _("Someone has updated their comment"),
