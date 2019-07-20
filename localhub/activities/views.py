@@ -33,7 +33,10 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from taggit.models import Tag, TaggedItem
 
-from localhub.activities.emails import send_activity_notification_email
+from localhub.activities.emails import (
+    send_activity_deleted_email,
+    send_activity_notification_email,
+)
 from localhub.activities.models import Activity
 from localhub.activities.types import ActivityType
 from localhub.comments.forms import CommentForm
@@ -53,7 +56,6 @@ from localhub.likes.models import Like
 from localhub.photos.models import Photo
 from localhub.posts.models import Post
 from localhub.subscriptions.models import Subscription
-
 
 class ActivityQuerySetMixin(CommunityRequiredMixin, BaseQuerySetViewMixin):
     def get_queryset(self) -> QuerySet:
@@ -156,7 +158,7 @@ class ActivityDeleteView(
 ):
     permission_required = "activities.delete_activity"
     success_url = settings.HOME_PAGE_URL
-    success_message = _("Your %s has been deleted")
+    success_message = _("The %s has been deleted")
 
     def get_success_message(self) -> Optional[str]:
         return self.success_message % self.object._meta.verbose_name
@@ -168,6 +170,9 @@ class ActivityDeleteView(
         message = self.get_success_message()
         if message:
             messages.success(self.request, message)
+
+        if request.user != self.object.owner:
+            send_activity_deleted_email(self.object)
 
         return HttpResponseRedirect(self.get_success_url())
 

@@ -3,7 +3,7 @@
 
 import pytest
 
-from typing import Callable
+from typing import Callable, List
 
 from django.core import mail
 from django.conf import settings
@@ -143,6 +143,16 @@ class TestPostDeleteView:
         )
         assert response.url == reverse("activities:stream")
         assert Post.objects.count() == 0
+
+    def test_delete_by_moderator(
+        self, client: Client, moderator: Membership, mailoutbox: List
+    ):
+        post = PostFactory(community=moderator.community)
+        response = client.delete(reverse("posts:delete", args=[post.id]))
+        assert response.url == reverse("activities:stream")
+        assert Post.objects.count() == 0
+        assert len(mailoutbox) == 1
+        assert mailoutbox[0].to == [post.owner.email]
 
 
 class TestPostDetailView:
