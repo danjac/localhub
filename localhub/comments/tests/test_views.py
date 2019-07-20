@@ -3,9 +3,8 @@
 
 import pytest
 
-from typing import Callable
+from typing import Callable, List
 
-from django.core import mail
 from django.test.client import Client
 from django.urls import reverse
 
@@ -70,7 +69,6 @@ class TestCommentDeleteView:
         response = client.delete(reverse("comments:delete", args=[comment.id]))
         assert response.url == post.get_absolute_url()
         assert Comment.objects.count() == 0
-        assert len(mail.outbox) == 0
 
     def test_delete_by_moderator(self, client: Client, moderator: Membership):
         post = PostFactory(community=moderator.community)
@@ -83,9 +81,6 @@ class TestCommentDeleteView:
 
         assert response.url == post.get_absolute_url()
         assert Comment.objects.count() == 0
-
-        assert len(mail.outbox) == 1
-        assert mail.outbox[0].to[0] == comment.owner.email
 
 
 class TestCommentLikeView:
@@ -133,7 +128,11 @@ class TestFlagView:
         assert response.status_code == 200
 
     def test_post(
-        self, client: Client, member: Membership, transactional_db: Callable
+        self,
+        client: Client,
+        member: Membership,
+        mailoutbox: List,
+        transactional_db: Callable,
     ):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
@@ -157,5 +156,6 @@ class TestFlagView:
         assert notification.verb == "flagged"
 
         # commented + flagged
-        assert len(mail.outbox) == 2
-        assert mail.outbox[1].to[0] == moderator.member.email
+        assert len(mailoutbox) == 2
+
+        assert mailoutbox[1].to[0] == moderator.member.email

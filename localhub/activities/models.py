@@ -15,14 +15,18 @@ from django.contrib.postgres.search import (
     SearchVector,
     SearchVectorField,
 )
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils.encoding import smart_text
+from django.utils.functional import cached_property
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
 
 from model_utils.models import TimeStampedModel
+
+from simple_history.models import HistoricalRecords
 
 from taggit.managers import TaggableManager
 from taggit.models import Tag
@@ -96,15 +100,9 @@ class Activity(TimeStampedModel):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
-    editor = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="+",
-    )
-
     description = MarkdownField(blank=True)
+
+    history = HistoricalRecords(inherit=True)
 
     tags = TaggableManager()
 
@@ -191,6 +189,20 @@ class Activity(TimeStampedModel):
 
     def get_likes(self) -> models.QuerySet:
         return get_generic_related_queryset(self, Like)
+
+    @cached_property
+    def editor(self) -> Optional[settings.AUTH_USER_MODEL]:
+        try:
+            return (
+                self.history.select_related("history_user")
+                .latest()
+                .history_user
+            )
+        except ObjectDoesNotExist:
+            return None
+
+    def is_moderated(self) -> bool:
+        return self.editor is not None and self.editor != self.owner
 
     def get_breadcrumbs(self) -> BreadcrumbList:
         """
@@ -291,15 +303,6 @@ class Activity(TimeStampedModel):
             for subscription in subscriptions
         ]
 
-    def notify_moderators(self, created: bool) -> List[Notification]:
-        verb = "created" if created else "updated"
-        return [
-            self.make_notification(moderator, verb)
-            for moderator in self.community.get_moderators().exclude(
-                pk=self.owner_id
-            )
-        ]
-
     def notify_tag_subscribers(self) -> List[Notification]:
         hashtags = self.description.extract_hashtags()
         if hashtags:
@@ -327,7 +330,29 @@ class Activity(TimeStampedModel):
                 ]
         return []
 
-    def notify(self, created: bool) -> List[Notification]:
+    def notify_owner_or_moderators(
+        self, created: bool, editor: Optional[settings.AUTH_USER_MODEL] = None
+    ) -> List[Notification]:
+        """
+        Notifies moderators of updates. If change made by moderator,
+        then notification sent to owner.
+        """
+        verb = "created" if created else "updated"
+
+        if editor and editor != self.owner:
+            return [
+                self.make_notification(self.owner, "moderated", actor=editor)
+            ]
+        return [
+            self.make_notification(moderator, verb)
+            for moderator in self.community.get_moderators().exclude(
+                pk=self.owner_id
+            )
+        ]
+
+    def notify(
+        self, created: bool, editor: Optional[settings.AUTH_USER_MODEL] = None
+    ) -> List[Notification]:
         """
         Generates user notifications when instance is created
         or updated.
@@ -337,7 +362,6 @@ class Activity(TimeStampedModel):
         - any users @mentioned in the description field
         - any users subscribed to hashtags in the description field
         - any users subscribed to the owner (only on create)
-        - all commmunity moderators
         - if moderated, the original owner
         """
         notifications: List[Notification] = []
@@ -350,14 +374,7 @@ class Activity(TimeStampedModel):
         if created:
             notifications += self.notify_followers()
 
-        if created or self.editor is None or self.editor == self.owner:
-            notifications += self.notify_moderators(created)
-        else:
-            notifications.append(
-                self.make_notification(
-                    self.owner, "moderated", actor=self.editor
-                )
-            )
+        notifications += self.notify_owner_or_moderators(created, editor)
 
         Notification.objects.bulk_create(notifications)
         return notifications

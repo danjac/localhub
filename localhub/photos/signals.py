@@ -5,7 +5,9 @@ from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from localhub.activities.emails import send_activity_notification_email
+from simple_history.signals import post_create_historical_record
+
+from localhub.activities.signals import send_notifications
 from localhub.photos.models import Photo
 
 
@@ -21,10 +23,8 @@ def taggit(instance: Photo, created: bool, **kwargs):
     transaction.on_commit(lambda: instance.taggit(created))
 
 
-@receiver(post_save, sender=Photo, dispatch_uid="photos.send_notifications")
-def send_notifications(instance: Photo, created: bool, **kwargs):
-    def notify():
-        for notification in instance.notify(created):
-            send_activity_notification_email(instance, notification)
-
-    transaction.on_commit(notify)
+receiver(
+    post_create_historical_record,
+    sender=Photo.history.model,
+    dispatch_uid="photos.send_notifications",
+)(send_notifications)

@@ -36,6 +36,7 @@ django-markdownx==2.0.28
 django-model-utils==3.1.2
 django-redis==4.10.0
 django-silk==3.0.2
+django-simple-history==2.7.3
 django-storages==1.7.1
 django-taggit==1.1.0
 django-timezone-field==3.0
@@ -88,7 +89,7 @@ requests-oauthlib==1.2.0  # via django-allauth
 requests==2.22.0          # via django-allauth, django-anymail, django-silk, geocoder, requests-oauthlib
 rules==2.0.1
 s3transfer==0.2.1         # via boto3
-six==1.12.0               # via bleach, django-anymail, django-appconf, django-extensions, faker, geocoder, prompt-toolkit, pytest, python-dateutil, traitlets
+six==1.12.0               # via bleach, django-anymail, django-appconf, django-extensions, django-simple-history, faker, geocoder, prompt-toolkit, pytest, python-dateutil, traitlets
 sorl-thumbnail==12.5.0
 soupsieve==1.9.2          # via beautifulsoup4
 sqlparse==0.3.0           # via django, django-debug-toolbar, django-silk

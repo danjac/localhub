@@ -2,20 +2,37 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.db import transaction
-from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.utils.translation import gettext as _
 
-from localhub.comments.emails import send_comment_notification_email
+from simple_history.signals import post_create_historical_record
+
+from localhub.comments.emails import (
+    send_comment_notification_email,
+    send_comment_deleted_email,
+)
 from localhub.comments.models import Comment
 
 
 @receiver(
-    post_save, sender=Comment, dispatch_uid="comments.send_notifications"
+    post_create_historical_record,
+    sender=Comment.history.model,
+    dispatch_uid="comments.create_historical_record",
 )
-def send_notifications(instance: Comment, created: bool, **kwargs):
+def send_notifications(
+    instance: Comment, history_instance: Comment.history.model, **kwargs
+):
     def notify():
-        for notification in instance.notify(created):
-            send_comment_notification_email(instance, notification)
+        if (
+            history_instance.history_type == "-"
+            and history_instance.history_user
+            and history_instance.history_user != instance.owner
+        ):
+            send_comment_deleted_email(instance)
+        else:
+            for notification in instance.notify(
+                history_instance.history_type == "+",
+                history_instance.history_user,
+            ):
+                send_comment_notification_email(instance, notification)
 
     transaction.on_commit(notify)

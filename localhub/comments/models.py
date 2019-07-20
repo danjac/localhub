@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import List
+from typing import List, Optional
 
 from django.conf import settings
 from django.contrib.contenttypes.fields import (
@@ -14,6 +14,8 @@ from django.urls import reverse
 
 from model_utils import FieldTracker
 from model_utils.models import TimeStampedModel
+
+from simple_history.models import HistoricalRecords
 
 from localhub.communities.models import Community
 from localhub.core.markdown.fields import MarkdownField
@@ -86,6 +88,8 @@ class Comment(TimeStampedModel):
     likes = GenericRelation(Like, related_query_name="comment")
     notifications = GenericRelation(Notification, related_query_name="comment")
 
+    history = HistoricalRecords()
+
     objects = CommentQuerySet.as_manager()
 
     class Meta:
@@ -107,7 +111,23 @@ class Comment(TimeStampedModel):
     def get_flags(self) -> models.QuerySet:
         return Flag.objects.filter(comment=self)
 
-    def notify(self, created: bool) -> List[Notification]:
+    def make_notification(
+        self,
+        verb,
+        recipient: settings.AUTH_USER_MODEL,
+        actor: Optional[settings.AUTH_USER_MODEL] = None,
+    ) -> Notification:
+        return Notification(
+            content_object=self,
+            recipient=recipient,
+            actor=actor or self.owner,
+            community=self.community,
+            verb=verb,
+        )
+
+    def notify(
+        self, created: bool, editor: Optional[settings.AUTH_USER_MODEL] = None
+    ) -> List[Notification]:
         """
         Creates user notifications:
 
@@ -123,13 +143,7 @@ class Comment(TimeStampedModel):
         # notify anyone @mentioned in the description
         if self.content and (created or self.content_tracker.changed()):
             notifications += [
-                Notification(
-                    content_object=self,
-                    recipient=recipient,
-                    actor=self.owner,
-                    community=self.community,
-                    verb="mentioned",
-                )
+                self.make_notification("mentioned", recipient)
                 for recipient in self.community.members.matches_usernames(  # noqa
                     self.content.extract_mentions()
                 ).exclude(
@@ -137,29 +151,22 @@ class Comment(TimeStampedModel):
                 )
             ]
         # notify all community moderators
-        verb = "created" if created else "updated"
-        notifications += [
-            Notification(
-                content_object=self,
-                recipient=recipient,
-                actor=self.owner,
-                community=self.community,
-                verb=verb,
-            )
-            for recipient in self.community.get_moderators().exclude(
-                pk=self.owner_id
-            )
-        ]
+        if editor and editor != self.owner:
+            notifications += [
+                self.make_notification("moderated", self.owner, editor)
+            ]
+        else:
+            verb = "created" if created else "updated"
+            notifications += [
+                self.make_notification(verb, recipient)
+                for recipient in self.community.get_moderators().exclude(
+                    pk=self.owner_id
+                )
+            ]
         # notify the activity owner
         if created and self.owner_id != self.content_object.owner_id:
             notifications.append(
-                Notification(
-                    content_object=self,
-                    actor=self.owner,
-                    recipient=self.content_object.owner,
-                    community=self.community,
-                    verb="commented",
-                )
+                self.make_notification("commented", self.content_object.owner)
             )
         Notification.objects.bulk_create(notifications)
         return notifications

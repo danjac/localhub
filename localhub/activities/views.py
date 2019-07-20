@@ -11,6 +11,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.db.models import Q, QuerySet
 from django.forms import ModelForm
@@ -33,10 +34,7 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from taggit.models import Tag, TaggedItem
 
-from localhub.activities.emails import (
-    send_activity_deleted_email,
-    send_activity_notification_email,
-)
+from localhub.activities.emails import send_activity_notification_email
 from localhub.activities.models import Activity
 from localhub.activities.types import ActivityType
 from localhub.comments.forms import CommentForm
@@ -56,6 +54,7 @@ from localhub.likes.models import Like
 from localhub.photos.models import Photo
 from localhub.posts.models import Post
 from localhub.subscriptions.models import Subscription
+
 
 class ActivityQuerySetMixin(CommunityRequiredMixin, BaseQuerySetViewMixin):
     def get_queryset(self) -> QuerySet:
@@ -132,25 +131,17 @@ class ActivityListView(MultipleActivityMixin, ListView):
 
 
 class ActivityUpdateView(
-    PermissionRequiredMixin, SingleActivityMixin, BreadcrumbsMixin, UpdateView
+    PermissionRequiredMixin,
+    SingleActivityMixin,
+    BreadcrumbsMixin,
+    SuccessMessageMixin,
+    UpdateView,
 ):
     permission_required = "activities.change_activity"
     success_message = _("Your changes have been saved")
 
     def get_breadcrumbs(self) -> BreadcrumbList:
         return self.object.get_breadcrumbs() + [(self.request.path, _("Edit"))]
-
-    def get_success_message(self) -> str:
-        return self.success_message
-
-    def form_valid(self, form: ModelForm) -> HttpResponse:
-
-        self.object = form.save(commit=False)
-        self.object.editor = self.request.user
-        self.object.save()
-
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
 
 
 class ActivityDeleteView(
@@ -170,9 +161,6 @@ class ActivityDeleteView(
         message = self.get_success_message()
         if message:
             messages.success(self.request, message)
-
-        if request.user != self.object.owner:
-            send_activity_deleted_email(self.object)
 
         return HttpResponseRedirect(self.get_success_url())
 

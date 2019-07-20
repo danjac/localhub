@@ -28,11 +28,12 @@ def send_comment_notification_email(
 ):
 
     SUBJECTS = {
-        "mentioned": _("Someone has mentioned you in their comment"),
-        "created": _("Someone has published a new comment"),
         "commented": _("Someone has made a comment on one of your posts"),
-        "updated": _("Someone has updated their comment"),
+        "created": _("Someone has published a new comment"),
         "flagged": _("Someone has flagged this comment"),
+        "mentioned": _("Someone has mentioned you in their comment"),
+        "moderated": _("Someone has edited your comment"),
+        "updated": _("Someone has updated their comment"),
     }
 
     send_notification_email(

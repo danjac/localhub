@@ -22,6 +22,10 @@
 {% blocktrans %}
 {{ actor }} has updated their comment.
 {% endblocktrans %}
+{% elif notification.verb == 'moderated' %}
+{% blocktrans %}
+{{ actor }} has edited your comment.
+{% endblocktrans %}
 {% elif notification.verb == 'commented' %}
 {% blocktrans %}
 {{ actor }} has commented on one of your posts.

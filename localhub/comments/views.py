@@ -23,10 +23,7 @@ from django.views.generic.list import MultipleObjectMixin
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.activities.models import Activity
-from localhub.comments.emails import (
-    send_comment_deleted_email,
-    send_comment_notification_email,
-)
+from localhub.comments.emails import send_comment_notification_email
 from localhub.comments.forms import CommentForm
 from localhub.comments.models import Comment
 from localhub.communities.views import CommunityRequiredMixin
@@ -143,9 +140,6 @@ class CommentDeleteView(
     def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         self.object.delete()
-        if request.user != self.object.owner:
-            send_comment_deleted_email(self.object)
-
         messages.success(request, _("Comment has been deleted"))
         return HttpResponseRedirect(self.get_success_url())
 
