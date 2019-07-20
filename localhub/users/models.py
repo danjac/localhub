@@ -10,10 +10,13 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from model_utils import Choices
+
 from sorl.thumbnail import ImageField
 
 
 from localhub.communities.models import Community
+from localhub.core.fields import ChoiceArrayField
 from localhub.core.markdown.fields import MarkdownField
 from localhub.subscriptions.models import (
     Subscription,
@@ -96,10 +99,33 @@ class UserManager(BaseUserManager):
         )
 
 
+EMAIL_NOTIFICATIONS = Choices(
+    ("comments", _("Someone comments on my post")),
+    ("deletes", _("A moderator deletes my post or comment")),
+    ("edits", _("A moderator edits my post or comment")),
+    ("follows", _("Someone I'm following creates a post")),
+    ("flags", _("Someone flags a post or comment (MODERATORS ONLY)")),
+    ("likes", _("Someone likes my post or comment")),
+    ("mentions", _("I am @mentioned in a post or comment")),
+    ("messages", _("Someone sends me a direct message")),
+    ("tags", _("Someone creates a post containing a tag I'm following")),
+    (
+        "updates",
+        _("Someone creates or updates content on site (MODERATORS ONLY)"),
+    ),
+)
+
+
 class User(AbstractUser):
+
     name = models.CharField(_("Full name of user"), blank=True, max_length=255)
     bio = MarkdownField(blank=True)
     avatar = ImageField(upload_to="avatars", null=True, blank=True)
+
+    email_notifications = ChoiceArrayField(
+        models.CharField(max_length=12, choices=EMAIL_NOTIFICATIONS),
+        default=list,
+    )
 
     subscriptions = GenericRelation(Subscription, related_query_name="user")
 

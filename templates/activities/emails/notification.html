@@ -10,11 +10,11 @@
 {% user_display notification.recipient as recipient %}
 {% user_display notification.actor as actor %}
 
-<p>
+<div class="intro">
 {% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
-</p>
+</div>
 
-<p>
+<div class="section">
 {% if notification.verb == 'mentioned' %}
 {% blocktrans %}
 {{ actor }} has mentioned you in their <a href="{{ object_url }}">{{ activity_name }}</a>

@@ -1,13 +1,22 @@
-from django.contrib.auth import get_user_model, forms
+from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
 User = get_user_model()
 
 
-class UserChangeForm(forms.UserChangeForm):
-    class Meta(forms.UserChangeForm.Meta):
+class UserChangeForm(UserChangeForm):
+    class Meta(UserChangeForm.Meta):
         model = User
 
 
-class UserCreationForm(forms.UserCreationForm):
-    class Meta(forms.UserCreationForm.Meta):
+class UserCreationForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
         model = User
+
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ("name", "avatar", "email_notifications", "bio")
+        widgets = {"email_notifications": forms.CheckboxSelectMultiple}

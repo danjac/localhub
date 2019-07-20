@@ -11,13 +11,13 @@
 {% user_display recipient.recipient as recipient_name %}
 {% user_display message.sender as sender %}
 
-<div>
+<div class="intro">
 {% blocktrans %}
 Hi {{ recipient_name }},
 </div>
 {% endblocktrans %}
 
-<div>
+<div class="section">
 {% blocktrans with subject=message.subject url=recipient.get_permalink %}
 {{ sender }} has sent you a message <a href="{{ url }}">{{ subject }}</a>.
 {% endblocktrans %}

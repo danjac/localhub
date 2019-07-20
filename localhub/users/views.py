@@ -34,6 +34,7 @@ from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.types import ContextDict
 from localhub.likes.models import Like
 from localhub.subscriptions.models import Subscription
+from localhub.users.forms import UserForm
 
 
 class AuthenticatedUserMixin(LoginRequiredMixin):
@@ -48,9 +49,8 @@ class AuthenticatedUserMixin(LoginRequiredMixin):
 
 
 class UserUpdateView(AuthenticatedUserMixin, SuccessMessageMixin, UpdateView):
-    fields = ("name", "avatar", "bio")
-
     success_message = _("Your details have been updated")
+    form_class = UserForm
 
     def get_success_url(self) -> str:
         return self.object.get_absolute_url()

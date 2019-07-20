@@ -12,11 +12,11 @@
 {% user_display notification.recipient as recipient %}
 {% user_display notification.actor as actor %}
 
-<p>
+<div class="intro">
 {% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
-</p>
+</div>
 
-<p>
+<div class="section">
 {% if notification.verb == 'mentioned' %}
 {% blocktrans %}
 {{ actor }} has mentioned you in their <a href="{{ object_url }}">comment</a>
@@ -46,5 +46,5 @@
 {{ actor }} has <a href="{{ object_url }}">commented</a> on one of your posts.
 {% endblocktrans %}
 {% endif %}
-</p>
+</div>
 {% endblock content %}
