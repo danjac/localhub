@@ -15,12 +15,10 @@ from django.contrib.postgres.search import (
     SearchVector,
     SearchVectorField,
 )
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils.encoding import smart_text
-from django.utils.functional import cached_property
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
 
@@ -100,6 +98,14 @@ class Activity(TimeStampedModel):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
+    editor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="+",
+    )
+
     description = MarkdownField(blank=True)
 
     history = HistoricalRecords(inherit=True)
@@ -124,6 +130,14 @@ class Activity(TimeStampedModel):
             models.Index(fields=["owner", "community"]),
         ]
         abstract = True
+
+    @property
+    def _history_user(self) -> Optional[settings.AUTH_USER_MODEL]:
+        return self.editor
+
+    @_history_user.setter
+    def _history_user(self, value: settings.AUTH_USER_MODEL):
+        self.editor = value
 
     @classmethod
     def get_list_url(cls) -> str:
@@ -189,20 +203,6 @@ class Activity(TimeStampedModel):
 
     def get_likes(self) -> models.QuerySet:
         return get_generic_related_queryset(self, Like)
-
-    @cached_property
-    def editor(self) -> Optional[settings.AUTH_USER_MODEL]:
-        try:
-            return (
-                self.history.select_related("history_user")
-                .latest()
-                .history_user
-            )
-        except ObjectDoesNotExist:
-            return None
-
-    def is_moderated(self) -> bool:
-        return self.editor is not None and self.editor != self.owner
 
     def get_breadcrumbs(self) -> BreadcrumbList:
         """
@@ -330,18 +330,18 @@ class Activity(TimeStampedModel):
                 ]
         return []
 
-    def notify_owner_or_moderators(
-        self, created: bool, editor: Optional[settings.AUTH_USER_MODEL] = None
-    ) -> List[Notification]:
+    def notify_owner_or_moderators(self, created: bool) -> List[Notification]:
         """
         Notifies moderators of updates. If change made by moderator,
         then notification sent to owner.
         """
         verb = "created" if created else "updated"
 
-        if editor and editor != self.owner:
+        if self.editor and self.editor != self.owner:
             return [
-                self.make_notification(self.owner, "moderated", actor=editor)
+                self.make_notification(
+                    self.owner, "moderated", actor=self.editor
+                )
             ]
         return [
             self.make_notification(moderator, verb)
@@ -350,9 +350,7 @@ class Activity(TimeStampedModel):
             )
         ]
 
-    def notify(
-        self, created: bool, editor: Optional[settings.AUTH_USER_MODEL] = None
-    ) -> List[Notification]:
+    def notify(self, created: bool) -> List[Notification]:
         """
         Generates user notifications when instance is created
         or updated.
@@ -374,7 +372,7 @@ class Activity(TimeStampedModel):
         if created:
             notifications += self.notify_followers()
 
-        notifications += self.notify_owner_or_moderators(created, editor)
+        notifications += self.notify_owner_or_moderators(created)
 
         Notification.objects.bulk_create(notifications)
         return notifications

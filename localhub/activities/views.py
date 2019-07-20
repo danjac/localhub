@@ -11,7 +11,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.db.models import Q, QuerySet
 from django.forms import ModelForm
@@ -34,9 +33,13 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from taggit.models import Tag, TaggedItem
 
-from localhub.activities.emails import send_activity_notification_email
+from localhub.activities.emails import (
+    send_activity_deleted_email,
+    send_activity_notification_email,
+)
 from localhub.activities.models import Activity
 from localhub.activities.types import ActivityType
+from localhub.comments.emails import send_comment_notification_email
 from localhub.comments.forms import CommentForm
 from localhub.communities.models import Community
 from localhub.communities.views import CommunityRequiredMixin
@@ -105,6 +108,9 @@ class ActivityCreateView(
         self.object.community = self.request.community
         self.object.save()
 
+        for notification in self.object.notify(created=True):
+            send_activity_notification_email(self.object, notification)
+
         messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
@@ -131,17 +137,28 @@ class ActivityListView(MultipleActivityMixin, ListView):
 
 
 class ActivityUpdateView(
-    PermissionRequiredMixin,
-    SingleActivityMixin,
-    BreadcrumbsMixin,
-    SuccessMessageMixin,
-    UpdateView,
+    PermissionRequiredMixin, SingleActivityMixin, BreadcrumbsMixin, UpdateView
 ):
     permission_required = "activities.change_activity"
     success_message = _("Your changes have been saved")
 
     def get_breadcrumbs(self) -> BreadcrumbList:
         return self.object.get_breadcrumbs() + [(self.request.path, _("Edit"))]
+
+    def get_success_message(self) -> str:
+        return self.success_message
+
+    def form_valid(self, form: ModelForm) -> HttpResponse:
+
+        self.object = form.save(commit=False)
+        self.object.editor = self.request.user
+        self.object.save()
+
+        for notification in self.object.notify(created=True):
+            send_activity_notification_email(self.object, notification)
+
+        messages.success(self.request, self.get_success_message())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class ActivityDeleteView(
@@ -157,6 +174,9 @@ class ActivityDeleteView(
     def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         self.object.delete()
+
+        if self.request.user != self.object.owner:
+            send_activity_deleted_email(self.object)
 
         message = self.get_success_message()
         if message:
@@ -502,6 +522,8 @@ class ActivityCommentCreateView(
         comment.community = self.request.community
         comment.owner = self.request.user
         comment.save()
+        for notification in comment.notify(created=True):
+            send_comment_notification_email(comment, notification)
         messages.success(self.request, _("Your comment has been posted"))
         return HttpResponseRedirect(self.get_success_url())
 

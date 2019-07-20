@@ -167,9 +167,8 @@ class TestPostDeleteView:
         response = client.delete(reverse("posts:delete", args=[post.id]))
         assert response.url == reverse("activities:stream")
         assert Post.objects.count() == 0
-        assert len(mailoutbox) == 2
-        assert mailoutbox[0].to == [moderator.member.email]
-        assert mailoutbox[1].to == [post.owner.email]
+        assert len(mailoutbox) == 1
+        assert mailoutbox[0].to == [post.owner.email]
 
 
 class TestPostDetailView:

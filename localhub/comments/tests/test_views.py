@@ -155,7 +155,6 @@ class TestFlagView:
         notification = Notification.objects.get(recipient=moderator.member)
         assert notification.verb == "flagged"
 
-        # commented + flagged
-        assert len(mailoutbox) == 2
+        assert len(mailoutbox) == 1
 
-        assert mailoutbox[1].to[0] == moderator.member.email
+        assert mailoutbox[0].to[0] == moderator.member.email

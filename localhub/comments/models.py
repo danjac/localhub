@@ -77,6 +77,14 @@ class Comment(TimeStampedModel):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
+    editor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="+",
+    )
+
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey("content_type", "object_id")
@@ -108,6 +116,14 @@ class Comment(TimeStampedModel):
         """
         return self.community.resolve_url(self.get_absolute_url())
 
+    @property
+    def _history_user(self) -> Optional[settings.AUTH_USER_MODEL]:
+        return self.editor
+
+    @_history_user.setter
+    def _history_user(self, value: settings.AUTH_USER_MODEL):
+        self.editor = value
+
     def get_flags(self) -> models.QuerySet:
         return Flag.objects.filter(comment=self)
 
@@ -125,9 +141,7 @@ class Comment(TimeStampedModel):
             verb=verb,
         )
 
-    def notify(
-        self, created: bool, editor: Optional[settings.AUTH_USER_MODEL] = None
-    ) -> List[Notification]:
+    def notify(self, created: bool) -> List[Notification]:
         """
         Creates user notifications:
 
@@ -151,9 +165,9 @@ class Comment(TimeStampedModel):
                 )
             ]
         # notify all community moderators
-        if editor and editor != self.owner:
+        if self.editor and self.editor != self.owner:
             notifications += [
-                self.make_notification("moderated", self.owner, editor)
+                self.make_notification("moderated", self.owner, self.editor)
             ]
         else:
             verb = "created" if created else "updated"

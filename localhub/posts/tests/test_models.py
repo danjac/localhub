@@ -98,7 +98,7 @@ class TestPostModel:
             community=post.community,
         )
 
-        notifications = post.notify(created=True, editor=post.owner)
+        notifications = post.notify(created=True)
         assert len(notifications) == 4
 
         assert notifications[0].recipient == mentioned
@@ -118,8 +118,10 @@ class TestPostModel:
         assert notifications[3].verb == "created"
 
         # edit by moderator
+        post.editor = moderator
+        post.save()
 
-        notifications = post.notify(created=False, editor=moderator)
+        notifications = post.notify(created=False)
         assert len(notifications) == 1
 
         assert notifications[0].recipient == post.owner

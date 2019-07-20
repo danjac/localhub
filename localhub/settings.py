@@ -79,7 +79,6 @@ class Base(Configuration):
         "django.contrib.sessions.middleware.SessionMiddleware",
         "localhub.core.turbolinks.middleware.TurbolinksMiddleware",
         "localhub.communities.middleware.CurrentCommunityMiddleware",
-        "simple_history.middleware.HistoryRequestMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",

@@ -7,6 +7,6 @@ from localhub.core.markdown.admin import MarkdownFieldMixin
 
 
 class ActivityAdmin(MarkdownFieldMixin, SimpleHistoryAdmin):
-    raw_id_fields = ("owner",)
+    raw_id_fields = ("owner", "editor")
     list_display = ("__str__", "owner", "community", "created")
     ordering = ("-created",)

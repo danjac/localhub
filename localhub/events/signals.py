@@ -5,9 +5,6 @@ from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from simple_history.signals import post_create_historical_record
-
-from localhub.activities.signals import send_notifications
 from localhub.events import tasks
 from localhub.events.models import Event
 
@@ -32,10 +29,3 @@ def update_search_document(instance: Event, **kwargs):
 @receiver(post_save, sender=Event, dispatch_uid="events.taggit")
 def taggit(instance: Event, created: bool, **kwargs):
     transaction.on_commit(lambda: instance.taggit(created))
-
-
-receiver(
-    post_create_historical_record,
-    sender=Event.history.model,
-    dispatch_uid="events.send_notifications",
-)(send_notifications)

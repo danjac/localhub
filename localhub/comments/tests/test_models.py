@@ -128,7 +128,7 @@ class TestCommentModel:
             content="hello @danjac",
         )
 
-        notifications = comment.notify(created=True, editor=comment_owner)
+        notifications = comment.notify(created=True)
 
         assert len(notifications) == 3
 
@@ -145,8 +145,10 @@ class TestCommentModel:
         assert notifications[2].verb == "commented"
 
         # edit by moderator
+        comment.editor = moderator
+        comment.save()
 
-        notifications = comment.notify(created=False, editor=moderator)
+        notifications = comment.notify(created=False)
         assert len(notifications) == 1
 
         assert notifications[0].recipient == comment.owner
