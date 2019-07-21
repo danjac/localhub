@@ -131,4 +131,6 @@ class User(AbstractUser):
         return reverse("users:detail", args=[self.username])
 
     def has_email_pref(self, pref: str) -> bool:
-        return pref in self.email_preferences or []
+        return (
+            pref in self.email_preferences if self.email_preferences else False
+        )
