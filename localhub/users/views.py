@@ -34,6 +34,7 @@ from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.types import ContextDict
 from localhub.likes.models import Like
 from localhub.subscriptions.models import Subscription
+from localhub.users.emails import send_user_notification_email
 from localhub.users.forms import UserForm
 
 
@@ -116,11 +117,14 @@ class UserSubscribeView(
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
 
-        Subscription.objects.create(
+        subscription = Subscription.objects.create(
             subscriber=self.request.user,
             content_object=self.object,
             community=self.request.community,
         )
+
+        for notification in subscription.notify([self.object]):
+            send_user_notification_email(self.object, notification)
 
         messages.success(self.request, _("You are now following this user"))
         return HttpResponseRedirect(self.get_success_url())

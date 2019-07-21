@@ -111,6 +111,7 @@ class User(AbstractUser):
         ("tags", _("A post is created containing tags I'm following")),
         ("flags", _("Post or comment is flagged (MODERATORS ONLY)")),
         ("reviews", _("Content to be reviewed (MODERATORS ONLY)")),
+        ("subscribes", _("Someone starts following me")),
     )
 
     name = models.CharField(_("Full name"), blank=True, max_length=255)

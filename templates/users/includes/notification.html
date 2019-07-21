@@ -1,0 +1,18 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "notifications/includes/notification.html" %}
+
+{% load i18n %}
+{% load account %}
+
+{% block notification_title %}
+{% user_display notification.actor as actor %}
+{% with actor_url=actor.get_absolute_url %}
+{% if notification.verb == 'subscribe' %}
+{% blocktrans %}
+<a href="{{ actor_url }}">{{ actor }}</a> is now following you.
+{% endblocktrans %}
+{% endif %}
+{% endwith %}
+{% endblock notification_title %}
