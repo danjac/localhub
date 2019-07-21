@@ -11,28 +11,43 @@ from localhub.notifications.models import Notification
 
 
 def send_activity_deleted_email(activity: Activity):
-    activity_name = activity._meta.verbose_name
 
-    context = {"activity": activity, "activity_name": activity_name}
-    send_mail(
-        _("Your %s has been deleted by a moderator" % activity_name),
-        render_to_string("activities/emails/activity_deleted.txt", context),
-        activity.community.resolve_email("notifications"),
-        [activity.owner.email],
-        html_message=render_to_string(
-            "activities/emails/activity_deleted.html", context
-        ),
-    )
+    if activity.owner.has_email_pref("deletes"):
+        activity_name = activity._meta.verbose_name
+
+        context = {"activity": activity, "activity_name": activity_name}
+        send_mail(
+            _("Your %s has been deleted by a moderator" % activity_name),
+            render_to_string(
+                "activities/emails/activity_deleted.txt", context
+            ),
+            activity.community.resolve_email("notifications"),
+            [activity.owner.email],
+            html_message=render_to_string(
+                "activities/emails/activity_deleted.html", context
+            ),
+        )
+
+
+NOTIFICATION_PREFERENCES = {
+    "edit": "edits",
+    "flag": "flags",
+    "follow": "follows",
+    "like": "likes",
+    "mention": "mentions",
+    "review": "reviews",
+    "tag": "tags",
+}
 
 
 NOTIFICATION_SUBJECTS = {
-    "created": _("Someone has published a new %s"),
-    "flagged": _("Someone has flagged this %s"),
-    "liked": _("Someone has liked your %s"),
-    "mentioned": _("Someone has mentioned you in their %s"),
-    "moderated": _("Someone has edited your %s"),
-    "tagged": _("Someone has published a new %s you might be interested in"),
-    "updated": _("Someone has updated their %s"),
+    "edit": _("A moderator has edited your %s"),
+    "flag": _("Someone has flagged this %s"),
+    "follow": _("Someone you are following has created a new %s"),
+    "like": _("Someone has liked your %s"),
+    "mention": _("Someone has mentioned you in their %s"),
+    "review": _("Someone has created a new %s to review"),
+    "tag": _("Someone has created a new %s containing tags you are following"),
 }
 
 
@@ -40,13 +55,16 @@ def send_activity_notification_email(
     activity: Activity, notification: Notification
 ):
 
-    activity_name = activity._meta.verbose_name
+    if notification.recipient.has_email_pref(
+        NOTIFICATION_PREFERENCES[notification.verb]
+    ):
+        activity_name = activity._meta.verbose_name
 
-    send_notification_email(
-        notification,
-        NOTIFICATION_SUBJECTS[notification.verb] % activity_name,
-        activity.get_permalink(),
-        "activities/emails/notification.txt",
-        "activities/emails/notification.html",
-        {"activity_name": activity_name},
-    )
+        send_notification_email(
+            notification,
+            NOTIFICATION_SUBJECTS[notification.verb] % activity_name,
+            activity.get_permalink(),
+            "activities/emails/notification.txt",
+            "activities/emails/notification.html",
+            {"activity_name": activity_name},
+        )

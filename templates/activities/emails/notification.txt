@@ -6,33 +6,33 @@
 {% user_display notification.recipient as recipient %}
 {% user_display notification.actor as actor %}
 {% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
-{% if notification.verb == 'mentioned' %}
+{% if notification.verb == 'mention' %}
 {% blocktrans %}
-{{ actor }} has mentioned you in their {{ activity_name }}
+{{ actor }} has mentioned you in their {{ activity_name }}.
 {% endblocktrans %}
-{% elif notification.verb == 'created' %}
+{% elif notification.verb == 'follow' %}
 {% blocktrans %}
-{{ actor }} has published a new {{ activity_name }}
+{{ actor }} has created a new {{ activity_name }}.
 {% endblocktrans %}
-{% elif notification.verb == 'liked' %}
+{% elif notification.verb == 'like' %}
 {% blocktrans %}
-{{ actor }} has liked your {{ activity_name }}
+{{ actor }} has liked your {{ activity_name }}.
 {% endblocktrans %}
-{% elif notification.verb == 'flagged' %}
+{% elif notification.verb == 'flag' %}
 {% blocktrans %}
-{{ actor }} has flagged this {{ activity_name }}
+{{ actor }} has flagged this {{ activity_name }}.
 {% endblocktrans %}
-{% elif notification.verb == 'updated' %}
+{% elif notification.verb == 'review' %}
 {% blocktrans %}
-{{ actor }} has updated their {{ activity_name }}
+{{ actor }} has created or updated their {{ activity_name }} for you to review.
 {% endblocktrans %}
-{% elif notification.verb == 'moderated' %}
+{% elif notification.verb == 'edit' %}
 {% blocktrans %}
-{{ actor }} has edited your {{ activity_name }}
+{{ actor }} has edited your {{ activity_name }}.
 {% endblocktrans %}
-{% elif notification.verb == 'tagged' %}
+{% elif notification.verb == 'tag' %}
 {% blocktrans %}
-{{ actor }} has tagged content you are following in their {{ activity_name }}
+{{ actor }} has created a new {{ activity_name }} containing tags you are following.
 {% endblocktrans %}
 {% endif %}
 Link to {{ activity_name }}: {{ object_url }}

@@ -3,8 +3,6 @@
 
 import pytest
 
-from typing import Callable, List
-
 from django.test.client import Client
 from django.urls import reverse
 
@@ -84,7 +82,7 @@ class TestCommentDeleteView:
 
 
 class TestCommentLikeView:
-    def test_post(self, client: Client, member: Membership, mailoutbox: List):
+    def test_post(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             content_object=post, community=member.community
@@ -96,7 +94,6 @@ class TestCommentLikeView:
         assert response.status_code == 204
         like = Like.objects.get()
         assert like.user == member.member
-        assert mailoutbox[0].to == [comment.owner.email]
 
 
 class TestCommentDislikeView:
@@ -128,13 +125,7 @@ class TestFlagView:
         response = client.get(reverse("comments:flag", args=[comment.id]))
         assert response.status_code == 200
 
-    def test_post(
-        self,
-        client: Client,
-        member: Membership,
-        mailoutbox: List,
-        transactional_db: Callable,
-    ):
+    def test_post(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             content_object=post, community=member.community
@@ -154,8 +145,4 @@ class TestFlagView:
         assert flag.user == member.member
 
         notification = Notification.objects.get(recipient=moderator.member)
-        assert notification.verb == "flagged"
-
-        assert len(mailoutbox) == 1
-
-        assert mailoutbox[0].to[0] == moderator.member.email
+        assert notification.verb == "flag"

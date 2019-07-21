@@ -15,33 +15,29 @@
 </div>
 
 <div class="section">
-{% if notification.verb == 'mentioned' %}
+{% if notification.verb == 'mention' %}
 {% blocktrans %}
-{{ actor }} has mentioned you in their <a href="{{ object_url }}">{{ activity_name }}</a>
+{{ actor }} has mentioned you in their <a href="{{ object_url }}">{{ activity_name }}</a>.
 {% endblocktrans %}
-{% elif notification.verb == 'flagged' %}
+{% elif notification.verb == 'flag' %}
 {% blocktrans %}
-{{ actor }} has flagged this <a href="{{ object_url }}">{{ activity_name }}</a>
+{{ actor }} has flagged this <a href="{{ object_url }}">{{ activity_name }}</a>.
 {% endblocktrans %}
-{% elif notification.verb == 'created' %}
+{% elif notification.verb == 'follow' %}
 {% blocktrans %}
-{{ actor }} has published a new <a href="{{ object_url }}">{{ activity_name }}</a>
+{{ actor }} has created a new <a href="{{ object_url }}">{{ activity_name }}</a>.
 {% endblocktrans %}
-{% elif notification.verb == 'liked' %}
+{% elif notification.verb == 'like' %}
 {% blocktrans %}
-{{ actor }} has liked your <a href="{{ object_url }}">{{ activity_name }}</a>
+{{ actor }} has liked your <a href="{{ object_url }}">{{ activity_name }}</a>.
 {% endblocktrans %}
-{% elif notification.verb == 'updated' %}
+{% elif notification.verb == 'edit' %}
 {% blocktrans %}
-{{ actor }} has updated their <a href="{{ object_url }}">{{ activity_name }}</a>
+{{ actor }} has edited your <a href="{{ object_url }}">{{ activity_name }}</a>.
 {% endblocktrans %}
-{% elif notification.verb == 'moderated' %}
+{% elif notification.verb == 'tag' %}
 {% blocktrans %}
-{{ actor }} has edited your <a href="{{ object_url }}">{{ activity_name }}</a>
-{% endblocktrans %}
-{% elif notification.verb == 'tagged' %}
-{% blocktrans %}
-{{ actor }} has tagged content you are following in their <a href="{{ object_url }}">{{ activity_name }}</a>
+{{ actor }} has created a new <a href="{{ object_url }}">{{ activity_name }}</a> containing tags you are following.
 {% endblocktrans %}
 {% endif %}
 </p>

@@ -53,7 +53,7 @@ class UserUpdateView(AuthenticatedUserMixin, SuccessMessageMixin, UpdateView):
     form_class = UserForm
 
     def get_success_url(self) -> str:
-        return self.object.get_absolute_url()
+        return self.request.path
 
 
 user_update_view = UserUpdateView.as_view()

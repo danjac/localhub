@@ -101,7 +101,7 @@ class Flag(TimeStampedModel):
                 recipient=moderator,
                 actor=self.user,
                 community=self.community,
-                verb="flagged",
+                verb="flag",
             )
             for moderator in self.community.get_moderators()
         ]

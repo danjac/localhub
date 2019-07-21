@@ -134,15 +134,15 @@ class TestCommentModel:
 
         assert notifications[0].recipient == mentioned
         assert notifications[0].actor == comment.owner
-        assert notifications[0].verb == "mentioned"
+        assert notifications[0].verb == "mention"
 
         assert notifications[1].recipient == moderator
         assert notifications[1].actor == comment.owner
-        assert notifications[1].verb == "created"
+        assert notifications[1].verb == "review"
 
         assert notifications[2].recipient == post.owner
         assert notifications[2].actor == comment.owner
-        assert notifications[2].verb == "commented"
+        assert notifications[2].verb == "comment"
 
         # edit by moderator
         comment.editor = moderator
@@ -153,4 +153,4 @@ class TestCommentModel:
 
         assert notifications[0].recipient == comment.owner
         assert notifications[0].actor == moderator
-        assert notifications[0].verb == "moderated"
+        assert notifications[0].verb == "edit"

@@ -103,19 +103,19 @@ class TestPostModel:
 
         assert notifications[0].recipient == mentioned
         assert notifications[0].actor == post.owner
-        assert notifications[0].verb == "mentioned"
+        assert notifications[0].verb == "mention"
 
         assert notifications[1].recipient == tag_subscriber
         assert notifications[1].actor == post.owner
-        assert notifications[1].verb == "tagged"
+        assert notifications[1].verb == "tag"
 
         assert notifications[2].recipient == user_subscriber
         assert notifications[2].actor == post.owner
-        assert notifications[2].verb == "created"
+        assert notifications[2].verb == "follow"
 
         assert notifications[3].recipient == moderator
         assert notifications[3].actor == post.owner
-        assert notifications[3].verb == "created"
+        assert notifications[3].verb == "review"
 
         # edit by moderator
         post.editor = moderator
@@ -126,4 +126,4 @@ class TestPostModel:
 
         assert notifications[0].recipient == post.owner
         assert notifications[0].actor == moderator
-        assert notifications[0].verb == "moderated"
+        assert notifications[0].verb == "edit"

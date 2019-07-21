@@ -284,7 +284,7 @@ class Activity(TimeStampedModel):
 
     def notify_mentioned_users(self) -> List[Notification]:
         return [
-            self.make_notification(recipient, "mentioned")
+            self.make_notification(recipient, "mention")
             for recipient in self.community.members.matches_usernames(
                 self.description.extract_mentions()
             ).exclude(pk=self.owner_id)
@@ -299,7 +299,7 @@ class Activity(TimeStampedModel):
             .select_related("subscriber")
         )
         return [
-            self.make_notification(subscription.subscriber, "created")
+            self.make_notification(subscription.subscriber, "follow")
             for subscription in subscriptions
         ]
 
@@ -320,7 +320,7 @@ class Activity(TimeStampedModel):
                     .only("subscriber")
                 )
                 return [
-                    self.make_notification(subscriber, "tagged")
+                    self.make_notification(subscriber, "tag")
                     for subscriber in set(
                         [
                             subscription.subscriber
@@ -335,16 +335,14 @@ class Activity(TimeStampedModel):
         Notifies moderators of updates. If change made by moderator,
         then notification sent to owner.
         """
-        verb = "created" if created else "updated"
-
         if self.editor and self.editor != self.owner:
             return [
                 self.make_notification(
-                    self.owner, "moderated", actor=self.editor
+                    self.owner, "edit", actor=self.editor
                 )
             ]
         return [
-            self.make_notification(moderator, verb)
+            self.make_notification(moderator, "review")
             for moderator in self.community.get_moderators().exclude(
                 pk=self.owner_id
             )

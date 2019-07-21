@@ -33,7 +33,7 @@ class TestFlagModel:
         assert notification.actor == user
         assert notification.recipient == moderator.member
         assert notification.content_object == comment
-        assert notification.verb == "flagged"
+        assert notification.verb == "flag"
 
     @factory.django.mute_signals(signals.post_save)
     def test_notify_post(
@@ -49,4 +49,4 @@ class TestFlagModel:
         assert notification.actor == user
         assert notification.recipient == moderator.member
         assert notification.content_object == post
-        assert notification.verb == "flagged"
+        assert notification.verb == "flag"

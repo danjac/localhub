@@ -3,8 +3,6 @@
 
 import pytest
 
-from typing import Callable, List
-
 from django.conf import settings
 from django.test.client import Client
 from django.urls import reverse
@@ -109,13 +107,7 @@ class TestPostCommentCreateView:
         response = client.get(reverse("posts:comment", args=[post.id]))
         assert response.status_code == 200
 
-    def test_post(
-        self,
-        client: Client,
-        member: Membership,
-        mailoutbox: List,
-        transactional_db: Callable,
-    ):
+    def test_post(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
         response = client.post(
             reverse("posts:comment", args=[post.id]), {"content": "test"}
@@ -128,10 +120,7 @@ class TestPostCommentCreateView:
         notification = Notification.objects.get(
             recipient=post.owner, comment=comment
         )
-        assert notification.verb == "commented"
-
-        assert len(mailoutbox) == 1
-        assert mailoutbox[0].to[0] == post.owner.email
+        assert notification.verb == "comment"
 
 
 class TestPostDeleteView:
@@ -142,33 +131,18 @@ class TestPostDeleteView:
         )
         assert response.status_code == 200
 
-    def test_delete(
-        self,
-        client: Client,
-        post_for_member: Post,
-        mailoutbox: List,
-        transactional_db: Callable,
-    ):
+    def test_delete(self, client: Client, post_for_member: Post):
         response = client.delete(
             reverse("posts:delete", args=[post_for_member.id])
         )
         assert response.url == reverse("activities:stream")
         assert Post.objects.count() == 0
-        assert len(mailoutbox) == 0
 
-    def test_delete_by_moderator(
-        self,
-        client: Client,
-        moderator: Membership,
-        mailoutbox: List,
-        transactional_db: Callable,
-    ):
+    def test_delete_by_moderator(self, client: Client, moderator: Membership):
         post = PostFactory(community=moderator.community)
         response = client.delete(reverse("posts:delete", args=[post.id]))
         assert response.url == reverse("activities:stream")
         assert Post.objects.count() == 0
-        assert len(mailoutbox) == 1
-        assert mailoutbox[0].to == [post.owner.email]
 
 
 class TestPostDetailView:
@@ -191,7 +165,7 @@ class TestPostDetailView:
 
 
 class TestPostLikeView:
-    def test_post(self, client: Client, member: Membership, mailoutbox: List):
+    def test_post(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
         response = client.post(
             reverse("posts:like", args=[post.id]),
@@ -200,7 +174,6 @@ class TestPostLikeView:
         assert response.status_code == 204
         like = Like.objects.get()
         assert like.user == member.member
-        assert mailoutbox[0].to == [post.owner.email]
 
 
 class TestPostDislikeView:
@@ -226,13 +199,7 @@ class TestFlagView:
         response = client.get(reverse("posts:flag", args=[post.id]))
         assert response.status_code == 200
 
-    def test_post(
-        self,
-        client: Client,
-        member: Membership,
-        mailoutbox: List,
-        transactional_db: Callable,
-    ):
+    def test_post(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
         moderator = Membership.objects.create(
             member=UserFactory(),
@@ -249,6 +216,3 @@ class TestFlagView:
 
         notification = Notification.objects.get()
         assert notification.recipient == moderator.member
-
-        assert len(mailoutbox) == 1
-        assert mailoutbox[0].to[0] == moderator.member.email

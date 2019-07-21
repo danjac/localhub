@@ -97,6 +97,6 @@ class Like(TimeStampedModel):
             recipient=self.recipient,
             actor=self.user,
             community=self.community,
-            verb="liked",
+            verb="like",
         )
         return [notification]

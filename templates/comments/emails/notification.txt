@@ -6,31 +6,27 @@
 {% user_display notification.recipient as recipient %}
 {% user_display notification.actor as actor %}
 {% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
-{% if notification.verb == 'mentioned' %}
+{% if notification.verb == 'mention' %}
 {% blocktrans %}
 {{ actor }} has mentioned you in their comment.
 {% endblocktrans %}
-{% elif notification.verb == 'created' %}
+{% elif notification.verb == 'review' %}
 {% blocktrans %}
-{{ actor }} has published a new comment.
+{{ actor }} has posted or updated a comment for review.
 {% endblocktrans %}
-{% elif notification.verb == 'flagged' %}
+{% elif notification.verb == 'flag' %}
 {% blocktrans %}
 {{ actor }} has flagged this comment.
 {% endblocktrans %}
-{% elif notification.verb == 'liked' %}
+{% elif notification.verb == 'like' %}
 {% blocktrans %}
 {{ actor }} has liked this comment.
 {% endblocktrans %}
-{% elif notification.verb == 'updated' %}
-{% blocktrans %}
-{{ actor }} has updated their comment.
-{% endblocktrans %}
-{% elif notification.verb == 'moderated' %}
+{% elif notification.verb == 'edit' %}
 {% blocktrans %}
 {{ actor }} has edited your comment.
 {% endblocktrans %}
-{% elif notification.verb == 'commented' %}
+{% elif notification.verb == 'comment' %}
 {% blocktrans %}
 {{ actor }} has commented on one of your posts.
 {% endblocktrans %}

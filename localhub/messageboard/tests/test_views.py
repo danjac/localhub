@@ -3,8 +3,6 @@
 
 import pytest
 
-from typing import List
-
 from django.test.client import Client
 from django.urls import reverse
 
@@ -134,9 +132,7 @@ class TestMessageCreateView:
         )
         assert response.status_code == 200
 
-    def test_post_with_recipients(
-        self, client: Client, member: Membership, mailoutbox: List
-    ):
+    def test_post_with_recipients(self, client: Client, member: Membership):
         user = UserFactory()
         Membership.objects.create(
             member=user,
@@ -149,5 +145,3 @@ class TestMessageCreateView:
         )
         assert response.url == reverse("messageboard:message_list")
         assert MessageRecipient.objects.count() == 1
-        assert len(mailoutbox) == 1
-        assert mailoutbox[0].to == [user.email]

@@ -99,32 +99,28 @@ class UserManager(BaseUserManager):
         )
 
 
-EMAIL_NOTIFICATIONS = Choices(
-    ("comments", _("Someone comments on my post")),
-    ("deletes", _("A moderator deletes my post or comment")),
-    ("edits", _("A moderator edits my post or comment")),
-    ("follows", _("Someone I'm following creates a post")),
-    ("flags", _("Someone flags a post or comment (MODERATORS ONLY)")),
-    ("likes", _("Someone likes my post or comment")),
-    ("mentions", _("I am @mentioned in a post or comment")),
-    ("messages", _("Someone sends me a direct message")),
-    ("tags", _("Someone creates a post containing a tag I'm following")),
-    (
-        "updates",
-        _("Someone creates or updates content on site (MODERATORS ONLY)"),
-    ),
-)
-
-
 class User(AbstractUser):
+    EMAIL_PREFERENCES = Choices(
+        ("comments", _("Someone comments on my post")),
+        ("deletes", _("A moderator deletes my post or comment")),
+        ("edits", _("A moderator edits my post or comment")),
+        ("follows", _("Someone I'm following creates a post")),
+        ("likes", _("Someone likes my post or comment")),
+        ("mentions", _("I am @mentioned in a post or comment")),
+        ("messages", _("I receive a direct message")),
+        ("tags", _("A post is created containing tags I'm following")),
+        ("flags", _("Post or comment is flagged (MODERATORS ONLY)")),
+        ("reviews", _("Content to be reviewed (MODERATORS ONLY)")),
+    )
 
-    name = models.CharField(_("Full name of user"), blank=True, max_length=255)
+    name = models.CharField(_("Full name"), blank=True, max_length=255)
     bio = MarkdownField(blank=True)
     avatar = ImageField(upload_to="avatars", null=True, blank=True)
 
-    email_notifications = ChoiceArrayField(
-        models.CharField(max_length=12, choices=EMAIL_NOTIFICATIONS),
+    email_preferences = ChoiceArrayField(
+        models.CharField(max_length=12, choices=EMAIL_PREFERENCES),
         default=list,
+        blank=True,
     )
 
     subscriptions = GenericRelation(Subscription, related_query_name="user")
@@ -133,3 +129,6 @@ class User(AbstractUser):
 
     def get_absolute_url(self) -> str:
         return reverse("users:detail", args=[self.username])
+
+    def has_email_pref(self, pref: str) -> bool:
+        return pref in self.email_preferences or []

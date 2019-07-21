@@ -9,27 +9,23 @@
 {% block notification_title %}
 {% user_display notification.actor as actor %}
 {% with comment_url=comment.get_absolute_url %}
-{% if notification.verb == 'mentioned' %}
+{% if notification.verb == 'mention' %}
 {% blocktrans %}
 {{ actor }} has mentioned you in their <a href="{{ comment_url }}">comment</a>
 {% endblocktrans %}
-{% elif notification.verb == 'created' %}
+{% elif notification.verb == 'review' %}
 {% blocktrans %}
-{{ actor }} has published a new  <a href="{{ comment_url }}">comment</a>
+{{ actor }} has posted or updated a <a href="{{ comment_url }}">comment</a> for review
 {% endblocktrans %}
-{% elif notification.verb == 'updated' %}
-{% blocktrans %}
-{{ actor }} has updated their  <a href="{{ comment_url }}">comment</a>
-{% endblocktrans %}
-{% elif notification.verb == 'liked' %}
+{% elif notification.verb == 'like' %}
 {% blocktrans %}
 {{ actor }} has liked your <a href="{{ comment_url }}">comment</a>
 {% endblocktrans %}
-{% elif notification.verb == 'moderated' %}
+{% elif notification.verb == 'edit' %}
 {% blocktrans %}
 {{ actor }} has edited your <a href="{{ comment_url }}">comment</a>
 {% endblocktrans %}
-{% elif notification.verb == 'commented' %}
+{% elif notification.verb == 'comment' %}
 {% blocktrans %}
 {{ actor }} has  <a href="{{ comment_url }}">commented</a> on one of your posts
 {% endblocktrans %}

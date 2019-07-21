@@ -18,5 +18,5 @@ class UserCreationForm(UserCreationForm):
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ("name", "avatar", "email_notifications", "bio")
-        widgets = {"email_notifications": forms.CheckboxSelectMultiple}
+        fields = ("name", "avatar", "email_preferences", "bio")
+        widgets = {"email_preferences": forms.CheckboxSelectMultiple}

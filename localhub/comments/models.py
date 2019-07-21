@@ -157,7 +157,7 @@ class Comment(TimeStampedModel):
         # notify anyone @mentioned in the description
         if self.content and (created or self.content_tracker.changed()):
             notifications += [
-                self.make_notification("mentioned", recipient)
+                self.make_notification("mention", recipient)
                 for recipient in self.community.members.matches_usernames(  # noqa
                     self.content.extract_mentions()
                 ).exclude(
@@ -167,12 +167,11 @@ class Comment(TimeStampedModel):
         # notify all community moderators
         if self.editor and self.editor != self.owner:
             notifications += [
-                self.make_notification("moderated", self.owner, self.editor)
+                self.make_notification("edit", self.owner, self.editor)
             ]
         else:
-            verb = "created" if created else "updated"
             notifications += [
-                self.make_notification(verb, recipient)
+                self.make_notification("review", recipient)
                 for recipient in self.community.get_moderators().exclude(
                     pk=self.owner_id
                 )
@@ -180,7 +179,7 @@ class Comment(TimeStampedModel):
         # notify the activity owner
         if created and self.owner_id != self.content_object.owner_id:
             notifications.append(
-                self.make_notification("commented", self.content_object.owner)
+                self.make_notification("comment", self.content_object.owner)
             )
         Notification.objects.bulk_create(notifications)
         return notifications
