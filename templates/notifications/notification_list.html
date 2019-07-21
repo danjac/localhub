@@ -41,6 +41,8 @@
   {% include "activities/includes/notification.html" with activity=content_object activity_name="event" %}
   {% elif content_type == "comment" %}
   {% include "comments/includes/notification.html" with comment=content_object %}
+  {% elif content_type == "user" %}
+  {% include "users/includes/notification.html" with user_obj=content_object %}
   {% endif %}
   {% endwith %}
 </div>

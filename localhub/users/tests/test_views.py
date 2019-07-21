@@ -12,6 +12,7 @@ from localhub.comments.tests.factories import CommentFactory
 from localhub.communities.models import Membership
 from localhub.events.tests.factories import EventFactory
 from localhub.likes.models import Like
+from localhub.notifications.models import Notification
 from localhub.posts.tests.factories import PostFactory
 from localhub.subscriptions.models import Subscription
 from localhub.users.tests.factories import UserFactory
@@ -107,6 +108,10 @@ class TestUserSubscribeView:
         assert sub.content_object == user
         assert sub.subscriber == member.member
         assert sub.community == member.community
+        notification = Notification.objects.get()
+        assert notification.recipient == user
+        assert notification.content_object == user
+        assert notification.actor == member.member
 
     def test_post_if_user_same_as_auth_user(
         self, client: Client, member: Membership

@@ -1,0 +1,13 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load i18n %}
+{% load account %}
+{% autoescape off %}
+{% user_display notification.recipient as recipient %}
+{% user_display notification.actor as actor %}
+{% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
+{% if notification.verb == 'subscribe' %}
+{{ actor }} is now following you.
+{% endif %}
+Link to user: {{ object_url }}
+{% endautoescape %}
