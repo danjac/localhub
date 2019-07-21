@@ -20,7 +20,7 @@
        class="btn btn-primary"
        data-controller="ajax"
        data-action="ajax#post">
-        <i class="icon icon-plus"></i> {% trans "Follow this tag" %}
+        {% trans "Follow" %}
     </a>
 </p>
 {% elif is_subscribed %}
@@ -29,7 +29,7 @@
        class="btn"
        data-controller="ajax"
        data-action="ajax#post">
-        <i class="icon icon-stop"></i> {% trans "Stop following this tag" %}
+        {% trans "Unfollow" %}
     </a>
 </p>
 {% endif %}
@@ -40,9 +40,6 @@
 </div>
 {% empty %}
 <div class="empty">
-  <div class="empty-icon">
-    <i class="icon icon-search"></i>
-  </div>
   <p class="empty-title h5">{% trans "Sorry, no results found for this tag" %}</p>
 </div>
 {% endfor %}

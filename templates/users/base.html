@@ -26,8 +26,8 @@
 
 {% if can_create_message %}
     <a href="{% url 'messageboard:message_create_pm' user_obj.username %}"
-       class="btn btn-primary">
-        <i class="icon icon-mail"></i> {% trans "Send Message" %}
+       class="btn">
+        {% trans "Send Message" %}
     </a>
 {% endif %}
 {% if can_create_subscription and not is_subscribed %}
@@ -36,7 +36,7 @@
        data-controller="ajax"
        data-action="ajax#post"
        data-ajax-redirect="{{ request.path }}">
-        <i class="icon icon-plus"></i> {% trans "Follow" %}
+        {% trans "Follow" %}
     </a>
 {% elif is_subscribed %}
     <a href="{% url 'users:unsubscribe' user_obj.username %}"
@@ -44,7 +44,7 @@
        data-controller="ajax"
        data-action="ajax#post"
        data-ajax-redirect="{{ request.path }}">
-        <i class="icon icon-stop"></i> {% trans "Unfollow" %}
+        {% trans "Unfollow" %}
     </a>
 {% endif %}
 {% endif %}

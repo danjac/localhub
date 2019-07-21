@@ -6,7 +6,7 @@
 {% has_perm "activities.flag_activity" user object as can_flag %}
 {% if can_flag and not object.has_flagged %}
 <a class="btn btn-sm" href="{{ object.get_flag_url }}">
-  <i class="icon icon-flag"></i> {% trans "Flag" %}
+  {% trans "Flag" %}
 </a>
 {% endif %}
 

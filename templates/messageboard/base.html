@@ -12,8 +12,7 @@
 
 {% if can_create_message %}
 <div class="mb-2">
-  <a href="{% url 'messageboard:message_create' %}" class="btn btn-primary btn-block">
-    <i class="icon icon-plus"></i>
+  <a href="{% url 'messageboard:message_create' %}" class="btn">
     {% trans "Send message" %}
   </a>
 </div>

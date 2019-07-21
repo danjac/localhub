@@ -7,7 +7,7 @@
        href="{% url 'events:download' event.id %}"
        title="{% trans 'Download .ics calendar file' %}"
        download>
-        <i class="icon icon-download"></i> {% trans "Download" %}
+        {% trans "Download" %}
     </a>
     {% include "activities/includes/actions.html" with object=event id_prefix="event" %}
 </div>

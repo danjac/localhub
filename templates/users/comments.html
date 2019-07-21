@@ -41,9 +41,6 @@ and has a total of <strong>{{ counter }} likes</strong> for their comments.
 </div>
 {% empty %}
 <div class="empty">
-    <div class="empty-icon">
-        <i class="icon icon-user"></i>
-    </div>
     <p class="empty-title h5">
         {% if is_auth_user %}
         {% trans "You haven't posted anything yet" %}

@@ -7,8 +7,8 @@
 {% has_perm 'activities.create_activity' user request.community as can_create_activity %}
 {% if can_create_activity %}
 <div class="new-post">
-  <a href="{% url 'events:create' %}" class="btn btn-primary btn-block">
-    <i class="icon icon-time"></i> {% trans "Submit Event" %}
+  <a href="{% url 'events:create' %}" class="btn">
+    {% trans "Submit Event" %}
   </a>
 </div>
 
@@ -26,7 +26,7 @@
 
 {% endif %}
 
-{% include "activities/includes/show_all_toggle.html" %}
+{# include "activities/includes/show_all_toggle.html" #}
 
 {% for event in object_list %}
 <div class="mt-2">

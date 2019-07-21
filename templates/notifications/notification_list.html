@@ -8,11 +8,11 @@
 {% if object_list %}
 <div class="mb-2">
   {% if is_unread_notifications %}
-  <button class="btn btn-primary"
+  <button class="btn"
           data-controller="ajax"
           data-action="ajax#post"
           data-ajax-url="{% url 'notifications:mark_all_read' %}"
-          ><i class="icon icon-check"></i> {% trans "Mark All as Read" %}</button>
+          >{% trans "Mark All as Read" %}</button>
   {% endif %}
   <button class="btn"
           data-controller="confirm ajax"
@@ -20,7 +20,7 @@
           data-ajax-url="{% url 'notifications:delete_all' %}"
           data-confirm-header="{% trans 'Delete All' %}"
           data-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}"
-          ><i class="icon icon-delete"></i> {% trans "Delete All" %}</button>
+          >{% trans "Delete All" %}</button>
 </div>
 <div class="clearfix"></div>
 {% endif %}
@@ -48,9 +48,6 @@
 </div>
 {% empty %}
 <div class="empty">
-  <div class="empty-icon">
-    <i class="icon icon-mail"></i>
-  </div>
   <p class="empty-title h5">{% trans "You have no new notifications" %}</p>
 </div>
 {% endfor %}

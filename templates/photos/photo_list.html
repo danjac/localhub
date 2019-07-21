@@ -6,8 +6,8 @@
 {% has_perm 'activities.create_activity' user request.community as can_create_activity %}
 {% if can_create_activity %}
 <div class="new-post">
-  <a href="{% url 'photos:create' %}" class="btn btn-primary btn-block">
-    <i class="icon icon-photo"></i> {% trans "Submit Photo" %}
+  <a href="{% url 'photos:create' %}" class="btn">
+    {% trans "Submit Photo" %}
   </a>
 </div>
 
@@ -24,7 +24,7 @@
 </p>
 {% endif %}
 
-{% include "activities/includes/show_all_toggle.html" %}
+{# include "activities/includes/show_all_toggle.html" #}
 
 {% for photo in object_list %}
 <div class="mt-2">
