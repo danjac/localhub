@@ -16,9 +16,8 @@
       data-controller="form"
       data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload">
     {% include "includes/forms/fields.html" %}
-    <button type="submit" class="btn btn-primary btn-block">
-        <i class="icon icon-check"></i>
-        {% trans 'Save' %}
+    <button type="submit" class="btn btn-primary">
+        {% trans 'Save settings' %}
     </button>
 </form>
 {% endblock users_content %}

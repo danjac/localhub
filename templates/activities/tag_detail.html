@@ -17,7 +17,7 @@
 {% if can_create_subscription and not is_auth_user and not is_subscribed %}
 <p class="mt-2">
     <a href="{% url 'activities:subscribe_tag' tag.slug %}"
-       class="btn btn-primary btn-block"
+       class="btn btn-primary"
        data-controller="ajax"
        data-action="ajax#post">
         <i class="icon icon-plus"></i> {% trans "Follow this tag" %}
@@ -26,7 +26,7 @@
 {% elif is_subscribed %}
 <p class="mt-2">
     <a href="{% url 'activities:unsubscribe_tag' tag.slug %}"
-       class="btn btn-block"
+       class="btn"
        data-controller="ajax"
        data-action="ajax#post">
         <i class="icon icon-stop"></i> {% trans "Stop following this tag" %}

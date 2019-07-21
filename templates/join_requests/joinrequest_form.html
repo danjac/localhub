@@ -11,8 +11,7 @@
   <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
     <p>{% trans "Your request will be sent to the site admins." %}</p>
     {% include "includes/forms/fields.html" %}
-    <button type="submit" class="btn btn-primary btn-block">
-        <i class="icon icon-check"></i>
+    <button type="submit" class="btn btn-primary">
         {% trans "Send request" %}
     </button>
   </form>

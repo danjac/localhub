@@ -13,8 +13,7 @@
       data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload"
       {% block form_extra_attrs %}{% endblock %}>
   {% include "includes/forms/fields.html" %}
-  <button type="submit" class="btn btn-primary btn-block">
-      <i class="icon icon-check"></i>
+  <button type="submit" class="btn btn-primary">
       {% trans "Submit" %}
   </button>
 </form>

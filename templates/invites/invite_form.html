@@ -6,8 +6,7 @@
 <div class="col-6 col-sm-12">
   <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
     {% include "includes/forms/fields.html" %}
-    <button class="btn btn-primary btn-block">
-        <i class="icon icon-check"></i>
+    <button class="btn btn-primary">
         {% trans "Send invite" %}
     </button>
   </form>

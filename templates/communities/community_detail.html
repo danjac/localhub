@@ -27,7 +27,7 @@
 
 {% has_perm "communities.manage_community" user community as can_manage %}
 {% if can_manage %}
-<a href="{% url "communities:community_update" %}" class="btn btn-primary btn-block">
+<a href="{% url "communities:community_update" %}" class="btn btn-primary">
     <i class="icon icon-edit"></i>
     {% trans "Edit Community Settings" %}
 </a>

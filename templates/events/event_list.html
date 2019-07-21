@@ -7,7 +7,7 @@
 {% has_perm 'activities.create_activity' user request.community as can_create_activity %}
 {% if can_create_activity %}
 <div class="new-post">
-  <a href="{% url 'events:create' %}" class="btn btn-block btn-primary">
+  <a href="{% url 'events:create' %}" class="btn btn-primary btn-block">
     <i class="icon icon-time"></i> {% trans "Submit Event" %}
   </a>
 </div>

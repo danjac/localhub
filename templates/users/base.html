@@ -24,7 +24,6 @@
 {% has_perm "subscriptions.create_subscription" user request.community as can_create_subscription %}
 {% is_subscribed user user_obj as is_subscribed %}
 
-<div class="btn-group btn-group-block">
 {% if can_create_message %}
     <a href="{% url 'messageboard:message_create_pm' user_obj.username %}"
        class="btn btn-primary">
@@ -48,7 +47,6 @@
         <i class="icon icon-stop"></i> {% trans "Unfollow" %}
     </a>
 {% endif %}
-</div>
 {% endif %}
 
 <ul class="tab tab-block">

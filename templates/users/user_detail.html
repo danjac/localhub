@@ -10,7 +10,7 @@
 {{ user_obj.bio.markdown }}
 {% if is_auth_user %}
 <p class="mt-2">
-    <a href="{% url 'user_update' %}" class="btn btn-primary btn-block">
+    <a href="{% url 'user_update' %}" class="btn btn-primary">
         <i class="icon icon-edit"></i> {% trans "Update your profile" %}
     </a>
 </p>
@@ -23,7 +23,7 @@
     {% if is_auth_user %}
     <p class="empty-title h5">{% trans "You do not have a bio" %}</p>
     <div class="empty-action">
-        <a href="{% url 'user_update' %}" class="btn btn-primary btn-block">
+        <a href="{% url 'user_update' %}" class="btn btn-primary">
             <i class="icon icon-edit"></i> {% trans "Update your profile" %}
         </a>
     </div>
