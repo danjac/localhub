@@ -32,6 +32,7 @@
             {% if request.community %}{{ request.community.name }}{% else %}Localhub{% endif %}
           </a>
         </section>
+        {% block search_form %}
         {% if request.community %}
         {% has_perm "communities.view_community" user request.community as can_view_community %}
         {% if can_view_community %}
@@ -51,6 +52,8 @@
         </section>
         {% endif %}
         {% endif %}
+        {% endblock search_form %}
+        {% block navbar_auth %}
         <section class="navbar-section">
           {% with current_url=request.resolver_match.url_name %}
           {% if user.is_authenticated %}
@@ -66,7 +69,9 @@
           {% endif %}
           {% endwith %}
         </section>
+        {% endblock %}
       </header>
+      {% block mobile_search_form %}
       {% if request.community %}
       {% has_perm "communities.view_community" user request.community as can_view_community %}
       {% if can_view_community %}
@@ -85,6 +90,7 @@
       </form>
       {% endif %}
       {% endif %}
+      {% endblock mobile_search_form %}
       <div class="text-center mb-2 toast toast-primary d-hide" data-controller="cookie-notice" data-cookie-notice-domain="{{ community.domain }}">
         <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
         {% blocktrans %}
