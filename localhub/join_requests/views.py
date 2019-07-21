@@ -48,12 +48,18 @@ class JoinRequestListView(
     PermissionRequiredMixin, MultipleJoinRequestMixin, ListView
 ):
     permission_required = "communities.manage_community"
+    paginate_by = settings.DEFAULT_PAGE_SIZE
 
     def get_permission_object(self) -> Community:
         return self.request.community
 
     def get_queryset(self) -> QuerySet:
-        return super().get_queryset().select_related("community", "sender")
+        return (
+            super()
+            .get_queryset()
+            .select_related("community", "sender")
+            .order_by("created")
+        )
 
 
 join_request_list_view = JoinRequestListView.as_view()

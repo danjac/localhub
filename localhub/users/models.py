@@ -128,7 +128,7 @@ class User(AbstractUser):
     objects = UserManager()
 
     def get_absolute_url(self) -> str:
-        return reverse("users:detail", args=[self.username])
+        return reverse("users:activities", args=[self.username])
 
     def has_email_pref(self, pref: str) -> bool:
         return (

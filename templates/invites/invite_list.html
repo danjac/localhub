@@ -49,7 +49,10 @@
 
 
 <div class="mt-2">
-  <a class="btn btn-primary" href="{% url 'invites:create' %}">{% trans "Send an invite" %}</a>
+  <a class="btn btn-primary btn-block" href="{% url 'invites:create' %}">
+      <i class="icon icon-forward"></i>
+      {% trans "Send an invite" %}
+  </a>
 </div>
 
 {% endblock settings_content %}

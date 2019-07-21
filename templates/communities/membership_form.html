@@ -19,7 +19,10 @@
 <div class="col-6 col-sm-12">
     <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
         {% include "includes/forms/fields.html" %}
-        <input type="submit" class="btn btn-primary" value="{% trans 'Save' %}">
+        <button type="submit" class="btn btn-primary btn-block">
+            <i class="icon icon-check"></i>
+            {% trans 'Save' %}
+        </button>
     </form>
 </div>
 {% endblock settings_content %}

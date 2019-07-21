@@ -26,11 +26,11 @@ urlpatterns = [
     path(
         "<slug:slug>/unfollow/", view=user_unsubscribe_view, name="unsubscribe"
     ),
+    path("<slug:slug>/about/", view=user_detail_view, name="detail"),
     path(
         "<slug:slug>/comments/", view=user_comment_list_view, name="comments"
     ),
     path(
-        "<slug:slug>/posts/", view=user_activity_stream_view, name="activities"
+        "<slug:slug>/", view=user_activity_stream_view, name="activities"
     ),
-    path("<slug:slug>/", view=user_detail_view, name="detail"),
 ]

@@ -87,16 +87,7 @@ class UserQuerySetMixin(CommunityRequiredMixin):
 class UserDetailView(
     UserSlugMixin, UserContextMixin, UserQuerySetMixin, DetailView
 ):
-    def get_context_data(self, **kwargs) -> ContextDict:
-        data = super().get_context_data(**kwargs)
-        if (
-            self.request.user.is_authenticated
-            and self.object != self.request.user
-        ):
-            data["is_subscribed"] = Subscription.objects.filter(
-                user=self.object, subscriber=self.request.user
-            ).exists()
-        return data
+    ...
 
 
 user_detail_view = UserDetailView.as_view()
