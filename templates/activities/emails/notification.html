@@ -27,6 +27,10 @@
 {% blocktrans %}
 {{ actor }} has created a new <a href="{{ object_url }}">{{ activity_name }}</a>.
 {% endblocktrans %}
+{% elif notification.verb == 'review' %}
+{% blocktrans %}
+{{ actor }} has created or updated their <a href="{{ object_url }}">{{ activity_name }}</a> for you to review.
+{% endblocktrans %}
 {% elif notification.verb == 'like' %}
 {% blocktrans %}
 {{ actor }} has liked your <a href="{{ object_url }}">{{ activity_name }}</a>.
