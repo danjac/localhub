@@ -39,6 +39,7 @@ class EventForm(forms.ModelForm):
             "country",
             "description",
         )
+        localized_fields = ("starts", "ends")
 
         help_texts = {
             "timezone": _("Start and end times will be shown in this timezone")
