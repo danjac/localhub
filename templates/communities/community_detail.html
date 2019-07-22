@@ -6,6 +6,16 @@
 {% load rules %}
 
 {% block activities_content %}
+{% has_perm "communities.manage_community" user community as can_manage %}
+{% if can_manage %}
+<div class="float-right">
+<a href="{% url "communities:community_update" %}" class="btn btn-sm">
+    {% trans "Edit Community Settings" %}
+</a>
+</div>
+<div class="clearfix"></div>
+{% endif %}
+
 
 <h3>{{ community.name }}</h3>
 
@@ -23,14 +33,6 @@
 <p>
   {{ community.terms.markdown }}
 </p>
-{% endif %}
-
-{% has_perm "communities.manage_community" user community as can_manage %}
-{% if can_manage %}
-<a href="{% url "communities:community_update" %}" class="btn btn-primary">
-    <i class="icon icon-edit"></i>
-    {% trans "Edit Community Settings" %}
-</a>
 {% endif %}
 
 {% endblock activities_content %}
