@@ -3,7 +3,7 @@
 
 from django.http import HttpRequest, HttpResponse
 
-from localhub.activities.views import SingleActivityView
+from localhub.activities.views.generic import SingleActivityView
 from localhub.events.models import Event
 
 
