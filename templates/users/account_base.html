@@ -10,17 +10,19 @@
 <div class="container">
   <div class="columns" data-controller="sidebar">
     <div class="column col-3 col-md-12 hide-md bg-gray p-2" data-target="sidebar.nav">
-      <a href="#"
-         class="btn btn-link show-md hide-lg"
-         data-action="sidebar#toggle"
-         >{% trans "Close Sidebar" %}</a>
+      <div class="show-md hide-lg text-center mb-2">
+        <a href="#"
+           class="btn btn-sm"
+           data-action="sidebar#toggle"
+           >{% trans "Close Sidebar" %}</a>
+      </div>
       {% include "users/includes/sidebar.html" %}
     </div>
 
     <div class="column col-9 col-md-12" data-target="sidebar.main">
-      <div class="show-md hide-lg float-right">
+      <div class="show-md hide-lg float-right mb-2">
         <a href="#"
-           class="btn btn-link"
+           class="btn btn-sm"
            data-action="sidebar#toggle"
            >{% trans "Sidebar" %}</a>
       </div>
