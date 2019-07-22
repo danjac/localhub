@@ -15,7 +15,7 @@
        >
        <div class="show-md hide-lg text-center mb-2">
          <a href="#"
-            class="btn btn-sm"
+            class="btn btn-sm btn-block"
             data-action="sidebar#toggle"
             >{% trans "Close Sidebar" %}</a>
        </div>
@@ -25,7 +25,7 @@
   </div>
 
   <div class="column col-9 col-md-12" data-target="sidebar.main">
-    <div class="show-md hide-lg float-right mb-2">
+    <div class="show-md hide-lg mb-2">
       <a href="#"
          class="btn btn-sm"
          data-action="sidebar#toggle"
@@ -37,7 +37,6 @@
         {% endwith %}
       </a>
     </div>
-    <div class="clearfix"></div>
     {% block activities_content %}{% endblock %}
   </div>
 </div>
