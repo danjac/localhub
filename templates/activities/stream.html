@@ -9,12 +9,12 @@
 {% has_perm 'activities.create_activity' user request.community as can_create_activity %}
 {% if can_create_activity %}
 <div class="mb-1">
-  <select class="form-select" data-controller="location-select" data-action="location-select#select">
-    <option>{% trans "Create new..." %}</option>
-    <option value="{% url 'posts:create' %}">{% trans "Post" %}</option>
-    <option value="{% url 'events:create' %}">{% trans "Event" %}</option>
-    <option value="{% url 'photos:create' %}">{% trans "Photo" %}</option>
-  </select>
+  <div class="float-right">
+    <a href="{% url 'posts:create' %}" class="btn btn-sm">{% trans "Submit Post" %}</a>
+    <a href="{% url 'events:create' %}" class="btn btn-sm">{% trans "Submit Event" %}</a>
+    <a href="{% url 'photos:create' %}" class="btn btn-sm">{% trans "Submit Photo" %}</a>
+  </div>
+  <div class="clearfix"></div>
 </div>
 {% elif user.is_authenticated %}
 <p class="bg-gray p-2 text-center">
