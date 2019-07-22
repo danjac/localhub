@@ -23,12 +23,12 @@
     </li>
 </ul>
 
-<div>
-    <a href="{% url 'messageboard:message_create_reply' message.id %}" class="btn">
+<div class="float-right">
+    <a href="{% url 'messageboard:message_create_reply' message.id %}" class="btn btn-sm">
         {% trans "Reply" %}
     </a>
     <a href="{% url 'messageboard:message_recipient_delete' object.id %}"
-       class="btn"
+       class="btn btn-sm"
        data-controller="ajax confirm"
        data-action="confirm#check ajax#delete"
        data-confirm-header="{% trans 'Delete' %}"
@@ -37,6 +37,7 @@
        {% trans "Delete" %}
     </a>
 </div>
+<div class="clearfix"></div>
 
 <dl>
     <dt>{% trans "Subject" %}</dt>

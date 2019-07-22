@@ -6,11 +6,12 @@
 {% block activities_content %}
 {% has_perm 'activities.create_activity' user request.community as can_create_activity %}
 {% if can_create_activity %}
-<div class="new-post">
-  <a href="{% url 'events:create' %}" class="btn">
+<div class="float-right">
+  <a href="{% url 'events:create' %}" class="btn btn-sm">
     {% trans "Submit Event" %}
   </a>
 </div>
+<div class="clearfix"></div>
 
 {% elif user.is_authenticated %}
 <p class="bg-gray p-2 text-center">

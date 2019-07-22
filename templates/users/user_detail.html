@@ -20,8 +20,8 @@
     {% if is_auth_user %}
     <p class="empty-title h5">{% trans "You do not have a bio" %}</p>
     <div class="empty-action">
-        <a href="{% url 'user_update' %}" class="btn btn-primary">
-            <i class="icon icon-edit"></i> {% trans "Update your profile" %}
+        <a href="{% url 'user_update' %}" class="btn">
+            {% trans "Update your profile" %}
         </a>
     </div>
     {% else %}

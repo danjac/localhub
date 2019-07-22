@@ -11,11 +11,12 @@
 {% has_perm "messageboard.create_message" user request.community as can_create_message %}
 
 {% if can_create_message %}
-<div class="mb-2">
-  <a href="{% url 'messageboard:message_create' %}" class="btn">
+<div class="float-right">
+  <a href="{% url 'messageboard:message_create' %}" class="btn btn-sm">
     {% trans "Send message" %}
   </a>
 </div>
+<div class="clearfix"></div>
 {% endif %}
 
 <ul class="tab tab-block mt-1">

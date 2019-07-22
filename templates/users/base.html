@@ -14,9 +14,6 @@
 
 {% block activities_content %}
 
-{% user_display user_obj as display_name %}
-
-<h3>{% avatar user_obj "avatar-lg" %}{{ display_name }}</h3>
 
 {% if user.is_authenticated and not is_auth_user %}
 
@@ -24,15 +21,16 @@
 {% has_perm "subscriptions.create_subscription" user request.community as can_create_subscription %}
 {% is_subscribed user user_obj as is_subscribed %}
 
+<div class="float-right">
 {% if can_create_message %}
     <a href="{% url 'messageboard:message_create_pm' user_obj.username %}"
-       class="btn">
+       class="btn btn-sm">
         {% trans "Send Message" %}
     </a>
 {% endif %}
 {% if can_create_subscription and not is_subscribed %}
     <a href="{% url 'users:subscribe' user_obj.username %}"
-       class="btn"
+       class="btn btn-sm"
        data-controller="ajax"
        data-action="ajax#post"
        data-ajax-redirect="{{ request.path }}">
@@ -40,14 +38,20 @@
     </a>
 {% elif is_subscribed %}
     <a href="{% url 'users:unsubscribe' user_obj.username %}"
-       class="btn"
+       class="btn btn-sm"
        data-controller="ajax"
        data-action="ajax#post"
        data-ajax-redirect="{{ request.path }}">
         {% trans "Unfollow" %}
     </a>
 {% endif %}
+</div>
+<div class="clearfix"></div>
 {% endif %}
+
+{% user_display user_obj as display_name %}
+<h3>{% avatar user_obj "avatar-lg" %}{{ display_name }}</h3>
+
 
 <ul class="tab tab-block">
   <li class="tab-item" data-controller="active-link" data-active-link-exact>

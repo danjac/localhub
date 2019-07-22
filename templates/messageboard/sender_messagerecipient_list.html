@@ -10,21 +10,24 @@
 {% block messageboard_header %}
 {% user_display user_obj as sender %}
 <ul class="breadcrumb">
-    <li class="breadcrumb-item">
-        <a href="{% url 'messageboard:message_recipient_list' %}">{% trans "Inbox" %}</a>
-    </li>
-    <li class="breadcrumb-item">
-        <a href="#">{{ sender }}</a>
-    </li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'messageboard:message_recipient_list' %}">{% trans "Inbox" %}</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="#">{{ sender }}</a>
+  </li>
 </ul>
 
 {% has_perm "messageboard.create_message" user request.community as can_create_message %}
 
 {% if can_create_message %}
 <div class="mb-2">
-<a href="{% url 'messageboard:message_create_pm' user_obj.username %}" class="btn">
-  {% trans "Send message to this user" %}
-</a>
+  <div class="float-right">
+    <a href="{% url 'messageboard:message_create_pm' user_obj.username %}" class="btn btn-sm">
+      {% trans "Send message" %}
+    </a>
+  </div>
+  <div class="clearfix"></div>
 </div>
 {% endif %}
 

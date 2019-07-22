@@ -8,39 +8,37 @@
 {% block activities_content %}
 {% has_perm 'activities.create_activity' user request.community as can_create_activity %}
 {% if can_create_activity %}
-<div class="mb-1">
-  <div class="float-right">
-    <a href="{% url 'posts:create' %}" class="btn btn-sm">{% trans "Submit Post" %}</a>
-    <a href="{% url 'events:create' %}" class="btn btn-sm">{% trans "Submit Event" %}</a>
-    <a href="{% url 'photos:create' %}" class="btn btn-sm">{% trans "Submit Photo" %}</a>
-  </div>
-  <div class="clearfix"></div>
+<div class="float-right">
+  <a href="{% url 'posts:create' %}" class="btn btn-sm">{% trans "Submit Post" %}</a>
+  <a href="{% url 'events:create' %}" class="btn btn-sm">{% trans "Submit Event" %}</a>
+  <a href="{% url 'photos:create' %}" class="btn btn-sm">{% trans "Submit Photo" %}</a>
 </div>
+<div class="clearfix"></div>
 {% elif user.is_authenticated %}
 <p class="bg-gray p-2 text-center">
-    {% url 'join_requests:create' as join_request_url %}
-    {% blocktrans %}You do not have permission to post to this site. You can send a request to join this community <a href="{{ join_request_url }}">here</a>.{% endblocktrans %}
+  {% url 'join_requests:create' as join_request_url %}
+  {% blocktrans %}You do not have permission to post to this site. You can send a request to join this community <a href="{{ join_request_url }}">here</a>.{% endblocktrans %}
 </p>
 
 {% else %}
 <p class="bg-gray p-2 text-center">
-    {% url 'account_login' as login_url %}
-    {% blocktrans %}Please <a href="{{ login_url }}">sign in</a> to post content to this site.{% endblocktrans %}
+  {% url 'account_login' as login_url %}
+  {% blocktrans %}Please <a href="{{ login_url }}">sign in</a> to post content to this site.{% endblocktrans %}
 </p>
 {% endif %}
 
 
 {% for activity in object_list %}
 <div class="mt-2">
-    {% include "activities/includes/activity.html" %}
+  {% include "activities/includes/activity.html" %}
 </div>
 {% empty %}
 <div class="empty mt-2">
-    {% if not view.show_all and user.is_authenticated %}
-    <p class="empty-title h5">{% trans "Nothing has been posted yet by people you are following. Click 'Show All' to see all content." %}</p>
-    {% else %}
-    <p class="empty-title h5">{% trans "Nothing has been posted yet" %}</p>
-    {% endif %}
+  {% if not view.show_all and user.is_authenticated %}
+  <p class="empty-title h5">{% trans "Nothing has been posted yet by people you are following. Click 'Show All' to see all content." %}</p>
+  {% else %}
+  <p class="empty-title h5">{% trans "Nothing has been posted yet" %}</p>
+  {% endif %}
 </div>
 {% endfor %}
 

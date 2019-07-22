@@ -16,9 +16,12 @@
 <h3>{% trans "Members" %}</h3>
 
 {% if can_manage %}
-<a class="btn" href="{% url 'communities:membership_list' %}">
+<div class="float-right">
+<a class="btn btn-sm" href="{% url 'communities:membership_list' %}">
     {% trans "Edit member settings" %}
 </a>
+</div>
+<div class="clearfix"></div>
 {% endif %}
 
 <table class="table table-striped table-hover">
