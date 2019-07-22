@@ -154,7 +154,7 @@ class ActivityUpdateView(
         self.object.editor = self.request.user
         self.object.save()
 
-        for notification in self.object.notify(created=True):
+        for notification in self.object.notify(created=False):
             send_activity_notification_email(self.object, notification)
 
         messages.success(self.request, self.get_success_message())
