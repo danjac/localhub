@@ -20,7 +20,7 @@
 <h3>{{ community.name }}</h3>
 
 {% if community.description %}
-<hr />
+<div class="divider mb-2"></div>
 <h4>{% trans "Description" %}</h4>
 <p>
   {{ community.description.markdown }}
@@ -28,7 +28,7 @@
 {% endif %}
 
 {% if community.terms %}
-<hr />
+<div class="divider mb-2"></div>
 <h4>{% trans "Terms & Conditions" %}</h4>
 <p>
   {{ community.terms.markdown }}
