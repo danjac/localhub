@@ -4,7 +4,8 @@
 {% extends "messageboard/base.html" %}
 {% load i18n %}
 
-{% block messageboard_header %}{% endblock %}
+{% block messageboard_header %}<h3>{% trans "Send Message" %}</h3>{% endblock %}
+
 {% block messageboard_content %}
 
 <form method="POST"
