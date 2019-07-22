@@ -26,7 +26,7 @@ from django.views.generic.detail import SingleObjectMixin
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.activities.models import Activity
-from localhub.activities.views import BaseActivityStreamView
+from localhub.activities.views.streams import BaseStreamView
 from localhub.comments.models import Comment
 from localhub.comments.views import CommentListView
 from localhub.communities.models import Community
@@ -207,7 +207,7 @@ class SingleUserMixin(
         return super().get(request, *args, **kwargs)
 
 
-class UserActivityStreamView(SingleUserMixin, BaseActivityStreamView):
+class UserStreamView(SingleUserMixin, BaseStreamView):
 
     active_tab = "posts"
     template_name = "users/activities.html"
@@ -225,7 +225,7 @@ class UserActivityStreamView(SingleUserMixin, BaseActivityStreamView):
         return data
 
 
-user_activity_stream_view = UserActivityStreamView.as_view()
+user_stream_view = UserStreamView.as_view()
 
 
 class UserCommentListView(SingleUserMixin, CommentListView):

@@ -3,14 +3,11 @@
 
 from django.urls import path
 
-from localhub.likes.views import (
-    liked_activity_stream_view,
-    liked_comment_list_view,
-)
+from localhub.likes.views import liked_comment_list_view, liked_stream_view
 
 app_name = "likes"
 
 urlpatterns = [
-    path("", liked_activity_stream_view, name="activities"),
+    path("", liked_stream_view, name="activities"),
     path("comments/", liked_comment_list_view, name="comments"),
 ]
