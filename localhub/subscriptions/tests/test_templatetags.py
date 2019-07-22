@@ -16,16 +16,15 @@ pytestmark = pytest.mark.django_db
 
 
 class TestIsSubscribed:
-    def test_user_anonymous(self):
-        assert not is_subscribed(AnonymousUser(), UserFactory())
+    def test_user_anonymous(self, community: Community):
+        assert not is_subscribed(AnonymousUser(), community, UserFactory())
 
     def test_is_subscribed(self, community: Community):
         user = UserFactory()
         sub = Subscription.objects.create(
             community=community, content_object=user, subscriber=UserFactory()
         )
-        assert is_subscribed(sub.subscriber, user)
+        assert is_subscribed(sub.subscriber, community, user)
 
-    def test_is_not_subscribed(self):
-        assert not is_subscribed(UserFactory(), UserFactory())
-        pass
+    def test_is_not_subscribed(self, community: Community):
+        assert not is_subscribed(UserFactory(), community, UserFactory())

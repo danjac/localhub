@@ -89,21 +89,9 @@ class TagDetailView(SingleTagMixin, BaseStreamView):
             .distinct()
         )
 
-    def is_subscribed(self):
-        if not self.request.user.is_authenticated:
-            return False
-
-        return Subscription.objects.filter(
-            content_type=ContentType.objects.get_for_model(self.object),
-            object_id=self.object.id,
-            subscriber=self.request.user,
-            community=self.request.community,
-        ).exists()
-
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
         data["tag"] = self.object
-        data["is_subscribed"] = self.is_subscribed()
         return data
 
 

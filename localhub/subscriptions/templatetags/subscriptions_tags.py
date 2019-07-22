@@ -6,13 +6,16 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Model
 
+from localhub.communities.models import Community
 from localhub.subscriptions.models import Subscription
 
 register = template.Library()
 
 
 @register.simple_tag
-def is_subscribed(user: settings.AUTH_USER_MODEL, obj: Model) -> bool:
+def is_subscribed(
+    user: settings.AUTH_USER_MODEL, community: Community, obj: Model
+) -> bool:
 
     if user.is_anonymous:
         return False
@@ -21,4 +24,5 @@ def is_subscribed(user: settings.AUTH_USER_MODEL, obj: Model) -> bool:
         content_type=ContentType.objects.get_for_model(obj),
         object_id=obj.pk,
         subscriber=user,
+        community=community,
     ).exists()

@@ -19,7 +19,7 @@
 
 {% has_perm "messageboard.create_message" user request.community as can_create_message %}
 {% has_perm "subscriptions.create_subscription" user request.community as can_create_subscription %}
-{% is_subscribed user user_obj as is_subscribed %}
+{% is_subscribed user request.community user_obj as is_subscribed %}
 
 <div class="float-right">
 {% if can_create_message %}

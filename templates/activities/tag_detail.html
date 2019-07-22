@@ -4,10 +4,13 @@
 {% extends "activities/base.html" %}
 {% load i18n %}
 {% load rules %}
+{% load subscriptions_tags %}
+
 {% block subtitle %} #{{ tag.slug }}{% endblock %}
 {% block activities_content %}
 
 {% has_perm "subscriptions.create_subscription" user request.community as can_create_subscription %}
+{% is_subscribed user request.community tag as is_subscribed %}
 
 {% if can_create_subscription %}
 <div class="float-right">
