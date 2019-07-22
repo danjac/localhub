@@ -9,31 +9,32 @@
 
 {% has_perm "subscriptions.create_subscription" user request.community as can_create_subscription %}
 
+{% if can_create_subscription %}
+<div class="float-right">
+  {% if is_subscribed %}
+  <a href="{% url 'activities:unsubscribe_tag' tag.slug %}"
+     class="btn btn-sm"
+     data-controller="ajax"
+     data-action="ajax#post">
+    {% trans "Unfollow" %}
+  </a>
+  {% else %}
+  <a href="{% url 'activities:subscribe_tag' tag.slug %}"
+     class="btn btn-sm"
+     data-controller="ajax"
+     data-action="ajax#post">
+    {% trans "Follow" %}
+  </a>
+  {% endif %}
+</div>
+<div class="clearfix"></div>
+{% endif %}
+
+
 <h3>#{{ tag.slug }}</h3>
 {% with total=paginator.count %}
 <h4 class="text-gray">{% blocktrans count counter=total %}{{ total }} result{% plural %}{{ total }} results{% endblocktrans %}</h4>
 {% endwith %}
-
-{% if can_create_subscription %}
-<div class="float-right">
-{% if is_subscribed %}
-    <a href="{% url 'activities:unsubscribe_tag' tag.slug %}"
-       class="btn btn-sm"
-       data-controller="ajax"
-       data-action="ajax#post">
-        {% trans "Unfollow" %}
-    </a>
-{% else %}
-    <a href="{% url 'activities:subscribe_tag' tag.slug %}"
-       class="btn btn-sm"
-       data-controller="ajax"
-       data-action="ajax#post">
-        {% trans "Follow" %}
-    </a>
-{% endif %}
-</div>
-<div class="clearfix"></div>
-{% endif %}
 
 {% for activity in object_list %}
 <div class="mt-2">
