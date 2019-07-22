@@ -3,11 +3,10 @@
 
 from django.urls import path
 
-from localhub.activities.views import (
-    activity_search_view,
-    activity_stream_view,
-    activity_tag_view,
+from localhub.activities.views.streams import search_view, stream_view
+from localhub.activities.views.tags import (
     tag_autocomplete_list_view,
+    tag_detail_view,
     tag_subscribe_view,
     tag_unsubscribe_view,
 )
@@ -15,14 +14,14 @@ from localhub.activities.views import (
 app_name = "activities"
 
 urlpatterns = [
-    path("", activity_stream_view, name="stream"),
-    path("search/", activity_search_view, name="search"),
+    path("", stream_view, name="stream"),
+    path("search/", search_view, name="search"),
     path(
         "tag-autocomplete/",
         tag_autocomplete_list_view,
         name="tag_autocomplete_list",
     ),
-    path("tag/<slug:slug>/", activity_tag_view, name="tag"),
+    path("tag/<slug:slug>/", tag_detail_view, name="tag"),
     path(
         "tag/<slug:slug>/subscribe/", tag_subscribe_view, name="subscribe_tag"
     ),
