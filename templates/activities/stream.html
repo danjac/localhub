@@ -9,7 +9,7 @@
 {% has_perm 'activities.create_activity' user request.community as can_create_activity %}
 {% if can_create_activity %}
 <div class="mb-1">
-  <select class="form-select" data-controller="location-select" data-action="select">
+  <select class="form-select" data-controller="location-select" data-action="location-select#select">
     <option>{% trans "Create new..." %}</option>
     <option value="{% url 'posts:create' %}">{% trans "Post" %}</option>
     <option value="{% url 'events:create' %}">{% trans "Event" %}</option>
