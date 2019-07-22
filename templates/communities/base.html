@@ -11,7 +11,7 @@
     <div class="column col-3 col-md-12 hide-md bg-gray p-2" data-target="sidebar.nav">
       <div class="show-md hide-lg mb-2">
         <a href="#"
-           class="btn btn-sm btn-block"
+           class="btn btn-sm btn-link"
            data-action="sidebar#toggle">{% trans "Close Sidebar" %}</a>
       </div>
       <ul class="menu">
@@ -36,12 +36,13 @@
       </ul>
     </div>
     <div class="column col-9 col-md-12" data-target="sidebar.main">
-      <div class="show-md hide-lg mb-2">
+      <div class="show-md hide-lg mb-2 float-right">
         <a href="#"
-           class="btn btn-sm"
+           class="btn btn-sm btn-link"
            data-action="sidebar#toggle"
            >{% trans "Sidebar" %}</a>
       </div>
+      <div class="clearfix"></div>
       {% block settings_content %}{% endblock %}
     </div>
   </div>
