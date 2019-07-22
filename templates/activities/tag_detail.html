@@ -14,24 +14,25 @@
 <h4 class="text-gray">{% blocktrans count counter=total %}{{ total }} result{% plural %}{{ total }} results{% endblocktrans %}</h4>
 {% endwith %}
 
-{% if can_create_subscription and not is_auth_user and not is_subscribed %}
-<p class="mt-2">
-    <a href="{% url 'activities:subscribe_tag' tag.slug %}"
-       class="btn btn-primary"
-       data-controller="ajax"
-       data-action="ajax#post">
-        {% trans "Follow" %}
-    </a>
-</p>
-{% elif is_subscribed %}
-<p class="mt-2">
+{% if can_create_subscription %}
+<div class="float-right">
+{% if is_subscribed %}
     <a href="{% url 'activities:unsubscribe_tag' tag.slug %}"
-       class="btn"
+       class="btn btn-sm"
        data-controller="ajax"
        data-action="ajax#post">
         {% trans "Unfollow" %}
     </a>
-</p>
+{% else %}
+    <a href="{% url 'activities:subscribe_tag' tag.slug %}"
+       class="btn btn-sm"
+       data-controller="ajax"
+       data-action="ajax#post">
+        {% trans "Follow" %}
+    </a>
+{% endif %}
+</div>
+<div class="clearfix"></div>
 {% endif %}
 
 {% for activity in object_list %}
