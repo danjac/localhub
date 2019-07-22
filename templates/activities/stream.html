@@ -9,15 +9,12 @@
 {% has_perm 'activities.create_activity' user request.community as can_create_activity %}
 {% if can_create_activity %}
 <div class="mb-1">
-    <a href="{% url 'posts:create' %}" class="btn">
-        {% trans "Submit Post" %}
-    </a>
-    <a href="{% url 'events:create' %}" class="btn">
-        {% trans "Submit Event" %}
-    </a>
-    <a href="{% url 'photos:create' %}" class="btn">
-        {% trans "Submit Photo" %}
-    </a>
+  <select class="form-select" data-controller="location-select" data-action="select">
+    <option>{% trans "Create new..." %}</option>
+    <option value="{% url 'posts:create' %}">{% trans "Post" %}</option>
+    <option value="{% url 'events:create' %}">{% trans "Event" %}</option>
+    <option value="{% url 'photos:create' %}">{% trans "Photo" %}</option>
+  </select>
 </div>
 {% elif user.is_authenticated %}
 <p class="bg-gray p-2 text-center">
@@ -32,7 +29,6 @@
 </p>
 {% endif %}
 
-{# include "activities/includes/show_all_toggle.html" #}
 
 {% for activity in object_list %}
 <div class="mt-2">
