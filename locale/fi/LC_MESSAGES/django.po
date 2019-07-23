@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-23 07:20+0000\n"
+"POT-Creation-Date: 2019-07-23 10:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,7 +69,7 @@ msgid "Your update has been posted"
 msgstr ""
 
 #: localhub/activities/views/generic.py:86
-#: templates/activities/activity_form.html:17
+#: templates/activities/activity_form.html:16
 #: templates/activities/includes/comments.html:23
 msgid "Submit"
 msgstr "Lähetä"
@@ -200,6 +200,7 @@ msgid "This community is currently live."
 msgstr ""
 
 #: localhub/communities/models.py:96
+#: templates/activities/includes/sidebar.html:109
 msgid "Communities"
 msgstr "Yhteisöt"
 
@@ -487,7 +488,7 @@ msgstr ""
 msgid "Either title or URL must be provided"
 msgstr ""
 
-#: localhub/posts/models.py:33
+#: localhub/posts/models.py:33 templates/activities/includes/sidebar.html:82
 msgid "Post"
 msgstr "Postaus"
 
@@ -960,6 +961,7 @@ msgid "Comments"
 msgstr "Kommentit"
 
 #: templates/activities/includes/comments.html:16
+#: templates/activities/includes/comments_count.html:15
 msgid "Post a Comment"
 msgstr "Lähetä Kommentti"
 
@@ -974,7 +976,7 @@ msgstr ""
 msgid "You do not have permission to post comments on this site."
 msgstr ""
 
-#: templates/activities/includes/comments_count.html:7
+#: templates/activities/includes/comments_count.html:9
 msgid ""
 "\n"
 "  Comment\n"
@@ -983,8 +985,12 @@ msgid_plural ""
 "\n"
 "  Comments\n"
 "  "
-msgstr[0] "\nKommentti"
-msgstr[1] "\nKommenttia"
+msgstr[0] ""
+"\n"
+"Kommentti"
+msgstr[1] ""
+"\n"
+"Kommenttia"
 
 #: templates/activities/includes/content.html:10
 msgid "Sensitive Content"
@@ -1051,75 +1057,86 @@ msgid ""
 "a> containing tags you are following\n"
 msgstr ""
 
-#: templates/activities/includes/sidebar.html:25
-#: templates/activities/stream.html:12 templates/posts/post_list.html:10
-msgid "Submit Post"
-msgstr "Lähetä Postaus"
-
-#: templates/activities/includes/sidebar.html:32
+#: templates/activities/includes/sidebar.html:27
 #: templates/notifications/base.html:6
 msgid "Notifications"
 msgstr "Tiedotteet"
 
-#: templates/activities/includes/sidebar.html:39
+#: templates/activities/includes/sidebar.html:34
 msgid "Direct Messages"
 msgstr "Suoraat Viestit"
 
-#: templates/activities/includes/sidebar.html:45 templates/likes/base.html:7
+#: templates/activities/includes/sidebar.html:40 templates/likes/base.html:7
 #: templates/likes/base.html:11
 msgid "Favorites"
 msgstr "Suosikit"
 
-#: templates/activities/includes/sidebar.html:50
+#: templates/activities/includes/sidebar.html:45
 #: templates/subscriptions/base.html:7 templates/subscriptions/base.html:11
 msgid "Following"
 msgstr "Minun Seuraamat"
 
-#: templates/activities/includes/sidebar.html:56
+#: templates/activities/includes/sidebar.html:51
 #: templates/communities/base.html:28
 #: templates/communities/membership_list.html:11
 #: templates/users/user_list.html:16
 msgid "Members"
 msgstr "Jäsenet"
 
-#: templates/activities/includes/sidebar.html:60
+#: templates/activities/includes/sidebar.html:55
 #: templates/users/includes/sidebar.html:15
 msgid "My Profile"
 msgstr "Oma Profiili"
 
-#: templates/activities/includes/sidebar.html:64
+#: templates/activities/includes/sidebar.html:59
 #: templates/communities/base.html:22 templates/users/account_base.html:7
 msgid "My Settings"
 msgstr "Omat Asetukset"
 
-#: templates/activities/includes/sidebar.html:67
+#: templates/activities/includes/sidebar.html:62
 #: templates/communities/base.html:25
 #: templates/communities/community_form.html:9
 #: templates/users/includes/sidebar.html:20
 msgid "Community Settings"
 msgstr "Yhteisön Asetukset"
 
-#: templates/activities/includes/sidebar.html:75
+#: templates/activities/includes/sidebar.html:70
 msgid "Flagged"
 msgstr ""
 
-#: templates/activities/includes/sidebar.html:82 templates/likes/base.html:16
+#: templates/activities/includes/sidebar.html:85
+#, fuzzy
+#| msgid "Events"
+msgid "Event"
+msgstr "Tapahtuma"
+
+#: templates/activities/includes/sidebar.html:88
+#, fuzzy
+#| msgid "Photos"
+msgid "Photo"
+msgstr "Valokuva"
+
+#: templates/activities/includes/sidebar.html:94
+msgid "Activities"
+msgstr "Toiminta"
+
+#: templates/activities/includes/sidebar.html:96 templates/likes/base.html:16
 #: templates/posts/post_form.html:7 templates/posts/post_list.html:4
 #: templates/users/base.html:59
 msgid "Posts"
 msgstr "Postaukset"
 
-#: templates/activities/includes/sidebar.html:85
+#: templates/activities/includes/sidebar.html:99
 #: templates/events/event_form.html:4 templates/events/event_list.html:4
 msgid "Events"
 msgstr "Tapahtumat"
 
-#: templates/activities/includes/sidebar.html:88
+#: templates/activities/includes/sidebar.html:102
 #: templates/photos/photo_form.html:7 templates/photos/photo_list.html:4
 msgid "Photos"
 msgstr "Valokuvat"
 
-#: templates/activities/includes/sidebar.html:115
+#: templates/activities/includes/sidebar.html:130
 msgid "More Details"
 msgstr ""
 
@@ -1151,38 +1168,42 @@ msgstr[1] ""
 msgid "Sorry, no results found for your search"
 msgstr ""
 
-#: templates/activities/stream.html:7
+#: templates/activities/stream.html:10
 msgid "Latest"
 msgstr ""
 
-#: templates/activities/stream.html:13 templates/events/event_list.html:11
+#: templates/activities/stream.html:24
+msgid "Start a conversation..."
+msgstr "Aloita keskustelu..."
+
+#: templates/activities/stream.html:28 templates/events/event_list.html:11
 msgid "Submit Event"
 msgstr "Lähetä Tapahtuma"
 
-#: templates/activities/stream.html:14 templates/photos/photo_list.html:10
+#: templates/activities/stream.html:29 templates/photos/photo_list.html:10
 msgid "Submit Photo"
 msgstr "Lähetä Valokuva"
 
-#: templates/activities/stream.html:20
+#: templates/activities/stream.html:35
 #, python-format
 msgid ""
 "You do not have permission to post to this site. You can send a request to "
 "join this community <a href=\"%(join_request_url)s\">here</a>."
 msgstr ""
 
-#: templates/activities/stream.html:26
+#: templates/activities/stream.html:41
 #, python-format
 msgid ""
 "Please <a href=\"%(login_url)s\">sign in</a> to post content to this site."
 msgstr ""
 
-#: templates/activities/stream.html:38
+#: templates/activities/stream.html:53
 msgid ""
 "Nothing has been posted yet by people you are following. Click 'Show All' to "
 "see all content."
 msgstr ""
 
-#: templates/activities/stream.html:40
+#: templates/activities/stream.html:55
 msgid "Nothing has been posted yet"
 msgstr ""
 
@@ -1354,7 +1375,7 @@ msgstr[1] ""
 #: templates/photos/includes/photo.html:64
 #: templates/posts/includes/post.html:44
 msgid "Permalink"
-msgstr ""
+msgstr "Pysyvä linkki"
 
 #: templates/comments/includes/notification.html:13
 #, python-format
@@ -1396,7 +1417,7 @@ msgstr ""
 
 #: templates/communities/access_denied.html:6
 msgid "Access Denied"
-msgstr ""
+msgstr "Kielletty"
 
 #: templates/communities/access_denied.html:8
 msgid "You do not have permission to view this community"
@@ -1408,11 +1429,11 @@ msgstr ""
 
 #: templates/communities/community_detail.html:13
 msgid "Edit Community Settings"
-msgstr ""
+msgstr "Muokkaa Yhteisön Asetukset"
 
 #: templates/communities/community_detail.html:24
 msgid "Description"
-msgstr ""
+msgstr "Kuvaus"
 
 #: templates/communities/community_detail.html:32
 msgid "Terms & Conditions"
@@ -1422,7 +1443,7 @@ msgstr ""
 #: templates/communities/membership_form.html:23
 #: templates/users/user_form.html:20
 msgid "Save settings"
-msgstr ""
+msgstr "Päivitä asetukset"
 
 #: templates/communities/leave.html:11
 msgid ""
@@ -1434,11 +1455,11 @@ msgstr ""
 
 #: templates/communities/leave.html:16 templates/users/includes/sidebar.html:37
 msgid "Leave community"
-msgstr ""
+msgstr "Lähde Yhteisöstä"
 
 #: templates/communities/membership_confirm_delete.html:4
 msgid "Delete Membership"
-msgstr ""
+msgstr "Poista jäsenyys"
 
 #: templates/communities/membership_confirm_delete.html:8
 msgid "Do you really want to delete this membership?"
@@ -1457,7 +1478,7 @@ msgstr ""
 
 #: templates/communities/membership_list.html:17
 msgid "Role"
-msgstr ""
+msgstr "Rooli"
 
 #: templates/communities/membership_list.html:18
 #: templates/flags/includes/flags.html:11 templates/invites/invite_list.html:24
@@ -1508,7 +1529,7 @@ msgstr ""
 
 #: templates/events/event_confirm_delete.html:4
 msgid "Delete Event"
-msgstr ""
+msgstr "Poista Tapahtuma"
 
 #: templates/events/event_confirm_delete.html:8
 msgid "Do you really want to delete this event?"
@@ -1547,19 +1568,19 @@ msgstr ""
 
 #: templates/events/includes/event.html:37
 msgid "Starts"
-msgstr ""
+msgstr "Alkaa"
 
 #: templates/events/includes/event.html:41
 msgid "Ends"
-msgstr ""
+msgstr "Loppuu"
 
 #: templates/events/includes/event.html:47
 msgid "Timezone"
-msgstr ""
+msgstr "Aikavyöhyke"
 
 #: templates/events/includes/event.html:50
 msgid "Location"
-msgstr ""
+msgstr "Sijainti"
 
 #: templates/events/includes/event.html:56
 msgid "Online"
@@ -1567,7 +1588,7 @@ msgstr ""
 
 #: templates/events/includes/event.html:62
 msgid "Admission"
-msgstr ""
+msgstr "Hinta"
 
 #: templates/events/includes/event.html:86
 msgid ""
@@ -1583,7 +1604,7 @@ msgstr[1] ""
 
 #: templates/flags/flag_list.html:11 templates/flags/includes/flags.html:9
 msgid "User"
-msgstr ""
+msgstr "Käyttäjä"
 
 #: templates/flags/flag_list.html:12
 msgid "Type"
@@ -1591,7 +1612,7 @@ msgstr ""
 
 #: templates/flags/flag_list.html:13 templates/flags/includes/flags.html:10
 msgid "Reason"
-msgstr ""
+msgstr "Syy"
 
 #: templates/flags/flag_list.html:28
 msgid "No flags at the moment"
@@ -1604,23 +1625,23 @@ msgstr ""
 #: templates/includes/confirm_dialog.html:3
 #: templates/includes/confirm_dialog.html:6
 msgid "Close"
-msgstr ""
+msgstr "Sulje"
 
 #: templates/includes/forms/widgets/calendar.html:8
 msgid "Calendar"
-msgstr ""
+msgstr "Kalenteri"
 
 #: templates/includes/pagination.html:17
 msgid "Previous"
-msgstr ""
+msgstr "Seuraava"
 
 #: templates/includes/pagination.html:29
 msgid "Next"
-msgstr ""
+msgstr "Viimeinen"
 
 #: templates/invites/emails/invitation.txt:7
 msgid "Hi"
-msgstr ""
+msgstr "Hei"
 
 #: templates/invites/emails/invitation.txt:9
 #, python-format
@@ -2051,6 +2072,10 @@ msgstr "Poista Postaus"
 #: templates/posts/post_confirm_delete.html:8
 msgid "Do you really want to delete this post?"
 msgstr "Haluatko varmasti poistaa tämän postauksen?"
+
+#: templates/posts/post_list.html:10
+msgid "Submit Post"
+msgstr "Lähetä Postaus"
 
 #: templates/posts/post_list.html:18
 #, python-format

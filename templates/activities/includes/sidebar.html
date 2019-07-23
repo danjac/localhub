@@ -20,17 +20,6 @@
        href="{% url 'activities:stream' %}">{% trans "Home" %}
     </a>
   </li>
-  {% if can_create_activity %}
-  <li class="menu-item">
-    <a href="{% url 'posts:create' %}">{% trans "Submit Post" %}</a>
-  </li>
-  <li class="menu-item">
-    <a href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
-  </li>
-  <li class="menu-item">
-    <a href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
-  </li>
-  {% endif %}
   {% if is_member %}
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'notifications:list' %}">
@@ -84,6 +73,25 @@
   </li>
   {% endif %}
   {% endif %}
+</ul>
+
+{% if can_create_activity %}
+<ul class="menu mt-2">
+  <li class="divider" data-content="Submit">
+  <li class="menu-item">
+    <a href="{% url 'posts:create' %}">{% trans "Post" %}</a>
+  </li>
+  <li class="menu-item">
+    <a href="{% url 'events:create' %}">{% trans "Event" %}</a>
+  </li>
+  <li class="menu-item">
+    <a href="{% url 'photos:create' %}">{% trans "Photo" %}</a>
+  </li>
+</ul>
+{% endif %}
+
+<ul class="menu mt-2">
+  <li class="divider" data-content="{% trans 'Activities' %}">
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
   </li>
@@ -94,10 +102,11 @@
     <a data-controller="active-link" href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
   </li>
 </ul>
+
 {% get_communities as communities %}
 {% if communities|length > 1 %}
 <ul class="menu mt-2">
-  <li class="divider" data-content="Communities"></li>
+  <li class="divider" data-content="{% trans 'Communities' %}"></li>
   {% for community in communities %}
   <li class="menu-item">
     {% if community.id == request.community.id %}

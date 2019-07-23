@@ -26,3 +26,7 @@
 .menu-item.selected {
   @extend .bg-secondary;
 }
+
+.conversation-input {
+  height: 2.0rem;
+}

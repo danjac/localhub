@@ -6,16 +6,6 @@
 
 {% block activities_content %}
 {% include "activities/includes/breadcrumbs.html" %}
-
-{% if object_type and not object %}
-<div class="float-right">
-  {% if object_type != 'post' %}<a class="btn btn-sm" href="{% url 'posts:create' %}">{% trans "Submit Post" %}</a>{% endif %}
-  {% if object_type != 'event' %}<a class="btn btn-sm" href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>{% endif %}
-  {% if object_type != 'photo' %}<a class="btn btn-sm" href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>{% endif %}
-</div>
-<div class="clearfix"></div>
-{% endif %}
-
 <form method="POST"
       action="{{ request.path }}"
       data-controller="form"
