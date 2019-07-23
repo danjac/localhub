@@ -73,32 +73,17 @@
     <a data-controller="active-link"
        href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
   </li>
-  <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'subscriptions:user_list' %}">
-      {% trans "Following" %}
-    </a>
-  </li>
+  <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
        href="{% url 'users:list' %}">{% trans "Members" %}</a>
   </li>
-
-  {% if can_manage_community %}
-  <li class="menu-item"><a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a></li>
-  {% endif %}
-  {% if can_moderate_community %}
-  {% get_flags_count as num_flags %}
-  {% if num_flags %}
   <li class="menu-item">
-    <a href="{% url 'flags:list' %}">
-      <span class="badge" data-badge="{{ num_flags }}">
-        {% trans "Flagged" %}
-      </span>
+    <a data-controller="active-link" href="{% url 'subscriptions:user_list' %}">
+      {% trans "Following" %}
     </a>
   </li>
-  {% endif %}
-  {% endif %}
 </ul>
 
 <ul class="menu mt-2">
@@ -122,10 +107,49 @@
       {% trans "Tags" %}
     </a>
   </li>
+  {% if can_moderate_community %}
+  {% get_flags_count as num_flags %}
+  {% if num_flags %}
+  <li class="menu-item">
+    <a href="{% url 'flags:list' %}">
+      <span class="badge" data-badge="{{ num_flags }}">
+        {% trans "Flagged" %}
+      </span>
+    </a>
+  </li>
+  {% endif %}
+  {% endif %}
 </ul>
-
 {% endif %}
 
+{% if request.community.description or request.community.terms %}
+{% url 'communities:community_detail' as community_detail_url %}
+{% url 'communities:community_update' as community_update_url %}
+<div class="panel mt-2 p-1">
+  <div class="panel-header">
+    <div class="panel-title">
+      {% blocktrans with name=request.community.name %}About {{ name }}{% endblocktrans %}
+    </div>
+  </div>
+  <div class="panel-body">
+    {% if request.community.description %}
+    <p>
+      {{ request.community.description.markdown|truncatewords_html:30 }}
+    </p>
+    <a href="{{ community_detail_url }}">{% trans "More Details" %}</a>
+    {% elif request.community.terms %}
+    <a href="{{ community_detail_url }}">{% trans "Terms" %}</a>
+    {% endif %}
+    {% if can_manage_community %}
+    <a href="{{ community_update_url }}">{% trans "Community Settings" %}</a>
+    {% endif %}
+  </div>
+</div>
+{% elif can_manage_community %}
+<div class="panel mt-2 p-1">
+  <a href="{{ community_update_url }}">{% trans "Community Settings" %}</a>
+</div>
+{% endif %}
 
 {% get_communities as communities %}
 {% if communities|length > 1 %}
@@ -144,16 +168,3 @@
   {% endfor %}
 </ul>
 {% endif %}
-
-{% if request.community.description %}
-<div class="panel mt-2 p-1">
-  <div class="panel-body">
-    <p>
-      {{ request.community.description.markdown|truncatewords_html:30 }}
-    </p>
-    <a href="{% url 'communities:community_detail' %}">{% trans "More Details" %}</a>
-  </div>
-</div>
-{% endif %}
-
-
