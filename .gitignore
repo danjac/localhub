@@ -21,7 +21,7 @@ logs
 npm-debug.log*
 
 # Translations
-*.mo
+# *.mo
 *.pot
 
 # Django media/static dirs
