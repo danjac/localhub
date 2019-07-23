@@ -99,6 +99,11 @@ class ActivityCreateView(
         messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["object_type"] = self.model._meta.verbose_name
+        return data
+
 
 class ActivityListView(MultipleActivityMixin, ListView):
     allow_empty = True
@@ -144,6 +149,11 @@ class ActivityUpdateView(
 
         messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["object_type"] = self.object._meta.verbose_name
+        return data
 
 
 class ActivityDeleteView(

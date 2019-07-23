@@ -10,8 +10,6 @@
 {% if can_create_activity %}
 <div class="float-right">
   <a href="{% url 'posts:create' %}" class="btn btn-sm">{% trans "Submit Post" %}</a>
-  <a href="{% url 'events:create' %}" class="btn btn-sm">{% trans "Submit Event" %}</a>
-  <a href="{% url 'photos:create' %}" class="btn btn-sm">{% trans "Submit Photo" %}</a>
 </div>
 <div class="clearfix"></div>
 {% elif user.is_authenticated %}

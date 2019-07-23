@@ -236,7 +236,7 @@ class Base(Configuration):
         }
 
     @property
-    def LOCALE_PATHS(self) -> str:
+    def LOCALE_PATHS(self) -> List[str]:
         return [os.path.join(self.BASE_DIR, "locale")]
 
 
