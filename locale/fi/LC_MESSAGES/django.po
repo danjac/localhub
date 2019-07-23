@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-23 10:08+0000\n"
+"POT-Creation-Date: 2019-07-23 10:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -200,7 +200,7 @@ msgid "This community is currently live."
 msgstr ""
 
 #: localhub/communities/models.py:96
-#: templates/activities/includes/sidebar.html:109
+#: templates/activities/includes/sidebar.html:133
 msgid "Communities"
 msgstr "Yhteisöt"
 
@@ -488,7 +488,7 @@ msgstr ""
 msgid "Either title or URL must be provided"
 msgstr ""
 
-#: localhub/posts/models.py:33 templates/activities/includes/sidebar.html:82
+#: localhub/posts/models.py:33 templates/activities/includes/sidebar.html:58
 msgid "Post"
 msgstr "Postaus"
 
@@ -1066,77 +1066,96 @@ msgstr "Tiedotteet"
 msgid "Direct Messages"
 msgstr "Suoraat Viestit"
 
-#: templates/activities/includes/sidebar.html:40 templates/likes/base.html:7
-#: templates/likes/base.html:11
-msgid "Favorites"
-msgstr "Suosikit"
+#: templates/activities/includes/sidebar.html:40
+#: templates/communities/base.html:22 templates/users/account_base.html:7
+msgid "My Settings"
+msgstr "Omat Asetukset"
 
-#: templates/activities/includes/sidebar.html:45
+#: templates/activities/includes/sidebar.html:43
+#: templates/activities/includes/sidebar.html:107 templates/likes/base.html:16
+#: templates/posts/post_form.html:7 templates/posts/post_list.html:4
+#: templates/users/base.html:59
+msgid "Posts"
+msgstr "Postaukset"
+
+#: templates/activities/includes/sidebar.html:46
+#: templates/activities/includes/sidebar.html:110
+#: templates/events/event_form.html:4 templates/events/event_list.html:4
+msgid "Events"
+msgstr "Tapahtumat"
+
+#: templates/activities/includes/sidebar.html:49
+#: templates/activities/includes/sidebar.html:113
+#: templates/photos/photo_form.html:7 templates/photos/photo_list.html:4
+msgid "Photos"
+msgstr "Valokuvat"
+
+#: templates/activities/includes/sidebar.html:56
+#, fuzzy
+#| msgid "Submit"
+msgid "Submit New"
+msgstr "Lähetä Uusi"
+
+#: templates/activities/includes/sidebar.html:61
+#, fuzzy
+#| msgid "Events"
+msgid "Event"
+msgstr "Tapahtuma"
+
+#: templates/activities/includes/sidebar.html:64
+#, fuzzy
+#| msgid "Photos"
+msgid "Photo"
+msgstr "Valokuva"
+
+#: templates/activities/includes/sidebar.html:71
+#: templates/subscriptions/base.html:16
+msgid "People"
+msgstr "Ihmiset"
+
+#: templates/activities/includes/sidebar.html:74
+#: templates/users/includes/sidebar.html:15
+msgid "My Profile"
+msgstr "Oma Profiili"
+
+#: templates/activities/includes/sidebar.html:78
 #: templates/subscriptions/base.html:7 templates/subscriptions/base.html:11
 msgid "Following"
 msgstr "Minun Seuraamat"
 
-#: templates/activities/includes/sidebar.html:51
+#: templates/activities/includes/sidebar.html:84
 #: templates/communities/base.html:28
 #: templates/communities/membership_list.html:11
 #: templates/users/user_list.html:16
 msgid "Members"
 msgstr "Jäsenet"
 
-#: templates/activities/includes/sidebar.html:55
-#: templates/users/includes/sidebar.html:15
-msgid "My Profile"
-msgstr "Oma Profiili"
-
-#: templates/activities/includes/sidebar.html:59
-#: templates/communities/base.html:22 templates/users/account_base.html:7
-msgid "My Settings"
-msgstr "Omat Asetukset"
-
-#: templates/activities/includes/sidebar.html:62
+#: templates/activities/includes/sidebar.html:88
 #: templates/communities/base.html:25
 #: templates/communities/community_form.html:9
 #: templates/users/includes/sidebar.html:20
 msgid "Community Settings"
 msgstr "Yhteisön Asetukset"
 
-#: templates/activities/includes/sidebar.html:70
+#: templates/activities/includes/sidebar.html:96
 msgid "Flagged"
 msgstr ""
 
-#: templates/activities/includes/sidebar.html:85
-#, fuzzy
-#| msgid "Events"
-msgid "Event"
-msgstr "Tapahtuma"
-
-#: templates/activities/includes/sidebar.html:88
-#, fuzzy
-#| msgid "Photos"
-msgid "Photo"
-msgstr "Valokuva"
-
-#: templates/activities/includes/sidebar.html:94
+#: templates/activities/includes/sidebar.html:105
 msgid "Activities"
 msgstr "Toiminta"
 
-#: templates/activities/includes/sidebar.html:96 templates/likes/base.html:16
-#: templates/posts/post_form.html:7 templates/posts/post_list.html:4
-#: templates/users/base.html:59
-msgid "Posts"
-msgstr "Postaukset"
+#: templates/activities/includes/sidebar.html:117 templates/likes/base.html:7
+#: templates/likes/base.html:11
+msgid "Favorites"
+msgstr "Suosikit"
 
-#: templates/activities/includes/sidebar.html:99
-#: templates/events/event_form.html:4 templates/events/event_list.html:4
-msgid "Events"
-msgstr "Tapahtumat"
+#: templates/activities/includes/sidebar.html:122
+#: templates/subscriptions/base.html:20
+msgid "Tags"
+msgstr "Tagit"
 
-#: templates/activities/includes/sidebar.html:102
-#: templates/photos/photo_form.html:7 templates/photos/photo_list.html:4
-msgid "Photos"
-msgstr "Valokuvat"
-
-#: templates/activities/includes/sidebar.html:130
+#: templates/activities/includes/sidebar.html:154
 msgid "More Details"
 msgstr ""
 
@@ -2094,14 +2113,6 @@ msgstr ""
 #: templates/posts/post_list.html:37
 msgid "No posts have been submitted yet"
 msgstr ""
-
-#: templates/subscriptions/base.html:16
-msgid "People"
-msgstr "Ihmiset"
-
-#: templates/subscriptions/base.html:20
-msgid "Tags"
-msgstr "Tagit"
 
 #: templates/subscriptions/tag_list.html:24
 msgid "You are not following any tags right now"

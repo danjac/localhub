@@ -12,6 +12,6 @@ app_name = "subscriptions"
 
 
 urlpatterns = [
-    path("", view=subscribed_user_list_view, name="user_list"),
+    path("users/", view=subscribed_user_list_view, name="user_list"),
     path("tags/", view=subscribed_tag_list_view, name="tag_list"),
 ]
