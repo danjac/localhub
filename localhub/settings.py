@@ -7,6 +7,7 @@ import socket
 from typing import Any, Dict, List
 
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 from configurations import Configuration, values
 
@@ -77,6 +78,7 @@ class Base(Configuration):
         "django.middleware.security.SecurityMiddleware",
         "django.contrib.sites.middleware.CurrentSiteMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
+        "django.middleware.locale.LocaleMiddleware",
         "localhub.core.turbolinks.middleware.TurbolinksMiddleware",
         "localhub.communities.middleware.CurrentCommunityMiddleware",
         "django.middleware.common.CommonMiddleware",
@@ -130,6 +132,8 @@ class Base(Configuration):
     # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
     LANGUAGE_CODE = "en-us"
+
+    LANGUAGES = [("en", _("English")), ("fi", _("Finnish"))]
 
     TIME_ZONE = "UTC"
 
@@ -230,6 +234,10 @@ class Base(Configuration):
                 },
             }
         }
+
+    @property
+    def LOCALE_PATHS(self) -> str:
+        return [os.path.join(self.BASE_DIR, "locale")]
 
 
 class DockerConfigMixin:
