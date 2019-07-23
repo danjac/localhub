@@ -62,7 +62,6 @@ class TestPostCreateView:
     def test_get(self, client: Client, member: Membership):
         response = client.get(reverse("posts:create"))
         assert response.status_code == 200
-        assert response.context["object_type"] == "post"
 
     def test_post(self, client: Client, member: Membership):
         response = client.post(
@@ -80,7 +79,6 @@ class TestPostUpdateView:
             reverse("posts:update", args=[post_for_member.id])
         )
         assert response.status_code == 200
-        assert response.context["object_type"] == "post"
 
     def test_post(self, client: Client, post_for_member: Post):
         response = client.post(
