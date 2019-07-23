@@ -8,8 +8,8 @@
 {% load users_tags %}
 
 {% block subtitle %} - {% trans "Latest" %}{% endblock %}
-{% block activities_content %}
-{% has_perm 'activities.create_activity' user request.community as can_create_activity %}
+{% block content %}
+{% has_perm 'activities.create_activity' user community as can_create_activity %}
 {% if can_create_activity %}
 <div class="mb-1">
   <div class="input-group">
@@ -21,7 +21,7 @@
            data-controller="linkify"
            data-action="focus->linkify#go"
            data-linkify-url="{% url 'posts:create' %}"
-           placeholder="{% trans 'Start a conversation...'%}">
+           placeholder="{% trans "What's on your mind?" %}">
   </div>
 </div>
 <div class="float-right">
@@ -59,4 +59,4 @@
 
 
 {% include "includes/pagination.html" %}
-{% endblock activities_content %}
+{% endblock content %}

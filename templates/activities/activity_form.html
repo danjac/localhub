@@ -4,7 +4,7 @@
 {% extends "activities/base.html" %}
 {% load i18n %}
 
-{% block activities_content %}
+{% block content %}
 {% include "activities/includes/breadcrumbs.html" %}
 <form method="POST"
       action="{{ request.path }}"
@@ -16,4 +16,4 @@
       {% trans "Submit" %}
   </button>
 </form>
-{% endblock activities_content %}
+{% endblock content %}

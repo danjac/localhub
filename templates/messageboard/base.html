@@ -1,14 +1,14 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "activities/base.html" %}
+{% extends "base.html" %}
 
 {% load i18n %}
 {% load rules %}
 
-{% block activities_content %}
+{% block content %}
 {% block messageboard_header %}
-{% has_perm "messageboard.create_message" user request.community as can_create_message %}
+{% has_perm "messageboard.create_message" user community as can_create_message %}
 
 {% if can_create_message %}
 <div class="float-right">
@@ -32,4 +32,4 @@
 
 {% endblock messageboard_header %}
 {% block messageboard_content %}{% endblock %}
-{% endblock activities_content %}
+{% endblock content %}

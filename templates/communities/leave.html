@@ -4,7 +4,7 @@
 {% extends "users/account_base.html" %}
 {% load i18n %}
 
-{% block users_content %}
+{% block content %}
 <form method="POST" action="{{ request.path }}">
   {% csrf_token %}
   <p>
@@ -16,4 +16,4 @@
   <button class="btn btn-primary" type="submit">{% trans "Leave community" %}</button>
 </form>
 
-{% endblock users_content %}
+{% endblock content %}

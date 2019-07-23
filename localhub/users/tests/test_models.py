@@ -9,7 +9,10 @@ from django.contrib.auth import get_user_model
 from allauth.account.models import EmailAddress
 
 from localhub.communities.models import Community, Membership
+from localhub.messageboard.tests.factories import MessageRecipientFactory
+from localhub.notifications.models import Notification
 from localhub.subscriptions.models import Subscription
+from localhub.posts.tests.factories import PostFactory
 from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
@@ -111,3 +114,42 @@ class TestUserManager:
 class TestUserModel:
     def test_get_absolute_url(self, user: settings.AUTH_USER_MODEL):
         assert user.get_absolute_url() == f"/people/{user.username}/"
+
+    def test_has_email_pref(self):
+        user = UserFactory(email_preferences=["messages"])
+        assert user.has_email_pref("messages")
+
+    def test_does_not_have_email_pref(self):
+        user = UserFactory()
+        assert not user.has_email_pref("messages")
+
+    def test_has_role(self, moderator: Membership):
+        assert moderator.member.has_role(
+            moderator.community, Membership.ROLES.moderator
+        )
+
+    def test_does_not_have_role(self, member: Membership):
+        assert not member.member.has_role(
+            member.community, Membership.ROLES.moderator
+        )
+
+    def test_get_unread_notification_count(
+        self, user: settings.AUTH_USER_MODEL, community: Community
+    ):
+        Notification.objects.create(
+            verb="mention",
+            recipient=user,
+            community=community,
+            content_object=PostFactory(),
+            actor=UserFactory(),
+        )
+        assert user.get_unread_notification_count(community) == 1
+
+    def test_get_unread_message_count(self):
+        recipient = MessageRecipientFactory()
+        assert (
+            recipient.recipient.get_unread_message_count(
+                recipient.message.community
+            )
+            == 1
+        )

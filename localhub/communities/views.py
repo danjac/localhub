@@ -52,7 +52,7 @@ class CommunityRequiredMixin:
 
     @no_type_check
     def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        if not request.community:
+        if request.community.is_anonymous:
             return self.handle_community_not_found()
 
         if (

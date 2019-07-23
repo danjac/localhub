@@ -1,6 +1,6 @@
 {% extends "invites/base.html" %}
 {% load i18n %}
-{% block settings_content %}
+{% block content %}
 <h3>{% trans "Delete Invite" %}</h3>
 
 <form method="POST" action="{{ request.path }}">
@@ -10,4 +10,4 @@
   <button class="btn btn-primary" type="submit">{% trans "Delete" %}</button>
 </form>
 
-{% endblock settings_content %}
+{% endblock content %}

@@ -4,7 +4,7 @@
 {% extends "users/account_base.html" %}
 {% load i18n %}
 
-{% block users_content %}
+{% block content %}
 <form method="POST" action="{% url 'user_delete' %}">
   {% csrf_token %}
   <p>
@@ -16,4 +16,4 @@
   <button class="btn btn-primary" type="submit">{% trans "Delete account" %}</button>
 </form>
 
-{% endblock users_content %}
+{% endblock content %}

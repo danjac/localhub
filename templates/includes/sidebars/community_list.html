@@ -1,0 +1,23 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% load communities_tags %}
+
+{% get_communities as communities %}
+{% if communities|length > 1 %}
+<ul class="menu mt-2">
+  <li class="divider" data-content="{% trans 'Communities' %}"></li>
+  {% for community in communities %}
+  <li class="menu-item">
+    {% if community.id == community.id %}
+    <strong>{{ community.name }}</strong>
+    {% else %}
+    <a href="{{ community.get_absolute_url }}">
+      {{ community.name }}
+    </a>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}

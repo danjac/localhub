@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load rules %}
 
-{% has_perm "communities.moderate_community" user request.community as can_moderate_community %}
+{% has_perm "communities.moderate_community" user community as can_moderate_community %}
 
 <div class="card bg-gray" id="photo-{{ photo.id }}">
     <div class="card-header">

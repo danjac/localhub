@@ -7,7 +7,7 @@
 
 {% block subtitle %} - {% trans "Email Addresses" %}{% endblock %}
 
-{% block users_content %}
+{% block content %}
 <h3>{% trans "Email Addresses" %}</h3>
 {% with emailaddresses=user.emailaddress_set.all emailaddress_count=user.emailaddress_set.count %}
 {% if emailaddress_count %}
@@ -57,4 +57,4 @@
     <button name="action_add" class="btn btn-primary" type="submit">{% trans "Add E-mail" %}</button>
   </form>
 </div>
-{% endblock users_content %}
+{% endblock content %}

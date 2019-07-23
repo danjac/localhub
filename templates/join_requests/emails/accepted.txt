@@ -4,5 +4,5 @@
 {% autoescape off %}
 Hi,
 
-You have been accepted to join {{ join_request.community.name }}!
+You have been accepted to join {{ join_community.name }}!
 {% endautoescape %}

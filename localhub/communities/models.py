@@ -1,10 +1,11 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Optional, Set
+from typing import Set, Union
 from urllib.parse import urljoin
 
 from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.validators import RegexValidator, URLValidator
 from django.db import models
 from django.http import HttpRequest
@@ -17,11 +18,50 @@ from model_utils.models import TimeStampedModel
 from localhub.core.markdown.fields import MarkdownField
 from localhub.core.markdown.utils import extract_hashtags
 
+DOMAIN_VALIDATOR = RegexValidator(
+    regex=URLValidator.host_re, message=_("This is not a valid domain")
+)
+
+
+class RequestCommunity:
+    """
+    This works in a similar way to Django auth AnonymousUser, if
+    no community present. It provides ducktyping so we don't have to check
+    for None everywhere: just check `is_authenticated` and `is_anonymous`
+    properties. Wraps HttpRequest/Site.
+    """
+
+    id = None
+    pk = None
+    public = False
+
+    def __init__(self, request: HttpRequest):
+        self.request = request
+        self.site = get_current_site(request)
+        self.name = self.site.name
+        self.domain = self.site.domain
+
+    @property
+    def is_authenticated(self) -> bool:
+        return False
+
+    @property
+    def is_anonymous(self) -> bool:
+        return True
+
+    def get_absolute_url(self) -> str:
+        return self.request.full_path
+
+    def user_has_role(self, user: settings.AUTH_USER_MODEL, role: str) -> bool:
+        return False
+
 
 class CommunityManager(models.Manager):
     use_in_migrations = True
 
-    def get_current(self, request: HttpRequest) -> Optional["Community"]:
+    def get_current(
+        self, request: HttpRequest
+    ) -> Union["Community", "AnonymousCommunity"]:
         """
         Returns current community matching request domain if active.
         """
@@ -30,12 +70,7 @@ class CommunityManager(models.Manager):
                 active=True, domain__iexact=request.get_host().split(":")[0]
             )
         except self.model.DoesNotExist:
-            return None
-
-
-DOMAIN_VALIDATOR = RegexValidator(
-    regex=URLValidator.host_re, message=_("This is not a valid domain")
-)
+            return RequestCommunity(request)
 
 
 class Community(TimeStampedModel):
@@ -98,6 +133,14 @@ class Community(TimeStampedModel):
     def __str__(self) -> str:
         return self.name
 
+    @property
+    def is_authenticated(self) -> bool:
+        return True
+
+    @property
+    def is_anonymous(self) -> bool:
+        return False
+
     def get_absolute_url(self) -> str:
         return f"http://{self.domain}"
 
@@ -122,21 +165,6 @@ class Community(TimeStampedModel):
         """
         return f"{local_part}@{self.get_email_domain()}"
 
-    def user_has_role(self, user: settings.AUTH_USER_MODEL, role: str) -> bool:
-        if user.is_anonymous:
-            return False
-        # cache for this user
-        if not hasattr(user, "_community_roles_cache"):
-            user._community_roles_cache = dict(
-                Membership.objects.filter(
-                    active=True, member=user
-                ).values_list("community", "role")
-            )
-        try:
-            return user._community_roles_cache[self.id] == role
-        except KeyError:
-            return False
-
     def get_members_by_role(self, role: str) -> models.QuerySet:
         return self.members.filter(membership__role=role)
 
@@ -148,6 +176,11 @@ class Community(TimeStampedModel):
 
     def get_admins(self) -> models.QuerySet:
         return self.get_members_by_role(Membership.ROLES.admin)
+
+    def user_has_role(self, user: settings.AUTH_USER_MODEL, role: str) -> bool:
+        if user.is_anonymous:
+            return False
+        return user.has_role(self, role)
 
 
 class Membership(TimeStampedModel):

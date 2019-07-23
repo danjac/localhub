@@ -1,7 +1,7 @@
 {% extends "invites/base.html" %}
 {% load i18n %}
 
-{% block settings_content %}
+{% block content %}
 <h3>Invite a new member</h3>
 <div class="col-6 col-sm-12">
   <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
@@ -11,4 +11,4 @@
     </button>
   </form>
 </div>
-{% endblock settings_content %}
+{% endblock content %}

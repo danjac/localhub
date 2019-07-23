@@ -1,0 +1,116 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% load rules %}
+{% load notifications_tags %}
+{% load messageboard_tags %}
+{% load flags_tags %}
+
+{% has_perm 'activities.create_activity' user community as can_create_activity %}
+{% has_perm 'communities.moderate_community' user community as can_moderate_community %}
+{% has_perm 'communities.manage_community' user community as can_manage_community %}
+
+{% get_unread_notification_count user community as unread_notifications %}
+{% get_unread_message_count user community as unread_messages %}
+
+<ul class="menu">
+  <li class="menu-item">
+    <a data-controller="active-link"
+       data-active-link-exact
+       href="{% url 'activities:stream' %}">{% trans "Home" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'notifications:list' %}">
+      <span {% if unread_notifications %}class="badge" data-badge="{{ unread_notifications }}"{% endif %}>
+        {% trans "Notifications" %}
+      </span>
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'messageboard:message_recipient_list' %}">
+      <span {% if unread_messages %}class="badge" data-badge="{{ unread_messages }}"{% endif %}>
+        {% trans "Direct Messages" %}
+      </span>
+    </a>
+  </li>
+</ul>
+
+<ul class="menu mt-2">
+  <li class="divider" data-content="{% trans 'Submit' %}"></li>
+  {% if can_create_activity %}
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'posts:create' %}">{% trans "Post" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'events:create' %}">{% trans "Event" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'photos:create' %}">{% trans "Photo" %}</a>
+  </li>
+  {% endif %}
+</ul>
+
+<ul class="menu mt-2">
+  <li class="divider" data-content="{% trans 'Settings' %}"></li>
+  <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
+  {% if can_manage_community %}
+  <li class="menu-item">
+    <a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
+  </li>
+  {% endif %}
+</ul>
+
+<ul class="menu mt-2">
+  <li class="divider" data-content="{% trans 'People' %}"></li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       data-active-link-exact
+       href="{% url 'users:list' %}">{% trans "Members" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'subscriptions:user_list' %}">
+      {% trans "Following" %}
+    </a>
+  </li>
+</ul>
+
+<ul class="menu mt-2">
+  <li class="divider" data-content="{% trans 'Content' %}"></li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'events:list' %}">{% trans "Events" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'likes:activities' %}">
+      {% trans "Favorites" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'subscriptions:tag_list' %}">
+      {% trans "Tags" %}
+    </a>
+  </li>
+  {% if can_moderate_community %}
+  {% get_flags_count as num_flags %}
+  {% if num_flags %}
+  <li class="menu-item">
+    <a href="{% url 'flags:list' %}">
+      <span class="badge" data-badge="{{ num_flags }}">
+        {% trans "Flagged" %}
+      </span>
+    </a>
+  </li>
+  {% endif %}
+  {% endif %}
+</ul>

@@ -5,7 +5,7 @@
 {% load i18n %}
 {% load rules %}
 {% block subtitle %} - {% trans "Search" %}{% endblock %}
-{% block activities_content %}
+{% block content %}
 
 {% if search_query %}
 <h3>{% blocktrans %}Search for "{{ search_query }}"{% endblocktrans %}</h3>
@@ -25,4 +25,4 @@
 {% endfor %}
 
 {% include "includes/pagination.html" %}
-{% endblock activities_content %}
+{% endblock content %}

@@ -5,7 +5,7 @@
 {% load i18n %}
 {% load rules %}
 
-{% block activities_content %}
+{% block content %}
 {% has_perm "communities.manage_community" user community as can_manage %}
 {% if can_manage %}
 <div class="float-right">
@@ -35,4 +35,4 @@
 </p>
 {% endif %}
 
-{% endblock activities_content %}
+{% endblock content %}

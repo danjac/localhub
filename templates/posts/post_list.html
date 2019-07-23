@@ -2,8 +2,8 @@
 {% load i18n %}
 {% load rules %}
 {% block subtitle %} - {% trans "Posts" %}{% endblock %}
-{% block activities_content %}
-{% has_perm 'activities.create_activity' user request.community as can_create_activity %}
+{% block content %}
+{% has_perm 'activities.create_activity' user community as can_create_activity %}
 {% if can_create_activity %}
 <div class="float-right">
   <a href="{% url 'posts:create' %}" class="btn btn-sm">
@@ -40,4 +40,4 @@
 
 
 {% include "includes/pagination.html" %}
-{% endblock activities_content %}
+{% endblock content %}

@@ -8,7 +8,7 @@ from django.test.client import Client, RequestFactory
 from django.urls import reverse
 from django.views.generic import View
 
-from localhub.communities.models import Community, Membership
+from localhub.communities.models import Community, Membership, RequestCommunity
 from localhub.communities.tests.factories import CommunityFactory
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.tests.factories import UserFactory
@@ -35,12 +35,12 @@ class TestCommunityRequiredMixin:
 
     def test_community_not_found(self, req_factory: RequestFactory):
         req = req_factory.get("/")
-        req.community = None
+        req.community = RequestCommunity(req)
         assert my_view(req).url == reverse("community_not_found")
 
     def test_community_not_found_if_ajax(self, req_factory: RequestFactory):
         req = req_factory.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
-        req.community = None
+        req.community = RequestCommunity(req)
         with pytest.raises(Http404):
             my_view(req)
 

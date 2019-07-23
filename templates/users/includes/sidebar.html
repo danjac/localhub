@@ -6,7 +6,7 @@
 
 
 <ul class="menu">
-  {% if request.community %}
+  {% if community %}
   <li class="menu-item">
     <a href="{% url 'activities:stream' %}">{% trans "Home" %}
     </a>
@@ -14,10 +14,12 @@
   <li class="menu-item">
     <a data-controller="active-link" href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
   </li>
-  {% has_perm 'communities.manage_community' user request.community as can_manage_community %}
 
+  {% if community %}
+  {% has_perm 'communities.manage_community' user community as can_manage_community %}
   {% if can_manage_community %}
   <li class="menu-item"><a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a></li>
+  {% endif %}
   {% endif %}
 
   {% endif %}
@@ -33,9 +35,15 @@
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'account_logout' %}">{% trans "Logout" %}</a>
   </li>
+
+  {% if community %}
+  {% test_rule 'is_member' user community as is_member %}
+  {% if is_member %}
   <li class="menu-item">
     <a href="{% url 'communities:leave' %}">{% trans "Leave community" %}</a>
   </li>
+  {% endif %}
+  {% endif %}
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'user_delete' %}">{% trans "Delete account" %}</a>
   </li>

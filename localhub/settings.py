@@ -212,6 +212,7 @@ class Base(Configuration):
                         "django.template.context_processors.static",
                         "django.template.context_processors.tz",
                         "django.contrib.messages.context_processors.messages",
+                        "localhub.communities.context_processors.community",
                     ],
                 },
             }

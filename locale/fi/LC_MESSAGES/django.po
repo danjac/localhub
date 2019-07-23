@@ -59,8 +59,8 @@ msgid "Someone has created a new %s containing tags you are following"
 msgstr ""
 
 #: localhub/activities/models.py:162
-#: templates/includes/sidebar.html:20
-#: templates/communities/base.html:19 templates/users/includes/sidebar.html:11
+#: templates/includes/default_sidebar.html:20
+#: templates/communities/base.html:19 templates/users/includes/default_sidebar.html:11
 msgid "Home"
 msgstr "Kotisivu"
 
@@ -200,7 +200,7 @@ msgid "This community is currently live."
 msgstr ""
 
 #: localhub/communities/models.py:96
-#: templates/includes/sidebar.html:133
+#: templates/includes/default_sidebar.html:133
 msgid "Communities"
 msgstr "Yhteisöt"
 
@@ -488,7 +488,7 @@ msgstr ""
 msgid "Either title or URL must be provided"
 msgstr ""
 
-#: localhub/posts/models.py:33 templates/includes/sidebar.html:58
+#: localhub/posts/models.py:33 templates/includes/default_sidebar.html:58
 msgid "Post"
 msgstr "Postaus"
 
@@ -693,7 +693,7 @@ msgstr ""
 
 #: templates/account/logout.html:7 templates/account/logout.html:11
 #: templates/account/logout.html:21 templates/base.html:65
-#: templates/users/includes/sidebar.html:34
+#: templates/users/includes/default_sidebar.html:34
 msgid "Logout"
 msgstr "Kirjaudu ulos"
 
@@ -747,7 +747,7 @@ msgid ""
 msgstr ""
 
 #: templates/account/password_reset_from_key.html:22
-#: templates/users/includes/sidebar.html:31
+#: templates/users/includes/default_sidebar.html:31
 msgid "Change password"
 msgstr "Vaihda salasana"
 
@@ -1057,105 +1057,105 @@ msgid ""
 "a> containing tags you are following\n"
 msgstr ""
 
-#: templates/includes/sidebar.html:27
+#: templates/includes/default_sidebar.html:27
 #: templates/notifications/base.html:6
 msgid "Notifications"
 msgstr "Tiedotteet"
 
-#: templates/includes/sidebar.html:34
+#: templates/includes/default_sidebar.html:34
 msgid "Direct Messages"
 msgstr "Suoraat Viestit"
 
-#: templates/includes/sidebar.html:40
+#: templates/includes/default_sidebar.html:40
 #: templates/communities/base.html:22 templates/users/account_base.html:7
 msgid "My Settings"
 msgstr "Omat Asetukset"
 
-#: templates/includes/sidebar.html:43
-#: templates/includes/sidebar.html:107 templates/likes/base.html:16
+#: templates/includes/default_sidebar.html:43
+#: templates/includes/default_sidebar.html:107 templates/likes/base.html:16
 #: templates/posts/post_form.html:7 templates/posts/post_list.html:4
 #: templates/users/base.html:59
 msgid "Posts"
 msgstr "Postaukset"
 
-#: templates/includes/sidebar.html:46
-#: templates/includes/sidebar.html:110
+#: templates/includes/default_sidebar.html:46
+#: templates/includes/default_sidebar.html:110
 #: templates/events/event_form.html:4 templates/events/event_list.html:4
 msgid "Events"
 msgstr "Tapahtumat"
 
-#: templates/includes/sidebar.html:49
-#: templates/includes/sidebar.html:113
+#: templates/includes/default_sidebar.html:49
+#: templates/includes/default_sidebar.html:113
 #: templates/photos/photo_form.html:7 templates/photos/photo_list.html:4
 msgid "Photos"
 msgstr "Valokuvat"
 
-#: templates/includes/sidebar.html:56
+#: templates/includes/default_sidebar.html:56
 #, fuzzy
 #| msgid "Submit"
 msgid "Submit New"
 msgstr "Lähetä Uusi"
 
-#: templates/includes/sidebar.html:61
+#: templates/includes/default_sidebar.html:61
 #, fuzzy
 #| msgid "Events"
 msgid "Event"
 msgstr "Tapahtuma"
 
-#: templates/includes/sidebar.html:64
+#: templates/includes/default_sidebar.html:64
 #, fuzzy
 #| msgid "Photos"
 msgid "Photo"
 msgstr "Valokuva"
 
-#: templates/includes/sidebar.html:71
+#: templates/includes/default_sidebar.html:71
 #: templates/subscriptions/base.html:16
 msgid "People"
 msgstr "Ihmiset"
 
-#: templates/includes/sidebar.html:74
-#: templates/users/includes/sidebar.html:15
+#: templates/includes/default_sidebar.html:74
+#: templates/users/includes/default_sidebar.html:15
 msgid "My Profile"
 msgstr "Oma Profiili"
 
-#: templates/includes/sidebar.html:78
+#: templates/includes/default_sidebar.html:78
 #: templates/subscriptions/base.html:7 templates/subscriptions/base.html:11
 msgid "Following"
 msgstr "Minun Seuraamani"
 
-#: templates/includes/sidebar.html:84
+#: templates/includes/default_sidebar.html:84
 #: templates/communities/base.html:28
 #: templates/communities/membership_list.html:11
 #: templates/users/user_list.html:16
 msgid "Members"
 msgstr "Jäsenet"
 
-#: templates/includes/sidebar.html:88
+#: templates/includes/default_sidebar.html:88
 #: templates/communities/base.html:25
 #: templates/communities/community_form.html:9
-#: templates/users/includes/sidebar.html:20
+#: templates/users/includes/default_sidebar.html:20
 msgid "Community Settings"
 msgstr "Yhteisön Asetukset"
 
-#: templates/includes/sidebar.html:96
+#: templates/includes/default_sidebar.html:96
 msgid "Flagged"
 msgstr ""
 
-#: templates/includes/sidebar.html:105
+#: templates/includes/default_sidebar.html:105
 msgid "Activities"
 msgstr "Toiminta"
 
-#: templates/includes/sidebar.html:117 templates/likes/base.html:7
+#: templates/includes/default_sidebar.html:117 templates/likes/base.html:7
 #: templates/likes/base.html:11
 msgid "Favorites"
 msgstr "Suosikit"
 
-#: templates/includes/sidebar.html:122
+#: templates/includes/default_sidebar.html:122
 #: templates/subscriptions/base.html:20
 msgid "Tags"
 msgstr "Tagit"
 
-#: templates/includes/sidebar.html:154
+#: templates/includes/default_sidebar.html:154
 msgid "More Details"
 msgstr ""
 
@@ -1472,7 +1472,7 @@ msgid ""
 "  "
 msgstr ""
 
-#: templates/communities/leave.html:16 templates/users/includes/sidebar.html:37
+#: templates/communities/leave.html:16 templates/users/includes/default_sidebar.html:37
 msgid "Leave community"
 msgstr "Lähde Yhteisöstä"
 
@@ -2236,15 +2236,15 @@ msgid ""
 "<a href=\"%(actor_url)s\">%(actor)s</a> is now following you.\n"
 msgstr ""
 
-#: templates/users/includes/sidebar.html:25
+#: templates/users/includes/default_sidebar.html:25
 msgid "Edit profile"
 msgstr "Muokkaa profiili"
 
-#: templates/users/includes/sidebar.html:28
+#: templates/users/includes/default_sidebar.html:28
 msgid "Email addresses"
 msgstr "Sähköpostiviestit"
 
-#: templates/users/includes/sidebar.html:40
+#: templates/users/includes/default_sidebar.html:40
 #: templates/users/user_confirm_delete.html:16
 msgid "Delete account"
 msgstr "Poista tili"

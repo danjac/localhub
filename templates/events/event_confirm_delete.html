@@ -1,6 +1,6 @@
 {% extends "activities/base.html" %}
 {% load i18n %}
-{% block activities_content %}
+{% block content %}
 <h3>{% trans "Delete Event" %}</h3>
 
 <form method="POST" action="{{ request.path }}">
@@ -10,4 +10,4 @@
   <button class="btn btn-primary" type="submit">{% trans "Delete" %}</button>
 </form>
 
-{% endblock activities_content %}
+{% endblock content %}

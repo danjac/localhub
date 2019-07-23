@@ -7,11 +7,11 @@
 {% load rules %}
 
 
-{% block activities_content %}
+{% block content %}
 
-{% has_perm "communities.manage_community" user request.community as can_manage %}
-{% has_perm "messageboard.create_message" user request.community as can_create_message %}
-{% has_perm "subscriptions.create_subscription" user request.community as can_create_subscription %}
+{% has_perm "communities.manage_community" user community as can_manage %}
+{% has_perm "messageboard.create_message" user community as can_create_message %}
+{% has_perm "subscriptions.create_subscription" user community as can_create_subscription %}
 
 <h3>{% trans "Members" %}</h3>
 
@@ -78,4 +78,4 @@
     </tbody>
 </table>
 {% include "includes/pagination.html" %}
-{% endblock activities_content %}
+{% endblock content %}

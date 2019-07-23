@@ -5,7 +5,7 @@
 
 {% load i18n %}
 
-{% block users_content %}
+{% block content %}
 <h3>{% trans "Update profile" %}</h3>
 
 <p>You can change your primary and other email addresses <a href="{% url 'account_email' %}">here</a>.</p>
@@ -20,4 +20,4 @@
         {% trans 'Save settings' %}
     </button>
 </form>
-{% endblock users_content %}
+{% endblock content %}
