@@ -1121,7 +1121,7 @@ msgstr "Oma Profiili"
 #: templates/activities/includes/sidebar.html:78
 #: templates/subscriptions/base.html:7 templates/subscriptions/base.html:11
 msgid "Following"
-msgstr "Minun Seuraamat"
+msgstr "Minun Seuraamani"
 
 #: templates/activities/includes/sidebar.html:84
 #: templates/communities/base.html:28
@@ -1164,7 +1164,7 @@ msgstr ""
 msgid ""
 "\n"
 "Posted %(created)s ago by\n"
-msgstr ""
+msgstr "\nKirjoitettu %(created)s sitten. Tekijä\n"
 
 #: templates/activities/search.html:7 templates/base.html:46
 #: templates/base.html:48 templates/base.html:85 templates/base.html:87
