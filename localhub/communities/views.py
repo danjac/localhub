@@ -6,9 +6,11 @@ from typing import no_type_check
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import redirect_to_login
+from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
+from django.forms import ModelForm
 from django.http import (
     Http404,
     HttpRequest,
@@ -108,10 +110,7 @@ community_access_denied_view = CommunityAccessDeniedView.as_view()
 
 
 class CommunityUpdateView(
-    CommunityRequiredMixin,
-    PermissionRequiredMixin,
-    SuccessMessageMixin,
-    UpdateView,
+    CommunityRequiredMixin, PermissionRequiredMixin, UpdateView
 ):
     fields = (
         "name",
@@ -130,6 +129,16 @@ class CommunityUpdateView(
 
     def get_success_url(self) -> str:
         return self.request.path
+
+    def get_success_message(self) -> str:
+        return self.success_message
+
+    def form_valid(self, form: ModelForm) -> HttpResponse:
+        community = form.save(commit=False)
+        community.admin = self.request.user
+        community.save()
+        messages.success(self.request, self.get_success_message())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 community_update_view = CommunityUpdateView.as_view()

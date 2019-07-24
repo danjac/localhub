@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Set, Union
+from typing import Optional, Set, Union
 from urllib.parse import urljoin
 
 from django.conf import settings
@@ -11,9 +11,10 @@ from django.db import models
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
-
 from model_utils import Choices
 from model_utils.models import TimeStampedModel
+
+from simple_history.models import HistoricalRecords
 
 from localhub.core.markdown.fields import MarkdownField
 from localhub.core.markdown.utils import extract_hashtags
@@ -117,6 +118,16 @@ class Community(TimeStampedModel):
         default=True, help_text=_("This community is currently live.")
     )
 
+    history = HistoricalRecords()
+
+    admin = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="+",
+    )
+
     objects = CommunityManager()
 
     class Meta:
@@ -124,6 +135,14 @@ class Community(TimeStampedModel):
 
     def __str__(self) -> str:
         return self.name
+
+    @property
+    def _history_user(self) -> Optional[settings.AUTH_USER_MODEL]:
+        return self.admin
+
+    @_history_user.setter
+    def _history_user(self, value: settings.AUTH_USER_MODEL):
+        self.admin = value
 
     def get_absolute_url(self) -> str:
         return f"http://{self.domain}"
