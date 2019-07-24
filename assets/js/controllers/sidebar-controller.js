@@ -5,7 +5,7 @@ export default class extends Controller {
 
   toggle(event) {
     event.preventDefault();
-    this.mainTarget.classList.toggle('hide-md');
-    this.navTarget.classList.toggle('hide-md');
+    this.mainTarget.classList.toggle('hide-lg');
+    this.navTarget.classList.toggle('hide-lg');
   }
 }
