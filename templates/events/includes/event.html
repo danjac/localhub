@@ -81,7 +81,7 @@
   <div class="card-footer">
 
     {% if event.num_likes and event.owner == user %}
-    <div class="mb-2 text-gray">
+    <div class="text-gray">
       {{ event.num_likes }}
       {% blocktrans count counter=event.num_likes %}
       person liked this event
@@ -90,7 +90,7 @@
       {% endblocktrans %}
     </div>
     {% endif %}
-    <div class="mb-2">
+    <div>
       {% if is_detail %}
       <a href="{{ event.get_permalink }}">{% trans "Permalink" %}</a>
       {% else %}
