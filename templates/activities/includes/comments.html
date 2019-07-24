@@ -13,7 +13,6 @@
     {% endfor %}
     {% if comment_form %}
     <div class="divider"></div>
-    <h6>{% trans "Post a Comment" %}</h6>
     <form method="POST"
           action="{{ object.get_create_comment_url }}"
           data-controller="form"
