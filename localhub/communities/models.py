@@ -61,7 +61,7 @@ class CommunityManager(models.Manager):
 
     def get_current(
         self, request: HttpRequest
-    ) -> Union["Community", "AnonymousCommunity"]:
+    ) -> Union["Community", "RequestCommunity"]:
         """
         Returns current community matching request domain if active.
         """
