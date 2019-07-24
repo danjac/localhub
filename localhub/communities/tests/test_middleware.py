@@ -27,4 +27,4 @@ class TestCurrentCommunityMiddleware:
         mw = CurrentCommunityMiddleware(get_response)
         req = req_factory.get("/", HTTP_HOST="example.com")
         mw(req)
-        assert req.community.is_anonymous
+        assert req.community.id is None

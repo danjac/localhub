@@ -5,10 +5,11 @@ import pytest
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.test.client import RequestFactory
 
 from allauth.account.models import EmailAddress
 
-from localhub.communities.models import Community, Membership
+from localhub.communities.models import Community, Membership, RequestCommunity
 from localhub.messageboard.tests.factories import MessageRecipientFactory
 from localhub.notifications.models import Notification
 from localhub.subscriptions.models import Subscription
@@ -145,6 +146,12 @@ class TestUserModel:
         )
         assert user.get_unread_notification_count(community) == 1
 
+    def test_get_unread_notification_count_if_community_id_none(
+        self, user: settings.AUTH_USER_MODEL, req_factory: RequestFactory
+    ):
+        req = req_factory.get("/")
+        assert user.get_unread_notification_count(RequestCommunity(req)) == 0
+
     def test_get_unread_message_count(self):
         recipient = MessageRecipientFactory()
         assert (
@@ -153,3 +160,9 @@ class TestUserModel:
             )
             == 1
         )
+
+    def test_get_unread_message_count_if_community_id_none(
+        self, user: settings.AUTH_USER_MODEL, req_factory: RequestFactory
+    ):
+        req = req_factory.get("/")
+        assert user.get_unread_message_count(RequestCommunity(req)) == 0

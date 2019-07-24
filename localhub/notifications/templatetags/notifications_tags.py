@@ -17,7 +17,6 @@ def get_unread_notification_count(
     Returns a count of the total number of *unread* notifications
     for the current user. If user not logged in just returns 0.
     """
-    if user.is_anonymous or community.is_anonymous:
+    if user.is_anonymous or not community.active:
         return 0
-
     return user.get_unread_notification_count(community)

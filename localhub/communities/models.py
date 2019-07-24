@@ -27,27 +27,19 @@ class RequestCommunity:
     """
     This works in a similar way to Django auth AnonymousUser, if
     no community present. It provides ducktyping so we don't have to check
-    for None everywhere: just check `is_authenticated` and `is_anonymous`
-    properties. Wraps HttpRequest/Site.
+    for None everywhere. Wraps HttpRequest/Site.
     """
 
     id = None
     pk = None
     public = False
+    active = False
 
     def __init__(self, request: HttpRequest):
         self.request = request
         self.site = get_current_site(request)
         self.name = self.site.name
         self.domain = self.site.domain
-
-    @property
-    def is_authenticated(self) -> bool:
-        return False
-
-    @property
-    def is_anonymous(self) -> bool:
-        return True
 
     def get_absolute_url(self) -> str:
         return self.request.full_path
@@ -132,14 +124,6 @@ class Community(TimeStampedModel):
 
     def __str__(self) -> str:
         return self.name
-
-    @property
-    def is_authenticated(self) -> bool:
-        return True
-
-    @property
-    def is_anonymous(self) -> bool:
-        return False
 
     def get_absolute_url(self) -> str:
         return f"http://{self.domain}"

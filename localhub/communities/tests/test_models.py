@@ -33,13 +33,13 @@ class TestCommunityManager:
     ):
         req = req_factory.get("/", HTTP_HOST="example.com")
         CommunityFactory(domain="example.com", active=False)
-        assert Community.objects.get_current(req).is_anonymous
+        assert Community.objects.get_current(req).id is None
 
     def test_get_current_if_no_community_available(
         self, req_factory: RequestFactory
     ):
         req = req_factory.get("/", HTTP_HOST="example.com")
-        assert Community.objects.get_current(req).is_anonymous
+        assert Community.objects.get_current(req).id is None
 
 
 class TestCommunityModel:
@@ -51,12 +51,6 @@ class TestCommunityModel:
 
     def test_get_admins(self, admin: Membership):
         assert admin.community.get_admins().first() == admin.member
-
-    def test_is_authenticated(self):
-        assert Community().is_authenticated
-
-    def test_is_not_anonymous(self):
-        assert not Community().is_anonymous
 
     def test_get_email_domain_if_none_set(self):
 

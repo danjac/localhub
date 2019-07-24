@@ -38,16 +38,16 @@
 </ul>
 
 <ul class="menu mt-2">
-  <li class="divider" data-content="{% trans 'Submit' %}"></li>
+  <li class="divider" data-content="{% trans 'Actions' %}"></li>
   {% if can_create_activity %}
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'posts:create' %}">{% trans "Post" %}</a>
+    <a data-controller="active-link" href="{% url 'posts:create' %}">{% trans "Submit Post" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'events:create' %}">{% trans "Event" %}</a>
+    <a data-controller="active-link" href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'photos:create' %}">{% trans "Photo" %}</a>
+    <a data-controller="active-link" href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
   </li>
   {% endif %}
 </ul>
@@ -63,25 +63,7 @@
 </ul>
 
 <ul class="menu mt-2">
-  <li class="divider" data-content="{% trans 'People' %}"></li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       data-active-link-exact
-       href="{% url 'users:list' %}">{% trans "Members" %}</a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'subscriptions:user_list' %}">
-      {% trans "Following" %}
-    </a>
-  </li>
-</ul>
-
-<ul class="menu mt-2">
-  <li class="divider" data-content="{% trans 'Content' %}"></li>
+  <li class="divider" data-content="{% trans 'Activity' %}"></li>
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
   </li>
@@ -114,3 +96,23 @@
   {% endif %}
   {% endif %}
 </ul>
+
+<ul class="menu mt-2">
+  <li class="divider" data-content="{% trans 'People' %}"></li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       data-active-link-exact
+       href="{% url 'users:list' %}">{% trans "Members" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'subscriptions:user_list' %}">
+      {% trans "Following" %}
+    </a>
+  </li>
+</ul>
+
+
