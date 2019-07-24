@@ -87,18 +87,27 @@ class TestInviteAcceptView:
         invite.refresh_from_db()
         assert invite.is_pending()
 
-    def _test_current_user_is_member(
+    def test_current_user_is_member(
         self, client: Client, community: Community, member: Membership
     ):
         invite = InviteFactory(
             community=member.community, email=member.member.email
         )
         response = client.get(reverse("invites:accept", args=[invite.id]))
-        assert response.url == reverse("content:list")
+        assert response.url == settings.HOME_PAGE_URL
         invite.refresh_from_db()
         assert invite.is_accepted()
 
-    def _test_current_user_is_not_member(
+    def test_current_user_has_wrong_email(
+        self, client: Client, community: Community, member: Membership
+    ):
+        invite = InviteFactory(community=member.community)
+        response = client.get(reverse("invites:accept", args=[invite.id]))
+        assert response.url == settings.HOME_PAGE_URL
+        invite.refresh_from_db()
+        assert invite.is_rejected()
+
+    def test_current_user_is_not_member(
         self,
         client: Client,
         community: Community,
@@ -106,14 +115,14 @@ class TestInviteAcceptView:
     ):
         invite = InviteFactory(community=community, email=login_user.email)
         response = client.get(reverse("invites:accept", args=[invite.id]))
-        assert response.url == reverse("content:list")
+        assert response.url == settings.HOME_PAGE_URL
         assert Membership.objects.filter(
             community=community, member=login_user
         ).exists()
         invite.refresh_from_db()
         assert invite.is_accepted()
 
-    def _test_invalid_invite(
+    def test_invalid_invite(
         self,
         client: Client,
         community: Community,
@@ -122,7 +131,7 @@ class TestInviteAcceptView:
         user = UserFactory()
         invite = InviteFactory(community=community, email=user.email)
         response = client.get(reverse("invites:accept", args=[invite.id]))
-        assert response.url == reverse("content:list")
+        assert response.url == settings.HOME_PAGE_URL
         assert not Membership.objects.filter(
             community=community, member=login_user
         ).exists()

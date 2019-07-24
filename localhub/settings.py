@@ -28,6 +28,8 @@ class Base(Configuration):
     DEBUG = False
     ALLOWED_HOSTS: List[str] = []
 
+    SESSION_COOKIE_DOMAIN = values.Value()
+
     WSGI_APPLICATION = "localhub.wsgi.application"
 
     DJANGO_APPS = [
@@ -261,6 +263,8 @@ class Testing(Base):
 class Local(DockerConfigMixin, Base):
 
     DEBUG = True
+
+    ALLOWED_HOSTS: List[str] = ["*"]
 
     THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + [
         "debug_toolbar",

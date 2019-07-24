@@ -4,20 +4,16 @@
 {% load i18n %}
 {% load communities_tags %}
 
-{% get_communities as communities %}
-{% if communities|length > 1 %}
+{% get_local_communities user community as communities %}
+{% if communities|length %}
 <ul class="menu mt-2">
-  <li class="divider" data-content="{% trans 'Communities' %}"></li>
-  {% for community in communities %}
-  <li class="menu-item">
-    {% if community.id == community.id %}
-    <strong>{{ community.name }}</strong>
-    {% else %}
-    <a href="{{ community.get_absolute_url }}">
-      {{ community.name }}
-    </a>
-    {% endif %}
-  </li>
-  {% endfor %}
+    <li class="divider" data-content="{% trans 'Local Communities' %}"></li>
+    {% for community in communities %}
+    <li class="menu-item">
+        <a href="{{ community.get_absolute_url }}">
+            {{ community.name }}
+        </a>
+    </li>
+    {% endfor %}
 </ul>
 {% endif %}

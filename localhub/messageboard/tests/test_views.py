@@ -7,7 +7,7 @@ from django.test.client import Client
 from django.urls import reverse
 
 from localhub.communities.models import Membership
-from localhub.messageboard.models import MessageRecipient
+from localhub.messageboard.models import Message, MessageRecipient
 from localhub.messageboard.tests.factories import (
     MessageFactory,
     MessageRecipientFactory,
@@ -143,5 +143,5 @@ class TestMessageCreateView:
             reverse("messageboard:message_create"),
             {"subject": "test", "message": "test", "groups": "moderators"},
         )
-        assert response.url == reverse("messageboard:message_list")
+        assert response.url == Message.objects.get().get_absolute_url()
         assert MessageRecipient.objects.count() == 1
