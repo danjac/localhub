@@ -103,7 +103,7 @@ class ActivityCreateView(
 class ActivityListView(MultipleActivityMixin, ListView):
     allow_empty = True
     paginate_by = settings.DEFAULT_PAGE_SIZE
-    order_by = "-created"
+    order_by = "-id"
 
     def get_queryset(self) -> QuerySet:
         qs = (
