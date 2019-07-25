@@ -3,13 +3,11 @@
 
 import pytest
 
-from typing import List
-
 from django.test.client import Client
 from django.urls import reverse
 
 from localhub.communities.models import Membership
-from localhub.messageboard.models import MessageRecipient
+from localhub.messageboard.models import Message, MessageRecipient
 from localhub.messageboard.tests.factories import (
     MessageFactory,
     MessageRecipientFactory,
@@ -134,9 +132,7 @@ class TestMessageCreateView:
         )
         assert response.status_code == 200
 
-    def test_post_with_recipients(
-        self, client: Client, member: Membership, mailoutbox: List
-    ):
+    def test_post_with_recipients(self, client: Client, member: Membership):
         user = UserFactory()
         Membership.objects.create(
             member=user,
@@ -147,7 +143,5 @@ class TestMessageCreateView:
             reverse("messageboard:message_create"),
             {"subject": "test", "message": "test", "groups": "moderators"},
         )
-        assert response.url == reverse("messageboard:message_list")
+        assert response.url == Message.objects.get().get_absolute_url()
         assert MessageRecipient.objects.count() == 1
-        assert len(mailoutbox) == 1
-        assert mailoutbox[0].to == [user.email]

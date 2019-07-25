@@ -7,6 +7,7 @@ import socket
 from typing import Any, Dict, List
 
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 from configurations import Configuration, values
 
@@ -26,6 +27,8 @@ class Base(Configuration):
 
     DEBUG = False
     ALLOWED_HOSTS: List[str] = []
+
+    SESSION_COOKIE_DOMAIN = values.Value()
 
     WSGI_APPLICATION = "localhub.wsgi.application"
 
@@ -49,6 +52,7 @@ class Base(Configuration):
         "markdownx",
         "micawber.contrib.mcdjango",
         "rules.apps.AutodiscoverRulesConfig",
+        "simple_history",
         "sorl.thumbnail",
         "taggit",
         "widget_tweaks",
@@ -76,6 +80,7 @@ class Base(Configuration):
         "django.middleware.security.SecurityMiddleware",
         "django.contrib.sites.middleware.CurrentSiteMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
+        "django.middleware.locale.LocaleMiddleware",
         "localhub.core.turbolinks.middleware.TurbolinksMiddleware",
         "localhub.communities.middleware.CurrentCommunityMiddleware",
         "django.middleware.common.CommonMiddleware",
@@ -129,6 +134,8 @@ class Base(Configuration):
     # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
     LANGUAGE_CODE = "en-us"
+
+    LANGUAGES = [("en", _("English")), ("fi", _("Finnish"))]
 
     TIME_ZONE = "UTC"
 
@@ -207,6 +214,7 @@ class Base(Configuration):
                         "django.template.context_processors.static",
                         "django.template.context_processors.tz",
                         "django.contrib.messages.context_processors.messages",
+                        "localhub.communities.context_processors.community",
                     ],
                 },
             }
@@ -230,6 +238,10 @@ class Base(Configuration):
             }
         }
 
+    @property
+    def LOCALE_PATHS(self) -> List[str]:
+        return [os.path.join(self.BASE_DIR, "locale")]
+
 
 class DockerConfigMixin:
     @property
@@ -251,6 +263,8 @@ class Testing(Base):
 class Local(DockerConfigMixin, Base):
 
     DEBUG = True
+
+    ALLOWED_HOSTS: List[str] = ["*"]
 
     THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + [
         "debug_toolbar",

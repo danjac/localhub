@@ -3,33 +3,34 @@
 
 {% load i18n %}
 <div class="comments mt-2" id="comments">
-  {% if comments %}
-  <h5>{% trans "Comments" %}</h5>
-  {% endif %}
-  {% for comment in comments %}
-  <div class="mb-2">
-    {% include "comments/includes/comment.html" %}
-  </div>
-  {% endfor %}
-  {% if comment_form %}
-  <div class="divider"></div>
-  <h6>{% trans "Post a Comment" %}</h6>
-  <form method="POST"
-        action="{{ object.get_create_comment_url }}"
-        data-controller="form"
-        data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload">
-    {% include "includes/forms/fields.html" with form=comment_form %}
-    <button class="btn btn-primary" type="submit">{% trans "Submit" %}</button>
-  </form>
-  {% elif not user.is_authenticated %}
-  <p class="bg-gray p-2 text-center">
-    {% url 'account_login' as login_url %}
-    {% blocktrans %}Please <a href="{{ login_url }}">sign in</a> to post comments.{% endblocktrans %}
-  </p>
-  {% else %}
-  <p class="bg-gray p-2 text-center">
-    {% trans "You do not have permission to post comments on this site." %}
-  </p>
-  {% endif %}
+    {% if comments %}
+    <h5>{% trans "Comments" %}</h5>
+    {% endif %}
+    {% for comment in comments %}
+    <div class="mb-2">
+        {% include "comments/includes/comment.html" %}
+    </div>
+    {% endfor %}
+    {% if comment_form %}
+    <div class="divider"></div>
+    <form method="POST"
+          action="{{ object.get_create_comment_url }}"
+          data-controller="form"
+          data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload">
+          {% include "includes/forms/fields.html" with form=comment_form %}
+          <button type="submit" class="btn btn-primary">
+              {% trans 'Submit' %}
+          </button>
+    </form>
+    {% elif not user.is_authenticated %}
+    <p class="bg-gray p-2 text-center">
+        {% url 'account_login' as login_url %}
+        {% blocktrans with next_url=request.path %}Please <a href="{{ login_url }}?next={{ next_url }}">sign in</a> to post comments.{% endblocktrans %}
+    </p>
+    {% else %}
+    <p class="bg-gray p-2 text-center">
+        {% trans "You do not have permission to post comments on this site." %}
+    </p>
+    {% endif %}
 </div>
 

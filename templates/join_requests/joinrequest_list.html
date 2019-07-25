@@ -1,7 +1,7 @@
 {% extends "join_requests/base.html" %}
 {% load i18n %}
 
-{% block settings_content %}
+{% block content %}
 
 <h3>{% trans "Requests to join this community" %}</h3>
 
@@ -37,6 +37,7 @@
     {% endfor %}
   </tbody>
 </table>
-{% endblock settings_content %}
+{% include "includes/pagination.html" %}
+{% endblock content %}
 
 

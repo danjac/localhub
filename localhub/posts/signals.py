@@ -5,7 +5,6 @@ from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from localhub.activities.emails import send_activity_notification_email
 from localhub.posts import tasks
 from localhub.posts.models import Post
 
@@ -25,12 +24,3 @@ def update_search_document(instance: Post, **kwargs):
 @receiver(post_save, sender=Post, dispatch_uid="posts.taggit")
 def taggit(instance: Post, created: bool, **kwargs):
     transaction.on_commit(lambda: instance.taggit(created))
-
-
-@receiver(post_save, sender=Post, dispatch_uid="posts.send_notifications")
-def send_notifications(instance: Post, created: bool, **kwargs):
-    def notify():
-        for notification in instance.notify(created):
-            send_activity_notification_email(instance, notification)
-
-    transaction.on_commit(notify)

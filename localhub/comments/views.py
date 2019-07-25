@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.db.models import QuerySet, Model
+from django.forms import ModelForm
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
@@ -24,7 +25,7 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.activities.models import Activity
 from localhub.comments.emails import (
-    send_deletion_email,
+    send_comment_deleted_email,
     send_comment_notification_email,
 )
 from localhub.comments.forms import CommentForm
@@ -125,6 +126,15 @@ class CommentUpdateView(
             (self.request.path, _("Edit Comment"))
         ]
 
+    def form_valid(self, form: ModelForm) -> HttpResponse:
+        self.object = form.save(commit=False)
+        self.object.editor = self.request.user
+        self.object.save()
+        for notification in self.object.notify(created=False):
+            send_comment_notification_email(self.object, notification)
+        messages.success(self.request, _("Comment has been updated"))
+        return HttpResponseRedirect(self.get_success_url())
+
 
 comment_update_view = CommentUpdateView.as_view()
 
@@ -143,8 +153,8 @@ class CommentDeleteView(
     def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         self.object.delete()
-        if request.user != self.object.owner:
-            send_deletion_email(self.object)
+        if self.request.user != self.object.owner:
+            send_comment_deleted_email(self.object)
 
         messages.success(request, _("Comment has been deleted"))
         return HttpResponseRedirect(self.get_success_url())
@@ -161,12 +171,14 @@ class CommentLikeView(
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         try:
-            Like.objects.create(
+            like = Like.objects.create(
                 user=request.user,
                 community=request.community,
                 recipient=self.object.owner,
                 content_object=self.object,
             )
+            for notification in like.notify():
+                send_comment_notification_email(self.object, notification)
         except IntegrityError:
             # dupe, ignore
             pass
@@ -228,7 +240,7 @@ class CommentFlagView(
     def get_success_url(self) -> str:
         return self.parent.get_absolute_url()
 
-    def form_valid(self, form) -> HttpResponse:
+    def form_valid(self, form: ModelForm) -> HttpResponse:
         flag = form.save(commit=False)
         flag.content_object = self.object
         flag.community = self.request.community

@@ -7,7 +7,7 @@ from localhub.core.markdown.admin import MarkdownFieldMixin
 @admin.register(Community)
 class CommunityAdmin(MarkdownFieldMixin, admin.ModelAdmin):
     search_fields = ("domain", "name")
-    list_display = ("domain", "name", "active")
+    list_display = ("domain", "name", "active", "public")
 
 
 @admin.register(Membership)

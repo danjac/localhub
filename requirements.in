@@ -16,6 +16,7 @@ django-markdownx
 django-model-utils
 django-redis
 django-silk
+django-simple-history
 django-storages
 django-taggit
 django-timezone-field

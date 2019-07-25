@@ -7,7 +7,6 @@ from django.dispatch import receiver
 
 from localhub.events import tasks
 from localhub.events.models import Event
-from localhub.activities.emails import send_activity_notification_email
 
 
 @receiver(
@@ -30,12 +29,3 @@ def update_search_document(instance: Event, **kwargs):
 @receiver(post_save, sender=Event, dispatch_uid="events.taggit")
 def taggit(instance: Event, created: bool, **kwargs):
     transaction.on_commit(lambda: instance.taggit(created))
-
-
-@receiver(post_save, sender=Event, dispatch_uid="events.send_notifications")
-def send_notifications(instance: Event, created: bool, **kwargs):
-    def notify():
-        for notification in instance.notify(created):
-            send_activity_notification_email(instance, notification)
-
-    transaction.on_commit(notify)

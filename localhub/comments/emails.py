@@ -10,32 +10,54 @@ from localhub.notifications.emails import send_notification_email
 from localhub.notifications.models import Notification
 
 
-def send_deletion_email(comment: Comment):
-    send_mail(
-        _("Your comment has been deleted by a moderator"),
-        render_to_string("comments/emails/deletion.txt", {"comment": comment}),
-        comment.community.resolve_email("notifications"),
-        [comment.owner.email],
-    )
+NOTIFICATION_PREFERENCES = {
+    "comment": "comments",
+    "delete": "deletes",
+    "edit": "edits",
+    "flag": "flags",
+    "like": "likes",
+    "mention": "mentions",
+    "review": "reviews",
+}
+
+NOTIFICATION_SUBJECTS = {
+    "comment": _("Someone has made a comment on one of your posts"),
+    "delete": _("Your comment has been deleted by a moderator"),
+    "edit": _("A moderator has edited your comment"),
+    "flag": _("Someone has flagged this comment"),
+    "like": _("Someone has liked your comment"),
+    "mention": _("Someone has mentioned you in their comment"),
+    "review": _("Someone has posted or updated a comment to review"),
+}
 
 
 def send_comment_notification_email(
     comment: Comment, notification: Notification
 ):
 
-    SUBJECTS = {
-        "mentioned": _("Someone has mentioned you in their comment"),
-        "created": _("Someone has published a new comment"),
-        "commented": _("Someone has made a comment on one of your posts"),
-        "updated": _("Someone has updated their comment"),
-        "flagged": _("Someone has flagged this comment"),
-    }
+    if notification.recipient.has_email_pref(
+        NOTIFICATION_PREFERENCES[notification.verb]
+    ):
 
-    send_notification_email(
-        notification,
-        SUBJECTS[notification.verb],
-        comment.get_permalink(),
-        "comments/emails/notification.txt",
-        "comments/emails/notification.html",
-        {"comment": comment},
-    )
+        send_notification_email(
+            notification,
+            NOTIFICATION_SUBJECTS[notification.verb],
+            comment.get_permalink(),
+            "comments/emails/notification.txt",
+            "comments/emails/notification.html",
+            {"comment": comment},
+        )
+
+
+def send_comment_deleted_email(comment: Comment):
+    if comment.owner.has_email_pref(NOTIFICATION_PREFERENCES["delete"]):
+        context = {"comment": comment}
+        send_mail(
+            NOTIFICATION_SUBJECTS["delete"],
+            render_to_string("comments/emails/comment_deleted.txt", context),
+            comment.community.resolve_email("notifications"),
+            [comment.owner.email],
+            html_message=render_to_string(
+                "comments/emails/comment_deleted.html", context
+            ),
+        )

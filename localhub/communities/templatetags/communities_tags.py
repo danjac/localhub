@@ -1,29 +1,28 @@
 from django import template
+from django.conf import settings
 from django.db.models import QuerySet
 
 from localhub.communities.models import Community
-from localhub.core.types import ContextDict
 
 register = template.Library()
 
 
-@register.simple_tag(takes_context=True)
-def get_communities(context: ContextDict) -> QuerySet:
+@register.simple_tag
+def get_local_communities(
+    user: settings.AUTH_USER_MODEL, community: Community
+) -> QuerySet:
     """
-    Returns list of communities a user belongs to
+    Returns other communities on same host belonging to this user.
     """
-    try:
-        request = context["request"]
-    except KeyError:
+    if user.is_anonymous:
         return Community.objects.none()
 
-    if request.user.is_anonymous:
-        return Community.objects.none()
-
-    # include inactive communities?
-
-    return (
-        Community.objects.filter(members=request.user)
+    qs = (
+        Community.objects.filter(members=user, active=True)
         .order_by("name")
         .distinct()
     )
+
+    if community.id:
+        qs = qs.exclude(pk=community.id)
+    return qs

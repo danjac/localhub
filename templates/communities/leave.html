@@ -4,7 +4,7 @@
 {% extends "users/account_base.html" %}
 {% load i18n %}
 
-{% block users_content %}
+{% block content %}
 <form method="POST" action="{{ request.path }}">
   {% csrf_token %}
   <p>
@@ -13,7 +13,7 @@
   {% endblocktrans %}
   </p>
   <a class="btn btn-secondary" href="{{ user.get_absolute_url }}">{% trans "Cancel" %}</a>
-  <button class="btn btn-warning" type="submit">{% trans "Leave" %}</button>
+  <button class="btn btn-primary" type="submit">{% trans "Leave community" %}</button>
 </form>
 
-{% endblock users_content %}
+{% endblock content %}

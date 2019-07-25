@@ -1,26 +1,58 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "activities/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 {% load account %}
+{% load rules %}
+{% load subscriptions_tags %}
 {% load users_tags %}
 
 {% block subtitle %}
 {% user_display user_obj as display_name %} - {{ display_name }}
 {% endblock %}
 
-{% block activities_content %}
+{% block content %}
+
+{% if user.is_authenticated and not is_auth_user %}
+
+{% has_perm "messageboard.create_message" user community as can_create_message %}
+{% has_perm "subscriptions.create_subscription" user community as can_create_subscription %}
+{% is_subscribed user community user_obj as is_subscribed %}
+
+<div class="float-right">
+{% if can_create_message %}
+    <a href="{% url 'messageboard:message_create_pm' user_obj.username %}"
+       class="btn btn-sm">
+        {% trans "Send Message" %}
+    </a>
+{% endif %}
+{% if can_create_subscription and not is_subscribed %}
+    <a href="{% url 'users:subscribe' user_obj.username %}"
+       class="btn btn-sm"
+       data-controller="ajax"
+       data-action="ajax#post"
+       data-ajax-redirect="{{ request.path }}">
+        {% trans "Follow" %}
+    </a>
+{% elif is_subscribed %}
+    <a href="{% url 'users:unsubscribe' user_obj.username %}"
+       class="btn btn-sm"
+       data-controller="ajax"
+       data-action="ajax#post"
+       data-ajax-redirect="{{ request.path }}">
+        {% trans "Unfollow" %}
+    </a>
+{% endif %}
+</div>
+<div class="clearfix"></div>
+{% endif %}
 
 {% user_display user_obj as display_name %}
-
 <h3>{% avatar user_obj "avatar-lg" %}{{ display_name }}</h3>
 
+
 <ul class="tab tab-block">
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:detail' user_obj.username %}">{% trans "About" %}</a>
-  </li>
   <li class="tab-item" data-controller="active-link" data-active-link-exact>
     <a data-target="active-link.match"
        href="{% url 'users:activities' user_obj.username %}">{% trans "Posts" %}</a>
@@ -29,7 +61,11 @@
     <a data-target="active-link.match"
        href="{% url 'users:comments' user_obj.username %}">{% trans "Comments" %}</a>
   </li>
+  <li class="tab-item" data-controller="active-link" data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'users:detail' user_obj.username %}">{% trans "About" %}</a>
+  </li>
 </ul>
 
 {% block user_content %}{% endblock %}
-{% endblock activities_content %}
+{% endblock content %}

@@ -2,11 +2,12 @@
 {% load i18n %}
 
 {% block content %}
-<div class="col-6 col-sm-12 text-center col-mx-auto my-2">
-<h3>{% trans "Access Denied" %}</h3>
-<p class="bg-gray p-2">
-  {% trans "You do not have permission to view this community" %}
-  {# add invite request form here #}
-</p>
+<div class="col-6 col-sm-12 col-mx-auto">
+  <div class="empty">
+    <h5 class="empty-title">{% trans "Access Denied" %}</h5>
+    <p>
+      {% trans "You do not have permission to view content in this community" %}
+    </p>
+  </div>
 </div>
 {% endblock %}

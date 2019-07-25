@@ -4,40 +4,20 @@
 {% extends "account/base.html" %}
 
 {% load i18n %}
-{% load account socialaccount %}
+{% load account %}
 
 {% block subtitle %} - {% trans "Login" %}{% endblock %}
 
 {% block content %}
 
-<h1>{% trans "Login" %}</h1>
+<div class="col-6 col-mx-auto col-sm-12">
+  <h3>{% trans "Login" %}</h3>
 
-{% get_providers as socialaccount_providers %}
+  <p>{% blocktrans %}If you have not created an account yet, then please
+    <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}
+  </p>
 
-{% if socialaccount_providers %}
-<p>{% blocktrans with site.name as site_name %}Please sign in with one
-  of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-  for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
-
-<div class="socialaccount_ballot">
-
-  <ul class="socialaccount_providers">
-    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-  </ul>
-
-  <div class="login-or">{% trans 'or' %}</div>
-
-</div>
-
-{% include "socialaccount/snippets/login_extra.html" %}
-
-{% else %}
-<p>{% blocktrans %}If you have not created an account yet, then please
-  <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
-{% endif %}
-
-<div class="col-6 col-sm-12">
-  <form method="POST" action="{% url 'account_login' %}">
+  <form method="POST" action="{% url 'account_login' %}" class="mt-2 p-2 bg-gray">
 
     {% if redirect_field_value %}
     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
@@ -45,8 +25,10 @@
 
     {% include "includes/forms/fields.html" %}
 
-    <button class="btn btn-primary" type="submit">{% trans "Sign in" %}</button>
-    <a class="btn btn-link" href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a>
+    <div class="btn-group btn-group-block">
+      <button class="btn btn-primary" type="submit">{% trans "Sign in" %}</button>
+      <a class="btn btn-link" href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a>
+    </div>
 
   </form>
 </div>

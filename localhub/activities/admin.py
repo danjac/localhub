@@ -1,12 +1,12 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.contrib import admin
+from simple_history.admin import SimpleHistoryAdmin
 
 from localhub.core.markdown.admin import MarkdownFieldMixin
 
 
-class ActivityAdmin(MarkdownFieldMixin, admin.ModelAdmin):
-    raw_id_fields = ("owner",)
+class ActivityAdmin(MarkdownFieldMixin, SimpleHistoryAdmin):
+    raw_id_fields = ("owner", "editor")
     list_display = ("__str__", "owner", "community", "created")
     ordering = ("-created",)

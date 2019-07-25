@@ -4,11 +4,11 @@
 from django.urls import path
 
 from localhub.users.views import (
-    user_activity_stream_view,
     user_autocomplete_list_view,
     user_comment_list_view,
     user_detail_view,
     user_list_view,
+    user_stream_view,
     user_subscribe_view,
     user_unsubscribe_view,
 )
@@ -26,11 +26,9 @@ urlpatterns = [
     path(
         "<slug:slug>/unfollow/", view=user_unsubscribe_view, name="unsubscribe"
     ),
+    path("<slug:slug>/about/", view=user_detail_view, name="detail"),
     path(
         "<slug:slug>/comments/", view=user_comment_list_view, name="comments"
     ),
-    path(
-        "<slug:slug>/posts/", view=user_activity_stream_view, name="activities"
-    ),
-    path("<slug:slug>/", view=user_detail_view, name="detail"),
+    path("<slug:slug>/", view=user_stream_view, name="activities"),
 ]

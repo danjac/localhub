@@ -4,35 +4,40 @@
 {% extends "activities/base.html" %}
 {% load i18n %}
 {% load rules %}
-{% block subtitle %} #{{ tag.slug }}{% endblock %}
-{% block activities_content %}
+{% load subscriptions_tags %}
 
-{% has_perm "subscriptions.create_subscription" user request.community as can_create_subscription %}
+{% block subtitle %} #{{ tag.slug }}{% endblock %}
+{% block content %}
+
+{% has_perm "subscriptions.create_subscription" user community as can_create_subscription %}
+{% is_subscribed user community tag as is_subscribed %}
+
+{% if can_create_subscription %}
+<div class="float-right">
+  {% if is_subscribed %}
+  <a href="{% url 'activities:unsubscribe_tag' tag.slug %}"
+     class="btn btn-sm"
+     data-controller="ajax"
+     data-action="ajax#post">
+    {% trans "Unfollow" %}
+  </a>
+  {% else %}
+  <a href="{% url 'activities:subscribe_tag' tag.slug %}"
+     class="btn btn-sm"
+     data-controller="ajax"
+     data-action="ajax#post">
+    {% trans "Follow" %}
+  </a>
+  {% endif %}
+</div>
+<div class="clearfix"></div>
+{% endif %}
+
 
 <h3>#{{ tag.slug }}</h3>
 {% with total=paginator.count %}
 <h4 class="text-gray">{% blocktrans count counter=total %}{{ total }} result{% plural %}{{ total }} results{% endblocktrans %}</h4>
 {% endwith %}
-
-{% if can_create_subscription and not is_auth_user and not is_subscribed %}
-<p class="mt-2">
-    <a href="{% url 'activities:subscribe_tag' tag.slug %}"
-       class="btn btn-primary btn-block"
-       data-controller="ajax"
-       data-action="ajax#post">
-        <i class="icon icon-plus"></i> {% trans "Follow this tag" %}
-    </a>
-</p>
-{% elif is_subscribed %}
-<p class="mt-2">
-    <a href="{% url 'activities:unsubscribe_tag' tag.slug %}"
-       class="btn btn-block"
-       data-controller="ajax"
-       data-action="ajax#post">
-        <i class="icon icon-stop"></i> {% trans "Stop following this tag" %}
-    </a>
-</p>
-{% endif %}
 
 {% for activity in object_list %}
 <div class="mt-2">
@@ -40,12 +45,9 @@
 </div>
 {% empty %}
 <div class="empty">
-  <div class="empty-icon">
-    <i class="icon icon-search"></i>
-  </div>
   <p class="empty-title h5">{% trans "Sorry, no results found for this tag" %}</p>
 </div>
 {% endfor %}
 
 {% include "includes/pagination.html" %}
-{% endblock activities_content %}
+{% endblock content %}

@@ -2,14 +2,15 @@
 {% load i18n %}
 {% load rules %}
 {% block subtitle %} - {% trans "Photos" %}{% endblock %}
-{% block activities_content %}
-{% has_perm 'activities.create_activity' user request.community as can_create_activity %}
+{% block content %}
+{% has_perm 'activities.create_activity' user community as can_create_activity %}
 {% if can_create_activity %}
-<div class="new-post">
-  <a href="{% url 'photos:create' %}" class="btn btn-block btn-primary">
-    <i class="icon icon-photo"></i> {% trans "Submit Photo" %}
+<div class="float-right">
+  <a href="{% url 'photos:create' %}" class="btn btn-sm">
+    {% trans "Submit Photo" %}
   </a>
 </div>
+<div class="clearfix"></div>
 
 {% elif user.is_authenticated %}
 <p class="bg-gray p-2 text-center">
@@ -24,7 +25,7 @@
 </p>
 {% endif %}
 
-{% include "activities/includes/show_all_toggle.html" %}
+{# include "activities/includes/show_all_toggle.html" #}
 
 {% for photo in object_list %}
 <div class="mt-2">
@@ -36,4 +37,4 @@
 </div>
 {% endfor %}
 {% include "includes/pagination.html" %}
-{% endblock activities_content %}
+{% endblock content %}

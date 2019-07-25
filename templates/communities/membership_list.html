@@ -7,7 +7,7 @@
 {% load rules %}
 
 
-{% block settings_content %}
+{% block content %}
 <h3>{% trans "Members" %}</h3>
 <table class="table table-striped table-hover">
     <thead>
@@ -34,8 +34,7 @@
                 {% has_perm "communities.change_membership" user member as can_change %}
                 {% has_perm "communities.delete_membership" user member as can_delete %}
                 {% if can_change %}
-                <a href="{% url 'communities:membership_update' member.id %}" class="btn btn-sm btn-primary">
-                    <i class="icon icon-edit"></i>
+                <a href="{% url 'communities:membership_update' member.id %}" class="btn btn-sm">
                     {% trans "Edit" %}
                 </a>
                 {% endif %}
@@ -46,7 +45,7 @@
                    data-action="confirm#check ajax#delete"
                    data-confirm-header="{% trans 'Delete' %}"
                    data-confirm-body="{% trans 'Are you sure you want to delete this membership?' %}"
-                   ><i class="icon icon-delete"></i> {% trans "Delete" %}</a>
+                   >{% trans "Delete" %}</a>
                 {% endif %}
             </td>
         </tr>
@@ -55,4 +54,4 @@
 </table>
 
 {% include "includes/pagination.html" %}
-{% endblock settings_content %}
+{% endblock content %}

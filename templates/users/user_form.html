@@ -5,7 +5,7 @@
 
 {% load i18n %}
 
-{% block users_content %}
+{% block content %}
 <h3>{% trans "Update profile" %}</h3>
 
 <p>You can change your primary and other email addresses <a href="{% url 'account_email' %}">here</a>.</p>
@@ -16,6 +16,8 @@
       data-controller="form"
       data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload">
     {% include "includes/forms/fields.html" %}
-    <input type="submit" class="btn btn-primary" value="{% trans 'Save' %}">
+    <button type="submit" class="btn btn-primary">
+        {% trans 'Save settings' %}
+    </button>
 </form>
-{% endblock users_content %}
+{% endblock content %}

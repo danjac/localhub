@@ -158,11 +158,10 @@ class InviteAcceptView(SingleInviteView):
         self.object = self.get_object()
         user = get_user_model().objects.for_email(self.object.email).first()
 
-        if not user:
-            return self.handle_new_user()
-
         if request.user.is_anonymous:
-            return self.handle_logged_out_user()
+            if user:
+                return self.handle_logged_out_user()
+            return self.handle_new_user()
 
         if user == request.user:
             return self.handle_current_user()

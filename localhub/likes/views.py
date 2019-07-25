@@ -7,18 +7,18 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 
 from localhub.activities.models import Activity
-from localhub.activities.views import BaseActivityStreamView
+from localhub.activities.views.streams import BaseStreamView
 from localhub.comments.views import CommentListView
 
 
-class LikedActivityStreamView(LoginRequiredMixin, BaseActivityStreamView):
+class LikedStreamView(LoginRequiredMixin, BaseStreamView):
     template_name = "likes/activities.html"
 
     def get_queryset_for_model(self, model: Type[Activity]) -> QuerySet:
         return super().get_queryset_for_model(model).filter(has_liked=True)
 
 
-liked_activity_stream_view = LikedActivityStreamView.as_view()
+liked_stream_view = LikedStreamView.as_view()
 
 
 class LikedCommentListView(LoginRequiredMixin, CommentListView):

@@ -49,16 +49,18 @@ class TestPostModel:
         # owner should not receive any notifications from their own posts
         owner = UserFactory(username="owner")
         moderator = UserFactory()
-        mentioned = UserFactory(username="danjac")
 
         Membership.objects.create(
             member=owner, community=community, role=Membership.ROLES.moderator
         )
+
         Membership.objects.create(
             member=moderator,
             community=community,
             role=Membership.ROLES.moderator,
         )
+        mentioned = UserFactory(username="danjac")
+
         Membership.objects.create(
             member=mentioned, community=community, role=Membership.ROLES.member
         )
@@ -97,29 +99,31 @@ class TestPostModel:
         )
 
         notifications = post.notify(created=True)
-
-        # ensure saved to db
         assert len(notifications) == 4
 
         assert notifications[0].recipient == mentioned
-        assert notifications[0].verb == "mentioned"
+        assert notifications[0].actor == post.owner
+        assert notifications[0].verb == "mention"
 
         assert notifications[1].recipient == tag_subscriber
-        assert notifications[1].verb == "tagged"
+        assert notifications[1].actor == post.owner
+        assert notifications[1].verb == "tag"
 
-        assert notifications[2].recipient == moderator
-        assert notifications[2].verb == "created"
+        assert notifications[2].recipient == user_subscriber
+        assert notifications[2].actor == post.owner
+        assert notifications[2].verb == "follow"
 
-        assert notifications[3].recipient == user_subscriber
-        assert notifications[3].verb == "created"
+        assert notifications[3].recipient == moderator
+        assert notifications[3].actor == post.owner
+        assert notifications[3].verb == "review"
 
-        # change the description and remove the mention
-        post.description = "hello!"
+        # edit by moderator
+        post.editor = moderator
         post.save()
 
         notifications = post.notify(created=False)
+        assert len(notifications) == 1
 
-        assert notifications[0].recipient == moderator
-        assert notifications[0].verb == "updated"
-
-        assert post.notifications.count() == 5
+        assert notifications[0].recipient == post.owner
+        assert notifications[0].actor == moderator
+        assert notifications[0].verb == "edit"

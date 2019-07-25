@@ -7,20 +7,23 @@
 {% load rules %}
 
 
-{% block activities_content %}
+{% block content %}
 
-{% has_perm "communities.manage_community" user request.community as can_manage %}
-{% has_perm "messageboard.create_message" user request.community as can_create_message %}
-{% has_perm "subscriptions.create_subscription" user request.community as can_create_subscription %}
-
-{% if can_manage %}
-<a class="float-right btn btn-primary" href="{% url 'communities:membership_list' %}">
-    <i class="icon icon-edit"></i>
-    {% trans "Edit member settings" %}
-</a>
-{% endif %}
+{% has_perm "communities.manage_community" user community as can_manage %}
+{% has_perm "messageboard.create_message" user community as can_create_message %}
+{% has_perm "subscriptions.create_subscription" user community as can_create_subscription %}
 
 <h3>{% trans "Members" %}</h3>
+
+{% if can_manage %}
+<div class="float-right">
+<a class="btn btn-sm" href="{% url 'communities:membership_list' %}">
+    {% trans "Edit member settings" %}
+</a>
+</div>
+<div class="clearfix"></div>
+{% endif %}
+
 <table class="table table-striped table-hover">
     {% if user.is_authenticated %}
     <thead>
@@ -49,23 +52,21 @@
                        data-controller="ajax"
                        data-ajax-redirect="{{ request.path }}"
                        data-action="ajax#post">
-                        <i class="icon icon-stop"></i>
                         {% trans "Unfollow" %}
                     </a>
                     {% else %}
                     <a href="{% url 'users:subscribe' member.username %}"
-                       class="btn btn-primary btn-sm"
+                       class="btn btn-sm"
                        data-controller="ajax"
                        data-ajax-redirect="{{ request.path }}"
                        data-action="ajax#post">
-                        <i class="icon icon-plus"></i>
                         {% trans "Follow" %}
                     </a>
                     {% endif %}
                     {% endif %}
                     {% if can_create_message %}
                     <a href="{% url 'messageboard:message_create_pm' member.username %}" class="btn btn-sm">
-                        <i class="icon icon-mail"></i> {% trans "Send Message" %}
+                        {% trans "Send Message" %}
                     </a>
                     {% endif %}
                 </div>
@@ -77,4 +78,4 @@
     </tbody>
 </table>
 {% include "includes/pagination.html" %}
-{% endblock activities_content %}
+{% endblock content %}

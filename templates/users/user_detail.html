@@ -3,59 +3,25 @@
 
 {% extends "users/base.html" %}
 {% load i18n %}
-{% load rules %}
 
 {% block user_content %}
-
-{% if user.is_authenticated and not is_auth_user %}
-
-{% has_perm "messageboard.create_message" user request.community as can_create_message %}
-{% has_perm "subscriptions.create_subscription" user request.community as can_create_subscription %}
-
-<div class="btn-group btn-group-block">
-{% if can_create_message %}
-    <a href="{% url 'messageboard:message_create_pm' user_obj.username %}"
-       class="btn btn-primary">
-        <i class="icon icon-mail"></i> {% trans "Send Message" %}
-    </a>
-{% endif %}
-{% if can_create_subscription and not is_subscribed %}
-    <a href="{% url 'users:subscribe' user_obj.username %}"
-       class="btn"
-       data-controller="ajax"
-       data-action="ajax#post">
-        <i class="icon icon-plus"></i> {% trans "Follow" %}
-    </a>
-{% elif is_subscribed %}
-    <a href="{% url 'users:unsubscribe' user_obj.username %}"
-       class="btn"
-       data-controller="ajax"
-       data-action="ajax#post">
-        <i class="icon icon-stop"></i> {% trans "Unfollow" %}
-    </a>
-{% endif %}
-</div>
-{% endif %}
 
 {% if user_obj.bio %}
 {{ user_obj.bio.markdown }}
 {% if is_auth_user %}
 <p class="mt-2">
-    <a href="{% url 'user_update' %}" class="btn btn-primary btn-block">
-        <i class="icon icon-edit"></i> {% trans "Update your profile" %}
+    <a href="{% url 'user_update' %}" class="btn">
+        {% trans "Update your profile" %}
     </a>
 </p>
 {% endif %}
 {% else %}
 <div class="empty">
-    <div class="empty-icon">
-        <i class="icon icon-people"></i>
-    </div>
     {% if is_auth_user %}
     <p class="empty-title h5">{% trans "You do not have a bio" %}</p>
     <div class="empty-action">
-        <a href="{% url 'user_update' %}" class="btn btn-primary btn-block">
-            <i class="icon icon-edit"></i> {% trans "Update your profile" %}
+        <a href="{% url 'user_update' %}" class="btn">
+            {% trans "Update your profile" %}
         </a>
     </div>
     {% else %}

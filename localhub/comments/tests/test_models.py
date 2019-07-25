@@ -1,11 +1,16 @@
+import factory
 import pytest
 
+from django.db.models import signals
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 
 from localhub.comments.models import Comment
+from localhub.comments.tests.factories import CommentFactory
+from localhub.communities.models import Community, Membership
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
+from localhub.posts.tests.factories import PostFactory
 from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
@@ -88,3 +93,64 @@ class TestCommentManager:
         assert hasattr(comment, "has_liked")
         assert hasattr(comment, "has_flagged")
         assert not hasattr(comment, "is_flagged")
+
+
+class TestCommentModel:
+    @factory.django.mute_signals(signals.post_save)
+    def test_notify(self, community: Community):
+        comment_owner = UserFactory(username="comment_owner")
+        post_owner = UserFactory(username="post_owner")
+        moderator = UserFactory()
+
+        Membership.objects.create(
+            member=comment_owner,
+            community=community,
+            role=Membership.ROLES.moderator,
+        )
+
+        Membership.objects.create(
+            member=moderator,
+            community=community,
+            role=Membership.ROLES.moderator,
+        )
+        mentioned = UserFactory(username="danjac")
+
+        Membership.objects.create(
+            member=mentioned, community=community, role=Membership.ROLES.member
+        )
+
+        post = PostFactory(owner=post_owner, community=community)
+
+        comment = CommentFactory(
+            owner=comment_owner,
+            community=community,
+            content_object=post,
+            content="hello @danjac",
+        )
+
+        notifications = comment.notify(created=True)
+
+        assert len(notifications) == 3
+
+        assert notifications[0].recipient == mentioned
+        assert notifications[0].actor == comment.owner
+        assert notifications[0].verb == "mention"
+
+        assert notifications[1].recipient == moderator
+        assert notifications[1].actor == comment.owner
+        assert notifications[1].verb == "review"
+
+        assert notifications[2].recipient == post.owner
+        assert notifications[2].actor == comment.owner
+        assert notifications[2].verb == "comment"
+
+        # edit by moderator
+        comment.editor = moderator
+        comment.save()
+
+        notifications = comment.notify(created=False)
+        assert len(notifications) == 1
+
+        assert notifications[0].recipient == comment.owner
+        assert notifications[0].actor == moderator
+        assert notifications[0].verb == "edit"

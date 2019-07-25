@@ -5,15 +5,12 @@
 import factory
 import pytest
 
-from django.db import IntegrityError
 from django.db.models import signals
 from django.conf import settings
 
-from localhub.comments.models import Comment
 from localhub.comments.tests.factories import CommentFactory
 from localhub.communities.models import Membership
 from localhub.flags.models import Flag
-from localhub.posts.models import Post
 from localhub.posts.tests.factories import PostFactory
 
 
@@ -36,7 +33,7 @@ class TestFlagModel:
         assert notification.actor == user
         assert notification.recipient == moderator.member
         assert notification.content_object == comment
-        assert notification.verb == "flagged"
+        assert notification.verb == "flag"
 
     @factory.django.mute_signals(signals.post_save)
     def test_notify_post(
@@ -52,4 +49,4 @@ class TestFlagModel:
         assert notification.actor == user
         assert notification.recipient == moderator.member
         assert notification.content_object == post
-        assert notification.verb == "flagged"
+        assert notification.verb == "flag"

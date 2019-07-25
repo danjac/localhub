@@ -3,13 +3,14 @@
 
 from django.contrib import admin
 
+from simple_history.admin import SimpleHistoryAdmin
 
 from localhub.comments.models import Comment
 from localhub.core.markdown.admin import MarkdownFieldMixin
 
 
 @admin.register(Comment)
-class CommentAdmin(MarkdownFieldMixin, admin.ModelAdmin):
+class CommentAdmin(MarkdownFieldMixin, SimpleHistoryAdmin):
     raw_id_fields = ("owner",)
     list_display = ("owner", "community", "created")
     ordering = ("-created",)

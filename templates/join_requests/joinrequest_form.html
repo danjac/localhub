@@ -1,7 +1,7 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "base.html" %}
+{% extends "activities/base.html" %}
 {% load i18n %}
 
 
@@ -11,7 +11,9 @@
   <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
     <p>{% trans "Your request will be sent to the site admins." %}</p>
     {% include "includes/forms/fields.html" %}
-    <button type="submit" class="btn btn-primary">{% trans "Send request" %}</button>
+    <button type="submit" class="btn btn-primary">
+        {% trans "Send request" %}
+    </button>
   </form>
 </div>
 {% endblock %}

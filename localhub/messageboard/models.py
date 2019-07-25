@@ -17,9 +17,7 @@ class Message(TimeStampedModel):
 
     message = MarkdownField(blank=True)
 
-    community = models.ForeignKey(
-        Community, on_delete=models.CASCADE, related_name="+"
-    )
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
     sender = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+"
@@ -62,9 +60,7 @@ class MessageRecipient(models.Model):
         return str(self.message)
 
     def get_absolute_url(self) -> str:
-        return reverse(
-            "messageboard:message_recipient_detail", args=[self.id]
-        )
+        return reverse("messageboard:message_recipient_detail", args=[self.id])
 
     def get_permalink(self) -> str:
         return self.message.community.resolve_url(self.get_absolute_url())

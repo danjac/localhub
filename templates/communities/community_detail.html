@@ -5,12 +5,22 @@
 {% load i18n %}
 {% load rules %}
 
-{% block activities_content %}
+{% block content %}
+{% has_perm "communities.manage_community" user community as can_manage %}
+{% if can_manage %}
+<div class="float-right">
+<a href="{% url "communities:community_update" %}" class="btn btn-sm">
+    {% trans "Edit Community Settings" %}
+</a>
+</div>
+<div class="clearfix"></div>
+{% endif %}
+
 
 <h3>{{ community.name }}</h3>
 
 {% if community.description %}
-<hr />
+<div class="divider mb-2"></div>
 <h4>{% trans "Description" %}</h4>
 <p>
   {{ community.description.markdown }}
@@ -18,19 +28,11 @@
 {% endif %}
 
 {% if community.terms %}
-<hr />
+<div class="divider mb-2"></div>
 <h4>{% trans "Terms & Conditions" %}</h4>
 <p>
   {{ community.terms.markdown }}
 </p>
 {% endif %}
 
-{% has_perm "communities.manage_community" user community as can_manage %}
-{% if can_manage %}
-<a href="{% url "communities:community_update" %}" class="btn btn-primary btn-block">
-    <i class="icon icon-edit"></i>
-    {% trans "Edit Community Settings" %}
-</a>
-{% endif %}
-
-{% endblock activities_content %}
+{% endblock content %}

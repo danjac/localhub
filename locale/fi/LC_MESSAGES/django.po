@@ -1,0 +1,2278 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-07-23 10:34+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: localhub/activities/emails.py:20
+#, python-format
+msgid "Your %s has been deleted by a moderator"
+msgstr ""
+
+#: localhub/activities/emails.py:44
+#, python-format
+msgid "A moderator has edited your %s"
+msgstr ""
+
+#: localhub/activities/emails.py:45
+#, python-format
+msgid "Someone has flagged this %s"
+msgstr ""
+
+#: localhub/activities/emails.py:46
+#, python-format
+msgid "Someone you are following has created a new %s"
+msgstr ""
+
+#: localhub/activities/emails.py:47
+#, python-format
+msgid "Someone has liked your %s"
+msgstr ""
+
+#: localhub/activities/emails.py:48
+#, python-format
+msgid "Someone has mentioned you in their %s"
+msgstr ""
+
+#: localhub/activities/emails.py:49
+#, python-format
+msgid "Someone has created a new %s to review"
+msgstr ""
+
+#: localhub/activities/emails.py:50
+#, python-format
+msgid "Someone has created a new %s containing tags you are following"
+msgstr ""
+
+#: localhub/activities/models.py:162
+#: templates/includes/default_sidebar.html:20
+#: templates/communities/base.html:19 templates/users/includes/default_sidebar.html:11
+msgid "Home"
+msgstr "Kotisivu"
+
+#: localhub/activities/views/generic.py:76
+msgid "Your update has been posted"
+msgstr ""
+
+#: localhub/activities/views/generic.py:86
+#: templates/activities/activity_form.html:16
+#: templates/activities/includes/comments.html:23
+msgid "Submit"
+msgstr "Lähetä"
+
+#: localhub/activities/views/generic.py:128
+msgid "Your changes have been saved"
+msgstr ""
+
+#: localhub/activities/views/generic.py:131
+#: templates/activities/includes/actions/update.html:8
+#: templates/comments/includes/actions.html:36
+#: templates/communities/membership_list.html:38
+#: templates/markdownx/widget2.html:11
+msgid "Edit"
+msgstr "Muokkaa"
+
+#: localhub/activities/views/generic.py:154
+#, python-format
+msgid "The %s has been deleted"
+msgstr ""
+
+#: localhub/activities/views/generic.py:275
+#: templates/activities/includes/actions/flag.html:9
+#: templates/comments/includes/actions.html:29 templates/flags/flag_form.html:7
+msgid "Flag"
+msgstr ""
+
+#: localhub/activities/views/generic.py:293
+#, python-format
+msgid "This %s has been flagged to the moderators"
+msgstr ""
+
+#: localhub/activities/views/generic.py:329
+msgid "Your comment has been posted"
+msgstr "Kommentti lähitetty"
+
+#: localhub/activities/views/tags.py:121
+msgid "You are now following this tag"
+msgstr ""
+
+#: localhub/activities/views/tags.py:140
+msgid "You have stopped following this tag"
+msgstr ""
+
+#: localhub/comments/emails.py:24
+msgid "Someone has made a comment on one of your posts"
+msgstr ""
+
+#: localhub/comments/emails.py:25
+msgid "Your comment has been deleted by a moderator"
+msgstr ""
+
+#: localhub/comments/emails.py:26
+msgid "A moderator has edited your comment"
+msgstr ""
+
+#: localhub/comments/emails.py:27
+msgid "Someone has flagged this comment"
+msgstr ""
+
+#: localhub/comments/emails.py:28
+msgid "Someone has liked your comment"
+msgstr ""
+
+#: localhub/comments/emails.py:29
+msgid "Someone has mentioned you in their comment"
+msgstr ""
+
+#: localhub/comments/emails.py:30
+msgid "Someone has posted or updated a comment to review"
+msgstr ""
+
+#: localhub/comments/forms.py:11 localhub/comments/views.py:84
+#: templates/comments/comment_detail.html:8
+#: templates/comments/comment_form.html:7
+msgid "Comment"
+msgstr "Kommenttoi"
+
+#: localhub/comments/views.py:126
+msgid "Edit Comment"
+msgstr "Muokkaa kommentti"
+
+#: localhub/comments/views.py:135
+msgid "Comment has been updated"
+msgstr "Kommentti päivitetty"
+
+#: localhub/comments/views.py:159
+msgid "Comment has been deleted"
+msgstr "Kommentti poistettu"
+
+#: localhub/comments/views.py:237
+msgid "Flag Comment"
+msgstr ""
+
+#: localhub/comments/views.py:253
+msgid "This comment has been flagged to the moderators"
+msgstr ""
+
+#: localhub/communities/models.py:37
+msgid "This is not a valid domain"
+msgstr ""
+
+#: localhub/communities/models.py:51
+msgid "Terms and conditions, code of conduct and other membership terms."
+msgstr ""
+
+#: localhub/communities/models.py:59
+msgid ""
+"Any posts containing these tags in their description will be automatically "
+"hidden by default"
+msgstr ""
+
+#: localhub/communities/models.py:69
+msgid ""
+"Will add domain to notification emails from this site, e.g. "
+"notifications@this-domain.com. If left empty will use the site domain by "
+"default."
+msgstr ""
+
+#: localhub/communities/models.py:84
+msgid ""
+"This community is open to the world. Non-members can view all published "
+"content."
+msgstr ""
+
+#: localhub/communities/models.py:90
+msgid "This community is currently live."
+msgstr ""
+
+#: localhub/communities/models.py:96
+#: templates/includes/default_sidebar.html:133
+msgid "Communities"
+msgstr "Yhteisöt"
+
+#: localhub/communities/models.py:155
+#: templates/communities/membership_list.html:15
+#: templates/users/user_list.html:31
+msgid "Member"
+msgstr "Jäsen"
+
+#: localhub/communities/models.py:156
+msgid "Moderator"
+msgstr ""
+
+#: localhub/communities/models.py:157
+msgid "Admin"
+msgstr "Ylläpitäjä"
+
+#: localhub/communities/views.py:69
+msgid "You must be a member of this community"
+msgstr ""
+
+#: localhub/communities/views.py:76
+msgid "No community is available for this domain"
+msgstr ""
+
+#: localhub/communities/views.py:126
+msgid "Community settings have been updated"
+msgstr ""
+
+#: localhub/communities/views.py:197
+msgid "Membership has been updated"
+msgstr ""
+
+#: localhub/core/forms/widgets.py:53 templates/flags/flag_list.html:10
+#: templates/flags/includes/flags.html:8
+msgid "Date"
+msgstr "Päivämäärä"
+
+#: localhub/core/forms/widgets.py:57
+msgid "Time"
+msgstr "Aika"
+
+#: localhub/events/forms.py:11
+msgid ""
+"Time will be stored in UTC timezone. It will be shown in the timezone you "
+"select below."
+msgstr ""
+
+#: localhub/events/forms.py:18
+msgid "Event starts"
+msgstr "Tapahtuma alkaa"
+
+#: localhub/events/forms.py:21
+msgid "Event ends"
+msgstr "Tapahtuma loppuu"
+
+#: localhub/events/forms.py:45
+msgid "Start and end times will be shown in this timezone"
+msgstr ""
+
+#: localhub/events/models.py:43 localhub/posts/forms.py:16
+#: templates/markdownx/widget2.html:39
+msgid "Link"
+msgstr "Linkki"
+
+#: localhub/events/models.py:45
+msgid "Starts on (UTC)"
+msgstr ""
+
+#: localhub/events/models.py:53
+msgid "City or town"
+msgstr "Kaupunki"
+
+#: localhub/events/models.py:64 templates/events/includes/event.html:67
+msgid "Tickets available from"
+msgstr ""
+
+#: localhub/events/models.py:80
+msgid "End date cannot be before start date"
+msgstr ""
+
+#: localhub/flags/models.py:49
+msgid "Spam"
+msgstr "Roska"
+
+#: localhub/flags/models.py:50
+msgid "Abuse"
+msgstr ""
+
+#: localhub/flags/models.py:51
+msgid "Breach of community rules"
+msgstr ""
+
+#: localhub/flags/models.py:52
+msgid "Illegal activity"
+msgstr "Laiton toiminta"
+
+#: localhub/flags/models.py:53
+msgid "Pornography"
+msgstr ""
+
+#: localhub/flags/models.py:54
+msgid "Breach of copyright"
+msgstr ""
+
+#: localhub/invites/emails.py:14
+msgid "Invitation to join"
+msgstr ""
+
+#: localhub/invites/forms.py:26
+msgid "A user with this email address already belongs to this community"
+msgstr ""
+
+#: localhub/invites/forms.py:34
+msgid "An invitation has already been sent to this email address"
+msgstr ""
+
+#: localhub/invites/models.py:19 localhub/join_requests/models.py:20
+msgid "Pending"
+msgstr "Odottaa"
+
+#: localhub/invites/models.py:20 localhub/join_requests/models.py:21
+msgid "Accepted"
+msgstr "Hyväksytty"
+
+#: localhub/invites/models.py:21 localhub/join_requests/models.py:22
+msgid "Rejected"
+msgstr "Hyljätty"
+
+#: localhub/invites/views.py:88
+#, python-format
+msgid "Your invitation has been sent to %s"
+msgstr ""
+
+#: localhub/invites/views.py:116
+#, python-format
+msgid "Email has been re-sent to %s"
+msgstr ""
+
+#: localhub/invites/views.py:173
+msgid "Sign up to join this community"
+msgstr ""
+
+#: localhub/invites/views.py:179
+msgid "Login to join this community"
+msgstr ""
+
+#: localhub/invites/views.py:188
+#, python-format
+msgid "Welcome to %s"
+msgstr "Tervetuloa yhteisöön %s"
+
+#: localhub/invites/views.py:190
+msgid "You are already a member of this community"
+msgstr ""
+
+#: localhub/invites/views.py:200
+msgid "This invite is invalid"
+msgstr ""
+
+#: localhub/join_requests/apps.py:7 templates/communities/base.html:34
+msgid "Join Requests"
+msgstr ""
+
+#: localhub/join_requests/emails.py:14
+msgid "A request has been received"
+msgstr ""
+
+#: localhub/join_requests/emails.py:38
+msgid "Your request has been approved"
+msgstr ""
+
+#: localhub/join_requests/emails.py:51
+msgid "Your request has been rejected"
+msgstr ""
+
+#: localhub/join_requests/forms.py:40
+msgid "You have already sent a request. Be patient."
+msgstr ""
+
+#: localhub/join_requests/views.py:87
+msgid "Your request has been sent to the community admins"
+msgstr ""
+
+#: localhub/join_requests/views.py:126
+msgid "Join request has been accepted"
+msgstr ""
+
+#: localhub/join_requests/views.py:130
+msgid "User already belongs to this community"
+msgstr ""
+
+#: localhub/join_requests/views.py:141
+msgid "An invite has been sent to this email"
+msgstr ""
+
+#: localhub/join_requests/views.py:160
+msgid "Join request has been rejected"
+msgstr ""
+
+#: localhub/messageboard/apps.py:7
+msgid "Message Board"
+msgstr "Viestipalsta"
+
+#: localhub/messageboard/forms.py:25
+msgid "Community moderators"
+msgstr ""
+
+#: localhub/messageboard/forms.py:26
+msgid "Community admins"
+msgstr ""
+
+#: localhub/messageboard/forms.py:27
+msgid "People following me"
+msgstr ""
+
+#: localhub/messageboard/forms.py:33
+msgid "Send to individual recipients"
+msgstr ""
+
+#: localhub/messageboard/forms.py:35
+msgid ""
+"Prefix each name with the @ character to send a message to individual "
+"members of the community"
+msgstr ""
+
+#: localhub/messageboard/forms.py:43
+msgid "Send to people belonging to these groups"
+msgstr ""
+
+#: localhub/messageboard/forms.py:45
+msgid "All those belonging to the groups you select will receive your message"
+msgstr ""
+
+#: localhub/messageboard/forms.py:57
+msgid "You must include at least one group or individual user"
+msgstr ""
+
+#: localhub/messageboard/views.py:169
+msgid "Your message has been sent"
+msgstr ""
+
+#: localhub/messageboard/views.py:172
+#, python-format
+msgid "Your message has been sent to %(num_recipients)s people"
+msgstr ""
+
+#: localhub/messageboard/views.py:185
+msgid "Please select at least one valid recipient"
+msgstr ""
+
+#: localhub/photos/models.py:24
+msgid "Attribution"
+msgstr ""
+
+#: localhub/photos/models.py:25
+msgid "Attribution ShareAlike"
+msgstr ""
+
+#: localhub/photos/models.py:26
+msgid "Attribution NoDerivs"
+msgstr ""
+
+#: localhub/photos/models.py:27
+msgid "Attribution NonCommercial"
+msgstr ""
+
+#: localhub/photos/models.py:28
+msgid "Attribution NonCommercial ShareAlike"
+msgstr ""
+
+#: localhub/photos/models.py:29
+msgid "Attribution NonCommercial NoDerivs"
+msgstr ""
+
+#: localhub/posts/forms.py:16
+msgid "Title"
+msgstr "Otsikko"
+
+#: localhub/posts/forms.py:21
+msgid "Add a full link here"
+msgstr ""
+
+#: localhub/posts/forms.py:30
+msgid "Either title or URL must be provided"
+msgstr ""
+
+#: localhub/posts/models.py:33 templates/includes/default_sidebar.html:58
+msgid "Post"
+msgstr "Postaus"
+
+#: localhub/settings.py:136
+msgid "English"
+msgstr "Englanti"
+
+#: localhub/settings.py:136
+msgid "Finnish"
+msgstr "Suomi"
+
+#: localhub/users/emails.py:12
+msgid "Someone has started following you"
+msgstr ""
+
+#: localhub/users/models.py:104
+msgid "Someone comments on my post"
+msgstr ""
+
+#: localhub/users/models.py:105
+msgid "A moderator deletes my post or comment"
+msgstr ""
+
+#: localhub/users/models.py:106
+msgid "A moderator edits my post or comment"
+msgstr ""
+
+#: localhub/users/models.py:107
+msgid "Someone I'm following creates a post"
+msgstr ""
+
+#: localhub/users/models.py:108
+msgid "Someone likes my post or comment"
+msgstr ""
+
+#: localhub/users/models.py:109
+msgid "I am @mentioned in a post or comment"
+msgstr ""
+
+#: localhub/users/models.py:110
+msgid "I receive a direct message"
+msgstr ""
+
+#: localhub/users/models.py:111
+msgid "A post is created containing tags I'm following"
+msgstr ""
+
+#: localhub/users/models.py:112
+msgid "Post or comment is flagged (MODERATORS ONLY)"
+msgstr ""
+
+#: localhub/users/models.py:113
+msgid "Content to be reviewed (MODERATORS ONLY)"
+msgstr ""
+
+#: localhub/users/models.py:114
+msgid "Someone starts following me"
+msgstr ""
+
+#: localhub/users/models.py:117
+msgid "Full name"
+msgstr "Koko nimi"
+
+#: localhub/users/views.py:53
+msgid "Your details have been updated"
+msgstr ""
+
+#: localhub/users/views.py:129
+msgid "You are now following this user"
+msgstr ""
+
+#: localhub/users/views.py:148
+msgid "You have stopped following this user"
+msgstr ""
+
+#: templates/400.html:7 templates/500.html:7
+msgid "An error has occurred"
+msgstr "Virhe on tapahtunut"
+
+#: templates/400.html:9
+msgid "Sorry, we could not complete your request. Please try again later."
+msgstr ""
+
+#: templates/403.html:7
+msgid "Permission Denied"
+msgstr "Lupa kielletty"
+
+#: templates/403.html:9
+msgid "Sorry, you do not have permission to view this page."
+msgstr ""
+
+#: templates/404.html:7
+msgid "Page not found"
+msgstr "Sivu ei löytyy"
+
+#: templates/404.html:9
+msgid "Sorry, this page does not exist, or it has been removed."
+msgstr ""
+
+#: templates/500.html:9
+msgid ""
+"Sorry, an unexpected error has occurred. The server admins have already been "
+"notified."
+msgstr ""
+
+#: templates/account/email.html:8 templates/account/email.html:11
+msgid "Email Addresses"
+msgstr "Sähköpostiosoitteet"
+
+#: templates/account/email.html:14
+msgid "The following email addresses are associated with your account:"
+msgstr ""
+
+#: templates/account/email.html:25
+msgid "Verified"
+msgstr ""
+
+#: templates/account/email.html:27
+msgid "Unverified"
+msgstr ""
+
+#: templates/account/email.html:29
+msgid "Primary"
+msgstr "Ensimmäinen"
+
+#: templates/account/email.html:35
+msgid "Make Primary"
+msgstr "Tee ensimmäiseksi"
+
+#: templates/account/email.html:36
+msgid "Re-send Verification"
+msgstr ""
+
+#: templates/account/email.html:37
+msgid "Remove"
+msgstr "Poista"
+
+#: templates/account/email.html:44
+msgid "Warning:"
+msgstr "Varoitus:"
+
+#: templates/account/email.html:44
+msgid ""
+"You currently do not have any e-mail address set up. You should really add "
+"an e-mail address so you can receive notifications, reset your password, etc."
+msgstr ""
+
+#: templates/account/email.html:52
+msgid "Add E-mail Address"
+msgstr "Lisää sähköpostiosoite"
+
+#: templates/account/email.html:57
+msgid "Add E-mail"
+msgstr "Lisää sähköpostiosoite"
+
+#: templates/account/email_confirm.html:9
+msgid "Confirm E-Mail"
+msgstr "Varmista sähköpostiosoite"
+
+#: templates/account/email_confirm.html:12
+msgid "Confirm E-mail Address"
+msgstr "Varmista sähköpostiosoite"
+
+#: templates/account/email_confirm.html:19
+#, python-format
+msgid ""
+"Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail "
+"address for user %(user_display)s."
+msgstr ""
+
+#: templates/account/email_confirm.html:24
+#: templates/includes/confirm_dialog.html:14
+msgid "Confirm"
+msgstr "Varmista"
+
+#: templates/account/email_confirm.html:32
+#, python-format
+msgid ""
+"This e-mail confirmation link expired or is invalid. Please <a href="
+"\"%(email_url)s\">issue a new e-mail confirmation request</a>."
+msgstr ""
+
+#: templates/account/login.html:9 templates/account/login.html:14
+#: templates/base.html:67
+msgid "Login"
+msgstr "Kirjaudu sisään"
+
+#: templates/account/login.html:16
+#, python-format
+msgid ""
+"If you have not created an account yet, then please\n"
+"    <a href=\"%(signup_url)s\">sign up</a> first."
+msgstr ""
+
+#: templates/account/login.html:29
+msgid "Sign in"
+msgstr "Kirjaudu sisään"
+
+#: templates/account/login.html:30
+msgid "Forgot your password?"
+msgstr ""
+
+#: templates/account/logout.html:7 templates/account/logout.html:11
+#: templates/account/logout.html:21 templates/base.html:65
+#: templates/users/includes/default_sidebar.html:34
+msgid "Logout"
+msgstr "Kirjaudu ulos"
+
+#: templates/account/logout.html:13
+msgid "Are you sure you want to log out?"
+msgstr "Haluatko varmasti kirjautua ulos?"
+
+#: templates/account/password_change.html:8
+#: templates/account/password_change.html:12
+#: templates/account/password_change.html:18
+#: templates/account/password_reset_from_key.html:8
+#: templates/account/password_reset_from_key.html:12
+#: templates/account/password_reset_from_key_done.html:4
+#: templates/account/password_reset_from_key_done.html:8
+msgid "Change Password"
+msgstr "Vaihda salasana"
+
+#: templates/account/password_reset.html:6
+#: templates/account/password_reset.html:11
+#: templates/account/password_reset_done.html:9
+#: templates/account/password_reset_done.html:13
+msgid "Password Reset"
+msgstr ""
+
+#: templates/account/password_reset.html:15
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll send you "
+"an e-mail allowing you to reset it."
+msgstr ""
+
+#: templates/account/password_reset.html:20
+msgid "Reset My Password"
+msgstr ""
+
+#: templates/account/password_reset_done.html:19
+msgid ""
+"We have sent you an e-mail. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:12
+msgid "Bad Token"
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:16
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
+"a>."
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:22
+#: templates/users/includes/default_sidebar.html:31
+msgid "Change password"
+msgstr "Vaihda salasana"
+
+#: templates/account/password_reset_from_key.html:26
+msgid "Your password is now changed."
+msgstr "Salasanasi on vaihdettu"
+
+#: templates/account/password_reset_from_key_done.html:10
+#, python-format
+msgid ""
+"Your password has been changed. Please <a href=\"%(login_url)s\">log in</a> "
+"again using your new password."
+msgstr ""
+
+#: templates/account/signup.html:7 templates/base.html:68
+msgid "Signup"
+msgstr "Rekisteröidy"
+
+#: templates/account/signup.html:12 templates/account/signup.html:23
+msgid "Sign Up"
+msgstr "Rekisteröidy"
+
+#: templates/account/signup.html:14
+#, python-format
+msgid ""
+"Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
+msgstr ""
+
+#: templates/activities/base.html:20 templates/communities/base.html:15
+#: templates/users/account_base.html:17
+msgid "Close Sidebar"
+msgstr "Sulje Sivuvalikko"
+
+#: templates/activities/base.html:35 templates/communities/base.html:43
+#: templates/users/account_base.html:27
+msgid "Sidebar"
+msgstr "Sivuvalikko"
+
+#: templates/activities/emails/activity_deleted.html:10
+#: templates/activities/emails/activity_deleted.txt:4
+#: templates/comments/emails/comment_deleted.html:10
+#: templates/comments/emails/comment_deleted.txt:4
+#, python-format
+msgid "Hi %(owner)s,"
+msgstr "Hei  %(owner)s,"
+
+#: templates/activities/emails/activity_deleted.html:13
+#, python-format
+msgid "The following %(activity_name)s was deleted by a moderator "
+msgstr ""
+
+#: templates/activities/emails/activity_deleted.txt:5
+msgid "The following {{ activity_name }} was deleted by a moderator"
+msgstr ""
+
+#: templates/activities/emails/notification.html:14
+#: templates/activities/emails/notification.txt:8
+#: templates/comments/emails/notification.html:16
+#: templates/comments/emails/notification.txt:8
+#: templates/events/emails/notification.txt:3
+#: templates/photos/emails/notification.txt:4
+#: templates/posts/emails/notification.html:11
+#: templates/posts/emails/notification.txt:4
+#: templates/users/emails/notification.html:16
+#: templates/users/emails/notification.txt:8
+#, python-format
+msgid "Hi %(recipient)s,"
+msgstr "Hei %(recipient)s,"
+
+#: templates/activities/emails/notification.html:19
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has mentioned you in their <a href=\"%(object_url)s\">"
+"%(activity_name)s</a>.\n"
+msgstr ""
+
+#: templates/activities/emails/notification.html:23
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has flagged this <a href=\"%(object_url)s\">%(activity_name)s</"
+"a>.\n"
+msgstr ""
+
+#: templates/activities/emails/notification.html:27
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has created a new <a href=\"%(object_url)s\">%(activity_name)s</"
+"a>.\n"
+msgstr ""
+
+#: templates/activities/emails/notification.html:31
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has created or updated their <a href=\"%(object_url)s\">"
+"%(activity_name)s</a> for you to review.\n"
+msgstr ""
+
+#: templates/activities/emails/notification.html:35
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has liked your <a href=\"%(object_url)s\">%(activity_name)s</a>.\n"
+msgstr ""
+
+#: templates/activities/emails/notification.html:39
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has edited your <a href=\"%(object_url)s\">%(activity_name)s</a>.\n"
+msgstr ""
+
+#: templates/activities/emails/notification.html:43
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has created a new <a href=\"%(object_url)s\">%(activity_name)s</a> "
+"containing tags you are following.\n"
+msgstr ""
+
+#: templates/activities/emails/notification.txt:10
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has mentioned you in their %(activity_name)s.\n"
+msgstr ""
+
+#: templates/activities/emails/notification.txt:14
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has created a new %(activity_name)s.\n"
+msgstr ""
+
+#: templates/activities/emails/notification.txt:18
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has liked your %(activity_name)s.\n"
+msgstr ""
+
+#: templates/activities/emails/notification.txt:22
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has flagged this %(activity_name)s.\n"
+msgstr ""
+
+#: templates/activities/emails/notification.txt:26
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has created or updated their %(activity_name)s for you to review.\n"
+msgstr ""
+
+#: templates/activities/emails/notification.txt:30
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has edited your %(activity_name)s.\n"
+msgstr ""
+
+#: templates/activities/emails/notification.txt:34
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has created a new %(activity_name)s containing tags you are "
+"following.\n"
+msgstr ""
+
+#: templates/activities/includes/actions/delete.html:12
+#: templates/activities/includes/actions/delete.html:14
+#: templates/comments/comment_confirm_delete.html:10
+#: templates/comments/includes/actions.html:52
+#: templates/communities/membership_confirm_delete.html:10
+#: templates/communities/membership_list.html:46
+#: templates/communities/membership_list.html:48
+#: templates/events/event_confirm_delete.html:10
+#: templates/flags/includes/flags.html:27
+#: templates/invites/invite_confirm_delete.html:10
+#: templates/invites/invite_list.html:47
+#: templates/messageboard/messagerecipient_confirm_delete.html:12
+#: templates/messageboard/messagerecipient_detail.html:34
+#: templates/messageboard/messagerecipient_detail.html:37
+#: templates/notifications/includes/notification.html:29
+#: templates/photos/photo_confirm_delete.html:10
+#: templates/posts/post_confirm_delete.html:10
+msgid "Delete"
+msgstr "Poista"
+
+#: templates/activities/includes/actions/delete.html:13
+msgid "Are you sure you want to delete this item?"
+msgstr "Haluatko varmasti poista tämän?"
+
+#: templates/activities/includes/actions/like.html:11
+#: templates/comments/includes/actions.html:17
+msgid "Like"
+msgstr "Tykkään"
+
+#: templates/activities/includes/actions/like.html:18
+#: templates/comments/includes/actions.html:24
+msgid "Unlike"
+msgstr "En tykkää"
+
+#: templates/activities/includes/comments.html:7 templates/likes/base.html:20
+#: templates/users/base.html:63
+msgid "Comments"
+msgstr "Kommentit"
+
+#: templates/activities/includes/comments.html:16
+#: templates/activities/includes/comments_count.html:15
+msgid "Post a Comment"
+msgstr "Lähetä Kommentti"
+
+#: templates/activities/includes/comments.html:29
+#, python-format
+msgid ""
+"Please <a href=\"%(login_url)s?next=%(next_url)s\">sign in</a> to post "
+"comments."
+msgstr ""
+
+#: templates/activities/includes/comments.html:33
+msgid "You do not have permission to post comments on this site."
+msgstr ""
+
+#: templates/activities/includes/comments_count.html:9
+msgid ""
+"\n"
+"  Comment\n"
+"  "
+msgid_plural ""
+"\n"
+"  Comments\n"
+"  "
+msgstr[0] ""
+"\n"
+"Kommentti"
+msgstr[1] ""
+"\n"
+"Kommenttia"
+
+#: templates/activities/includes/content.html:10
+msgid "Sensitive Content"
+msgstr ""
+
+#: templates/activities/includes/content.html:11
+msgid ""
+"This post has been tagged sensitive. Click the button below to view the "
+"content."
+msgstr ""
+
+#: templates/activities/includes/content.html:13
+msgid "Show Content"
+msgstr "Näytä sisältöä"
+
+#: templates/activities/includes/description.html:8
+msgid "Read more"
+msgstr "Lue lisää"
+
+#: templates/activities/includes/notification.html:13
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has mentioned you in their <a href=\"%(activity_url)s\">"
+"%(activity_name)s</a>\n"
+msgstr ""
+
+#: templates/activities/includes/notification.html:17
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has created a new <a href=\"%(activity_url)s\">%(activity_name)s</"
+"a>\n"
+msgstr ""
+
+#: templates/activities/includes/notification.html:21
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has created or updated their <a href=\"%(activity_url)s\">"
+"%(activity_name)s</a> for you to review\n"
+msgstr ""
+
+#: templates/activities/includes/notification.html:25
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has liked your <a href=\"%(activity_url)s\">%(activity_name)s</a>\n"
+msgstr ""
+
+#: templates/activities/includes/notification.html:29
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has edited your <a href=\"%(activity_url)s\">%(activity_name)s</"
+"a>\n"
+msgstr ""
+
+#: templates/activities/includes/notification.html:33
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has created a new <a href=\"%(activity_url)s\">%(activity_name)s</"
+"a> containing tags you are following\n"
+msgstr ""
+
+#: templates/includes/default_sidebar.html:27
+#: templates/notifications/base.html:6
+msgid "Notifications"
+msgstr "Tiedotteet"
+
+#: templates/includes/default_sidebar.html:34
+msgid "Direct Messages"
+msgstr "Suoraat Viestit"
+
+#: templates/includes/default_sidebar.html:40
+#: templates/communities/base.html:22 templates/users/account_base.html:7
+msgid "My Settings"
+msgstr "Omat Asetukset"
+
+#: templates/includes/default_sidebar.html:43
+#: templates/includes/default_sidebar.html:107 templates/likes/base.html:16
+#: templates/posts/post_form.html:7 templates/posts/post_list.html:4
+#: templates/users/base.html:59
+msgid "Posts"
+msgstr "Postaukset"
+
+#: templates/includes/default_sidebar.html:46
+#: templates/includes/default_sidebar.html:110
+#: templates/events/event_form.html:4 templates/events/event_list.html:4
+msgid "Events"
+msgstr "Tapahtumat"
+
+#: templates/includes/default_sidebar.html:49
+#: templates/includes/default_sidebar.html:113
+#: templates/photos/photo_form.html:7 templates/photos/photo_list.html:4
+msgid "Photos"
+msgstr "Valokuvat"
+
+#: templates/includes/default_sidebar.html:56
+#, fuzzy
+#| msgid "Submit"
+msgid "Submit New"
+msgstr "Lähetä Uusi"
+
+#: templates/includes/default_sidebar.html:61
+#, fuzzy
+#| msgid "Events"
+msgid "Event"
+msgstr "Tapahtuma"
+
+#: templates/includes/default_sidebar.html:64
+#, fuzzy
+#| msgid "Photos"
+msgid "Photo"
+msgstr "Valokuva"
+
+#: templates/includes/default_sidebar.html:71
+#: templates/subscriptions/base.html:16
+msgid "People"
+msgstr "Ihmiset"
+
+#: templates/includes/default_sidebar.html:74
+#: templates/users/includes/default_sidebar.html:15
+msgid "My Profile"
+msgstr "Oma Profiili"
+
+#: templates/includes/default_sidebar.html:78
+#: templates/subscriptions/base.html:7 templates/subscriptions/base.html:11
+msgid "Following"
+msgstr "Minun Seuraamani"
+
+#: templates/includes/default_sidebar.html:84
+#: templates/communities/base.html:28
+#: templates/communities/membership_list.html:11
+#: templates/users/user_list.html:16
+msgid "Members"
+msgstr "Jäsenet"
+
+#: templates/includes/default_sidebar.html:88
+#: templates/communities/base.html:25
+#: templates/communities/community_form.html:9
+#: templates/users/includes/default_sidebar.html:20
+msgid "Community Settings"
+msgstr "Yhteisön Asetukset"
+
+#: templates/includes/default_sidebar.html:96
+msgid "Flagged"
+msgstr ""
+
+#: templates/includes/default_sidebar.html:105
+msgid "Activities"
+msgstr "Toiminta"
+
+#: templates/includes/default_sidebar.html:117 templates/likes/base.html:7
+#: templates/likes/base.html:11
+msgid "Favorites"
+msgstr "Suosikit"
+
+#: templates/includes/default_sidebar.html:122
+#: templates/subscriptions/base.html:20
+msgid "Tags"
+msgstr "Tagit"
+
+#: templates/includes/default_sidebar.html:154
+msgid "More Details"
+msgstr ""
+
+#: templates/activities/includes/timesince.html:5
+#, python-format
+msgid ""
+"\n"
+"Posted %(created)s ago by\n"
+msgstr "\nKirjoitettu %(created)s sitten. Tekijä\n"
+
+#: templates/activities/search.html:7 templates/base.html:46
+#: templates/base.html:48 templates/base.html:85 templates/base.html:87
+msgid "Search"
+msgstr "Hae"
+
+#: templates/activities/search.html:11
+#, python-format
+msgid "Search for \"%(search_query)s\""
+msgstr "Hae \"%(search_query)s\""
+
+#: templates/activities/search.html:13 templates/activities/tag_detail.html:39
+#, python-format
+msgid "%(total)s result"
+msgid_plural "%(total)s results"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/activities/search.html:23
+msgid "Sorry, no results found for your search"
+msgstr ""
+
+#: templates/activities/stream.html:10
+msgid "Latest"
+msgstr ""
+
+#: templates/activities/stream.html:24
+msgid "Start a conversation..."
+msgstr "Aloita keskustelu..."
+
+#: templates/activities/stream.html:28 templates/events/event_list.html:11
+msgid "Submit Event"
+msgstr "Lähetä Tapahtuma"
+
+#: templates/activities/stream.html:29 templates/photos/photo_list.html:10
+msgid "Submit Photo"
+msgstr "Lähetä Valokuva"
+
+#: templates/activities/stream.html:35
+#, python-format
+msgid ""
+"You do not have permission to post to this site. You can send a request to "
+"join this community <a href=\"%(join_request_url)s\">here</a>."
+msgstr ""
+
+#: templates/activities/stream.html:41
+#, python-format
+msgid ""
+"Please <a href=\"%(login_url)s\">sign in</a> to post content to this site."
+msgstr ""
+
+#: templates/activities/stream.html:53
+msgid ""
+"Nothing has been posted yet by people you are following. Click 'Show All' to "
+"see all content."
+msgstr ""
+
+#: templates/activities/stream.html:55
+msgid "Nothing has been posted yet"
+msgstr ""
+
+#: templates/activities/tag_detail.html:22 templates/users/base.html:45
+#: templates/users/user_list.html:55
+msgid "Unfollow"
+msgstr "Lopeta seuraamista"
+
+#: templates/activities/tag_detail.html:29 templates/users/base.html:37
+#: templates/users/user_list.html:63
+msgid "Follow"
+msgstr "Seuraa"
+
+#: templates/activities/tag_detail.html:48
+msgid "Sorry, no results found for this tag"
+msgstr ""
+
+#: templates/base.html:96
+msgid ""
+"\n"
+"        This site uses cookies for authentication purposes only. We do not "
+"share your personal\n"
+"        information with third parties.\n"
+"        "
+msgstr ""
+
+#: templates/comments/comment_confirm_delete.html:4
+#: templates/comments/includes/actions.html:49
+msgid "Delete Comment"
+msgstr "Poista Kommentti"
+
+#: templates/comments/comment_confirm_delete.html:8
+msgid "Do you really want to delete this comment?"
+msgstr "Haluatko varmasti poistaa kommentin?"
+
+#: templates/comments/comment_confirm_delete.html:9
+#: templates/communities/leave.html:15
+#: templates/communities/membership_confirm_delete.html:9
+#: templates/events/event_confirm_delete.html:9
+#: templates/includes/confirm_dialog.html:13
+#: templates/invites/invite_confirm_delete.html:9
+#: templates/messageboard/messagerecipient_confirm_delete.html:11
+#: templates/photos/photo_confirm_delete.html:9
+#: templates/posts/post_confirm_delete.html:9
+#: templates/users/user_confirm_delete.html:15
+msgid "Cancel"
+msgstr "Peruuta"
+
+#: templates/comments/emails/comment_deleted.html:13
+#: templates/comments/emails/comment_deleted.txt:5
+msgid "The following comment was deleted by a moderator"
+msgstr ""
+
+#: templates/comments/emails/notification.html:9
+#: templates/posts/emails/notification.html:8
+#: templates/users/emails/notification.html:9
+msgid "Notification"
+msgstr ""
+
+#: templates/comments/emails/notification.html:21
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has mentioned you in their <a href=\"%(object_url)s\">comment</"
+"a>.\n"
+msgstr ""
+
+#: templates/comments/emails/notification.html:25
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has posted or updated <a href=\"%(object_url)s\">comment</a> to "
+"review.\n"
+msgstr ""
+
+#: templates/comments/emails/notification.html:29
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has liked this <a href=\"%(object_url)s\">comment</a>.\n"
+msgstr ""
+
+#: templates/comments/emails/notification.html:33
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has flagged this <a href=\"%(object_url)s\">comment</a>.\n"
+msgstr ""
+
+#: templates/comments/emails/notification.html:37
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has edited your <a href=\"%(object_url)s\">comment</a>.\n"
+msgstr ""
+
+#: templates/comments/emails/notification.html:41
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has <a href=\"%(object_url)s\">commented</a> on one of your "
+"posts.\n"
+msgstr ""
+
+#: templates/comments/emails/notification.txt:10
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has mentioned you in their comment.\n"
+msgstr ""
+
+#: templates/comments/emails/notification.txt:14
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has posted or updated a comment for review.\n"
+msgstr ""
+
+#: templates/comments/emails/notification.txt:18
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has flagged this comment.\n"
+msgstr ""
+
+#: templates/comments/emails/notification.txt:22
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has liked this comment.\n"
+msgstr ""
+
+#: templates/comments/emails/notification.txt:26
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has edited your comment.\n"
+msgstr ""
+
+#: templates/comments/emails/notification.txt:30
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has commented on one of your posts.\n"
+msgstr ""
+
+#: templates/comments/includes/actions.html:50
+msgid "Are you sure you want to delete this comment?"
+msgstr ""
+
+#: templates/comments/includes/comment.html:10
+msgid "This comment has been flagged"
+msgstr ""
+
+#: templates/comments/includes/comment.html:28
+msgid ""
+"\n"
+"            person liked this comment\n"
+"            "
+msgid_plural ""
+"\n"
+"            people liked this comment\n"
+"            "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/comments/includes/comment.html:36
+#: templates/events/includes/event.html:95
+#: templates/photos/includes/photo.html:64
+#: templates/posts/includes/post.html:44
+msgid "Permalink"
+msgstr "Pysyvä linkki"
+
+#: templates/comments/includes/notification.html:13
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has mentioned you in their <a href=\"%(comment_url)s\">comment</"
+"a>\n"
+msgstr ""
+
+#: templates/comments/includes/notification.html:17
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has posted or updated a <a href=\"%(comment_url)s\">comment</a> "
+"for review\n"
+msgstr ""
+
+#: templates/comments/includes/notification.html:21
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has liked your <a href=\"%(comment_url)s\">comment</a>\n"
+msgstr ""
+
+#: templates/comments/includes/notification.html:25
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has edited your <a href=\"%(comment_url)s\">comment</a>\n"
+msgstr ""
+
+#: templates/comments/includes/notification.html:29
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has  <a href=\"%(comment_url)s\">commented</a> on one of your "
+"posts\n"
+msgstr ""
+
+#: templates/communities/access_denied.html:6
+msgid "Access Denied"
+msgstr "Kielletty"
+
+#: templates/communities/access_denied.html:8
+msgid "You do not have permission to view this community"
+msgstr ""
+
+#: templates/communities/base.html:31
+msgid "Invite New Members"
+msgstr ""
+
+#: templates/communities/community_detail.html:13
+msgid "Edit Community Settings"
+msgstr "Muokkaa Yhteisön Asetukset"
+
+#: templates/communities/community_detail.html:24
+msgid "Description"
+msgstr "Kuvaus"
+
+#: templates/communities/community_detail.html:32
+msgid "Terms & Conditions"
+msgstr ""
+
+#: templates/communities/community_form.html:17
+#: templates/communities/membership_form.html:23
+#: templates/users/user_form.html:20
+msgid "Save settings"
+msgstr "Päivitä asetukset"
+
+#: templates/communities/leave.html:11
+msgid ""
+"\n"
+"  Please confirm you want to leave this community.  Your posts and comments "
+"will not be deleted until you delete your account.\n"
+"  "
+msgstr ""
+
+#: templates/communities/leave.html:16 templates/users/includes/default_sidebar.html:37
+msgid "Leave community"
+msgstr "Lähde Yhteisöstä"
+
+#: templates/communities/membership_confirm_delete.html:4
+msgid "Delete Membership"
+msgstr "Poista jäsenyys"
+
+#: templates/communities/membership_confirm_delete.html:8
+msgid "Do you really want to delete this membership?"
+msgstr ""
+
+#: templates/communities/membership_form.html:17
+#, python-format
+msgid "Membership Settings for <a href=\"%(url)s\">%(display_name)s</a>"
+msgstr ""
+
+#: templates/communities/membership_list.html:16
+#: templates/invites/invite_list.html:22
+#: templates/join_requests/joinrequest_list.html:12
+msgid "Status"
+msgstr ""
+
+#: templates/communities/membership_list.html:17
+msgid "Role"
+msgstr "Rooli"
+
+#: templates/communities/membership_list.html:18
+#: templates/flags/includes/flags.html:11 templates/invites/invite_list.html:24
+#: templates/join_requests/joinrequest_list.html:14
+#: templates/users/user_list.html:32
+msgid "Actions"
+msgstr ""
+
+#: templates/communities/membership_list.html:28
+msgid "Active"
+msgstr ""
+
+#: templates/communities/membership_list.html:30
+msgid "Inactive"
+msgstr ""
+
+#: templates/communities/membership_list.html:47
+msgid "Are you sure you want to delete this membership?"
+msgstr ""
+
+#: templates/communities/not_found.html:5
+msgid "Community Not Found"
+msgstr ""
+
+#: templates/communities/not_found.html:7
+msgid "No community found for this domain"
+msgstr ""
+
+#: templates/events/emails/notification.txt:6
+#, python-format
+msgid "%(actor)s has mentioned you in an event."
+msgstr ""
+
+#: templates/events/emails/notification.txt:7
+#, python-format
+msgid "%(actor)s has added an event containing tags you follow."
+msgstr ""
+
+#: templates/events/emails/notification.txt:8
+#, python-format
+msgid "%(actor)s has added an event."
+msgstr ""
+
+#: templates/events/emails/notification.txt:9
+#, python-format
+msgid "%(actor)s has edited an event."
+msgstr ""
+
+#: templates/events/event_confirm_delete.html:4
+msgid "Delete Event"
+msgstr "Poista Tapahtuma"
+
+#: templates/events/event_confirm_delete.html:8
+msgid "Do you really want to delete this event?"
+msgstr ""
+
+#: templates/events/event_list.html:19
+#, python-format
+msgid ""
+"You do not have permission to submit events to this site. You can send a "
+"request to join this community <a href=\"%(join_request_url)s\">here</a>."
+msgstr ""
+
+#: templates/events/event_list.html:25
+#, python-format
+msgid ""
+"Please <a href=\"%(login_url)s?next=%(request.get_full_path)s\">sign in</a> "
+"to submit events to this site."
+msgstr ""
+
+#: templates/events/event_list.html:38
+msgid "No events in the calendar right now."
+msgstr ""
+
+#: templates/events/includes/actions.html:8
+msgid "Download .ics calendar file"
+msgstr ""
+
+#: templates/events/includes/actions.html:10
+#: templates/photos/includes/actions.html:9
+msgid "Download"
+msgstr "Lataa"
+
+#: templates/events/includes/event.html:16
+msgid "This event has been flagged"
+msgstr ""
+
+#: templates/events/includes/event.html:37
+msgid "Starts"
+msgstr "Alkaa"
+
+#: templates/events/includes/event.html:41
+msgid "Ends"
+msgstr "Loppuu"
+
+#: templates/events/includes/event.html:47
+msgid "Timezone"
+msgstr "Aikavyöhyke"
+
+#: templates/events/includes/event.html:50
+msgid "Location"
+msgstr "Sijainti"
+
+#: templates/events/includes/event.html:56
+msgid "Online"
+msgstr ""
+
+#: templates/events/includes/event.html:62
+msgid "Admission"
+msgstr "Hinta"
+
+#: templates/events/includes/event.html:86
+msgid ""
+"\n"
+"      person liked this event\n"
+"      "
+msgid_plural ""
+"\n"
+"      people liked this event\n"
+"      "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/flags/flag_list.html:11 templates/flags/includes/flags.html:9
+msgid "User"
+msgstr "Käyttäjä"
+
+#: templates/flags/flag_list.html:12
+msgid "Type"
+msgstr ""
+
+#: templates/flags/flag_list.html:13 templates/flags/includes/flags.html:10
+msgid "Reason"
+msgstr "Syy"
+
+#: templates/flags/flag_list.html:28
+msgid "No flags at the moment"
+msgstr ""
+
+#: templates/flags/includes/flags.html:4
+msgid "The following users have flagged this comment"
+msgstr ""
+
+#: templates/includes/confirm_dialog.html:3
+#: templates/includes/confirm_dialog.html:6
+msgid "Close"
+msgstr "Sulje"
+
+#: templates/includes/forms/widgets/calendar.html:8
+msgid "Calendar"
+msgstr "Kalenteri"
+
+#: templates/includes/pagination.html:17
+msgid "Previous"
+msgstr "Seuraava"
+
+#: templates/includes/pagination.html:29
+msgid "Next"
+msgstr "Viimeinen"
+
+#: templates/invites/emails/invitation.txt:7
+msgid "Hi"
+msgstr "Hei"
+
+#: templates/invites/emails/invitation.txt:9
+#, python-format
+msgid ""
+"\n"
+"You've been invited to join the community %(community)s.\n"
+msgstr ""
+
+#: templates/invites/emails/invitation.txt:13
+msgid "Click on this link or copy and paste into your browser navbar"
+msgstr ""
+
+#: templates/invites/invite_confirm_delete.html:4
+msgid "Delete Invite"
+msgstr ""
+
+#: templates/invites/invite_confirm_delete.html:8
+msgid "Do you really want to delete this invite?"
+msgstr ""
+
+#: templates/invites/invite_form.html:10
+msgid "Send invite"
+msgstr ""
+
+#: templates/invites/invite_list.html:12
+msgid "Send an invite"
+msgstr ""
+
+#: templates/invites/invite_list.html:21
+#: templates/join_requests/joinrequest_list.html:11
+msgid "Email"
+msgstr ""
+
+#: templates/invites/invite_list.html:23
+msgid "Email Sent"
+msgstr ""
+
+#: templates/invites/invite_list.html:35 templates/invites/invite_list.html:37
+msgid "Re-send"
+msgstr ""
+
+#: templates/invites/invite_list.html:45
+msgid "Delete invite"
+msgstr ""
+
+#: templates/invites/invite_list.html:46
+msgid "You sure you want to delete this invite?"
+msgstr ""
+
+#: templates/invites/invite_list.html:52
+msgid "No invites at the moment"
+msgstr ""
+
+#: templates/join_requests/joinrequest_form.html:9
+msgid "Request invitation"
+msgstr ""
+
+#: templates/join_requests/joinrequest_form.html:12
+msgid "Your request will be sent to the site admins."
+msgstr ""
+
+#: templates/join_requests/joinrequest_form.html:15
+msgid "Send request"
+msgstr ""
+
+#: templates/join_requests/joinrequest_list.html:6
+msgid "Requests to join this community"
+msgstr ""
+
+#: templates/join_requests/joinrequest_list.html:13
+#: templates/messageboard/messagerecipient_detail.html:56
+msgid "Received"
+msgstr ""
+
+#: templates/join_requests/joinrequest_list.html:25
+#: templates/join_requests/joinrequest_list.html:28
+msgid "Accept"
+msgstr ""
+
+#: templates/join_requests/joinrequest_list.html:26
+#: templates/join_requests/joinrequest_list.html:29
+msgid "Reject"
+msgstr ""
+
+#: templates/join_requests/joinrequest_list.html:35
+msgid "No requests at the moment"
+msgstr ""
+
+#: templates/likes/activities.html:15
+msgid "You haven't liked any posts yet"
+msgstr ""
+
+#: templates/likes/comments.html:16
+msgid "You haven't liked any comments yet"
+msgstr ""
+
+#: templates/markdownx/widget2.html:14
+msgid "Preview"
+msgstr ""
+
+#: templates/markdownx/widget2.html:17
+msgid "Formatting Help"
+msgstr ""
+
+#: templates/markdownx/widget2.html:27
+msgid "Bold"
+msgstr ""
+
+#: templates/markdownx/widget2.html:33
+msgid "Italic"
+msgstr ""
+
+#: templates/markdownx/widget2.html:45
+msgid "Quote"
+msgstr ""
+
+#: templates/markdownx/widget2.html:51
+msgid "Code"
+msgstr ""
+
+#: templates/markdownx/widget2.html:58
+msgid "List (Bullets)"
+msgstr ""
+
+#: templates/markdownx/widget2.html:65
+msgid "List (Numbers)"
+msgstr ""
+
+#: templates/markdownx/widget2.html:82
+msgid "Markdown"
+msgstr ""
+
+#: templates/markdownx/widget2.html:83
+msgid "Output"
+msgstr ""
+
+#: templates/messageboard/base.html:16
+#: templates/messageboard/sender_messagerecipient_list.html:27
+msgid "Send message"
+msgstr "Lähetä Viesti"
+
+#: templates/messageboard/base.html:25
+#: templates/messageboard/messagerecipient_detail.html:16
+#: templates/messageboard/sender_messagerecipient_list.html:14
+msgid "Inbox"
+msgstr "Saapuneet"
+
+#: templates/messageboard/base.html:29
+#: templates/messageboard/message_detail.html:13
+msgid "Outbox"
+msgstr ""
+
+#: templates/messageboard/emails/message.html:15
+#, python-format
+msgid ""
+"\n"
+"Hi %(recipient_name)s,\n"
+"</div>\n"
+msgstr ""
+
+#: templates/messageboard/emails/message.html:21
+#, python-format
+msgid ""
+"\n"
+"%(sender)s has sent you a message <a href=\"%(url)s\">%(subject)s</a>.\n"
+msgstr ""
+
+#: templates/messageboard/emails/message.txt:6
+#, python-format
+msgid ""
+"\n"
+"Hi %(recipient_name)s,\n"
+"\n"
+"%(sender)s has sent you a message:\n"
+"%(subject)s\n"
+"To see the message in full, please click on the link below:\n"
+msgstr ""
+
+#: templates/messageboard/message_detail.html:21
+#: templates/messageboard/messagerecipient_detail.html:43
+msgid "Subject"
+msgstr "Asia"
+
+#: templates/messageboard/message_detail.html:23
+msgid "Sent"
+msgstr "Lähitetty"
+
+#: templates/messageboard/message_detail.html:25
+msgid "Recipients"
+msgstr "Saavat"
+
+#: templates/messageboard/message_form.html:7 templates/users/base.html:28
+#: templates/users/user_list.html:69
+msgid "Send Message"
+msgstr "Lähetä Viesti"
+
+#: templates/messageboard/message_form.html:18
+msgid "Send"
+msgstr "Lähetä"
+
+#: templates/messageboard/message_list.html:24
+msgid "Your outbox is empty"
+msgstr ""
+
+#: templates/messageboard/messagerecipient_confirm_delete.html:6
+msgid "Delete Message"
+msgstr "Poista Viesti"
+
+#: templates/messageboard/messagerecipient_confirm_delete.html:10
+msgid "Do you really want to delete this message?"
+msgstr "Haluatko varmasti poistaa tämän viestin?"
+
+#: templates/messageboard/messagerecipient_detail.html:28
+msgid "Reply"
+msgstr "Vastaa"
+
+#: templates/messageboard/messagerecipient_detail.html:35
+msgid "Are you sure you want to delete this message?"
+msgstr "Haluatko varmasti poistaa tämän viestin?"
+
+#: templates/messageboard/messagerecipient_detail.html:47
+msgid "Reply to"
+msgstr "Vastaa lähettäjälle"
+
+#: templates/messageboard/messagerecipient_detail.html:51
+msgid "From"
+msgstr "Lähettäjä"
+
+#: templates/messageboard/messagerecipient_detail.html:54
+msgid "See all from this user"
+msgstr "Katso kaikki viestit tältä käyttäjältä"
+
+#: templates/messageboard/messagerecipient_list.html:12
+#, python-format
+msgid ""
+"You can enable emails for new messages <a href=\"%(user_settings_url)s\">in "
+"your settings</a>."
+msgstr ""
+
+#: templates/messageboard/messagerecipient_list.html:26
+#, python-format
+msgid ""
+"\n"
+"      %(created)s ago from\n"
+"      "
+msgstr ""
+
+#: templates/messageboard/messagerecipient_list.html:35
+msgid "Your inbox is empty"
+msgstr ""
+
+#: templates/notifications/includes/notification.html:11
+#, python-format
+msgid ""
+"\n"
+"      %(created)s ago by %(actor)s\n"
+"      "
+msgstr ""
+
+#: templates/notifications/includes/notification.html:23
+msgid "Mark as Read"
+msgstr "Merkitse Luetuksi"
+
+#: templates/notifications/notification_list.html:15
+msgid "Mark All as Read"
+msgstr "Merkitse Kaikki Luetuiksi"
+
+#: templates/notifications/notification_list.html:21
+#: templates/notifications/notification_list.html:23
+msgid "Delete All"
+msgstr "Poista Kaikki"
+
+#: templates/notifications/notification_list.html:22
+msgid "Are you sure you want to delete all your notifications?"
+msgstr "Haluatko varmasti poistaa kaikki tiedotteesi?"
+
+#: templates/notifications/notification_list.html:30
+#, python-format
+msgid ""
+"You can enable emails for your notifications <a href=\"%(user_settings_url)s"
+"\">in your settings</a>."
+msgstr ""
+
+#: templates/notifications/notification_list.html:51
+msgid "You have no new notifications"
+msgstr "Sinulla ei ole uusia tiedotteita"
+
+#: templates/photos/emails/notification.txt:6
+#, python-format
+msgid "%(actor)s has mentioned you in a photo."
+msgstr ""
+
+#: templates/photos/emails/notification.txt:7
+#, python-format
+msgid "%(actor)s has added a photo containing tags you follow."
+msgstr ""
+
+#: templates/photos/emails/notification.txt:8
+#, python-format
+msgid "%(actor)s has added a photo."
+msgstr ""
+
+#: templates/photos/emails/notification.txt:9
+#, python-format
+msgid "%(actor)s has edited a photo."
+msgstr ""
+
+#: templates/photos/includes/content.html:21
+msgid "No photo available"
+msgstr ""
+
+#: templates/photos/includes/photo.html:14
+msgid "This photo has been flagged"
+msgstr ""
+
+#: templates/photos/includes/photo.html:35
+msgid "Artist"
+msgstr "Taitelija"
+
+#: templates/photos/includes/photo.html:39
+msgid "Original URL"
+msgstr "Alkuperäinen linkki"
+
+#: templates/photos/includes/photo.html:43
+msgid "Creative Commons License"
+msgstr ""
+
+#: templates/photos/includes/photo.html:54
+msgid ""
+"\n"
+"            person liked this photo\n"
+"            "
+msgid_plural ""
+"\n"
+"            people liked this photo\n"
+"            "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/photos/photo_confirm_delete.html:4
+msgid "Delete Photo"
+msgstr "Poista Valokuva"
+
+#: templates/photos/photo_confirm_delete.html:8
+msgid "Do you really want to delete this photo?"
+msgstr "Haluatko varmasti poistaa tämän valokuvan?"
+
+#: templates/photos/photo_list.html:18
+#, python-format
+msgid ""
+"You do not have permission to submit photos to this site. You can send a "
+"request to join this community <a href=\"%(join_request_url)s\">here</a>."
+msgstr ""
+
+#: templates/photos/photo_list.html:24
+#, python-format
+msgid ""
+"Please <a href=\"%(login_url)s?next=%(request.get_full_path)s\">sign in</a> "
+"to submit photos to this site."
+msgstr ""
+
+#: templates/photos/photo_list.html:36
+msgid "No photos have been uploaded."
+msgstr ""
+
+#: templates/posts/emails/notification.html:14
+#, python-format
+msgid "%(actor)s has mentioned you in a <a href=\"%(object_url)s\">post</a>."
+msgstr ""
+
+#: templates/posts/emails/notification.html:15
+#, python-format
+msgid ""
+"%(actor)s has added a <a href=\"%(object_url)s\">post</a> containing tags "
+"you follow."
+msgstr ""
+
+#: templates/posts/emails/notification.html:16
+#, python-format
+msgid "%(actor)s has added a <a href=\"%(object_url)s\">post</a>."
+msgstr ""
+
+#: templates/posts/emails/notification.html:17
+#, python-format
+msgid "%(actor)s has edited a<a href=\"%(object_url)s\">post</a>."
+msgstr ""
+
+#: templates/posts/emails/notification.txt:6
+#, python-format
+msgid "%(actor)s has mentioned you in a post."
+msgstr ""
+
+#: templates/posts/emails/notification.txt:7
+#, python-format
+msgid "%(actor)s has added a post containing tags you follow."
+msgstr ""
+
+#: templates/posts/emails/notification.txt:8
+#, python-format
+msgid "%(actor)s has added a post."
+msgstr ""
+
+#: templates/posts/emails/notification.txt:9
+#, python-format
+msgid "%(actor)s has edited a post."
+msgstr ""
+
+#: templates/posts/includes/post.html:13
+msgid "This post has been flagged"
+msgstr ""
+
+#: templates/posts/includes/post.html:35
+msgid ""
+"\n"
+"      person liked this post\n"
+"      "
+msgid_plural ""
+"\n"
+"      people liked this post\n"
+"      "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/posts/post_confirm_delete.html:4
+msgid "Delete Post"
+msgstr "Poista Postaus"
+
+#: templates/posts/post_confirm_delete.html:8
+msgid "Do you really want to delete this post?"
+msgstr "Haluatko varmasti poistaa tämän postauksen?"
+
+#: templates/posts/post_list.html:10
+msgid "Submit Post"
+msgstr "Lähetä Postaus"
+
+#: templates/posts/post_list.html:18
+#, python-format
+msgid ""
+"You do not have permission to submit posts to this site. You can send a "
+"request to join this community <a href=\"%(join_request_url)s\">here</a>."
+msgstr ""
+
+#: templates/posts/post_list.html:24
+#, python-format
+msgid ""
+"Please <a href=\"%(login_url)s?next=%(request.get_full_path)s\">sign in</a> "
+"to submit posts to this site."
+msgstr ""
+
+#: templates/posts/post_list.html:37
+msgid "No posts have been submitted yet"
+msgstr ""
+
+#: templates/subscriptions/tag_list.html:24
+msgid "You are not following any tags right now"
+msgstr ""
+
+#: templates/subscriptions/user_list.html:23
+msgid "You are not following anyone right now"
+msgstr ""
+
+#: templates/users/activities.html:12
+#, python-format
+msgid ""
+"\n"
+"You have published <strong>1 post</strong>\n"
+msgid_plural ""
+"\n"
+"You have published <strong>%(counter)s posts</strong>\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/activities.html:17
+#, python-format
+msgid ""
+"\n"
+"and have a total of <strong>1 like</strong> for your posts.\n"
+msgid_plural ""
+"\n"
+"and have a total of <strong>%(counter)s likes</strong> for your posts.\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/activities.html:24
+#, python-format
+msgid ""
+"\n"
+"This user has published <strong>1 post</strong>\n"
+msgid_plural ""
+"\n"
+"This user has published <strong>%(counter)s posts</strong>\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/activities.html:29
+#, python-format
+msgid ""
+"\n"
+"and has a total of <strong>1 like</strong> for their posts.\n"
+msgid_plural ""
+"\n"
+"and has a total of <strong>%(counter)s likes</strong> for their posts.\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/activities.html:47 templates/users/comments.html:46
+msgid "You haven't posted anything yet"
+msgstr ""
+
+#: templates/users/activities.html:49 templates/users/comments.html:48
+msgid "This user hasn't posted anything yet"
+msgstr ""
+
+#: templates/users/base.html:67
+msgid "About"
+msgstr "Yksityiskohdat"
+
+#: templates/users/comments.html:11
+#, python-format
+msgid ""
+"\n"
+"You have published <strong>1 comment</strong>\n"
+msgid_plural ""
+"\n"
+"You have published <strong>%(counter)s comments</strong>\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/comments.html:16
+#, python-format
+msgid ""
+"\n"
+"and have a total of <strong>1 like</strong> for your comments.\n"
+msgid_plural ""
+"\n"
+"and have a total of <strong>%(counter)s likes</strong> for your comments.\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/comments.html:23
+#, python-format
+msgid ""
+"\n"
+"This user has published <strong>1 comment</strong>\n"
+msgid_plural ""
+"\n"
+"This user has published <strong>%(counter)s comments</strong>\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/comments.html:28
+#, python-format
+msgid ""
+"\n"
+"and has a total of <strong>1 like</strong> for their comments.\n"
+msgid_plural ""
+"\n"
+"and has a total of <strong>%(counter)s likes</strong> for their comments.\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/emails/notification.html:21
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(object_url)s\">%(actor)s</a> is now following you.\n"
+msgstr ""
+
+#: templates/users/includes/notification.html:13
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor)s</a> is now following you.\n"
+msgstr ""
+
+#: templates/users/includes/default_sidebar.html:25
+msgid "Edit profile"
+msgstr "Muokkaa profiili"
+
+#: templates/users/includes/default_sidebar.html:28
+msgid "Email addresses"
+msgstr "Sähköpostiviestit"
+
+#: templates/users/includes/default_sidebar.html:40
+#: templates/users/user_confirm_delete.html:16
+msgid "Delete account"
+msgstr "Poista tili"
+
+#: templates/users/user_confirm_delete.html:11
+msgid ""
+"\n"
+"  Please confirm you want to delete your account. This will also "
+"<b>permanently</b> remove all your posts and comments.\n"
+"  "
+msgstr ""
+
+#: templates/users/user_detail.html:14 templates/users/user_detail.html:24
+msgid "Update your profile"
+msgstr "Muokkaa profiilisi"
+
+#: templates/users/user_detail.html:21
+msgid "You do not have a bio"
+msgstr "Sinulla ei ole kuvausta"
+
+#: templates/users/user_detail.html:28
+msgid "This user has not added any information."
+msgstr ""
+
+#: templates/users/user_form.html:9
+msgid "Update profile"
+msgstr "Muokkaa profiili"
+
+#: templates/users/user_list.html:21
+msgid "Edit member settings"
+msgstr "Muokkaa jäsenasetukset"

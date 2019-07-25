@@ -8,7 +8,7 @@ from localhub.users.tests.factories import UserFactory
 
 
 class MessageFactory(DjangoModelFactory):
-    subject = Faker("text")
+    subject = "Test Message"
     message = Faker("text")
     community = SubFactory(CommunityFactory)
     sender = SubFactory(UserFactory)

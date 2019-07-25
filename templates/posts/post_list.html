@@ -2,14 +2,15 @@
 {% load i18n %}
 {% load rules %}
 {% block subtitle %} - {% trans "Posts" %}{% endblock %}
-{% block activities_content %}
-{% has_perm 'activities.create_activity' user request.community as can_create_activity %}
+{% block content %}
+{% has_perm 'activities.create_activity' user community as can_create_activity %}
 {% if can_create_activity %}
-<div class="new-post">
-  <a href="{% url 'posts:create' %}" class="btn btn-block btn-primary">
-    <i class="icon icon-link"></i> {% trans "Submit Post" %}
+<div class="float-right">
+  <a href="{% url 'posts:create' %}" class="btn btn-sm">
+    {% trans "Submit Post" %}
   </a>
 </div>
+<div class="clearfix"></div>
 
 {% elif user.is_authenticated %}
 <p class="bg-gray p-2 text-center">
@@ -25,7 +26,7 @@
 
 {% endif %}
 
-{% include "activities/includes/show_all_toggle.html" %}
+{# include "activities/includes/show_all_toggle.html" #}
 
 {% for post in object_list %}
 <div class="mt-2">
@@ -39,4 +40,4 @@
 
 
 {% include "includes/pagination.html" %}
-{% endblock activities_content %}
+{% endblock content %}

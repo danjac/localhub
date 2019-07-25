@@ -11,7 +11,7 @@ from localhub.core.types import DjangoView
 class CurrentCommunityMiddleware:
     """
     Lazily fetches the current community matching the domain
-    and appends to the request object as `request.community`.
+    and appends to the request object as `community`.
 
     If no community found this value will be *None*.
     """

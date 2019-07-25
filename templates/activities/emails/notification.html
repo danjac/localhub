@@ -8,31 +8,40 @@
 
 {% block content %}
 {% user_display notification.recipient as recipient %}
+{% user_display notification.actor as actor %}
 
-<p>
+<div class="intro">
 {% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
-</p>
+</div>
 
-<p>
-{% if notification.verb == 'mentioned' %}
+<div class="section">
+{% if notification.verb == 'mention' %}
 {% blocktrans %}
-Someone has mentioned you in their <a href="{{ object_url }}">{{ activity_name }}</a>
+{{ actor }} has mentioned you in their <a href="{{ object_url }}">{{ activity_name }}</a>.
 {% endblocktrans %}
-{% elif notification.verb == 'flagged' %}
+{% elif notification.verb == 'flag' %}
 {% blocktrans %}
-Someone has flagged this <a href="{{ object_url }}">{{ activity_name }}</a>
+{{ actor }} has flagged this <a href="{{ object_url }}">{{ activity_name }}</a>.
 {% endblocktrans %}
-{% elif notification.verb == 'created' %}
+{% elif notification.verb == 'follow' %}
 {% blocktrans %}
-Someone has published a new <a href="{{ object_url }}">{{ activity_name }}</a>
+{{ actor }} has created a new <a href="{{ object_url }}">{{ activity_name }}</a>.
 {% endblocktrans %}
-{% elif notification.verb == 'updated' %}
+{% elif notification.verb == 'review' %}
 {% blocktrans %}
-Someone has updated their <a href="{{ object_url }}">{{ activity_name }}</a>
+{{ actor }} has created or updated their <a href="{{ object_url }}">{{ activity_name }}</a> for you to review.
 {% endblocktrans %}
-{% elif notification.verb == 'tagged' %}
+{% elif notification.verb == 'like' %}
 {% blocktrans %}
-Someone has tagged content you are following in their <a href="{{ object_url }}">{{ activity_name }}</a>
+{{ actor }} has liked your <a href="{{ object_url }}">{{ activity_name }}</a>.
+{% endblocktrans %}
+{% elif notification.verb == 'edit' %}
+{% blocktrans %}
+{{ actor }} has edited your <a href="{{ object_url }}">{{ activity_name }}</a>.
+{% endblocktrans %}
+{% elif notification.verb == 'tag' %}
+{% blocktrans %}
+{{ actor }} has created a new <a href="{{ object_url }}">{{ activity_name }}</a> containing tags you are following.
 {% endblocktrans %}
 {% endif %}
 </p>

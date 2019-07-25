@@ -6,7 +6,7 @@
 {% load i18n %}
 {% load account %}
 
-{% block settings_content %}
+{% block content %}
 {% user_display membership.member as display_name %}
 
 <ul class="breadcrumb">
@@ -19,7 +19,9 @@
 <div class="col-6 col-sm-12">
     <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
         {% include "includes/forms/fields.html" %}
-        <input type="submit" class="btn btn-primary" value="{% trans 'Save' %}">
+        <button type="submit" class="btn btn-primary">
+            {% trans 'Save settings' %}
+        </button>
     </form>
 </div>
-{% endblock settings_content %}
+{% endblock content %}

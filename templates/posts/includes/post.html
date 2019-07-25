@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load rules %}
 
-{% has_perm "communities.moderate_community" user request.community as can_moderate_community %}
+{% has_perm "communities.moderate_community" user community as can_moderate_community %}
 
 <div class="card bg-gray" id="post-{{ post.id }}">
   <div class="card-header">
@@ -30,7 +30,7 @@
   </div>
   <div class="card-footer">
     {% if post.num_likes and post.owner == user %}
-    <div class="mb-2 text-gray">
+    <div class="text-gray">
       {{ post.num_likes }}
       {% blocktrans count counter=post.num_likes %}
       person liked this post
@@ -39,14 +39,16 @@
       {% endblocktrans %}
     </div>
     {% endif %}
-    <div class="mb-2">
+    <div>
       {% if is_detail %}
       <a href="{{ post.get_permalink }}">{% trans "Permalink" %}</a>
       {% else %}
       {% include "activities/includes/comments_count.html" with object=post %}
       {% endif %}
     </div>
+    <div>
     {% include "posts/includes/actions.html" with show_comments=True %}
+    </div>
   </div>
 
 </div>

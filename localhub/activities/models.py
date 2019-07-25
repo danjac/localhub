@@ -4,7 +4,7 @@
 import operator
 
 from functools import reduce
-from typing import Callable, Dict, List, Set
+from typing import Callable, Dict, List, Optional, Set
 
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
@@ -23,6 +23,8 @@ from django.utils.text import slugify
 from django.utils.translation import gettext as _
 
 from model_utils.models import TimeStampedModel
+
+from simple_history.models import HistoricalRecords
 
 from taggit.managers import TaggableManager
 from taggit.models import Tag
@@ -96,7 +98,17 @@ class Activity(TimeStampedModel):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
+    editor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="+",
+    )
+
     description = MarkdownField(blank=True)
+
+    history = HistoricalRecords(inherit=True)
 
     tags = TaggableManager()
 
@@ -118,6 +130,14 @@ class Activity(TimeStampedModel):
             models.Index(fields=["owner", "community"]),
         ]
         abstract = True
+
+    @property
+    def _history_user(self) -> Optional[settings.AUTH_USER_MODEL]:
+        return self.editor
+
+    @_history_user.setter
+    def _history_user(self, value: settings.AUTH_USER_MODEL):
+        self.editor = value
 
     @classmethod
     def get_list_url(cls) -> str:
@@ -249,15 +269,84 @@ class Activity(TimeStampedModel):
                 self.tags.clear()
 
     def make_notification(
-        self, recipient: settings.AUTH_USER_MODEL, verb: str
+        self,
+        recipient: settings.AUTH_USER_MODEL,
+        verb: str,
+        actor: Optional[settings.AUTH_USER_MODEL] = None,
     ) -> Notification:
         return Notification(
             content_object=self,
-            actor=self.owner,
+            actor=actor or self.owner,
             community=self.community,
             recipient=recipient,
             verb=verb,
         )
+
+    def notify_mentioned_users(self) -> List[Notification]:
+        return [
+            self.make_notification(recipient, "mention")
+            for recipient in self.community.members.matches_usernames(
+                self.description.extract_mentions()
+            ).exclude(pk=self.owner_id)
+        ]
+
+    def notify_followers(self) -> List[Notification]:
+        subscriptions = (
+            Subscription.objects.filter(
+                user=self.owner, community=self.community
+            )
+            .exclude(subscriber=self.owner)
+            .select_related("subscriber")
+        )
+        return [
+            self.make_notification(subscription.subscriber, "follow")
+            for subscription in subscriptions
+        ]
+
+    def notify_tag_subscribers(self) -> List[Notification]:
+        hashtags = self.description.extract_hashtags()
+        if hashtags:
+            tags = Tag.objects.filter(slug__in=hashtags)
+
+            if tags:
+                subscriptions = (
+                    Subscription.objects.filter(
+                        content_type=ContentType.objects.get_for_model(Tag),
+                        object_id__in=[t.id for t in tags],
+                        community=self.community,
+                    )
+                    .exclude(subscriber=self.owner)
+                    .select_related("subscriber")
+                    .only("subscriber")
+                )
+                return [
+                    self.make_notification(subscriber, "tag")
+                    for subscriber in set(
+                        [
+                            subscription.subscriber
+                            for subscription in subscriptions
+                        ]
+                    )
+                ]
+        return []
+
+    def notify_owner_or_moderators(self, created: bool) -> List[Notification]:
+        """
+        Notifies moderators of updates. If change made by moderator,
+        then notification sent to owner.
+        """
+        if self.editor and self.editor != self.owner:
+            return [
+                self.make_notification(
+                    self.owner, "edit", actor=self.editor
+                )
+            ]
+        return [
+            self.make_notification(moderator, "review")
+            for moderator in self.community.get_moderators().exclude(
+                pk=self.owner_id
+            )
+        ]
 
     def notify(self, created: bool) -> List[Notification]:
         """
@@ -269,72 +358,19 @@ class Activity(TimeStampedModel):
         - any users @mentioned in the description field
         - any users subscribed to hashtags in the description field
         - any users subscribed to the owner (only on create)
-        - all commmunity moderators
+        - if moderated, the original owner
         """
         notifications: List[Notification] = []
-        # notify anyone @mentioned in the description
-        # TBD: should probably be a separate method to
-        # return mentions - if we have multiple fields
-        # in subclasses for example
         if self.description and (
             created or self.description_tracker.changed()
         ):
-            notifications += [
-                self.make_notification(recipient, "mentioned")
-                for recipient in self.community.members.matches_usernames(
-                    self.description.extract_mentions()
-                ).exclude(pk=self.owner_id)
-            ]
-            # is anyone subscribing to the hashtags
-            # ensure subscriber just has single notification for
-            # multiple tags
-            hashtags = self.description.extract_hashtags()
-            if hashtags:
-                tags = Tag.objects.filter(slug__in=hashtags)
-                if tags:
-                    subscriptions = (
-                        Subscription.objects.filter(
-                            content_type=ContentType.objects.get_for_model(
-                                Tag
-                            ),
-                            object_id__in=[t.id for t in tags],
-                            community=self.community,
-                        )
-                        .exclude(subscriber=self.owner)
-                        .select_related("subscriber")
-                        .only("subscriber")
-                    )
-                    notifications += [
-                        self.make_notification(subscriber, "tagged")
-                        for subscriber in set(
-                            [
-                                subscription.subscriber
-                                for subscription in subscriptions
-                            ]
-                        )
-                    ]
+            notifications += self.notify_mentioned_users()
+            notifications += self.notify_tag_subscribers()
 
-        # notify all community moderators
-        verb = "created" if created else "updated"
-        notifications += [
-            self.make_notification(recipient, verb)
-            for recipient in self.community.get_moderators().exclude(
-                pk=self.owner_id
-            )
-        ]
-        # notify anyone subscribed to this user
         if created:
-            subscriptions = (
-                Subscription.objects.filter(
-                    user=self.owner, community=self.community
-                )
-                .exclude(subscriber=self.owner)
-                .select_related("subscriber")
-            )
-            notifications += [
-                self.make_notification(subscription.subscriber, "created")
-                for subscription in subscriptions
-            ]
+            notifications += self.notify_followers()
+
+        notifications += self.notify_owner_or_moderators(created)
 
         Notification.objects.bulk_create(notifications)
         return notifications

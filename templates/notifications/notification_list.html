@@ -3,27 +3,32 @@
 
 {% extends "notifications/base.html" %}
 {% load i18n %}
-{% block activities_content %}
+{% block content %}
 
 {% if object_list %}
-<div class="mb-2 btn-group btn-group-block">
+<div class="float-right">
   {% if is_unread_notifications %}
-  <button class="btn btn-primary"
+  <button class="btn btn-sm"
           data-controller="ajax"
           data-action="ajax#post"
           data-ajax-url="{% url 'notifications:mark_all_read' %}"
-          ><i class="icon icon-check"></i> {% trans "Mark All as Read" %}</button>
+          >{% trans "Mark All as Read" %}</button>
   {% endif %}
-  <button class="btn"
+  <button class="btn btn-sm"
           data-controller="confirm ajax"
           data-action="confirm#check ajax#delete"
           data-ajax-url="{% url 'notifications:delete_all' %}"
           data-confirm-header="{% trans 'Delete All' %}"
           data-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}"
-          ><i class="icon icon-delete"></i> {% trans "Delete All" %}</button>
+          >{% trans "Delete All" %}</button>
 </div>
 <div class="clearfix"></div>
 {% endif %}
+
+<p class="bg-gray p-2 m-2 text-center">
+  {% url 'user_update' as user_settings_url %}
+  {% blocktrans %}You can enable emails for your notifications <a href="{{ user_settings_url }}">in your settings</a>.{% endblocktrans %}
+</p>
 
 {% for notification in object_list %}
 <div class="mb-2">
@@ -36,14 +41,13 @@
   {% include "activities/includes/notification.html" with activity=content_object activity_name="event" %}
   {% elif content_type == "comment" %}
   {% include "comments/includes/notification.html" with comment=content_object %}
+  {% elif content_type == "user" %}
+  {% include "users/includes/notification.html" with user_obj=content_object %}
   {% endif %}
   {% endwith %}
 </div>
 {% empty %}
 <div class="empty">
-  <div class="empty-icon">
-    <i class="icon icon-mail"></i>
-  </div>
   <p class="empty-title h5">{% trans "You have no new notifications" %}</p>
 </div>
 {% endfor %}

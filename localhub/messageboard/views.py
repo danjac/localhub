@@ -162,7 +162,7 @@ class MessageCreateView(
         return initial
 
     def get_success_url(self) -> str:
-        return reverse("messageboard:message_list")
+        return self.object.get_absolute_url()
 
     def get_success_message(self, num_recipients: int) -> str:
         if num_recipients == 1:
@@ -186,23 +186,23 @@ class MessageCreateView(
             )
             return self.form_invalid(form)
 
-        message = form.save(commit=False)
+        self.object = form.save(commit=False)
 
-        message.sender = self.request.user
-        message.community = self.request.community
-        message.parent = self.parent
-        message.save()
+        self.object.sender = self.request.user
+        self.object.community = self.request.community
+        self.object.parent = self.parent
+        self.object.save()
 
         MessageRecipient.objects.bulk_create(
             [
-                MessageRecipient(message=message, recipient=recipient)
+                MessageRecipient(message=self.object, recipient=recipient)
                 for recipient in recipients
             ],
             ignore_conflicts=True,
         )
 
         # fetch again so we have IDs
-        for recipient in message.messagerecipient_set.select_related(
+        for recipient in self.object.messagerecipient_set.select_related(
             "message", "message__community", "message__sender", "recipient"
         ):
             send_message_email(recipient)

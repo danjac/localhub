@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block content %}
-<h3>{% trans "Community Not Found" %}</h3>
-<p class="bg-gray p-2 text-center">
-  {% trans "No community found for this domain" %}
-</p>
+{% block main_layout %}
+<div class="col-6 col-sm-12 col-mx-auto">
+  <div class="empty">
+    <h5 class="empty-title">{% trans "Community Not Found" %}</h5>
+    <p>
+      {% trans "No community found for this domain" %}
+    </p>
+  </div>
+</div>
 {% endblock %}

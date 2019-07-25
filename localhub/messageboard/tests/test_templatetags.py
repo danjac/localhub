@@ -4,11 +4,10 @@
 import pytest
 
 from django.contrib.auth.models import AnonymousUser
-from django.test.client import RequestFactory
 
-from localhub.communities.models import Membership
+from localhub.communities.models import Community, Membership
 from localhub.messageboard.templatetags.messageboard_tags import (
-    get_unread_messages_count,
+    get_unread_message_count,
 )
 from localhub.messageboard.tests.factories import (
     MessageFactory,
@@ -18,18 +17,11 @@ from localhub.messageboard.tests.factories import (
 pytestmark = pytest.mark.django_db
 
 
-class TestGetUnreadMessagesCount:
-    def test_anonymous(self, req_factory: RequestFactory):
-        request = req_factory.get("/")
-        request.user = AnonymousUser()
-        assert get_unread_messages_count({"request": request}) == 0
+class TestGetUnreadMessageCount:
+    def test_anonymous(self, community: Community):
+        assert get_unread_message_count(AnonymousUser(), community) == 0
 
-    def test_authenticated(
-        self, req_factory: RequestFactory, member: Membership
-    ):
-        request = req_factory.get("/")
-        request.user = member.member
-        request.community = member.community
+    def test_authenticated(self, member: Membership):
         message = MessageFactory(community=member.community)
         MessageRecipientFactory(message=message, recipient=member.member)
-        assert get_unread_messages_count({"request": request}) == 1
+        assert get_unread_message_count(member.member, member.community) == 1

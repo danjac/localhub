@@ -2,8 +2,11 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
+{% load rules %}
+
+
 <ul class="menu">
-  {% if request.community %}
+  {% if community %}
   <li class="menu-item">
     <a href="{% url 'activities:stream' %}">{% trans "Home" %}
     </a>
@@ -11,6 +14,14 @@
   <li class="menu-item">
     <a data-controller="active-link" href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
   </li>
+
+  {% if community %}
+  {% has_perm 'communities.manage_community' user community as can_manage_community %}
+  {% if can_manage_community %}
+  <li class="menu-item"><a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a></li>
+  {% endif %}
+  {% endif %}
+
   {% endif %}
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'user_update' %}">{% trans "Edit profile" %}</a>
@@ -24,11 +35,17 @@
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'account_logout' %}">{% trans "Logout" %}</a>
   </li>
+
+  {% if community %}
+  {% test_rule 'is_member' user community as is_member %}
+  {% if is_member %}
   <li class="menu-item">
-    <a href="{% url 'communities:leave' %}" class="text-warning">{% trans "Leave community" %}</a>
+    <a href="{% url 'communities:leave' %}">{% trans "Leave community" %}</a>
   </li>
+  {% endif %}
+  {% endif %}
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'user_delete' %}" class="text-warning">{% trans "Delete account" %}</a>
+    <a data-controller="active-link" href="{% url 'user_delete' %}">{% trans "Delete account" %}</a>
   </li>
 </ul>
 

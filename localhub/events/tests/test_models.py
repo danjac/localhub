@@ -10,13 +10,12 @@ from datetime import timedelta
 
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from django.utils.encoding import force_str
 
 from pytest_mock import MockFixture
 
-from localhub.communities.models import Community, Membership
 from localhub.events.models import Event
 from localhub.events.tests.factories import EventFactory
-from localhub.users.tests.factories import UserFactory
 
 
 pytestmark = pytest.mark.django_db
@@ -47,50 +46,6 @@ class TestEventModel:
 
     def test_get_domain_if_url(self):
         assert Event(url="http://google.com").get_domain() == "google.com"
-
-    def test_notify(self, community: Community):
-        owner = UserFactory(username="owner")
-        moderator = UserFactory()
-        mentioned = UserFactory(username="danjac")
-
-        Membership.objects.create(
-            member=owner, community=community, role=Membership.ROLES.moderator
-        )
-        Membership.objects.create(
-            member=moderator,
-            community=community,
-            role=Membership.ROLES.moderator,
-        )
-        Membership.objects.create(
-            member=mentioned, community=community, role=Membership.ROLES.member
-        )
-
-        event = EventFactory(
-            owner=owner,
-            community=community,
-            description="hello @danjac from @owner",
-        )
-        notifications = event.notify(created=True)
-
-        assert notifications[0].recipient == mentioned
-        assert notifications[0].verb == "mentioned"
-
-        assert notifications[1].recipient == moderator
-        assert notifications[1].verb == "created"
-
-        # ensure saved to db
-        assert event.notifications.count() == 2
-
-        # change the description and remove the mention
-        event.description = "hello!"
-        event.save()
-
-        notifications = event.notify(created=False)
-
-        assert notifications[0].recipient == moderator
-        assert notifications[0].verb == "updated"
-
-        assert event.notifications.count() == 3
 
     def test_get_breadcrumbs(self, event: Event):
         breadcrumbs = event.get_breadcrumbs()
@@ -213,3 +168,7 @@ class TestEventModel:
         assert event.longitude is None
 
         assert geocoder.osm.call_count == 0
+
+    def test_to_ical(self, event: Event):
+        result = force_str(event.to_ical())
+        assert "DTSTART" in result

@@ -6,7 +6,7 @@
     <a class="btn btn-sm"
        href="{{ photo.image.url }}"
        download>
-        <i class="icon icon-download"></i> {% trans "Download" %}
+        {% trans "Download" %}
     </a>
 
   {% include "activities/includes/actions.html" with object=photo id_prefix="photo" %}

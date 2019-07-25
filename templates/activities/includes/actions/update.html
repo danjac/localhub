@@ -5,6 +5,5 @@
 {% load rules %}
 {% has_perm "activities.change_activity" user object as can_change %}
 {% if can_change %}
-<a href="{{ object.get_update_url }}"
-   class="btn btn-sm"><i class="icon icon-edit"></i> {% trans "Edit" %}</a>
+<a href="{{ object.get_update_url }}" class="btn btn-sm">{% trans "Edit" %}</a>
 {% endif %}

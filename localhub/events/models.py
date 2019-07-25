@@ -19,6 +19,8 @@ from timezone_field import TimeZoneField
 
 from model_utils import FieldTracker
 
+from icalendar import Calendar, Event as CalendarEvent
+
 from localhub.activities.models import Activity
 from localhub.activities.utils import get_domain
 from localhub.comments.models import Comment
@@ -140,3 +142,23 @@ class Event(Activity):
                 if value
             ]
         )
+
+    def to_ical(self) -> str:
+        event = CalendarEvent()
+
+        starts = self.get_starts_with_tz()
+        ends = self.get_ends_with_tz()
+
+        event.add("dtstart", starts)
+        event.add("dtstamp", starts)
+        if ends:
+            event.add("dtend", ends)
+        event.add("summary", self.title)
+
+        location = self.full_location
+        if location:
+            event.add("location", location)
+
+        calendar = Calendar()
+        calendar.add_component(event)
+        return calendar.to_ical()

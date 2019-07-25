@@ -1,27 +1,22 @@
 import pytest
 
 from django.contrib.auth.models import AnonymousUser
-from django.test.client import RequestFactory
 
-from localhub.communities.models import Membership
+from localhub.communities.models import Community, Membership
 from localhub.notifications.models import Notification
 from localhub.notifications.templatetags.notifications_tags import (
-    get_unread_notifications_count,
+    get_unread_notification_count,
 )
 from localhub.posts.tests.factories import PostFactory
 
 pytestmark = pytest.mark.django_db
 
 
-class TestGetUnreadNotificationsCount:
-    def test_anonymous(self, req_factory: RequestFactory):
-        request = req_factory.get("/")
-        request.user = AnonymousUser()
-        assert get_unread_notifications_count({"request": request}) == 0
+class TestGetUnreadNotificationCount:
+    def test_anonymous(self, community: Community):
+        assert get_unread_notification_count(AnonymousUser(), community) == 0
 
-    def test_authenticated(
-        self, req_factory: RequestFactory, member: Membership
-    ):
+    def test_authenticated(self, member: Membership):
         post = PostFactory(community=member.community)
 
         Notification.objects.create(
@@ -42,7 +37,6 @@ class TestGetUnreadNotificationsCount:
             is_read=True,
         )
 
-        request = req_factory.get("/")
-        request.user = member.member
-        request.community = member.community
-        assert get_unread_notifications_count({"request": request}) == 1
+        assert (
+            get_unread_notification_count(member.member, member.community) == 1
+        )

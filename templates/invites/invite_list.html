@@ -5,7 +5,15 @@
 {% load i18n %}
 {% load rules %}
 
-{% block settings_content %}
+{% block content %}
+
+<div class="float-right">
+  <a class="btn btn-sm" href="{% url 'invites:create' %}">
+      {% trans "Send an invite" %}
+  </a>
+</div>
+<div class="clearfix"></div>
+
 
 <table class="table table-striped table-hover">
   <thead>
@@ -48,9 +56,5 @@
 </table>
 
 
-<div class="mt-2">
-  <a class="btn btn-primary" href="{% url 'invites:create' %}">{% trans "Send an invite" %}</a>
-</div>
-
-{% endblock settings_content %}
+{% endblock content %}
 

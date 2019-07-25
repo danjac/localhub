@@ -26,7 +26,7 @@ from django.views.generic.detail import SingleObjectMixin
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.activities.models import Activity
-from localhub.activities.views import BaseActivityStreamView
+from localhub.activities.views.streams import BaseStreamView
 from localhub.comments.models import Comment
 from localhub.comments.views import CommentListView
 from localhub.communities.models import Community
@@ -34,6 +34,8 @@ from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.types import ContextDict
 from localhub.likes.models import Like
 from localhub.subscriptions.models import Subscription
+from localhub.users.emails import send_user_notification_email
+from localhub.users.forms import UserForm
 
 
 class AuthenticatedUserMixin(LoginRequiredMixin):
@@ -48,12 +50,11 @@ class AuthenticatedUserMixin(LoginRequiredMixin):
 
 
 class UserUpdateView(AuthenticatedUserMixin, SuccessMessageMixin, UpdateView):
-    fields = ("name", "avatar", "bio")
-
     success_message = _("Your details have been updated")
+    form_class = UserForm
 
     def get_success_url(self) -> str:
-        return self.object.get_absolute_url()
+        return self.request.path
 
 
 user_update_view = UserUpdateView.as_view()
@@ -87,16 +88,7 @@ class UserQuerySetMixin(CommunityRequiredMixin):
 class UserDetailView(
     UserSlugMixin, UserContextMixin, UserQuerySetMixin, DetailView
 ):
-    def get_context_data(self, **kwargs) -> ContextDict:
-        data = super().get_context_data(**kwargs)
-        if (
-            self.request.user.is_authenticated
-            and self.object != self.request.user
-        ):
-            data["is_subscribed"] = Subscription.objects.filter(
-                user=self.object, subscriber=self.request.user
-            ).exists()
-        return data
+    ...
 
 
 user_detail_view = UserDetailView.as_view()
@@ -125,11 +117,14 @@ class UserSubscribeView(
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
 
-        Subscription.objects.create(
+        subscription = Subscription.objects.create(
             subscriber=self.request.user,
             content_object=self.object,
             community=self.request.community,
         )
+
+        for notification in subscription.notify([self.object]):
+            send_user_notification_email(self.object, notification)
 
         messages.success(self.request, _("You are now following this user"))
         return HttpResponseRedirect(self.get_success_url())
@@ -212,7 +207,7 @@ class SingleUserMixin(
         return super().get(request, *args, **kwargs)
 
 
-class UserActivityStreamView(SingleUserMixin, BaseActivityStreamView):
+class UserStreamView(SingleUserMixin, BaseStreamView):
 
     active_tab = "posts"
     template_name = "users/activities.html"
@@ -230,7 +225,7 @@ class UserActivityStreamView(SingleUserMixin, BaseActivityStreamView):
         return data
 
 
-user_activity_stream_view = UserActivityStreamView.as_view()
+user_stream_view = UserStreamView.as_view()
 
 
 class UserCommentListView(SingleUserMixin, CommentListView):
