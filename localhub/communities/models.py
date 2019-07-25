@@ -5,6 +5,7 @@ from typing import Optional, Set, Union
 from urllib.parse import urljoin
 
 from django.conf import settings
+from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.validators import RegexValidator, URLValidator
 from django.db import models
@@ -33,8 +34,15 @@ class RequestCommunity:
 
     id = None
     pk = None
-    public = False
-    active = False
+
+    public: bool = False
+    active: bool = False
+
+    name: str
+    domain: str
+
+    request: HttpRequest
+    site: Site
 
     def __init__(self, request: HttpRequest):
         self.request = request
