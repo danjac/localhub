@@ -41,14 +41,18 @@ export default class extends Controller {
     const multipart =
       this.element.getAttribute('enctype') === 'multipart/form-data';
 
-    const data = this.serialize(multipart);
+    this.handleSubmit(method, url, this.serialize(multipart));
 
-    this.formElements.forEach(el => el.setAttribute('disabled', true));
+    return false;
+  }
 
+  handleSubmit(method, url, data) {
     if (method === 'GET') {
-      return Turbolinks.visit(`${url}?${data}`);
+      Turbolinks.visit(`${url}?${data}`);
+      return;
     }
 
+    this.disableFormElements();
     const referrer = location.href;
 
     axios({
@@ -58,24 +62,36 @@ export default class extends Controller {
       },
       method,
       url
-    }).then(response => {
-      window.onbeforeunload = null;
-      const contentType = response.headers['content-type'];
+    })
+      .then(response => {
+        window.onbeforeunload = null;
+        const contentType = response.headers['content-type'];
 
-      if (contentType.match(/html/)) {
-        this.formElements.forEach(el => el.removeAttribute('disabled'));
-        // errors in form, re-render
-        Turbolinks.controller.cache.put(
-          referrer,
-          Turbolinks.Snapshot.wrap(response.data)
-        );
-        Turbolinks.visit(referrer, { action: 'restore' });
-      } else if (contentType.match(/javascript/)) {
-        /* eslint-disable-next-line no-eval */
-        eval(response.data);
-      }
-    });
-    return false;
+        if (contentType.match(/html/)) {
+          this.enableFormElements();
+          // errors in form, re-render
+          Turbolinks.controller.cache.put(
+            referrer,
+            Turbolinks.Snapshot.wrap(response.data)
+          );
+          Turbolinks.visit(referrer, { action: 'restore' });
+        } else if (contentType.match(/javascript/)) {
+          /* eslint-disable-next-line no-eval */
+          eval(response.data);
+        }
+      })
+      .catch(() => {
+        // we need something more elaborate later
+        this.enableFormElements();
+      });
+  }
+
+  disableFormElements() {
+    this.formElements.forEach(el => el.setAttribute('disabled', true));
+  }
+
+  enableFormElements() {
+    this.formElements.forEach(el => el.removeAttribute('disabled'));
   }
 
   serialize(multipart) {
