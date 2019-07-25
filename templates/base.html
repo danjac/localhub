@@ -65,7 +65,12 @@
                         {% user_display user as display_name %}
                         {{ display_name }}
                     </a>
-                    <a class="btn btn-link text-light" href="{% url 'account_logout' %}">{% trans "Logout" %}</a>
+                    <a class="btn btn-link text-light"
+                       href="{% url 'account_logout' %}"
+                       data-controller="ajax"
+                       data-action="ajax#post"
+                       data-ajax-redirect="/"
+                       >{% trans "Logout" %}</a>
                     {% else %}
                     <a class="btn btn-link text-light" href="{% url 'account_login' %}">{% trans "Login" %}</a>
                     <a class="btn btn-link text-light" href="{% url 'account_signup' %}">{% trans "Signup" %}</a>
