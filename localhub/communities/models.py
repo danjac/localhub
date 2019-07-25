@@ -1,12 +1,10 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from dataclasses import dataclass
 from typing import Optional, Set, Union
 from urllib.parse import urljoin
 
 from django.conf import settings
-from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.validators import RegexValidator, URLValidator
 from django.db import models
@@ -26,7 +24,6 @@ DOMAIN_VALIDATOR = RegexValidator(
 )
 
 
-@dataclass
 class RequestCommunity:
     """
     This works in a similar way to Django auth AnonymousUser, if
