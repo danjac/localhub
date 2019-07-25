@@ -1,6 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from dataclasses import dataclass
 from typing import Optional, Set, Union
 from urllib.parse import urljoin
 
@@ -24,6 +25,7 @@ DOMAIN_VALIDATOR = RegexValidator(
 )
 
 
+@dataclass
 class RequestCommunity:
     """
     This works in a similar way to Django auth AnonymousUser, if
@@ -31,16 +33,16 @@ class RequestCommunity:
     for None everywhere. Wraps HttpRequest/Site.
     """
 
+    request: HttpRequest
+
+    name: str
+    domain: str
+
     id = None
     pk = None
 
     public: bool = False
     active: bool = False
-
-    name: str
-    domain: str
-
-    request: HttpRequest
 
     def get_absolute_url(self) -> str:
         return self.request.full_path
@@ -64,9 +66,7 @@ class CommunityManager(models.Manager):
             )
         except self.model.DoesNotExist:
             site = get_current_site(request)
-            return RequestCommunity(
-                request=request, name=site.name, domain=site.domain
-            )
+            return RequestCommunity(request, site.name, site.domain)
 
 
 class Community(TimeStampedModel):

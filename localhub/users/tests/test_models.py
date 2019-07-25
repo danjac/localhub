@@ -150,7 +150,12 @@ class TestUserModel:
         self, user: settings.AUTH_USER_MODEL, req_factory: RequestFactory
     ):
         req = req_factory.get("/")
-        assert user.get_unread_notification_count(RequestCommunity(req)) == 0
+        assert (
+            user.get_unread_notification_count(
+                RequestCommunity(req, "example.com", "example.com")
+            )
+            == 0
+        )
 
     def test_get_unread_message_count(self):
         recipient = MessageRecipientFactory()
@@ -165,4 +170,9 @@ class TestUserModel:
         self, user: settings.AUTH_USER_MODEL, req_factory: RequestFactory
     ):
         req = req_factory.get("/")
-        assert user.get_unread_message_count(RequestCommunity(req)) == 0
+        assert (
+            user.get_unread_message_count(
+                RequestCommunity(req, "example.com", "example.com")
+            )
+            == 0
+        )

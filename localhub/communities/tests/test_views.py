@@ -35,12 +35,12 @@ class TestCommunityRequiredMixin:
 
     def test_community_not_found(self, req_factory: RequestFactory):
         req = req_factory.get("/")
-        req.community = RequestCommunity(req)
+        req.community = RequestCommunity(req, "example.com", "example.com")
         assert my_view(req).url == reverse("community_not_found")
 
     def test_community_not_found_if_ajax(self, req_factory: RequestFactory):
         req = req_factory.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
-        req.community = RequestCommunity(req)
+        req.community = RequestCommunity(req, "example.com", "example.com")
         with pytest.raises(Http404):
             my_view(req)
 
