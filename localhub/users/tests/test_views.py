@@ -96,7 +96,7 @@ class TestUserDeleteView:
         assert User.objects.filter(username=login_user.username).count() == 0
 
 
-class TestUserSubscribeView:
+class TestUserFollowView:
     def test_post(self, client: Client, member: Membership):
         user = UserFactory()
         Membership.objects.create(member=user, community=member.community)
@@ -123,7 +123,7 @@ class TestUserSubscribeView:
         assert not Subscription.objects.exists()
 
 
-class TestUserUnsubscribeView:
+class TestUserUnfollowView:
     def test_post(self, client: Client, member: Membership):
         user = UserFactory()
         Membership.objects.create(member=user, community=member.community)

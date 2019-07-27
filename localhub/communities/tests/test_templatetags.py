@@ -13,11 +13,19 @@ pytestmark = pytest.mark.django_db
 
 
 class TestGetLocalCommunities:
-    def test_anonymous_user(self, community: Community):
+    def test_anonymous_user_if_no_other_community(self, community: Community):
+        assert get_local_communities(AnonymousUser(), community).count() == 0
+
+    def test_anonymous_user_if_other_community_public(
+        self, community: Community
+    ):
+        CommunityFactory(public=True)
         assert get_local_communities(AnonymousUser(), community).count() == 1
 
-    def test_anonymous_user_if_not_public(self):
-        community = CommunityFactory(public=False)
+    def test_anonymous_user_if_other_community_not_public(
+        self, community: Community
+    ):
+        CommunityFactory(public=False)
         assert get_local_communities(AnonymousUser(), community).count() == 0
 
     def test_user_if_no_other_memberships(
@@ -30,10 +38,10 @@ class TestGetLocalCommunities:
     def test_user_if_no_other_memberships_if_other_community(
         self, member: settings.AUTH_USER_MODEL
     ):
-        community = CommunityFactory()
+        community = CommunityFactory(public=True)
         assert get_local_communities(member.member, community).count() == 1
 
-    def test_user_if_other_memberships_not_public(
+    def test_user_if_other_memberships_if_other_community_not_public(
         self, member: settings.AUTH_USER_MODEL, community: Community
     ):
         Membership.objects.create(
