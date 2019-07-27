@@ -17,7 +17,7 @@ from localhub.posts.models import Post
 
 
 class BaseStreamView(CommunityRequiredMixin, MultipleQuerySetListView):
-    ordering = "id"
+    ordering = "created"
     allow_empty = True
     paginate_by = settings.DEFAULT_PAGE_SIZE
     models: List[ActivityType] = [Photo, Post, Event]
