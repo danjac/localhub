@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.messages.views import SuccessMessageMixin
-from django.db.models import Q, QuerySet
+from django.db.models import BooleanField, Q, QuerySet, Value
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
@@ -100,7 +100,7 @@ class SingleUserView(
     ...
 
 
-class UserSubscribeView(
+class UserFollowView(
     LoginRequiredMixin, PermissionRequiredMixin, SingleUserView
 ):
     permission_required = "subscriptions.create_subscription"
@@ -130,10 +130,10 @@ class UserSubscribeView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-user_subscribe_view = UserSubscribeView.as_view()
+user_follow_view = UserFollowView.as_view()
 
 
-class UserUnsubscribeView(LoginRequiredMixin, SingleUserView):
+class UserUnfollowView(LoginRequiredMixin, SingleUserView):
     def get_success_url(self) -> str:
         return self.object.get_absolute_url()
 
@@ -150,7 +150,7 @@ class UserUnsubscribeView(LoginRequiredMixin, SingleUserView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-user_unsubscribe_view = UserUnsubscribeView.as_view()
+user_unfollow_view = UserUnfollowView.as_view()
 
 
 class BaseUserListView(UserQuerySetMixin, ListView):
@@ -172,6 +172,36 @@ class UserListView(BaseUserListView):
 
 
 user_list_view = UserListView.as_view()
+
+
+class FollowingUserListView(LoginRequiredMixin, BaseUserListView):
+    template_name = "users/following_user_list.html"
+
+    def get_queryset(self) -> QuerySet:
+        return (
+            super()
+            .get_queryset()
+            .following(self.request.user, self.request.community)
+            .annotate(has_subscribed=Value(True, output_field=BooleanField()))
+        )
+
+
+following_user_list_view = FollowingUserListView.as_view()
+
+
+class FollowerUserListView(LoginRequiredMixin, BaseUserListView):
+    template_name = "users/follower_user_list.html"
+
+    def get_queryset(self) -> QuerySet:
+        return (
+            super()
+            .get_queryset()
+            .followers(self.request.user, self.request.community)
+            .with_has_subscribed(self.request.user, self.request.community)
+        )
+
+
+follower_user_list_view = FollowerUserListView.as_view()
 
 
 class UserAutocompleteListView(BaseUserListView):

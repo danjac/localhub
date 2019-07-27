@@ -15,14 +15,14 @@
 {% if can_create_subscription %}
 <div class="float-right">
   {% if is_subscribed %}
-  <a href="{% url 'activities:unsubscribe_tag' tag.slug %}"
+  <a href="{% url 'activities:tag_unfollow' tag.slug %}"
      class="btn btn-sm"
      data-controller="ajax"
      data-action="ajax#post">
     {% trans "Unfollow" %}
   </a>
   {% else %}
-  <a href="{% url 'activities:subscribe_tag' tag.slug %}"
+  <a href="{% url 'activities:tag_follow' tag.slug %}"
      class="btn btn-sm"
      data-controller="ajax"
      data-action="ajax#post">

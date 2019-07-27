@@ -28,6 +28,28 @@ from localhub.subscriptions.models import (
 class UserQuerySet(SubscriptionAnnotationsQuerySetMixin, models.QuerySet):
     use_in_migrations = True
 
+    def following(
+        self, user: settings.AUTH_USER_MODEL, community: Community
+    ) -> models.QuerySet:
+        """
+        Returns all users this user is following.
+        """
+        return self.filter(
+            subscriptions__subscriber=user, subscriptions__community=community
+        ).exclude(pk=user.id)
+
+    def followers(
+        self, user: settings.AUTH_USER_MODEL, community: Community
+    ) -> models.QuerySet:
+        """
+        Returns all users following this user.
+        """
+        return self.filter(
+            pk__in=Subscription.objects.filter(
+                community=community, user=user
+            ).values("subscriber")
+        ).exclude(pk=user.id)
+
     def for_email(self, email: str) -> models.QuerySet:
         """
         Returns all users with primary or additional emails matching
@@ -66,6 +88,16 @@ class UserManager(BaseUserManager):
 
     def active(self, community: Community) -> models.QuerySet:
         return self.get_queryset().active(community)
+
+    def following(
+        self, user: settings.AUTH_USER_MODEL, community: Community
+    ) -> models.QuerySet:
+        return self.get_queryset().following(user, community)
+
+    def followers(
+        self, user: settings.AUTH_USER_MODEL, community: Community
+    ) -> models.QuerySet:
+        return self.get_queryset().followers(user, community)
 
     def for_email(self, email: str) -> models.QuerySet:
         return self.get_queryset().for_email(email)

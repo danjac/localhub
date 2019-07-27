@@ -1,0 +1,9 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "users/user_list.html" %}
+{% load i18n %}
+
+{% block page_header %}{% trans "Following" %}{% endblock %}
+{% block empty %}{% trans "You are not following anybody at the moment" %}{% endblock %}
+
