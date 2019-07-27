@@ -32,6 +32,13 @@ def is_activity_community_moderator(
     return is_moderator.test(user, activity.community)
 
 
+@rules.predicate
+def allows_comments(
+    user: settings.AUTH_USER_MODEL, activity: Activity
+) -> bool:
+    return activity.allow_comments
+
+
 is_editor = is_owner | is_activity_community_moderator
 
 rules.add_perm("activities.create_activity", is_member)
@@ -43,4 +50,6 @@ rules.add_perm(
 rules.add_perm(
     "activities.like_activity", is_activity_community_member & ~is_owner
 )
-rules.add_perm("activities.create_comment", is_activity_community_member)
+rules.add_perm(
+    "activities.create_comment", is_activity_community_member & allows_comments
+)

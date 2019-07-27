@@ -11,6 +11,7 @@ class PhotoForm(forms.ModelForm):
             "title",
             "image",
             "description",
+            "allow_comments",
             "artist",
             "original_url",
             "cc_license",
