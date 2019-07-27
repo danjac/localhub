@@ -34,7 +34,7 @@ from localhub.subscriptions.models import Subscription
 
 
 class TagQuerySetMixin(CommunityRequiredMixin):
-    models = [Post, Event, Photo]
+    tagged_models = [Post, Event, Photo]
 
     def get_queryset(self) -> QuerySet:
         q = Q(
@@ -48,7 +48,7 @@ class TagQuerySetMixin(CommunityRequiredMixin):
                         content_type=content_type,
                     )
                     for model, content_type in ContentType.objects.get_for_models(  # noqa
-                        *self.models
+                        *self.tagged_models
                     ).items()
                 ],
             )
