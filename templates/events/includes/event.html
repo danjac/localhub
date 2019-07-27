@@ -4,101 +4,82 @@
 {% load i18n %}
 {% load tz %}
 {% load micawber_tags %}
-{% load rules %}
-
-{% has_perm "communities.moderate_community" user community as can_moderate_community %}
-
 
 <div class="card bg-gray" id="event-{{ event.id }}">
-  <div class="card-header">
-    {% if event.is_flagged and can_moderate_community %}
-    <div class="toast toast-warning text-center">
-        <a href="{{ event.get_absolute_url }}">{% trans "This event has been flagged" %}</a>
+    <div class="card-header">
+        {% include "activities/includes/header.html" with object=event %}
     </div>
-    {% endif %}
+    <div class="card-body">
+        {% include "events/includes/content.html" with object=event %}
+        <div class="divider"></div>
+        <dl>
+            {% timezone event.timezone %}
 
-    <div class="card-title h5">
-      {% if is_detail %}
-      {{ event.title }}
-      {% else %}
-      <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
-      {% endif %}
+            <dt>{% trans "Starts" %}</dt>
+            <dd>{{ event.starts|date:"SHORT_DATE_FORMAT" }} @ {{ event.starts|date:"TIME_FORMAT" }}</dd>
+
+            {% if event.ends %}
+            <dt>{% trans "Ends" %}</dt>
+            <dd>{{ event.ends|date:"SHORT_DATE_FORMAT" }} @ {{ event.ends|date:"TIME_FORMAT" }}</dd>
+            {% endif %}
+
+            {% endtimezone %}
+
+            <dt>{% trans "Timezone" %}</dt>
+            <dd>{{ event.timezone }}</dd>
+
+            <dt>{% trans "Location" %}</dt>
+            <dd>
+            {% with location=event.full_location %}
+            {% if location %}
+            {{ location }}
+            {% else %}
+            {% trans "Online" %}
+            {% endif %}
+            {% endwith %}
+            </dd>
+
+            {% if event.ticket_price %}
+            <dt>{% trans "Admission" %}</dt>
+            <dd>{{ event.ticket_price }}</dd>
+            {% endif %}
+
+            {% if event.ticket_vendor %}
+            <dt>{% trans "Tickets available from" %}</dt>
+            <dd>{{ event.ticket_vendor|linebreaksbr }}</dd>
+            {% endif %}
+
+        </dl>
+        {% if is_detail and event.latitude and event.longitude %}
+        <div id="map-for-event-{{ event.id }}"
+             class="event-map{% if is_detail %} event-map-lg{% endif %}"
+             data-controller="map"
+             data-map-latitude="{{ event.latitude }}"
+             data-map-longitude="{{ event.longitude }}"
+             ></div>
+        {% endif %}
     </div>
-    <div class="card-subtitle h6 text-gray">
-      {% include "activities/includes/timesince.html" with timestamp=event.created owner=event.owner %}
+    <div class="card-footer">
+
+        {% if event.num_likes and event.owner == user %}
+        <div class="text-gray">
+            {{ event.num_likes }}
+            {% blocktrans count counter=event.num_likes %}
+            person liked this event
+            {% plural %}
+            people liked this event
+            {% endblocktrans %}
+        </div>
+        {% endif %}
+        <div>
+            {% if is_detail %}
+            <a href="{{ event.get_permalink }}">{% trans "Permalink" %}</a>
+            {% else %}
+            {% include "activities/includes/comments_count.html" with object=event %}
+            {% endif %}
+        </div>
+        <div>
+            {% include "events/includes/actions.html" %}
+        </div>
     </div>
-  </div>
-  <div class="card-body">
-    {% include "events/includes/content.html" with object=event %}
-    <div class="divider"></div>
-    <dl>
-      {% timezone event.timezone %}
-
-      <dt>{% trans "Starts" %}</dt>
-      <dd>{{ event.starts|date:"SHORT_DATE_FORMAT" }} @ {{ event.starts|date:"TIME_FORMAT" }}</dd>
-
-      {% if event.ends %}
-      <dt>{% trans "Ends" %}</dt>
-      <dd>{{ event.ends|date:"SHORT_DATE_FORMAT" }} @ {{ event.ends|date:"TIME_FORMAT" }}</dd>
-      {% endif %}
-
-      {% endtimezone %}
-
-      <dt>{% trans "Timezone" %}</dt>
-      <dd>{{ event.timezone }}</dd>
-
-      <dt>{% trans "Location" %}</dt>
-      <dd>
-      {% with location=event.full_location %}
-      {% if location %}
-      {{ location }}
-      {% else %}
-      {% trans "Online" %}
-      {% endif %}
-      {% endwith %}
-      </dd>
-
-      {% if event.ticket_price %}
-      <dt>{% trans "Admission" %}</dt>
-      <dd>{{ event.ticket_price }}</dd>
-      {% endif %}
-
-      {% if event.ticket_vendor %}
-      <dt>{% trans "Tickets available from" %}</dt>
-      <dd>{{ event.ticket_vendor|linebreaksbr }}</dd>
-      {% endif %}
-
-    </dl>
-    {% if is_detail and event.latitude and event.longitude %}
-    <div id="map-for-event-{{ event.id }}"
-         class="event-map{% if is_detail %} event-map-lg{% endif %}"
-         data-controller="map"
-         data-map-latitude="{{ event.latitude }}"
-         data-map-longitude="{{ event.longitude }}"
-         ></div>
-    {% endif %}
-  </div>
-  <div class="card-footer">
-
-    {% if event.num_likes and event.owner == user %}
-    <div class="text-gray">
-      {{ event.num_likes }}
-      {% blocktrans count counter=event.num_likes %}
-      person liked this event
-      {% plural %}
-      people liked this event
-      {% endblocktrans %}
-    </div>
-    {% endif %}
-    <div>
-      {% if is_detail %}
-      <a href="{{ event.get_permalink }}">{% trans "Permalink" %}</a>
-      {% else %}
-      {% include "activities/includes/comments_count.html" with object=event %}
-      {% endif %}
-    </div>
-    <div>
-      {% include "events/includes/actions.html" %}
-    </div>
-  </div>
 </div>

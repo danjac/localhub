@@ -2,28 +2,10 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-{% load rules %}
-
-{% has_perm "communities.moderate_community" user community as can_moderate_community %}
 
 <div class="card bg-gray" id="post-{{ post.id }}">
   <div class="card-header">
-    {% if post.is_flagged and can_moderate_community %}
-    <div class="toast toast-warning text-center">
-      <a href="{{ post.get_absolute_url }}">{% trans "This post has been flagged" %}</a>
-    </div>
-    {% endif %}
-
-    <div class="card-title h5">
-      {% if is_detail %}
-      {{ post.title }}
-      {% else %}
-      <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-      {% endif %}
-    </div>
-    <div class="card-subtitle h6 text-gray">
-      {% include "activities/includes/timesince.html" with timestamp=post.created owner=post.owner %}
-    </div>
+    {% include "activities/includes/header.html" with object=post %}
   </div>
   <div class="card-body">
     {% include "posts/includes/content.html" with object=post %}

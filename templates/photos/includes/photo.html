@@ -2,74 +2,55 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-{% load rules %}
-
-{% has_perm "communities.moderate_community" user community as can_moderate_community %}
 
 <div class="card bg-gray" id="photo-{{ photo.id }}">
-  <div class="card-header">
-
-    {% if photo.is_flagged and can_moderate_community %}
-    <div class="toast toast-warning text-center">
-      <a href="{{ photo.get_absolute_url }}">{% trans "This photo has been flagged" %}</a>
+    <div class="card-header">
+        {% include "activities/includes/header.html" with object=photo %}
     </div>
-    {% endif %}
-
-    <div class="card-title h5">
-      {% if is_detail %}
-      {{ photo.title }}
-      {% else %}
-      <a href="{{ photo.get_absolute_url }}">{{ photo.title }}</a>
-      {% endif %}
-    </div>
-    <div class="card-subtitle h6 text-gray">
-      {% include "activities/includes/timesince.html" with timestamp=photo.created owner=photo.owner %}
-    </div>
-  </div>
-  <div class="card-body">
-    {% include "photos/includes/content.html" with object=photo %}
-    {% if photo.has_attribution %}
-    <div class="mb-2">
-      <dl>
-        {% if photo.artist %}
-        <dt>{% trans "Artist" %}</dt>
-        <dd>{{ photo.artist }}</dd>
+    <div class="card-body">
+        {% include "photos/includes/content.html" with object=photo %}
+        {% if photo.has_attribution %}
+        <div class="mb-2">
+            <dl>
+                {% if photo.artist %}
+                <dt>{% trans "Artist" %}</dt>
+                <dd>{{ photo.artist }}</dd>
+                {% endif %}
+                {% if photo.original_url %}
+                <dt>{% trans "Original URL" %}</dt>
+                <dd><a href="{{ photo.original_url }}" rel="noopener nofollow" target="_blank">{{ photo.original_url }}</a></dd>
+                {% endif %}
+                {% if photo.cc_license %}
+                <dt>{% trans "Creative Commons License" %}</dt>
+                <dd>{{ photo.get_cc_license_display }}</dd>
+                {% endif %}
+            </dl>
+        </div>
         {% endif %}
-        {% if photo.original_url %}
-        <dt>{% trans "Original URL" %}</dt>
-        <dd><a href="{{ photo.original_url }}" rel="noopener nofollow" target="_blank">{{ photo.original_url }}</a></dd>
-        {% endif %}
-        {% if photo.cc_license %}
-        <dt>{% trans "Creative Commons License" %}</dt>
-        <dd>{{ photo.get_cc_license_display }}</dd>
-        {% endif %}
-      </dl>
     </div>
-    {% endif %}
-  </div>
-  <div class="card-footer">
-    {% if photo.num_likes and photo.owner == user %}
-    <div class="text-gray">
-      {{ photo.num_likes }}
-      {% blocktrans count counter=photo.num_likes %}
-      person liked this photo
-      {% plural %}
-      people liked this photo
-      {% endblocktrans %}
-    </div>
-    {% endif %}
+    <div class="card-footer">
+        {% if photo.num_likes and photo.owner == user %}
+        <div class="text-gray">
+            {{ photo.num_likes }}
+            {% blocktrans count counter=photo.num_likes %}
+            person liked this photo
+            {% plural %}
+            people liked this photo
+            {% endblocktrans %}
+        </div>
+        {% endif %}
 
-    <div>
-      {% if is_detail %}
-      <a href="{{ photo.get_permalink }}">{% trans "Permalink" %}</a>
-      {% else %}
-      {% include "activities/includes/comments_count.html" with object=photo %}
-      {% endif %}
+        <div>
+            {% if is_detail %}
+            <a href="{{ photo.get_permalink }}">{% trans "Permalink" %}</a>
+            {% else %}
+            {% include "activities/includes/comments_count.html" with object=photo %}
+            {% endif %}
+        </div>
+        <div>
+            {% include "photos/includes/actions.html" %}
+        </div>
     </div>
-    <div>
-      {% include "photos/includes/actions.html" %}
-    </div>
-  </div>
 
 </div>
 

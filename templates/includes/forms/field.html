@@ -16,10 +16,12 @@
   {% elif widget.input_type == 'radio' %}
   <label class="form-label">{{ label }}</label>
   {% for choice in field %}
-  <label class="form-radio form-inline">
-    {{ choice.tag }}
-    <i class="form-icon"></i> {{ choice.choice_label }}
-  </label>
+  <div>
+    <label class="form-radio form-inline">
+      {{ choice.tag }}
+      <i class="form-icon"></i> {{ choice.choice_label }}
+    </label>
+  </div>
   {% endfor %}
   {% else %}
   <label for="{{ field.id_for_label }}" class="form-label">{{ label }}</label>
