@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Any, Dict
+from typing import Any, Dict, List, Set
 
 from django import forms
 from django.db import models
@@ -13,7 +13,6 @@ from localhub.communities.models import Community
 from localhub.core.forms.widgets import TypeaheadInput
 from localhub.core.markdown.utils import extract_mentions
 from localhub.messageboard.models import Message
-from localhub.subscriptions.models import Subscription
 
 
 User = get_user_model()
@@ -25,6 +24,7 @@ class MessageForm(forms.ModelForm):
         ("moderators", _("Community moderators")),
         ("admins", _("Community admins")),
         ("followers", _("People following me")),
+        ("everyone", _("All members of this community")),
     )
 
     individuals = forms.CharField(
@@ -58,12 +58,16 @@ class MessageForm(forms.ModelForm):
             )
         return data
 
-    def get_recipients(
-        self, sender: settings.AUTH_USER_MODEL, community: Community
+    def get_recipient_queryset(
+        self,
+        sender: settings.AUTH_USER_MODEL,
+        community: Community,
+        groups: List[str],
+        mentions: Set[str],
     ) -> models.QuerySet:
 
-        groups = self.cleaned_data["groups"]
-        mentions = extract_mentions(self.cleaned_data["individuals"])
+        if "everyone" in groups:
+            return community.members.all()
 
         qs = User.objects.none()
 
@@ -77,9 +81,22 @@ class MessageForm(forms.ModelForm):
             qs = qs | community.get_admins()
 
         if "followers" in groups:
-            qs = qs | User.objects.filter(
-                pk__in=Subscription.objects.filter(
-                    community=community, user=sender
-                ).values("subscriber")
+            qs = qs | User.objects.followers(sender, community)
+
+        return qs
+
+    def get_recipients(
+        self, sender: settings.AUTH_USER_MODEL, community: Community
+    ) -> models.QuerySet:
+
+        return (
+            self.get_recipient_queryset(
+                sender,
+                community,
+                self.cleaned_data["groups"],
+                extract_mentions(self.cleaned_data["individuals"]),
             )
-        return qs.active(community).exclude(pk=sender.pk).distinct()
+            .active(community)
+            .exclude(pk=sender.pk)
+            .distinct()
+        )

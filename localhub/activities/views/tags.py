@@ -9,7 +9,7 @@ from functools import reduce
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Q, QuerySet
+from django.db.models import BooleanField, Q, QuerySet, Value
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -26,20 +26,17 @@ from localhub.activities.views.streams import BaseStreamView
 from localhub.communities.models import Community
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.types import ContextDict
+from localhub.core.utils.content_types import get_generic_related_exists
 from localhub.events.models import Event
 from localhub.photos.models import Photo
 from localhub.posts.models import Post
 from localhub.subscriptions.models import Subscription
 
 
-class TagAutocompleteListView(CommunityRequiredMixin, ListView):
-    template_name = "activities/tag_autocomplete_list.html"
+class TagQuerySetMixin(CommunityRequiredMixin):
+    models = [Post, Event, Photo]
 
     def get_queryset(self) -> QuerySet:
-        search_term = self.request.GET.get("q", "").strip()
-        if not search_term:
-            return Tag.objects.none()
-
         q = Q(
             reduce(
                 operator.or_,
@@ -51,7 +48,7 @@ class TagAutocompleteListView(CommunityRequiredMixin, ListView):
                         content_type=content_type,
                     )
                     for model, content_type in ContentType.objects.get_for_models(  # noqa
-                        Post, Event, Photo
+                        *self.models
                     ).items()
                 ],
             )
@@ -59,23 +56,40 @@ class TagAutocompleteListView(CommunityRequiredMixin, ListView):
 
         return (
             Tag.objects.filter(
-                taggit_taggeditem_items__in=TaggedItem.objects.filter(q),
-                name__istartswith=search_term,
+                taggit_taggeditem_items__in=TaggedItem.objects.filter(q)
             )
             .order_by("name")
             .distinct()
         )
 
 
+class SingleTagMixin(TagQuerySetMixin, SingleObjectMixin):
+    ...
+
+
+class SingleTagView(SingleTagMixin, View):
+    ...
+
+
+class BaseTagListView(TagQuerySetMixin, ListView):
+    ...
+
+
+class TagAutocompleteListView(BaseTagListView):
+    template_name = "activities/tags/tag_autocomplete_list.html"
+
+    def get_queryset(self) -> QuerySet:
+        search_term = self.request.GET.get("q", "").strip()
+        if not search_term:
+            return Tag.objects.none()
+        return super().get_queryset().filter(name__istartswith=search_term)
+
+
 tag_autocomplete_list_view = TagAutocompleteListView.as_view()
 
 
-class SingleTagMixin(SingleObjectMixin):
-    model = Tag
-
-
 class TagDetailView(SingleTagMixin, BaseStreamView):
-    template_name = "activities/tag_detail.html"
+    template_name = "activities/tags/tag_detail.html"
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
@@ -98,8 +112,8 @@ class TagDetailView(SingleTagMixin, BaseStreamView):
 tag_detail_view = TagDetailView.as_view()
 
 
-class TagSubscribeView(
-    LoginRequiredMixin, PermissionRequiredMixin, SingleTagMixin, View
+class TagFollowView(
+    LoginRequiredMixin, PermissionRequiredMixin, SingleTagView
 ):
     permission_required = "subscriptions.create_subscription"
 
@@ -107,7 +121,7 @@ class TagSubscribeView(
         return self.request.community
 
     def get_success_url(self) -> str:
-        return reverse("activities:tag", args=[self.object.slug])
+        return reverse("activities:tag_detail", args=[self.object.slug])
 
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
@@ -122,12 +136,12 @@ class TagSubscribeView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-tag_subscribe_view = TagSubscribeView.as_view()
+tag_follow_view = TagFollowView.as_view()
 
 
-class TagUnsubscribeView(LoginRequiredMixin, SingleTagMixin, View):
+class TagUnfollowView(LoginRequiredMixin, SingleTagView):
     def get_success_url(self) -> str:
-        return reverse("activities:tag", args=[self.object.slug])
+        return reverse("activities:tag_detail", args=[self.object.slug])
 
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
@@ -142,4 +156,40 @@ class TagUnsubscribeView(LoginRequiredMixin, SingleTagMixin, View):
         return HttpResponseRedirect(self.get_success_url())
 
 
-tag_unsubscribe_view = TagUnsubscribeView.as_view()
+tag_unfollow_view = TagUnfollowView.as_view()
+
+
+class TagListView(BaseTagListView):
+    template_name = "activities/tags/tag_list.html"
+
+    def get_queryset(self) -> QuerySet:
+
+        qs = super().get_queryset()
+
+        if self.request.user.is_authenticated:
+            qs = qs.annotate(
+                is_subscribed=get_generic_related_exists(
+                    Tag,
+                    Subscription.objects.filter(
+                        subscriber=self.request.user,
+                        community=self.request.community,
+                    ),
+                )
+            )
+        else:
+            qs = qs.annotate(is_subscribed=Value(False, BooleanField()))
+
+        return qs
+
+
+tag_list_view = TagListView.as_view()
+
+
+class FollowingTagListView(LoginRequiredMixin, TagListView):
+    template_name = "activities/tags/following_tag_list.html"
+
+    def get_queryset(self) -> QuerySet:
+        return super().get_queryset().filter(is_subscribed=True)
+
+
+following_tag_list_view = FollowingTagListView.as_view()

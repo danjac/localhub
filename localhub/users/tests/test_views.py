@@ -101,7 +101,7 @@ class TestUserSubscribeView:
         user = UserFactory()
         Membership.objects.create(member=user, community=member.community)
         response = client.post(
-            reverse("users:subscribe", args=[user.username])
+            reverse("users:follow", args=[user.username])
         )
         assert response.url == user.get_absolute_url()
         sub = Subscription.objects.get()
@@ -117,7 +117,7 @@ class TestUserSubscribeView:
         self, client: Client, member: Membership
     ):
         response = client.post(
-            reverse("users:subscribe", args=[member.member.username])
+            reverse("users:follow", args=[member.member.username])
         )
         assert response.status_code == 404
         assert not Subscription.objects.exists()
@@ -133,7 +133,7 @@ class TestUserUnsubscribeView:
             community=member.community,
         )
         response = client.post(
-            reverse("users:unsubscribe", args=[user.username])
+            reverse("users:unfollow", args=[user.username])
         )
         assert response.url == user.get_absolute_url()
         assert not Subscription.objects.exists()

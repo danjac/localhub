@@ -168,10 +168,9 @@ class MessageCreateView(
         if num_recipients == 1:
             return _("Your message has been sent")
 
-        return (
-            _("Your message has been sent to %(num_recipients)s people")
-            % num_recipients
-        )
+        return _("Your message has been sent to %(num_recipients)s people") % {
+            "num_recipients": num_recipients
+        }
 
     def form_valid(self, form) -> HttpResponse:
 

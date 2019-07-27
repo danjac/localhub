@@ -103,29 +103,37 @@ class TestTagAutocompleteListView:
         assert len(response.context["object_list"]) == 1
 
 
-class TestTagSubscribeView:
+class TestTagFollowView:
     def test_post(self, client: Client, member: Membership):
-        tag = Tag.objects.create(name="movies")
+        post = PostFactory(community=member.community)
+        post.tags.set("movies")
+        tag = Tag.objects.get()
         response = client.post(
-            reverse("activities:subscribe_tag", args=[tag.slug])
+            reverse("activities:tag_follow", args=[tag.slug])
         )
-        assert response.url == reverse("activities:tag", args=[tag.slug])
+        assert response.url == reverse(
+            "activities:tag_detail", args=[tag.slug]
+        )
         sub = Subscription.objects.get()
         assert sub.content_object == tag
         assert sub.subscriber == member.member
         assert sub.community == member.community
 
 
-class TestTagUnsubscribeView:
+class TestTagUnfollowView:
     def test_post(self, client: Client, member: Membership):
-        tag = Tag.objects.create(name="movies")
+        post = PostFactory(community=member.community)
+        post.tags.set("movies")
+        tag = Tag.objects.get()
         Subscription.objects.create(
             content_object=tag,
             subscriber=member.member,
             community=member.community,
         )
         response = client.post(
-            reverse("activities:unsubscribe_tag", args=[tag.slug])
+            reverse("activities:tag_unfollow", args=[tag.slug])
         )
-        assert response.url == reverse("activities:tag", args=[tag.slug])
+        assert response.url == reverse(
+            "activities:tag_detail", args=[tag.slug]
+        )
         assert not Subscription.objects.exists()

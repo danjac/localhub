@@ -28,7 +28,7 @@
     </a>
 {% endif %}
 {% if can_create_subscription and not is_subscribed %}
-    <a href="{% url 'users:subscribe' user_obj.username %}"
+    <a href="{% url 'users:follow' user_obj.username %}"
        class="btn btn-sm"
        data-controller="ajax"
        data-action="ajax#post"
@@ -36,7 +36,7 @@
         {% trans "Follow" %}
     </a>
 {% elif is_subscribed %}
-    <a href="{% url 'users:unsubscribe' user_obj.username %}"
+    <a href="{% url 'users:unfollow' user_obj.username %}"
        class="btn btn-sm"
        data-controller="ajax"
        data-action="ajax#post"

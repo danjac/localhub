@@ -27,6 +27,38 @@ class TestUserManager:
         )
         assert user.check_password("t3ZtP4s31")
 
+    def test_following(
+        self, user: settings.AUTH_USER_MODEL, member: Membership
+    ):
+
+        Subscription.objects.create(
+            content_object=member.member,
+            community=member.community,
+            subscriber=user,
+        )
+
+        assert (
+            get_user_model().objects.following(user, member.community).get()
+            == member.member
+        )
+
+    def test_followers(
+        self, user: settings.AUTH_USER_MODEL, member: Membership
+    ):
+
+        Subscription.objects.create(
+            content_object=member.member,
+            community=member.community,
+            subscriber=user,
+        )
+
+        assert (
+            get_user_model()
+            .objects.followers(member.member, member.community)
+            .get()
+            == user
+        )
+
     def test_active(self, community: Community):
         Membership.objects.create(member=UserFactory(), community=community)
         assert get_user_model().objects.active(community).exists()

@@ -3,31 +3,33 @@
 
 from django.urls import path
 
-from localhub.activities.views.streams import search_view, stream_view
-from localhub.activities.views.tags import (
-    tag_autocomplete_list_view,
-    tag_detail_view,
-    tag_subscribe_view,
-    tag_unsubscribe_view,
-)
+from localhub.activities.views import streams, tags
 
 app_name = "activities"
 
 urlpatterns = [
-    path("", stream_view, name="stream"),
-    path("search/", search_view, name="search"),
+    path("", streams.stream_view, name="stream"),
+    path("search/", streams.search_view, name="search"),
+    path("tags/", tags.tag_list_view, name="tag_list"),
     path(
-        "tag-autocomplete/",
-        tag_autocomplete_list_view,
+        "tags/following/",
+        tags.following_tag_list_view,
+        name="following_tag_list",
+    ),
+    path(
+        "tags/autocomplete/",
+        tags.tag_autocomplete_list_view,
         name="tag_autocomplete_list",
     ),
-    path("tag/<slug:slug>/", tag_detail_view, name="tag"),
+    path("tag/<slug:slug>/", tags.tag_detail_view, name="tag_detail"),
     path(
-        "tag/<slug:slug>/subscribe/", tag_subscribe_view, name="subscribe_tag"
+        "tags/<slug:slug>/follow/",
+        tags.tag_follow_view,
+        name="tag_follow",
     ),
     path(
-        "tag/<slug:slug>/unsubscribe/",
-        tag_unsubscribe_view,
-        name="unsubscribe_tag",
+        "tags/<slug:slug>/unfollow/",
+        tags.tag_unfollow_view,
+        name="tag_unfollow",
     ),
 ]
