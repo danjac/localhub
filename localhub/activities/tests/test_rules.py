@@ -52,6 +52,13 @@ class TestPermissions:
         Membership.objects.create(member=user, community=post.community)
         assert user.has_perm("activities.create_comment", post)
 
+    def test_can_create_comment_if_does_not_allow_comments(
+        self, post: PostFactory, user: settings.AUTH_USER_MODEL
+    ):
+        post.allow_comments = False
+        Membership.objects.create(member=user, community=post.community)
+        assert not user.has_perm("activities.create_comment", post)
+
     def test_can_create_comment_if_not_member(
         self, post: PostFactory, user: settings.AUTH_USER_MODEL
     ):

@@ -108,6 +108,8 @@ class Activity(TimeStampedModel):
 
     description = MarkdownField(blank=True)
 
+    allow_comments = models.BooleanField(default=True)
+
     history = HistoricalRecords(inherit=True)
 
     tags = TaggableManager()

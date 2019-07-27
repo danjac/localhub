@@ -38,6 +38,7 @@ class EventForm(forms.ModelForm):
             "region",
             "country",
             "description",
+            "allow_comments",
         )
         localized_fields = ("starts", "ends")
 

@@ -12,7 +12,7 @@ from localhub.posts.models import Post
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ("title", "url", "description")
+        fields = ("title", "url", "description", "allow_comments")
         labels = {"title": _("Title"), "url": _("Link")}
 
     def __init__(self, *args, **kwargs):
