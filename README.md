@@ -16,7 +16,7 @@ We will also be investigating different ways to interact with LocalHub instances
 Technology
 ----------
 
-LocalHub is built with Python, Django and PostgreSQL. These are solid "boring" open source technologies that are easy to work with and have large, vibrant communities. Rather than use a Single Page Application (SPA) approach with a JavaScript-heavy front end, we've used the Turbolinks library with the lightweight Stimulus framework to provide much of the benefits of an SPA such as quick page loading and interactivity, while keeping much of the advantages of a traditional server-side rendered application, such as a smaller code base, a more robust and accessible user interface, and better search engine discoverability.
+LocalHub is built with Python, Django and PostgreSQL. These are solid "boring" open source technologies that are easy to work with and have large, vibrant communities. Rather than use a Single Page Application (SPA) approach with a JavaScript-heavy front end, we've used the [Turbolinks](https://github.com/turbolinks/turbolinks) library with the lightweight [Stimulus framework](https://stimulusjs.org/) to provide much of the benefits of an SPA such as quick page loading and interactivity, while keeping much of the advantages of a traditional server-side rendered application, such as a smaller code base, a more robust and accessible user interface, and better search engine discoverability.
 
 Installation
 ------------
@@ -53,6 +53,11 @@ Finally for email we use Mailgun, which requires these settings:
 * DJANGO_MAILGUN_SENDER_DOMAIN
 
 Again, we hope to improve the production deployment situation to remove any hard dependencies on third parties such as Heroku, Mailgun or AWS.
+
+Inspiration
+-----------
+
+Inspiration came from [Mastodon](https://mastodon.social), [Diaspora*](https://joindiaspora.com) and other projects exploring the decentralized social media space. The design and architecture was heavily influenced by [Tildes](https://tildes.net).
 
 Licensing
 ---------
