@@ -43,18 +43,18 @@
   <li class="divider" data-content="{% trans 'Actions' %}"></li>
   {% if can_create_activity %}
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'posts:create' %}">{% trans "Submit Post" %}</a>
+    <a href="{% url 'posts:create' %}">{% trans "Submit Post" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
+    <a href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
+    <a href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
   </li>
   {% endif %}
   {% if can_create_message %}
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'messageboard:message_create' %}">{% trans "Send Message" %}</a>
+    <a href="{% url 'messageboard:message_create' %}">{% trans "Send Message" %}</a>
   </li>
   {% endif %}
 </ul>
