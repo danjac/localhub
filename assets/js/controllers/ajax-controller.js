@@ -33,30 +33,39 @@ export default class extends Controller {
     const referrer = location.href;
     const url = this.data.get('url') || this.element.getAttribute('href');
 
+    this.element.setAttribute('disabled', true);
+
     axios({
       headers: {
         'Turbolinks-Referrer': referrer
       },
       method,
       url
-    }).then(response => {
-      const toggle = this.data.get('toggle');
-      const redirect = this.data.get('redirect');
+    })
+      .then(response => {
 
-      if (toggle !== null) {
-        this.element.classList.toggle('d-hide');
-        const target = toggle && document.querySelector(toggle);
-        if (target) {
-          target.classList.toggle('d-hide');
+        const toggle = this.data.get('toggle');
+        const redirect = this.data.get('redirect');
+
+        if (toggle !== null) {
+          this.element.classList.toggle('d-hide');
+          this.element.removeAttribute('disabled');
+          const target = toggle && document.querySelector(toggle);
+          if (target) {
+            target.classList.toggle('d-hide');
+          }
+        } else if (this.data.has('replace')) {
+          this.element.innerHTML = response.data;
+          this.element.removeAttribute('disabled');
+        } else if (redirect) {
+          Turbolinks.visit(redirect);
+        } else if (response.headers['content-type'].match(/javascript/)) {
+          /* eslint-disable-next-line no-eval */
+          eval(response.data);
         }
-      } else if (this.data.has('replace')) {
-        this.element.innerHTML = response.data;
-      } else if (redirect) {
-        Turbolinks.visit(redirect);
-      } else if (response.headers['content-type'].match(/javascript/)) {
-        /* eslint-disable-next-line no-eval */
-        eval(response.data);
-      }
-    });
+      })
+      .catch(() => {
+        this.element.removeAttribute('disabled');
+      });
   }
 }

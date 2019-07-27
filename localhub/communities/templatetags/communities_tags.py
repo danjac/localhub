@@ -1,6 +1,6 @@
 from django import template
 from django.conf import settings
-from django.db.models import QuerySet
+from django.db.models import Q, QuerySet
 
 from localhub.communities.models import Community
 
@@ -14,15 +14,13 @@ def get_local_communities(
     """
     Returns other communities on same host belonging to this user.
     """
+
+    qs = Community.objects.filter(active=True)
     if user.is_anonymous:
-        return Community.objects.none()
-
-    qs = (
-        Community.objects.filter(members=user, active=True)
-        .order_by("name")
-        .distinct()
-    )
-
+        qs = qs.filter(public=True)
+    else:
+        qs = qs.filter(Q(public=True) | Q(members=user))
     if community.id:
         qs = qs.exclude(pk=community.id)
-    return qs
+
+    return qs.order_by("name").distinct()
