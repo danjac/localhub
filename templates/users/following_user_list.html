@@ -5,5 +5,14 @@
 {% load i18n %}
 
 {% block page_header %}{% trans "Following" %}{% endblock %}
+
+{% block counter %}
+{% blocktrans count counter=paginator.count %}
+You are following one person.
+{% plural %}
+You are following {{ counter }} people.
+{% endblocktrans %}
+{% endblock counter %}
+
 {% block empty %}{% trans "You are not following anybody at the moment" %}{% endblock %}
 

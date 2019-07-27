@@ -24,9 +24,17 @@
   <dd>{{ object.created|date:"DATETIME_FORMAT" }}</dd>
   <dt>{% trans "Recipients" %}</dt>
   <dd>
+  {% with num_recipients=recipients.count %}
+  {% if num_recipients > 20 %}
+  {% blocktrans %}
+  <b>{{ num_recipients }}</b> people received this message.
+  {% endblocktrans %}
+  {% else %}
   {% for recipient in recipients %}
   {% include "users/includes/chip.html" with profile=recipient.recipient %}&nbsp;
   {% endfor %}
+  {% endif %}
+  {% endwith %}
   </dd>
 
 </dl>

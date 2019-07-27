@@ -5,5 +5,15 @@
 {% load i18n %}
 
 {% block page_header %}{% trans "Followers" %}{% endblock %}
+
+{% block counter %}
+{% blocktrans count counter=paginator.count %}
+You have one follower.
+{% plural %}
+You have {{ counter }} followers.
+{% endblocktrans %}
+{% endblock counter %}
+
 {% block empty %}{% trans "Nobody is following you at the moment" %}{% endblock %}
+
 

@@ -154,12 +154,13 @@ user_unfollow_view = UserUnfollowView.as_view()
 
 
 class BaseUserListView(UserQuerySetMixin, ListView):
+    paginate_by = settings.DEFAULT_PAGE_SIZE
+
     def get_queryset(self) -> QuerySet:
         return super().get_queryset().order_by("name", "username")
 
 
 class UserListView(BaseUserListView):
-    paginate_by = settings.DEFAULT_PAGE_SIZE
 
     def get_queryset(self) -> QuerySet:
 
