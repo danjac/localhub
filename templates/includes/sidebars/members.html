@@ -7,9 +7,10 @@
 {% load messageboard_tags %}
 {% load flags_tags %}
 
-{% has_perm 'activities.create_activity' user community as can_create_activity %}
-{% has_perm 'communities.moderate_community' user community as can_moderate_community %}
-{% has_perm 'communities.manage_community' user community as can_manage_community %}
+{% has_perm "activities.create_activity" user community as can_create_activity %}
+{% has_perm "communities.moderate_community" user community as can_moderate_community %}
+{% has_perm "communities.manage_community" user community as can_manage_community %}
+{% has_perm "messageboard.create_message" user community as can_create_message %}
 
 {% get_unread_notification_count user community as unread_notifications %}
 {% get_unread_message_count user community as unread_messages %}
@@ -37,6 +38,7 @@
   </li>
 </ul>
 
+{% if can_create_activity or can_create_message %}
 <ul class="menu mt-2">
   <li class="divider" data-content="{% trans 'Actions' %}"></li>
   {% if can_create_activity %}
@@ -50,7 +52,13 @@
     <a data-controller="active-link" href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
   </li>
   {% endif %}
+  {% if can_create_message %}
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'messageboard:message_create' %}">{% trans "Send Message" %}</a>
+  </li>
+  {% endif %}
 </ul>
+{% endif %}
 
 <ul class="menu mt-2">
   <li class="divider" data-content="{% trans 'People' %}"></li>
