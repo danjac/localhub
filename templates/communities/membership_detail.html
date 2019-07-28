@@ -12,7 +12,8 @@
 {% has_perm "communities.delete_membership" user object as can_delete %}
 {% has_perm "messageboard.create_message" user community as can_create_message %}
 
-{% if can_change or can_delete %}
+{% if object.member != user %}
+{% if can_change or can_delete or can_create_message %}
 <div class="btn-group float-right">
     {% if can_create_message %}
     <a href="{% url 'messageboard:message_create_pm' object.member.username %}"
@@ -35,6 +36,7 @@
        >{% trans "Delete" %}</a>
     {% endif %}
 </div>
+{% endif %}
 {% endif %}
 
 <ul class="breadcrumb">
