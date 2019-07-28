@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import pytest
 
 from django.conf import settings
@@ -5,8 +8,8 @@ from django.conf import settings
 
 from localhub.communities.models import Membership, Community
 from localhub.comments.models import Comment
+from localhub.comments.tests.factories import CommentFactory
 from localhub.comments.rules import is_owner, is_comment_community_moderator
-from localhub.posts.tests.factories import PostFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -36,15 +39,12 @@ class TestIsCommentCommunityModerator:
         assert not is_comment_community_moderator.test(user, comment)
 
     def test_is_moderator_of_different_community(
-        self,
-        comment: Comment,
-        user: settings.AUTH_USER_MODEL,
-        community: Community,
+        self, user: settings.AUTH_USER_MODEL, community: Community
     ):
         Membership.objects.create(
             member=user, community=community, role="moderator"
         )
-        assert not is_comment_community_moderator.test(user, comment)
+        assert not is_comment_community_moderator.test(user, CommentFactory())
 
 
 class TestPermissions:

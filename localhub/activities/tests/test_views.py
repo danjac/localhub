@@ -9,6 +9,7 @@ from django.urls import reverse
 from taggit.models import Tag
 
 from localhub.communities.models import Community, Membership
+from localhub.communities.tests.factories import MembershipFactory
 from localhub.events.tests.factories import EventFactory
 from localhub.photos.tests.factories import PhotoFactory
 from localhub.posts.tests.factories import PostFactory
@@ -20,8 +21,9 @@ pytestmark = pytest.mark.django_db
 
 class TestActivityStreamView:
     def test_get_if_anonymous(self, client: Client, community: Community):
-        PostFactory(community=community)
-        EventFactory(community=community)
+        member = MembershipFactory(community=community)
+        PostFactory(community=community, owner=member.member)
+        EventFactory(community=community, owner=member.member)
 
         response = client.get(reverse("activities:stream"))
         assert response.status_code == 200
@@ -30,9 +32,13 @@ class TestActivityStreamView:
     def test_get_if_authenticated_following(
         self, client: Client, member: Membership
     ):
-        EventFactory(community=member.community)
+        # not following
+        EventFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
 
-        post = PostFactory(community=member.community)
+        post = PostFactory(community=member.community, owner=member.member)
         PostFactory(community=member.community, owner=member.member)
 
         Subscription.objects.create(
@@ -47,8 +53,8 @@ class TestActivityStreamView:
     def test_get_if_authenticated_show_all(
         self, client: Client, member: Membership
     ):
-        EventFactory(community=member.community)
-        post = PostFactory(community=member.community)
+        EventFactory(community=member.community, owner=member.member)
+        post = PostFactory(community=member.community, owner=member.member)
         PostFactory(community=member.community, owner=member.member)
 
         Subscription.objects.create(
@@ -63,8 +69,13 @@ class TestActivityStreamView:
 
 class TestActivitySearchView:
     def test_get(self, client: Client, community: Community):
-        post = PostFactory(community=community, title="test")
-        event = EventFactory(community=community, title="test")
+        member = MembershipFactory(community=community)
+        post = PostFactory(
+            community=community, title="test", owner=member.member
+        )
+        event = EventFactory(
+            community=community, title="test", owner=member.member
+        )
 
         for item in (post, event):
             item.make_search_updater()()
@@ -74,7 +85,10 @@ class TestActivitySearchView:
         assert len(response.context["object_list"]) == 2
 
     def test_get_hashtag(self, client: Client, community: Community):
-        post = PostFactory(community=community, description="#testme")
+        member = MembershipFactory(community=community)
+        post = PostFactory(
+            community=community, description="#testme", owner=member.member
+        )
         post.make_search_updater()()
         response = client.get(reverse("activities:search"), {"q": "#testme"})
         assert response.status_code == 200
@@ -92,9 +106,16 @@ class TestActivitySearchView:
 class TestTagAutocompleteListView:
     def test_get(self, client: Client, community: Community):
 
-        PostFactory(community=community).tags.add("movies")
-        EventFactory(community=community).tags.add("movies")
-        PhotoFactory(community=community).tags.add("movies")
+        member = MembershipFactory(community=community)
+        PostFactory(community=community, owner=member.member).tags.add(
+            "movies"
+        )
+        EventFactory(community=community, owner=member.member).tags.add(
+            "movies"
+        )
+        PhotoFactory(community=community, owner=member.member).tags.add(
+            "movies"
+        )
 
         response = client.get(
             reverse("activities:tag_autocomplete_list"), {"q": "movie"}
@@ -105,7 +126,7 @@ class TestTagAutocompleteListView:
 
 class TestTagFollowView:
     def test_post(self, client: Client, member: Membership):
-        post = PostFactory(community=member.community)
+        post = PostFactory(community=member.community, owner=member.member)
         post.tags.set("movies")
         tag = Tag.objects.get()
         response = client.post(
@@ -122,7 +143,7 @@ class TestTagFollowView:
 
 class TestTagUnfollowView:
     def test_post(self, client: Client, member: Membership):
-        post = PostFactory(community=member.community)
+        post = PostFactory(community=member.community, owner=member.member)
         post.tags.set("movies")
         tag = Tag.objects.get()
         Subscription.objects.create(

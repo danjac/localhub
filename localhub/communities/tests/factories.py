@@ -1,6 +1,10 @@
-from factory import DjangoModelFactory, Faker, Sequence
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
 
-from localhub.communities.models import Community
+from factory import DjangoModelFactory, Faker, Sequence, SubFactory
+
+from localhub.communities.models import Community, Membership
+from localhub.users.tests.factories import UserFactory
 
 
 class CommunityFactory(DjangoModelFactory):
@@ -10,3 +14,11 @@ class CommunityFactory(DjangoModelFactory):
 
     class Meta:
         model = Community
+
+
+class MembershipFactory(DjangoModelFactory):
+    member = SubFactory(UserFactory)
+    community = SubFactory(UserFactory)
+
+    class Meta:
+        model = Membership

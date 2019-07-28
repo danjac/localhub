@@ -216,3 +216,9 @@ class Membership(TimeStampedModel):
 
     def __str__(self) -> str:
         return self.get_role_display()
+
+    def is_admin(self) -> bool:
+        return self.role == self.ROLES.admin
+
+    def is_moderator(self) -> bool:
+        return self.role == self.ROLES.moderator

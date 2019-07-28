@@ -182,15 +182,34 @@ class MembershipListView(
     permission_required = "communities.manage_community"
 
     def get_queryset(self) -> QuerySet:
-        return (
+
+        qs = (
             super().get_queryset().order_by("member__name", "member__username")
         )
+
+        if "q" in self.request.GET:
+            self.search_term = self.request.GET["q"]
+            qs = qs.filter(member__username__icontains=self.search_term)
+        return qs
 
     def get_permission_object(self) -> Community:
         return self.request.community
 
 
 membership_list_view = MembershipListView.as_view()
+
+
+class MembershipDetailView(
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    SingleMembershipMixin,
+    DetailView,
+):
+
+    permission_required = "communities.view_membership"
+
+
+membership_detail_view = MembershipDetailView.as_view()
 
 
 class MembershipUpdateView(
@@ -221,6 +240,16 @@ class MembershipDeleteView(
         if self.object.member == self.request.user:
             return reverse("communities:community_list")
         return reverse("communities:membership_list")
+
+    def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        self.object.delete()
+        messages.success(
+            self.request,
+            _("Membership for user %s has been deleted")
+            % self.object.member.username,
+        )
+        return HttpResponseRedirect(self.get_success_url())
 
 
 membership_delete_view = MembershipDeleteView.as_view()

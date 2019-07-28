@@ -64,6 +64,12 @@ class ActivityQuerySet(
                 qs = qs.with_is_flagged()
         return qs
 
+    def for_community(self, community: Community) -> models.QuerySet:
+        """
+        Must match community, and owner must also be member.
+        """
+        return self.filter(community=community, owner__communities=community)
+
     def following(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
         """
         Includes only instances where the activity owner is subscribed by

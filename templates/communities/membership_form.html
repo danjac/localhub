@@ -10,8 +10,9 @@
 {% user_display membership.member as display_name %}
 
 <ul class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'communities:membership_list' %}">Memberships</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'communities:membership_update' membership.id %}">{{ display_name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'communities:membership_detail' membership.id %}">{{ display_name }}</a></li>
+    <li class="breadcrumb-item"><a href="#">Edit</a></li>
 </ul>
 
 <h3>{% blocktrans with url=membership.member.get_absolute_url %}Membership Settings for <a href="{{ url }}">{{ display_name }}</a>{% endblocktrans %}</h3>

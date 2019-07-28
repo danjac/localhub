@@ -48,6 +48,12 @@ class CommentAnnotationsQuerySetMixin(BaseQuerySetMixin):
 class CommentQuerySet(
     FlagAnnotationsQuerySetMixin, LikeAnnotationsQuerySetMixin, models.QuerySet
 ):
+    def for_community(self, community: Community) -> models.QuerySet:
+        """
+        Both community and membership should match.
+        """
+        return self.filter(community=community, owner__communities=community)
+
     def with_common_annotations(
         self, community: Community, user: settings.AUTH_USER_MODEL
     ) -> models.QuerySet:
@@ -85,8 +91,10 @@ class Comment(TimeStampedModel):
         related_name="+",
     )
 
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
+    content_type = models.ForeignKey(
+        ContentType, on_delete=models.SET_NULL, null=True, blank=True
+    )
+    object_id = models.PositiveIntegerField(null=True, blank=True)
     content_object = GenericForeignKey("content_type", "object_id")
 
     content = MarkdownField()

@@ -6,7 +6,8 @@ import pytest
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 
-from localhub.communities.models import Membership
+from localhub.communities.models import Community, Membership
+from localhub.communities.tests.factories import MembershipFactory
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.posts.models import Post
@@ -19,6 +20,20 @@ pytestmark = pytest.mark.django_db
 
 
 class TestActivityManager:
+    def test_for_community(self, community: Community):
+
+        post = PostFactory(
+            community=community,
+            owner=MembershipFactory(community=community).member,
+        )
+        PostFactory(owner=MembershipFactory(community=community).member)
+        PostFactory(community=community)
+        PostFactory()
+
+        qs = Post.objects.for_community(community)
+        assert qs.count() == 1
+        assert qs.first() == post
+
     def test_following(self, user: settings.AUTH_USER_MODEL):
         not_followed = PostFactory()
         my_post = PostFactory(owner=user)

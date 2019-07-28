@@ -49,7 +49,7 @@ class ActivityQuerySetMixin(CommunityRequiredMixin, BaseQuerySetViewMixin):
         return (
             super()
             .get_queryset()
-            .filter(community=self.request.community)
+            .for_community(self.request.community)
             .select_related("owner", "community")
         )
 
@@ -205,6 +205,7 @@ class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
         return (
             self.object.get_comments()
             .with_common_annotations(self.request.community, self.request.user)
+            .filter(owner__communities=self.request.community)
             .select_related("owner", "community")
             .order_by("created")
         )

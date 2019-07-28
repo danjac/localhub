@@ -100,9 +100,7 @@ class TestUserFollowView:
     def test_post(self, client: Client, member: Membership):
         user = UserFactory()
         Membership.objects.create(member=user, community=member.community)
-        response = client.post(
-            reverse("users:follow", args=[user.username])
-        )
+        response = client.post(reverse("users:follow", args=[user.username]))
         assert response.url == user.get_absolute_url()
         sub = Subscription.objects.get()
         assert sub.content_object == user
@@ -132,23 +130,9 @@ class TestUserUnfollowView:
             subscriber=member.member,
             community=member.community,
         )
-        response = client.post(
-            reverse("users:unfollow", args=[user.username])
-        )
+        response = client.post(reverse("users:unfollow", args=[user.username]))
         assert response.url == user.get_absolute_url()
         assert not Subscription.objects.exists()
-
-
-class TestUserListView:
-    def test_get(
-        self,
-        client: Client,
-        member: Membership,
-        user: settings.AUTH_USER_MODEL,
-    ):
-        Membership.objects.create(member=user, community=member.community)
-        response = client.get(reverse("users:list"))
-        assert len(dict(response.context or {})["object_list"]) == 2
 
 
 class TestUserAutocompleteListView:

@@ -8,6 +8,7 @@ from django.contrib.auth.models import AnonymousUser
 from localhub.comments.models import Comment
 from localhub.comments.tests.factories import CommentFactory
 from localhub.communities.models import Community, Membership
+from localhub.communities.tests.factories import MembershipFactory
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.posts.tests.factories import PostFactory
@@ -17,6 +18,16 @@ pytestmark = pytest.mark.django_db
 
 
 class TestCommentManager:
+    def test_For_community(self, community: Community):
+        comment = CommentFactory(
+            community=community,
+            owner=MembershipFactory(community=community).member,
+        )
+        CommentFactory(owner=MembershipFactory(community=community).member)
+        CommentFactory(community=community)
+        CommentFactory()
+        assert Comment.objects.for_community(community).get() == comment
+
     def test_with_num_likes(
         self, comment: Comment, user: settings.AUTH_USER_MODEL
     ):

@@ -16,11 +16,6 @@
 
 <div class="my-2 toast text-center">
   {% block counter %}
-  {% blocktrans count counter=paginator.count %}
-  This community has one member.
-  {% plural %}
-  This community has {{ counter }} members.
-  {% endblocktrans %}
   {% endblock counter %}
 </div>
 

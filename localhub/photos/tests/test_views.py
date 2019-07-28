@@ -9,6 +9,7 @@ from django.test.client import Client
 from django.urls import reverse
 
 from localhub.communities.models import Membership
+from localhub.communities.tests.factories import MembershipFactory
 from localhub.likes.models import Like
 from localhub.photos.tests.factories import PhotoFactory
 from localhub.photos.models import Photo
@@ -104,7 +105,10 @@ class TestPhotoDetailView:
 
 class TestPhotoLikeView:
     def test_post(self, client: Client, member: Membership):
-        photo = PhotoFactory(community=member.community)
+        photo = PhotoFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
         response = client.post(
             reverse("photos:like", args=[photo.id]),
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
@@ -117,7 +121,10 @@ class TestPhotoLikeView:
 
 class TestPhotoDislikeView:
     def test_post(self, client: Client, member: Membership):
-        photo = PhotoFactory(community=member.community)
+        photo = PhotoFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
         Like.objects.create(
             user=member.member,
             content_object=photo,

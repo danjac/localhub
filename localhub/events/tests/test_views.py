@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.utils.encoding import force_str
 
 from localhub.communities.models import Community, Membership
+from localhub.communities.tests.factories import MembershipFactory
 from localhub.events.models import Event
 from localhub.events.tests.factories import EventFactory
 from localhub.likes.models import Like
@@ -47,7 +48,11 @@ class TestEventCreateView:
 
 class TestEventListView:
     def test_get(self, client: Client, community: Community):
-        EventFactory.create_batch(3, community=community)
+        EventFactory.create_batch(
+            3,
+            community=community,
+            owner=MembershipFactory(community=community).member,
+        )
         response = client.get(reverse("events:list"))
         assert response.status_code == 200
         assert len(dict(response.context or {})["object_list"]) == 3
@@ -119,7 +124,10 @@ class TestEventDetailView:
 
 class TestEventLikeView:
     def test_post(self, client: Client, member: Membership):
-        event = EventFactory(community=member.community)
+        event = EventFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
         response = client.post(
             reverse("events:like", args=[event.id]),
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
@@ -131,7 +139,10 @@ class TestEventLikeView:
 
 class TestEventDislikeView:
     def test_post(self, client: Client, member: Membership):
-        event = EventFactory(community=member.community)
+        event = EventFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
         Like.objects.create(
             user=member.member,
             content_object=event,

@@ -10,7 +10,6 @@ from localhub.users.views import (
     user_comment_list_view,
     user_detail_view,
     user_follow_view,
-    user_list_view,
     user_stream_view,
     user_unfollow_view,
 )
@@ -18,7 +17,6 @@ from localhub.users.views import (
 app_name = "users"
 
 urlpatterns = [
-    path("", view=user_list_view, name="list"),
     path(
         "autocomplete/",
         view=user_autocomplete_list_view,

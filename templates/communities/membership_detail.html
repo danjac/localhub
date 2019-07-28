@@ -1,0 +1,66 @@
+{% extends "communities/base.html" %}
+
+{% load i18n %}
+{% load account %}
+{% load rules %}
+{% load users_tags %}
+
+{% block content %}
+{% user_display object.member as display_name %}
+
+{% has_perm "communities.change_membership" user object as can_change %}
+{% has_perm "communities.delete_membership" user object as can_delete %}
+{% has_perm "messageboard.create_message" user community as can_create_message %}
+
+{% if can_change or can_delete %}
+<div class="btn-group float-right">
+    {% if can_create_message %}
+    <a href="{% url 'messageboard:message_create_pm' object.member.username %}"
+       class="btn btn-sm">
+        {% trans "Send Message" %}
+    </a>
+    {% endif %}
+    {% if can_change %}
+    <a href="{% url 'communities:membership_update' object.id %}" class="btn btn-sm">
+        {% trans "Edit" %}
+    </a>
+    {% endif %}
+    {% if can_delete %}
+    <a href="{% url 'communities:membership_delete' object.id %}"
+       class="btn btn-sm"
+       data-controller="ajax confirm"
+       data-action="confirm#check ajax#delete"
+       data-confirm-header="{% trans 'Delete' %}"
+       data-confirm-body="{% trans 'Are you sure you want to delete this membership?' %}"
+       >{% trans "Delete" %}</a>
+    {% endif %}
+</div>
+{% endif %}
+
+<ul class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a></li>
+    <li class="breadcrumb-item"><a href="#">{{ display_name }}</a></li>
+</ul>
+
+
+<h3>{% avatar object.member "avatar-lg" %}{{ display_name }}</h3>
+
+<dl>
+    <dt>{% trans "Status" %}</dt>
+    <dd>{{ object.active|yesno:"Active,Inactive" }}</dd>
+
+    <dt>{% trans "Role" %}</dt>
+    <dd>{{ object.get_role_display }}</dd>
+
+    <dt>{% trans "Joined" %}</dt>
+    <dd>{{ object.created|date:"SHORT_DATE_FORMAT" }}</dd>
+
+</dl>
+
+<p>
+    <a href="{% url 'users:activities' object.member.username %}">{% trans "Posts" %}</a>
+    | <a href="{% url 'users:comments' object.member.username %}">{% trans "Comments" %}</a>
+    | <a href="{% url 'users:detail' object.member.username %}">{% trans "About" %}</a>
+</p>
+
+{% endblock %}

@@ -9,11 +9,11 @@ from django.urls import reverse
 from localhub.comments.models import Comment
 from localhub.comments.tests.factories import CommentFactory
 from localhub.communities.models import Membership
+from localhub.communities.tests.factories import MembershipFactory
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification
 from localhub.posts.tests.factories import PostFactory
-from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -21,7 +21,11 @@ pytestmark = pytest.mark.django_db
 class TestCommentDetailView:
     def test_get(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
-        comment = CommentFactory(owner=member.member, content_object=post)
+        comment = CommentFactory(
+            owner=member.member,
+            community=member.community,
+            content_object=post,
+        )
         response = client.get(
             reverse("comments:detail", args=[comment.id]),
             HTTP_HOST=comment.community.domain,
@@ -69,9 +73,10 @@ class TestCommentDeleteView:
         assert Comment.objects.count() == 0
 
     def test_delete_by_moderator(self, client: Client, moderator: Membership):
-        post = PostFactory(community=moderator.community)
+        member = MembershipFactory(community=moderator.community)
+        post = PostFactory(community=moderator.community, owner=member.member)
         comment = CommentFactory(
-            owner=UserFactory(),
+            owner=member.member,
             content_object=post,
             community=moderator.community,
         )
@@ -85,7 +90,9 @@ class TestCommentLikeView:
     def test_post(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
-            content_object=post, community=member.community
+            content_object=post,
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
         )
         response = client.post(
             reverse("comments:like", args=[comment.id]),
@@ -100,7 +107,9 @@ class TestCommentDislikeView:
     def test_post(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
-            content_object=post, community=member.community
+            content_object=post,
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
         )
         Like.objects.create(
             user=member.member,
@@ -120,7 +129,9 @@ class TestFlagView:
     def test_get(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
-            content_object=post, community=member.community
+            content_object=post,
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
         )
         response = client.get(reverse("comments:flag", args=[comment.id]))
         assert response.status_code == 200
@@ -128,12 +139,12 @@ class TestFlagView:
     def test_post(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
-            content_object=post, community=member.community
+            content_object=post,
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
         )
-        moderator = Membership.objects.create(
-            member=UserFactory(),
-            community=post.community,
-            role=Membership.ROLES.moderator,
+        moderator = MembershipFactory(
+            community=post.community, role=Membership.ROLES.moderator
         )
         response = client.post(
             reverse("comments:flag", args=[comment.id]),

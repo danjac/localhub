@@ -46,7 +46,7 @@ class CommentQuerySetMixin(CommunityRequiredMixin, BaseQuerySetViewMixin):
     def get_queryset(self) -> QuerySet:
         return (
             Comment.objects.get_queryset()
-            .filter(community=self.request.community)
+            .for_community(self.request.community)
             .select_related("owner", "community")
         )
 
@@ -80,9 +80,11 @@ class CommentDetailView(
     CommentQuerySetMixin, CommentParentMixin, BreadcrumbsMixin, DetailView
 ):
     def get_breadcrumbs(self) -> BreadcrumbList:
-        return self.parent.get_breadcrumbs() + [
-            (self.request.path, _("Comment"))
-        ]
+        if self.parent:
+            return self.parent.get_breadcrumbs() + [
+                (self.request.path, _("Comment"))
+            ]
+        return []
 
     def get_flags(self) -> QuerySet:
         return (
@@ -122,9 +124,11 @@ class CommentUpdateView(
         return self.parent.get_absolute_url()
 
     def get_breadcrumbs(self) -> BreadcrumbList:
-        return self.parent.get_breadcrumbs() + [
-            (self.request.path, _("Edit Comment"))
-        ]
+        if self.parent:
+            return self.parent.get_breadcrumbs() + [
+                (self.request.path, _("Edit Comment"))
+            ]
+        return []
 
     def form_valid(self, form: ModelForm) -> HttpResponse:
         self.object = form.save(commit=False)

@@ -6,6 +6,7 @@ from localhub.users.tests.factories import UserFactory
 
 
 class PostFactory(DjangoModelFactory):
+    title = Faker("text")
     description = Faker("text")
     community = SubFactory(CommunityFactory)
     owner = SubFactory(UserFactory)

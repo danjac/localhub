@@ -9,6 +9,7 @@ from localhub.communities.views import (
     community_list_view,
     community_update_view,
     membership_delete_view,
+    membership_detail_view,
     membership_list_view,
     membership_update_view,
 )
@@ -21,6 +22,11 @@ urlpatterns = [
     path("communities/", view=community_list_view, name="community_list"),
     path("memberships/", view=membership_list_view, name="membership_list"),
     path("leave/", view=community_leave_view, name="leave"),
+    path(
+        "memberships/<int:pk>/",
+        view=membership_detail_view,
+        name="membership_detail",
+    ),
     path(
         "memberships/<int:pk>/~update/",
         view=membership_update_view,

@@ -9,9 +9,11 @@ from django.urls import reverse
 from django.views.generic import View
 
 from localhub.communities.models import Community, Membership, RequestCommunity
-from localhub.communities.tests.factories import CommunityFactory
+from localhub.communities.tests.factories import (
+    CommunityFactory,
+    MembershipFactory,
+)
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -112,7 +114,7 @@ class TestCommunityListView:
         member: Membership,
         user: settings.AUTH_USER_MODEL,
     ):
-        Membership.objects.create(member=user, community=member.community)
+        MembershipFactory(member=user, community=member.community)
         assert (
             client.get(reverse("communities:community_list")).status_code
             == 200
@@ -124,11 +126,34 @@ class TestMembershipListView:
         self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
     ):
         for _ in range(3):
-            Membership.objects.create(
-                member=UserFactory(), community=admin.community
-            )
+            MembershipFactory(community=admin.community)
+        response = client.get(reverse("communities:membership_list"))
+        assert len(response.context["object_list"]) == 4
+
+    def test_get_if_search(
+        self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
+    ):
+        for _ in range(3):
+            MembershipFactory(community=admin.community)
+
+        member = MembershipFactory(community=admin.community)
+
+        response = client.get(
+            reverse("communities:membership_list"),
+            {"q": member.member.username},
+        )
+        assert len(response.context["object_list"]) == 1
+
+
+class TestMembershipDetailView:
+    def test_get(
+        self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
+    ):
+        membership = MembershipFactory(member=user, community=admin.community)
         assert (
-            client.get(reverse("communities:membership_list")).status_code
+            client.get(
+                reverse("communities:membership_detail", args=[membership.id])
+            ).status_code
             == 200
         )
 
@@ -137,9 +162,7 @@ class TestMembershipUpdateView:
     def test_get(
         self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
     ):
-        membership = Membership.objects.create(
-            member=user, community=admin.community
-        )
+        membership = MembershipFactory(member=user, community=admin.community)
         assert (
             client.get(
                 reverse("communities:membership_update", args=[membership.id])
@@ -150,9 +173,7 @@ class TestMembershipUpdateView:
     def test_post(
         self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
     ):
-        membership = Membership.objects.create(
-            member=user, community=admin.community
-        )
+        membership = MembershipFactory(member=user, community=admin.community)
         response = client.post(
             reverse("communities:membership_update", args=[membership.id]),
             {"active": True, "role": "moderator"},
@@ -166,9 +187,7 @@ class TestMembershipDeleteView:
     def test_get(
         self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
     ):
-        membership = Membership.objects.create(
-            member=user, community=admin.community
-        )
+        membership = MembershipFactory(member=user, community=admin.community)
         assert (
             client.get(
                 reverse("communities:membership_delete", args=[membership.id])
@@ -179,9 +198,7 @@ class TestMembershipDeleteView:
     def test_delete(
         self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
     ):
-        membership = Membership.objects.create(
-            member=UserFactory(), community=admin.community
-        )
+        membership = MembershipFactory(community=admin.community)
         response = client.post(
             reverse("communities:membership_delete", args=[membership.id])
         )

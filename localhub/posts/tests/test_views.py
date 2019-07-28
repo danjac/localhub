@@ -8,14 +8,14 @@ from django.test.client import Client
 from django.urls import reverse
 
 from localhub.comments.models import Comment
-from localhub.communities.models import Community, Membership
+from localhub.communities.models import Membership
+from localhub.communities.tests.factories import MembershipFactory
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification
 from localhub.posts.tests.factories import PostFactory
 from localhub.posts.models import Post
 from localhub.subscriptions.models import Subscription
-from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -26,8 +26,10 @@ def post_for_member(member: Membership) -> Post:
 
 
 class TestPostListView:
-    def test_get_if_anonymous(self, client: Client, community: Community):
-        PostFactory.create_batch(3, community=community)
+    def test_get_if_anonymous(self, client: Client, member: Membership):
+        PostFactory.create_batch(
+            3, community=member.community, owner=member.member
+        )
         response = client.get(reverse("posts:list"))
         assert len(response.context["object_list"]) == 3
 
@@ -36,7 +38,10 @@ class TestPostListView:
     ):
 
         PostFactory(owner=member.member, community=member.community)
-        post = PostFactory(community=member.community)
+        post = PostFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
 
         Subscription.objects.create(
             subscriber=member.member,
@@ -52,7 +57,10 @@ class TestPostListView:
     ):
 
         PostFactory(owner=member.member, community=member.community)
-        PostFactory(community=member.community)
+        PostFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
         response = client.get(reverse("posts:list"))
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 2
@@ -90,7 +98,10 @@ class TestPostUpdateView:
         assert post_for_member.title == "UPDATED"
 
     def test_post_moderator(self, client: Client, moderator: Membership):
-        post = PostFactory(community=moderator.community)
+        post = PostFactory(
+            community=moderator.community,
+            owner=MembershipFactory(community=moderator.community).member,
+        )
         response = client.post(
             reverse("posts:update", args=[post.id]),
             {"title": "UPDATED", "description": post.description},
@@ -103,12 +114,18 @@ class TestPostUpdateView:
 
 class TestPostCommentCreateView:
     def test_get(self, client: Client, member: Membership):
-        post = PostFactory(community=member.community)
+        post = PostFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
         response = client.get(reverse("posts:comment", args=[post.id]))
         assert response.status_code == 200
 
     def test_post(self, client: Client, member: Membership):
-        post = PostFactory(community=member.community)
+        post = PostFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
         response = client.post(
             reverse("posts:comment", args=[post.id]), {"content": "test"}
         )
@@ -139,7 +156,10 @@ class TestPostDeleteView:
         assert Post.objects.count() == 0
 
     def test_delete_by_moderator(self, client: Client, moderator: Membership):
-        post = PostFactory(community=moderator.community)
+        post = PostFactory(
+            community=moderator.community,
+            owner=MembershipFactory(community=moderator.community).member,
+        )
         response = client.delete(reverse("posts:delete", args=[post.id]))
         assert response.url == reverse("activities:stream")
         assert Post.objects.count() == 0
@@ -156,7 +176,7 @@ class TestPostDetailView:
     def test_get_if_can_post_comment(
         self, client: Client, post: Post, login_user: settings.AUTH_USER_MODEL
     ):
-        Membership.objects.create(member=login_user, community=post.community)
+        MembershipFactory(member=login_user, community=post.community)
         response = client.get(
             post.get_absolute_url(), HTTP_HOST=post.community.domain
         )
@@ -166,7 +186,10 @@ class TestPostDetailView:
 
 class TestPostLikeView:
     def test_post(self, client: Client, member: Membership):
-        post = PostFactory(community=member.community)
+        post = PostFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
         response = client.post(
             reverse("posts:like", args=[post.id]),
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
@@ -178,7 +201,10 @@ class TestPostLikeView:
 
 class TestPostDislikeView:
     def test_post(self, client: Client, member: Membership):
-        post = PostFactory(community=member.community)
+        post = PostFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
         Like.objects.create(
             user=member.member,
             content_object=post,
@@ -195,14 +221,19 @@ class TestPostDislikeView:
 
 class TestFlagView:
     def test_get(self, client: Client, member: Membership):
-        post = PostFactory(community=member.community)
+        post = PostFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
         response = client.get(reverse("posts:flag", args=[post.id]))
         assert response.status_code == 200
 
     def test_post(self, client: Client, member: Membership):
-        post = PostFactory(community=member.community)
-        moderator = Membership.objects.create(
-            member=UserFactory(),
+        post = PostFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
+        moderator = MembershipFactory(
             community=post.community,
             role=Membership.ROLES.moderator,
         )

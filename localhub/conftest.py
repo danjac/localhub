@@ -10,7 +10,10 @@ from django.test import Client, RequestFactory
 from localhub.comments.models import Comment
 from localhub.comments.tests.factories import CommentFactory
 from localhub.communities.models import Community, Membership
-from localhub.communities.tests.factories import CommunityFactory
+from localhub.communities.tests.factories import (
+    CommunityFactory,
+    MembershipFactory,
+)
 from localhub.events.models import Event
 from localhub.events.tests.factories import EventFactory
 from localhub.photos.models import Photo
@@ -58,7 +61,7 @@ def login_user(client: Client) -> settings.AUTH_USER_MODEL:
 def member(
     client: Client, login_user: settings.AUTH_USER_MODEL, community: Community
 ) -> Membership:
-    return Membership.objects.create(
+    return MembershipFactory(
         member=login_user, community=community, role=Membership.ROLES.member
     )
 
@@ -67,7 +70,7 @@ def member(
 def moderator(
     client: Client, login_user: settings.AUTH_USER_MODEL, community: Community
 ) -> Membership:
-    return Membership.objects.create(
+    return MembershipFactory(
         member=login_user, community=community, role=Membership.ROLES.moderator
     )
 
@@ -76,26 +79,39 @@ def moderator(
 def admin(
     client: Client, login_user: settings.AUTH_USER_MODEL, community: Community
 ) -> Membership:
-    return Membership.objects.create(
+    return MembershipFactory(
         member=login_user, community=community, role=Membership.ROLES.admin
     )
 
 
 @pytest.fixture
-def post() -> Post:
-    return PostFactory()
+def post(community: Community) -> Post:
+    return PostFactory(
+        community=community,
+        owner=MembershipFactory(community=community).member,
+    )
 
 
 @pytest.fixture
-def photo() -> Photo:
-    return PhotoFactory()
+def photo(community: Community) -> Photo:
+    return PhotoFactory(
+        community=community,
+        owner=MembershipFactory(community=community).member,
+    )
 
 
 @pytest.fixture
-def comment() -> Comment:
-    return CommentFactory()
+def event(community: Community) -> Event:
+    return EventFactory(
+        community=community,
+        owner=MembershipFactory(community=community).member,
+    )
 
 
 @pytest.fixture
-def event() -> Event:
-    return EventFactory()
+def comment(post: Post) -> Comment:
+    return CommentFactory(
+        content_object=post,
+        community=post.community,
+        owner=MembershipFactory(community=post.community).member,
+    )

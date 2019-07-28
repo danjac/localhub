@@ -9,48 +9,76 @@
 
 {% block content %}
 <h3>{% trans "Members" %}</h3>
+{% if not view.search_term %}
+<div class="my-2 toast text-center">
+  {% blocktrans count counter=paginator.count %}
+  This community has one member.
+  {% plural %}
+  This community has {{ counter }} members.
+  {% endblocktrans %}
+</div>
+{% endif %}
+<form method="GET"
+      action="{{ request.path }}"
+      class="form-horizontal"
+      data-controller="form"
+      data-action="form#submit"
+      >
+      <div class="input-group">
+        <input class="form-input"
+               name="q"
+               type="search"
+               placeholder="{% trans "Search" %}"
+               value="{{ view.search_term }}">
+        <button class="btn input-group-btn">
+          {% trans "Search" %}
+        </button>
+      </div>
+</form>
+
 <table class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th>{% trans "Member" %}</th>
-            <th>{% trans "Status" %}</th>
-            <th>{% trans "Role" %}</th>
-            <th>{% trans "Actions" %}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for member in object_list %}
-        <tr>
-            <td>
-              {% include "users/includes/chip.html" with profile=member.member %}
-            </td>
-            {% if member.active %}
-            <td>{% trans "Active" %}</td>
-            {% else %}
-            <td class="text-gray">{% trans "Inactive" %}</td>
-            {% endif %}
-            <td {% if not member.active %} class="text-gray"{% endif %}>{{ member.get_role_display }}</td>
-            <td>
-                {% has_perm "communities.change_membership" user member as can_change %}
-                {% has_perm "communities.delete_membership" user member as can_delete %}
-                {% if can_change %}
-                <a href="{% url 'communities:membership_update' member.id %}" class="btn btn-sm">
-                    {% trans "Edit" %}
-                </a>
-                {% endif %}
-                {% if can_delete %}
-                <a href="{% url 'communities:membership_delete' member.id %}"
-                   class="btn btn-sm"
-                   data-controller="ajax confirm"
-                   data-action="confirm#check ajax#delete"
-                   data-confirm-header="{% trans 'Delete' %}"
-                   data-confirm-body="{% trans 'Are you sure you want to delete this membership?' %}"
-                   >{% trans "Delete" %}</a>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
+  <thead>
+    <tr>
+      <th>{% trans "Member" %}</th>
+      <th>{% trans "Status" %}</th>
+      <th>{% trans "Role" %}</th>
+      <th>{% trans "Actions" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for member in object_list %}
+    <tr>
+      <td>
+        {% url 'communities:membership_detail' member.id as membership_detail_url %}
+        {% include "users/includes/chip.html" with profile=member.member profile_url=membership_detail_url %}
+      </td>
+      {% if member.active %}
+      <td>{% trans "Active" %}</td>
+      {% else %}
+      <td class="text-gray">{% trans "Inactive" %}</td>
+      {% endif %}
+      <td {% if not member.active %} class="text-gray"{% endif %}>{{ member.get_role_display }}</td>
+      <td>
+        {% has_perm "communities.change_membership" user member as can_change %}
+        {% has_perm "communities.delete_membership" user member as can_delete %}
+        {% if can_change %}
+        <a href="{% url 'communities:membership_update' member.id %}" class="btn btn-sm">
+          {% trans "Edit" %}
+        </a>
+        {% endif %}
+        {% if can_delete %}
+        <a href="{% url 'communities:membership_delete' member.id %}"
+           class="btn btn-sm"
+           data-controller="ajax confirm"
+           data-action="confirm#check ajax#delete"
+           data-confirm-header="{% trans 'Delete' %}"
+           data-confirm-body="{% trans 'Are you sure you want to delete this membership?' %}"
+           >{% trans "Delete" %}</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
 
 {% include "includes/pagination.html" %}

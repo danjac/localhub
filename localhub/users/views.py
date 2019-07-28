@@ -29,7 +29,7 @@ from localhub.activities.models import Activity
 from localhub.activities.views.streams import BaseStreamView
 from localhub.comments.models import Comment
 from localhub.comments.views import CommentListView
-from localhub.communities.models import Community
+from localhub.communities.models import Community, Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.types import ContextDict
 from localhub.likes.models import Like
@@ -77,6 +77,12 @@ class UserContextMixin(ContextMixin):
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
         data["is_auth_user"] = self.request.user == self.object
+        try:
+            data["membership"] = Membership.objects.get(
+                member=self.object, community=self.request.community
+            )
+        except Membership.DoesNotExist:
+            pass  # shouldn't happen, but just in case``
         return data
 
 
@@ -158,21 +164,6 @@ class BaseUserListView(UserQuerySetMixin, ListView):
 
     def get_queryset(self) -> QuerySet:
         return super().get_queryset().order_by("name", "username")
-
-
-class UserListView(BaseUserListView):
-
-    def get_queryset(self) -> QuerySet:
-
-        qs = super().get_queryset()
-        if self.request.user.is_authenticated:
-            qs = qs.with_has_subscribed(
-                self.request.user, self.request.community
-            )
-        return qs
-
-
-user_list_view = UserListView.as_view()
 
 
 class FollowingUserListView(LoginRequiredMixin, BaseUserListView):
