@@ -5,3 +5,7 @@
 .btn-outline-warning {
   @include button-outline-variant($warning-color);
 }
+
+.bg-light {
+  background-color: $light-color;
+}
