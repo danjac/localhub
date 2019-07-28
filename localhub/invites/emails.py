@@ -10,17 +10,19 @@ from localhub.invites.models import Invite
 
 
 def send_invitation_email(invite: Invite):
+    context = {
+        "invite": invite,
+        "accept_url": invite.community.resolve_url(
+            reverse("invites:accept", args=[invite.id])
+        ),
+    }
+
     send_mail(
         _("Invitation to join"),
-        render_to_string(
-            "invites/emails/invitation.txt",
-            {
-                "invite": invite,
-                "accept_url": invite.community.resolve_url(
-                    reverse("invites:accept", args=[invite.id])
-                ),
-            },
-        ),
+        render_to_string("invites/emails/invitation.txt", context),
         invite.community.resolve_email("invites"),
         [invite.email],
+        html_message=render_to_string(
+            "invites/emails/invitation.html", context
+        ),
     )
