@@ -1,0 +1,18 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "emails/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<p>{% trans "Hi," %}</p>
+
+<p>
+  {% blocktrans with community=join_request.community.name %}
+  Sorry, you have not been accepted to join {{ community }}.
+  {% endblocktrans %}
+</p>
+{% endblock %}

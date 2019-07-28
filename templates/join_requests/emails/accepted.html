@@ -6,14 +6,18 @@
 {% load account %}
 
 {% block content %}
-{% autoescape off %}
-{% user_display user as user_name %}
-{% blocktrans %}
-Hi, {{ user_name }}
-{% endblocktrans %}
+
+<p>
+    {% user_display user as user_name %}
+    {% blocktrans %}
+    Hi, {{ user_name }}
+    {% endblocktrans %}
+</p>
+
+<p>
 {% blocktrans with community=join_request.community.name community_url=join_request.community.get_absolute_url %}
-You have been accepted to join {{ community }}! Welcome on board!
-{{ community_url }}
+You have been accepted to join <a href="{{ community_url }}">">{{ community }}</a>! Welcome on board!
 {% endblocktrans %}
-{% endautoescape %}
+</p>
+
 {% endblock content %}

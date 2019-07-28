@@ -1,8 +1,10 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load i18n %}
 
 {% autoescape off %}
+{% blocktrans with community=join_request.community.name %}
 Hi,
-
-Sorry, you have not been accepted to join {{ join_community.name }}.
+Sorry, you have not been accepted to join {{ community }}.
+{% endblocktrans %}
 {% endautoescape %}

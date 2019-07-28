@@ -17,7 +17,7 @@ def send_membership_deleted_email(
     send_mail(
         _("Your membership of community %s has been deleted") % community,
         render_to_string("communities/emails/membership_deleted.txt", context),
-        community.resolve_email("notifications"),
+        community.resolve_email("support"),
         [member.email],
         html_message=render_to_string(
             "communities/emails/membership_deleted.html", context

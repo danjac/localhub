@@ -53,13 +53,13 @@ class TestJoinRequestCreateView:
 
 
 class TestJoinRequestAcceptView:
-    def test_get_if_no_user(
+    def test_post_if_no_user(
         self, client: Client, mailoutbox: List, admin: Membership
     ):
         join_request = JoinRequestFactory(
             community=admin.community, sender=None
         )
-        response = client.get(
+        response = client.post(
             reverse("join_requests:accept", args=[join_request.id])
         )
         assert response.url == reverse("join_requests:list")
@@ -68,11 +68,11 @@ class TestJoinRequestAcceptView:
         mail = mailoutbox[0]
         assert mail.to == [join_request.email]
 
-    def test_get_if_user(
+    def test_post_if_user(
         self, client: Client, mailoutbox: List, admin: Membership
     ):
         join_request = JoinRequestFactory(community=admin.community)
-        response = client.get(
+        response = client.post(
             reverse("join_requests:accept", args=[join_request.id])
         )
         assert response.url == reverse("join_requests:list")
@@ -86,13 +86,13 @@ class TestJoinRequestAcceptView:
 
 
 class TestJoinRequestRejectView:
-    def test_get_if_no_user(
+    def test_post_if_no_user(
         self, client: Client, mailoutbox: List, admin: Membership
     ):
         join_request = JoinRequestFactory(
             community=admin.community, sender=None
         )
-        response = client.get(
+        response = client.post(
             reverse("join_requests:reject", args=[join_request.id])
         )
         assert response.url == reverse("join_requests:list")
@@ -101,11 +101,11 @@ class TestJoinRequestRejectView:
         mail = mailoutbox[0]
         assert mail.to == [join_request.email]
 
-    def test_get_if_user(
+    def test_post_if_user(
         self, client: Client, mailoutbox: List, admin: Membership
     ):
         join_request = JoinRequestFactory(community=admin.community)
-        response = client.get(
+        response = client.post(
             reverse("join_requests:reject", args=[join_request.id])
         )
         assert response.url == reverse("join_requests:list")

@@ -54,12 +54,16 @@ class JoinRequestListView(
         return self.request.community
 
     def get_queryset(self) -> QuerySet:
-        return (
+        qs = (
             super()
             .get_queryset()
             .select_related("community", "sender")
             .order_by("created")
         )
+        self.show_all = "all" in self.request.GET
+        if not self.show_all:
+            qs = qs.filter(status=JoinRequest.STATUS.pending)
+        return qs
 
 
 join_request_list_view = JoinRequestListView.as_view()
@@ -109,8 +113,7 @@ class JoinRequestActionView(PermissionRequiredMixin, SingleJoinRequestView):
 
 
 class JoinRequestAcceptView(JoinRequestActionView):
-    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        # TBD: needs to be ajax POST/confirm page
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         self.object.status = JoinRequest.STATUS.accepted
         self.object.save()
@@ -148,8 +151,7 @@ join_request_accept_view = JoinRequestAcceptView.as_view()
 
 
 class JoinRequestRejectView(JoinRequestActionView):
-    # TBD: needs to be ajax POST/confirm page
-    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
 
         self.object.status = JoinRequest.STATUS.rejected

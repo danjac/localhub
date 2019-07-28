@@ -2,6 +2,9 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
+{% load join_request_tags %}
+
+{% get_pending_join_request_count community as pending_join_requests %}
 
 <ul class="menu">
   <li class="menu-item">
@@ -20,7 +23,11 @@
     <a data-controller="active-link" href="{% url 'invites:list' %}">{% trans "Invite New Members" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
+    <a data-controller="active-link" href="{% url 'join_requests:list' %}">
+      <span {% if pending_join_requests %}class="badge" data-badge="{{ pending_join_requests }}"{% endif %}>
+        {% trans "Join Requests" %}
+      </span>
+    </a>
   </li>
 </ul>
 
