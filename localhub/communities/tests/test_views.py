@@ -1,5 +1,7 @@
 import pytest
 
+from typing import List
+
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import PermissionDenied
@@ -196,7 +198,11 @@ class TestMembershipDeleteView:
         )
 
     def test_delete(
-        self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
+        self,
+        client: Client,
+        admin: Membership,
+        user: settings.AUTH_USER_MODEL,
+        mailoutbox: List,
     ):
         membership = MembershipFactory(community=admin.community)
         response = client.post(
@@ -205,6 +211,7 @@ class TestMembershipDeleteView:
 
         assert response.url == reverse("communities:membership_list")
         assert not Membership.objects.filter(pk=membership.pk).exists()
+        assert mailoutbox[0].to == [membership.member.email]
 
     def test_delete_own_membership(self, client: Client, member: Membership):
         response = client.post(

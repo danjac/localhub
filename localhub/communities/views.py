@@ -30,6 +30,7 @@ from django.views.generic.detail import SingleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
+from localhub.communities.emails import send_membership_deleted_email
 from localhub.communities.forms import MembershipForm
 from localhub.communities.models import Community, Membership
 
@@ -248,6 +249,9 @@ class MembershipDeleteView(
             self.request,
             _("Membership for user %s has been deleted")
             % self.object.member.username,
+        )
+        send_membership_deleted_email(
+            self.object.member, self.object.community
         )
         return HttpResponseRedirect(self.get_success_url())
 
