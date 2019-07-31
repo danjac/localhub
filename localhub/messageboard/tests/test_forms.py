@@ -4,9 +4,8 @@
 import pytest
 
 from localhub.communities.models import Membership
+from localhub.communities.tests.factories import MembershipFactory
 from localhub.messageboard.forms import MessageForm
-from localhub.subscriptions.models import Subscription
-from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -17,22 +16,20 @@ class TestMessageForm:
         assert not form.is_valid()
 
     def test_get_recipients_from_individuals(self, member: Membership):
-
-        user = UserFactory()
-        Membership.objects.create(member=user, community=member.community)
+        other = MembershipFactory(community=member.community)
 
         form = MessageForm(
             {
                 "subject": "testing",
                 "message": "testing",
-                "individuals": f"@{user.username}",
+                "individuals": f"@{other.member.username}",
             }
         )
 
         assert form.is_valid()
 
         recipients = form.get_recipients(member.member, member.community)
-        assert recipients.get() == user
+        assert recipients.get() == other.member
 
     def test_get_recipients_excludes_sender(self, member: Membership):
 
@@ -51,11 +48,8 @@ class TestMessageForm:
 
     def test_get_recipients_from_moderators(self, member: Membership):
 
-        user = UserFactory()
-        Membership.objects.create(
-            member=user,
-            community=member.community,
-            role=Membership.ROLES.moderator,
+        moderator = MembershipFactory(
+            community=member.community, role=Membership.ROLES.moderator
         )
 
         form = MessageForm(
@@ -69,15 +63,12 @@ class TestMessageForm:
         assert form.is_valid()
 
         recipients = form.get_recipients(member.member, member.community)
-        assert recipients.get() == user
+        assert recipients.get() == moderator.member
 
     def test_get_recipients_from_admins(self, member: Membership):
 
-        user = UserFactory()
-        Membership.objects.create(
-            member=user,
-            community=member.community,
-            role=Membership.ROLES.admin,
+        admin = MembershipFactory(
+            community=member.community, role=Membership.ROLES.admin
         )
 
         form = MessageForm(
@@ -87,18 +78,12 @@ class TestMessageForm:
         assert form.is_valid()
 
         recipients = form.get_recipients(member.member, member.community)
-        assert recipients.get() == user
+        assert recipients.get() == admin.member
 
     def test_get_recipients_from_followers(self, member: Membership):
 
-        user = UserFactory()
-        Membership.objects.create(member=user, community=member.community)
-
-        Subscription.objects.create(
-            content_object=member.member,
-            community=member.community,
-            subscriber=user,
-        )
+        follower = MembershipFactory(community=member.community)
+        follower.member.following.add(member.member)
 
         form = MessageForm(
             {
@@ -111,33 +96,27 @@ class TestMessageForm:
         assert form.is_valid()
 
         recipients = form.get_recipients(member.member, member.community)
-        assert recipients.get() == user
+        assert recipients.get() == follower.member
 
     def test_get_recipients_from_multiple_sources(self, member: Membership):
 
-        user = UserFactory()
-        Membership.objects.create(member=user, community=member.community)
+        other = MembershipFactory(community=member.community)
 
-        follower = UserFactory()
-        Membership.objects.create(member=follower, community=member.community)
-        Subscription.objects.create(
-            content_object=member.member,
-            community=member.community,
-            subscriber=follower,
+        follower = MembershipFactory(community=member.community)
+        follower.member.following.add(member.member)
+
+        MembershipFactory(
+            community=member.community, role=Membership.ROLES.moderator
         )
 
-        moderator = UserFactory()
-        Membership.objects.create(
-            member=moderator,
-            community=member.community,
-            role=Membership.ROLES.moderator,
-        )
+        blocker = MembershipFactory(community=member.community).member
+        blocker.blocked.add(member.member)
 
         form = MessageForm(
             {
                 "subject": "testing",
                 "message": "testing",
-                "individuals": f"@{user.username}",
+                "individuals": f"@{other.member.username}",
                 "groups": ["moderators", "followers"],
             }
         )
@@ -146,3 +125,4 @@ class TestMessageForm:
 
         recipients = form.get_recipients(member.member, member.community)
         assert recipients.count() == 3
+        assert blocker not in recipients

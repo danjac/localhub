@@ -9,63 +9,95 @@
 
 {% block content %}
 
-{% has_perm 'subscriptions.create_subscription' user community as can_create_subscription %}
+{% has_perm "users.follow_tag" user as can_follow_tag %}
+{% has_perm "users.block_tag" user as can_block_tag %}
 
 <h3>{% trans "Tags" %}</h3>
 
-{% if can_create_subscription %}
+{% if can_follow_tag or can_block_tag %}
 <ul class="tab tab-block">
-    <li class="tab-item" data-controller="active-link" data-active-link-exact>
-        <a data-target="active-link.match"
-           href="{% url 'activities:tag_list' %}">{% trans "All" %}</a>
-    </li>
-    <li class="tab-item" data-controller="active-link" data-active-link-exact>
-        <a data-target="active-link.match"
-           href="{% url 'activities:following_tag_list' %}">{% trans "Following" %}</a>
-    </li>
+  <li class="tab-item" data-controller="active-link" data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'activities:tag_list' %}">{% trans "All" %}</a>
+  </li>
+  {% if can_follow_tag %}
+  <li class="tab-item" data-controller="active-link" data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'activities:following_tag_list' %}">{% trans "Following" %}</a>
+  </li>
+  {% endif %}
+  {% if can_block_tag %}
+  <li class="tab-item" data-controller="active-link" data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'activities:blocked_tag_list' %}">{% trans "Blocked" %}</a>
+  </li>
+  {% endif %}
 </ul>
 {% endif %}
 
 {% if object_list %}
+{% with blocked=user.blocked_tags.all %}
 <table class="table table-striped table-hover">
-    <tbody>
-        {% for tag in object_list %}
-        <tr>
-            <td>
-                <a href="{% url 'activities:tag_detail' tag.slug %}">
-                    #{{ tag.name }}
-                </a>
-            </td>
-            {% if can_create_subscription %}
-            <td>
-                <div class="btn-group float-right">
-                    {% if tag.is_subscribed %}
-                    <a href="{% url 'activities:tag_unfollow' tag.slug %}"
-                       class="btn btn-sm"
-                       data-controller="ajax"
-                       data-ajax-redirect="{{ request.path }}"
-                       data-action="ajax#post">
-                        {% trans "Unfollow" %}
-                    </a>
-                    {% else %}
-                    <a href="{% url 'activities:tag_follow' tag.slug %}"
-                       class="btn btn-sm"
-                       data-controller="ajax"
-                       data-ajax-redirect="{{ request.path }}"
-                       data-action="ajax#post">
-                        {% trans "Follow" %}
-                    </a>
-                    {% endif %}
-                </div>
-            </td>
-            {% endif %}
-        </tr>
-        {% endfor %}
-    </tbody>
+  <tbody>
+    {% for tag in object_list %}
+    <tr>
+      <td>
+        <a href="{% url 'activities:tag_detail' tag.slug %}">
+          #{{ tag.name }}
+        </a>
+      </td>
+      {% if can_follow_tag or can_block_tag %}
+      <td>
+        <div class="btn-group float-right">
+          {% if can_follow_tag %}
+          {% if tag.is_following %}
+          <a href="{% url 'activities:tag_unfollow' tag.slug %}"
+             class="btn btn-sm"
+             data-controller="ajax"
+             data-ajax-redirect="{{ request.path }}"
+             data-action="ajax#post">
+            {% trans "Unfollow" %}
+          </a>
+          {% else %}
+          <a href="{% url 'activities:tag_follow' tag.slug %}"
+             class="btn btn-sm"
+             data-controller="ajax"
+             data-ajax-redirect="{{ request.path }}"
+             data-action="ajax#post">
+            {% trans "Follow" %}
+          </a>
+          {% endif %}
+          {% endif %}
+          {% if can_block_tag %}
+          {% if tag in blocked %}
+          <a href="{% url 'activities:tag_unblock' tag.slug %}"
+             class="btn btn-sm"
+             data-controller="ajax"
+             data-ajax-redirect="{{ request.path }}"
+             data-action="ajax#post">
+            {% trans "Unblock" %}
+          </a>
+          {% else %}
+          <a href="{% url 'activities:tag_block' tag.slug %}"
+             class="btn btn-sm"
+             data-controller="ajax"
+             data-ajax-redirect="{{ request.path }}"
+             data-action="ajax#post">
+            {% trans "Block" %}
+          </a>
+          {% endif %}
+          {% endif %}
+        </div>
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
+{% endwith %}
 {% else %}
 <div class="empty">
-    <p class="empty-title h5">{% block empty %}{% trans "There are no tags at the moment" %}{% endblock %}</p>
+  <p class="empty-title h5">{% block empty %}{% trans "There are no tags at the moment" %}{% endblock %}</p>
 </div>
 {% endif %}
 

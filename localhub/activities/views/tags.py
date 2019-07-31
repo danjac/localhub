@@ -9,7 +9,7 @@ from functools import reduce
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import BooleanField, Q, QuerySet, Value
+from django.db.models import BooleanField, Exists, OuterRef, Q, QuerySet, Value
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -26,11 +26,9 @@ from localhub.activities.views.streams import BaseStreamView
 from localhub.communities.models import Community
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.types import ContextDict
-from localhub.core.utils.content_types import get_generic_related_exists
 from localhub.events.models import Event
 from localhub.photos.models import Photo
 from localhub.posts.models import Post
-from localhub.subscriptions.models import Subscription
 
 
 class TagQuerySetMixin(CommunityRequiredMixin):
@@ -96,12 +94,26 @@ class TagDetailView(SingleTagMixin, BaseStreamView):
         return super().get(request, *args, **kwargs)
 
     def get_queryset_for_model(self, model: ActivityType) -> QuerySet:
-        return (
+        qs = (
             super()
             .get_queryset_for_model(model)
+            .blocked_users(self.request.user)
             .filter(tags__name__in=[self.object.name])
             .distinct()
         )
+
+        # ensure we block all unwanted tags *unless* it's the tag
+        # in question.
+        if self.request.user.is_authenticated:
+            qs = qs.exclude(
+                Q(
+                    tags__in=self.request.user.blocked_tags.exclude(
+                        id=self.object.id
+                    )
+                ),
+                ~Q(owner=self.request.user),
+            )
+        return qs
 
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
@@ -115,7 +127,7 @@ tag_detail_view = TagDetailView.as_view()
 class TagFollowView(
     LoginRequiredMixin, PermissionRequiredMixin, SingleTagView
 ):
-    permission_required = "subscriptions.create_subscription"
+    permission_required = "users.follow_tag"
 
     def get_permission_object(self) -> Community:
         return self.request.community
@@ -125,12 +137,7 @@ class TagFollowView(
 
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
-
-        Subscription.objects.create(
-            subscriber=self.request.user,
-            content_object=self.object,
-            community=self.request.community,
-        )
+        self.request.user.following_tags.add(self.object)
 
         messages.success(self.request, _("You are now following this tag"))
         return HttpResponseRedirect(self.get_success_url())
@@ -145,18 +152,54 @@ class TagUnfollowView(LoginRequiredMixin, SingleTagView):
 
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
-        Subscription.objects.filter(
-            object_id=self.object.id,
-            content_type=ContentType.objects.get_for_model(self.object),
-            subscriber=self.request.user,
-        ).delete()
+        self.request.user.following_tags.remove(self.object)
         messages.success(
-            self.request, _("You have stopped following this tag")
+            self.request, _("You are no longer following this tag")
         )
         return HttpResponseRedirect(self.get_success_url())
 
 
 tag_unfollow_view = TagUnfollowView.as_view()
+
+
+class TagBlockView(LoginRequiredMixin, PermissionRequiredMixin, SingleTagView):
+    permission_required = "users.block_tag"
+
+    def get_permission_object(self) -> Community:
+        return self.request.community
+
+    def get_success_url(self) -> str:
+        return reverse("activities:tag_detail", args=[self.object.slug])
+
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        self.request.user.blocked_tags.add(self.object)
+
+        messages.success(
+            self.request,
+            _(
+                "You are now blocking this tag. Posts containing this tag "
+                "will be removed from your home page and other feeds."
+            ),
+        )
+        return HttpResponseRedirect(self.get_success_url())
+
+
+tag_block_view = TagBlockView.as_view()
+
+
+class TagUnblockView(LoginRequiredMixin, SingleTagView):
+    def get_success_url(self) -> str:
+        return reverse("activities:tag_detail", args=[self.object.slug])
+
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        self.request.user.blocked_tags.remove(self.object)
+        messages.success(self.request, _("You have stopped blocking this tag"))
+        return HttpResponseRedirect(self.get_success_url())
+
+
+tag_unblock_view = TagUnblockView.as_view()
 
 
 class TagListView(BaseTagListView):
@@ -168,16 +211,14 @@ class TagListView(BaseTagListView):
 
         if self.request.user.is_authenticated:
             qs = qs.annotate(
-                is_subscribed=get_generic_related_exists(
-                    Tag,
-                    Subscription.objects.filter(
-                        subscriber=self.request.user,
-                        community=self.request.community,
-                    ),
+                is_following=Exists(
+                    self.request.user.following_tags.filter(
+                        pk__in=OuterRef("id")
+                    )
                 )
             )
         else:
-            qs = qs.annotate(is_subscribed=Value(False, BooleanField()))
+            qs = qs.annotate(is_following=Value(False, BooleanField()))
 
         return qs
 
@@ -189,7 +230,17 @@ class FollowingTagListView(LoginRequiredMixin, TagListView):
     template_name = "activities/tags/following_tag_list.html"
 
     def get_queryset(self) -> QuerySet:
-        return super().get_queryset().filter(is_subscribed=True)
+        return super().get_queryset().filter(is_following=True)
 
 
 following_tag_list_view = FollowingTagListView.as_view()
+
+
+class BlockedTagListView(LoginRequiredMixin, TagListView):
+    template_name = "activities/tags/blocked_tag_list.html"
+
+    def get_queryset(self) -> QuerySet:
+        return self.request.user.blocked_tags.all()
+
+
+blocked_tag_list_view = BlockedTagListView.as_view()

@@ -55,7 +55,7 @@ def send_comment_deleted_email(comment: Comment):
         send_mail(
             NOTIFICATION_SUBJECTS["delete"],
             render_to_string("comments/emails/comment_deleted.txt", context),
-            comment.community.resolve_email("notifications"),
+            comment.community.resolve_email("no-reply"),
             [comment.owner.email],
             html_message=render_to_string(
                 "comments/emails/comment_deleted.html", context

@@ -15,7 +15,6 @@ from localhub.likes.models import Like
 from localhub.notifications.models import Notification
 from localhub.posts.tests.factories import PostFactory
 from localhub.posts.models import Post
-from localhub.subscriptions.models import Subscription
 
 pytestmark = pytest.mark.django_db
 
@@ -32,38 +31,6 @@ class TestPostListView:
         )
         response = client.get(reverse("posts:list"))
         assert len(response.context["object_list"]) == 3
-
-    def test_get_if_authenticated_following(
-        self, client: Client, member: Membership
-    ):
-
-        PostFactory(owner=member.member, community=member.community)
-        post = PostFactory(
-            community=member.community,
-            owner=MembershipFactory(community=member.community).member,
-        )
-
-        Subscription.objects.create(
-            subscriber=member.member,
-            community=member.community,
-            content_object=post.owner,
-        )
-        response = client.get(reverse("posts:list"), {"following": "1"})
-        assert response.status_code == 200
-        assert len(response.context["object_list"]) == 2
-
-    def test_get_if_authenticated_show_all(
-        self, client: Client, member: Membership
-    ):
-
-        PostFactory(owner=member.member, community=member.community)
-        PostFactory(
-            community=member.community,
-            owner=MembershipFactory(community=member.community).member,
-        )
-        response = client.get(reverse("posts:list"))
-        assert response.status_code == 200
-        assert len(response.context["object_list"]) == 2
 
 
 class TestPostCreateView:
@@ -234,8 +201,7 @@ class TestFlagView:
             owner=MembershipFactory(community=member.community).member,
         )
         moderator = MembershipFactory(
-            community=post.community,
-            role=Membership.ROLES.moderator,
+            community=post.community, role=Membership.ROLES.moderator
         )
         response = client.post(
             reverse("posts:flag", args=[post.id]), data={"reason": "spam"}

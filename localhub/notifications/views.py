@@ -42,6 +42,7 @@ class NotificationListView(NotificationQuerySetMixin, ListView):
             .get_queryset()
             .prefetch_related("content_object")
             .select_related("actor", "content_type")
+            .exclude(actor__in=self.request.user.blocked.all())
             .order_by("-created")
         )
 

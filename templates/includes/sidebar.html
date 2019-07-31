@@ -3,7 +3,7 @@
 
 {% load rules %}
 
-{% test_rule 'is_member' user community as is_member %}
+{% test_rule "communities.is_member" user community as is_member %}
 
 {% if is_member %}
 {% include "includes/sidebars/members.html" %}

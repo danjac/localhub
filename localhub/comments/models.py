@@ -54,6 +54,14 @@ class CommentQuerySet(
         """
         return self.filter(community=community, owner__communities=community)
 
+    def blocked_users(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> models.QuerySet:
+
+        if user.is_anonymous:
+            return self
+        return self.exclude(owner__in=user.blocked.all())
+
     def with_common_annotations(
         self, community: Community, user: settings.AUTH_USER_MODEL
     ) -> models.QuerySet:
@@ -162,18 +170,21 @@ class Comment(TimeStampedModel):
         notified of their own comment.
         """
         notifications: List[Notification] = []
+        recipients = self.community.members.exclude(blocked=self.owner)
         # notify anyone @mentioned in the description
         if self.content and (created or self.content_tracker.changed()):
             notifications += [
                 self.make_notification("mention", recipient)
-                for recipient in self.community.members.matches_usernames(  # noqa
+                for recipient in recipients.matches_usernames(  # noqa
                     self.content.extract_mentions()
-                ).exclude(
-                    pk=self.owner_id
-                )
+                ).exclude(pk=self.owner_id)
             ]
         # notify all community moderators
-        if self.editor and self.editor != self.owner:
+        if (
+            self.editor
+            and self.editor != self.owner
+            and self.owner in recipients
+        ):
             notifications += [
                 self.make_notification("edit", self.owner, self.editor)
             ]

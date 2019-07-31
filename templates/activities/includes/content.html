@@ -3,12 +3,17 @@
 
 {% load i18n %}
 
-{% with content_warning_tags=object.get_content_warning_tags %}
-{% if content_warning_tags %}
+{% with content_warning_tags=object.get_content_warning_tags hide_content_warning=user.show_sensitive_content %}
+{% if content_warning_tags and not hide_content_warning %}
 <div data-controller="toggle">
   <div class="empty bg-dark" data-target="toggle.togglable">
     <p class="empty-title h5">{% trans "Sensitive Content" %}</p>
     <p class="empty-subtitle">{% trans "This post has been tagged sensitive. Click the button below to view the content." %}</p>
+    <p>
+      {% for tag in content_warning_tags %}
+      #{{ tag }}{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </p>
     <div class="empty-action">
       <button class="btn btn-primary" data-action="toggle#toggle">{% trans "Show Content" %}</button>
     </div>
@@ -16,7 +21,7 @@
   <div class="d-hide" data-target="toggle.togglable">
     {% endif %}
     {% block activity_content %}{% endblock %}
-    {% if content_warning_tags %}
+    {% if content_warning_tags and not hide_content_warning %}
   </div>
 </div>
 {% endif %}

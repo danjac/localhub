@@ -18,14 +18,14 @@ pytestmark = pytest.mark.django_db
 class TestSendUserNotificationEmail:
     def test_if_enabled(self, community: Community, mailoutbox: List):
         follower = UserFactory()
-        followed = UserFactory(email_preferences=["subscribes"])
+        followed = UserFactory(email_preferences=["follows"])
 
         notification = Notification.objects.create(
             content_object=followed,
             community=community,
             actor=follower,
             recipient=followed,
-            verb="subscribe",
+            verb="follow",
         )
 
         send_user_notification_email(followed, notification)
@@ -41,7 +41,7 @@ class TestSendUserNotificationEmail:
             community=community,
             actor=follower,
             recipient=followed,
-            verb="subscribe",
+            verb="follow",
         )
 
         send_user_notification_email(followed, notification)

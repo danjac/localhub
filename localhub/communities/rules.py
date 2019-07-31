@@ -52,9 +52,9 @@ def is_membership_community_admin(
     return is_admin.test(user, membership.community)
 
 
-rules.add_rule("is_admin", is_admin)
-rules.add_rule("is_moderator", is_moderator)
-rules.add_rule("is_member", is_member)
+rules.add_rule("communities.is_admin", is_admin)
+rules.add_rule("communities.is_moderator", is_moderator)
+rules.add_rule("communities.is_member", is_member)
 
 rules.add_perm("communities.view_community", is_visitor)
 rules.add_perm("communities.manage_community", is_admin)

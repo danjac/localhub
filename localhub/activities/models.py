@@ -7,7 +7,6 @@ from functools import reduce
 from typing import Callable, Dict, List, Optional, Set
 
 from django.conf import settings
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import (
     SearchQuery,
@@ -37,7 +36,6 @@ from localhub.core.utils.content_types import get_generic_related_queryset
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.notifications.models import Notification
-from localhub.subscriptions.models import Subscription
 
 
 class ActivityQuerySet(
@@ -70,15 +68,61 @@ class ActivityQuerySet(
         """
         return self.filter(community=community, owner__communities=community)
 
-    def following(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
-        """
-        Includes only instances where the activity owner is subscribed by
-        the user.
-        """
-        return self.filter(
-            models.Q(owner__subscriptions__subscriber=user)
-            | models.Q(owner=user)
+    def following_users(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> models.QuerySet:
+
+        if user.is_anonymous:
+            return self
+        return self.filter(owner=user) | self.filter(
+            owner__in=user.following.all()
         )
+
+    def following_tags(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> models.QuerySet:
+
+        if user.is_anonymous:
+            return self
+        return self.filter(owner=user) | self.filter(
+            tags__in=user.following_tags.all()
+        )
+
+    def following(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
+
+        if user.is_anonymous or not user.home_page_filters:
+            return self
+
+        qs = self.none()
+
+        if "users" in user.home_page_filters:
+            qs = qs | self.following_users(user)
+
+        if "tags" in user.home_page_filters:
+            qs = qs | self.following_tags(user)
+
+        return qs
+
+    def blocked_users(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
+
+        if user.is_anonymous:
+            return self
+        return self.exclude(owner__in=user.blocked.all())
+
+    def blocked_tags(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
+        """
+        Should remove all activities with tags except if user is owner
+        """
+        if user.is_anonymous:
+            return self
+        return self.exclude(
+            models.Q(tags__in=user.blocked_tags.all()), ~models.Q(owner=user)
+        )
+
+    def blocked(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
+        if user.is_anonymous:
+            return self
+        return self.blocked_users(user).blocked_tags(user)
 
     def search(self, search_term: str) -> models.QuerySet:
         """
@@ -118,7 +162,7 @@ class Activity(TimeStampedModel):
 
     history = HistoricalRecords(inherit=True)
 
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     search_document = SearchVectorField(null=True, editable=False)
 
@@ -290,51 +334,36 @@ class Activity(TimeStampedModel):
             verb=verb,
         )
 
-    def notify_mentioned_users(self) -> List[Notification]:
+    def notify_mentioned_users(
+        self, recipients: models.QuerySet
+    ) -> List[Notification]:
         return [
             self.make_notification(recipient, "mention")
-            for recipient in self.community.members.matches_usernames(
+            for recipient in recipients.matches_usernames(
                 self.description.extract_mentions()
             ).exclude(pk=self.owner_id)
         ]
 
-    def notify_followers(self) -> List[Notification]:
-        subscriptions = (
-            Subscription.objects.filter(
-                user=self.owner, community=self.community
-            )
-            .exclude(subscriber=self.owner)
-            .select_related("subscriber")
-        )
+    def notify_followers(
+        self, recipients: models.QuerySet
+    ) -> List[Notification]:
         return [
-            self.make_notification(subscription.subscriber, "follow")
-            for subscription in subscriptions
+            self.make_notification(follower, "following")
+            for follower in recipients.filter(following=self.owner).distinct()
         ]
 
-    def notify_tag_subscribers(self) -> List[Notification]:
+    def notify_tag_followers(
+        self, recipients: models.QuerySet
+    ) -> List[Notification]:
         hashtags = self.description.extract_hashtags()
         if hashtags:
             tags = Tag.objects.filter(slug__in=hashtags)
-
             if tags:
-                subscriptions = (
-                    Subscription.objects.filter(
-                        content_type=ContentType.objects.get_for_model(Tag),
-                        object_id__in=[t.id for t in tags],
-                        community=self.community,
-                    )
-                    .exclude(subscriber=self.owner)
-                    .select_related("subscriber")
-                    .only("subscriber")
-                )
                 return [
-                    self.make_notification(subscriber, "tag")
-                    for subscriber in set(
-                        [
-                            subscription.subscriber
-                            for subscription in subscriptions
-                        ]
-                    )
+                    self.make_notification(follower, "tag")
+                    for follower in recipients.filter(
+                        following_tags__in=tags
+                    ).distinct()
                 ]
         return []
 
@@ -345,9 +374,7 @@ class Activity(TimeStampedModel):
         """
         if self.editor and self.editor != self.owner:
             return [
-                self.make_notification(
-                    self.owner, "edit", actor=self.editor
-                )
+                self.make_notification(self.owner, "edit", actor=self.editor)
             ]
         return [
             self.make_notification(moderator, "review")
@@ -369,14 +396,16 @@ class Activity(TimeStampedModel):
         - if moderated, the original owner
         """
         notifications: List[Notification] = []
+        recipients = self.community.members.exclude(blocked=self.owner)
+
         if self.description and (
             created or self.description_tracker.changed()
         ):
-            notifications += self.notify_mentioned_users()
-            notifications += self.notify_tag_subscribers()
+            notifications += self.notify_mentioned_users(recipients)
+            notifications += self.notify_tag_followers(recipients)
 
         if created:
-            notifications += self.notify_followers()
+            notifications += self.notify_followers(recipients)
 
         notifications += self.notify_owner_or_moderators(created)
 

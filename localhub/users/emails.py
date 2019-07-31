@@ -7,9 +7,9 @@ from django.utils.translation import gettext_lazy as _
 from localhub.notifications.emails import send_notification_email
 from localhub.notifications.models import Notification
 
-NOTIFICATION_PREFERENCES = {"subscribe": "subscribes"}
+NOTIFICATION_PREFERENCES = {"follow": "follows"}
 
-NOTIFICATION_SUBJECTS = {"subscribe": _("Someone has started following you")}
+NOTIFICATION_SUBJECTS = {"follow": _("Someone has started following you")}
 
 
 def send_user_notification_email(

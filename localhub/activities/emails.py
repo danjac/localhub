@@ -21,7 +21,7 @@ def send_activity_deleted_email(activity: Activity):
             render_to_string(
                 "activities/emails/activity_deleted.txt", context
             ),
-            activity.community.resolve_email("notifications"),
+            activity.community.resolve_email("no-reply"),
             [activity.owner.email],
             html_message=render_to_string(
                 "activities/emails/activity_deleted.html", context
@@ -32,7 +32,7 @@ def send_activity_deleted_email(activity: Activity):
 NOTIFICATION_PREFERENCES = {
     "edit": "edits",
     "flag": "flags",
-    "follow": "follows",
+    "following": "followings",
     "like": "likes",
     "mention": "mentions",
     "review": "reviews",
@@ -43,7 +43,7 @@ NOTIFICATION_PREFERENCES = {
 NOTIFICATION_SUBJECTS = {
     "edit": _("A moderator has edited your %s"),
     "flag": _("Someone has flagged this %s"),
-    "follow": _("Someone you are following has created a new %s"),
+    "following": _("Someone you are following has created a new %s"),
     "like": _("Someone has liked your %s"),
     "mention": _("Someone has mentioned you in their %s"),
     "review": _("Someone has created a new %s to review"),

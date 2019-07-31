@@ -72,7 +72,7 @@ class MessageForm(forms.ModelForm):
         qs = User.objects.none()
 
         if mentions:
-            qs = qs | User.objects.matches_usernames(mentions)
+            qs = qs | community.members.matches_usernames(mentions)
 
         if "moderators" in groups:
             qs = qs | community.get_moderators()
@@ -81,7 +81,7 @@ class MessageForm(forms.ModelForm):
             qs = qs | community.get_admins()
 
         if "followers" in groups:
-            qs = qs | User.objects.followers(sender, community)
+            qs = qs | community.members.filter(following=sender)
 
         return qs
 
@@ -98,5 +98,6 @@ class MessageForm(forms.ModelForm):
             )
             .active(community)
             .exclude(pk=sender.pk)
+            .exclude(blocked=sender)
             .distinct()
         )
