@@ -28,7 +28,7 @@ def send_notification_email(
     send_mail(
         subject,
         render_to_string(plain_template_name, context),
-        notification.community.resolve_email("notifications"),
+        notification.community.resolve_email("no-reply"),
         [notification.recipient.email],
         html_message=render_to_string(html_template_name, context),
         **kwargs,

@@ -18,6 +18,19 @@ pytestmark = pytest.mark.django_db
 
 
 class TestCommentManager:
+    def test_blocked_users(self, user: settings.AUTH_USER_MODEL):
+
+        my_comment = CommentFactory(owner=user)
+
+        first_comment = CommentFactory()
+        second_comment = CommentFactory()
+        user.blocked.add(first_comment.owner)
+
+        comments = Comment.objects.blocked_users(user).all()
+        assert len(comments) == 2
+        assert my_comment in comments
+        assert second_comment in comments
+
     def test_For_community(self, community: Community):
         comment = CommentFactory(
             community=community,

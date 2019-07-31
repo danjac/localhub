@@ -12,7 +12,6 @@ from allauth.account.models import EmailAddress
 from localhub.communities.models import Community, Membership, RequestCommunity
 from localhub.messageboard.tests.factories import MessageRecipientFactory
 from localhub.notifications.models import Notification
-from localhub.subscriptions.models import Subscription
 from localhub.posts.tests.factories import PostFactory
 from localhub.users.tests.factories import UserFactory
 
@@ -26,38 +25,6 @@ class TestUserManager:
             username="tester", email="tester@gmail.com", password="t3ZtP4s31"
         )
         assert user.check_password("t3ZtP4s31")
-
-    def test_following(
-        self, user: settings.AUTH_USER_MODEL, member: Membership
-    ):
-
-        Subscription.objects.create(
-            content_object=member.member,
-            community=member.community,
-            subscriber=user,
-        )
-
-        assert (
-            get_user_model().objects.following(user, member.community).get()
-            == member.member
-        )
-
-    def test_followers(
-        self, user: settings.AUTH_USER_MODEL, member: Membership
-    ):
-
-        Subscription.objects.create(
-            content_object=member.member,
-            community=member.community,
-            subscriber=user,
-        )
-
-        assert (
-            get_user_model()
-            .objects.followers(member.member, member.community)
-            .get()
-            == user
-        )
 
     def test_active(self, community: Community):
         Membership.objects.create(member=UserFactory(), community=community)
@@ -120,28 +87,20 @@ class TestUserManager:
         # check empty set returns no results
         assert get_user_model().objects.matches_usernames([]).count() == 0
 
-    def test_has_subscribed(self, member: Membership):
+    def test_is_following(self, user: settings.AUTH_USER_MODEL):
 
-        subscribed = UserFactory()
+        followed = UserFactory()
         UserFactory()
 
-        Subscription.objects.create(
-            subscriber=member.member,
-            community=member.community,
-            content_object=subscribed,
-        )
+        user.following.add(followed)
 
-        users = (
-            get_user_model()
-            .objects.all()
-            .with_has_subscribed(member.member, member.community)
-        )
+        users = get_user_model().objects.all().with_is_following(user)
 
         for user in users:
-            if user == subscribed:
-                assert user.has_subscribed
+            if user == followed:
+                assert user.is_following
             else:
-                assert not user.has_subscribed
+                assert not user.is_following
 
 
 class TestUserModel:

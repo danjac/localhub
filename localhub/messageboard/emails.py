@@ -16,7 +16,7 @@ def send_message_email(recipient: MessageRecipient):
         send_mail(
             recipient.message.subject,
             render_to_string("messageboard/emails/message.txt", context),
-            recipient.message.community.resolve_email("messages"),
+            recipient.message.community.resolve_email("no-reply"),
             [recipient.recipient.email],
             html_message=render_to_string(
                 "messageboard/emails/message.html", context

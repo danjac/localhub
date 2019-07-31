@@ -11,9 +11,9 @@ from taggit.models import Tag
 from localhub.comments.models import Comment
 from localhub.comments.tests.factories import CommentFactory
 from localhub.communities.models import Community, Membership
+from localhub.communities.tests.factories import MembershipFactory
 from localhub.posts.models import Post
 from localhub.posts.tests.factories import PostFactory
-from localhub.subscriptions.models import Subscription
 from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
@@ -47,23 +47,19 @@ class TestPostModel:
     @factory.django.mute_signals(signals.post_save)
     def test_notify(self, community: Community):
         # owner should not receive any notifications from their own posts
-        owner = UserFactory(username="owner")
-        moderator = UserFactory()
+        owner = MembershipFactory(
+            community=community, role=Membership.ROLES.moderator
+        ).member
 
-        Membership.objects.create(
-            member=owner, community=community, role=Membership.ROLES.moderator
-        )
+        moderator = MembershipFactory(
+            community=community, role=Membership.ROLES.moderator
+        ).member
 
-        Membership.objects.create(
-            member=moderator,
+        mentioned = MembershipFactory(
+            member=UserFactory(username="danjac"),
             community=community,
-            role=Membership.ROLES.moderator,
-        )
-        mentioned = UserFactory(username="danjac")
-
-        Membership.objects.create(
-            member=mentioned, community=community, role=Membership.ROLES.member
-        )
+            role=Membership.ROLES.member,
+        ).member
 
         post = PostFactory(
             owner=owner,
@@ -71,32 +67,17 @@ class TestPostModel:
             description="hello @danjac from @owner #movies #reviews",
         )
 
+        # ensure we just have one notification for multiple tags
+
         movies = Tag.objects.create(name="movies")
         reviews = Tag.objects.create(name="reviews")
 
-        tag_subscriber = UserFactory()
+        tag_follower = MembershipFactory(community=community).member
+        tag_follower.following_tags.add(movies, reviews)
+        assert tag_follower.following_tags.count() == 2
 
-        # ensure we just have one notification for multiple tags
-
-        Subscription.objects.create(
-            subscriber=tag_subscriber,
-            content_object=movies,
-            community=post.community,
-        )
-
-        Subscription.objects.create(
-            subscriber=tag_subscriber,
-            content_object=reviews,
-            community=post.community,
-        )
-
-        user_subscriber = UserFactory()
-
-        Subscription.objects.create(
-            subscriber=user_subscriber,
-            content_object=post.owner,
-            community=post.community,
-        )
+        user_follower = MembershipFactory(community=community).member
+        user_follower.following.add(post.owner)
 
         notifications = post.notify(created=True)
         assert len(notifications) == 4
@@ -105,13 +86,13 @@ class TestPostModel:
         assert notifications[0].actor == post.owner
         assert notifications[0].verb == "mention"
 
-        assert notifications[1].recipient == tag_subscriber
+        assert notifications[1].recipient == tag_follower
         assert notifications[1].actor == post.owner
         assert notifications[1].verb == "tag"
 
-        assert notifications[2].recipient == user_subscriber
+        assert notifications[2].recipient == user_follower
         assert notifications[2].actor == post.owner
-        assert notifications[2].verb == "follow"
+        assert notifications[2].verb == "following"
 
         assert notifications[3].recipient == moderator
         assert notifications[3].actor == post.owner

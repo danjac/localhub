@@ -4,17 +4,17 @@
 {% extends "activities/base.html" %}
 {% load i18n %}
 {% load rules %}
-{% load subscriptions_tags %}
 
 {% block subtitle %} #{{ tag.slug }}{% endblock %}
 {% block content %}
 
-{% has_perm "subscriptions.create_subscription" user community as can_create_subscription %}
-{% is_subscribed user community tag as is_subscribed %}
+{% has_perm "users.follow_tag" user as can_follow_tag %}
+{% has_perm "users.block_tag" user as can_block_tag %}
 
-{% if can_create_subscription %}
+{% if can_follow_tag or can_block_tag %}
 <div class="float-right">
-  {% if is_subscribed %}
+  {% if can_follow_tag %}
+  {% if object in user.following_tags.all %}
   <a href="{% url 'activities:tag_unfollow' tag.slug %}"
      class="btn btn-sm"
      data-controller="ajax"
@@ -29,10 +29,29 @@
     {% trans "Follow" %}
   </a>
   {% endif %}
+  {% endif %}
+  {% if can_block_tag %}
+  {% if tag in user.blocked_tags.all %}
+  <a href="{% url 'activities:tag_unblock' tag.slug %}"
+     class="btn btn-sm"
+     data-controller="ajax"
+     data-ajax-redirect="{{ request.path }}"
+     data-action="ajax#post">
+    {% trans "Unblock" %}
+  </a>
+  {% else %}
+  <a href="{% url 'activities:tag_block' tag.slug %}"
+     class="btn btn-sm"
+     data-controller="ajax"
+     data-ajax-redirect="{{ request.path }}"
+     data-action="ajax#post">
+    {% trans "Block" %}
+  </a>
+  {% endif %}
+  {% endif %}
 </div>
 <div class="clearfix"></div>
 {% endif %}
-
 
 <h3>#{{ tag.slug }}</h3>
 {% with total=paginator.count %}

@@ -22,7 +22,7 @@ urlpatterns = [
     path("invites/", include("localhub.invites.urls")),
     path("join-requests/", include("localhub.join_requests.urls")),
     path("notifications/", include("localhub.notifications.urls")),
-    path("likes/", include("localhub.likes.urls")),
+    path("favorites/", include("localhub.likes.urls")),
     path("messages/", include("localhub.messageboard.urls")),
     path("photos/", include("localhub.photos.urls")),
     path("posts/", include("localhub.posts.urls")),

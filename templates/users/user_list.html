@@ -8,8 +8,7 @@
 {% block content %}
 <h3>{% block page_header %}{% trans "Members" %}{% endblock %}</h3>
 
-{% test_rule "is_member" user community as is_member %}
-{% has_perm "subscriptions.create_subscription" user community as can_create_subscription %}
+{% test_rule "communities.is_member" user community as is_member %}
 {% has_perm "messageboard.create_message" user community as can_create_message %}
 
 {% if object_list %}
@@ -30,8 +29,9 @@
       <td>
         {% if user != user_obj %}
         <div class="btn-group float-right">
-          {% if can_create_subscription %}
-          {% if user_obj.has_subscribed %}
+          {% has_perm "users.follow_user" user user_obj as can_follow_user %}
+          {% if can_follow_user %}
+          {% if user_obj.is_following %}
           <a href="{% url 'users:unfollow' user_obj.username %}"
              class="btn btn-sm"
              data-controller="ajax"

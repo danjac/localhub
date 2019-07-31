@@ -10,11 +10,11 @@ from django.urls import reverse
 
 from localhub.comments.tests.factories import CommentFactory
 from localhub.communities.models import Membership
+from localhub.communities.tests.factories import MembershipFactory
 from localhub.events.tests.factories import EventFactory
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification
 from localhub.posts.tests.factories import PostFactory
-from localhub.subscriptions.models import Subscription
 from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
@@ -98,41 +98,40 @@ class TestUserDeleteView:
 
 class TestUserFollowView:
     def test_post(self, client: Client, member: Membership):
-        user = UserFactory()
-        Membership.objects.create(member=user, community=member.community)
+        user = MembershipFactory(community=member.community).member
         response = client.post(reverse("users:follow", args=[user.username]))
         assert response.url == user.get_absolute_url()
-        sub = Subscription.objects.get()
-        assert sub.content_object == user
-        assert sub.subscriber == member.member
-        assert sub.community == member.community
+        assert user in member.member.following.all()
         notification = Notification.objects.get()
         assert notification.recipient == user
         assert notification.content_object == user
         assert notification.actor == member.member
 
-    def test_post_if_user_same_as_auth_user(
-        self, client: Client, member: Membership
-    ):
-        response = client.post(
-            reverse("users:follow", args=[member.member.username])
-        )
-        assert response.status_code == 404
-        assert not Subscription.objects.exists()
+
+class TestUserBlockView:
+    def test_post(self, client: Client, member: Membership):
+        user = MembershipFactory(community=member.community).member
+        response = client.post(reverse("users:block", args=[user.username]))
+        assert response.url == user.get_absolute_url()
+        assert user in member.member.blocked.all()
 
 
 class TestUserUnfollowView:
     def test_post(self, client: Client, member: Membership):
-        user = UserFactory()
-        Membership.objects.create(member=user, community=member.community)
-        Subscription.objects.create(
-            content_object=user,
-            subscriber=member.member,
-            community=member.community,
-        )
+        user = MembershipFactory(community=member.community).member
+        member.member.following.add(user)
         response = client.post(reverse("users:unfollow", args=[user.username]))
+        assert user not in member.member.following.all()
         assert response.url == user.get_absolute_url()
-        assert not Subscription.objects.exists()
+
+
+class TestUserUnblockView:
+    def test_post(self, client: Client, member: Membership):
+        user = MembershipFactory(community=member.community).member
+        member.member.blocked.add(user)
+        response = client.post(reverse("users:unblock", args=[user.username]))
+        assert user not in member.member.blocked.all()
+        assert response.url == user.get_absolute_url()
 
 
 class TestUserAutocompleteListView:
@@ -142,8 +141,18 @@ class TestUserAutocompleteListView:
         member: Membership,
         user: settings.AUTH_USER_MODEL,
     ):
-        Membership.objects.create(member=user, community=member.community)
+        other = MembershipFactory(
+            community=member.community, member=UserFactory(username="tester1")
+        ).member
+        blocker = MembershipFactory(
+            community=member.community, member=UserFactory(username="tester2")
+        ).member
+
+        blocker.blocked.add(member.member)
+
         response = client.get(
-            reverse("users:autocomplete_list"), {"q": user.username}
+            reverse("users:autocomplete_list"), {"q": "tester"}
         )
-        assert len(dict(response.context or {})["object_list"]) == 1
+        object_list = response.context["object_list"]
+        assert other in object_list
+        assert blocker not in object_list

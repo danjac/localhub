@@ -1,11 +1,10 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Dict, Optional, Sequence
+from typing import Dict, List, Optional, Sequence
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
 from django.utils.functional import cached_property
@@ -15,40 +14,16 @@ from model_utils import Choices
 
 from sorl.thumbnail import ImageField
 
+from taggit.models import Tag
 
 from localhub.communities.models import Community, Membership
 from localhub.core.fields import ChoiceArrayField
 from localhub.core.markdown.fields import MarkdownField
-from localhub.subscriptions.models import (
-    Subscription,
-    SubscriptionAnnotationsQuerySetMixin,
-)
+from localhub.notifications.models import Notification
 
 
-class UserQuerySet(SubscriptionAnnotationsQuerySetMixin, models.QuerySet):
+class UserQuerySet(models.QuerySet):
     use_in_migrations = True
-
-    def following(
-        self, user: settings.AUTH_USER_MODEL, community: Community
-    ) -> models.QuerySet:
-        """
-        Returns all users this user is following.
-        """
-        return self.filter(
-            subscriptions__subscriber=user, subscriptions__community=community
-        ).exclude(pk=user.id)
-
-    def followers(
-        self, user: settings.AUTH_USER_MODEL, community: Community
-    ) -> models.QuerySet:
-        """
-        Returns all users following this user.
-        """
-        return self.filter(
-            pk__in=Subscription.objects.filter(
-                community=community, user=user
-            ).values("subscriber")
-        ).exclude(pk=user.id)
 
     def for_email(self, email: str) -> models.QuerySet:
         """
@@ -58,6 +33,24 @@ class UserQuerySet(SubscriptionAnnotationsQuerySetMixin, models.QuerySet):
         return self.filter(
             models.Q(emailaddress__email__iexact=email)
             | models.Q(email__iexact=email)
+        )
+
+    def with_is_following(
+        self, follower: settings.AUTH_USER_MODEL
+    ) -> models.QuerySet:
+        return self.annotate(
+            is_following=models.Exists(
+                follower.following.filter(pk__in=models.OuterRef("id"))
+            )
+        )
+
+    def with_is_blocked(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> models.QuerySet:
+        return self.annotate(
+            is_blocked=models.Exists(
+                user.blocked.filter(pk__in=models.OuterRef("id"))
+            )
         )
 
     def matches_usernames(self, names=Sequence[str]) -> models.QuerySet:
@@ -86,18 +79,13 @@ class UserManager(BaseUserManager):
     def get_queryset(self) -> models.QuerySet:
         return UserQuerySet(self.model, using=self._db)
 
+    def with_is_following(
+        self, follower: settings.AUTH_USER_MODEL
+    ) -> models.QuerySet:
+        return self.get_queryset().with_is_following(follower)
+
     def active(self, community: Community) -> models.QuerySet:
         return self.get_queryset().active(community)
-
-    def following(
-        self, user: settings.AUTH_USER_MODEL, community: Community
-    ) -> models.QuerySet:
-        return self.get_queryset().following(user, community)
-
-    def followers(
-        self, user: settings.AUTH_USER_MODEL, community: Community
-    ) -> models.QuerySet:
-        return self.get_queryset().followers(user, community)
 
     def for_email(self, email: str) -> models.QuerySet:
         return self.get_queryset().for_email(email)
@@ -133,14 +121,20 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
+
+    HOME_PAGE_FILTERS = Choices(
+        ("users", _("Posts from people I'm following")),
+        ("tags", _("Posts containing tags I'm following")),
+    )
+
     EMAIL_PREFERENCES = Choices(
         ("messages", _("I receive a direct message")),
-        ("subscribes", _("Someone starts following me")),
+        ("follows", _("Someone starts following me")),
         ("comments", _("Someone comments on my post")),
         ("mentions", _("I am @mentioned in a post or comment")),
         ("deletes", _("A moderator deletes my post or comment")),
         ("edits", _("A moderator edits my post or comment")),
-        ("follows", _("Someone I'm following creates a post")),
+        ("followings", _("Someone I'm following creates a post")),
         ("likes", _("Someone likes my post or comment")),
         ("tags", _("A post is created containing tags I'm following")),
         ("flags", _("Post or comment is flagged (MODERATORS ONLY)")),
@@ -151,13 +145,31 @@ class User(AbstractUser):
     bio = MarkdownField(blank=True)
     avatar = ImageField(upload_to="avatars", null=True, blank=True)
 
+    home_page_filters = ChoiceArrayField(
+        models.CharField(max_length=12, choices=HOME_PAGE_FILTERS),
+        default=list,
+        blank=True,
+    )
+
+    show_sensitive_content = models.BooleanField(default=False)
+
     email_preferences = ChoiceArrayField(
         models.CharField(max_length=12, choices=EMAIL_PREFERENCES),
         default=list,
         blank=True,
     )
 
-    subscriptions = GenericRelation(Subscription, related_query_name="user")
+    following = models.ManyToManyField(
+        "self", related_name="followers", blank=True, symmetrical=False
+    )
+
+    blocked = models.ManyToManyField(
+        "self", related_name="blockers", blank=True, symmetrical=False
+    )
+
+    following_tags = models.ManyToManyField(Tag, related_name="+", blank=True)
+
+    blocked_tags = models.ManyToManyField(Tag, related_name="+", blank=True)
 
     objects = UserManager()
 
@@ -219,3 +231,22 @@ class User(AbstractUser):
                 "community", "role"
             )
         )
+
+    def notify(
+        self, recipient: settings.AUTH_USER_MODEL, community: Community
+    ) -> List[Notification]:
+        """
+        Sends notification to provided recipients
+        """
+
+        notifications = [
+            Notification.objects.create(
+                content_object=recipient,
+                recipient=recipient,
+                actor=self,
+                community=community,
+                verb="follow",
+            )
+        ]
+
+        return notifications

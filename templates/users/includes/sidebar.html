@@ -16,7 +16,7 @@
   </li>
 
   {% if community %}
-  {% has_perm 'communities.manage_community' user community as can_manage_community %}
+  {% has_perm "communities.manage_community" user community as can_manage_community %}
   {% if can_manage_community %}
   <li class="menu-item"><a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a></li>
   {% endif %}
@@ -37,7 +37,7 @@
   </li>
 
   {% if community %}
-  {% test_rule 'is_member' user community as is_member %}
+  {% test_rule "communities.is_member" user community as is_member %}
   {% if is_member %}
   <li class="menu-item">
     <a href="{% url 'communities:leave' %}">{% trans "Leave community" %}</a>

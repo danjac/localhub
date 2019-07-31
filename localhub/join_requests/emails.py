@@ -20,7 +20,7 @@ def send_join_request_email(join_request: JoinRequest):
     send_mail(
         _("A request has been received"),
         render_to_string("join_requests/emails/join_request.txt", context),
-        join_request.community.resolve_email("requests"),
+        join_request.community.resolve_email("no-reply"),
         [u.email for u in join_request.community.get_admins()],
         html_message=render_to_string(
             "join_requests/emails/join_request.html", context
@@ -33,7 +33,7 @@ def send_acceptance_email(join_request: JoinRequest):
     send_mail(
         _("Your request has been approved"),
         render_to_string("join_requests/emails/accepted.txt", context),
-        join_request.community.resolve_email("requests"),
+        join_request.community.resolve_email("no-reply"),
         [join_request.sender.email],
         html_message=render_to_string(
             "join_requests/emails/accepted.html", context
@@ -47,7 +47,7 @@ def send_rejection_email(join_request: JoinRequest):
     send_mail(
         _("Your request has been rejected"),
         render_to_string("join_requests/emails/rejected.txt", context),
-        join_request.community.resolve_email("support"),
+        join_request.community.resolve_email("no-reply"),
         [user.email if user else join_request.email],
         html_message=render_to_string(
             "join_requests/emails/rejected.html", context

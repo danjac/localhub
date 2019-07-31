@@ -20,7 +20,7 @@ def send_invitation_email(invite: Invite):
     send_mail(
         _("Invitation to join"),
         render_to_string("invites/emails/invitation.txt", context),
-        invite.community.resolve_email("invites"),
+        invite.community.resolve_email("no-reply"),
         [invite.email],
         html_message=render_to_string(
             "invites/emails/invitation.html", context

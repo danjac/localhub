@@ -5,7 +5,6 @@
 {% load i18n %}
 {% load account %}
 {% load rules %}
-{% load subscriptions_tags %}
 {% load users_tags %}
 
 {% block subtitle %}
@@ -17,75 +16,101 @@
 {% if user.is_authenticated and not is_auth_user %}
 
 {% has_perm "messageboard.create_message" user community as can_create_message %}
-{% has_perm "subscriptions.create_subscription" user community as can_create_subscription %}
-{% is_subscribed user community user_obj as is_subscribed %}
+{% has_perm "users.block_user" user user_obj as can_block_user %}
+{% has_perm "users.follow_user" user user_obj as can_follow_user %}
 
+{# TBD: is_blocked/is_following tags #}
 <div class="float-right">
-  {% if can_create_message %}
-  <a href="{% url 'messageboard:message_create_pm' user_obj.username %}"
-     class="btn btn-sm">
-    {% trans "Send Message" %}
-  </a>
-  {% endif %}
-  {% if can_create_subscription and not is_subscribed %}
-  <a href="{% url 'users:follow' user_obj.username %}"
-     class="btn btn-sm"
-     data-controller="ajax"
-     data-action="ajax#post"
-     data-ajax-redirect="{{ request.path }}">
-    {% trans "Follow" %}
-  </a>
-  {% elif is_subscribed %}
-  <a href="{% url 'users:unfollow' user_obj.username %}"
-     class="btn btn-sm"
-     data-controller="ajax"
-     data-action="ajax#post"
-     data-ajax-redirect="{{ request.path }}">
-    {% trans "Unfollow" %}
-  </a>
-  {% endif %}
+    {% if can_block_user %}
+    {% if user_obj in user.blocked.all %}
+    <a href="{% url 'users:unblock' user_obj.username %}"
+       class="btn btn-sm"
+       data-controller="ajax"
+       data-action="ajax#post"
+       data-ajax-redirect="{{ request.path }}">
+        {% trans "Unblock" %}
+    </a>
+    {% else %}
+    <a href="{% url 'users:block' user_obj.username %}"
+       class="btn btn-sm"
+       data-controller="ajax"
+       data-action="ajax#post"
+       data-ajax-redirect="{{ request.path }}">
+        {% trans "Block" %}
+    </a>
+    {% endif %}
+    {% endif %}
+    {% if can_follow_user %}
+    {% if user_obj in user.following.all %}
+    <a href="{% url 'users:unfollow' user_obj.username %}"
+       class="btn btn-sm"
+       data-controller="ajax"
+       data-action="ajax#post"
+       data-ajax-redirect="{{ request.path }}">
+        {% trans "Unfollow" %}
+    </a>
+    {% else %}
+    <a href="{% url 'users:follow' user_obj.username %}"
+       class="btn btn-sm"
+       data-controller="ajax"
+       data-action="ajax#post"
+       data-ajax-redirect="{{ request.path }}">
+        {% trans "Follow" %}
+    </a>
+    {% endif %}
+    {% endif %}
+    {% if can_create_message %}
+    <a href="{% url 'messageboard:message_create_pm' user_obj.username %}"
+       class="btn btn-sm">
+        {% trans "Send Message" %}
+    </a>
+    {% endif %}
+
 </div>
 <div class="clearfix"></div>
 {% endif %}
 
 {% user_display user_obj as display_name %}
 <h3>{% avatar user_obj "avatar-lg" %}{{ display_name }}</h3>
-
-{% if membership %}
+{% if is_auth_user %}
+{% blocktrans with created=membership.created|timesince %}
+You have been a member for <b>{{ created }}</b>.
+{% endblocktrans %}
+{% elif membership %}
 <p>
-  {% if membership.is_admin %}
-  {% trans "This user is a community admin." %}
-  {% elif membership.is_moderator %}
-  {% trans "This user is a community moderator." %}
-  {% else %}
-  {% trans "This user is a member of this community." %}
-  {% endif %}
-  {% blocktrans with created=membership.created|timesince %}
-  They have been a member for <b>{{ created }}</b>.
-  {% endblocktrans %}
+    {% if membership.is_admin %}
+    {% trans "This user is a community admin." %}
+    {% elif membership.is_moderator %}
+    {% trans "This user is a community moderator." %}
+    {% else %}
+    {% trans "This user is a member of this community." %}
+    {% endif %}
+    {% blocktrans with created=membership.created|timesince %}
+    They have been a member for <b>{{ created }}</b>.
+    {% endblocktrans %}
 </p>
 
 {% has_perm "communities.view_membership" user membership as can_view_membership %}
 {% if can_view_membership %}
 <p>
-  <a href="{% url 'communities:membership_detail' membership.id %}">{% trans "View Membership Details" %}</a>
+    <a href="{% url 'communities:membership_detail' membership.id %}">{% trans "View Membership Details" %}</a>
 </p>
 {% endif %}
 {% endif %}
 
 <ul class="tab tab-block">
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:activities' user_obj.username %}">{% trans "Posts" %}</a>
-  </li>
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:comments' user_obj.username %}">{% trans "Comments" %}</a>
-  </li>
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:detail' user_obj.username %}">{% trans "About" %}</a>
-  </li>
+    <li class="tab-item" data-controller="active-link" data-active-link-exact>
+        <a data-target="active-link.match"
+           href="{% url 'users:activities' user_obj.username %}">{% trans "Posts" %}</a>
+    </li>
+    <li class="tab-item" data-controller="active-link" data-active-link-exact>
+        <a data-target="active-link.match"
+           href="{% url 'users:comments' user_obj.username %}">{% trans "Comments" %}</a>
+    </li>
+    <li class="tab-item" data-controller="active-link" data-active-link-exact>
+        <a data-target="active-link.match"
+           href="{% url 'users:detail' user_obj.username %}">{% trans "About" %}</a>
+    </li>
 </ul>
 
 {% block user_content %}{% endblock %}

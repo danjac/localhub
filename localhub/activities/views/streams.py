@@ -37,15 +37,12 @@ class StreamView(BaseStreamView):
     template_name = "activities/stream.html"
 
     def get_queryset_for_model(self, model: ActivityType) -> QuerySet:
-        qs = super().get_queryset_for_model(model)
-
-        self.show_all = (
-            "following" not in self.request.GET
-            or self.request.user.is_anonymous
+        return (
+            super()
+            .get_queryset_for_model(model)
+            .following(self.request.user)
+            .blocked(self.request.user)
         )
-        if self.show_all:
-            return qs
-        return qs.following(self.request.user)
 
 
 stream_view = StreamView.as_view()
@@ -64,7 +61,10 @@ class SearchView(BaseStreamView):
     def get_queryset_for_model(self, model: ActivityType) -> QuerySet:
         if self.search_query:
             return (
-                super().get_queryset_for_model(model).search(self.search_query)
+                super()
+                .get_queryset_for_model(model)
+                .blocked(self.request.user)
+                .search(self.search_query)
             )
         return model.objects.none()
 

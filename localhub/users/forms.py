@@ -5,6 +5,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserChangeForm as BaseUserChangeForm
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
@@ -22,5 +23,25 @@ class UserCreationForm(BaseUserCreationForm):
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ("name", "avatar", "email_preferences", "bio")
-        widgets = {"email_preferences": forms.CheckboxSelectMultiple}
+        fields = (
+            "name",
+            "avatar",
+            "show_sensitive_content",
+            "home_page_filters",
+            "email_preferences",
+            "bio",
+        )
+        widgets = {
+            "email_preferences": forms.CheckboxSelectMultiple,
+            "home_page_filters": forms.CheckboxSelectMultiple,
+        }
+        help_texts = {
+            "home_page_filters": _(
+                "Blocked users and tags will not be shown."
+            ),
+            "show_sensitive_content": _(
+                "Sensitive content will be hidden by default. "
+                "If you wish to remove sensitive content completely "
+                "from your feeds, you can block specific tags such as #nsfw."
+            ),
+        }

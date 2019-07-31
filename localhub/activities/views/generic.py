@@ -106,19 +106,13 @@ class ActivityListView(MultipleActivityMixin, ListView):
     order_by = "-id"
 
     def get_queryset(self) -> QuerySet:
-        qs = (
+        return (
             super()
             .get_queryset()
             .with_common_annotations(self.request.community, self.request.user)
+            .blocked(self.request.user)
             .order_by(self.order_by)
         )
-        self.show_all = (
-            "following" not in self.request.GET
-            or self.request.user.is_anonymous
-        )
-        if self.show_all:
-            return qs
-        return qs.following(self.request.user)
 
 
 class ActivityUpdateView(
@@ -205,6 +199,7 @@ class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
         return (
             self.object.get_comments()
             .with_common_annotations(self.request.community, self.request.user)
+            .blocked_users(self.request.user)
             .filter(owner__communities=self.request.community)
             .select_related("owner", "community")
             .order_by("created")
