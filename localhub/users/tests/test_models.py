@@ -102,6 +102,21 @@ class TestUserManager:
             else:
                 assert not user.is_following
 
+    def test_is_blocked(self, user: settings.AUTH_USER_MODEL):
+
+        blocked = UserFactory()
+        UserFactory()
+
+        user.blocked.add(blocked)
+
+        users = get_user_model().objects.all().with_is_blocked(user)
+
+        for user in users:
+            if user == blocked:
+                assert user.is_blocked
+            else:
+                assert not user.is_blocked
+
 
 class TestUserModel:
     def test_get_absolute_url(self, user: settings.AUTH_USER_MODEL):

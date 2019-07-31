@@ -30,7 +30,7 @@ Development installation requires Docker and Docker-Compose. Assuming both are i
 Deployment
 ----------
 
-__Please note that LocalHub is in the early development stage and should not be trusted to run in a serious production environment.__
+__Please note that LocalHub is in the early development stage and should not be trusted to run in a serious production environment. Breaking changes will happen until a stable release is officially available.__
 
 At present, LocalHub is optimized to deploy to Heroku, although we hope to provide more options later. A _heroku.yml_ file is provided along with Docker configuration to get started. You will have to set the following environment variables in your Heroku account:
 

@@ -72,7 +72,6 @@ class Base(Configuration):
         "localhub.notifications.apps.NotificationsConfig",
         "localhub.photos.apps.PhotosConfig",
         "localhub.posts.apps.PostsConfig",
-        "localhub.subscriptions.apps.SubscriptionsConfig",
         "localhub.users.apps.UsersConfig",
     ]
 

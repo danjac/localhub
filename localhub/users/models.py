@@ -84,6 +84,11 @@ class UserManager(BaseUserManager):
     ) -> models.QuerySet:
         return self.get_queryset().with_is_following(follower)
 
+    def with_is_blocked(
+        self, follower: settings.AUTH_USER_MODEL
+    ) -> models.QuerySet:
+        return self.get_queryset().with_is_blocked(follower)
+
     def active(self, community: Community) -> models.QuerySet:
         return self.get_queryset().active(community)
 
