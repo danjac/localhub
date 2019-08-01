@@ -32,6 +32,7 @@ from localhub.comments.models import Comment, CommentAnnotationsQuerySetMixin
 from localhub.communities.models import Community
 from localhub.core.markdown.fields import MarkdownField
 from localhub.core.types import BreadcrumbList
+from localhub.core.utils.tracker import Tracker
 from localhub.core.utils.content_types import get_generic_related_queryset
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
@@ -201,15 +202,9 @@ class Activity(TimeStampedModel):
 
     search_document = SearchVectorField(null=True, editable=False)
 
+    description_tracker = Tracker(["description"])
+
     objects = ActivityQuerySet.as_manager()
-
-    # Note: due to bug in FieldTracker we can't define it in abstract base
-    # class and have to define on each subclass.
-    # https://github.com/jazzband/django-model-utils/issues/275
-
-    # add following to all Activity subclasses in order to track
-    # description for notifications etc.
-    # description_tracker = FieldTracker(["description"])
 
     class Meta:
         indexes = [

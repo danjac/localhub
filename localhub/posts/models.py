@@ -29,7 +29,7 @@ class Post(Activity):
     likes = GenericRelation(Like, related_query_name="post")
     notifications = GenericRelation(Notification, related_query_name="post")
 
-    description_tracker = FieldTracker(["description"])
+    # description_tracker = FieldTracker(["description"])
 
     def __str__(self) -> str:
         return self.title or self.get_domain() or _("Post")

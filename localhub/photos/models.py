@@ -7,7 +7,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from model_utils import Choices, FieldTracker
+from model_utils import Choices
 
 from sorl.thumbnail import ImageField
 
@@ -54,8 +54,6 @@ class Photo(Activity):
     flags = GenericRelation(Flag, related_query_name="photo")
     likes = GenericRelation(Like, related_query_name="photo")
     notifications = GenericRelation(Notification, related_query_name="photo")
-
-    description_tracker = FieldTracker(["description"])
 
     def __str__(self) -> str:
         return self.title

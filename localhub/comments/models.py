@@ -11,8 +11,8 @@ from django.contrib.contenttypes.fields import (
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.urls import reverse
+from django.utils.functional import cached_property
 
-from model_utils import FieldTracker
 from model_utils.models import TimeStampedModel
 
 from simple_history.models import HistoricalRecords
@@ -23,6 +23,7 @@ from localhub.core.types import BaseQuerySetMixin
 from localhub.core.utils.content_types import (
     get_generic_related_count_subquery,
 )
+from localhub.core.utils.tracker import Tracker
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.notifications.models import Notification
@@ -54,9 +55,7 @@ class CommentQuerySet(
         """
         return self.filter(community=community, owner__communities=community)
 
-    def blocked_users(
-        self, user: settings.AUTH_USER_MODEL
-    ) -> models.QuerySet:
+    def blocked_users(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
 
         if user.is_anonymous:
             return self
@@ -106,13 +105,13 @@ class Comment(TimeStampedModel):
     content_object = GenericForeignKey("content_type", "object_id")
 
     content = MarkdownField()
-    content_tracker = FieldTracker(["content"])
 
     flags = GenericRelation(Flag, related_query_name="comment")
     likes = GenericRelation(Like, related_query_name="comment")
     notifications = GenericRelation(Notification, related_query_name="comment")
 
     history = HistoricalRecords()
+    content_tracker = Tracker(["content"])
 
     objects = CommentQuerySet.as_manager()
 
@@ -139,6 +138,24 @@ class Comment(TimeStampedModel):
     @_history_user.setter
     def _history_user(self, value: settings.AUTH_USER_MODEL):
         self.editor = value
+
+    @cached_property
+    def first_record(self) -> Optional[models.Model]:
+        return self.history.first()
+
+    @cached_property
+    def prev_record(self) -> Optional[models.Model]:
+        return self.first_record.prev_record if self.first_record else None
+
+    @cached_property
+    def changed_fields(self) -> List[str]:
+        if self.first_record is None or self.prev_record is None:
+            return []
+        return self.first_record.diff_against(self.prev_record).changed_fields
+
+    @cached_property
+    def has_content_changed(self) -> bool:
+        return "content" in self.changed_fields
 
     def get_flags(self) -> models.QuerySet:
         return Flag.objects.filter(comment=self)

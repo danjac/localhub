@@ -17,13 +17,12 @@ from django_countries.fields import CountryField
 
 from timezone_field import TimeZoneField
 
-from model_utils import FieldTracker
-
 from icalendar import Calendar, Event as CalendarEvent
 
 from localhub.activities.models import Activity
 from localhub.activities.utils import get_domain
 from localhub.comments.models import Comment
+from localhub.core.utils.tracker import Tracker
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification
@@ -82,8 +81,7 @@ class Event(Activity):
     likes = GenericRelation(Like, related_query_name="event")
     notifications = GenericRelation(Notification, related_query_name="event")
 
-    location_tracker = FieldTracker(LOCATION_FIELDS)
-    description_tracker = FieldTracker(["description"])
+    location_tracker = Tracker(LOCATION_FIELDS)
 
     def __str__(self) -> str:
         return self.title or self.location
