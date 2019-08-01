@@ -23,14 +23,14 @@
           </button>
     </form>
     {% elif not object.allow_comments %}
-    <p class="bg-gray p-2 text-center">{% trans "Comments are locked" %}</p>
+    <p class="toast text-center">{% trans "Comments are locked" %}</p>
     {% elif not user.is_authenticated %}
-    <p class="bg-gray p-2 text-center">
+    <p class="toast text-center">
         {% url 'account_login' as login_url %}
         {% blocktrans with next_url=request.path %}Please <a href="{{ login_url }}?next={{ next_url }}">sign in</a> to post comments.{% endblocktrans %}
     </p>
     {% else %}
-    <p class="bg-gray p-2 text-center">
+    <p class="toast text-center">
         {% trans "You do not have permission to post comments on this site." %}
     </p>
     {% endif %}

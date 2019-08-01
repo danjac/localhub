@@ -13,13 +13,13 @@
 <div class="clearfix"></div>
 
 {% elif user.is_authenticated %}
-<p class="bg-gray p-2 text-center">
+<p class="toast text-center">
   {% url 'join_requests:create' as join_request_url %}
   {% blocktrans %}You do not have permission to submit posts to this site. You can send a request to join this community <a href="{{ join_request_url }}">here</a>.{% endblocktrans %}
 </p>
 
 {% else %}
-<p class="bg-gray p-2 text-center">
+<p class="toast text-center">
   {% url 'account_login' as login_url %}
   {% blocktrans %}Please <a href="{{ login_url }}?next={{ request.get_full_path }}">sign in</a> to submit posts to this site.{% endblocktrans %}
 </p>

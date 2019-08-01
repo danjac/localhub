@@ -17,7 +17,7 @@
     <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}
   </p>
 
-  <form method="POST" action="{% url 'account_login' %}" class="mt-2 p-2 bg-gray">
+  <form method="POST" action="{% url 'account_login' %}">
 
     {% if redirect_field_value %}
     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
