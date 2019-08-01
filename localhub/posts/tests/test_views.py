@@ -151,6 +151,27 @@ class TestPostDetailView:
         assert "comment_form" in response.context
 
 
+class TestPostReshareView:
+    def test_post(self, client: Client, member: Membership):
+
+        post = PostFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
+        response = client.post(
+            reverse("posts:reshare", args=[post.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        assert response.url == post.get_absolute_url()
+        assert post.reshares.filter(owner=member.member).count() == 1
+        assert (
+            Notification.objects.filter(
+                actor=member.member, recipient=post.owner, verb="reshare"
+            ).count()
+            == 1
+        )
+
+
 class TestPostLikeView:
     def test_post(self, client: Client, member: Membership):
         post = PostFactory(

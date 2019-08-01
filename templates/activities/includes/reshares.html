@@ -1,0 +1,20 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% with num_reshares=reshares.count %}
+{% if num_reshares %}
+{% if num_reshares > 20 %}
+{% blocktrans %}
+<b>{{ num_reshares }}</b> people have reshared this post.
+{% endblocktrans %}
+{% else %}
+<div class="text-gray">{% trans "Reshared by" %}
+{% for reshare in reshares %}
+{% include "users/includes/chip.html" with profile=reshare.owner profile_url=reshare.get_absolute_url %}&nbsp;
+{% endfor %}
+</div>
+{% endif %}
+{% endif %}
+{% endwith %}
+

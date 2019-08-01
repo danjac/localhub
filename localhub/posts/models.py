@@ -19,6 +19,8 @@ from localhub.notifications.models import Notification
 
 class Post(Activity):
 
+    RESHARED_FIELDS = ("title", "description", "url")
+
     title = models.CharField(max_length=300, blank=True)
     url = models.URLField(blank=True)
 

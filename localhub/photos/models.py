@@ -29,6 +29,14 @@ class Photo(Activity):
         ("by-nc-nd", _("Attribution NonCommercial NoDerivs")),
     )
 
+    RESHARED_FIELDS = (
+        "title",
+        "image",
+        "artist",
+        "original_url",
+        "cc_license",
+    )
+
     title = models.CharField(max_length=300)
     image = ImageField(upload_to="photos")
 

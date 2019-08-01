@@ -25,6 +25,10 @@
 {% blocktrans %}
 {{ actor }} has liked your <a href="{{ activity_url }}">{{ activity_name }}</a>
 {% endblocktrans %}
+{% elif notification.verb == 'reshare' %}
+{% blocktrans %}
+{{ actor }} has reshared your <a href="{{ activity_url }}">{{ activity_name }}</a>
+{% endblocktrans %}
 {% elif notification.verb == 'edit' %}
 {% blocktrans %}
 {{ actor }} has edited your <a href="{{ activity_url }}">{{ activity_name }}</a>

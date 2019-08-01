@@ -18,6 +18,10 @@
 {% blocktrans %}
 {{ actor }} has liked your {{ activity_name }}.
 {% endblocktrans %}
+{% elif notification.verb == 'reshare' %}
+{% blocktrans %}
+{{ actor }} has reshared your {{ activity_name }}.
+{% endblocktrans %}
 {% elif notification.verb == 'flag' %}
 {% blocktrans %}
 {{ actor }} has flagged this {{ activity_name }}.

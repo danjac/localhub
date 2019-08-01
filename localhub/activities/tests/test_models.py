@@ -21,6 +21,42 @@ pytestmark = pytest.mark.django_db
 
 
 class TestActivityManager:
+    def test_num_reshares(self, post: Post):
+
+        for _ in range(3):
+            post.reshare(UserFactory())
+
+        post = (
+            Post.objects.with_num_reshares().filter(is_reshare=False).first()
+        )
+        assert post.num_reshares == 3
+
+    def test_has_reshared(self, post: Post, user: settings.AUTH_USER_MODEL):
+
+        first = PostFactory()
+        PostFactory()
+
+        other = UserFactory()
+
+        first.reshare(user)
+
+        posts = Post.objects.with_has_reshared(user).filter(has_reshared=True)
+        assert len(posts) == 1
+        assert posts[0] == first
+
+        assert (
+            Post.objects.with_has_reshared(other)
+            .filter(has_reshared=True)
+            .count()
+            == 0
+        )
+        assert (
+            Post.objects.with_has_reshared(AnonymousUser())
+            .filter(has_reshared=True)
+            .count()
+            == 0
+        )
+
     def test_following_users(self, user: settings.AUTH_USER_MODEL):
         first_post = PostFactory()
         PostFactory()

@@ -20,7 +20,13 @@
   </div>
   <div class="d-hide" data-target="toggle.togglable">
     {% endif %}
-    {% block activity_content %}{% endblock %}
+    {% if object.is_reshare %}
+    <blockquote>
+      {% endif %}
+      {% block activity_content %}{% endblock %}
+      {% if object.is_reshare %}
+    </blockquote>
+    {% endif %}
     {% if content_warning_tags and not hide_content_warning %}
   </div>
 </div>
