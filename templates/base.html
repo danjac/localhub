@@ -96,22 +96,22 @@
       </form>
       {% endif %}
       {% endblock mobile_search_form %}
-      <div class="text-center mb-2 toast toast-primary d-hide" data-controller="cookie-notice" data-cookie-notice-domain="{{ community.domain }}">
-        <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
-        {% blocktrans %}
-        This site uses cookies for authentication purposes only. We do not share your personal
-        information with third parties.
-        {% endblocktrans %}
-      </div>
-      {% for message in messages %}
-      <div class="text-center mb-2 toast toast-{{ message.tags }}" data-controller="alert">
-        <button class="btn btn-clear float-right" data-action="alert#dismiss"></button>
-        {{ message }}
-      </div>
-      {% endfor %}
-
       {% block main_layout %}
       <div class="columns bg-light py-2" data-controller="sidebar">
+        <div class="text-center mb-2 toast toast-primary d-hide" data-controller="cookie-notice" data-cookie-notice-domain="{{ community.domain }}">
+          <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
+          {% blocktrans %}
+          This site uses cookies for authentication purposes only. We do not share your personal
+          information with third parties.
+          {% endblocktrans %}
+        </div>
+        {% for message in messages %}
+        <div class="text-center my-2 toast toast-{{ message.tags }}" data-controller="alert">
+          <button class="btn btn-clear float-right" data-action="alert#dismiss"></button>
+          {{ message }}
+        </div>
+        {% endfor %}
+
         <div class="column col-3 col-lg-12 hide-lg p-2"
              data-target="sidebar.nav"
              >
