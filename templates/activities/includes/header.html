@@ -12,26 +12,32 @@
 {% endif %}
 
 <div class="card-title h5">
+
   {% if object.is_reshare %}
+
   <div class="card-subtitle h6 text-gray">
     {% include "activities/includes/timesince.html" with timestamp=object.created owner=object.owner is_reshare=True %}
   </div>
-  <blockquote>
-    {% endif %}
-    {% if is_detail and not object.is_reshare %}
+  <div class="divider"></div>
+
+  {% if object.parent %}
+  <a href="{{ object.parent.get_absolute_url }}">{{ object.title|truncatechars:130 }}</a>
+  {% endif %}
+
+  {% else %}
+
+  {% if is_detail %}
     {{ object.title }}
     {% else %}
-    <a href="{% if object.parent %}{{ object.parent.get_absolute_url }}{% else %}{{ object.get_absolute_url }}{% endif %}">{{ object.title|truncatechars:130 }}</a>
+    <a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:130 }}</a>
     {% endif %}
-    {% if object.is_reshare %}
-  </blockquote>
+
   {% endif %}
+
 </div>
 <div class="card-subtitle h6 text-gray">
   {% if object.parent %}
-  <blockquote>
-    {% include "activities/includes/timesince.html" with timestamp=object.parent.created owner=object.parent.owner %}
-  </blockquote>
+  {% include "activities/includes/timesince.html" with timestamp=object.parent.created owner=object.parent.owner %}
   {% elif not object.is_reshare %}
   {% include "activities/includes/timesince.html" with timestamp=object.created owner=object.owner %}
   {% endif %}

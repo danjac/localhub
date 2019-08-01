@@ -49,6 +49,12 @@ class TestPermissions:
     def test_owner_can_reshare_activity(self, post: Post):
         assert not post.owner.has_perm("activities.reshare_activity", post)
 
+    def test_parent_owner_can_reshare_activity(self, post: Post):
+        post = PostFactory(parent=PostFactory())
+        assert not post.parent.owner.has_perm(
+            "activities.reshare_activity", post
+        )
+
     def test_member_can_reshare_activity(self, member: Membership):
         post = PostFactory(community=member.community)
         assert member.member.has_perm("activities.reshare_activity", post)
