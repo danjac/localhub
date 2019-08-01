@@ -35,6 +35,7 @@ NOTIFICATION_PREFERENCES = {
     "following": "followings",
     "like": "likes",
     "mention": "mentions",
+    "reshare": "reshares",
     "review": "reviews",
     "tag": "tags",
 }
@@ -46,6 +47,7 @@ NOTIFICATION_SUBJECTS = {
     "following": _("Someone you are following has created a new %s"),
     "like": _("Someone has liked your %s"),
     "mention": _("Someone has mentioned you in their %s"),
+    "reshare": _("Someone has reshared your %s"),
     "review": _("Someone has created a new %s to review"),
     "tag": _("Someone has created a new %s containing tags you are following"),
 }

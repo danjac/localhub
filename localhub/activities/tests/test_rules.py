@@ -46,6 +46,13 @@ class TestPermissions:
         post = PostFactory(community=member.community)
         assert member.member.has_perm("activities.like_activity", post)
 
+    def test_owner_can_reshare_activity(self, post: Post):
+        assert not post.owner.has_perm("activities.reshare_activity", post)
+
+    def test_member_can_reshare_activity(self, member: Membership):
+        post = PostFactory(community=member.community)
+        assert member.member.has_perm("activities.reshare_activity", post)
+
     def test_can_create_comment_if_member(
         self, post: PostFactory, user: settings.AUTH_USER_MODEL
     ):
@@ -86,6 +93,13 @@ class TestPermissions:
     ):
         post = PostFactory(owner=user)
         assert user.has_perm("activities.change_activity", post)
+        assert user.has_perm("activities.delete_activity", post)
+
+    def test_owner_can_edit_or_delete_activity_if_reshare(
+        self, user: settings.AUTH_USER_MODEL
+    ):
+        post = PostFactory(owner=user, is_reshare=True)
+        assert not user.has_perm("activities.change_activity", post)
         assert user.has_perm("activities.delete_activity", post)
 
     def test_non_owner_can_edit_or_delete_activity(

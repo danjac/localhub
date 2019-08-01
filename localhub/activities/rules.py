@@ -39,16 +39,24 @@ def allows_comments(
     return activity.allow_comments
 
 
+@rules.predicate
+def is_reshare(user: settings.AUTH_USER_MODEL, activity: Activity) -> bool:
+    return activity.is_reshare
+
+
 is_editor = is_owner | is_activity_community_moderator
 
 rules.add_perm("activities.create_activity", is_member)
-rules.add_perm("activities.change_activity", is_editor)
+rules.add_perm("activities.change_activity", is_editor & ~is_reshare)
 rules.add_perm("activities.delete_activity", is_editor)
 rules.add_perm(
     "activities.flag_activity", is_activity_community_member & ~is_owner
 )
 rules.add_perm(
     "activities.like_activity", is_activity_community_member & ~is_owner
+)
+rules.add_perm(
+    "activities.reshare_activity", is_activity_community_member & ~is_owner
 )
 rules.add_perm(
     "activities.create_comment", is_activity_community_member & allows_comments

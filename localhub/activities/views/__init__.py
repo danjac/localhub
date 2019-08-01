@@ -23,6 +23,7 @@ def create_activity_urls(
     dislike_view_class: ViewType = generic.ActivityDislikeView,
     flag_view_class: ViewType = generic.ActivityFlagView,
     like_view_class: ViewType = generic.ActivityLikeView,
+    reshare_view_class: ViewType = generic.ActivityReshareView,
     create_comment_view_class: ViewType = generic.ActivityCommentCreateView,
 ) -> List[URLPattern]:
     """
@@ -64,6 +65,11 @@ def create_activity_urls(
             "<int:pk>/~like/",
             like_view_class.as_view(model=model),
             name="like",
+        ),
+        path(
+            "<int:pk>/~reshare/",
+            reshare_view_class.as_view(model=model),
+            name="reshare",
         ),
         path(
             "<int:pk>/~update/",

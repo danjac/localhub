@@ -10,56 +10,79 @@
         {% include "activities/includes/header.html" with object=event %}
     </div>
     <div class="card-body">
+        {% if event.is_reshare and not event.parent %}
+        {% trans "The original event has been removed." %}
+        {% else %}
         {% include "events/includes/content.html" with object=event %}
         <div class="divider"></div>
-        <dl>
-            {% timezone event.timezone %}
-
-            <dt>{% trans "Starts" %}</dt>
-            <dd>{{ event.starts|date:"SHORT_DATE_FORMAT" }} @ {{ event.starts|date:"TIME_FORMAT" }}</dd>
-
-            {% if event.ends %}
-            <dt>{% trans "Ends" %}</dt>
-            <dd>{{ event.ends|date:"SHORT_DATE_FORMAT" }} @ {{ event.ends|date:"TIME_FORMAT" }}</dd>
+        {% if event.is_reshare %}
+        <blockquote>
             {% endif %}
 
-            {% endtimezone %}
+            <dl>
+                {% timezone event.timezone %}
 
-            <dt>{% trans "Timezone" %}</dt>
-            <dd>{{ event.timezone }}</dd>
+                <dt>{% trans "Starts" %}</dt>
+                <dd>{{ event.starts|date:"SHORT_DATE_FORMAT" }} @ {{ event.starts|date:"TIME_FORMAT" }}</dd>
 
-            <dt>{% trans "Location" %}</dt>
-            <dd>
-            {% with location=event.full_location %}
-            {% if location %}
-            {{ location }}
-            {% else %}
-            {% trans "Online" %}
+                {% if event.ends %}
+                <dt>{% trans "Ends" %}</dt>
+                <dd>{{ event.ends|date:"SHORT_DATE_FORMAT" }} @ {{ event.ends|date:"TIME_FORMAT" }}</dd>
+                {% endif %}
+
+                {% endtimezone %}
+
+                <dt>{% trans "Timezone" %}</dt>
+                <dd>{{ event.timezone }}</dd>
+
+                <dt>{% trans "Location" %}</dt>
+                <dd>
+                {% with location=event.full_location %}
+                {% if location %}
+                {{ location }}
+                {% else %}
+                {% trans "Online" %}
+                {% endif %}
+                {% endwith %}
+                </dd>
+
+                {% if event.ticket_price %}
+                <dt>{% trans "Admission" %}</dt>
+                <dd>{{ event.ticket_price }}</dd>
+                {% endif %}
+
+                {% if event.ticket_vendor %}
+                <dt>{% trans "Tickets available from" %}</dt>
+                <dd>{{ event.ticket_vendor|linebreaksbr }}</dd>
+                {% endif %}
+
+            </dl>
+            {% if is_detail and event.latitude and event.longitude %}
+            <div id="map-for-event-{{ event.id }}"
+                 class="event-map{% if is_detail %} event-map-lg{% endif %}"
+                 data-controller="map"
+                 data-map-latitude="{{ event.latitude }}"
+                 data-map-longitude="{{ event.longitude }}"
+                 ></div>
             {% endif %}
-            {% endwith %}
-            </dd>
-
-            {% if event.ticket_price %}
-            <dt>{% trans "Admission" %}</dt>
-            <dd>{{ event.ticket_price }}</dd>
-            {% endif %}
-
-            {% if event.ticket_vendor %}
-            <dt>{% trans "Tickets available from" %}</dt>
-            <dd>{{ event.ticket_vendor|linebreaksbr }}</dd>
-            {% endif %}
-
-        </dl>
-        {% if is_detail and event.latitude and event.longitude %}
-        <div id="map-for-event-{{ event.id }}"
-             class="event-map{% if is_detail %} event-map-lg{% endif %}"
-             data-controller="map"
-             data-map-latitude="{{ event.latitude }}"
-             data-map-longitude="{{ event.longitude }}"
-             ></div>
+            {% if event.is_reshare %}
+        </blockquote>
+        {% endif %}
         {% endif %}
     </div>
     <div class="card-footer">
+        {% if is_detail %}
+        {% include "activities/includes/reshares.html" with object=event %}
+        {% elif event.num_reshares %}
+        <div class="text-gray">
+            {{ event.num_reshares }}
+            {% blocktrans count counter=event.num_reshares %}
+            person has reshared this event
+            {% plural %}
+            people have reshared this event
+            {% endblocktrans %}
+        </div>
+        {% endif %}
 
         {% if event.num_likes and event.owner == user %}
         <div class="text-gray">

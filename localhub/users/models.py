@@ -136,6 +136,7 @@ class User(AbstractUser):
         ("messages", _("I receive a direct message")),
         ("follows", _("Someone starts following me")),
         ("comments", _("Someone comments on my post")),
+        ("reshares", _("Someone has reshared my post")),
         ("mentions", _("I am @mentioned in a post or comment")),
         ("deletes", _("A moderator deletes my post or comment")),
         ("edits", _("A moderator edits my post or comment")),

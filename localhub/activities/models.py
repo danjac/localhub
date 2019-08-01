@@ -4,7 +4,7 @@
 import operator
 
 from functools import reduce
-from typing import Callable, Dict, List, Optional, Set
+from typing import Callable, Dict, Iterable, List, Optional, Set
 
 from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
@@ -52,15 +52,38 @@ class ActivityQuerySet(
         conditionally e.g. if user is authenticated or not.
         """
 
-        qs = self.with_num_comments()
+        qs = self.with_num_comments().with_num_reshares()
         if user.is_authenticated:
             qs = (
-                qs.with_num_likes().with_has_liked(user).with_has_flagged(user)
+                qs.with_num_likes()
+                .with_has_liked(user)
+                .with_has_flagged(user)
+                .with_has_reshared(user)
             )
 
             if user.has_perm("communities.moderate_community", community):
                 qs = qs.with_is_flagged()
         return qs
+
+    def with_num_reshares(self) -> models.QuerySet:
+        return self.annotate(num_reshares=models.Count("reshares"))
+
+    def with_has_reshared(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> models.QuerySet:
+        if user.is_anonymous:
+            return self.annotate(
+                has_reshared=models.Value(
+                    False, output_field=models.BooleanField()
+                )
+            )
+        return self.annotate(
+            has_reshared=models.Exists(
+                self.model.objects.filter(
+                    parent=models.OuterRef("pk"), owner=user
+                )
+            )
+        )
 
     def for_community(self, community: Community) -> models.QuerySet:
         """
@@ -142,6 +165,8 @@ class Activity(TimeStampedModel):
     Base class for all activity-related entities e.g. posts, events, photos.
     """
 
+    RESHARED_FIELDS: Iterable = ()
+
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
     owner = models.ForeignKey(
@@ -159,6 +184,16 @@ class Activity(TimeStampedModel):
     description = MarkdownField(blank=True)
 
     allow_comments = models.BooleanField(default=True)
+
+    is_reshare = models.BooleanField(default=False)
+
+    parent = models.ForeignKey(
+        "self",
+        null=True,
+        blank=True,
+        related_name="reshares",
+        on_delete=models.SET_NULL,
+    )
 
     history = HistoricalRecords(inherit=True)
 
@@ -237,6 +272,9 @@ class Activity(TimeStampedModel):
 
     def get_flag_url(self) -> str:
         return self.resolve_url("flag")
+
+    def get_reshare_url(self) -> str:
+        return self.resolve_url("reshare")
 
     def get_update_url(self) -> str:
         return self.resolve_url("update")
@@ -337,11 +375,16 @@ class Activity(TimeStampedModel):
     def notify_mentioned_users(
         self, recipients: models.QuerySet
     ) -> List[Notification]:
+        qs = recipients.matches_usernames(
+            self.description.extract_mentions()
+        ).exclude(pk=self.owner_id)
+
+        if self.parent:
+            qs = qs.exclude(pk=self.parent.owner_id)
+        qs = qs.distinct()
+
         return [
-            self.make_notification(recipient, "mention")
-            for recipient in recipients.matches_usernames(
-                self.description.extract_mentions()
-            ).exclude(pk=self.owner_id)
+            self.make_notification(recipient, "mention") for recipient in qs
         ]
 
     def notify_followers(
@@ -358,16 +401,20 @@ class Activity(TimeStampedModel):
         hashtags = self.description.extract_hashtags()
         if hashtags:
             tags = Tag.objects.filter(slug__in=hashtags)
+            qs = recipients.filter(following_tags__in=tags).exclude(
+                pk=self.owner.id
+            )
+            if self.parent:
+                qs = qs.exclude(pk=self.parent.owner_id)
+            qs = qs.distinct()
+
             if tags:
                 return [
-                    self.make_notification(follower, "tag")
-                    for follower in recipients.filter(
-                        following_tags__in=tags
-                    ).distinct()
+                    self.make_notification(follower, "tag") for follower in qs
                 ]
         return []
 
-    def notify_owner_or_moderators(self, created: bool) -> List[Notification]:
+    def notify_owner_or_moderators(self) -> List[Notification]:
         """
         Notifies moderators of updates. If change made by moderator,
         then notification sent to owner.
@@ -376,12 +423,25 @@ class Activity(TimeStampedModel):
             return [
                 self.make_notification(self.owner, "edit", actor=self.editor)
             ]
+
+        qs = self.community.get_moderators().exclude(pk=self.owner_id)
+
+        if self.parent:
+            qs = qs.exclude(pk=self.parent.owner_id)
+
+        qs = qs.distinct()
+
         return [
-            self.make_notification(moderator, "review")
-            for moderator in self.community.get_moderators().exclude(
-                pk=self.owner_id
-            )
+            self.make_notification(moderator, "review") for moderator in qs
         ]
+
+    def notify_parent_owner(
+        self, recipients: models.QuerySet
+    ) -> List[Notification]:
+        owner = recipients.filter(pk=self.parent.owner_id).first()
+        if owner:
+            return [self.make_notification(owner, "reshare")]
+        return []
 
     def notify(self, created: bool) -> List[Notification]:
         """
@@ -406,8 +466,34 @@ class Activity(TimeStampedModel):
 
         if created:
             notifications += self.notify_followers(recipients)
+            if self.parent:
+                notifications += self.notify_parent_owner(recipients)
 
-        notifications += self.notify_owner_or_moderators(created)
+        notifications += self.notify_owner_or_moderators()
 
         Notification.objects.bulk_create(notifications)
         return notifications
+
+    def reshare(
+        self, owner: settings.AUTH_USER_MODEL, commit=True, **kwargs
+    ) -> models.Model:
+        """
+        Creates a copy of the model.  The subclass must define
+        an iterable of `RESHARED_FIELDS`.
+
+        If the activity is already a reshare, a copy is made of the
+        *original* model, not the reshare.
+        """
+
+        parent = self.parent or self
+        reshared = self.__class__(
+            owner=owner,
+            is_reshare=True,
+            parent=parent,
+            community=parent.community,
+        )
+        for field in self.RESHARED_FIELDS:
+            setattr(reshared, field, getattr(self, field))
+        if commit:
+            reshared.save(**kwargs)
+        return reshared

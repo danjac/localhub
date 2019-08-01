@@ -8,9 +8,25 @@
     {% include "activities/includes/header.html" with object=post %}
   </div>
   <div class="card-body">
+    {% if post.is_reshare and not post.parent %}
+    {% trans "The original post has been removed." %}
+    {% else %}
     {% include "posts/includes/content.html" with object=post %}
+    {% endif %}
   </div>
   <div class="card-footer">
+    {% if is_detail %}
+    {% include "activities/includes/reshares.html" with object=post %}
+    {% elif post.num_reshares %}
+    <div class="text-gray">
+      {{ post.num_reshares }}
+      {% blocktrans count counter=post.num_reshares %}
+      person has reshared this post
+      {% plural %}
+      people have reshared this post
+      {% endblocktrans %}
+    </div>
+    {% endif %}
     {% if post.num_likes and post.owner == user %}
     <div class="text-gray">
       {{ post.num_likes }}
@@ -29,7 +45,7 @@
       {% endif %}
     </div>
     <div>
-    {% include "posts/includes/actions.html" with show_comments=True %}
+      {% include "posts/includes/actions.html" with show_comments=True %}
     </div>
   </div>
 

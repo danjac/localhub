@@ -50,7 +50,7 @@ class ActivityQuerySetMixin(CommunityRequiredMixin, BaseQuerySetViewMixin):
             super()
             .get_queryset()
             .for_community(self.request.community)
-            .select_related("owner", "community")
+            .select_related("owner", "community", "parent", "parent__owner")
         )
 
 
@@ -178,6 +178,8 @@ class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
         ):
             data.update({"comment_form": CommentForm()})
 
+        data["reshares"] = self.get_reshares()
+
         return data
 
     def get_queryset(self) -> QuerySet:
@@ -195,6 +197,11 @@ class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
             self.object.get_flags().select_related("user").order_by("-created")
         )
 
+    def get_reshares(self) -> QuerySet:
+        return self.object.reshares.blocked_users(
+            self.request.user
+        ).select_related("owner").order_by("-created")
+
     def get_comments(self) -> QuerySet:
         return (
             self.object.get_comments()
@@ -204,6 +211,35 @@ class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
             .select_related("owner", "community")
             .order_by("created")
         )
+
+
+class ActivityReshareView(PermissionRequiredMixin, SingleActivityView):
+    permission_required = "activities.reshare_activity"
+
+    def get_queryset(self) -> QuerySet:
+        """
+        Make sure user has only reshared once.
+        """
+        return (
+            super()
+            .get_queryset()
+            .with_has_reshared(self.request.user)
+            .filter(has_reshared=False)
+        )
+
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        reshare = self.object.reshare(self.request.user)
+
+        messages.success(
+            self.request,
+            _("You have reshared this %s") % self.object._meta.verbose_name,
+        )
+
+        for notification in reshare.notify(created=True):
+            send_activity_notification_email(self.object, notification)
+
+        return HttpResponseRedirect(self.object.get_absolute_url())
 
 
 class ActivityLikeView(PermissionRequiredMixin, SingleActivityView):

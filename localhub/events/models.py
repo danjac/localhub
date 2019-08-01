@@ -39,6 +39,19 @@ class Event(Activity):
         "country",
     )
 
+    RESHARED_FIELDS = LOCATION_FIELDS + (
+        "title",
+        "url",
+        "starts",
+        "ends",
+        "timezone",
+        "venue",
+        "ticket_price",
+        "ticket_vendor",
+        "latitude",
+        "longitude",
+    )
+
     title = models.CharField(max_length=200)
     url = models.URLField(verbose_name=_("Link"), null=True, blank=True)
 
@@ -47,6 +60,11 @@ class Event(Activity):
     timezone = TimeZoneField(default=settings.TIME_ZONE)
 
     venue = models.CharField(max_length=200, blank=True)
+
+    ticket_price = models.CharField(max_length=200, blank=True)
+    ticket_vendor = models.TextField(
+        verbose_name=_("Tickets available from"), blank=True
+    )
 
     street_address = models.CharField(max_length=200, blank=True)
     locality = models.CharField(
@@ -58,11 +76,6 @@ class Event(Activity):
 
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
-
-    ticket_price = models.CharField(max_length=200, blank=True)
-    ticket_vendor = models.TextField(
-        verbose_name=_("Tickets available from"), blank=True
-    )
 
     comments = GenericRelation(Comment, related_query_name="event")
     flags = GenericRelation(Flag, related_query_name="event")
