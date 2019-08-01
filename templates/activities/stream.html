@@ -30,13 +30,13 @@
 </div>
 <div class="clearfix"></div>
 {% elif user.is_authenticated %}
-<p class="toast text-center">
+<p class="toast text-center my-2">
   {% url 'join_requests:create' as join_request_url %}
   {% blocktrans %}You do not have permission to post to this site. You can send a request to join this community <a href="{{ join_request_url }}">here</a>.{% endblocktrans %}
 </p>
 
 {% else %}
-<p class="toast text-center">
+<p class="toast text-center my-2">
   {% url 'account_login' as login_url %}
   {% blocktrans %}Please <a href="{{ login_url }}">sign in</a> to post content to this site.{% endblocktrans %}
 </p>
