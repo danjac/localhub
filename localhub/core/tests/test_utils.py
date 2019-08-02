@@ -3,14 +3,14 @@
 
 import pytest
 
-from localhub.posts.models import Post
+from localhub.events.models import Event
 
 pytestmark = pytest.mark.django_db
 
 
 class TestTracker:
-    def test_changed(self, post: Post):
-        assert not post.description_tracker.changed()
-        post.description = "testing changed"
-        post.save()
-        assert post.description_tracker.changed()
+    def test_changed(self, event: Event):
+        assert not event.location_tracker.changed()
+        event.locality = "Helsinki"
+        event.save()
+        assert event.location_tracker.changed()
