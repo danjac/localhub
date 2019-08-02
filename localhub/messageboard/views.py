@@ -39,7 +39,7 @@ class MessageQuerySetMixin(LoginRequiredMixin, CommunityRequiredMixin):
     def get_queryset(self) -> models.QuerySet:
         return Message.objects.filter(
             sender=self.request.user, community=self.request.community
-        )
+        ).select_related("parent", "parent__sender")
 
 
 class MessageRecipientListView(MessageRecipientQuerySetMixin, ListView):
@@ -79,6 +79,13 @@ class MessageRecipientDetailView(MessageRecipientQuerySetMixin, DetailView):
             .select_related("message__parent", "message__parent__sender")
         )
 
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["replies"] = Message.objects.filter(
+            sender=self.request.user, parent=self.object.message
+        ).order_by("created")
+        return data
+
 
 message_recipient_detail_view = MessageRecipientDetailView.as_view()
 
@@ -107,6 +114,14 @@ class MessageDetailView(MessageQuerySetMixin, DetailView):
         data["recipients"] = self.object.messagerecipient_set.select_related(
             "recipient"
         ).order_by("recipient__name", "recipient__username")
+        if self.object.parent:
+            data["reply_to"] = (
+                MessageRecipient.objects.filter(
+                    recipient=self.request.user, message=self.object.parent
+                )
+                .select_related("message")
+                .first()
+            )
         return data
 
 

@@ -20,6 +20,10 @@
 <dl>
   <dt>{% trans "Subject" %}</dt>
   <dd>{{ object.subject }}</dd>
+  {% if reply_to and reply_to %}
+  <dt>{% trans "Reply to" %}</dt>
+  <dd><a href="{{ reply_to.get_absolute_url }}">{{ reply_to.message.subject }}</a></dd>
+  {% endif %}
   <dt>{% trans "Sent" %}</dt>
   <dd>{{ object.created|date:"DATETIME_FORMAT" }}</dd>
   <dt>{% trans "Recipients" %}</dt>

@@ -23,7 +23,7 @@
     </li>
 </ul>
 
-<div class="float-right">
+<div class="btn-group float-right">
     <a href="{% url 'messageboard:message_create_reply' message.id %}" class="btn btn-sm">
         {% trans "Reply" %}
     </a>
@@ -56,12 +56,37 @@
     <dt>{% trans "Received" %}</dt>
     <dd>{{ message.created|date:"DATETIME_FORMAT" }}</dd>
 </dl>
-
 <div class="divider"></div>
-
 <div class="markdown-content">
     {{ message.message.markdown }}
 </div>
+{% if replies %}
+<h6>{% trans "My Replies" %}</h6>
+{% for reply in replies %}
+<div class="card mb-1">
+    <div class="card-header">
+        <div class="card-title">
+
+            <a href="{{ reply.get_absolute_url }}">{{ reply.subject }}
+                {% blocktrans with since=reply.created|timesince %}
+                {{ since }} ago
+                {% endblocktrans %}
+            </a>
+        </div>
+        <div class="card-subtitle text-gray">
+            {% blocktrans with created=reply.created|timesince %}
+            {{ created }}
+            {% endblocktrans %}
+        </div>
+    </div>
+    <div class="card-body">
+        <p class="markdown-content">
+            {{ reply.message.markdown|truncatechars_html:60 }}
+        </p>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
 
 {% endwith %}
 {% endblock messageboard_content %}
