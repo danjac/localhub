@@ -72,6 +72,7 @@
 
 {% user_display user_obj as display_name %}
 <h3>{% avatar user_obj "avatar-lg" %}{{ display_name }}</h3>
+<h4>@{{ user_obj.username }}</h4>
 {% if is_auth_user %}
 {% blocktrans with created=membership.created|timesince %}
 You have been a member for <b>{{ created }}</b>.
