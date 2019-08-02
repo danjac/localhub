@@ -96,8 +96,8 @@
       </form>
       {% endif %}
       {% endblock mobile_search_form %}
-      {% block main_layout %}
-      <div class="columns bg-light py-2" data-controller="sidebar">
+
+      <div class="columns p-2 bg-light">
         <div class="text-center mb-2 toast toast-primary d-hide" data-controller="cookie-notice" data-cookie-notice-domain="{{ community.domain }}">
           <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
           {% blocktrans %}
@@ -111,6 +111,10 @@
           {{ message }}
         </div>
         {% endfor %}
+      </div>
+
+      {% block main_layout %}
+      <div class="columns bg-light py-2" data-controller="sidebar">
 
         <div class="column col-3 col-lg-12 hide-lg p-2"
              data-target="sidebar.nav"
