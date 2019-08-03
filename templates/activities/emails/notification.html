@@ -15,7 +15,7 @@
 </div>
 
 <div class="section">
-{% include "activities/emails/notifications/"|add:notification.verb|add:".html" %}
+    {% block notification_body %}{% endblock %}
 </div>
 {% endblock content %}
 

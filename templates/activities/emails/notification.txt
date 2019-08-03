@@ -6,6 +6,6 @@
 {% user_display notification.recipient as recipient %}
 {% user_display notification.actor as actor %}
 {% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
-{% include "activities/emails/notifications/"|add:notification.verb|add:".txt" %}
+{% block notification_body %}{% endblock %}
 Link to {{ activity_name }}: {{ object_url }}
 {% endautoescape %}

@@ -1,8 +1,12 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{% extends "activities/emails/notification.html" %}
+
 {% load i18n %}
 
+{% block notification_body %}
 {% blocktrans %}
 {{ actor }} has created a new <a href="{{ object_url }}">{{ activity_name }}</a> containing tags you are following.
 {% endblocktrans %}
+{% endblock notification_body %}
