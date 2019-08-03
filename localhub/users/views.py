@@ -200,9 +200,13 @@ class FollowingUserListView(LoginRequiredMixin, BaseUserListView):
     template_name = "users/following_user_list.html"
 
     def get_queryset(self) -> QuerySet:
-        return self.request.user.following.annotate(
-            is_following=Value(True, output_field=BooleanField())
-        ).order_by("name", "username")
+        return (
+            self.request.user.following.annotate(
+                is_following=Value(True, output_field=BooleanField())
+            )
+            .active(self.request.community)
+            .order_by("name", "username")
+        )
 
 
 following_user_list_view = FollowingUserListView.as_view()
