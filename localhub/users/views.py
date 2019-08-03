@@ -216,7 +216,12 @@ class FollowerUserListView(LoginRequiredMixin, BaseUserListView):
     template_name = "users/follower_user_list.html"
 
     def get_queryset(self) -> QuerySet:
-        return super().get_queryset().filter(following=self.request.user)
+        return (
+            super()
+            .get_queryset()
+            .filter(following=self.request.user)
+            .with_is_following(self.request.user)
+        )
 
 
 follower_user_list_view = FollowerUserListView.as_view()
@@ -226,7 +231,12 @@ class BlockedUserListView(LoginRequiredMixin, BaseUserListView):
     template_name = "users/blocked_user_list.html"
 
     def get_queryset(self) -> QuerySet:
-        return super().get_queryset().filter(blockers=self.request.user)
+        return (
+            super()
+            .get_queryset()
+            .filter(blockers=self.request.user)
+            .with_is_following(self.request.user)
+        )
 
 
 blocked_user_list_view = BlockedUserListView.as_view()
