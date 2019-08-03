@@ -257,6 +257,7 @@ class Testing(Base):
     CACHES = {
         "default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}
     }
+    THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + ["django_extensions"]
 
 
 class Local(DockerConfigMixin, Base):
