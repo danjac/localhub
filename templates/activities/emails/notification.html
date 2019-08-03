@@ -15,38 +15,7 @@
 </div>
 
 <div class="section">
-{% if notification.verb == 'mention' %}
-{% blocktrans %}
-{{ actor }} has mentioned you in their <a href="{{ object_url }}">{{ activity_name }}</a>.
-{% endblocktrans %}
-{% elif notification.verb == 'flag' %}
-{% blocktrans %}
-{{ actor }} has flagged this <a href="{{ object_url }}">{{ activity_name }}</a>.
-{% endblocktrans %}
-{% elif notification.verb == 'follow' %}
-{% blocktrans %}
-{{ actor }} has created a new <a href="{{ object_url }}">{{ activity_name }}</a>.
-{% endblocktrans %}
-{% elif notification.verb == 'review' %}
-{% blocktrans %}
-{{ actor }} has created or updated their <a href="{{ object_url }}">{{ activity_name }}</a> for you to review.
-{% endblocktrans %}
-{% elif notification.verb == 'like' %}
-{% blocktrans %}
-{{ actor }} has liked your <a href="{{ object_url }}">{{ activity_name }}</a>.
-{% endblocktrans %}
-{% elif notification.verb == 'reshare' %}
-{% blocktrans %}
-{{ actor }} has reshared your <a href="{{ object_url }}">{{ activity_name }}</a>.
-{% endblocktrans %}
-{% elif notification.verb == 'edit' %}
-{% blocktrans %}
-{{ actor }} has edited your <a href="{{ object_url }}">{{ activity_name }}</a>.
-{% endblocktrans %}
-{% elif notification.verb == 'tag' %}
-{% blocktrans %}
-{{ actor }} has created a new <a href="{{ object_url }}">{{ activity_name }}</a> containing tags you are following.
-{% endblocktrans %}
-{% endif %}
-</p>
+{% include "activities/emails/notifications/"|add:notification.verb|add:".html" %}
+</div>
 {% endblock content %}
+

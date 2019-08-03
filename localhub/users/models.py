@@ -169,7 +169,7 @@ class User(AbstractUser):
     show_sensitive_content = models.BooleanField(default=False)
 
     email_preferences = ChoiceArrayField(
-        models.CharField(max_length=12, choices=EMAIL_PREFERENCES),
+        models.CharField(max_length=30, choices=EMAIL_PREFERENCES),
         default=list,
         blank=True,
     )
