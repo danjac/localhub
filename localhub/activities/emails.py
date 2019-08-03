@@ -44,7 +44,7 @@ NOTIFICATION_PREFERENCES = {
 NOTIFICATION_SUBJECTS = {
     "edit": _("A moderator has edited your %s"),
     "flag": _("Someone has flagged this %s"),
-    "following": _("Someone you are following has created a new %s"),
+    "follow": _("Someone you are following has created a new %s"),
     "like": _("Someone has liked your %s"),
     "mention": _("Someone has mentioned you in their %s"),
     "reshare": _("Someone has reshared your %s"),

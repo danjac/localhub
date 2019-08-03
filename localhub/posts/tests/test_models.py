@@ -121,7 +121,7 @@ class TestPostModel:
 
         assert notifications[2].recipient == user_follower
         assert notifications[2].actor == post.owner
-        assert notifications[2].verb == "following"
+        assert notifications[2].verb == "follow"
 
         assert notifications[3].recipient == moderator
         assert notifications[3].actor == post.owner

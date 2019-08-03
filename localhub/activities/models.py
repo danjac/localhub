@@ -386,7 +386,7 @@ class Activity(TimeStampedModel):
         self, recipients: models.QuerySet
     ) -> List[Notification]:
         return [
-            self.make_notification(follower, "following")
+            self.make_notification(follower, "follow")
             for follower in recipients.filter(following=self.owner).distinct()
         ]
 
