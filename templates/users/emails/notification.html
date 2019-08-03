@@ -17,7 +17,7 @@
 </div>
 
 <div class="section">
-{% if notification.verb == 'follow' %}
+{% if notification.verb == 'new_follower' %}
 {% blocktrans %}
 <a href="{{ object_url }}">{{ actor }}</a> is now following you.
 {% endblocktrans %}

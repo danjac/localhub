@@ -9,7 +9,7 @@ from localhub.messageboard.models import MessageRecipient
 
 def send_message_email(recipient: MessageRecipient):
 
-    if recipient.recipient.has_email_pref("messages"):
+    if recipient.recipient.has_email_pref("new_message"):
 
         context = {"recipient": recipient, "message": recipient.message}
 

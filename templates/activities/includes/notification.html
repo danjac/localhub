@@ -3,40 +3,11 @@
 
 {% extends "notifications/includes/notification.html" %}
 
-{% load i18n %}
 {% load account %}
 
 {% block notification_title %}
 {% with activity_url=activity.get_absolute_url %}
 {% user_display notification.actor as actor %}
-{% if notification.verb == 'mention' %}
-{% blocktrans %}
-{{ actor }} has mentioned you in their <a href="{{ activity_url }}">{{ activity_name }}</a>.
-{% endblocktrans %}
-{% elif notification.verb == 'follow' %}
-{% blocktrans %}
-{{ actor }} has created a new <a href="{{ activity_url }}">{{ activity_name }}</a>.
-{% endblocktrans %}
-{% elif notification.verb == 'review' %}
-{% blocktrans %}
-{{ actor }} has created or updated their <a href="{{ activity_url }}">{{ activity_name }}</a> for you to review.
-{% endblocktrans %}
-{% elif notification.verb == 'like' %}
-{% blocktrans %}
-{{ actor }} has liked your <a href="{{ activity_url }}">{{ activity_name }}</a>.
-{% endblocktrans %}
-{% elif notification.verb == 'reshare' %}
-{% blocktrans %}
-{{ actor }} has reshared your <a href="{{ activity_url }}">{{ activity_name }}</a>.
-{% endblocktrans %}
-{% elif notification.verb == 'edit' %}
-{% blocktrans %}
-{{ actor }} has edited your <a href="{{ activity_url }}">{{ activity_name }}</a>.
-{% endblocktrans %}
-{% elif notification.verb == 'tag' %}
-{% blocktrans %}
-{{ actor }} has created a new <a href="{{ activity_url }}">{{ activity_name }}</a> containing tags you are following.
-{% endblocktrans %}
-{% endif %}
+{% include "activities/includes/notifications/"|add:notification.verb|add:".html" %}
 {% endwith %}
 {% endblock notification_title %}

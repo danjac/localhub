@@ -6,7 +6,7 @@
 {% user_display notification.recipient as recipient %}
 {% user_display notification.actor as actor %}
 {% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
-{% if notification.verb == 'follow' %}
+{% if notification.verb == 'new_follower' %}
 {{ actor }} is now following you.
 {% endif %}
 Link to user: {{ object_url }}

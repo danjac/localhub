@@ -24,7 +24,7 @@ class Notification(TimeStampedModel):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey("content_type", "object_id")
 
-    verb = models.CharField(max_length=20)
+    verb = models.CharField(max_length=30)
     is_read = models.BooleanField(default=False)
 
     class Meta:

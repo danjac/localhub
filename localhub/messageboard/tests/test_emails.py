@@ -14,7 +14,7 @@ pytestmark = pytest.mark.django_db
 
 class TestSendMessageEmail:
     def test_if_enabled(self, mailoutbox: List):
-        user = UserFactory(email_preferences=["messages"])
+        user = UserFactory(email_preferences=["new_message"])
         recipient = MessageRecipientFactory(recipient=user)
         send_message_email(recipient)
         assert len(mailoutbox) == 1

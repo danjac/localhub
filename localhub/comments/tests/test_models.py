@@ -162,11 +162,11 @@ class TestCommentModel:
 
         assert notifications[1].recipient == moderator
         assert notifications[1].actor == comment.owner
-        assert notifications[1].verb == "review"
+        assert notifications[1].verb == "moderator_review_request"
 
         assert notifications[2].recipient == post.owner
         assert notifications[2].actor == comment.owner
-        assert notifications[2].verb == "comment"
+        assert notifications[2].verb == "new_comment"
 
         # edit by moderator
         comment.editor = moderator
@@ -177,4 +177,4 @@ class TestCommentModel:
 
         assert notifications[0].recipient == comment.owner
         assert notifications[0].actor == moderator
-        assert notifications[0].verb == "edit"
+        assert notifications[0].verb == "moderator_edit"

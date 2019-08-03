@@ -104,7 +104,7 @@ class TestPostCommentCreateView:
         notification = Notification.objects.get(
             recipient=post.owner, comment=comment
         )
-        assert notification.verb == "comment"
+        assert notification.verb == "new_comment"
 
 
 class TestPostDeleteView:

@@ -152,9 +152,7 @@
       </div>
       {% endblock main_layout %}
     </div>
-    <footer class="text-center p-2 text-light">
-      &copy; Dan Jacob {% now "Y" %}. {% blocktrans %}<a href="https://gitlab.com/danjac/localhub/">Open software</a> licensed under <a href="http://www.affero.org/oagpl.html">AGPL</a>{% endblocktrans %}.
-    </footer>
+    {% include "includes/footer.html" %}
     {% include "includes/confirm_dialog.html" %}
   </body>
 

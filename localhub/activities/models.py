@@ -386,7 +386,7 @@ class Activity(TimeStampedModel):
         self, recipients: models.QuerySet
     ) -> List[Notification]:
         return [
-            self.make_notification(follower, "follow")
+            self.make_notification(follower, "new_followed_user_post")
             for follower in recipients.filter(following=self.owner).distinct()
         ]
 
@@ -405,7 +405,8 @@ class Activity(TimeStampedModel):
 
             if tags:
                 return [
-                    self.make_notification(follower, "tag") for follower in qs
+                    self.make_notification(follower, "new_followed_tag_post")
+                    for follower in qs
                 ]
         return []
 
@@ -416,7 +417,9 @@ class Activity(TimeStampedModel):
         """
         if self.editor and self.editor != self.owner:
             return [
-                self.make_notification(self.owner, "edit", actor=self.editor)
+                self.make_notification(
+                    self.owner, "moderator_edit", actor=self.editor
+                )
             ]
 
         qs = self.community.get_moderators().exclude(pk=self.owner_id)
@@ -427,7 +430,8 @@ class Activity(TimeStampedModel):
         qs = qs.distinct()
 
         return [
-            self.make_notification(moderator, "review") for moderator in qs
+            self.make_notification(moderator, "moderator_review_request")
+            for moderator in qs
         ]
 
     def notify_parent_owner(

@@ -20,14 +20,14 @@ pytestmark = pytest.mark.django_db
 
 class TestSendCommentNotificationEmail:
     def test_if_enabled(self, comment: Comment, mailoutbox: List):
-        moderator = UserFactory(email_preferences=["reviews"])
+        moderator = UserFactory(email_preferences=["moderator_review_request"])
 
         notification = Notification.objects.create(
             content_object=comment,
             community=comment.community,
             actor=comment.owner,
             recipient=moderator,
-            verb="review",
+            verb="moderator_review_request",
         )
 
         send_comment_notification_email(comment, notification)
@@ -42,7 +42,7 @@ class TestSendCommentNotificationEmail:
             community=comment.community,
             actor=comment.owner,
             recipient=moderator,
-            verb="review",
+            verb="moderator_review_request",
         )
 
         send_comment_notification_email(comment, notification)
@@ -51,7 +51,7 @@ class TestSendCommentNotificationEmail:
 
 class TestSendCommentDeletedEmail:
     def test_if_enabled(self, comment: Comment, mailoutbox: List):
-        comment.owner.email_preferences = ["deletes"]
+        comment.owner.email_preferences = ["moderator_delete"]
 
         send_comment_deleted_email(comment)
         assert len(mailoutbox) == 1

@@ -203,11 +203,13 @@ class Comment(TimeStampedModel):
             and self.owner in recipients
         ):
             notifications += [
-                self.make_notification("edit", self.owner, self.editor)
+                self.make_notification(
+                    "moderator_edit", self.owner, self.editor
+                )
             ]
         else:
             notifications += [
-                self.make_notification("review", recipient)
+                self.make_notification("moderator_review_request", recipient)
                 for recipient in self.community.get_moderators().exclude(
                     pk=self.owner_id
                 )
@@ -215,7 +217,9 @@ class Comment(TimeStampedModel):
         # notify the activity owner
         if created and self.owner_id != self.content_object.owner_id:
             notifications.append(
-                self.make_notification("comment", self.content_object.owner)
+                self.make_notification(
+                    "new_comment", self.content_object.owner
+                )
             )
         Notification.objects.bulk_create(notifications)
         return notifications

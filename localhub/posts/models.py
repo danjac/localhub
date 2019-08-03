@@ -7,8 +7,6 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.utils.translation import gettext as _
 
-from model_utils import FieldTracker
-
 from localhub.activities.models import Activity
 from localhub.activities.utils import get_domain
 from localhub.comments.models import Comment
@@ -28,8 +26,6 @@ class Post(Activity):
     flags = GenericRelation(Flag, related_query_name="post")
     likes = GenericRelation(Like, related_query_name="post")
     notifications = GenericRelation(Notification, related_query_name="post")
-
-    # description_tracker = FieldTracker(["description"])
 
     def __str__(self) -> str:
         return self.title or self.get_domain() or _("Post")

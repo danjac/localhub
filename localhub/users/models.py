@@ -133,18 +133,27 @@ class User(AbstractUser):
     )
 
     EMAIL_PREFERENCES = Choices(
-        ("messages", _("I receive a direct message")),
-        ("follows", _("Someone starts following me")),
-        ("comments", _("Someone comments on my post")),
-        ("reshares", _("Someone has reshared my post")),
-        ("mentions", _("I am @mentioned in a post or comment")),
-        ("deletes", _("A moderator deletes my post or comment")),
-        ("edits", _("A moderator edits my post or comment")),
-        ("followings", _("Someone I'm following creates a post")),
-        ("likes", _("Someone likes my post or comment")),
-        ("tags", _("A post is created containing tags I'm following")),
-        ("flags", _("Post or comment is flagged (MODERATORS ONLY)")),
-        ("reviews", _("Content to be reviewed (MODERATORS ONLY)")),
+        ("new_message", _("I receive a direct message")),
+        ("new_follower", _("Someone starts following me")),
+        ("new_comment", _("Someone comments on my post")),
+        ("reshare", _("Someone has reshared my post")),
+        ("mention", _("I am @mentioned in a post or comment")),
+        ("moderator_delete", _("A moderator deletes my post or comment")),
+        ("moderator_edit", _("A moderator edits my post or comment")),
+        ("like", _("Someone likes my post or comment")),
+        ("new_followed_user_post", _("Someone I'm following creates a post")),
+        (
+            "new_followed_tag_post",
+            _("A post is created containing tags I'm following"),
+        ),
+        ("flag", _("A user has flagged a comment or post (moderators only)")),
+        (
+            "moderator_review_request",
+            _(
+                "A user has a new comment or post for you to "
+                "review (moderators only)"
+            ),
+        ),
     )
 
     name = models.CharField(_("Full name"), blank=True, max_length=255)

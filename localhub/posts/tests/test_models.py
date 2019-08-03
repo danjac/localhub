@@ -117,15 +117,15 @@ class TestPostModel:
 
         assert notifications[1].recipient == tag_follower
         assert notifications[1].actor == post.owner
-        assert notifications[1].verb == "tag"
+        assert notifications[1].verb == "new_followed_tag_post"
 
         assert notifications[2].recipient == user_follower
         assert notifications[2].actor == post.owner
-        assert notifications[2].verb == "follow"
+        assert notifications[2].verb == "new_followed_user_post"
 
         assert notifications[3].recipient == moderator
         assert notifications[3].actor == post.owner
-        assert notifications[3].verb == "review"
+        assert notifications[3].verb == "moderator_review_request"
 
         # edit by moderator
         post.editor = moderator
@@ -136,7 +136,7 @@ class TestPostModel:
 
         assert notifications[0].recipient == post.owner
         assert notifications[0].actor == moderator
-        assert notifications[0].verb == "edit"
+        assert notifications[0].verb == "moderator_edit"
 
         # reshare
         reshare = post.reshare(UserFactory())
@@ -149,7 +149,7 @@ class TestPostModel:
 
         assert notifications[1].recipient == tag_follower
         assert notifications[1].actor == reshare.owner
-        assert notifications[1].verb == "tag"
+        assert notifications[1].verb == "new_followed_tag_post"
 
         assert notifications[2].recipient == post.owner
         assert notifications[2].actor == reshare.owner
@@ -157,4 +157,4 @@ class TestPostModel:
 
         assert notifications[3].recipient == moderator
         assert notifications[3].actor == reshare.owner
-        assert notifications[3].verb == "review"
+        assert notifications[3].verb == "moderator_review_request"
