@@ -2,8 +2,10 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "comments/emails/notification.txt" %}
+{% load i18n %}
+
 {% block notification_body %}
 {% blocktrans %}
-{{ actor }} has edited your <a href="{{ object_url }}">comment</a>.
+{{ actor }} has flagged this comment.
 {% endblocktrans %}
 {% endblock notification_body %}

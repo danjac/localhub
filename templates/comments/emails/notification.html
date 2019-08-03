@@ -17,30 +17,6 @@
 </div>
 
 <div class="section">
-{% if notification.verb == 'mention' %}
-{% blocktrans %}
-{{ actor }} has mentioned you in their <a href="{{ object_url }}">comment</a>.
-{% endblocktrans %}
-{% elif notification.verb == 'review' %}
-{% blocktrans %}
-{{ actor }} has posted or updated <a href="{{ object_url }}">comment</a> to review.
-{% endblocktrans %}
-{% elif notification.verb == 'like' %}
-{% blocktrans %}
-{{ actor }} has liked this <a href="{{ object_url }}">comment</a>.
-{% endblocktrans %}
-{% elif notification.verb == 'flag' %}
-{% blocktrans %}
-{{ actor }} has flagged this <a href="{{ object_url }}">comment</a>.
-{% endblocktrans %}
-{% elif notification.verb == 'edit' %}
-{% blocktrans %}
-{{ actor }} has edited your <a href="{{ object_url }}">comment</a>.
-{% endblocktrans %}
-{% elif notification.verb == 'comment' %}
-{% blocktrans %}
-{{ actor }} has <a href="{{ object_url }}">commented</a> on one of your posts.
-{% endblocktrans %}
-{% endif %}
+  {% block notification_body %}{% endblock %}
 </div>
 {% endblock content %}

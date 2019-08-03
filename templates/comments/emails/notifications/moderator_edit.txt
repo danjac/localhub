@@ -4,6 +4,6 @@
 {% extends "comments/emails/notification.txt" %}
 {% block notification_body %}
 {% blocktrans %}
-{{ actor }} has edited your <a href="{{ object_url }}">comment</a>.
+{{ actor }} has edited your comment.
 {% endblocktrans %}
 {% endblock notification_body %}

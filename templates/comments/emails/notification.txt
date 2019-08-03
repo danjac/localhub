@@ -6,30 +6,6 @@
 {% user_display notification.recipient as recipient %}
 {% user_display notification.actor as actor %}
 {% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
-{% if notification.verb == 'mention' %}
-{% blocktrans %}
-{{ actor }} has mentioned you in their comment.
-{% endblocktrans %}
-{% elif notification.verb == 'review' %}
-{% blocktrans %}
-{{ actor }} has posted or updated a comment for review.
-{% endblocktrans %}
-{% elif notification.verb == 'flag' %}
-{% blocktrans %}
-{{ actor }} has flagged this comment.
-{% endblocktrans %}
-{% elif notification.verb == 'like' %}
-{% blocktrans %}
-{{ actor }} has liked this comment.
-{% endblocktrans %}
-{% elif notification.verb == 'edit' %}
-{% blocktrans %}
-{{ actor }} has edited your comment.
-{% endblocktrans %}
-{% elif notification.verb == 'comment' %}
-{% blocktrans %}
-{{ actor }} has commented on one of your posts.
-{% endblocktrans %}
-{% endif %}
+{% block notification_body %}{% endblock %}
 Link to comment: {{ object_url }}
 {% endautoescape %}

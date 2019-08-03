@@ -1,8 +1,11 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{% extends "comments/emails/notification.txt" %}
 {% load i18n %}
 
+{% block notification_body %}
 {% blocktrans %}
 {{ actor }} has liked this <a href="{{ object_url }}">comment</a>.
 {% endblocktrans %}
+{% endblock notification_body %}

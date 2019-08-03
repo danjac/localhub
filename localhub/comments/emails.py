@@ -27,15 +27,21 @@ def send_comment_notification_email(
     comment: Comment, notification: Notification
 ):
 
-    print(notification.verb)
     if notification.recipient.has_email_pref(notification.verb):
+
+        plain_template_name = (
+            f"comments/emails/notifications/{notification.verb}.txt"
+        )
+        html_template_name = (
+            f"comments/emails/notifications/{notification.verb}.html"
+        )
 
         send_notification_email(
             notification,
             NOTIFICATION_SUBJECTS[notification.verb],
             comment.get_permalink(),
-            "comments/emails/notification.txt",
-            "comments/emails/notification.html",
+            plain_template_name,
+            html_template_name,
             {"comment": comment},
         )
 
