@@ -55,6 +55,7 @@ message_recipient_list_view = MessageRecipientListView.as_view()
 class SenderMessageRecipientListView(
     SingleUserMixin, MessageRecipientListView
 ):
+    paginate_by = settings.DEFAULT_PAGE_SIZE
     template_name = "messageboard/sender_messagerecipient_list.html"
 
     def get_queryset(self) -> models.QuerySet:
@@ -83,7 +84,7 @@ class MessageRecipientDetailView(MessageRecipientQuerySetMixin, DetailView):
         data = super().get_context_data(**kwargs)
         data["replies"] = Message.objects.filter(
             sender=self.request.user, parent=self.object.message
-        ).order_by("created")
+        ).order_by("-created")
         return data
 
 

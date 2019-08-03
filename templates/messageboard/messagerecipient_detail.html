@@ -61,25 +61,23 @@
   {{ message.message.markdown }}
 </div>
 {% if replies %}
-<h6>{% trans "My Replies" %}</h6>
-{% for reply in replies %}
-<div class="card mb-1">
-  <div class="card-header">
-    <div class="card-title">
 
+<div class="divider"></div>
+<h6>{% trans "My Replies" %}</h6>
+
+<div class="tile">
+  {% for reply in replies %}
+  <div class="tile-content">
+    <div class="tile-title">
       <a href="{{ reply.get_absolute_url }}">{{ reply.subject }}</a>
     </div>
-    <div class="card-subtitle text-gray">
+    <div class="tile-subtitle text-gray">
       {{ reply.created|date:"DATETIME_FORMAT" }}
     </div>
   </div>
-  <div class="card-body">
-    <p class="markdown-content">
-      {{ reply.message.markdown|truncatechars_html:60 }}
-    </p>
-  </div>
 </div>
 {% endfor %}
+</div>
 {% endif %}
 
 {% endwith %}

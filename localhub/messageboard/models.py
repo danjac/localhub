@@ -4,6 +4,7 @@
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+from django.utils import formats
 
 from model_utils.models import TimeStampedModel
 
@@ -37,6 +38,9 @@ class Message(TimeStampedModel):
     def get_absolute_url(self) -> str:
         return reverse("messageboard:message_detail", args=[self.id])
 
+    def get_month(self) -> str:
+        return formats.date_format(self.created, "F, Y")
+
 
 class MessageRecipient(models.Model):
 
@@ -64,3 +68,6 @@ class MessageRecipient(models.Model):
 
     def get_permalink(self) -> str:
         return self.message.community.resolve_url(self.get_absolute_url())
+
+    def get_month(self) -> str:
+        return self.message.get_month()

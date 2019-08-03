@@ -6,26 +6,40 @@
 {% load i18n %}
 
 {% block messageboard_content %}
-{% for message in object_list %}
-<div class="card mb-1">
-  <div class="card-header">
-    <div class="card-title">
-      <a href="{{ message.get_absolute_url }}">
-        <a href="{{ message.get_absolute_url }}">{{ message.subject }}</a>
-      </a>
+
+{% if object_list %}
+{% regroup object_list by get_month as months %}
+
+<div class="timeline">
+  {% for month in months %}
+  <div class="timeline-item">
+    <div class="timeline-left">
+      <a class="timeline-icon" href="#"></a>
     </div>
-    <div class="card-subtitle text-gray">
-      {{ message.created|timesince }} ago
+    <div class="timeline-content">
+      <div class="tile">
+        <div class="tile-content">
+          <p class="tile-subtitle">{{ month.grouper }}</p>
+          {% for message in month.list %}
+          <p class="tile-title">
+            <a href="{{ message.get_absolute_url }}">
+                {{ message.subject }}
+            </a><br>
+            <span class="text-gray">{{ message.created|date:"DATETIME_FORMAT" }}</span>
+          </p>
+          {% endfor %}
+        </div>
+      </div>
     </div>
   </div>
+  {% endfor %}
 </div>
-{% empty %}
+{% include "includes/pagination.html" %}
+{% else %}
 <div class="empty">
   <p class="empty-title h5">{% trans "Your outbox is empty" %}</p>
 </div>
-{% endfor %}
-
-{% include "includes/pagination.html" %}
+{% endif %}
 {% endblock messageboard_content %}
 
 

@@ -12,30 +12,42 @@
   {% blocktrans %}You can enable emails for new messages <a href="{{ user_settings_url }}">in your settings</a>.{% endblocktrans %}
 </p>
 
-{% for recipient in object_list %}
-<div class="card mb-1">
-  <div class="card-header">
-    <div class="card-title">
-      <a href="{{ recipient.get_absolute_url }}">
-        {% if not recipient.read %}<strong>{% endif %}
-          {{ recipient.message.subject }}
-          {% if not recipient.read %}</strong>{% endif %}
-      </a>
+{% if object_list %}
+{% regroup object_list by get_month as months %}
+
+<div class="timeline">
+  {% for month in months %}
+  <div class="timeline-item">
+    <div class="timeline-left">
+      <a class="timeline-icon" href="#"></a>
     </div>
-    <div class="card-subtitle text-gray">
-      {% blocktrans with created=recipient.message.created|timesince %}
-      {{ created }} ago from
-      {% endblocktrans %}
-      {% include "users/includes/chip.html" with profile=recipient.message.sender %}
+    <div class="timeline-content">
+      <div class="tile">
+        <div class="tile-content">
+          <p class="tile-subtitle">{{ month.grouper }}</p>
+          {% for recipient in month.list %}
+          <p class="tile-title">
+            <a href="{{ recipient.get_absolute_url }}">
+              {% if not recipient.read %}<strong>{% endif %}
+                {{ recipient.message.subject }}
+                {% if not recipient.read %}</strong>{% endif %}
+            </a><br>
+            {% include "users/includes/chip.html" with profile=recipient.message.sender %}
+            <span class="text-gray">{{ recipient.message.created|date:"DATETIME_FORMAT" }}</span>
+          </p>
+          {% endfor %}
+        </div>
+      </div>
     </div>
   </div>
+  {% endfor %}
 </div>
-{% empty %}
+{% include "includes/pagination.html" %}
+{% else %}
 <div class="empty">
   <p class="empty-title h5">{% trans "Your inbox is empty" %}</p>
 </div>
-{% endfor %}
-{% include "includes/pagination.html" %}
+{% endif %}
 {% endblock messageboard_content %}
 
 
