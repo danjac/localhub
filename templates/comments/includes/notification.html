@@ -11,15 +11,15 @@
 {% with comment_url=comment.get_absolute_url %}
 {% if notification.verb == 'mention' %}
 {% blocktrans %}
-{{ actor }} has mentioned you in their <a href="{{ comment_url }}">comment</a>
+{{ actor }} has mentioned you in their <a href="{{ comment_url }}">comment</a>.
 {% endblocktrans %}
 {% elif notification.verb == 'review' %}
 {% blocktrans %}
-{{ actor }} has posted or updated a <a href="{{ comment_url }}">comment</a> for review
+{{ actor }} has posted or updated a <a href="{{ comment_url }}">comment</a> for review.
 {% endblocktrans %}
 {% elif notification.verb == 'like' %}
 {% blocktrans %}
-{{ actor }} has liked your <a href="{{ comment_url }}">comment</a>
+{{ actor }} has liked your <a href="{{ comment_url }}">comment</a>.
 {% endblocktrans %}
 {% elif notification.verb == 'edit' %}
 {% blocktrans %}
