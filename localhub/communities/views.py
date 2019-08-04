@@ -115,6 +115,7 @@ class CommunityUpdateView(
 ):
     fields = (
         "name",
+        "tagline",
         "description",
         "terms",
         "content_warning_tags",
@@ -145,18 +146,21 @@ class CommunityUpdateView(
 community_update_view = CommunityUpdateView.as_view()
 
 
-class CommunityListView(LoginRequiredMixin, ListView):
+class CommunityListView(ListView):
     """
-    Returns all communities a user belongs to
+    Returns all public communities, or communities the
+    current user belongs to.
     """
 
     paginate_by = settings.DEFAULT_PAGE_SIZE
     allow_empty = True
 
     def get_queryset(self) -> QuerySet:
-        return self.request.user.membership_set.select_related(
-            "community"
-        ).order_by("community__name")
+        return (
+            Community.objects.available(self.request.user)
+            .with_num_members()
+            .order_by("name")
+        )
 
 
 community_list_view = CommunityListView.as_view()
@@ -239,7 +243,7 @@ class MembershipDeleteView(
 
     def get_success_url(self) -> str:
         if self.object.member == self.request.user:
-            return reverse("communities:community_list")
+            return settings.HOME_PAGE_URL
         return reverse("communities:membership_list")
 
     def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:

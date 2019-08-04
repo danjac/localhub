@@ -6,7 +6,6 @@ from django.urls import path
 from localhub.communities.views import (
     community_detail_view,
     community_leave_view,
-    community_list_view,
     community_update_view,
     membership_delete_view,
     membership_detail_view,
@@ -19,7 +18,6 @@ app_name = "communities"
 urlpatterns = [
     path("", view=community_detail_view, name="community_detail"),
     path("~update/", view=community_update_view, name="community_update"),
-    path("communities/", view=community_list_view, name="community_list"),
     path("memberships/", view=membership_list_view, name="membership_list"),
     path("leave/", view=community_leave_view, name="leave"),
     path(

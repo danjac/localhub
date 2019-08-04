@@ -52,8 +52,45 @@ class RequestCommunity:
         return False
 
 
+class CommunityQuerySet(models.QuerySet):
+    def with_num_members(self) -> models.QuerySet:
+        return self.annotate(num_members=models.Count("membership"))
+
+    def available(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
+        qs = self.filter(active=True)
+        if user.is_authenticated:
+            qs = qs.annotate(
+                is_member=models.Exists(
+                    self.model.objects.filter(
+                        membership__member=user,
+                        membership__active=True,
+                        membership__community=models.OuterRef("pk"),
+                    )
+                )
+            )
+        else:
+            qs = self.annotate(
+                is_member=models.Value(
+                    False, output_field=models.BooleanField()
+                )
+            )
+
+        return qs.filter(
+            models.Q(models.Q(public=True) | models.Q(is_member=True))
+        ).distinct()
+
+
 class CommunityManager(models.Manager):
     use_in_migrations = True
+
+    def get_queryset(self) -> models.QuerySet:
+        return CommunityQuerySet(self.model, using=self._db)
+
+    def with_num_members(self) -> models.QuerySet:
+        return self.get_queryset().with_num_members()
+
+    def available(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
+        return self.get_queryset().available(user)
 
     def get_current(
         self, request: HttpRequest
@@ -76,6 +113,9 @@ class Community(TimeStampedModel):
     )
 
     name = models.CharField(max_length=255)
+
+    tagline = models.TextField(blank=True)
+
     description = MarkdownField(blank=True)
     terms = MarkdownField(
         blank=True,

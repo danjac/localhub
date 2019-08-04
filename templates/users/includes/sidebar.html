@@ -11,12 +11,15 @@
     <a href="{% url 'activities:stream' %}">{% trans "Home" %}
     </a>
   </li>
+  {% if community %}
+  {% test_rule "communities.is_member" user community as is_member %}
+  {% has_perm "communities.manage_community" user community as can_manage_community %}
+  {% if is_member %}
   <li class="menu-item">
     <a data-controller="active-link" href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
   </li>
+  {% endif %}
 
-  {% if community %}
-  {% has_perm "communities.manage_community" user community as can_manage_community %}
   {% if can_manage_community %}
   <li class="menu-item"><a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a></li>
   {% endif %}

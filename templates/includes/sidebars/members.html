@@ -3,6 +3,7 @@
 
 {% load i18n %}
 {% load rules %}
+{% load communities_tags %}
 {% load notifications_tags %}
 {% load messageboard_tags %}
 {% load flags_tags %}
@@ -14,6 +15,7 @@
 
 {% get_unread_notification_count user community as unread_notifications %}
 {% get_unread_message_count user community as unread_messages %}
+{% get_local_communities_count user community as num_communities %}
 
 <ul class="menu">
   <li class="menu-item">
@@ -36,6 +38,14 @@
       </span>
     </a>
   </li>
+  {% if num_communities %}
+  <li class="menu-item">
+    <a data-controller="active-link"
+       data-active-link-exact
+       href="{% url 'community_list' %}">{% trans "Local Directory" %}
+    </a>
+  </li>
+  {% endif %}
 </ul>
 
 {% if can_create_activity or can_create_message %}

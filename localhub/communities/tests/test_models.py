@@ -3,17 +3,57 @@
 
 import pytest
 
+from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError
 from django.test.client import RequestFactory
 
 from localhub.communities.models import Community, Membership
+from localhub.communities.tests.factories import (
+    CommunityFactory,
+    MembershipFactory,
+)
+from localhub.users.tests.factories import UserFactory
 
-from .factories import CommunityFactory
 
 pytestmark = pytest.mark.django_db
 
 
 class TestCommunityManager:
+    def test_with_num_members(self):
+        MembershipFactory()
+        community = Community.objects.with_num_members().first()
+        assert community.num_members == 1
+
+    def test_available_if_anonymous_and_public(self):
+        community = CommunityFactory(public=True)
+        assert (
+            Community.objects.available(AnonymousUser()).first() == community
+        )
+
+    def test_available_if_anonymous_and_private(self):
+        CommunityFactory(public=False)
+        assert Community.objects.available(AnonymousUser()).first() is None
+
+    def test_available_if_not_member_and_public(self):
+        user = UserFactory()
+        community = CommunityFactory(public=True)
+        assert Community.objects.available(user).first() == community
+
+    def test_available_if_not_member_and_private(self):
+        user = UserFactory()
+        CommunityFactory(public=False)
+        assert Community.objects.available(user).first() is None
+
+    def test_available_if_member_and_public(self):
+        community = CommunityFactory(public=True)
+        member = MembershipFactory(community=community).member
+        assert Community.objects.available(member).first() == community
+
+    def test_available_if_member_and_private(self):
+        community = CommunityFactory(public=False)
+        member = MembershipFactory(community=community).member
+        assert Community.objects.available(member).first() == community
+
     def test_get_current_if_community_on_site(
         self, req_factory: RequestFactory
     ):

@@ -3,35 +3,53 @@
 
 {% load i18n %}
 {% load rules %}
+{% load communities_tags %}
 
 {% has_perm "communities.view_community" user community as can_view_community %}
 
+{% get_local_communities_count user community as num_communities %}
+
 {% if can_view_community %}
 <ul class="menu">
-  <li class="menu-item">
-    <a data-controller="active-link"
-       data-active-link-exact
-       href="{% url 'activities:stream' %}">{% trans "Home" %}
-    </a>
-  </li>
-  <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
-  <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'activities:tag_list' %}">{% trans "Tags" %}</a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'events:list' %}">{% trans "Events" %}</a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
-  </li>
+    <li class="menu-item">
+        <a data-controller="active-link"
+           data-active-link-exact
+           href="{% url 'activities:stream' %}">{% trans "Home" %}
+        </a>
+    </li>
+    {% if num_communities %}
+    <li class="menu-item">
+        <a data-controller="active-link"
+           data-active-link-exact
+           href="{% url 'community_list' %}">{% trans "Local Directory" %}
+        </a>
+    </li>
+    {% endif %}
+    <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
+    <li class="menu-item">
+        <a data-controller="active-link" href="{% url 'activities:tag_list' %}">{% trans "Tags" %}</a>
+    </li>
+    <li class="menu-item">
+        <a data-controller="active-link" href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
+    </li>
+    <li class="menu-item">
+        <a data-controller="active-link" href="{% url 'events:list' %}">{% trans "Events" %}</a>
+    </li>
+    <li class="menu-item">
+        <a data-controller="active-link" href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
+    </li>
 </ul>
 {% else %}
 <ul class="menu">
-  <li class="divider" data-content="Settings"></li>
-  <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
+    {% if num_communities %}
+    <li class="menu-item">
+        <a data-controller="active-link"
+           data-active-link-exact
+           href="{% url 'community_list' %}">{% trans "Local Directory" %}
+        </a>
+    </li>
+    {% endif %}
+    <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
 </ul>
 {% endif %}
 

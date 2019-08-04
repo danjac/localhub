@@ -18,7 +18,7 @@ class CommunityFactory(DjangoModelFactory):
 
 class MembershipFactory(DjangoModelFactory):
     member = SubFactory(UserFactory)
-    community = SubFactory(UserFactory)
+    community = SubFactory(CommunityFactory)
 
     class Meta:
         model = Membership

@@ -116,11 +116,8 @@ class TestCommunityListView:
         member: Membership,
         user: settings.AUTH_USER_MODEL,
     ):
-        MembershipFactory(member=user, community=member.community)
-        assert (
-            client.get(reverse("communities:community_list")).status_code
-            == 200
-        )
+        CommunityFactory.create_batch(3)
+        assert client.get(reverse("community_list")).status_code == 200
 
 
 class TestMembershipListView:
@@ -219,7 +216,7 @@ class TestMembershipDeleteView:
             reverse("communities:membership_delete", args=[member.id])
         )
 
-        assert response.url == reverse("communities:community_list")
+        assert response.url == settings.HOME_PAGE_URL
         assert not Membership.objects.filter(pk=member.id).exists()
 
 
@@ -248,5 +245,5 @@ class TestCommunityLeaveView:
             reverse("communities:membership_delete", args=[member.id])
         )
 
-        assert response.url == reverse("communities:community_list")
+        assert response.url == settings.HOME_PAGE_URL
         assert not Membership.objects.filter(pk=member.id).exists()

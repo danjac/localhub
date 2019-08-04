@@ -1,0 +1,51 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h3>{% trans "Local Directory" %}</h3>
+
+{% for object in object_list %}
+<div class="card mb-1">
+  <div class="card-header">
+    <div class="card-title">
+      {% if object.is_member %}
+      <span class="badge" data-badge="Member">
+        <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+      </span>
+      {% else %}
+      <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+      {% endif %}
+    </div>
+    <div class="card-subtitle text-gray">
+      {% blocktrans with created=object.created|timesince %}
+      Created {{ created }} ago
+      {% endblocktrans %}
+    </div>
+    <div class="card-content">
+      {% blocktrans count counter=object.num_members %}
+      This community has <strong>1</strong> Members.
+      {% plural %}
+      This community has <strong>{{ counter }}</strong> Members.
+      {% endblocktrans %}
+    </div>
+    {% if not object.public %}
+    <div class="card-content">
+      <strong>{% trans "This community is private" %}.</strong>
+    </div>
+    {% endif %}
+    {% if object.tagline %}
+    <div class="card-content">
+      <em>
+      {{ object.tagline|linebreaks }}
+      </em>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+
+{% include "includes/pagination.html" %}
+{% endblock content %}
