@@ -309,6 +309,9 @@ class Production(DockerConfigMixin, Base):
     AWS_QUERYSTRING_AUTH = False
     AWS_DEFAULT_ACL = "public-read"
 
+    MEDIA_URL = values.Value()
+    STATIC_URL = values.Value()
+
     CELERY_EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
     MAILGUN_API_KEY = values.Value()
     MAILGUN_SENDER_DOMAIN = values.Value()
@@ -326,14 +329,6 @@ class Production(DockerConfigMixin, Base):
             f"https://{self.AWS_STORAGE_BUCKET_NAME}."
             f"s3.{self.AWS_S3_REGION_NAME}.amazonaws.com/"
         )
-
-    @property
-    def MEDIA_URL(self) -> str:
-        return f"{self.s3_url}{self.AWS_MEDIA_LOCATION}/"
-
-    @property
-    def STATIC_URL(self) -> str:
-        return f"{self.s3_url}{self.AWS_STATIC_LOCATION}/"
 
     @property
     def ANYMAIL(self) -> Dict[str, str]:
