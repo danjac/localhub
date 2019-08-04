@@ -12,7 +12,7 @@ from localhub.photos.models import Photo
     post_save, sender=Photo, dispatch_uid="photos.update_search_document"
 )
 def update_search_document(instance: Photo, **kwargs):
-    transaction.on_commit(instance.search_indexer.make_updater())
+    transaction.on_commit(lambda: instance.search_indexer.update())
 
 
 @receiver(post_save, sender=Photo, dispatch_uid="photos.taggit")

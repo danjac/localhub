@@ -5,7 +5,7 @@ import operator
 
 from functools import reduce
 
-from typing import Callable, List, Tuple, Type
+from typing import List, Tuple, Type
 
 from django.contrib.postgres.search import (
     SearchVector,
@@ -65,26 +65,20 @@ class InstanceSearchIndexer:
             ]
         ]
 
-    def make_updater(self) -> Callable:
+    def update(self):
         """
-        Returns an indexing function to update the PostgreSQL search document
-        for this instance.
+        In e.g.post_save signal:
 
-        In post_save signal:
-
-        transaction.on_commit(instance.search_indexer.make_updater())
+        transaction.on_commit(lambda: instance.search_indexer.update())
         """
 
-        def on_commit():
-            self.owner.objects.filter(pk=self.instance.pk).update(
-                **{
-                    self.search_document_field: reduce(
-                        operator.add, self.get_search_vectors()
-                    )
-                }
-            )
-
-        return on_commit
+        self.owner.objects.filter(pk=self.instance.pk).update(
+            **{
+                self.search_document_field: reduce(
+                    operator.add, self.get_search_vectors()
+                )
+            }
+        )
 
 
 class SearchIndexer:

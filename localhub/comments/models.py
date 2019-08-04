@@ -9,6 +9,8 @@ from django.contrib.contenttypes.fields import (
     GenericRelation,
 )
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.urls import reverse
 from django.utils.functional import cached_property
@@ -23,6 +25,7 @@ from localhub.core.types import BaseQuerySetMixin
 from localhub.core.utils.content_types import (
     get_generic_related_count_subquery,
 )
+from localhub.core.utils.search import SearchIndexer, SearchQuerySetMixin
 from localhub.core.utils.tracker import Tracker
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
@@ -51,7 +54,10 @@ class CommentAnnotationsQuerySetMixin(BaseQuerySetMixin):
 
 
 class CommentQuerySet(
-    FlagAnnotationsQuerySetMixin, LikeAnnotationsQuerySetMixin, models.QuerySet
+    FlagAnnotationsQuerySetMixin,
+    LikeAnnotationsQuerySetMixin,
+    SearchQuerySetMixin,
+    models.QuerySet,
 ):
     def for_community(self, community: Community) -> models.QuerySet:
         """
@@ -110,20 +116,24 @@ class Comment(TimeStampedModel):
 
     content = MarkdownField()
 
+    search_document = SearchVectorField(null=True, editable=False)
+
     flags = GenericRelation(Flag, related_query_name="comment")
     likes = GenericRelation(Like, related_query_name="comment")
     notifications = GenericRelation(Notification, related_query_name="comment")
 
     history = HistoricalRecords()
     content_tracker = Tracker(["content"])
+    search_indexer = SearchIndexer(("A", "content"))
 
     objects = CommentQuerySet.as_manager()
 
     class Meta:
         indexes = [
+            GinIndex(fields=["search_document"]),
             models.Index(
                 fields=["content_type", "object_id", "owner", "community"]
-            )
+            ),
         ]
 
     def get_absolute_url(self) -> str:

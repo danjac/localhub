@@ -18,7 +18,7 @@ def fetch_title_from_url(instance: Post, **kwargs):
 
 @receiver(post_save, sender=Post, dispatch_uid="posts.update_search_document")
 def update_search_document(instance: Post, **kwargs):
-    transaction.on_commit(instance.search_indexer.make_updater())
+    transaction.on_commit(lambda: instance.search_indexer.update())
 
 
 @receiver(post_save, sender=Post, dispatch_uid="posts.taggit")

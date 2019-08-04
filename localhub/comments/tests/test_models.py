@@ -18,6 +18,16 @@ pytestmark = pytest.mark.django_db
 
 
 class TestCommentManager:
+    def test_search(self):
+
+        comment = CommentFactory(content="testme")
+        other_comment = CommentFactory(content="not found")
+
+        comment.search_indexer.update()
+        other_comment.search_indexer.update()
+
+        assert Comment.objects.search("testme").get() == comment
+
     def test_blocked_users(self, user: settings.AUTH_USER_MODEL):
 
         my_comment = CommentFactory(owner=user)
