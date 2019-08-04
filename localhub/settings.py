@@ -305,12 +305,10 @@ class Production(DockerConfigMixin, Base):
     AWS_ACCESS_KEY_ID = values.Value()
     AWS_SECRET_ACCESS_KEY = values.Value()
     AWS_STORAGE_BUCKET_NAME = values.Value()
+    AWS_S3_CUSTOM_DOMAIN = values.Value()
     AWS_S3_REGION_NAME = values.Value("eu-north-1")
     AWS_QUERYSTRING_AUTH = False
     AWS_DEFAULT_ACL = "public-read"
-
-    MEDIA_URL = values.Value()
-    STATIC_URL = values.Value()
 
     CELERY_EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
     MAILGUN_API_KEY = values.Value()
