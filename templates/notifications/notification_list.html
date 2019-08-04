@@ -25,13 +25,13 @@
 <div class="clearfix"></div>
 {% endif %}
 
-<p class="toast text-center my-2">
+<p class="toast text-center my-1">
   {% url 'user_update' as user_settings_url %}
   {% blocktrans %}You can enable emails for your notifications <a href="{{ user_settings_url }}">in your settings</a>.{% endblocktrans %}
 </p>
 
 {% for notification in object_list %}
-<div class="mb-2">
+<div class="mb-1">
   {% with content_type=notification.content_type.name content_object=notification.content_object %}
   {% if content_type == "post" %}
   {% include "activities/includes/notification.html" with activity=content_object activity_name="post" %}

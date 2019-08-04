@@ -6,7 +6,7 @@
 
 {% block user_content %}
 
-<div class="mt-2 toast text-center">
+<div class="mt-1 toast text-center">
 {% if is_auth_user %}
 {% blocktrans count counter=paginator.count %}
 You have published <strong>1 comment</strong>
@@ -36,7 +36,7 @@ and has a total of <strong>{{ counter }} likes</strong> for their comments.
 
 
 {% for comment in object_list %}
-<div class="mt-2">
+<div class="mt-1">
     {% include "comments/includes/comment.html" %}
 </div>
 {% empty %}

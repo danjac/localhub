@@ -23,7 +23,7 @@
     </div>
     <div class="card-footer">
         {% if comment.num_likes and comment.owner == user %}
-        <div class="mb-2 text-gray">
+        <div class="mb-1 text-gray">
             {{ comment.num_likes }}
             {% blocktrans count counter=comment.num_likes %}
             person liked this comment
@@ -32,7 +32,7 @@
             {% endblocktrans %}
         </div>
         {% endif %}
-        <div class="mb-2">
+        <div class="mb-1">
             <a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a>
         </div>
         {% include "comments/includes/actions.html" %}

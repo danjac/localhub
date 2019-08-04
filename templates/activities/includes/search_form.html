@@ -6,7 +6,7 @@
       action="{{ request.path }}"
       data-controller="form"
       data-action="form#submit"
-      class="my-2"
+      class="my-1"
       >
       <div class="input-group">
         <input class="form-input"
@@ -26,7 +26,7 @@
 </form>
 
 {% if view.search_query and object_list %}
-<div class="toast text-center mt-2">
+<div class="toast text-center mt-1">
   {% blocktrans count counter=paginator.count %}
   1 result found
   {% plural %}

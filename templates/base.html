@@ -32,7 +32,7 @@
 
   <body class="bg-dark text-dark">
     <div class="container">
-      <header class="navbar px-2 py-1 my-2">
+      <header class="navbar px-1 py-1 my-1">
         <section class="navbar-section">
           <a class="navbar-brand mr-2 text-light" href="/">
             {{ community.name }}
@@ -83,7 +83,7 @@
       {% if can_view_community %}
       <form method="GET"
             action="{% url 'activities:search' %}"
-            class="form-horizontal show-sm mb-2"
+            class="form-horizontal show-sm mb-1"
             data-controller="form"
             data-action="form#submit"
             >
@@ -97,8 +97,8 @@
       {% endif %}
       {% endblock mobile_search_form %}
 
-      <div class="columns p-2 bg-light">
-        <div class="text-center mb-2 toast toast-primary d-hide" data-controller="cookie-notice" data-cookie-notice-domain="{{ community.domain }}">
+      <div class="columns p-1 bg-light">
+        <div class="text-center mb-1 toast toast-primary d-hide" data-controller="cookie-notice" data-cookie-notice-domain="{{ community.domain }}">
           <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
           {% blocktrans %}
           This site uses cookies for authentication purposes only. We do not share your personal
@@ -106,7 +106,7 @@
           {% endblocktrans %}
         </div>
         {% for message in messages %}
-        <div class="text-center my-2 toast toast-{{ message.tags }}" data-controller="alert">
+        <div class="text-center my-1 toast toast-{{ message.tags }}" data-controller="alert">
           <button class="btn btn-clear float-right" data-action="alert#dismiss"></button>
           {{ message }}
         </div>
@@ -114,12 +114,12 @@
       </div>
 
       {% block main_layout %}
-      <div class="columns bg-light py-2" data-controller="sidebar">
+      <div class="columns bg-light py-1" data-controller="sidebar">
 
-        <div class="column col-3 col-lg-12 hide-lg p-2"
+        <div class="column col-3 col-lg-12 hide-lg p-1"
              data-target="sidebar.nav"
              >
-             <div class="show-lg hide-xl mb-2">
+             <div class="show-lg hide-xl mb-1">
                <a href="#"
                   class="btn btn-sm btn-link btn-block"
                   data-action="sidebar#toggle"
@@ -129,8 +129,8 @@
           {% include "includes/sidebar.html" %}
           {% endblock %}
         </div>
-        <div class="column col-9 col-lg-12 bg-light pt-2" data-target="sidebar.main">
-          <div class="show-lg hide-xl float-right mb-2">
+        <div class="column col-9 col-lg-12 bg-light pt-1" data-target="sidebar.main">
+          <div class="show-lg hide-xl float-right mb-1">
             <a href="#"
                class="btn btn-sm btn-link"
                data-action="sidebar#toggle"

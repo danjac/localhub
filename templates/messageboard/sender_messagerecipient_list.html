@@ -21,7 +21,7 @@
 {% has_perm "messageboard.create_message" user community as can_create_message %}
 
 {% if can_create_message %}
-<div class="mb-2">
+<div class="mb-1">
   <div class="float-right">
     <a href="{% url 'messageboard:message_create_pm' user_obj.username %}" class="btn btn-sm">
       {% trans "Send message" %}

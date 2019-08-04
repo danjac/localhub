@@ -9,7 +9,7 @@
 {% if user_obj.bio %}
 {{ user_obj.bio.markdown }}
 {% if is_auth_user %}
-<p class="mt-2">
+<p class="mt-1">
     <a href="{% url 'user_update' %}" class="btn">
         {% trans "Update your profile" %}
     </a>

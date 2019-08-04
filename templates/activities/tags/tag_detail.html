@@ -56,7 +56,7 @@
 <h3>#{{ tag.slug }}</h3>
 {% with total=paginator.count %}
 {% if total %}
-<div class="toast text-center my-2">
+<div class="toast text-center my-1">
   {% blocktrans count counter=total %}
   There is one post with this tag.
   {% plural %}
@@ -67,7 +67,7 @@
 {% endwith %}
 
 {% for activity in object_list %}
-<div class="mt-2">
+<div class="mt-1">
   {% include "activities/includes/activity.html" %}
 </div>
 {% empty %}

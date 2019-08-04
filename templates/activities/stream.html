@@ -30,13 +30,13 @@
 </div>
 <div class="clearfix"></div>
 {% elif user.is_authenticated %}
-<p class="toast text-center my-2">
+<p class="toast text-center my-1">
   {% url 'join_requests:create' as join_request_url %}
   {% blocktrans %}You do not have permission to post to this site. You can send a request to join this community <a href="{{ join_request_url }}">here</a>.{% endblocktrans %}
 </p>
 
 {% else %}
-<p class="toast text-center my-2">
+<p class="toast text-center my-1">
   {% url 'account_login' as login_url %}
   {% blocktrans %}Please <a href="{{ login_url }}">sign in</a> to post content to this site.{% endblocktrans %}
 </p>
@@ -44,11 +44,11 @@
 
 
 {% for activity in object_list %}
-<div class="my-2">
+<div class="my-1">
   {% include "activities/includes/activity.html" %}
 </div>
 {% empty %}
-<div class="empty mt-2">
+<div class="empty mt-1">
   {% if not view.show_all and user.is_authenticated %}
   <p class="empty-title h5">{% trans "Nothing has been posted yet by people you are following. Click 'Show All' to see all content." %}</p>
   {% else %}

@@ -6,7 +6,7 @@
 
 {% get_local_communities user community as communities %}
 {% if communities|length %}
-<ul class="menu mt-2">
+<ul class="menu mt-1">
     <li class="divider" data-content="{% trans 'Local Communities' %}"></li>
     {% for community in communities %}
     <li class="menu-item">
