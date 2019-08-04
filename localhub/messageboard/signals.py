@@ -6,24 +6,13 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
-from localhub.messageboard.models import Message, MessageRecipient
+from localhub.messageboard.models import Message
 
 
 @receiver(
     post_save,
     sender=Message,
-    dispatch_uid="messageboard.update_message_search_document",
+    dispatch_uid="messageboard.update_search_document",
 )
-def update_message_search_document(instance: Message, **kwargs):
-    transaction.on_commit(lambda: instance.search_indexer.update())
-
-
-@receiver(
-    post_save,
-    sender=MessageRecipient,
-    dispatch_uid="messageboard.update_messagerecipient_search_document",
-)
-def update_messagerecipient_search_document(
-    instance: MessageRecipient, **kwargs
-):
+def update_search_document(instance: Message, **kwargs):
     transaction.on_commit(lambda: instance.search_indexer.update())

@@ -46,7 +46,11 @@ class MessageRecipientListView(MessageRecipientQuerySetMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
     def get_queryset(self) -> models.QuerySet:
-        return super().get_queryset().order_by("-message__created")
+        qs = super().get_queryset().order_by("-message__created")
+        self.search_query = self.request.GET.get("q", "")
+        if self.search_query:
+            qs = qs.search(self.search_query)
+        return qs
 
 
 message_recipient_list_view = MessageRecipientListView.as_view()
@@ -103,7 +107,11 @@ class MessageListView(MessageQuerySetMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
     def get_queryset(self) -> models.QuerySet:
-        return super().get_queryset().order_by("-created")
+        qs = super().get_queryset().order_by("-created")
+        self.search_query = self.request.GET.get("q", "")
+        if self.search_query:
+            qs = qs.search(self.search_query)
+        return qs
 
 
 message_list_view = MessageListView.as_view()

@@ -59,7 +59,7 @@ class Message(TimeStampedModel):
 
 
 class MessageRecipientQuerySet(SearchQuerySetMixin, models.QuerySet):
-    ...
+    search_document_field = "message__search_document"
 
 
 class MessageRecipient(models.Model):
@@ -72,12 +72,6 @@ class MessageRecipient(models.Model):
 
     read = models.DateTimeField(null=True, blank=True)
 
-    search_document = SearchVectorField(null=True, editable=False)
-
-    search_indexer = SearchIndexer(
-        ("A", "message.subject"), ("B", "message.message")
-    )
-
     objects = MessageRecipientQuerySet.as_manager()
 
     class Meta:
@@ -87,7 +81,6 @@ class MessageRecipient(models.Model):
                 name="unique_message_recipient",
             )
         ]
-        indexes = [GinIndex(fields=["search_document"])]
 
     def __str__(self) -> str:
         return str(self.message)

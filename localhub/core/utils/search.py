@@ -15,7 +15,6 @@ from django.contrib.postgres.search import (
 from django.db import models
 
 from localhub.core.types import BaseQuerySetMixin
-from localhub.core.utils.functional import nested_getattr
 
 
 class SearchQuerySetMixin(BaseQuerySetMixin):
@@ -60,7 +59,7 @@ class InstanceSearchIndexer:
                 weight=weight,
             )
             for (weight, text) in [
-                (k, nested_getattr(self.instance, v))
+                (k, getattr(self.instance, v))
                 for k, v in self.search_components
             ]
         ]

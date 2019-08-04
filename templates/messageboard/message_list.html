@@ -7,6 +7,8 @@
 
 {% block messageboard_content %}
 
+{% include "includes/search_form.html" %}
+
 {% if object_list %}
 {% regroup object_list by get_month as months %}
 

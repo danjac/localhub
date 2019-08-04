@@ -24,6 +24,15 @@ class TestMessageRecipientListView:
         response = client.get(reverse("messageboard:message_recipient_list"))
         assert len(response.context["object_list"]) == 1
 
+    def test_search(self, client: Client, member: Membership):
+        message = MessageFactory(community=member.community, subject="testme")
+        message.search_indexer.update()
+        MessageRecipientFactory(message=message, recipient=member.member)
+        response = client.get(
+            reverse("messageboard:message_recipient_list"), {"q": "testme"}
+        )
+        assert len(response.context["object_list"]) == 1
+
 
 class TestSenderMessageRecipientListView:
     def test_get(self, client: Client, member: Membership):
@@ -81,6 +90,16 @@ class TestMessageListView:
     def test_get(self, client: Client, member: Membership):
         MessageFactory(community=member.community, sender=member.member)
         response = client.get(reverse("messageboard:message_list"))
+        assert len(response.context["object_list"]) == 1
+
+    def test_search(self, client: Client, member: Membership):
+        message = MessageFactory(
+            community=member.community, sender=member.member, subject="testme"
+        )
+        message.search_indexer.update()
+        response = client.get(
+            reverse("messageboard:message_list"), {"q": "testme"}
+        )
         assert len(response.context["object_list"]) == 1
 
 

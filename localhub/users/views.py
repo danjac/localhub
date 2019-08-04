@@ -254,7 +254,7 @@ class UserAutocompleteListView(LoginRequiredMixin, BaseUserListView):
                     Q(username__icontains=search_term)
                     | Q(name__icontains=search_term)
                 )
-            )
+            )[: settings.DEFAULT_PAGE_SIZE]
         return qs.none()
 
 
