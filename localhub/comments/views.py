@@ -264,3 +264,25 @@ comment_flag_view = CommentFlagView.as_view()
 
 class CommentListView(MultipleCommentMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
+
+
+class CommentSearchView(CommentListView):
+    template_name = "comments/search.html"
+
+    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.search_query = request.GET.get("q", "").strip()
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self) -> QuerySet:
+        if not self.search_query:
+            return self.none()
+        return (
+            super()
+            .get_queryset()
+            .blocked_users(self.request.user)
+            .search(self.search_query)
+            .order_by("rank")
+        )
+
+
+comment_search_view = CommentSearchView.as_view()

@@ -18,6 +18,24 @@ from localhub.posts.tests.factories import PostFactory
 pytestmark = pytest.mark.django_db
 
 
+class TestCommentSearchView:
+    def test_get(self, client: Client, member: Membership):
+        post = PostFactory(community=member.community, owner=member.member)
+        comment = CommentFactory(
+            community=member.community,
+            content="testme",
+            content_object=post,
+            owner=post.owner,
+        )
+        comment.search_indexer.update()
+        response = client.get(
+            reverse("comments:search"),
+            {"q": "testme"},
+            HTTP_HOST=comment.community.domain,
+        )
+        assert len(response.context["object_list"]) == 1
+
+
 class TestCommentDetailView:
     def test_get(self, client: Client, member: Membership):
         post = PostFactory(community=member.community)

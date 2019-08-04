@@ -3,17 +3,15 @@
 
 {% extends "search_base.html" %}
 {% load i18n %}
-{% load rules %}
 
 {% block search_content %}
-
-{% for activity in object_list %}
+{% for comment in object_list %}
 <div class="mt-2">
-  {% include "activities/includes/activity.html" %}
+  {% include "comments/includes/comment.html" %}
 </div>
 {% empty %}
 <div class="empty">
-  <p class="empty-title h5">{% trans "Sorry, no posts found for your search" %}</p>
+  <p class="empty-title h5">{% trans "Sorry, no comments found for your search" %}</p>
 </div>
 {% endfor %}
 

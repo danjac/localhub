@@ -14,7 +14,7 @@ export default class extends Controller {
       this.matchTarget.getAttribute('href');
     const matches = this.data.has('exact')
       ? pathname === href
-      : pathname.startsWith(href);
+      : pathname.startsWith(href.split(/[?#]/)[0]);
     if (matches) {
       this.element.classList.add(this.data.get('active-class') || 'active');
     }

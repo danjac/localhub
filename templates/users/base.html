@@ -19,7 +19,6 @@
 {% has_perm "users.block_user" user user_obj as can_block_user %}
 {% has_perm "users.follow_user" user user_obj as can_follow_user %}
 
-{# TBD: is_blocked/is_following tags #}
 <div class="float-right">
     {% if can_block_user %}
     {% if user_obj in user.blocked.all %}

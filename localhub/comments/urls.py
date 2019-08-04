@@ -6,6 +6,7 @@ from localhub.comments.views import (
     comment_dislike_view,
     comment_flag_view,
     comment_like_view,
+    comment_search_view,
     comment_update_view,
 )
 
@@ -13,6 +14,7 @@ app_name = "comments"
 
 
 urlpatterns = [
+    path("search/", comment_search_view, name="search"),
     path("<int:pk>/", comment_detail_view, name="detail"),
     path("<int:pk>/~update/", comment_update_view, name="update"),
     path("<int:pk>/~delete/", comment_delete_view, name="delete"),
