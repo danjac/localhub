@@ -5,3 +5,6 @@ from django.utils.translation import gettext_lazy as _
 class MessageboardConfig(AppConfig):
     name = "localhub.messageboard"
     verbose_name = _("Message Board")
+
+    def ready(self):
+        import localhub.messageboard.signals  # noqa

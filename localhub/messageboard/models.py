@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.urls import reverse
 from django.utils import formats
@@ -10,6 +12,11 @@ from model_utils.models import TimeStampedModel
 
 from localhub.communities.models import Community
 from localhub.core.markdown.fields import MarkdownField
+from localhub.core.utils.search import SearchIndexer, SearchQuerySetMixin
+
+
+class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
+    ...
 
 
 class Message(TimeStampedModel):
@@ -32,6 +39,15 @@ class Message(TimeStampedModel):
         related_name="replies",
     )
 
+    search_document = SearchVectorField(null=True, editable=False)
+
+    search_indexer = SearchIndexer(("A", "subject"), ("B", "message"))
+
+    objects = MessageQuerySet.as_manager()
+
+    class Meta:
+        indexes = [GinIndex(fields=["search_document"])]
+
     def __str__(self) -> str:
         return self.subject
 
@@ -40,6 +56,10 @@ class Message(TimeStampedModel):
 
     def get_month(self) -> str:
         return formats.date_format(self.created, "F, Y")
+
+
+class MessageRecipientQuerySet(SearchQuerySetMixin, models.QuerySet):
+    ...
 
 
 class MessageRecipient(models.Model):
@@ -52,6 +72,14 @@ class MessageRecipient(models.Model):
 
     read = models.DateTimeField(null=True, blank=True)
 
+    search_document = SearchVectorField(null=True, editable=False)
+
+    search_indexer = SearchIndexer(
+        ("A", "message.subject"), ("B", "message.message")
+    )
+
+    objects = MessageRecipientQuerySet.as_manager()
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -59,6 +87,7 @@ class MessageRecipient(models.Model):
                 name="unique_message_recipient",
             )
         ]
+        indexes = [GinIndex(fields=["search_document"])]
 
     def __str__(self) -> str:
         return str(self.message)
