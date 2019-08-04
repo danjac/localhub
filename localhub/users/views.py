@@ -251,8 +251,8 @@ class UserAutocompleteListView(LoginRequiredMixin, BaseUserListView):
         if search_term:
             return qs.filter(
                 Q(
-                    Q(username__icontains=search_term)
-                    | Q(name__icontains=search_term)
+                    Q(username__istartswith=search_term)
+                    | Q(name__istartswith=search_term)
                 )
             )[: settings.DEFAULT_PAGE_SIZE]
         return qs.none()

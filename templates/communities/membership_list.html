@@ -9,7 +9,7 @@
 
 {% block content %}
 <h3>{% trans "Members" %}</h3>
-{% if not view.search_term %}
+{% if not view.search_query %}
 <div class="my-1 toast text-center">
   {% blocktrans count counter=paginator.count %}
   This community has one member.
@@ -18,23 +18,8 @@
   {% endblocktrans %}
 </div>
 {% endif %}
-<form method="GET"
-      action="{{ request.path }}"
-      class="form-horizontal"
-      data-controller="form"
-      data-action="form#submit"
-      >
-      <div class="input-group">
-        <input class="form-input"
-               name="q"
-               type="search"
-               placeholder="{% trans "Search" %}"
-               value="{{ view.search_term }}">
-        <button class="btn input-group-btn">
-          {% trans "Search" %}
-        </button>
-      </div>
-</form>
+
+{% include "includes/search_form.html" %}
 
 <table class="table table-striped table-hover">
   <thead>

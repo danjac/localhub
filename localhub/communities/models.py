@@ -19,6 +19,7 @@ from simple_history.models import HistoricalRecords
 
 from localhub.core.markdown.fields import MarkdownField
 from localhub.core.markdown.utils import extract_hashtags
+from localhub.core.utils.search import SearchQuerySetMixin
 
 DOMAIN_VALIDATOR = RegexValidator(
     regex=URLValidator.host_re, message=_("This is not a valid domain")
@@ -189,6 +190,10 @@ class Community(TimeStampedModel):
         return user.has_role(self, role)
 
 
+class MembershipQuerySet(SearchQuerySetMixin, models.QuerySet):
+    search_document_field = "member__search_document"
+
+
 class Membership(TimeStampedModel):
     ROLES = Choices(
         ("member", _("Member")),
@@ -205,6 +210,8 @@ class Membership(TimeStampedModel):
         choices=ROLES, max_length=9, default=ROLES.member, db_index=True
     )
     active = models.BooleanField(default=True)
+
+    objects = MembershipQuerySet.as_manager()
 
     class Meta:
         constraints = [

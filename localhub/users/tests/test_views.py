@@ -142,11 +142,16 @@ class TestUserAutocompleteListView:
         user: settings.AUTH_USER_MODEL,
     ):
         other = MembershipFactory(
-            community=member.community, member=UserFactory(username="tester1")
+            community=member.community, member=UserFactory(name="tester")
         ).member
+        other.search_indexer.update()
+
+        assert get_user_model().objects.search("tester").get() == other
+
         blocker = MembershipFactory(
-            community=member.community, member=UserFactory(username="tester2")
+            community=member.community, member=UserFactory(name="tester")
         ).member
+        blocker.search_indexer.update()
 
         blocker.blocked.add(member.member)
 

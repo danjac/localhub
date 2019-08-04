@@ -17,6 +17,9 @@
       <div class="tile-content">
         {% user_display user_obj as display_name %}
         {{ display_name }}
+        {% if display_name != user_obj.username %}
+        (@{{ user_obj.username }})
+        {% endif %}
       </div>
     </div>
   </a>

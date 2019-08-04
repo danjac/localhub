@@ -188,9 +188,9 @@ class MembershipListView(
             super().get_queryset().order_by("member__name", "member__username")
         )
 
-        if "q" in self.request.GET:
-            self.search_term = self.request.GET["q"]
-            qs = qs.filter(member__username__icontains=self.search_term)
+        self.search_query = self.request.GET.get("q", "")
+        if self.search_query:
+            qs = qs.search(self.search_query)
         return qs
 
     def get_permission_object(self) -> Community:

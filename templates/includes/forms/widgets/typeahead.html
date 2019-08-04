@@ -13,7 +13,7 @@
      <ul class="menu d-hide p-absolute" data-target="typeahead.selector"></ul>
      <textarea
        data-target="typeahead.input"
-       data-action="keyup->typeahead#typeahead keydown->typeahead#keypress"
+       data-action="keyup->typeahead#typeahead keydown->typeahead#keypress blur->typeahead#closeSelector"
        name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}
        >{% spaceless %}{% if widget.value %}{{ widget.value }}{% endif %}{% endspaceless %}</textarea>
 </div>

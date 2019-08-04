@@ -5,6 +5,8 @@ from typing import Dict, List, Optional, Sequence
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.urls import reverse
 from django.utils.functional import cached_property
@@ -19,10 +21,11 @@ from taggit.models import Tag
 from localhub.communities.models import Community, Membership
 from localhub.core.fields import ChoiceArrayField
 from localhub.core.markdown.fields import MarkdownField
+from localhub.core.utils.search import SearchIndexer, SearchQuerySetMixin
 from localhub.notifications.models import Notification
 
 
-class UserQuerySet(models.QuerySet):
+class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
     use_in_migrations = True
 
     def for_email(self, email: str) -> models.QuerySet:
@@ -78,6 +81,9 @@ class UserQuerySet(models.QuerySet):
 class UserManager(BaseUserManager):
     def get_queryset(self) -> models.QuerySet:
         return UserQuerySet(self.model, using=self._db)
+
+    def search(self, search_term: str, *args, **kwargs) -> models.QuerySet:
+        return self.get_queryset().search(search_term, *args, **kwargs)
 
     def with_is_following(
         self, follower: settings.AUTH_USER_MODEL
@@ -186,7 +192,15 @@ class User(AbstractUser):
 
     blocked_tags = models.ManyToManyField(Tag, related_name="+", blank=True)
 
+    search_document = SearchVectorField(null=True, editable=False)
+
+    search_indexer = SearchIndexer(("A", "username"), ("B", "name"))
+
     objects = UserManager()
+
+    class Meta(AbstractUser.Meta):
+
+        indexes = [GinIndex(fields=["search_document"])]
 
     def get_absolute_url(self) -> str:
         return reverse("users:activities", args=[self.username])

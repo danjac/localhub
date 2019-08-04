@@ -139,6 +139,7 @@ class TestMembershipListView:
             MembershipFactory(community=admin.community)
 
         member = MembershipFactory(community=admin.community)
+        member.member.search_indexer.update()
 
         response = client.get(
             reverse("communities:membership_list"),
