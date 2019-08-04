@@ -106,13 +106,18 @@ class ActivityListView(MultipleActivityMixin, ListView):
     order_by = "-id"
 
     def get_queryset(self) -> QuerySet:
-        return (
+        qs = (
             super()
             .get_queryset()
             .with_common_annotations(self.request.community, self.request.user)
             .blocked(self.request.user)
             .order_by(self.order_by)
         )
+
+        self.search_query = self.request.GET.get("q")
+        if self.search_query:
+            qs = qs.search(self.search_query).order_by("rank")
+        return qs
 
 
 class ActivityUpdateView(
@@ -198,9 +203,11 @@ class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
         )
 
     def get_reshares(self) -> QuerySet:
-        return self.object.reshares.blocked_users(
-            self.request.user
-        ).select_related("owner").order_by("-created")
+        return (
+            self.object.reshares.blocked_users(self.request.user)
+            .select_related("owner")
+            .order_by("-created")
+        )
 
     def get_comments(self) -> QuerySet:
         return (

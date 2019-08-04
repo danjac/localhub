@@ -32,6 +32,16 @@ class TestPostListView:
         response = client.get(reverse("posts:list"))
         assert len(response.context["object_list"]) == 3
 
+    def test_search(self, client: Client, member: Membership):
+        PostFactory.create_batch(
+            3, community=member.community, owner=member.member, title="testme"
+        )
+        for post in Post.objects.all():
+            post.search_indexer.update()
+
+        response = client.get(reverse("posts:list"), {"q": "testme"})
+        assert len(response.context["object_list"]) == 3
+
 
 class TestPostCreateView:
     def test_get(self, client: Client, member: Membership):

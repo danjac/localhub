@@ -25,7 +25,7 @@
 </p>
 {% endif %}
 
-{# include "activities/includes/show_all_toggle.html" #}
+{% include "activities/includes/search_form.html" %}
 
 {% for photo in object_list %}
 <div class="mt-2">
@@ -33,7 +33,13 @@
 </div>
 {% empty %}
 <div class="empty mt-2">
-  <p class="empty-title h5">{% trans "No photos have been uploaded." %}</p>
+  <p class="empty-title h5">
+    {% if view.search_query %}
+    {% trans "No photos have been found matching your search." %}
+    {% else %}
+    {% trans "No photos have been submitted." %}
+    {% endif %}
+  </p>
 </div>
 {% endfor %}
 {% include "includes/pagination.html" %}

@@ -1,3 +1,6 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% extends "activities/base.html" %}
 {% load i18n %}
 {% load rules %}
@@ -26,7 +29,7 @@
 
 {% endif %}
 
-{# include "activities/includes/show_all_toggle.html" #}
+{% include "activities/includes/search_form.html" %}
 
 {% for post in object_list %}
 <div class="mt-2">
@@ -34,7 +37,13 @@
 </div>
 {% empty %}
 <div class="empty mt-2">
-  <p class="empty-title h5">{% trans "No posts have been submitted yet" %}</p>
+  <p class="empty-title h5">
+      {% if view.search_query %}
+      {% trans "No posts have been found for your search." %}
+      {% else %}
+      {% trans "No posts have been submitted yet." %}
+      {% endif %}
+  </p>
 </div>
 {% endfor %}
 

@@ -1,22 +1,7 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "base.html" %}
-
 {% load i18n %}
-
-{% block content %}
-<ul class="tab tab-block">
-    <li class="tab-item" data-controller="active-link">
-        <a data-target="active-link.match"
-           href="{% url 'activities:search' %}?q={{ view.search_query }}">{% trans "Posts" %}</a>
-    </li>
-    <li class="tab-item" data-controller="active-link">
-        <a data-target="active-link.match"
-           href="{% url 'comments:search' %}?q={{ view.search_query }}">{% trans "Comments" %}</a>
-    </li>
-</ul>
-
 <form method="GET"
       action="{{ request.path }}"
       data-controller="form"
@@ -28,14 +13,19 @@
                name="q"
                type="search"
                placeholder="{% trans "Search" %}"
-               value="{{ view.search_query }}">
+               value="{{ view.search_query|default:"" }}">
         <button class="btn input-group-btn">
           {% trans "Search" %}
         </button>
       </div>
+      {% if view.search_query %}
+      <a class="btn btn-link btn-block" href="{{ request.path }}">
+        {% trans "Clear Search" %}
+      </a>
+      {% endif %}
 </form>
 
-{% if object_list %}
+{% if view.search_query and object_list %}
 <div class="toast text-center mt-2">
   {% blocktrans count counter=paginator.count %}
   1 result found
@@ -44,8 +34,4 @@
   {% endblocktrans %}
 </div>
 {% endif %}
-
-
-{% block search_content %}{% endblock %}
-{% endblock content %}
 
