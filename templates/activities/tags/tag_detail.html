@@ -55,7 +55,15 @@
 
 <h3>#{{ tag.slug }}</h3>
 {% with total=paginator.count %}
-<h4 class="text-gray">{% blocktrans count counter=total %}{{ total }} result{% plural %}{{ total }} results{% endblocktrans %}</h4>
+{% if total %}
+<div class="toast my-2">
+  {% blocktrans count counter=total %}
+  There is one post with this tag.
+  {% plural %}
+  There are {{ total }} posts with this tag.
+  {% endblocktrans %}
+</div>
+{% endif %}
 {% endwith %}
 
 {% for activity in object_list %}
@@ -64,7 +72,7 @@
 </div>
 {% empty %}
 <div class="empty">
-  <p class="empty-title h5">{% trans "Sorry, no results found for this tag" %}</p>
+  <p class="empty-title h5">{% trans "This tag does not have any posts." %}</p>
 </div>
 {% endfor %}
 
