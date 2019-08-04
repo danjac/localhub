@@ -49,11 +49,7 @@
 </div>
 {% empty %}
 <div class="empty mt-1">
-  {% if not view.show_all and user.is_authenticated %}
-  <p class="empty-title h5">{% trans "Nothing has been posted yet by people you are following. Click 'Show All' to see all content." %}</p>
-  {% else %}
-  <p class="empty-title h5">{% trans "Nothing has been posted yet" %}</p>
-  {% endif %}
+  <p class="empty-title h5">{% trans "Nothing to see here." %}</p>
 </div>
 {% endfor %}
 
