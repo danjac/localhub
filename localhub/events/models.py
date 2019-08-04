@@ -4,7 +4,7 @@
 import datetime
 import geocoder
 
-from typing import Dict, Optional, List, Tuple
+from typing import Optional, List, Tuple
 
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
@@ -22,6 +22,7 @@ from icalendar import Calendar, Event as CalendarEvent
 from localhub.activities.models import Activity
 from localhub.activities.utils import get_domain
 from localhub.comments.models import Comment
+from localhub.core.utils.search import SearchIndexer
 from localhub.core.utils.tracker import Tracker
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
@@ -83,6 +84,10 @@ class Event(Activity):
 
     location_tracker = Tracker(LOCATION_FIELDS)
 
+    search_indexer = SearchIndexer(
+        ("A", "title"), ("B", "full_location"), ("C", "description")
+    )
+
     def __str__(self) -> str:
         return self.title or self.location
 
@@ -104,13 +109,6 @@ class Event(Activity):
         Returns start datetime adjusted for the timezone field value.
         """
         return self.ends.astimezone(self.timezone) if self.ends else None
-
-    def search_index_components(self) -> Dict[str, str]:
-        return {
-            "A": self.title,
-            "B": self.full_location,
-            "C": self.description,
-        }
 
     def update_coordinates(self) -> Tuple[Optional[float], Optional[float]]:
         """

@@ -23,7 +23,7 @@ def update_event_coordinates(instance: Event, created: bool = False, **kwargs):
     post_save, sender=Event, dispatch_uid="events.update_search_document"
 )
 def update_search_document(instance: Event, **kwargs):
-    transaction.on_commit(instance.make_search_updater())
+    transaction.on_commit(instance.search_indexer.make_updater())
 
 
 @receiver(post_save, sender=Event, dispatch_uid="events.taggit")

@@ -320,6 +320,6 @@ class TestActivityManager:
     def test_search(self):
         post = PostFactory(title="random thing")
         # normally fired when transaction commits
-        post.make_search_updater()()
+        post.search_indexer.make_updater()()
         result = Post.objects.search("random thing").get()
         assert result.rank

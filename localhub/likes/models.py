@@ -26,24 +26,32 @@ class LikeAnnotationsQuerySetMixin(BaseQuerySetMixin):
     """
 
     def with_has_liked(
-        self, user: settings.AUTH_USER_MODEL
+        self, user: settings.AUTH_USER_MODEL, annotated_name: str = "has_liked"
     ) -> models.QuerySet:
         """
         Checks if user has liked the object, adding `has_liked`
         annotation.
         """
         return self.annotate(
-            has_liked=get_generic_related_exists(
-                self.model, Like.objects.filter(user=user)
-            )
+            **{
+                annotated_name: get_generic_related_exists(
+                    self.model, Like.objects.filter(user=user)
+                )
+            }
         )
 
-    def with_num_likes(self) -> models.QuerySet:
+    def with_num_likes(
+        self, annotated_name: str = "num_likes"
+    ) -> models.QuerySet:
         """
         Appends the total number of likes each object has received.
         """
         return self.annotate(
-            num_likes=get_generic_related_count_subquery(self.model, Like)
+            **{
+                annotated_name: get_generic_related_count_subquery(
+                    self.model, Like
+                )
+            }
         )
 
 

@@ -35,14 +35,18 @@ class CommentAnnotationsQuerySetMixin(BaseQuerySetMixin):
     queryset.
     """
 
-    def with_num_comments(self) -> models.QuerySet:
+    def with_num_comments(
+        self, annotated_name: str = "num_comments"
+    ) -> models.QuerySet:
         """
         Annotates `num_comments` to the model.
         """
         return self.annotate(
-            num_comments=get_generic_related_count_subquery(
-                self.model, Comment
-            )
+            **{
+                annotated_name: get_generic_related_count_subquery(
+                    self.model, Comment
+                )
+            }
         )
 
 

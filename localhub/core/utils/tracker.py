@@ -6,16 +6,18 @@ from typing import List, Optional, Iterable, Type
 from django.db.models import Model
 
 
-class TrackerProxy:
-    def __init__(self, model: Model, fields: Iterable[str], history_attr: str):
+class InstanceTracker:
+    def __init__(
+        self, instance: Model, fields: Iterable[str], history_attr: str
+    ):
 
-        self.model = model
-        self.history_attr = history_attr
+        self.instance = instance
         self.fields = fields
+        self.history_attr = history_attr
 
     @property
     def first_record(self) -> Optional[Model]:
-        return getattr(self.model, self.history_attr).first()
+        return getattr(self.instance, self.history_attr).first()
 
     @property
     def prev_record(self) -> Optional[Model]:
@@ -43,5 +45,5 @@ class Tracker:
         self.fields = fields
         self.history_attr = history_attr
 
-    def __get__(self, instance: Model, owner: Type[Model]):
-        return TrackerProxy(instance, self.fields, self.history_attr)
+    def __get__(self, instance: Model, owner: Type[Model]) -> InstanceTracker:
+        return InstanceTracker(instance, self.fields, self.history_attr)

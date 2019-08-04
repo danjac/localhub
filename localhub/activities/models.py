@@ -1,19 +1,12 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import operator
 
-from functools import reduce
-from typing import Callable, Dict, Iterable, List, Optional, Set
+from typing import Iterable, List, Optional, Set
 
 from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import (
-    SearchQuery,
-    SearchRank,
-    SearchVector,
-    SearchVectorField,
-)
+from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.template.defaultfilters import truncatechars
 from django.urls import reverse
@@ -32,8 +25,9 @@ from localhub.comments.models import Comment, CommentAnnotationsQuerySetMixin
 from localhub.communities.models import Community
 from localhub.core.markdown.fields import MarkdownField
 from localhub.core.types import BreadcrumbList
-from localhub.core.utils.tracker import Tracker
 from localhub.core.utils.content_types import get_generic_related_queryset
+from localhub.core.utils.search import SearchQuerySetMixin
+from localhub.core.utils.tracker import Tracker
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.notifications.models import Notification
@@ -43,6 +37,7 @@ class ActivityQuerySet(
     CommentAnnotationsQuerySetMixin,
     FlagAnnotationsQuerySetMixin,
     LikeAnnotationsQuerySetMixin,
+    SearchQuerySetMixin,
     models.QuerySet,
 ):
     def with_common_annotations(
@@ -147,18 +142,6 @@ class ActivityQuerySet(
         if user.is_anonymous:
             return self
         return self.blocked_users(user).blocked_tags(user)
-
-    def search(self, search_term: str) -> models.QuerySet:
-        """
-        Returns result of search on indexed fields. Annotates with
-        `rank` to allow ordering by search result accuracy.
-        """
-        if not search_term:
-            return self.none()
-        query = SearchQuery(search_term)
-        return self.annotate(
-            rank=SearchRank(models.F("search_document"), query=query)
-        ).filter(search_document=query)
 
 
 class Activity(TimeStampedModel):
@@ -305,41 +288,6 @@ class Activity(TimeStampedModel):
             self.description.extract_hashtags()
             & self.community.get_content_warning_tags()
         )
-
-    def search_index_components(self) -> Dict[str, str]:
-        """
-        Return a dict of text elements for inclusion in the search document.
-        Dict keys should be A, B, C and so forth depending on weighting.
-
-        e.g.
-
-        {"A": self.title, "B": self.description}
-        """
-        return {}
-
-    def make_search_updater(self) -> Callable:
-        """
-        Returns an indexing function to update the PostgreSQL search document
-        for this instance.
-
-        In post_save signal:
-
-        transaction.on_commit(instance.make_search_updater())
-        """
-
-        def on_commit():
-            search_vectors = [
-                SearchVector(
-                    models.Value(text, output_field=models.CharField()),
-                    weight=weight,
-                )
-                for (weight, text) in self.search_index_components().items()
-            ]
-            self.__class__.objects.filter(pk=self.pk).update(
-                search_document=reduce(operator.add, search_vectors)
-            )
-
-        return on_commit
 
     def taggit(self, created: bool):
         """

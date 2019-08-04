@@ -1,8 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Dict
-
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -13,6 +11,7 @@ from sorl.thumbnail import ImageField
 
 from localhub.activities.models import Activity
 from localhub.comments.models import Comment
+from localhub.core.utils.search import SearchIndexer
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification
@@ -55,11 +54,10 @@ class Photo(Activity):
     likes = GenericRelation(Like, related_query_name="photo")
     notifications = GenericRelation(Notification, related_query_name="photo")
 
+    search_indexer = SearchIndexer(("A", "title"), ("B", "description"))
+
     def __str__(self) -> str:
         return self.title
-
-    def search_index_components(self) -> Dict[str, str]:
-        return {"A": self.title, "B": self.description}
 
     def has_attribution(self) -> bool:
         return any((self.artist, self.original_url, self.cc_license))

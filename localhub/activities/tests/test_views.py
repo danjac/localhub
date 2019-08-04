@@ -49,7 +49,7 @@ class TestActivitySearchView:
         )
 
         for item in (post, event):
-            item.make_search_updater()()
+            item.search_indexer.make_updater()()
 
         response = client.get(reverse("activities:search"), {"q": "test"})
         assert response.status_code == 200
@@ -60,7 +60,7 @@ class TestActivitySearchView:
         post = PostFactory(
             community=community, description="#testme", owner=member.member
         )
-        post.make_search_updater()()
+        post.search_indexer.make_updater()()
         response = client.get(reverse("activities:search"), {"q": "#testme"})
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 1
