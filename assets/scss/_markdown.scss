@@ -4,7 +4,15 @@
   }
 }
 
-.markdown-content img {
-  @extend .img-responsive;
+.markdown-content {
   word-wrap: break-word;
+
+  img {
+    @extend .img-responsive;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
 }
