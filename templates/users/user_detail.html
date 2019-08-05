@@ -3,27 +3,25 @@
 
 {% extends "users/base.html" %}
 {% load i18n %}
+{% load rules %}
 
 {% block user_content %}
 
+{% has_perm "users.change_user" user user_obj as can_change_user %}
+
 {% if user_obj.bio %}
 {{ user_obj.bio.markdown }}
-{% if is_auth_user %}
-<p class="mt-1">
-    <a href="{% url 'user_update' %}" class="btn">
-        {% trans "Update your profile" %}
-    </a>
-</p>
-{% endif %}
 {% else %}
 <div class="empty">
     {% if is_auth_user %}
     <p class="empty-title h5">{% trans "You do not have a bio" %}</p>
+    {% if can_change_user %}
     <div class="empty-action">
-        <a href="{% url 'user_update' %}" class="btn">
-            {% trans "Update your profile" %}
+        <a href="{% url 'user_update' %}" class="btn btn-link">
+            {% trans "Add a bio to your profile" %}
         </a>
     </div>
+    {% endif %}
     {% else %}
     <p class="empty-title h5">{% trans "This user has not added any information." %}</p>
     {% endif %}

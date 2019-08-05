@@ -18,8 +18,14 @@
 {% has_perm "messageboard.create_message" user community as can_create_message %}
 {% has_perm "users.block_user" user user_obj as can_block_user %}
 {% has_perm "users.follow_user" user user_obj as can_follow_user %}
+{% has_perm "users.change_user" user user_obj as can_change_user %}
 
 <div class="float-right">
+    {% if can_change_user %}
+    <a href="{% url 'user_update' %}" class="btn btn-sm">
+      {% trans "Update Profile" %}
+    </a>
+    {% endif %}
     {% if can_block_user %}
     {% if user_obj in user.blocked.all %}
     <a href="{% url 'users:unblock' user_obj.username %}"
