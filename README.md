@@ -51,6 +51,9 @@ In addition the production instance requires AWS/S3: add the following settings 
 * DJANGO_AWS_SECRET_ACCESS_KEY
 * DJANGO_AWS_STORAGE_BUCKET_NAME
 
+If you are using a Cloudfront or other CDN, set **DJANGO_AWS_CUSTOM_DOMAIN** accordingly e.g. _12345abc.cloudfront.net_.
+
+
 Finally for email we use Mailgun, which requires these settings:
 
 * DJANGO_MAILGUN_API_KEY
