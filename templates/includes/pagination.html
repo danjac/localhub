@@ -7,6 +7,7 @@
 <ul class="pagination">
     <li class="page-item page-prev{% if not page_obj.has_previous %} disabled{% endif %}">
         <a {% spaceless %}
+            class="btn btn-link"
             {% if page_obj.has_previous %}
             href="{% pagination_url page_obj.previous_page_number %}"
             {% else %}
@@ -14,11 +15,12 @@
             {% endif %}
             {% endspaceless %}
             >
-            <div class="page-item-title h5">{% trans "Previous" %}</div>
+            {% trans "Previous" %}
         </a>
     </li>
     <li class="page-item page-next{% if not page_obj.has_next %} disabled{% endif %}">
         <a {% spaceless %}
+            class="btn btn-link"
             {% if page_obj.has_next %}
             href="{% pagination_url page_obj.next_page_number %}"
             {% else %}
@@ -26,7 +28,7 @@
             {% endif %}
             {% endspaceless %}
             >
-            <div class="page-item-title h5">{% trans "Next" %}</div>
+            {% trans "Next" %}
         </a>
     </li>
 </ul>
