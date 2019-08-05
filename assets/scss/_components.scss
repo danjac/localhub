@@ -31,3 +31,18 @@
   height: 2rem;
 }
 
+.menu-item a {
+  color: $dark-color;
+}
+
+.navbar a {
+  color: $dark-color;
+}
+
+.btn {
+  color: $dark-color;
+  border-color: $border-color-dark;
+  &.btn-link {
+    color: $dark-color;
+  }
+}
