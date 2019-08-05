@@ -154,7 +154,9 @@ class Base(Configuration):
 
     # https://micawber.readthedocs.io/en/latest/django.html
     MICAWBER_PROVIDERS = "localhub.activities.oembed.bootstrap_oembed"
-
+    MICAWBER_TEMPLATE_EXTENSIONS = [
+        ("oembed_no_urlize", {"urlize_all": False})
+    ]
     # https://celery.readthedocs.io/en/latest/userguide/configuration.html
 
     CELERY_RESULT_BACKEND = CELERY_BROKER_URL = REDIS_URL
@@ -320,13 +322,6 @@ class Production(DockerConfigMixin, Base):
         "handlers": {"console": {"class": "logging.StreamHandler"}},
         "loggers": {"django": {"handlers": ["console"], "level": "INFO"}},
     }
-
-    @property
-    def s3_url(self) -> str:
-        return (
-            f"https://{self.AWS_STORAGE_BUCKET_NAME}."
-            f"s3.{self.AWS_S3_REGION_NAME}.amazonaws.com/"
-        )
 
     @property
     def ANYMAIL(self) -> Dict[str, str]:
