@@ -14,6 +14,12 @@
     <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
   </li>
   <li class="menu-item">
+    <a data-controller="active-link"
+       data-active-link-exact
+       href="{% url 'community_list' %}">{% trans "Local Directory" %}
+    </a>
+  </li>
+  <li class="menu-item">
     <a data-controller="active-link" href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
   </li>
   <li class="menu-item">
