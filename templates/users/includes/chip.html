@@ -6,6 +6,7 @@
 {% user_display profile as profile_name %}
 <div class="chip">
   {% avatar profile "avatar-xs" %}
-  <a href="{{ profile_url|default:profile.get_absolute_url }}">{{ profile_name }}</a>
+  <a title="@{{ profile.username }}"
+     href="{{ profile_url|default:profile.get_absolute_url }}">{{ profile_name }}</a>
 </div>
 
