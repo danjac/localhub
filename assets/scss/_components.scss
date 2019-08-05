@@ -45,6 +45,9 @@
   &.btn-link {
     color: $dark-color;
   }
+  &:visited {
+    color: $dark-color;
+  }
 }
 
 .chip a {
