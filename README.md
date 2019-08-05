@@ -3,6 +3,10 @@ Description
 
 LocalHub is an experimental project aiming to provide secure, localized, private social media for small to medium sized communities. This is of particular interest to people who don't like big, centralized private-data sucking entities such as Twitter or Facebook.
 
+The premise of LocalHub is to create and foster small communities of no greater size than [Dunbar's Number](https://en.m.wikipedia.org/wiki/Dunbar%27s_number) : ""the number of people you would not feel embarrassed about joining uninvited for a drink if you happened to bump into them in a bar". This is the number a community might be comfortably moderated and managed, beyond which you run into the common issues of larger communities such as the Eternal September.
+
+A user may belong to a number of communities under the same domain/host, but the communities themselves are isolated - content you post in one community does not appear in a another; messages you post to a friend inside a community will not "leak" outside that community. A community may allow its content to be public, if the admins so decide, but all communities are invite-only.
+
 
 What about the Fediverse/Activity Pub/etc?
 ------------------------------------------
@@ -59,7 +63,15 @@ Inspiration
 
 Inspiration came from [Mastodon](https://mastodon.social), [Diaspora*](https://joindiaspora.com) and other projects exploring the decentralized social media space. The design and architecture was heavily influenced by [Tildes](https://tildes.net).
 
+
+Demo
+----
+
+A live demo is available at https://demo.localhub.social. Use the username **demo** password **testpass1** to log in.
+
 Licensing
 ---------
 
 This project is open source and licensed under AGPL.
+
+
