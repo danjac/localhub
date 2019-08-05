@@ -312,6 +312,8 @@ class Production(DockerConfigMixin, Base):
     AWS_QUERYSTRING_AUTH = False
     AWS_DEFAULT_ACL = "public-read"
 
+    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=600"}
+
     CELERY_EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
     MAILGUN_API_KEY = values.Value()
     MAILGUN_SENDER_DOMAIN = values.Value()
