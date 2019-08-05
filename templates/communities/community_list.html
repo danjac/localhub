@@ -8,12 +8,16 @@
 <h3>{% trans "Local Directory" %}</h3>
 
 {% for object in object_list %}
-<div class="card mb-1">
+<div class="card mb-1{% if object == community %} bg-gray{% endif %}">
   <div class="card-header">
     <div class="card-title">
       {% if object.is_member %}
       <span class="badge" data-badge="Member">
+        {% if object == community %}
+        {{ object.name }}
+        {% else %}
         <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+        {% endif %}
       </span>
       {% else %}
       <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
