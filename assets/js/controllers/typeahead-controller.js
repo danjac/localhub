@@ -5,6 +5,7 @@ import { Controller } from 'stimulus';
 import axios from 'axios';
 import getCaretPosition from 'textarea-caret';
 
+const ESC_KEY = 27;
 const TAB_KEY = 9;
 const RETURN_KEY = 13;
 const ARROW_UP = 38;
@@ -12,6 +13,17 @@ const ARROW_DOWN = 40;
 
 export default class extends Controller {
   static targets = ['selector', 'input'];
+
+  connect() {
+    document.addEventListener('keydown', event => {
+      if (event.keyCode === ESC_KEY) {
+        this.closeSelector();
+      }
+    });
+    document.addEventListener('click', () => {
+      this.closeSelector();
+    });
+  }
 
   select(event) {
     event.preventDefault();
