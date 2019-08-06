@@ -129,7 +129,7 @@ class UserFollowView(
         for notification in self.request.user.notify_on_follow(
             self.object, self.request.community
         ):
-            send_user_notification_email(self.object, notification)
+            send_user_notification_email(self.request.user, notification)
 
         messages.success(self.request, _("You are now following this user"))
         return HttpResponseRedirect(self.get_success_url())
