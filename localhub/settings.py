@@ -30,6 +30,7 @@ class Base(Configuration):
 
     SESSION_COOKIE_DOMAIN = values.Value()
     CSRF_COOKIE_DOMAIN = values.Value()
+    CSRF_TRUSTED_ORIGINS: List[str] = []
 
     WSGI_APPLICATION = "localhub.wsgi.application"
 
@@ -293,6 +294,8 @@ class Production(DockerConfigMixin, Base):
     THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + ["anymail"]
 
     ALLOWED_HOSTS = values.ListValue()
+    CSRF_TRUSTED_ORIGINS = values.ListValue()
+
     ADMINS = values.ListValue()
 
     SECURE_SSL_REDIRECT = True
