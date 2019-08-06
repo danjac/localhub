@@ -186,7 +186,9 @@ class TestUserModel:
 
     def test_notify_on_follow(self, member: Membership):
         follower = MembershipFactory(community=member.community).member
-        notifications = follower.notify_on_follow(member, member.community)
+        notifications = follower.notify_on_follow(
+            member.member, member.community
+        )
         assert len(notifications) == 1
         assert notifications[0].recipient == member.member
         assert notifications[0].community == member.community
