@@ -3,6 +3,8 @@
 
 import pytest
 
+from typing import List
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test import Client
@@ -97,8 +99,11 @@ class TestUserDeleteView:
 
 
 class TestUserFollowView:
-    def test_post(self, client: Client, member: Membership):
-        user = MembershipFactory(community=member.community).member
+    def test_post(self, client: Client, member: Membership, mailoutbox: List):
+        user = MembershipFactory(
+            community=member.community,
+            member=UserFactory(email_prefs=["new_follower"]),
+        ).member
         response = client.post(reverse("users:follow", args=[user.username]))
         assert response.url == user.get_absolute_url()
         assert user in member.member.following.all()
@@ -106,6 +111,7 @@ class TestUserFollowView:
         assert notification.recipient == user
         assert notification.content_object == user
         assert notification.actor == member.member
+        assert mailoutbox[0].to == [user.email]
 
 
 class TestUserBlockView:
