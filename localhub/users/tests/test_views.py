@@ -102,7 +102,7 @@ class TestUserFollowView:
     def test_post(self, client: Client, member: Membership, mailoutbox: List):
         user = MembershipFactory(
             community=member.community,
-            member=UserFactory(email_prefs=["new_follower"]),
+            member=UserFactory(email_preferences=["new_follower"]),
         ).member
         response = client.post(reverse("users:follow", args=[user.username]))
         assert response.url == user.get_absolute_url()

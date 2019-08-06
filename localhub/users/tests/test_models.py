@@ -10,6 +10,7 @@ from django.test.client import RequestFactory
 from allauth.account.models import EmailAddress
 
 from localhub.communities.models import Community, Membership, RequestCommunity
+from localhub.communities.tests.factories import MembershipFactory
 from localhub.messageboard.tests.factories import MessageRecipientFactory
 from localhub.notifications.models import Notification
 from localhub.posts.tests.factories import PostFactory
@@ -182,3 +183,11 @@ class TestUserModel:
             )
             == 0
         )
+
+    def test_notify_on_follow(self, member: Membership):
+        follower = MembershipFactory(community=member.community).member
+        notifications = follower.notify_on_follow(member, member.community)
+        assert len(notifications) == 1
+        assert notifications[0].recipient == member.member
+        assert notifications[0].community == member.community
+        assert notifications[0].verb == "new_follower"
