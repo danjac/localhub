@@ -1,6 +1,7 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{% with object=activity.object object_type=activity.object_type %}
 {% if activity.object_type == "post" %}
 {% include "posts/includes/post.html" with post=activity.object %}
 {% elif activity.object_type == "event" %}
@@ -8,3 +9,4 @@
 {% elif activity.object_type == "photo" %}
 {% include "photos/includes/photo.html" with photo=activity.object %}
 {% endif %}
+{% endwith %}

@@ -4,5 +4,5 @@
 {% extends "activities/activity_detail_base.html" %}
 
 {% block activities_detail_content %}
-{% include "posts/includes/post.html" with is_detail=True %}
+{% include "posts/includes/post.html" with is_detail=True object_type="post" object=post %}
 {% endblock activities_detail_content %}

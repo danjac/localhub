@@ -1,108 +1,58 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{% extends "activities/includes/activity_base.html" %}
+
 {% load i18n %}
 {% load tz %}
-{% load micawber_tags %}
 
-<div class="card" id="event-{{ event.id }}">
-    <div class="card-header">
-        {% include "activities/includes/header.html" with object=event %}
-    </div>
-    <div class="card-body">
-        {% if event.is_reshare and not event.parent %}
-        {% trans "The original event has been removed." %}
-        {% else %}
-        {% include "events/includes/content.html" with object=event %}
-        <div class="divider"></div>
-        {% if event.is_reshare %}
-        <blockquote>
-            {% endif %}
+{% block content %}
+<dl>
+  {% timezone object.timezone %}
 
-            <dl>
-                {% timezone event.timezone %}
+  <dt>{% trans "Starts" %}</dt>
+  <dd>{{ object.starts|date:"SHORT_DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }}</dd>
 
-                <dt>{% trans "Starts" %}</dt>
-                <dd>{{ event.starts|date:"SHORT_DATE_FORMAT" }} @ {{ event.starts|date:"TIME_FORMAT" }}</dd>
+  {% if object.ends %}
+  <dt>{% trans "Ends" %}</dt>
+  <dd>{{ object.ends|date:"SHORT_DATE_FORMAT" }} @ {{ object.ends|date:"TIME_FORMAT" }}</dd>
+  {% endif %}
 
-                {% if event.ends %}
-                <dt>{% trans "Ends" %}</dt>
-                <dd>{{ event.ends|date:"SHORT_DATE_FORMAT" }} @ {{ event.ends|date:"TIME_FORMAT" }}</dd>
-                {% endif %}
+  {% endtimezone %}
 
-                {% endtimezone %}
+  <dt>{% trans "Timezone" %}</dt>
+  <dd>{{ object.timezone }}</dd>
 
-                <dt>{% trans "Timezone" %}</dt>
-                <dd>{{ event.timezone }}</dd>
+  <dt>{% trans "Location" %}</dt>
+  <dd>
+  {% with location=object.full_location %}
+  {% if location %}
+  {{ location }}
+  {% else %}
+  {% trans "Online" %}
+  {% endif %}
+  {% endwith %}
+  </dd>
 
-                <dt>{% trans "Location" %}</dt>
-                <dd>
-                {% with location=event.full_location %}
-                {% if location %}
-                {{ location }}
-                {% else %}
-                {% trans "Online" %}
-                {% endif %}
-                {% endwith %}
-                </dd>
+  {% if object.ticket_price %}
+  <dt>{% trans "Admission" %}</dt>
+  <dd>{{ object.ticket_price }}</dd>
+  {% endif %}
 
-                {% if event.ticket_price %}
-                <dt>{% trans "Admission" %}</dt>
-                <dd>{{ event.ticket_price }}</dd>
-                {% endif %}
+  {% if object.ticket_vendor %}
+  <dt>{% trans "Tickets available from" %}</dt>
+  <dd>{{ object.ticket_vendor|linebreaksbr }}</dd>
+  {% endif %}
 
-                {% if event.ticket_vendor %}
-                <dt>{% trans "Tickets available from" %}</dt>
-                <dd>{{ event.ticket_vendor|linebreaksbr }}</dd>
-                {% endif %}
+</dl>
+{% if is_detail and object.latitude and object.longitude %}
+<div id="map-for-event-{{ object.id }}"
+     class="event-map{% if is_detail %} event-map-lg{% endif %}"
+     data-controller="map"
+     data-map-latitude="{{ object.latitude }}"
+     data-map-longitude="{{ object.longitude }}"
+     ></div>
+{% endif %}
+{% endblock content %}
 
-            </dl>
-            {% if is_detail and event.latitude and event.longitude %}
-            <div id="map-for-event-{{ event.id }}"
-                 class="event-map{% if is_detail %} event-map-lg{% endif %}"
-                 data-controller="map"
-                 data-map-latitude="{{ event.latitude }}"
-                 data-map-longitude="{{ event.longitude }}"
-                 ></div>
-            {% endif %}
-            {% if event.is_reshare %}
-        </blockquote>
-        {% endif %}
-        {% endif %}
-    </div>
-    <div class="card-footer">
-        {% if is_detail %}
-        {% include "activities/includes/reshares.html" with object=event %}
-        {% elif event.num_reshares %}
-        <div class="text-gray">
-            {{ event.num_reshares }}
-            {% blocktrans count counter=event.num_reshares %}
-            person has reshared this event
-            {% plural %}
-            people have reshared this event
-            {% endblocktrans %}
-        </div>
-        {% endif %}
-
-        {% if event.num_likes and event.owner == user %}
-        <div class="text-gray">
-            {{ event.num_likes }}
-            {% blocktrans count counter=event.num_likes %}
-            person liked this event
-            {% plural %}
-            people liked this event
-            {% endblocktrans %}
-        </div>
-        {% endif %}
-        <div>
-            {% if is_detail %}
-            <a href="{{ event.get_permalink }}">{% trans "Permalink" %}</a>
-            {% else %}
-            {% include "activities/includes/comments_count.html" with object=event %}
-            {% endif %}
-        </div>
-        <div>
-            {% include "events/includes/actions.html" %}
-        </div>
-    </div>
-</div>
+{% block actions %}{% include "events/includes/actions.html" %}{% endblock actions %}

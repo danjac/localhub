@@ -7,7 +7,9 @@
 
 {% block messageboard_content %}
 
+{% if paginator.count %}
 {% include "includes/search_form.html" %}
+{% endif %}
 
 {% if object_list %}
 {% regroup object_list by get_month as months %}

@@ -2,12 +2,9 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-<div class="btn-group">
-    <a class="btn btn-sm"
-       href="{{ photo.image.url }}"
-       download>
-        {% trans "Download" %}
-    </a>
-
-  {% include "activities/includes/actions.html" with object=photo id_prefix="photo" %}
-</div>
+<a class="btn btn-sm"
+   href="{{ photo.image.url }}"
+   download>
+    {% trans "Download" %}
+</a>
+{% include "activities/includes/actions.html" %}

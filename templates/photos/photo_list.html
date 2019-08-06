@@ -27,11 +27,13 @@
 
 <h3>{% trans "Photos" %}</h3>
 
+{% if paginator.count %}
 {% include "includes/search_form.html" %}
+{% endif %}
 
-{% for photo in object_list %}
+{% for object in object_list %}
 <div class="mt-1">
-  {% include "photos/includes/photo.html" %}
+  {% include "photos/includes/photo.html" with object_type="photo" %}
 </div>
 {% empty %}
 <div class="empty mt-1">

@@ -4,10 +4,10 @@
 {% load i18n %}
 <div class="btn-group">
     <a class="btn btn-sm"
-       href="{% url 'events:download' event.id %}"
+       href="{% url 'events:download' object.id %}"
        title="{% trans 'Download .ics calendar file' %}"
        download>
         {% trans "Download" %}
     </a>
-    {% include "activities/includes/actions.html" with object=event id_prefix="event" %}
+    {% include "activities/includes/actions.html" %}
 </div>

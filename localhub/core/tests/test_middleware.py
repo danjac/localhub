@@ -1,8 +1,26 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.test.client import RequestFactory
 
-from localhub.core.turbolinks.middleware import TurbolinksMiddleware
+from localhub.core.middleware import DoNotTrackMiddleware, TurbolinksMiddleware
 from localhub.core.types import DjangoView
+
+
+class TestDoNotTrackMiddleware:
+    def test_if_header_present(
+        self, req_factory: RequestFactory, get_response: DjangoView
+    ):
+        mw = DoNotTrackMiddleware(get_response)
+        req = req_factory.get("/", HTTP_DNT="1")
+        mw(req)
+        assert req.do_not_track
+
+    def test_if_header_not_present(
+        self, req_factory: RequestFactory, get_response: DjangoView
+    ):
+        mw = DoNotTrackMiddleware(get_response)
+        req = req_factory.get("/")
+        mw(req)
+        assert not req.do_not_track
 
 
 class TestTurbolinksMiddleware:

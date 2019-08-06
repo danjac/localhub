@@ -27,6 +27,7 @@ class UserForm(forms.ModelForm):
             "name",
             "avatar",
             "show_sensitive_content",
+            "show_embedded_content",
             "home_page_filters",
             "email_preferences",
             "bio",
@@ -43,5 +44,11 @@ class UserForm(forms.ModelForm):
                 "Sensitive content will be hidden by default. "
                 "If you wish to remove sensitive content completely "
                 "from your feeds, you can block specific tags such as #nsfw."
+            ),
+            "show_embedded_content": _(
+                "If you have enabled Do Not Track in your browser, we will "
+                "hide content such as YouTube videos and Twitter and Facebook "
+                "posts by default. Enabling this setting "
+                "ensures embedded content will always be shown on this site."
             ),
         }

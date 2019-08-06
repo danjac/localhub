@@ -7,7 +7,9 @@
 
 {% block messageboard_content %}
 
+{% if paginator.count %}
 {% include "includes/search_form.html" %}
+{% endif %}
 
 <p class="toast text-center my-1">
   {% url 'user_update' as user_settings_url %}

@@ -1,0 +1,69 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% load activities_tags %}
+
+{% with is_content_sensitive=object|is_content_sensitive:user %}
+<div id="{{ object_type }}-{{ object.id }}" class="card"{% if is_content_sensitive %} data-controller="content-sensitive"{% endif %}>
+  {% if is_content_sensitive %}
+  <div class="card-header" data-target="content-sensitive.togglable">
+    <div class="card-subtitle h6 text-gray">
+      {% include "activities/includes/timesince.html" with timestamp=object.created owner=object.owner %}
+    </div>
+  </div>
+  <div class="card-header d-hide" data-target="content-sensitive.togglable">
+    {% else %}
+    <div class="card-header">
+      {% endif %}
+      {% include "activities/includes/header.html" %}
+    </div>
+    <div class="card-body">
+      {% if object.is_reshare and not object.parent %}
+      {% blocktrans %}
+      The original {{ object_type }} has been removed.
+      {% endblocktrans %}
+      {% else %}
+      {% if object.is_reshare %}<blockquote>{% endif %}
+        {% block content %}{% endblock %}
+        {% if object.is_reshare %}</blockquote>{% endif %}
+      {% endif %}
+    </div>
+    <div class="card-footer">
+      {% if is_detail %}
+      {% include "activities/includes/reshares.html" %}
+      {% elif object.num_reshares %}
+      <div class="text-gray">
+        {{ object.num_reshares }}
+        {% blocktrans count counter=object.num_reshares %}
+        person has reshared this {{ object_type }}
+        {% plural %}
+        people have reshared this {{ object_type }}
+        {% endblocktrans %}
+      </div>
+      {% endif %}
+      {% if object.num_likes and object.owner == user %}
+      <div class="text-gray">
+        {{ object.num_likes }}
+        {% blocktrans count counter=object.num_likes %}
+        person liked this {{ object_type }}
+        {% plural %}
+        people liked this {{ object_type }}
+        {% endblocktrans %}
+      </div>
+      {% endif %}
+      <div>
+        {% if is_detail %}
+        <a href="{{ object.get_permalink }}">{% trans "Permalink" %}</a>
+        {% else %}
+        {% include "activities/includes/comments_count.html" %}
+        {% endif %}
+      </div>
+      {% if user.is_authenticated %}
+      <div class="btn-group">
+        {% include "activities/includes/actions.html" %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endwith %}

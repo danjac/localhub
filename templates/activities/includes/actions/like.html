@@ -6,18 +6,18 @@
 {% has_perm "activities.like_activity" user object as can_like %}
 {% if can_like %}
 <button class="btn btn-sm{% if object.has_liked %} d-hide{% endif %}"
-        id="{{ id_prefix }}-like-btn-{{ object.id }}"
+        id="{{ object_type }}-like-btn-{{ object.id }}"
         data-controller="ajax"
         data-action="ajax#post"
         data-ajax-url="{{ object.get_like_url }}"
-        data-ajax-toggle="#{{ id_prefix }}-dislike-btn-{{ object.id }}"
+        data-ajax-toggle="#{{ object_type }}-dislike-btn-{{ object.id }}"
         >{% trans "Like" %}</button>
 <button class="btn btn-sm{% if not object.has_liked %} d-hide{% endif %}"
-        id="{{ id_prefix }}-dislike-btn-{{ object.id }}"
+        id="{{ object_type }}-dislike-btn-{{ object.id }}"
         data-controller="ajax"
         data-action="ajax#post"
         data-ajax-url="{{ object.get_dislike_url }}"
-        data-ajax-toggle="#{{ id_prefix }}-like-btn-{{ object.id }}"
+        data-ajax-toggle="#{{ object_type }}-like-btn-{{ object.id }}"
         >{% trans "Unlike" %}</button>
 {% endif %}
 

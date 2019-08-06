@@ -3,6 +3,19 @@ from django.http import HttpRequest, HttpResponse
 from localhub.core.types import DjangoView
 
 
+class DoNotTrackMiddleware:
+    """
+    Checks if DoNotTrack(DNT) HTTP header is present.
+    """
+
+    def __init__(self, get_response: DjangoView):
+        self.get_response = get_response
+
+    def __call__(self, request: HttpRequest) -> HttpResponse:
+        request.do_not_track = request.headers.get("DNT") == "1"
+        return self.get_response(request)
+
+
 class TurbolinksMiddleware:
     """
     This provides backend Django complement to the Turbolinks JS framework:

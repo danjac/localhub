@@ -173,6 +173,7 @@ class User(AbstractUser):
     )
 
     show_sensitive_content = models.BooleanField(default=False)
+    show_embedded_content = models.BooleanField(default=False)
 
     email_preferences = ChoiceArrayField(
         models.CharField(max_length=30, choices=EMAIL_PREFERENCES),

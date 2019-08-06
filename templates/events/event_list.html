@@ -29,11 +29,13 @@
 
 <h3>{% trans "Events" %}</h3>
 
+{% if paginator.count %}
 {% include "includes/search_form.html" %}
+{% endif %}
 
-{% for event in object_list %}
+{% for object in object_list %}
 <div class="mt-1">
-  {% include "events/includes/event.html" %}
+  {% include "events/includes/event.html" with object_type="event" %}
 </div>
 {% empty %}
 <div class="empty mt-1">

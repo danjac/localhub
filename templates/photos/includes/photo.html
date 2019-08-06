@@ -1,79 +1,28 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{% extends "activities/includes/activity_base.html" %}
+
 {% load i18n %}
 
-<div class="card" id="photo-{{ photo.id }}">
-    <div class="card-header">
-        {% include "activities/includes/header.html" with object=photo %}
-    </div>
-    <div class="card-body">
-        {% if photo.is_reshare and not photo.parent %}
-        {% trans "The original photo has been removed." %}
-        {% else %}
-        {% include "photos/includes/content.html" with object=photo %}
-        {% if photo.has_attribution %}
-        <div class="mb-1">
-            {% if photo.is_reshare %}
-            <blockquote>
-                {% endif %}
-                <dl>
-                    {% if photo.artist %}
-                    <dt>{% trans "Artist" %}</dt>
-                    <dd>{{ photo.artist }}</dd>
-                    {% endif %}
-                    {% if photo.original_url %}
-                    <dt>{% trans "Original URL" %}</dt>
-                    <dd><a href="{{ photo.original_url }}" rel="noopener nofollow" target="_blank">{{ photo.original_url }}</a></dd>
-                    {% endif %}
-                    {% if photo.cc_license %}
-                    <dt>{% trans "Creative Commons License" %}</dt>
-                    <dd>{{ photo.get_cc_license_display }}</dd>
-                    {% endif %}
-                </dl>
-                {% if photo.is_reshare %}
-            </blockquote>
-            {% endif %}
-        </div>
-        {% endif %}
-        {% endif %}
-    </div>
-    <div class="card-footer">
-        {% if is_detail %}
-        {% include "activities/includes/reshares.html" with object=photo %}
-        {% elif photo.num_reshares %}
-        <div class="text-gray">
-            {{ photo.num_reshares }}
-            {% blocktrans count counter=photo.num_reshares %}
-            person has reshared this photo
-            {% plural %}
-            people have reshared this photo
-            {% endblocktrans %}
-        </div>
-        {% endif %}
+{% block content %}
+{% include "photos/includes/content.html" %}
+{% if photo.has_attribution %}
+<dl>
+  {% if photo.artist %}
+  <dt>{% trans "Artist" %}</dt>
+  <dd>{{ photo.artist }}</dd>
+  {% endif %}
+  {% if photo.original_url %}
+  <dt>{% trans "Original URL" %}</dt>
+  <dd><a href="{{ photo.original_url }}" rel="noopener nofollow" target="_blank">{{ photo.original_url }}</a></dd>
+  {% endif %}
+  {% if photo.cc_license %}
+  <dt>{% trans "Creative Commons License" %}</dt>
+  <dd>{{ photo.get_cc_license_display }}</dd>
+  {% endif %}
+</dl>
+{% endif %}
+{% endblock content %}
 
-        {% if photo.num_likes and photo.owner == user %}
-        <div class="text-gray">
-            {{ photo.num_likes }}
-            {% blocktrans count counter=photo.num_likes %}
-            person liked this photo
-            {% plural %}
-            people liked this photo
-            {% endblocktrans %}
-        </div>
-        {% endif %}
-
-        <div>
-            {% if is_detail %}
-            <a href="{{ photo.get_permalink }}">{% trans "Permalink" %}</a>
-            {% else %}
-            {% include "activities/includes/comments_count.html" with object=photo %}
-            {% endif %}
-        </div>
-        <div>
-            {% include "photos/includes/actions.html" %}
-        </div>
-    </div>
-
-</div>
-
+{% block actions %}{% include "photos/includes/actions.html" %}{% endblock %}

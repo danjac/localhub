@@ -1,10 +1,27 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{% load i18n %}
 {% load micawber_tags %}
 {% load activities_tags %}
+
 {% if object.url %}
- <div data-controller="oembed" class="wordwrap">
-  {{ object.url|oembed_no_urlize|domain }}
+{% if request.do_not_track and not user.show_embedded_content %}
+<div>
+  {{ object.url|oembed_fallback }}
 </div>
+<div>
+  <em>{% trans "Embedded content has been removed as your browser has enabled Do Not Track." %}</em>
+  {% if user.is_authenticated %}
+  {% url "user_update" as user_update_url %}
+  {% blocktrans %}
+  <em>You can view embedded content by checking the <b>Show embedded content</b> option in your <a href="{{ user_update_url }}">user settings</a>.</em>
+  {% endblocktrans %}
+  {% endif %}
+</div>
+{% else %}
+<div data-controller="oembed" class="wordwrap">
+  {{ object.url|oembed_no_urlize|oembed_fallback }}
+</div>
+{% endif %}
 {% endif %}

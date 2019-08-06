@@ -60,7 +60,8 @@ rules.add_perm("activities.change_activity", is_editor & ~is_reshare)
 rules.add_perm("activities.delete_activity", is_editor)
 
 rules.add_perm(
-    "activities.flag_activity", is_activity_community_member & ~is_owner
+    "activities.flag_activity",
+    is_activity_community_member & ~is_owner & ~is_parent_owner,
 )
 
 rules.add_perm(
