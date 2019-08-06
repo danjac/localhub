@@ -96,13 +96,16 @@
       {% endblock mobile_search_form %}
 
       <div class="columns p-1 bg-light">
-        <div class="text-center mb-1 toast toast-primary d-hide" data-controller="cookie-notice" data-cookie-notice-domain="{{ community.domain }}">
+        <p class="text-center mb-1 toast toast-primary d-hide"
+             data-controller="cookie-notice"
+             data-cookie-notice-name="accept-cookies"
+             data-cookie-notice-domain="{{ community.domain }}">
           <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
           {% blocktrans %}
           This site uses cookies for authentication purposes only. We do not share your personal
           information with third parties.
           {% endblocktrans %}
-        </div>
+        </p>
         {% for message in messages %}
         <div class="text-center my-1 toast toast-{{ message.tags }}" data-controller="alert">
           <button class="btn btn-clear float-right" data-action="alert#dismiss"></button>

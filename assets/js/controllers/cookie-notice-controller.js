@@ -3,13 +3,13 @@ import { Controller } from 'stimulus';
 
 export default class extends Controller {
   connect() {
-    if (!Cookies.get('accept-cookies')) {
+    if (!Cookies.get(this.data.get('name'))) {
       this.element.classList.remove('d-hide');
     }
   }
 
   accept() {
-    Cookies.set('accept-cookies', true, {
+    Cookies.set(this.data.get('name'), true, {
       domain: this.data.get('domain'),
       expires: 360
     });

@@ -10,22 +10,6 @@
 <div>
   {{ object.url|oembed_fallback }}
 </div>
-<div class="empty bg-dark">
-  <p class="empty title h5">
-    {% trans "Embedded Content" %}
-  </p>
-  <p class="empty-subtitle">
-    {% trans "Embedded content has been removed because your browser has enabled Do Not Track." %}
-  </p>
-  {% if user.is_authenticated %}
-  <div class="empty-action">
-    {% url "user_update" as user_update_url %}
-    {% blocktrans %}
-    View embedded content by checking the <b>Show embedded content</b> option in your <a href="{{ user_update_url }}">user settings</a>.
-    {% endblocktrans %}
-  </div>
-  {% endif %}
-</div>
 {% else %}
 <div data-controller="oembed" class="wordwrap">
   {{ object.url|oembed_no_urlize|oembed_fallback }}

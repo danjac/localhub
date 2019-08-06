@@ -42,6 +42,20 @@
 </p>
 {% endif %}
 
+{% if user.is_authenticated and request.do_not_track and not user.show_embedded_content %}
+<p class="toast text-center my-1"
+   data-controller="cookie-notice"
+   data-cookie-notice-name="embedded-content"
+   data-cookie-notice-domain="{{ community.domain }}">
+  <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
+  {% url "user_update" as user_update_url %}
+  {% blocktrans %}
+  Embedded content has been removed because your browser has enabled Do Not Track.
+  You can view embedded content by checking the <b>Show embedded content</b> option in your
+  <a href="{{ user_update_url }}">user settings</a>.
+  {% endblocktrans %}
+</p>
+{% endif %}
 
 {% for activity in object_list %}
 <div class="my-1">
