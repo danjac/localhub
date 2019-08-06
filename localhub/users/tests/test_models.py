@@ -191,5 +191,7 @@ class TestUserModel:
         )
         assert len(notifications) == 1
         assert notifications[0].recipient == member.member
+        assert notifications[0].content_object == follower
+        assert notifications[0].actor == follower
         assert notifications[0].community == member.community
         assert notifications[0].verb == "new_follower"

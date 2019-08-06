@@ -109,7 +109,7 @@ class TestUserFollowView:
         assert user in member.member.following.all()
         notification = Notification.objects.get()
         assert notification.recipient == user
-        assert notification.content_object == user
+        assert notification.content_object == member.member
         assert notification.actor == member.member
         assert mailoutbox[0].to == [user.email]
 
