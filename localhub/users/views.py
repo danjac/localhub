@@ -126,7 +126,7 @@ class UserFollowView(
 
         self.request.user.following.add(self.object)
 
-        for notification in self.request.user.notify(
+        for notification in self.request.user.notify_on_follow(
             self.object, self.request.community
         ):
             send_user_notification_email(self.object, notification)

@@ -261,7 +261,7 @@ class User(AbstractUser):
             )
         )
 
-    def notify(
+    def notify_on_follow(
         self, recipient: settings.AUTH_USER_MODEL, community: Community
     ) -> List[Notification]:
         """
@@ -274,7 +274,7 @@ class User(AbstractUser):
                 recipient=recipient,
                 actor=self,
                 community=community,
-                verb="follow",
+                verb="new_follower",
             )
         ]
 
