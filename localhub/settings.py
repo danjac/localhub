@@ -29,6 +29,7 @@ class Base(Configuration):
     ALLOWED_HOSTS: List[str] = []
 
     SESSION_COOKIE_DOMAIN = values.Value()
+    CSRF_COOKIE_DOMAIN = values.Value()
 
     WSGI_APPLICATION = "localhub.wsgi.application"
 
