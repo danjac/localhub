@@ -1,0 +1,12 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "error_base.html" %}
+{% load i18n %}
+{% block content %}
+<h1>{% trans "Form Error" %}</h1>
+<p>
+{% trans "Sorry, an error has occurred when posting your form. Please refresh this page and try again." %}
+</p>
+
+{% endblock %}

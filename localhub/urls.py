@@ -69,4 +69,7 @@ if settings.DEBUG:
         path("errors/403/", TemplateView.as_view(template_name="403.html")),
         path("errors/404/", TemplateView.as_view(template_name="404.html")),
         path("errors/500/", TemplateView.as_view(template_name="500.html")),
+        path(
+            "errors/csrf/", TemplateView.as_view(template_name="403_csrf.html")
+        ),
     ]
