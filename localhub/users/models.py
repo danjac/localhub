@@ -270,7 +270,7 @@ class User(AbstractUser):
 
         notifications = [
             Notification.objects.create(
-                content_object=recipient,
+                content_object=self,
                 recipient=recipient,
                 actor=self,
                 community=community,
