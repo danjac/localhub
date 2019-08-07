@@ -16,6 +16,7 @@ def send_activity_deleted_email(activity: Activity):
         activity_name = activity._meta.verbose_name
 
         context = {"activity": activity, "activity_name": activity_name}
+
         send_mail(
             _("Your %s has been deleted by a moderator" % activity_name),
             render_to_string(
@@ -52,11 +53,18 @@ def send_activity_notification_email(
     if notification.recipient.has_email_pref(notification.verb):
         activity_name = activity._meta.verbose_name
 
+        plain_template_name = (
+            f"activities/emails/notifications/{notification.verb}.txt"
+        )
+        html_template_name = (
+            f"activities/emails/notifications/{notification.verb}.html"
+        )
+
         send_notification_email(
             notification,
             NOTIFICATION_SUBJECTS[notification.verb] % activity_name,
             activity.get_permalink(),
-            "activities/emails/notification.txt",
-            "activities/emails/notification.html",
+            plain_template_name,
+            html_template_name,
             {"activity_name": activity_name},
         )

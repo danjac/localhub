@@ -9,7 +9,15 @@ from functools import reduce
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import BooleanField, Exists, OuterRef, Q, QuerySet, Value
+from django.db.models import (
+    BooleanField,
+    Count,
+    Exists,
+    OuterRef,
+    Q,
+    QuerySet,
+    Value,
+)
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -34,7 +42,7 @@ from localhub.posts.models import Post
 class TagQuerySetMixin(CommunityRequiredMixin):
     tagged_models = [Post, Event, Photo]
 
-    def get_queryset(self) -> QuerySet:
+    def get_tagged_items(self) -> Q:
         q = Q(
             reduce(
                 operator.or_,
@@ -51,14 +59,12 @@ class TagQuerySetMixin(CommunityRequiredMixin):
                 ],
             )
         )
+        return TaggedItem.objects.filter(q)
 
-        return (
-            Tag.objects.filter(
-                taggit_taggeditem_items__in=TaggedItem.objects.filter(q)
-            )
-            .order_by("name")
-            .distinct()
-        )
+    def get_queryset(self) -> QuerySet:
+        return Tag.objects.filter(
+            taggit_taggeditem_items__in=self.get_tagged_items()
+        ).distinct()
 
 
 class SingleTagMixin(TagQuerySetMixin, SingleObjectMixin):
@@ -70,7 +76,8 @@ class SingleTagView(SingleTagMixin, View):
 
 
 class BaseTagListView(TagQuerySetMixin, ListView):
-    ...
+    def get_queryset(self) -> QuerySet:
+        return super().get_queryset().order_by("name")
 
 
 class TagAutocompleteListView(BaseTagListView):
@@ -204,10 +211,17 @@ tag_unblock_view = TagUnblockView.as_view()
 
 class TagListView(BaseTagListView):
     template_name = "activities/tags/tag_list.html"
+    paginate_by = 30
 
     def get_queryset(self) -> QuerySet:
 
         qs = super().get_queryset()
+
+        # TBD: refactor this into a mixin which provides
+        # "search_query". Then we can just do self.search_query.
+        self.search_query = self.request.GET.get("q", "")
+        if self.search_query:
+            qs = qs.filter(name__icontains=self.search_query)
 
         if self.request.user.is_authenticated:
             qs = qs.annotate(
@@ -220,23 +234,32 @@ class TagListView(BaseTagListView):
         else:
             qs = qs.annotate(is_following=Value(False, BooleanField()))
 
-        return qs
+        qs = qs.annotate(
+            item_count=Count(
+                "taggit_taggeditem_items",
+                filter=Q(
+                    taggit_taggeditem_items__pk__in=self.get_tagged_items()
+                ),
+            )
+        )
+
+        return qs.order_by("-item_count", "name")
 
 
 tag_list_view = TagListView.as_view()
 
 
-class FollowingTagListView(LoginRequiredMixin, TagListView):
+class FollowingTagListView(LoginRequiredMixin, BaseTagListView):
     template_name = "activities/tags/following_tag_list.html"
 
     def get_queryset(self) -> QuerySet:
-        return super().get_queryset().filter(is_following=True)
+        return self.request.user.following_tags.all()
 
 
 following_tag_list_view = FollowingTagListView.as_view()
 
 
-class BlockedTagListView(LoginRequiredMixin, TagListView):
+class BlockedTagListView(LoginRequiredMixin, BaseTagListView):
     template_name = "activities/tags/blocked_tag_list.html"
 
     def get_queryset(self) -> QuerySet:

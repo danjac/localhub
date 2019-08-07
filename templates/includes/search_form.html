@@ -3,12 +3,12 @@
 
 {% load i18n %}
 <form method="GET"
-      action="{{ request.path }}"
+      action="{{ search_url|default:request.path }}"
       data-controller="form"
       data-action="form#submit"
       class="my-1"
       >
-      <div class="input-group">
+      <div class="input-group{% if is_search_form_inline %} input-inline{% endif %}">
         <input class="form-input"
                name="q"
                type="search"
