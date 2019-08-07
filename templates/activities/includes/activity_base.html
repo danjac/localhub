@@ -34,22 +34,26 @@
       {% include "activities/includes/reshares.html" %}
       {% elif object.num_reshares %}
       <div class="text-gray">
+        <small>
         {{ object.num_reshares }}
         {% blocktrans count counter=object.num_reshares %}
         person has reshared this {{ object_type }}
         {% plural %}
         people have reshared this {{ object_type }}
         {% endblocktrans %}
+        </small>
       </div>
       {% endif %}
       {% if object.num_likes and object.owner == user %}
       <div class="text-gray">
+        <small>
         {{ object.num_likes }}
         {% blocktrans count counter=object.num_likes %}
         person liked this {{ object_type }}
         {% plural %}
         people liked this {{ object_type }}
         {% endblocktrans %}
+        </small>
       </div>
       {% endif %}
       <div>
