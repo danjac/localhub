@@ -1,3 +1,6 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% load i18n %}
 {% load rules %}
 
@@ -33,7 +36,7 @@
         </div>
         {% endif %}
         <div class="mb-1">
-            <a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a>
+          <small><a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a></small>
         </div>
         {% include "comments/includes/actions.html" %}
     </div>

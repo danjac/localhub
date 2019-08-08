@@ -58,7 +58,7 @@
       {% endif %}
       <div>
         {% if is_detail %}
-        <a href="{{ object.get_permalink }}">{% trans "Permalink" %}</a>
+        <small><a href="{{ object.get_permalink }}">{% trans "Permalink" %}</a></small>
         {% else %}
         {% include "activities/includes/comments_count.html" %}
         {% endif %}
