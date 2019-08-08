@@ -6,7 +6,6 @@
 {% has_perm "activities.delete_activity" user object as can_delete %}
 {% if can_delete %}
 <a href="{{ object.get_delete_url }}"
-   class="btn btn-sm"
    data-controller="ajax confirm"
    data-action="confirm#check ajax#delete"
    data-confirm-header="{% trans 'Delete' %}"

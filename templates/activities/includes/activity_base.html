@@ -9,7 +9,7 @@
 <div id="{{ object_type }}-{{ object.id }}" class="card"{% if is_content_sensitive %} data-controller="content-sensitive"{% endif %}>
   {% if is_content_sensitive %}
   <div class="card-header" data-target="content-sensitive.togglable">
-    <div class="card-subtitle h6 text-gray">
+    <div class="card-subtitle h6">
       {% include "activities/includes/timesince.html" with timestamp=object.created owner=object.owner %}
     </div>
   </div>
@@ -18,12 +18,12 @@
     <div class="card-header">
       {% endif %}
 
-      {% load i18n %}
-
       {% has_perm "communities.moderate_community" user community as can_moderate_community %}
       {% if object.is_flagged and can_moderate_community %}
-      <div class="toast toast-warning text-center">
-        <a href="{{ object.get_absolute_url }}">{% trans "This object has been flagged" %}</a>
+      <div class="toast text-center">
+        <a href="{{ object.get_absolute_url }}">
+          {% blocktrans %}This {{ object_type }} has been flagged{% endblocktrans %}
+        </a>
       </div>
       {% endif %}
 
@@ -31,7 +31,7 @@
 
         {% if object.is_reshare %}
 
-        <div class="card-subtitle h6 text-gray">
+        <div class="card-subtitle h6">
           {% include "activities/includes/timesince.html" with timestamp=object.created owner=object.owner is_reshare=True %}
         </div>
         <div class="divider"></div>
@@ -55,7 +55,7 @@
         {% endif %}
 
       </div>
-      <div class="card-subtitle h6 text-gray">
+      <div class="card-subtitle h6">
         {% if object.parent %}
         {% include "activities/includes/timesince.html" with timestamp=object.parent.created owner=object.parent.owner %}
         {% elif not object.is_reshare %}
@@ -79,43 +79,55 @@
       {% if is_detail %}
       {% include "activities/includes/reshares.html" %}
       {% elif object.num_reshares %}
-      <div class="text-gray">
-        <small>
-          {{ object.num_reshares }}
-          {% blocktrans count counter=object.num_reshares %}
-          person has reshared this {{ object_type }}
-          {% plural %}
-          people have reshared this {{ object_type }}
-          {% endblocktrans %}
-        </small>
+      <div class="info">
+        {{ object.num_reshares }}
+        {% blocktrans count counter=object.num_reshares %}
+        person has reshared this {{ object_type }}
+        {% plural %}
+        people have reshared this {{ object_type }}
+        {% endblocktrans %}
       </div>
       {% endif %}
       {% if object.num_likes and object.owner == user %}
-      <div class="text-gray">
-        <small>
-          {{ object.num_likes }}
-          {% blocktrans count counter=object.num_likes %}
-          person liked this {{ object_type }}
-          {% plural %}
-          people liked this {{ object_type }}
-          {% endblocktrans %}
-        </small>
+      <div class="info">
+        {{ object.num_likes }}
+        {% blocktrans count counter=object.num_likes %}
+        person liked this {{ object_type }}
+        {% plural %}
+        people liked this {{ object_type }}
+        {% endblocktrans %}
       </div>
       {% endif %}
-      <div>
+      <div class="actions">
         {% if is_detail %}
-        <small><a href="{{ object.get_permalink }}">{% trans "Permalink" %}</a></small>
+        <a href="{{ object.get_permalink }}">{% trans "Permalink" %}</a>
         {% else %}
-        {% include "activities/includes/comments_count.html" %}
+        {% has_perm "activities.create_comment" user object as can_create_comment %}
+        {% with num_comments=object.num_comments|default:0 %}
+        {% if num_comments or can_create_comment %}
+        <a href="{{ object.get_absolute_url }}#comments">
+          {% if num_comments %}
+          {{ num_comments }}
+          {% blocktrans count counter=num_comments %}
+          Comment
+          {% plural %}
+          Comments
+          {% endblocktrans %}
+          {% else %}
+          {% trans "Discuss" %}
+          {% endif %}
+        </a>
+        {% else %}
+        <a href="{{ object.get_permalink }}">{% trans "Permalink" %}</a>
         {% endif %}
-      </div>
-      {% if user.is_authenticated %}
-      <div class="btn-group">
+        {% endwith %}
+        {% endif %}
+        {% if user.is_authenticated %}
         {% block actions %}
         {% include "activities/includes/actions.html" %}
         {% endblock %}
+        {% endif %}
       </div>
-      {% endif %}
     </div>
   </div>
   {% endwith %}

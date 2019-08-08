@@ -56,8 +56,7 @@
 {% endblock content %}
 
 {% block actions %}
-<a class="btn btn-sm"
-   href="{% url 'events:download' object.id %}"
+<a href="{% url 'events:download' object.id %}"
    title="{% trans 'Download .ics calendar file' %}"
    download>
   {% trans "Download" %}

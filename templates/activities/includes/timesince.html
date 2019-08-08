@@ -2,14 +2,15 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-{% if is_reshare %}
-{% blocktrans with created=timestamp|timesince %}
-Reshared {{ created }} ago by
-{% endblocktrans %}
-{% else %}
-{% blocktrans with created=timestamp|timesince %}
-Posted {{ created }} ago by
-{% endblocktrans %}
-{% endif %}
-{% include "users/includes/chip.html" with profile=owner %}
-
+<span class="timesince">
+  {% if is_reshare %}
+  {% blocktrans with created=timestamp|timesince %}
+  Reshared {{ created }} ago by
+  {% endblocktrans %}
+  {% else %}
+  {% blocktrans with created=timestamp|timesince %}
+  Posted {{ created }} ago by
+  {% endblocktrans %}
+  {% endif %}
+  {% include "users/includes/chip.html" with profile=owner %}
+</span>

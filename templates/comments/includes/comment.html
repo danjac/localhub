@@ -9,14 +9,13 @@
 <div class="card" id="comment-{{ comment.id }}">
     <div class="card-header">
         {% if comment.is_flagged and can_moderate_community %}
-        <div class="toast toast-warning text-center">
+        <div class="toast toast-info text-center mb-1">
             <a href="{{ comment.get_absolute_url }}">{% trans "This comment has been flagged" %}</a>
         </div>
         {% endif %}
 
-        <div class="card-title h6 text-gray">
+        <div class="card-title h6">
             {% include "activities/includes/timesince.html" with timestamp=comment.created owner=comment.owner %}
-
         </div>
     </div>
     <div class="card-body">
@@ -26,7 +25,7 @@
     </div>
     <div class="card-footer">
         {% if comment.num_likes and comment.owner == user %}
-        <div class="mb-1 text-gray">
+        <div class="info">
             {{ comment.num_likes }}
             {% blocktrans count counter=comment.num_likes %}
             person liked this comment
@@ -35,9 +34,6 @@
             {% endblocktrans %}
         </div>
         {% endif %}
-        <div class="mb-1">
-          <small><a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a></small>
-        </div>
         {% include "comments/includes/actions.html" %}
     </div>
 </div>

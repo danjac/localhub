@@ -7,28 +7,26 @@
 
 {% block content %}
 {% include "photos/includes/content.html" %}
-{% if photo.has_attribution %}
+{% if object.has_attribution %}
 <dl>
-  {% if photo.artist %}
+  {% if object.artist %}
   <dt>{% trans "Artist" %}</dt>
-  <dd>{{ photo.artist }}</dd>
+  <dd>{{ object.artist }}</dd>
   {% endif %}
-  {% if photo.original_url %}
+  {% if object.original_url %}
   <dt>{% trans "Original URL" %}</dt>
-  <dd><a href="{{ photo.original_url }}" rel="noopener nofollow" target="_blank">{{ photo.original_url }}</a></dd>
+  <dd><a href="{{ object.original_url }}" rel="noopener nofollow" target="_blank">{{ object.original_url }}</a></dd>
   {% endif %}
-  {% if photo.cc_license %}
+  {% if object.cc_license %}
   <dt>{% trans "Creative Commons License" %}</dt>
-  <dd>{{ photo.get_cc_license_display }}</dd>
+  <dd>{{ object.get_cc_license_display }}</dd>
   {% endif %}
 </dl>
 {% endif %}
 {% endblock content %}
 
 {% block actions %}
-<a class="btn btn-sm"
-   href="{{ photo.image.url }}"
-   download>
+<a href="{{ object.image.url }}" download>
     {% trans "Download" %}
 </a>
 {{ block.super }}

@@ -1,11 +1,22 @@
-.content {
-  &-actions {
-    font-size: $font-size-sm;
-    color: $gray-color-dark;
-    a {
-      color: $gray-color-dark;
+.actions {
+  font-size: $font-size-sm;
+  a {
+    &:not(:last-child) {
+      @extend .pr-1;
+    }
+    &:visited {
+      color: $link-color;
     }
   }
+}
+
+.info {
+  font-size: $font-size-sm;
+  color: $gray-color-dark;
+}
+
+.timesince {
+  color: $gray-color-dark;
 }
 
 .event-map {
