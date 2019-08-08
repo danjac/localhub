@@ -38,7 +38,7 @@
 {% block tag_list %}
 {% if object_list %}
 {% with blocked=user.blocked_tags.all following=user.following_tags.all %}
-<table class="table table-striped table-hover">
+<table class="table table-striped table-hover table-responsive-md">
   <tbody>
     {% for tag in object_list %}
     <tr>
