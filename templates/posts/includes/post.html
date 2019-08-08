@@ -13,7 +13,7 @@
 <a href="{{ object.url }}" rel="nofollow">{% if is_detail %}{{ object.title }}{% else %}{{ object.title|truncatechars:130 }}{% endif %}</a>
 {% else %}
 {{ block.super }}
-{% endblock %}
+{% endif %}
 {% endblock %}
 
 
