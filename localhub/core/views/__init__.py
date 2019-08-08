@@ -9,9 +9,12 @@ from .multiple_queryset import (
     MultipleQuerySetMixin,
 )
 
+from .search import SearchMixin
+
 __all__ = [
     "BreadcrumbsMixin",
     "MultipleQuerySetContextMixin",
     "MultipleQuerySetListView",
     "MultipleQuerySetMixin",
+    "SearchMixin",
 ]

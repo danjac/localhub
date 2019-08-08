@@ -39,7 +39,7 @@ from localhub.core.types import (
     BreadcrumbList,
     ContextDict,
 )
-from localhub.core.views import BreadcrumbsMixin
+from localhub.core.views import BreadcrumbsMixin, SearchMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
 
@@ -100,7 +100,7 @@ class ActivityCreateView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityListView(MultipleActivityMixin, ListView):
+class ActivityListView(MultipleActivityMixin, SearchMixin, ListView):
     allow_empty = True
     paginate_by = settings.DEFAULT_PAGE_SIZE
     order_by = "-id"
@@ -114,7 +114,6 @@ class ActivityListView(MultipleActivityMixin, ListView):
             .order_by(self.order_by)
         )
 
-        self.search_query = self.request.GET.get("q")
         if self.search_query:
             qs = qs.search(self.search_query).order_by("rank")
         return qs

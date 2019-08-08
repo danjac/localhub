@@ -34,6 +34,7 @@ from localhub.activities.views.streams import BaseStreamView
 from localhub.communities.models import Community
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.types import ContextDict
+from localhub.core.views import SearchMixin
 from localhub.events.models import Event
 from localhub.photos.models import Photo
 from localhub.posts.models import Post
@@ -209,7 +210,7 @@ class TagUnblockView(LoginRequiredMixin, SingleTagView):
 tag_unblock_view = TagUnblockView.as_view()
 
 
-class TagListView(BaseTagListView):
+class TagListView(SearchMixin, BaseTagListView):
     template_name = "activities/tags/tag_list.html"
     paginate_by = 30
 
@@ -217,9 +218,6 @@ class TagListView(BaseTagListView):
 
         qs = super().get_queryset()
 
-        # TBD: refactor this into a mixin which provides
-        # "search_query". Then we can just do self.search_query.
-        self.search_query = self.request.GET.get("q", "")
         if self.search_query:
             qs = qs.filter(name__icontains=self.search_query)
 

@@ -19,6 +19,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from localhub.communities.models import Community
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.types import ContextDict
+from localhub.core.views import SearchMixin
 from localhub.messageboard.emails import send_message_email
 from localhub.messageboard.forms import MessageForm
 from localhub.messageboard.models import Message, MessageRecipient
@@ -42,12 +43,13 @@ class MessageQuerySetMixin(LoginRequiredMixin, CommunityRequiredMixin):
         ).select_related("parent", "parent__sender")
 
 
-class MessageRecipientListView(MessageRecipientQuerySetMixin, ListView):
+class MessageRecipientListView(
+    MessageRecipientQuerySetMixin, SearchMixin, ListView
+):
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
     def get_queryset(self) -> models.QuerySet:
         qs = super().get_queryset().order_by("-message__created")
-        self.search_query = self.request.GET.get("q", "")
         if self.search_query:
             qs = qs.search(self.search_query)
         return qs
@@ -103,12 +105,11 @@ class MessageRecipientDeleteView(MessageRecipientQuerySetMixin, DeleteView):
 message_recipient_delete_view = MessageRecipientDeleteView.as_view()
 
 
-class MessageListView(MessageQuerySetMixin, ListView):
+class MessageListView(MessageQuerySetMixin, SearchMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
     def get_queryset(self) -> models.QuerySet:
         qs = super().get_queryset().order_by("-created")
-        self.search_query = self.request.GET.get("q", "")
         if self.search_query:
             qs = qs.search(self.search_query)
         return qs

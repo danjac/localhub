@@ -37,7 +37,7 @@ from localhub.core.types import (
     BreadcrumbList,
     ContextDict,
 )
-from localhub.core.views import BreadcrumbsMixin
+from localhub.core.views import BreadcrumbsMixin, SearchMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
 
@@ -266,12 +266,8 @@ class CommentListView(MultipleCommentMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
 
-class CommentSearchView(CommentListView):
+class CommentSearchView(SearchMixin, CommentListView):
     template_name = "comments/search.html"
-
-    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        self.search_query = request.GET.get("q", "").strip()
-        return super().get(request, *args, **kwargs)
 
     def get_queryset(self) -> QuerySet:
         if not self.search_query:

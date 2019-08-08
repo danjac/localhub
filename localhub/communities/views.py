@@ -33,6 +33,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from localhub.communities.emails import send_membership_deleted_email
 from localhub.communities.forms import MembershipForm
 from localhub.communities.models import Community, Membership
+from localhub.core.views import SearchMixin
 
 
 class CommunityRequiredMixin:
@@ -181,6 +182,7 @@ class MembershipListView(
     LoginRequiredMixin,
     PermissionRequiredMixin,
     MembershipQuerySetMixin,
+    SearchMixin,
     ListView,
 ):
     paginate_by = settings.DEFAULT_PAGE_SIZE
@@ -192,7 +194,6 @@ class MembershipListView(
             super().get_queryset().order_by("member__name", "member__username")
         )
 
-        self.search_query = self.request.GET.get("q", "")
         if self.search_query:
             qs = qs.search(self.search_query)
         return qs

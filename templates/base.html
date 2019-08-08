@@ -17,8 +17,12 @@
   <head>
     <title>
       {% block title %}
-      {{ community.name }}
-      {% block subtitle %}{% endblock %}
+      {% if community %}{{ community.name }}{% endif %}
+      {% block subtitle %}
+      {% if view.page_title %}
+      {% for segment in view.page_title %} / {{ segment }}{% endfor %}
+      {% endif %}
+      {% endblock %}
       {% endblock %}
     </title>
     <meta charset="UTF-8">
