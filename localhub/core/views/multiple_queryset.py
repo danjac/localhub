@@ -41,8 +41,8 @@ class MultipleQuerySetMixin:
     Pagination is handled in same way as for ListView, i.e. just set the
     `paginate_by` variable.
 
-    For a complete example see BaseActivityStreamView in
-    localhub/activities/views.py.
+    For a complete example see BaseStreamView in
+    localhub/activities/views/streams.py.
 
     Pattern adapted from:
     https://simonwillison.net/2018/Mar/25/combined-recent-additions/
