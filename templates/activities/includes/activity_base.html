@@ -3,6 +3,7 @@
 
 {% load i18n %}
 {% load activities_tags %}
+{% load rules %}
 
 {% with is_content_sensitive=object|is_content_sensitive:user %}
 <div id="{{ object_type }}-{{ object.id }}" class="card"{% if is_content_sensitive %} data-controller="content-sensitive"{% endif %}>
@@ -16,7 +17,52 @@
     {% else %}
     <div class="card-header">
       {% endif %}
-      {% include "activities/includes/header.html" %}
+
+      {% load i18n %}
+
+      {% has_perm "communities.moderate_community" user community as can_moderate_community %}
+      {% if object.is_flagged and can_moderate_community %}
+      <div class="toast toast-warning text-center">
+        <a href="{{ object.get_absolute_url }}">{% trans "This object has been flagged" %}</a>
+      </div>
+      {% endif %}
+
+      <div class="card-title h5">
+
+        {% if object.is_reshare %}
+
+        <div class="card-subtitle h6 text-gray">
+          {% include "activities/includes/timesince.html" with timestamp=object.created owner=object.owner is_reshare=True %}
+        </div>
+        <div class="divider"></div>
+
+        {% if object.parent %}
+        <a href="{{ object.parent.get_absolute_url }}">{{ object.title|truncatechars:130 }}</a>
+        {% endif %}
+
+        {% else %}
+
+        {% block activity_title %}
+
+        {% if is_detail %}
+        {{ object.title }}
+        {% else %}
+        <a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:130 }}</a>
+        {% endif %}
+
+        {% endblock activity_title %}
+
+        {% endif %}
+
+      </div>
+      <div class="card-subtitle h6 text-gray">
+        {% if object.parent %}
+        {% include "activities/includes/timesince.html" with timestamp=object.parent.created owner=object.parent.owner %}
+        {% elif not object.is_reshare %}
+        {% include "activities/includes/timesince.html" with timestamp=object.created owner=object.owner %}
+        {% endif %}
+      </div>
+
     </div>
     <div class="card-body">
       {% if object.is_reshare and not object.parent %}
@@ -35,24 +81,24 @@
       {% elif object.num_reshares %}
       <div class="text-gray">
         <small>
-        {{ object.num_reshares }}
-        {% blocktrans count counter=object.num_reshares %}
-        person has reshared this {{ object_type }}
-        {% plural %}
-        people have reshared this {{ object_type }}
-        {% endblocktrans %}
+          {{ object.num_reshares }}
+          {% blocktrans count counter=object.num_reshares %}
+          person has reshared this {{ object_type }}
+          {% plural %}
+          people have reshared this {{ object_type }}
+          {% endblocktrans %}
         </small>
       </div>
       {% endif %}
       {% if object.num_likes and object.owner == user %}
       <div class="text-gray">
         <small>
-        {{ object.num_likes }}
-        {% blocktrans count counter=object.num_likes %}
-        person liked this {{ object_type }}
-        {% plural %}
-        people liked this {{ object_type }}
-        {% endblocktrans %}
+          {{ object.num_likes }}
+          {% blocktrans count counter=object.num_likes %}
+          person liked this {{ object_type }}
+          {% plural %}
+          people liked this {{ object_type }}
+          {% endblocktrans %}
         </small>
       </div>
       {% endif %}

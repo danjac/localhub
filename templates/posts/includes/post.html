@@ -7,3 +7,13 @@
 
 {% block content %}{% include "posts/includes/content.html" %}{% endblock %}
 {% block actions %}{% include "activities/includes/actions.html" %}{% endblock %}
+
+{% block activity_title %}
+{% if object.url %}
+<a href="{{ object.url }}" rel="nofollow">{% if is_detail %}{{ object.title }}{% else %}{{ object.title|truncatechars:130 }}{% endif %}</a>
+{% else %}
+{{ block.super }}
+{% endblock %}
+{% endblock %}
+
+
