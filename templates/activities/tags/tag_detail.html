@@ -8,11 +8,6 @@
 {% block subtitle %} | {% trans "Tags" %} | {{ tag.slug }}{% endblock %}
 {% block content %}
 
-<ul class="breadcrumb">
-  <li class="breadcrumb-item"><a href="{% url 'activities:tag_list' %}">{% trans "Tags" %}</a></li>
-  <li class="breadcrumb-item"><a href="#">{{ tag.slug }}</a></li>
-</ul>
-
 {% has_perm "users.follow_tag" user as can_follow_tag %}
 {% has_perm "users.block_tag" user as can_block_tag %}
 
@@ -57,6 +52,12 @@
 </div>
 <div class="clearfix"></div>
 {% endif %}
+
+
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{% url 'activities:tag_list' %}">{% trans "Tags" %}</a></li>
+  <li class="breadcrumb-item"><a href="#">{{ tag.slug }}</a></li>
+</ul>
 
 {% with total=paginator.count %}
 {% if total %}
