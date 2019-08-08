@@ -10,16 +10,6 @@
 {% block messageboard_subtitle %}{{ user_obj.username }}{% endblock %}
 
 {% block messageboard_header %}
-{% user_display user_obj as sender %}
-<ul class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="{% url 'messageboard:message_recipient_list' %}">{% trans "Inbox" %}</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="#">{{ sender }}</a>
-  </li>
-</ul>
-
 {% has_perm "messageboard.create_message" user community as can_create_message %}
 
 {% if can_create_message %}
@@ -33,6 +23,7 @@
 </div>
 {% endif %}
 
+{% include "includes/breadcrumbs.html" %}
 
 {% endblock messageboard_header %}
 

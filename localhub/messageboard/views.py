@@ -18,11 +18,12 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.communities.models import Community
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.core.types import ContextDict
-from localhub.core.views import SearchMixin
+from localhub.core.types import BreadcrumbList, ContextDict
+from localhub.core.views import BreadcrumbsMixin, SearchMixin
 from localhub.messageboard.emails import send_message_email
 from localhub.messageboard.forms import MessageForm
 from localhub.messageboard.models import Message, MessageRecipient
+from localhub.users.utils import user_display
 from localhub.users.views import SingleUserMixin
 
 
@@ -59,10 +60,16 @@ message_recipient_list_view = MessageRecipientListView.as_view()
 
 
 class SenderMessageRecipientListView(
-    SingleUserMixin, MessageRecipientListView
+    SingleUserMixin, BreadcrumbsMixin, MessageRecipientListView
 ):
     paginate_by = settings.DEFAULT_PAGE_SIZE
     template_name = "messageboard/sender_messagerecipient_list.html"
+
+    def get_breadcrumbs(self) -> BreadcrumbList:
+        return [
+            (reverse("messageboard:message_recipient_list"), _("Inbox")),
+            ("#", self.object),
+        ]
 
     def get_queryset(self) -> models.QuerySet:
         return super().get_queryset().filter(message__sender=self.object)
@@ -71,7 +78,22 @@ class SenderMessageRecipientListView(
 sender_message_recipient_list_view = SenderMessageRecipientListView.as_view()
 
 
-class MessageRecipientDetailView(MessageRecipientQuerySetMixin, DetailView):
+class MessageRecipientDetailView(
+    MessageRecipientQuerySetMixin, BreadcrumbsMixin, DetailView
+):
+    def get_breadcrumbs(self) -> BreadcrumbList:
+        return [
+            (reverse("messageboard:message_recipient_list"), _("Inbox")),
+            (
+                reverse(
+                    "messageboard:sender_message_recipient_list",
+                    args=[self.object.message.sender.username],
+                ),
+                user_display(self.object.message.sender),
+            ),
+            ("#", self.object.message.subject),
+        ]
+
     def get(self, *args, **kwargs) -> HttpResponse:
         response = super().get(*args, **kwargs)
         if not self.object.read:
@@ -118,7 +140,13 @@ class MessageListView(MessageQuerySetMixin, SearchMixin, ListView):
 message_list_view = MessageListView.as_view()
 
 
-class MessageDetailView(MessageQuerySetMixin, DetailView):
+class MessageDetailView(MessageQuerySetMixin, BreadcrumbsMixin, DetailView):
+    def get_breadcrumbs(self) -> BreadcrumbList:
+        return [
+            (reverse("messageboard:message_list"), _("Outbox")),
+            ("#", self.object.subject),
+        ]
+
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
         data["recipients"] = self.object.messagerecipient_set.select_related(
@@ -142,6 +170,7 @@ class MessageCreateView(
     LoginRequiredMixin,
     PermissionRequiredMixin,
     CommunityRequiredMixin,
+    BreadcrumbsMixin,
     CreateView,
 ):
     model = Message
@@ -151,6 +180,26 @@ class MessageCreateView(
 
     def get_permission_object(self) -> Community:
         return self.request.community
+
+    def get_breadcrumbs(self) -> BreadcrumbList:
+        if not self.parent_recipient:
+            return []
+        return [
+            (reverse("messageboard:message_recipient_list"), _("Inbox")),
+            (self.parent_recipient.get_absolute_url(), self.parent.subject),
+            ("#", _("Reply")),
+        ]
+
+    @cached_property
+    def parent_recipient(self) -> Optional[MessageRecipient]:
+        if self.parent is None:
+            return None
+        try:
+            return MessageRecipient.objects.get(
+                message=self.parent, recipient=self.request.user
+            )
+        except MessageRecipient.DoesNotExist:
+            raise Http404
 
     @cached_property
     def parent(self) -> Optional[Message]:
@@ -196,6 +245,14 @@ class MessageCreateView(
         return _("Your message has been sent to %(num_recipients)s people") % {
             "num_recipients": num_recipients
         }
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        if self.parent:
+            data["recipient"] = MessageRecipient.objects.filter(
+                message=self.parent, recipient=self.request.user
+            ).first()
+        return data
 
     def form_valid(self, form) -> HttpResponse:
 

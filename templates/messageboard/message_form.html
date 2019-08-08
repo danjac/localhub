@@ -10,10 +10,14 @@
 
 {% block messageboard_content %}
 
+{% if breadcrumbs %}
+{% include "includes/breadcrumbs.html" %}
+{% else %}
 <div class="mb-1">
   <a href="{% url 'messageboard:message_recipient_list' %}">{% trans "Inbox" %}</a>
   | <a href="{% url 'messageboard:message_list' %}">{% trans "Outbox" %}</a>
 </div>
+{% endif %}
 
 <form method="POST"
       action="{{ request.path }}"

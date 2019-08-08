@@ -12,19 +12,6 @@
 
 {% block messageboard_content %}
 {% with message=object.message %}
-{% user_display message.sender as sender %}
-<ul class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="{% url 'messageboard:message_recipient_list' %}">{% trans "Inbox" %}</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="{% url 'messageboard:sender_message_recipient_list' message.sender.username %}">{{ sender }}</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="#">{{ message.subject|truncatechars:60 }}</a>
-  </li>
-</ul>
-
 <div class="btn-group float-right">
   <a href="{% url 'messageboard:message_create_reply' message.id %}" class="btn btn-sm">
     {% trans "Reply" %}
@@ -40,6 +27,8 @@
   </a>
 </div>
 <div class="clearfix"></div>
+
+{% include "includes/breadcrumbs.html" %}
 
 <dl>
   <dt>{% trans "Subject" %}</dt>
