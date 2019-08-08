@@ -4,10 +4,10 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block subtitle %} | {% trans "Local Directory" %}{% endblock %}
+{% block subtitle %} | {% trans "Local Network" %}{% endblock %}
 
 {% block content %}
-<h3>{% trans "Local Directory" %}</h3>
+<h3>{% trans "Local Network" %}</h3>
 
 {% for object in object_list %}
 <div class="card mb-1{% if object == community %} bg-gray{% endif %}">
