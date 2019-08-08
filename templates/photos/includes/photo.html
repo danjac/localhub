@@ -25,4 +25,11 @@
 {% endif %}
 {% endblock content %}
 
-{% block actions %}{% include "photos/includes/actions.html" %}{% endblock %}
+{% block actions %}
+<a class="btn btn-sm"
+   href="{{ photo.image.url }}"
+   download>
+    {% trans "Download" %}
+</a>
+{{ block.super }}
+{% endblock actions %}

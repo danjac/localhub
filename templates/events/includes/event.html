@@ -55,4 +55,12 @@
 {% endif %}
 {% endblock content %}
 
-{% block actions %}{% include "events/includes/actions.html" %}{% endblock actions %}
+{% block actions %}
+<a class="btn btn-sm"
+   href="{% url 'events:download' object.id %}"
+   title="{% trans 'Download .ics calendar file' %}"
+   download>
+  {% trans "Download" %}
+</a>
+{{ block.super }}
+{% endblock actions %}
