@@ -14,3 +14,11 @@
 {% include "includes/pagination.html" %}
 
 {% endblock tag_list %}
+
+{% block empty %}
+{% if view.search_query %}
+{% trans "There are no tags matching your query currently used by any posts in this community." %}
+{% else %}
+{{ block.super }}
+{% endif %}
+{% endblock empty %}
