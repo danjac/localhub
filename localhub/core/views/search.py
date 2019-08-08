@@ -1,7 +1,12 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from django.utils.functional import cached_property
 
+from localhub.core.types import BaseViewMixin
 
-class SearchMixin:
+
+class SearchMixin(BaseViewMixin):
     search_query_parameter = "q"
 
     @cached_property

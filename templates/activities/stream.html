@@ -7,7 +7,7 @@
 {% load rules %}
 {% load users_tags %}
 
-{% block account_subtitle %}{% trans "Latest" %}{% endblock %}
+{% block subtitle %} | {% trans "Home" %}{% endblock %}
 {% block content %}
 {% has_perm 'activities.create_activity' user community as can_create_activity %}
 {% if can_create_activity %}
