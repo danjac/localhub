@@ -147,21 +147,23 @@ class CommunityUpdateView(
 community_update_view = CommunityUpdateView.as_view()
 
 
-class CommunityListView(ListView):
+class CommunityListView(SearchMixin, ListView):
     """
     Returns all public communities, or communities the
     current user belongs to.
     """
 
     paginate_by = settings.DEFAULT_PAGE_SIZE
-    allow_empty = True
 
     def get_queryset(self) -> QuerySet:
-        return (
+        qs = (
             Community.objects.available(self.request.user)
             .with_num_members()
             .order_by("name")
         )
+        if self.search_query:
+            qs = qs.filter(name__icontains=self.search_query)
+        return qs
 
 
 community_list_view = CommunityListView.as_view()

@@ -9,10 +9,22 @@
 {% block content %}
 <h3>{% trans "Local Network" %}</h3>
 
-{% for object in object_list %}
-<div class="card mb-1{% if object == community %} bg-gray{% endif %}">
-  <div class="card-header">
-    <div class="card-title">
+{% include "includes/search_form.html" %}
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>{% trans "Community" %}</th>
+      <th>{% trans "Created" %}</th>
+      <th>{% trans "Private" %}</th>
+      <th>{% trans "Members" %}</th>
+      <th>{% trans "Tagline" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for object in object_list %}
+    <td>
+
       {% if object.is_member %}
       <span class="badge" data-badge="Member">
         {% if object == community %}
@@ -24,34 +36,24 @@
       {% else %}
       <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
       {% endif %}
-    </div>
-    <div class="card-subtitle text-gray">
+
+    </td>
+    <td>
       {% blocktrans with created=object.created|timesince %}
-      Created {{ created }} ago
+      {{ created }} ago
       {% endblocktrans %}
-    </div>
-    <div class="card-content">
-      {% blocktrans count counter=object.num_members %}
-      This community has <strong>1</strong> Member.
-      {% plural %}
-      This community has <strong>{{ counter }}</strong> Members.
-      {% endblocktrans %}
-    </div>
-    {% if not object.public %}
-    <div class="card-content">
-      <strong>{% trans "This community is private" %}.</strong>
-    </div>
-    {% endif %}
-    {% if object.tagline %}
-    <div class="card-content">
-      <em>
-      {{ object.tagline|linebreaks }}
-      </em>
-    </div>
-    {% endif %}
-  </div>
-</div>
-{% endfor %}
+    </td>
+    <td>
+      <label class="form-checkbox">
+        <input type="checkbox" readonly{% if not object.public %} checked{% endif %}>
+        <i class="form-icon"></i>
+      </label>
+    </td>
+    <td>{{ object.num_members }}</td>
+    <td>{{ object.tagline|default:"-"|linebreaksbr }}</td>
+    {% endfor }
+  </tbody>
+</table>
 
 {% include "includes/pagination.html" %}
 {% endblock content %}
