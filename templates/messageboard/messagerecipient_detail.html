@@ -62,8 +62,10 @@
     <div class="tile-title">
       <a href="{{ reply.get_absolute_url }}">{{ reply.subject }}</a>
     </div>
-    <div class="tile-subtitle text-gray">
-      {{ reply.created|date:"DATETIME_FORMAT" }}
+    <div class="tile-subtitle">
+      <span class="timesince">
+        {{ reply.created|date:"DATETIME_FORMAT" }}
+      </span>
     </div>
   </div>
 </div>

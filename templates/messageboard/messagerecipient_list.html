@@ -41,7 +41,7 @@
                 {% if not recipient.read %}</strong>{% endif %}
             </a><br>
             {% include "users/includes/chip.html" with profile=recipient.message.sender %}
-            <span class="text-gray">{{ recipient.message.created|date:"DATETIME_FORMAT" }}</span>
+            <span class="timesince">{{ recipient.message.created|date:"DATETIME_FORMAT" }}</span>
           </p>
           {% endfor %}
         </div>

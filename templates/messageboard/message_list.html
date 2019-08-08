@@ -29,7 +29,7 @@
             <a href="{{ message.get_absolute_url }}">
                 {{ message.subject }}
             </a><br>
-            <span class="text-gray">{{ message.created|date:"DATETIME_FORMAT" }}</span>
+            <span class="timesince">{{ message.created|date:"DATETIME_FORMAT" }}</span>
           </p>
           {% endfor %}
         </div>
