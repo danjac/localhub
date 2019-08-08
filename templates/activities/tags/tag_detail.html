@@ -76,9 +76,7 @@
   {% include "activities/includes/activity.html" %}
 </div>
 {% empty %}
-<div class="empty mt-1">
-  <p class="empty-title h5">{% trans "This tag does not have any posts in this community." %}</p>
-</div>
+{% include "includes/empty.html" %}
 {% endfor %}
 
 {% include "includes/pagination.html" %}
