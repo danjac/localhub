@@ -40,7 +40,11 @@ from localhub.photos.models import Photo
 from localhub.posts.models import Post
 
 
-class TagQuerySetMixin(CommunityRequiredMixin):
+class CommunityTagQuerySetMixin(CommunityRequiredMixin):
+    """
+    Only shows tags where content is available within the community.
+    """
+
     tagged_models = [Post, Event, Photo]
 
     def get_tagged_items(self) -> Q:
@@ -68,20 +72,20 @@ class TagQuerySetMixin(CommunityRequiredMixin):
         ).distinct()
 
 
-class SingleTagMixin(TagQuerySetMixin, SingleObjectMixin):
-    ...
+class SingleTagMixin(SingleObjectMixin):
+    model = Tag
 
 
 class SingleTagView(SingleTagMixin, View):
     ...
 
 
-class BaseTagListView(TagQuerySetMixin, ListView):
+class BaseTagListView(ListView):
     def get_queryset(self) -> QuerySet:
         return super().get_queryset().order_by("name")
 
 
-class TagAutocompleteListView(BaseTagListView):
+class TagAutocompleteListView(CommunityTagQuerySetMixin, BaseTagListView):
     template_name = "activities/tags/tag_autocomplete_list.html"
 
     def get_queryset(self) -> QuerySet:
@@ -210,7 +214,7 @@ class TagUnblockView(LoginRequiredMixin, SingleTagView):
 tag_unblock_view = TagUnblockView.as_view()
 
 
-class TagListView(SearchMixin, BaseTagListView):
+class TagListView(SearchMixin, CommunityTagQuerySetMixin, BaseTagListView):
     template_name = "activities/tags/tag_list.html"
     paginate_by = 30
 
@@ -251,7 +255,7 @@ class FollowingTagListView(LoginRequiredMixin, BaseTagListView):
     template_name = "activities/tags/following_tag_list.html"
 
     def get_queryset(self) -> QuerySet:
-        return self.request.user.following_tags.all()
+        return self.request.user.following_tags.order_by("name")
 
 
 following_tag_list_view = FollowingTagListView.as_view()
@@ -261,7 +265,7 @@ class BlockedTagListView(LoginRequiredMixin, BaseTagListView):
     template_name = "activities/tags/blocked_tag_list.html"
 
     def get_queryset(self) -> QuerySet:
-        return self.request.user.blocked_tags.all()
+        return self.request.user.blocked_tags.order_by("name")
 
 
 blocked_tag_list_view = BlockedTagListView.as_view()
