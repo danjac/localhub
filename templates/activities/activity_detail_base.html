@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "activities/base.html" %}
-{% block subtitle %} - {{ object }}{% endblock %}
+{% block account_subtitle %}{{ object }}{% endblock %}
 {% block content %}
 {% include "activities/includes/breadcrumbs.html" %}
 {% block activities_detail_content %}{% endblock %}

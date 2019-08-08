@@ -6,6 +6,8 @@
 {% load i18n %}
 {% load rules %}
 
+{% block subtitle %} | {% trans "Direct Messages" %} | {% block messageboard_subtitle %}{% endblock %}{% endblock %}
+
 {% block content %}
 {% block messageboard_header %}
 {% has_perm "messageboard.create_message" user community as can_create_message %}
@@ -18,6 +20,8 @@
 </div>
 <div class="clearfix"></div>
 {% endif %}
+
+<h3>{% trans "Direct Messages" %}</h3>
 
 <ul class="tab tab-block mt-1">
   <li class="tab-item" data-controller="active-link" data-active-link-exact>

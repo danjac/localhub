@@ -5,13 +5,23 @@ from typing import Optional
 
 from urllib.parse import urlparse
 
+from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
+
+
+_urlvalidator = URLValidator()
+
 
 def get_domain(url: Optional[str]) -> Optional[str]:
     """
     Returns the domain of a URL. Removes any "www." at the start.
     Returns None if invalid.
     """
-    if not url:
+    if url is None:
+        return None
+    try:
+        _urlvalidator(url)
+    except ValidationError:
         return None
     domain = urlparse(url).netloc
     if domain.startswith("www."):

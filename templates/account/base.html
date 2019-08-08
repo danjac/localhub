@@ -3,6 +3,10 @@
 
 {% extends "no_sidebar_base.html" %}
 
+{% load i18n %}
+
+{% block subtitle %} | {% trans "Account" %} | {% block account_subtitle %}{% endblock %}{% endblock %}
+
 {% block navbar_auth %}{% endblock %}
 {% block search_form %}{% endblock %}
 {% block mobile_search_form %}{% endblock %}

@@ -1,7 +1,8 @@
 {% extends "activities/base.html" %}
 {% load i18n %}
 {% load rules %}
-{% block subtitle %} - {% trans "Events" %}{% endblock %}
+
+{% block subtitle %} | {% trans "Events" %}{% endblock %}
 
 {% block content %}
 {% has_perm 'activities.create_activity' user community as can_create_activity %}

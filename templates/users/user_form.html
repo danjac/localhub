@@ -5,10 +5,15 @@
 
 {% load i18n %}
 
-{% block content %}
-<h3>{% trans "Update profile" %}</h3>
+{% block account_subtitle %}{% trans "Update Profile" %}{% endblock %}
 
-<p>You can change your primary and other email addresses <a href="{% url 'account_email' %}">here</a>.</p>
+{% block content %}
+<h3>{% trans "Update Profile" %}</h3>
+
+{% url "account_email" as account_email_url %}
+{% blocktrans %}
+<p>You can change your primary and other email addresses <a href="{{ account_email_url }}">here</a>.</p>
+{% endblocktrans %}
 
 <form method="POST"
       action="{% url 'user_update' %}"

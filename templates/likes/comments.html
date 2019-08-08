@@ -4,6 +4,8 @@
 {% extends "likes/base.html" %}
 {% load i18n %}
 
+{% block likes_subtitle %}{% trans "Comments" %}{% endblock %}
+
 {% block likes_content %}
 
 {% for comment in object_list %}

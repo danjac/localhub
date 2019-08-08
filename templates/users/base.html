@@ -7,9 +7,7 @@
 {% load rules %}
 {% load users_tags %}
 
-{% block subtitle %}
-{% user_display user_obj as display_name %} - {{ display_name }}
-{% endblock %}
+{% block subtitle %} | {% user_display user_obj %}{% endblock %}
 
 {% block content %}
 

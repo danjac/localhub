@@ -6,6 +6,8 @@
 {% load i18n %}
 {% load account %}
 
+{% block messageboard_subtitle %}{{ object.message.subject }}{% endblock %}
+
 {% block messageboard_header %}{% endblock %}
 
 {% block messageboard_content %}

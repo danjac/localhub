@@ -3,7 +3,11 @@
 
 {% extends "notifications/base.html" %}
 {% load i18n %}
+
+{% block subtitle %} | {% trans "Notifications" %}{% endblock %}
+
 {% block content %}
+
 
 {% if object_list %}
 <div class="float-right">
@@ -24,6 +28,8 @@
 </div>
 <div class="clearfix"></div>
 {% endif %}
+
+<h3>{% trans "Notifications" %}</h3>
 
 <p class="toast text-center my-1 d-hide"
    data-controller="cookie-notice"

@@ -1,7 +1,9 @@
 {% extends "activities/base.html" %}
 {% load i18n %}
 {% load rules %}
-{% block subtitle %} - {% trans "Photos" %}{% endblock %}
+
+{% block subtitle %} | {% trans "Photos" %}{% endblock %}
+
 {% block content %}
 {% has_perm 'activities.create_activity' user community as can_create_activity %}
 {% if can_create_activity %}

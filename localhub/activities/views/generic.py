@@ -74,6 +74,7 @@ class ActivityCreateView(
 ):
     permission_required = "activities.create_activity"
     success_message = _("Your update has been posted")
+    page_title = _("Submit")
 
     def get_permission_object(self) -> Community:
         return self.request.community
@@ -124,6 +125,7 @@ class ActivityUpdateView(
 ):
     permission_required = "activities.change_activity"
     success_message = _("Your changes have been saved")
+    page_title = _("Edit")
 
     def get_breadcrumbs(self) -> BreadcrumbList:
         return self.object.get_breadcrumbs() + [(self.request.path, _("Edit"))]

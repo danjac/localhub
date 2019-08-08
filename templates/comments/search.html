@@ -4,6 +4,8 @@
 {% extends "search_base.html" %}
 {% load i18n %}
 
+{% block subtitle %} | {% trans "Comments" %}{% endblock %}
+
 {% block search_content %}
 {% for comment in object_list %}
 <div class="mt-1">

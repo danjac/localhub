@@ -7,6 +7,8 @@
 {% load account %}
 {% load rules %}
 
+{% block messageboard_subtitle %}{{ user_obj.username }}{% endblock %}
+
 {% block messageboard_header %}
 {% user_display user_obj as sender %}
 <ul class="breadcrumb">

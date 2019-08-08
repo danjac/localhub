@@ -5,5 +5,5 @@ class SearchMixin:
     search_query_parameter = "q"
 
     @cached_property
-    def search_query(self):
+    def search_query(self) -> str:
         return self.request.GET.get(self.search_query_parameter, "")

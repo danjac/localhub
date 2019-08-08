@@ -5,8 +5,13 @@
 {% load i18n %}
 {% load rules %}
 
-{% block subtitle %} #{{ tag.slug }}{% endblock %}
+{% block subtitle %} | {% trans "Tags" %} | {{ tag.slug }}{% endblock %}
 {% block content %}
+
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{% url 'activities:tag_list' %}">{% trans "Tags" %}</a></li>
+  <li class="breadcrumb-item"><a href="#">{{ tag.slug }}</a></li>
+</ul>
 
 {% has_perm "users.follow_tag" user as can_follow_tag %}
 {% has_perm "users.block_tag" user as can_block_tag %}
@@ -53,7 +58,6 @@
 <div class="clearfix"></div>
 {% endif %}
 
-<h3>#{{ tag.slug }}</h3>
 {% with total=paginator.count %}
 {% if total %}
 <div class="toast text-center my-1">
