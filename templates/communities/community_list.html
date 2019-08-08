@@ -23,35 +23,38 @@
   </thead>
   <tbody>
     {% for object in object_list %}
-    <td>
+    <tr>
+      <td>
 
-      {% if object.is_member %}
-      <span class="badge" data-badge="Member">
-        {% if object == community %}
-        {{ object.name }}
+        {% if object.is_member %}
+        <span class="badge" data-badge="Member">
+          {% if object == community %}
+          {{ object.name }}
+          {% else %}
+          <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+          {% endif %}
+        </span>
         {% else %}
         <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
         {% endif %}
-      </span>
-      {% else %}
-      <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
-      {% endif %}
 
-    </td>
-    <td>
-      {% blocktrans with created=object.created|timesince %}
-      {{ created }} ago
-      {% endblocktrans %}
-    </td>
-    <td>
-      <label class="form-checkbox">
-        <input type="checkbox" readonly{% if not object.public %} checked{% endif %}>
-        <i class="form-icon"></i>
-      </label>
-    </td>
-    <td>{{ object.num_members }}</td>
-    <td>{{ object.tagline|default:"-"|linebreaksbr }}</td>
-    {% endfor }
+      </td>
+      <td>
+        {% blocktrans with created=object.created|timesince %}
+        {{ created }} ago
+        {% endblocktrans %}
+      </td>
+      <td>
+        <label class="form-checkbox">
+          <input type="checkbox" readonly{% if not object.public %} checked{% endif %}>
+          <i class="form-icon"></i>
+        </label>
+      </td>
+      <td>{{ object.num_members }}</td>
+      <td>{{ object.tagline|default:"-"|linebreaksbr }}</td>
+    </tr>
+    {% endfor %}
+
   </tbody>
 </table>
 
