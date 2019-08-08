@@ -9,7 +9,7 @@
 <b>{{ num_reshares }}</b> people have reshared this post.
 {% endblocktrans %}
 {% else %}
-<div class="text-gray">{% trans "Reshared by" %}
+<div class="info">{% trans "Reshared by" %}
 {% for reshare in reshares %}
 {% include "users/includes/chip.html" with profile=reshare.owner profile_url=reshare.get_absolute_url %}&nbsp;
 {% endfor %}
