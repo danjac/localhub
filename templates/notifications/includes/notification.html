@@ -7,25 +7,27 @@
     <div class="card-title">
       {% block notification_title %}{% endblock %}
     </div>
-    <div class="card-subtitle text-gray">
-      {% blocktrans with created=notification.created|timesince %}
-      {{ created }} ago by {{ actor }}
-      {% endblocktrans %}
-      {% include "users/includes/chip.html" with profile=notification.actor %}
+    <div class="card-subtitle">
+      <span class="timesince">
+        {% blocktrans with created=notification.created|timesince %}
+        {{ created }} ago from
+        {% endblocktrans %}
+        {% include "users/includes/chip.html" with profile=notification.actor %}
+      </span>
     </div>
   </div>
   <div class="card-footer">
-    {% if not notification.is_read %}
-    <button class="btn btn-sm"
-            data-controller="ajax"
-            data-action="ajax#post"
-            data-ajax-url="{% url 'notifications:mark_read' notification.pk %}"
-            >{% trans "Mark as Read" %}</button>
-    {% endif %}
-    <button class="btn btn-sm"
-            data-controller="ajax"
-            data-action="ajax#delete"
-            data-ajax-url="{% url 'notifications:delete' notification.pk %}"
-            >{% trans "Delete" %}</button>
+    <div class="actions">
+      {% if not notification.is_read %}
+      <a href="{% url 'notifications:mark_read' notification.pk %}"
+         data-controller="ajax"
+         data-action="ajax#post"
+         >{% trans "Mark as Read" %}</a>
+      {% endif %}
+      <a href="{% url 'notifications:delete' notification.pk %}"
+         data-controller="ajax"
+         data-action="ajax#delete"
+         >{% trans "Delete" %}</a>
+    </div>
   </div>
 </div>
