@@ -40,9 +40,7 @@
 </div>
 {% include "includes/pagination.html" %}
 {% else %}
-<div class="empty">
-  <p class="empty-title h5">{% trans "Your outbox is empty" %}</p>
-</div>
+{% include "includes/empty.html" %}
 {% endif %}
 {% endblock messageboard_content %}
 

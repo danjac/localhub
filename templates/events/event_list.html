@@ -39,16 +39,7 @@
   {% include "events/includes/event.html" with object_type="event" %}
 </div>
 {% empty %}
-<div class="empty mt-1">
-  <p class="empty-title h5">
-    {% if view.search_query %}
-    {% trans "No events have been found matching your search." %}
-    {% else %}
-    {% trans "No events have been submitted." %}
-    {% endif %}
-  </p>
-</div>
-
+{% include "includes/empty.html" %}
 {% endfor %}
 
 

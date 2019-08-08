@@ -57,9 +57,7 @@
   {% endwith %}
 </div>
 {% empty %}
-<div class="empty">
-  <p class="empty-title h5">{% trans "You have no new notifications" %}</p>
-</div>
+{% include "includes/empty.html" %}
 {% endfor %}
 
 {% include "includes/pagination.html" %}

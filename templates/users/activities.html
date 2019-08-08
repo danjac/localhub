@@ -41,15 +41,7 @@ and has a total of <strong>{{ counter }} likes</strong> for their posts.
   {% include "activities/includes/activity.html" %}
 </div>
 {% empty %}
-<div class="empty">
-  <p class="empty-title h5">
-      {% if is_auth_user %}
-      {% trans "You haven't posted anything yet" %}
-      {% else %}
-      {% trans "This user hasn't posted anything yet" %}
-      {% endif %}
-  </p>
-</div>
+{% include "includes/empty.html" %}
 {% endfor %}
 
 {% include "includes/pagination.html" %}
