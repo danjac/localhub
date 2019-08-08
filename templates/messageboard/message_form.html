@@ -10,6 +10,11 @@
 
 {% block messageboard_content %}
 
+<div class="mb-1">
+  <a href="{% url 'messageboard:message_recipient_list' %}">{% trans "Inbox" %}</a>
+  | <a href="{% url 'messageboard:message_list' %}">{% trans "Outbox" %}</a>
+</div>
+
 <form method="POST"
       action="{{ request.path }}"
       data-controller="form"
