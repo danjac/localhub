@@ -32,7 +32,29 @@ export default class extends Controller {
     this.inputTarget.focus();
   }
 
-  keypress(event) {
+  keydown(event) {
+    if (
+      this.selectorOpen &&
+      [ARROW_DOWN, ARROW_UP, RETURN_KEY].indexOf(event.which) > -1
+    ) {
+      event.preventDefault();
+    }
+  }
+
+  keyup(event) {
+    if (!this.handleSelectorEvents(event)) {
+      return false;
+    }
+
+    if (!this.handleMentions() && !this.handleTags()) {
+      this.closeSelector();
+      return true;
+    }
+
+    return false;
+  }
+
+  handleSelectorEvents(event) {
     if (!this.selectorOpen) {
       return true;
     }
@@ -76,19 +98,6 @@ export default class extends Controller {
       default:
         return true;
     }
-  }
-
-  typeahead(event) {
-    if (!this.keypress(event)) {
-      return false;
-    }
-
-    if (!this.handleMentions() && !this.handleTags()) {
-      this.closeSelector();
-      return true;
-    }
-
-    return false;
   }
 
   handleMentions() {
