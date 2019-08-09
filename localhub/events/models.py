@@ -168,6 +168,9 @@ class Event(Activity):
         if location:
             event.add("location", location)
 
+        if self.description:
+            event.add("description", self.description)
+
         calendar = Calendar()
         calendar.add_component(event)
         return calendar.to_ical()
