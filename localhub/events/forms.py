@@ -48,26 +48,22 @@ class EventForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs)
 
-        timezone = self.initial.get("timezone")
-        if timezone:
+        # convert the UTC stored value into the local time the user
+        # originally entered according to their timezone. The final value
+        # must be UTC, otherwise the field will just convert it again
+        # to the database value.
 
-            # convert the UTC stored value into the local time the user
-            # originally entered according to their timezone. The final value
-            # must be UTC, otherwise the field will just convert it again
-            # to the database value.
+        def _convert_to_local(value: datetime) -> datetime:
+            return make_aware(
+                localtime(value, self.instance.timezone).replace(tzinfo=None),
+                pytz.UTC,
+                is_dst=True,
+            )
 
-            def _convert_to_local(value: datetime) -> datetime:
-                return make_aware(
-                    localtime(value, timezone).replace(tzinfo=None), pytz.UTC
-                )
-
-            starts = self.initial.get("starts")
-            ends = self.initial.get("ends")
-
-            if starts:
-                self.initial["starts"] = _convert_to_local(starts)
-            if ends:
-                self.initial["ends"] = _convert_to_local(ends)
+        if self.instance.starts:
+            self.initial["starts"] = _convert_to_local(self.instance.starts)
+        if self.instance.ends:
+            self.initial["ends"] = _convert_to_local(self.instance.ends)
 
     def clean(self) -> Dict[str, Any]:
         cleaned_data = super().clean()
@@ -84,7 +80,8 @@ class EventForm(forms.ModelForm):
 
         def _convert_to_utc(value: datetime) -> datetime:
             return localtime(
-                make_aware(value.replace(tzinfo=None), timezone), pytz.UTC
+                make_aware(value.replace(tzinfo=None), timezone, is_dst=True),
+                pytz.UTC,
             )
 
         cleaned_data["starts"] = _convert_to_utc(cleaned_data["starts"])

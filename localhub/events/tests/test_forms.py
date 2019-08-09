@@ -16,12 +16,14 @@ class TestEventForm:
     def test_initial_with_correct_timezone_value(self):
 
         event = EventFactory(
-            timezone="Europe/Helsinki",
-            starts=datetime.datetime(hour=12, day=1, year=2019, month=10),
+            timezone=pytz.timezone("Europe/Helsinki"),
+            starts=datetime.datetime(
+                hour=10, day=1, year=2019, month=10, tzinfo=pytz.UTC
+            ),
         )
         form = EventForm(instance=event)
         assert form.initial["starts"].tzinfo == pytz.UTC
-        assert form.initial["starts"].hour == 12
+        assert form.initial["starts"].hour == 13
 
     def test_save_with_converted_utc(self):
 
@@ -38,6 +40,6 @@ class TestEventForm:
         instance = form.save(commit=False)
         # check values converted
         assert instance.starts.tzinfo == pytz.UTC
-        assert instance.starts.hour == 7
+        assert instance.starts.hour == 8
         assert instance.ends.tzinfo == pytz.UTC
-        assert instance.ends.hour == 7
+        assert instance.ends.hour == 8
