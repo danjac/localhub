@@ -261,6 +261,7 @@ class Testing(Base):
         "default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}
     }
     THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + ["django_extensions"]
+    SITE_ID = 1
 
 
 class Local(DockerConfigMixin, Base):
@@ -286,6 +287,8 @@ class Local(DockerConfigMixin, Base):
     }
 
     SILKY_PYTHON_PROFILER = True
+
+    SITE_ID = 1
 
 
 class Production(DockerConfigMixin, Base):

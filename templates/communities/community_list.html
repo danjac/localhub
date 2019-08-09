@@ -16,7 +16,6 @@
     <tr>
       <th>{% trans "Community" %}</th>
       <th>{% trans "Created" %}</th>
-      <th>{% trans "Private" %}</th>
       <th>{% trans "Members" %}</th>
       <th>{% trans "Tagline" %}</th>
     </tr>
@@ -25,30 +24,24 @@
     {% for object in object_list %}
     <tr>
       <td>
-
-        {% if object.is_member %}
-        <span class="badge" data-badge="Member">
           {% if object == community %}
           {{ object.name }}
           {% else %}
           <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
           {% endif %}
-        </span>
-        {% else %}
-        <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
-        {% endif %}
 
+          {% if object.is_member %}
+          <span class="chip">{% trans "Member" %}</span>
+          {% endif %}
+
+          {% if not object.public %}
+          <span class="chip">{% trans "Private" %}</span>
+          {% endif %}
       </td>
       <td>
         {% blocktrans with created=object.created|timesince %}
         {{ created }} ago
         {% endblocktrans %}
-      </td>
-      <td>
-        <label class="form-checkbox">
-          <input type="checkbox" disabled{% if not object.public %} checked{% endif %}>
-          <i class="form-icon"></i>
-        </label>
       </td>
       <td>{{ object.num_members }}</td>
       <td>{{ object.tagline|default:"-"|linebreaksbr }}</td>
