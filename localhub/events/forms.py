@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django import forms
-from django.utils.timezone import make_aware, make_naive
 from django.utils.translation import gettext_lazy as _
 
 from localhub.core.forms.fields import CalendarField
@@ -46,20 +45,3 @@ class EventForm(forms.ModelForm):
         help_texts = {
             "timezone": _("Start and end times will be shown in this timezone")
         }
-
-    def clean(self):
-        # starts and ends will be stored in UTC. However the user enters
-        # the time they expect to see in the timezone they enter.
-        cleaned_data = super().clean()
-
-        tz = cleaned_data["timezone"]
-
-        cleaned_data["starts"] = make_aware(
-            make_naive(cleaned_data["starts"]), tz
-        )
-
-        ends = cleaned_data.get("ends")
-        if ends:
-            cleaned_data["starts"] = make_aware(make_naive(ends), tz)
-
-        return cleaned_data
