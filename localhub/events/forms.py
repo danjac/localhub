@@ -7,19 +7,11 @@ from django.utils.translation import gettext_lazy as _
 from localhub.core.forms.fields import CalendarField
 from localhub.events.models import Event
 
-calendar_help_text = _(
-    "Time will be stored in UTC timezone. It will be shown in the timezone you select below."  # noqa
-)
-
 
 class EventForm(forms.ModelForm):
 
-    starts = CalendarField(
-        label=_("Event starts"), help_text=calendar_help_text
-    )
-    ends = CalendarField(
-        label=_("Event ends"), help_text=calendar_help_text, required=False
-    )
+    starts = CalendarField(label=_("Event starts"))
+    ends = CalendarField(label=_("Event ends"), required=False)
 
     class Meta:
         model = Event

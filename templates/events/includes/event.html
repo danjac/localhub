@@ -4,12 +4,10 @@
 {% extends "activities/includes/activity_base.html" %}
 
 {% load i18n %}
-{% load tz %}
 
 {% block content %}
 <dl>
 
-  {% timezone object.timezone %}
   <dt>{% trans "Starts" %}</dt>
   <dd>{{ object.starts|date:"SHORT_DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }}</dd>
 
@@ -17,8 +15,6 @@
   <dt>{% trans "Ends" %}</dt>
   <dd>{{ object.ends|date:"SHORT_DATE_FORMAT" }} @ {{ object.ends|date:"TIME_FORMAT" }}</dd>
   {% endif %}
-  {% endtimezone %}
-
 
   <dt>{% trans "Timezone" %}</dt>
   <dd>{{ object.timezone }}</dd>
