@@ -5,5 +5,8 @@
 
 {% block activity_content %}
 {% include "activities/includes/oembed.html" %}
+{% if object.url and object.description %}
+<div class="divider"></div>
+{% endif %}
 {% include "activities/includes/description.html" %}
 {% endblock activity_content %}
