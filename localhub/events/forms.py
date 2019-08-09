@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django import forms
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from localhub.core.forms.fields import CalendarField
@@ -45,3 +46,8 @@ class EventForm(forms.ModelForm):
         help_texts = {
             "timezone": _("Start and end times will be shown in this timezone")
         }
+
+    def save(self, *args, **kwargs):
+        with timezone.override(self.cleaned_data["timezone"]):
+            instance = super().save(*args, **kwargs)
+        return instance
