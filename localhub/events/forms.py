@@ -1,8 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import pytz
-
 from django import forms
 from django.utils.timezone import make_aware, make_naive
 from django.utils.translation import gettext_lazy as _
@@ -54,7 +52,7 @@ class EventForm(forms.ModelForm):
         # the time they expect to see in the timezone they enter.
         cleaned_data = super().clean()
 
-        tz = pytz.timezone(cleaned_data["timezone"])
+        tz = cleaned_data["timezone"]
 
         cleaned_data["starts"] = make_aware(
             make_naive(cleaned_data["starts"]), tz
