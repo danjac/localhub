@@ -48,7 +48,8 @@ class EventForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs)
 
-        if self.instance:
+        timezone = self.initial.get("timezone")
+        if timezone:
 
             # convert the UTC stored value into the local time the user
             # originally entered according to their timezone. The final value
@@ -57,16 +58,16 @@ class EventForm(forms.ModelForm):
 
             def _convert_to_local(value: datetime) -> datetime:
                 return make_aware(
-                    localtime(value, self.instance.timezone).replace(
-                        tzinfo=None
-                    ),
-                    pytz.UTC,
+                    localtime(value, timezone).replace(tzinfo=None), pytz.UTC
                 )
 
-            self.initial["starts"] = _convert_to_local(self.instance.starts)
+            starts = self.initial.get("starts")
+            ends = self.initial.get("ends")
 
-            if self.instance.ends:
-                self.initial["ends"] = _convert_to_local(self.instance.ends)
+            if starts:
+                self.initial["starts"] = _convert_to_local(starts)
+            if ends:
+                self.initial["ends"] = _convert_to_local(ends)
 
     def clean(self) -> Dict[str, Any]:
         cleaned_data = super().clean()
