@@ -59,10 +59,10 @@
 
 </dl>
 
-<p>
+<div class="actions">
     <a href="{% url 'users:activities' object.member.username %}">{% trans "Posts" %}</a>
-    | <a href="{% url 'users:comments' object.member.username %}">{% trans "Comments" %}</a>
-    | <a href="{% url 'users:detail' object.member.username %}">{% trans "About" %}</a>
-</p>
+    <a href="{% url 'users:comments' object.member.username %}">{% trans "Comments" %}</a>
+    <a href="{% url 'users:detail' object.member.username %}">{% trans "About" %}</a>
+</div>
 
 {% endblock %}

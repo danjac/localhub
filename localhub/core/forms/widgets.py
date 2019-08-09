@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from localhub.core.types import ContextDict
 
 
-class TypeaheadInput(forms.Textarea):
+class TypeaheadInput(forms.TextInput):
     template_name = "includes/forms/widgets/typeahead.html"
 
     def __init__(

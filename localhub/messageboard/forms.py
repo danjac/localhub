@@ -48,7 +48,7 @@ class MessageForm(forms.ModelForm):
 
     class Meta:
         model = Message
-        fields = ("subject", "message")
+        fields = ("individuals", "groups", "subject", "message")
 
     def clean(self) -> Dict[str, Any]:
         data = super().clean()

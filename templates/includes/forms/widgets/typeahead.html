@@ -11,9 +11,9 @@
      {% endif %}
      >
      <ul class="menu d-hide p-absolute" data-target="typeahead.selector"></ul>
-     <textarea
+     <input
        data-target="typeahead.input"
        data-action="keyup->typeahead#keyup keydown->typeahead#keydown"
        name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}
-       >{% spaceless %}{% if widget.value %}{{ widget.value }}{% endif %}{% endspaceless %}</textarea>
+       >
 </div>
