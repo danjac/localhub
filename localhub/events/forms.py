@@ -3,7 +3,6 @@
 
 import pytz
 
-from datetime import datetime
 from typing import Any, Dict
 
 from django import forms
@@ -53,17 +52,16 @@ class EventForm(forms.ModelForm):
         # must be UTC, otherwise the field will just convert it again
         # to the database value.
 
-        def _convert_to_local(value: datetime) -> datetime:
-            return make_aware(
-                localtime(value, self.instance.timezone).replace(tzinfo=None),
-                pytz.UTC,
-                is_dst=True,
-            )
-
-        if self.instance.starts:
-            self.initial["starts"] = _convert_to_local(self.instance.starts)
-        if self.instance.ends:
-            self.initial["ends"] = _convert_to_local(self.instance.ends)
+        for field in ("starts", "ends"):
+            value = getattr(self.instance, field)
+            if value:
+                self.initial[field] = make_aware(
+                    localtime(value, self.instance.timezone).replace(
+                        tzinfo=None
+                    ),
+                    pytz.UTC,
+                    is_dst=True,
+                )
 
     def clean(self) -> Dict[str, Any]:
         cleaned_data = super().clean()
@@ -78,17 +76,13 @@ class EventForm(forms.ModelForm):
         # for example, if the user enters starts value 09:00 and timezone
         # Helsinki, we store the value in the database as 06:00 UTC.
 
-        def _convert_to_utc(value: datetime) -> datetime:
-            return localtime(
-                make_aware(value.replace(tzinfo=None), timezone, is_dst=True),
-                pytz.UTC,
-            )
-
-        cleaned_data["starts"] = _convert_to_utc(cleaned_data["starts"])
-
-        # do the same with ends, if it's provided
-
-        ends = cleaned_data.get("ends")
-        if ends:
-            cleaned_data["ends"] = _convert_to_utc(ends)
+        for field in ("starts", "ends"):
+            value = cleaned_data.get(field)
+            if value:
+                cleaned_data[field] = localtime(
+                    make_aware(
+                        value.replace(tzinfo=None), timezone, is_dst=True
+                    ),
+                    pytz.UTC,
+                )
         return cleaned_data
