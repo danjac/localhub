@@ -5,14 +5,17 @@
 {% block subtitle %} | {% trans "Photos" %}{% endblock %}
 
 {% block content %}
+
+<h3>{% trans "Photos" %}</h3>
+
 {% has_perm 'activities.create_activity' user community as can_create_activity %}
+
 {% if can_create_activity %}
-<div class="float-right">
-  <a href="{% url 'photos:create' %}" class="btn btn-sm">
+<div class="actions">
+  <a href="{% url 'photos:create' %}">
     {% trans "Submit Photo" %}
   </a>
 </div>
-<div class="clearfix"></div>
 
 {% elif user.is_authenticated %}
 <p class="toast text-center my-1">
@@ -27,7 +30,6 @@
 </p>
 {% endif %}
 
-<h3>{% trans "Photos" %}</h3>
 
 {% if paginator.count or view.search_query %}
 {% include "includes/search_form.html" %}

@@ -23,9 +23,8 @@
         {% include "users/includes/chip.html" with profile=user_obj %}
       </td>
       <td>
-        <div class="btn-group float-right">
+        <div class="actions float-right">
           <a href="{% url 'users:unblock' user_obj.username %}"
-             class="btn btn-sm"
              data-controller="ajax"
              data-ajax-redirect="{{ request.path }}"
              data-action="ajax#post">

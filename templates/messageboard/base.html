@@ -10,18 +10,19 @@
 
 {% block content %}
 {% block messageboard_header %}
+
+<h3>{% trans "Direct Messages" %}</h3>
+
 {% has_perm "messageboard.create_message" user community as can_create_message %}
 
 {% if can_create_message %}
-<div class="float-right">
-  <a href="{% url 'messageboard:message_create' %}" class="btn btn-sm">
-    {% trans "Send message" %}
+<div class="actions">
+  <a href="{% url 'messageboard:message_create' %}">
+    {% trans "Send Message" %}
   </a>
 </div>
-<div class="clearfix"></div>
 {% endif %}
 
-<h3>{% trans "Direct Messages" %}</h3>
 
 <ul class="tab tab-block mt-1">
   <li class="tab-item" data-controller="active-link" data-active-link-exact>

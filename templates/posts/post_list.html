@@ -8,14 +8,16 @@
 {% block subtitle %} | {% trans "Posts" %}{% endblock %}
 
 {% block content %}
+
+<h3>{% trans "Posts" %}</h3>
+
 {% has_perm 'activities.create_activity' user community as can_create_activity %}
 {% if can_create_activity %}
-<div class="float-right">
-  <a href="{% url 'posts:create' %}" class="btn btn-sm">
+<div class="actions">
+  <a href="{% url 'posts:create' %}">
     {% trans "Submit Post" %}
   </a>
 </div>
-<div class="clearfix"></div>
 
 {% elif user.is_authenticated %}
 <p class="toast text-center my-1">
@@ -31,7 +33,6 @@
 
 {% endif %}
 
-<h3>{% trans "Posts" %}</h3>
 
 {% if paginator.count or view.search_query %}
 {% include "includes/search_form.html" %}

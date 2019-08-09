@@ -49,11 +49,10 @@
       </td>
       {% if can_follow_tag or can_block_tag %}
       <td>
-        <div class="btn-group float-right">
+        <div class="actions float-right">
           {% if can_follow_tag %}
           {% if tag in following %}
           <a href="{% url 'activities:tag_unfollow' tag.slug %}"
-             class="btn btn-sm"
              data-controller="ajax"
              data-ajax-redirect="{{ request.path }}"
              data-action="ajax#post">
@@ -61,7 +60,6 @@
           </a>
           {% else %}
           <a href="{% url 'activities:tag_follow' tag.slug %}"
-             class="btn btn-sm"
              data-controller="ajax"
              data-ajax-redirect="{{ request.path }}"
              data-action="ajax#post">
@@ -72,7 +70,6 @@
           {% if can_block_tag %}
           {% if tag in blocked %}
           <a href="{% url 'activities:tag_unblock' tag.slug %}"
-             class="btn btn-sm"
              data-controller="ajax"
              data-ajax-redirect="{{ request.path }}"
              data-action="ajax#post">
@@ -80,7 +77,6 @@
           </a>
           {% else %}
           <a href="{% url 'activities:tag_block' tag.slug %}"
-             class="btn btn-sm"
              data-controller="ajax"
              data-ajax-redirect="{{ request.path }}"
              data-action="ajax#post">

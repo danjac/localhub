@@ -7,12 +7,11 @@
 
 {% block content %}
 
-<div class="float-right">
-  <a class="btn btn-sm" href="{% url 'invites:create' %}">
-      {% trans "Send an invite" %}
+<div class="actions">
+  <a href="{% url 'invites:create' %}">
+    {% trans "Send an invite" %}
   </a>
 </div>
-<div class="clearfix"></div>
 
 
 {% if object_list %}
@@ -32,25 +31,19 @@
       <td>{{ invite.get_status_display }}</td>
       <td>{{ invite.sent|date }}</td>
       <td>
-        {% if invite.is_pending %}
-        <a class="btn btn-sm" href="{% url 'invites:resend' invite.id %}">{% trans "Re-send" %}</a>
-        {% else %}
-        <a class="btn btn-sm disabled" href="#">{% trans "Re-send" %}</a>
-        {% endif %}
-        {% url 'invites:delete' invite.id as delete_url %}
-        <a class="btn btn-sm"
-           href="{{ delete_url }}"
-           data-controller="ajax confirm"
-           data-action="confirm#check ajax#delete"
-           data-ajax-url="{{ delete_url }}"
-           data-confirm-header="{% trans 'Delete invite' %}"
-           data-confirm-body="{% trans 'You sure you want to delete this invite?' %}"
-           >{% trans "Delete" %}</a>
+        <div class="actions">
+          {% if invite.is_pending %}
+          <a href="{% url 'invites:resend' invite.id %}">{% trans "Re-send" %}</a>
+          {% endif %}
+          {% url 'invites:delete' invite.id as delete_url %}
+          <a href="{{ delete_url }}"
+             data-controller="ajax confirm"
+             data-action="confirm#check ajax#delete"
+             data-confirm-header="{% trans 'Delete invite' %}"
+             data-confirm-body="{% trans 'You sure you want to delete this invite?' %}"
+             >{% trans "Delete" %}</a>
+        </div>
       </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="4" class="text-center">{% trans "No invites at the moment" %}</td>
     </tr>
     {% endfor %}
   </tbody>

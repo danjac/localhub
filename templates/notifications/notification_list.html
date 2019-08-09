@@ -8,28 +8,25 @@
 
 {% block content %}
 
+<h3>{% trans "Notifications" %}</h3>
 
 {% if object_list %}
-<div class="btn-group float-right">
+<div class="actions">
   {% if is_unread_notifications %}
-  <button class="btn btn-sm"
-          data-controller="ajax"
-          data-action="ajax#post"
-          data-ajax-url="{% url 'notifications:mark_all_read' %}"
-          >{% trans "Mark All as Read" %}</button>
+  <a href="{% url 'notifications:mark_all_read' %}"
+     data-controller="ajax"
+     data-action="ajax#post"
+     >{% trans "Mark All As Read" %}</a>
   {% endif %}
-  <button class="btn btn-sm"
-          data-controller="confirm ajax"
-          data-action="confirm#check ajax#delete"
-          data-ajax-url="{% url 'notifications:delete_all' %}"
-          data-confirm-header="{% trans 'Delete All' %}"
-          data-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}"
-          >{% trans "Delete All" %}</button>
+  <a href="{% url 'notifications:delete_all' %}"
+     data-controller="confirm ajax"
+     data-action="confirm#check ajax#delete"
+     data-confirm-header="{% trans 'Delete All' %}"
+     data-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}"
+     >{% trans "Delete All" %}</a>
 </div>
-<div class="clearfix"></div>
 {% endif %}
 
-<h3>{% trans "Notifications" %}</h3>
 
 <p class="toast text-center my-1 d-hide"
    data-controller="cookie-notice"

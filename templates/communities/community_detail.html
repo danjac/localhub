@@ -6,18 +6,17 @@
 {% load rules %}
 
 {% block content %}
-{% has_perm "communities.manage_community" user community as can_manage %}
-{% if can_manage %}
-<div class="float-right">
-<a href="{% url "communities:community_update" %}" class="btn btn-sm">
-    {% trans "Edit Community Settings" %}
-</a>
-</div>
-<div class="clearfix"></div>
-{% endif %}
-
 
 <h3>{{ community.name }}</h3>
+
+{% has_perm "communities.manage_community" user community as can_manage %}
+{% if can_manage %}
+<div class="actions">
+  <a href="{% url "communities:community_update" %}">
+    {% trans "Edit Community Settings" %}
+  </a>
+</div>
+{% endif %}
 
 {% if community.description %}
 <div class="divider mb-1"></div>

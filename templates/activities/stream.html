@@ -24,11 +24,10 @@
            placeholder="{% trans "What's on your mind?" %}">
   </div>
 </div>
-<div class="float-right">
-  <a href="{% url 'events:create' %}" class="btn btn-sm">{% trans "Submit Event" %}</a>
-  <a href="{% url 'photos:create' %}" class="btn btn-sm">{% trans "Submit Photo" %}</a>
+<div class="actions">
+  <a href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
+  <a href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
 </div>
-<div class="clearfix"></div>
 {% elif user.is_authenticated %}
 <p class="toast text-center my-1">
   {% url 'join_requests:create' as join_request_url %}

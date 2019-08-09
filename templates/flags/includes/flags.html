@@ -20,9 +20,8 @@
       </td>
       <td>{{ flag.get_reason_display }}</td>
       <td>
-          <div class="btn-group">
+          <div class="actions">
               <a href="{% url 'flags:delete' flag.id %}"
-                 class="btn btn-sm"
                  data-controller="ajax"
                  data-action="ajax#delete">{% trans "Delete" %}</a>
           </div>

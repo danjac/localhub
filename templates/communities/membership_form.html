@@ -15,8 +15,6 @@
     <li class="breadcrumb-item"><a href="#">Edit</a></li>
 </ul>
 
-<h3>{% blocktrans with url=membership.member.get_absolute_url %}Membership Settings for <a href="{{ url }}">{{ display_name }}</a>{% endblocktrans %}</h3>
-
 <div class="col-6 col-sm-12">
     <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
         {% include "includes/forms/fields.html" %}

@@ -5,13 +5,13 @@
 
 <h3>{% trans "Requests to join this community" %}</h3>
 
-<p>
+<div class="actions">
   {% if view.show_all %}
   <a href="{{ request.path }}">{% trans "Show pending requests only" %}</a>
   {% else %}
   <a href="{{ request.path }}?all">{% trans "Show All" %}</a>
   {% endif %}
-</p>
+</div>
 {% if object_list %}
 <table class="table table-striped table-hover table-responsive-md">
   <thead>
@@ -38,20 +38,19 @@
       <td>{{ join_request.created|date }}</td>
       <td>
         {% if join_request.is_pending %}
-        <a class="btn btn-sm"
-           data-controller="ajax"
-           data-action="ajax#post"
-           href="{% url 'join_requests:accept' join_request.id %}">{% trans "Accept" %}
-        </a>
-        <a class="btn btn-sm"
-           data-controller="ajax confirm"
-           data-action="confirm#check ajax#post"
-           data-confirm-header="{% trans 'Reject' %}"
-           data-confirm-body="{% trans 'Are you sure you want to reject this request?' %}"
-           href="{% url 'join_requests:reject' join_request.id %}">{% trans "Reject" %}</a>
+        <div class="actions">
+          <a data-controller="ajax"
+             data-action="ajax#post"
+             href="{% url 'join_requests:accept' join_request.id %}">{% trans "Accept" %}
+          </a>
+          <a data-controller="ajax confirm"
+             data-action="confirm#check ajax#post"
+             data-confirm-header="{% trans 'Reject' %}"
+             data-confirm-body="{% trans 'Are you sure you want to reject this request?' %}"
+             href="{% url 'join_requests:reject' join_request.id %}">{% trans "Reject" %}</a>
+        </div>
         {% else %}
-        <a class="btn btn-sm disabled" href="#">{% trans "Accept" %}</a>
-        <a class="btn btn-sm disabled" href="#">{% trans "Reject" %}</a>
+        -
         {% endif %}
       </td>
     </tr>

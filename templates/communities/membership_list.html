@@ -44,22 +44,23 @@
       {% endif %}
       <td {% if not member.active %} class="text-gray"{% endif %}>{{ member.get_role_display }}</td>
       <td>
-        {% has_perm "communities.change_membership" user member as can_change %}
-        {% has_perm "communities.delete_membership" user member as can_delete %}
-        {% if can_change %}
-        <a href="{% url 'communities:membership_update' member.id %}" class="btn btn-sm">
-          {% trans "Edit" %}
-        </a>
-        {% endif %}
-        {% if can_delete %}
-        <a href="{% url 'communities:membership_delete' member.id %}"
-           class="btn btn-sm"
-           data-controller="ajax confirm"
-           data-action="confirm#check ajax#delete"
-           data-confirm-header="{% trans 'Delete' %}"
-           data-confirm-body="{% trans 'Are you sure you want to delete this membership?' %}"
-           >{% trans "Delete" %}</a>
-        {% endif %}
+        <div class="actions">
+          {% has_perm "communities.change_membership" user member as can_change %}
+          {% has_perm "communities.delete_membership" user member as can_delete %}
+          {% if can_change %}
+          <a href="{% url 'communities:membership_update' member.id %}">
+            {% trans "Edit" %}
+          </a>
+          {% endif %}
+          {% if can_delete %}
+          <a href="{% url 'communities:membership_delete' member.id %}"
+             data-controller="ajax confirm"
+             data-action="confirm#check ajax#delete"
+             data-confirm-header="{% trans 'Delete' %}"
+             data-confirm-body="{% trans 'Are you sure you want to delete this membership?' %}"
+             >{% trans "Delete" %}</a>
+          {% endif %}
+        </div>
       </td>
     </tr>
     {% endfor %}

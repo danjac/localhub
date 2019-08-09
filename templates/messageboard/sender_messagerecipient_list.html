@@ -10,20 +10,19 @@
 {% block messageboard_subtitle %}{{ user_obj.username }}{% endblock %}
 
 {% block messageboard_header %}
+
+{% include "includes/breadcrumbs.html" %}
+
 {% has_perm "messageboard.create_message" user community as can_create_message %}
 
 {% if can_create_message %}
-<div class="mb-1">
-  <div class="float-right">
-    <a href="{% url 'messageboard:message_create_pm' user_obj.username %}" class="btn btn-sm">
-      {% trans "Send message" %}
-    </a>
-  </div>
-  <div class="clearfix"></div>
+<div class="actions">
+  <a href="{% url 'messageboard:message_create_pm' user_obj.username %}">
+    {% trans "Send message" %}
+  </a>
 </div>
 {% endif %}
 
-{% include "includes/breadcrumbs.html" %}
 
 {% endblock messageboard_header %}
 

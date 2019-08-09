@@ -28,12 +28,11 @@
       {% if is_member %}
       <td>
         {% if user != user_obj %}
-        <div class="btn-group float-right">
+        <div class="actions float-right">
           {% has_perm "users.follow_user" user user_obj as can_follow_user %}
           {% if can_follow_user %}
           {% if user_obj.is_following %}
           <a href="{% url 'users:unfollow' user_obj.username %}"
-             class="btn btn-sm"
              data-controller="ajax"
              data-ajax-redirect="{{ request.path }}"
              data-action="ajax#post">
@@ -41,7 +40,6 @@
           </a>
           {% else %}
           <a href="{% url 'users:follow' user_obj.username %}"
-             class="btn btn-sm"
              data-controller="ajax"
              data-ajax-redirect="{{ request.path }}"
              data-action="ajax#post">
@@ -50,7 +48,7 @@
           {% endif %}
           {% endif %}
           {% if can_create_message %}
-          <a href="{% url 'messageboard:message_create_pm' user_obj.username %}" class="btn btn-sm">
+          <a href="{% url 'messageboard:message_create_pm' user_obj.username %}">
             {% trans "Send Message" %}
           </a>
           {% endif %}
