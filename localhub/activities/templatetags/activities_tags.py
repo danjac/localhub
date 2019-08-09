@@ -21,9 +21,11 @@ def is_content_sensitive(
 
 
 @register.filter
-def oembed_fallback(url: str) -> str:
+def domain(url: str) -> str:
     """
-    Show instead of oembed content, if unavailable or blocked.
+    Shows a linked URL domain e.g. if http://reddit.com:
+
+    <a href="http://reddit.com">reddit.com</a>
     """
     domain = get_domain(url)
     if domain:

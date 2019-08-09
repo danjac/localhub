@@ -8,11 +8,11 @@
 {% if object.url %}
 {% if request.do_not_track and not user.show_embedded_content %}
 <div>
-  {{ object.url|oembed_fallback }}
+  {{ object.url|domain }}
 </div>
 {% else %}
 <div data-controller="oembed" class="wordwrap">
-  {{ object.url|oembed_no_urlize|oembed_fallback }}
+  {{ object.url|oembed_no_urlize|domain }}
 </div>
 {% endif %}
 {% endif %}

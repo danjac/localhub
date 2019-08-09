@@ -6,7 +6,7 @@ import pytest
 from django.contrib.auth.models import AnonymousUser
 
 from localhub.activities.templatetags.activities_tags import (
-    oembed_fallback,
+    domain,
     is_content_sensitive,
 )
 from localhub.communities.tests.factories import CommunityFactory
@@ -50,18 +50,18 @@ class TestIsContentSensitive:
         )
 
 
-class TestOembedFallback:
+class TestDomain:
     def test_if_not_valid_url(self):
-        assert oembed_fallback("<div />") == "<div />"
+        assert domain("<div />") == "<div />"
 
     def test_if_valid_url(self):
         assert (
-            oembed_fallback("http://reddit.com")
+            domain("http://reddit.com")
             == '<a href="http://reddit.com" rel="nofollow">reddit.com</a>'
         )
 
     def test_if_www(self):
         assert (
-            oembed_fallback("http://www.reddit.com")
+            domain("http://www.reddit.com")
             == '<a href="http://www.reddit.com" rel="nofollow">reddit.com</a>'
         )

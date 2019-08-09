@@ -4,6 +4,7 @@
 {% extends "activities/includes/activity_base.html" %}
 
 {% load i18n %}
+{% load activities_tags %}
 
 {% block content %}
 {% include "photos/includes/content.html" %}
@@ -15,7 +16,7 @@
   {% endif %}
   {% if object.original_url %}
   <dt>{% trans "Original URL" %}</dt>
-  <dd><a href="{{ object.original_url }}" rel="noopener nofollow" target="_blank">{{ object.original_url }}</a></dd>
+  <dd>{{ object.original_url|domain }}</dd>
   {% endif %}
   {% if object.cc_license %}
   <dt>{% trans "Creative Commons License" %}</dt>
