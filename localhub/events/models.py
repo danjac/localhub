@@ -11,7 +11,6 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.encoding import smart_text
-from django.utils.timezone import make_aware
 from django.utils.translation import gettext_lazy as _
 
 from django_countries.fields import CountryField
@@ -100,20 +99,10 @@ class Event(Activity):
         return get_domain(self.url)
 
     def get_starts_with_tz(self) -> datetime.datetime:
-        """
-        Returns the start time with timezone included. We want to preserve
-        the original value entered by the user, along with the expected
-        datetime. Because the stored value is actually UTC, we don't
-        want to convert this as it will create an unexpected result.
-        """
-        return make_aware(self.starts.replace(tzinfo=None), self.timezone)
+        return self.starts.astimezone(self.timezone)
 
     def get_ends_with_tz(self) -> Optional[datetime.datetime]:
-        return (
-            make_aware(self.ends.replace(tzinfo=None), self.timezone)
-            if self.ends
-            else None
-        )
+        return self.ends.astimezone(self.timezone) if self.ends else None
 
     def update_coordinates(self) -> Tuple[Optional[float], Optional[float]]:
         """
