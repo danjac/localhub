@@ -50,7 +50,7 @@ class MessageRecipientListView(
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
     def get_queryset(self) -> models.QuerySet:
-        qs = super().get_queryset().order_by("-message__created")
+        qs = super().get_queryset().order_by("-read", "-message__created")
         if self.search_query:
             qs = qs.search(self.search_query)
         return qs
@@ -68,7 +68,7 @@ class SenderMessageRecipientListView(
     def get_breadcrumbs(self) -> BreadcrumbList:
         return [
             (reverse("messageboard:message_recipient_list"), _("Inbox")),
-            ("#", self.object),
+            ("#", user_display(self.object)),
         ]
 
     def get_queryset(self) -> models.QuerySet:

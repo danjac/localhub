@@ -3,9 +3,10 @@
 
 {% load i18n %}
 {% load rules %}
+{% load flags_tags %}
+{% load join_request_tags %}
 {% load messageboard_tags %}
 {% load notifications_tags %}
-{% load flags_tags %}
 
 {% has_perm "activities.create_activity" user community as can_create_activity %}
 {% has_perm "communities.moderate_community" user community as can_moderate_community %}
@@ -131,6 +132,20 @@
   {% if can_manage_community %}
   <li class="menu-item">
     <a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'communities:membership_list' %}">{% trans "Members" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'invites:list' %}">{% trans "Invite New Members" %}</a>
+  </li>
+  <li class="menu-item">
+    {% get_pending_join_request_count community as pending_join_requests %}
+    <a data-controller="active-link" href="{% url 'join_requests:list' %}">
+      <span {% if pending_join_requests %}class="badge" data-badge="{{ pending_join_requests }}"{% endif %}>
+        {% trans "Join Requests" %}
+      </span>
+    </a>
   </li>
   {% endif %}
 </ul>

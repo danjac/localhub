@@ -6,7 +6,7 @@
 {% has_perm "comments.like_comment" user comment as can_like_comment %}
 {% has_perm "comments.flag_comment" user comment as can_flag_comment %}
 
-<div class="actions">
+<div class="actions actions-sm">
   <a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a>
   {% if can_like_comment %}
   <a {% if comment.has_liked %} class="d-hide"{% endif %}

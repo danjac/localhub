@@ -1,13 +1,21 @@
 .actions {
-  font-size: $font-size-sm;
   a {
+    @extend .btn-link;
     &:not(:last-child) {
       @extend .pr-1;
+      // border-right: 1pt solid $gray-color-dark;
+    }
+    &:not(:first-child) {
+      @extend .pl-1;
     }
     &:visited {
       color: $link-color;
     }
   }
+}
+
+.actions-sm {
+  font-size: $font-size-sm;
 }
 
 .info {

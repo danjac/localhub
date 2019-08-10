@@ -8,12 +8,13 @@
 {% block account_subtitle %}{% trans "Update Profile" %}{% endblock %}
 
 {% block content %}
-<h3>{% trans "Update Profile" %}</h3>
+<h3>{% trans "My Settings" %}</h3>
+<div class="actions">
+    <a href="{% url 'account_email' %}">{% trans "Email Addresses" %}</a>
+    <a href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a>
+</div>
 
-{% url "account_email" as account_email_url %}
-{% blocktrans %}
-<p>You can change your primary and other email addresses <a href="{{ account_email_url }}">here</a>.</p>
-{% endblocktrans %}
+<div class="divider"></div>
 
 <form method="POST"
       action="{% url 'user_update' %}"

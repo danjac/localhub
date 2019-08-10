@@ -1,43 +1,15 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "base.html" %}
+{% extends "users/user_list.html" %}
 {% load i18n %}
 
 {% block subtitle %} | {% trans "Users" %} | {% trans "Blocked" %}{% endblock %}
+{% block counter %}
+{% blocktrans count counter=paginator.count %}
+You have blocked one person.
+{% plural %}
+You have blocked {{ counter }} people.
+{% endblocktrans %}
+{% endblock counter %}
 
-{% block content %}
-<h3>{% trans "Blocked Users" %}</h3>
-
-{% if object_list %}
-
-<p class="toast text-center my-1">
-  {% trans "Blocked users will not appear in your feeds. They cannot send you direct messages." %}
-</p>
-
-<table class="table table-striped table-hover table-responsive-md">
-  <tbody>
-    {% for user_obj in object_list %}
-    <tr>
-      <td>
-        {% include "users/includes/chip.html" with profile=user_obj %}
-      </td>
-      <td>
-        <div class="actions float-right">
-          <a href="{% url 'users:unblock' user_obj.username %}"
-             data-controller="ajax"
-             data-ajax-redirect="{{ request.path }}"
-             data-action="ajax#post">
-            {% trans "Unblock" %}
-          </a>
-        </div>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% include "includes/pagination.html" %}
-{% else %}
-{% include "includes/empty.html" %}
-{% endif %}
-{% endblock content %}

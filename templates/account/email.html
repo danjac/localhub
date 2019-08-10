@@ -9,6 +9,11 @@
 
 {% block content %}
 <h3>{% trans "Email Addresses" %}</h3>
+
+<div class="actions">
+  <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+</div>
+<div class="divider"></div>
 {% with emailaddresses=user.emailaddress_set.all emailaddress_count=user.emailaddress_set.count %}
 {% if emailaddress_count %}
 <p>{% trans "The following email addresses are associated with your account:" %}</p>

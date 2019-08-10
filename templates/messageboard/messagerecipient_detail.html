@@ -10,11 +10,10 @@
 
 {% block messageboard_header %}{% endblock %}
 
-{% block messageboard_content %}
-{% with message=object.message %}
-
+{% block messageboard_actions %}
 {% include "includes/breadcrumbs.html" %}
 
+{% with message=object.message %}
 <div class="actions">
   <a href="{% url 'messageboard:message_create_reply' message.id %}">
     {% trans "Reply" %}
@@ -28,6 +27,11 @@
      {% trans "Delete" %}
   </a>
 </div>
+{% endwith %}
+{% endblock messageboard_actions %}
+
+{% block messageboard_content %}
+{% with message=object.message %}
 
 <dl>
   <dt>{% trans "Subject" %}</dt>
@@ -46,10 +50,12 @@
   <dt>{% trans "Received" %}</dt>
   <dd>{{ message.created|date:"DATETIME_FORMAT" }}</dd>
 </dl>
+{% if message.message %}
 <div class="divider"></div>
 <div class="markdown-content">
   {{ message.message.markdown }}
 </div>
+{% endif %}
 {% if replies %}
 
 <div class="divider"></div>

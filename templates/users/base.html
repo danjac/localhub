@@ -46,7 +46,7 @@ You have been a member for <b>{{ created }}</b>.
 
   {% if can_change_user %}
   <a href="{% url 'user_update' %}">
-    {% trans "Update Profile" %}
+    {% trans "My Settings" %}
   </a>
   {% endif %}
 
@@ -86,19 +86,28 @@ You have been a member for <b>{{ created }}</b>.
   {% endif %}
   {% endif %}
 
-  {% if can_create_message and not is_auth_user %}
+  {% if not is_auth_user %}
+  <a href="{% url 'messageboard:sender_message_recipient_list' user_obj.username %}">
+    {% trans "Direct Messages" %}
+  </a>
+
+  {% if can_create_message %}
   <a href="{% url 'messageboard:message_create_pm' user_obj.username %}">
     {% trans "Send Message" %}
   </a>
   {% endif %}
 
   {% if can_view_membership %}
-  <a href="{% url 'communities:membership_detail' membership.id %}">{% trans "View Membership" %}</a>
+  <a href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
+  {% endif %}
+
   {% endif %}
 
 </div>
 
 {% endif %}
+
+<div class="divider"></div>
 
 <ul class="tab tab-block">
   <li class="tab-item" data-controller="active-link" data-active-link-exact>

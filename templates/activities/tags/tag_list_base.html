@@ -9,10 +9,11 @@
 
 {% block content %}
 
+<h3>{% trans "Tags" %}</h3>
+<div class="divider"></div>
+
 {% has_perm "users.follow_tag" user as can_follow_tag %}
 {% has_perm "users.block_tag" user as can_block_tag %}
-
-<h3>{% trans "Tags" %}</h3>
 
 {% if can_follow_tag or can_block_tag %}
 <ul class="tab tab-block">
@@ -49,7 +50,7 @@
       </td>
       {% if can_follow_tag or can_block_tag %}
       <td>
-        <div class="actions float-right">
+        <div class="actions actions-sm float-right">
           {% if can_follow_tag %}
           {% if tag in following %}
           <a href="{% url 'activities:tag_unfollow' tag.slug %}"

@@ -9,9 +9,11 @@
 
 {% block messageboard_header %}{% endblock %}
 
-{% block messageboard_content %}
-
+{% block messageboard_actions %}
 {% include "includes/breadcrumbs.html" %}
+{% endblock messageboard_actions %}
+
+{% block messageboard_content %}
 
 <dl>
   <dt>{% trans "Subject" %}</dt>

@@ -6,18 +6,20 @@
 
 {% block messageboard_subtitle %}{% trans "Send Message" %}{% endblock %}
 
-{% block messageboard_header %}<h3>{% trans "Send Message" %}</h3>{% endblock %}
+{% block messageboard_header %}{% endblock %}
 
-{% block messageboard_content %}
-
+{% block messageboard_actions %}
 {% if breadcrumbs %}
 {% include "includes/breadcrumbs.html" %}
 {% else %}
-<div class="actions mb-1">
-  <a href="{% url 'messageboard:message_recipient_list' %}">{% trans "Inbox" %}</a>
-  <a href="{% url 'messageboard:message_list' %}">{% trans "Outbox" %}</a>
+<div class="actions">
+    <a href="{% url 'messageboard:message_recipient_list' %}">{% trans "Inbox" %}</a>
+    <a href="{% url 'messageboard:message_list' %}">{% trans "Outbox" %}</a>
 </div>
 {% endif %}
+{% endblock messageboard_actions %}
+
+{% block messageboard_content %}
 
 <form method="POST"
       action="{{ request.path }}"

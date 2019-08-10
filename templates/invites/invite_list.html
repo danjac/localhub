@@ -7,12 +7,15 @@
 
 {% block content %}
 
+<h3>{% trans "Invites" %}</h3>
+
 <div class="actions">
   <a href="{% url 'invites:create' %}">
     {% trans "Send an invite" %}
   </a>
 </div>
 
+<div class="divider"></div>
 
 {% if object_list %}
 <table class="table table-striped table-hover table-responsive-md">
@@ -31,7 +34,7 @@
       <td>{{ invite.get_status_display }}</td>
       <td>{{ invite.sent|date }}</td>
       <td>
-        <div class="actions">
+        <div class="actions actions-sm">
           {% if invite.is_pending %}
           <a href="{% url 'invites:resend' invite.id %}">{% trans "Re-send" %}</a>
           {% endif %}

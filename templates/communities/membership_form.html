@@ -7,6 +7,8 @@
 {% load account %}
 
 {% block content %}
+<h3>{% trans "Members" %}</h3>
+
 {% user_display membership.member as display_name %}
 
 <ul class="breadcrumb">
@@ -14,6 +16,8 @@
     <li class="breadcrumb-item"><a href="{% url 'communities:membership_detail' membership.id %}">{{ display_name }}</a></li>
     <li class="breadcrumb-item"><a href="#">Edit</a></li>
 </ul>
+
+<div class="divider"></div>
 
 <div class="col-6 col-sm-12">
     <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">

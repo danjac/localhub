@@ -8,6 +8,12 @@
 {% block content %}
 <h3>{% trans "Community Settings" %}</h3>
 
+<div class="actions">
+  <a href="{% url 'communities:membership_list' %}">{% trans "Members" %}</a>
+</div>
+
+<div class="divider"></div>
+
 <form method="POST"
       action="{% url 'communities:community_update' %}"
       data-controller="form"
