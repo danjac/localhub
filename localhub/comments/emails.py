@@ -4,6 +4,7 @@
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
+from django.utils.translation import override
 
 from localhub.comments.models import Comment
 from localhub.notifications.emails import send_notification_email
@@ -28,33 +29,36 @@ def send_comment_notification_email(
 ):
 
     if notification.recipient.has_email_pref(notification.verb):
+        with override(notification.recipient.language):
+            plain_template_name = (
+                f"comments/emails/notifications/{notification.verb}.txt"
+            )
+            html_template_name = (
+                f"comments/emails/notifications/{notification.verb}.html"
+            )
 
-        plain_template_name = (
-            f"comments/emails/notifications/{notification.verb}.txt"
-        )
-        html_template_name = (
-            f"comments/emails/notifications/{notification.verb}.html"
-        )
-
-        send_notification_email(
-            notification,
-            NOTIFICATION_SUBJECTS[notification.verb],
-            comment.get_permalink(),
-            plain_template_name,
-            html_template_name,
-            {"comment": comment},
-        )
+            send_notification_email(
+                notification,
+                NOTIFICATION_SUBJECTS[notification.verb],
+                comment.get_permalink(),
+                plain_template_name,
+                html_template_name,
+                {"comment": comment},
+            )
 
 
 def send_comment_deleted_email(comment: Comment):
     if comment.owner.has_email_pref("moderator_delete"):
-        context = {"comment": comment}
-        send_mail(
-            NOTIFICATION_SUBJECTS["moderator_delete"],
-            render_to_string("comments/emails/comment_deleted.txt", context),
-            comment.community.resolve_email("no-reply"),
-            [comment.owner.email],
-            html_message=render_to_string(
-                "comments/emails/comment_deleted.html", context
-            ),
-        )
+        with override(comment.owner.language):
+            context = {"comment": comment}
+            send_mail(
+                NOTIFICATION_SUBJECTS["moderator_delete"],
+                render_to_string(
+                    "comments/emails/comment_deleted.txt", context
+                ),
+                comment.community.resolve_email("no-reply"),
+                [comment.owner.email],
+                html_message=render_to_string(
+                    "comments/emails/comment_deleted.html", context
+                ),
+            )

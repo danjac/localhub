@@ -26,6 +26,7 @@ class UserForm(forms.ModelForm):
         fields = (
             "name",
             "avatar",
+            "language",
             "show_sensitive_content",
             "show_embedded_content",
             "home_page_filters",

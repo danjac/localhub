@@ -7,7 +7,6 @@ import socket
 from typing import Any, Dict, List
 
 from django.urls import reverse_lazy
-from django.utils.translation import gettext_lazy as _
 
 from configurations import Configuration, values
 
@@ -30,6 +29,7 @@ class Base(Configuration):
 
     SESSION_COOKIE_DOMAIN = values.Value()
     CSRF_COOKIE_DOMAIN = values.Value()
+    LANGUAGE_COOKIE_DOMAIN = values.Value()
     CSRF_TRUSTED_ORIGINS: List[str] = []
 
     WSGI_APPLICATION = "localhub.wsgi.application"
@@ -88,6 +88,7 @@ class Base(Configuration):
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
+        "localhub.users.middleware.UserLocaleMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
     ]
@@ -133,9 +134,8 @@ class Base(Configuration):
     # Internationalization
     # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-    LANGUAGE_CODE = "en-us"
-
-    LANGUAGES = [("en", _("English")), ("fi", _("Finnish"))]
+    LANGUAGE_CODE = "en"
+    LANGUAGES = [("en", "English"), ("fi", "Suomi")]
 
     TIME_ZONE = "UTC"
 

@@ -81,7 +81,9 @@ class TestUserUpdateView:
         assert response.status_code == 200
 
     def test_post(self, client: Client, login_user: settings.AUTH_USER_MODEL):
-        response = client.post(reverse("user_update"), {"name": "New Name"})
+        response = client.post(
+            reverse("user_update"), {"name": "New Name", "language": "en"}
+        )
         assert response.url == reverse("user_update")
         login_user.refresh_from_db()
         assert login_user.name == "New Name"

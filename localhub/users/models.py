@@ -166,6 +166,15 @@ class User(AbstractUser):
     bio = MarkdownField(blank=True)
     avatar = ImageField(upload_to="avatars", null=True, blank=True)
 
+    language = models.CharField(
+        max_length=6,
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGE_CODE,
+        help_text=_(
+            "Preferred language. User content will not be translated."
+        ),
+    )
+
     home_page_filters = ChoiceArrayField(
         models.CharField(max_length=12, choices=HOME_PAGE_FILTERS),
         default=list,
