@@ -60,10 +60,12 @@
         {% endif %}
         {% endwith %}
 
-        <div class="info">
+        <div>
+          <span class="timesince">
           {% blocktrans with created=notification.created|timesince %}
           {{ created }} ago from
           {% endblocktrans %}
+          </span>
           {% include "users/includes/chip.html" with profile=notification.actor %}
         </div>
 

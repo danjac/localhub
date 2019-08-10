@@ -1,0 +1,25 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% load account %}
+
+{% block content %}
+{% user_display notification.recipient as recipient %}
+{% user_display notification.actor as actor %}
+
+{% with community=notification.community %}
+{% blocktrans with community_name=community.name %}
+Hello from {{ community_name }} !
+{% endblocktrans %}
+
+{% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
+
+{% block notification_body %}{% endblock %}
+
+  {% blocktrans with community_name=community.name %}
+  Thank you from {{ community_name }} !
+  {% endblocktrans %}
+  {{ community.domain }}
+{% endwith %}
+{% endblock content %}

@@ -10,7 +10,14 @@
 {% user_display notification.recipient as recipient %}
 {% user_display notification.actor as actor %}
 
+{% with community=notification.community %}
 <div class="intro">
+  {% blocktrans with community_name=community.name %}
+  Hello from {{ community_name }} !
+  {% endblocktrans %}
+</div>
+
+<div class="section">
   {% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
 </div>
 
@@ -18,5 +25,14 @@
   {% block notification_body %}{% endblock %}
 </div>
 
-{% endblock content %}
+<div class="section">
+  {% blocktrans with community_name=community.name %}
+  Thank you from {{ community_name }} !
+  {% endblocktrans %}
+</div>
+<div class="section">
+  {{ community.domain }}
+</div>
+{% endwith %}
 
+{% endblock content %}

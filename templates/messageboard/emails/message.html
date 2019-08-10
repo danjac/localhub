@@ -5,21 +5,37 @@
 {% load i18n %}
 {% load account %}
 
-{% block title %}{{ message.subject }}{% endblock %}
-
 {% block content %}
 {% user_display recipient.recipient as recipient_name %}
 {% user_display message.sender as sender %}
 
+{% with community=message.community %}
 <div class="intro">
-{% blocktrans %}
-Hi {{ recipient_name }},
+  {% blocktrans with community_name=community.name %}
+  Hello from {{ community_name }} !
+  {% endblocktrans %}
 </div>
-{% endblocktrans %}
 
 <div class="section">
-{% blocktrans with subject=message.subject url=recipient.get_permalink %}
-{{ sender }} has sent you a message <a href="{{ url }}">{{ subject }}</a>.
-{% endblocktrans %}
+  {% blocktrans %}
+  Hi {{ recipient_name }},
+  {% endblocktrans %}
 </div>
+
+<div class="section">
+  {% blocktrans with subject=message.subject url=recipient.get_permalink %}
+  {{ sender }} has sent you a message: <br> <a href="{{ url }}">{{ subject }}</a>
+  {% endblocktrans %}
+</div>
+
+<div class="section">
+  {% blocktrans with community_name=community.name %}
+  Thank you from {{ community_name }} !
+  {% endblocktrans %}
+</div>
+<div class="section">
+  {{ community.domain }}
+</div>
+{% endwith %}
+
 {% endblock content %}

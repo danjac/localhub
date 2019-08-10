@@ -1,26 +1,17 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "emails/base.html" %}
+{% extends "notifications/emails/base.html" %}
 
 {% load i18n %}
 {% load account %}
 
-{% block title %}{% trans "Notification" %}{% endblock %}
-
 {% block content %}
 {% user_display notification.recipient as recipient %}
 {% user_display notification.actor as actor %}
-
-<div class="intro">
-{% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
-</div>
-
-<div class="section">
 {% if notification.verb == 'new_follower' %}
 {% blocktrans %}
 <a href="{{ object_url }}">{{ actor }}</a> is now following you.
 {% endblocktrans %}
 {% endif %}
-</div>
 {% endblock content %}

@@ -21,7 +21,7 @@
                 <a href="{{ message.get_absolute_url }}">
                     {{ message.subject }}
                 </a>
-                <div class="info">
+                <div class="timesince">
                     {% blocktrans with created=message.created|timesince %}
                     {{ created }} ago
                     {% endblocktrans %}

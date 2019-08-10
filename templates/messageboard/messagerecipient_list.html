@@ -32,10 +32,12 @@
             {{ recipient.message.subject }}
             {% if not recipient.read %}</strong>{% endif %}
         </a>
-        <div class="info">
+        <div>
+          <span class="timesince">
           {% blocktrans with created=recipient.message.created|timesince %}
           {{ created }} ago from
           {% endblocktrans %}
+          </span>
           {% include "users/includes/chip.html" with profile=recipient.message.sender %}
         </div>
       </td>
