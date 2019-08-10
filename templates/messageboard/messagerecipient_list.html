@@ -23,27 +23,21 @@
 {% if object_list %}
 
 <table class="table table-striped table-hover">
-  <thead>
-    <th>{% trans "Subject" %}</th>
-    <th>{% trans "From" %}</th>
-  </thead>
   <tbody>
     {% for recipient in object_list %}
     <tr>
       <td>
         <a href="{{ recipient.get_absolute_url }}">
           {% if not recipient.read %}<strong>{% endif %}
-            {{ recipient.message.subject|truncatechars:60 }}
+            {{ recipient.message.subject }}
             {% if not recipient.read %}</strong>{% endif %}
         </a>
         <div class="info">
           {% blocktrans with created=recipient.message.created|timesince %}
-          {{ created }} ago
+          {{ created }} ago from
           {% endblocktrans %}
+          {% include "users/includes/chip.html" with profile=recipient.message.sender %}
         </div>
-      </td>
-      <td>
-        {% include "users/includes/chip.html" with profile=recipient.message.sender %}
       </td>
     </tr>
     {% endfor %}

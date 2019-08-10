@@ -9,6 +9,8 @@
 
 {% block messageboard_subtitle %}{{ user_obj.username }}{% endblock %}
 
+{% block messageboard_header %}{% endblock %}
+
 {% block messageboard_actions %}
 {% include "includes/breadcrumbs.html" %}
 {% has_perm "messageboard.create_message" user community as can_create_message %}

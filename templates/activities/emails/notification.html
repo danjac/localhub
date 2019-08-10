@@ -11,11 +11,12 @@
 {% user_display notification.actor as actor %}
 
 <div class="intro">
-{% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
+  {% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
 </div>
 
 <div class="section">
-    {% block notification_body %}{% endblock %}
+  {% block notification_body %}{% endblock %}
 </div>
+
 {% endblock content %}
 

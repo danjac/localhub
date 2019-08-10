@@ -19,7 +19,7 @@
         <tr>
             <td>
                 <a href="{{ message.get_absolute_url }}">
-                    {{ message.subject|truncatechars:60 }}
+                    {{ message.subject }}
                 </a>
                 <div class="info">
                     {% blocktrans with created=message.created|timesince %}
