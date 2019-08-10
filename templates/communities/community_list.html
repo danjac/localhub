@@ -16,7 +16,6 @@
   <thead>
     <tr>
       <th>{% trans "Community" %}</th>
-      <th>{% trans "Created" %}</th>
       <th>{% trans "Members" %}</th>
       <th>{% trans "Tagline" %}</th>
     </tr>
@@ -38,11 +37,6 @@
           {% if not object.public %}
           <span class="chip">{% trans "Private" %}</span>
           {% endif %}
-      </td>
-      <td>
-        {% blocktrans with created=object.created|timesince %}
-        {{ created }} ago
-        {% endblocktrans %}
       </td>
       <td>{{ object.num_members }}</td>
       <td>{{ object.tagline|default:"-"|linebreaksbr }}</td>

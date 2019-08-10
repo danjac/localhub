@@ -22,12 +22,10 @@
 
 {% if object_list %}
 
-<table class="table table-striped table-hover table-responsive-md">
+<table class="table table-striped table-hover">
   <thead>
     <th>{% trans "Subject" %}</th>
     <th>{% trans "From" %}</th>
-    <th>{% trans "Date" %}</th>
-
   </thead>
   <tbody>
     {% for recipient in object_list %}
@@ -38,12 +36,14 @@
             {{ recipient.message.subject|truncatechars:60 }}
             {% if not recipient.read %}</strong>{% endif %}
         </a>
+        <div class="info">
+          {% blocktrans with created=recipient.message.created|timesince %}
+          {{ created }} ago
+          {% endblocktrans %}
+        </div>
       </td>
       <td>
         {% include "users/includes/chip.html" with profile=recipient.message.sender %}
-      </td>
-      <td>
-        <span class="timesince">{{ recipient.message.created|date:"SHORT_DATETIME_FORMAT" }}</span>
       </td>
     </tr>
     {% endfor %}

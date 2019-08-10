@@ -38,25 +38,64 @@
   {% blocktrans %}You can enable emails for your notifications <a href="{{ user_settings_url }}">in your settings</a>.{% endblocktrans %}
 </p>
 
-{% for notification in object_list %}
-<div class="my-1">
-  {% with content_type=notification.content_type.name content_object=notification.content_object %}
-  {% if content_type == "post" %}
-  {% include "activities/includes/notification.html" with activity=content_object activity_name="post" %}
-  {% elif content_type == "photo" %}
-  {% include "activities/includes/notification.html" with activity=content_object activity_name="photo" %}
-  {% elif content_type == "event" %}
-  {% include "activities/includes/notification.html" with activity=content_object activity_name="event" %}
-  {% elif content_type == "comment" %}
-  {% include "comments/includes/notification.html" with comment=content_object %}
-  {% elif content_type == "user" %}
-  {% include "users/includes/notification.html" with user_obj=content_object %}
-  {% endif %}
-  {% endwith %}
-</div>
-{% empty %}
-{% include "includes/empty.html" %}
-{% endfor %}
+{% if object_list %}
 
+<table class="table table-striped table-hover table-responsive-md">
+  <thead>
+    <th>Notification</th>
+    <th>From</th>
+    <th>Actions</th>
+  </thead>
+  <tbody>
+    {% for notification in object_list %}
+    <tr>
+      <td>
+
+        {% with content_type=notification.content_type.name content_object=notification.content_object %}
+        {% if content_type == "post" %}
+        {% include "activities/includes/notification.html" with activity=content_object activity_name="post" %}
+        {% elif content_type == "photo" %}
+        {% include "activities/includes/notification.html" with activity=content_object activity_name="photo" %}
+        {% elif content_type == "event" %}
+        {% include "activities/includes/notification.html" with activity=content_object activity_name="event" %}
+        {% elif content_type == "comment" %}
+        {% include "comments/includes/notification.html" with comment=content_object %}
+        {% elif content_type == "user" %}
+        {% include "users/includes/notification.html" with user_obj=content_object %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="info">
+          {% blocktrans with created=notification.created|timesince %}
+          {{ created }} ago
+          {% endblocktrans %}
+        </div>
+
+      </td>
+      <td>
+        {% include "users/includes/chip.html" with profile=notification.actor %}
+      </td>
+      <td>
+        <div class="actions actions-sm">
+          {% if not notification.is_read %}
+          <a href="{% url 'notifications:mark_read' notification.pk %}"
+             data-controller="ajax"
+             data-action="ajax#post"
+             >{% trans "Mark As Read" %}</a>
+          {% endif %}
+          <a href="{% url 'notifications:delete' notification.pk %}"
+             data-controller="ajax"
+             data-action="ajax#delete"
+             >{% trans "Delete" %}</a>
+        </div>
+
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% include "includes/pagination.html" %}
+{% else %}
+{% include "includes/empty.html" %}
+{% endif %}
 {% endblock %}

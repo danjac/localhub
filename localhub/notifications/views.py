@@ -43,7 +43,7 @@ class NotificationListView(NotificationQuerySetMixin, ListView):
             .prefetch_related("content_object")
             .select_related("actor", "content_type")
             .exclude(actor__in=self.request.user.blocked.all())
-            .order_by("-created")
+            .order_by("is_read", "-created")
         )
 
     def get_context_data(self, **kwargs) -> ContextDict:
