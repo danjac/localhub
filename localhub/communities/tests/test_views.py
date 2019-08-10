@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import pytest
 
 from typing import List
@@ -87,6 +90,14 @@ class TestCommunityDetailView:
     def test_get(self, client: Client, community: Community):
         assert (
             client.get(reverse("communities:community_detail")).status_code
+            == 200
+        )
+
+
+class TestCommunityTermsView:
+    def test_get(self, client: Client, community: Community):
+        assert (
+            client.get(reverse("communities:community_terms")).status_code
             == 200
         )
 

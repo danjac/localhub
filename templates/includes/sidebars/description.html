@@ -4,21 +4,18 @@
 {% load i18n %}
 
 {% if community.description or community.terms %}
-<div class="panel mt-1 p-1">
-  <div class="panel-header">
-    <div class="panel-title">
-      {% blocktrans with name=community.name %}About {{ name }}{% endblocktrans %}
-    </div>
-  </div>
-  <div class="panel-body">
-    {% if community.description %}
-    <p>
-      {{ community.description.markdown|truncatewords_html:30 }}
-    </p>
-    <a href="{% url 'communities:community_detail' %}">{% trans "More Details" %}</a>
-    {% elif community.terms %}
-    <a href="{% url 'communities:community_detail' %}">{% trans "Terms" %}</a>
-    {% endif %}
-  </div>
-</div>
+<ul class="menu mt-1">
+  <li class="menu-item">
+    <a data-controller="active-link"
+       data-active-link-exact
+       href="{% url 'communities:community_detail' %}">
+      {% trans "About This Site" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'communities:community_terms' %}">
+      {% trans "Terms" %}
+    </a>
+  </li>
+</ul>
 {% endif %}

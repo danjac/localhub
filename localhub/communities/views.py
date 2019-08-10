@@ -89,6 +89,13 @@ class CommunityDetailView(CommunityRequiredMixin, DetailView):
 community_detail_view = CommunityDetailView.as_view()
 
 
+class CommunityTermsView(CommunityDetailView):
+    template_name = "communities/terms.html"
+
+
+community_terms_view = CommunityTermsView.as_view()
+
+
 class CommunityNotFoundView(TemplateView):
     """
     This is shown if no community exists for this domain.

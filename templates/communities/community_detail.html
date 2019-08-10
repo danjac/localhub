@@ -1,7 +1,7 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "activities/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 {% load rules %}
 
@@ -9,29 +9,24 @@
 
 <h3>{{ community.name }}</h3>
 
-{% has_perm "communities.manage_community" user community as can_manage %}
-{% if can_manage %}
 <div class="actions">
-  <a href="{% url "communities:community_update" %}">
-    {% trans "Edit Community Settings" %}
-  </a>
+    {% if community.terms %}
+    <a href="{% url 'communities:community_terms' %}">
+        {% trans "Terms" %}
+    </a>
+    {% endif %}
+
+    {% has_perm "communities.manage_community" user community as can_manage %}
+    {% if can_manage %}
+    <a href="{% url "communities:community_update" %}">
+        {% trans "Community Settings" %}
+    </a>
+    {% endif %}
 </div>
-{% endif %}
 
-{% if community.description %}
-<div class="divider mb-1"></div>
-<h4>{% trans "Description" %}</h4>
-<p>
-  {{ community.description.markdown }}
-</p>
-{% endif %}
-
-{% if community.terms %}
-<div class="divider mb-1"></div>
-<h4>{% trans "Terms & Conditions" %}</h4>
-<p>
-  {{ community.terms.markdown }}
-</p>
-{% endif %}
+<div class="divider"></div>
+<div class="markdown-content">
+    {{ community.description.markdown }}
+</div>
 
 {% endblock content %}
