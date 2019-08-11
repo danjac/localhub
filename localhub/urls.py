@@ -46,6 +46,10 @@ urlpatterns = [
     path("admin/", admin.site.urls),
 ]
 
+# silk
+if "silk" in settings.INSTALLED_APPS:
+    urlpatterns += [path("silk/", include("silk.urls", namespace="silk"))]
+
 if settings.DEBUG:
 
     # debug toolbar
@@ -54,9 +58,6 @@ if settings.DEBUG:
     urlpatterns = [
         path("__debug__/", include(debug_toolbar.urls))
     ] + urlpatterns
-
-    # silk
-    urlpatterns += [path("silk/", include("silk.urls", namespace="silk"))]
 
     # static views
     urlpatterns += static(

@@ -293,7 +293,7 @@ class Local(DockerConfigMixin, Base):
 
 class Production(DockerConfigMixin, Base):
 
-    THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + ["anymail"]
+    THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + ["anymail", "silk"]
 
     ALLOWED_HOSTS = values.ListValue()
     CSRF_TRUSTED_ORIGINS = values.ListValue()
@@ -330,6 +330,17 @@ class Production(DockerConfigMixin, Base):
         "handlers": {"console": {"class": "logging.StreamHandler"}},
         "loggers": {"django": {"handlers": ["console"], "level": "INFO"}},
     }
+
+    MIDDLEWARE = Base.MIDDLEWARE + ["silk.middleware.SilkyMiddleware"]
+
+    # https://github.com/jazzband/django-silk#configuration
+
+    SILKY_AUTHENTICATION = True  # User must login
+    SILKY_AUTHORISATION = True
+    SILKY_INTERCEPT_PERCENT = 50
+    SILKY_MAX_REQUEST_BODY_SIZE = -1  # Silk takes anything <0 as no limit
+    SILKY_MAX_RESPONSE_BODY_SIZE = 1024
+    SILKY_MAX_RECORDED_REQUESTS = 10**4
 
     @property
     def ANYMAIL(self) -> Dict[str, str]:
