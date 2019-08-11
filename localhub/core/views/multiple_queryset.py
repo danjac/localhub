@@ -75,9 +75,11 @@ class MultipleQuerySetMixin:
         values = ["pk", "object_type"]
 
         ordering = self.get_ordering()
+        if isinstance(ordering, str):
+            ordering = (ordering,)
 
         if ordering:
-            values.append(ordering)
+            values += list(ordering)
 
         querysets = [
             qs.annotate(
@@ -87,7 +89,7 @@ class MultipleQuerySetMixin:
         ]
         qs = querysets[0].union(*querysets[1:])
         if ordering:
-            qs = qs.order_by(f"-{ordering}")
+            qs = qs.order_by(*["-" + field for field in ordering])
         return qs
 
     def load_objects(self, items: QuerySet, queryset_dict: QuerySetDict):
@@ -145,6 +147,7 @@ class MultipleQuerySetContextMixin(MultipleQuerySetMixin, ContextMixin):
     - is_paginated
 
     """
+
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
         if self.paginate_by:
