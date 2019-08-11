@@ -7,13 +7,5 @@
 {% block subtitle %} | {% trans "Comments" %}{% endblock %}
 
 {% block search_content %}
-{% for comment in object_list %}
-<div class="mt-1">
-  {% include "comments/includes/comment.html" %}
-</div>
-{% empty %}
-{% include "includes/empty.html" %}
-{% endfor %}
-
-{% include "includes/pagination.html" %}
+{% include "comments/includes/comment_list.html" %}
 {% endblock search_content %}
