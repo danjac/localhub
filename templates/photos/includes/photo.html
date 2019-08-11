@@ -4,10 +4,24 @@
 {% extends "activities/includes/activity_base.html" %}
 
 {% load i18n %}
+{% load thumbnail %}
 {% load activities_tags %}
 
 {% block content %}
-{% include "photos/includes/content.html" %}
+{% thumbnail object.image is_detail|yesno:"800,600" crop="center" as image %}
+<div>
+  <a href="{{ object.get_absolute_url }}">
+    <img class="img-responsive"
+         src="{{ image.url }}"
+         width="{{ image.width }}"
+         height="{{ image.height }}"
+         alt="{{ object.title }}">
+  </a>
+</div>
+{% empty %}
+<em>{% trans "No photo available" %}</em>
+{% endthumbnail %}
+{% include "activities/includes/description.html" %}
 {% if object.has_attribution %}
 <dl>
   {% if object.artist %}

@@ -9,39 +9,39 @@
 {% block content %}
 <dl>
 
-    {% timezone object.timezone %}
-    <dt>{% trans "Starts" %}</dt>
-    <dd>{{ object.starts|date:"SHORT_DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }}</dd>
+  {% timezone object.timezone %}
+  <dt>{% trans "Starts" %}</dt>
+  <dd>{{ object.starts|date:"SHORT_DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }}</dd>
 
-    {% if object.ends %}
-    <dt>{% trans "Ends" %}</dt>
-    <dd>{{ object.ends|date:"SHORT_DATE_FORMAT" }} @ {{ object.ends|date:"TIME_FORMAT" }}</dd>
-    {% endif %}
-    {% endtimezone %}
+  {% if object.ends %}
+  <dt>{% trans "Ends" %}</dt>
+  <dd>{{ object.ends|date:"SHORT_DATE_FORMAT" }} @ {{ object.ends|date:"TIME_FORMAT" }}</dd>
+  {% endif %}
+  {% endtimezone %}
 
-    <dt>{% trans "Timezone" %}</dt>
-    <dd>{{ object.timezone }}</dd>
+  <dt>{% trans "Timezone" %}</dt>
+  <dd>{{ object.timezone }}</dd>
 
-    <dt>{% trans "Location" %}</dt>
-    <dd>
-    {% with location=object.full_location %}
-    {% if location %}
-    {{ location }}
-    {% else %}
-    {% trans "Online" %}
-    {% endif %}
-    {% endwith %}
-    </dd>
+  <dt>{% trans "Location" %}</dt>
+  <dd>
+  {% with location=object.full_location %}
+  {% if location %}
+  {{ location }}
+  {% else %}
+  {% trans "Online" %}
+  {% endif %}
+  {% endwith %}
+  </dd>
 
-    {% if object.ticket_price %}
-    <dt>{% trans "Admission" %}</dt>
-    <dd>{{ object.ticket_price }}</dd>
-    {% endif %}
+  {% if object.ticket_price %}
+  <dt>{% trans "Admission" %}</dt>
+  <dd>{{ object.ticket_price }}</dd>
+  {% endif %}
 
-    {% if object.ticket_vendor %}
-    <dt>{% trans "Tickets available from" %}</dt>
-    <dd>{{ object.ticket_vendor|linebreaksbr }}</dd>
-    {% endif %}
+  {% if object.ticket_vendor %}
+  <dt>{% trans "Tickets available from" %}</dt>
+  <dd>{{ object.ticket_vendor|linebreaksbr }}</dd>
+  {% endif %}
 
 </dl>
 {% if is_detail and object.latitude and object.longitude %}
@@ -53,18 +53,22 @@
      ></div>
 <div class="divider"></div>
 {% endif %}
-{% include "events/includes/content.html" %}
+{% include "activities/includes/oembed.html" %}
+{% if object.url and object.description %}
+<div class="divider"></div>
+{% endif %}
+{% include "activities/includes/description.html" %}
 {% endblock content %}
 
 {% block actions %}
 <a href="{% url 'events:download' object.id %}"
    title="{% trans 'Download .ics calendar file' %}"
    download>
-    {% trans "Download" %}
+  {% trans "Download" %}
 </a>
 {% if not is_detail and object.latitude and object.longitude %}
 <a href="{{ object.get_absolute_url }}#map-for-event-{{ object.id }}">
-    {% trans "Map" %}
+  {% trans "Map" %}
 </a>
 {% endif %}
 {{ block.super }}

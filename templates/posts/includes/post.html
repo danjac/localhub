@@ -5,15 +5,22 @@
 
 {% load i18n %}
 
-{% block content %}{% include "posts/includes/content.html" %}{% endblock %}
-{% block actions %}{% include "activities/includes/actions.html" %}{% endblock %}
-
-{% block activity_title %}
+{% block title %}
 {% if object.url %}
 <a href="{{ object.url }}" rel="nofollow">{% if is_detail %}{{ object.title }}{% else %}{{ object.title|truncatechars:130 }}{% endif %}</a>
 {% else %}
 {{ block.super }}
 {% endif %}
-{% endblock %}
+{% endblock title %}
+
+{% block content %}
+
+{% include "activities/includes/oembed.html" %}
+{% if object.url and object.description %}
+<div class="divider"></div>
+{% endif %}
+{% include "activities/includes/description.html" %}
+
+{% endblock content %}
 
 

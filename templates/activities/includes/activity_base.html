@@ -42,7 +42,7 @@
 
         {% else %}
 
-        {% block activity_title %}
+        {% block title %}
 
         {% if is_detail %}
         {{ object.title }}
@@ -50,7 +50,7 @@
         <a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:130 }}</a>
         {% endif %}
 
-        {% endblock activity_title %}
+        {% endblock title %}
 
         {% endif %}
 
@@ -71,13 +71,44 @@
       {% endblocktrans %}
       {% else %}
       {% if object.is_reshare %}<blockquote>{% endif %}
-        {% block content %}{% endblock %}
+        {% if is_content_sensitive %}
+        <div class="empty bg-dark" data-target="content-sensitive.togglable">
+          <p class="empty-title h5">{% trans "Sensitive Content" %}</p>
+          <p class="empty-subtitle">{% trans "This post has been tagged sensitive. Click the button below to view the content." %}</p>
+          <p>
+            {% for tag in object.get_content_warning_tags %}
+            #{{ tag }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </p>
+          <div class="empty-action">
+            <button class="btn btn-primary" data-action="content-sensitive#toggle">{% trans "Show Content" %}</button>
+          </div>
+        </div>
+        <div class="d-hide" data-target="content-sensitive.togglable">
+          {% endif %}
+          {% block content %}{% endblock %}
+          {% if is_content_sensitive %}</div>{% endif %}
         {% if object.is_reshare %}</blockquote>{% endif %}
       {% endif %}
     </div>
     <div class="card-footer">
       {% if is_detail %}
-      {% include "activities/includes/reshares.html" %}
+      {% with num_reshares=reshares.count %}
+      {% if num_reshares %}
+      {% if num_reshares > 20 %}
+      {% blocktrans %}
+      <b>{{ num_reshares }}</b> people have reshared this post.
+      {% endblocktrans %}
+      {% else %}
+      <div class="info">{% trans "Reshared by" %}
+        {% for reshare in reshares %}
+        {% include "users/includes/chip.html" with profile=reshare.owner profile_url=reshare.get_absolute_url %}&nbsp;
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endif %}
+      {% endwith %}
+
       {% elif object.num_reshares %}
       <div class="info">
         {{ object.num_reshares }}
@@ -124,7 +155,59 @@
         {% endif %}
         {% if user.is_authenticated %}
         {% block actions %}
-        {% include "activities/includes/actions.html" %}
+
+        {% has_perm "activities.like_activity" user object as can_like %}
+        {% if can_like %}
+        <a href="{{ object.get_like_url }}"
+           {% if object.has_liked %} class="d-hide"{% endif %}
+                                     id="{{ object_type }}-like-btn-{{ object.id }}"
+                                     data-controller="ajax"
+                                     data-action="ajax#post"
+                                     data-ajax-toggle="#{{ object_type }}-dislike-btn-{{ object.id }}"
+                                     >{% trans "Like" %}</a>
+        <a href="{{ object.get_dislike_url }}"
+           {% if not object.has_liked %} class="d-hide"{% endif %}
+                                         id="{{ object_type }}-dislike-btn-{{ object.id }}"
+                                         data-controller="ajax"
+                                         data-action="ajax#post"
+                                         data-ajax-toggle="#{{ object_type }}-like-btn-{{ object.id }}"
+                                         >{% trans "Unlike" %}</a>
+        {% endif %}
+
+        {% if not object.has_reshared %}
+        {% has_perm "activities.reshare_activity" user object as can_reshare %}
+        {% if can_reshare %}
+        <a data-controller="ajax"
+           data-action="ajax#post"
+           data-ajax-redirect="{{ request.path }}"
+           href="{{ object.get_reshare_url }}"
+           >{% trans "Reshare" %}</a>
+        {% endif %}
+        {% endif %}
+
+        {% has_perm "activities.flag_activity" user object as can_flag %}
+        {% if can_flag and not object.has_flagged %}
+        <a href="{{ object.get_flag_url }}">
+          {% trans "Flag" %}
+        </a>
+        {% endif %}
+
+        {% has_perm "activities.change_activity" user object as can_change %}
+        {% if can_change %}
+        <a href="{{ object.get_update_url }}">{% trans "Edit" %}</a>
+        {% endif %}
+
+
+        {% has_perm "activities.delete_activity" user object as can_delete %}
+        {% if can_delete %}
+        <a href="{{ object.get_delete_url }}"
+           data-controller="ajax confirm"
+           data-action="confirm#check ajax#delete"
+           data-confirm-header="{% trans 'Delete' %}"
+           data-confirm-body="{% trans 'Are you sure you want to delete this item?' %}"
+           >{% trans "Delete" %}</a>
+        {% endif %}
+
         {% endblock %}
         {% endif %}
       </div>
