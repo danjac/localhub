@@ -186,3 +186,16 @@ class TestBlockedTagListView:
 
         response = client.get(reverse("activities:blocked_tag_list"))
         assert len(response.context["object_list"]) == 1
+
+
+class TestTagDetailView:
+    def test_get(self, client: Client, member: Membership):
+        PostFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        ).tags.add("movies")
+        response = client.get(
+            reverse("activities:tag_detail", args=["movies"])
+        )
+        assert response.context["tag"].name == "movies"
+        assert len(response.context["object_list"]) == 1
