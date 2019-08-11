@@ -26,7 +26,7 @@ def send_notification_email(
     }
     context.update(extra_context or {})
     send_mail(
-        subject,
+        f"{notification.community.name} | {subject}",
         render_to_string(plain_template_name, context),
         notification.community.resolve_email("no-reply"),
         [notification.recipient.email],

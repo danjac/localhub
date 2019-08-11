@@ -16,7 +16,7 @@ def send_message_email(recipient: MessageRecipient):
             context = {"recipient": recipient, "message": recipient.message}
 
             send_mail(
-                recipient.message.subject,
+                f"{recipient.message.community.name} | {recipient.message.subject}", # noqa
                 render_to_string("messageboard/emails/message.txt", context),
                 recipient.message.community.resolve_email("no-reply"),
                 [recipient.recipient.email],

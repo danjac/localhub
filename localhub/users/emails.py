@@ -3,6 +3,7 @@
 
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import override
 
 from localhub.notifications.emails import send_notification_email
 from localhub.notifications.models import Notification
@@ -18,11 +19,12 @@ def send_user_notification_email(
 ):
 
     if notification.recipient.has_email_pref("new_follower"):
-        send_notification_email(
-            notification,
-            NOTIFICATION_SUBJECTS[notification.verb],
-            notification.community.resolve_url(user.get_absolute_url()),
-            "users/emails/notification.txt",
-            "users/emails/notification.html",
-            {"user": user},
-        )
+        with override(notification.recipient.language):
+            send_notification_email(
+                notification,
+                NOTIFICATION_SUBJECTS[notification.verb],
+                notification.community.resolve_url(user.get_absolute_url()),
+                "users/emails/notification.txt",
+                "users/emails/notification.html",
+                {"user": user},
+            )
