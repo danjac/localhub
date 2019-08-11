@@ -6,7 +6,7 @@
 {% load i18n %}
 {% load account %}
 
-{% block content %}
+{% block notification_body %}
 {% user_display notification.recipient as recipient %}
 {% user_display notification.actor as actor %}
 {% if notification.verb == 'new_follower' %}
@@ -14,4 +14,4 @@
 <a href="{{ object_url }}">{{ actor }}</a> is now following you.
 {% endblocktrans %}
 {% endif %}
-{% endblock content %}
+{% endblock notification_body %}
