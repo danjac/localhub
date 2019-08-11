@@ -3,7 +3,7 @@
 {% load i18n %}{% load account %}{% autoescape off %}
 {% user_display member as member_name %}{% blocktrans %}Hi {{ member_name }},{% endblocktrans %}
 {% blocktrans with community=community.name %}
-Your membership of the community {{ community }} has been deleted by the admins. You will not be able to post new content until your membership has been restored.
+Your membership of the community {{ community }} has been terminated. You will not be able to post new content until your membership has been restored.
 
 Your posts will not be available on the site, however they will not be removed from the database until you delete your own account.
 {% endblocktrans %}
