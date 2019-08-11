@@ -58,14 +58,5 @@
 
 <div class="divider"></div>
 
-{% for activity in object_list %}
-<div class="my-1">
-  {% include "activities/includes/activity.html" %}
-</div>
-{% empty %}
-{% include "includes/empty.html" %}
-{% endfor %}
-
-
-{% include "includes/pagination.html" %}
+{% include "activities/includes/activity_list.html" %}
 {% endblock content %}

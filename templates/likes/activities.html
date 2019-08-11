@@ -8,13 +8,6 @@
 
 {% block likes_content %}
 
-{% for activity in object_list %}
-<div class="mt-1">
-  {% include "activities/includes/activity.html" %}
-</div>
-{% empty %}
-{% include "includes/empty.html" %}
-{% endfor %}
+{% include "activities/includes/activity_list.html" %}
 
-{% include "includes/pagination.html" %}
 {% endblock likes_content %}

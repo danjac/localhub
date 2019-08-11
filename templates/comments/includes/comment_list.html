@@ -1,0 +1,11 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% for comment in object_list %}
+<div class="activity-list-item">
+    {% include "comments/includes/comment.html" %}
+</div>
+{% empty %}
+{% include "includes/empty.html" %}
+{% endfor %}
+{% include "includes/pagination.html" %}

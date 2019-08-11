@@ -33,15 +33,6 @@ and has a total of <strong>{{ counter }} likes</strong> for their comments.
 {% endif %}
 </div>
 
+{% include "comments/includes/comment_list.html" %}
 
-
-{% for comment in object_list %}
-<div class="mt-1">
-    {% include "comments/includes/comment.html" %}
-</div>
-{% empty %}
-{% include "includes/empty.html" %}
-{% endfor %}
-
-{% include "includes/pagination.html" %}
 {% endblock user_content %}

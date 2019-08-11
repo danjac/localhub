@@ -66,13 +66,5 @@
 {% endif %}
 {% endwith %}
 
-{% for activity in object_list %}
-<div class="mt-1">
-  {% include "activities/includes/activity.html" %}
-</div>
-{% empty %}
-{% include "includes/empty.html" %}
-{% endfor %}
-
-{% include "includes/pagination.html" %}
+{% include "activities/includes/activities_list.html" %}
 {% endblock content %}
