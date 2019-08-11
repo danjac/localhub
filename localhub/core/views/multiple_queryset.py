@@ -52,6 +52,7 @@ class MultipleQuerySetMixin:
     limit: Optional[int] = None
     ordering: Optional[str] = None
     paginate_by: Optional[int] = None
+    paginator_class = Paginator
     page_kwarg = "page"
     request: HttpRequest
 
@@ -121,9 +122,9 @@ class MultipleQuerySetMixin:
         queryset_dict = self.get_queryset_dict()
         union_qs = self.get_combined_queryset(queryset_dict)
 
-        page = Paginator(union_qs, **self.get_pagination_kwargs()).get_page(
-            self.request.GET.get(self.page_kwarg, 1)
-        )
+        page = self.paginator_class(
+            union_qs, **self.get_pagination_kwargs()
+        ).get_page(self.request.GET.get(self.page_kwarg, 1))
 
         self.load_objects(page, queryset_dict)
 
