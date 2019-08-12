@@ -7,27 +7,17 @@
 {% block content %}
 <h3>{% trans "Events" %}</h3>
 
-{% has_perm 'activities.create_activity' user community as can_create_activity %}
-{% if can_create_activity %}
 <div class="actions">
+  {% has_perm 'activities.create_activity' user community as can_create_activity %}
+  {% if can_create_activity %}
   <a href="{% url 'events:create' %}">
     {% trans "Submit Event" %}
   </a>
+  {% endif %}
+  <a href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
+  <a href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
 </div>
 
-{% elif user.is_authenticated %}
-<p class="toast text-center my-1">
-  {% url 'join_requests:create' as join_request_url %}
-  {% blocktrans %}You do not have permission to submit events to this site. You can send a request to join this community <a href="{{ join_request_url }}">here</a>.{% endblocktrans %}
-</p>
-
-{% else %}
-<p class="toast text-center my-1">
-  {% url 'account_login' as login_url %}
-  {% blocktrans %}Please <a href="{{ login_url }}?next={{ request.get_full_path }}">sign in</a> to submit events to this site.{% endblocktrans %}
-</p>
-
-{% endif %}
 
 <div class="divider"></div>
 
