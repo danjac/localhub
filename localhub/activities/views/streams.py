@@ -8,7 +8,7 @@ from django.db.models import QuerySet
 
 from localhub.activities.types import ActivityType
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.core.types import ContextDict, QuerySetList
+from localhub.core.types import QuerySetList
 from localhub.core.views import MultipleQuerySetListView, SearchMixin
 from localhub.events.models import Event
 from localhub.photos.models import Photo

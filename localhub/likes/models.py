@@ -94,7 +94,7 @@ class Like(TimeStampedModel):
                 name="unique_like",
             )
         ]
-        indexes = [models.Index(fields=["content_type", "object_id", "user"])]
+        indexes = [models.Index(fields=["content_type", "object_id"])]
 
     def notify(self) -> List[Notification]:
         """

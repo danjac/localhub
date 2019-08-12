@@ -210,7 +210,10 @@ class User(AbstractUser):
 
     class Meta(AbstractUser.Meta):
 
-        indexes = [GinIndex(fields=["search_document"])]
+        indexes = [
+            GinIndex(fields=["search_document"]),
+            models.Index(fields=["name", "username", "email"]),
+        ]
 
     def get_absolute_url(self) -> str:
         return reverse("users:activities", args=[self.username])

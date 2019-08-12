@@ -6,7 +6,6 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.urls import reverse
-from django.utils import formats
 
 from model_utils.models import TimeStampedModel
 
@@ -46,16 +45,16 @@ class Message(TimeStampedModel):
     objects = MessageQuerySet.as_manager()
 
     class Meta:
-        indexes = [GinIndex(fields=["search_document"])]
+        indexes = [
+            GinIndex(fields=["search_document"]),
+            models.Index(fields=["created", "-created"]),
+        ]
 
     def __str__(self) -> str:
         return self.subject
 
     def get_absolute_url(self) -> str:
         return reverse("messageboard:message_detail", args=[self.id])
-
-    def get_month(self) -> str:
-        return formats.date_format(self.created, "F, Y")
 
 
 class MessageRecipientQuerySet(SearchQuerySetMixin, models.QuerySet):
@@ -81,6 +80,7 @@ class MessageRecipient(models.Model):
                 name="unique_message_recipient",
             )
         ]
+        indexes = [models.Index(fields=["read"])]
 
     def __str__(self) -> str:
         return str(self.message)
@@ -90,6 +90,3 @@ class MessageRecipient(models.Model):
 
     def get_permalink(self) -> str:
         return self.message.community.resolve_url(self.get_absolute_url())
-
-    def get_month(self) -> str:
-        return self.message.get_month()

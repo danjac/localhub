@@ -33,9 +33,9 @@ class Notification(TimeStampedModel):
                 fields=[
                     "content_type",
                     "object_id",
-                    "community",
-                    "actor",
-                    "recipient",
+                    "created",
+                    "-created",
+                    "is_read",
                 ]
             )
         ]

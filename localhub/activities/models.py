@@ -192,7 +192,7 @@ class Activity(TimeStampedModel):
     class Meta:
         indexes = [
             GinIndex(fields=["search_document"]),
-            models.Index(fields=["owner", "community"]),
+            models.Index(fields=["created", "-created"]),
         ]
         abstract = True
 

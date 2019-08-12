@@ -93,7 +93,7 @@ class Flag(TimeStampedModel):
         ]
         indexes = [
             models.Index(
-                fields=["user", "content_type", "object_id", "community"]
+                fields=["content_type", "object_id", "created", "-created"]
             )
         ]
 

@@ -43,7 +43,7 @@ def get_generic_related_exists(
             related,
             related_object_id_field,
             related_content_type_field,
-        )
+        ).only("pk")
     )
 
 

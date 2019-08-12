@@ -40,6 +40,7 @@ class JoinRequest(TimeStampedModel):
 
     class Meta:
         unique_together = ("email", "community", "sender")
+        indexes = [models.Index(fields=["status"])]
 
     def __str__(self) -> str:
         if self.sender_id:
