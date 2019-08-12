@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from typing import Optional, DefaultDict, Set
+from typing import Optional, DefaultDict, Set, Tuple, Union
 
 from django.core.paginator import Page, Paginator
 from django.db.models import CharField, QuerySet, Value
@@ -50,7 +50,7 @@ class MultipleQuerySetMixin:
 
     allow_empty = True
     limit: Optional[int] = None
-    ordering: Optional[str] = None
+    ordering: Optional[Union[str, Tuple[str]]] = None
     paginate_by: Optional[int] = None
     paginator_class = Paginator
     page_kwarg = "page"
@@ -63,7 +63,7 @@ class MultipleQuerySetMixin:
         """
         raise NotImplementedError
 
-    def get_ordering(self) -> Optional[str]:
+    def get_ordering(self) -> Optional[Union[str, Tuple[str]]]:
         return self.ordering
 
     def get_queryset_dict(self) -> QuerySetDict:
