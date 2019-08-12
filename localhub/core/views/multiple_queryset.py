@@ -6,7 +6,7 @@ from collections import defaultdict
 from typing import Optional, DefaultDict, Set, Tuple, Union
 
 from django.core.paginator import Page, Paginator
-from django.db.models import CharField, Count, QuerySet, Value
+from django.db.models import CharField, QuerySet, Value
 from django.http import HttpRequest
 from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
@@ -92,7 +92,7 @@ class MultipleQuerySetMixin:
         return self.get_querysets()
 
     def get_combined_count_queryset(self) -> QuerySet:
-        querysets = self.get_count_querysets()
+        querysets = [qs.only("pk") for qs in self.get_count_querysets()]
         return querysets[0].union(*querysets[1:])
 
     def get_combined_count(self) -> int:

@@ -12,10 +12,10 @@ from localhub.comments.views import CommentListView
 class LikedStreamView(LoginRequiredMixin, BaseStreamView):
     template_name = "likes/activities.html"
 
-    def get_queryset_count_for_model(self, model: ActivityType) -> QuerySet:
+    def get_count_queryset_for_model(self, model: ActivityType) -> QuerySet:
         return self.filter_queryset(
             model.objects.with_has_liked(self.request.user)
-        ).only("pk")
+        )
 
     def filter_queryset(self, queryset: QuerySet) -> QuerySet:
         return super().filter_queryset(queryset).filter(has_liked=True)

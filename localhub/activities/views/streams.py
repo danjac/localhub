@@ -31,15 +31,15 @@ class BaseStreamView(CommunityRequiredMixin, MultipleQuerySetListView):
             ).select_related("owner", "community", "parent", "parent__owner")
         )
 
-    def get_queryset_count_for_model(self, model: ActivityType) -> QuerySet:
-        return self.filter_queryset(model.objects).only("pk")
+    def get_count_queryset_for_model(self, model: ActivityType) -> QuerySet:
+        return self.filter_queryset(model.objects)
 
     def get_querysets(self) -> QuerySetList:
         return [self.get_queryset_for_model(model) for model in self.models]
 
     def get_count_querysets(self) -> QuerySetList:
         return [
-            self.get_queryset_count_for_model(model) for model in self.models
+            self.get_count_queryset_for_model(model) for model in self.models
         ]
 
 
