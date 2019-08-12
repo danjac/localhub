@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from typing import Optional, Type
+from typing import Optional
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -24,7 +24,6 @@ from django.views.generic.detail import SingleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
-from localhub.activities.models import Activity
 from localhub.activities.views.streams import BaseStreamView
 from localhub.comments.models import Comment
 from localhub.comments.views import CommentListView
@@ -280,10 +279,10 @@ class UserStreamView(SingleUserMixin, BaseStreamView):
     active_tab = "posts"
     template_name = "users/activities.html"
 
-    def get_queryset_for_model(self, model: Type[Activity]) -> QuerySet:
+    def filter_queryset(self, queryset: QuerySet) -> QuerySet:
         return (
             super()
-            .get_queryset_for_model(model)
+            .filter_queryset(queryset)
             .blocked_tags(self.request.user)
             .filter(owner=self.object)
         )

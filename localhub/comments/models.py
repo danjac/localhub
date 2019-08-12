@@ -131,9 +131,8 @@ class Comment(TimeStampedModel):
     class Meta:
         indexes = [
             GinIndex(fields=["search_document"]),
-            models.Index(
-                fields=["content_type", "object_id", "owner", "community"]
-            ),
+            models.Index(fields=["content_type", "object_id"]),
+            models.Index(fields=["created", "-created"]),
         ]
 
     def get_absolute_url(self) -> str:

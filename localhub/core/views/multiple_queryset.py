@@ -6,12 +6,28 @@ from collections import defaultdict
 from typing import Optional, DefaultDict, Set, Tuple, Union
 
 from django.core.paginator import Page, Paginator
-from django.db.models import CharField, QuerySet, Value
+from django.db.models import CharField, Count, QuerySet, Value
 from django.http import HttpRequest
 from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 
 from localhub.core.types import ContextDict, QuerySetDict, QuerySetList
+
+
+class PresetCountPaginator(Paginator):
+    """
+    Paginator which presets the total count, so you can have a separately
+    calculated query in situations where using naive object_list.count()
+    will be expensive and you need something more fine-tuned and efficient.
+    """
+
+    @property
+    def count(self) -> int:
+        return self._preset_count
+
+    def __init__(self, count: int, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._preset_count = count
 
 
 class MultipleQuerySetMixin:
@@ -52,7 +68,7 @@ class MultipleQuerySetMixin:
     limit: Optional[int] = None
     ordering: Optional[Union[str, Tuple[str]]] = None
     paginate_by: Optional[int] = None
-    paginator_class = Paginator
+    paginator_class = PresetCountPaginator
     page_kwarg = "page"
     request: HttpRequest
 
@@ -71,6 +87,16 @@ class MultipleQuerySetMixin:
             queryset.model._meta.model_name: queryset
             for queryset in self.get_querysets()
         }
+
+    def get_count_querysets(self) -> QuerySetList:
+        return self.get_querysets()
+
+    def get_combined_count_queryset(self) -> QuerySet:
+        querysets = self.get_count_querysets()
+        return querysets[0].union(*querysets[1:])
+
+    def get_combined_count(self) -> int:
+        return self.get_combined_count_queryset().count()
 
     def get_combined_queryset(self, queryset_dict: QuerySetDict) -> QuerySet:
         values = ["pk", "object_type"]
@@ -123,7 +149,9 @@ class MultipleQuerySetMixin:
         union_qs = self.get_combined_queryset(queryset_dict)
 
         page = self.paginator_class(
-            union_qs, **self.get_pagination_kwargs()
+            object_list=union_qs,
+            count=self.get_combined_count(),
+            **self.get_pagination_kwargs()
         ).get_page(self.request.GET.get(self.page_kwarg, 1))
 
         self.load_objects(page, queryset_dict)

@@ -29,7 +29,6 @@ from rules.contrib.views import PermissionRequiredMixin
 from taggit.models import Tag, TaggedItem
 
 
-from localhub.activities.types import ActivityType
 from localhub.activities.views.streams import BaseStreamView
 from localhub.communities.models import Community
 from localhub.communities.views import CommunityRequiredMixin
@@ -105,10 +104,10 @@ class TagDetailView(SingleTagMixin, BaseStreamView):
         self.object = self.get_object()
         return super().get(request, *args, **kwargs)
 
-    def get_queryset_for_model(self, model: ActivityType) -> QuerySet:
+    def filter_queryset(self, queryset: QuerySet) -> QuerySet:
         qs = (
             super()
-            .get_queryset_for_model(model)
+            .filter_queryset(queryset)
             .blocked_users(self.request.user)
             .filter(tags__name__in=[self.object.name])
             .distinct()

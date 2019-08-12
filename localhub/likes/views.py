@@ -1,21 +1,24 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Type
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 
-from localhub.activities.models import Activity
 from localhub.activities.views.streams import BaseStreamView
+from localhub.activities.types import ActivityType
 from localhub.comments.views import CommentListView
 
 
 class LikedStreamView(LoginRequiredMixin, BaseStreamView):
     template_name = "likes/activities.html"
 
-    def get_queryset_for_model(self, model: Type[Activity]) -> QuerySet:
-        return super().get_queryset_for_model(model).filter(has_liked=True)
+    def get_queryset_count_for_model(self, model: ActivityType) -> QuerySet:
+        return self.filter_queryset(
+            model.objects.with_has_liked(self.request.user)
+        ).only("pk")
+
+    def filter_queryset(self, queryset: QuerySet) -> QuerySet:
+        return super().filter_queryset(queryset).filter(has_liked=True)
 
 
 liked_stream_view = LikedStreamView.as_view()
