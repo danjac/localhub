@@ -12,6 +12,8 @@ from django.db import models
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
+from sorl.thumbnail import ImageField
+
 from model_utils import Choices
 from model_utils.models import TimeStampedModel
 
@@ -114,9 +116,17 @@ class Community(TimeStampedModel):
 
     name = models.CharField(max_length=255)
 
+    logo = ImageField(
+        upload_to="logo",
+        null=True,
+        blank=True,
+        help_text=_("Logo will be rendered in PNG format."),
+    )
+
     tagline = models.TextField(blank=True)
 
     description = MarkdownField(blank=True)
+
     terms = MarkdownField(
         blank=True,
         help_text=_(

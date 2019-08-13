@@ -4,6 +4,7 @@
 {% load static %}
 {% load i18n %}
 {% load rules %}
+{% load thumbnail %}
 {% load messageboard_tags %}
 {% load notifications_tags %}
 {% load users_tags %}
@@ -33,6 +34,13 @@
     <div class="container">
       <header class="navbar px-1 py-1 my-1">
         <section class="navbar-section">
+          {% thumbnail community.logo "40x40" format="PNG" as logo %}
+          <img src="{{ logo.url }}"
+               width="{{ logo.width }}"
+               height="{{ logo.height }}"
+               alt="{% trans 'Logo' %}"
+               class="mr-2">
+          {% endthumbnail %}
           <a class="navbar-brand mr-2" href="/">
             {{ community.name }}
           </a>
@@ -97,9 +105,9 @@
 
       <div class="columns p-1 bg-light">
         <p class="text-center mb-1 toast toast-primary d-hide"
-             data-controller="cookie-notice"
-             data-cookie-notice-name="accept-cookies"
-             data-cookie-notice-domain="{{ community.domain }}">
+           data-controller="cookie-notice"
+           data-cookie-notice-name="accept-cookies"
+           data-cookie-notice-domain="{{ community.domain }}">
           <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
           {% blocktrans %}
           This site uses cookies for authentication purposes only. We do not share your personal

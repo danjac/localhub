@@ -15,6 +15,7 @@
 <div class="divider"></div>
 
 <form method="POST"
+      enctype="multipart/form-data"
       action="{% url 'communities:community_update' %}"
       data-controller="form"
       data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload">

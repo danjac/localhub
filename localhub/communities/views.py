@@ -123,6 +123,7 @@ class CommunityUpdateView(
 ):
     fields = (
         "name",
+        "logo",
         "tagline",
         "description",
         "terms",
