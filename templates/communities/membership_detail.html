@@ -6,26 +6,27 @@
 {% load users_tags %}
 
 {% block content %}
+{% with member=object.member %}
 
-{% user_display object.member as display_name %}
+{% user_display member as display_name %}
 
 <ul class="breadcrumb">
   <li class="breadcrumb-item"><a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a></li>
   <li class="breadcrumb-item"><a href="#">{{ display_name }}</a></li>
 </ul>
 
-<h3>{% avatar object.member "avatar-lg" %}{{ display_name }}</h3>
+<h3>{% avatar member "avatar-lg" %}{{ display_name }}</h3>
 
 <div class="actions">
-  <a href="{% url 'users:activities' object.member.username %}">{% trans "Posts" %}</a>
-  <a href="{% url 'users:comments' object.member.username %}">{% trans "Comments" %}</a>
-  <a href="{% url 'users:detail' user_obj.username %}">{% trans "About" %}</a>
-  {% if object.member != user %}
+  <a href="{% url 'users:activities' member.username %}">{% trans "Posts" %}</a>
+  <a href="{% url 'users:comments' member.username %}">{% trans "Comments" %}</a>
+  <a href="{% url 'users:detail' member.username %}">{% trans "About" %}</a>
+  {% if member != user %}
   {% has_perm "communities.change_membership" user object as can_change %}
   {% has_perm "communities.delete_membership" user object as can_delete %}
   {% has_perm "messageboard.create_message" user community as can_create_message %}
   {% if can_create_message %}
-  <a href="{% url 'messageboard:message_create_pm' object.member.username %}">
+  <a href="{% url 'messageboard:message_create_pm' member.username %}">
     {% trans "Send Message" %}
   </a>
   {% endif %}
@@ -57,4 +58,5 @@
 
 </dl>
 
+{% endwith %}
 {% endblock content %}
