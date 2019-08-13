@@ -14,6 +14,12 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ("title", "url", "description", "allow_comments")
         labels = {"title": _("Title"), "url": _("Link")}
+        help_texts = {
+            "title": _(
+                "If you add a URL in the Link field below and leave the title "
+                "empty, we will try to fetch the title from the web page."
+            )
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
