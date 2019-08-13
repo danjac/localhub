@@ -4,24 +4,10 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load rules %}
-{% load thumbnail %}
 
 {% block content %}
 
-<h3 class="d-flex">
-    {% thumbnail community.logo "100" format="PNG" as logo %}
-    <div class="mr-2">
-    <img src="{{ logo.url }}"
-         width="{{ logo.width }}"
-         height="{{ logo.height }}"
-         alt="{% trans 'Logo' %}"
-         >
-    </div>
-    {% endthumbnail %}
-    <div class="">
-    {{ community.name }}
-    </div>
-</h3>
+<h3>{{ community.name }}</h3>
 
 <div class="actions">
     {% if community.terms %}
