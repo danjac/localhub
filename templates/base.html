@@ -32,18 +32,9 @@
 
   <body>
     <div class="container">
-      <header class="navbar px-1 py-1 my-1">
+      <header class="navbar p-1">
         <section class="navbar-section">
-          {% thumbnail community.logo "50x50" format="PNG" as logo %}
-          <img src="{{ logo.url }}"
-               width="{{ logo.width }}"
-               height="{{ logo.height }}"
-               alt="{% trans 'Logo' %}"
-               class="mr-2">
-          {% endthumbnail %}
-          <a class="navbar-brand mr-2" href="/">
-            {{ community.name }}
-          </a>
+          <a class="navbar-brand" href="/">{{ community.name }}</a>
         </section>
         {% block search_form %}
         {% if can_view_community %}
