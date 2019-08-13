@@ -34,7 +34,16 @@
     <div class="container">
       <header class="navbar p-1">
         <section class="navbar-section">
+          {% thumbnail community.logo "32" format="PNG" as logo %}
+          <a class="navbar-brand d-inline-flex align-center" href="/">
+            <img src="{{ logo.url }}"
+                 width="{{ logo.width }}"
+                 height="{{ logo.height }}"
+                 alt="{{ community.name }}">
+          </a>
+          {% empty %}
           <a class="navbar-brand" href="/">{{ community.name }}</a>
+          {% endthumbnail %}
         </section>
         {% block search_form %}
         {% if can_view_community %}
