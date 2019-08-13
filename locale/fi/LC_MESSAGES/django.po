@@ -956,7 +956,7 @@ msgid "Unlike"
 msgstr "En tykkää"
 
 #: templates/activities/includes/comments.html:7 templates/likes/base.html:20
-#: templates/users/base.html:63
+#: templates/users/user_detail_base.html:63
 msgid "Comments"
 msgstr "Kommentit"
 
@@ -1074,7 +1074,7 @@ msgstr "Omat Asetukset"
 #: templates/includes/default_sidebar.html:43
 #: templates/includes/default_sidebar.html:107 templates/likes/base.html:16
 #: templates/posts/post_form.html:7 templates/posts/post_list.html:4
-#: templates/users/base.html:59
+#: templates/users/user_detail_base.html:59
 msgid "Posts"
 msgstr "Postaukset"
 
@@ -1226,12 +1226,12 @@ msgstr ""
 msgid "Nothing has been posted yet"
 msgstr ""
 
-#: templates/activities/tag_detail.html:22 templates/users/base.html:45
+#: templates/activities/tag_detail.html:22 templates/users/user_detail_base.html:45
 #: templates/users/user_list.html:55
 msgid "Unfollow"
 msgstr "Lopeta seuraamista"
 
-#: templates/activities/tag_detail.html:29 templates/users/base.html:37
+#: templates/activities/tag_detail.html:29 templates/users/user_detail_base.html:37
 #: templates/users/user_list.html:63
 msgid "Follow"
 msgstr "Seuraa"
@@ -1852,7 +1852,7 @@ msgstr "Lähitetty"
 msgid "Recipients"
 msgstr "Saavat"
 
-#: templates/messageboard/message_form.html:7 templates/users/base.html:28
+#: templates/messageboard/message_form.html:7 templates/users/user_detail_base.html:28
 #: templates/users/user_list.html:69
 msgid "Send Message"
 msgstr "Lähetä Viesti"
@@ -2174,7 +2174,7 @@ msgstr ""
 msgid "This user hasn't posted anything yet"
 msgstr ""
 
-#: templates/users/base.html:67
+#: templates/users/user_detail_base.html:67
 msgid "About"
 msgstr "Yksityiskohdat"
 

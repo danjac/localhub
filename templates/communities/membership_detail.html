@@ -19,6 +19,7 @@
 <div class="actions">
   <a href="{% url 'users:activities' object.member.username %}">{% trans "Posts" %}</a>
   <a href="{% url 'users:comments' object.member.username %}">{% trans "Comments" %}</a>
+  <a href="{% url 'users:detail' user_obj.username %}">{% trans "About" %}</a>
   {% if object.member != user %}
   {% has_perm "communities.change_membership" user object as can_change %}
   {% has_perm "communities.delete_membership" user object as can_delete %}
@@ -55,12 +56,3 @@
   <dd>{{ object.created|date:"SHORT_DATE_FORMAT" }}</dd>
 
 </dl>
-
-{% if object.member.bio %}
-<div class="divider"></div>
-<h5>{% trans "About" %}</h5>
-<div class="markdown-content">
-  {{ object.member.bio.markdown }}
-</div>
-{% endif %}
-{% endblock %}
