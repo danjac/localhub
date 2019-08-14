@@ -38,13 +38,13 @@ NOTIFICATION_SUBJECTS = {
     "mention": _("Someone has mentioned you in their %(activity)s"),
     "moderator_edit": _("A moderator has edited your %(activity)s"),
     "moderator_review_request": _(
-        "Someone has created a new %(activity)s to review"
+        "Someone has submitted a new %(activity)s to review"
     ),
     "new_followed_user_post": _(
-        "Someone you are following has created a new %(activity)s"
+        "Someone you are following has submitted a new %(activity)s"
     ),
     "new_followed_user_tag": _(
-        "Someone has created a new %(activity)s containing "
+        "Someone has submitted a new %(activity)s containing "
         "tags you are following"
     ),
     "reshare": _("Someone has reshared your %(activity)s"),

@@ -35,7 +35,7 @@ msgstr ""
 
 #: localhub/activities/emails.py:46
 #, python-format
-msgid "Someone you are following has created a new %s"
+msgid "Someone you are following has submitted a new %s"
 msgstr ""
 
 #: localhub/activities/emails.py:47
@@ -50,12 +50,12 @@ msgstr ""
 
 #: localhub/activities/emails.py:49
 #, python-format
-msgid "Someone has created a new %s to review"
+msgid "Someone has submitted a new %s to review"
 msgstr ""
 
 #: localhub/activities/emails.py:50
 #, python-format
-msgid "Someone has created a new %s containing tags you are following"
+msgid "Someone has submitted a new %s containing tags you are following"
 msgstr ""
 
 #: localhub/activities/models.py:162
@@ -837,7 +837,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"%(actor)s has created a new <a href=\"%(object_url)s\">%(activity_name)s</"
+"%(actor)s has submitted a new <a href=\"%(object_url)s\">%(activity_name)s</"
 "a>.\n"
 msgstr ""
 
@@ -867,7 +867,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"%(actor)s has created a new <a href=\"%(object_url)s\">%(activity_name)s</a> "
+"%(actor)s has submitted a new <a href=\"%(object_url)s\">%(activity_name)s</a> "
 "containing tags you are following.\n"
 msgstr ""
 
@@ -882,7 +882,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"%(actor)s has created a new %(activity_name)s.\n"
+"%(actor)s has submitted a new %(activity_name)s.\n"
 msgstr ""
 
 #: templates/activities/emails/notification.txt:18
@@ -917,7 +917,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"%(actor)s has created a new %(activity_name)s containing tags you are "
+"%(actor)s has submitted a new %(activity_name)s containing tags you are "
 "following.\n"
 msgstr ""
 
@@ -1022,7 +1022,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"%(actor)s has created a new <a href=\"%(activity_url)s\">%(activity_name)s</"
+"%(actor)s has submitted a new <a href=\"%(activity_url)s\">%(activity_name)s</"
 "a>\n"
 msgstr ""
 
@@ -1053,7 +1053,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"%(actor)s has created a new <a href=\"%(activity_url)s\">%(activity_name)s</"
+"%(actor)s has submitted a new <a href=\"%(activity_url)s\">%(activity_name)s</"
 "a> containing tags you are following\n"
 msgstr ""
 
