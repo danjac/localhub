@@ -1,15 +1,7 @@
-.btn-warning {
-  @include button-variant($warning-color);
-}
-
-.btn-outline-warning {
-  @include button-outline-variant($warning-color);
-}
-
-.bg-light {
-  background-color: $light-color;
-}
-
-.align-center {
-  align-items: center;
+@mixin table-responsive-mixin() {
+  // copied from table scroll, as we can't extend inside @media.
+  display: block;
+  overflow-x: auto;
+  padding-bottom: 0.75rem;
+  white-space: nowrap;
 }
