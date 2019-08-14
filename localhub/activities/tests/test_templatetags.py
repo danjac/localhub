@@ -8,12 +8,37 @@ from django.contrib.auth.models import AnonymousUser
 from localhub.activities.templatetags.activities_tags import (
     domain,
     is_content_sensitive,
+    url_to_img,
 )
 from localhub.communities.tests.factories import CommunityFactory
 from localhub.posts.tests.factories import PostFactory
 from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
+
+
+class TestUrlToImg:
+    def test_if_image(self):
+        url = "http://somedomain.org/test.jpg"
+        assert url_to_img(url) == (
+            '<a href="http://somedomain.org/test.jpg" rel="nofollow"'
+            '><img src="http://somedomain.org/test.jpg" '
+            'alt="somedomain.org"></a>'
+        )
+
+    def test_if_image_no_link(self):
+        url = "http://somedomain.org/test.jpg"
+        assert url_to_img(url, False) == (
+            '<img src="http://somedomain.org/test.jpg" alt="somedomain.org">'
+        )
+
+    def test_if_not_image(self):
+        url = "http://somedomain.org/"
+        assert url_to_img(url) == url
+
+    def test_if_not_url(self):
+        text = "<div></div>"
+        assert url_to_img(text) == "<div></div>"
 
 
 class TestIsContentSensitive:

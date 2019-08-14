@@ -12,7 +12,7 @@
 </div>
 {% else %}
 <div data-controller="oembed" class="wordwrap">
-  {{ object.url|oembed_no_urlize|domain }}
+  {{ object.url|oembed_no_urlize|url_to_img|domain }}
 </div>
 {% endif %}
 {% endif %}

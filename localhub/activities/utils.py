@@ -12,17 +12,25 @@ from django.core.validators import URLValidator
 _urlvalidator = URLValidator()
 
 
+def is_url(url: Optional[str]) -> bool:
+
+    if url is None:
+        return False
+    try:
+        _urlvalidator(url)
+    except ValidationError:
+        return False
+    return True
+
+
 def get_domain(url: Optional[str]) -> Optional[str]:
     """
     Returns the domain of a URL. Removes any "www." at the start.
     Returns None if invalid.
     """
-    if url is None:
+    if not is_url(url):
         return None
-    try:
-        _urlvalidator(url)
-    except ValidationError:
-        return None
+
     domain = urlparse(url).netloc
     if domain.startswith("www."):
         domain = domain[4:]
