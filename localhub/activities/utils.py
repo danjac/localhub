@@ -28,7 +28,8 @@ def get_domain(url: Optional[str]) -> Optional[str]:
     Returns the domain of a URL. Removes any "www." at the start.
     Returns None if invalid.
     """
-    if not is_url(url):
+
+    if url is None or not is_url(url):
         return None
 
     domain = urlparse(url).netloc

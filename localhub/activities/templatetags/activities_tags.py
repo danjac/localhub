@@ -34,7 +34,7 @@ def url_to_img(url: Optional[str], linkify: bool = True) -> Optional[str]:
     Given a URL, tries to render the <img> tag. Returns URL unparsed
     if not an image.
     """
-    if not is_url:
+    if url is None or not is_url(url):
         return url
     mimetype, _ = mimetypes.guess_type(urlparse(url).path)
     if mimetype in IMAGE_TYPES:
