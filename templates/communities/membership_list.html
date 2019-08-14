@@ -10,7 +10,6 @@
 {% block content %}
 <h3>{% trans "Members" %}</h3>
 
-
 <div class="actions">
   <a href="{% url 'invites:list' %}">{% trans "Invite New Members" %}</a>
   <a href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
@@ -30,6 +29,7 @@
 
 {% include "includes/search_form.html" %}
 
+{% if object_list %}
 <table class="table table-striped table-hover table-responsive-sm">
   <thead>
     <tr>
@@ -79,6 +79,8 @@
     {% endfor %}
   </tbody>
 </table>
-
 {% include "includes/pagination.html" %}
+{% else %}
+{% include "includes/empty.html" %}
+{% endif %}
 {% endblock content %}
