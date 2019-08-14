@@ -164,8 +164,9 @@ export default class extends Controller {
         selection +
         remainder +
         ' ' +
-        tokens.slice(1).join(' ');
-      this.inputTarget.selectionEnd = index + selection.length + 1;
+        tokens.slice(1).join(' ') +
+        ' ';
+      this.inputTarget.selectionEnd = index + selection.length + 2;
     }
     this.closeSelector();
   }
