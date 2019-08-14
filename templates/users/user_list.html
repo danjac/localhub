@@ -48,24 +48,27 @@
       {% if is_member %}
       <td>
         {% if user != user_obj %}
-        <div class="actions actions-sm float-right">
+        <div class="actions actions-sm float-right" data-controller="toggle">
           {% has_perm "users.follow_user" user user_obj as can_follow_user %}
           {% if can_follow_user %}
-          {% if user_obj.is_following %}
           <a href="{% url 'users:unfollow' user_obj.username %}"
+             {% if not user_obj.is_following %}class="d-hide"{% endif %}
              data-controller="ajax"
-             data-ajax-redirect="{{ request.path }}"
-             data-action="ajax#post">
+             data-ajax-redirect="none"
+             data-target="toggle.togglable"
+             data-toggle-target="follow"
+             data-action="ajax#post toggle#toggle">
             {% trans "Unfollow" %}
           </a>
-          {% else %}
           <a href="{% url 'users:follow' user_obj.username %}"
+             {% if user_obj.is_following %}class="d-hide"{% endif %}
              data-controller="ajax"
-             data-ajax-redirect="{{ request.path }}"
-             data-action="ajax#post">
+             data-ajax-redirect="none"
+             data-target="toggle.togglable"
+             data-toggle-target="follow"
+             data-action="ajax#post toggle#toggle">
             {% trans "Follow" %}
           </a>
-          {% endif %}
           {% endif %}
           {% if can_create_message %}
           <a href="{% url 'messageboard:message_create_pm' user_obj.username %}">

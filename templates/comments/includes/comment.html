@@ -36,22 +36,25 @@
     {% endif %}
 
     {% has_perm "comments.like_comment" user comment as can_like_comment %}
-    <div class="actions actions-sm">
+    <div class="actions actions-sm" data-controller="toggle">
       <a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a>
       {% if can_like_comment %}
-      <a {% if comment.has_liked %} class="d-hide"{% endif %}
-                                    id="comment-like-btn-{{ comment.id }}"
-                                    href="{% url 'comments:like' comment.id %}"
+
+      <a href="{% url 'comments:like' comment.id %}"
+         {% if comment.has_liked %} class="d-hide"{% endif %}
                                     data-controller="ajax"
-                                    data-action="ajax#post"
-                                    data-ajax-toggle="#comment-dislike-btn-{{ comment.id }}"
+                                    data-target="toggle.togglable"
+                                    data-toggle-target="like"
+                                    data-ajax-redirect="none"
+                                    data-action="ajax#post toggle#toggle"
                                     >{% trans "Like" %}</a>
-      <a {% if not comment.has_liked %} class="d-hide"{% endif %}
-                                        id="comment-dislike-btn-{{ comment.id }}"
-                                        href="{% url 'comments:dislike' comment.id %}"
+      <a href="{% url 'comments:dislike' comment.id %}"
+         {% if not comment.has_liked %} class="d-hide"{% endif %}
                                         data-controller="ajax"
-                                        data-action="ajax#post"
-                                        data-ajax-toggle="#comment-like-btn-{{ comment.id }}"
+                                        data-target="toggle.togglable"
+                                        data-toggle-target="like"
+                                        data-ajax-redirect="none"
+                                        data-action="ajax#post toggle#toggle"
                                         >{% trans "Unlike" %}</a>
       {% endif %}
 

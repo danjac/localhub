@@ -42,7 +42,7 @@ You have been a member for <b>{{ created }}</b>.
 {% has_perm "users.change_user" user user_obj as can_change_user %}
 {% has_perm "communities.view_membership" user membership as can_view_membership %}
 
-<div class="actions">
+<div class="actions" data-controller="toggle">
 
   {% if can_change_user %}
   <a href="{% url 'user_update' %}">
@@ -50,40 +50,50 @@ You have been a member for <b>{{ created }}</b>.
   </a>
   {% endif %}
 
-  {% if can_block_user %}
-  {% if user_obj in user.blocked.all %}
-  <a href="{% url 'users:unblock' user_obj.username %}"
-     data-controller="ajax"
-     data-action="ajax#post"
-     data-ajax-redirect="{{ request.path }}">
-    {% trans "Unblock" %}
-  </a>
-  {% else %}
-  <a href="{% url 'users:block' user_obj.username %}"
-     data-controller="ajax"
-     data-action="ajax#post"
-     data-ajax-redirect="{{ request.path }}">
-    {% trans "Block" %}
-  </a>
-  {% endif %}
-  {% endif %}
-
   {% if can_follow_user %}
-  {% if user_obj in user.following.all %}
+  {% with following=user.following.all %}
   <a href="{% url 'users:unfollow' user_obj.username %}"
+     {% if user_obj not in following %}class="d-hide"{% endif %}
      data-controller="ajax"
-     data-action="ajax#post"
-     data-ajax-redirect="{{ request.path }}">
+     data-action="ajax#post toggle#toggle"
+     data-target="toggle.togglable"
+     data-toggle-target="follow"
+     data-ajax-redirect="none">
     {% trans "Unfollow" %}
   </a>
-  {% else %}
   <a href="{% url 'users:follow' user_obj.username %}"
+     {% if user_obj in following %}class="d-hide"{% endif %}
      data-controller="ajax"
-     data-action="ajax#post"
-     data-ajax-redirect="{{ request.path }}">
+     data-action="ajax#post toggle#toggle"
+     data-target="toggle.togglable"
+     data-toggle-target="follow"
+     data-ajax-redirect="none">
     {% trans "Follow" %}
   </a>
+  {% endwith %}
   {% endif %}
+
+  {% if can_block_user %}
+  {% with blocked=user.blocked.all %}
+  <a href="{% url 'users:unblock' user_obj.username %}"
+     {% if user_obj not in blocked %}class="d-hide"{% endif %}
+     data-controller="ajax"
+     data-action="ajax#post toggle#toggle"
+     data-target="toggle.togglable"
+     data-toggle-target="block"
+     data-ajax-redirect="none">
+    {% trans "Unblock" %}
+  </a>
+  <a href="{% url 'users:block' user_obj.username %}"
+     {% if user_obj in blocked %}class="d-hide"{% endif %}
+     data-controller="ajax"
+     data-action="ajax#post toggle#toggle"
+     data-target="toggle.togglable"
+     data-toggle-target="block"
+     data-ajax-redirect="none">
+    {% trans "Block" %}
+  </a>
+  {% endwith %}
   {% endif %}
 
   {% if not is_auth_user %}

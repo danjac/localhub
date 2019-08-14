@@ -129,7 +129,7 @@
         {% endblocktrans %}
       </div>
       {% endif %}
-      <div class="actions actions-sm">
+      <div class="actions actions-sm" data-controller="toggle">
         {% if is_detail %}
         <a href="{{ object.get_permalink }}">{% trans "Permalink" %}</a>
         {% else %}
@@ -160,17 +160,19 @@
         {% if can_like %}
         <a href="{{ object.get_like_url }}"
            {% if object.has_liked %} class="d-hide"{% endif %}
-                                     id="{{ object_type }}-like-btn-{{ object.id }}"
                                      data-controller="ajax"
-                                     data-action="ajax#post"
-                                     data-ajax-toggle="#{{ object_type }}-dislike-btn-{{ object.id }}"
+                                     data-target="toggle.togglable"
+                                     data-toggle-target="like"
+                                     data-ajax-redirect="none"
+                                     data-action="ajax#post toggle#toggle"
                                      >{% trans "Like" %}</a>
         <a href="{{ object.get_dislike_url }}"
            {% if not object.has_liked %} class="d-hide"{% endif %}
-                                         id="{{ object_type }}-dislike-btn-{{ object.id }}"
                                          data-controller="ajax"
-                                         data-action="ajax#post"
-                                         data-ajax-toggle="#{{ object_type }}-like-btn-{{ object.id }}"
+                                         data-target="toggle.togglable"
+                                         data-toggle-target="like"
+                                         data-ajax-redirect="none"
+                                         data-action="ajax#post toggle#toggle"
                                          >{% trans "Unlike" %}</a>
         {% endif %}
 

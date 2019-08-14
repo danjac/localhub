@@ -4,9 +4,7 @@
 {% load i18n %}
 {% load account %}
 
-{% block notification_title %}
 {% user_display notification.actor as actor %}
 {% with comment_url=comment.get_absolute_url %}
 {% include "comments/includes/notifications/"|add:notification.verb|add:".html" %}
 {% endwith %}
-{% endblock notification_title %}

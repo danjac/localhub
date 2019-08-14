@@ -30,10 +30,15 @@ export default class extends Controller {
   send(method, event) {
     event.preventDefault();
 
-    const referrer = location.href;
-    const url = this.data.get('url') || this.element.getAttribute('href');
+    // anchor doesn't have disabled attr, we'll simulate here
+    if (this.element.hasAttribute('disabled')) {
+      return;
+    }
 
-    this.element.setAttribute('disabled', true);
+    this.element.setAttribute('disabled', 'disabled');
+
+    const referrer = location.href;
+    const url = this.element.getAttribute('href');
 
     axios({
       headers: {
@@ -43,21 +48,13 @@ export default class extends Controller {
       url
     })
       .then(response => {
-
-        const toggle = this.data.get('toggle');
         const redirect = this.data.get('redirect');
+        if (redirect === 'none') {
+          this.element.removeAttribute('disabled');
+          return;
+        }
 
-        if (toggle !== null) {
-          this.element.classList.toggle('d-hide');
-          this.element.removeAttribute('disabled');
-          const target = toggle && document.querySelector(toggle);
-          if (target) {
-            target.classList.toggle('d-hide');
-          }
-        } else if (this.data.has('replace')) {
-          this.element.innerHTML = response.data;
-          this.element.removeAttribute('disabled');
-        } else if (redirect) {
+        if (redirect) {
           Turbolinks.visit(redirect);
         } else if (response.headers['content-type'].match(/javascript/)) {
           /* eslint-disable-next-line no-eval */

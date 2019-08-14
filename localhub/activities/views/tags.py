@@ -6,7 +6,6 @@ import operator
 
 from functools import reduce
 
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import (
@@ -20,7 +19,6 @@ from django.db.models import (
 )
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView, View
 from django.views.generic.detail import SingleObjectMixin
 
@@ -150,7 +148,6 @@ class TagFollowView(
         self.object = self.get_object()
         self.request.user.following_tags.add(self.object)
 
-        messages.success(self.request, _("You are now following this tag"))
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -164,9 +161,6 @@ class TagUnfollowView(LoginRequiredMixin, SingleTagView):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         self.request.user.following_tags.remove(self.object)
-        messages.success(
-            self.request, _("You are no longer following this tag")
-        )
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -185,14 +179,6 @@ class TagBlockView(LoginRequiredMixin, PermissionRequiredMixin, SingleTagView):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         self.request.user.blocked_tags.add(self.object)
-
-        messages.success(
-            self.request,
-            _(
-                "You are now blocking this tag. Posts containing this tag "
-                "will be removed from your home page and other feeds."
-            ),
-        )
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -206,7 +192,6 @@ class TagUnblockView(LoginRequiredMixin, SingleTagView):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         self.request.user.blocked_tags.remove(self.object)
-        messages.success(self.request, _("You have stopped blocking this tag"))
         return HttpResponseRedirect(self.get_success_url())
 
 

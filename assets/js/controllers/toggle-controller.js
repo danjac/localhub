@@ -8,6 +8,12 @@ export default class extends Controller {
 
   toggle(event) {
     event.preventDefault();
-    this.togglableTargets.forEach(el => el.classList.toggle('d-hide'));
+
+    const targetAttr = `data-${this.data.identifier}-target`;
+    const target = event.currentTarget.getAttribute(targetAttr);
+
+    this.togglableTargets
+      .filter(el => el.getAttribute(targetAttr) === target)
+      .forEach(el => el.classList.toggle('d-hide'));
   }
 }

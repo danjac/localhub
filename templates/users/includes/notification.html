@@ -4,7 +4,6 @@
 {% load i18n %}
 {% load account %}
 
-{% block notification_title %}
 {% user_display notification.actor as actor %}
 {% with actor_url=notification.actor.get_absolute_url %}
 {% if notification.verb == 'new_follower' %}
@@ -13,4 +12,3 @@
 {% endblocktrans %}
 {% endif %}
 {% endwith %}
-{% endblock notification_title %}

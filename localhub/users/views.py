@@ -7,7 +7,6 @@ from typing import Optional
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import BooleanField, Q, QuerySet, Value
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
@@ -130,7 +129,6 @@ class UserFollowView(
         ):
             send_user_notification_email(self.request.user, notification)
 
-        messages.success(self.request, _("You are now following this user"))
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -144,9 +142,6 @@ class UserUnfollowView(LoginRequiredMixin, SingleUserView):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         self.request.user.following.remove(self.object)
-        messages.success(
-            self.request, _("You have stopped following this user")
-        )
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -165,7 +160,6 @@ class UserBlockView(
         self.object = self.get_object()
 
         self.request.user.blocked.add(self.object)
-        messages.success(self.request, _("You are now blocking this user"))
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -179,9 +173,6 @@ class UserUnblockView(LoginRequiredMixin, SingleUserView):
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
         self.request.user.blocked.remove(self.object)
-        messages.success(
-            self.request, _("You have stopped blocking this user")
-        )
         return HttpResponseRedirect(self.get_success_url())
 
 
