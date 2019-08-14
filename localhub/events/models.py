@@ -41,6 +41,7 @@ class Event(Activity):
 
     RESHARED_FIELDS = LOCATION_FIELDS + (
         "title",
+        "description",
         "url",
         "starts",
         "ends",

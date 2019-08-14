@@ -30,6 +30,7 @@ class Photo(Activity):
 
     RESHARED_FIELDS = (
         "title",
+        "description",
         "image",
         "artist",
         "original_url",
