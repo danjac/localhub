@@ -71,6 +71,8 @@ class TestJoinRequestAcceptView:
     def test_post_if_user(
         self, client: Client, mailoutbox: List, admin: Membership
     ):
+        admin.member.email_preferences = ["new_member"]
+        admin.member.save()
         join_request = JoinRequestFactory(community=admin.community)
         response = client.post(
             reverse("join_requests:accept", args=[join_request.id])
@@ -83,6 +85,8 @@ class TestJoinRequestAcceptView:
         ).exists()
         mail = mailoutbox[0]
         assert mail.to == [join_request.sender.email]
+        other_member_mail = mailoutbox[1]
+        assert other_member_mail.to == [admin.member.email]
 
 
 class TestJoinRequestRejectView:

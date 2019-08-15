@@ -7,8 +7,10 @@ from django.test.client import Client
 from django.urls import reverse
 
 from localhub.communities.models import Community, Membership
+from localhub.communities.tests.factories import MembershipFactory
 from localhub.invites.models import Invite
 from localhub.invites.tests.factories import InviteFactory
+from localhub.notifications.models import Notification
 from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
@@ -112,8 +114,14 @@ class TestInviteAcceptView:
         client: Client,
         community: Community,
         login_user: settings.AUTH_USER_MODEL,
+        mailoutbox: List,
     ):
-        invite = InviteFactory(community=community, email=login_user.email)
+        sender = MembershipFactory(community=community).member
+        sender.email_preferences = ["new_member"]
+        sender.save()
+        invite = InviteFactory(
+            community=community, email=login_user.email, sender=sender
+        )
         response = client.get(reverse("invites:accept", args=[invite.id]))
         assert response.url == settings.HOME_PAGE_URL
         assert Membership.objects.filter(
@@ -121,6 +129,9 @@ class TestInviteAcceptView:
         ).exists()
         invite.refresh_from_db()
         assert invite.is_accepted()
+        assert Notification.objects.filter(recipient=sender).exists()
+        assert len(mailoutbox) == 1
+        assert mailoutbox[0].to == [sender.email]
 
     def test_invalid_invite(
         self,

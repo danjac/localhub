@@ -10,5 +10,9 @@
 {% blocktrans %}
 <a href="{{ actor_url }}">{{ actor }}</a> is now following you.
 {% endblocktrans %}
+{% elif notification.verb == 'new_member' %}
+{% blocktrans %}
+<a href="{{ actor_url }}">{{ actor }}</a> has joined this community.
+{% endblocktrans %}
 {% endif %}
 {% endwith %}

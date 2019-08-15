@@ -25,6 +25,7 @@ from localhub.join_requests.emails import (
 )
 from localhub.join_requests.forms import JoinRequestForm
 from localhub.join_requests.models import JoinRequest
+from localhub.users.emails import send_user_notification_email
 
 
 class JoinRequestQuerySetMixin(CommunityRequiredMixin):
@@ -127,6 +128,8 @@ class JoinRequestAcceptView(JoinRequestActionView):
             if created:
                 send_acceptance_email(self.object)
                 messages.success(request, _("Join request has been accepted"))
+                for notification in user.notify_on_join(self.object.community):
+                    send_user_notification_email(user, notification)
 
             else:
                 messages.error(

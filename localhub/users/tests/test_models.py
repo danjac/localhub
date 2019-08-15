@@ -184,6 +184,16 @@ class TestUserModel:
             == 0
         )
 
+    def test_notify_on_join(self, member: Membership):
+        other_member = MembershipFactory(community=member.community).member
+        notifications = member.member.notify_on_join(member.community)
+        assert len(notifications) == 1
+        assert notifications[0].recipient == other_member
+        assert notifications[0].content_object == member.member
+        assert notifications[0].actor == member.member
+        assert notifications[0].community == member.community
+        assert notifications[0].verb == "new_member"
+
     def test_notify_on_follow(self, member: Membership):
         follower = MembershipFactory(community=member.community).member
         notifications = follower.notify_on_follow(

@@ -141,6 +141,7 @@ class User(AbstractUser):
     EMAIL_PREFERENCES = Choices(
         ("new_message", _("I receive a direct message")),
         ("new_follower", _("Someone starts following me")),
+        ("new_member", _("Someone joins a community I belong to")),
         ("new_comment", _("Someone comments on my post")),
         ("reshare", _("Someone has reshared my post")),
         ("mention", _("I am @mentioned in a post or comment")),
@@ -274,6 +275,20 @@ class User(AbstractUser):
             )
         )
 
+    def notify_on_join(self, community: Community) -> List[Notification]:
+        notifications = [
+            Notification(
+                content_object=self,
+                actor=self,
+                recipient=member,
+                community=community,
+                verb="new_member",
+            )
+            for member in community.members.exclude(pk=self.pk)
+        ]
+        Notification.objects.bulk_create(notifications)
+        return notifications
+
     def notify_on_follow(
         self, recipient: settings.AUTH_USER_MODEL, community: Community
     ) -> List[Notification]:
@@ -284,8 +299,8 @@ class User(AbstractUser):
         notifications = [
             Notification.objects.create(
                 content_object=self,
-                recipient=recipient,
                 actor=self,
+                recipient=recipient,
                 community=community,
                 verb="new_follower",
             )

@@ -10,7 +10,8 @@ from localhub.notifications.models import Notification
 
 
 NOTIFICATION_SUBJECTS = {
-    "new_follower": _("Someone has started following you")
+    "new_follower": _("Someone has started following you"),
+    "new_member": _("Someone has just joined this community"),
 }
 
 
@@ -18,7 +19,7 @@ def send_user_notification_email(
     user: settings.AUTH_USER_MODEL, notification: Notification
 ):
 
-    if notification.recipient.has_email_pref("new_follower"):
+    if notification.recipient.has_email_pref(notification.verb):
         with override(notification.recipient.language):
             send_notification_email(
                 notification,

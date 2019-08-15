@@ -10,6 +10,8 @@
 {% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
 {% if notification.verb == 'new_follower' %}
 {{ actor }} is now following you.
+{% elif notification.verb == 'new_member' %}
+{{ actor }} has joined this community.
 {% endif %}
 Link to user: {{ object_url }}
 {% endautoescape %}
