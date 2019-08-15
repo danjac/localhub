@@ -22,7 +22,8 @@ def send_join_request_email(join_request: JoinRequest):
         with override(admin.language):
 
             send_mail(
-                _("A request has been received"),
+                _("%s | Someone has requested to join this community")
+                % join_request.community.name,
                 render_to_string(
                     "join_requests/emails/join_request.txt", context
                 ),
