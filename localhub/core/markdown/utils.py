@@ -93,7 +93,7 @@ def extract_hashtags(content: str) -> Set[str]:
     """
     return set(
         [
-            hashtag
+            hashtag.lower()
             for token in content.split(" ")
             for hashtag in HASHTAGS_RE.findall(token)
         ]
@@ -109,7 +109,7 @@ def linkify_hashtags(content: str) -> str:
     for token in tokens:
 
         for tag in HASHTAGS_RE.findall(token):
-            url = reverse("activities:tag_detail", args=[tag])
+            url = reverse("activities:tag_detail", args=[tag.lower()])
             token = token.replace("#" + tag, f'<a href="{url}">#{tag}</a>')
 
         rv.append(token)
