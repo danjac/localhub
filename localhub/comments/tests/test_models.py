@@ -136,24 +136,27 @@ class TestCommentModel:
         post_owner = UserFactory(username="post_owner")
         moderator = UserFactory()
 
-        Membership.objects.create(
+        MembershipFactory(
             member=comment_owner,
             community=community,
             role=Membership.ROLES.moderator,
         )
 
-        Membership.objects.create(
+        MembershipFactory(
             member=moderator,
             community=community,
             role=Membership.ROLES.moderator,
         )
         mentioned = UserFactory(username="danjac")
 
-        Membership.objects.create(
-            member=mentioned, community=community, role=Membership.ROLES.member
-        )
+        MembershipFactory(member=mentioned, community=community)
 
         post = PostFactory(owner=post_owner, community=community)
+
+        other_comment = CommentFactory(
+            owner=MembershipFactory(community=community).member,
+            content_object=post,
+        )
 
         comment = CommentFactory(
             owner=comment_owner,
@@ -162,9 +165,12 @@ class TestCommentModel:
             content="hello @danjac",
         )
 
+        follower = MembershipFactory(community=community).member
+        follower.following.add(comment.owner)
+
         notifications = comment.notify(created=True)
 
-        assert len(notifications) == 3
+        assert len(notifications) == 5
 
         assert notifications[0].recipient == mentioned
         assert notifications[0].actor == comment.owner
@@ -177,6 +183,14 @@ class TestCommentModel:
         assert notifications[2].recipient == post.owner
         assert notifications[2].actor == comment.owner
         assert notifications[2].verb == "new_comment"
+
+        assert notifications[3].recipient == other_comment.owner
+        assert notifications[3].actor == comment.owner
+        assert notifications[3].verb == "new_sibling_comment"
+
+        assert notifications[4].recipient == follower
+        assert notifications[4].actor == comment.owner
+        assert notifications[4].verb == "new_followed_user_comment"
 
         # edit by moderator
         comment.editor = moderator

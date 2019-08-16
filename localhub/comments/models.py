@@ -192,12 +192,11 @@ class Comment(TimeStampedModel):
         Creates user notifications:
 
         - anyone @mentioned in the changed content field
-        - anyone subscribed to the comment owner (on create only)
+        - anyone following the comment owner (on create only)
         - the owner of the parent object
+        - anyone who has commented on the parent object (except for
+          parent owner)
         - all community moderators
-
-        Note that the comment owner themselves should never be
-        notified of their own comment.
         """
         notifications: List[Notification] = []
         recipients = self.community.members.exclude(blocked=self.owner)
@@ -234,5 +233,26 @@ class Comment(TimeStampedModel):
                     "new_comment", self.content_object.owner
                 )
             )
+        if created:
+            # notify anyone who has commented on this post, excluding
+            # this comment owner and parent owner
+            other_commentors = (
+                recipients.filter(
+                    comment__in=self.content_object.get_comments()
+                )
+                .exclude(pk__in=(self.owner_id, self.content_object.owner_id))
+                .distinct()
+            )
+            notifications += [
+                self.make_notification("new_sibling_comment", commentor)
+                for commentor in other_commentors
+            ]
+            notifications += [
+                self.make_notification("new_followed_user_comment", follower)
+                for follower in recipients.filter(
+                    following=self.owner
+                ).distinct()
+            ]
+
         Notification.objects.bulk_create(notifications)
         return notifications

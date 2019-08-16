@@ -20,7 +20,13 @@ NOTIFICATION_SUBJECTS = {
     "moderator_review_request": _(
         "Someone has posted or updated a comment to review"
     ),
-    "new_comment": _("Someone has made a comment on one of your posts"),
+    "new_comment": _("Someone has submitted a comment on one of your posts"),
+    "new_sibling_comment": _(
+        "Someone has made a comment on a post you've commented on"
+    ),
+    "new_followed_user_comment": _(
+        "Someone you are following has submitted a new comment"
+    ),
 }
 
 

@@ -134,30 +134,56 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
 
     HOME_PAGE_FILTERS = Choices(
-        ("users", _("Posts from people I'm following")),
-        ("tags", _("Posts containing tags I'm following")),
+        ("users", _("Posts, events and photots from people I'm following")),
+        ("tags", _("Posts, events and photos containing tags I'm following")),
     )
 
     EMAIL_PREFERENCES = Choices(
         ("new_message", _("I receive a direct message")),
         ("new_follower", _("Someone starts following me")),
         ("new_member", _("Someone joins a community I belong to")),
-        ("new_comment", _("Someone comments on my post")),
-        ("reshare", _("Someone has reshared my post")),
-        ("mention", _("I am @mentioned in a post or comment")),
-        ("moderator_delete", _("A moderator deletes my post or comment")),
-        ("moderator_edit", _("A moderator edits my post or comment")),
-        ("like", _("Someone likes my post or comment")),
-        ("new_followed_user_post", _("Someone I'm following creates a post")),
+        ("new_comment", _("Someone comments on my post, event or photo")),
+        (
+            "new_sibling_comment",
+            _(
+                "Someone comments on a post, event or photo I've also commented on" # noqa
+            ),
+        ),
+        ("reshare", _("Someone has reshared my post, event or photo")),
+        ("mention", _("I am @mentioned in a post, event, photo or comment")),
+        (
+            "moderator_delete",
+            _("A moderator deletes my post, event, photo or comment"),
+        ),
+        (
+            "moderator_edit",
+            _("A moderator edits my post, event, photo or comment"),
+        ),
+        ("like", _("Someone likes my post, event, photo or comment")),
+        (
+            "new_followed_user_post",
+            _("Someone I'm following submits a post, event or photo"),
+        ),
+        (
+            "new_followed_user_comment",
+            _("Someone I'm following submits a comment"),
+        ),
         (
             "new_followed_tag_post",
-            _("A post is created containing tags I'm following"),
+            _(
+                "A post, event or photo is submitted containing tags I'm following"  # noqa
+            ),
         ),
-        ("flag", _("A user has flagged a comment or post (moderators only)")),
+        (
+            "flag",
+            _(
+                "A user has flagged a comment, post, event or photo (moderators only)"  # noqa
+            ),
+        ),
         (
             "moderator_review_request",
             _(
-                "A user has a new comment or post for you to "
+                "A user has a new comment, post, event or photo for you to "
                 "review (moderators only)"
             ),
         ),
