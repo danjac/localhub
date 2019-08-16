@@ -3,7 +3,7 @@
 
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from django.utils.translation import override
+from django.utils.translation import override, gettext as _
 
 from localhub.messageboard.models import MessageRecipient
 
@@ -16,7 +16,8 @@ def send_message_email(recipient: MessageRecipient):
             context = {"recipient": recipient, "message": recipient.message}
 
             send_mail(
-                f"{recipient.message.community.name} | {recipient.message.subject}", # noqa
+                _("%(community)s | Someone has sent you a message")
+                % {"community": recipient.message.community.name},
                 render_to_string("messageboard/emails/message.txt", context),
                 recipient.message.community.resolve_email("no-reply"),
                 [recipient.recipient.email],
