@@ -1,8 +1,16 @@
+a {
+  color: $link-color-dark;
+  &:visited {
+    color: $link-color;
+  }
+}
 .actions {
   &.actions-sm {
     font-size: $font-size-sm;
   }
   a {
+    color: $link-color-dark;
+
     @extend .btn-link;
     &:not(:last-child) {
       @extend .pr-1;
@@ -12,7 +20,7 @@
       @extend .pl-1;
     }
     &:visited {
-      color: $link-color;
+      color: $link-color-dark;
     }
   }
 }
@@ -46,6 +54,13 @@
 
 .conversation-input {
   height: 2rem;
+}
+
+.divider,
+.divider-vert {
+  &[data-content]::after {
+    color: $gray-color-dark;
+  }
 }
 
 .event-map {
@@ -134,4 +149,3 @@
 .wordwrap {
   word-wrap: break-word;
 }
-
