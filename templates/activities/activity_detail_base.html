@@ -13,7 +13,7 @@
 {% include "flags/includes/flags.html" %}
 <div class="comments mt-1" id="comments">
   {% if comments %}
-  <h5>{% trans "Comments" %}</h5>
+  <div class="divider text-center" data-content="{% trans 'Comments' %}"></div>
   {% endif %}
   {% for comment in comments %}
   <div class="mb-1">
