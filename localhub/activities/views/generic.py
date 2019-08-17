@@ -94,7 +94,7 @@ class ActivityCreateView(
         self.object.community = self.request.community
         self.object.save()
 
-        for notification in self.object.notify(created=True):
+        for notification in self.object.notify_on_create():
             send_activity_notification_email(self.object, notification)
 
         messages.success(self.request, self.get_success_message())
@@ -139,7 +139,7 @@ class ActivityUpdateView(
         self.object.editor = self.request.user
         self.object.save()
 
-        for notification in self.object.notify(created=False):
+        for notification in self.object.notify_on_update():
             send_activity_notification_email(self.object, notification)
 
         messages.success(self.request, self.get_success_message())
@@ -244,7 +244,7 @@ class ActivityReshareView(PermissionRequiredMixin, SingleActivityView):
             _("You have reshared this %s") % self.object._meta.verbose_name,
         )
 
-        for notification in reshare.notify(created=True):
+        for notification in reshare.notify_on_create():
             send_activity_notification_email(self.object, notification)
 
         return HttpResponseRedirect(self.object.get_absolute_url())
@@ -364,7 +364,7 @@ class ActivityCommentCreateView(
         comment.community = self.request.community
         comment.owner = self.request.user
         comment.save()
-        for notification in comment.notify(created=True):
+        for notification in comment.notify_on_create():
             send_comment_notification_email(comment, notification)
         messages.success(self.request, _("Your comment has been posted"))
         return HttpResponseRedirect(self.get_success_url())

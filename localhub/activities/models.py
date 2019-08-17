@@ -390,31 +390,35 @@ class Activity(TimeStampedModel):
             return [self.make_notification(owner, "reshare")]
         return []
 
-    def notify(self, created: bool) -> List[Notification]:
-        """
-        Generates user notifications when instance is created
-        or updated.
+    def get_notification_recipients(self) -> models.QuerySet:
+        return self.community.members.exclude(blocked=self.owner)
 
-        The following notifications may be created:
-
-        - any users @mentioned in the description field
-        - any users subscribed to hashtags in the description field
-        - any users subscribed to the owner (only on create)
-        - if moderated, the original owner
-        """
+    def notify_on_create(self) -> List[Notification]:
         notifications: List[Notification] = []
-        recipients = self.community.members.exclude(blocked=self.owner)
+        recipients = self.get_notification_recipients()
 
-        if self.description and (
-            created or self.description_tracker.changed()
-        ):
+        if self.description:
             notifications += self.notify_mentioned_users(recipients)
             notifications += self.notify_tag_followers(recipients)
 
-        if created:
-            notifications += self.notify_followers(recipients)
-            if self.parent:
-                notifications += self.notify_parent_owner(recipients)
+        notifications += self.notify_followers(recipients)
+
+        if self.parent:
+            notifications += self.notify_parent_owner(recipients)
+
+        notifications += self.notify_owner_or_moderators()
+
+        Notification.objects.bulk_create(notifications)
+        return notifications
+
+    def notify_on_update(self) -> List[Notification]:
+
+        notifications: List[Notification] = []
+        recipients = self.get_notification_recipients()
+
+        if self.description and self.description_tracker.changed():
+            notifications += self.notify_mentioned_users(recipients)
+            notifications += self.notify_tag_followers(recipients)
 
         notifications += self.notify_owner_or_moderators()
 

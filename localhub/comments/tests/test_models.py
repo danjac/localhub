@@ -1,7 +1,5 @@
-import factory
 import pytest
 
-from django.db.models import signals
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 
@@ -130,23 +128,14 @@ class TestCommentManager:
 
 
 class TestCommentModel:
-    @factory.django.mute_signals(signals.post_save)
-    def test_notify(self, community: Community):
-        comment_owner = UserFactory(username="comment_owner")
-        post_owner = UserFactory(username="post_owner")
-        moderator = UserFactory()
+    def test_notify_on_create(self, community: Community):
 
-        MembershipFactory(
-            member=comment_owner,
-            community=community,
-            role=Membership.ROLES.moderator,
-        )
+        comment_owner = MembershipFactory(community=community).member
+        post_owner = MembershipFactory(community=community).member
+        moderator = MembershipFactory(
+            community=community, role=Membership.ROLES.moderator
+        ).member
 
-        MembershipFactory(
-            member=moderator,
-            community=community,
-            role=Membership.ROLES.moderator,
-        )
         mentioned = UserFactory(username="danjac")
 
         MembershipFactory(member=mentioned, community=community)
@@ -168,7 +157,7 @@ class TestCommentModel:
         follower = MembershipFactory(community=community).member
         follower.following.add(comment.owner)
 
-        notifications = comment.notify(created=True)
+        notifications = comment.notify_on_create()
 
         assert len(notifications) == 5
 
@@ -192,13 +181,43 @@ class TestCommentModel:
         assert notifications[4].actor == comment.owner
         assert notifications[4].verb == "new_followed_user_comment"
 
+    def test_notify_on_update(self, community: Community):
+
+        comment_owner = MembershipFactory(community=community).member
+        post_owner = MembershipFactory(community=community).member
+        moderator = MembershipFactory(
+            community=community, role=Membership.ROLES.moderator
+        ).member
+
+        post = PostFactory(owner=post_owner, community=community)
+
+        comment = CommentFactory(
+            owner=comment_owner,
+            community=community,
+            content_object=post,
+            content="hello @danjac",
+        )
+
         # edit by moderator
         comment.editor = moderator
+        comment.content = "edit #1"
         comment.save()
 
-        notifications = comment.notify(created=False)
+        notifications = comment.notify_on_update()
         assert len(notifications) == 1
 
         assert notifications[0].recipient == comment.owner
         assert notifications[0].actor == moderator
         assert notifications[0].verb == "moderator_edit"
+
+        # edit by owner
+        comment.content = "edit #2"
+        comment.editor = comment_owner
+        comment.save()
+
+        notifications = comment.notify_on_update()
+        assert len(notifications) == 1
+
+        assert notifications[0].recipient == moderator
+        assert notifications[0].actor == comment_owner
+        assert notifications[0].verb == "moderator_review_request"

@@ -134,7 +134,7 @@ class CommentUpdateView(
         self.object = form.save(commit=False)
         self.object.editor = self.request.user
         self.object.save()
-        for notification in self.object.notify(created=False):
+        for notification in self.object.notify_on_update():
             send_comment_notification_email(self.object, notification)
         messages.success(self.request, _("Comment has been updated"))
         return HttpResponseRedirect(self.get_success_url())

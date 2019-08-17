@@ -1,11 +1,9 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import factory
 import pytest
 
 from django.conf import settings
-from django.db.models import signals
 
 from taggit.models import Tag
 
@@ -69,8 +67,7 @@ class TestPostModel:
         post = PostFactory(description="This post is #legit")
         assert post.get_content_warning_tags() == set()
 
-    @factory.django.mute_signals(signals.post_save)
-    def test_notify(self, community: Community):
+    def test_notify_on_create(self, community: Community):
         # owner should not receive any notifications from their own posts
         owner = MembershipFactory(
             community=community, role=Membership.ROLES.moderator
@@ -108,7 +105,7 @@ class TestPostModel:
         user_follower = MembershipFactory(community=community).member
         user_follower.following.add(post.owner)
 
-        notifications = post.notify(created=True)
+        notifications = post.notify_on_create()
         assert len(notifications) == 4
 
         assert notifications[0].recipient == mentioned
@@ -127,20 +124,79 @@ class TestPostModel:
         assert notifications[3].actor == post.owner
         assert notifications[3].verb == "moderator_review_request"
 
+    def test_notify_on_update(self, community: Community):
+
+        owner = MembershipFactory(
+            community=community, role=Membership.ROLES.moderator
+        ).member
+
+        moderator = MembershipFactory(
+            community=community, role=Membership.ROLES.moderator
+        ).member
+
+        post = PostFactory(
+            owner=owner,
+            community=community,
+            description="hello @danjac from @owner #movies #reviews",
+        )
+
         # edit by moderator
         post.editor = moderator
         post.save()
 
-        notifications = post.notify(created=False)
+        notifications = post.notify_on_update()
         assert len(notifications) == 1
 
         assert notifications[0].recipient == post.owner
         assert notifications[0].actor == moderator
         assert notifications[0].verb == "moderator_edit"
 
+        # edit by owner
+        post.editor = owner
+        post.save()
+
+        notifications = post.notify_on_update()
+        assert len(notifications) == 1
+
+        assert notifications[0].recipient == moderator
+        assert notifications[0].actor == post.owner
+        assert notifications[0].verb == "moderator_review_request"
+
+    def test_notify_on_create_reshare(self, community: Community):
+
+        mentioned = MembershipFactory(
+            member=UserFactory(username="danjac"),
+            community=community,
+            role=Membership.ROLES.member,
+        ).member
+
+        # ensure we just have one notification for multiple tags
+
+        movies = Tag.objects.create(name="movies")
+        reviews = Tag.objects.create(name="reviews")
+
+        tag_follower = MembershipFactory(community=community).member
+        tag_follower.following_tags.add(movies, reviews)
+
+        assert tag_follower.following_tags.count() == 2
+
+        owner = MembershipFactory(
+            community=community, role=Membership.ROLES.moderator
+        ).member
+
+        moderator = MembershipFactory(
+            community=community, role=Membership.ROLES.moderator
+        ).member
+
+        post = PostFactory(
+            owner=owner,
+            community=community,
+            description="hello @danjac from @owner #movies #reviews",
+        )
+
         # reshare
         reshare = post.reshare(UserFactory())
-        notifications = reshare.notify(created=True)
+        notifications = reshare.notify_on_create()
         assert len(notifications) == 4
 
         assert notifications[0].recipient == mentioned

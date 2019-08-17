@@ -187,28 +187,69 @@ class Comment(TimeStampedModel):
             verb=verb,
         )
 
-    def notify(self, created: bool) -> List[Notification]:
-        """
-        Creates user notifications:
+    def notify_mentioned(self, recipients) -> List[Notification]:
+        return [
+            self.make_notification("mention", recipient)
+            for recipient in recipients.matches_usernames(  # noqa
+                self.content.extract_mentions()
+            ).exclude(pk=self.owner_id)
+        ]
 
-        - anyone @mentioned in the changed content field
-        - anyone following the comment owner (on create only)
-        - the owner of the parent object
-        - anyone who has commented on the parent object (except for
-          parent owner)
-        - all community moderators
-        """
+    def notify_moderators(self) -> List[Notification]:
+        return [
+            self.make_notification("moderator_review_request", recipient)
+            for recipient in self.community.get_moderators().exclude(
+                pk=self.owner_id
+            )
+        ]
+
+    def get_notification_recipients(self) -> models.QuerySet:
+        return self.community.members.exclude(blocked=self.owner)
+
+    def notify_on_create(self) -> List[Notification]:
         notifications: List[Notification] = []
-        recipients = self.community.members.exclude(blocked=self.owner)
-        # notify anyone @mentioned in the description
-        if self.content and (created or self.content_tracker.changed()):
-            notifications += [
-                self.make_notification("mention", recipient)
-                for recipient in recipients.matches_usernames(  # noqa
-                    self.content.extract_mentions()
-                ).exclude(pk=self.owner_id)
-            ]
-        # notify all community moderators
+        recipients = self.get_notification_recipients()
+        notifications += self.notify_mentioned(recipients)
+        notifications += self.notify_moderators()
+
+        # notify the activity owner
+        if self.owner_id != self.content_object.owner_id:
+            notifications.append(
+                self.make_notification(
+                    "new_comment", self.content_object.owner
+                )
+            )
+
+        # notify anyone who has commented on this post, excluding
+        # this comment owner and parent owner
+        other_commentors = (
+            recipients.filter(comment__in=self.content_object.get_comments())
+            .exclude(pk__in=(self.owner_id, self.content_object.owner_id))
+            .distinct()
+        )
+        notifications += [
+            self.make_notification("new_sibling_comment", commentor)
+            for commentor in other_commentors
+        ]
+        notifications += [
+            self.make_notification("new_followed_user_comment", follower)
+            for follower in recipients.filter(following=self.owner)
+            .exclude(pk__in=other_commentors)
+            .distinct()
+        ]
+
+        Notification.objects.bulk_create(notifications)
+        return notifications
+
+    def notify_on_update(self) -> List[Notification]:
+        notifications: List[Notification] = []
+        if not self.content_tracker.changed():
+            return notifications
+
+        recipients = self.get_notification_recipients()
+        notifications += self.notify_mentioned(recipients)
+        if self.editor == self.owner:
+            notifications += self.notify_moderators()
         if (
             self.editor
             and self.editor != self.owner
@@ -218,40 +259,6 @@ class Comment(TimeStampedModel):
                 self.make_notification(
                     "moderator_edit", self.owner, self.editor
                 )
-            ]
-        else:
-            notifications += [
-                self.make_notification("moderator_review_request", recipient)
-                for recipient in self.community.get_moderators().exclude(
-                    pk=self.owner_id
-                )
-            ]
-        # notify the activity owner
-        if created and self.owner_id != self.content_object.owner_id:
-            notifications.append(
-                self.make_notification(
-                    "new_comment", self.content_object.owner
-                )
-            )
-        if created:
-            # notify anyone who has commented on this post, excluding
-            # this comment owner and parent owner
-            other_commentors = (
-                recipients.filter(
-                    comment__in=self.content_object.get_comments()
-                )
-                .exclude(pk__in=(self.owner_id, self.content_object.owner_id))
-                .distinct()
-            )
-            notifications += [
-                self.make_notification("new_sibling_comment", commentor)
-                for commentor in other_commentors
-            ]
-            notifications += [
-                self.make_notification("new_followed_user_comment", follower)
-                for follower in recipients.filter(
-                    following=self.owner
-                ).distinct()
             ]
 
         Notification.objects.bulk_create(notifications)
