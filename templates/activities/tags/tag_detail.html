@@ -11,7 +11,7 @@
 
 <ul class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'activities:tag_list' %}">{% trans "Tags" %}</a></li>
-    <li class="breadcrumb-item"><a href="#">{{ tag.slug }}</a></li>
+    <li class="breadcrumb-item"><a href="#">{{ tag.name }}</a></li>
 </ul>
 
 {% has_perm "users.follow_tag" user as can_follow_tag %}
