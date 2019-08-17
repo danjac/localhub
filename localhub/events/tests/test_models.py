@@ -47,11 +47,6 @@ class TestEventModel:
     def test_get_domain_if_url(self):
         assert Event(url="http://google.com").get_domain() == "google.com"
 
-    def test_get_breadcrumbs(self, event: Event):
-        breadcrumbs = event.get_breadcrumbs()
-        assert len(breadcrumbs) == 3
-        assert breadcrumbs[2][0] == event.get_absolute_url()
-
     def test_clean_if_ok(self):
         event = Event(
             starts=timezone.now(), ends=timezone.now() + timedelta(days=3)

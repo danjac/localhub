@@ -11,10 +11,6 @@ pytestmark = pytest.mark.django_db
 
 
 class TestPhotoModel:
-    def test_breadcrumbs(self, photo: Photo):
-        breadcrumbs = photo.get_breadcrumbs()
-        assert len(breadcrumbs) == 3
-        assert breadcrumbs[2][0] == photo.get_absolute_url()
 
     def test_reshare(self, photo: Photo, user: settings.AUTH_USER_MODEL):
 

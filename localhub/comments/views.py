@@ -23,6 +23,7 @@ from django.views.generic.list import MultipleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
+from localhub.activities.breadcrumbs import get_breadcrumbs_for_instance
 from localhub.activities.models import Activity
 from localhub.comments.emails import (
     send_comment_deleted_email,
@@ -81,7 +82,7 @@ class CommentDetailView(
 ):
     def get_breadcrumbs(self) -> BreadcrumbList:
         if self.parent:
-            return self.parent.get_breadcrumbs() + [
+            return get_breadcrumbs_for_instance(self.parent) + [
                 (self.request.path, _("Comment"))
             ]
         return []
@@ -125,7 +126,7 @@ class CommentUpdateView(
 
     def get_breadcrumbs(self) -> BreadcrumbList:
         if self.parent:
-            return self.parent.get_breadcrumbs() + [
+            return get_breadcrumbs_for_instance(self.parent) + [
                 (self.request.path, _("Edit Comment"))
             ]
         return []
@@ -237,7 +238,7 @@ class CommentFlagView(
         return self.object
 
     def get_breadcrumbs(self) -> BreadcrumbList:
-        return self.parent.get_breadcrumbs() + [
+        return get_breadcrumbs_for_instance(self.parent) + [
             (self.request.path, _("Flag Comment"))
         ]
 

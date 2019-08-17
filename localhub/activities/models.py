@@ -8,11 +8,9 @@ from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
-from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils.encoding import smart_text
 from django.utils.text import slugify
-from django.utils.translation import gettext as _
 
 from model_utils.models import TimeStampedModel
 
@@ -24,7 +22,6 @@ from taggit.models import Tag
 from localhub.comments.models import Comment, CommentAnnotationsQuerySetMixin
 from localhub.communities.models import Community
 from localhub.core.markdown.fields import MarkdownField
-from localhub.core.types import BreadcrumbList
 from localhub.core.utils.content_types import get_generic_related_queryset
 from localhub.core.utils.search import SearchQuerySetMixin
 from localhub.core.utils.tracker import Tracker
@@ -204,30 +201,6 @@ class Activity(TimeStampedModel):
     def _history_user(self, value: settings.AUTH_USER_MODEL):
         self.editor = value
 
-    @classmethod
-    def get_list_url(cls) -> str:
-        """
-        Returns the default list view URL of the model.
-        """
-        return reverse(f"{cls._meta.app_label}:list")
-
-    @classmethod
-    def get_create_url(cls) -> str:
-        """
-        Returns the default create view URL of the model.
-        """
-        return reverse(f"{cls._meta.app_label}:create")
-
-    @classmethod
-    def get_breadcrumbs_for_model(cls) -> BreadcrumbList:
-        """
-        Creates a default breadcrumb navigation for the model class.
-        """
-        return [
-            (settings.HOME_PAGE_URL, _("Home")),
-            (cls.get_list_url(), _(cls._meta.verbose_name_plural.title())),
-        ]
-
     def slugify(self) -> str:
         return slugify(smart_text(self), allow_unicode=False)
 
@@ -271,14 +244,6 @@ class Activity(TimeStampedModel):
 
     def get_likes(self) -> models.QuerySet:
         return get_generic_related_queryset(self, Like)
-
-    def get_breadcrumbs(self) -> BreadcrumbList:
-        """
-        Returns breadcrumb navigation for individual instance.
-        """
-        return self.__class__.get_breadcrumbs_for_model() + [
-            (self.get_absolute_url(), truncatechars(smart_text(self), 60))
-        ]
 
     def get_content_warning_tags(self) -> Set[str]:
         """

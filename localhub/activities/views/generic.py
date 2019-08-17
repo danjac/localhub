@@ -25,6 +25,10 @@ from django.views.generic.list import MultipleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
+from localhub.activities.breadcrumbs import (
+    get_breadcrumbs_for_instance,
+    get_breadcrumbs_for_model,
+)
 from localhub.activities.emails import (
     send_activity_deleted_email,
     send_activity_notification_email,
@@ -83,7 +87,7 @@ class ActivityCreateView(
         return self.success_message
 
     def get_breadcrumbs(self) -> BreadcrumbList:
-        return self.model.get_breadcrumbs_for_model() + [
+        return get_breadcrumbs_for_model(self.model) + [
             (self.request.path, _("Submit"))
         ]
 
@@ -128,7 +132,9 @@ class ActivityUpdateView(
     page_title = _("Edit")
 
     def get_breadcrumbs(self) -> BreadcrumbList:
-        return self.object.get_breadcrumbs() + [(self.request.path, _("Edit"))]
+        return get_breadcrumbs_for_instance(self.object) + [
+            (self.request.path, _("Edit"))
+        ]
 
     def get_success_message(self) -> str:
         return self.success_message
@@ -196,7 +202,7 @@ class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
         )
 
     def get_breadcrumbs(self) -> BreadcrumbList:
-        return self.object.get_breadcrumbs()
+        return get_breadcrumbs_for_instance(self.object)
 
     def get_flags(self) -> QuerySet:
         return (
@@ -312,7 +318,9 @@ class ActivityFlagView(
         return self.object
 
     def get_breadcrumbs(self) -> BreadcrumbList:
-        return self.object.get_breadcrumbs() + [(self.request.path, _("Flag"))]
+        return get_breadcrumbs_for_instance(self.object) + [
+            (self.request.path, _("Flag"))
+        ]
 
     def get_success_url(self) -> str:
         return self.object.get_absolute_url()
