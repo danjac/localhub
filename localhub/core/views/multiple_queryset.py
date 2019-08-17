@@ -91,7 +91,7 @@ class MultipleQuerySetMixin:
             ordering = (ordering,)
 
         if ordering:
-            values += list(ordering)
+            values += [field.lstrip("-") for field in ordering]
 
         querysets = [
             qs.annotate(
@@ -101,7 +101,7 @@ class MultipleQuerySetMixin:
         ]
         qs = querysets[0].union(*querysets[1:])
         if ordering:
-            qs = qs.order_by(*["-" + field for field in ordering])
+            qs = qs.order_by(*ordering)
         return qs
 
     def load_objects(self, items: QuerySet, queryset_dict: QuerySetDict):

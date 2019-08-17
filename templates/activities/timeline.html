@@ -8,6 +8,11 @@
 <h3>{% trans "Timeline" %}</h3>
 <div class="actions">
   <a href="{% url 'activities:stream' %}">{% trans "Home" %}</a>
+  {% if view.sort_by_ascending %}
+  <a href="{{ request.path }}?order=desc">{% trans "Newest First" %}</a>
+  {% else %}
+  <a href="{{ request.path }}?order=asc">{% trans "Oldest First" %}</a>
+  {% endif %}
 </div>
 <div class="divider"></div>
 
