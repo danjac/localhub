@@ -1,0 +1,54 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h3>{% trans "Timeline" %}</h3>
+<div class="actions">
+  <a href="{% url 'activities:stream' %}">{% trans "Home" %}</a>
+</div>
+<div class="divider"></div>
+
+{% if object_list %}
+<div class="timeline">
+  {% regroup object_list by month as months %}
+  {% for month, activities in months %}
+  <div class="timeline-item">
+    <div class="timeline-left"><a class="timeline-icon tooltip" href="#" data-tooltip="{{ month }}"></a></div>
+
+    <div class="timeline-content">
+      <div class="tile">
+        <div class="tile-content">
+          <p class="tile-subtitle">{{ month }}</p>
+          {% for activity in activities %}
+          <p class="tile-title">
+            <a href="{{ activity.object.get_absolute_url }}">
+              {{ activity.object|truncatechars:100 }}
+            </a>
+            <span class="chip">{% trans activity.object_type|capfirst %}</span>
+          </p>
+          <p class="tile-title">
+            <div>
+              <span class="timesince">
+                {% blocktrans with since=activity.created|timesince %}
+                {{ since }} ago
+                {% endblocktrans %}
+                {% include "users/includes/chip.html" with profile=activity.object.owner %}
+              </span>
+            </div>
+          </p>
+          <div class="divider"></div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% include "includes/pagination.html" %}
+{% else %}
+{% include "includes/empty.html" %}
+{% endif %}
+{% endblock content %}

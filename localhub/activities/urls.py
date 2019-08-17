@@ -10,6 +10,7 @@ app_name = "activities"
 urlpatterns = [
     path("", streams.stream_view, name="stream"),
     path("search/", streams.search_view, name="search"),
+    path("timeline/", streams.timeline_view, name="timeline"),
     path("tags/", tags.tag_list_view, name="tag_list"),
     path(
         "tags/following/",

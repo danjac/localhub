@@ -5,10 +5,11 @@ from typing import List, Optional
 
 from django.conf import settings
 from django.db.models import QuerySet
+from django.utils.formats import date_format
 
 from localhub.activities.types import ActivityType
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.core.types import QuerySetList
+from localhub.core.types import ContextDict, QuerySetList
 from localhub.core.views import MultipleQuerySetListView, SearchMixin
 from localhub.events.models import Event
 from localhub.photos.models import Photo
@@ -56,6 +57,20 @@ class StreamView(BaseStreamView):
 
 
 stream_view = StreamView.as_view()
+
+
+class TimelineView(StreamView):
+    template_name = "activities/timeline.html"
+    paginate_by = settings.DEFAULT_PAGE_SIZE * 2
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        for object in data["object_list"]:
+            object["month"] = date_format(object["created"], "F Y")
+        return data
+
+
+timeline_view = TimelineView.as_view()
 
 
 class SearchView(SearchMixin, BaseStreamView):

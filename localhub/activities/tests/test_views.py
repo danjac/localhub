@@ -38,6 +38,18 @@ class TestActivityStreamView:
         assert len(response.context["object_list"]) == 3
 
 
+class TestActivityTimelineView:
+    def test_get_if_anonymous(self, client: Client, community: Community):
+        member = MembershipFactory(community=community)
+        PostFactory(community=community, owner=member.member)
+        EventFactory(community=community, owner=member.member)
+
+        response = client.get(reverse("activities:timeline"))
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 2
+        assert response.context["object_list"][0]["month"]
+
+
 class TestActivitySearchView:
     def test_get(self, client: Client, community: Community):
         member = MembershipFactory(community=community)
