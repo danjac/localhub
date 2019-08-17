@@ -23,10 +23,11 @@ class TestMarkdownifySafe:
 
 class TestExtractMentions:
     def test_extract(self):
-        content = "hello @danjac and @weegill and @someone-else!"
+        content = "hello @danjac and @weegill and @kesämies and @someone-else!"
         assert extract_mentions(content) == {
             "danjac",
             "weegill",
+            "kesämies",
             "someone-else",
         }
 
@@ -37,13 +38,19 @@ class TestLinkifyMentions:
         replaced = linkify_mentions(content)
         assert replaced == 'hello <a href="/people/danjac/">@danjac</a>'
 
+    def test_linkify_unicode(self):
+        content = "hello @kesämies"
+        replaced = linkify_mentions(content)
+        assert replaced == 'hello <a href="/people/kesamies/">@kesämies</a>'
+
 
 class TestLinkifyHashtags:
     def test_linkify(self):
-        content = "tags: #coding #opensource #coding2019"
+        content = "tags: #coding #opensource #Coding2019 #kesä"
         replaced = linkify_hashtags(content)
         assert (
             replaced == 'tags: <a href="/tags/coding/">#coding</a>'
             ' <a href="/tags/opensource/">#opensource</a>'
-            ' <a href="/tags/coding2019/">#coding2019</a>'
+            ' <a href="/tags/coding2019/">#Coding2019</a>'
+            ' <a href="/tags/kesa/">#kesä</a>'
         )

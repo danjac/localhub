@@ -14,6 +14,7 @@ from bleach import Cleaner  # type: ignore
 from bleach.linkifier import LinkifyFilter
 
 from django.urls import reverse
+from django.utils.text import slugify
 
 from markdownx.utils import markdownify as default_markdownify
 
@@ -76,7 +77,7 @@ def linkify_mentions(content: str) -> str:
     rv = []
     for token in tokens:
         for mention in MENTIONS_RE.findall(token):
-            url = reverse("users:activities", args=[mention])
+            url = reverse("users:activities", args=[slugify(mention)])
             token = token.replace(
                 "@" + mention, f'<a href="{url}">@{mention}</a>'
             )
@@ -109,7 +110,7 @@ def linkify_hashtags(content: str) -> str:
     for token in tokens:
 
         for tag in HASHTAGS_RE.findall(token):
-            url = reverse("activities:tag_detail", args=[tag.lower()])
+            url = reverse("activities:tag_detail", args=[slugify(tag)])
             token = token.replace("#" + tag, f'<a href="{url}">#{tag}</a>')
 
         rv.append(token)
