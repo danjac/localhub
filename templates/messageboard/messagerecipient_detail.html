@@ -48,7 +48,13 @@
   <a href="{% url 'messageboard:sender_message_recipient_list' message.sender.username %}">{% trans "See all from this user" %}</a>
   </dd>
   <dt>{% trans "Received" %}</dt>
-  <dd>{{ message.created|date:"DATETIME_FORMAT" }}</dd>
+  <dd>
+  <div class="timesince">
+    {% blocktrans with created=message.created|timesince %}
+    {{ created }} ago
+    {% endblocktrans %}
+  </div>
+  </dd>
 </dl>
 {% if message.message %}
 <div class="divider"></div>

@@ -23,7 +23,13 @@
   <dd><a href="{{ reply_to.get_absolute_url }}">{{ reply_to.message.subject }}</a></dd>
   {% endif %}
   <dt>{% trans "Sent" %}</dt>
-  <dd>{{ object.created|date:"DATETIME_FORMAT" }}</dd>
+  <dd>
+  <div class="timesince">
+    {% blocktrans with created=object.created|timesince %}
+    {{ created }} ago
+    {% endblocktrans %}
+  </div>
+  </dd>
   <dt>{% trans "Recipients" %}</dt>
   <dd>
   {% with num_recipients=recipients.count %}
@@ -44,7 +50,7 @@
 <div class="divider"></div>
 
 <div class="markdown-content">
-{{ object.message.markdown }}
+  {{ object.message.markdown }}
 </div>
 
 {% endblock messageboard_content %}
