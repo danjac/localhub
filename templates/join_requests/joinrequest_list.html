@@ -49,7 +49,7 @@
             <td>{{ join_request.get_status_display }}</td>
             <td>
                 {% if join_request.is_pending %}
-                <div class="actions actions-sm">
+                <div class="actions">
                     <a data-controller="ajax"
                        data-action="ajax#post"
                        href="{% url 'join_requests:accept' join_request.id %}">{% trans "Accept" %}

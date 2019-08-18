@@ -50,7 +50,7 @@
       </td>
       {% if can_follow_tag or can_block_tag %}
       <td>
-        <div class="actions actions-sm float-right" data-controller="toggle">
+        <div class="actions float-right" data-controller="toggle">
           {% if can_follow_tag %}
           <a href="{% url 'activities:tag_unfollow' tag.slug %}"
              {% if not tag in following %}class="d-hide"{% endif %}

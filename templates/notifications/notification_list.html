@@ -67,7 +67,7 @@
           {% include "users/includes/chip.html" with profile=notification.actor %}
         </div>
 
-        <div class="actions actions-sm show-md hide-lg">
+        <div class="actions show-md hide-lg">
           {% if not notification.is_read %}
           <a href="{% url 'notifications:mark_read' notification.pk %}"
              data-controller="ajax"

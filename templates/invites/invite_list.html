@@ -40,7 +40,7 @@
             </td>
             <td>{{ invite.get_status_display }}</td>
             <td>
-                <div class="actions actions-sm">
+                <div class="actions">
                     {% if invite.is_pending %}
                     <a href="{% url 'invites:resend' invite.id %}">{% trans "Re-send" %}</a>
                     {% endif %}

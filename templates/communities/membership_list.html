@@ -53,7 +53,7 @@
       {% endif %}
       <td {% if not member.active %} class="text-gray"{% endif %}>{{ member.get_role_display }}</td>
       <td>
-        <div class="actions actions-sm">
+        <div class="actions">
           {% if member.member == user %}
           -
           {% else %}

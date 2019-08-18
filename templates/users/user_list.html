@@ -48,7 +48,7 @@
       {% if is_member %}
       <td>
         {% if user != user_obj %}
-        <div class="actions actions-sm float-right" data-controller="toggle">
+        <div class="actions float-right" data-controller="toggle">
           {% has_perm "users.follow_user" user user_obj as can_follow_user %}
           {% if can_follow_user %}
           <a href="{% url 'users:unfollow' user_obj.username %}"
