@@ -1,17 +1,26 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import json
+
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import IntegrityError
 from django.db.models import QuerySet
-from django.views.generic import ListView, View, DeleteView
+from django.http import (
+    HttpRequest,
+    HttpResponse,
+    HttpResponseRedirect,
+    JsonResponse,
+)
+from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import DeleteView, ListView, TemplateView, View
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import MultipleObjectMixin
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.urls import reverse
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.notifications.models import Notification
+from localhub.notifications.models import Notification, PushSubscription
 from localhub.core.types import ContextDict
 
 
@@ -112,3 +121,50 @@ class NotificationDeleteView(
 
 
 notification_delete_view = NotificationDeleteView.as_view()
+
+
+class ServiceWorkerView(TemplateView):
+    """
+    Returns template containing serviceWorker JS, can't use
+    static as must always be under domain. We can also pass
+    in server specific settings.
+    """
+
+    template_name = "notifications/service_worker.js"
+
+    def get(self, *args, **kwargs) -> HttpResponse:
+        response = super().get(*args, **kwargs)
+        response["Content-Type"] = "application/javascript"
+        return response
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        return {"vapid_public_key": settings.VAPID_PUBLIC_KEY}
+
+
+service_worker_view = ServiceWorkerView.as_view()
+
+
+class SubscribeView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs) -> HttpResponse:
+        try:
+            json_body = json.loads(request.body.decode("utf-8"))
+
+            data = {"endpoint": json_body["endpoint"]}
+            keys = json_body["keys"]
+            data["auth"] = keys["auth"]
+            data["p256dh"] = keys["p256dh"]
+
+        except (ValueError, KeyError):
+            return HttpResponse(status=400)
+
+        data["user"] = self.request.user
+
+        try:
+            PushSubscription.objects.get_or_create(**data)
+        except IntegrityError:
+            pass  # dupe, ignore
+
+        return JsonResponse({"message": "ok"})
+
+
+subscribe_view = csrf_exempt(SubscribeView.as_view())

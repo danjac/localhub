@@ -45,6 +45,8 @@ services:
       dockerfile: Dockerfile.local
     restart: on-failure
     environment: *default-env
+    env_file:
+      - .env
     depends_on:
       - postgres
       - mailhog

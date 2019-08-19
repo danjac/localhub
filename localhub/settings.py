@@ -168,6 +168,11 @@ class Base(Configuration):
 
     TAGGIT_CASE_INSENSITIVE = True
 
+    # https://web-push-codelab.glitch.me/
+    VAPID_PUBLIC_KEY = values.Value()
+    VAPID_PRIVATE_KEY = values.Value()
+    VAPID_ADMIN_EMAIL = values.Value()
+
     @property
     def BASE_DIR(self) -> str:
         return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -341,7 +346,7 @@ class Production(DockerConfigMixin, Base):
     SILKY_INTERCEPT_PERCENT = 50
     SILKY_MAX_REQUEST_BODY_SIZE = -1  # Silk takes anything <0 as no limit
     SILKY_MAX_RESPONSE_BODY_SIZE = 1024
-    SILKY_MAX_RECORDED_REQUESTS = 10**4
+    SILKY_MAX_RECORDED_REQUESTS = 10 ** 4
 
     @property
     def ANYMAIL(self) -> Dict[str, str]:

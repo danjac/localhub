@@ -23,6 +23,7 @@ from localhub.core.views import BreadcrumbsMixin, SearchMixin
 from localhub.messageboard.emails import send_message_email
 from localhub.messageboard.forms import MessageForm
 from localhub.messageboard.models import Message, MessageRecipient
+from localhub.messageboard.push import send_message_push
 from localhub.users.utils import user_display
 from localhub.users.views import SingleUserMixin
 
@@ -287,6 +288,7 @@ class MessageCreateView(
             "message", "message__community", "message__sender", "recipient"
         ):
             send_message_email(recipient)
+            send_message_push(recipient)
 
         messages.success(
             self.request, self.get_success_message(num_recipients)

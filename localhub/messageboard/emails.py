@@ -3,7 +3,8 @@
 
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from django.utils.translation import override, gettext as _
+from django.utils.translation import gettext as _
+from django.utils.translation import override
 
 from localhub.messageboard.models import MessageRecipient
 

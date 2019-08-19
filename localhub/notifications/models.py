@@ -1,6 +1,12 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import json
+
+from typing import Any, Dict
+
+from pywebpush import WebPushException, webpush
+
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -39,3 +45,57 @@ class Notification(TimeStampedModel):
                 ]
             )
         ]
+
+
+class PushSubscription(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )
+    endpoint = models.TextField()
+    auth = models.TextField()
+    p256dh = models.TextField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "auth", "p256dh"],
+                name="unique_push_notification",
+            )
+        ]
+
+    def push(self, payload: Dict[str, Any], ttl=0) -> bool:
+        """
+        Sends push notification.
+        If sub has expired, will delete the instance.
+        Returns True if sent.
+
+        This should probably be called in a celery task.
+        """
+        subscription_info = {
+            "endpoint": self.endpoint,
+            "keys": {"auth": self.auth, "p256dh": self.p256dh},
+        }
+
+        vapid_creds = {}
+        if settings.VAPID_PRIVATE_KEY:
+            vapid_creds["vapid_private_key"] = settings.VAPID_PRIVATE_KEY
+        if settings.VAPID_ADMIN_EMAIL:
+            vapid_creds["vapid_claims"] = {
+                "sub": f"mailto:{settings.VAPID_ADMIN_EMAIL}"
+            }
+
+        try:
+            webpush(
+                subscription_info=subscription_info,
+                data=json.dumps(payload),
+                ttl=ttl,
+                **vapid_creds,
+            )
+            return True
+        except WebPushException as e:
+            if e.response.status_code == 410:  # timeout
+                self.delete()
+            else:
+                raise e
+
+        return False

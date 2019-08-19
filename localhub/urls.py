@@ -12,7 +12,7 @@ from localhub.communities.views import (
     community_list_view,
     community_not_found_view,
 )
-from localhub.users.views import user_update_view, user_delete_view
+from localhub.users.views import user_delete_view, user_update_view
 
 urlpatterns = [
     # Local

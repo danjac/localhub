@@ -6,4 +6,4 @@ set -o nounset
 
 celery flower \
     --app=localhub.celery \
-    --broker="${DJANGO_CELERY_BROKER_URL}"
+    --broker="${REDIS_URL}"

@@ -5,8 +5,20 @@ from django import template
 from django.conf import settings
 
 from localhub.communities.models import Community
+from localhub.core.types import ContextDict
 
 register = template.Library()
+
+
+@register.inclusion_tag("notifications/includes/subscribe_btn.html")
+def notifications_subscribe_btn(
+    user: settings.AUTH_USER_MODEL, community: Community
+) -> ContextDict:
+    return {
+        "user": user,
+        "community": Community,
+        "vapid_public_key": settings.VAPID_PUBLIC_KEY,
+    }
 
 
 @register.simple_tag
