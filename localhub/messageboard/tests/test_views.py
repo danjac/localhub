@@ -6,7 +6,10 @@ import pytest
 from django.test.client import Client
 from django.urls import reverse
 
+from pytest_mock import MockFixture
+
 from localhub.communities.models import Membership
+from localhub.communities.tests.factories import MembershipFactory
 from localhub.messageboard.models import Message, MessageRecipient
 from localhub.messageboard.tests.factories import (
     MessageFactory,
@@ -151,13 +154,13 @@ class TestMessageCreateView:
         )
         assert response.status_code == 200
 
-    def test_post_with_recipients(self, client: Client, member: Membership):
-        user = UserFactory()
-        Membership.objects.create(
-            member=user,
-            community=member.community,
-            role=Membership.ROLES.moderator,
+    def test_post_with_recipients(
+        self, client: Client, member: Membership, mocker: MockFixture
+    ):
+        MembershipFactory(
+            community=member.community, role=Membership.ROLES.moderator
         )
+        mocker.patch("localhub.messageboard.views.send_message_push")
         response = client.post(
             reverse("messageboard:message_create"),
             {"subject": "test", "message": "test", "groups": "moderators"},

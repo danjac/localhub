@@ -14,7 +14,6 @@ from django.http import (
     JsonResponse,
 )
 from django.urls import reverse
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DeleteView, ListView, TemplateView, View
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import MultipleObjectMixin
@@ -164,7 +163,7 @@ class SubscribeView(LoginRequiredMixin, View):
         except IntegrityError:
             pass  # dupe, ignore
 
-        return JsonResponse({"message": "ok"})
+        return JsonResponse({"message": "ok"}, status=201)
 
 
-subscribe_view = csrf_exempt(SubscribeView.as_view())
+subscribe_view = SubscribeView.as_view()

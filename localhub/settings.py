@@ -269,6 +269,10 @@ class Testing(Base):
     THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + ["django_extensions"]
     SITE_ID = 1
 
+    VAPID_PUBLIC_KEY = None
+    VAPID_PRIVATE_KEY = None
+    VAPID_ADMIN_EMAIL = None
+
 
 class Local(DockerConfigMixin, Base):
 
