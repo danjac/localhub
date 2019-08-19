@@ -63,11 +63,15 @@ export default class extends Controller {
     }
   }
 
-  remove() {
+  hide() {
     Cookies.set('notifications-subscribe-btn', true, {
       domain: this.data.get('domain'),
       expires: 360
     });
+    this.remove();
+  }
+
+  remove() {
     this.element.remove();
   }
 

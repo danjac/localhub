@@ -25,8 +25,16 @@ class TestPushSubscriptionModel:
 
         payload = {"head": "hello", "body": "testing"}
 
-        with mocker.patch("localhub.notifications.models.webpush"):
+        with mocker.patch("localhub.notifications.models.webpush") as patched:
             assert sub.push(payload)
+            assert patched.called_with(
+                {
+                    "endpoint": sub.endpoint,
+                    "keys": {"auth": sub.auth, "p256dh": sub.p256dh},
+                },
+                payload,
+                ttf=0,
+            )
 
         assert PushSubscription.objects.exists()
 

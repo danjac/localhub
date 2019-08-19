@@ -16,7 +16,7 @@ def notifications_subscribe_btn(
 ) -> ContextDict:
     return {
         "user": user,
-        "community": Community,
+        "community": community,
         "vapid_public_key": settings.VAPID_PUBLIC_KEY,
     }
 

@@ -6,10 +6,23 @@ from localhub.communities.models import Community, Membership
 from localhub.notifications.models import Notification
 from localhub.notifications.templatetags.notifications_tags import (
     get_unread_notification_count,
+    notifications_subscribe_btn,
 )
 from localhub.posts.tests.factories import PostFactory
 
 pytestmark = pytest.mark.django_db
+
+
+class TestNotificationsSubscribeBtn:
+    def test_authenticated(self, member: Membership):
+
+        assert notifications_subscribe_btn(
+            member.member, member.community
+        ) == {
+            "user": member.member,
+            "community": member.community,
+            "vapid_public_key": None,
+        }
 
 
 class TestGetUnreadNotificationCount:
