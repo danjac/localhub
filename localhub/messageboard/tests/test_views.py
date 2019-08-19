@@ -160,10 +160,14 @@ class TestMessageCreateView:
         MembershipFactory(
             community=member.community, role=Membership.ROLES.moderator
         )
-        mocker.patch("localhub.messageboard.views.send_message_push")
-        response = client.post(
-            reverse("messageboard:message_create"),
-            {"subject": "test", "message": "test", "groups": "moderators"},
-        )
-        assert response.url == Message.objects.get().get_absolute_url()
+        with mocker.patch(
+            "localhub.messageboard.views.send_message_push"
+        ) as patched:
+            response = client.post(
+                reverse("messageboard:message_create"),
+                {"subject": "test", "message": "test", "groups": "moderators"},
+            )
+            assert response.url == Message.objects.get().get_absolute_url()
+            assert patched.called_only_once()
+
         assert MessageRecipient.objects.count() == 1
