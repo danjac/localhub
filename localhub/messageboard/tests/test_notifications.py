@@ -5,7 +5,7 @@ import pytest
 
 from typing import List
 
-from localhub.messageboard.emails import send_message_email
+from localhub.messageboard.notifications import send_message_email
 from localhub.messageboard.tests.factories import MessageRecipientFactory
 from localhub.users.tests.factories import UserFactory
 

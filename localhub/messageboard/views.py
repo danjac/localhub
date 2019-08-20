@@ -20,10 +20,9 @@ from localhub.communities.models import Community
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.types import BreadcrumbList, ContextDict
 from localhub.core.views import BreadcrumbsMixin, SearchMixin
-from localhub.messageboard.emails import send_message_email
 from localhub.messageboard.forms import MessageForm
 from localhub.messageboard.models import Message, MessageRecipient
-from localhub.messageboard.push import send_message_push
+from localhub.messageboard.notifications import send_message_notifications
 from localhub.users.utils import user_display
 from localhub.users.views import SingleUserMixin
 
@@ -287,8 +286,7 @@ class MessageCreateView(
         for recipient in self.object.messagerecipient_set.select_related(
             "message", "message__community", "message__sender", "recipient"
         ):
-            send_message_email(recipient)
-            send_message_push(recipient)
+            send_message_notifications(recipient)
 
         messages.success(
             self.request, self.get_success_message(num_recipients)

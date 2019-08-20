@@ -25,10 +25,12 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.activities.breadcrumbs import get_breadcrumbs_for_instance
 from localhub.activities.models import Activity
-from localhub.comments.emails import send_comment_deleted_email
 from localhub.comments.forms import CommentForm
 from localhub.comments.models import Comment
-from localhub.comments.utils import send_comment_notifications
+from localhub.comments.notifications import (
+    send_comment_notifications,
+    send_comment_deleted_email,
+)
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.types import (
     BaseContextMixin,

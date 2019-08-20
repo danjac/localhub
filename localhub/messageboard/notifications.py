@@ -7,6 +7,12 @@ from django.utils.translation import gettext as _
 from django.utils.translation import override
 
 from localhub.messageboard.models import MessageRecipient
+from localhub.notifications.utils import send_push_notification
+
+
+def send_message_notifications(recipient: MessageRecipient):
+    send_message_push(recipient)
+    send_message_email(recipient)
 
 
 def send_message_email(recipient: MessageRecipient):
@@ -26,3 +32,15 @@ def send_message_email(recipient: MessageRecipient):
                     "messageboard/emails/message.html", context
                 ),
             )
+
+
+def send_message_push(recipient: MessageRecipient):
+    with override(recipient.recipient.language):
+        send_push_notification(
+            recipient.recipient,
+            recipient.message.community,
+            head=_("%(sender)s has sent you a message")
+            % {"sender": recipient.message.sender},
+            body=recipient.message.subject,
+            url=recipient.get_permalink(),
+        )

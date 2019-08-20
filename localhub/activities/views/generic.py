@@ -29,9 +29,11 @@ from localhub.activities.breadcrumbs import (
     get_breadcrumbs_for_instance,
     get_breadcrumbs_for_model,
 )
-from localhub.activities.emails import send_activity_deleted_email
 from localhub.activities.models import Activity
-from localhub.activities.utils import send_activity_notifications
+from localhub.activities.notifications import (
+    send_activity_notifications,
+    send_activity_deleted_email,
+)
 from localhub.comments.forms import CommentForm
 from localhub.comments.utils import send_comment_notifications
 from localhub.communities.models import Community

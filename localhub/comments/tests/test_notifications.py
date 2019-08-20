@@ -6,7 +6,7 @@ import pytest
 from typing import List
 
 
-from localhub.comments.emails import (
+from localhub.comments.notifications import (
     send_comment_deleted_email,
     send_comment_notification_email,
 )

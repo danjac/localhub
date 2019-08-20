@@ -6,7 +6,7 @@ import pytest
 from typing import List
 
 
-from localhub.activities.emails import (
+from localhub.activities.notifications import (
     send_activity_deleted_email,
     send_activity_notification_email,
 )
