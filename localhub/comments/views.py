@@ -25,12 +25,10 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.activities.breadcrumbs import get_breadcrumbs_for_instance
 from localhub.activities.models import Activity
-from localhub.comments.emails import (
-    send_comment_deleted_email,
-    send_comment_notification_email,
-)
+from localhub.comments.emails import send_comment_deleted_email
 from localhub.comments.forms import CommentForm
 from localhub.comments.models import Comment
+from localhub.comments.utils import send_comment_notifications
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.types import (
     BaseContextMixin,
@@ -136,7 +134,7 @@ class CommentUpdateView(
         self.object.editor = self.request.user
         self.object.save()
         for notification in self.object.notify_on_update():
-            send_comment_notification_email(self.object, notification)
+            send_comment_notifications(self.object, notification)
         messages.success(self.request, _("Comment has been updated"))
         return HttpResponseRedirect(self.get_success_url())
 
@@ -183,7 +181,7 @@ class CommentLikeView(
                 content_object=self.object,
             )
             for notification in like.notify():
-                send_comment_notification_email(self.object, notification)
+                send_comment_notifications(self.object, notification)
         except IntegrityError:
             # dupe, ignore
             pass
@@ -253,7 +251,7 @@ class CommentFlagView(
         flag.save()
 
         for notification in flag.notify():
-            send_comment_notification_email(self.object, notification)
+            send_comment_notifications(self.object, notification)
         messages.success(
             self.request, _("This comment has been flagged to the moderators")
         )

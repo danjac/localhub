@@ -8,6 +8,8 @@ from django.test.client import Client
 from django.urls import reverse
 from django.utils.encoding import force_str
 
+from pytest_mock import MockFixture
+
 from localhub.communities.models import Community, Membership
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.events.models import Event
@@ -27,7 +29,12 @@ class TestEventCreateView:
         response = client.get(reverse("events:create"))
         assert response.status_code == 200
 
-    def test_post(self, client: Client, member: Membership):
+    def test_post(
+        self,
+        client: Client,
+        member: Membership,
+        send_notification_webpush_mock: MockFixture,
+    ):
         response = client.post(
             reverse("events:create"),
             {
@@ -65,7 +72,12 @@ class TestEventUpdateView:
         )
         assert response.status_code == 200
 
-    def test_post(self, client: Client, event_for_member: Event):
+    def test_post(
+        self,
+        client: Client,
+        event_for_member: Event,
+        send_notification_webpush_mock: MockFixture,
+    ):
         response = client.post(
             reverse("events:update", args=[event_for_member.id]),
             {
@@ -123,7 +135,12 @@ class TestEventDetailView:
 
 
 class TestEventLikeView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(
+        self,
+        client: Client,
+        member: Membership,
+        send_notification_webpush_mock: MockFixture,
+    ):
         event = EventFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,

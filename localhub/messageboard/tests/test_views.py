@@ -155,19 +155,18 @@ class TestMessageCreateView:
         assert response.status_code == 200
 
     def test_post_with_recipients(
-        self, client: Client, member: Membership, mocker: MockFixture
+        self,
+        client: Client,
+        member: Membership,
+        send_notification_webpush_mock: MockFixture,
     ):
         MembershipFactory(
             community=member.community, role=Membership.ROLES.moderator
         )
-        with mocker.patch(
-            "localhub.messageboard.views.send_message_push"
-        ) as patched:
-            response = client.post(
-                reverse("messageboard:message_create"),
-                {"subject": "test", "message": "test", "groups": "moderators"},
-            )
-            assert response.url == Message.objects.get().get_absolute_url()
-            assert patched.called_only_once()
+        response = client.post(
+            reverse("messageboard:message_create"),
+            {"subject": "test", "message": "test", "groups": "moderators"},
+        )
+        assert response.url == Message.objects.get().get_absolute_url()
 
         assert MessageRecipient.objects.count() == 1

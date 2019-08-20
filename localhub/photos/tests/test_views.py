@@ -8,6 +8,8 @@ from django.core.files import File
 from django.test.client import Client
 from django.urls import reverse
 
+from pytest_mock import MockFixture
+
 from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.likes.models import Like
@@ -36,7 +38,13 @@ class TestPhotoCreateView:
         response = client.get(reverse("photos:create"))
         assert response.status_code == 200
 
-    def test_post(self, client: Client, member: Membership, fake_image: File):
+    def test_post(
+        self,
+        client: Client,
+        member: Membership,
+        fake_image: File,
+        send_notification_webpush_mock: MockFixture,
+    ):
         response = client.post(
             reverse("photos:create"), {"title": "test", "image": fake_image}
         )
@@ -54,7 +62,11 @@ class TestPhotoUpdateView:
         assert response.status_code == 200
 
     def test_post(
-        self, client: Client, photo_for_member: Photo, fake_image: File
+        self,
+        client: Client,
+        photo_for_member: Photo,
+        fake_image: File,
+        send_notification_webpush_mock: MockFixture,
     ):
         response = client.post(
             reverse("photos:update", args=[photo_for_member.id]),
@@ -104,7 +116,12 @@ class TestPhotoDetailView:
 
 
 class TestPhotoLikeView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(
+        self,
+        client: Client,
+        member: Membership,
+        send_notification_webpush_mock: MockFixture,
+    ):
         photo = PhotoFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,

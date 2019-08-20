@@ -7,6 +7,8 @@ from django.conf import settings
 from django.test.client import Client
 from django.urls import reverse
 
+from pytest_mock import MockFixture
+
 from localhub.comments.models import Comment
 from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory
@@ -48,7 +50,12 @@ class TestPostCreateView:
         response = client.get(reverse("posts:create"))
         assert response.status_code == 200
 
-    def test_post(self, client: Client, member: Membership):
+    def test_post(
+        self,
+        client: Client,
+        member: Membership,
+        send_notification_webpush_mock: MockFixture,
+    ):
         response = client.post(
             reverse("posts:create"), {"title": "test", "description": "test"}
         )
@@ -65,7 +72,12 @@ class TestPostUpdateView:
         )
         assert response.status_code == 200
 
-    def test_post(self, client: Client, post_for_member: Post):
+    def test_post(
+        self,
+        client: Client,
+        post_for_member: Post,
+        send_notification_webpush_mock: MockFixture,
+    ):
         response = client.post(
             reverse("posts:update", args=[post_for_member.id]),
             {"title": "UPDATED", "description": post_for_member.description},
@@ -74,7 +86,12 @@ class TestPostUpdateView:
         assert response.url == post_for_member.get_absolute_url()
         assert post_for_member.title == "UPDATED"
 
-    def test_post_moderator(self, client: Client, moderator: Membership):
+    def test_post_moderator(
+        self,
+        client: Client,
+        moderator: Membership,
+        send_notification_webpush_mock: MockFixture,
+    ):
         post = PostFactory(
             community=moderator.community,
             owner=MembershipFactory(community=moderator.community).member,
@@ -98,7 +115,12 @@ class TestPostCommentCreateView:
         response = client.get(reverse("posts:comment", args=[post.id]))
         assert response.status_code == 200
 
-    def test_post(self, client: Client, member: Membership):
+    def test_post(
+        self,
+        client: Client,
+        member: Membership,
+        send_notification_webpush_mock: MockFixture,
+    ):
         post = PostFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
@@ -162,7 +184,12 @@ class TestPostDetailView:
 
 
 class TestPostReshareView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(
+        self,
+        client: Client,
+        member: Membership,
+        send_notification_webpush_mock: MockFixture,
+    ):
 
         post = PostFactory(
             community=member.community,
@@ -183,7 +210,12 @@ class TestPostReshareView:
 
 
 class TestPostLikeView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(
+        self,
+        client: Client,
+        member: Membership,
+        send_notification_webpush_mock: MockFixture,
+    ):
         post = PostFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
@@ -195,6 +227,8 @@ class TestPostLikeView:
         assert response.status_code == 204
         like = Like.objects.get()
         assert like.user == member.member
+
+        assert send_notification_webpush_mock.called_once()
 
 
 class TestPostDislikeView:
@@ -226,7 +260,12 @@ class TestFlagView:
         response = client.get(reverse("posts:flag", args=[post.id]))
         assert response.status_code == 200
 
-    def test_post(self, client: Client, member: Membership):
+    def test_post(
+        self,
+        client: Client,
+        member: Membership,
+        send_notification_webpush_mock: MockFixture,
+    ):
         post = PostFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,

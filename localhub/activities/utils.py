@@ -8,6 +8,10 @@ from urllib.parse import urlparse
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 
+from localhub.activities.emails import send_activity_notification_email
+from localhub.activities.models import Activity
+from localhub.activities.push import send_activity_notification_push
+from localhub.notifications.models import Notification
 
 _urlvalidator = URLValidator()
 
@@ -36,3 +40,10 @@ def get_domain(url: Optional[str]) -> Optional[str]:
     if domain.startswith("www."):
         domain = domain[4:]
     return domain
+
+
+def send_activity_notifications(
+    activity: Activity, notification: Notification
+):
+    send_activity_notification_push(activity, notification)
+    send_activity_notification_email(activity, notification)

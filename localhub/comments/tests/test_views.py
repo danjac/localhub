@@ -6,6 +6,8 @@ import pytest
 from django.test.client import Client
 from django.urls import reverse
 
+from pytest_mock import MockFixture
+
 from localhub.comments.models import Comment
 from localhub.comments.tests.factories import CommentFactory
 from localhub.communities.models import Membership
@@ -62,7 +64,12 @@ class TestCommentUpdateView:
         response = client.get(reverse("comments:update", args=[comment.id]))
         assert response.status_code == 200
 
-    def test_post(self, client: Client, member: Membership):
+    def test_post(
+        self,
+        client: Client,
+        member: Membership,
+        send_notification_webpush_mock: MockFixture,
+    ):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             owner=member.member,
@@ -105,7 +112,12 @@ class TestCommentDeleteView:
 
 
 class TestCommentLikeView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(
+        self,
+        client: Client,
+        member: Membership,
+        send_notification_webpush_mock: MockFixture,
+    ):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             content_object=post,
@@ -154,7 +166,12 @@ class TestFlagView:
         response = client.get(reverse("comments:flag", args=[comment.id]))
         assert response.status_code == 200
 
-    def test_post(self, client: Client, member: Membership):
+    def test_post(
+        self,
+        client: Client,
+        member: Membership,
+        send_notification_webpush_mock: MockFixture,
+    ):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             content_object=post,

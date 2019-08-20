@@ -29,13 +29,11 @@ from localhub.activities.breadcrumbs import (
     get_breadcrumbs_for_instance,
     get_breadcrumbs_for_model,
 )
-from localhub.activities.emails import (
-    send_activity_deleted_email,
-    send_activity_notification_email,
-)
+from localhub.activities.emails import send_activity_deleted_email
 from localhub.activities.models import Activity
-from localhub.comments.emails import send_comment_notification_email
+from localhub.activities.utils import send_activity_notifications
 from localhub.comments.forms import CommentForm
+from localhub.comments.utils import send_comment_notifications
 from localhub.communities.models import Community
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.types import (
@@ -99,7 +97,7 @@ class ActivityCreateView(
         self.object.save()
 
         for notification in self.object.notify_on_create():
-            send_activity_notification_email(self.object, notification)
+            send_activity_notifications(self.object, notification)
 
         messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
@@ -146,7 +144,7 @@ class ActivityUpdateView(
         self.object.save()
 
         for notification in self.object.notify_on_update():
-            send_activity_notification_email(self.object, notification)
+            send_activity_notifications(self.object, notification)
 
         messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
@@ -251,7 +249,7 @@ class ActivityReshareView(PermissionRequiredMixin, SingleActivityView):
         )
 
         for notification in reshare.notify_on_create():
-            send_activity_notification_email(self.object, notification)
+            send_activity_notifications(self.object, notification)
 
         return HttpResponseRedirect(self.object.get_absolute_url())
 
@@ -269,7 +267,7 @@ class ActivityLikeView(PermissionRequiredMixin, SingleActivityView):
                 content_object=self.object,
             )
             for notification in like.notify():
-                send_activity_notification_email(self.object, notification)
+                send_activity_notifications(self.object, notification)
 
         except IntegrityError:
             # dupe, ignore
@@ -333,7 +331,7 @@ class ActivityFlagView(
         flag.save()
 
         for notification in flag.notify():
-            send_activity_notification_email(self.object, notification)
+            send_activity_notifications(self.object, notification)
 
         messages.success(
             self.request,
@@ -373,6 +371,6 @@ class ActivityCommentCreateView(
         comment.owner = self.request.user
         comment.save()
         for notification in comment.notify_on_create():
-            send_comment_notification_email(comment, notification)
+            send_comment_notifications(comment, notification)
         messages.success(self.request, _("Your comment has been posted"))
         return HttpResponseRedirect(self.get_success_url())

@@ -7,6 +7,8 @@ from django.conf import settings
 from django.http import HttpRequest, HttpResponse
 from django.test import Client, RequestFactory
 
+from pytest_mock import MockFixture
+
 from localhub.comments.models import Comment
 from localhub.comments.tests.factories import CommentFactory
 from localhub.communities.models import Community, Membership
@@ -115,3 +117,8 @@ def comment(post: Post) -> Comment:
         community=post.community,
         owner=MembershipFactory(community=post.community).member,
     )
+
+
+@pytest.fixture
+def send_notification_webpush_mock(mocker: MockFixture) -> MockFixture:
+    return mocker.patch("localhub.notifications.models.webpush")
