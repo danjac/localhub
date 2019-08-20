@@ -17,7 +17,9 @@ pytestmark = pytest.mark.django_db
 
 class TestPushSubscriptionModel:
     def test_push_if_ok(
-        self, user: settings.AUTH_USER_MODEL, mocker: MockFixture
+        self,
+        user: settings.AUTH_USER_MODEL,
+        send_notification_webpush_mock: MockFixture,
     ):
         sub = PushSubscription.objects.create(
             user=user, endpoint="http://xyz.com", auth="auth", p256dh="xxx"
@@ -25,16 +27,15 @@ class TestPushSubscriptionModel:
 
         payload = {"head": "hello", "body": "testing"}
 
-        with mocker.patch("localhub.notifications.models.webpush") as patched:
-            assert sub.push(payload)
-            assert patched.called_with(
-                {
-                    "endpoint": sub.endpoint,
-                    "keys": {"auth": sub.auth, "p256dh": sub.p256dh},
-                },
-                payload,
-                ttf=0,
-            )
+        assert sub.push(payload)
+        assert send_notification_webpush_mock.called_with(
+            {
+                "endpoint": sub.endpoint,
+                "keys": {"auth": sub.auth, "p256dh": sub.p256dh},
+            },
+            payload,
+            ttf=0,
+        )
 
         assert PushSubscription.objects.exists()
 
