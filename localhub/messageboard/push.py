@@ -12,6 +12,7 @@ def send_message_push(recipient: MessageRecipient):
     with override(recipient.recipient.language):
         send_push_notification(
             recipient.recipient,
+            recipient.message.community,
             head=_("%(sender)s has sent you a message")
             % {"sender": recipient.message.sender},
             body=recipient.message.subject,

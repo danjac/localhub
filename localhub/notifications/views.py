@@ -143,7 +143,7 @@ class ServiceWorkerView(TemplateView):
 service_worker_view = ServiceWorkerView.as_view()
 
 
-class SubscribeView(LoginRequiredMixin, View):
+class SubscribeView(CommunityRequiredMixin, LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs) -> HttpResponse:
         try:
             json_body = json.loads(request.body.decode("utf-8"))
@@ -156,7 +156,9 @@ class SubscribeView(LoginRequiredMixin, View):
         except (ValueError, KeyError):
             return HttpResponse(status=400)
 
-        data["user"] = self.request.user
+        data.update(
+            {"user": self.request.user, "community": self.request.community}
+        )
 
         try:
             PushSubscription.objects.get_or_create(**data)

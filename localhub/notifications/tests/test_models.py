@@ -4,12 +4,11 @@
 
 import pytest
 
-from django.conf import settings
-
 from pywebpush import WebPushException
 
 from pytest_mock import MockFixture
 
+from localhub.communities.models import Membership
 from localhub.notifications.models import PushSubscription
 
 pytestmark = pytest.mark.django_db
@@ -17,12 +16,14 @@ pytestmark = pytest.mark.django_db
 
 class TestPushSubscriptionModel:
     def test_push_if_ok(
-        self,
-        user: settings.AUTH_USER_MODEL,
-        send_notification_webpush_mock: MockFixture,
+        self, member: Membership, send_notification_webpush_mock: MockFixture
     ):
         sub = PushSubscription.objects.create(
-            user=user, endpoint="http://xyz.com", auth="auth", p256dh="xxx"
+            user=member.member,
+            community=member.community,
+            endpoint="http://xyz.com",
+            auth="auth",
+            p256dh="xxx",
         )
 
         payload = {"head": "hello", "body": "testing"}
@@ -39,11 +40,13 @@ class TestPushSubscriptionModel:
 
         assert PushSubscription.objects.exists()
 
-    def test_push_if_timeout(
-        self, user: settings.AUTH_USER_MODEL, mocker: MockFixture
-    ):
+    def test_push_if_timeout(self, member: Membership, mocker: MockFixture):
         sub = PushSubscription.objects.create(
-            user=user, endpoint="http://xyz.com", auth="auth", p256dh="xxx"
+            user=member.member,
+            community=member.community,
+            endpoint="http://xyz.com",
+            auth="auth",
+            p256dh="xxx",
         )
 
         payload = {"head": "hello", "body": "testing"}

@@ -51,6 +51,7 @@ class PushSubscription(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
     endpoint = models.TextField()
     auth = models.TextField()
     p256dh = models.TextField()
@@ -58,7 +59,7 @@ class PushSubscription(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["user", "auth", "p256dh"],
+                fields=["user", "auth", "p256dh", "community"],
                 name="unique_push_notification",
             )
         ]

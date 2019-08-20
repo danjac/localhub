@@ -33,6 +33,7 @@ def send_comment_notification_push(
 
         send_push_notification(
             notification.recipient,
+            notification.community,
             head=NOTIFICATION_HEADS[notification.verb]
             % {"actor": notification.actor},
             body=force_text(truncatechars(comment.content, 60)),

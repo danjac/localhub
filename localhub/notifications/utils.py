@@ -3,11 +3,13 @@
 
 from django.conf import settings
 
+from localhub.communities.models import Community
 from localhub.notifications import tasks
 
 
 def send_push_notification(
     recipient: settings.AUTH_USER_MODEL,
+    community: Community,
     head: str,
     body: str,
     url: str,
@@ -17,4 +19,6 @@ def send_push_notification(
     if icon:
         payload["icon"] = icon
 
-    return tasks.send_push_notification.delay(recipient.id, payload)
+    return tasks.send_push_notification.delay(
+        recipient.id, community.id, payload
+    )

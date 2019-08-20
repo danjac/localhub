@@ -14,10 +14,14 @@ logger = get_task_logger(__name__)
 
 
 @shared_task(name="notifications.send_push_notification")
-def send_push_notification(recipient_id: int, payload: Dict[str, Any]):
-    for subscription in PushSubscription.objects.filter(user__pk=recipient_id):
+def send_push_notification(
+    recipient_id: int, community_id: int, payload: Dict[str, Any]
+):
+    for subscription in PushSubscription.objects.filter(
+        user__pk=recipient_id, community__pk=community_id
+    ):
         try:
             if subscription.push(payload):
-                logger.log("Notification push sent")
+                logger.info("Notification push sent")
         except Exception as e:
             logger.exception(e)

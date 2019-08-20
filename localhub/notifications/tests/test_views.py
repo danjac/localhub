@@ -124,9 +124,7 @@ class TestNotificationDeleteAllView:
 
 
 class TestSubscribeView:
-    def test_post_if_keys_missing(
-        self, client: Client, login_user: settings.AUTH_USER_MODEL
-    ):
+    def test_post_if_keys_missing(self, client: Client, member: Membership):
         body = {"endpoint": "http://xyz"}
         response = client.post(
             reverse("notifications:subscribe"),
@@ -136,7 +134,7 @@ class TestSubscribeView:
         assert response.status_code == 400
         assert not PushSubscription.objects.exists()
 
-    def test_post(self, client: Client, login_user: settings.AUTH_USER_MODEL):
+    def test_post(self, client: Client, member: Membership):
         body = {
             "endpoint": "http://xyz",
             "keys": {"auth": "auth", "p256dh": "xxxx"},
@@ -149,7 +147,8 @@ class TestSubscribeView:
         assert response.status_code == 201
 
         sub = PushSubscription.objects.get()
-        assert sub.user == login_user
+        assert sub.user == member.member
+        assert sub.community == member.community
         assert sub.endpoint == "http://xyz"
         assert sub.auth == "auth"
         assert sub.p256dh == "xxxx"
