@@ -36,10 +36,9 @@ def send_comment_notifications(comment: Comment, notification: Notification):
 
 
 def get_notification_header(notification: Notification) -> str:
-    return (
-        NOTIFICATION_HEADERS[notification.verb]
-        % {"actor": notification.actor},
-    )
+    return NOTIFICATION_HEADERS[notification.verb] % {
+        "actor": notification.actor
+    }
 
 
 def send_comment_notification_push(
