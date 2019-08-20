@@ -6,6 +6,8 @@ import Cookies from 'js-cookie';
 
 import { Controller } from 'stimulus';
 
+const COOKIE_NAME = 'disable-subscribe-btn';
+
 let registration = null;
 
 export default class extends Controller {
@@ -14,9 +16,10 @@ export default class extends Controller {
     try {
       this.checkBrowserCompatibility();
     } catch (e) {
-      console.log('Compatibility issue:', e);
+      console.log('Compatibility issue:', e.toString());
       return;
     }
+    console.log('fetching service worker...');
 
     // fetch registration and check if user already subscribed
     navigator.serviceWorker
@@ -58,13 +61,12 @@ export default class extends Controller {
   }
 
   show() {
-    if (!Cookies.get('notifications-subscribe-btn')) {
-      this.element.classList.remove('d-hide');
-    }
+    this.element.classList.remove('d-hide');
   }
 
-  hide() {
-    Cookies.set('notifications-subscribe-btn', true, {
+  disable() {
+    // remove button
+    Cookies.set(COOKIE_NAME, true, {
       domain: this.data.get('domain'),
       expires: 360
     });
@@ -87,6 +89,9 @@ export default class extends Controller {
     }
     if (Notification.permission === 'denied') {
       throw new Error('Permission denied');
+    }
+    if (Cookies.get(COOKIE_NAME)) {
+      throw new Error('Subscribe button disabled by user');
     }
   }
 
