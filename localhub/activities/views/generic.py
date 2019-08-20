@@ -35,7 +35,7 @@ from localhub.activities.notifications import (
     send_activity_deleted_email,
 )
 from localhub.comments.forms import CommentForm
-from localhub.comments.utils import send_comment_notifications
+from localhub.comments.notifications import send_comment_notifications
 from localhub.communities.models import Community
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.types import (
