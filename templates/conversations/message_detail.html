@@ -1,0 +1,56 @@
+{% extends "conversations/base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+<div class="actions" data-controller="toggle">
+  <a href="{% url 'conversations:inbox' %}">{% trans "Inbox" %}</a>
+  <a href="{% url 'conversations:outbox' %}">{% trans "Outbox" %}</a>
+</div>
+<div class="divider">
+<div class="card">
+  <div class="card-header">
+    <div class="card-title h6">
+      <span class="timesince">
+        {% blocktrans with created=message.created|timesince %}
+        Sent {{ created }} ago from
+        {% endblocktrans %}
+        {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url %}
+        {% trans "to" %}
+        {% include "users/includes/chip.html" with profile=message.recipient profile_url=recipient_url %}
+      </span>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="markdown-content">
+      {{ message.message.markdown }}
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="actions">
+      {% if message.sender == request.user %}
+
+      <a href="{% url 'conversations:message_delete' message.id %}"
+         data-controller="ajax confirm"
+         data-action="confirm#check ajax#delete"
+         data-confirm-header="{% trans 'Delete' %}"
+         data-confirm-body="{% trans 'Are you sure you want to delete this message?' %}"
+         data-ajax-redirect="{{ sender_url }}"
+         >{% trans "Delete" %}</a>
+
+      {% else %}
+      {% if not message.read %}
+      <a href="{% url 'conversations:message_mark_read' message.id %}"
+         data-controller="ajax"
+         data-action="ajax#post"
+         data-ajax-redirect="{{ request.path }}"
+         >{% trans "Mark As Read" %}</a>
+      {% endif %}
+      <a href="{% url 'conversations:conversation' message.sender.username %}#message-form">{% trans "Reply" %}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+

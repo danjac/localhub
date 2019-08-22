@@ -14,26 +14,38 @@
 {% include "conversations/email_settings.html" %}
 
 {% if object_list %}
+
 {% for message in object_list %}
 <div class="card mb-1">
   <div class="card-header">
     <div class="card-title h6">
-      {% include "activities/includes/timesince.html" with timestamp=message.created owner=message.sender %}
+      <span class="timesince">
+        {% blocktrans with created=message.created|timesince %}
+        Sent {{ created }} ago from
+        {% endblocktrans %}
+        {% url 'conversations:conversation' message.sender.username as convo_url %}
+        {% include "users/includes/chip.html" with profile=message.sender profile_url=convo_url %}
+      </span>
     </div>
   </div>
   <div class="card-body">
     <div class="markdown-content">
+      {% if show_all or message.description|wordcount < 60 %}
+      {{ message.message.markdown }}
+      {% else %}
       {{ message.message.markdown|truncatewords_html:60 }}
+      <a href="{{ message.get_absolute_url }}">{% trans "Read more" %}</a>
+      {% endif %}
     </div>
   </div>
-  {% if not message.read %}
   <div class="card-footer">
     <div class="actions">
+      {% if not message.read %}
       <a href="">{% trans "Mark As Read" %}</a>
-      <a href="{% url 'conversations:conversation' message.sender.username %}">{% trans "Reply" %}</a>
+      {% endif %}
+      <a href="{% url 'conversations:conversation' message.sender.username %}#message-form">{% trans "Reply" %}</a>
     </div>
   </div>
-  {% endif %}
 </div>
 {% endfor %}
 

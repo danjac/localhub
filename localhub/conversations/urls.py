@@ -7,6 +7,7 @@ from localhub.conversations.views import (
     message_create_view,
     message_delete_view,
     message_detail_view,
+    message_mark_read_view,
     outbox_view,
 )
 
@@ -19,8 +20,13 @@ urlpatterns = [
     path("<slug:slug>/~send/", message_create_view, name="message_create"),
     path("messages/<int:pk>/", message_detail_view, name="message_detail"),
     path(
-        "messages/<int:pk>/~/delete/",
+        "messages/<int:pk>/~delete/",
         message_delete_view,
         name="message_delete",
+    ),
+    path(
+        "messages/<int:pk>/~read/",
+        message_mark_read_view,
+        name="message_mark_read",
     ),
 ]

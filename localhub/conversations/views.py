@@ -12,7 +12,13 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
-from django.views.generic import FormView, DeleteView, DetailView, ListView
+from django.views.generic import (
+    FormView,
+    DeleteView,
+    DetailView,
+    ListView,
+    View,
+)
 from django.views.generic.detail import SingleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
@@ -39,6 +45,8 @@ class MessageListView(
 
 
 class SingleUserMixin(UserSlugMixin, SingleObjectMixin):
+    context_object_name = "user_obj"
+
     def get_user_queryset(self):
         return (
             get_user_model()
@@ -159,7 +167,7 @@ class MessageCreateView(
         messages.success(
             self.request,
             _("Message sent to %(recipient)s")
-            % {"recipient": self.object.recipient}
+            % {"recipient": self.object.recipient},
         )
         send_message_notifications(self.object)
         return HttpResponseRedirect(self.get_success_url())
@@ -168,18 +176,39 @@ class MessageCreateView(
 message_create_view = MessageCreateView.as_view()
 
 
-class MessageDetailView(MessageQuerySetMixin, DetailView):
+class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
     def get_queryset(self) -> QuerySet:
-        return super().filter(
-            Q(recipient=self.request.user) | Q(sender=self.request.user)
+        return (
+            super()
+            .get_queryset()
+            .filter(
+                Q(recipient=self.request.user) | Q(sender=self.request.user)
+            )
         )
 
-    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        response = super().get(request, *args, **kwargs)
-        if self.object.recipient == self.request.user and not self.object.read:
-            self.object.read = timezone.now()
-            self.object.save(fields=["read"])
-        return response
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        if self.object.sender == self.request.user:
+            data.update(
+                {
+                    "sender_url": reverse("conversations:outbox"),
+                    "recipient_url": reverse(
+                        "conversations:conversation",
+                        args=[self.object.recipient.username],
+                    ),
+                }
+            )
+        else:
+            data.update(
+                {
+                    "sender_url": reverse(
+                        "conversations:conversation",
+                        args=[self.object.recipient.username],
+                    ),
+                    "recipient_url": reverse("conversations:inbox"),
+                }
+            )
+        return data
 
 
 message_detail_view = MessageDetailView.as_view()
@@ -192,7 +221,25 @@ class MessageDeleteView(MessageQuerySetMixin, DeleteView):
         )
 
     def get_queryset(self) -> QuerySet:
-        return super().filter(sender=self.request.user)
+        return super().get_queryset().filter(sender=self.request.user)
 
 
 message_delete_view = MessageDeleteView.as_view()
+
+
+class MessageMarkReadView(MessageQuerySetMixin, SingleObjectMixin, View):
+    def get_queryset(self) -> QuerySet:
+        return (
+            super()
+            .get_queryset()
+            .filter(recipient=self.request.user, read__isnull=True)
+        )
+
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        message = self.get_object()
+        message.read = timezone.now()
+        message.save()
+        return HttpResponseRedirect(message.get_absolute_url())
+
+
+message_mark_read_view = MessageMarkReadView.as_view()

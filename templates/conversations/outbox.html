@@ -13,25 +13,35 @@
 
 {% if object_list %}
 {% for message in object_list %}
-<div class="card">
+<div class="card mb-1">
   <div class="card-header">
     <div class="card-title h6">
-      {# timestamp + recipient #}
+      <span class="timesince">
+        {% blocktrans with created=message.created|timesince %}
+        Sent {{ created }} ago to
+        {% endblocktrans %}
+        {% url 'conversations:conversation' message.recipient.username as convo_url %}
+        {% include "users/includes/chip.html" with profile=message.recipient profile_url=convo_url %}
+      </span>
     </div>
   </div>
   <div class="card-body">
     <div class="markdown-content">
+      {% if show_all or message.description|wordcount < 60 %}
+      {{ message.message.markdown }}
+      {% else %}
       {{ message.message.markdown|truncatewords_html:60 }}
+      <a href="{{ message.get_absolute_url }}">{% trans "Read more" %}</a>
+      {% endif %}
     </div>
   </div>
-  {% if not message.read %}
   <div class="card-footer">
     <div class="actions">
       <a href="">Delete</a>
     </div>
   </div>
-  {% endif %}
 </div>
+
 {% endfor %}
 
 {% include "includes/pagination.html" %}
