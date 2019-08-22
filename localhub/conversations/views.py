@@ -72,7 +72,7 @@ class InboxView(MessageListView):
         )
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank")
-        return qs.order_by("read", "-created")
+        return qs.order_by("-created", "read")
 
 
 inbox_view = InboxView.as_view()
