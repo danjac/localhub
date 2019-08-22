@@ -15,10 +15,9 @@
 
 {% if object_list %}
 {% for message in object_list %}
-<div class="card">
+<div class="card mb-1">
   <div class="card-header">
     <div class="card-title h6">
-      {# TBD: move this to the general includes #}
       {% include "activities/includes/timesince.html" with timestamp=message.created owner=message.sender %}
     </div>
   </div>
@@ -30,8 +29,8 @@
   {% if not message.read %}
   <div class="card-footer">
     <div class="actions">
-      <a href="">Mark As Read</a>
-      <a href="{% url 'conversations:conversation' message.sender.username %}">Reply</a>
+      <a href="">{% trans "Mark As Read" %}</a>
+      <a href="{% url 'conversations:conversation' message.sender.username %}">{% trans "Reply" %}</a>
     </div>
   </div>
   {% endif %}
