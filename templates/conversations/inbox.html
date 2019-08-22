@@ -41,7 +41,12 @@
   <div class="card-footer">
     <div class="actions">
       {% if not message.read %}
-      <a href="">{% trans "Mark As Read" %}</a>
+      <a href="{% url 'conversations:message_mark_read' message.id %}"
+         data-controller="ajax"
+         data-action="ajax#post"
+         data-ajax-redirect="{{ request.path }}"
+         >{% trans "Mark As Read" %}</a>
+
       {% endif %}
       <a href="{% url 'conversations:conversation' message.sender.username %}#message-form">{% trans "Reply" %}</a>
     </div>
