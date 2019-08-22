@@ -1,0 +1,44 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "emails/base.html" %}
+{% load i18n %}
+{% load account %}
+
+{% block content %}
+{% user_display message.recipient as recipient_name %}
+{% user_display message.sender as sender %}
+
+{% with community=message.community %}
+<div class="intro">
+  {% blocktrans with community_name=community.name %}
+  Hello from {{ community_name }} !
+  {% endblocktrans %}
+</div>
+
+<div class="section">
+  {% blocktrans %}
+  Hi {{ recipient_name }},
+  {% endblocktrans %}
+</div>
+
+<div class="section">
+  {% blocktrans with message=message.message url=recipient.get_permalink %}
+  {{ sender }} has sent you a <a href="{{ url }}">message</a>: <br>
+  <p>
+    {{ message|linebreaksbr }}
+  </p>
+  {% endblocktrans %}
+</div>
+
+<div class="section">
+  {% blocktrans with community_name=community.name %}
+  Thank you from {{ community_name }} !
+  {% endblocktrans %}
+</div>
+<div class="section">
+  {{ community.domain }}
+</div>
+{% endwith %}
+
+{% endblock content %}

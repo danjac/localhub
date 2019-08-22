@@ -1,0 +1,25 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "conversations/base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+<h3>{% trans "Conversations" %}</h3>
+<div class="divider"></div>
+
+<ul class="tab tab-block mt-1">
+  <li class="tab-item" data-controller="active-link" data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'conversations:inbox' %}">{% trans "Inbox" %}</a>
+  </li>
+  <li class="tab-item" data-controller="active-link" data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'conversations:outbox' %}">{% trans "Outbox" %}</a>
+  </li>
+</ul>
+
+{% block message_list %}{% endblock %}
+
+{% endblock content %}

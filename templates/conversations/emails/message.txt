@@ -1,0 +1,26 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load i18n %}{% load account %}{% autoescape off %}
+{% user_display message.recipient as recipient_name %}
+{% user_display message.sender as sender %}
+{% with community=message.community %}
+
+{% blocktrans with community_name=community.name %}
+Hello from {{ community_name }} !
+{% endblocktrans %}
+
+{% blocktrans with message=message.message %}
+Hi {{ recipient_name }},
+{{ sender }} has sent you a message:
+{{ message }}
+{% endblocktrans %}
+
+{{ recipient.get_permalink }}
+
+{% blocktrans with community_name=community.name %}
+Thank you from {{ community_name }} !
+{% endblocktrans %}
+
+{{ community.domain }}
+{% endwith %}
+{% endautoescape %}

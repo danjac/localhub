@@ -24,7 +24,9 @@ class Message(TimeStampedModel):
 
     message = MarkdownField(blank=True)
 
-    community = models.ForeignKey(Community, on_delete=models.CASCADE)
+    community = models.ForeignKey(
+        Community, on_delete=models.CASCADE, related_name="+"
+    )
 
     sender = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+"

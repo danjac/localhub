@@ -1,0 +1,49 @@
+{% extends "conversations/base.html" %}
+
+{% load i18n %}
+{% load account %}
+{% load users_tags %}
+
+{% block content %}
+<h3>
+  {% avatar object "avatar-lg" %}
+  {% user_display object %}
+</h3>
+<div class="actions">
+  <a href="{% url 'conversations:inbox' %}">{% trans "Inbox" %}</a>
+  <a href="{% url 'conversations:outbox' %}">{% trans "Outbox" %}</a>
+  <a href="{{ object.get_absolute_url }}">About</a>
+</div>
+<div class="divider"></div>
+
+{% if paginator.count or view.search_query %}
+{% include "includes/search_form.html" %}
+{% endif %}
+
+{% for message in object_list reversed %}
+<div class="card mb-1">
+  <div class="card-header">
+    <div class="card-title h6">
+      {% include "activities/includes/timesince.html" with timestamp=message.created owner=message.sender %}
+    </div>
+    <div class="card-body markdown-content">
+      {{ message.message.markdown }}
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% if message_form %}
+<div class="divider"></div>
+<form method="POST"
+      action="{% url 'conversations:message_create' object.username %}"
+      data-controller="form"
+      data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload">
+      {% include "includes/forms/fields.html" with form=message_form %}
+      <button type="submit" class="btn btn-primary">
+        {% trans 'Submit' %}
+      </button>
+</form>
+
+{% endif %}
+{% endblock %}

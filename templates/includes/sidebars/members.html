@@ -5,13 +5,12 @@
 {% load rules %}
 {% load flags_tags %}
 {% load join_request_tags %}
-{% load messageboard_tags %}
+{% load conversations_tags %}
 {% load notifications_tags %}
 
 {% has_perm "activities.create_activity" user community as can_create_activity %}
 {% has_perm "communities.moderate_community" user community as can_moderate_community %}
 {% has_perm "communities.manage_community" user community as can_manage_community %}
-{% has_perm "messageboard.create_message" user community as can_create_message %}
 
 {% get_unread_notification_count user community as unread_notifications %}
 {% get_unread_message_count user community as unread_messages %}
@@ -37,13 +36,6 @@
     </a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'messageboard:message_recipient_list' %}">
-      <span {% if unread_messages %}class="badge" data-badge="{{ unread_messages }}"{% endif %}>
-        {% trans "Direct Messages" %}
-      </span>
-    </a>
-  </li>
-  <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
        href="{% url 'community_list' %}">{% trans "Local Network" %}
@@ -51,7 +43,7 @@
   </li>
 </ul>
 
-{% if can_create_activity or can_create_message %}
+{% if can_create_activity %}
 <ul class="menu mt-1">
   <li class="divider" data-content="{% trans 'Actions' %}"></li>
   {% if can_create_activity %}
@@ -65,11 +57,6 @@
     <a href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
   </li>
   {% endif %}
-  {% if can_create_message %}
-  <li class="menu-item">
-    <a href="{% url 'messageboard:message_create' %}">{% trans "Send Message" %}</a>
-  </li>
-  {% endif %}
 </ul>
 {% endif %}
 
@@ -78,6 +65,13 @@
   <li class="menu-item">
     <a data-controller="active-link"
        href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'conversations:inbox' %}">
+      <span {% if unread_messages %}class="badge" data-badge="{{ unread_messages }}"{% endif %}>
+        {% trans "Conversations" %}
+      </span>
+    </a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'users:following_list' %}">

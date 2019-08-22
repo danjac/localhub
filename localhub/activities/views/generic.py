@@ -120,7 +120,7 @@ class ActivityListView(MultipleActivityMixin, SearchMixin, ListView):
         )
 
         if self.search_query:
-            qs = qs.search(self.search_query).order_by("rank")
+            qs = qs.search(self.search_query).order_by("-rank")
         return qs
 
 

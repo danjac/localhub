@@ -85,7 +85,7 @@ class SearchView(SearchMixin, BaseStreamView):
     template_name = "activities/search.html"
 
     def get_ordering(self) -> Optional[str]:
-        return "rank" if self.search_query else None
+        return "-rank" if self.search_query else None
 
     def filter_queryset(self, queryset: QuerySet) -> QuerySet:
         if self.search_query:

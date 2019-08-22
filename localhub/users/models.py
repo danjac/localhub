@@ -284,10 +284,10 @@ class User(AbstractUser):
         return dict(
             Community.objects.annotate(
                 num_messages=models.Count(
-                    "message__messagerecipient",
+                    "message",
                     filter=models.Q(
-                        message__messagerecipient__read__isnull=True,
-                        message__messagerecipient__recipient=self,
+                        message__read__isnull=True,
+                        message__recipient=self,
                     ),
                 )
             ).values_list("id", "num_messages")
