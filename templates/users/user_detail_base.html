@@ -96,7 +96,7 @@ You have been a member for <b>{{ created }}</b>.
 
   {% if not is_auth_user %}
   <a href="{% url 'conversations:conversation' user_obj.username %}">
-    {% trans "Conversations" %}
+    {% trans "Private Messages" %}
   </a>
 
   {% if can_view_membership %}

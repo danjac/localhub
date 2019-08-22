@@ -79,7 +79,7 @@
 {% if object_list %}
 {% include "includes/pagination.html" %}
 {% for message in object_list reversed %}
-<div class="card mb-1">
+<div class="card mb-1 {% if message.sender == user %} bg-gray{% endif %}">
   <div class="card-header">
     <div class="card-title h6">
       <span class="timesince">

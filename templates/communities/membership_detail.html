@@ -25,7 +25,7 @@
   {% has_perm "communities.change_membership" user object as can_change %}
   {% has_perm "communities.delete_membership" user object as can_delete %}
   <a href="{% url 'conversations:conversation' member.username %}">
-    {% trans "Conversations" %}
+    {% trans "Private Messages" %}
   </a>
   {% if can_change %}
   <a href="{% url 'communities:membership_update' object.id %}">

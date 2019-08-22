@@ -108,11 +108,18 @@ class ConversationView(SingleUserMixin, MessageListView):
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self) -> QuerySet:
-        qs = Message.objects.filter(
-            Q(Q(recipient=self.object) | Q(sender=self.object))
-            & Q(Q(recipient=self.request.user) | Q(sender=self.request.user)),
-            community=self.request.community,
-        ).distinct()
+        qs = (
+            Message.objects.filter(
+                Q(Q(recipient=self.object) | Q(sender=self.object))
+                & Q(
+                    Q(recipient=self.request.user)
+                    | Q(sender=self.request.user)
+                ),
+                community=self.request.community,
+            )
+            .select_related("sender", "recipient")
+            .distinct()
+        )
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank")
         return qs.order_by("-created")
