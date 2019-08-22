@@ -11,7 +11,7 @@ from allauth.account.models import EmailAddress
 
 from localhub.communities.models import Community, Membership, RequestCommunity
 from localhub.communities.tests.factories import MembershipFactory
-from localhub.messageboard.tests.factories import MessageRecipientFactory
+from localhub.conversations.tests.factories import MessageFactory
 from localhub.notifications.models import Notification
 from localhub.posts.tests.factories import PostFactory
 from localhub.users.tests.factories import UserFactory
@@ -165,11 +165,9 @@ class TestUserModel:
         )
 
     def test_get_unread_message_count(self):
-        recipient = MessageRecipientFactory()
+        message = MessageFactory()
         assert (
-            recipient.recipient.get_unread_message_count(
-                recipient.message.community
-            )
+            message.recipient.get_unread_message_count(message.community)
             == 1
         )
 

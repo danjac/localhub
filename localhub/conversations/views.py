@@ -216,9 +216,7 @@ message_detail_view = MessageDetailView.as_view()
 
 class MessageDeleteView(MessageQuerySetMixin, DeleteView):
     def get_success_url(self) -> str:
-        return reverse(
-            "conversations:conversation", args=[self.object.recipient.username]
-        )
+        return reverse("conversations:outbox")
 
     def get_queryset(self) -> QuerySet:
         return super().get_queryset().filter(sender=self.request.user)

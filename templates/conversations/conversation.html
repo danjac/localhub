@@ -73,6 +73,9 @@
 {% if paginator.count or view.search_query %}
 {% include "includes/search_form.html" %}
 {% endif %}
+
+{% include "conversations/email_settings.html" %}
+
 {% if object_list %}
 {% include "includes/pagination.html" %}
 {% for message in object_list reversed %}
@@ -132,5 +135,8 @@
         {% trans 'Submit' %}
       </button>
 </form>
+{% endif %}
+{% if page_obj.number != 1 %}
+{% include "includes/pagination.html" %}
 {% endif %}
 {% endblock %}
