@@ -5,7 +5,7 @@
 {% with parent=message.parent %}
 {% if parent %}
 {% blocktrans with parent_id=parent parent_url=parent.get_absolute_url parent_id=parent.id %}
-in reply to <a href="{{ parent_url }}">#{{ parent_id }}</a>
+in reply to <a href="{{ parent_url }}">{{ parent.get_abbreviation }}</a>
 {% endblocktrans %}
 {% endif %}
 {% endwith %}

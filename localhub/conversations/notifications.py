@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.core.mail import send_mail
-from django.template.defaultfilters import truncatechars, striptags
 from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
 from django.utils.translation import override
@@ -53,6 +52,6 @@ def send_message_push(message: Message):
             message.recipient,
             message.community,
             head=head % {"sender": message.sender},
-            body=truncatechars(striptags(message.message.markdown()), 60),
+            body=message.get_abbreviation(),
             url=message.get_permalink(),
         )

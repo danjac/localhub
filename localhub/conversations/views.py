@@ -171,7 +171,7 @@ class MessageReplyView(SingleObjectMixin, BreadcrumbsMixin, MessageFormView):
                 ),
                 user_display(self.parent.sender),
             ),
-            (self.parent.get_absolute_url(), f"#{self.parent.id}"),
+            (self.parent.get_absolute_url(), self.parent.get_abbreviation()),
             ("#", _("Reply")),
         ]
 
@@ -298,11 +298,11 @@ class MessageDetailView(
             breadcrumbs.append(
                 (
                     self.object.parent.get_absolute_url(),
-                    f"#{self.object.parent.id}",
+                    self.object.parent.get_abbreviation(),
                 )
             )
 
-        breadcrumbs.append(("#", f"#{self.object.id}"))
+        breadcrumbs.append(("#", self.object.get_abbreviation()))
         return breadcrumbs
 
     def get_queryset(self) -> QuerySet:

@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
+from django.template.defaultfilters import truncatechars, striptags
 from django.urls import reverse
 
 from model_utils.models import TimeStampedModel
@@ -54,6 +55,15 @@ class Message(TimeStampedModel):
 
     def __str__(self) -> str:
         return self.message
+
+    def get_abbreviation(self, length: int = 60) -> str:
+        """
+        Returns non-HTML/markdown abbreviated version of message.
+        """
+        text = " ".join(
+            striptags(self.message.markdown()).strip().splitlines()
+        )
+        return truncatechars(text, length)
 
     def get_absolute_url(self) -> str:
         return reverse("conversations:message_detail", args=[self.id])
