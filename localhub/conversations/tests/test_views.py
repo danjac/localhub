@@ -54,6 +54,29 @@ class TestConversationView:
         assert to_someone_else not in object_list
 
 
+class TestMessageUpdateView:
+    def test_get(self, client: Client, member: Membership):
+        message = MessageFactory(
+            community=member.community, sender=member.member
+        )
+        response = client.get(
+            reverse("conversations:message_update", args=[message.id])
+        )
+        assert response.status_code == 200
+
+    def test_post(self, client: Client, member: Membership):
+        message = MessageFactory(
+            community=member.community, sender=member.member
+        )
+        response = client.post(
+            reverse("conversations:message_update", args=[message.id]),
+            {"message": "updated"},
+        )
+        assert response.url == message.get_absolute_url()
+        message.refresh_from_db()
+        assert message.message == "updated"
+
+
 class TestMessageDeleteView:
     def test_delete(self, client: Client, member: Membership):
         message = MessageFactory(

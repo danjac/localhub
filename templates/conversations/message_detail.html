@@ -36,6 +36,8 @@
             <a href="{{ message.get_permalink }}">{% trans "Permalink" %}</a>
             {% if message.sender == request.user %}
 
+            <a href="{% url 'conversations:message_update' message.id %}">{% trans "Edit" %}</a>
+
             <a href="{% url 'conversations:message_delete' message.id %}"
                data-controller="ajax confirm"
                data-action="confirm#check ajax#delete"
@@ -96,7 +98,7 @@
                data-ajax-redirect="{{ request.path }}"
                >{% trans "Mark As Read" %}</a>
             {% endif %}
-           {% include "conversations/includes/replies.html" with message=reply %}
+            {% include "conversations/includes/replies.html" with message=reply %}
         </div>
     </div>
 </div>

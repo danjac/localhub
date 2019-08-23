@@ -32,6 +32,7 @@
   <div class="card-footer">
     <div class="actions">
       <a href="{{ message.get_permalink }}">{% trans "Permalink" %}</a>
+      <a href="{% url 'conversations:message_update' message.id %}">{% trans "Edit" %}</a>
       <a href="{% url 'conversations:message_delete' message.id %}"
          data-controller="ajax confirm"
          data-action="confirm#check ajax#delete"

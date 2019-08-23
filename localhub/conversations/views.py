@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import F, Q, QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
@@ -13,10 +14,11 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.views.generic import (
-    FormView,
     DeleteView,
     DetailView,
+    FormView,
     ListView,
+    UpdateView,
     View,
 )
 from django.views.generic.detail import SingleObjectMixin
@@ -344,6 +346,39 @@ class MessageDetailView(
 
 
 message_detail_view = MessageDetailView.as_view()
+
+
+class MessageUpdateView(
+    MessageQuerySetMixin, BreadcrumbsMixin, SuccessMessageMixin, UpdateView
+):
+    form_class = MessageForm
+
+    def get_success_message(self, cleaned_data: ContextDict) -> str:
+        return _("Your message has been updated")
+
+    def get_breadcrumbs(self) -> BreadcrumbList:
+        return [
+            (reverse("conversations:outbox"), _("Outbox")),
+            (
+                reverse(
+                    "conversations:conversation",
+                    args=[self.object.recipient.username],
+                ),
+                user_display(self.object.recipient),
+            ),
+            ("#", _("Edit Message")),
+        ]
+
+    def get_form(self) -> MessageForm:
+        form = super().get_form()
+        form.fields["message"].label = _("Edit Message")
+        return form
+
+    def get_queryset(self) -> QuerySet:
+        return super().get_queryset().filter(sender=self.request.user)
+
+
+message_update_view = MessageUpdateView.as_view()
 
 
 class MessageDeleteView(MessageQuerySetMixin, DeleteView):
