@@ -42,17 +42,7 @@
          data-ajax-redirect="{{ request.path }}"
          >{% trans "Mark As Read" %}</a>
       {% endif %}
-      {% if message.num_replies %}
-      <a href="{{ message.get_absolute_url }}">
-          {% blocktrans count counter=message.num_replies %}
-          1 Reply
-          {% plural %}
-          {{ counter }} Replies
-          {% endblocktrans %}
-      </a>
-      {% else %}
-      <a href="{% url 'conversations:message_reply' message.id %}">{% trans "Reply" %}</a>
-      {% endif %}
+      {% include "conversations/includes/replies.html" %}
     </div>
   </div>
 </div>

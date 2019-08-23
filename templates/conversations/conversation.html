@@ -62,28 +62,14 @@
                data-confirm-body="{% trans 'Are you sure you want to delete this message?' %}"
                >{% trans "Delete" %}</a>
 
-            {% else %}
-
-            {% if not message.read %}
+            {% elif not message.read %}
             <a href="{% url 'conversations:message_mark_read' message.id %}"
                data-controller="ajax"
                data-action="ajax#post"
                data-ajax-redirect="{{ request.path }}"
                >{% trans "Mark As Read" %}</a>
             {% endif %}
-            {% if message.num_replies %}
-            <a href="{{ message.get_absolute_url }}">
-                {% blocktrans count counter=message.num_replies %}
-                1 Reply
-                {% plural %}
-                {{ counter }} Replies
-                {% endblocktrans %}
-            </a>
-            {% else %}
-            <a href="{% url 'conversations:message_reply' message.id %}">{% trans "Reply" %}</a>
-            {% endif %}
-
-            {% endif %}
+            {% include "conversations/includes/replies.html" %}
         </div>
     </div>
 </div>

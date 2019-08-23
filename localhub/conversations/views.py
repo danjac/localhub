@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Count, F, Q, QuerySet
+from django.db.models import F, Q, QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
@@ -68,7 +68,7 @@ class InboxView(MessageListView):
         qs = (
             super()
             .get_queryset()
-            .annotate(num_replies=Count("replies"))
+            .with_num_replies()
             .filter(recipient=self.request.user)
             .select_related("sender", "parent", "community")
         )
@@ -91,6 +91,7 @@ class OutboxView(MessageListView):
         qs = (
             super()
             .get_queryset()
+            .with_num_replies()
             .filter(sender=self.request.user)
             .select_related("recipient", "parent", "community")
         )
@@ -115,7 +116,8 @@ class ConversationView(SingleUserMixin, MessageListView):
 
     def get_queryset(self) -> QuerySet:
         qs = (
-            Message.objects.filter(
+            Message.objects.with_num_replies()
+            .filter(
                 Q(Q(recipient=self.object) | Q(sender=self.object))
                 & Q(
                     Q(recipient=self.request.user)
@@ -123,7 +125,6 @@ class ConversationView(SingleUserMixin, MessageListView):
                 ),
                 community=self.request.community,
             )
-            .annotate(num_replies=Count("replies"))
             .select_related("sender", "recipient", "parent", "community")
             .distinct()
         )
@@ -318,8 +319,10 @@ class MessageDetailView(
         )
 
     def get_replies(self) -> QuerySet:
-        return self.object.replies.order_by("created").select_related(
-            "recipient", "sender", "parent", "community"
+        return (
+            self.object.replies.with_num_replies()
+            .order_by("created")
+            .select_related("recipient", "sender", "parent", "community")
         )
 
     def get_context_data(self, **kwargs) -> ContextDict:

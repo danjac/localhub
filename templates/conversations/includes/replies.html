@@ -1,0 +1,17 @@
+{% load i18n %}
+{% load rules %}
+{% if message.num_replies %}
+<a href="{{ message.get_absolute_url }}">
+  {% blocktrans count counter=message.num_replies %}
+  1 Reply
+  {% plural %}
+  {{ counter }} Replies
+  {% endblocktrans %}
+</a>
+{% elif message.recipient == user %}
+{% has_perm "conversations.create_message" user community as can_create_message %}
+{% if can_create_message %}
+<a href="{% url 'conversations:message_reply' message.id %}">{% trans "Reply" %}</a>
+{% endif %}
+{% endif %}
+

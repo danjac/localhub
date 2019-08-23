@@ -16,7 +16,8 @@ from localhub.core.utils.search import SearchIndexer, SearchQuerySetMixin
 
 
 class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
-    ...
+    def with_num_replies(self) -> models.QuerySet:
+        return self.annotate(num_replies=models.Count("replies"))
 
 
 class Message(TimeStampedModel):

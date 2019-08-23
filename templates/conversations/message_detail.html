@@ -44,25 +44,21 @@
                data-ajax-redirect="{{ sender_url }}"
                >{% trans "Delete" %}</a>
 
-            {% else %}
-            {% if not message.read %}
+            {% elif not message.read %}
             <a href="{% url 'conversations:message_mark_read' message.id %}"
                data-controller="ajax"
                data-action="ajax#post"
                data-ajax-redirect="{{ request.path }}"
                >{% trans "Mark As Read" %}</a>
             {% endif %}
-            {% if can_reply %}
-            <a href="{% url 'conversations:message_reply' message.id %}">{% trans "Reply" %}</a>
-            {% endif %}
-            {% endif %}
+            {% include "conversations/includes/replies.html" %}
         </div>
     </div>
 </div>
 
 {% if replies %}
 <div class="divider"></div>
-<h4>Replies</h4>
+<h4>{% trans "Replies" %}</h4>
 
 {% for reply in replies %}
 <div class="card mb-1">
@@ -93,18 +89,14 @@
                data-ajax-redirect="{{ sender_url }}"
                >{% trans "Delete" %}</a>
 
-            {% else %}
-            {% if not reply.read %}
+            {% elif not reply.read %}
             <a href="{% url 'conversations:message_mark_read' reply.id %}"
                data-controller="ajax"
                data-action="ajax#post"
                data-ajax-redirect="{{ request.path }}"
                >{% trans "Mark As Read" %}</a>
             {% endif %}
-            {% if can_reply %}
-            <a href="{% url 'conversations:message_reply' reply.id %}">{% trans "Reply" %}</a>
-            {% endif %}
-            {% endif %}
+           {% include "conversations/includes/replies.html" with message=reply %}
         </div>
     </div>
 </div>
