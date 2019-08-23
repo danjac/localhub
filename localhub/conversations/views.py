@@ -3,6 +3,7 @@
 
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
@@ -29,6 +30,7 @@ from localhub.conversations.models import Message
 from localhub.conversations.notifications import send_message_notifications
 from localhub.core.types import ContextDict
 from localhub.core.views import SearchMixin
+from localhub.users.utils import user_display
 from localhub.users.views import UserSlugMixin
 
 
@@ -127,20 +129,6 @@ class ConversationView(SingleUserMixin, MessageListView):
             return qs.search(self.search_query).order_by("-rank")
         return qs.order_by("-created")
 
-    def get_context_data(self, **kwargs) -> ContextDict:
-        data = super().get_context_data(**kwargs)
-        if (
-            self.request.user.has_perm(
-                "conversations.create_message", self.request.community
-            )
-            and not self.object.blocked.filter(
-                pk=self.request.user.id
-            ).exists()
-        ):
-            data["message_form"] = MessageForm()
-
-        return data
-
 
 conversation_view = ConversationView.as_view()
 
@@ -171,12 +159,9 @@ class MessageCreateView(
         return data
 
     def get_success_url(self) -> str:
-        return (
-            reverse(
-                "conversations:conversation",
-                args=[self.message.recipient.username],
-            )
-            + "#message-form"
+        return reverse(
+            "conversations:conversation",
+            args=[self.message.recipient.username],
         )
 
     def form_valid(self, form) -> HttpResponse:
@@ -185,6 +170,11 @@ class MessageCreateView(
         self.message.sender = self.request.user
         self.message.recipient = self.recipient
         self.message.save()
+        messages.success(
+            self.request,
+            _("Your message has been sent to %(recipient)s")
+            % {"recipient": user_display(self.message.recipient)},
+        )
         send_message_notifications(self.message)
         return HttpResponseRedirect(self.get_success_url())
 
