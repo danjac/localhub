@@ -38,7 +38,6 @@ You have been a member for <b>{{ created }}</b>.
 {% has_perm "users.block_user" user user_obj as can_block_user %}
 {% has_perm "users.follow_user" user user_obj as can_follow_user %}
 {% has_perm "users.change_user" user user_obj as can_change_user %}
-{% has_perm "conversations.create_message" user community as can_create_message %}
 {% has_perm "communities.view_membership" user membership as can_view_membership %}
 
 <div class="actions" data-controller="toggle">
@@ -99,11 +98,6 @@ You have been a member for <b>{{ created }}</b>.
   <a href="{% url 'conversations:conversation' user_obj.username %}#message-form">
     {% trans "Private Messages" %}
   </a>
-  {% if can_create_message and user not in user_obj.blocked.all %}
-  <a href="{% url 'conversations:message_create' user_obj.username %}">
-    {% trans "Send Message" %}
-  </a>
-  {% endif %}
   {% if can_view_membership %}
   <a href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
   {% endif %}
