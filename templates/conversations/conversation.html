@@ -10,19 +10,19 @@
 
 {% block content %}
 <h3>
-  {% avatar object "avatar-lg" %}
-  {% user_display object %}
+    {% avatar object "avatar-lg" %}
+    {% user_display object %}
 </h3>
 <div class="actions" data-controller="toggle">
-  <a href="{% url 'conversations:inbox' %}">{% trans "Inbox" %}</a>
-  <a href="{% url 'conversations:outbox' %}">{% trans "Outbox" %}</a>
-  {% has_perm "conversations.create_message" user community as can_create_message %}
+    <a href="{% url 'conversations:inbox' %}">{% trans "Inbox" %}</a>
+    <a href="{% url 'conversations:outbox' %}">{% trans "Outbox" %}</a>
+    {% has_perm "conversations.create_message" user community as can_create_message %}
 
-  {% if can_create_message and user not in object.blocked.all %}
-  <a href="{% url 'conversations:message_create' object.username %}">{% trans "Send Message" %}</a>
-  {% endif %}
+    {% if can_create_message and user not in object.blocked.all %}
+    <a href="{% url 'conversations:message_create' object.username %}">{% trans "Send Message" %}</a>
+    {% endif %}
 
-  <a href="{{ object.get_absolute_url }}">{% trans "About" %}</a>
+    <a href="{{ object.get_absolute_url }}">{% trans "About" %}</a>
 </div>
 <div class="divider"></div>
 
@@ -35,47 +35,57 @@
 {% if object_list %}
 {% for message in object_list %}
 <div class="card mb-1 {% if message.sender == user %} bg-gray{% endif %}">
-  <div class="card-header">
-    <div class="card-title h6">
-      <span class="timesince">
-        {% blocktrans with created=message.created|timesince %}
-        Sent {{ created }} ago by
-        {% endblocktrans %}
-        {% include "users/includes/chip.html" with profile=message.sender %}
-        {% include "conversations/includes/parent.html" %}
-      </span>
+    <div class="card-header">
+        <div class="card-title h6">
+            <span class="timesince">
+                {% blocktrans with created=message.created|timesince %}
+                Sent {{ created }} ago by
+                {% endblocktrans %}
+                {% include "users/includes/chip.html" with profile=message.sender %}
+                {% include "conversations/includes/parent.html" %}
+            </span>
+        </div>
     </div>
-  </div>
-  <div class="card-body">
-    {% include "conversations/includes/message.html" %}
-  </div>
-  <div class="card-footer">
-    <div class="actions">
-      <a href="{{ message.get_permalink }}">{% trans "Permalink" %}</a>
-      {% if message.sender == request.user %}
-
-      <a href="{% url 'conversations:message_delete' message.id %}"
-         data-controller="ajax confirm"
-         data-action="confirm#check ajax#delete"
-         data-ajax-redirect="{{ request.path }}"
-         data-confirm-header="{% trans 'Delete' %}"
-         data-confirm-body="{% trans 'Are you sure you want to delete this message?' %}"
-         >{% trans "Delete" %}</a>
-
-      {% else %}
-
-      {% if not message.read %}
-      <a href="{% url 'conversations:message_mark_read' message.id %}"
-         data-controller="ajax"
-         data-action="ajax#post"
-         data-ajax-redirect="{{ request.path }}"
-         >{% trans "Mark As Read" %}</a>
-      {% endif %}
-
-      <a href="{% url 'conversations:message_reply' message.id %}">{% trans "Reply" %}</a>
-      {% endif %}
+    <div class="card-body">
+        {% include "conversations/includes/message.html" %}
     </div>
-  </div>
+    <div class="card-footer">
+        <div class="actions">
+            <a href="{{ message.get_permalink }}">{% trans "Permalink" %}</a>
+            {% if message.sender == request.user %}
+
+            <a href="{% url 'conversations:message_delete' message.id %}"
+               data-controller="ajax confirm"
+               data-action="confirm#check ajax#delete"
+               data-ajax-redirect="{{ request.path }}"
+               data-confirm-header="{% trans 'Delete' %}"
+               data-confirm-body="{% trans 'Are you sure you want to delete this message?' %}"
+               >{% trans "Delete" %}</a>
+
+            {% else %}
+
+            {% if not message.read %}
+            <a href="{% url 'conversations:message_mark_read' message.id %}"
+               data-controller="ajax"
+               data-action="ajax#post"
+               data-ajax-redirect="{{ request.path }}"
+               >{% trans "Mark As Read" %}</a>
+            {% endif %}
+            {% if message.num_replies %}
+            <a href="{{ message.get_absolute_url }}">
+                {% blocktrans count counter=message.num_replies %}
+                1 Reply
+                {% plural %}
+                {{ counter }} Replies
+                {% endblocktrans %}
+            </a>
+            {% else %}
+            <a href="{% url 'conversations:message_reply' message.id %}">{% trans "Reply" %}</a>
+            {% endif %}
+
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% endfor %}
 {% include "includes/pagination.html" %}

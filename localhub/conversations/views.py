@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import F, Q, QuerySet
+from django.db.models import Count, F, Q, QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
@@ -68,6 +68,7 @@ class InboxView(MessageListView):
         qs = (
             super()
             .get_queryset()
+            .annotate(num_replies=Count("replies"))
             .filter(recipient=self.request.user)
             .select_related("sender", "parent", "community")
         )
@@ -122,6 +123,7 @@ class ConversationView(SingleUserMixin, MessageListView):
                 ),
                 community=self.request.community,
             )
+            .annotate(num_replies=Count("replies"))
             .select_related("sender", "recipient", "parent", "community")
             .distinct()
         )
