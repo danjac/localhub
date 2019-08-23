@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q, QuerySet
+from django.db.models import F, Q, QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
@@ -73,7 +73,7 @@ class InboxView(MessageListView):
         )
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank")
-        return qs.order_by("-created", "read")
+        return qs.order_by(F("read").desc(nulls_first=True), "-created")
 
 
 inbox_view = InboxView.as_view()
