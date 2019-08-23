@@ -4,28 +4,15 @@
 {% extends "conversations/base.html" %}
 
 {% load i18n %}
-{% load account %}
 
 {% block content %}
-<ul class="breadcrumb">
-    <li class="breadcrumb-item">
-        <a href="{% url 'conversations:conversation' recipient.username %}">{% user_display recipient %}</a>
-    </li>
-    <li class="breadcrumb-item">
-        <a href="#">{% trans "Send Message" %}</a>
-    </li>
-</ul>
 
-
-<div class="actions">
-    <a href="{% url 'conversations:inbox' %}">{% trans "Inbox" %}</a>
-    <a href="{% url 'conversations:outbox' %}">{% trans "Outbox" %}</a>
-</div>
+{% include "includes/breadcrumbs.html" %}
 
 <div class="divider"></div>
 
 <form method="POST"
-      action="{% url 'conversations:message_create' recipient.username %}"
+      action="{{ request.path }}"
       data-controller="form"
       data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload">
       {% include "includes/forms/fields.html" %}

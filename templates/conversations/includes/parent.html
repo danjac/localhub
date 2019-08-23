@@ -1,0 +1,11 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% with parent=message.parent %}
+{% if parent %}
+{% blocktrans with parent_id=parent parent_url=parent.get_absolute_url parent_id=parent.id %}
+in reply to <a href="{{ parent_url }}">#{{ parent_id }}</a>
+{% endblocktrans %}
+{% endif %}
+{% endwith %}

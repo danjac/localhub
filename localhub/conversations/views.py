@@ -28,8 +28,8 @@ from localhub.communities.views import CommunityRequiredMixin
 from localhub.conversations.forms import MessageForm
 from localhub.conversations.models import Message
 from localhub.conversations.notifications import send_message_notifications
-from localhub.core.types import ContextDict
-from localhub.core.views import SearchMixin
+from localhub.core.types import BreadcrumbList, ContextDict
+from localhub.core.views import BreadcrumbsMixin, SearchMixin
 from localhub.users.utils import user_display
 from localhub.users.views import UserSlugMixin
 
@@ -69,7 +69,7 @@ class InboxView(MessageListView):
             super()
             .get_queryset()
             .filter(recipient=self.request.user)
-            .select_related("sender")
+            .select_related("sender", "parent", "community")
         )
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank")
@@ -91,7 +91,7 @@ class OutboxView(MessageListView):
             super()
             .get_queryset()
             .filter(sender=self.request.user)
-            .select_related("recipient")
+            .select_related("recipient", "parent", "community")
         )
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank")
@@ -122,7 +122,7 @@ class ConversationView(SingleUserMixin, MessageListView):
                 ),
                 community=self.request.community,
             )
-            .select_related("sender", "recipient")
+            .select_related("sender", "recipient", "parent", "community")
             .distinct()
         )
         if self.search_query:
@@ -133,9 +133,10 @@ class ConversationView(SingleUserMixin, MessageListView):
 conversation_view = ConversationView.as_view()
 
 
-class MessageCreateView(
-    CommunityRequiredMixin, PermissionRequiredMixin, SingleUserMixin, FormView
+class MessageFormView(
+    CommunityRequiredMixin, PermissionRequiredMixin, FormView
 ):
+
     permission_required = "conversations.create_message"
     template_name = "conversations/message_form.html"
     form_class = MessageForm
@@ -143,6 +144,77 @@ class MessageCreateView(
     def get_permission_object(self) -> Community:
         return self.request.community
 
+
+class MessageReplyView(SingleObjectMixin, BreadcrumbsMixin, MessageFormView):
+    def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+
+        self.parent = self.object = self.get_object(
+            queryset=Message.objects.filter(
+                recipient=self.request.user, community=self.request.community
+            )
+        )
+        self.recipient = self.parent.sender
+
+        if self.parent.sender.blocked.filter(pk=request.user.id):
+            raise PermissionDenied(
+                _("You are not permitted to send messages to this user")
+            )
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_breadcrumbs(self) -> BreadcrumbList:
+        return [
+            (reverse("conversations:inbox"), _("Inbox")),
+            (
+                reverse(
+                    "conversations:conversation",
+                    args=[self.parent.sender.username],
+                ),
+                user_display(self.parent.sender),
+            ),
+            (self.parent.get_absolute_url(), f"#{self.parent.id}"),
+            ("#", _("Reply")),
+        ]
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["recipient"] = self.recipient
+        data["parent"] = self.parent
+        return data
+
+    def get_initial(self) -> ContextDict:
+        initial = super().get_initial()
+        initial["message"] = "\n".join(
+            [f"> {line}" for line in self.parent.message.splitlines()]
+        )
+        return initial
+
+    def get_success_url(self) -> str:
+        return reverse(
+            "conversations:conversation",
+            args=[self.message.recipient.username],
+        )
+
+    def form_valid(self, form) -> HttpResponse:
+        self.message = form.save(commit=False)
+        self.message.community = self.request.community
+        self.message.sender = self.request.user
+        self.message.recipient = self.recipient
+        self.message.parent = self.parent
+        self.message.save()
+
+        messages.success(
+            self.request,
+            _("Your message has been sent to %(recipient)s")
+            % {"recipient": user_display(self.message.recipient)},
+        )
+        send_message_notifications(self.message)
+        return HttpResponseRedirect(self.get_success_url())
+
+
+message_reply_view = MessageReplyView.as_view()
+
+
+class MessageCreateView(SingleUserMixin, BreadcrumbsMixin, MessageFormView):
     def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.recipient = self.object = self.get_object(
             queryset=self.get_user_queryset()
@@ -152,6 +224,19 @@ class MessageCreateView(
                 _("You are not permitted to send messages to this user")
             )
         return super().dispatch(request, *args, **kwargs)
+
+    def get_breadcrumbs(self) -> BreadcrumbList:
+        return [
+            (reverse("conversations:outbox"), _("Outbox")),
+            (
+                reverse(
+                    "conversations:conversation",
+                    args=[self.recipient.username],
+                ),
+                user_display(self.recipient),
+            ),
+            ("#", _("Send Message")),
+        ]
 
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
@@ -182,7 +267,44 @@ class MessageCreateView(
 message_create_view = MessageCreateView.as_view()
 
 
-class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
+class MessageDetailView(
+    MessageQuerySetMixin, LoginRequiredMixin, BreadcrumbsMixin, DetailView
+):
+    def get_breadcrumbs(self) -> BreadcrumbList:
+        if self.request.user == self.object.sender:
+            breadcrumbs = [
+                (reverse("conversations:outbox"), _("Outbox")),
+                (
+                    reverse(
+                        "conversations:conversation",
+                        args=[self.object.recipient.username],
+                    ),
+                    user_display(self.object.recipient),
+                ),
+            ]
+        else:
+            breadcrumbs = [
+                (reverse("conversations:inbox"), _("Inbox")),
+                (
+                    reverse(
+                        "conversations:conversation",
+                        args=[self.object.sender.username],
+                    ),
+                    user_display(self.object.sender),
+                ),
+            ]
+
+        if self.object.parent:
+            breadcrumbs.append(
+                (
+                    self.object.parent.get_absolute_url(),
+                    f"#{self.object.parent.id}",
+                )
+            )
+
+        breadcrumbs.append(("#", f"#{self.object.id}"))
+        return breadcrumbs
+
     def get_queryset(self) -> QuerySet:
         return (
             super()
@@ -190,38 +312,29 @@ class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
             .filter(
                 Q(recipient=self.request.user) | Q(sender=self.request.user)
             )
+            .select_related("recipient", "sender", "parent", "community")
+        )
+
+    def get_replies(self) -> QuerySet:
+        return self.object.replies.order_by("created").select_related(
+            "recipient", "sender", "parent", "community"
         )
 
     def get_context_data(self, **kwargs) -> ContextDict:
         data = super().get_context_data(**kwargs)
-        if self.object.sender == self.request.user:
-            data.update(
-                {
-                    "sender_url": reverse("conversations:outbox"),
-                    "recipient_url": reverse(
-                        "conversations:conversation",
-                        args=[self.object.recipient.username],
-                    ),
-                    "send_message_url": reverse(
-                        "conversations:message_create",
-                        args=[self.object.recipient.username],
-                    ),
-                }
+        data["replies"] = self.get_replies()
+        blocked = (
+            self.object.recipient.blocked
+            if self.object.sender == self.request.user
+            else self.object.sender.blocked
+        )
+        data["can_reply"] = (
+            self.request.user.has_perm(
+                "conversations.create_message", self.request.community
             )
-        else:
-            data.update(
-                {
-                    "sender_url": reverse(
-                        "conversations:conversation",
-                        args=[self.object.recipient.username],
-                    ),
-                    "recipient_url": reverse("conversations:inbox"),
-                    "send_message_url": reverse(
-                        "conversations:message_create",
-                        args=[self.object.sender.username],
-                    ),
-                }
-            )
+            and not blocked.filter(pk=self.request.user.pk).exists()
+        )
+
         return data
 
 

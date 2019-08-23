@@ -86,12 +86,6 @@ class TestMessageDetailView:
         )
         response = client.get(message.get_absolute_url())
         assert response.status_code == 200
-        assert response.context["sender_url"] == reverse(
-            "conversations:outbox"
-        )
-        assert response.context["recipient_url"] == reverse(
-            "conversations:conversation", args=[message.recipient.username]
-        )
 
     def test_get_if_recipient(self, client: Client, member: Membership):
         message = MessageFactory(
@@ -99,12 +93,6 @@ class TestMessageDetailView:
         )
         response = client.get(message.get_absolute_url())
         assert response.status_code == 200
-        assert response.context["recipient_url"] == reverse(
-            "conversations:inbox"
-        )
-        assert response.context["sender_url"] == reverse(
-            "conversations:conversation", args=[message.recipient.username]
-        )
 
     def test_get_if_neither_recipient_nor_sender(
         self, client: Client, member: Membership
@@ -112,6 +100,50 @@ class TestMessageDetailView:
         message = MessageFactory(community=member.community)
         response = client.get(message.get_absolute_url())
         assert response.status_code == 404
+
+
+class TestMessageReplyView:
+    def test_post_if_sender_blocked(self, client: Client, member: Membership):
+        recipient = MembershipFactory(community=member.community).member
+        recipient.blocked.add(member.member)
+        parent = MessageFactory(
+            community=member.community,
+            sender=recipient,
+            recipient=member.member,
+        )
+        response = client.post(
+            reverse("conversations:message_reply", args=[parent.id]),
+            {"message": "test"},
+        )
+        assert response.status_code == 403
+
+    def test_post(
+        self,
+        client: Client,
+        member: Membership,
+        send_notification_webpush_mock: MockFixture,
+    ):
+        recipient = MembershipFactory(community=member.community).member
+        parent = MessageFactory(
+            community=member.community,
+            sender=recipient,
+            recipient=member.member,
+        )
+        response = client.post(
+            reverse("conversations:message_reply", args=[parent.id]),
+            {"message": "test"},
+        )
+        assert response.url == reverse(
+            "conversations:conversation", args=[recipient.username]
+        )
+
+        message = Message.objects.filter(parent__isnull=False).get()
+        assert message.recipient == recipient
+        assert message.sender == member.member
+        assert message.community == member.community
+        assert message.parent == parent
+
+        assert send_notification_webpush_mock.called_once()
 
 
 class TestMessageCreateView:
@@ -135,9 +167,8 @@ class TestMessageCreateView:
             reverse("conversations:message_create", args=[recipient.username]),
             {"message": "test"},
         )
-        assert (
-            response.url
-            == reverse("conversations:conversation", args=[recipient.username])
+        assert response.url == reverse(
+            "conversations:conversation", args=[recipient.username]
         )
 
         message = Message.objects.get()

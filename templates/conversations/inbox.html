@@ -25,6 +25,7 @@
         {% endblocktrans %}
         {% url 'conversations:conversation' message.sender.username as convo_url %}
         {% include "users/includes/chip.html" with profile=message.sender profile_url=convo_url %}
+        {% include "conversations/includes/parent.html" %}
       </span>
     </div>
   </div>
@@ -40,9 +41,8 @@
          data-action="ajax#post"
          data-ajax-redirect="{{ request.path }}"
          >{% trans "Mark As Read" %}</a>
-
       {% endif %}
-      <a href="{% url 'conversations:message_create' message.sender.username %}">{% trans "Send Message" %}</a>
+      <a href="{% url 'conversations:message_reply' message.id %}">{% trans "Reply" %}</a>
     </div>
   </div>
 </div>

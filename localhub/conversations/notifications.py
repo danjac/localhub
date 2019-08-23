@@ -23,9 +23,14 @@ def send_message_email(message: Message):
 
             context = {"recipient": message.recipient, "message": message}
 
+            subject = (
+                _("Someone has replied to your message")
+                if message.parent
+                else _("Someone has sent you a message")
+            )
+
             send_mail(
-                _("%(community)s | Someone has sent you a message")
-                % {"community": message.community.name},
+                f"{message.community.name} | {subject}",
                 render_to_string("conversations/emails/message.txt", context),
                 message.community.resolve_email("no-reply"),
                 [message.recipient.email],
@@ -37,11 +42,17 @@ def send_message_email(message: Message):
 
 def send_message_push(message: Message):
     with override(message.recipient.language):
+
+        head = (
+            _("%(sender)s has replied to your message")
+            if message.parent
+            else _("%(sender)s has sent you a message")
+        )
+
         send_push_notification(
             message.recipient,
             message.community,
-            head=_("%(sender)s has sent you a message")
-            % {"sender": message.sender},
+            head=head % {"sender": message.sender},
             body=truncatechars(striptags(message.message.markdown()), 60),
             url=message.get_permalink(),
         )
