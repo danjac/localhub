@@ -202,6 +202,10 @@ class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
                         "conversations:conversation",
                         args=[self.object.recipient.username],
                     ),
+                    "send_message_url": reverse(
+                        "conversations:message_create",
+                        args=[self.object.recipient.username],
+                    ),
                 }
             )
         else:
@@ -212,6 +216,10 @@ class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
                         args=[self.object.recipient.username],
                     ),
                     "recipient_url": reverse("conversations:inbox"),
+                    "send_message_url": reverse(
+                        "conversations:message_create",
+                        args=[self.object.sender.username],
+                    ),
                 }
             )
         return data

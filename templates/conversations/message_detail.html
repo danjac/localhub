@@ -8,8 +8,8 @@
   <a href="{% url 'conversations:inbox' %}">{% trans "Inbox" %}</a>
   <a href="{% url 'conversations:outbox' %}">{% trans "Outbox" %}</a>
   {% has_perm "conversations.create_message" user community as can_create_message %}
-  {% if recipient.sender != request.user and can_create_message %}
-  <a href="{% url 'conversations:message_create' message.sender.username %}">{% trans "Send Message" %}</a>
+  {% if can_create_message %}
+  <a href="{{ send_message_url }}">{% trans "Send Message" %}</a>
   {% endif %}
 </div>
 <div class="divider">
