@@ -1,0 +1,19 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% if message.message|wordcount > 60 %}
+<div data-controller="toggle">
+  <div class="markdown-content d-hide" data-target="toggle.togglable">
+    {{ message.message.markdown }}
+  </div>
+  <div class="markdown-content" data-target="toggle.togglable">
+    {{ message.message.markdown|truncatewords_html:60 }}
+  </div>
+  <a href="#" data-action="toggle#toggle" data-target="toggle.togglable">{% trans "Read more" %}</a>
+</div>
+{% else %}
+<div class="markdown-content">
+  {{ message.message.markdown }}
+</div>
+{% endif %}

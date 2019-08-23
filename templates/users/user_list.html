@@ -69,8 +69,8 @@
             {% trans "Follow" %}
           </a>
           {% endif %}
-          <a href="{% url 'conversations:conversation' object.username %}#message-form">
-            {% trans "Private Messages" %}
+          <a href="{% url 'conversations:message_create' object.username %}">
+            {% trans "Send Message" %}
           </a>
         </div>
         {% endif %}

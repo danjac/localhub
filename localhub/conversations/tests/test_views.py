@@ -135,8 +135,10 @@ class TestMessageCreateView:
             reverse("conversations:message_create", args=[recipient.username]),
             {"message": "test"},
         )
-        assert response.url == reverse(
-            "conversations:conversation", args=[recipient.username]
+        assert (
+            response.url
+            == reverse("conversations:conversation", args=[recipient.username])
+            + "#message-form"
         )
 
         message = Message.objects.get()

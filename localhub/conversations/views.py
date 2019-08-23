@@ -3,7 +3,6 @@
 
 
 from django.conf import settings
-from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
@@ -101,6 +100,10 @@ outbox_view = OutboxView.as_view()
 
 
 class ConversationView(SingleUserMixin, MessageListView):
+    """
+    Renders thread of conversation between two users.
+    """
+
     template_name = "conversations/conversation.html"
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
@@ -153,30 +156,36 @@ class MessageCreateView(
         return self.request.community
 
     def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        self.recipient = self.get_object(queryset=self.get_user_queryset())
+        self.recipient = self.object = self.get_object(
+            queryset=self.get_user_queryset()
+        )
         if self.recipient.blocked.filter(pk=request.user.id):
             raise PermissionDenied(
                 _("You are not permitted to send messages to this user")
             )
         return super().dispatch(request, *args, **kwargs)
 
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["recipient"] = self.recipient
+        return data
+
     def get_success_url(self) -> str:
-        return reverse(
-            "conversations:conversation", args=[self.object.recipient.username]
+        return (
+            reverse(
+                "conversations:conversation",
+                args=[self.message.recipient.username],
+            )
+            + "#message-form"
         )
 
     def form_valid(self, form) -> HttpResponse:
-        self.object = form.save(commit=False)
-        self.object.community = self.request.community
-        self.object.sender = self.request.user
-        self.object.recipient = self.recipient
-        self.object.save()
-        messages.success(
-            self.request,
-            _("Message sent to %(recipient)s")
-            % {"recipient": self.object.recipient},
-        )
-        send_message_notifications(self.object)
+        self.message = form.save(commit=False)
+        self.message.community = self.request.community
+        self.message.sender = self.request.user
+        self.message.recipient = self.recipient
+        self.message.save()
+        send_message_notifications(self.message)
         return HttpResponseRedirect(self.get_success_url())
 
 

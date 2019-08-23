@@ -46,7 +46,7 @@
          data-ajax-redirect="{{ request.path }}"
          >{% trans "Mark As Read" %}</a>
       {% endif %}
-      <a href="{% url 'conversations:conversation' message.sender.username %}#message-form">{% trans "Reply" %}</a>
+      <a href="{% url 'conversations:message_create' message.sender.username %}">{% trans "Send Message" %}</a>
       {% endif %}
     </div>
   </div>

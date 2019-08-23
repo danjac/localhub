@@ -17,25 +17,31 @@ export default class extends Controller {
       this.checkBrowserCompatibility();
     } catch (e) {
       console.log('Compatibility issue:', e.toString());
-      return;
     }
-    console.log('fetching service worker...');
 
-    // fetch registration and check if user already subscribed
-    navigator.serviceWorker
-      .register(this.data.get('service-worker-url'))
-      .then(swRegistration => {
-        registration = swRegistration;
-        return registration.pushManager.getSubscription();
-      })
-      .then(subscription => {
+    this.registerServiceWorker();
+  }
+
+  registerServiceWorker() {
+    const url = this.data.get('service-worker-url');
+
+    const onRegister = swRegistration => {
+      registration = swRegistration;
+      return registration.pushManager.getSubscription().then(subscription => {
         if (!subscription) {
           this.show();
         }
-      })
-      .catch(e => {
-        console.log('Error', e);
       });
+    };
+
+    return navigator.serviceWorker.getRegistration(url).then(swRegistration => {
+      if (swRegistration) {
+        console.log('found service worker');
+        return onRegister(swRegistration);
+      }
+      console.log('registering new service worker');
+      return navigator.serviceWorker.register(url).then(onRegister);
+    });
   }
 
   subscribe(event) {

@@ -11,7 +11,7 @@
 {% include "includes/search_form.html" %}
 {% endif %}
 
-{% include "conversations/email_settings.html" %}
+{% include "conversations/includes/email_settings.html" %}
 
 {% if object_list %}
 
@@ -29,17 +29,11 @@
     </div>
   </div>
   <div class="card-body">
-    <div class="markdown-content">
-      {% if show_all or message.description|wordcount < 60 %}
-      {{ message.message.markdown }}
-      {% else %}
-      {{ message.message.markdown|truncatewords_html:60 }}
-      <a href="{{ message.get_absolute_url }}">{% trans "Read more" %}</a>
-      {% endif %}
-    </div>
+    {% include "conversations/includes/message.html" %}
   </div>
   <div class="card-footer">
     <div class="actions">
+      <a href="{{ message.get_permalink }}">{% trans "Permalink" %}</a>
       {% if not message.read %}
       <a href="{% url 'conversations:message_mark_read' message.id %}"
          data-controller="ajax"
@@ -48,7 +42,7 @@
          >{% trans "Mark As Read" %}</a>
 
       {% endif %}
-      <a href="{% url 'conversations:conversation' message.sender.username %}#message-form">{% trans "Reply" %}</a>
+      <a href="{% url 'conversations:message_create' message.sender.username %}">{% trans "Send Message" %}</a>
     </div>
   </div>
 </div>
