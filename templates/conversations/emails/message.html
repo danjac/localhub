@@ -23,10 +23,10 @@
 </div>
 
 <div class="section">
-  {% blocktrans with message=message.message url=recipient.get_permalink %}
+  {% blocktrans with message=message.message|linebreaksbr url=message.get_permalink %}
   {{ sender }} has sent you a <a href="{{ url }}">message</a>: <br>
   <p>
-    {{ message|linebreaksbr }}
+    {{ message }}
   </p>
   {% endblocktrans %}
 </div>
