@@ -83,6 +83,7 @@
         <div class="actions">
             <a href="{{ reply.get_permalink }}">{% trans "Permalink" %}</a>
             {% if reply.sender == request.user %}
+            <a href="{% url 'conversations:message_update' message.id %}">{% trans "Edit" %}</a>
             <a href="{% url 'conversations:message_delete' reply.id %}"
                data-controller="ajax confirm"
                data-action="confirm#check ajax#delete"
