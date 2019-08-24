@@ -8,7 +8,7 @@
 {% load activities_tags %}
 
 {% block content %}
-{% thumbnail object.image is_detail|yesno:"800,600" crop="center" as image %}
+{% thumbnail object.image is_detail|yesno:"800,600" as image %}
 <div>
   <a href="{{ object.get_absolute_url }}">
     <img class="img-responsive"
