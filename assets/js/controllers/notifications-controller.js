@@ -15,11 +15,10 @@ export default class extends Controller {
     // check browser can do notifications, and permission OK.
     try {
       this.checkBrowserCompatibility();
+      this.registerServiceWorker();
     } catch (e) {
       console.log('Compatibility issue:', e.toString());
     }
-
-    this.registerServiceWorker();
   }
 
   registerServiceWorker() {
