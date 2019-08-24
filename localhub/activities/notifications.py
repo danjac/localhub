@@ -11,6 +11,7 @@ from localhub.activities.models import Activity
 from localhub.notifications.models import Notification
 from localhub.notifications.emails import send_notification_email
 from localhub.notifications.utils import send_push_notification
+from localhub.users.utils import user_display
 
 NOTIFICATION_HEADERS = {
     "flag": _("%(actor)s has flagged this %(activity)s"),
@@ -79,7 +80,7 @@ def get_notification_header(
     activity: Activity, notification: Notification
 ) -> str:
     return NOTIFICATION_HEADERS[notification.verb] % {
-        "actor": notification.actor,
+        "actor": user_display(notification.actor),
         "activity": activity._meta.verbose_name,
     }
 

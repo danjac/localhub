@@ -8,6 +8,7 @@ from django.utils.translation import override
 
 from localhub.conversations.models import Message
 from localhub.notifications.utils import send_push_notification
+from localhub.users.utils import user_display
 
 
 def send_message_notifications(message: Message):
@@ -51,7 +52,7 @@ def send_message_push(message: Message):
         send_push_notification(
             message.recipient,
             message.community,
-            head=head % {"sender": message.sender},
+            head=head % {"sender": user_display(message.sender)},
             body=message.get_abbreviation(),
             url=message.get_permalink(),
         )

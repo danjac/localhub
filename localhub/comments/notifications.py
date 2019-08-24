@@ -12,6 +12,7 @@ from localhub.comments.models import Comment
 from localhub.notifications.emails import send_notification_email
 from localhub.notifications.models import Notification
 from localhub.notifications.utils import send_push_notification
+from localhub.users.utils import user_display
 
 NOTIFICATION_HEADERS = {
     "flag": _("%(actor)s has flagged this comment"),
@@ -37,7 +38,7 @@ def send_comment_notifications(comment: Comment, notification: Notification):
 
 def get_notification_header(notification: Notification) -> str:
     return NOTIFICATION_HEADERS[notification.verb] % {
-        "actor": notification.actor
+        "actor": user_display(notification.actor)
     }
 
 
