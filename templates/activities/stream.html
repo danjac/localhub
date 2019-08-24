@@ -26,8 +26,12 @@
 </div>
 {% elif user.is_authenticated %}
 <p class="toast text-center my-1">
+    {% if join_request_sent %}
+    {% trans "Your application to join this community is pending approval from the site admins." %}
+    {% else %}
     {% url 'join_requests:create' as join_request_url %}
     {% blocktrans %}You do not have permission to post to this site. You can send a request to join this community <a href="{{ join_request_url }}">here</a>.{% endblocktrans %}
+    {% endif %}
 </p>
 {% else %}
 <p class="toast text-center my-1">

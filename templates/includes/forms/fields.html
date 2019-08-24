@@ -1,6 +1,16 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
 {{ form.media }}
 
 {% csrf_token %}
+
+<div class="toast toast-error text-center d-hide" data-target="form.errorMessage">
+  {% trans "Sorry, an error has occurred with your form" %}
+  <div data-target="form.errorDetail"></div>
+</div>
+
 {% include "includes/forms/non_field_errors.html" %}
 
 {% for field in form.hidden_fields %}

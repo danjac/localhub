@@ -9,10 +9,12 @@ from django.utils.formats import date_format
 from django.utils.functional import cached_property
 
 from localhub.activities.types import ActivityType
+from localhub.communities.rules import is_member
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.types import ContextDict, QuerySetList
 from localhub.core.views import MultipleQuerySetListView, SearchMixin
 from localhub.events.models import Event
+from localhub.join_requests.models import JoinRequest
 from localhub.photos.models import Photo
 from localhub.posts.models import Post
 
@@ -55,6 +57,18 @@ class StreamView(BaseStreamView):
             .following(self.request.user)
             .blocked(self.request.user)
         )
+
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        data["join_request_sent"] = (
+            self.request.user.is_authenticated
+            and not is_member(self.request.user, self.request.community)
+            and JoinRequest.objects.filter(
+                sender=self.request.user, community=self.request.community
+            ).exists()
+        )
+
+        return data
 
 
 stream_view = StreamView.as_view()

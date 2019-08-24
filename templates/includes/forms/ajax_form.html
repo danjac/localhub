@@ -1,0 +1,14 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+<form method="POST"
+      action="{{ action }}"
+      {% if multipart %}enctype="multipart/form-data"{% endif %}
+      data-controller="form"
+      data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload"
+      {% block form_extra_attrs %}{% endblock %}>
+  {% include "includes/forms/fields.html" %}
+  <button type="submit" class="btn btn-primary">
+    {{ submit_btn }}
+  </button>
+</form>

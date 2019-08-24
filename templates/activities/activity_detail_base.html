@@ -4,6 +4,7 @@
 {% extends "activities/base.html" %}
 
 {% load i18n %}
+{% load form_tags %}
 
 {% block subtitle %}{{ object }}{% endblock %}
 
@@ -22,15 +23,7 @@
   {% endfor %}
   {% if comment_form %}
   <div class="divider"></div>
-  <form method="POST"
-        action="{{ object.get_create_comment_url }}"
-        data-controller="form"
-        data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload">
-        {% include "includes/forms/fields.html" with form=comment_form %}
-        <button type="submit" class="btn btn-primary">
-          {% trans 'Submit' %}
-        </button>
-  </form>
+  {% simple_ajax_form comment_form action=object.get_create_comment_url %}
   {% elif not object.allow_comments %}
   <p class="toast text-center my-1">{% trans "Comments are locked" %}</p>
   {% elif not user.is_authenticated %}

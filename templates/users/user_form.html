@@ -4,6 +4,7 @@
 {% extends "users/account_base.html" %}
 
 {% load i18n %}
+{% load form_tags %}
 
 {% block account_subtitle %}{% trans "Update Profile" %}{% endblock %}
 
@@ -15,15 +16,6 @@
 </div>
 
 <div class="divider"></div>
-
-<form method="POST"
-      action="{% url 'user_update' %}"
-      enctype="multipart/form-data"
-      data-controller="form"
-      data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload">
-    {% include "includes/forms/fields.html" %}
-    <button type="submit" class="btn btn-primary">
-        {% trans 'Save settings' %}
-    </button>
-</form>
+{% trans "Save Settings" as t_save_settings %}
+{% simple_ajax_form form multipart=True submit_btn=t_save_settings %}
 {% endblock content %}

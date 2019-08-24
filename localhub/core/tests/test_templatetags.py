@@ -1,6 +1,20 @@
+from django.forms import Form
 from django.test.client import RequestFactory
 
+from localhub.core.templatetags.form_tags import simple_ajax_form
 from localhub.core.templatetags.pagination_tags import pagination_url
+
+
+class TestSimpleAjaxForm:
+    def test_simple_ajax_form(self, req_factory: RequestFactory):
+        class MyForm(Form):
+            ...
+
+        form = MyForm()
+        req = req_factory.get("/some-action/")
+        context = simple_ajax_form({"request": req}, form)
+        assert context["action"] == "/some-action/"
+        assert context["form"] == form
 
 
 class TestPaginationUrl:

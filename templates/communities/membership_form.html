@@ -5,6 +5,7 @@
 
 {% load i18n %}
 {% load account %}
+{% load form_tags %}
 
 {% block content %}
 <h3>{% trans "Members" %}</h3>
@@ -20,11 +21,7 @@
 <div class="divider"></div>
 
 <div class="col-6 col-sm-12">
-    <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
-        {% include "includes/forms/fields.html" %}
-        <button type="submit" class="btn btn-primary">
-            {% trans 'Save settings' %}
-        </button>
-    </form>
+    {% trans "Save Settings" as t_save_settings %}
+    {% simple_ajax_form form submit_btn=t_save_settings %}
 </div>
 {% endblock content %}

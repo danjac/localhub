@@ -4,6 +4,7 @@
 {% extends "communities/base.html" %}
 
 {% load i18n %}
+{% load form_tags %}
 
 {% block content %}
 <h3>{% trans "Community Settings" %}</h3>
@@ -14,14 +15,7 @@
 
 <div class="divider"></div>
 
-<form method="POST"
-      enctype="multipart/form-data"
-      action="{% url 'communities:community_update' %}"
-      data-controller="form"
-      data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload">
-      {% include "includes/forms/fields.html" %}
-      <button type="submit" class="btn btn-primary">
-          {% trans 'Save settings' %}
-      </button>
-</form>
+{% trans "Save Settings" as t_save_settings %}
+{% simple_ajax_form form multipart=True submit_btn=t_save_settings %}
+
 {% endblock content %}

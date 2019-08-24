@@ -3,17 +3,11 @@
 
 {% extends "activities/base.html" %}
 {% load i18n %}
-
+{% load form_tags %}
 
 {% block content %}
 <h3>{% trans "Request invitation" %}</h3>
-<div class="col-6 col-sm-12">
-  <form method="POST" action="{{ request.path }}" data-controller="form" data-action="form#submit">
-    <p>{% trans "Your request will be sent to the site admins." %}</p>
-    {% include "includes/forms/fields.html" %}
-    <button type="submit" class="btn btn-primary">
-        {% trans "Send request" %}
-    </button>
-  </form>
-</div>
+<p>{% trans "Your request will be sent to the site admins. If they approve your request, you will automatically become a member of this community." %}</p>
+{% trans "Send Join Request" as t_send_join_request %}
+{% simple_ajax_form form submit_btn=t_send_join_request %}
 {% endblock %}

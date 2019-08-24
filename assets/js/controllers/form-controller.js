@@ -10,6 +10,8 @@ const unloadMsg =
   'Are you sure you want to leave this page? All your changes will be lost.';
 
 export default class extends Controller {
+  static targets = ['errorMessage', 'errorDetail'];
+
   connect() {
     this.formElements.forEach(element =>
       element.addEventListener('change', () => this.data.set('changed', true))
@@ -53,6 +55,7 @@ export default class extends Controller {
     }
 
     this.disableFormElements();
+    this.clearErrorMessage();
     const referrer = location.href;
 
     axios({
@@ -80,10 +83,34 @@ export default class extends Controller {
           eval(response.data);
         }
       })
-      .catch(() => {
-        // we need something more elaborate later
+      .catch(err => {
         this.enableFormElements();
+        let errMsg = '';
+        if (err.response) {
+          console.log(err.response);
+          const { status, statusText } = err.response;
+          errMsg = `${status}: ${statusText}`;
+        }
+        this.renderErrorMessage(errMsg);
       });
+  }
+
+  clearErrorMessage() {
+    if (this.errorMessageTarget) {
+      this.errorMessageTarget.classList.add('d-hide');
+    }
+    if (this.errorDetailTarget) {
+      this.errorDetailTarget.textContent = '';
+    }
+  }
+
+  renderErrorMessage(msg) {
+    if (this.errorMessageTarget) {
+      this.errorMessageTarget.classList.remove('d-hide');
+    }
+    if (this.errorDetailTarget && msg) {
+      this.errorDetailTarget.textContent = msg;
+    }
   }
 
   disableFormElements() {
