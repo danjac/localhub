@@ -25,7 +25,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="turbolinks-cache-control" content="no-cache">
+    {% if community.public %}
+    {% if community.tagline %}
+    <meta name="description" content="{{ community.tagline }}">
+    {% endif %}
+    <meta name="copyright" content="Dan Jacob {% now "Y" %}">
+    <meta name="keywords" content="open source,social network">
+    <meta name="robots" content="index,follow">
+    {% else %}
+    <meta name="robots" content="noindex">
+    {% endif %}
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link rel="apple-touch-icon image_src" href="{% static 'apple-touch-icon.png' %}">
     <link rel="stylesheet" href="{% static 'dist/main.css' %}">
     <script defer src="{% static 'dist/main.js' %}"></script>
   </head>
