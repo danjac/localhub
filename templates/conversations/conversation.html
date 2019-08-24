@@ -10,19 +10,18 @@
 
 {% block content %}
 <h3>
-    {% avatar object "avatar-lg" %}
-    {% user_display object %}
+    {% avatar user_obj "avatar-lg" %}
+    {% user_display user_obj %}
 </h3>
 <div class="actions" data-controller="toggle">
     <a href="{% url 'conversations:inbox' %}">{% trans "Inbox" %}</a>
     <a href="{% url 'conversations:outbox' %}">{% trans "Outbox" %}</a>
     {% has_perm "conversations.create_message" user community as can_create_message %}
 
-    {% if can_create_message and user not in object.blocked.all %}
-    <a href="{% url 'conversations:message_create' object.username %}">{% trans "Send Message" %}</a>
+    {% if can_create_message and user not in user_obj.blocked.all %}
+    <a href="{% url 'conversations:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
     {% endif %}
 
-    <a href="{{ object.get_absolute_url }}">{% trans "About" %}</a>
 </div>
 <div class="divider"></div>
 
