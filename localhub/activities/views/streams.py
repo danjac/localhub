@@ -64,7 +64,9 @@ class StreamView(BaseStreamView):
             self.request.user.is_authenticated
             and not is_member(self.request.user, self.request.community)
             and JoinRequest.objects.filter(
-                sender=self.request.user, community=self.request.community
+                sender=self.request.user,
+                community=self.request.community,
+                status=JoinRequest.STATUS.pending,
             ).exists()
         )
 
