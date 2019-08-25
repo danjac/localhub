@@ -11,7 +11,7 @@
 {% block content %}
 <h3>
     {% avatar user_obj "avatar-lg" %}
-    {% user_display user_obj %}
+    <a href="{{ user_obj.get_absolute_url }}">{% user_display user_obj %}</a>
 </h3>
 <div class="actions" data-controller="toggle">
     <a href="{% url 'conversations:inbox' %}">{% trans "Inbox" %}</a>
