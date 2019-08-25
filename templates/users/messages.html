@@ -1,7 +1,8 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "private_messages/base.html" %}
+
+{% extends "users/user_detail_base.html" %}
 
 {% load i18n %}
 {% load account %}
@@ -9,33 +10,7 @@
 {% load private_messages_tags %}
 {% load users_tags %}
 
-{% block private_messages_subtitle %} | {% user_display user_obj %}{% endblock %}
-
-{% block content %}
-<h3>{% trans "Messages" %}</h3>
-<h4>
-    {% avatar user_obj "avatar-lg" %}
-    <a href="{{ user_obj.get_absolute_url }}">{% user_display user_obj %}</a>
-</h4>
-<div class="actions" data-controller="toggle">
-      {% get_unread_message_count user community as unread_messages %}
-      <span {% if unread_messages %}class="badge" data-badge="{{ unread_messages }}"{% endif %}>
-        <a href="{% url 'private_messages:inbox'%}">{% trans "Inbox" %}</a>
-      </span>
-
-    <a href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
-    {% has_perm "private_messages.create_message" user community as can_create_message %}
-
-    {% if can_create_message and user not in user_obj.blocked.all %}
-    <a href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
-    {% endif %}
-
-</div>
-<div class="divider"></div>
-
-{% if paginator.count or view.search_query %}
-{% include "includes/search_form.html" %}
-{% endif %}
+{% block user_content %}
 
 {% include "private_messages/includes/email_settings.html" %}
 
@@ -87,4 +62,4 @@
 {% else %}
 {% include "includes/empty.html" %}
 {% endif %}
-{% endblock %}
+{% endblock user_content %}

@@ -105,39 +105,6 @@ class OutboxView(MessageListView):
 outbox_view = OutboxView.as_view()
 
 
-class ThreadView(SingleUserMixin, MessageListView):
-    """
-    Renders thread of all private messages between two users.
-    """
-
-    template_name = "private_messages/thread.html"
-
-    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        self.object = self.get_object(queryset=self.get_user_queryset())
-        return super().get(request, *args, **kwargs)
-
-    def get_queryset(self) -> QuerySet:
-        qs = (
-            Message.objects.with_num_replies()
-            .filter(
-                Q(Q(recipient=self.object) | Q(sender=self.object))
-                & Q(
-                    Q(recipient=self.request.user)
-                    | Q(sender=self.request.user)
-                ),
-                community=self.request.community,
-            )
-            .select_related("sender", "recipient", "parent", "community")
-            .distinct()
-        )
-        if self.search_query:
-            return qs.search(self.search_query).order_by("-rank")
-        return qs.order_by("-created")
-
-
-thread_view = ThreadView.as_view()
-
-
 class MessageFormView(
     CommunityRequiredMixin, PermissionRequiredMixin, FormView
 ):
@@ -169,13 +136,6 @@ class MessageReplyView(SingleObjectMixin, BreadcrumbsMixin, MessageFormView):
     def get_breadcrumbs(self) -> BreadcrumbList:
         return [
             (reverse("private_messages:inbox"), _("Inbox")),
-            (
-                reverse(
-                    "private_messages:thread",
-                    args=[self.parent.sender.username],
-                ),
-                user_display(self.parent.sender),
-            ),
             (self.parent.get_absolute_url(), self.parent.get_abbreviation()),
             ("#", _("Reply")),
         ]
@@ -194,9 +154,7 @@ class MessageReplyView(SingleObjectMixin, BreadcrumbsMixin, MessageFormView):
         return initial
 
     def get_success_url(self) -> str:
-        return reverse(
-            "private_messages:thread", args=[self.message.recipient.username]
-        )
+        return self.message.get_absolute_url()
 
     def form_valid(self, form) -> HttpResponse:
         self.message = form.save(commit=False)
@@ -231,13 +189,7 @@ class MessageCreateView(SingleUserMixin, BreadcrumbsMixin, MessageFormView):
 
     def get_breadcrumbs(self) -> BreadcrumbList:
         return [
-            (reverse("private_messages:outbox"), _("Outbox")),
-            (
-                reverse(
-                    "private_messages:thread", args=[self.recipient.username]
-                ),
-                user_display(self.recipient),
-            ),
+            (reverse("users:messages"), user_display(self.recipient)),
             ("#", _("Send Message")),
         ]
 
@@ -247,9 +199,7 @@ class MessageCreateView(SingleUserMixin, BreadcrumbsMixin, MessageFormView):
         return data
 
     def get_success_url(self) -> str:
-        return reverse(
-            "private_messages:thread", args=[self.message.recipient.username]
-        )
+        return self.message.get_absolute_url()
 
     def form_valid(self, form) -> HttpResponse:
         self.message = form.save(commit=False)
@@ -274,27 +224,9 @@ class MessageDetailView(
 ):
     def get_breadcrumbs(self) -> BreadcrumbList:
         if self.request.user == self.object.sender:
-            breadcrumbs = [
-                (reverse("private_messages:outbox"), _("Outbox")),
-                (
-                    reverse(
-                        "private_messages:thread",
-                        args=[self.object.recipient.username],
-                    ),
-                    user_display(self.object.recipient),
-                ),
-            ]
+            breadcrumbs = [(reverse("private_messages:outbox"), _("Outbox"))]
         else:
-            breadcrumbs = [
-                (reverse("private_messages:inbox"), _("Inbox")),
-                (
-                    reverse(
-                        "private_messages:thread",
-                        args=[self.object.sender.username],
-                    ),
-                    user_display(self.object.sender),
-                ),
-            ]
+            breadcrumbs = [(reverse("private_messages:inbox"), _("Inbox"))]
 
         if self.object.parent:
             breadcrumbs.append(
@@ -356,13 +288,6 @@ class MessageUpdateView(
     def get_breadcrumbs(self) -> BreadcrumbList:
         return [
             (reverse("private_messages:outbox"), _("Outbox")),
-            (
-                reverse(
-                    "private_messages:thread",
-                    args=[self.object.recipient.username],
-                ),
-                user_display(self.object.recipient),
-            ),
             ("#", _("Edit Message")),
         ]
 

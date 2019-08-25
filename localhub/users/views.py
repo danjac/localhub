@@ -30,6 +30,7 @@ from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.types import ContextDict
 from localhub.likes.models import Like
+from localhub.private_messages.models import Message
 from localhub.users.emails import send_user_notification_email
 from localhub.users.forms import UserForm
 
@@ -315,3 +316,34 @@ class UserCommentListView(SingleUserMixin, CommentListView):
 
 
 user_comment_list_view = UserCommentListView.as_view()
+
+
+class UserMessageListView(LoginRequiredMixin, SingleUserMixin, ListView):
+    """
+    Renders thread of all private messages between this user
+    and the current user.
+    """
+
+    template_name = "users/messages.html"
+
+    def get_user_queryset(self) -> QuerySet:
+        return super().get_user_queryset().exclude(pk=self.request.user.id)
+
+    def get_queryset(self) -> QuerySet:
+        return (
+            Message.objects.with_num_replies()
+            .filter(
+                Q(Q(recipient=self.object) | Q(sender=self.object))
+                & Q(
+                    Q(recipient=self.request.user)
+                    | Q(sender=self.request.user)
+                ),
+                community=self.request.community,
+            )
+            .select_related("sender", "recipient", "parent", "community")
+            .order_by("-created")
+            .distinct()
+        )
+
+
+user_message_list_view = UserMessageListView.as_view()

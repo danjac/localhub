@@ -27,33 +27,6 @@ class TestOutboxView:
         assert len(response.context["object_list"]) == 1
 
 
-class TestThreadView:
-    def test_get(self, client: Client, member: Membership):
-        other_user = MembershipFactory(community=member.community).member
-        from_me = MessageFactory(
-            community=member.community,
-            sender=member.member,
-            recipient=other_user,
-        )
-        to_me = MessageFactory(
-            community=member.community,
-            sender=other_user,
-            recipient=member.member,
-        )
-        to_someone_else = MessageFactory(
-            community=member.community, sender=other_user
-        )
-        response = client.get(
-            reverse("private_messages:thread", args=[other_user.username])
-        )
-        assert response.status_code == 200
-
-        object_list = response.context["object_list"]
-        assert from_me in object_list
-        assert to_me in object_list
-        assert to_someone_else not in object_list
-
-
 class TestMessageUpdateView:
     def test_get(self, client: Client, member: Membership):
         message = MessageFactory(
@@ -156,11 +129,8 @@ class TestMessageReplyView:
             reverse("private_messages:message_reply", args=[parent.id]),
             {"message": "test"},
         )
-        assert response.url == reverse(
-            "private_messages:thread", args=[recipient.username]
-        )
-
         message = Message.objects.filter(parent__isnull=False).get()
+        assert response.url == message.get_absolute_url()
         assert message.recipient == recipient
         assert message.sender == member.member
         assert message.community == member.community
@@ -194,11 +164,8 @@ class TestMessageCreateView:
             ),
             {"message": "test"},
         )
-        assert response.url == reverse(
-            "private_messages:thread", args=[recipient.username]
-        )
-
         message = Message.objects.get()
+        assert message.get_absolute_url() == response.url
         assert message.recipient == recipient
         assert message.sender == member.member
         assert message.community == member.community

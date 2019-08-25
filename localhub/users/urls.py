@@ -10,8 +10,8 @@ from localhub.users.views import (
     user_autocomplete_list_view,
     user_block_view,
     user_comment_list_view,
-    user_detail_view,
     user_follow_view,
+    user_message_list_view,
     user_stream_view,
     user_unblock_view,
     user_unfollow_view,
@@ -32,9 +32,11 @@ urlpatterns = [
     path("<slug:slug>/unfollow/", view=user_unfollow_view, name="unfollow"),
     path("<slug:slug>/block/", view=user_block_view, name="block"),
     path("<slug:slug>/unblock/", view=user_unblock_view, name="unblock"),
-    path("<slug:slug>/about/", view=user_detail_view, name="detail"),
     path(
         "<slug:slug>/comments/", view=user_comment_list_view, name="comments"
+    ),
+    path(
+        "<slug:slug>/messages/", view=user_message_list_view, name="messages"
     ),
     path("<slug:slug>/", view=user_stream_view, name="activities"),
 ]

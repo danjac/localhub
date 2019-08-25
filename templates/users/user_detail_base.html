@@ -14,6 +14,14 @@
 <h3>{% avatar user_obj "avatar-lg" %}{% user_display user_obj %}</h3>
 <h4>@{{ user_obj.username }}</h4>
 
+{% if user_obj.bio %}
+<p class="py-1">
+  {{ user_obj.bio|urlize|linebreaksbr }}
+</p>
+{% elif is_auth_user %}
+<p>{% trans "Click the 'My Settings' link to add a bio to your profile." %}</p>
+{% endif %}
+
 {% if is_auth_user %}
 {% blocktrans with created=membership.created|timesince %}
 You have been a member for <b>{{ created }}</b>.
@@ -38,6 +46,7 @@ You have been a member for <b>{{ created }}</b>.
 {% has_perm "users.block_user" user user_obj as can_block_user %}
 {% has_perm "users.follow_user" user user_obj as can_follow_user %}
 {% has_perm "users.change_user" user user_obj as can_change_user %}
+{% has_perm "private_messages.create_message" user community as can_create_message %}
 {% has_perm "communities.view_membership" user membership as can_view_membership %}
 
 <div class="actions" data-controller="toggle">
@@ -96,12 +105,13 @@ You have been a member for <b>{{ created }}</b>.
 
   {% if not is_auth_user %}
 
-  <a href="{% url 'private_messages:thread' user_obj.username %}">{% trans "Messages" %}</a>
+  {% if can_create_message %}
+  <a href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
+  {% endif %}
 
   {% if can_view_membership %}
   <a href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
   {% endif %}
-
   {% endif %}
 
 </div>
@@ -119,10 +129,12 @@ You have been a member for <b>{{ created }}</b>.
     <a data-target="active-link.match"
        href="{% url 'users:comments' user_obj.username %}">{% trans "Comments" %}</a>
   </li>
+  {% if user.is_authenticated and not is_auth_user %}
   <li class="tab-item" data-controller="active-link" data-active-link-exact>
     <a data-target="active-link.match"
-       href="{% url 'users:detail' user_obj.username %}">{% trans "About" %}</a>
+       href="{% url 'users:messages' user_obj.username %}">{% trans "Messages" %}</a>
   </li>
+  {% endif %}
 </ul>
 
 {% block user_content %}{% endblock %}

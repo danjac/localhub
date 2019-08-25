@@ -20,7 +20,7 @@
 <div class="actions">
   <a href="{% url 'users:activities' member.username %}">{% trans "Posts" %}</a>
   <a href="{% url 'users:comments' member.username %}">{% trans "Comments" %}</a>
-  <a href="{% url 'users:detail' member.username %}">{% trans "About" %}</a>
+  <a href="{% url 'users:messages' member.username %}">{% trans "Messages" %}</a>
   {% if member != user %}
   {% has_perm "communities.change_membership" user object as can_change %}
   {% has_perm "communities.delete_membership" user object as can_delete %}

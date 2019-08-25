@@ -20,7 +20,6 @@ from taggit.models import Tag
 
 from localhub.communities.models import Community, Membership
 from localhub.core.fields import ChoiceArrayField
-from localhub.core.markdown.fields import MarkdownField
 from localhub.core.utils.search import SearchIndexer, SearchQuerySetMixin
 from localhub.notifications.models import Notification
 
@@ -146,7 +145,7 @@ class User(AbstractUser):
         (
             "new_sibling_comment",
             _(
-                "Someone comments on a post, event or photo I've also commented on" # noqa
+                "Someone comments on a post, event or photo I've also commented on"  # noqa
             ),
         ),
         ("reshare", _("Someone has reshared my post, event or photo")),
@@ -190,7 +189,7 @@ class User(AbstractUser):
     )
 
     name = models.CharField(_("Full name"), blank=True, max_length=255)
-    bio = MarkdownField(blank=True)
+    bio = models.TextField(blank=True)
     avatar = ImageField(upload_to="avatars", null=True, blank=True)
 
     language = models.CharField(
@@ -286,8 +285,7 @@ class User(AbstractUser):
                 num_messages=models.Count(
                     "message",
                     filter=models.Q(
-                        message__read__isnull=True,
-                        message__recipient=self,
+                        message__read__isnull=True, message__recipient=self
                     ),
                 )
             ).values_list("id", "num_messages")
