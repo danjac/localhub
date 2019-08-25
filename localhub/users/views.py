@@ -345,5 +345,20 @@ class UserMessageListView(LoginRequiredMixin, SingleUserMixin, ListView):
             .distinct()
         )
 
+    def get_context_data(self, **kwargs) -> ContextDict:
+        data = super().get_context_data(**kwargs)
+        qs = self.get_queryset()
+        data.update(
+            {
+                "num_messages_sent": qs.filter(
+                    sender=self.request.user
+                ).count(),
+                "num_messages_received": qs.filter(
+                    recipient=self.request.user
+                ).count(),
+            }
+        )
+        return data
+
 
 user_message_list_view = UserMessageListView.as_view()
