@@ -27,7 +27,7 @@ class TestOutboxView:
         assert len(response.context["object_list"]) == 1
 
 
-class TestConversationView:
+class TestThreadView:
     def test_get(self, client: Client, member: Membership):
         other_user = MembershipFactory(community=member.community).member
         from_me = MessageFactory(
@@ -44,9 +44,7 @@ class TestConversationView:
             community=member.community, sender=other_user
         )
         response = client.get(
-            reverse(
-                "private_messages:conversation", args=[other_user.username]
-            )
+            reverse("private_messages:thread", args=[other_user.username])
         )
         assert response.status_code == 200
 
@@ -159,7 +157,7 @@ class TestMessageReplyView:
             {"message": "test"},
         )
         assert response.url == reverse(
-            "private_messages:conversation", args=[recipient.username]
+            "private_messages:thread", args=[recipient.username]
         )
 
         message = Message.objects.filter(parent__isnull=False).get()
@@ -197,7 +195,7 @@ class TestMessageCreateView:
             {"message": "test"},
         )
         assert response.url == reverse(
-            "private_messages:conversation", args=[recipient.username]
+            "private_messages:thread", args=[recipient.username]
         )
 
         message = Message.objects.get()

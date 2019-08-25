@@ -105,12 +105,12 @@ class OutboxView(MessageListView):
 outbox_view = OutboxView.as_view()
 
 
-class ConversationView(SingleUserMixin, MessageListView):
+class ThreadView(SingleUserMixin, MessageListView):
     """
-    Renders thread of conversation between two users.
+    Renders thread of all private messages between two users.
     """
 
-    template_name = "private_messages/conversation.html"
+    template_name = "private_messages/thread.html"
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object(queryset=self.get_user_queryset())
@@ -135,7 +135,7 @@ class ConversationView(SingleUserMixin, MessageListView):
         return qs.order_by("-created")
 
 
-conversation_view = ConversationView.as_view()
+thread_view = ThreadView.as_view()
 
 
 class MessageFormView(
@@ -171,7 +171,7 @@ class MessageReplyView(SingleObjectMixin, BreadcrumbsMixin, MessageFormView):
             (reverse("private_messages:inbox"), _("Inbox")),
             (
                 reverse(
-                    "private_messages:conversation",
+                    "private_messages:thread",
                     args=[self.parent.sender.username],
                 ),
                 user_display(self.parent.sender),
@@ -195,8 +195,7 @@ class MessageReplyView(SingleObjectMixin, BreadcrumbsMixin, MessageFormView):
 
     def get_success_url(self) -> str:
         return reverse(
-            "private_messages:conversation",
-            args=[self.message.recipient.username],
+            "private_messages:thread", args=[self.message.recipient.username]
         )
 
     def form_valid(self, form) -> HttpResponse:
@@ -235,8 +234,7 @@ class MessageCreateView(SingleUserMixin, BreadcrumbsMixin, MessageFormView):
             (reverse("private_messages:outbox"), _("Outbox")),
             (
                 reverse(
-                    "private_messages:conversation",
-                    args=[self.recipient.username],
+                    "private_messages:thread", args=[self.recipient.username]
                 ),
                 user_display(self.recipient),
             ),
@@ -250,8 +248,7 @@ class MessageCreateView(SingleUserMixin, BreadcrumbsMixin, MessageFormView):
 
     def get_success_url(self) -> str:
         return reverse(
-            "private_messages:conversation",
-            args=[self.message.recipient.username],
+            "private_messages:thread", args=[self.message.recipient.username]
         )
 
     def form_valid(self, form) -> HttpResponse:
@@ -281,7 +278,7 @@ class MessageDetailView(
                 (reverse("private_messages:outbox"), _("Outbox")),
                 (
                     reverse(
-                        "private_messages:conversation",
+                        "private_messages:thread",
                         args=[self.object.recipient.username],
                     ),
                     user_display(self.object.recipient),
@@ -292,7 +289,7 @@ class MessageDetailView(
                 (reverse("private_messages:inbox"), _("Inbox")),
                 (
                     reverse(
-                        "private_messages:conversation",
+                        "private_messages:thread",
                         args=[self.object.sender.username],
                     ),
                     user_display(self.object.sender),
@@ -361,7 +358,7 @@ class MessageUpdateView(
             (reverse("private_messages:outbox"), _("Outbox")),
             (
                 reverse(
-                    "private_messages:conversation",
+                    "private_messages:thread",
                     args=[self.object.recipient.username],
                 ),
                 user_display(self.object.recipient),

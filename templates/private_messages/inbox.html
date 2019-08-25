@@ -25,7 +25,7 @@
         {% blocktrans with created=message.created|timesince %}
         Sent {{ created }} ago from
         {% endblocktrans %}
-        {% url 'private_messages:conversation' message.sender.username as convo_url %}
+        {% url 'private_messages:thread' message.sender.username as convo_url %}
         {% include "users/includes/chip.html" with profile=message.sender profile_url=convo_url %}
         {% include "private_messages/includes/parent.html" %}
       </span>
