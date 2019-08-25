@@ -64,7 +64,6 @@ class Base(Configuration):
         "localhub.activities.apps.ActivitiesConfig",
         "localhub.comments.apps.CommentsConfig",
         "localhub.communities.apps.CommunitiesConfig",
-        "localhub.conversations.apps.MessagesConfig",
         "localhub.core.apps.CoreConfig",
         "localhub.events.apps.EventsConfig",
         "localhub.flags.apps.FlagsConfig",
