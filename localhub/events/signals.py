@@ -5,8 +5,12 @@ from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from celery.utils.log import get_logger
+
 from localhub.events import tasks
 from localhub.events.models import Event
+
+celery_logger = get_logger(__name__)
 
 
 @receiver(
@@ -14,9 +18,14 @@ from localhub.events.models import Event
 )
 def update_event_coordinates(instance: Event, created: bool = False, **kwargs):
     if created or instance.location_tracker.changed():
-        transaction.on_commit(
-            lambda: tasks.update_event_coordinates.delay(instance.id)
-        )
+
+        def run_task():
+            try:
+                tasks.update_event_coordinates.delay(instance.id)
+            except tasks.update_event_coordinates.OperationalError as e:
+                celery_logger.exception(e)
+
+        transaction.on_commit(run_task)
 
 
 @receiver(
