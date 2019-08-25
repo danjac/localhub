@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class ConversationsConfig(AppConfig):
+class MessagesConfig(AppConfig):
     name = "localhub.conversations"
 
     def ready(self):

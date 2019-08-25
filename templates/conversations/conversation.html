@@ -12,7 +12,7 @@
 {% block conversations_subtitle %} | {% user_display user_obj %}{% endblock %}
 
 {% block content %}
-<h3>{% trans "Conversations" %}</h3>
+<h3>{% trans "Messages" %}</h3>
 <h4>
     {% avatar user_obj "avatar-lg" %}
     <a href="{{ user_obj.get_absolute_url }}">{% user_display user_obj %}</a>
