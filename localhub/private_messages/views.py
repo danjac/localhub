@@ -189,7 +189,10 @@ class MessageCreateView(SingleUserMixin, BreadcrumbsMixin, MessageFormView):
 
     def get_breadcrumbs(self) -> BreadcrumbList:
         return [
-            (reverse("users:messages"), user_display(self.recipient)),
+            (
+                reverse("users:messages", self.recipient.username),
+                user_display(self.recipient),
+            ),
             ("#", _("Send Message")),
         ]
 
