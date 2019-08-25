@@ -22,7 +22,7 @@ NOTIFICATION_HEADERS = {
         "%(actor)s has submitted a new %(activity)s to review"
     ),
     "new_followed_user_post": _("%(actor)s has submitted a new %(activity)s"),
-    "new_followed_user_tag": _(
+    "new_followed_tag_post": _(
         "Someone has submitted a new %(activity)s containing "
         "tags you are following"
     ),
