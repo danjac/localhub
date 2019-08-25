@@ -171,3 +171,12 @@ class TestMessageCreateView:
         assert message.community == member.community
 
         assert send_notification_webpush_mock.called_once()
+
+    def test_get(self, client: Client, member: Membership):
+        recipient = MembershipFactory(community=member.community).member
+        response = client.get(
+            reverse(
+                "private_messages:message_create", args=[recipient.username]
+            )
+        )
+        assert response.status_code == 200
