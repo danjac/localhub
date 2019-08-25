@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
-<h3>{% trans "Delete Comment" %}</h3>
+<h3>{% trans "Delete Message" %}</h3>
 
 <form method="POST" action="{{ request.path }}">
   {% csrf_token %}
-  <p>{% trans "Do you really want to delete this comment?" %}</p>
-  <a class="btn btn-link" href="{{ comment.get_absolute_url }}">{% trans "Cancel" %}</a>
+  <p>{% trans "Do you really want to delete this message?" %}</p>
+  <a class="btn btn-link" href="{{ message.get_absolute_url }}">{% trans "Cancel" %}</a>
   <button class="btn btn-primary" type="submit">{% trans "Delete" %}</button>
 </form>
 

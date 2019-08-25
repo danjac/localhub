@@ -5,6 +5,8 @@
 
 {% load i18n %}
 
+{% block conversations_subtitle %} | {% trans "Outbox" %}{% endblock %}
+
 {% block message_list %}
 
 {% if paginator.count or view.search_query %}

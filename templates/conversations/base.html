@@ -3,4 +3,4 @@
 
 {% extends "base.html" %}
 {% load i18n %}
-{% block subtitle %} | {% trans "Messages" %}{% endblock %}
+{% block subtitle %} | {% trans "Conversations" %}{% block conversations_subtitle %}{% endblock %}{% endblock %}

@@ -6,9 +6,13 @@
 {% load i18n %}
 {% load form_tags %}
 
+{% block conversations_subtitle %} | {% if message.id %}{% trans "Edit Message" %}{% else %}{% trans "Send Message" %}{% endif %}{% endblock %}
+
 {% block content %}
 
 {% include "includes/breadcrumbs.html" %}
+
+<h3>{% trans "Conversations" %}</h3>
 
 <div class="divider"></div>
 
