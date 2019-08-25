@@ -11,9 +11,9 @@ from allauth.account.models import EmailAddress
 
 from localhub.communities.models import Community, Membership, RequestCommunity
 from localhub.communities.tests.factories import MembershipFactory
-from localhub.conversations.tests.factories import MessageFactory
 from localhub.notifications.models import Notification
 from localhub.posts.tests.factories import PostFactory
+from localhub.private_messages.tests.factories import MessageFactory
 from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db

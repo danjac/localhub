@@ -7,8 +7,8 @@ from pytest_mock import MockFixture
 
 from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory
-from localhub.conversations.models import Message
-from localhub.conversations.tests.factories import MessageFactory
+from localhub.private_messages.models import Message
+from localhub.private_messages.tests.factories import MessageFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -16,14 +16,14 @@ pytestmark = pytest.mark.django_db
 class TestInboxView:
     def test_get(self, client: Client, member: Membership):
         MessageFactory(community=member.community, recipient=member.member)
-        response = client.get(reverse("conversations:inbox"))
+        response = client.get(reverse("private_messages:inbox"))
         assert len(response.context["object_list"]) == 1
 
 
 class TestOutboxView:
     def test_get(self, client: Client, member: Membership):
         MessageFactory(community=member.community, sender=member.member)
-        response = client.get(reverse("conversations:outbox"))
+        response = client.get(reverse("private_messages:outbox"))
         assert len(response.context["object_list"]) == 1
 
 
@@ -44,7 +44,9 @@ class TestConversationView:
             community=member.community, sender=other_user
         )
         response = client.get(
-            reverse("conversations:conversation", args=[other_user.username])
+            reverse(
+                "private_messages:conversation", args=[other_user.username]
+            )
         )
         assert response.status_code == 200
 
@@ -60,7 +62,7 @@ class TestMessageUpdateView:
             community=member.community, sender=member.member
         )
         response = client.get(
-            reverse("conversations:message_update", args=[message.id])
+            reverse("private_messages:message_update", args=[message.id])
         )
         assert response.status_code == 200
 
@@ -69,7 +71,7 @@ class TestMessageUpdateView:
             community=member.community, sender=member.member
         )
         response = client.post(
-            reverse("conversations:message_update", args=[message.id]),
+            reverse("private_messages:message_update", args=[message.id]),
             {"message": "updated"},
         )
         assert response.url == message.get_absolute_url()
@@ -83,9 +85,9 @@ class TestMessageDeleteView:
             community=member.community, sender=member.member
         )
         response = client.delete(
-            reverse("conversations:message_delete", args=[message.id])
+            reverse("private_messages:message_delete", args=[message.id])
         )
-        assert response.url == reverse("conversations:outbox")
+        assert response.url == reverse("private_messages:outbox")
         assert not Message.objects.exists()
 
 
@@ -95,7 +97,7 @@ class TestMessageMarkReadView:
             community=member.community, recipient=member.member
         )
         response = client.post(
-            reverse("conversations:message_mark_read", args=[message.id])
+            reverse("private_messages:message_mark_read", args=[message.id])
         )
         assert response.url == message.get_absolute_url()
         message.refresh_from_db()
@@ -135,7 +137,7 @@ class TestMessageReplyView:
             recipient=member.member,
         )
         response = client.post(
-            reverse("conversations:message_reply", args=[parent.id]),
+            reverse("private_messages:message_reply", args=[parent.id]),
             {"message": "test"},
         )
         assert response.status_code == 403
@@ -153,11 +155,11 @@ class TestMessageReplyView:
             recipient=member.member,
         )
         response = client.post(
-            reverse("conversations:message_reply", args=[parent.id]),
+            reverse("private_messages:message_reply", args=[parent.id]),
             {"message": "test"},
         )
         assert response.url == reverse(
-            "conversations:conversation", args=[recipient.username]
+            "private_messages:conversation", args=[recipient.username]
         )
 
         message = Message.objects.filter(parent__isnull=False).get()
@@ -174,7 +176,9 @@ class TestMessageCreateView:
         recipient = MembershipFactory(community=member.community).member
         recipient.blocked.add(member.member)
         response = client.post(
-            reverse("conversations:message_create", args=[recipient.username]),
+            reverse(
+                "private_messages:message_create", args=[recipient.username]
+            ),
             {"message": "test"},
         )
         assert response.status_code == 403
@@ -187,11 +191,13 @@ class TestMessageCreateView:
     ):
         recipient = MembershipFactory(community=member.community).member
         response = client.post(
-            reverse("conversations:message_create", args=[recipient.username]),
+            reverse(
+                "private_messages:message_create", args=[recipient.username]
+            ),
             {"message": "test"},
         )
         assert response.url == reverse(
-            "conversations:conversation", args=[recipient.username]
+            "private_messages:conversation", args=[recipient.username]
         )
 
         message = Message.objects.get()

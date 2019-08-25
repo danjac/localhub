@@ -5,7 +5,7 @@
 {% load rules %}
 {% load flags_tags %}
 {% load join_request_tags %}
-{% load conversations_tags %}
+{% load private_messages_tags %}
 {% load notifications_tags %}
 
 {% has_perm "activities.create_activity" user community as can_create_activity %}
@@ -36,7 +36,7 @@
     </a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'conversations:inbox' %}">
+    <a data-controller="active-link" href="{% url 'private_messages:inbox' %}">
       <span {% if unread_messages %}class="badge" data-badge="{{ unread_messages }}"{% endif %}>
         {% trans "Messages" %}
       </span>

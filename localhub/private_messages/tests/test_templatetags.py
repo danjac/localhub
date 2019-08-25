@@ -6,10 +6,10 @@ import pytest
 from django.contrib.auth.models import AnonymousUser
 
 from localhub.communities.models import Community, Membership
-from localhub.conversations.templatetags.conversations_tags import (
+from localhub.private_messages.templatetags.private_messages_tags import (
     get_unread_message_count,
 )
-from localhub.conversations.tests.factories import MessageFactory
+from localhub.private_messages.tests.factories import MessageFactory
 
 pytestmark = pytest.mark.django_db
 

@@ -21,9 +21,7 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
 
 
 class Message(TimeStampedModel):
-    community = models.ForeignKey(
-        Community, on_delete=models.CASCADE, related_name="+"
-    )
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
     sender = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name="+", on_delete=models.CASCADE
@@ -69,7 +67,7 @@ class Message(TimeStampedModel):
         return truncatechars(text, length)
 
     def get_absolute_url(self) -> str:
-        return reverse("conversations:message_detail", args=[self.id])
+        return reverse("private_messages:message_detail", args=[self.id])
 
     def get_permalink(self) -> str:
         return self.community.resolve_url(self.get_absolute_url())

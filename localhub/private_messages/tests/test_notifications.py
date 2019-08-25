@@ -5,8 +5,8 @@ import pytest
 
 from typing import List
 
-from localhub.conversations.notifications import send_message_email
-from localhub.conversations.tests.factories import MessageFactory
+from localhub.private_messages.notifications import send_message_email
+from localhub.private_messages.tests.factories import MessageFactory
 from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db

@@ -1,8 +1,8 @@
 import pytest
 
 
-from localhub.conversations.models import Message
-from localhub.conversations.tests.factories import MessageFactory
+from localhub.private_messages.models import Message
+from localhub.private_messages.tests.factories import MessageFactory
 
 pytestmark = pytest.mark.django_db
 

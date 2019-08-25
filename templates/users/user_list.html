@@ -69,7 +69,7 @@
             {% trans "Follow" %}
           </a>
           {% endif %}
-          <a href="{% url 'conversations:message_create' object.username %}">
+          <a href="{% url 'private_messages:message_create' object.username %}">
             {% trans "Send Message" %}
           </a>
         </div>

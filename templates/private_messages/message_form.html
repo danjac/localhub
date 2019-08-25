@@ -1,12 +1,12 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "conversations/base.html" %}
+{% extends "private_messages/base.html" %}
 
 {% load i18n %}
 {% load form_tags %}
 
-{% block conversations_subtitle %} | {% if message.id %}{% trans "Edit Message" %}{% else %}{% trans "Send Message" %}{% endif %}{% endblock %}
+{% block private_messages_subtitle %} | {% if message.id %}{% trans "Edit Message" %}{% else %}{% trans "Send Message" %}{% endif %}{% endblock %}
 
 {% block content %}
 

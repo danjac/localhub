@@ -1,0 +1,55 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "private_messages/message_list_base.html" %}
+
+{% load i18n %}
+
+{% block private_messages_subtitle %} | {% trans "Outbox" %}{% endblock %}
+
+{% block message_list %}
+
+{% if paginator.count or view.search_query %}
+{% include "includes/search_form.html" %}
+{% endif %}
+
+{% if object_list %}
+{% for message in object_list %}
+<div class="card mb-1">
+  <div class="card-header">
+    <div class="card-title h6">
+      <span class="timesince">
+        {% blocktrans with created=message.created|timesince %}
+        Sent {{ created }} ago to
+        {% endblocktrans %}
+        {% url 'private_messages:conversation' message.recipient.username as convo_url %}
+        {% include "users/includes/chip.html" with profile=message.recipient profile_url=convo_url %}
+        {% include "private_messages/includes/parent.html" %}
+      </span>
+    </div>
+  </div>
+  <div class="card-body">
+    {% include "private_messages/includes/message.html" %}
+  </div>
+  <div class="card-footer">
+    <div class="actions">
+      <a href="{{ message.get_permalink }}">{% trans "Permalink" %}</a>
+      <a href="{% url 'private_messages:message_update' message.id %}">{% trans "Edit" %}</a>
+      <a href="{% url 'private_messages:message_delete' message.id %}"
+         data-controller="ajax confirm"
+         data-action="confirm#check ajax#delete"
+         data-ajax-redirect="{{ request.path }}"
+         data-confirm-header="{% trans 'Delete' %}"
+         data-confirm-body="{% trans 'Are you sure you want to delete this message?' %}"
+         >{% trans "Delete" %}</a>
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+
+{% include "includes/pagination.html" %}
+{% else %}
+{% include "includes/empty.html" %}
+{% endif %}
+{% endblock message_list %}

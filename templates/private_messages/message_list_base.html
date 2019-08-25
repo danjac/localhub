@@ -1,7 +1,7 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "conversations/base.html" %}
+{% extends "private_messages/base.html" %}
 
 {% load i18n %}
 
@@ -12,11 +12,11 @@
 <ul class="tab tab-block mt-1">
   <li class="tab-item" data-controller="active-link" data-active-link-exact>
     <a data-target="active-link.match"
-       href="{% url 'conversations:inbox' %}">{% trans "Inbox" %}</a>
+       href="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</a>
   </li>
   <li class="tab-item" data-controller="active-link" data-active-link-exact>
     <a data-target="active-link.match"
-       href="{% url 'conversations:outbox' %}">{% trans "Outbox" %}</a>
+       href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
   </li>
 </ul>
 

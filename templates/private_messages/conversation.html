@@ -1,15 +1,15 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "conversations/base.html" %}
+{% extends "private_messages/base.html" %}
 
 {% load i18n %}
 {% load account %}
 {% load rules %}
-{% load conversations_tags %}
+{% load private_messages_tags %}
 {% load users_tags %}
 
-{% block conversations_subtitle %} | {% user_display user_obj %}{% endblock %}
+{% block private_messages_subtitle %} | {% user_display user_obj %}{% endblock %}
 
 {% block content %}
 <h3>{% trans "Messages" %}</h3>
@@ -20,14 +20,14 @@
 <div class="actions" data-controller="toggle">
       {% get_unread_message_count user community as unread_messages %}
       <span {% if unread_messages %}class="badge" data-badge="{{ unread_messages }}"{% endif %}>
-        <a href="{% url 'conversations:inbox'%}">{% trans "Inbox" %}</a>
+        <a href="{% url 'private_messages:inbox'%}">{% trans "Inbox" %}</a>
       </span>
 
-    <a href="{% url 'conversations:outbox' %}">{% trans "Outbox" %}</a>
-    {% has_perm "conversations.create_message" user community as can_create_message %}
+    <a href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
+    {% has_perm "private_messages.create_message" user community as can_create_message %}
 
     {% if can_create_message and user not in user_obj.blocked.all %}
-    <a href="{% url 'conversations:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
+    <a href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
     {% endif %}
 
 </div>
@@ -37,7 +37,7 @@
 {% include "includes/search_form.html" %}
 {% endif %}
 
-{% include "conversations/includes/email_settings.html" %}
+{% include "private_messages/includes/email_settings.html" %}
 
 {% if object_list %}
 {% for message in object_list %}
@@ -49,21 +49,21 @@
                 Sent {{ created }} ago by
                 {% endblocktrans %}
                 {% include "users/includes/chip.html" with profile=message.sender %}
-                {% include "conversations/includes/parent.html" %}
+                {% include "private_messages/includes/parent.html" %}
             </span>
         </div>
     </div>
     <div class="card-body">
-        {% include "conversations/includes/message.html" %}
+        {% include "private_messages/includes/message.html" %}
     </div>
     <div class="card-footer">
         <div class="actions">
             <a href="{{ message.get_permalink }}">{% trans "Permalink" %}</a>
             {% if message.sender == request.user %}
 
-            <a href="{% url 'conversations:message_update' message.id %}">{% trans "Edit" %}</a>
+            <a href="{% url 'private_messages:message_update' message.id %}">{% trans "Edit" %}</a>
 
-            <a href="{% url 'conversations:message_delete' message.id %}"
+            <a href="{% url 'private_messages:message_delete' message.id %}"
                data-controller="ajax confirm"
                data-action="confirm#check ajax#delete"
                data-ajax-redirect="{{ request.path }}"
@@ -72,13 +72,13 @@
                >{% trans "Delete" %}</a>
 
             {% elif not message.read %}
-            <a href="{% url 'conversations:message_mark_read' message.id %}"
+            <a href="{% url 'private_messages:message_mark_read' message.id %}"
                data-controller="ajax"
                data-action="ajax#post"
                data-ajax-redirect="{{ request.path }}"
                >{% trans "Mark As Read" %}</a>
             {% endif %}
-            {% include "conversations/includes/replies.html" %}
+            {% include "private_messages/includes/replies.html" %}
         </div>
     </div>
 </div>

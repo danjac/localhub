@@ -74,6 +74,7 @@ class Base(Configuration):
         "localhub.notifications.apps.NotificationsConfig",
         "localhub.photos.apps.PhotosConfig",
         "localhub.posts.apps.PostsConfig",
+        "localhub.private_messages.apps.PrivateMessagesConfig",
         "localhub.users.apps.UsersConfig",
     ]
 

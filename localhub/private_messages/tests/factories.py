@@ -3,7 +3,7 @@
 from factory import DjangoModelFactory, Faker, SubFactory
 
 from localhub.communities.tests.factories import CommunityFactory
-from localhub.conversations.models import Message
+from localhub.private_messages.models import Message
 from localhub.users.tests.factories import UserFactory
 
 
