@@ -3,6 +3,7 @@
 
 {% extends "notifications/base.html" %}
 {% load i18n %}
+{% load notifications_tags %}
 
 {% block content %}
 
@@ -36,6 +37,8 @@
   {% blocktrans %}You can enable emails for your notifications <a href="{{ user_settings_url }}">in your settings</a>.{% endblocktrans %}
 </p>
 
+{% notifications_subscribe_btn user community %}
+
 {% if object_list %}
 
 <table class="table table-striped table-hover">
@@ -60,9 +63,9 @@
 
         <div>
           <span class="timesince">
-          {% blocktrans with created=notification.created|timesince %}
-          {{ created }} ago from
-          {% endblocktrans %}
+            {% blocktrans with created=notification.created|timesince %}
+            {{ created }} ago from
+            {% endblocktrans %}
           </span>
           {% include "users/includes/chip.html" with profile=notification.actor %}
         </div>
