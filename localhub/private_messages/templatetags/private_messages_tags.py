@@ -15,8 +15,11 @@ from localhub.private_messages.models import Message
 register = template.Library()
 
 
-@register.inclusion_tag("private_messages/includes/message.html")
+@register.inclusion_tag(
+    "private_messages/includes/message.html", takes_context=True
+)
 def show_message(
+    context: ContextDict,
     user: settings.AUTH_USER_MODEL,
     message: Message,
     show_sender_info: bool = True,
@@ -27,6 +30,7 @@ def show_message(
 
     is_sender = user == message.sender
     is_recipient = user == message.recipient
+    outbox_url = reverse("private_messages:outbox")
 
     try:
         reply = message.reply
@@ -34,14 +38,14 @@ def show_message(
         reply = None
 
     if is_sender:
-        sender_url = reverse("private_messages:outbox")
+        sender_url = outbox_url
         recipient_url = reverse(
             "users:messages", args=[message.recipient.username]
         )
         can_reply = False
     else:
         sender_url = reverse("users:messages", args=[message.sender.username])
-        recipient_url = reverse("private_messages:outbox")
+        recipient_url = outbox_url
         can_reply = (
             reply is None
             and not message.sender_has_blocked
@@ -51,6 +55,7 @@ def show_message(
         )
 
     return {
+        "request": context["request"],
         "can_reply": can_reply,
         "is_detail": is_detail,
         "is_recipient": is_recipient,
@@ -62,6 +67,7 @@ def show_message(
         "show_recipient_info": show_recipient_info,
         "show_sender_info": show_sender_info,
         "show_parent_info": show_parent_info,
+        "post_delete_redirect": outbox_url if is_detail else None,
     }
 
 
