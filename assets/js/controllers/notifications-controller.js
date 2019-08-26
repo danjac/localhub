@@ -70,9 +70,8 @@ export default class extends Controller {
   unsubscribe(event) {
     event.preventDefault();
     this.showSubscribeBtn();
-    registration.pushManager
-      .getSubscription()
-      .then(subscription =>
+    registration.pushManager.getSubscription().then(subscription =>
+      subscription.unsubscribe().then(
         axios.post(
           this.data.get('unsubscribe-url'),
           JSON.stringify(subscription),
@@ -83,7 +82,7 @@ export default class extends Controller {
           }
         )
       )
-      .then(registration.pushManager.unsubscribe);
+    );
   }
 
   showSubscribeBtn() {
