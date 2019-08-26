@@ -331,8 +331,7 @@ class UserMessageListView(LoginRequiredMixin, SingleUserMixin, ListView):
 
     def get_queryset(self) -> QuerySet:
         return (
-            Message.objects.with_num_replies()
-            .filter(
+            Message.objects.filter(
                 Q(Q(recipient=self.object) | Q(sender=self.object))
                 & Q(
                     Q(recipient=self.request.user)
@@ -340,7 +339,10 @@ class UserMessageListView(LoginRequiredMixin, SingleUserMixin, ListView):
                 ),
                 community=self.request.community,
             )
-            .select_related("sender", "recipient", "parent", "community")
+            .with_sender_has_blocked(self.request.user)
+            .select_related(
+                "sender", "recipient", "parent", "community", "reply"
+            )
             .order_by("-created")
             .distinct()
         )

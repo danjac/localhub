@@ -8,17 +8,24 @@ pytestmark = pytest.mark.django_db
 
 
 class TestMessageManager:
-    def test_with_num_replies(self):
-        parent = MessageFactory()
-        MessageFactory(parent=parent)
-        messages = Message.objects.with_num_replies().filter(
-            parent__isnull=False
+    def test_with_sender_has_blocked_if_not_blocked(self):
+        message = MessageFactory()
+
+        assert (
+            not Message.objects.with_sender_has_blocked(message.recipient)
+            .first()
+            .sender_has_blocked
         )
-        assert messages.first().num_replies == 0
-        messages = Message.objects.with_num_replies().filter(
-            parent__isnull=True
+
+    def test_with_sender_has_blocked_if_blocked(self):
+        message = MessageFactory()
+        message.sender.blocked.add(message.recipient)
+
+        assert (
+            Message.objects.with_sender_has_blocked(message.recipient)
+            .first()
+            .sender_has_blocked
         )
-        assert messages.first().num_replies == 1
 
 
 class TestMessageModel:

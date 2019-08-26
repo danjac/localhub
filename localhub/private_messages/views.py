@@ -70,9 +70,11 @@ class InboxView(MessageListView):
         qs = (
             super()
             .get_queryset()
-            .with_num_replies()
+            .with_sender_has_blocked(self.request.user)
             .filter(recipient=self.request.user)
-            .select_related("sender", "parent", "community")
+            .select_related(
+                "sender", "recipient", "parent", "reply", "community"
+            )
         )
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank")
@@ -93,9 +95,10 @@ class OutboxView(MessageListView):
         qs = (
             super()
             .get_queryset()
-            .with_num_replies()
             .filter(sender=self.request.user)
-            .select_related("recipient", "parent", "community")
+            .select_related(
+                "sender", "recipient", "parent", "reply", "community"
+            )
         )
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank")
@@ -246,35 +249,23 @@ class MessageDetailView(
         return (
             super()
             .get_queryset()
+            .with_sender_has_blocked(self.request.user)
             .filter(
                 Q(recipient=self.request.user) | Q(sender=self.request.user)
             )
-            .select_related("recipient", "sender", "parent", "community")
-        )
-
-    def get_replies(self) -> QuerySet:
-        return (
-            self.object.replies.with_num_replies()
-            .order_by("created")
-            .select_related("recipient", "sender", "parent", "community")
-        )
-
-    def get_context_data(self, **kwargs) -> ContextDict:
-        data = super().get_context_data(**kwargs)
-        data["replies"] = self.get_replies()
-        blocked = (
-            self.object.recipient.blocked
-            if self.object.sender == self.request.user
-            else self.object.sender.blocked
-        )
-        data["can_reply"] = (
-            self.request.user.has_perm(
-                "private_messages.create_message", self.request.community
+            .select_related(
+                "community",
+                "parent",
+                "recipient",
+                "reply",
+                "reply__community",
+                "reply__parent",
+                "reply__recipient",
+                "reply__reply",
+                "reply__sender",
+                "sender",
             )
-            and not blocked.filter(pk=self.request.user.pk).exists()
         )
-
-        return data
 
 
 message_detail_view = MessageDetailView.as_view()

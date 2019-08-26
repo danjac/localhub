@@ -29,47 +29,7 @@
 
 {% if object_list %}
 {% for message in object_list %}
-<div class="card mb-1 {% if message.sender == user %} bg-gray{% endif %}">
-  <div class="card-header">
-    <div class="card-title h6">
-      <span class="timesince">
-        {% blocktrans with created=message.created|timesince %}
-        Sent {{ created }} ago by
-        {% endblocktrans %}
-        {% include "users/includes/chip.html" with profile=message.sender %}
-        {% include "private_messages/includes/parent.html" %}
-      </span>
-    </div>
-  </div>
-  <div class="card-body">
-    {% include "private_messages/includes/message.html" %}
-  </div>
-  <div class="card-footer">
-    <div class="actions">
-      <a href="{{ message.get_permalink }}">{% trans "Permalink" %}</a>
-      {% if message.sender == request.user %}
-
-      <a href="{% url 'private_messages:message_update' message.id %}">{% trans "Edit" %}</a>
-
-      <a href="{% url 'private_messages:message_delete' message.id %}"
-         data-controller="ajax confirm"
-         data-action="confirm#check ajax#delete"
-         data-ajax-redirect="{{ request.path }}"
-         data-confirm-header="{% trans 'Delete' %}"
-         data-confirm-body="{% trans 'Are you sure you want to delete this message?' %}"
-         >{% trans "Delete" %}</a>
-
-      {% elif not message.read %}
-      <a href="{% url 'private_messages:message_mark_read' message.id %}"
-         data-controller="ajax"
-         data-action="ajax#post"
-         data-ajax-redirect="{{ request.path }}"
-         >{% trans "Mark As Read" %}</a>
-      {% endif %}
-      {% include "private_messages/includes/replies.html" %}
-    </div>
-  </div>
-</div>
+{% show_message user message %}
 {% endfor %}
 {% include "includes/pagination.html" %}
 {% else %}

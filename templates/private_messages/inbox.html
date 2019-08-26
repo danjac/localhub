@@ -4,10 +4,12 @@
 {% extends "private_messages/message_list_base.html" %}
 
 {% load i18n %}
+{% load private_messages_tags %}
 
 {% block private_messages_subtitle %} | {% trans "Inbox" %}{% endblock %}
 
 {% block message_list %}
+
 
 {% if paginator.count or view.search_query %}
 {% include "includes/search_form.html" %}
@@ -16,38 +18,8 @@
 {% include "private_messages/includes/email_settings.html" %}
 
 {% if object_list %}
-
 {% for message in object_list %}
-<div class="card mb-1">
-  <div class="card-header">
-    <div class="card-title h6">
-      <span class="timesince">
-        {% blocktrans with created=message.created|timesince %}
-        Sent {{ created }} ago from
-        {% endblocktrans %}
-        {% url 'users:messages' message.sender.username as sender_url %}
-        {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url %}
-        {% include "private_messages/includes/parent.html" %}
-      </span>
-    </div>
-  </div>
-  <div class="card-body">
-    {% include "private_messages/includes/message.html" %}
-  </div>
-  <div class="card-footer">
-    <div class="actions">
-      <a href="{{ message.get_permalink }}">{% trans "Permalink" %}</a>
-      {% if not message.read %}
-      <a href="{% url 'private_messages:message_mark_read' message.id %}"
-         data-controller="ajax"
-         data-action="ajax#post"
-         data-ajax-redirect="{{ request.path }}"
-         >{% trans "Mark As Read" %}</a>
-      {% endif %}
-      {% include "private_messages/includes/replies.html" %}
-    </div>
-  </div>
-</div>
+{% show_message user message show_recipient_info=False %}
 {% endfor %}
 
 {% include "includes/pagination.html" %}

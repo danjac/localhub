@@ -16,8 +16,14 @@ from localhub.core.utils.search import SearchIndexer, SearchQuerySetMixin
 
 
 class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
-    def with_num_replies(self) -> models.QuerySet:
-        return self.annotate(num_replies=models.Count("replies"))
+    def with_sender_has_blocked(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> models.QuerySet:
+        return self.annotate(
+            sender_has_blocked=models.Exists(
+                user.blockers.filter(pk=models.OuterRef("sender_id"))
+            )
+        )
 
 
 class Message(TimeStampedModel):
@@ -31,9 +37,9 @@ class Message(TimeStampedModel):
         settings.AUTH_USER_MODEL, related_name="+", on_delete=models.CASCADE
     )
 
-    parent = models.ForeignKey(
+    parent = models.OneToOneField(
         "self",
-        related_name="replies",
+        related_name="reply",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
