@@ -2,21 +2,21 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
 import { Controller } from 'stimulus';
-
-const COOKIE_NAME = 'disable-subscribe-btn';
 
 let registration = null;
 
 export default class extends Controller {
+  static targets = ['subscribeBtn', 'unsubscribeBtn'];
+
   connect() {
     // check browser can do notifications, and permission OK.
     try {
       this.checkBrowserCompatibility();
       this.registerServiceWorker();
     } catch (e) {
+      this.element.remove();
       console.log('Compatibility issue:', e.toString());
     }
   }
@@ -27,15 +27,17 @@ export default class extends Controller {
     const onRegister = swRegistration => {
       registration = swRegistration;
       return registration.pushManager.getSubscription().then(subscription => {
-        if (!subscription) {
-          this.show();
+        if (subscription) {
+          this.showUnsubscribeBtn();
+        } else {
+          this.showSubscribeBtn();
         }
       });
     };
 
     return navigator.serviceWorker.getRegistration(url).then(swRegistration => {
       if (swRegistration) {
-        console.log('found service worker');
+        console.log('found existing service worker');
         return onRegister(swRegistration);
       }
       console.log('registering new service worker');
@@ -52,7 +54,7 @@ export default class extends Controller {
       userVisibleOnly: true
     };
     registration.pushManager.subscribe(options).then(subscription => {
-      this.remove();
+      this.showUnsubscribeBtn();
       return axios.post(
         this.data.get('subscribe-url'),
         JSON.stringify(subscription),
@@ -65,21 +67,35 @@ export default class extends Controller {
     });
   }
 
-  show() {
+  unsubscribe(event) {
+    event.preventDefault();
+    this.showSubscribeBtn();
+    registration.pushManager
+      .getSubscription()
+      .then(subscription =>
+        axios.post(
+          this.data.get('unsubscribe-url'),
+          JSON.stringify(subscription),
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+      )
+      .then(registration.pushManager.unsubscribe);
+  }
+
+  showSubscribeBtn() {
     this.element.classList.remove('d-hide');
+    this.subscribeBtnTarget.classList.remove('d-hide');
+    this.unsubscribeBtnTarget.classList.add('d-hide');
   }
 
-  disable() {
-    // remove button
-    Cookies.set(COOKIE_NAME, true, {
-      domain: this.data.get('domain'),
-      expires: 360
-    });
-    this.remove();
-  }
-
-  remove() {
-    this.element.remove();
+  showUnsubscribeBtn() {
+    this.element.classList.remove('d-hide');
+    this.unsubscribeBtnTarget.classList.remove('d-hide');
+    this.subscribeBtnTarget.classList.add('d-hide');
   }
 
   checkBrowserCompatibility() {
@@ -94,9 +110,6 @@ export default class extends Controller {
     }
     if (Notification.permission === 'denied') {
       throw new Error('Permission denied');
-    }
-    if (Cookies.get(COOKIE_NAME)) {
-      throw new Error('Subscribe button disabled by user');
     }
   }
 

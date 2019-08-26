@@ -6,15 +6,21 @@
 {% if user.is_authenticated %}
 <div class="text-center my-1 toast d-hide"
      data-controller="notifications"
-     data-notifications-domain="{{ community.domain }}"
      data-notifications-service-worker-url="{% url 'notifications:service_worker' %}"
      data-notifications-subscribe-url="{% url 'notifications:subscribe' %}"
+     data-notifications-unsubscribe-url="{% url 'notifications:unsubscribe' %}"
      {% if vapid_public_key %}
      data-notifications-vapid-public-key="{{ vapid_public_key }}"
      {% endif %}
      >
-     <button class="btn btn-clear float-right" data-action="notifications#disable"></button>
-     <a href="#" data-action="notifications#subscribe">{% trans "Enable browser notifications" %}</a>
+     <a class="d-hide"
+        href="#"
+        data-target="notifications.subscribeBtn"
+        data-action="notifications#subscribe">{% trans "Enable browser notifications" %}</a>
+     <a class="d-hide"
+        href="#"
+        data-target="notifications.unsubscribeBtn"
+        data-action="notifications#unsubscribe">{% trans "Disable browser notifications" %}</a>
 </div>
 {% endif %}
 

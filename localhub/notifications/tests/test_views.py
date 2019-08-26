@@ -154,6 +154,37 @@ class TestSubscribeView:
         assert sub.p256dh == "xxxx"
 
 
+class TestUnsubscribeView:
+    def test_post_if_keys_missing(self, client: Client, member: Membership):
+        body = {"endpoint": "http://xyz"}
+        response = client.post(
+            reverse("notifications:unsubscribe"),
+            json.dumps(body),
+            content_type="application/json",
+        )
+        assert response.status_code == 400
+
+    def test_post(self, client: Client, member: Membership):
+        PushSubscription.objects.create(
+            user=member.member,
+            community=member.community,
+            endpoint="http://xyz",
+            auth="auth",
+            p256dh="xxxx",
+        )
+        body = {
+            "endpoint": "http://xyz",
+            "keys": {"auth": "auth", "p256dh": "xxxx"},
+        }
+        response = client.post(
+            reverse("notifications:unsubscribe"),
+            json.dumps(body),
+            content_type="application/json",
+        )
+        assert response.status_code == 200
+        assert not PushSubscription.objects.exists()
+
+
 class TestServiceWorkerView:
     def test_get(self, client: Client, login_user: settings.AUTH_USER_MODEL):
         response = client.get(reverse("notifications:service_worker"))

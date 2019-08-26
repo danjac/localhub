@@ -5,8 +5,8 @@
 {% load i18n %}
 {% load rules %}
 {% load thumbnail %}
-{% load private_messages_tags %}
 {% load notifications_tags %}
+{% load private_messages_tags %}
 {% load users_tags %}
 
 {% test_rule "communities.is_member" user community as is_member %}
@@ -126,8 +126,6 @@
           information with third parties.
           {% endblocktrans %}
         </div>
-
-        {% notifications_subscribe_btn user community %}
 
         {% for message in messages %}
         <div class="text-center my-1 toast toast-{{ message.tags }}" data-controller="alert">

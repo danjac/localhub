@@ -143,7 +143,7 @@ class ServiceWorkerView(TemplateView):
 service_worker_view = ServiceWorkerView.as_view()
 
 
-class SubscribeView(CommunityRequiredMixin, LoginRequiredMixin, View):
+class PushSubscriptionView(CommunityRequiredMixin, LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs) -> HttpResponse:
         try:
             json_body = json.loads(request.body.decode("utf-8"))
@@ -156,12 +156,27 @@ class SubscribeView(CommunityRequiredMixin, LoginRequiredMixin, View):
         except (ValueError, KeyError):
             return HttpResponse(status=400)
 
-        data.update(
-            {"user": self.request.user, "community": self.request.community}
-        )
+        return self.handle_action(request, **data)
+
+    def handle_action(
+        self, request: HttpRequest, auth: str, p256dh: str, endpoint: str
+    ) -> HttpResponse:
+        raise NotImplementedError
+
+
+class SubscribeView(PushSubscriptionView):
+    def handle_action(
+        self, request: HttpRequest, auth: str, p256dh: str, endpoint: str
+    ) -> HttpResponse:
 
         try:
-            PushSubscription.objects.get_or_create(**data)
+            PushSubscription.objects.get_or_create(
+                auth=auth,
+                p256dh=p256dh,
+                endpoint=endpoint,
+                user=request.user,
+                community=request.community,
+            )
         except IntegrityError:
             pass  # dupe, ignore
 
@@ -169,3 +184,22 @@ class SubscribeView(CommunityRequiredMixin, LoginRequiredMixin, View):
 
 
 subscribe_view = SubscribeView.as_view()
+
+
+class UnsubscribeView(PushSubscriptionView):
+    def handle_action(
+        self, request: HttpRequest, auth: str, p256dh: str, endpoint: str
+    ) -> HttpResponse:
+
+        PushSubscription.objects.filter(
+            auth=auth,
+            p256dh=p256dh,
+            endpoint=endpoint,
+            user=request.user,
+            community=request.community,
+        ).delete()
+
+        return JsonResponse({"message": "ok"}, status=200)
+
+
+unsubscribe_view = UnsubscribeView.as_view()

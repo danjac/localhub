@@ -11,6 +11,7 @@ from localhub.notifications.views import (
     notification_mark_read_view,
     service_worker_view,
     subscribe_view,
+    unsubscribe_view,
 )
 
 app_name = "notifications"
@@ -19,6 +20,7 @@ urlpatterns = [
     path("", notification_list_view, name="list"),
     path("service-worker.js", service_worker_view, name="service_worker"),
     path("~subscribe/", subscribe_view, name="subscribe"),
+    path("~unsubscribe/", unsubscribe_view, name="unsubscribe"),
     path("<int:pk>/~delete/", notification_delete_view, name="delete"),
     path(
         "<int:pk>/~mark-read/", notification_mark_read_view, name="mark_read"
