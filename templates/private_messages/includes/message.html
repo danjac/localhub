@@ -31,7 +31,7 @@
       {% if reply and not is_detail %}
       <div class="timesince">
         {% blocktrans with replied=reply.created|timesince reply_url=reply.get_absolute_url %}
-        <a href="{{ reply_url }}">replied to {{ replied }} ago</a>
+        Replied to <a href="{{ reply_url }}">{{ replied }} ago</a>
         {% endblocktrans %}
       </div>
       {% endif %}
