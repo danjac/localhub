@@ -3,7 +3,6 @@
 
 {% extends "notifications/base.html" %}
 {% load i18n %}
-{% load notifications_tags %}
 
 {% block content %}
 
@@ -27,8 +26,6 @@
 {% endif %}
 
 <div class="divider"></div>
-
-{% notifications_subscribe_btn user community %}
 
 <p class="toast text-center my-1 d-hide"
    data-controller="cookie-notice"

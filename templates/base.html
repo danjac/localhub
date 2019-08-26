@@ -127,6 +127,8 @@
           {% endblocktrans %}
         </div>
 
+        {% notifications_subscribe_btn user community %}
+
         {% for message in messages %}
         <div class="text-center my-1 toast toast-{{ message.tags }}" data-controller="alert">
           <button class="btn btn-clear float-right" data-action="alert#dismiss"></button>
@@ -135,8 +137,10 @@
         {% endfor %}
       </div>
 
+
       {% block main_layout %}
       <div class="columns bg-light py-1" data-controller="sidebar">
+
 
         <div class="column col-2 col-lg-12 hide-lg p-1"
              data-target="sidebar.nav"
