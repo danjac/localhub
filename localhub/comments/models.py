@@ -128,7 +128,7 @@ class Comment(TimeStampedModel):
             models.Index(fields=["created", "-created"]),
         ]
 
-    def get_absolute_url(self) -> str:
+    def get_absolute_url(self):
         return reverse("comments:detail", args=[self.id])
 
     def get_permalink(self):

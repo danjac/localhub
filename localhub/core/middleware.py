@@ -52,7 +52,7 @@ class TurbolinksMiddleware:
         request.session[self.session_key] = response["Location"]
         return response
 
-    def is_turbolinks_request(self, request) -> bool:
+    def is_turbolinks_request(self, request):
         return request.is_ajax() and self.referrer_header in request.headers
 
     def redirect_with_turbolinks(self, request, response):

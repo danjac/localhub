@@ -3,8 +3,6 @@
 
 import mimetypes
 
-from typing import Optional
-
 from urllib.parse import urlparse
 
 from django import template
@@ -25,7 +23,7 @@ def is_content_sensitive(activity, user):
 
 
 @register.filter
-def url_to_img(url: Optional[str], linkify: bool = True) -> Optional[str]:
+def url_to_img(url, linkify=True):
     """
     Given a URL, tries to render the <img> tag. Returns URL unparsed
     if not an image.
@@ -42,7 +40,7 @@ def url_to_img(url: Optional[str], linkify: bool = True) -> Optional[str]:
 
 
 @register.filter
-def domain(url: str):
+def domain(url):
     """
     Shows a linked URL domain e.g. if http://reddit.com:
 

@@ -5,8 +5,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
-from django.db.models import QuerySet
-from django.forms import ModelForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
@@ -34,7 +32,6 @@ from localhub.activities.notifications import (
 )
 from localhub.comments.forms import CommentForm
 from localhub.comments.notifications import send_comment_notifications
-from localhub.communities.models import Community
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.core.views import BreadcrumbsMixin, SearchMixin
 from localhub.flags.forms import FlagForm
@@ -42,7 +39,7 @@ from localhub.likes.models import Like
 
 
 class ActivityQuerySetMixin(CommunityRequiredMixin):
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return (
             super()
             .get_queryset()
@@ -73,7 +70,7 @@ class ActivityCreateView(
     success_message = _("Your update has been posted")
     page_title = _("Submit")
 
-    def get_permission_object(self) -> Community:
+    def get_permission_object(self):
         return self.request.community
 
     def get_success_message(self):
@@ -103,7 +100,7 @@ class ActivityListView(MultipleActivityMixin, SearchMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
     order_by = "-id"
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         qs = (
             super()
             .get_queryset()
@@ -132,7 +129,7 @@ class ActivityUpdateView(
     def get_success_message(self):
         return self.success_message
 
-    def form_valid(self, form: ModelForm):
+    def form_valid(self, form):
 
         self.object = form.save(commit=False)
         self.object.editor = self.request.user
@@ -187,7 +184,7 @@ class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
 
         return data
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return (
             super()
             .get_queryset()
@@ -197,19 +194,19 @@ class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
     def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.object)
 
-    def get_flags(self) -> QuerySet:
+    def get_flags(self):
         return (
             self.object.get_flags().select_related("user").order_by("-created")
         )
 
-    def get_reshares(self) -> QuerySet:
+    def get_reshares(self):
         return (
             self.object.reshares.blocked_users(self.request.user)
             .select_related("owner")
             .order_by("-created")
         )
 
-    def get_comments(self) -> QuerySet:
+    def get_comments(self):
         return (
             self.object.get_comments()
             .with_common_annotations(self.request.community, self.request.user)
@@ -223,7 +220,7 @@ class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
 class ActivityReshareView(PermissionRequiredMixin, SingleActivityView):
     permission_required = "activities.reshare_activity"
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         """
         Make sure user has only reshared once.
         """
@@ -359,7 +356,7 @@ class ActivityCommentCreateView(
     def get_success_url(self):
         return self.object.get_absolute_url()
 
-    def form_valid(self, form: ModelForm):
+    def form_valid(self, form):
         comment = form.save(commit=False)
         comment.content_object = self.object
         comment.community = self.request.community

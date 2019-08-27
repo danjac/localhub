@@ -92,7 +92,7 @@ class SearchIndexer:
         self.search_components = search_components
         self.search_document_field = search_document_field
 
-    def __get__(self, instance, owner) -> InstanceSearchIndexer:
+    def __get__(self, instance, owner):
         return InstanceSearchIndexer(
             instance,
             owner,

@@ -3,12 +3,9 @@
 
 
 from django import template
-from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 
-
-from localhub.communities.models import Community
 
 register = template.Library()
 
@@ -70,9 +67,7 @@ def show_message(
 
 
 @register.simple_tag
-def get_unread_message_count(
-    user: settings.AUTH_USER_MODEL, community: Community
-) -> int:
+def get_unread_message_count(user, community):
     """
     Returns a count of the total number of *unread* messages
     for the current user. If user not logged in just returns 0.

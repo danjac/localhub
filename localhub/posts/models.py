@@ -29,7 +29,7 @@ class Post(Activity):
 
     search_indexer = SearchIndexer(("A", "title"), ("B", "description"))
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.title or self.get_domain() or _("Post")
 
     def get_domain(self):

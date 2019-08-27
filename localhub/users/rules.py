@@ -9,7 +9,7 @@ import rules
 
 
 @rules.predicate
-def is_self(user, other) -> bool:
+def is_self(user, other):
     return user.is_authenticated and user == other
 
 

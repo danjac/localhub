@@ -72,7 +72,7 @@ class CommunityRequiredMixin:
 
 
 class CommunityDetailView(CommunityRequiredMixin, DetailView):
-    def get_object(self) -> Community:
+    def get_object(self):
         return self.request.community
 
 
@@ -125,7 +125,7 @@ class CommunityUpdateView(
     permission_required = "communities.manage_community"
     success_message = _("Community settings have been updated")
 
-    def get_object(self) -> Community:
+    def get_object(self):
         return self.request.community
 
     def get_success_url(self):
