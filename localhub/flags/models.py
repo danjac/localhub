@@ -11,12 +11,11 @@ from model_utils import Choices
 from model_utils.models import TimeStampedModel
 
 from localhub.communities.models import Community
-from localhub.core.types import BaseQuerySetMixin
 from localhub.core.utils.content_types import get_generic_related_exists
 from localhub.notifications.models import Notification
 
 
-class FlagAnnotationsQuerySetMixin(BaseQuerySetMixin):
+class FlagAnnotationsQuerySetMixin:
     """
     Adds annotation methods to related model query set.
     """

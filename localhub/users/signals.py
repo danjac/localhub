@@ -11,5 +11,5 @@ User = get_user_model()
 
 
 @receiver(post_save, sender=User, dispatch_uid="users.update_search_document")
-def update_search_document(instance):
+def update_search_document(instance, **kwargs):
     transaction.on_commit(lambda: instance.search_indexer.update())

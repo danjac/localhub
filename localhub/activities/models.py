@@ -256,7 +256,7 @@ class Activity(TimeStampedModel):
             else:
                 self.tags.clear()
 
-    def make_notification(self, recipient, verb, actor):
+    def make_notification(self, recipient, verb, actor=None):
         return Notification(
             content_object=self,
             actor=actor or self.owner,
