@@ -6,28 +6,23 @@ Functions for more efficient handling of ContentType related
 objects with querysets.
 """
 
-from typing import Any, Union
-
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import (
     Count,
     Exists,
     IntegerField,
-    Model,
     OuterRef,
     Subquery,
     QuerySet,
 )
 
-from localhub.core.types import ModelType, ModelOrQuerySet
-
 
 def get_generic_related_exists(
-    model: ModelType,
-    related: ModelOrQuerySet,
-    related_object_id_field: str = "object_id",
-    related_content_type_field: str = "content_type",
-) -> Exists:
+    model,
+    related,
+    related_object_id_field="object_id",
+    related_content_type_field="content_type",
+):
     """
     Used with QuerySet.annotate() to add an EXISTS clause
     to a QuerySet where you want to select based on a ContentType
@@ -48,11 +43,11 @@ def get_generic_related_exists(
 
 
 def get_generic_related_count_subquery(
-    model: ModelType,
-    related: ModelOrQuerySet,
-    related_object_id_field: str = "object_id",
-    related_content_type_field: str = "content_type",
-) -> Subquery:
+    model,
+    related,
+    related_object_id_field="object_id",
+    related_content_type_field="content_type",
+):
     """
     Used with QuerySet.annotate() to add a COUNT subquery
     to a QuerySet where you want to select based on a ContentType
@@ -77,11 +72,11 @@ def get_generic_related_count_subquery(
 
 
 def get_generic_related_queryset(
-    model: Model,
-    related: ModelOrQuerySet,
-    related_object_id_field: str = "object_id",
-    related_content_type_field: str = "content_type",
-) -> QuerySet:
+    model,
+    related,
+    related_object_id_field="object_id",
+    related_content_type_field="content_type",
+):
     """
     Used inside a model instance to provide all instances
     of a related content type matching the object's primary key.
@@ -96,12 +91,12 @@ def get_generic_related_queryset(
 
 
 def _get_generic_related_by_id_and_content_type(
-    pk: Any,
-    model: Union[ModelType, Model],
-    related: ModelOrQuerySet,
-    related_object_id_field: str = "object_id",
-    related_content_type_field: str = "content_type",
-) -> QuerySet:
+    pk,
+    model,
+    related,
+    related_object_id_field="object_id",
+    related_content_type_field="content_type",
+):
 
     return _get_queryset(related).filter(
         **{
@@ -113,7 +108,7 @@ def _get_generic_related_by_id_and_content_type(
     )
 
 
-def _get_queryset(model_or_queryset: ModelOrQuerySet) -> QuerySet:
+def _get_queryset(model_or_queryset):
     return (
         model_or_queryset
         if isinstance(model_or_queryset, QuerySet)

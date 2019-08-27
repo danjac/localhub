@@ -15,9 +15,9 @@ class PresetCountPaginator(Paginator):
     """
 
     @property
-    def count(self) -> int:
+    def count(self):
         return self._preset_count
 
-    def __init__(self, count: int, *args, **kwargs):
+    def __init__(self, count, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._preset_count = count

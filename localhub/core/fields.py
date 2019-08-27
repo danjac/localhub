@@ -1,13 +1,13 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.forms import Field, MultipleChoiceField
+from django.forms import MultipleChoiceField
 from django.contrib.postgres.fields import ArrayField
 
 
 class ChoiceArrayField(ArrayField):
     # https://blogs.gnome.org/danni/2016/03/08/multiple-choice-using-djangos-postgres-arrayfield/
-    def formfield(self, **kwargs) -> Field:
+    def formfield(self, **kwargs):
         defaults = {
             "form_class": MultipleChoiceField,
             "choices": self.base_field.choices,

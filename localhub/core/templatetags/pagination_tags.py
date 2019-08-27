@@ -3,13 +3,12 @@
 
 from django import template
 
-from localhub.core.types import ContextDict
 
 register = template.Library()
 
 
 @register.simple_tag(takes_context=True)
-def pagination_url(context: ContextDict, page_number: int) -> str:
+def pagination_url(context, page_number):
     """
     Inserts the "page" query string parameter with the
     provided page number into the template, preserving the original

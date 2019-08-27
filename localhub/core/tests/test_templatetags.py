@@ -1,12 +1,11 @@
 from django.forms import Form
-from django.test.client import RequestFactory
 
 from localhub.core.templatetags.form_tags import simple_ajax_form
 from localhub.core.templatetags.pagination_tags import pagination_url
 
 
 class TestSimpleAjaxForm:
-    def test_simple_ajax_form(self, req_factory: RequestFactory):
+    def test_simple_ajax_form(self, req_factory):
         class MyForm(Form):
             ...
 
@@ -18,9 +17,7 @@ class TestSimpleAjaxForm:
 
 
 class TestPaginationUrl:
-    def test_append_page_number_to_querystring(
-        self, req_factory: RequestFactory
-    ):
+    def test_append_page_number_to_querystring(self, req_factory):
 
         req = req_factory.get("/search/", {"q": "test"})
         url = pagination_url({"request": req}, 5)

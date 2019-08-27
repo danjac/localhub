@@ -8,8 +8,6 @@ Custom Markdown-related functions.
 import re
 import bleach
 
-from typing import Set
-
 from bleach import Cleaner  # type: ignore
 from bleach.linkifier import LinkifyFilter
 
@@ -42,7 +40,7 @@ HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")
 MENTIONS_RE = re.compile(r"(?:^|\s)[＠ @]{1}([^\s#<>!.?[\]|{}]+)")
 
 
-def markdownify(content: str) -> str:
+def markdownify(content):
     """
     Drop-in replacement to default MarkdownX markdownify function.
 
@@ -55,7 +53,7 @@ def markdownify(content: str) -> str:
     )
 
 
-def extract_mentions(content: str) -> Set[str]:
+def extract_mentions(content):
     """
     Returns set of @mentions in text
     """
@@ -68,7 +66,7 @@ def extract_mentions(content: str) -> Set[str]:
     )
 
 
-def linkify_mentions(content: str) -> str:
+def linkify_mentions(content):
     """
     Replace all @mentions in the text with links to user profile page.
     """
@@ -87,7 +85,7 @@ def linkify_mentions(content: str) -> str:
     return " ".join(rv)
 
 
-def extract_hashtags(content: str) -> Set[str]:
+def extract_hashtags(content):
     """
     Extracts tags (prefixed with "#") in string into a set of tags.
     The extracted tags do not include the hash("#") prefix.
@@ -101,7 +99,7 @@ def extract_hashtags(content: str) -> Set[str]:
     )
 
 
-def linkify_hashtags(content: str) -> str:
+def linkify_hashtags(content):
     """
     Replace all #hashtags in text with links to some tag search page.
     """

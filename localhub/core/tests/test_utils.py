@@ -3,13 +3,11 @@
 
 import pytest
 
-from localhub.events.models import Event
-
 pytestmark = pytest.mark.django_db
 
 
 class TestTracker:
-    def test_changed(self, event: Event):
+    def test_changed(self, event):
         assert not event.location_tracker.changed()
         event.locality = "Helsinki"
         event.save()

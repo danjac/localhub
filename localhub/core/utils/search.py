@@ -5,7 +5,6 @@ import operator
 
 from functools import reduce
 
-from typing import List, Tuple, Type
 
 from django.contrib.postgres.search import (
     SearchVector,
@@ -14,15 +13,11 @@ from django.contrib.postgres.search import (
 )
 from django.db import models
 
-from localhub.core.types import BaseQuerySetMixin
 
-
-class SearchQuerySetMixin(BaseQuerySetMixin):
+class SearchQuerySetMixin:
     search_document_field = "search_document"
 
-    def search(
-        self, search_term: str, search_rank_annotated_name: str = "rank"
-    ) -> models.QuerySet:
+    def search(self, search_term, search_rank_annotated_name="rank"):
         """
         Returns result of search on indexed fields. Annotates with
         `rank` to allow ordering by search result accuracy.
@@ -41,18 +36,14 @@ class SearchQuerySetMixin(BaseQuerySetMixin):
 
 class InstanceSearchIndexer:
     def __init__(
-        self,
-        instance: models.Model,
-        owner: Type[models.Model],
-        search_components: Tuple[Tuple[str, str]],
-        search_document_field: str,
+        self, instance, owner, search_components, search_document_field
     ):
         self.instance = instance
         self.owner = owner
         self.search_components = search_components
         self.search_document_field = search_document_field
 
-    def get_search_vectors(self) -> List[SearchVector]:
+    def get_search_vectors(self):
         return [
             SearchVector(
                 models.Value(text, output_field=models.CharField()),
@@ -101,9 +92,7 @@ class SearchIndexer:
         self.search_components = search_components
         self.search_document_field = search_document_field
 
-    def __get__(
-        self, instance: models.Model, owner: Type[models.Model]
-    ) -> InstanceSearchIndexer:
+    def __get__(self, instance, owner) -> InstanceSearchIndexer:
         return InstanceSearchIndexer(
             instance,
             owner,

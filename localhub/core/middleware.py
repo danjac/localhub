@@ -1,9 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.http import HttpRequest, HttpResponse
-
-from localhub.core.types import DjangoView
+from django.http import HttpResponse
 
 
 class DoNotTrackMiddleware:
@@ -11,10 +9,10 @@ class DoNotTrackMiddleware:
     Checks if DoNotTrack(DNT) HTTP header is present.
     """
 
-    def __init__(self, get_response: DjangoView):
+    def __init__(self, get_response):
         self.get_response = get_response
 
-    def __call__(self, request: HttpRequest) -> HttpResponse:
+    def __call__(self, request):
         request.do_not_track = request.headers.get("DNT") == "1"
         return self.get_response(request)
 
@@ -32,10 +30,10 @@ class TurbolinksMiddleware:
     location_header = "Turbolinks-Location"
     referrer_header = "Turbolinks-Referrer"
 
-    def __init__(self, get_response: DjangoView):
+    def __init__(self, get_response):
         self.get_response = get_response
 
-    def __call__(self, request: HttpRequest) -> HttpResponse:
+    def __call__(self, request):
 
         response = self.get_response(request)
         if response.status_code in (301, 302) and response.has_header(
@@ -48,20 +46,16 @@ class TurbolinksMiddleware:
                 response[self.location_header] = location
         return response
 
-    def handle_redirect(
-        self, request: HttpRequest, response: HttpResponse
-    ) -> HttpResponse:
+    def handle_redirect(self, request, response):
         if self.is_turbolinks_request(request):
             return self.redirect_with_turbolinks(request, response)
         request.session[self.session_key] = response["Location"]
         return response
 
-    def is_turbolinks_request(self, request: HttpRequest) -> bool:
+    def is_turbolinks_request(self, request) -> bool:
         return request.is_ajax() and self.referrer_header in request.headers
 
-    def redirect_with_turbolinks(
-        self, request: HttpRequest, response: HttpResponse
-    ) -> HttpResponse:
+    def redirect_with_turbolinks(self, request, response):
         js = []
         if request.method not in ("GET", "HEAD", "OPTIONS", "TRACE"):
             js.append("Turbolinks.clearCache();")

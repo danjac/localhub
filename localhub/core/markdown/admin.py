@@ -1,11 +1,8 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Optional, no_type_check
-
 from django import forms
 from django.db import models
-from django.http import HttpRequest
 
 from localhub.core.markdown.fields import MarkdownField
 
@@ -19,10 +16,7 @@ class MarkdownFieldMixin:
 
     model: models.Model
 
-    @no_type_check
-    def get_form(
-        self, request: HttpRequest, obj: Optional[models.Model], **kwargs
-    ) -> forms.ModelForm:
+    def get_form(self, request, obj, **kwargs):
         """
         formfield_overrides doesn't work with MarkdownField
         """

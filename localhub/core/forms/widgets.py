@@ -1,31 +1,20 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Any
-
 from django import forms
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-
-from localhub.core.types import ContextDict
 
 
 class TypeaheadInput(forms.TextInput):
     template_name = "includes/forms/widgets/typeahead.html"
 
-    def __init__(
-        self,
-        attrs: ContextDict = None,
-        search_mentions: bool = True,
-        search_hashtags: bool = True,
-    ):
+    def __init__(self, attrs=None, search_mentions=True, search_hashtags=True):
         super().__init__(attrs)
         self.search_mentions = search_mentions
         self.search_hashtags = search_hashtags
 
-    def get_context(
-        self, name: str, value: Any, attrs: ContextDict
-    ) -> ContextDict:
+    def get_context(self, name, value, attrs):
         data = super().get_context(name, value, attrs)
         if self.search_mentions:
             data["mention_search_url"] = reverse("users:autocomplete_list")
