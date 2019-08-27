@@ -1,8 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import List, Sequence
-
 from django.db import models
 
 from django.conf import settings
@@ -12,7 +10,6 @@ from django.contrib.contenttypes.models import ContentType
 from model_utils.models import TimeStampedModel
 
 from localhub.communities.models import Community
-from localhub.core.types import BaseQuerySetMixin
 from localhub.core.utils.content_types import (
     get_generic_related_count_subquery,
     get_generic_related_exists,
@@ -20,14 +17,12 @@ from localhub.core.utils.content_types import (
 from localhub.notifications.models import Notification
 
 
-class LikeAnnotationsQuerySetMixin(BaseQuerySetMixin):
+class LikeAnnotationsQuerySetMixin:
     """
     Annotation methods for related model query sets.
     """
 
-    def with_has_liked(
-        self, user: settings.AUTH_USER_MODEL, annotated_name: str = "has_liked"
-    ) -> models.QuerySet:
+    def with_has_liked(self, user, annotated_name="has_liked"):
         """
         Checks if user has liked the object, adding `has_liked`
         annotation.
@@ -40,9 +35,7 @@ class LikeAnnotationsQuerySetMixin(BaseQuerySetMixin):
             }
         )
 
-    def with_num_likes(
-        self, annotated_name: str = "num_likes"
-    ) -> models.QuerySet:
+    def with_num_likes(self, annotated_name="num_likes"):
         """
         Appends the total number of likes each object has received.
         """
@@ -56,7 +49,7 @@ class LikeAnnotationsQuerySetMixin(BaseQuerySetMixin):
 
 
 class LikeQuerySet(models.QuerySet):
-    def for_models(self, *models: Sequence[models.Model]) -> models.QuerySet:
+    def for_models(self, *models):
         """
         Returns instances of a Like for a given set of models.
         """
@@ -96,7 +89,7 @@ class Like(TimeStampedModel):
         ]
         indexes = [models.Index(fields=["content_type", "object_id"])]
 
-    def notify(self) -> List[Notification]:
+    def notify(self):
         """
         Sends notification to community moderators.
         """

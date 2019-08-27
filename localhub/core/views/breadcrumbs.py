@@ -1,12 +1,8 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Optional
 
-from localhub.core.types import BaseContextMixin, BreadcrumbList, ContextDict
-
-
-class BreadcrumbsMixin(BaseContextMixin):
+class BreadcrumbsMixin:
     """
     View mixin providing a list of (url, label) tuples
     that can be rendered with the appropriate HTML component.
@@ -29,15 +25,15 @@ class BreadcrumbsMixin(BaseContextMixin):
     {% endfor %}
     """
 
-    breadcrumbs: Optional[BreadcrumbList] = None
+    breadcrumbs = None
 
-    def get_breadcrumbs(self) -> BreadcrumbList:
+    def get_breadcrumbs(self):
         """
         Returns list of (url/label) tuples. Override as required.
         """
         return self.breadcrumbs or []
 
-    def get_context_data(self, **kwargs) -> ContextDict:
+    def get_context_data(self, **kwargs):
         data = super().get_context_data()
         data["breadcrumbs"] = self.get_breadcrumbs()
         return data

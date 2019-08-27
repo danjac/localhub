@@ -3,10 +3,8 @@
 
 from django.utils.functional import cached_property
 
-from localhub.core.types import BaseViewMixin
 
-
-class SearchMixin(BaseViewMixin):
+class SearchMixin:
     search_query_parameter = "q"
 
     @cached_property

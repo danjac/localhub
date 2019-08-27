@@ -3,16 +3,11 @@
 
 from collections import defaultdict
 
-from typing import Optional, DefaultDict, Set, Tuple, Union
-
-from django.core.paginator import Page
-from django.db.models import CharField, QuerySet, Value
-from django.http import HttpRequest
+from django.db.models import CharField, Value
 from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 
 from localhub.core.utils.pagination import PresetCountPaginator
-from localhub.core.types import ContextDict, QuerySetDict, QuerySetList
 
 
 class MultipleQuerySetMixin:
@@ -50,40 +45,39 @@ class MultipleQuerySetMixin:
     """
 
     allow_empty = True
-    limit: Optional[int] = None
-    ordering: Optional[Union[str, Tuple[str]]] = None
-    paginate_by: Optional[int] = None
+    limit = None
+    ordering = None
+    paginate_by = None
     paginator_class = PresetCountPaginator
     page_kwarg = "page"
-    request: HttpRequest
 
-    def get_querysets(self) -> QuerySetList:
+    def get_querysets(self):
         """
         This must be implemented by returning a list of QuerySets, one
         for each different model.
         """
         raise NotImplementedError
 
-    def get_ordering(self) -> Optional[Union[str, Tuple[str]]]:
+    def get_ordering(self):
         return self.ordering
 
-    def get_queryset_dict(self) -> QuerySetDict:
+    def get_queryset_dict(self):
         return {
             queryset.model._meta.model_name: queryset
             for queryset in self.get_querysets()
         }
 
-    def get_count_querysets(self) -> QuerySetList:
+    def get_count_querysets(self):
         return self.get_querysets()
 
-    def get_combined_count_queryset(self) -> QuerySet:
+    def get_combined_count_queryset(self):
         querysets = [qs.only("pk") for qs in self.get_count_querysets()]
         return querysets[0].union(*querysets[1:])
 
-    def get_combined_count(self) -> int:
+    def get_combined_count(self):
         return self.get_combined_count_queryset().count()
 
-    def get_combined_queryset(self, queryset_dict: QuerySetDict) -> QuerySet:
+    def get_combined_queryset(self, queryset_dict):
         values = ["pk", "object_type"]
 
         ordering = self.get_ordering()
@@ -104,8 +98,8 @@ class MultipleQuerySetMixin:
             qs = qs.order_by(*ordering)
         return qs
 
-    def load_objects(self, items: QuerySet, queryset_dict: QuerySetDict):
-        bulk_load: DefaultDict[str, Set] = defaultdict(set)
+    def load_objects(self, items, queryset_dict):
+        bulk_load = defaultdict(set)
 
         for item in items:
             bulk_load[item["object_type"]].add(item["pk"])
@@ -119,7 +113,7 @@ class MultipleQuerySetMixin:
         for item in items:
             item["object"] = fetched[(item["object_type"], item["pk"])]
 
-    def get_object_list(self) -> QuerySet:
+    def get_object_list(self):
 
         queryset_dict = self.get_queryset_dict()
         union_qs = self.get_combined_queryset(queryset_dict)
@@ -129,7 +123,7 @@ class MultipleQuerySetMixin:
         self.load_objects(union_qs, queryset_dict)
         return union_qs
 
-    def get_page(self) -> Page:
+    def get_page(self):
         queryset_dict = self.get_queryset_dict()
         union_qs = self.get_combined_queryset(queryset_dict)
 
@@ -143,7 +137,7 @@ class MultipleQuerySetMixin:
 
         return page
 
-    def get_pagination_kwargs(self) -> ContextDict:
+    def get_pagination_kwargs(self):
         return {
             "per_page": self.paginate_by,
             "allow_empty_first_page": self.allow_empty,
@@ -162,7 +156,7 @@ class MultipleQuerySetContextMixin(MultipleQuerySetMixin, ContextMixin):
 
     """
 
-    def get_context_data(self, **kwargs) -> ContextDict:
+    def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.paginate_by:
             page = self.get_page()

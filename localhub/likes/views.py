@@ -5,19 +5,18 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 
 from localhub.activities.views.streams import BaseStreamView
-from localhub.activities.types import ActivityType
 from localhub.comments.views import CommentListView
 
 
 class LikedStreamView(LoginRequiredMixin, BaseStreamView):
     template_name = "likes/activities.html"
 
-    def get_count_queryset_for_model(self, model: ActivityType) -> QuerySet:
+    def get_count_queryset_for_model(self, model):
         return self.filter_queryset(
             model.objects.with_has_liked(self.request.user)
         )
 
-    def filter_queryset(self, queryset: QuerySet) -> QuerySet:
+    def filter_queryset(self, queryset):
         return super().filter_queryset(queryset).filter(has_liked=True)
 
 
@@ -27,7 +26,7 @@ liked_stream_view = LikedStreamView.as_view()
 class LikedCommentListView(LoginRequiredMixin, CommentListView):
     template_name = "likes/comments.html"
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return (
             super()
             .get_queryset()
