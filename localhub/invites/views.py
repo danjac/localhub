@@ -6,8 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import redirect_to_login
-from django.db.models import QuerySet
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -17,9 +16,8 @@ from django.views.generic.list import MultipleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
-from localhub.communities.models import Community, Membership
+from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.core.types import ContextDict
 from localhub.invites.emails import send_invitation_email
 from localhub.invites.forms import InviteForm
 from localhub.invites.models import Invite
@@ -27,7 +25,7 @@ from localhub.users.emails import send_user_notification_email
 
 
 class InviteQuerySetMixin(CommunityRequiredMixin):
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return Invite.objects.filter(community=self.request.community)
 
 
@@ -48,7 +46,7 @@ class InviteListView(
 ):
     permission_required = "communities.manage_community"
 
-    def get_permission_object(self) -> Community:
+    def get_permission_object(self):
         return self.request.community
 
 
@@ -66,15 +64,15 @@ class InviteCreateView(
     success_url = reverse_lazy("invites:list")
     permission_required = "communities.manage_community"
 
-    def get_permission_object(self) -> Community:
+    def get_permission_object(self):
         return self.request.community
 
-    def get_form_kwargs(self) -> ContextDict:
+    def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs.update({"community": self.request.community})
         return kwargs
 
-    def form_valid(self, form: InviteForm) -> HttpResponse:
+    def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.sender = self.request.user
         self.object.community = self.request.community
@@ -100,13 +98,13 @@ class InviteResendView(
 ):
     permission_required = "communities.manage_community"
 
-    def get_permission_object(self) -> Community:
+    def get_permission_object(self):
         return self.request.community
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return super().get_queryset().filter(status=Invite.STATUS.pending)
 
-    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def get(self, request, *args, **kwargs):
         # should be a POST, but whatever
         self.object = self.get_object()
         self.object.sent = timezone.now()
@@ -118,7 +116,7 @@ class InviteResendView(
         )
         return HttpResponseRedirect(self.get_success_url())
 
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return reverse("invites:list")
 
 
@@ -131,7 +129,7 @@ class InviteDeleteView(
     permission_required = "communities.manage_community"
     success_url = reverse_lazy("invites:list")
 
-    def get_permission_object(self) -> Community:
+    def get_permission_object(self):
         return self.request.community
 
 
@@ -152,11 +150,11 @@ class InviteAcceptView(SingleInviteView):
 
     allow_if_private = True
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         # TBD: add a deadline of e.g. 3 days
         return super().get_queryset().filter(status=Invite.STATUS.pending)
 
-    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         user = get_user_model().objects.for_email(self.object.email).first()
 
@@ -170,17 +168,17 @@ class InviteAcceptView(SingleInviteView):
 
         return self.handle_invalid_invite()
 
-    def handle_new_user(self) -> HttpResponse:
+    def handle_new_user(self):
         messages.info(self.request, _("Sign up to join this community"))
         return redirect_to_login(
             self.request.get_full_path(), reverse("account_signup")
         )
 
-    def handle_logged_out_user(self) -> HttpResponse:
+    def handle_logged_out_user(self):
         messages.info(self.request, _("Login to join this community"))
         return redirect_to_login(self.request.get_full_path())
 
-    def handle_current_user(self) -> HttpResponse:
+    def handle_current_user(self):
         _membership, created = Membership.objects.get_or_create(
             member=self.request.user, community=self.object.community
         )
@@ -201,7 +199,7 @@ class InviteAcceptView(SingleInviteView):
 
         return HttpResponseRedirect(settings.HOME_PAGE_URL)
 
-    def handle_invalid_invite(self) -> HttpResponse:
+    def handle_invalid_invite(self):
         messages.error(self.request, _("This invite is invalid"))
 
         self.object.status = Invite.STATUS.rejected

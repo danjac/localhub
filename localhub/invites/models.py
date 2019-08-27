@@ -38,14 +38,14 @@ class Invite(TimeStampedModel):
     class Meta:
         unique_together = ("email", "community")
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.email
 
-    def is_pending(self) -> bool:
+    def is_pending(self):
         return self.status == self.STATUS.pending
 
-    def is_accepted(self) -> bool:
+    def is_accepted(self):
         return self.status == self.STATUS.accepted
 
-    def is_rejected(self) -> bool:
+    def is_rejected(self):
         return self.status == self.STATUS.rejected

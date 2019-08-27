@@ -5,7 +5,6 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 
-from localhub.communities.models import Community
 from localhub.invites.models import Invite
 
 
@@ -14,11 +13,11 @@ class InviteForm(forms.ModelForm):
         model = Invite
         fields = ("email",)
 
-    def __init__(self, community: Community, *args, **kwargs):
+    def __init__(self, community, *args, **kwargs):
         self.community = community
         super().__init__(*args, **kwargs)
 
-    def clean_email(self) -> str:
+    def clean_email(self):
         email = self.cleaned_data["email"]
         if self.community.members.for_email(email).exists():
             raise ValidationError(

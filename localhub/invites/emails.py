@@ -6,10 +6,8 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
-from localhub.invites.models import Invite
 
-
-def send_invitation_email(invite: Invite):
+def send_invitation_email(invite):
     context = {
         "invite": invite,
         "accept_url": invite.community.resolve_url(
