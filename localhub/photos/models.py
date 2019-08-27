@@ -57,8 +57,8 @@ class Photo(Activity):
 
     search_indexer = SearchIndexer(("A", "title"), ("B", "description"))
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.title
 
-    def has_attribution(self) -> bool:
+    def has_attribution(self):
         return any((self.artist, self.original_url, self.cc_license))

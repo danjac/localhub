@@ -3,12 +3,8 @@ import pytest
 
 from PIL import Image
 
-from django.conf import settings
 from django.core.files import File
-from django.test.client import Client
 from django.urls import reverse
-
-from pytest_mock import MockFixture
 
 from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory
@@ -20,12 +16,12 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def photo_for_member(member: Membership) -> Photo:
+def photo_for_member(member):
     return PhotoFactory(owner=member.member, community=member.community)
 
 
 @pytest.fixture
-def fake_image() -> File:
+def fake_image():
     file_obj = io.BytesIO()
     image = Image.new("RGBA", size=(500, 500), color="blue")
     image.save(file_obj, "png")
@@ -34,16 +30,12 @@ def fake_image() -> File:
 
 
 class TestPhotoCreateView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         response = client.get(reverse("photos:create"))
         assert response.status_code == 200
 
     def test_post(
-        self,
-        client: Client,
-        member: Membership,
-        fake_image: File,
-        send_notification_webpush_mock: MockFixture,
+        self, client, member, fake_image, send_notification_webpush_mock
     ):
         response = client.post(
             reverse("photos:create"), {"title": "test", "image": fake_image}
@@ -55,7 +47,7 @@ class TestPhotoCreateView:
 
 
 class TestPhotoUpdateView:
-    def test_get(self, client: Client, photo_for_member: Photo):
+    def test_get(self, client, photo_for_member):
         response = client.get(
             reverse("photos:update", args=[photo_for_member.id])
         )
@@ -63,10 +55,10 @@ class TestPhotoUpdateView:
 
     def test_post(
         self,
-        client: Client,
-        photo_for_member: Photo,
-        fake_image: File,
-        send_notification_webpush_mock: MockFixture,
+        client,
+        photo_for_member,
+        fake_image,
+        send_notification_webpush_mock,
     ):
         response = client.post(
             reverse("photos:update", args=[photo_for_member.id]),
@@ -78,14 +70,14 @@ class TestPhotoUpdateView:
 
 
 class TestPhotoDeleteView:
-    def test_get(self, client: Client, photo_for_member: Photo):
+    def test_get(self, client, photo_for_member):
         # test confirmation page for non-JS clients
         response = client.get(
             reverse("photos:delete", args=[photo_for_member.id])
         )
         assert response.status_code == 200
 
-    def test_delete(self, client: Client, photo_for_member: Photo):
+    def test_delete(self, client, photo_for_member):
         response = client.delete(
             reverse("photos:delete", args=[photo_for_member.id])
         )
@@ -94,19 +86,14 @@ class TestPhotoDeleteView:
 
 
 class TestPhotoDetailView:
-    def test_get(self, client: Client, photo: Photo):
+    def test_get(self, client, photo):
         response = client.get(
             photo.get_absolute_url(), HTTP_HOST=photo.community.domain
         )
         assert response.status_code == 200
         assert "comment_form" not in response.context
 
-    def test_get_if_can_photo_comment(
-        self,
-        client: Client,
-        photo: Photo,
-        login_user: settings.AUTH_USER_MODEL,
-    ):
+    def test_get_if_can_photo_comment(self, client, photo, login_user):
         Membership.objects.create(member=login_user, community=photo.community)
         response = client.get(
             photo.get_absolute_url(), HTTP_HOST=photo.community.domain
@@ -116,12 +103,7 @@ class TestPhotoDetailView:
 
 
 class TestPhotoLikeView:
-    def test_post(
-        self,
-        client: Client,
-        member: Membership,
-        send_notification_webpush_mock: MockFixture,
-    ):
+    def test_post(self, client, member, send_notification_webpush_mock):
         photo = PhotoFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
@@ -137,7 +119,7 @@ class TestPhotoLikeView:
 
 
 class TestPhotoDislikeView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         photo = PhotoFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,

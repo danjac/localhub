@@ -11,10 +11,10 @@ from localhub.photos.models import Photo
 @receiver(
     post_save, sender=Photo, dispatch_uid="photos.update_search_document"
 )
-def update_search_document(instance: Photo, **kwargs):
+def update_search_document(instance, **kwargs):
     transaction.on_commit(lambda: instance.search_indexer.update())
 
 
 @receiver(post_save, sender=Photo, dispatch_uid="photos.taggit")
-def taggit(instance: Photo, created: bool, **kwargs):
+def taggit(instance, created, **kwargs):
     transaction.on_commit(lambda: instance.taggit(created))
