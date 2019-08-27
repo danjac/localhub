@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from dataclasses import dataclass
-from typing import Optional, Set, Union
 from urllib.parse import urljoin
 
 from django.conf import settings
@@ -47,18 +46,18 @@ class RequestCommunity:
     public: bool = False
     active: bool = False
 
-    def get_absolute_url(self) -> str:
+    def get_absolute_url(self):
         return self.request.full_path
 
-    def user_has_role(self, user: settings.AUTH_USER_MODEL, role: str) -> bool:
+    def user_has_role(self, user, role):
         return False
 
 
 class CommunityQuerySet(models.QuerySet):
-    def with_num_members(self) -> models.QuerySet:
+    def with_num_members(self):
         return self.annotate(num_members=models.Count("membership"))
 
-    def available(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
+    def available(self, user):
         qs = self.filter(active=True)
         if user.is_authenticated:
             qs = qs.annotate(
@@ -85,18 +84,16 @@ class CommunityQuerySet(models.QuerySet):
 class CommunityManager(models.Manager):
     use_in_migrations = True
 
-    def get_queryset(self) -> models.QuerySet:
+    def get_queryset(self):
         return CommunityQuerySet(self.model, using=self._db)
 
-    def with_num_members(self) -> models.QuerySet:
+    def with_num_members(self):
         return self.get_queryset().with_num_members()
 
-    def available(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
+    def available(self, user):
         return self.get_queryset().available(user)
 
-    def get_current(
-        self, request: HttpRequest
-    ) -> Union["Community", "RequestCommunity"]:
+    def get_current(self, request):
         """
         Returns current community matching request domain if active.
         """
@@ -187,54 +184,54 @@ class Community(TimeStampedModel):
     class Meta:
         verbose_name_plural = _("Communities")
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.name
 
     @property
-    def _history_user(self) -> Optional[settings.AUTH_USER_MODEL]:
+    def _history_user(self):
         return self.admin
 
     @_history_user.setter
-    def _history_user(self, value: settings.AUTH_USER_MODEL):
+    def _history_user(self, value):
         self.admin = value
 
-    def get_absolute_url(self) -> str:
+    def get_absolute_url(self):
         return f"http://{self.domain}"
 
-    def get_email_domain(self) -> str:
+    def get_email_domain(self):
         """
         Returns email domain if available, else the community domain
         """
         return self.email_domain or self.domain
 
-    def get_content_warning_tags(self) -> Set[str]:
+    def get_content_warning_tags(self):
         return extract_hashtags(self.content_warning_tags)
 
-    def resolve_url(self, url: str) -> str:
+    def resolve_url(self, url):
         """
         Prepends the community domain to create a complete URL string
         """
         return urljoin(self.get_absolute_url(), url)
 
-    def resolve_email(self, local_part: str) -> str:
+    def resolve_email(self, local_part):
         """
         Appends the email domain to create a full email address
         """
         return f"{local_part}@{self.get_email_domain()}"
 
-    def get_members_by_role(self, role: str) -> models.QuerySet:
+    def get_members_by_role(self, role):
         return self.members.filter(membership__role=role)
 
-    def get_members(self) -> models.QuerySet:
+    def get_members(self):
         return self.get_members_by_role(Membership.ROLES.member)
 
-    def get_moderators(self) -> models.QuerySet:
+    def get_moderators(self):
         return self.get_members_by_role(Membership.ROLES.moderator)
 
-    def get_admins(self) -> models.QuerySet:
+    def get_admins(self):
         return self.get_members_by_role(Membership.ROLES.admin)
 
-    def user_has_role(self, user: settings.AUTH_USER_MODEL, role: str) -> bool:
+    def user_has_role(self, user, role):
         if user.is_anonymous:
             return False
         return user.has_role(self, role)
@@ -271,11 +268,11 @@ class Membership(TimeStampedModel):
         ]
         indexes = [models.Index(fields=["member", "community", "active"])]
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.get_role_display()
 
-    def is_admin(self) -> bool:
+    def is_admin(self):
         return self.role == self.ROLES.admin
 
-    def is_moderator(self) -> bool:
+    def is_moderator(self):
         return self.role == self.ROLES.moderator

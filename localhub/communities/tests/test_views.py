@@ -3,17 +3,15 @@
 
 import pytest
 
-from typing import List
 
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponse
-from django.test.client import Client, RequestFactory
 from django.urls import reverse
 from django.views.generic import View
 
-from localhub.communities.models import Community, Membership, RequestCommunity
+from localhub.communities.models import Membership, RequestCommunity
 from localhub.communities.tests.factories import (
     CommunityFactory,
     MembershipFactory,
@@ -32,35 +30,31 @@ my_view = MyView.as_view()
 
 
 class TestCommunityRequiredMixin:
-    def test_community_available(
-        self, community: Community, req_factory: RequestFactory
-    ):
+    def test_community_available(self, community, req_factory):
         req = req_factory.get("/")
         req.community = community
         req.user = AnonymousUser()
         assert my_view(req).status_code == 200
 
-    def test_community_not_found(self, req_factory: RequestFactory):
+    def test_community_not_found(self, req_factory):
         req = req_factory.get("/")
         req.community = RequestCommunity(req, "example.com", "example.com")
         assert my_view(req).url == reverse("community_not_found")
 
-    def test_community_not_found_if_ajax(self, req_factory: RequestFactory):
+    def test_community_not_found_if_ajax(self, req_factory):
         req = req_factory.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
         req.community = RequestCommunity(req, "example.com", "example.com")
         with pytest.raises(Http404):
             my_view(req)
 
-    def test_community_access_denied_if_anonymous(
-        self, req_factory: RequestFactory
-    ):
+    def test_community_access_denied_if_anonymous(self, req_factory):
         req = req_factory.get("/")
         req.community = CommunityFactory(public=False)
         req.user = AnonymousUser()
         assert my_view(req).url.startswith(reverse("account_login"))
 
     def test_community_access_denied_if_private_allowed(
-        self, req_factory: RequestFactory, user: settings.AUTH_USER_MODEL
+        self, req_factory, user
     ):
         req = req_factory.get("/")
         req.community = CommunityFactory(public=False)
@@ -68,17 +62,13 @@ class TestCommunityRequiredMixin:
         my_public_view = MyView.as_view(allow_if_private=True)
         assert my_public_view(req).status_code == 200
 
-    def test_community_access_denied_if_authenticated(
-        self, req_factory: RequestFactory, user: settings.AUTH_USER_MODEL
-    ):
+    def test_community_access_denied_if_authenticated(self, req_factory, user):
         req = req_factory.get("/")
         req.community = CommunityFactory(public=False)
         req.user = user
         assert my_view(req).url == reverse("community_access_denied")
 
-    def test_community_access_denied_if_ajax(
-        self, req_factory: RequestFactory, user: settings.AUTH_USER_MODEL
-    ):
+    def test_community_access_denied_if_ajax(self, req_factory, user):
         req = req_factory.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
         req.community = CommunityFactory(public=False)
         req.user = user
@@ -87,7 +77,7 @@ class TestCommunityRequiredMixin:
 
 
 class TestCommunityDetailView:
-    def test_get(self, client: Client, community: Community):
+    def test_get(self, client, community):
         assert (
             client.get(reverse("communities:community_detail")).status_code
             == 200
@@ -95,7 +85,7 @@ class TestCommunityDetailView:
 
 
 class TestCommunityTermsView:
-    def test_get(self, client: Client, community: Community):
+    def test_get(self, client, community):
         assert (
             client.get(reverse("communities:community_terms")).status_code
             == 200
@@ -103,13 +93,13 @@ class TestCommunityTermsView:
 
 
 class TestCommunityUpdateView:
-    def test_get(self, client: Client, admin: Membership):
+    def test_get(self, client, admin):
         assert (
             client.get(reverse("communities:community_update")).status_code
             == 200
         )
 
-    def test_post(self, client: Client, admin: Membership):
+    def test_post(self, client, admin):
         url = reverse("communities:community_update")
         response = client.post(
             url, {"name": "New name", "description": "", "public": True}
@@ -121,28 +111,19 @@ class TestCommunityUpdateView:
 
 
 class TestCommunityListView:
-    def test_get(
-        self,
-        client: Client,
-        member: Membership,
-        user: settings.AUTH_USER_MODEL,
-    ):
+    def test_get(self, client, member, user):
         CommunityFactory.create_batch(3)
         assert client.get(reverse("community_list")).status_code == 200
 
 
 class TestMembershipListView:
-    def test_get(
-        self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
-    ):
+    def test_get(self, client, admin, user):
         for _ in range(3):
             MembershipFactory(community=admin.community)
         response = client.get(reverse("communities:membership_list"))
         assert len(response.context["object_list"]) == 4
 
-    def test_get_if_search(
-        self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
-    ):
+    def test_get_if_search(self, client, admin, user):
         for _ in range(3):
             MembershipFactory(community=admin.community)
 
@@ -157,9 +138,7 @@ class TestMembershipListView:
 
 
 class TestMembershipDetailView:
-    def test_get(
-        self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
-    ):
+    def test_get(self, client, admin, user):
         membership = MembershipFactory(member=user, community=admin.community)
         assert (
             client.get(
@@ -170,9 +149,7 @@ class TestMembershipDetailView:
 
 
 class TestMembershipUpdateView:
-    def test_get(
-        self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
-    ):
+    def test_get(self, client, admin, user):
         membership = MembershipFactory(member=user, community=admin.community)
         assert (
             client.get(
@@ -181,9 +158,7 @@ class TestMembershipUpdateView:
             == 200
         )
 
-    def test_post(
-        self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
-    ):
+    def test_post(self, client, admin, user):
         membership = MembershipFactory(member=user, community=admin.community)
         response = client.post(
             reverse("communities:membership_update", args=[membership.id]),
@@ -195,9 +170,7 @@ class TestMembershipUpdateView:
 
 
 class TestMembershipDeleteView:
-    def test_get(
-        self, client: Client, admin: Membership, user: settings.AUTH_USER_MODEL
-    ):
+    def test_get(self, client, admin, user):
         membership = MembershipFactory(member=user, community=admin.community)
         assert (
             client.get(
@@ -206,13 +179,7 @@ class TestMembershipDeleteView:
             == 200
         )
 
-    def test_delete(
-        self,
-        client: Client,
-        admin: Membership,
-        user: settings.AUTH_USER_MODEL,
-        mailoutbox: List,
-    ):
+    def test_delete(self, client, admin, user, mailoutbox):
         membership = MembershipFactory(community=admin.community)
         response = client.post(
             reverse("communities:membership_delete", args=[membership.id])
@@ -222,7 +189,7 @@ class TestMembershipDeleteView:
         assert not Membership.objects.filter(pk=membership.pk).exists()
         assert mailoutbox[0].to == [membership.member.email]
 
-    def test_delete_own_membership(self, client: Client, member: Membership):
+    def test_delete_own_membership(self, client, member):
         response = client.post(
             reverse("communities:membership_delete", args=[member.id])
         )
@@ -232,26 +199,16 @@ class TestMembershipDeleteView:
 
 
 class TestCommunityLeaveView:
-    def test_get(
-        self,
-        client: Client,
-        member: Membership,
-        user: settings.AUTH_USER_MODEL,
-    ):
+    def test_get(self, client, member, user):
         assert client.get(reverse("communities:leave")).status_code == 200
 
-    def test_delete(
-        self,
-        client: Client,
-        member: Membership,
-        user: settings.AUTH_USER_MODEL,
-    ):
+    def test_delete(self, client, member, user):
         response = client.post(reverse("communities:leave"))
 
         assert response.url == "/"
         assert not Membership.objects.filter(pk=member.pk).exists()
 
-    def test_delete_own_membership(self, client: Client, member: Membership):
+    def test_delete_own_membership(self, client, member):
         response = client.post(
             reverse("communities:membership_delete", args=[member.id])
         )

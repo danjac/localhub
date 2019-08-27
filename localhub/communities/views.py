@@ -1,22 +1,14 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import no_type_check
-
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import redirect_to_login
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import QuerySet
 from django.forms import ModelForm
-from django.http import (
-    Http404,
-    HttpRequest,
-    HttpResponse,
-    HttpResponseRedirect,
-)
+from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
@@ -52,10 +44,8 @@ class CommunityRequiredMixin:
     """
 
     allow_if_private = False
-    request: HttpRequest
 
-    @no_type_check
-    def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def dispatch(self, request, *args, **kwargs):
         if not request.community.active:
             return self.handle_community_not_found()
 
@@ -68,14 +58,14 @@ class CommunityRequiredMixin:
             return self.handle_community_access_denied()
         return super().dispatch(request, *args, **kwargs)
 
-    def handle_community_access_denied(self) -> HttpResponse:
+    def handle_community_access_denied(self):
         if self.request.is_ajax():
             raise PermissionDenied(_("You must be a member of this community"))
         if self.request.user.is_anonymous:
             return redirect_to_login(self.request.get_full_path())
         return HttpResponseRedirect(reverse("community_access_denied"))
 
-    def handle_community_not_found(self) -> HttpResponse:
+    def handle_community_not_found(self):
         if self.request.is_ajax():
             raise Http404(_("No community is available for this domain"))
         return HttpResponseRedirect(reverse("community_not_found"))
@@ -138,13 +128,13 @@ class CommunityUpdateView(
     def get_object(self) -> Community:
         return self.request.community
 
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return self.request.path
 
-    def get_success_message(self) -> str:
+    def get_success_message(self):
         return self.success_message
 
-    def form_valid(self, form: ModelForm) -> HttpResponse:
+    def form_valid(self, form: ModelForm):
         community = form.save(commit=False)
         community.admin = self.request.user
         community.save()
@@ -163,7 +153,7 @@ class CommunityListView(SearchMixin, ListView):
 
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         qs = (
             Community.objects.available(self.request.user)
             .with_num_members()
@@ -178,7 +168,7 @@ community_list_view = CommunityListView.as_view()
 
 
 class MembershipQuerySetMixin(CommunityRequiredMixin):
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return Membership.objects.filter(
             community=self.request.community
         ).select_related("community", "member")
@@ -198,7 +188,7 @@ class MembershipListView(
     paginate_by = settings.DEFAULT_PAGE_SIZE
     permission_required = "communities.manage_community"
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
 
         qs = (
             super().get_queryset().order_by("member__name", "member__username")
@@ -208,7 +198,7 @@ class MembershipListView(
             qs = qs.search(self.search_query)
         return qs
 
-    def get_permission_object(self) -> Community:
+    def get_permission_object(self):
         return self.request.community
 
 
@@ -252,12 +242,12 @@ class MembershipDeleteView(
 ):
     permission_required = "communities.delete_membership"
 
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         if self.object.member == self.request.user:
             return settings.HOME_PAGE_URL
         return reverse("communities:membership_list")
 
-    def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()
         messages.success(
@@ -281,7 +271,7 @@ class CommunityLeaveView(MembershipDeleteView):
 
     template_name = "communities/leave.html"
 
-    def get_object(self) -> Membership:
+    def get_object(self):
         return (
             super()
             .get_queryset()
@@ -289,7 +279,7 @@ class CommunityLeaveView(MembershipDeleteView):
             .get()
         )
 
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return settings.HOME_PAGE_URL
 
 

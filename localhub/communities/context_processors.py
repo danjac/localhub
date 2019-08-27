@@ -1,7 +1,6 @@
-from django.http import HttpRequest
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
 
-from localhub.core.types import ContextDict
 
-
-def community(request: HttpRequest) -> ContextDict:
+def community(request):
     return {"community": request.community}

@@ -7,18 +7,16 @@ Rulesets for communities/memberships
 
 import rules
 
-from django.conf import settings
-
-from localhub.communities.models import Community, Membership
+from localhub.communities.models import Membership
 
 
 @rules.predicate
-def is_admin(user: settings.AUTH_USER_MODEL, community: Community) -> bool:
+def is_admin(user, community):
     return community.user_has_role(user, Membership.ROLES.admin)
 
 
 @rules.predicate
-def is_moderator(user, community: Community) -> bool:
+def is_moderator(user, community):
     return community.user_has_role(user, Membership.ROLES.moderator)
 
 
@@ -26,7 +24,7 @@ is_moderator = is_moderator | is_admin
 
 
 @rules.predicate
-def is_member(user: settings.AUTH_USER_MODEL, community: Community) -> bool:
+def is_member(user, community):
     return community.user_has_role(user, Membership.ROLES.member)
 
 
@@ -34,21 +32,17 @@ is_member = is_member | is_moderator
 
 
 @rules.predicate
-def is_visitor(user: settings.AUTH_USER_MODEL, community: Community) -> bool:
+def is_visitor(user, community):
     return community.public or is_member.test(user, community)
 
 
 @rules.predicate
-def is_own_membership(
-    user: settings.AUTH_USER_MODEL, membership: Membership
-) -> bool:
+def is_own_membership(user, membership):
     return membership.member_id == user.id
 
 
 @rules.predicate
-def is_membership_community_admin(
-    user: settings.AUTH_USER_MODEL, membership: Membership
-) -> bool:
+def is_membership_community_admin(user, membership):
     return is_admin.test(user, membership.community)
 
 
@@ -60,10 +54,7 @@ rules.add_perm("communities.view_community", is_visitor)
 rules.add_perm("communities.manage_community", is_admin)
 rules.add_perm("communities.moderate_community", is_moderator)
 
-rules.add_perm(
-    "communities.view_membership",
-    is_membership_community_admin,
-)
+rules.add_perm("communities.view_membership", is_membership_community_admin)
 
 rules.add_perm(
     "communities.change_membership",

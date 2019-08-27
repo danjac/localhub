@@ -1,11 +1,9 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.http import HttpRequest, HttpResponse
 from django.utils.functional import SimpleLazyObject
 
 from localhub.communities.models import Community
-from localhub.core.types import DjangoView
 
 
 class CurrentCommunityMiddleware:
@@ -16,10 +14,10 @@ class CurrentCommunityMiddleware:
     If no community found this value will be *None*.
     """
 
-    def __init__(self, get_response: DjangoView):
+    def __init__(self, get_response):
         self.get_response = get_response
 
-    def __call__(self, request: HttpRequest) -> HttpResponse:
+    def __call__(self, request):
         request.community = SimpleLazyObject(
             lambda: Community.objects.get_current(request)
         )
