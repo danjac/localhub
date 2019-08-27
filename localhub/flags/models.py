@@ -1,8 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import List
-
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -23,9 +21,7 @@ class FlagAnnotationsQuerySetMixin(BaseQuerySetMixin):
     Adds annotation methods to related model query set.
     """
 
-    def with_is_flagged(
-        self, annotated_name: str = "is_flagged"
-    ) -> models.QuerySet:
+    def with_is_flagged(self, annotated_name="is_flagged"):
         """
         Adds True if the object has been flagged by a user.
         """
@@ -34,10 +30,8 @@ class FlagAnnotationsQuerySetMixin(BaseQuerySetMixin):
         )
 
     def with_has_flagged(
-        self,
-        user: settings.AUTH_USER_MODEL,
-        annotated_name: str = "has_flagged",
-    ) -> models.QuerySet:
+        self, user, annotated_name="has_flagged"
+    ):
         """
         Adds True if the user in question has flagged the object.
         """
@@ -97,7 +91,7 @@ class Flag(TimeStampedModel):
             )
         ]
 
-    def notify(self) -> List[Notification]:
+    def notify(self):
         """
         Sends notification to community moderators.
         """

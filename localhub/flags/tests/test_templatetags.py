@@ -3,18 +3,15 @@
 
 import pytest
 
-from django.test.client import RequestFactory
-
 from localhub.flags.models import Flag
 from localhub.flags.templatetags.flags_tags import get_flags_count
-from localhub.posts.models import Post
 from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 
 
 class TestGetFlagsCount:
-    def test_get_count(self, req_factory: RequestFactory, post: Post):
+    def test_get_count(self, req_factory, post):
         Flag.objects.create(
             content_object=post, community=post.community, user=UserFactory()
         )

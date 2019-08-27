@@ -3,10 +3,8 @@
 
 import pytest
 
-from django.test.client import Client
 from django.urls import reverse
 
-from localhub.communities.models import Membership
 from localhub.flags.models import Flag
 from localhub.posts.tests.factories import PostFactory
 from localhub.users.tests.factories import UserFactory
@@ -15,7 +13,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestFlagListView:
-    def test_get(self, client: Client, moderator: Membership):
+    def test_get(self, client, moderator):
         post = PostFactory(community=moderator.community)
         Flag.objects.create(
             content_object=post,
@@ -27,7 +25,7 @@ class TestFlagListView:
 
 
 class TestFlagDeleteView:
-    def test_delete(self, client: Client, moderator: Membership):
+    def test_delete(self, client, moderator):
         post = PostFactory(community=moderator.community)
         flag = Flag.objects.create(
             content_object=post,
