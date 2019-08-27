@@ -16,7 +16,7 @@ celery_logger = get_logger(__name__)
 @receiver(
     post_save, sender=Event, dispatch_uid="events.update_event_coordinates"
 )
-def update_event_coordinates(instance: Event, created: bool = False, **kwargs):
+def update_event_coordinates(instance, created=False, **kwargs):
     if created or instance.location_tracker.changed():
 
         def run_task():
@@ -31,10 +31,10 @@ def update_event_coordinates(instance: Event, created: bool = False, **kwargs):
 @receiver(
     post_save, sender=Event, dispatch_uid="events.update_search_document"
 )
-def update_search_document(instance: Event, **kwargs):
+def update_search_document(instance, **kwargs):
     transaction.on_commit(lambda: instance.search_indexer.update())
 
 
 @receiver(post_save, sender=Event, dispatch_uid="events.taggit")
-def taggit(instance: Event, created: bool, **kwargs):
+def taggit(instance, created, **kwargs):
     transaction.on_commit(lambda: instance.taggit(created))

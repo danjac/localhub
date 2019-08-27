@@ -3,14 +3,10 @@
 
 import pytest
 
-from django.conf import settings
-from django.test.client import Client
 from django.urls import reverse
 from django.utils.encoding import force_str
 
-from pytest_mock import MockFixture
-
-from localhub.communities.models import Community, Membership
+from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.events.models import Event
 from localhub.events.tests.factories import EventFactory
@@ -20,21 +16,16 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def event_for_member(member: Membership) -> Event:
+def event_for_member(member):
     return EventFactory(owner=member.member, community=member.community)
 
 
 class TestEventCreateView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         response = client.get(reverse("events:create"))
         assert response.status_code == 200
 
-    def test_post(
-        self,
-        client: Client,
-        member: Membership,
-        send_notification_webpush_mock: MockFixture,
-    ):
+    def test_post(self, client, member, send_notification_webpush_mock):
         response = client.post(
             reverse("events:create"),
             {
@@ -54,7 +45,7 @@ class TestEventCreateView:
 
 
 class TestEventListView:
-    def test_get(self, client: Client, community: Community):
+    def test_get(self, client, community):
         EventFactory.create_batch(
             3,
             community=community,
@@ -66,17 +57,14 @@ class TestEventListView:
 
 
 class TestEventUpdateView:
-    def test_get(self, client: Client, event_for_member: Event):
+    def test_get(self, client, event_for_member):
         response = client.get(
             reverse("events:update", args=[event_for_member.id])
         )
         assert response.status_code == 200
 
     def test_post(
-        self,
-        client: Client,
-        event_for_member: Event,
-        send_notification_webpush_mock: MockFixture,
+        self, client, event_for_member, send_notification_webpush_mock
     ):
         response = client.post(
             reverse("events:update", args=[event_for_member.id]),
@@ -96,14 +84,14 @@ class TestEventUpdateView:
 
 
 class TestEventDeleteView:
-    def test_get(self, client: Client, event_for_member: Event):
+    def test_get(self, client, event_for_member):
         # test confirmation page for non-JS clients
         response = client.get(
             reverse("events:delete", args=[event_for_member.id])
         )
         assert response.status_code == 200
 
-    def test_delete(self, client: Client, event_for_member: Event):
+    def test_delete(self, client, event_for_member):
         response = client.delete(
             reverse("events:delete", args=[event_for_member.id])
         )
@@ -112,19 +100,14 @@ class TestEventDeleteView:
 
 
 class TestEventDetailView:
-    def test_get(self, client: Client, event: Event):
+    def test_get(self, client, event):
         response = client.get(
             event.get_absolute_url(), HTTP_HOST=event.community.domain
         )
         assert response.status_code == 200
         assert "comment_form" not in dict(response.context or {})
 
-    def test_get_if_can_post_comment(
-        self,
-        client: Client,
-        event: Event,
-        login_user: settings.AUTH_USER_MODEL,
-    ):
+    def test_get_if_can_post_comment(self, client, event, login_user):
         Membership.objects.create(member=login_user, community=event.community)
 
         response = client.get(
@@ -135,12 +118,7 @@ class TestEventDetailView:
 
 
 class TestEventLikeView:
-    def test_post(
-        self,
-        client: Client,
-        member: Membership,
-        send_notification_webpush_mock: MockFixture,
-    ):
+    def test_post(self, client, member, send_notification_webpush_mock):
         event = EventFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
@@ -155,7 +133,7 @@ class TestEventLikeView:
 
 
 class TestEventDislikeView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         event = EventFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
@@ -175,7 +153,7 @@ class TestEventDislikeView:
 
 
 class TestEventDownloadView:
-    def test_get(self, client: Client, event: Event):
+    def test_get(self, client, event):
         response = client.get(
             reverse("events:download", args=[event.id]),
             HTTP_HOST=event.community.domain,

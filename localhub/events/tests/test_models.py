@@ -12,8 +12,6 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.utils.encoding import force_str
 
-from pytest_mock import MockFixture
-
 from localhub.events.models import Event
 from localhub.events.tests.factories import EventFactory
 
@@ -38,7 +36,7 @@ class TestEventModel:
 
         assert event.get_ends_with_tz().tzinfo.zone == "Europe/Helsinki"
 
-    def test_get_absolute_url(self, event: Event):
+    def test_get_absolute_url(self, event):
         assert event.get_absolute_url().startswith(f"/events/{event.id}/")
 
     def test_get_domain_if_no_url(self):
@@ -112,7 +110,7 @@ class TestEventModel:
             event.location == "Areenankuja 1, Helsinki, Uusimaa, Finland"
         ), "location property should include all available location fields"
 
-    def test_update_coordinates_ok(self, mocker: MockFixture, event: Event):
+    def test_update_coordinates_ok(self, mocker, event):
         class MockGoodOSMResult:
             lat = 60
             lng = 50
@@ -131,9 +129,7 @@ class TestEventModel:
 
         geocoder.osm.assert_called_once_with(event.location)
 
-    def test_update_coordinates_not_ok(
-        self, mocker: MockFixture, event: Event
-    ):
+    def test_update_coordinates_not_ok(self, mocker, event):
         class MockBadOSMResult:
             lat = None
             lng = None
@@ -152,9 +148,7 @@ class TestEventModel:
 
         geocoder.osm.assert_called_once_with(event.location)
 
-    def test_update_coordinates_location_empty(
-        self, mocker: MockFixture, event: Event
-    ):
+    def test_update_coordinates_location_empty(self, mocker, event):
         mocker.patch("geocoder.osm")
 
         assert event.update_coordinates() == (None, None)
@@ -164,6 +158,6 @@ class TestEventModel:
 
         assert geocoder.osm.call_count == 0
 
-    def test_to_ical(self, event: Event):
+    def test_to_ical(self, event):
         result = force_str(event.to_ical())
         assert "DTSTART" in result

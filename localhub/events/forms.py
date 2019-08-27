@@ -3,8 +3,6 @@
 
 import pytz
 
-from typing import Any, Dict
-
 from django import forms
 from django.utils.timezone import localtime, make_aware
 from django.utils.translation import gettext_lazy as _
@@ -63,7 +61,7 @@ class EventForm(forms.ModelForm):
                     is_dst=True,
                 )
 
-    def clean(self) -> Dict[str, Any]:
+    def clean(self):
         cleaned_data = super().clean()
         timezone = cleaned_data["timezone"]
 

@@ -10,7 +10,7 @@ logger = get_task_logger(__name__)
 
 
 @shared_task(name="events.update_event_coordinates")
-def update_event_coordinates(event_id: int):
+def update_event_coordinates(event_id):
     try:
         Event.objects.get(pk=event_id).update_coordinates()
     except Event.DoesNotExist:

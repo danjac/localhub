@@ -1,10 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import datetime
 import geocoder
-
-from typing import Optional, List, Tuple
 
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
@@ -89,23 +86,23 @@ class Event(Activity):
         ("A", "title"), ("B", "full_location"), ("C", "description")
     )
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.title or self.location
 
     def clean(self):
         if self.ends and self.ends < self.starts:
             raise ValidationError(_("End date cannot be before start date"))
 
-    def get_domain(self) -> Optional[str]:
+    def get_domain(self):
         return get_domain(self.url)
 
-    def get_starts_with_tz(self) -> datetime.datetime:
+    def get_starts_with_tz(self):
         return self.starts.astimezone(self.timezone)
 
-    def get_ends_with_tz(self) -> Optional[datetime.datetime]:
+    def get_ends_with_tz(self):
         return self.ends.astimezone(self.timezone) if self.ends else None
 
-    def update_coordinates(self) -> Tuple[Optional[float], Optional[float]]:
+    def update_coordinates(self):
         """
         Fetches the lat/lng coordinates from Open Street Map API.
         """
@@ -118,11 +115,11 @@ class Event(Activity):
         return self.latitude, self.longitude
 
     @property
-    def location(self) -> str:
+    def location(self):
         """
         Returns a concatenated string of location fields.
         """
-        rv: List[str] = [
+        rv = [
             smart_text(value)
             for value in [
                 getattr(self, field) for field in self.LOCATION_FIELDS[:-1]
@@ -135,7 +132,7 @@ class Event(Activity):
         return ", ".join(rv)
 
     @property
-    def full_location(self) -> str:
+    def full_location(self):
         """
         Includes venue if available
         """
@@ -147,7 +144,7 @@ class Event(Activity):
             ]
         )
 
-    def to_ical(self) -> str:
+    def to_ical(self):
         event = CalendarEvent()
 
         starts = self.get_starts_with_tz()
