@@ -3,17 +3,13 @@
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.test.client import RequestFactory
 from django.utils.encoding import force_text
 
-from localhub.core.types import DjangoView
 from localhub.users.middleware import UserLocaleMiddleware
 
 
 class TestUserLocaleMiddleware:
-    def test_set_language_in_cookie(
-        self, req_factory: RequestFactory, get_response: DjangoView
-    ):
+    def test_set_language_in_cookie(self, req_factory, get_response):
         mw = UserLocaleMiddleware(get_response)
         req = req_factory.get("/")
         req.user = get_user_model()

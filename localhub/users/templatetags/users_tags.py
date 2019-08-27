@@ -2,18 +2,14 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django import template
-from django.conf import settings
 
-from localhub.core.types import ContextDict
 from localhub.users.utils import user_display
 
 register = template.Library()
 
 
 @register.inclusion_tag("users/includes/avatar.html")
-def avatar(
-    user: settings.AUTH_USER_MODEL, avatar_class: str = "avatar-sm"
-) -> ContextDict:
+def avatar(user, avatar_class="avatar-sm"):
     """
     Displays the avatar if any for a given user. If no image available
     will render initials (based on name/username)

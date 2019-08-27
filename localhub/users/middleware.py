@@ -2,9 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
-from django.http import HttpRequest, HttpResponse
-
-from localhub.core.types import DjangoView
 
 
 class UserLocaleMiddleware:
@@ -13,10 +10,10 @@ class UserLocaleMiddleware:
     depending on the user's lang preference.
     """
 
-    def __init__(self, get_response: DjangoView):
+    def __init__(self, get_response):
         self.get_response = get_response
 
-    def __call__(self, request: HttpRequest) -> HttpResponse:
+    def __call__(self, request):
         response = self.get_response(request)
         if request.user.is_authenticated:
             response.set_cookie(

@@ -3,13 +3,11 @@
 
 import pytest
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.test.client import RequestFactory
 
 from allauth.account.models import EmailAddress
 
-from localhub.communities.models import Community, Membership, RequestCommunity
+from localhub.communities.models import Membership, RequestCommunity
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.notifications.models import Notification
 from localhub.posts.tests.factories import PostFactory
@@ -27,21 +25,21 @@ class TestUserManager:
         )
         assert user.check_password("t3ZtP4s31")
 
-    def test_active(self, community: Community):
+    def test_active(self, community):
         Membership.objects.create(member=UserFactory(), community=community)
         assert get_user_model().objects.active(community).exists()
 
-    def test_active_if_not_member(self, community: Community):
+    def test_active_if_not_member(self, community):
         UserFactory()
         assert not get_user_model().objects.active(community).exists()
 
-    def test_active_if_not_active_member(self, community: Community):
+    def test_active_if_not_active_member(self, community):
         Membership.objects.create(
             member=UserFactory(), community=community, active=False
         )
         assert not get_user_model().objects.active(community).exists()
 
-    def test_active_if_not_active(self, community: Community):
+    def test_active_if_not_active(self, community):
         Membership.objects.create(
             member=UserFactory(is_active=False), community=community
         )
@@ -88,7 +86,7 @@ class TestUserManager:
         # check empty set returns no results
         assert get_user_model().objects.matches_usernames([]).count() == 0
 
-    def test_is_following(self, user: settings.AUTH_USER_MODEL):
+    def test_is_following(self, user):
 
         followed = UserFactory()
         UserFactory()
@@ -103,7 +101,7 @@ class TestUserManager:
             else:
                 assert not user.is_following
 
-    def test_is_blocked(self, user: settings.AUTH_USER_MODEL):
+    def test_is_blocked(self, user):
 
         blocked = UserFactory()
         UserFactory()
@@ -120,7 +118,7 @@ class TestUserManager:
 
 
 class TestUserModel:
-    def test_get_absolute_url(self, user: settings.AUTH_USER_MODEL):
+    def test_get_absolute_url(self, user):
         assert user.get_absolute_url() == f"/people/{user.username}/"
 
     def test_has_email_pref(self):
@@ -131,19 +129,17 @@ class TestUserModel:
         user = UserFactory()
         assert not user.has_email_pref("messages")
 
-    def test_has_role(self, moderator: Membership):
+    def test_has_role(self, moderator):
         assert moderator.member.has_role(
             moderator.community, Membership.ROLES.moderator
         )
 
-    def test_does_not_have_role(self, member: Membership):
+    def test_does_not_have_role(self, member):
         assert not member.member.has_role(
             member.community, Membership.ROLES.moderator
         )
 
-    def test_get_unread_notification_count(
-        self, user: settings.AUTH_USER_MODEL, community: Community
-    ):
+    def test_get_unread_notification_count(self, user, community):
         Notification.objects.create(
             verb="mention",
             recipient=user,
@@ -154,7 +150,7 @@ class TestUserModel:
         assert user.get_unread_notification_count(community) == 1
 
     def test_get_unread_notification_count_if_community_id_none(
-        self, user: settings.AUTH_USER_MODEL, req_factory: RequestFactory
+        self, user, req_factory
     ):
         req = req_factory.get("/")
         assert (
@@ -167,12 +163,11 @@ class TestUserModel:
     def test_get_unread_message_count(self):
         message = MessageFactory()
         assert (
-            message.recipient.get_unread_message_count(message.community)
-            == 1
+            message.recipient.get_unread_message_count(message.community) == 1
         )
 
     def test_get_unread_message_count_if_community_id_none(
-        self, user: settings.AUTH_USER_MODEL, req_factory: RequestFactory
+        self, user, req_factory
     ):
         req = req_factory.get("/")
         assert (
@@ -182,7 +177,7 @@ class TestUserModel:
             == 0
         )
 
-    def test_notify_on_join(self, member: Membership):
+    def test_notify_on_join(self, member):
         other_member = MembershipFactory(community=member.community).member
         notifications = member.member.notify_on_join(member.community)
         assert len(notifications) == 1
@@ -192,7 +187,7 @@ class TestUserModel:
         assert notifications[0].community == member.community
         assert notifications[0].verb == "new_member"
 
-    def test_notify_on_follow(self, member: Membership):
+    def test_notify_on_follow(self, member):
         follower = MembershipFactory(community=member.community).member
         notifications = follower.notify_on_follow(
             member.member, member.community

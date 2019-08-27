@@ -7,11 +7,9 @@ from typing import List
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.test import Client
 from django.urls import reverse
 
 from localhub.comments.tests.factories import CommentFactory
-from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.events.tests.factories import EventFactory
 from localhub.likes.models import Like
@@ -27,7 +25,7 @@ User = get_user_model()
 
 
 class TestUserCommentsView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             content_object=post,
@@ -49,7 +47,7 @@ class TestUserCommentsView:
 
 
 class TestUserActivitiesView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         post = PostFactory(community=member.community, owner=member.member)
         EventFactory(community=member.community, owner=member.member)
 
@@ -69,11 +67,11 @@ class TestUserActivitiesView:
 
 
 class TestUserUpdateView:
-    def test_get(self, client: Client, login_user: settings.AUTH_USER_MODEL):
+    def test_get(self, client, login_user):
         response = client.get(reverse("user_update"))
         assert response.status_code == 200
 
-    def test_post(self, client: Client, login_user: settings.AUTH_USER_MODEL):
+    def test_post(self, client, login_user):
         response = client.post(
             reverse("user_update"), {"name": "New Name", "language": "en"}
         )
@@ -83,18 +81,18 @@ class TestUserUpdateView:
 
 
 class TestUserDeleteView:
-    def test_get(self, client: Client, login_user: settings.AUTH_USER_MODEL):
+    def test_get(self, client, login_user):
         response = client.get(reverse("user_delete"))
         assert response.status_code == 200
 
-    def test_post(self, client: Client, login_user: settings.AUTH_USER_MODEL):
+    def test_post(self, client, login_user):
         response = client.post(reverse("user_delete"))
         assert response.url == "/"
         assert User.objects.filter(username=login_user.username).count() == 0
 
 
 class TestUserFollowView:
-    def test_post(self, client: Client, member: Membership, mailoutbox: List):
+    def test_post(self, client, member, mailoutbox: List):
         user = MembershipFactory(
             community=member.community,
             member=UserFactory(email_preferences=["new_follower"]),
@@ -110,7 +108,7 @@ class TestUserFollowView:
 
 
 class TestUserBlockView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         user = MembershipFactory(community=member.community).member
         response = client.post(reverse("users:block", args=[user.username]))
         assert response.url == user.get_absolute_url()
@@ -118,7 +116,7 @@ class TestUserBlockView:
 
 
 class TestUserUnfollowView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         user = MembershipFactory(community=member.community).member
         member.member.following.add(user)
         response = client.post(reverse("users:unfollow", args=[user.username]))
@@ -127,7 +125,7 @@ class TestUserUnfollowView:
 
 
 class TestUserUnblockView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         user = MembershipFactory(community=member.community).member
         member.member.blocked.add(user)
         response = client.post(reverse("users:unblock", args=[user.username]))
@@ -136,12 +134,7 @@ class TestUserUnblockView:
 
 
 class TestUserAutocompleteListView:
-    def test_get(
-        self,
-        client: Client,
-        member: Membership,
-        user: settings.AUTH_USER_MODEL,
-    ):
+    def test_get(self, client, member, user):
         other = MembershipFactory(
             community=member.community, member=UserFactory(name="tester")
         ).member
@@ -165,7 +158,7 @@ class TestUserAutocompleteListView:
 
 
 class TestUserMessageListView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         other_user = MembershipFactory(community=member.community).member
         from_me = MessageFactory(
             community=member.community,

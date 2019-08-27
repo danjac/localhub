@@ -1,12 +1,10 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import override
 
 from localhub.notifications.emails import send_notification_email
-from localhub.notifications.models import Notification
 
 
 NOTIFICATION_SUBJECTS = {
@@ -15,9 +13,7 @@ NOTIFICATION_SUBJECTS = {
 }
 
 
-def send_user_notification_email(
-    user: settings.AUTH_USER_MODEL, notification: Notification
-):
+def send_user_notification_email(user, notification):
 
     if notification.recipient.has_email_pref(notification.verb):
         with override(notification.recipient.language):

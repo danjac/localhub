@@ -7,13 +7,9 @@ Rulesets for users
 
 import rules
 
-from django.conf import settings
-
 
 @rules.predicate
-def is_self(
-    user: settings.AUTH_USER_MODEL, other: settings.AUTH_USER_MODEL
-) -> bool:
+def is_self(user, other) -> bool:
     return user.is_authenticated and user == other
 
 

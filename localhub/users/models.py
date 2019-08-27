@@ -1,7 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Dict, List, Optional, Sequence
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -27,7 +26,7 @@ from localhub.notifications.models import Notification
 class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
     use_in_migrations = True
 
-    def for_email(self, email: str) -> models.QuerySet:
+    def for_email(self, email):
         """
         Returns all users with primary or additional emails matching
         this email (case insensitive).
@@ -37,25 +36,21 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
             | models.Q(email__iexact=email)
         )
 
-    def with_is_following(
-        self, follower: settings.AUTH_USER_MODEL
-    ) -> models.QuerySet:
+    def with_is_following(self, follower: settings.AUTH_USER_MODEL):
         return self.annotate(
             is_following=models.Exists(
                 follower.following.filter(pk__in=models.OuterRef("id"))
             )
         )
 
-    def with_is_blocked(
-        self, user: settings.AUTH_USER_MODEL
-    ) -> models.QuerySet:
+    def with_is_blocked(self, user: settings.AUTH_USER_MODEL):
         return self.annotate(
             is_blocked=models.Exists(
                 user.blocked.filter(pk__in=models.OuterRef("id"))
             )
         )
 
-    def matches_usernames(self, names=Sequence[str]) -> models.QuerySet:
+    def matches_usernames(self, names):
         """
         Returns any users matching username (case insensitive).
         """
@@ -63,7 +58,7 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
             return self.none()
         return self.filter(username__iregex=r"^(%s)+" % "|".join(names))
 
-    def active(self, community: Community) -> models.QuerySet:
+    def active(self, community):
         """
         Returns only users which are a) active and b) have active
         membership with given community.
@@ -78,38 +73,28 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
 
 
 class UserManager(BaseUserManager):
-    def get_queryset(self) -> models.QuerySet:
+    def get_queryset(self):
         return UserQuerySet(self.model, using=self._db)
 
-    def search(self, search_term: str, *args, **kwargs) -> models.QuerySet:
+    def search(self, search_term, *args, **kwargs):
         return self.get_queryset().search(search_term, *args, **kwargs)
 
-    def with_is_following(
-        self, follower: settings.AUTH_USER_MODEL
-    ) -> models.QuerySet:
+    def with_is_following(self, follower: settings.AUTH_USER_MODEL):
         return self.get_queryset().with_is_following(follower)
 
-    def with_is_blocked(
-        self, follower: settings.AUTH_USER_MODEL
-    ) -> models.QuerySet:
+    def with_is_blocked(self, follower: settings.AUTH_USER_MODEL):
         return self.get_queryset().with_is_blocked(follower)
 
-    def active(self, community: Community) -> models.QuerySet:
+    def active(self, community):
         return self.get_queryset().active(community)
 
-    def for_email(self, email: str) -> models.QuerySet:
+    def for_email(self, email):
         return self.get_queryset().for_email(email)
 
-    def matches_usernames(self, names=Sequence[str]) -> models.QuerySet:
+    def matches_usernames(self, names):
         return self.get_queryset().matches_usernames(names)
 
-    def create_user(
-        self,
-        username: str,
-        email: str,
-        password: Optional[str] = None,
-        **kwargs
-    ) -> settings.AUTH_USER_MODEL:
+    def create_user(self, username, email, password=None, **kwargs):
         user = self.model(
             username=username, email=self.normalize_email(email), **kwargs
         )
@@ -117,9 +102,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(
-        self, username: str, email: str, password: str, **kwargs
-    ) -> settings.AUTH_USER_MODEL:
+    def create_superuser(self, username, email, password, **kwargs):
         return self.create_user(
             username,
             email,
@@ -241,31 +224,31 @@ class User(AbstractUser):
             models.Index(fields=["name", "username", "email"]),
         ]
 
-    def get_absolute_url(self) -> str:
+    def get_absolute_url(self):
         return reverse("users:activities", args=[self.username])
 
-    def has_email_pref(self, pref: str) -> bool:
+    def has_email_pref(self, pref):
         return (
             pref in self.email_preferences if self.email_preferences else False
         )
 
-    def has_role(self, community: Community, role: str) -> bool:
+    def has_role(self, community, role):
         """
         Checks if user has given role in the community, if any. Result
         is cached.
         """
         return self.community_roles_cache.get(community.id, None) == role
 
-    def get_unread_notification_count(self, community: Community) -> int:
+    def get_unread_notification_count(self, community):
         """Gets number of unread notifications. Result is cached."""
         return self.unread_notification_counts_cache.get(community.id, 0)
 
-    def get_unread_message_count(self, community: Community) -> int:
+    def get_unread_message_count(self, community):
         """Gets number of unread direct messages. Result is cached."""
         return self.unread_message_counts_cache.get(community.id, 0)
 
     @cached_property
-    def unread_notification_counts_cache(self) -> Dict[int, int]:
+    def unread_notification_counts_cache(self):
         return dict(
             Community.objects.annotate(
                 num_notifications=models.Count(
@@ -279,7 +262,7 @@ class User(AbstractUser):
         )
 
     @cached_property
-    def unread_message_counts_cache(self) -> Dict[int, int]:
+    def unread_message_counts_cache(self):
         return dict(
             Community.objects.annotate(
                 num_messages=models.Count(
@@ -292,14 +275,14 @@ class User(AbstractUser):
         )
 
     @cached_property
-    def community_roles_cache(self) -> Dict[int, str]:
+    def community_roles_cache(self):
         return dict(
             Membership.objects.filter(active=True, member=self).values_list(
                 "community", "role"
             )
         )
 
-    def notify_on_join(self, community: Community) -> List[Notification]:
+    def notify_on_join(self, community):
         notifications = [
             Notification(
                 content_object=self,
@@ -313,9 +296,7 @@ class User(AbstractUser):
         Notification.objects.bulk_create(notifications)
         return notifications
 
-    def notify_on_follow(
-        self, recipient: settings.AUTH_USER_MODEL, community: Community
-    ) -> List[Notification]:
+    def notify_on_follow(self, recipient, community):
         """
         Sends notification to provided recipients
         """

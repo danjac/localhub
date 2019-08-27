@@ -3,10 +3,6 @@
 
 import pytest
 
-from typing import List
-
-
-from localhub.communities.models import Community
 from localhub.notifications.models import Notification
 from localhub.users.emails import send_user_notification_email
 from localhub.users.tests.factories import UserFactory
@@ -16,7 +12,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestSendUserNotificationEmail:
-    def test_if_enabled(self, community: Community, mailoutbox: List):
+    def test_if_enabled(self, community, mailoutbox):
         follower = UserFactory()
         followed = UserFactory(email_preferences=["new_follower"])
 
@@ -32,7 +28,7 @@ class TestSendUserNotificationEmail:
         assert len(mailoutbox) == 1
         assert mailoutbox[0].to == [followed.email]
 
-    def test_if_disabled(self, community: Community, mailoutbox: List):
+    def test_if_disabled(self, community, mailoutbox):
         follower = UserFactory()
         followed = UserFactory(email_preferences=[])
 
