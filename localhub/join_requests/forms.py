@@ -1,11 +1,11 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from django import forms
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 
-from localhub.communities.models import Community
 from localhub.join_requests.models import JoinRequest
-from localhub.core.types import ContextDict
 
 
 class JoinRequestForm(forms.ModelForm):
@@ -13,13 +13,7 @@ class JoinRequestForm(forms.ModelForm):
         model = JoinRequest
         fields = ("email",)
 
-    def __init__(
-        self,
-        community: Community,
-        sender: settings.AUTH_USER_MODEL,
-        *args,
-        **kwargs
-    ):
+    def __init__(self, community, sender, *args, **kwargs):
         self.community = community
         self.sender = sender
 
@@ -28,7 +22,7 @@ class JoinRequestForm(forms.ModelForm):
         if self.sender:
             del self.fields["email"]
 
-    def clean(self) -> ContextDict:
+    def clean(self):
         data = super().clean()
         if self.sender:
             qs = JoinRequest.objects.filter(sender=self.sender)
@@ -41,7 +35,7 @@ class JoinRequestForm(forms.ModelForm):
             )
         return data
 
-    def save(self, commit=True) -> JoinRequest:
+    def save(self, commit=True):
         instance = super().save(commit=False)
         instance.sender = self.sender
         instance.community = self.community

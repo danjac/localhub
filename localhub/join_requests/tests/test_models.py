@@ -1,6 +1,5 @@
 import pytest
 
-from django.conf import settings
 
 from localhub.join_requests.tests.factories import JoinRequestFactory
 
@@ -12,7 +11,7 @@ class TestJoinRequestModel:
         join_request = JoinRequestFactory()
         assert join_request.get_sender()
 
-    def test_get_sender_if_email_exists(self, user: settings.AUTH_USER_MODEL):
+    def test_get_sender_if_email_exists(self, user):
         join_request = JoinRequestFactory(email=user.email, sender=None)
         assert join_request.get_sender() == user
 

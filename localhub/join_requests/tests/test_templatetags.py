@@ -3,7 +3,6 @@
 
 import pytest
 
-from localhub.communities.models import Community
 from localhub.join_requests.templatetags.join_request_tags import (
     get_pending_join_request_count,
 )
@@ -13,6 +12,6 @@ pytestmark = pytest.mark.django_db
 
 
 class TestGetPendingJoinRequestCount:
-    def test_get_pending_join_request_count(self, community: Community):
+    def test_get_pending_join_request_count(self, community):
         JoinRequestFactory.create_batch(3, community=community)
         assert get_pending_join_request_count(community) == 3

@@ -4,14 +4,13 @@
 
 from django import template
 
-from localhub.communities.models import Community
 from localhub.join_requests.models import JoinRequest
 
 register = template.Library()
 
 
 @register.simple_tag
-def get_pending_join_request_count(community: Community) -> int:
+def get_pending_join_request_count(community):
     """
     Returns total number of pending join requests.
     """

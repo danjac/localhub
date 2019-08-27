@@ -7,10 +7,8 @@ from django.urls import reverse
 from django.template.loader import render_to_string
 from django.utils.translation import gettext as _, override
 
-from localhub.join_requests.models import JoinRequest
 
-
-def send_join_request_email(join_request: JoinRequest):
+def send_join_request_email(join_request):
     context = {
         "join_request": join_request,
         "list_url": join_request.community.resolve_url(
@@ -35,7 +33,7 @@ def send_join_request_email(join_request: JoinRequest):
             )
 
 
-def send_acceptance_email(join_request: JoinRequest):
+def send_acceptance_email(join_request):
     sender = join_request.get_sender()
     with override(sender.language if sender else settings.LANGUAGE_CODE):
         context = {"join_request": join_request, "user": sender}
@@ -50,7 +48,7 @@ def send_acceptance_email(join_request: JoinRequest):
         )
 
 
-def send_rejection_email(join_request: JoinRequest):
+def send_rejection_email(join_request):
     sender = join_request.get_sender()
     with override(sender.language if sender else settings.LANGUAGE_CODE):
         context = {"join_request": join_request}

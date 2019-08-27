@@ -1,12 +1,12 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import pytest
 
-from typing import List
-
 from django.conf import settings
-from django.test.client import Client
 from django.urls import reverse
 
-from localhub.communities.models import Community, Membership
+from localhub.communities.models import Membership
 from localhub.users.tests.factories import UserFactory
 from localhub.join_requests.models import JoinRequest
 from localhub.join_requests.tests.factories import JoinRequestFactory
@@ -15,7 +15,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestJoinRequestListView:
-    def test_get(self, client: Client, admin: Membership):
+    def test_get(self, client, admin):
         JoinRequestFactory.create_batch(3, community=admin.community)
         response = client.get(reverse("join_requests:list"))
         assert response.status_code == 200
@@ -23,21 +23,10 @@ class TestJoinRequestListView:
 
 
 class TestJoinRequestCreateView:
-    def test_get(
-        self,
-        client: Client,
-        login_user: settings.AUTH_USER_MODEL,
-        community: Community,
-    ):
+    def test_get(self, client, login_user, community):
         assert client.get(reverse("join_requests:create")).status_code == 200
 
-    def test_post(
-        self,
-        client: Client,
-        mailoutbox: List,
-        login_user: settings.AUTH_USER_MODEL,
-        community: Community,
-    ):
+    def test_post(self, client, mailoutbox, login_user, community):
 
         admin = UserFactory()
         Membership.objects.create(
@@ -53,9 +42,7 @@ class TestJoinRequestCreateView:
 
 
 class TestJoinRequestAcceptView:
-    def test_post_if_no_user(
-        self, client: Client, mailoutbox: List, admin: Membership
-    ):
+    def test_post_if_no_user(self, client, mailoutbox, admin):
         join_request = JoinRequestFactory(
             community=admin.community, sender=None
         )
@@ -68,9 +55,7 @@ class TestJoinRequestAcceptView:
         mail = mailoutbox[0]
         assert mail.to == [join_request.email]
 
-    def test_post_if_user(
-        self, client: Client, mailoutbox: List, admin: Membership
-    ):
+    def test_post_if_user(self, client, mailoutbox, admin):
         admin.member.email_preferences = ["new_member"]
         admin.member.save()
         join_request = JoinRequestFactory(community=admin.community)
@@ -90,9 +75,7 @@ class TestJoinRequestAcceptView:
 
 
 class TestJoinRequestRejectView:
-    def test_post_if_no_user(
-        self, client: Client, mailoutbox: List, admin: Membership
-    ):
+    def test_post_if_no_user(self, client, mailoutbox, admin):
         join_request = JoinRequestFactory(
             community=admin.community, sender=None
         )
@@ -105,9 +88,7 @@ class TestJoinRequestRejectView:
         mail = mailoutbox[0]
         assert mail.to == [join_request.email]
 
-    def test_post_if_user(
-        self, client: Client, mailoutbox: List, admin: Membership
-    ):
+    def test_post_if_user(self, client, mailoutbox, admin):
         join_request = JoinRequestFactory(community=admin.community)
         response = client.post(
             reverse("join_requests:reject", args=[join_request.id])

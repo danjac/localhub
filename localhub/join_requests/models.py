@@ -1,7 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Optional
 
 from django.db import models
 from django.conf import settings
@@ -42,12 +41,12 @@ class JoinRequest(TimeStampedModel):
         unique_together = ("email", "community", "sender")
         indexes = [models.Index(fields=["status"])]
 
-    def __str__(self) -> str:
+    def __str__(self):
         if self.sender_id:
             return self.sender.email
         return self.email
 
-    def get_sender(self) -> Optional[settings.AUTH_USER_MODEL]:
+    def get_sender(self):
         qs = get_user_model()._default_manager
         if self.sender_id:
             qs = qs.filter(pk=self.sender_id)
@@ -55,11 +54,11 @@ class JoinRequest(TimeStampedModel):
             qs = qs.for_email(self.email)
         return qs.first()
 
-    def is_pending(self) -> bool:
+    def is_pending(self):
         return self.status == self.STATUS.pending
 
-    def is_accepted(self) -> bool:
+    def is_accepted(self):
         return self.status == self.STATUS.accepted
 
-    def is_rejected(self) -> bool:
+    def is_rejected(self):
         return self.status == self.STATUS.rejected
