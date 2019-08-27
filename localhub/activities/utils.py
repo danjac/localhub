@@ -4,14 +4,22 @@
 
 from urllib.parse import urlparse
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
+from django.template.defaultfilters import truncatechars
+from django.urls import reverse
+from django.utils.encoding import smart_text
+from django.utils.translation import gettext as _
 
 
 _urlvalidator = URLValidator()
 
 
 def is_url(url):
+    """
+    Checks if a value is a valid URL.
+    """
 
     if url is None:
         return False
@@ -35,3 +43,27 @@ def get_domain(url):
     if domain.startswith("www."):
         domain = domain[4:]
     return domain
+
+
+def get_breadcrumbs_for_model(model_cls):
+    """
+    Returns default breadcrumbs for an Activity model class. Use
+    this with BreadcrumbMixin views.
+    """
+    return [
+        (settings.HOME_PAGE_URL, _("Home")),
+        (
+            reverse(f"{model_cls._meta.app_label}:list"),
+            _(model_cls._meta.verbose_name_plural.title()),
+        ),
+    ]
+
+
+def get_breadcrumbs_for_instance(instance):
+    """
+    Returns default breadcrumbs for an Activity model instance. Use
+    this with BreadcrumbMixin views.
+    """
+    return get_breadcrumbs_for_model(instance.__class__) + [
+        (instance.get_absolute_url(), truncatechars(smart_text(instance), 60))
+    ]

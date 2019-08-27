@@ -23,7 +23,7 @@ from django.views.generic.list import MultipleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
-from localhub.activities.breadcrumbs import get_breadcrumbs_for_instance
+from localhub.activities.utils import get_breadcrumbs_for_instance
 from localhub.comments.forms import CommentForm
 from localhub.comments.models import Comment
 from localhub.comments.notifications import (

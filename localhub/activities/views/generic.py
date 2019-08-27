@@ -21,14 +21,14 @@ from django.views.generic.list import MultipleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
-from localhub.activities.breadcrumbs import (
-    get_breadcrumbs_for_instance,
-    get_breadcrumbs_for_model,
-)
 from localhub.activities.models import Activity
 from localhub.activities.notifications import (
-    send_activity_notifications,
     send_activity_deleted_email,
+    send_activity_notifications,
+)
+from localhub.activities.utils import (
+    get_breadcrumbs_for_instance,
+    get_breadcrumbs_for_model,
 )
 from localhub.comments.forms import CommentForm
 from localhub.comments.notifications import send_comment_notifications
