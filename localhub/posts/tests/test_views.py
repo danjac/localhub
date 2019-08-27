@@ -3,11 +3,7 @@
 
 import pytest
 
-from django.conf import settings
-from django.test.client import Client
 from django.urls import reverse
-
-from pytest_mock import MockFixture
 
 from localhub.comments.models import Comment
 from localhub.communities.models import Membership
@@ -22,19 +18,19 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def post_for_member(member: Membership) -> Post:
+def post_for_member(member):
     return PostFactory(owner=member.member, community=member.community)
 
 
 class TestPostListView:
-    def test_get_if_anonymous(self, client: Client, member: Membership):
+    def test_get_if_anonymous(self, client, member):
         PostFactory.create_batch(
             3, community=member.community, owner=member.member
         )
         response = client.get(reverse("posts:list"))
         assert len(response.context["object_list"]) == 3
 
-    def test_search(self, client: Client, member: Membership):
+    def test_search(self, client, member):
         PostFactory.create_batch(
             3, community=member.community, owner=member.member, title="testme"
         )
@@ -46,16 +42,11 @@ class TestPostListView:
 
 
 class TestPostCreateView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         response = client.get(reverse("posts:create"))
         assert response.status_code == 200
 
-    def test_post(
-        self,
-        client: Client,
-        member: Membership,
-        send_notification_webpush_mock: MockFixture,
-    ):
+    def test_post(self, client, member, send_notification_webpush_mock):
         response = client.post(
             reverse("posts:create"), {"title": "test", "description": "test"}
         )
@@ -66,17 +57,14 @@ class TestPostCreateView:
 
 
 class TestPostUpdateView:
-    def test_get(self, client: Client, post_for_member: Post):
+    def test_get(self, client, post_for_member):
         response = client.get(
             reverse("posts:update", args=[post_for_member.id])
         )
         assert response.status_code == 200
 
     def test_post(
-        self,
-        client: Client,
-        post_for_member: Post,
-        send_notification_webpush_mock: MockFixture,
+        self, client, post_for_member, send_notification_webpush_mock
     ):
         response = client.post(
             reverse("posts:update", args=[post_for_member.id]),
@@ -87,10 +75,7 @@ class TestPostUpdateView:
         assert post_for_member.title == "UPDATED"
 
     def test_post_moderator(
-        self,
-        client: Client,
-        moderator: Membership,
-        send_notification_webpush_mock: MockFixture,
+        self, client, moderator, send_notification_webpush_mock
     ):
         post = PostFactory(
             community=moderator.community,
@@ -107,7 +92,7 @@ class TestPostUpdateView:
 
 
 class TestPostCommentCreateView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         post = PostFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
@@ -115,12 +100,7 @@ class TestPostCommentCreateView:
         response = client.get(reverse("posts:comment", args=[post.id]))
         assert response.status_code == 200
 
-    def test_post(
-        self,
-        client: Client,
-        member: Membership,
-        send_notification_webpush_mock: MockFixture,
-    ):
+    def test_post(self, client, member, send_notification_webpush_mock):
         post = PostFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
@@ -140,21 +120,21 @@ class TestPostCommentCreateView:
 
 
 class TestPostDeleteView:
-    def test_get(self, client: Client, post_for_member: Post):
+    def test_get(self, client, post_for_member: Post):
         # test confirmation page for non-JS clients
         response = client.get(
             reverse("posts:delete", args=[post_for_member.id])
         )
         assert response.status_code == 200
 
-    def test_delete(self, client: Client, post_for_member: Post):
+    def test_delete(self, client, post_for_member: Post):
         response = client.delete(
             reverse("posts:delete", args=[post_for_member.id])
         )
         assert response.url == reverse("activities:stream")
         assert Post.objects.count() == 0
 
-    def test_delete_by_moderator(self, client: Client, moderator: Membership):
+    def test_delete_by_moderator(self, client, moderator):
         post = PostFactory(
             community=moderator.community,
             owner=MembershipFactory(community=moderator.community).member,
@@ -165,16 +145,14 @@ class TestPostDeleteView:
 
 
 class TestPostDetailView:
-    def test_get(self, client: Client, post: Post):
+    def test_get(self, client, post):
         response = client.get(
             post.get_absolute_url(), HTTP_HOST=post.community.domain
         )
         assert response.status_code == 200
         assert "comment_form" not in response.context
 
-    def test_get_if_can_post_comment(
-        self, client: Client, post: Post, login_user: settings.AUTH_USER_MODEL
-    ):
+    def test_get_if_can_post_comment(self, client, post, login_user):
         MembershipFactory(member=login_user, community=post.community)
         response = client.get(
             post.get_absolute_url(), HTTP_HOST=post.community.domain
@@ -184,12 +162,7 @@ class TestPostDetailView:
 
 
 class TestPostReshareView:
-    def test_post(
-        self,
-        client: Client,
-        member: Membership,
-        send_notification_webpush_mock: MockFixture,
-    ):
+    def test_post(self, client, member, send_notification_webpush_mock):
 
         post = PostFactory(
             community=member.community,
@@ -210,12 +183,7 @@ class TestPostReshareView:
 
 
 class TestPostLikeView:
-    def test_post(
-        self,
-        client: Client,
-        member: Membership,
-        send_notification_webpush_mock: MockFixture,
-    ):
+    def test_post(self, client, member, send_notification_webpush_mock):
         post = PostFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
@@ -232,7 +200,7 @@ class TestPostLikeView:
 
 
 class TestPostDislikeView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         post = PostFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
@@ -252,7 +220,7 @@ class TestPostDislikeView:
 
 
 class TestFlagView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         post = PostFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
@@ -260,12 +228,7 @@ class TestFlagView:
         response = client.get(reverse("posts:flag", args=[post.id]))
         assert response.status_code == 200
 
-    def test_post(
-        self,
-        client: Client,
-        member: Membership,
-        send_notification_webpush_mock: MockFixture,
-    ):
+    def test_post(self, client, member, send_notification_webpush_mock):
         post = PostFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,

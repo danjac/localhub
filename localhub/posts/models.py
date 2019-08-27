@@ -1,7 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Optional
 
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
@@ -33,5 +32,5 @@ class Post(Activity):
     def __str__(self) -> str:
         return self.title or self.get_domain() or _("Post")
 
-    def get_domain(self) -> Optional[str]:
+    def get_domain(self):
         return get_domain(self.url)

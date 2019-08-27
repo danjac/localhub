@@ -3,13 +3,12 @@
 
 import pytest
 
-from django.conf import settings
 
 from taggit.models import Tag
 
 from localhub.comments.models import Comment
 from localhub.comments.tests.factories import CommentFactory
-from localhub.communities.models import Community, Membership
+from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.posts.models import Post
 from localhub.posts.tests.factories import PostFactory
@@ -19,7 +18,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestPostModel:
-    def test_reshare(self, post: Post, user: settings.AUTH_USER_MODEL):
+    def test_reshare(self, post, user):
 
         reshared = post.reshare(user)
         assert reshared.title == post.title
@@ -29,9 +28,7 @@ class TestPostModel:
         assert reshared.community == post.community
         assert reshared.owner == user
 
-    def test_reshare_a_reshare(
-        self, post: Post, user: settings.AUTH_USER_MODEL
-    ):
+    def test_reshare_a_reshare(self, post, user):
 
         reshared = post.reshare(user)
         reshared.reshare(UserFactory())
@@ -43,7 +40,7 @@ class TestPostModel:
         assert reshared.community == post.community
         assert reshared.owner == user
 
-    def test_delete_comments_on_delete(self, post: Post):
+    def test_delete_comments_on_delete(self, post):
         CommentFactory(content_object=post)
         post.delete()
         assert Comment.objects.count() == 0
@@ -62,7 +59,7 @@ class TestPostModel:
         post = PostFactory(description="This post is #legit")
         assert post.get_content_warning_tags() == set()
 
-    def test_notify_on_create(self, community: Community):
+    def test_notify_on_create(self, community):
         # owner should not receive any notifications from their own posts
         owner = MembershipFactory(
             community=community, role=Membership.ROLES.moderator
@@ -119,7 +116,7 @@ class TestPostModel:
         assert notifications[3].actor == post.owner
         assert notifications[3].verb == "moderator_review_request"
 
-    def test_notify_on_update(self, community: Community):
+    def test_notify_on_update(self, community):
 
         owner = MembershipFactory(
             community=community, role=Membership.ROLES.moderator
@@ -157,7 +154,7 @@ class TestPostModel:
         assert notifications[0].actor == post.owner
         assert notifications[0].verb == "moderator_review_request"
 
-    def test_notify_on_create_reshare(self, community: Community):
+    def test_notify_on_create_reshare(self, community):
 
         mentioned = MembershipFactory(
             member=UserFactory(username="danjac"),

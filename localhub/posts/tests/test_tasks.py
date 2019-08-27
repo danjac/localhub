@@ -6,9 +6,6 @@ import pytest
 
 from django.db.models import signals
 
-
-from pytest_mock import MockFixture
-
 from localhub.posts import tasks
 from localhub.posts.tests.factories import PostFactory
 
@@ -17,7 +14,7 @@ pytestmark = pytest.mark.django_db
 
 class TestFetchTitleFromUrl:
     @factory.django.mute_signals(signals.post_save)
-    def test_no_title_and_url(self, mocker: MockFixture):
+    def test_no_title_and_url(self, mocker):
         # should insert a title from the URL
         mocker.patch(
             "localhub.posts.tasks.fetch_title_from_url",
@@ -48,7 +45,7 @@ class TestFetchTitleFromUrl:
         assert post.title == "testme"
 
     @factory.django.mute_signals(signals.post_save)
-    def test_fetch_title_fails(self, mocker: MockFixture):
+    def test_fetch_title_fails(self, mocker):
         # should insert domain
         mocker.patch(
             "localhub.posts.tasks.fetch_title_from_url", return_value=None

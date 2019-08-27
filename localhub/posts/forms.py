@@ -1,7 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Any, Dict
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
@@ -28,7 +27,7 @@ class PostForm(forms.ModelForm):
             {"placeholder": _("Add a full link here")}
         )
 
-    def clean(self) -> Dict[str, Any]:
+    def clean(self):
         cleaned_data = super().clean()
         title = cleaned_data.get("title")
         url = cleaned_data.get("url")

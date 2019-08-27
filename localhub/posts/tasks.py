@@ -12,7 +12,7 @@ logger = get_task_logger(__name__)
 
 
 @shared_task(name="posts.fetch_post_title_from_url")
-def fetch_post_title_from_url(post_id: int):
+def fetch_post_title_from_url(post_id):
     try:
         post = Post.objects.get(pk=post_id)
         if post.url and not post.title:

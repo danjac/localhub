@@ -14,7 +14,7 @@ celery_logger = get_logger(__name__)
 
 
 @receiver(post_save, sender=Post, dispatch_uid="posts.fetch_title_from_url")
-def fetch_title_from_url(instance: Post, **kwargs):
+def fetch_title_from_url(instance, **kwargs):
     def run_task():
         try:
             tasks.fetch_post_title_from_url.delay(instance.id)
@@ -25,10 +25,10 @@ def fetch_title_from_url(instance: Post, **kwargs):
 
 
 @receiver(post_save, sender=Post, dispatch_uid="posts.update_search_document")
-def update_search_document(instance: Post, **kwargs):
+def update_search_document(instance, **kwargs):
     transaction.on_commit(lambda: instance.search_indexer.update())
 
 
 @receiver(post_save, sender=Post, dispatch_uid="posts.taggit")
-def taggit(instance: Post, created: bool, **kwargs):
+def taggit(instance, created, **kwargs):
     transaction.on_commit(lambda: instance.taggit(created))
