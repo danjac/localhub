@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
-from django.db.models import QuerySet, Model
+from django.db.models import Model
 from django.forms import ModelForm
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.utils.functional import cached_property
@@ -24,7 +24,6 @@ from django.views.generic.list import MultipleObjectMixin
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.activities.breadcrumbs import get_breadcrumbs_for_instance
-from localhub.activities.models import Activity
 from localhub.comments.forms import CommentForm
 from localhub.comments.models import Comment
 from localhub.comments.notifications import (
@@ -32,19 +31,13 @@ from localhub.comments.notifications import (
     send_comment_deleted_email,
 )
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.core.types import (
-    BaseContextMixin,
-    BaseQuerySetViewMixin,
-    BreadcrumbList,
-    ContextDict,
-)
 from localhub.core.views import BreadcrumbsMixin, SearchMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
 
 
-class CommentQuerySetMixin(CommunityRequiredMixin, BaseQuerySetViewMixin):
-    def get_queryset(self) -> QuerySet:
+class CommentQuerySetMixin(CommunityRequiredMixin):
+    def get_queryset(self):
         return (
             Comment.objects.get_queryset()
             .for_community(self.request.community)
@@ -60,14 +53,14 @@ class SingleCommentMixin(CommentQuerySetMixin, SingleObjectMixin):
     ...
 
 
-class CommentParentMixin(BaseContextMixin):
+class CommentParentMixin:
     object: Model
 
     @cached_property
-    def parent(self) -> Activity:
+    def parent(self):
         return self.object.content_object
 
-    def get_context_data(self, **kwargs) -> ContextDict:
+    def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["parent"] = self.parent
         return data
@@ -80,26 +73,26 @@ class SingleCommentView(SingleCommentMixin, View):
 class CommentDetailView(
     CommentQuerySetMixin, CommentParentMixin, BreadcrumbsMixin, DetailView
 ):
-    def get_breadcrumbs(self) -> BreadcrumbList:
+    def get_breadcrumbs(self):
         if self.parent:
             return get_breadcrumbs_for_instance(self.parent) + [
                 (self.request.path, _("Comment"))
             ]
         return []
 
-    def get_flags(self) -> QuerySet:
+    def get_flags(self):
         return (
             self.object.get_flags().select_related("user").order_by("-created")
         )
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return (
             super()
             .get_queryset()
             .with_common_annotations(self.request.community, self.request.user)
         )
 
-    def get_context_data(self, **kwargs) -> ContextDict:
+    def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.user.has_perm(
             "communities.moderate_community", self.request.community
@@ -121,17 +114,17 @@ class CommentUpdateView(
     form_class = CommentForm
     permission_required = "comments.change_comment"
 
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return self.parent.get_absolute_url()
 
-    def get_breadcrumbs(self) -> BreadcrumbList:
+    def get_breadcrumbs(self):
         if self.parent:
             return get_breadcrumbs_for_instance(self.parent) + [
                 (self.request.path, _("Edit Comment"))
             ]
         return []
 
-    def form_valid(self, form: ModelForm) -> HttpResponse:
+    def form_valid(self, form: ModelForm):
         self.object = form.save(commit=False)
         self.object.editor = self.request.user
         self.object.save()
@@ -152,10 +145,10 @@ class CommentDeleteView(
 ):
     permission_required = "comments.delete_comment"
 
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return self.parent.get_absolute_url()
 
-    def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def delete(self, request: HttpRequest, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()
         if self.request.user != self.object.owner:
@@ -173,7 +166,7 @@ class CommentLikeView(
 ):
     permission_required = "comments.like_comment"
 
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def post(self, request: HttpRequest, *args, **kwargs):
         self.object = self.get_object()
         try:
             like = Like.objects.create(
@@ -196,14 +189,14 @@ comment_like_view = CommentLikeView.as_view()
 
 
 class CommentDislikeView(LoginRequiredMixin, SingleCommentView):
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def post(self, request: HttpRequest, *args, **kwargs):
         self.object = self.get_object()
         Like.objects.filter(user=request.user, comment=self.object).delete()
         if request.is_ajax():
             return HttpResponse(status=204)
         return HttpResponseRedirect(self.object.get_absolute_url())
 
-    def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def delete(self, request: HttpRequest, *args, **kwargs):
         return self.post(request, *args, **kwargs)
 
 
@@ -222,11 +215,11 @@ class CommentFlagView(
     template_name = "flags/flag_form.html"
     permission_required = "comments.flag_comment"
 
-    def dispatch(self, request, *args, **kwargs) -> HttpResponse:
+    def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super().dispatch(request, *args, **kwargs)
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return (
             super()
             .get_queryset()
@@ -234,18 +227,18 @@ class CommentFlagView(
             .exclude(has_flagged=True)
         )
 
-    def get_permission_object(self) -> Comment:
+    def get_permission_object(self):
         return self.object
 
-    def get_breadcrumbs(self) -> BreadcrumbList:
+    def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.parent) + [
             (self.request.path, _("Flag Comment"))
         ]
 
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return self.parent.get_absolute_url()
 
-    def form_valid(self, form: ModelForm) -> HttpResponse:
+    def form_valid(self, form):
         flag = form.save(commit=False)
         flag.content_object = self.object
         flag.community = self.request.community
@@ -270,7 +263,7 @@ class CommentListView(MultipleCommentMixin, ListView):
 class CommentSearchView(SearchMixin, CommentListView):
     template_name = "comments/search.html"
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         if not self.search_query:
             return self.none()
         return (

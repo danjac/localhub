@@ -3,54 +3,47 @@
 
 import pytest
 
-from django.conf import settings
-from django.http import HttpRequest, HttpResponse
-from django.test import Client, RequestFactory
+from django.http import HttpResponse
+from django.test import RequestFactory
 
-from pytest_mock import MockFixture
 
-from localhub.comments.models import Comment
 from localhub.comments.tests.factories import CommentFactory
-from localhub.communities.models import Community, Membership
+from localhub.communities.models import Membership
 from localhub.communities.tests.factories import (
     CommunityFactory,
     MembershipFactory,
 )
-from localhub.events.models import Event
 from localhub.events.tests.factories import EventFactory
-from localhub.photos.models import Photo
 from localhub.photos.tests.factories import PhotoFactory
-from localhub.posts.models import Post
 from localhub.posts.tests.factories import PostFactory
-from localhub.core.types import DjangoView
 from localhub.users.tests.factories import UserFactory
 
 
 @pytest.fixture
-def get_response() -> DjangoView:
-    def _get_response(req: HttpRequest) -> HttpResponse:
+def get_response():
+    def _get_response(req):
         return HttpResponse()
 
     return _get_response
 
 
 @pytest.fixture
-def req_factory() -> RequestFactory:
+def req_factory():
     return RequestFactory()
 
 
 @pytest.fixture
-def user() -> settings.AUTH_USER_MODEL:
+def user():
     return UserFactory()
 
 
 @pytest.fixture
-def community() -> Community:
+def community():
     return CommunityFactory(domain="testserver")
 
 
 @pytest.fixture
-def login_user(client: Client) -> settings.AUTH_USER_MODEL:
+def login_user(client):
     password = "t3SzTP4sZ"
     user = UserFactory()
     user.set_password(password)
@@ -60,34 +53,28 @@ def login_user(client: Client) -> settings.AUTH_USER_MODEL:
 
 
 @pytest.fixture
-def member(
-    client: Client, login_user: settings.AUTH_USER_MODEL, community: Community
-) -> Membership:
+def member(client, login_user, community):
     return MembershipFactory(
         member=login_user, community=community, role=Membership.ROLES.member
     )
 
 
 @pytest.fixture
-def moderator(
-    client: Client, login_user: settings.AUTH_USER_MODEL, community: Community
-) -> Membership:
+def moderator(client, login_user, community):
     return MembershipFactory(
         member=login_user, community=community, role=Membership.ROLES.moderator
     )
 
 
 @pytest.fixture
-def admin(
-    client: Client, login_user: settings.AUTH_USER_MODEL, community: Community
-) -> Membership:
+def admin(client, login_user, community):
     return MembershipFactory(
         member=login_user, community=community, role=Membership.ROLES.admin
     )
 
 
 @pytest.fixture
-def post(community: Community) -> Post:
+def post(community):
     return PostFactory(
         community=community,
         owner=MembershipFactory(community=community).member,
@@ -95,7 +82,7 @@ def post(community: Community) -> Post:
 
 
 @pytest.fixture
-def photo(community: Community) -> Photo:
+def photo(community):
     return PhotoFactory(
         community=community,
         owner=MembershipFactory(community=community).member,
@@ -103,7 +90,7 @@ def photo(community: Community) -> Photo:
 
 
 @pytest.fixture
-def event(community: Community) -> Event:
+def event(community):
     return EventFactory(
         community=community,
         owner=MembershipFactory(community=community).member,
@@ -111,7 +98,7 @@ def event(community: Community) -> Event:
 
 
 @pytest.fixture
-def comment(post: Post) -> Comment:
+def comment(post):
     return CommentFactory(
         content_object=post,
         community=post.community,
@@ -120,5 +107,5 @@ def comment(post: Post) -> Comment:
 
 
 @pytest.fixture
-def send_notification_webpush_mock(mocker: MockFixture) -> MockFixture:
+def send_notification_webpush_mock(mocker):
     return mocker.patch("localhub.notifications.models.webpush")

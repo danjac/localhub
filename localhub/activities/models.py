@@ -2,8 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from typing import Iterable, List, Optional, Set
-
 from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
@@ -37,9 +35,7 @@ class ActivityQuerySet(
     SearchQuerySetMixin,
     models.QuerySet,
 ):
-    def with_common_annotations(
-        self, community: Community, user: settings.AUTH_USER_MODEL
-    ) -> models.QuerySet:
+    def with_common_annotations(self, community, user):
         """
         Combines all common annotations into a single call. Applies annotations
         conditionally e.g. if user is authenticated or not.
@@ -58,12 +54,10 @@ class ActivityQuerySet(
                 qs = qs.with_is_flagged()
         return qs
 
-    def with_num_reshares(self) -> models.QuerySet:
+    def with_num_reshares(self):
         return self.annotate(num_reshares=models.Count("reshares"))
 
-    def with_has_reshared(
-        self, user: settings.AUTH_USER_MODEL
-    ) -> models.QuerySet:
+    def with_has_reshared(self, user):
         if user.is_anonymous:
             return self.annotate(
                 has_reshared=models.Value(
@@ -78,15 +72,13 @@ class ActivityQuerySet(
             )
         )
 
-    def for_community(self, community: Community) -> models.QuerySet:
+    def for_community(self, community):
         """
         Must match community, and owner must also be member.
         """
         return self.filter(community=community, owner__communities=community)
 
-    def following_users(
-        self, user: settings.AUTH_USER_MODEL
-    ) -> models.QuerySet:
+    def following_users(self, user):
 
         if user.is_anonymous:
             return self
@@ -94,9 +86,7 @@ class ActivityQuerySet(
             owner__in=user.following.all()
         )
 
-    def following_tags(
-        self, user: settings.AUTH_USER_MODEL
-    ) -> models.QuerySet:
+    def following_tags(self, user):
 
         if user.is_anonymous:
             return self
@@ -104,7 +94,7 @@ class ActivityQuerySet(
             tags__in=user.following_tags.all()
         )
 
-    def following(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
+    def following(self, user):
 
         if user.is_anonymous or not user.home_page_filters:
             return self
@@ -119,13 +109,13 @@ class ActivityQuerySet(
 
         return qs
 
-    def blocked_users(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
+    def blocked_users(self, user):
 
         if user.is_anonymous:
             return self
         return self.exclude(owner__in=user.blocked.all())
 
-    def blocked_tags(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
+    def blocked_tags(self, user):
         """
         Should remove all activities with tags except if user is owner
         """
@@ -135,7 +125,7 @@ class ActivityQuerySet(
             models.Q(tags__in=user.blocked_tags.all()), ~models.Q(owner=user)
         )
 
-    def blocked(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
+    def blocked(self, user):
         if user.is_anonymous:
             return self
         return self.blocked_users(user).blocked_tags(user)
@@ -146,7 +136,7 @@ class Activity(TimeStampedModel):
     Base class for all activity-related entities e.g. posts, events, photos.
     """
 
-    RESHARED_FIELDS: Iterable = ()
+    RESHARED_FIELDS = ()
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
@@ -194,58 +184,58 @@ class Activity(TimeStampedModel):
         abstract = True
 
     @property
-    def _history_user(self) -> Optional[settings.AUTH_USER_MODEL]:
+    def _history_user(self):
         return self.editor
 
     @_history_user.setter
-    def _history_user(self, value: settings.AUTH_USER_MODEL):
+    def _history_user(self, value):
         self.editor = value
 
-    def slugify(self) -> str:
+    def slugify(self):
         return slugify(smart_text(self), allow_unicode=False)
 
-    def resolve_url(self, view_name: str, *args) -> str:
+    def resolve_url(self, view_name: str, *args):
         return reverse(
             f"{self._meta.app_label}:{view_name}", args=[self.id] + list(args)
         )
 
-    def get_absolute_url(self) -> str:
+    def get_absolute_url(self):
         return self.resolve_url("detail", self.slugify())
 
-    def get_create_comment_url(self) -> str:
+    def get_create_comment_url(self):
         return self.resolve_url("comment")
 
-    def get_dislike_url(self) -> str:
+    def get_dislike_url(self):
         return self.resolve_url("dislike")
 
-    def get_like_url(self) -> str:
+    def get_like_url(self):
         return self.resolve_url("like")
 
-    def get_flag_url(self) -> str:
+    def get_flag_url(self):
         return self.resolve_url("flag")
 
-    def get_reshare_url(self) -> str:
+    def get_reshare_url(self):
         return self.resolve_url("reshare")
 
-    def get_update_url(self) -> str:
+    def get_update_url(self):
         return self.resolve_url("update")
 
-    def get_delete_url(self) -> str:
+    def get_delete_url(self):
         return self.resolve_url("delete")
 
-    def get_permalink(self) -> str:
+    def get_permalink(self):
         return self.community.resolve_url(self.get_absolute_url())
 
-    def get_comments(self) -> models.QuerySet:
+    def get_comments(self):
         return get_generic_related_queryset(self, Comment)
 
-    def get_flags(self) -> models.QuerySet:
+    def get_flags(self):
         return get_generic_related_queryset(self, Flag)
 
-    def get_likes(self) -> models.QuerySet:
+    def get_likes(self):
         return get_generic_related_queryset(self, Like)
 
-    def get_content_warning_tags(self) -> Set[str]:
+    def get_content_warning_tags(self):
         """
         Checks if any tags matching in description
         """
@@ -254,7 +244,7 @@ class Activity(TimeStampedModel):
             & self.community.get_content_warning_tags()
         )
 
-    def taggit(self, created: bool):
+    def taggit(self, created):
         """
         Generates Tag instances from #hashtags in the description field when
         changed. Pre-existing tags are deleted.
@@ -266,12 +256,7 @@ class Activity(TimeStampedModel):
             else:
                 self.tags.clear()
 
-    def make_notification(
-        self,
-        recipient: settings.AUTH_USER_MODEL,
-        verb: str,
-        actor: Optional[settings.AUTH_USER_MODEL] = None,
-    ) -> Notification:
+    def make_notification(self, recipient, verb, actor):
         return Notification(
             content_object=self,
             actor=actor or self.owner,
@@ -280,9 +265,7 @@ class Activity(TimeStampedModel):
             verb=verb,
         )
 
-    def notify_mentioned_users(
-        self, recipients: models.QuerySet
-    ) -> List[Notification]:
+    def notify_mentioned_users(self, recipients):
         qs = recipients.matches_usernames(
             self.description.extract_mentions()
         ).exclude(pk=self.owner_id)
@@ -295,17 +278,13 @@ class Activity(TimeStampedModel):
             self.make_notification(recipient, "mention") for recipient in qs
         ]
 
-    def notify_followers(
-        self, recipients: models.QuerySet
-    ) -> List[Notification]:
+    def notify_followers(self, recipients):
         return [
             self.make_notification(follower, "new_followed_user_post")
             for follower in recipients.filter(following=self.owner).distinct()
         ]
 
-    def notify_tag_followers(
-        self, recipients: models.QuerySet
-    ) -> List[Notification]:
+    def notify_tag_followers(self, recipients):
         hashtags = self.description.extract_hashtags()
         if hashtags:
             tags = Tag.objects.filter(slug__in=hashtags)
@@ -323,7 +302,7 @@ class Activity(TimeStampedModel):
                 ]
         return []
 
-    def notify_owner_or_moderators(self) -> List[Notification]:
+    def notify_owner_or_moderators(self):
         """
         Notifies moderators of updates. If change made by moderator,
         then notification sent to owner.
@@ -347,19 +326,17 @@ class Activity(TimeStampedModel):
             for moderator in qs
         ]
 
-    def notify_parent_owner(
-        self, recipients: models.QuerySet
-    ) -> List[Notification]:
+    def notify_parent_owner(self, recipients):
         owner = recipients.filter(pk=self.parent.owner_id).first()
         if owner:
             return [self.make_notification(owner, "reshare")]
         return []
 
-    def get_notification_recipients(self) -> models.QuerySet:
+    def get_notification_recipients(self):
         return self.community.members.exclude(blocked=self.owner)
 
-    def notify_on_create(self) -> List[Notification]:
-        notifications: List[Notification] = []
+    def notify_on_create(self):
+        notifications = []
         recipients = self.get_notification_recipients()
 
         if self.description:
@@ -376,9 +353,9 @@ class Activity(TimeStampedModel):
         Notification.objects.bulk_create(notifications)
         return notifications
 
-    def notify_on_update(self) -> List[Notification]:
+    def notify_on_update(self):
 
-        notifications: List[Notification] = []
+        notifications = []
         recipients = self.get_notification_recipients()
 
         if self.description and self.description_tracker.changed():
@@ -390,9 +367,7 @@ class Activity(TimeStampedModel):
         Notification.objects.bulk_create(notifications)
         return notifications
 
-    def reshare(
-        self, owner: settings.AUTH_USER_MODEL, commit=True, **kwargs
-    ) -> models.Model:
+    def reshare(self, owner, commit=True, **kwargs):
         """
         Creates a copy of the model.  The subclass must define
         an iterable of `RESHARED_FIELDS`.

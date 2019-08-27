@@ -1,11 +1,10 @@
 import pytest
 
-from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 
 from localhub.comments.models import Comment
 from localhub.comments.tests.factories import CommentFactory
-from localhub.communities.models import Community, Membership
+from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
@@ -26,7 +25,7 @@ class TestCommentManager:
 
         assert Comment.objects.search("testme").get() == comment
 
-    def test_blocked_users(self, user: settings.AUTH_USER_MODEL):
+    def test_blocked_users(self, user):
 
         my_comment = CommentFactory(owner=user)
 
@@ -39,7 +38,7 @@ class TestCommentManager:
         assert my_comment in comments
         assert second_comment in comments
 
-    def test_For_community(self, community: Community):
+    def test_For_community(self, community):
         comment = CommentFactory(
             community=community,
             owner=MembershipFactory(community=community).member,
@@ -49,9 +48,7 @@ class TestCommentManager:
         CommentFactory()
         assert Comment.objects.for_community(community).get() == comment
 
-    def test_with_num_likes(
-        self, comment: Comment, user: settings.AUTH_USER_MODEL
-    ):
+    def test_with_num_likes(self, comment, user):
         Like.objects.create(
             user=user,
             content_object=comment,
@@ -62,27 +59,21 @@ class TestCommentManager:
         comment = Comment.objects.with_num_likes().get()
         assert comment.num_likes == 1
 
-    def test_with_has_flagged_if_user_has_not_flagged(
-        self, comment: Comment, user: settings.AUTH_USER_MODEL
-    ):
+    def test_with_has_flagged_if_user_has_not_flagged(self, comment, user):
         Flag.objects.create(
             user=user, content_object=comment, community=comment.community
         )
         comment = Comment.objects.with_has_flagged(UserFactory()).get()
         assert not comment.has_flagged
 
-    def test_with_has_flagged_if_user_has_flagged(
-        self, comment: Comment, user: settings.AUTH_USER_MODEL
-    ):
+    def test_with_has_flagged_if_user_has_flagged(self, comment, user):
         Flag.objects.create(
             user=user, content_object=comment, community=comment.community
         )
         comment = Comment.objects.with_has_flagged(user).get()
         assert comment.has_flagged
 
-    def test_with_has_liked_if_user_has_not_liked(
-        self, comment: Comment, user: settings.AUTH_USER_MODEL
-    ):
+    def test_with_has_liked_if_user_has_not_liked(self, comment, user):
         Like.objects.create(
             user=user,
             content_object=comment,
@@ -92,9 +83,7 @@ class TestCommentManager:
         comment = Comment.objects.with_has_liked(UserFactory()).get()
         assert not comment.has_liked
 
-    def test_with_has_liked_if_user_has_liked(
-        self, comment: Comment, user: settings.AUTH_USER_MODEL
-    ):
+    def test_with_has_liked_if_user_has_liked(self, comment, user):
         Like.objects.create(
             user=user,
             content_object=comment,
@@ -104,7 +93,7 @@ class TestCommentManager:
         comment = Comment.objects.with_has_liked(user).get()
         assert comment.has_liked
 
-    def test_with_common_annotations_if_anonymous(self, comment: Comment):
+    def test_with_common_annotations_if_anonymous(self, comment):
         comment = Comment.objects.with_common_annotations(
             comment.community, AnonymousUser()
         ).get()
@@ -114,9 +103,7 @@ class TestCommentManager:
         assert not hasattr(comment, "has_flagged")
         assert not hasattr(comment, "is_flagged")
 
-    def test_with_common_annotations_if_authenticated(
-        self, comment: Comment, user: settings.AUTH_USER_MODEL
-    ):
+    def test_with_common_annotations_if_authenticated(self, comment, user):
         comment = Comment.objects.with_common_annotations(
             comment.community, user
         ).get()
@@ -128,7 +115,7 @@ class TestCommentManager:
 
 
 class TestCommentModel:
-    def test_notify_on_create(self, community: Community):
+    def test_notify_on_create(self, community):
 
         comment_owner = MembershipFactory(community=community).member
         post_owner = MembershipFactory(community=community).member
@@ -181,7 +168,7 @@ class TestCommentModel:
         assert notifications[4].actor == comment.owner
         assert notifications[4].verb == "new_followed_user_comment"
 
-    def test_notify_on_update(self, community: Community):
+    def test_notify_on_update(self, community):
 
         comment_owner = MembershipFactory(community=community).member
         post_owner = MembershipFactory(community=community).member

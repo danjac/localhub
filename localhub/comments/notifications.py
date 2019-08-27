@@ -8,7 +8,6 @@ from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import override
 
-from localhub.comments.models import Comment
 from localhub.notifications.emails import send_notification_email
 from localhub.notifications.models import Notification
 from localhub.notifications.utils import send_push_notification
@@ -31,20 +30,18 @@ NOTIFICATION_HEADERS = {
 }
 
 
-def send_comment_notifications(comment: Comment, notification: Notification):
+def send_comment_notifications(comment, notification):
     send_comment_notification_push(comment, notification)
     send_comment_notification_email(comment, notification)
 
 
-def get_notification_header(notification: Notification) -> str:
+def get_notification_header(notification: Notification):
     return NOTIFICATION_HEADERS[notification.verb] % {
         "actor": user_display(notification.actor)
     }
 
 
-def send_comment_notification_push(
-    comment: Comment, notification: Notification
-):
+def send_comment_notification_push(comment, notification):
     with override(notification.recipient.language):
 
         send_push_notification(
@@ -56,9 +53,7 @@ def send_comment_notification_push(
         )
 
 
-def send_comment_notification_email(
-    comment: Comment, notification: Notification
-):
+def send_comment_notification_email(comment, notification):
 
     if notification.recipient.has_email_pref(notification.verb):
         with override(notification.recipient.language):
@@ -79,7 +74,7 @@ def send_comment_notification_email(
             )
 
 
-def send_comment_deleted_email(comment: Comment):
+def send_comment_deleted_email(comment):
     if comment.owner.has_email_pref("moderator_delete"):
         with override(comment.owner.language):
             context = {"comment": comment}

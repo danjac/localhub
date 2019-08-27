@@ -3,12 +3,10 @@
 
 import pytest
 
-from django.test.client import Client
 from django.urls import reverse
 
 from taggit.models import Tag
 
-from localhub.communities.models import Community, Membership
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.events.tests.factories import EventFactory
 from localhub.photos.tests.factories import PhotoFactory
@@ -19,7 +17,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestActivityStreamView:
-    def test_get_if_anonymous(self, client: Client, community: Community):
+    def test_get_if_anonymous(self, client, community):
         member = MembershipFactory(community=community)
         PostFactory(community=community, owner=member.member)
         EventFactory(community=community, owner=member.member)
@@ -28,7 +26,7 @@ class TestActivityStreamView:
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 2
 
-    def test_get_if_authenticated(self, client: Client, member: Membership):
+    def test_get_if_authenticated(self, client, member):
         EventFactory(community=member.community, owner=member.member)
         PostFactory(community=member.community, owner=member.member)
         PostFactory(community=member.community, owner=member.member)
@@ -39,7 +37,7 @@ class TestActivityStreamView:
 
 
 class TestActivityTimelineView:
-    def test_get_if_anonymous(self, client: Client, community: Community):
+    def test_get_if_anonymous(self, client, community):
         member = MembershipFactory(community=community)
         PostFactory(community=community, owner=member.member)
         EventFactory(community=community, owner=member.member)
@@ -51,7 +49,7 @@ class TestActivityTimelineView:
 
 
 class TestActivitySearchView:
-    def test_get(self, client: Client, community: Community):
+    def test_get(self, client, community):
         member = MembershipFactory(community=community)
         post = PostFactory(
             community=community, title="test", owner=member.member
@@ -67,7 +65,7 @@ class TestActivitySearchView:
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 2
 
-    def test_get_hashtag(self, client: Client, community: Community):
+    def test_get_hashtag(self, client, community):
         member = MembershipFactory(community=community)
         post = PostFactory(
             community=community, description="#testme", owner=member.member
@@ -77,9 +75,7 @@ class TestActivitySearchView:
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 1
 
-    def test_get_if_search_string_empty(
-        self, client: Client, community: Community
-    ):
+    def test_get_if_search_string_empty(self, client, community):
 
         response = client.get(reverse("activities:search"))
         assert response.status_code == 200
@@ -87,7 +83,7 @@ class TestActivitySearchView:
 
 
 class TestTagAutocompleteListView:
-    def test_get(self, client: Client, community: Community):
+    def test_get(self, client, community):
 
         member = MembershipFactory(community=community)
         PostFactory(community=community, owner=member.member).tags.add(
@@ -108,7 +104,7 @@ class TestTagAutocompleteListView:
 
 
 class TestTagFollowView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         post = PostFactory(community=member.community, owner=member.member)
         post.tags.set("movies")
         tag = Tag.objects.get()
@@ -122,7 +118,7 @@ class TestTagFollowView:
 
 
 class TestTagUnfollowView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         post = PostFactory(community=member.community, owner=member.member)
         post.tags.set("movies")
         tag = Tag.objects.get()
@@ -137,7 +133,7 @@ class TestTagUnfollowView:
 
 
 class TestTagBlockView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         post = PostFactory(community=member.community, owner=member.member)
         post.tags.set("movies")
         tag = Tag.objects.get()
@@ -151,7 +147,7 @@ class TestTagBlockView:
 
 
 class TestTagUnblockView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         post = PostFactory(community=member.community, owner=member.member)
         post.tags.set("movies")
         tag = Tag.objects.get()
@@ -166,7 +162,7 @@ class TestTagUnblockView:
 
 
 class TestTagListView:
-    def test_get(self, client: Client, community: Community):
+    def test_get(self, client, community):
         member = MembershipFactory(community=community)
         PostFactory(community=community, owner=member.member).tags.add(
             "movies"
@@ -177,7 +173,7 @@ class TestTagListView:
 
 
 class TestFollowingTagListView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         PostFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
@@ -189,7 +185,7 @@ class TestFollowingTagListView:
 
 
 class TestBlockedTagListView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         PostFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
@@ -201,7 +197,7 @@ class TestBlockedTagListView:
 
 
 class TestTagDetailView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         PostFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,

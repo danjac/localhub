@@ -4,7 +4,6 @@
 import os
 import socket
 
-from typing import Any, Dict, List
 
 from django.urls import reverse_lazy
 
@@ -26,12 +25,12 @@ class Base(Configuration):
     EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
 
     DEBUG = False
-    ALLOWED_HOSTS: List[str] = []
+    ALLOWED_HOSTS = []
 
     SESSION_COOKIE_DOMAIN = values.Value()
     CSRF_COOKIE_DOMAIN = values.Value()
     LANGUAGE_COOKIE_DOMAIN = values.Value()
-    CSRF_TRUSTED_ORIGINS: List[str] = []
+    CSRF_TRUSTED_ORIGINS = []
 
     WSGI_APPLICATION = "localhub.wsgi.application"
 
@@ -183,38 +182,38 @@ class Base(Configuration):
     VAPID_ADMIN_EMAIL = values.Value()
 
     @property
-    def BASE_DIR(self) -> str:
+    def BASE_DIR(self):
         return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     @property
-    def INSTALLED_APPS(self) -> List[str]:
+    def INSTALLED_APPS(self):
         return self.DJANGO_APPS + self.THIRD_PARTY_APPS + self.LOCAL_APPS
 
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
     @property
-    def MEDIA_URL(self) -> str:
+    def MEDIA_URL(self):
         return "/media/"
 
     @property
-    def STATIC_URL(self) -> str:
+    def STATIC_URL(self):
         return "/static/"
 
     @property
-    def MEDIA_ROOT(self) -> str:
+    def MEDIA_ROOT(self):
         return os.path.join(self.BASE_DIR, "media")
 
     @property
-    def STATIC_ROOT(self) -> str:
+    def STATIC_ROOT(self):
         return os.path.join(self.BASE_DIR, "static")
 
     @property
-    def STATICFILES_DIRS(self) -> List[str]:
+    def STATICFILES_DIRS(self):
         return [os.path.join(self.BASE_DIR, "assets")]
 
     @property
-    def TEMPLATES(self) -> List[Dict]:
+    def TEMPLATES(self):
         return [
             {
                 "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -240,11 +239,11 @@ class Base(Configuration):
     # Sorl-thumbnail
 
     @property
-    def THUMBNAIL_DEBUG(self) -> bool:
+    def THUMBNAIL_DEBUG(self):
         return self.DEBUG
 
     @property
-    def CACHES(self) -> Dict[str, Any]:
+    def CACHES(self):
         return {
             "default": {
                 "BACKEND": "django_redis.cache.RedisCache",
@@ -256,13 +255,13 @@ class Base(Configuration):
         }
 
     @property
-    def LOCALE_PATHS(self) -> List[str]:
+    def LOCALE_PATHS(self):
         return [os.path.join(self.BASE_DIR, "locale")]
 
 
 class DockerConfigMixin:
     @property
-    def INTERNAL_IPS(self) -> List[str]:
+    def INTERNAL_IPS(self):
         ips = ["127.0.0.1", "10.0.2.2"]
         _, _, ips = socket.gethostbyname_ex(socket.gethostname())
         ips += [ip[:-1] + "1" for ip in ips]
@@ -289,7 +288,7 @@ class Local(DockerConfigMixin, Base):
 
     DEBUG = True
 
-    ALLOWED_HOSTS: List[str] = ["*"]
+    ALLOWED_HOSTS = ["*"]
 
     THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + [
         "debug_toolbar",
@@ -364,16 +363,16 @@ class Production(DockerConfigMixin, Base):
     SILKY_MAX_RECORDED_REQUESTS = 10 ** 4
 
     @property
-    def ANYMAIL(self) -> Dict[str, str]:
+    def ANYMAIL(self):
         return {
             "MAILGUN_API_KEY": self.MAILGUN_API_KEY,
             "MAILGUN_SENDER_DOMAIN": self.MAILGUN_SENDER_DOMAIN,
         }
 
     @property
-    def SERVER_EMAIL(self) -> str:
+    def SERVER_EMAIL(self):
         return f"errors@{self.MAILGUN_SENDER_DOMAIN}"
 
     @property
-    def DEFAULT_FROM_EMAIL(self) -> str:
+    def DEFAULT_FROM_EMAIL(self):
         return f"support@{self.MAILGUN_SENDER_DOMAIN}"

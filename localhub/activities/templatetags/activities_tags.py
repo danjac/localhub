@@ -8,10 +8,8 @@ from typing import Optional
 from urllib.parse import urlparse
 
 from django import template
-from django.conf import settings
 from django.utils.safestring import mark_safe
 
-from localhub.activities.models import Activity
 from localhub.activities.utils import get_domain, is_url
 
 register = template.Library()
@@ -20,9 +18,7 @@ IMAGE_TYPES = ("image/jpeg", "image/png", "image/gif")
 
 
 @register.filter
-def is_content_sensitive(
-    activity: Activity, user: settings.AUTH_USER_MODEL
-) -> bool:
+def is_content_sensitive(activity, user):
     if user.is_authenticated and user.show_sensitive_content:
         return False
     return bool(activity.get_content_warning_tags())
@@ -46,7 +42,7 @@ def url_to_img(url: Optional[str], linkify: bool = True) -> Optional[str]:
 
 
 @register.filter
-def domain(url: str) -> str:
+def domain(url: str):
     """
     Shows a linked URL domain e.g. if http://reddit.com:
 

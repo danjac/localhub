@@ -7,49 +7,38 @@ Rulesets for the activities app and subclassed models.
 
 import rules
 
-from django.conf import settings
-
-from localhub.activities.models import Activity
 from localhub.communities.rules import is_member, is_moderator
 
 
 @rules.predicate
-def is_owner(user: settings.AUTH_USER_MODEL, activity: Activity) -> bool:
+def is_owner(user, activity):
     return user.id == activity.owner_id
 
 
 @rules.predicate
-def is_parent_owner(
-    user: settings.AUTH_USER_MODEL, activity: Activity
-) -> bool:
+def is_parent_owner(user, activity):
     if activity.parent:
         return user.id == activity.parent.owner_id
     return False
 
 
 @rules.predicate
-def is_activity_community_member(
-    user: settings.AUTH_USER_MODEL, activity: Activity
-) -> bool:
+def is_activity_community_member(user, activity):
     return is_member.test(user, activity.community)
 
 
 @rules.predicate
-def is_activity_community_moderator(
-    user: settings.AUTH_USER_MODEL, activity: Activity
-) -> bool:
+def is_activity_community_moderator(user, activity):
     return is_moderator.test(user, activity.community)
 
 
 @rules.predicate
-def allows_comments(
-    user: settings.AUTH_USER_MODEL, activity: Activity
-) -> bool:
+def allows_comments(user, activity):
     return activity.allow_comments
 
 
 @rules.predicate
-def is_reshare(user: settings.AUTH_USER_MODEL, activity: Activity) -> bool:
+def is_reshare(user, activity):
     return activity.is_reshare
 
 

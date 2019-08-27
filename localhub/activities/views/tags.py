@@ -3,21 +3,12 @@
 
 import operator
 
-
 from functools import reduce
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import (
-    BooleanField,
-    Count,
-    Exists,
-    OuterRef,
-    Q,
-    QuerySet,
-    Value,
-)
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import ListView, View
 from django.views.generic.detail import SingleObjectMixin
@@ -26,11 +17,8 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from taggit.models import Tag, TaggedItem
 
-
 from localhub.activities.views.streams import BaseStreamView
-from localhub.communities.models import Community
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.core.types import ContextDict
 from localhub.core.views import SearchMixin
 from localhub.events.models import Event
 from localhub.photos.models import Photo
@@ -44,7 +32,7 @@ class CommunityTagQuerySetMixin(CommunityRequiredMixin):
 
     tagged_models = [Post, Event, Photo]
 
-    def get_tagged_items(self) -> Q:
+    def get_tagged_items(self):
         q = Q(
             reduce(
                 operator.or_,
@@ -63,7 +51,7 @@ class CommunityTagQuerySetMixin(CommunityRequiredMixin):
         )
         return TaggedItem.objects.filter(q)
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return Tag.objects.filter(
             taggit_taggeditem_items__in=self.get_tagged_items()
         ).distinct()
@@ -78,14 +66,14 @@ class SingleTagView(SingleTagMixin, View):
 
 
 class BaseTagListView(ListView):
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return super().get_queryset().order_by("name")
 
 
 class TagAutocompleteListView(CommunityTagQuerySetMixin, BaseTagListView):
     template_name = "activities/tags/tag_autocomplete_list.html"
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         search_term = self.request.GET.get("q", "").strip()
         if not search_term:
             return Tag.objects.none()
@@ -98,11 +86,11 @@ tag_autocomplete_list_view = TagAutocompleteListView.as_view()
 class TagDetailView(SingleTagMixin, BaseStreamView):
     template_name = "activities/tags/tag_detail.html"
 
-    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super().get(request, *args, **kwargs)
 
-    def filter_queryset(self, queryset: QuerySet) -> QuerySet:
+    def filter_queryset(self, queryset):
         qs = (
             super()
             .filter_queryset(queryset)
@@ -124,7 +112,7 @@ class TagDetailView(SingleTagMixin, BaseStreamView):
             )
         return qs
 
-    def get_context_data(self, **kwargs) -> ContextDict:
+    def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["tag"] = self.object
         return data
@@ -138,13 +126,13 @@ class TagFollowView(
 ):
     permission_required = "users.follow_tag"
 
-    def get_permission_object(self) -> Community:
+    def get_permission_object(self):
         return self.request.community
 
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return reverse("activities:tag_detail", args=[self.object.slug])
 
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.following_tags.add(self.object)
 
@@ -155,10 +143,10 @@ tag_follow_view = TagFollowView.as_view()
 
 
 class TagUnfollowView(LoginRequiredMixin, SingleTagView):
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return reverse("activities:tag_detail", args=[self.object.slug])
 
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.following_tags.remove(self.object)
         return HttpResponseRedirect(self.get_success_url())
@@ -170,13 +158,13 @@ tag_unfollow_view = TagUnfollowView.as_view()
 class TagBlockView(LoginRequiredMixin, PermissionRequiredMixin, SingleTagView):
     permission_required = "users.block_tag"
 
-    def get_permission_object(self) -> Community:
+    def get_permission_object(self):
         return self.request.community
 
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return reverse("activities:tag_detail", args=[self.object.slug])
 
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.blocked_tags.add(self.object)
         return HttpResponseRedirect(self.get_success_url())
@@ -186,10 +174,10 @@ tag_block_view = TagBlockView.as_view()
 
 
 class TagUnblockView(LoginRequiredMixin, SingleTagView):
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return reverse("activities:tag_detail", args=[self.object.slug])
 
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.blocked_tags.remove(self.object)
         return HttpResponseRedirect(self.get_success_url())
@@ -202,7 +190,7 @@ class TagListView(SearchMixin, CommunityTagQuerySetMixin, BaseTagListView):
     template_name = "activities/tags/tag_list.html"
     paginate_by = 30
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
 
         qs = super().get_queryset()
 
@@ -238,7 +226,7 @@ tag_list_view = TagListView.as_view()
 class FollowingTagListView(LoginRequiredMixin, BaseTagListView):
     template_name = "activities/tags/following_tag_list.html"
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return self.request.user.following_tags.order_by("name")
 
 
@@ -248,7 +236,7 @@ following_tag_list_view = FollowingTagListView.as_view()
 class BlockedTagListView(LoginRequiredMixin, BaseTagListView):
     template_name = "activities/tags/blocked_tag_list.html"
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return self.request.user.blocked_tags.order_by("name")
 
 

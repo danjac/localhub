@@ -3,12 +3,11 @@
 
 import pytest
 
-from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 
 from taggit.models import Tag
 
-from localhub.communities.models import Community, Membership
+from localhub.communities.models import Community
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
@@ -21,7 +20,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestActivityManager:
-    def test_num_reshares(self, post: Post):
+    def test_num_reshares(self, post):
 
         for _ in range(3):
             post.reshare(UserFactory())
@@ -31,7 +30,7 @@ class TestActivityManager:
         )
         assert post.num_reshares == 3
 
-    def test_has_reshared(self, post: Post, user: settings.AUTH_USER_MODEL):
+    def test_has_reshared(self, post, user):
 
         first = PostFactory()
         PostFactory()
@@ -57,14 +56,14 @@ class TestActivityManager:
             == 0
         )
 
-    def test_following_users(self, user: settings.AUTH_USER_MODEL):
+    def test_following_users(self, user):
         first_post = PostFactory()
         PostFactory()
         user.following.add(first_post.owner)
         assert Post.objects.following_users(user).get() == first_post
         assert Post.objects.following_users(AnonymousUser()).count() == 2
 
-    def test_following_tags(self, user: settings.AUTH_USER_MODEL):
+    def test_following_tags(self, user):
 
         my_post = PostFactory(owner=user)
 
@@ -85,7 +84,7 @@ class TestActivityManager:
 
         assert Post.objects.following_tags(AnonymousUser()).count() == 3
 
-    def test_following_if_no_preferences(self, user: settings.AUTH_USER_MODEL):
+    def test_following_if_no_preferences(self, user):
 
         PostFactory(owner=user)
 
@@ -100,7 +99,7 @@ class TestActivityManager:
         assert Post.objects.following(user).count() == 4
         assert Post.objects.following(AnonymousUser()).count() == 4
 
-    def test_following_users_only(self, user: settings.AUTH_USER_MODEL):
+    def test_following_users_only(self, user):
 
         my_post = PostFactory(owner=user)
 
@@ -122,7 +121,7 @@ class TestActivityManager:
 
         assert Post.objects.following(AnonymousUser()).count() == 4
 
-    def test_following_tags_only(self, user: settings.AUTH_USER_MODEL):
+    def test_following_tags_only(self, user):
 
         my_post = PostFactory(owner=user)
 
@@ -144,7 +143,7 @@ class TestActivityManager:
 
         assert Post.objects.following(AnonymousUser()).count() == 4
 
-    def test_following_users_and_tags(self, user: settings.AUTH_USER_MODEL):
+    def test_following_users_and_tags(self, user):
 
         first_post = PostFactory()
         user.following.add(first_post.owner)
@@ -163,7 +162,7 @@ class TestActivityManager:
         assert first_post in posts
         assert second_post in posts
 
-    def test_blocked_users(self, user: settings.AUTH_USER_MODEL):
+    def test_blocked_users(self, user):
 
         my_post = PostFactory(owner=user)
 
@@ -176,7 +175,7 @@ class TestActivityManager:
         assert my_post in posts
         assert second_post in posts
 
-    def test_blocked_tags(self, user: settings.AUTH_USER_MODEL):
+    def test_blocked_tags(self, user):
         first_post = PostFactory()
         second_post = PostFactory()
         third_post = PostFactory()
@@ -194,7 +193,7 @@ class TestActivityManager:
         assert my_post in posts
         assert third_post in posts
 
-    def test_blocked(self, user: settings.AUTH_USER_MODEL):
+    def test_blocked(self, user):
         first_post = PostFactory()
         second_post = PostFactory()
         third_post = PostFactory()
@@ -228,7 +227,7 @@ class TestActivityManager:
         CommentFactory.create_batch(2, content_object=post)
         assert Post.objects.with_num_comments().get().num_comments == 2
 
-    def test_with_num_likes(self, post: Post):
+    def test_with_num_likes(self, post):
         for _ in range(2):
             Like.objects.create(
                 user=UserFactory(),
@@ -239,27 +238,21 @@ class TestActivityManager:
 
         assert Post.objects.with_num_likes().get().num_likes == 2
 
-    def test_with_has_flagged_if_user_has_not_flagged(
-        self, post: Post, user: settings.AUTH_USER_MODEL
-    ):
+    def test_with_has_flagged_if_user_has_not_flagged(self, post, user):
         Flag.objects.create(
             user=user, content_object=post, community=post.community
         )
         activity = Post.objects.with_has_flagged(UserFactory()).get()
         assert not activity.has_flagged
 
-    def test_with_has_flagged_if_user_has_flagged(
-        self, post: Post, user: settings.AUTH_USER_MODEL
-    ):
+    def test_with_has_flagged_if_user_has_flagged(self, post, user):
         Flag.objects.create(
             user=user, content_object=post, community=post.community
         )
         activity = Post.objects.with_has_flagged(user).get()
         assert activity.has_flagged
 
-    def test_with_has_liked_if_user_has_not_liked(
-        self, post: Post, user: settings.AUTH_USER_MODEL
-    ):
+    def test_with_has_liked_if_user_has_not_liked(self, post, user):
         Like.objects.create(
             user=user,
             content_object=post,
@@ -269,9 +262,7 @@ class TestActivityManager:
         activity = Post.objects.with_has_liked(UserFactory()).get()
         assert not activity.has_liked
 
-    def test_with_has_liked_if_user_has_liked(
-        self, post: Post, user: settings.AUTH_USER_MODEL
-    ):
+    def test_with_has_liked_if_user_has_liked(self, post, user):
         Like.objects.create(
             user=user,
             content_object=post,
@@ -281,7 +272,7 @@ class TestActivityManager:
         activity = Post.objects.with_has_liked(user).get()
         assert activity.has_liked
 
-    def test_with_common_annotations_if_anonymous(self, post: Post):
+    def test_with_common_annotations_if_anonymous(self, post):
         activity = Post.objects.with_common_annotations(
             post.community, AnonymousUser()
         ).get()
@@ -292,9 +283,7 @@ class TestActivityManager:
         assert not hasattr(activity, "has_liked")
         assert not hasattr(activity, "has_flagged")
 
-    def test_with_common_annotations_if_authenticated(
-        self, post: Post, user: settings.AUTH_USER_MODEL
-    ):
+    def test_with_common_annotations_if_authenticated(self, post, user):
         activity = Post.objects.with_common_annotations(
             post.community, user
         ).get()
@@ -305,7 +294,7 @@ class TestActivityManager:
         assert hasattr(activity, "has_flagged")
         assert not hasattr(activity, "is_flagged")
 
-    def test_with_common_annotations_if_moderator(self, moderator: Membership):
+    def test_with_common_annotations_if_moderator(self, moderator):
         PostFactory(community=moderator.community)
         activity = Post.objects.with_common_annotations(
             moderator.community, moderator.member

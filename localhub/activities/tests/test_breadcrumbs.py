@@ -24,7 +24,7 @@ class TestGetBreadcrumbs:
         assert breadcrumbs[0][0] == settings.HOME_PAGE_URL
         assert breadcrumbs[1][0] == reverse("posts:list")
 
-    def test_get_breadcrumbs_for_instance(self, post: Post):
+    def test_get_breadcrumbs_for_instance(self, post):
         breadcrumbs = get_breadcrumbs_for_instance(post)
         assert len(breadcrumbs) == 3
 

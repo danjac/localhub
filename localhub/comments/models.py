@@ -1,8 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import List, Optional
-
 from django.conf import settings
 from django.contrib.contenttypes.fields import (
     GenericForeignKey,
@@ -38,9 +36,7 @@ class CommentAnnotationsQuerySetMixin(BaseQuerySetMixin):
     queryset.
     """
 
-    def with_num_comments(
-        self, annotated_name: str = "num_comments"
-    ) -> models.QuerySet:
+    def with_num_comments(self, annotated_name="num_comments"):
         """
         Annotates `num_comments` to the model.
         """
@@ -59,21 +55,19 @@ class CommentQuerySet(
     SearchQuerySetMixin,
     models.QuerySet,
 ):
-    def for_community(self, community: Community) -> models.QuerySet:
+    def for_community(self, community):
         """
         Both community and membership should match.
         """
         return self.filter(community=community, owner__communities=community)
 
-    def blocked_users(self, user: settings.AUTH_USER_MODEL) -> models.QuerySet:
+    def blocked_users(self, user):
 
         if user.is_anonymous:
             return self
         return self.exclude(owner__in=user.blocked.all())
 
-    def with_common_annotations(
-        self, community: Community, user: settings.AUTH_USER_MODEL
-    ) -> models.QuerySet:
+    def with_common_annotations(self, community, user):
         """
         Combines all common annotations into a single call. Applies annotations
         conditionally e.g. if user is authenticated or not.
@@ -138,47 +132,42 @@ class Comment(TimeStampedModel):
     def get_absolute_url(self) -> str:
         return reverse("comments:detail", args=[self.id])
 
-    def get_permalink(self) -> str:
+    def get_permalink(self):
         """
         Returns absolute URL including the community domain.
         """
         return self.community.resolve_url(self.get_absolute_url())
 
     @property
-    def _history_user(self) -> Optional[settings.AUTH_USER_MODEL]:
+    def _history_user(self):
         return self.editor
 
     @_history_user.setter
-    def _history_user(self, value: settings.AUTH_USER_MODEL):
+    def _history_user(self, value):
         self.editor = value
 
     @cached_property
-    def first_record(self) -> Optional[models.Model]:
+    def first_record(self):
         return self.history.first()
 
     @cached_property
-    def prev_record(self) -> Optional[models.Model]:
+    def prev_record(self):
         return self.first_record.prev_record if self.first_record else None
 
     @cached_property
-    def changed_fields(self) -> List[str]:
+    def changed_fields(self):
         if self.first_record is None or self.prev_record is None:
             return []
         return self.first_record.diff_against(self.prev_record).changed_fields
 
     @cached_property
-    def has_content_changed(self) -> bool:
+    def has_content_changed(self):
         return "content" in self.changed_fields
 
-    def get_flags(self) -> models.QuerySet:
+    def get_flags(self):
         return Flag.objects.filter(comment=self)
 
-    def make_notification(
-        self,
-        verb,
-        recipient: settings.AUTH_USER_MODEL,
-        actor: Optional[settings.AUTH_USER_MODEL] = None,
-    ) -> Notification:
+    def make_notification(self, verb, recipient, actor=None):
         return Notification(
             content_object=self,
             recipient=recipient,
@@ -187,7 +176,7 @@ class Comment(TimeStampedModel):
             verb=verb,
         )
 
-    def notify_mentioned(self, recipients) -> List[Notification]:
+    def notify_mentioned(self, recipients):
         return [
             self.make_notification("mention", recipient)
             for recipient in recipients.matches_usernames(  # noqa
@@ -195,7 +184,7 @@ class Comment(TimeStampedModel):
             ).exclude(pk=self.owner_id)
         ]
 
-    def notify_moderators(self) -> List[Notification]:
+    def notify_moderators(self):
         return [
             self.make_notification("moderator_review_request", recipient)
             for recipient in self.community.get_moderators().exclude(
@@ -203,11 +192,11 @@ class Comment(TimeStampedModel):
             )
         ]
 
-    def get_notification_recipients(self) -> models.QuerySet:
+    def get_notification_recipients(self):
         return self.community.members.exclude(blocked=self.owner)
 
-    def notify_on_create(self) -> List[Notification]:
-        notifications: List[Notification] = []
+    def notify_on_create(self):
+        notifications = []
         recipients = self.get_notification_recipients()
         notifications += self.notify_mentioned(recipients)
         notifications += self.notify_moderators()
@@ -241,8 +230,8 @@ class Comment(TimeStampedModel):
         Notification.objects.bulk_create(notifications)
         return notifications
 
-    def notify_on_update(self) -> List[Notification]:
-        notifications: List[Notification] = []
+    def notify_on_update(self):
+        notifications = []
         if not self.content_tracker.changed():
             return notifications
 

@@ -12,5 +12,5 @@ from localhub.comments.models import Comment
 @receiver(
     post_save, sender=Comment, dispatch_uid="comments.update_search_document"
 )
-def update_search_document(instance: Comment, **kwargs):
+def update_search_document(instance, **kwargs):
     transaction.on_commit(lambda: instance.search_indexer.update())

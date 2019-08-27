@@ -34,7 +34,6 @@ test:django:
   stage: test
   script:
     - docker-compose run django ./manage.py validate_templates
-    - docker-compose run django mypy localhub/
     - docker-compose run django pytest
   only:
     - master

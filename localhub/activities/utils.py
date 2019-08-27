@@ -1,7 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Optional
 
 from urllib.parse import urlparse
 
@@ -12,7 +11,7 @@ from django.core.validators import URLValidator
 _urlvalidator = URLValidator()
 
 
-def is_url(url: Optional[str]) -> bool:
+def is_url(url):
 
     if url is None:
         return False
@@ -23,7 +22,7 @@ def is_url(url: Optional[str]) -> bool:
     return True
 
 
-def get_domain(url: Optional[str]) -> Optional[str]:
+def get_domain(url):
     """
     Returns the domain of a URL. Removes any "www." at the start.
     Returns None if invalid.

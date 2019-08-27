@@ -15,5 +15,5 @@ class CommentAdmin(MarkdownFieldMixin, SimpleHistoryAdmin):
     list_display = ("owner", "community", "created")
     ordering = ("-created",)
 
-    def community(self, obj: Comment) -> str:
+    def community(self, obj):
         return obj.activity.community.name

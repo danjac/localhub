@@ -1,15 +1,13 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Optional
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.db.models import QuerySet
 from django.forms import ModelForm
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     CreateView,
@@ -38,17 +36,12 @@ from localhub.comments.forms import CommentForm
 from localhub.comments.notifications import send_comment_notifications
 from localhub.communities.models import Community
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.core.types import (
-    BaseQuerySetViewMixin,
-    BreadcrumbList,
-    ContextDict,
-)
 from localhub.core.views import BreadcrumbsMixin, SearchMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
 
 
-class ActivityQuerySetMixin(CommunityRequiredMixin, BaseQuerySetViewMixin):
+class ActivityQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self) -> QuerySet:
         return (
             super()
@@ -83,15 +76,15 @@ class ActivityCreateView(
     def get_permission_object(self) -> Community:
         return self.request.community
 
-    def get_success_message(self) -> str:
+    def get_success_message(self):
         return self.success_message
 
-    def get_breadcrumbs(self) -> BreadcrumbList:
+    def get_breadcrumbs(self):
         return get_breadcrumbs_for_model(self.model) + [
             (self.request.path, _("Submit"))
         ]
 
-    def form_valid(self, form: ModelForm) -> HttpResponse:
+    def form_valid(self, form):
 
         self.object = form.save(commit=False)
         self.object.owner = self.request.user
@@ -131,15 +124,15 @@ class ActivityUpdateView(
     success_message = _("Your changes have been saved")
     page_title = _("Edit")
 
-    def get_breadcrumbs(self) -> BreadcrumbList:
+    def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.object) + [
             (self.request.path, _("Edit"))
         ]
 
-    def get_success_message(self) -> str:
+    def get_success_message(self):
         return self.success_message
 
-    def form_valid(self, form: ModelForm) -> HttpResponse:
+    def form_valid(self, form: ModelForm):
 
         self.object = form.save(commit=False)
         self.object.editor = self.request.user
@@ -159,10 +152,10 @@ class ActivityDeleteView(
     success_url = settings.HOME_PAGE_URL
     success_message = _("The %s has been deleted")
 
-    def get_success_message(self) -> Optional[str]:
+    def get_success_message(self):
         return self.success_message % self.object._meta.verbose_name
 
-    def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()
 
@@ -177,7 +170,7 @@ class ActivityDeleteView(
 
 
 class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
-    def get_context_data(self, **kwargs) -> ContextDict:
+    def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.user.has_perm(
             "communities.moderate_community", self.request.community
@@ -201,7 +194,7 @@ class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
             .with_common_annotations(self.request.community, self.request.user)
         )
 
-    def get_breadcrumbs(self) -> BreadcrumbList:
+    def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.object)
 
     def get_flags(self) -> QuerySet:
@@ -241,7 +234,7 @@ class ActivityReshareView(PermissionRequiredMixin, SingleActivityView):
             .filter(has_reshared=False)
         )
 
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         reshare = self.object.reshare(self.request.user)
 
@@ -259,7 +252,7 @@ class ActivityReshareView(PermissionRequiredMixin, SingleActivityView):
 class ActivityLikeView(PermissionRequiredMixin, SingleActivityView):
     permission_required = "activities.like_activity"
 
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         try:
             like = Like.objects.create(
@@ -280,14 +273,14 @@ class ActivityLikeView(PermissionRequiredMixin, SingleActivityView):
 
 
 class ActivityDislikeView(LoginRequiredMixin, SingleActivityView):
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.get_likes().filter(user=request.user).delete()
         if request.is_ajax():
             return HttpResponse(status=204)
         return HttpResponseRedirect(self.object.get_absolute_url())
 
-    def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
 
 
@@ -302,11 +295,11 @@ class ActivityFlagView(
     template_name = "flags/flag_form.html"
     permission_required = "activities.flag_activity"
 
-    def dispatch(self, request, *args, **kwargs) -> HttpResponse:
+    def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super().dispatch(request, *args, **kwargs)
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return (
             super()
             .get_queryset()
@@ -314,18 +307,18 @@ class ActivityFlagView(
             .exclude(has_flagged=True)
         )
 
-    def get_permission_object(self) -> Activity:
+    def get_permission_object(self):
         return self.object
 
-    def get_breadcrumbs(self) -> BreadcrumbList:
+    def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.object) + [
             (self.request.path, _("Flag"))
         ]
 
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return self.object.get_absolute_url()
 
-    def form_valid(self, form: ModelForm) -> HttpResponse:
+    def form_valid(self, form):
         flag = form.save(commit=False)
         flag.content_object = self.object
         flag.community = self.request.community
@@ -356,17 +349,17 @@ class ActivityCommentCreateView(
     permission_required = "activities.create_comment"
     model = Activity
 
-    def dispatch(self, request, *args, **kwargs) -> HttpResponse:
+    def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super().dispatch(request, *args, **kwargs)
 
-    def get_permission_object(self) -> Activity:
+    def get_permission_object(self):
         return self.object
 
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return self.object.get_absolute_url()
 
-    def form_valid(self, form: ModelForm) -> HttpResponse:
+    def form_valid(self, form: ModelForm):
         comment = form.save(commit=False)
         comment.content_object = self.object
         comment.community = self.request.community

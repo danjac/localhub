@@ -30,16 +30,12 @@ NOTIFICATION_HEADERS = {
 }
 
 
-def send_activity_notifications(
-    activity: Activity, notification: Notification
-):
+def send_activity_notifications(activity, notification):
     send_activity_notification_push(activity, notification)
     send_activity_notification_email(activity, notification)
 
 
-def send_activity_notification_push(
-    activity: Activity, notification: Notification
-):
+def send_activity_notification_push(activity, notification):
     with override(notification.recipient.language):
 
         send_push_notification(
@@ -76,16 +72,14 @@ def send_activity_notification_email(
             )
 
 
-def get_notification_header(
-    activity: Activity, notification: Notification
-) -> str:
+def get_notification_header(activity, notification):
     return NOTIFICATION_HEADERS[notification.verb] % {
         "actor": user_display(notification.actor),
         "activity": activity._meta.verbose_name,
     }
 
 
-def send_activity_deleted_email(activity: Activity):
+def send_activity_deleted_email(activity):
 
     if activity.owner.has_email_pref("moderator_delete"):
         with override(activity.owner.language):

@@ -3,28 +3,21 @@
 
 import rules
 
-from django.conf import settings
-
-from localhub.comments.models import Comment
 from localhub.communities.rules import is_member, is_moderator
 
 
 @rules.predicate
-def is_owner(user: settings.AUTH_USER_MODEL, comment: Comment) -> bool:
+def is_owner(user, comment):
     return user.id == comment.owner_id
 
 
 @rules.predicate
-def is_comment_community_member(
-    user: settings.AUTH_USER_MODEL, comment: Comment
-) -> bool:
+def is_comment_community_member(user, comment):
     return is_member.test(user, comment.community)
 
 
 @rules.predicate
-def is_comment_community_moderator(
-    user: settings.AUTH_USER_MODEL, comment: Comment
-) -> bool:
+def is_comment_community_moderator(user, comment):
     return is_moderator.test(user, comment.community)
 
 

@@ -3,10 +3,7 @@
 
 import pytest
 
-from django.test.client import Client
 from django.urls import reverse
-
-from pytest_mock import MockFixture
 
 from localhub.comments.models import Comment
 from localhub.comments.tests.factories import CommentFactory
@@ -21,7 +18,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestCommentSearchView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         post = PostFactory(community=member.community, owner=member.member)
         comment = CommentFactory(
             community=member.community,
@@ -39,7 +36,7 @@ class TestCommentSearchView:
 
 
 class TestCommentDetailView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             owner=member.member,
@@ -54,7 +51,7 @@ class TestCommentDetailView:
 
 
 class TestCommentUpdateView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             owner=member.member,
@@ -64,12 +61,7 @@ class TestCommentUpdateView:
         response = client.get(reverse("comments:update", args=[comment.id]))
         assert response.status_code == 200
 
-    def test_post(
-        self,
-        client: Client,
-        member: Membership,
-        send_notification_webpush_mock: MockFixture,
-    ):
+    def test_post(self, client, member, send_notification_webpush_mock):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             owner=member.member,
@@ -86,7 +78,7 @@ class TestCommentUpdateView:
 
 
 class TestCommentDeleteView:
-    def test_delete(self, client: Client, member: Membership):
+    def test_delete(self, client, member):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             owner=member.member,
@@ -97,7 +89,7 @@ class TestCommentDeleteView:
         assert response.url == post.get_absolute_url()
         assert Comment.objects.count() == 0
 
-    def test_delete_by_moderator(self, client: Client, moderator: Membership):
+    def test_delete_by_moderator(self, client, moderator):
         member = MembershipFactory(community=moderator.community)
         post = PostFactory(community=moderator.community, owner=member.member)
         comment = CommentFactory(
@@ -112,12 +104,7 @@ class TestCommentDeleteView:
 
 
 class TestCommentLikeView:
-    def test_post(
-        self,
-        client: Client,
-        member: Membership,
-        send_notification_webpush_mock: MockFixture,
-    ):
+    def test_post(self, client, member, send_notification_webpush_mock):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             content_object=post,
@@ -134,7 +121,7 @@ class TestCommentLikeView:
 
 
 class TestCommentDislikeView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             content_object=post,
@@ -156,7 +143,7 @@ class TestCommentDislikeView:
 
 
 class TestFlagView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             content_object=post,
@@ -166,12 +153,7 @@ class TestFlagView:
         response = client.get(reverse("comments:flag", args=[comment.id]))
         assert response.status_code == 200
 
-    def test_post(
-        self,
-        client: Client,
-        member: Membership,
-        send_notification_webpush_mock: MockFixture,
-    ):
+    def test_post(self, client, member, send_notification_webpush_mock):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             content_object=post,

@@ -8,12 +8,7 @@ from django.utils.encoding import smart_text
 from django.utils.translation import gettext as _
 
 
-from localhub.activities.models import Activity
-from localhub.activities.types import ActivityType
-from localhub.core.types import BreadcrumbList
-
-
-def get_breadcrumbs_for_model(model: ActivityType) -> BreadcrumbList:
+def get_breadcrumbs_for_model(model):
     return [
         (settings.HOME_PAGE_URL, _("Home")),
         (
@@ -23,7 +18,7 @@ def get_breadcrumbs_for_model(model: ActivityType) -> BreadcrumbList:
     ]
 
 
-def get_breadcrumbs_for_instance(instance: Activity) -> BreadcrumbList:
+def get_breadcrumbs_for_instance(instance):
     return get_breadcrumbs_for_model(instance.__class__) + [
         (instance.get_absolute_url(), truncatechars(smart_text(instance), 60))
     ]

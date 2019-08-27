@@ -1,31 +1,25 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import List, Optional, Type
-
-from django.forms import ModelForm
-from django.urls import URLPattern, path
-
-from localhub.activities.types import ActivityType
-from localhub.core.types import ViewType
+from django.urls import path
 
 from . import generic
 
 
 def create_activity_urls(
-    model: ActivityType,
-    form_class: Optional[Type[ModelForm]] = None,
-    list_view_class: ViewType = generic.ActivityListView,
-    create_view_class: ViewType = generic.ActivityCreateView,
-    update_view_class: ViewType = generic.ActivityUpdateView,
-    detail_view_class: ViewType = generic.ActivityDetailView,
-    delete_view_class: ViewType = generic.ActivityDeleteView,
-    dislike_view_class: ViewType = generic.ActivityDislikeView,
-    flag_view_class: ViewType = generic.ActivityFlagView,
-    like_view_class: ViewType = generic.ActivityLikeView,
-    reshare_view_class: ViewType = generic.ActivityReshareView,
-    create_comment_view_class: ViewType = generic.ActivityCommentCreateView,
-) -> List[URLPattern]:
+    model,
+    form_class=None,
+    list_view_class=generic.ActivityListView,
+    create_view_class=generic.ActivityCreateView,
+    update_view_class=generic.ActivityUpdateView,
+    detail_view_class=generic.ActivityDetailView,
+    delete_view_class=generic.ActivityDeleteView,
+    dislike_view_class=generic.ActivityDislikeView,
+    flag_view_class=generic.ActivityFlagView,
+    like_view_class=generic.ActivityLikeView,
+    reshare_view_class=generic.ActivityReshareView,
+    create_comment_view_class=generic.ActivityCommentCreateView,
+):
     """
     Generates default URL patterns for activity subclasses.
 
