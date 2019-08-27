@@ -8,6 +8,7 @@ from typing import Any, Dict, List
 
 from django.urls import reverse_lazy
 
+
 from configurations import Configuration, values
 
 
@@ -102,9 +103,17 @@ class Base(Configuration):
 
     HOME_PAGE_URL = reverse_lazy("activities:stream")
 
+    # sorl
+
+    THUMBNAIL_KVSTORE = "sorl.thumbnail.kvstores.redis_kvstore.KVStore"
+    THUMBNAIL_REDIS_URL = REDIS_URL
+
+    # auth
+
     AUTH_USER_MODEL = "users.User"
 
     # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
+
     AUTHENTICATION_BACKENDS = [
         "rules.permissions.ObjectPermissionBackend",
         "django.contrib.auth.backends.ModelBackend",
@@ -272,6 +281,8 @@ class Testing(Base):
     VAPID_PUBLIC_KEY = None
     VAPID_PRIVATE_KEY = None
     VAPID_ADMIN_EMAIL = None
+
+    THUMBNAIL_KVSTORE = "sorl.thumbnail.kvstores.cached_db_kvstore.KVStore"
 
 
 class Local(DockerConfigMixin, Base):
