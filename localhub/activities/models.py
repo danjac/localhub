@@ -37,8 +37,17 @@ class ActivityQuerySet(
 ):
     def with_common_annotations(self, community, user):
         """
-        Combines all common annotations into a single call. Applies annotations
-        conditionally e.g. if user is authenticated or not.
+        Combines commonly used annotations into a single call for
+        convenience:
+            - with_num_reshares
+            - with_num_comments
+            - with_num_likes [1]
+            - with_has_liked [1]
+            - with_has_flagged [1]
+            - with_has_reshared [1]
+            - with_is_flagged [2]
+            [1]: authenticated users only
+            [2]: moderators only
         """
 
         qs = self.with_num_comments().with_num_reshares()
@@ -55,9 +64,18 @@ class ActivityQuerySet(
         return qs
 
     def with_num_reshares(self):
+        """
+        Annotates int value `num_reshares`, indicating how many times
+        this activity has been reshared.
+        """
         return self.annotate(num_reshares=models.Count("reshares"))
 
     def with_has_reshared(self, user):
+        """
+        Annotates boolean value `has_reshared`, indicating if user has
+        reshared this activity. If user is anonymous this value will
+        always be False.
+        """
         if user.is_anonymous:
             return self.annotate(
                 has_reshared=models.Value(
@@ -79,6 +97,11 @@ class ActivityQuerySet(
         return self.filter(community=community, owner__communities=community)
 
     def following_users(self, user):
+        """
+        Returns instances where the owner of each activity is either followed
+        by the user, or is the user themselves. If user is anonymous, then
+        passes an unfiltered queryset.
+        """
 
         if user.is_anonymous:
             return self
@@ -87,6 +110,11 @@ class ActivityQuerySet(
         )
 
     def following_tags(self, user):
+        """
+        Returns instances where each activity either contains tags followed
+        by the user, or is owned by user themselves. If user is anonymous, then
+        passes an unfiltered queryset.
+        """
 
         if user.is_anonymous:
             return self
@@ -95,6 +123,9 @@ class ActivityQuerySet(
         )
 
     def following(self, user):
+        """
+        Wraps the methods `following_users` and `following tags`.
+        """
 
         if user.is_anonymous or not user.home_page_filters:
             return self
@@ -110,6 +141,10 @@ class ActivityQuerySet(
         return qs
 
     def blocked_users(self, user):
+        """
+        Excludes any activities of users blocked by this user. If user
+        is anonymous then passes unfiltered queryset.
+        """
 
         if user.is_anonymous:
             return self
@@ -117,8 +152,10 @@ class ActivityQuerySet(
 
     def blocked_tags(self, user):
         """
-        Should remove all activities with tags except if user is owner
+        Excludes any activities of tags blocked by this user. If user
+        is anonymous then passes unfiltered queryset.
         """
+
         if user.is_anonymous:
             return self
         return self.exclude(
@@ -126,6 +163,9 @@ class ActivityQuerySet(
         )
 
     def blocked(self, user):
+        """
+        Wraps methods `blocked_users` and `blocked_tags`.
+        """
         if user.is_anonymous:
             return self
         return self.blocked_users(user).blocked_tags(user)
@@ -185,16 +225,18 @@ class Activity(TimeStampedModel):
 
     @property
     def _history_user(self):
+        # used by simple_history
         return self.editor
 
     @_history_user.setter
     def _history_user(self, value):
+        # used by simple_history
         self.editor = value
 
     def slugify(self):
         return slugify(smart_text(self), allow_unicode=False)
 
-    def resolve_url(self, view_name: str, *args):
+    def resolve_url(self, view_name, *args):
         return reverse(
             f"{self._meta.app_label}:{view_name}", args=[self.id] + list(args)
         )
@@ -336,6 +378,15 @@ class Activity(TimeStampedModel):
         return self.community.members.exclude(blocked=self.owner)
 
     def notify_on_create(self):
+        """
+        Generates Notification instances for users:
+        - @mentioned users
+        - users following any tags
+        - users following the owner or owner of reshared activity
+        - moderators
+
+        Users blocking the owner will not receive notifications.
+        """
         notifications = []
         recipients = self.get_notification_recipients()
 
