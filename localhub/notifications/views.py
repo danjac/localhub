@@ -6,9 +6,7 @@ import json
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
-from django.db.models import QuerySet
 from django.http import (
-    HttpRequest,
     HttpResponse,
     HttpResponseRedirect,
     JsonResponse,
@@ -20,23 +18,22 @@ from django.views.generic.list import MultipleObjectMixin
 
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.notifications.models import Notification, PushSubscription
-from localhub.core.types import ContextDict
 
 
 class NotificationQuerySetMixin(CommunityRequiredMixin, LoginRequiredMixin):
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return Notification.objects.filter(
             recipient=self.request.user, community=self.request.community
         )
 
 
 class UnreadNotificationQuerySetMixin(NotificationQuerySetMixin):
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return super().get_queryset().filter(is_read=False)
 
 
 class NotificationSuccessMixin:
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return reverse("notifications:list")
 
 
@@ -44,7 +41,7 @@ class NotificationListView(NotificationQuerySetMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
     template_name = "notifications/notification_list.html"
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return (
             super()
             .get_queryset()
@@ -54,7 +51,7 @@ class NotificationListView(NotificationQuerySetMixin, ListView):
             .order_by("is_read", "-created")
         )
 
-    def get_context_data(self, **kwargs) -> ContextDict:
+    def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["is_unread_notifications"] = (
             self.get_queryset().filter(is_read=False).exists()
@@ -71,7 +68,7 @@ class NotificationMarkAllReadView(
     MultipleObjectMixin,
     View,
 ):
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def post(self, request, *args, **kwargs):
         self.get_queryset().update(is_read=True)
         return HttpResponseRedirect(self.get_success_url())
 
@@ -85,7 +82,7 @@ class NotificationMarkReadView(
     SingleObjectMixin,
     View,
 ):
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.is_read = True
         self.object.save()
@@ -101,11 +98,11 @@ class NotificationDeleteAllView(
     MultipleObjectMixin,
     View,
 ):
-    def delete(self, request: HttpRequest) -> str:
+    def delete(self, request):
         self.get_queryset().delete()
         return HttpResponseRedirect(self.get_success_url())
 
-    def post(self, request: HttpRequest) -> HttpResponse:
+    def post(self, request):
         return self.delete(request)
 
 
@@ -115,7 +112,7 @@ notification_delete_all_view = NotificationDeleteAllView.as_view()
 class NotificationDeleteView(
     NotificationQuerySetMixin, NotificationSuccessMixin, DeleteView
 ):
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return reverse("notifications:list")
 
 
@@ -131,12 +128,12 @@ class ServiceWorkerView(TemplateView):
 
     template_name = "notifications/service_worker.js"
 
-    def get(self, *args, **kwargs) -> HttpResponse:
+    def get(self, *args, **kwargs):
         response = super().get(*args, **kwargs)
         response["Content-Type"] = "application/javascript"
         return response
 
-    def get_context_data(self, **kwargs) -> ContextDict:
+    def get_context_data(self, **kwargs):
         return {"vapid_public_key": settings.VAPID_PUBLIC_KEY}
 
 
@@ -144,7 +141,7 @@ service_worker_view = ServiceWorkerView.as_view()
 
 
 class PushSubscriptionView(CommunityRequiredMixin, LoginRequiredMixin, View):
-    def post(self, request, *args, **kwargs) -> HttpResponse:
+    def post(self, request, *args, **kwargs):
         try:
             json_body = json.loads(request.body.decode("utf-8"))
 
@@ -158,16 +155,12 @@ class PushSubscriptionView(CommunityRequiredMixin, LoginRequiredMixin, View):
 
         return self.handle_action(request, **data)
 
-    def handle_action(
-        self, request: HttpRequest, auth: str, p256dh: str, endpoint: str
-    ) -> HttpResponse:
+    def handle_action(self, request, auth, p256dh, endpoint):
         raise NotImplementedError
 
 
 class SubscribeView(PushSubscriptionView):
-    def handle_action(
-        self, request: HttpRequest, auth: str, p256dh: str, endpoint: str
-    ) -> HttpResponse:
+    def handle_action(self, request, auth, p256dh, endpoint):
 
         try:
             PushSubscription.objects.get_or_create(
@@ -187,9 +180,7 @@ subscribe_view = SubscribeView.as_view()
 
 
 class UnsubscribeView(PushSubscriptionView):
-    def handle_action(
-        self, request: HttpRequest, auth: str, p256dh: str, endpoint: str
-    ) -> HttpResponse:
+    def handle_action(self, request, auth, p256dh, endpoint):
 
         PushSubscription.objects.filter(
             auth=auth,

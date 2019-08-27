@@ -3,9 +3,6 @@
 
 import pytest
 
-from pytest_mock import MockFixture
-
-from localhub.communities.models import Membership
 from localhub.notifications.models import PushSubscription
 from localhub.notifications.tasks import send_push_notification
 
@@ -13,9 +10,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestSendPushNotification:
-    def test_send_ok(
-        self, member: Membership, send_notification_webpush_mock: MockFixture
-    ):
+    def test_send_ok(self, member, send_notification_webpush_mock):
 
         PushSubscription.objects.create(
             user=member.member,

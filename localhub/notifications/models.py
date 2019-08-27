@@ -3,7 +3,6 @@
 
 import json
 
-from typing import Any, Dict
 
 from pywebpush import WebPushException, webpush
 
@@ -64,7 +63,7 @@ class PushSubscription(models.Model):
             )
         ]
 
-    def push(self, payload: Dict[str, Any], ttl=0) -> bool:
+    def push(self, payload, ttl=0):
         """
         Sends push notification.
         If sub has expired, will delete the instance.

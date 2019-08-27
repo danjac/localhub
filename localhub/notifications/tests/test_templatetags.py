@@ -2,7 +2,6 @@ import pytest
 
 from django.contrib.auth.models import AnonymousUser
 
-from localhub.communities.models import Community, Membership
 from localhub.notifications.models import Notification
 from localhub.notifications.templatetags.notifications_tags import (
     get_unread_notification_count,
@@ -14,7 +13,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestNotificationsSubscribeBtn:
-    def test_authenticated(self, member: Membership):
+    def test_authenticated(self, member):
 
         assert notifications_subscribe_btn(
             member.member, member.community
@@ -26,10 +25,10 @@ class TestNotificationsSubscribeBtn:
 
 
 class TestGetUnreadNotificationCount:
-    def test_anonymous(self, community: Community):
+    def test_anonymous(self, community):
         assert get_unread_notification_count(AnonymousUser(), community) == 0
 
-    def test_authenticated(self, member: Membership):
+    def test_authenticated(self, member):
         post = PostFactory(community=member.community)
 
         Notification.objects.create(

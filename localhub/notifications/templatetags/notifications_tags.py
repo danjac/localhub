@@ -4,16 +4,12 @@
 from django import template
 from django.conf import settings
 
-from localhub.communities.models import Community
-from localhub.core.types import ContextDict
 
 register = template.Library()
 
 
 @register.inclusion_tag("notifications/includes/subscribe_btn.html")
-def notifications_subscribe_btn(
-    user: settings.AUTH_USER_MODEL, community: Community
-) -> ContextDict:
+def notifications_subscribe_btn(user, community):
     return {
         "user": user,
         "community": community,
@@ -22,9 +18,7 @@ def notifications_subscribe_btn(
 
 
 @register.simple_tag
-def get_unread_notification_count(
-    user: settings.AUTH_USER_MODEL, community: Community
-) -> int:
+def get_unread_notification_count(user, community):
     """
     Returns a count of the total number of *unread* notifications
     for the current user. If user not logged in just returns 0.

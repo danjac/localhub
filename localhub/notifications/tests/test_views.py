@@ -4,12 +4,9 @@
 import json
 import pytest
 
-from django.conf import settings
-from django.test.client import Client
 from django.urls import reverse
 
 from localhub.comments.tests.factories import CommentFactory
-from localhub.communities.models import Membership
 from localhub.events.tests.factories import EventFactory
 from localhub.notifications.models import Notification, PushSubscription
 from localhub.photos.tests.factories import PhotoFactory
@@ -19,7 +16,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestNotificationListView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         post = PostFactory(community=member.community)
         Notification.objects.create(
             content_object=post,
@@ -58,7 +55,7 @@ class TestNotificationListView:
 
 
 class TestNotificationMarkReadView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         post = PostFactory(community=member.community)
         notification = Notification.objects.create(
             content_object=post,
@@ -76,7 +73,7 @@ class TestNotificationMarkReadView:
 
 
 class TestNotificationMarkAllReadView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         post = PostFactory(community=member.community)
         notification = Notification.objects.create(
             content_object=post,
@@ -92,7 +89,7 @@ class TestNotificationMarkAllReadView:
 
 
 class TestNotificationDeleteView:
-    def test_delete(self, client: Client, member: Membership):
+    def test_delete(self, client, member):
         post = PostFactory(community=member.community)
         notification = Notification.objects.create(
             content_object=post,
@@ -109,7 +106,7 @@ class TestNotificationDeleteView:
 
 
 class TestNotificationDeleteAllView:
-    def test_delete(self, client: Client, member: Membership):
+    def test_delete(self, client, member):
         post = PostFactory(community=member.community)
         Notification.objects.create(
             content_object=post,
@@ -124,7 +121,7 @@ class TestNotificationDeleteAllView:
 
 
 class TestSubscribeView:
-    def test_post_if_keys_missing(self, client: Client, member: Membership):
+    def test_post_if_keys_missing(self, client, member):
         body = {"endpoint": "http://xyz"}
         response = client.post(
             reverse("notifications:subscribe"),
@@ -134,7 +131,7 @@ class TestSubscribeView:
         assert response.status_code == 400
         assert not PushSubscription.objects.exists()
 
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         body = {
             "endpoint": "http://xyz",
             "keys": {"auth": "auth", "p256dh": "xxxx"},
@@ -155,7 +152,7 @@ class TestSubscribeView:
 
 
 class TestUnsubscribeView:
-    def test_post_if_keys_missing(self, client: Client, member: Membership):
+    def test_post_if_keys_missing(self, client, member):
         body = {"endpoint": "http://xyz"}
         response = client.post(
             reverse("notifications:unsubscribe"),
@@ -164,7 +161,7 @@ class TestUnsubscribeView:
         )
         assert response.status_code == 400
 
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         PushSubscription.objects.create(
             user=member.member,
             community=member.community,
@@ -186,7 +183,7 @@ class TestUnsubscribeView:
 
 
 class TestServiceWorkerView:
-    def test_get(self, client: Client, login_user: settings.AUTH_USER_MODEL):
+    def test_get(self, client, login_user):
         response = client.get(reverse("notifications:service_worker"))
         assert response.status_code == 200
         assert response["Content-Type"] == "application/javascript"

@@ -1,22 +1,18 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Optional
 
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
-from localhub.core.types import ContextDict
-from localhub.notifications.models import Notification
-
 
 def send_notification_email(
-    notification: Notification,
-    subject: str,
-    object_url: str,
-    plain_template_name: str,
-    html_template_name: str,
-    extra_context: Optional[ContextDict] = None,
+    notification,
+    subject,
+    object_url,
+    plain_template_name,
+    html_template_name,
+    extra_context=None,
     **kwargs,
 ):
     context = {

@@ -2,24 +2,14 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from django.conf import settings
-
 from celery.utils.log import get_logger
 
-from localhub.communities.models import Community
 from localhub.notifications import tasks
 
 celery_logger = get_logger(__name__)
 
 
-def send_push_notification(
-    recipient: settings.AUTH_USER_MODEL,
-    community: Community,
-    head: str,
-    body: str,
-    url: str,
-    icon: str = "",
-):
+def send_push_notification(recipient, community, head, body, url, icon=""):
     payload = {"head": head, "body": body, "url": url}
     if icon:
         payload["icon"] = icon
