@@ -6,17 +6,16 @@ from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
 from django.utils.translation import override
 
-from localhub.private_messages.models import Message
 from localhub.notifications.utils import send_push_notification
 from localhub.users.utils import user_display
 
 
-def send_message_notifications(message: Message):
+def send_message_notifications(message):
     send_message_push(message)
     send_message_email(message)
 
 
-def send_message_email(message: Message):
+def send_message_email(message):
 
     if message.recipient.has_email_pref("new_message"):
         with override(message.recipient.language):
@@ -31,7 +30,9 @@ def send_message_email(message: Message):
 
             send_mail(
                 f"{message.community.name} | {subject}",
-                render_to_string("private_messages/emails/message.txt", context),
+                render_to_string(
+                    "private_messages/emails/message.txt", context
+                ),
                 message.community.resolve_email("no-reply"),
                 [message.recipient.email],
                 html_message=render_to_string(
@@ -40,7 +41,7 @@ def send_message_email(message: Message):
             )
 
 
-def send_message_push(message: Message):
+def send_message_push(message):
     with override(message.recipient.language):
 
         head = (

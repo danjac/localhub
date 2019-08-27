@@ -9,8 +9,6 @@ from django.urls import reverse
 
 
 from localhub.communities.models import Community
-from localhub.core.types import ContextDict
-from localhub.private_messages.models import Message
 
 register = template.Library()
 
@@ -19,14 +17,14 @@ register = template.Library()
     "private_messages/includes/message.html", takes_context=True
 )
 def show_message(
-    context: ContextDict,
-    user: settings.AUTH_USER_MODEL,
-    message: Message,
-    show_sender_info: bool = True,
-    show_recipient_info: bool = True,
-    show_parent_info: bool = True,
-    is_detail: bool = False,
-) -> ContextDict:
+    context,
+    user,
+    message,
+    show_sender_info=True,
+    show_recipient_info=True,
+    show_parent_info=True,
+    is_detail=False,
+):
 
     is_sender = user == message.sender
     is_recipient = user == message.recipient

@@ -4,10 +4,8 @@
 import pytest
 
 from django.contrib.auth.models import AnonymousUser
-from django.test.client import RequestFactory
 from django.urls import reverse
 
-from localhub.communities.models import Community, Membership
 from localhub.private_messages.templatetags.private_messages_tags import (
     get_unread_message_count,
     show_message,
@@ -18,7 +16,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestShowMessage:
-    def test_is_sender(self, req_factory: RequestFactory, member: Membership):
+    def test_is_sender(self, req_factory, member):
         message = MessageFactory(
             sender=member.member, community=member.community
         )
@@ -32,9 +30,7 @@ class TestShowMessage:
             "users:messages", args=[message.recipient.username]
         )
 
-    def test_is_recipient(
-        self, req_factory: RequestFactory, member: Membership
-    ):
+    def test_is_recipient(self, req_factory, member):
         message = MessageFactory(
             recipient=member.member, community=member.community
         )
@@ -49,9 +45,7 @@ class TestShowMessage:
             "users:messages", args=[message.sender.username]
         )
 
-    def test_is_recipient_sender_has_blocked(
-        self, req_factory: RequestFactory, member: Membership
-    ):
+    def test_is_recipient_sender_has_blocked(self, req_factory, member):
         message = MessageFactory(
             recipient=member.member, community=member.community
         )
@@ -66,9 +60,7 @@ class TestShowMessage:
             "users:messages", args=[message.sender.username]
         )
 
-    def test_is_sender_has_reply(
-        self, req_factory: RequestFactory, member: Membership
-    ):
+    def test_is_sender_has_reply(self, req_factory, member):
         message = MessageFactory(
             sender=member.member, community=member.community
         )
@@ -89,9 +81,7 @@ class TestShowMessage:
             "users:messages", args=[message.recipient.username]
         )
 
-    def test_is_recipient_has_reply(
-        self, req_factory: RequestFactory, member: Membership
-    ):
+    def test_is_recipient_has_reply(self, req_factory, member):
         message = MessageFactory(
             recipient=member.member, community=member.community
         )
@@ -114,9 +104,9 @@ class TestShowMessage:
 
 
 class TestGetUnreadMessageCount:
-    def test_anonymous(self, community: Community):
+    def test_anonymous(self, community):
         assert get_unread_message_count(AnonymousUser(), community) == 0
 
-    def test_authenticated(self, member: Membership):
+    def test_authenticated(self, member):
         MessageFactory(community=member.community, recipient=member.member)
         assert get_unread_message_count(member.member, member.community) == 1

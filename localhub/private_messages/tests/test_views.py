@@ -1,11 +1,7 @@
 import pytest
 
-from django.test.client import Client
 from django.urls import reverse
 
-from pytest_mock import MockFixture
-
-from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.private_messages.models import Message
 from localhub.private_messages.tests.factories import MessageFactory
@@ -14,21 +10,21 @@ pytestmark = pytest.mark.django_db
 
 
 class TestInboxView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         MessageFactory(community=member.community, recipient=member.member)
         response = client.get(reverse("private_messages:inbox"))
         assert len(response.context["object_list"]) == 1
 
 
 class TestOutboxView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         MessageFactory(community=member.community, sender=member.member)
         response = client.get(reverse("private_messages:outbox"))
         assert len(response.context["object_list"]) == 1
 
 
 class TestMessageUpdateView:
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         message = MessageFactory(
             community=member.community, sender=member.member
         )
@@ -37,7 +33,7 @@ class TestMessageUpdateView:
         )
         assert response.status_code == 200
 
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         message = MessageFactory(
             community=member.community, sender=member.member
         )
@@ -51,7 +47,7 @@ class TestMessageUpdateView:
 
 
 class TestMessageDeleteView:
-    def test_delete(self, client: Client, member: Membership):
+    def test_delete(self, client, member):
         message = MessageFactory(
             community=member.community, sender=member.member
         )
@@ -63,7 +59,7 @@ class TestMessageDeleteView:
 
 
 class TestMessageMarkReadView:
-    def test_post(self, client: Client, member: Membership):
+    def test_post(self, client, member):
         message = MessageFactory(
             community=member.community, recipient=member.member
         )
@@ -76,14 +72,14 @@ class TestMessageMarkReadView:
 
 
 class TestMessageDetailView:
-    def test_get_if_sender(self, client: Client, member: Membership):
+    def test_get_if_sender(self, client, member):
         message = MessageFactory(
             community=member.community, sender=member.member
         )
         response = client.get(message.get_absolute_url())
         assert response.status_code == 200
 
-    def test_get_if_recipient(self, client: Client, member: Membership):
+    def test_get_if_recipient(self, client, member):
         message = MessageFactory(
             community=member.community, recipient=member.member
         )
@@ -91,7 +87,7 @@ class TestMessageDetailView:
         assert response.status_code == 200
 
     def test_get_if_neither_recipient_nor_sender(
-        self, client: Client, member: Membership
+        self, client, member
     ):
         message = MessageFactory(community=member.community)
         response = client.get(message.get_absolute_url())
@@ -99,7 +95,7 @@ class TestMessageDetailView:
 
 
 class TestMessageReplyView:
-    def test_post_if_sender_blocked(self, client: Client, member: Membership):
+    def test_post_if_sender_blocked(self, client, member):
         recipient = MembershipFactory(community=member.community).member
         recipient.blocked.add(member.member)
         parent = MessageFactory(
@@ -115,9 +111,9 @@ class TestMessageReplyView:
 
     def test_post(
         self,
-        client: Client,
-        member: Membership,
-        send_notification_webpush_mock: MockFixture,
+        client,
+        member,
+        send_notification_webpush_mock,
     ):
         recipient = MembershipFactory(community=member.community).member
         parent = MessageFactory(
@@ -140,7 +136,7 @@ class TestMessageReplyView:
 
 
 class TestMessageCreateView:
-    def test_post_if_sender_blocked(self, client: Client, member: Membership):
+    def test_post_if_sender_blocked(self, client, member):
         recipient = MembershipFactory(community=member.community).member
         recipient.blocked.add(member.member)
         response = client.post(
@@ -153,9 +149,9 @@ class TestMessageCreateView:
 
     def test_post(
         self,
-        client: Client,
-        member: Membership,
-        send_notification_webpush_mock: MockFixture,
+        client,
+        member,
+        send_notification_webpush_mock,
     ):
         recipient = MembershipFactory(community=member.community).member
         response = client.post(
@@ -172,7 +168,7 @@ class TestMessageCreateView:
 
         assert send_notification_webpush_mock.called_once()
 
-    def test_get(self, client: Client, member: Membership):
+    def test_get(self, client, member):
         recipient = MembershipFactory(community=member.community).member
         response = client.get(
             reverse(

@@ -16,9 +16,7 @@ from localhub.core.utils.search import SearchIndexer, SearchQuerySetMixin
 
 
 class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
-    def with_sender_has_blocked(
-        self, user: settings.AUTH_USER_MODEL
-    ) -> models.QuerySet:
+    def with_sender_has_blocked(self, user):
         return self.annotate(
             sender_has_blocked=models.Exists(
                 user.blockers.filter(pk=models.OuterRef("sender_id"))
@@ -60,10 +58,10 @@ class Message(TimeStampedModel):
             models.Index(fields=["created", "-created", "read"]),
         ]
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.message
 
-    def get_abbreviation(self, length: int = 60) -> str:
+    def get_abbreviation(self, length=60):
         """
         Returns non-HTML/markdown abbreviated version of message.
         """
@@ -72,8 +70,8 @@ class Message(TimeStampedModel):
         )
         return truncatechars(text, length)
 
-    def get_absolute_url(self) -> str:
+    def get_absolute_url(self):
         return reverse("private_messages:message_detail", args=[self.id])
 
-    def get_permalink(self) -> str:
+    def get_permalink(self):
         return self.community.resolve_url(self.get_absolute_url())

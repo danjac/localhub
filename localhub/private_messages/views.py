@@ -8,8 +8,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import F, Q, QuerySet
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.db.models import F, Q
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -25,9 +25,7 @@ from django.views.generic.detail import SingleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
-from localhub.communities.models import Community
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.core.types import BreadcrumbList, ContextDict
 from localhub.core.views import BreadcrumbsMixin, SearchMixin
 from localhub.private_messages.forms import MessageForm
 from localhub.private_messages.models import Message
@@ -37,7 +35,7 @@ from localhub.users.views import UserSlugMixin
 
 
 class MessageQuerySetMixin(CommunityRequiredMixin):
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return Message.objects.filter(community=self.request.community)
 
 
@@ -66,7 +64,7 @@ class InboxView(MessageListView):
 
     template_name = "private_messages/inbox.html"
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         qs = (
             super()
             .get_queryset()
@@ -91,7 +89,7 @@ class OutboxView(MessageListView):
 
     template_name = "private_messages/outbox.html"
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         qs = (
             super()
             .get_queryset()
@@ -116,12 +114,12 @@ class MessageFormView(
     template_name = "private_messages/message_form.html"
     form_class = MessageForm
 
-    def get_permission_object(self) -> Community:
+    def get_permission_object(self):
         return self.request.community
 
 
 class MessageReplyView(SingleObjectMixin, BreadcrumbsMixin, MessageFormView):
-    def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def dispatch(self, request, *args, **kwargs):
 
         self.parent = self.object = self.get_object(
             queryset=Message.objects.filter(
@@ -136,30 +134,30 @@ class MessageReplyView(SingleObjectMixin, BreadcrumbsMixin, MessageFormView):
             )
         return super().dispatch(request, *args, **kwargs)
 
-    def get_breadcrumbs(self) -> BreadcrumbList:
+    def get_breadcrumbs(self):
         return [
             (reverse("private_messages:inbox"), _("Inbox")),
             (self.parent.get_absolute_url(), self.parent.get_abbreviation()),
             ("#", _("Reply")),
         ]
 
-    def get_context_data(self, **kwargs) -> ContextDict:
+    def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["recipient"] = self.recipient
         data["parent"] = self.parent
         return data
 
-    def get_initial(self) -> ContextDict:
+    def get_initial(self):
         initial = super().get_initial()
         initial["message"] = "\n".join(
             [f"> {line}" for line in self.parent.message.splitlines()]
         )
         return initial
 
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return self.message.get_absolute_url()
 
-    def form_valid(self, form) -> HttpResponse:
+    def form_valid(self, form):
         self.message = form.save(commit=False)
         self.message.community = self.request.community
         self.message.sender = self.request.user
@@ -180,7 +178,7 @@ message_reply_view = MessageReplyView.as_view()
 
 
 class MessageCreateView(SingleUserMixin, BreadcrumbsMixin, MessageFormView):
-    def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def dispatch(self, request, *args, **kwargs):
         self.recipient = self.object = self.get_object(
             queryset=self.get_user_queryset()
         )
@@ -190,7 +188,7 @@ class MessageCreateView(SingleUserMixin, BreadcrumbsMixin, MessageFormView):
             )
         return super().dispatch(request, *args, **kwargs)
 
-    def get_breadcrumbs(self) -> BreadcrumbList:
+    def get_breadcrumbs(self):
         return [
             (
                 reverse("users:messages", args=[self.recipient.username]),
@@ -199,15 +197,15 @@ class MessageCreateView(SingleUserMixin, BreadcrumbsMixin, MessageFormView):
             ("#", _("Send Message")),
         ]
 
-    def get_context_data(self, **kwargs) -> ContextDict:
+    def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["recipient"] = self.recipient
         return data
 
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return self.message.get_absolute_url()
 
-    def form_valid(self, form) -> HttpResponse:
+    def form_valid(self, form):
         self.message = form.save(commit=False)
         self.message.community = self.request.community
         self.message.sender = self.request.user
@@ -228,7 +226,7 @@ message_create_view = MessageCreateView.as_view()
 class MessageDetailView(
     MessageQuerySetMixin, LoginRequiredMixin, BreadcrumbsMixin, DetailView
 ):
-    def get_breadcrumbs(self) -> BreadcrumbList:
+    def get_breadcrumbs(self):
         if self.request.user == self.object.sender:
             breadcrumbs = [(reverse("private_messages:outbox"), _("Outbox"))]
         else:
@@ -245,7 +243,7 @@ class MessageDetailView(
         breadcrumbs.append(("#", self.object.get_abbreviation()))
         return breadcrumbs
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return (
             super()
             .get_queryset()
@@ -276,21 +274,21 @@ class MessageUpdateView(
 ):
     form_class = MessageForm
 
-    def get_success_message(self, cleaned_data: ContextDict) -> str:
+    def get_success_message(self, cleaned_data):
         return _("Your message has been updated")
 
-    def get_breadcrumbs(self) -> BreadcrumbList:
+    def get_breadcrumbs(self):
         return [
             (reverse("private_messages:outbox"), _("Outbox")),
             ("#", _("Edit Message")),
         ]
 
-    def get_form(self) -> MessageForm:
+    def get_form(self):
         form = super().get_form()
         form.fields["message"].label = _("Edit Message")
         return form
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return super().get_queryset().filter(sender=self.request.user)
 
 
@@ -298,10 +296,10 @@ message_update_view = MessageUpdateView.as_view()
 
 
 class MessageDeleteView(MessageQuerySetMixin, DeleteView):
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         return reverse("private_messages:outbox")
 
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return super().get_queryset().filter(sender=self.request.user)
 
 
@@ -309,14 +307,14 @@ message_delete_view = MessageDeleteView.as_view()
 
 
 class MessageMarkReadView(MessageQuerySetMixin, SingleObjectMixin, View):
-    def get_queryset(self) -> QuerySet:
+    def get_queryset(self):
         return (
             super()
             .get_queryset()
             .filter(recipient=self.request.user, read__isnull=True)
         )
 
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def post(self, request, *args, **kwargs):
         message = self.get_object()
         message.read = timezone.now()
         message.save()

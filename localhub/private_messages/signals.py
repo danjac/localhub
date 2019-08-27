@@ -14,5 +14,5 @@ from localhub.private_messages.models import Message
     sender=Message,
     dispatch_uid="private_messages.update_search_document",
 )
-def update_search_document(instance: Message, **kwargs):
+def update_search_document(instance):
     transaction.on_commit(lambda: instance.search_indexer.update())
