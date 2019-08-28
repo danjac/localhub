@@ -19,7 +19,7 @@
   {% endif %}
   <a href="{% url 'notifications:delete_all' %}"
      data-controller="confirm ajax"
-     data-action="confirm#check ajax#delete"
+     data-action="confirm#check ajax#post"
      data-confirm-header="{% trans 'Delete All' %}"
      data-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}"
      >{% trans "Delete All" %}</a>
@@ -79,7 +79,7 @@
           {% endif %}
           <a href="{% url 'notifications:delete' notification.pk %}"
              data-controller="ajax"
-             data-action="ajax#delete"
+             data-action="ajax#post"
              >{% trans "Delete" %}</a>
         </div>
 

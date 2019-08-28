@@ -6,15 +6,11 @@ import json
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
-from django.http import (
-    HttpResponse,
-    HttpResponseRedirect,
-    JsonResponse,
-)
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from django.views.generic import DeleteView, ListView, TemplateView, View
-from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.list import MultipleObjectMixin
+from django.views.generic import View
+
+from vanilla import DeleteView, ListView, TemplateView, GenericModelView
 
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.notifications.models import Notification, PushSubscription
@@ -32,7 +28,7 @@ class UnreadNotificationQuerySetMixin(NotificationQuerySetMixin):
         return super().get_queryset().filter(is_read=False)
 
 
-class NotificationSuccessMixin:
+class NotificationSuccessRedirectMixin:
     def get_success_url(self):
         return reverse("notifications:list")
 
@@ -40,6 +36,7 @@ class NotificationSuccessMixin:
 class NotificationListView(NotificationQuerySetMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
     template_name = "notifications/notification_list.html"
+    model = Notification
 
     def get_queryset(self):
         return (
@@ -64,9 +61,8 @@ notification_list_view = NotificationListView.as_view()
 
 class NotificationMarkAllReadView(
     UnreadNotificationQuerySetMixin,
-    NotificationSuccessMixin,
-    MultipleObjectMixin,
-    View,
+    NotificationSuccessRedirectMixin,
+    GenericModelView,
 ):
     def post(self, request, *args, **kwargs):
         self.get_queryset().update(is_read=True)
@@ -78,14 +74,13 @@ notification_mark_all_read_view = NotificationMarkAllReadView.as_view()
 
 class NotificationMarkReadView(
     UnreadNotificationQuerySetMixin,
-    NotificationSuccessMixin,
-    SingleObjectMixin,
-    View,
+    NotificationSuccessRedirectMixin,
+    GenericModelView,
 ):
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.is_read = True
-        self.object.save()
+        notification = self.get_object()
+        notification.is_read = True
+        notification.save()
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -94,9 +89,8 @@ notification_mark_read_view = NotificationMarkReadView.as_view()
 
 class NotificationDeleteAllView(
     NotificationQuerySetMixin,
-    NotificationSuccessMixin,
-    MultipleObjectMixin,
-    View,
+    NotificationSuccessRedirectMixin,
+    GenericModelView,
 ):
     def delete(self, request):
         self.get_queryset().delete()
@@ -110,10 +104,9 @@ notification_delete_all_view = NotificationDeleteAllView.as_view()
 
 
 class NotificationDeleteView(
-    NotificationQuerySetMixin, NotificationSuccessMixin, DeleteView
+    NotificationQuerySetMixin, NotificationSuccessRedirectMixin, DeleteView
 ):
-    def get_success_url(self):
-        return reverse("notifications:list")
+    ...
 
 
 notification_delete_view = NotificationDeleteView.as_view()

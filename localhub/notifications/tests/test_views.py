@@ -89,7 +89,7 @@ class TestNotificationMarkAllReadView:
 
 
 class TestNotificationDeleteView:
-    def test_delete(self, client, member):
+    def test_post(self, client, member):
         post = PostFactory(community=member.community)
         notification = Notification.objects.create(
             content_object=post,
@@ -98,7 +98,7 @@ class TestNotificationDeleteView:
             community=post.community,
             verb="created",
         )
-        response = client.delete(
+        response = client.post(
             reverse("notifications:delete", args=[notification.id])
         )
         assert response.url == reverse("notifications:list")
