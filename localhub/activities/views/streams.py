@@ -75,6 +75,14 @@ class TimelineView(StreamView):
     template_name = "activities/timeline.html"
     paginate_by = settings.DEFAULT_PAGE_SIZE * 2
 
+    """
+    TBD: call queryset.dates() to get the list of years/months
+    and allow for specific year/month links on this page.
+
+    For current year, show individual months in one row
+    Underneath show previous/future years.
+    """
+
     @cached_property
     def sort_by_ascending(self):
         return self.request.GET.get("order") == "asc"
