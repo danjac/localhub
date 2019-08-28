@@ -75,7 +75,7 @@ class InboxView(MessageListView):
             )
         )
         if self.search_query:
-            return qs.search(self.search_query).order_by("-rank")
+            return qs.search(self.search_query).order_by("-rank", "-created")
         return qs.order_by(F("read").desc(nulls_first=True), "-created")
 
 
@@ -99,7 +99,7 @@ class OutboxView(MessageListView):
             )
         )
         if self.search_query:
-            return qs.search(self.search_query).order_by("-rank")
+            return qs.search(self.search_query).order_by("-rank", "-created")
         return qs.order_by("-created")
 
 

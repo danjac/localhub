@@ -8,26 +8,26 @@ import Turbolinks from 'turbolinks';
 export default class extends Controller {
   // handles simple non-form AJAX interactions
   get(event) {
-    this.send('GET', event);
+    this.dispatch('GET', event);
   }
 
   post(event) {
-    this.send('POST', event);
+    this.dispatch('POST', event);
   }
 
   delete(event) {
-    this.send('DELETE', event);
+    this.dispatch('DELETE', event);
   }
 
   put(event) {
-    this.send('PUT', event);
+    this.dispatch('PUT', event);
   }
 
   patch(event) {
-    this.send('PATCH', event);
+    this.dispatch('PATCH', event);
   }
 
-  send(method, event) {
+  dispatch(method, event) {
     event.preventDefault();
 
     // anchor doesn't have disabled attr, we'll simulate here

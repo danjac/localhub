@@ -55,34 +55,30 @@ export default class extends Controller {
     };
     registration.pushManager.subscribe(options).then(subscription => {
       this.showUnsubscribeBtn();
-      return axios.post(
-        this.data.get('subscribe-url'),
-        JSON.stringify(subscription),
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+      return this.syncWithServer(subscription, this.data.get('subscribe-url'));
     });
   }
 
   unsubscribe(event) {
     event.preventDefault();
     this.showSubscribeBtn();
-    registration.pushManager.getSubscription().then(subscription =>
-      subscription.unsubscribe().then(
-        axios.post(
-          this.data.get('unsubscribe-url'),
-          JSON.stringify(subscription),
-          {
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        )
-      )
-    );
+    registration.pushManager
+      .getSubscription()
+      .then(subscription =>
+        subscription
+          .unsubscribe()
+          .then(
+            this.syncWithServer(subscription, this.data.get('unsubscribe-url'))
+          )
+      );
+  }
+
+  syncWithServer(subscription, url) {
+    return axios.post(url, JSON.stringify(subscription), {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
 
   showSubscribeBtn() {
