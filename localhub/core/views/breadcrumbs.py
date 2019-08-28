@@ -34,6 +34,6 @@ class BreadcrumbsMixin:
         return self.breadcrumbs or []
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data()
+        data = super().get_context_data(**kwargs)
         data["breadcrumbs"] = self.get_breadcrumbs()
         return data

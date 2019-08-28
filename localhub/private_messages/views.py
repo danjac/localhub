@@ -131,17 +131,17 @@ class MessageReplyView(BreadcrumbsMixin, MessageFormView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data["recipient"] = self.recipient
+        data["recipient"] = self.parent.sender
         data["parent"] = self.parent
         return data
 
-    def get_form(self, data, files, **kwargs):
+    def get_form(self, data=None, files=None):
         initial = {
             "message": "\n".join(
                 [f"> {line}" for line in self.parent.message.splitlines()]
             )
         }
-        return MessageForm(data, files, initial=initial, **kwargs)
+        return MessageForm(data, files, initial=initial)
 
     def form_valid(self, form):
         message = form.save(commit=False)
@@ -167,7 +167,8 @@ class MessageCreateView(BreadcrumbsMixin, MessageFormView):
     @cached_property
     def recipient(self):
         return get_object_or_404(
-            get_user_model().objects.exclude(pk=self.request.user.id)
+            get_user_model()
+            .objects.exclude(pk=self.request.user.id)
             .exclude(blocked=self.request.user)
             .active(self.request.community),
             username=self.kwargs["slug"],

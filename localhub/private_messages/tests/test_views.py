@@ -120,6 +120,19 @@ class TestMessageReplyView:
         )
         assert response.status_code == 404
 
+    def test_get(self, client, member):
+        recipient = MembershipFactory(community=member.community).member
+        parent = MessageFactory(
+            community=member.community,
+            sender=recipient,
+            recipient=member.member,
+        )
+        response = client.get(
+            reverse("private_messages:message_reply", args=[parent.id]),
+            {"message": "test"},
+        )
+        assert response.status_code == 200
+
     def test_post(self, client, member, send_notification_webpush_mock):
         recipient = MembershipFactory(community=member.community).member
         parent = MessageFactory(
