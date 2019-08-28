@@ -47,11 +47,11 @@ class TestMessageUpdateView:
 
 
 class TestMessageDeleteView:
-    def test_delete(self, client, member):
+    def test_post(self, client, member):
         message = MessageFactory(
             community=member.community, sender=member.member
         )
-        response = client.delete(
+        response = client.post(
             reverse("private_messages:message_delete", args=[message.id])
         )
         assert response.url == reverse("private_messages:outbox")
@@ -118,7 +118,7 @@ class TestMessageReplyView:
             reverse("private_messages:message_reply", args=[parent.id]),
             {"message": "test"},
         )
-        assert response.status_code == 403
+        assert response.status_code == 404
 
     def test_post(self, client, member, send_notification_webpush_mock):
         recipient = MembershipFactory(community=member.community).member
@@ -151,7 +151,7 @@ class TestMessageCreateView:
             ),
             {"message": "test"},
         )
-        assert response.status_code == 403
+        assert response.status_code == 404
 
     def test_post(self, client, member, send_notification_webpush_mock):
         recipient = MembershipFactory(community=member.community).member

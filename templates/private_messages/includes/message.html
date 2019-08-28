@@ -68,7 +68,7 @@
       <a href="{% url 'private_messages:message_update' message.id %}">{% trans "Edit" %}</a>
       <a href="{% url 'private_messages:message_delete' message.id %}"
          data-controller="ajax confirm"
-         data-action="confirm#check ajax#delete"
+         data-action="confirm#check ajax#post"
          data-ajax-redirect="{{ post_delete_redirect|default:request.path }}"
          data-confirm-header="{% trans 'Delete' %}"
          data-confirm-body="{% trans 'Are you sure you want to delete this message?' %}"
