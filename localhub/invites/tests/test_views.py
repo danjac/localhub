@@ -60,10 +60,10 @@ class TestInviteDeleteView:
         response = client.get(reverse("invites:delete", args=[invite.id]))
         assert response.status_code == 200
 
-    def test_delete(self, client, admin, mailoutbox):
+    def test_post(self, client, admin, mailoutbox):
 
         invite = InviteFactory(community=admin.community)
-        response = client.delete(reverse("invites:delete", args=[invite.id]))
+        response = client.post(reverse("invites:delete", args=[invite.id]))
         assert response.url == reverse("invites:list")
         assert not Invite.objects.exists()
 

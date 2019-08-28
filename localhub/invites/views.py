@@ -7,14 +7,14 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import redirect_to_login
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
-from django.views.generic import CreateView, DeleteView, ListView, View
-from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.list import MultipleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
+
+from vanilla import CreateView, DeleteView, GenericModelView, ListView
 
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
@@ -29,22 +29,15 @@ class InviteQuerySetMixin(CommunityRequiredMixin):
         return Invite.objects.filter(community=self.request.community)
 
 
-class SingleInviteMixin(InviteQuerySetMixin, SingleObjectMixin):
-    ...
-
-
-class MultipleInviteMixin(InviteQuerySetMixin, MultipleObjectMixin):
-    ...
-
-
-class SingleInviteView(SingleInviteMixin, View):
+class BaseSingleInviteView(InviteQuerySetMixin, GenericModelView):
     ...
 
 
 class InviteListView(
-    LoginRequiredMixin, PermissionRequiredMixin, MultipleInviteMixin, ListView
+    LoginRequiredMixin, PermissionRequiredMixin, InviteQuerySetMixin, ListView
 ):
     permission_required = "communities.manage_community"
+    model = Invite
 
     def get_permission_object(self):
         return self.request.community
@@ -67,24 +60,22 @@ class InviteCreateView(
     def get_permission_object(self):
         return self.request.community
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update({"community": self.request.community})
-        return kwargs
+    def get_form(self, data=None, files=None):
+        return self.form_class(self.request.community, data, files)
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.sender = self.request.user
-        self.object.community = self.request.community
-        self.object.sent = timezone.now()
-        self.object.save()
+        invite = form.save(commit=False)
+        invite.sender = self.request.user
+        invite.community = self.request.community
+        invite.sent = timezone.now()
+        invite.save()
 
         # send email to recipient
-        send_invitation_email(self.object)
+        send_invitation_email(invite)
 
         messages.success(
             self.request,
-            _("Your invitation has been sent to %s") % self.object.email,
+            _("Your invitation has been sent to %s") % invite.email,
         )
 
         return HttpResponseRedirect(self.get_success_url())
@@ -94,7 +85,7 @@ invite_create_view = InviteCreateView.as_view()
 
 
 class InviteResendView(
-    LoginRequiredMixin, PermissionRequiredMixin, SingleInviteView
+    LoginRequiredMixin, PermissionRequiredMixin, BaseSingleInviteView
 ):
     permission_required = "communities.manage_community"
 
@@ -105,29 +96,29 @@ class InviteResendView(
         return super().get_queryset().filter(status=Invite.STATUS.pending)
 
     def get(self, request, *args, **kwargs):
-        # should be a POST, but whatever
-        self.object = self.get_object()
-        self.object.sent = timezone.now()
-        self.object.save()
+        invite = self.get_object()
+        invite.sent = timezone.now()
+        invite.save()
 
-        send_invitation_email(self.object)
+        send_invitation_email(invite)
         messages.success(
-            self.request, _("Email has been re-sent to %s") % self.object.email
+            self.request, _("Email has been re-sent to %s") % invite.email
         )
-        return HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse("invites:list")
+        return redirect("invites:list")
 
 
 invite_resend_view = InviteResendView.as_view()
 
 
 class InviteDeleteView(
-    LoginRequiredMixin, PermissionRequiredMixin, SingleInviteMixin, DeleteView
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    InviteQuerySetMixin,
+    DeleteView,
 ):
     permission_required = "communities.manage_community"
     success_url = reverse_lazy("invites:list")
+    model = Invite
 
     def get_permission_object(self):
         return self.request.community
@@ -136,7 +127,7 @@ class InviteDeleteView(
 invite_delete_view = InviteDeleteView.as_view()
 
 
-class InviteAcceptView(SingleInviteView):
+class InviteAcceptView(BaseSingleInviteView):
     """
     Handles an invite accept action.
 
