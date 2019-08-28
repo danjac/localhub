@@ -78,18 +78,18 @@ class TestCommentUpdateView:
 
 
 class TestCommentDeleteView:
-    def test_delete(self, client, member):
+    def test_post(self, client, member):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             owner=member.member,
             content_object=post,
             community=member.community,
         )
-        response = client.delete(reverse("comments:delete", args=[comment.id]))
+        response = client.post(reverse("comments:delete", args=[comment.id]))
         assert response.url == post.get_absolute_url()
         assert Comment.objects.count() == 0
 
-    def test_delete_by_moderator(self, client, moderator):
+    def test_post_by_moderator(self, client, moderator):
         member = MembershipFactory(community=moderator.community)
         post = PostFactory(community=moderator.community, owner=member.member)
         comment = CommentFactory(
@@ -97,7 +97,7 @@ class TestCommentDeleteView:
             content_object=post,
             community=moderator.community,
         )
-        response = client.delete(reverse("comments:delete", args=[comment.id]))
+        response = client.post(reverse("comments:delete", args=[comment.id]))
 
         assert response.url == post.get_absolute_url()
         assert Comment.objects.count() == 0

@@ -302,6 +302,8 @@ class UserCommentListView(SingleUserMixin, CommentListView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        # placeholder
+        data["object_list"] = self.object_list
         data["num_likes"] = (
             Like.objects.for_models(Comment)
             .filter(recipient=self.object, community=self.request.community)

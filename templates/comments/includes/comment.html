@@ -78,7 +78,7 @@
       {% url 'comments:delete' comment.id as delete_url %}
       <a href="{{ delete_url }}"
          data-controller="ajax confirm"
-         data-action="confirm#check ajax#delete"
+         data-action="confirm#check ajax#post"
          {% if not is_detail %}
          data-ajax-redirect="{{ request.get_full_path }}"
          {% endif %}
