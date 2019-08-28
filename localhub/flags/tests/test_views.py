@@ -25,13 +25,13 @@ class TestFlagListView:
 
 
 class TestFlagDeleteView:
-    def test_delete(self, client, moderator):
+    def test_post(self, client, moderator):
         post = PostFactory(community=moderator.community)
         flag = Flag.objects.create(
             content_object=post,
             community=moderator.community,
             user=UserFactory(),
         )
-        response = client.delete(reverse("flags:delete", args=[flag.id]))
+        response = client.post(reverse("flags:delete", args=[flag.id]))
         assert response.url == post.get_absolute_url()
         assert not Flag.objects.exists()

@@ -4,7 +4,8 @@
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import DeleteView, ListView
+
+from vanilla import DeleteView, ListView
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -26,6 +27,7 @@ class FlagPermissionRequiredMixin(LoginRequiredMixin, PermissionRequiredMixin):
 
 class FlagListView(FlagPermissionRequiredMixin, FlagQuerySetMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
+    model = Flag
 
     def get_queryset(self):
         return (
@@ -43,6 +45,8 @@ flag_list_view = FlagListView.as_view()
 class FlagDeleteView(
     FlagPermissionRequiredMixin, FlagQuerySetMixin, DeleteView
 ):
+    model = Flag
+
     def get_success_url(self):
         return self.object.content_object.get_absolute_url()
 
