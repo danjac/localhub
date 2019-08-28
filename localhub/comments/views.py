@@ -13,6 +13,7 @@ from django.utils.translation import gettext as _
 from rules.contrib.views import PermissionRequiredMixin
 
 from vanilla import (
+    DeleteView,
     DetailView,
     FormView,
     GenericModelView,
@@ -38,6 +39,10 @@ class CommentQuerySetMixin(CommunityRequiredMixin):
         return Comment.objects.for_community(
             self.request.community
         ).select_related("owner", "community")
+
+
+class BaseCommentListView(CommentQuerySetMixin, ListView):
+    paginate_by = settings.DEFAULT_PAGE_SIZE
 
 
 class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
@@ -98,9 +103,10 @@ comment_update_view = CommentUpdateView.as_view()
 
 
 class CommentDeleteView(
-    PermissionRequiredMixin, CommentQuerySetMixin, GenericModelView
+    PermissionRequiredMixin, CommentQuerySetMixin, DeleteView
 ):
     permission_required = "comments.delete_comment"
+    template_name = "comments/comment_confirm_delete.html"
 
     def post(self, request, *args, **kwargs):
         comment = self.get_object()
@@ -210,11 +216,7 @@ class CommentFlagView(
 comment_flag_view = CommentFlagView.as_view()
 
 
-class CommentListView(CommentQuerySetMixin, ListView):
-    paginate_by = settings.DEFAULT_PAGE_SIZE
-
-
-class CommentSearchView(SearchMixin, CommentListView):
+class CommentSearchView(SearchMixin, BaseCommentListView):
     template_name = "comments/search.html"
 
     def get_queryset(self):

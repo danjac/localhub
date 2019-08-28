@@ -7,23 +7,17 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import BooleanField, Q, QuerySet, Value
-from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import (
-    DeleteView,
-    DetailView,
-    ListView,
-    UpdateView,
-    View,
-)
-from django.views.generic.base import ContextMixin
-from django.views.generic.detail import SingleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
+from vanilla import DeleteView, ListView, UpdateView, GenericModelView
+
 from localhub.activities.views.streams import BaseStreamView
 from localhub.comments.models import Comment
-from localhub.comments.views import CommentListView
+from localhub.comments.views import BaseCommentListView
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.likes.models import Like
@@ -32,147 +26,52 @@ from localhub.users.emails import send_user_notification_email
 from localhub.users.forms import UserForm
 
 
-class AuthenticatedUserMixin(LoginRequiredMixin):
+class BaseUserQuerySetMixin(CommunityRequiredMixin):
+    def get_user_queryset(self):
+        return get_user_model().objects.active(self.request.community)
+
+
+class UserQuerySetMixin(BaseUserQuerySetMixin):
+    def get_queryset(self):
+        return self.get_user_queryset()
+
+
+class CurrentUserMixin(LoginRequiredMixin):
     """
     Always returns the current logged in user.
     """
 
-    def get_object(self, queryset=None):
+    def get_object(self):
         return self.request.user
 
 
-class UserUpdateView(
-    AuthenticatedUserMixin,
-    SuccessMessageMixin,
-    PermissionRequiredMixin,
-    UpdateView,
-):
-    permission_required = "users.change_user"
-    success_message = _("Your details have been updated")
-    form_class = UserForm
+class SingleUserMixin(BaseUserQuerySetMixin):
+    @cached_property
+    def user_obj(self):
+        return get_object_or_404(
+            self.get_user_queryset(), username=self.kwargs["slug"]
+        )
 
-    def get_success_url(self):
-        return self.request.path
-
-
-user_update_view = UserUpdateView.as_view()
-
-
-class UserDeleteView(
-    AuthenticatedUserMixin, PermissionRequiredMixin, DeleteView
-):
-    permission_required = "users.delete_user"
-    success_url = settings.HOME_PAGE_URL
-
-
-user_delete_view = UserDeleteView.as_view()
-
-
-class UserSlugMixin:
-    slug_field = "username"
-
-
-class UserContextMixin(ContextMixin):
-    context_object_name = "user_obj"
+    def get_membership(self):
+        return Membership.objects.filter(
+            member=self.user_obj, community=self.request.community
+        ).first()
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data["is_auth_user"] = self.request.user == self.object
-        try:
-            data["membership"] = Membership.objects.get(
-                member=self.object, community=self.request.community
-            )
-        except Membership.DoesNotExist:
-            pass  # shouldn't happen, but just in case
+        data.update(
+            {
+                "user_obj": self.user_obj,
+                "is_auth_user": self.user_obj == self.request.user,
+                "membership": self.get_membership(),
+            }
+        )
         return data
 
 
-class UserQuerySetMixin(CommunityRequiredMixin):
-    def get_queryset(self):
-        return get_user_model().objects.active(self.request.community)
-
-
-class UserDetailView(
-    UserSlugMixin, UserContextMixin, UserQuerySetMixin, DetailView
-):
-    ...
-
-
-user_detail_view = UserDetailView.as_view()
-
-
-class SingleUserView(
-    UserSlugMixin, UserQuerySetMixin, SingleObjectMixin, View
-):
-    ...
-
-
-class UserFollowView(
-    LoginRequiredMixin, PermissionRequiredMixin, SingleUserView
-):
-    permission_required = "users.follow_user"
-
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-
-        self.request.user.following.add(self.object)
-
-        for notification in self.request.user.notify_on_follow(
-            self.object, self.request.community
-        ):
-            send_user_notification_email(self.request.user, notification)
-
-        return HttpResponseRedirect(self.get_success_url())
-
-
-user_follow_view = UserFollowView.as_view()
-
-
-class UserUnfollowView(LoginRequiredMixin, SingleUserView):
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.request.user.following.remove(self.object)
-        return HttpResponseRedirect(self.get_success_url())
-
-
-user_unfollow_view = UserUnfollowView.as_view()
-
-
-class UserBlockView(
-    LoginRequiredMixin, PermissionRequiredMixin, SingleUserView
-):
-    permission_required = "users.block_user"
-
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-
-        self.request.user.blocked.add(self.object)
-        return HttpResponseRedirect(self.get_success_url())
-
-
-user_block_view = UserBlockView.as_view()
-
-
-class UserUnblockView(LoginRequiredMixin, SingleUserView):
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.request.user.blocked.remove(self.object)
-        return HttpResponseRedirect(self.get_success_url())
-
-
-user_unblock_view = UserUnblockView.as_view()
+class BaseSingleUserView(UserQuerySetMixin, GenericModelView):
+    lookup_field = "username"
+    lookup_url_kwarg = "slug"
 
 
 class BaseUserListView(UserQuerySetMixin, ListView):
@@ -180,6 +79,61 @@ class BaseUserListView(UserQuerySetMixin, ListView):
 
     def get_queryset(self):
         return super().get_queryset().order_by("name", "username")
+
+
+class UserFollowView(
+    LoginRequiredMixin, PermissionRequiredMixin, BaseSingleUserView
+):
+    permission_required = "users.follow_user"
+
+    def post(self, request, *args, **kwargs):
+        user = self.get_object()
+
+        self.request.user.following.add(user)
+
+        for notification in self.request.user.notify_on_follow(
+            user, self.request.community
+        ):
+            send_user_notification_email(self.request.user, notification)
+
+        return redirect(user)
+
+
+user_follow_view = UserFollowView.as_view()
+
+
+class UserUnfollowView(LoginRequiredMixin, BaseSingleUserView):
+    def post(self, request, *args, **kwargs):
+        user = self.get_object()
+        self.request.user.following.remove(user)
+        return redirect(user)
+
+
+user_unfollow_view = UserUnfollowView.as_view()
+
+
+class UserBlockView(
+    LoginRequiredMixin, PermissionRequiredMixin, BaseSingleUserView
+):
+    permission_required = "users.block_user"
+
+    def post(self, request, *args, **kwargs):
+        user = self.get_object()
+        self.request.user.blocked.add(user)
+        return redirect(user)
+
+
+user_block_view = UserBlockView.as_view()
+
+
+class UserUnblockView(LoginRequiredMixin, BaseSingleUserView):
+    def post(self, request, *args, **kwargs):
+        user = self.get_object()
+        self.request.user.blocked.remove(user)
+        return redirect(user)
+
+
+user_unblock_view = UserUnblockView.as_view()
 
 
 class FollowingUserListView(LoginRequiredMixin, BaseUserListView):
@@ -247,20 +201,6 @@ class UserAutocompleteListView(LoginRequiredMixin, BaseUserListView):
 user_autocomplete_list_view = UserAutocompleteListView.as_view()
 
 
-class SingleUserMixin(
-    CommunityRequiredMixin, UserSlugMixin, UserContextMixin, SingleObjectMixin
-):
-    """
-    Used to mix with views using non-user querysets
-    """
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object(
-            queryset=get_user_model().objects.active(self.request.community)
-        )
-        return super().get(request, *args, **kwargs)
-
-
 class UserStreamView(SingleUserMixin, BaseStreamView):
 
     active_tab = "posts"
@@ -271,14 +211,14 @@ class UserStreamView(SingleUserMixin, BaseStreamView):
             super()
             .filter_queryset(queryset)
             .blocked_tags(self.request.user)
-            .filter(owner=self.object)
+            .filter(owner=self.user_obj)
         )
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["num_likes"] = (
             Like.objects.for_models(*self.models)
-            .filter(recipient=self.object, community=self.request.community)
+            .filter(recipient=self.user_obj, community=self.request.community)
             .count()
         )
         return data
@@ -287,7 +227,7 @@ class UserStreamView(SingleUserMixin, BaseStreamView):
 user_stream_view = UserStreamView.as_view()
 
 
-class UserCommentListView(SingleUserMixin, CommentListView):
+class UserCommentListView(SingleUserMixin, BaseCommentListView):
     active_tab = "comments"
     template_name = "users/comments.html"
 
@@ -295,18 +235,16 @@ class UserCommentListView(SingleUserMixin, CommentListView):
         return (
             super()
             .get_queryset()
-            .filter(owner=self.object)
+            .filter(owner=self.user_obj)
             .with_common_annotations(self.request.community, self.request.user)
             .order_by("-created")
         )
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        # placeholder
-        data["object_list"] = self.object_list
         data["num_likes"] = (
             Like.objects.for_models(Comment)
-            .filter(recipient=self.object, community=self.request.community)
+            .filter(recipient=self.user_obj, community=self.request.community)
             .count()
         )
         return data
@@ -329,7 +267,7 @@ class UserMessageListView(LoginRequiredMixin, SingleUserMixin, ListView):
     def get_queryset(self):
         return (
             Message.objects.filter(
-                Q(Q(recipient=self.object) | Q(sender=self.object))
+                Q(Q(recipient=self.user_obj) | Q(sender=self.user_obj))
                 & Q(
                     Q(recipient=self.request.user)
                     | Q(sender=self.request.user)
@@ -361,3 +299,27 @@ class UserMessageListView(LoginRequiredMixin, SingleUserMixin, ListView):
 
 
 user_message_list_view = UserMessageListView.as_view()
+
+
+class UserUpdateView(
+    CurrentUserMixin, SuccessMessageMixin, PermissionRequiredMixin, UpdateView
+):
+    permission_required = "users.change_user"
+    success_message = _("Your details have been updated")
+    form_class = UserForm
+    template_name = "users/user_form.html"
+
+    def get_success_url(self):
+        return self.request.path
+
+
+user_update_view = UserUpdateView.as_view()
+
+
+class UserDeleteView(CurrentUserMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = "users.delete_user"
+    success_url = settings.HOME_PAGE_URL
+    template_name = "users/user_confirm_delete.html"
+
+
+user_delete_view = UserDeleteView.as_view()
