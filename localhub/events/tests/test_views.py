@@ -91,8 +91,8 @@ class TestEventDeleteView:
         )
         assert response.status_code == 200
 
-    def test_delete(self, client, event_for_member):
-        response = client.delete(
+    def test_post(self, client, event_for_member):
+        response = client.post(
             reverse("events:delete", args=[event_for_member.id])
         )
         assert response.url == reverse("activities:stream")

@@ -2,25 +2,19 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import redirect_to_login
-from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.forms import ModelForm
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import (
-    DeleteView,
-    DetailView,
-    ListView,
-    TemplateView,
-    UpdateView,
-)
-from django.views.generic.detail import SingleObjectMixin
 
 from rules.contrib.views import PermissionRequiredMixin
+
+from vanilla import DeleteView, DetailView, ListView, TemplateView, UpdateView
 
 from localhub.communities.emails import send_membership_deleted_email
 from localhub.communities.forms import MembershipForm
@@ -71,7 +65,16 @@ class CommunityRequiredMixin:
         return HttpResponseRedirect(reverse("community_not_found"))
 
 
+class MembershipQuerySetMixin(CommunityRequiredMixin):
+    def get_queryset(self):
+        return Membership.objects.filter(
+            community=self.request.community
+        ).select_related("community", "member")
+
+
 class CommunityDetailView(CommunityRequiredMixin, DetailView):
+    model = Community
+
     def get_object(self):
         return self.request.community
 
@@ -124,6 +127,7 @@ class CommunityUpdateView(
 
     permission_required = "communities.manage_community"
     success_message = _("Community settings have been updated")
+    model = Community
 
     def get_object(self):
         return self.request.community
@@ -152,6 +156,7 @@ class CommunityListView(SearchMixin, ListView):
     """
 
     paginate_by = settings.DEFAULT_PAGE_SIZE
+    model = Community
 
     def get_queryset(self):
         qs = (
@@ -167,17 +172,6 @@ class CommunityListView(SearchMixin, ListView):
 community_list_view = CommunityListView.as_view()
 
 
-class MembershipQuerySetMixin(CommunityRequiredMixin):
-    def get_queryset(self):
-        return Membership.objects.filter(
-            community=self.request.community
-        ).select_related("community", "member")
-
-
-class SingleMembershipMixin(MembershipQuerySetMixin, SingleObjectMixin):
-    ...
-
-
 class MembershipListView(
     LoginRequiredMixin,
     PermissionRequiredMixin,
@@ -187,6 +181,10 @@ class MembershipListView(
 ):
     paginate_by = settings.DEFAULT_PAGE_SIZE
     permission_required = "communities.manage_community"
+    model = Membership
+
+    def get_permission_object(self):
+        return self.request.community
 
     def get_queryset(self):
 
@@ -198,9 +196,6 @@ class MembershipListView(
             qs = qs.search(self.search_query)
         return qs
 
-    def get_permission_object(self):
-        return self.request.community
-
 
 membership_list_view = MembershipListView.as_view()
 
@@ -208,11 +203,12 @@ membership_list_view = MembershipListView.as_view()
 class MembershipDetailView(
     LoginRequiredMixin,
     PermissionRequiredMixin,
-    SingleMembershipMixin,
+    MembershipQuerySetMixin,
     DetailView,
 ):
 
     permission_required = "communities.view_membership"
+    model = Membership
 
 
 membership_detail_view = MembershipDetailView.as_view()
@@ -221,10 +217,11 @@ membership_detail_view = MembershipDetailView.as_view()
 class MembershipUpdateView(
     LoginRequiredMixin,
     PermissionRequiredMixin,
-    SingleMembershipMixin,
+    MembershipQuerySetMixin,
     SuccessMessageMixin,
     UpdateView,
 ):
+    model = Membership
     form_class = MembershipForm
     permission_required = "communities.change_membership"
     success_url = reverse_lazy("communities:membership_list")
@@ -237,17 +234,18 @@ membership_update_view = MembershipUpdateView.as_view()
 class MembershipDeleteView(
     LoginRequiredMixin,
     PermissionRequiredMixin,
-    SingleMembershipMixin,
+    MembershipQuerySetMixin,
     DeleteView,
 ):
     permission_required = "communities.delete_membership"
+    model = Membership
 
     def get_success_url(self):
         if self.object.member == self.request.user:
             return settings.HOME_PAGE_URL
         return reverse("communities:membership_list")
 
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()
         messages.success(

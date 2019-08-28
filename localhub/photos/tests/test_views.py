@@ -77,8 +77,8 @@ class TestPhotoDeleteView:
         )
         assert response.status_code == 200
 
-    def test_delete(self, client, photo_for_member):
-        response = client.delete(
+    def test_post(self, client, photo_for_member):
+        response = client.post(
             reverse("photos:delete", args=[photo_for_member.id])
         )
         assert response.url == reverse("activities:stream")

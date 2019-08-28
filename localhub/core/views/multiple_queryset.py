@@ -4,8 +4,8 @@
 from collections import defaultdict
 
 from django.db.models import CharField, Value
-from django.views.generic import TemplateView
-from django.views.generic.base import ContextMixin
+
+from vanilla import TemplateView
 
 from localhub.core.utils.pagination import PresetCountPaginator
 
@@ -144,7 +144,7 @@ class MultipleQuerySetMixin:
         }
 
 
-class MultipleQuerySetContextMixin(MultipleQuerySetMixin, ContextMixin):
+class MultipleQuerySetContextMixin(MultipleQuerySetMixin):
     """
     Provides additional mixin functionality multiple queryset for use
     in templates. Template context is same as for a ListView i.e.:

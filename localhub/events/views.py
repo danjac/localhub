@@ -3,11 +3,11 @@
 
 from django.http import HttpResponse
 
-from localhub.activities.views.generic import SingleActivityView
+from localhub.activities.views.generic import BaseSingleActivityView
 from localhub.events.models import Event
 
 
-class EventDownloadView(SingleActivityView):
+class EventDownloadView(BaseSingleActivityView):
     """
     Generates a calendar .ics file.
     """

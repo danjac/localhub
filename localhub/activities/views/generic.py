@@ -6,22 +6,22 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import (
+
+from rules.contrib.views import PermissionRequiredMixin
+
+from vanilla import (
     CreateView,
     DeleteView,
     DetailView,
     FormView,
+    GenericModelView,
     ListView,
     UpdateView,
-    View,
 )
-from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.list import MultipleObjectMixin
 
-from rules.contrib.views import PermissionRequiredMixin
-
-from localhub.activities.models import Activity
 from localhub.activities.notifications import (
     send_activity_deleted_email,
     send_activity_notifications,
@@ -39,24 +39,15 @@ from localhub.likes.models import Like
 
 
 class ActivityQuerySetMixin(CommunityRequiredMixin):
+    model = None
+
     def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .for_community(self.request.community)
-            .select_related("owner", "community", "parent", "parent__owner")
-        )
+        return self.model._default_manager.for_community(
+            self.request.community
+        ).select_related("owner", "community", "parent", "parent__owner")
 
 
-class SingleActivityMixin(ActivityQuerySetMixin, SingleObjectMixin):
-    ...
-
-
-class MultipleActivityMixin(ActivityQuerySetMixin, MultipleObjectMixin):
-    ...
-
-
-class SingleActivityView(SingleActivityMixin, View):
+class BaseSingleActivityView(ActivityQuerySetMixin, GenericModelView):
     ...
 
 
@@ -95,7 +86,7 @@ class ActivityCreateView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityListView(MultipleActivityMixin, SearchMixin, ListView):
+class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
     allow_empty = True
     paginate_by = settings.DEFAULT_PAGE_SIZE
     order_by = "-id"
@@ -115,7 +106,10 @@ class ActivityListView(MultipleActivityMixin, SearchMixin, ListView):
 
 
 class ActivityUpdateView(
-    PermissionRequiredMixin, SingleActivityMixin, BreadcrumbsMixin, UpdateView
+    PermissionRequiredMixin,
+    ActivityQuerySetMixin,
+    BreadcrumbsMixin,
+    UpdateView,
 ):
     permission_required = "activities.change_activity"
     success_message = _("Your changes have been saved")
@@ -143,7 +137,7 @@ class ActivityUpdateView(
 
 
 class ActivityDeleteView(
-    PermissionRequiredMixin, SingleActivityMixin, DeleteView
+    PermissionRequiredMixin, ActivityQuerySetMixin, DeleteView
 ):
     permission_required = "activities.delete_activity"
     success_url = settings.HOME_PAGE_URL
@@ -152,7 +146,7 @@ class ActivityDeleteView(
     def get_success_message(self):
         return self.success_message % self.object._meta.verbose_name
 
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()
 
@@ -166,7 +160,7 @@ class ActivityDeleteView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
+class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.user.has_perm(
@@ -217,7 +211,7 @@ class ActivityDetailView(SingleActivityMixin, BreadcrumbsMixin, DetailView):
         )
 
 
-class ActivityReshareView(PermissionRequiredMixin, SingleActivityView):
+class ActivityReshareView(PermissionRequiredMixin, BaseSingleActivityView):
     permission_required = "activities.reshare_activity"
 
     def get_queryset(self):
@@ -232,50 +226,50 @@ class ActivityReshareView(PermissionRequiredMixin, SingleActivityView):
         )
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        reshare = self.object.reshare(self.request.user)
+        obj = self.get_object()
+        reshare = obj.reshare(self.request.user)
 
         messages.success(
             self.request,
-            _("You have reshared this %s") % self.object._meta.verbose_name,
+            _("You have reshared this %s") % obj._meta.verbose_name,
         )
 
         for notification in reshare.notify_on_create():
-            send_activity_notifications(self.object, notification)
+            send_activity_notifications(obj, notification)
 
-        return HttpResponseRedirect(self.object.get_absolute_url())
+        return redirect(obj)
 
 
-class ActivityLikeView(PermissionRequiredMixin, SingleActivityView):
+class ActivityLikeView(PermissionRequiredMixin, BaseSingleActivityView):
     permission_required = "activities.like_activity"
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        obj = self.get_object()
         try:
             like = Like.objects.create(
                 user=request.user,
                 community=request.community,
-                recipient=self.object.owner,
-                content_object=self.object,
+                recipient=obj.owner,
+                content_object=obj,
             )
             for notification in like.notify():
-                send_activity_notifications(self.object, notification)
+                send_activity_notifications(obj, notification)
 
         except IntegrityError:
             # dupe, ignore
             pass
         if request.is_ajax():
             return HttpResponse(status=204)
-        return HttpResponseRedirect(self.object.get_absolute_url())
+        return redirect(obj)
 
 
-class ActivityDislikeView(LoginRequiredMixin, SingleActivityView):
+class ActivityDislikeView(LoginRequiredMixin, BaseSingleActivityView):
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.get_likes().filter(user=request.user).delete()
+        obj = self.get_object()
+        obj.get_likes().filter(user=request.user).delete()
         if request.is_ajax():
             return HttpResponse(status=204)
-        return HttpResponseRedirect(self.object.get_absolute_url())
+        return redirect(obj)
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -284,17 +278,17 @@ class ActivityDislikeView(LoginRequiredMixin, SingleActivityView):
 class ActivityFlagView(
     LoginRequiredMixin,
     PermissionRequiredMixin,
-    SingleActivityMixin,
     BreadcrumbsMixin,
+    ActivityQuerySetMixin,
     FormView,
 ):
     form_class = FlagForm
     template_name = "flags/flag_form.html"
     permission_required = "activities.flag_activity"
 
-    def dispatch(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        return super().dispatch(request, *args, **kwargs)
+    @cached_property
+    def activity(self):
+        return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
 
     def get_queryset(self):
         return (
@@ -305,64 +299,57 @@ class ActivityFlagView(
         )
 
     def get_permission_object(self):
-        return self.object
+        return self.activity
 
     def get_breadcrumbs(self):
-        return get_breadcrumbs_for_instance(self.object) + [
+        return get_breadcrumbs_for_instance(self.activity) + [
             (self.request.path, _("Flag"))
         ]
 
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
     def form_valid(self, form):
         flag = form.save(commit=False)
-        flag.content_object = self.object
+        flag.content_object = self.activity
         flag.community = self.request.community
         flag.user = self.request.user
         flag.save()
 
         for notification in flag.notify():
-            send_activity_notifications(self.object, notification)
+            send_activity_notifications(self.activity, notification)
 
         messages.success(
             self.request,
             _(
                 "This %s has been flagged to the moderators"
-                % self.object._meta.verbose_name
+                % self.activity._meta.verbose_name
             ),
         )
-        return HttpResponseRedirect(self.get_success_url())
+        return redirect(self.activity)
 
 
 activity_flag_view = ActivityFlagView.as_view()
 
 
 class ActivityCommentCreateView(
-    PermissionRequiredMixin, SingleActivityMixin, FormView
+    PermissionRequiredMixin, ActivityQuerySetMixin, FormView
 ):
     form_class = CommentForm
     template_name = "comments/comment_form.html"
     permission_required = "activities.create_comment"
-    model = Activity
 
-    def dispatch(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        return super().dispatch(request, *args, **kwargs)
+    @cached_property
+    def activity(self):
+        return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
 
     def get_permission_object(self):
-        return self.object
-
-    def get_success_url(self):
-        return self.object.get_absolute_url()
+        return self.activity
 
     def form_valid(self, form):
         comment = form.save(commit=False)
-        comment.content_object = self.object
+        comment.content_object = self.activity
         comment.community = self.request.community
         comment.owner = self.request.user
         comment.save()
         for notification in comment.notify_on_create():
             send_comment_notifications(comment, notification)
         messages.success(self.request, _("Your comment has been posted"))
-        return HttpResponseRedirect(self.get_success_url())
+        return redirect(self.activity)

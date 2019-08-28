@@ -127,19 +127,19 @@ class TestPostDeleteView:
         )
         assert response.status_code == 200
 
-    def test_delete(self, client, post_for_member: Post):
-        response = client.delete(
+    def test_post(self, client, post_for_member: Post):
+        response = client.post(
             reverse("posts:delete", args=[post_for_member.id])
         )
         assert response.url == reverse("activities:stream")
         assert Post.objects.count() == 0
 
-    def test_delete_by_moderator(self, client, moderator):
+    def test_post_by_moderator(self, client, moderator):
         post = PostFactory(
             community=moderator.community,
             owner=MembershipFactory(community=moderator.community).member,
         )
-        response = client.delete(reverse("posts:delete", args=[post.id]))
+        response = client.post(reverse("posts:delete", args=[post.id]))
         assert response.url == reverse("activities:stream")
         assert Post.objects.count() == 0
 
