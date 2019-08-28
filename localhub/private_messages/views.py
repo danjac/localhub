@@ -43,13 +43,11 @@ class SenderQuerySetMixin(MessageQuerySetMixin):
         return super().get_queryset().filter(sender=self.request.user)
 
 
-class MessageListView(
-    LoginRequiredMixin, MessageQuerySetMixin, SearchMixin, ListView
-):
+class BaseMessageListView(LoginRequiredMixin, MessageQuerySetMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
 
-class InboxView(MessageListView):
+class InboxView(SearchMixin, BaseMessageListView):
     """
     Messages received by current user
     Here we should show the sender, timestamp...
@@ -75,7 +73,7 @@ class InboxView(MessageListView):
 inbox_view = InboxView.as_view()
 
 
-class OutboxView(SenderQuerySetMixin, MessageListView):
+class OutboxView(SenderQuerySetMixin, SearchMixin, BaseMessageListView):
     """
     Messages sent by current user
     """
@@ -98,7 +96,7 @@ class OutboxView(SenderQuerySetMixin, MessageListView):
 outbox_view = OutboxView.as_view()
 
 
-class MessageFormView(
+class BaseMessageFormView(
     CommunityRequiredMixin, PermissionRequiredMixin, FormView
 ):
 
@@ -110,7 +108,7 @@ class MessageFormView(
         return self.request.community
 
 
-class MessageReplyView(BreadcrumbsMixin, MessageFormView):
+class MessageReplyView(BreadcrumbsMixin, BaseMessageFormView):
     @cached_property
     def parent(self):
         return get_object_or_404(
@@ -163,7 +161,7 @@ class MessageReplyView(BreadcrumbsMixin, MessageFormView):
 message_reply_view = MessageReplyView.as_view()
 
 
-class MessageCreateView(BreadcrumbsMixin, MessageFormView):
+class MessageCreateView(BreadcrumbsMixin, BaseMessageFormView):
     @cached_property
     def recipient(self):
         return get_object_or_404(
