@@ -79,6 +79,19 @@ class TestMessageDetailView:
         response = client.get(message.get_absolute_url())
         assert response.status_code == 200
 
+    def test_get_if_sender_and_reply(self, client, member):
+        message = MessageFactory(
+            community=member.community, sender=member.member
+        )
+        MessageFactory(
+            sender=message.recipient,
+            recipient=message.sender,
+            parent=message,
+            community=message.community,
+        )
+        response = client.get(message.get_absolute_url())
+        assert response.status_code == 200
+
     def test_get_if_recipient(self, client, member):
         message = MessageFactory(
             community=member.community, recipient=member.member
@@ -86,9 +99,7 @@ class TestMessageDetailView:
         response = client.get(message.get_absolute_url())
         assert response.status_code == 200
 
-    def test_get_if_neither_recipient_nor_sender(
-        self, client, member
-    ):
+    def test_get_if_neither_recipient_nor_sender(self, client, member):
         message = MessageFactory(community=member.community)
         response = client.get(message.get_absolute_url())
         assert response.status_code == 404
@@ -109,12 +120,7 @@ class TestMessageReplyView:
         )
         assert response.status_code == 403
 
-    def test_post(
-        self,
-        client,
-        member,
-        send_notification_webpush_mock,
-    ):
+    def test_post(self, client, member, send_notification_webpush_mock):
         recipient = MembershipFactory(community=member.community).member
         parent = MessageFactory(
             community=member.community,
@@ -147,12 +153,7 @@ class TestMessageCreateView:
         )
         assert response.status_code == 403
 
-    def test_post(
-        self,
-        client,
-        member,
-        send_notification_webpush_mock,
-    ):
+    def test_post(self, client, member, send_notification_webpush_mock):
         recipient = MembershipFactory(community=member.community).member
         response = client.post(
             reverse(

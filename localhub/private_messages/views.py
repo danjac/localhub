@@ -246,6 +246,7 @@ class MessageDetailView(
     parent_id is NOT NULL.
     2) call recursive function to find the ancestor.
     """
+
     def get_breadcrumbs(self):
         if self.request.user == self.object.sender:
             breadcrumbs = [(reverse("private_messages:outbox"), _("Outbox"))]
@@ -263,6 +264,18 @@ class MessageDetailView(
         breadcrumbs.append(("#", self.object.get_abbreviation()))
         return breadcrumbs
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        try:
+            # ensure reply has all fields
+            if self.object.reply:
+                data["reply"] = self.get_queryset().get(
+                    pk=self.object.reply.id
+                )
+        except Message.DoesNotExist:
+            pass
+        return data
+
     def get_queryset(self):
         return (
             super()
@@ -272,16 +285,7 @@ class MessageDetailView(
                 Q(recipient=self.request.user) | Q(sender=self.request.user)
             )
             .select_related(
-                "community",
-                "parent",
-                "recipient",
-                "reply",
-                "reply__community",
-                "reply__parent",
-                "reply__recipient",
-                "reply__reply",
-                "reply__sender",
-                "sender",
+                "community", "parent", "recipient", "reply", "sender"
             )
         )
 
