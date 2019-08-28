@@ -247,16 +247,51 @@ class MessageDetailView(
         breadcrumbs.append(("#", self.object.get_abbreviation()))
         return breadcrumbs
 
+    def get_ancestor(self):
+        """
+        Find the most remote ancestor.
+        """
+        if self.object.parent is None:
+            return None
+
+        ancestors = self.get_queryset().filter(
+            created__lt=self.object.created, reply__isnull=False
+        )
+
+        def _find_ancestor(current):
+            for ancestor in ancestors:
+                if ancestor.reply == current:
+                    if ancestor.parent is None:
+                        return ancestor
+                    return _find_ancestor(ancestor)
+            return None
+
+        return _find_ancestor(self.object)
+
+    def get_descendants(self):
+        descendants = (
+            self.get_queryset()
+            .filter(created__gte=self.object.created, parent__isnull=False)
+            .order_by("created")
+        )
+
+        def _find_descendants(current):
+            rv = []
+            for descendant in descendants:
+                if descendant.parent == current:
+                    rv += [descendant] + _find_descendants(descendant)
+            return rv
+
+        return _find_descendants(self.object)
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        try:
-            # ensure reply has all fields
-            if self.object.reply:
-                data["reply"] = self.get_queryset().get(
-                    pk=self.object.reply.id
-                )
-        except Message.DoesNotExist:
-            pass
+        data.update(
+            {
+                "ancestor": self.get_ancestor(),
+                "descendants": self.get_descendants(),
+            }
+        )
         return data
 
     def get_queryset(self):

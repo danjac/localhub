@@ -10,11 +10,16 @@
 
 <h3>{% trans "Messages" %}</h3>
 
+{% if ancestor %}
+<div class="actions">
+    <a href="{{ ancestor.get_absolute_url }}">{% trans "View Thread" %}</a>
+</div>
+{% endif %}
+
 <div class="divider"></div>
 {% show_message user message is_detail=True %}
-{% if reply %}
-<div class="divider text-center" data-content="{% trans 'Reply' %}"></div>
-{% show_message user reply show_parent_info=False %}
-{% endif %}
+{% for descendant in descendants %}
+{% show_message user descendant show_parent_info=False %}
+{% endfor %}
 {% endblock content %}
 
