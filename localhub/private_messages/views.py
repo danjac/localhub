@@ -162,13 +162,6 @@ class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
             .select_related("community", "recipient", "sender")
         )
 
-    def get_other_user(self):
-        return (
-            self.object.recipient
-            if self.request.user == self.object.sender
-            else self.object.recipient
-        )
-
     def get_previous_message(self):
         return (
             self.get_queryset()
@@ -189,7 +182,7 @@ class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
         data = super().get_context_data(**kwargs)
         data.update(
             {
-                "other_user": self.get_other_user(),
+                "other_user": self.object.get_other_user(self.request.user),
                 "previous_message": self.get_previous_message(),
                 "next_message": self.get_next_message(),
             }

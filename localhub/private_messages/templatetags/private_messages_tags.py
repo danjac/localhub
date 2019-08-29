@@ -30,11 +30,9 @@ def show_message(
         recipient_url = reverse(
             "users:messages", args=[message.recipient.username]
         )
-        other_user = message.recipient
     else:
         sender_url = reverse("users:messages", args=[message.sender.username])
         recipient_url = outbox_url
-        other_user = message.sender
 
     request = context["request"]
 
@@ -50,7 +48,7 @@ def show_message(
         "message": message,
         "recipient_url": recipient_url,
         "sender_url": sender_url,
-        "other_user": other_user,
+        "other_user": message.get_other_user(user),
         "show_recipient_info": show_recipient_info,
         "show_sender_info": show_sender_info,
         "can_create_message": can_create_message,

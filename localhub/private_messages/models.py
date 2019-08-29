@@ -67,3 +67,9 @@ class Message(TimeStampedModel):
 
     def get_permalink(self):
         return self.community.resolve_url(self.get_absolute_url())
+
+    def get_other_user(self, user):
+        """
+        Return either recipient or sender, depending on user match
+        """
+        return self.recipient if user == self.sender else self.recipient

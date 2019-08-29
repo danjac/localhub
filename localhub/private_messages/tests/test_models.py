@@ -29,6 +29,11 @@ class TestMessageManager:
 
 
 class TestMessageModel:
+    def test_get_other_user(self):
+        message = MessageFactory()
+        assert message.get_other_user(message.sender) == message.recipient
+        assert message.get_other_user(message.recipient) == message.sender
+
     def test_get_abbreviation(self):
 
         msg = Message(message="Hello\nthis is a *test*")
