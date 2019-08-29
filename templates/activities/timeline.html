@@ -13,7 +13,22 @@
   {% else %}
   <a href="{{ request.path }}?order=asc">{% trans "Oldest First" %}</a>
   {% endif %}
+  {% if date_filters %}
+  <a href="{{ request.path }}">{% trans "Show All" %}</a>
+  {% endif %}
+  {% if years|length > 1 %}
+  {% for year in years %}
+  <a href="{{ request.path }}?year={{ year }}">{{ year }}</a>
+  {% endfor %}
+  {% endif %}
 </div>
+{% if months|length > 1 %}
+<div class="actions">
+  {% for order, name in months %}
+  <a href="{{ request.path }}?month={{ order }}&year={{ current_year }}">{{ name }}</a>
+  {% endfor %}
+</div>
+{% endif %}
 <div class="divider"></div>
 
 {% if object_list %}
