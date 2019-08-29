@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import F, Q
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
@@ -141,6 +142,14 @@ class MessageReplyView(BreadcrumbsMixin, BaseMessageFormView):
         }
         return MessageForm(data, files, initial=initial)
 
+    def get_success_url(self):
+        if "thread" in self.request.GET:
+            return reverse(
+                "private_messages:message_detail",
+                args=[self.request.GET["thread"]],
+            )
+        return self.parent.get_absolute_url()
+
     def form_valid(self, form):
         message = form.save(commit=False)
         message.community = self.request.community
@@ -155,7 +164,7 @@ class MessageReplyView(BreadcrumbsMixin, BaseMessageFormView):
             % {"recipient": user_display(message.recipient)},
         )
         send_message_notifications(message)
-        return redirect(message)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 message_reply_view = MessageReplyView.as_view()
@@ -247,10 +256,29 @@ class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        descendants = self.get_descendants()
+        reply_form, reply_url = None, None
+        if self.request.user.has_perm(
+            "private_messages.create_message", self.request.community
+        ):
+            reply_to_message = descendants[-1] if descendants else self.object
+            if reply_to_message.recipient == self.request.user:
+                reply_form = MessageForm()
+                reply_form["message"].label = _("Reply")
+                reply_url = (
+                    reverse(
+                        "private_messages:message_reply",
+                        args=[reply_to_message.id],
+                    )
+                    + f"?thread={self.object.id}"
+                )
+
         data.update(
             {
                 "ancestor": self.get_ancestor(),
-                "descendants": self.get_descendants(),
+                "descendants": descendants,
+                "reply_url": reply_url,
+                "reply_form": reply_form,
             }
         )
         return data

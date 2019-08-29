@@ -72,12 +72,77 @@ class TestMessageMarkReadView:
 
 
 class TestMessageDetailView:
+    def test_if_ancestor(self, client, member):
+        recipient = MembershipFactory(community=member.community).member
+        ancestor = MessageFactory(
+            community=member.community,
+            sender=member.member,
+            recipient=recipient,
+        )
+        parent = MessageFactory(
+            community=member.community,
+            sender=recipient,
+            recipient=member.member,
+            parent=ancestor,
+        )
+
+        message = MessageFactory(
+            community=member.community,
+            sender=recipient,
+            recipient=member.member,
+            parent=parent,
+        )
+
+        response = client.get(message.get_absolute_url())
+        assert response.status_code == 200
+        assert (
+            response.context["reply_url"]
+            == reverse("private_messages:message_reply", args=[message.id])
+            + "?thread=%s" % message.id
+        )
+        assert response.context["reply_form"] is not None
+        assert response.context["ancestor"] == ancestor
+
+    def test_if_descendants(self, client, member):
+        recipient = MembershipFactory(community=member.community).member
+        ancestor = MessageFactory(
+            community=member.community,
+            sender=member.member,
+            recipient=recipient,
+        )
+        parent = MessageFactory(
+            community=member.community,
+            sender=recipient,
+            recipient=member.member,
+            parent=ancestor,
+        )
+
+        message = MessageFactory(
+            community=member.community,
+            sender=recipient,
+            recipient=member.member,
+            parent=parent,
+        )
+
+        response = client.get(ancestor.get_absolute_url())
+        assert response.status_code == 200
+        assert (
+            response.context["reply_url"]
+            == reverse("private_messages:message_reply", args=[message.id])
+            + "?thread=%s" % ancestor.id
+        )
+        assert response.context["reply_form"] is not None
+        assert response.context["ancestor"] is None
+        assert response.context["descendants"] == [parent, message]
+
     def test_get_if_sender(self, client, member):
         message = MessageFactory(
             community=member.community, sender=member.member
         )
         response = client.get(message.get_absolute_url())
         assert response.status_code == 200
+        assert response.context["reply_url"] is None
+        assert response.context["reply_form"] is None
 
     def test_get_if_sender_and_reply(self, client, member):
         message = MessageFactory(
@@ -98,6 +163,12 @@ class TestMessageDetailView:
         )
         response = client.get(message.get_absolute_url())
         assert response.status_code == 200
+        assert (
+            response.context["reply_url"]
+            == reverse("private_messages:message_reply", args=[message.id])
+            + "?thread=%s" % message.id
+        )
+        assert response.context["reply_form"] is not None
 
     def test_get_if_neither_recipient_nor_sender(self, client, member):
         message = MessageFactory(community=member.community)
@@ -145,13 +216,36 @@ class TestMessageReplyView:
             {"message": "test"},
         )
         message = Message.objects.filter(parent__isnull=False).get()
-        assert response.url == message.get_absolute_url()
+        assert response.url == parent.get_absolute_url()
         assert message.recipient == recipient
         assert message.sender == member.member
         assert message.community == member.community
         assert message.parent == parent
 
         assert send_notification_webpush_mock.called_once()
+
+    def test_post_to_thread(
+        self, client, member, send_notification_webpush_mock
+    ):
+        recipient = MembershipFactory(community=member.community).member
+        parent = MessageFactory(
+            community=member.community,
+            sender=recipient,
+            recipient=member.member,
+        )
+        thread = MessageFactory(
+            community=member.community,
+            sender=recipient,
+            recipient=member.member,
+        )
+        response = client.post(
+            reverse("private_messages:message_reply", args=[parent.id])
+            + "?thread=%s" % thread.id,
+            {"message": "test"},
+        )
+        message = Message.objects.filter(parent__isnull=False).get()
+        assert response.url == thread.get_absolute_url()
+        assert message.recipient == recipient
 
 
 class TestMessageCreateView:

@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load account %}
+{% load form_tags %}
 {% load private_messages_tags %}
 
 {% block content %}
@@ -21,4 +22,7 @@
 {% for descendant in descendants %}
 {% show_message user descendant show_parent_info=False show_reply_info=False %}
 {% endfor %}
+{% if reply_url and reply_form %}
+{% simple_ajax_form reply_form action=reply_url %}
+{% endif %}
 {% endblock content %}
