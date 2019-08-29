@@ -72,4 +72,4 @@ class Message(TimeStampedModel):
         """
         Return either recipient or sender, depending on user match
         """
-        return self.recipient if user == self.sender else self.recipient
+        return self.recipient if user == self.sender else self.sender
