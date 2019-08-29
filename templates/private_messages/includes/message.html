@@ -70,7 +70,11 @@
       {% if can_reply %}
       <a href="{% url 'private_messages:message_reply' message.id %}">{% trans "Reply To Message" %}</a>
       {% elif reply and show_reply_info %}
-      <a href="{{ reply.get_absolute_url }}">{% trans "View Reply" %}</a>
+      <a href="{{ message.get_absolute_url }}">
+        {% blocktrans with replied=reply.created|timesince %}
+        Replied {{ replied }} ago
+        {% endblocktrans }
+      </a>
       {% endif %}
     </div>
   </div>

@@ -62,6 +62,7 @@ def show_message(
         "sender_url": sender_url,
         "show_recipient_info": show_recipient_info,
         "show_sender_info": show_sender_info,
+        "show_reply_info": show_reply_info,
         "show_parent_info": show_parent_info,
         "post_delete_redirect": outbox_url if is_detail else None,
     }

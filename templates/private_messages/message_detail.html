@@ -18,7 +18,7 @@
 </div>
 
 <div class="divider"></div>
-{% show_message user message is_detail=True %}
+{% show_message user message is_detail=True show_reply_info=False %}
 {% for descendant in descendants %}
 {% show_message user descendant show_parent_info=False show_reply_info=False %}
 {% endfor %}
