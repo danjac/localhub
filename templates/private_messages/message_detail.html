@@ -6,20 +6,19 @@
 
 {% block content %}
 
-{% include "includes/breadcrumbs.html" %}
-
 <h3>{% trans "Messages" %}</h3>
 
-{% if ancestor %}
 <div class="actions">
+    <a href="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</a>
+    <a href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
+    {% if ancestor %}
     <a href="{{ ancestor.get_absolute_url }}">{% trans "View Thread" %}</a>
+    {% endif %}
 </div>
-{% endif %}
 
 <div class="divider"></div>
 {% show_message user message is_detail=True %}
 {% for descendant in descendants %}
-{% show_message user descendant show_parent_info=False %}
+{% show_message user descendant show_parent_info=False show_reply_info=False %}
 {% endfor %}
 {% endblock content %}
-

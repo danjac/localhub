@@ -20,6 +20,7 @@ def show_message(
     show_sender_info=True,
     show_recipient_info=True,
     show_parent_info=True,
+    show_reply_info=True,
     is_detail=False,
 ):
 

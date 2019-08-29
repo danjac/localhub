@@ -204,48 +204,9 @@ class MessageCreateView(BreadcrumbsMixin, BaseMessageFormView):
 message_create_view = MessageCreateView.as_view()
 
 
-class MessageDetailView(
-    MessageQuerySetMixin, LoginRequiredMixin, BreadcrumbsMixin, DetailView
-):
-    """
-    TBD:
-
-    1) get the "thread" of messages where this object is the ancestor
-    of the messages
-    2) get the ancestor of the object, if any, and show as link (unless
-    ancestor is just one level up, as we already have link to parent)
-
-    To get the thread:
-    1) call get_queryset() to get all messages belonging to both recipient+
-    sender.
-    2) exclude any with parent_id NULL, or created older than current object.
-    3) for each in queryset, run a recursive function in Python to find
-    any with ancestor = current object ID.
-
-    To get the ancestor, we do the same in reverse:
-    1) call get_queryset() and filter any newer than the current object, or
-    parent_id is NOT NULL.
-    2) call recursive function to find the ancestor.
-    """
+class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
 
     model = Message
-
-    def get_breadcrumbs(self):
-        if self.request.user == self.object.sender:
-            breadcrumbs = [(reverse("private_messages:outbox"), _("Outbox"))]
-        else:
-            breadcrumbs = [(reverse("private_messages:inbox"), _("Inbox"))]
-
-        if self.object.parent:
-            breadcrumbs.append(
-                (
-                    self.object.parent.get_absolute_url(),
-                    self.object.parent.get_abbreviation(),
-                )
-            )
-
-        breadcrumbs.append(("#", self.object.get_abbreviation()))
-        return breadcrumbs
 
     def get_ancestor(self):
         """

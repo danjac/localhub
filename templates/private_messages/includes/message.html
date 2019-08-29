@@ -28,13 +28,6 @@
         {% endwith %}
         {% endif %}
       </div>
-      {% if reply and not is_detail %}
-      <div class="timesince">
-        {% blocktrans with replied=reply.created|timesince reply_url=reply.get_absolute_url %}
-        Replied to <a href="{{ reply_url }}">{{ replied }} ago</a>
-        {% endblocktrans %}
-      </div>
-      {% endif %}
     </div>
   </div>
   <div class="card-body">
@@ -76,6 +69,8 @@
       {% endif %}
       {% if can_reply %}
       <a href="{% url 'private_messages:message_reply' message.id %}">{% trans "Reply To Message" %}</a>
+      {% elif reply and show_reply_info %}
+      <a href="{{ reply.get_absolute_url }}">{% trans "View Reply" %}</a>
       {% endif %}
     </div>
   </div>
