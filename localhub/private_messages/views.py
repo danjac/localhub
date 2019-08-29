@@ -312,6 +312,7 @@ class MessageUpdateView(
     def get_breadcrumbs(self):
         return [
             (reverse("private_messages:outbox"), _("Outbox")),
+            (self.object.get_absolute_url, self.object.get_abbreviation()),
             ("#", _("Edit Message")),
         ]
 
