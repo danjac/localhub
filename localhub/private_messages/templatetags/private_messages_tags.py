@@ -30,20 +30,30 @@ def show_message(
         recipient_url = reverse(
             "users:messages", args=[message.recipient.username]
         )
+        other_user = message.recipient
     else:
         sender_url = reverse("users:messages", args=[message.sender.username])
         recipient_url = outbox_url
+        other_user = message.sender
+
+    request = context["request"]
+
+    can_create_message = request.user.has_perm(
+        "private_messages.create_message", request.community
+    )
 
     return {
-        "request": context["request"],
+        "request": request,
         "is_detail": is_detail,
         "is_recipient": is_recipient,
         "is_sender": is_sender,
         "message": message,
         "recipient_url": recipient_url,
         "sender_url": sender_url,
+        "other_user": other_user,
         "show_recipient_info": show_recipient_info,
         "show_sender_info": show_sender_info,
+        "can_create_message": can_create_message,
         "post_delete_redirect": outbox_url if is_detail else None,
     }
 
