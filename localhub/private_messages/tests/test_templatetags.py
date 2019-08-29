@@ -15,39 +15,47 @@ from localhub.private_messages.tests.factories import MessageFactory
 pytestmark = pytest.mark.django_db
 
 
+@pytest.fixture
+def auth_request(req_factory, member):
+    req = req_factory.get("/")
+    req.community = member.community
+    req.user = member.member
+    return req
+
+
 class TestShowMessage:
-    def test_is_sender(self, req_factory, member):
+    def test_is_sender(self, auth_request):
         message = MessageFactory(
-            sender=member.member, community=member.community
+            sender=auth_request.user, community=auth_request.community
         )
         context = show_message(
-            {"request": req_factory.get("/")}, member.member, message
+            {"request": auth_request}, auth_request.user, message
         )
         assert context["sender_url"] == reverse("private_messages:outbox")
         assert context["recipient_url"] == reverse(
             "users:messages", args=[message.recipient.username]
         )
 
-    def test_is_recipient(self, req_factory, member):
+    def test_is_recipient(self, auth_request):
         message = MessageFactory(
-            recipient=member.member, community=member.community
+            recipient=auth_request.user, community=auth_request.community
         )
         message.sender_has_blocked = False
         context = show_message(
-            {"request": req_factory.get("/")}, member.member, message
+            {"request": auth_request}, auth_request.user, message
         )
         assert context["recipient_url"] == reverse("private_messages:outbox")
         assert context["sender_url"] == reverse(
             "users:messages", args=[message.sender.username]
         )
 
-    def test_is_recipient_sender_has_blocked(self, req_factory, member):
+    def test_is_recipient_sender_has_blocked(self, auth_request):
         message = MessageFactory(
-            recipient=member.member, community=member.community
+            recipient=auth_request.user, community=auth_request.community
         )
         message.sender_has_blocked = True
         context = show_message(
-            {"request": req_factory.get("/")}, member.member, message
+            {"request": auth_request}, auth_request.user, message
         )
         assert context["recipient_url"] == reverse("private_messages:outbox")
         assert context["sender_url"] == reverse(
