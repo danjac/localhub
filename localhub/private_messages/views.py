@@ -124,6 +124,13 @@ class MessageCreateView(BreadcrumbsMixin, BaseMessageFormView):
             ("#", _("Send Message")),
         ]
 
+    def get_form(self, data=None, files=None):
+        form = self.form_class(data, files)
+        form["message"].label = _(
+            "Send message to %(recipient)s"
+        ) % user_display(self.recipient)
+        return form
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["recipient"] = self.recipient
