@@ -273,10 +273,16 @@ class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
                     + f"?thread={self.object.id}"
                 )
 
+        other_user = (
+            self.object.sender
+            if self.object.recipient == self.request.user
+            else self.object.recipient
+        )
         data.update(
             {
                 "ancestor": self.get_ancestor(),
                 "descendants": descendants,
+                "other_user": other_user,
                 "reply_url": reply_url,
                 "reply_form": reply_form,
             }

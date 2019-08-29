@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load account %}
+{% load rules %}
 {% load form_tags %}
 {% load private_messages_tags %}
 
@@ -14,6 +15,15 @@
     <a href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
     {% if ancestor %}
     <a href="{{ ancestor.get_absolute_url }}">{% trans "View Thread" %}</a>
+    {% endif %}
+    {% has_perm "private_messages.create_message" as can_create_message %}
+    {% if can_create_message %}
+    {% user_display other_user as other_user_name %}
+    <a href="{% url 'private_messages:message_create' other_user.id %}">
+      {% blocktrans %}
+      Send Message {{ other_user_name }}
+      {% endblocktrans %}
+    </a>
     {% endif %}
 </div>
 
