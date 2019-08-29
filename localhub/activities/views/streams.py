@@ -142,10 +142,10 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, StreamView):
     def make_date_lookup_kwargs(self, since, until):
         return {"created__gte": since, "created__lt": until}
 
-    def get_queryset_for_model(self, model):
-        qs = super().get_queryset_for_model(model)
+    def filter_queryset(self, queryset):
+        qs = super().filter_queryset(queryset)
         if self.date_kwargs:
-            qs = qs.filter(**self.date_kwargs)
+            return qs.filter(**self.date_kwargs)
         return qs
 
     def get_months(self, dates):
