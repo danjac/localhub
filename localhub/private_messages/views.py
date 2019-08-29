@@ -8,7 +8,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import F, Q
-from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
@@ -62,9 +61,7 @@ class InboxView(SearchMixin, BaseMessageListView):
             .get_queryset()
             .with_sender_has_blocked(self.request.user)
             .filter(recipient=self.request.user)
-            .select_related(
-                "sender", "recipient", "parent", "reply", "community"
-            )
+            .select_related("sender", "recipient", "community")
         )
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank", "-created")
@@ -85,9 +82,7 @@ class OutboxView(SenderQuerySetMixin, SearchMixin, BaseMessageListView):
         qs = (
             super()
             .get_queryset()
-            .select_related(
-                "sender", "recipient", "parent", "reply", "community"
-            )
+            .select_related("sender", "recipient", "community")
         )
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank", "-created")
@@ -107,67 +102,6 @@ class BaseMessageFormView(
 
     def get_permission_object(self):
         return self.request.community
-
-
-class MessageReplyView(BreadcrumbsMixin, BaseMessageFormView):
-    @cached_property
-    def parent(self):
-        return get_object_or_404(
-            Message.objects.with_sender_has_blocked(self.request.user).filter(
-                recipient=self.request.user,
-                community=self.request.community,
-                sender_has_blocked=False,
-            ),
-            pk=self.kwargs["pk"],
-        )
-
-    def get_breadcrumbs(self):
-        return [
-            (reverse("private_messages:inbox"), _("Inbox")),
-            (self.parent.get_absolute_url(), self.parent.get_abbreviation()),
-            ("#", _("Reply")),
-        ]
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["recipient"] = self.parent.sender
-        data["parent"] = self.parent
-        return data
-
-    def get_form(self, data=None, files=None):
-        initial = {
-            "message": "\n".join(
-                [f"> {line}" for line in self.parent.message.splitlines()]
-            )
-        }
-        return MessageForm(data, files, initial=initial)
-
-    def get_success_url(self):
-        if "thread" in self.request.GET:
-            return reverse(
-                "private_messages:message_detail",
-                args=[self.request.GET["thread"]],
-            )
-        return self.parent.get_absolute_url()
-
-    def form_valid(self, form):
-        message = form.save(commit=False)
-        message.community = self.request.community
-        message.sender = self.request.user
-        message.recipient = self.parent.sender
-        message.parent = self.parent
-        message.save()
-
-        messages.success(
-            self.request,
-            _("Your message has been sent to %(recipient)s")
-            % {"recipient": user_display(message.recipient)},
-        )
-        send_message_notifications(message)
-        return HttpResponseRedirect(self.get_success_url())
-
-
-message_reply_view = MessageReplyView.as_view()
 
 
 class MessageCreateView(BreadcrumbsMixin, BaseMessageFormView):
@@ -217,78 +151,6 @@ class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
 
     model = Message
 
-    def get_ancestor(self):
-        """
-        Find the most remote ancestor.
-        """
-        if self.object.parent is None:
-            return None
-
-        ancestors = self.get_queryset().filter(
-            created__lt=self.object.created, reply__isnull=False
-        )
-
-        def _find_ancestor(current):
-            for ancestor in ancestors:
-                if ancestor.reply == current:
-                    if ancestor.parent is None:
-                        return ancestor
-                    return _find_ancestor(ancestor)
-            return None
-
-        return _find_ancestor(self.object)
-
-    def get_descendants(self):
-        descendants = (
-            self.get_queryset()
-            .filter(created__gte=self.object.created, parent__isnull=False)
-            .order_by("created")
-        )
-
-        def _find_descendants(current):
-            rv = []
-            for descendant in descendants:
-                if descendant.parent == current:
-                    rv += [descendant] + _find_descendants(descendant)
-            return rv
-
-        return _find_descendants(self.object)
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        descendants = self.get_descendants()
-        reply_form, reply_url = None, None
-        if self.request.user.has_perm(
-            "private_messages.create_message", self.request.community
-        ):
-            reply_to_message = descendants[-1] if descendants else self.object
-            if reply_to_message.recipient == self.request.user:
-                reply_form = MessageForm()
-                reply_form["message"].label = _("Reply")
-                reply_url = (
-                    reverse(
-                        "private_messages:message_reply",
-                        args=[reply_to_message.id],
-                    )
-                    + f"?thread={self.object.id}"
-                )
-
-        other_user = (
-            self.object.sender
-            if self.object.recipient == self.request.user
-            else self.object.recipient
-        )
-        data.update(
-            {
-                "ancestor": self.get_ancestor(),
-                "descendants": descendants,
-                "other_user": other_user,
-                "reply_url": reply_url,
-                "reply_form": reply_form,
-            }
-        )
-        return data
-
     def get_queryset(self):
         return (
             super()
@@ -297,10 +159,43 @@ class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
             .filter(
                 Q(recipient=self.request.user) | Q(sender=self.request.user)
             )
-            .select_related(
-                "community", "parent", "recipient", "reply", "sender"
-            )
+            .select_related("community", "recipient", "sender")
         )
+
+    def get_other_user(self):
+        return (
+            self.object.recipient
+            if self.request.user == self.object.sender
+            else self.object.recipient
+        )
+
+    def get_previous_message(self):
+        return (
+            self.get_queryset()
+            .filter(created__lt=self.object.created)
+            .order_by("-created")
+            .first()
+        )
+
+    def get_next_message(self):
+        return (
+            self.get_queryset()
+            .filter(created__gt=self.object.created)
+            .order_by("created")
+            .first()
+        )
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data.update(
+            {
+                "other_user": self.get_other_user(),
+                "previous_message": self.get_previous_message(),
+                "next_message": self.get_next_message(),
+            }
+        )
+
+        return data
 
 
 message_detail_view = MessageDetailView.as_view()

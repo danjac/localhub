@@ -13,26 +13,19 @@
 <div class="actions">
     <a href="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</a>
     <a href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
-    {% if ancestor %}
-    <a href="{{ ancestor.get_absolute_url }}">{% trans "View Thread" %}</a>
+    {% if previous_message %}
+    <a href="{{ previous_message.get_absolute_url }}">{% trans "Previous" %}</a>
     {% endif %}
-    {% has_perm "private_messages.create_message" as can_create_message %}
+    {% if next_message %}
+    <a href="{{ next_message.get_absolute_url }}">{% trans "Next" %}</a>
+    {% endif %}
+    {% has_perm "private_messages.create_message" user community as can_create_message %}
     {% if can_create_message %}
     {% user_display other_user as other_user_name %}
-    <a href="{% url 'private_messages:message_create' other_user.id %}">
-      {% blocktrans %}
-      Send Message {{ other_user_name }}
-      {% endblocktrans %}
-    </a>
+    <a href="{% url 'private_messages:message_create' other_user.username %}">{% trans "Send Message" %}</a>
     {% endif %}
 </div>
 
 <div class="divider"></div>
-{% show_message user message is_detail=True show_reply_info=False %}
-{% for descendant in descendants %}
-{% show_message user descendant show_parent_info=False show_reply_info=False %}
-{% endfor %}
-{% if reply_url and reply_form %}
-{% simple_ajax_form reply_form action=reply_url %}
-{% endif %}
+{% show_message user message is_detail=True %}
 {% endblock content %}

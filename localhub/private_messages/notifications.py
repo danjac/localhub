@@ -22,11 +22,7 @@ def send_message_email(message):
 
             context = {"recipient": message.recipient, "message": message}
 
-            subject = (
-                _("Someone has replied to your message")
-                if message.parent
-                else _("Someone has sent you a message")
-            )
+            subject = _("Someone has sent you a message")
 
             send_mail(
                 f"{message.community.name} | {subject}",
@@ -44,16 +40,11 @@ def send_message_email(message):
 def send_message_push(message):
     with override(message.recipient.language):
 
-        head = (
-            _("%(sender)s has replied to your message")
-            if message.parent
-            else _("%(sender)s has sent you a message")
-        )
-
         send_push_notification(
             message.recipient,
             message.community,
-            head=head % {"sender": user_display(message.sender)},
+            head=_("%(sender)s has sent you a message")
+            % {"sender": user_display(message.sender)},
             body=message.get_abbreviation(),
             url=message.get_permalink(),
         )

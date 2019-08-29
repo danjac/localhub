@@ -3,7 +3,6 @@
 
 
 from django import template
-from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 
 
@@ -19,8 +18,6 @@ def show_message(
     message,
     show_sender_info=True,
     show_recipient_info=True,
-    show_parent_info=True,
-    show_reply_info=True,
     is_detail=False,
 ):
 
@@ -28,42 +25,25 @@ def show_message(
     is_recipient = user == message.recipient
     outbox_url = reverse("private_messages:outbox")
 
-    try:
-        reply = message.reply
-    except ObjectDoesNotExist:
-        reply = None
-
     if is_sender:
         sender_url = outbox_url
         recipient_url = reverse(
             "users:messages", args=[message.recipient.username]
         )
-        can_reply = False
     else:
         sender_url = reverse("users:messages", args=[message.sender.username])
         recipient_url = outbox_url
-        can_reply = (
-            reply is None
-            and not message.sender_has_blocked
-            and user.has_perm(
-                "private_messages.create_message", message.community
-            )
-        )
 
     return {
         "request": context["request"],
-        "can_reply": can_reply,
         "is_detail": is_detail,
         "is_recipient": is_recipient,
         "is_sender": is_sender,
         "message": message,
         "recipient_url": recipient_url,
-        "reply": reply,
         "sender_url": sender_url,
         "show_recipient_info": show_recipient_info,
         "show_sender_info": show_sender_info,
-        "show_reply_info": show_reply_info,
-        "show_parent_info": show_parent_info,
         "post_delete_redirect": outbox_url if is_detail else None,
     }
 

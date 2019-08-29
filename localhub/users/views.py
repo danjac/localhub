@@ -275,9 +275,7 @@ class UserMessageListView(LoginRequiredMixin, SingleUserMixin, ListView):
                 community=self.request.community,
             )
             .with_sender_has_blocked(self.request.user)
-            .select_related(
-                "sender", "recipient", "parent", "community", "reply"
-            )
+            .select_related("sender", "recipient", "community")
             .order_by("-created")
             .distinct()
         )

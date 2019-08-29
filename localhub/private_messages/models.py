@@ -35,14 +35,6 @@ class Message(TimeStampedModel):
         settings.AUTH_USER_MODEL, related_name="+", on_delete=models.CASCADE
     )
 
-    parent = models.OneToOneField(
-        "self",
-        related_name="reply",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-    )
-
     message = MarkdownField()
 
     read = models.DateTimeField(null=True, blank=True)

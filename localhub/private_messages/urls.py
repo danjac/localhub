@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from django.urls import path
 
 
@@ -7,7 +10,6 @@ from localhub.private_messages.views import (
     message_delete_view,
     message_detail_view,
     message_mark_read_view,
-    message_reply_view,
     message_update_view,
     outbox_view,
 )
@@ -24,7 +26,6 @@ urlpatterns = [
     path(
         "message/<int:pk>/~edit/", message_update_view, name="message_update"
     ),
-    path("message/<int:pk>/~reply/", message_reply_view, name="message_reply"),
     path(
         "message/<int:pk>/~delete/", message_delete_view, name="message_delete"
     ),

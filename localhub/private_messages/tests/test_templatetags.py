@@ -23,8 +23,6 @@ class TestShowMessage:
         context = show_message(
             {"request": req_factory.get("/")}, member.member, message
         )
-        assert context["can_reply"] is False
-        assert context["reply"] is None
         assert context["sender_url"] == reverse("private_messages:outbox")
         assert context["recipient_url"] == reverse(
             "users:messages", args=[message.recipient.username]
@@ -38,8 +36,6 @@ class TestShowMessage:
         context = show_message(
             {"request": req_factory.get("/")}, member.member, message
         )
-        assert context["can_reply"] is True
-        assert context["reply"] is None
         assert context["recipient_url"] == reverse("private_messages:outbox")
         assert context["sender_url"] == reverse(
             "users:messages", args=[message.sender.username]
@@ -53,50 +49,6 @@ class TestShowMessage:
         context = show_message(
             {"request": req_factory.get("/")}, member.member, message
         )
-        assert context["can_reply"] is False
-        assert context["reply"] is None
-        assert context["recipient_url"] == reverse("private_messages:outbox")
-        assert context["sender_url"] == reverse(
-            "users:messages", args=[message.sender.username]
-        )
-
-    def test_is_sender_has_reply(self, req_factory, member):
-        message = MessageFactory(
-            sender=member.member, community=member.community
-        )
-        reply = MessageFactory(
-            sender=message.recipient,
-            community=message.community,
-            recipient=message.sender,
-            parent=message,
-        )
-
-        context = show_message(
-            {"request": req_factory.get("/")}, member.member, message
-        )
-        assert context["can_reply"] is False
-        assert context["reply"] == reply
-        assert context["sender_url"] == reverse("private_messages:outbox")
-        assert context["recipient_url"] == reverse(
-            "users:messages", args=[message.recipient.username]
-        )
-
-    def test_is_recipient_has_reply(self, req_factory, member):
-        message = MessageFactory(
-            recipient=member.member, community=member.community
-        )
-        reply = MessageFactory(
-            sender=message.recipient,
-            community=message.community,
-            recipient=message.sender,
-            parent=message,
-        )
-
-        context = show_message(
-            {"request": req_factory.get("/")}, member.member, message
-        )
-        assert context["can_reply"] is False
-        assert context["reply"] == reply
         assert context["recipient_url"] == reverse("private_messages:outbox")
         assert context["sender_url"] == reverse(
             "users:messages", args=[message.sender.username]
