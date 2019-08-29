@@ -2,8 +2,6 @@
 
 {% load i18n %}
 {% load account %}
-{% load rules %}
-{% load form_tags %}
 {% load private_messages_tags %}
 
 {% block content %}
@@ -18,11 +16,6 @@
     {% endif %}
     {% if next_message %}
     <a href="{{ next_message.get_absolute_url }}">{% trans "Next" %}</a>
-    {% endif %}
-    {% has_perm "private_messages.create_message" user community as can_create_message %}
-    {% if can_create_message %}
-    {% user_display other_user as other_user_name %}
-    <a href="{% url 'private_messages:message_create' other_user.username %}">{% trans "Send Message" %}</a>
     {% endif %}
 </div>
 

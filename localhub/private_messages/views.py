@@ -182,7 +182,6 @@ class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
         data = super().get_context_data(**kwargs)
         data.update(
             {
-                "other_user": self.object.get_other_user(self.request.user),
                 "previous_message": self.get_previous_message(),
                 "next_message": self.get_next_message(),
             }
