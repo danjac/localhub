@@ -146,6 +146,7 @@ class User(AbstractUser):
             "new_followed_user_post",
             _("Someone I'm following submits a post, event or photo"),
         ),
+        ("replied_to_comment", _("Someone replies to my comment")),
         (
             "new_followed_user_comment",
             _("Someone I'm following submits a comment"),

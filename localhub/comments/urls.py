@@ -6,6 +6,7 @@ from localhub.comments.views import (
     comment_dislike_view,
     comment_flag_view,
     comment_like_view,
+    comment_reply_view,
     comment_search_view,
     comment_update_view,
 )
@@ -21,4 +22,5 @@ urlpatterns = [
     path("<int:pk>/~like/", comment_like_view, name="like"),
     path("<int:pk>/~dislike/", comment_dislike_view, name="dislike"),
     path("<int:pk>/~flag/", comment_flag_view, name="flag"),
+    path("<int:pk>/~reply/", comment_reply_view, name="reply"),
 ]

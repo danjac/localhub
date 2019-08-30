@@ -206,7 +206,13 @@ class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
             .with_common_annotations(self.request.community, self.request.user)
             .blocked_users(self.request.user)
             .filter(owner__communities=self.request.community)
-            .select_related("owner", "community")
+            .select_related(
+                "owner",
+                "community",
+                "parent",
+                "parent__owner",
+                "parent__community",
+            )
             .order_by("created")
         )
 

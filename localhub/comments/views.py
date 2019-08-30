@@ -13,6 +13,7 @@ from django.utils.translation import gettext as _
 from rules.contrib.views import PermissionRequiredMixin
 
 from vanilla import (
+    CreateView,
     DeleteView,
     DetailView,
     FormView,
@@ -38,7 +39,13 @@ class CommentQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
         return Comment.objects.for_community(
             self.request.community
-        ).select_related("owner", "community")
+        ).select_related(
+            "owner",
+            "community",
+            "parent",
+            "parent__owner",
+            "parent__community",
+        )
 
 
 class BaseCommentListView(CommentQuerySetMixin, ListView):
@@ -50,7 +57,7 @@ class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
 
     def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.object.content_object) + [
-            (self.request.path, _("Comment"))
+            ("#", _("Comment"))
         ]
 
     def get_flags(self):
@@ -232,3 +239,48 @@ class CommentSearchView(SearchMixin, BaseCommentListView):
 
 
 comment_search_view = CommentSearchView.as_view()
+
+
+class CommentReplyView(
+    LoginRequiredMixin,
+    CommentQuerySetMixin,
+    BreadcrumbsMixin,
+    PermissionRequiredMixin,
+    CreateView,
+):
+    permission_required = "comments.reply_to_comment"
+    model = Comment
+    form_class = CommentForm
+
+    def get_permission_object(self):
+        return self.parent
+
+    def get_breadcrumbs(self):
+        return get_breadcrumbs_for_instance(self.parent.content_object) + [
+            (self.parent.get_absolute_url(), self.parent.get_abbreviation()),
+            ("#", _("Reply")),
+        ]
+
+    @cached_property
+    def parent(self):
+        return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["parent"] = self.parent
+        return data
+
+    def form_valid(self, form):
+        comment = form.save(commit=False)
+        comment.parent = self.parent
+        comment.content_object = self.parent.content_object
+        comment.owner = self.request.user
+        comment.community = self.request.community
+        comment.save()
+        for notification in comment.notify_on_create():
+            send_comment_notifications(comment, notification)
+        messages.success(self.request, _("Your comment has been posted"))
+        return redirect(comment.content_object)
+
+
+comment_reply_view = CommentReplyView.as_view()

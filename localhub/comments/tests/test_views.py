@@ -174,3 +174,41 @@ class TestFlagView:
 
         notification = Notification.objects.get(recipient=moderator.member)
         assert notification.verb == "flag"
+
+
+class TestCommentReplyView:
+    def test_get(self, client, member):
+        post = PostFactory(community=member.community)
+        parent = CommentFactory(
+            content_object=post,
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
+        response = client.get(reverse("comments:reply", args=[parent.id]))
+        assert response.status_code == 200
+
+    def test_post(self, client, member, send_notification_webpush_mock):
+        post = PostFactory(community=member.community)
+        parent = CommentFactory(
+            content_object=post,
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
+        response = client.post(
+            reverse("comments:reply", args=[parent.id]), {"content": "test"}
+        )
+        assert response.url == parent.content_object.get_absolute_url()
+        comment = Comment.objects.get(parent=parent)
+        assert comment.owner == member.member
+        assert comment.content_object == parent.content_object
+        assert comment.parent == parent
+
+        notification = Notification.objects.get(
+            recipient=comment.content_object.owner, comment=comment
+        )
+        assert notification.verb == "new_comment"
+
+        notification = Notification.objects.get(
+            recipient=parent.owner, comment=comment
+        )
+        assert notification.verb == "replied_to_comment"

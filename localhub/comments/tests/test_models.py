@@ -115,6 +115,10 @@ class TestCommentManager:
 
 
 class TestCommentModel:
+    def test_get_abbreviation(self):
+        comment = Comment(content="Hello\nthis is a *test*")
+        assert comment.get_abbreviation() == "Hello this is a test"
+
     def test_notify_on_create(self, community):
 
         comment_owner = MembershipFactory(community=community).member
@@ -167,6 +171,73 @@ class TestCommentModel:
         assert notifications[4].recipient == follower
         assert notifications[4].actor == comment.owner
         assert notifications[4].verb == "new_followed_user_comment"
+
+    def test_notify_on_create_if_parent(self, community):
+
+        comment_owner = MembershipFactory(community=community).member
+        parent_owner = MembershipFactory(community=community).member
+        post_owner = MembershipFactory(community=community).member
+
+        moderator = MembershipFactory(
+            community=community, role=Membership.ROLES.moderator
+        ).member
+
+        mentioned = UserFactory(username="danjac")
+
+        MembershipFactory(member=mentioned, community=community)
+
+        post = PostFactory(owner=post_owner, community=community)
+
+        other_comment = CommentFactory(
+            owner=MembershipFactory(community=community).member,
+            content_object=post,
+        )
+
+        parent = CommentFactory(
+            owner=parent_owner,
+            community=community,
+            content_object=post,
+            content="hello @danjac",
+        )
+
+        comment = CommentFactory(
+            owner=comment_owner,
+            parent=parent,
+            community=community,
+            content_object=post,
+            content="hello @danjac",
+        )
+
+        follower = MembershipFactory(community=community).member
+        follower.following.add(comment.owner)
+
+        notifications = comment.notify_on_create()
+
+        assert len(notifications) == 6
+
+        assert notifications[0].recipient == mentioned
+        assert notifications[0].actor == comment.owner
+        assert notifications[0].verb == "mention"
+
+        assert notifications[1].recipient == moderator
+        assert notifications[1].actor == comment.owner
+        assert notifications[1].verb == "moderator_review_request"
+
+        assert notifications[2].recipient == post.owner
+        assert notifications[2].actor == comment.owner
+        assert notifications[2].verb == "new_comment"
+
+        assert notifications[3].recipient == parent_owner
+        assert notifications[3].actor == comment.owner
+        assert notifications[3].verb == "replied_to_comment"
+
+        assert notifications[4].recipient == other_comment.owner
+        assert notifications[4].actor == comment.owner
+        assert notifications[4].verb == "new_sibling_comment"
+
+        assert notifications[5].recipient == follower
+        assert notifications[5].actor == comment.owner
+        assert notifications[5].verb == "new_followed_user_comment"
 
     def test_notify_on_update(self, community):
 

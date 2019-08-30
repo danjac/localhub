@@ -10,6 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
+from django.template.defaultfilters import truncatechars, striptags
 from django.urls import reverse
 from django.utils.functional import cached_property
 
@@ -107,6 +108,10 @@ class Comment(TimeStampedModel):
     object_id = models.PositiveIntegerField(null=True, blank=True)
     content_object = GenericForeignKey("content_type", "object_id")
 
+    parent = models.ForeignKey(
+        "self", null=True, blank=True, on_delete=models.SET_NULL
+    )
+
     content = MarkdownField()
 
     search_document = SearchVectorField(null=True, editable=False)
@@ -163,6 +168,12 @@ class Comment(TimeStampedModel):
     def has_content_changed(self):
         return "content" in self.changed_fields
 
+    def get_abbreviation(self, length=60):
+        text = " ".join(
+            striptags(self.content.markdown()).strip().splitlines()
+        )
+        return truncatechars(text, length)
+
     def get_flags(self):
         return Flag.objects.filter(comment=self)
 
@@ -208,6 +219,13 @@ class Comment(TimeStampedModel):
                 )
             )
 
+        # notify the person being replied to
+
+        if self.parent:
+            notifications += [
+                self.make_notification("replied_to_comment", self.parent.owner)
+            ]
+
         # notify anyone who has commented on this post, excluding
         # this comment owner and parent owner
         other_commentors = (
@@ -215,6 +233,11 @@ class Comment(TimeStampedModel):
             .exclude(pk__in=(self.owner_id, self.content_object.owner_id))
             .distinct()
         )
+        if self.parent:
+            other_commentors = other_commentors.exclude(
+                pk=self.parent.owner.id
+            )
+
         notifications += [
             self.make_notification("new_sibling_comment", commentor)
             for commentor in other_commentors

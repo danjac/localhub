@@ -4,91 +4,107 @@
 {% load i18n %}
 {% load rules %}
 
-
 <div class="card" id="comment-{{ comment.id }}">
-  <div class="card-header">
-    {% has_perm "communities.moderate_community" user community as can_moderate_community %}
-    {% if comment.is_flagged and can_moderate_community %}
-    <div class="toast toast-info text-center mb-1">
-      <a href="{{ comment.get_absolute_url }}">{% trans "This comment has been flagged" %}</a>
-    </div>
-    {% endif %}
-
-    <div class="card-title h6">
-      {% include "activities/includes/timesince.html" with timestamp=comment.created owner=comment.owner %}
-    </div>
-  </div>
-  <div class="card-body">
-    <div class="markdown-content">
-      {{ comment.content.markdown }}
-    </div>
-  </div>
-  <div class="card-footer">
-    {% if comment.num_likes and comment.owner == user %}
-    <div class="info">
-      {{ comment.num_likes }}
-      {% blocktrans count counter=comment.num_likes %}
-      person liked this comment
-      {% plural %}
-      people liked this comment
-      {% endblocktrans %}
-    </div>
-    {% endif %}
-
-    {% has_perm "comments.like_comment" user comment as can_like_comment %}
-    <div class="actions" data-controller="toggle">
-      <a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a>
-      {% if can_like_comment %}
-
-      <a href="{% url 'comments:like' comment.id %}"
-         {% if comment.has_liked %} class="d-hide"{% endif %}
-                                    data-controller="ajax"
-                                    data-target="toggle.togglable"
-                                    data-toggle-target="like"
-                                    data-ajax-redirect="none"
-                                    data-action="ajax#post toggle#toggle"
-                                    >{% trans "Like" %}</a>
-      <a href="{% url 'comments:dislike' comment.id %}"
-         {% if not comment.has_liked %} class="d-hide"{% endif %}
-                                        data-controller="ajax"
-                                        data-target="toggle.togglable"
-                                        data-toggle-target="like"
-                                        data-ajax-redirect="none"
-                                        data-action="ajax#post toggle#toggle"
-                                        >{% trans "Unlike" %}</a>
-      {% endif %}
-
-      {% has_perm "comments.flag_comment" user comment as can_flag_comment %}
-      {% if can_flag_comment and not comment.has_flagged %}
-      <a href="{% url 'comments:flag' comment.id %}">
-        {% trans "Flag" %}
-      </a>
-      {% endif %}
-
-      {% has_perm "comments.change_comment" user comment as can_change_comment %}
-
-      {% if can_change_comment %}
-      <a href="{% url 'comments:update' comment.id %}">
-        {% trans "Edit" %}
-      </a>
-      {% endif %}
-
-      {% has_perm "comments.delete_comment" user comment as can_delete_comment %}
-      {% if can_delete_comment %}
-      {% url 'comments:delete' comment.id as delete_url %}
-      <a href="{{ delete_url }}"
-         data-controller="ajax confirm"
-         data-action="confirm#check ajax#post"
-         {% if not is_detail %}
-         data-ajax-redirect="{{ request.get_full_path }}"
-         {% endif %}
-         data-confirm-header="{% trans 'Delete Comment' %}"
-         data-confirm-body="{% trans 'Are you sure you want to delete this comment?' %}"
-         >
-         {% trans "Delete" %}
-      </a>
+    <div class="card-header">
+        {% has_perm "communities.moderate_community" user community as can_moderate_community %}
+        {% if comment.is_flagged and can_moderate_community %}
+        <div class="toast toast-info text-center mb-1">
+            <a href="{{ comment.get_absolute_url }}">{% trans "This comment has been flagged" %}</a>
+        </div>
         {% endif %}
-    </div>
 
-  </div>
+        <div class="card-title h6">
+            {% include "activities/includes/timesince.html" with timestamp=comment.created owner=comment.owner %}
+            {% with parent=comment.parent %}
+            {% if parent %}
+            {% if is_embedded %}
+            <a href="#comment-{{ parent.id }}" data-turbolinks="false">
+                {% else %}
+                <a href="{{ parent.get_absolute_url }}">
+                    {% endif %}
+                    {% blocktrans with abbreviation=parent.get_abbreviation %}
+                    in reply to {{ abbreviation }}
+                    {% endblocktrans %}
+                </a>
+                {% endif %}
+                {% endwith %}
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="markdown-content">
+            {{ comment.content.markdown }}
+        </div>
+    </div>
+    <div class="card-footer">
+        {% if comment.num_likes and comment.owner == user %}
+        <div class="info">
+            {{ comment.num_likes }}
+            {% blocktrans count counter=comment.num_likes %}
+            person liked this comment
+            {% plural %}
+            people liked this comment
+            {% endblocktrans %}
+        </div>
+        {% endif %}
+
+        {% has_perm "comments.like_comment" user comment as can_like_comment %}
+        <div class="actions" data-controller="toggle">
+            <a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a>
+            {% if can_like_comment %}
+
+            <a href="{% url 'comments:like' comment.id %}"
+               {% if comment.has_liked %} class="d-hide"{% endif %}
+                                          data-controller="ajax"
+                                          data-target="toggle.togglable"
+                                          data-toggle-target="like"
+                                          data-ajax-redirect="none"
+                                          data-action="ajax#post toggle#toggle"
+                                          >{% trans "Like" %}</a>
+            <a href="{% url 'comments:dislike' comment.id %}"
+               {% if not comment.has_liked %} class="d-hide"{% endif %}
+                                              data-controller="ajax"
+                                              data-target="toggle.togglable"
+                                              data-toggle-target="like"
+                                              data-ajax-redirect="none"
+                                              data-action="ajax#post toggle#toggle"
+                                              >{% trans "Unlike" %}</a>
+            {% endif %}
+
+            {% has_perm "comments.flag_comment" user comment as can_flag_comment %}
+            {% if can_flag_comment and not comment.has_flagged %}
+            <a href="{% url 'comments:flag' comment.id %}">
+                {% trans "Flag" %}
+            </a>
+            {% endif %}
+
+            {% has_perm "comments.change_comment" user comment as can_change_comment %}
+
+            {% if can_change_comment %}
+            <a href="{% url 'comments:update' comment.id %}">
+                {% trans "Edit" %}
+            </a>
+            {% endif %}
+
+            {% has_perm "comments.delete_comment" user comment as can_delete_comment %}
+            {% if can_delete_comment %}
+            {% url 'comments:delete' comment.id as delete_url %}
+            <a href="{{ delete_url }}"
+               data-controller="ajax confirm"
+               data-action="confirm#check ajax#post"
+               {% if not is_detail %}
+               data-ajax-redirect="{{ request.get_full_path }}"
+               {% endif %}
+               data-confirm-header="{% trans 'Delete Comment' %}"
+               data-confirm-body="{% trans 'Are you sure you want to delete this comment?' %}"
+               >
+               {% trans "Delete" %}
+            </a>
+                {% endif %}
+                {% has_perm "comments.reply_to_comment" user comment as can_reply %}
+                {% if can_reply %}
+                <a href="{% url 'comments:reply' comment.id %}">{% trans "Reply" %}</a>
+                {% endif %}
+        </div>
+
+    </div>
 </div>

@@ -26,6 +26,7 @@ NOTIFICATION_HEADERS = {
     "new_sibling_comment": _(
         "%(actor)s has made a comment on a post you've commented on"
     ),
+    "replied_to_comment": _("%(actor)s has replied to your comment"),
     "new_followed_user_comment": _("%(actor)s has submitted a new comment"),
 }
 

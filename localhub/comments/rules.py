@@ -33,3 +33,6 @@ rules.add_perm(
 rules.add_perm(
     "comments.like_comment", is_comment_community_member & ~is_owner
 )
+rules.add_perm(
+    "comments.reply_to_comment", is_comment_community_member & ~is_owner
+)
