@@ -7,6 +7,7 @@ import pytest
 from django.urls import reverse
 
 from localhub.comments.tests.factories import CommentFactory
+from localhub.communities.tests.factories import MembershipFactory
 from localhub.events.tests.factories import EventFactory
 from localhub.notifications.models import Notification, PushSubscription
 from localhub.photos.tests.factories import PhotoFactory
@@ -17,7 +18,8 @@ pytestmark = pytest.mark.django_db
 
 class TestNotificationListView:
     def test_get(self, client, member):
-        post = PostFactory(community=member.community)
+        owner = MembershipFactory(community=member.community).member
+        post = PostFactory(community=member.community, owner=owner)
         Notification.objects.create(
             content_object=post,
             recipient=member.member,
@@ -25,7 +27,7 @@ class TestNotificationListView:
             community=post.community,
             verb="new_followed_user_post",
         )
-        comment = CommentFactory(content_object=post)
+        comment = CommentFactory(content_object=post, owner=owner)
         Notification.objects.create(
             content_object=comment,
             recipient=member.member,
@@ -33,7 +35,7 @@ class TestNotificationListView:
             community=post.community,
             verb="new_comment",
         )
-        event = EventFactory(community=member.community)
+        event = EventFactory(community=member.community, owner=owner)
         Notification.objects.create(
             content_object=event,
             recipient=member.member,
@@ -41,7 +43,7 @@ class TestNotificationListView:
             community=event.community,
             verb="new_followed_user_post",
         )
-        photo = PhotoFactory(community=member.community)
+        photo = PhotoFactory(community=member.community, owner=owner)
         Notification.objects.create(
             content_object=photo,
             recipient=member.member,
@@ -56,7 +58,8 @@ class TestNotificationListView:
 
 class TestNotificationMarkReadView:
     def test_post(self, client, member):
-        post = PostFactory(community=member.community)
+        owner = MembershipFactory(community=member.community).member
+        post = PostFactory(community=member.community, owner=owner)
         notification = Notification.objects.create(
             content_object=post,
             recipient=member.member,
@@ -74,7 +77,8 @@ class TestNotificationMarkReadView:
 
 class TestNotificationMarkAllReadView:
     def test_post(self, client, member):
-        post = PostFactory(community=member.community)
+        owner = MembershipFactory(community=member.community).member
+        post = PostFactory(community=member.community, owner=owner)
         notification = Notification.objects.create(
             content_object=post,
             recipient=member.member,
@@ -90,7 +94,8 @@ class TestNotificationMarkAllReadView:
 
 class TestNotificationDeleteView:
     def test_post(self, client, member):
-        post = PostFactory(community=member.community)
+        owner = MembershipFactory(community=member.community).member
+        post = PostFactory(community=member.community, owner=owner)
         notification = Notification.objects.create(
             content_object=post,
             recipient=member.member,
@@ -107,7 +112,8 @@ class TestNotificationDeleteView:
 
 class TestNotificationDeleteAllView:
     def test_delete(self, client, member):
-        post = PostFactory(community=member.community)
+        owner = MembershipFactory(community=member.community).member
+        post = PostFactory(community=member.community, owner=owner)
         Notification.objects.create(
             content_object=post,
             recipient=member.member,

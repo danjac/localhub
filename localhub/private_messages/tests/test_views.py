@@ -11,22 +11,33 @@ pytestmark = pytest.mark.django_db
 
 class TestInboxView:
     def test_get(self, client, member):
-        MessageFactory(community=member.community, recipient=member.member)
+        sender = MembershipFactory(community=member.community).member
+        MessageFactory(
+            community=member.community, recipient=member.member, sender=sender
+        )
         response = client.get(reverse("private_messages:inbox"))
         assert len(response.context["object_list"]) == 1
 
 
 class TestOutboxView:
     def test_get(self, client, member):
-        MessageFactory(community=member.community, sender=member.member)
+        recipient = MembershipFactory(community=member.community).member
+        MessageFactory(
+            community=member.community,
+            sender=member.member,
+            recipient=recipient,
+        )
         response = client.get(reverse("private_messages:outbox"))
         assert len(response.context["object_list"]) == 1
 
 
 class TestMessageUpdateView:
     def test_get(self, client, member):
+        recipient = MembershipFactory(community=member.community).member
         message = MessageFactory(
-            community=member.community, sender=member.member
+            community=member.community,
+            sender=member.member,
+            recipient=recipient,
         )
         response = client.get(
             reverse("private_messages:message_update", args=[message.id])
@@ -34,8 +45,11 @@ class TestMessageUpdateView:
         assert response.status_code == 200
 
     def test_post(self, client, member):
+        recipient = MembershipFactory(community=member.community).member
         message = MessageFactory(
-            community=member.community, sender=member.member
+            community=member.community,
+            sender=member.member,
+            recipient=recipient,
         )
         response = client.post(
             reverse("private_messages:message_update", args=[message.id]),
@@ -48,8 +62,11 @@ class TestMessageUpdateView:
 
 class TestMessageDeleteView:
     def test_post(self, client, member):
+        recipient = MembershipFactory(community=member.community).member
         message = MessageFactory(
-            community=member.community, sender=member.member
+            community=member.community,
+            sender=member.member,
+            recipient=recipient,
         )
         response = client.post(
             reverse("private_messages:message_delete", args=[message.id])
@@ -60,8 +77,9 @@ class TestMessageDeleteView:
 
 class TestMessageMarkReadView:
     def test_post(self, client, member):
+        sender = MembershipFactory(community=member.community).member
         message = MessageFactory(
-            community=member.community, recipient=member.member
+            community=member.community, recipient=member.member, sender=sender
         )
         response = client.post(
             reverse("private_messages:message_mark_read", args=[message.id])
@@ -73,21 +91,29 @@ class TestMessageMarkReadView:
 
 class TestMessageDetailView:
     def test_get_if_sender(self, client, member):
+        recipient = MembershipFactory(community=member.community).member
         message = MessageFactory(
-            community=member.community, sender=member.member
+            community=member.community,
+            sender=member.member,
+            recipient=recipient,
         )
         response = client.get(message.get_absolute_url())
         assert response.status_code == 200
 
     def test_get_if_recipient(self, client, member):
+        sender = MembershipFactory(community=member.community).member
         message = MessageFactory(
-            community=member.community, recipient=member.member
+            community=member.community, recipient=member.member, sender=sender
         )
         response = client.get(message.get_absolute_url())
         assert response.status_code == 200
 
     def test_get_if_neither_recipient_nor_sender(self, client, member):
-        message = MessageFactory(community=member.community)
+        sender = MembershipFactory(community=member.community).member
+        recipient = MembershipFactory(community=member.community).member
+        message = MessageFactory(
+            community=member.community, sender=sender, recipient=recipient
+        )
         response = client.get(message.get_absolute_url())
         assert response.status_code == 404
 

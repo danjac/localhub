@@ -21,7 +21,7 @@ class NotificationQuerySetMixin(CommunityRequiredMixin, LoginRequiredMixin):
         return Notification.objects.filter(
             recipient=self.request.user,
             community=self.request.community,
-            actor__community=self.request.community,
+            actor__communities=self.request.community,
         )
 
 
