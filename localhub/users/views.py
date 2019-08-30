@@ -260,6 +260,7 @@ class UserMessageListView(LoginRequiredMixin, SingleUserMixin, ListView):
     """
 
     template_name = "users/messages.html"
+    paginate_by = settings.DEFAULT_PAGE_SIZE
 
     def get_user_queryset(self):
         return super().get_user_queryset().exclude(pk=self.request.user.id)
