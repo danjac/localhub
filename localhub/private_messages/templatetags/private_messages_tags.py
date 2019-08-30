@@ -18,6 +18,7 @@ def show_message(
     message,
     show_sender_info=True,
     show_recipient_info=True,
+    show_send_message=True,
     is_detail=False,
 ):
 
@@ -51,7 +52,7 @@ def show_message(
         "other_user": message.get_other_user(user),
         "show_recipient_info": show_recipient_info,
         "show_sender_info": show_sender_info,
-        "can_create_message": can_create_message,
+        "can_create_message": can_create_message and show_send_message,
         "post_delete_redirect": outbox_url if is_detail else None,
     }
 
