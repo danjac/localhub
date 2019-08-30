@@ -16,6 +16,7 @@ from localhub.core.utils.search import SearchIndexer, SearchQuerySetMixin
 
 
 class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
+
     def with_sender_has_blocked(self, user):
         return self.annotate(
             sender_has_blocked=models.Exists(

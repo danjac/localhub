@@ -2,6 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
+{% load account %}
 
 <div class="card mb-1{% if is_sender %} bg-gray{% endif %}">
     <div class="card-header">
@@ -59,7 +60,12 @@
                >{% trans "Delete" %}</a>
             {% endif %}
             {% if can_create_message %}
-            <a href="{% url 'private_messages:message_create' other_user.username %}">{% trans "Send Message" %}</a>
+            <a href="{% url 'private_messages:message_create' other_user.username %}">
+                {% user_display other_user as other_user_name %}
+                {% blocktrans %}
+                Send Message to {{ other_user_name }}
+                {% endblocktrans %}
+            </a>
             {% endif %}
         </div>
     </div>

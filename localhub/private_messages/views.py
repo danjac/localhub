@@ -169,6 +169,9 @@ class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
             .select_related("community", "recipient", "sender")
         )
 
+    def get_next_or_previous_queryset(self):
+        return self
+
     def get_previous_message(self):
         return (
             self.get_queryset()
