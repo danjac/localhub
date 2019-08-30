@@ -35,7 +35,11 @@ from localhub.users.utils import user_display
 
 class MessageQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
-        return Message.objects.filter(community=self.request.community)
+        return Message.objects.filter(
+            community=self.request.community,
+            sender__community=self.request.community,
+            recipient__community=self.request.community,
+        )
 
 
 class SenderQuerySetMixin(MessageQuerySetMixin):
@@ -168,9 +172,6 @@ class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
             )
             .select_related("community", "recipient", "sender")
         )
-
-    def get_next_or_previous_queryset(self):
-        return self
 
     def get_previous_message(self):
         return (
