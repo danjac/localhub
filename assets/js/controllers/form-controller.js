@@ -84,6 +84,7 @@ export default class extends Controller {
         }
       })
       .catch(err => {
+        console.log('form error', err);
         this.enableFormElements();
         let errMsg = '';
         if (err.response) {
