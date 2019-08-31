@@ -49,28 +49,26 @@ class TestActivityTimelineView:
 
 
 class TestActivitySearchView:
+    @pytest.mark.django_db(transaction=True)
     def test_get(self, client, community):
         member = MembershipFactory(community=community)
-        post = PostFactory(
+        PostFactory(
             community=community, title="test", owner=member.member
         )
-        event = EventFactory(
+        EventFactory(
             community=community, title="test", owner=member.member
         )
-
-        for item in (post, event):
-            item.search_indexer.update()
 
         response = client.get(reverse("activities:search"), {"q": "test"})
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 2
 
+    @pytest.mark.django_db(transaction=True)
     def test_get_hashtag(self, client, community):
         member = MembershipFactory(community=community)
-        post = PostFactory(
+        PostFactory(
             community=community, description="#testme", owner=member.member
         )
-        post.search_indexer.update()
         response = client.get(reverse("activities:search"), {"q": "#testme"})
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 1

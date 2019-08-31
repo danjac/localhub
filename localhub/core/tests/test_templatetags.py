@@ -5,21 +5,21 @@ from localhub.core.templatetags.pagination_tags import pagination_url
 
 
 class TestSimpleAjaxForm:
-    def test_simple_ajax_form(self, req_factory):
+    def test_simple_ajax_form(self, rf):
         class MyForm(Form):
             ...
 
         form = MyForm()
-        req = req_factory.get("/some-action/")
+        req = rf.get("/some-action/")
         context = simple_ajax_form({"request": req}, form)
         assert context["action"] == "/some-action/"
         assert context["form"] == form
 
 
 class TestPaginationUrl:
-    def test_append_page_number_to_querystring(self, req_factory):
+    def test_append_page_number_to_querystring(self, rf):
 
-        req = req_factory.get("/search/", {"q": "test"})
+        req = rf.get("/search/", {"q": "test"})
         url = pagination_url({"request": req}, 5)
         assert url.startswith("/search/?")
         assert "q=test" in url

@@ -18,6 +18,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestCommentSearchView:
+    @pytest.mark.django_db(transaction=True)
     def test_get(self, client, member):
         post = PostFactory(community=member.community, owner=member.member)
         comment = CommentFactory(
@@ -26,7 +27,6 @@ class TestCommentSearchView:
             content_object=post,
             owner=post.owner,
         )
-        comment.search_indexer.update()
         response = client.get(
             reverse("comments:search"),
             {"q": "testme"},

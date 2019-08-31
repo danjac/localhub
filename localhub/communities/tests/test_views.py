@@ -30,46 +30,46 @@ my_view = MyView.as_view()
 
 
 class TestCommunityRequiredMixin:
-    def test_community_available(self, community, req_factory):
-        req = req_factory.get("/")
+    def test_community_available(self, community, rf):
+        req = rf.get("/")
         req.community = community
         req.user = AnonymousUser()
         assert my_view(req).status_code == 200
 
-    def test_community_not_found(self, req_factory):
-        req = req_factory.get("/")
+    def test_community_not_found(self, rf):
+        req = rf.get("/")
         req.community = RequestCommunity(req, "example.com", "example.com")
         assert my_view(req).url == reverse("community_not_found")
 
-    def test_community_not_found_if_ajax(self, req_factory):
-        req = req_factory.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+    def test_community_not_found_if_ajax(self, rf):
+        req = rf.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
         req.community = RequestCommunity(req, "example.com", "example.com")
         with pytest.raises(Http404):
             my_view(req)
 
-    def test_community_access_denied_if_anonymous(self, req_factory):
-        req = req_factory.get("/")
+    def test_community_access_denied_if_anonymous(self, rf):
+        req = rf.get("/")
         req.community = CommunityFactory(public=False)
         req.user = AnonymousUser()
         assert my_view(req).url.startswith(reverse("account_login"))
 
     def test_community_access_denied_if_private_allowed(
-        self, req_factory, user
+        self, rf, user
     ):
-        req = req_factory.get("/")
+        req = rf.get("/")
         req.community = CommunityFactory(public=False)
         req.user = user
         my_public_view = MyView.as_view(allow_if_private=True)
         assert my_public_view(req).status_code == 200
 
-    def test_community_access_denied_if_authenticated(self, req_factory, user):
-        req = req_factory.get("/")
+    def test_community_access_denied_if_authenticated(self, rf, user):
+        req = rf.get("/")
         req.community = CommunityFactory(public=False)
         req.user = user
         assert my_view(req).url == reverse("community_access_denied")
 
-    def test_community_access_denied_if_ajax(self, req_factory, user):
-        req = req_factory.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+    def test_community_access_denied_if_ajax(self, rf, user):
+        req = rf.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
         req.community = CommunityFactory(public=False)
         req.user = user
         with pytest.raises(PermissionDenied):
@@ -123,12 +123,12 @@ class TestMembershipListView:
         response = client.get(reverse("communities:membership_list"))
         assert len(response.context["object_list"]) == 4
 
+    @pytest.mark.django_db(transaction=True)
     def test_get_if_search(self, client, admin, user):
         for _ in range(3):
             MembershipFactory(community=admin.community)
 
         member = MembershipFactory(community=admin.community)
-        member.member.search_indexer.update()
 
         response = client.get(
             reverse("communities:membership_list"),

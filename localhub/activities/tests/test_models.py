@@ -316,10 +316,3 @@ class TestActivityManager:
         assert hasattr(activity, "has_liked")
         assert hasattr(activity, "has_flagged")
         assert hasattr(activity, "is_flagged")
-
-    def test_search(self):
-        post = PostFactory(title="random thing")
-        # normally fired when transaction commits
-        post.search_indexer.update()
-        result = Post.objects.search("random thing").get()
-        assert result.rank

@@ -17,8 +17,8 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def auth_request(req_factory, member):
-    req = req_factory.get("/")
+def auth_request(rf, member):
+    req = rf.get("/")
     req.community = member.community
     req.user = member.member
     return req

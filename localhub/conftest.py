@@ -4,8 +4,6 @@
 import pytest
 
 from django.http import HttpResponse
-from django.test import RequestFactory
-
 
 from localhub.comments.tests.factories import CommentFactory
 from localhub.communities.models import Membership
@@ -25,11 +23,6 @@ def get_response():
         return HttpResponse()
 
     return _get_response
-
-
-@pytest.fixture
-def req_factory():
-    return RequestFactory()
 
 
 @pytest.fixture

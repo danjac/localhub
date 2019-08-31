@@ -9,9 +9,9 @@ from localhub.users.middleware import UserLocaleMiddleware
 
 
 class TestUserLocaleMiddleware:
-    def test_set_language_in_cookie(self, req_factory, get_response):
+    def test_set_language_in_cookie(self, rf, get_response):
         mw = UserLocaleMiddleware(get_response)
-        req = req_factory.get("/")
+        req = rf.get("/")
         req.user = get_user_model()
         req.user.language = "fi"
         resp = mw(req)

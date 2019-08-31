@@ -10,15 +10,15 @@ pytestmark = pytest.mark.django_db
 
 class TestCurrentCommunityMiddleware:
     def test_if_community_available(
-        self, community, req_factory, get_response
+        self, community, rf, get_response
     ):
         mw = CurrentCommunityMiddleware(get_response)
-        req = req_factory.get("/", HTTP_HOST=community.domain)
+        req = rf.get("/", HTTP_HOST=community.domain)
         mw(req)
         assert req.community == community
 
-    def test_if_no_community_available(self, req_factory, get_response):
+    def test_if_no_community_available(self, rf, get_response):
         mw = CurrentCommunityMiddleware(get_response)
-        req = req_factory.get("/", HTTP_HOST="example.com")
+        req = rf.get("/", HTTP_HOST="example.com")
         mw(req)
         assert req.community.id is None

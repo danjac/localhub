@@ -11,10 +11,10 @@ pytestmark = pytest.mark.django_db
 
 
 class TestGetFlagsCount:
-    def test_get_count(self, req_factory, post):
+    def test_get_count(self, rf, post):
         Flag.objects.create(
             content_object=post, community=post.community, user=UserFactory()
         )
-        req = req_factory.get("/")
+        req = rf.get("/")
         req.community = post.community
         assert get_flags_count({"request": req}) == 1

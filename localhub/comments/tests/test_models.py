@@ -15,13 +15,11 @@ pytestmark = pytest.mark.django_db
 
 
 class TestCommentManager:
+    @pytest.mark.django_db(transaction=True)
     def test_search(self):
 
         comment = CommentFactory(content="testme")
-        other_comment = CommentFactory(content="not found")
-
-        comment.search_indexer.update()
-        other_comment.search_indexer.update()
+        CommentFactory(content="not found")
 
         assert Comment.objects.search("testme").get() == comment
 

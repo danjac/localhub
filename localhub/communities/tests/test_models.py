@@ -53,25 +53,25 @@ class TestCommunityManager:
         member = MembershipFactory(community=community).member
         assert Community.objects.available(member).first() == community
 
-    def test_get_current_if_community_on_site(self, req_factory):
+    def test_get_current_if_community_on_site(self, rf):
 
-        req = req_factory.get("/", HTTP_HOST="example.com")
+        req = rf.get("/", HTTP_HOST="example.com")
         community = CommunityFactory(domain="example.com")
         assert Community.objects.get_current(req) == community
 
-    def test_get_current_with_port(self, req_factory):
+    def test_get_current_with_port(self, rf):
 
-        req = req_factory.get("/", HTTP_HOST="example.com:8000")
+        req = rf.get("/", HTTP_HOST="example.com:8000")
         community = CommunityFactory(domain="example.com")
         assert Community.objects.get_current(req) == community
 
-    def test_get_current_if_inactive_community_on_site(self, req_factory):
-        req = req_factory.get("/", HTTP_HOST="example.com")
+    def test_get_current_if_inactive_community_on_site(self, rf):
+        req = rf.get("/", HTTP_HOST="example.com")
         CommunityFactory(domain="example.com", active=False)
         assert Community.objects.get_current(req).id is None
 
-    def test_get_current_if_no_community_available(self, req_factory):
-        req = req_factory.get("/", HTTP_HOST="example.com")
+    def test_get_current_if_no_community_available(self, rf):
+        req = rf.get("/", HTTP_HOST="example.com")
         assert Community.objects.get_current(req).id is None
 
 

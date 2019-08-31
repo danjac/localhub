@@ -30,12 +30,11 @@ class TestPostListView:
         response = client.get(reverse("posts:list"))
         assert len(response.context["object_list"]) == 3
 
+    @pytest.mark.django_db(transaction=True)
     def test_search(self, client, member):
         PostFactory.create_batch(
             3, community=member.community, owner=member.member, title="testme"
         )
-        for post in Post.objects.all():
-            post.search_indexer.update()
 
         response = client.get(reverse("posts:list"), {"q": "testme"})
         assert len(response.context["object_list"]) == 3
