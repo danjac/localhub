@@ -58,7 +58,7 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
             return self.none()
         return self.filter(username__iregex=r"^(%s)+" % "|".join(names))
 
-    def active(self, community):
+    def for_community(self, community):
         """
         Returns only users which are a) active and b) have active
         membership with given community.
@@ -85,8 +85,8 @@ class UserManager(BaseUserManager):
     def with_is_blocked(self, follower: settings.AUTH_USER_MODEL):
         return self.get_queryset().with_is_blocked(follower)
 
-    def active(self, community):
-        return self.get_queryset().active(community)
+    def for_community(self, community):
+        return self.get_queryset().for_community(community)
 
     def for_email(self, email):
         return self.get_queryset().for_email(email)

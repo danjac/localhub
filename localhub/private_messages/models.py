@@ -21,8 +21,10 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
             community=community,
             sender__membership__community=community,
             sender__membership__active=True,
+            sender__is_active=True,
             recipient__membership__community=community,
             recipient__membership__active=True,
+            recipient__is_active=True,
         )
 
     def with_sender_has_blocked(self, user):

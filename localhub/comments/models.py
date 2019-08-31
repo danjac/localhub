@@ -63,6 +63,7 @@ class CommentQuerySet(
             community=community,
             owner__membership__community=community,
             owner__membership__active=True,
+            owner__is_active=True,
         )
 
     def blocked_users(self, user):

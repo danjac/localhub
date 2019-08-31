@@ -28,7 +28,7 @@ from localhub.users.forms import UserForm
 
 class BaseUserQuerySetMixin(CommunityRequiredMixin):
     def get_user_queryset(self):
-        return get_user_model().objects.active(self.request.community)
+        return get_user_model().objects.for_community(self.request.community)
 
 
 class UserQuerySetMixin(BaseUserQuerySetMixin):

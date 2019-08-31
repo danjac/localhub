@@ -22,6 +22,7 @@ class NotificationQuerySet(models.QuerySet):
             community=community,
             actor__membership__community=community,
             actor__membership__active=True,
+            actor__is_active=True,
         )
 
 

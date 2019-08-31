@@ -98,6 +98,7 @@ class ActivityQuerySet(
             community=community,
             owner__membership__community=community,
             owner__membership__active=True,
+            owner__is_active=True,
         )
 
     def following_users(self, user):

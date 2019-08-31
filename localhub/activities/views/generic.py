@@ -205,7 +205,7 @@ class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
             self.object.get_comments()
             .with_common_annotations(self.request.community, self.request.user)
             .blocked_users(self.request.user)
-            .filter(owner__communities=self.request.community)
+            .for_community(self.request.community)
             .select_related(
                 "owner",
                 "community",

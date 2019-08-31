@@ -111,7 +111,7 @@ class MessageCreateView(BreadcrumbsMixin, BaseMessageFormView):
             get_user_model()
             .objects.exclude(pk=self.request.user.id)
             .exclude(blocked=self.request.user)
-            .active(self.request.community),
+            .for_community(self.request.community),
             username=self.kwargs["slug"],
         )
 

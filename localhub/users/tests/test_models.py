@@ -24,23 +24,23 @@ class TestUserManager:
 
     def test_active(self, community):
         Membership.objects.create(member=UserFactory(), community=community)
-        assert get_user_model().objects.active(community).exists()
+        assert get_user_model().objects.for_community(community).exists()
 
     def test_active_if_not_member(self, community):
         UserFactory()
-        assert not get_user_model().objects.active(community).exists()
+        assert not get_user_model().objects.for_community(community).exists()
 
     def test_active_if_not_active_member(self, community):
         Membership.objects.create(
             member=UserFactory(), community=community, active=False
         )
-        assert not get_user_model().objects.active(community).exists()
+        assert not get_user_model().objects.for_community(community).exists()
 
     def test_active_if_not_active(self, community):
         Membership.objects.create(
             member=UserFactory(is_active=False), community=community
         )
-        assert not get_user_model().objects.active(community).exists()
+        assert not get_user_model().objects.for_community(community).exists()
 
     def test_create_superuser(self):
 
