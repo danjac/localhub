@@ -18,11 +18,11 @@ from taggit.managers import TaggableManager
 from taggit.models import Tag
 
 from localhub.comments.models import Comment, CommentAnnotationsQuerySetMixin
+from localhub.common.content_types import get_generic_related_queryset
+from localhub.common.markdown.fields import MarkdownField
+from localhub.common.search import SearchQuerySetMixin
+from localhub.common.tracker import Tracker
 from localhub.communities.models import Community
-from localhub.core.markdown.fields import MarkdownField
-from localhub.core.utils.content_types import get_generic_related_queryset
-from localhub.core.utils.search import SearchQuerySetMixin
-from localhub.core.utils.tracker import Tracker
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.notifications.models import Notification
@@ -37,7 +37,7 @@ class ActivityQuerySet(
 ):
     def with_common_annotations(self, user, community):
         """
-        Combines commonly used annotations into a single call for
+        Combines utilsly used annotations into a single call for
         convenience:
             - with_num_reshares
             - with_num_comments

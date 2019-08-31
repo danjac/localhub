@@ -1,7 +1,7 @@
 from django.forms import Form
 
-from localhub.core.templatetags.form_tags import simple_ajax_form
-from localhub.core.templatetags.pagination_tags import pagination_url
+from localhub.common.templatetags.form_tags import simple_ajax_form
+from localhub.common.templatetags.pagination_tags import pagination_url
 
 
 class TestSimpleAjaxForm:

@@ -25,8 +25,8 @@ from vanilla import (
     UpdateView,
 )
 
+from localhub.common.views import BreadcrumbsMixin, SearchMixin
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.core.views import BreadcrumbsMixin, SearchMixin
 from localhub.private_messages.forms import MessageForm
 from localhub.private_messages.models import Message
 from localhub.private_messages.notifications import send_message_notifications

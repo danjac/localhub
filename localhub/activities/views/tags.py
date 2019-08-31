@@ -21,8 +21,8 @@ from taggit.models import Tag, TaggedItem
 from vanilla import ListView, GenericModelView
 
 from localhub.activities.views.streams import BaseStreamView
+from localhub.common.views import SearchMixin
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.core.views import SearchMixin
 from localhub.events.models import Event
 from localhub.photos.models import Photo
 from localhub.posts.models import Post

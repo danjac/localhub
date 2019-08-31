@@ -19,7 +19,7 @@ from vanilla import DeleteView, DetailView, ListView, TemplateView, UpdateView
 from localhub.communities.emails import send_membership_deleted_email
 from localhub.communities.forms import MembershipForm
 from localhub.communities.models import Community, Membership
-from localhub.core.views import SearchMixin
+from localhub.common.views import SearchMixin
 
 
 class CommunityRequiredMixin:

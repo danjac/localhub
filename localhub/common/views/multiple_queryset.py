@@ -7,7 +7,7 @@ from django.db.models import CharField, Value
 
 from vanilla import TemplateView
 
-from localhub.core.utils.pagination import PresetCountPaginator
+from localhub.common.pagination import PresetCountPaginator
 
 
 class MultipleQuerySetMixin:

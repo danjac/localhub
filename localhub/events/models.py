@@ -19,8 +19,8 @@ from icalendar import Calendar, Event as CalendarEvent
 from localhub.activities.models import Activity
 from localhub.activities.utils import get_domain
 from localhub.comments.models import Comment
-from localhub.core.utils.search import SearchIndexer
-from localhub.core.utils.tracker import Tracker
+from localhub.common.search import SearchIndexer
+from localhub.common.tracker import Tracker
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification

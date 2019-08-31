@@ -1,6 +1,6 @@
 from django.utils.encoding import force_str
 
-from localhub.core.markdown.utils import (
+from localhub.common.markdown.utils import (
     extract_mentions,
     linkify_hashtags,
     linkify_mentions,

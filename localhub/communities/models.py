@@ -18,9 +18,9 @@ from model_utils.models import TimeStampedModel
 
 from simple_history.models import HistoricalRecords
 
-from localhub.core.markdown.fields import MarkdownField
-from localhub.core.markdown.utils import extract_hashtags
-from localhub.core.utils.search import SearchQuerySetMixin
+from localhub.common.markdown.fields import MarkdownField
+from localhub.common.markdown.utils import extract_hashtags
+from localhub.common.search import SearchQuerySetMixin
 
 DOMAIN_VALIDATOR = RegexValidator(
     regex=URLValidator.host_re, message=_("This is not a valid domain")

@@ -64,7 +64,6 @@ class Base(Configuration):
         "localhub.activities.apps.ActivitiesConfig",
         "localhub.comments.apps.CommentsConfig",
         "localhub.communities.apps.CommunitiesConfig",
-        "localhub.core.apps.CoreConfig",
         "localhub.events.apps.EventsConfig",
         "localhub.flags.apps.FlagsConfig",
         "localhub.invites.apps.InvitesConfig",
@@ -82,8 +81,8 @@ class Base(Configuration):
         "django.contrib.sites.middleware.CurrentSiteMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
         "django.middleware.locale.LocaleMiddleware",
-        "localhub.core.middleware.TurbolinksMiddleware",
-        "localhub.core.middleware.DoNotTrackMiddleware",
+        "localhub.common.middleware.TurbolinksMiddleware",
+        "localhub.common.middleware.DoNotTrackMiddleware",
         "localhub.communities.middleware.CurrentCommunityMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
@@ -160,7 +159,9 @@ class Base(Configuration):
 
     # https://neutronx.github.io/django-markdownx/customization/
 
-    MARKDOWNX_MARKDOWNIFY_FUNCTION = "localhub.core.markdown.utils.markdownify"
+    MARKDOWNX_MARKDOWNIFY_FUNCTION = (
+        "localhub.common.markdown.utils.markdownify"
+    )
 
     # https://micawber.readthedocs.io/en/latest/django.html
     MICAWBER_PROVIDERS = "localhub.activities.oembed.bootstrap_oembed"
@@ -232,6 +233,10 @@ class Base(Configuration):
                         "django.contrib.messages.context_processors.messages",
                         "localhub.communities.context_processors.community",
                     ],
+                    "libraries": {
+                        "form_tags": "localhub.common.templatetags.form_tags",
+                        "pagination_tags": "localhub.common.templatetags.pagination_tags", # noqa
+                    },
                 },
             }
         ]
@@ -324,8 +329,8 @@ class Production(DockerConfigMixin, Base):
     # This is required for Heroku SSL.
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-    DEFAULT_FILE_STORAGE = "localhub.core.storages.MediaStorage"
-    STATICFILES_STORAGE = "localhub.core.storages.StaticStorage"
+    DEFAULT_FILE_STORAGE = "localhub.common.storages.MediaStorage"
+    STATICFILES_STORAGE = "localhub.common.storages.StaticStorage"
 
     AWS_MEDIA_LOCATION = "media"
     AWS_STATIC_LOCATION = "static"

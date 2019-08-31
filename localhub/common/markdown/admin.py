@@ -4,7 +4,7 @@
 from django import forms
 from django.db import models
 
-from localhub.core.markdown.fields import MarkdownField
+from localhub.common.markdown.fields import MarkdownField
 
 
 class MarkdownFieldMixin:

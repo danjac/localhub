@@ -9,11 +9,11 @@ from django.contrib.contenttypes.models import ContentType
 
 from model_utils.models import TimeStampedModel
 
-from localhub.communities.models import Community
-from localhub.core.utils.content_types import (
+from localhub.common.content_types import (
     get_generic_related_count_subquery,
     get_generic_related_exists,
 )
+from localhub.communities.models import Community
 from localhub.notifications.models import Notification
 
 

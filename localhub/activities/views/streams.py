@@ -15,9 +15,9 @@ from django.views.generic.dates import (
     _date_from_string,
 )
 
+from localhub.common.views import MultipleQuerySetListView, SearchMixin
 from localhub.communities.rules import is_member
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.core.views import MultipleQuerySetListView, SearchMixin
 from localhub.events.models import Event
 from localhub.join_requests.models import JoinRequest
 from localhub.photos.models import Photo

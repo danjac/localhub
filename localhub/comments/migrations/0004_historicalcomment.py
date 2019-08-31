@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
-import localhub.core.markdown.fields
+import localhub.common.markdown.fields
 import model_utils.fields
 import simple_history.models
 
@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
                 ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
                 ('object_id', models.PositiveIntegerField()),
-                ('content', localhub.core.markdown.fields.MarkdownField()),
+                ('content', localhub.common.markdown.fields.MarkdownField()),
                 ('history_id', models.AutoField(primary_key=True, serialize=False)),
                 ('history_date', models.DateTimeField()),
                 ('history_change_reason', models.CharField(max_length=100, null=True)),

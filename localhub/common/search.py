@@ -87,7 +87,6 @@ class SearchIndexer:
     def contribute_to_class(self, cls, name):
 
         self.cls = cls
-        self.name = name
 
         models.signals.class_prepared.connect(
             self.finalize, sender=cls, weak=False

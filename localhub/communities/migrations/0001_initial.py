@@ -11,7 +11,7 @@ from django.db import migrations, models
 import model_utils.fields
 
 import localhub.communities.models
-import localhub.core.markdown.fields
+import localhub.common.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -65,7 +65,7 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=255)),
                 (
                     "description",
-                    localhub.core.markdown.fields.MarkdownField(blank=True),
+                    localhub.common.markdown.fields.MarkdownField(blank=True),
                 ),
                 (
                     "public",
