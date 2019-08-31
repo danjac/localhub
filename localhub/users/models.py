@@ -18,7 +18,7 @@ from sorl.thumbnail import ImageField
 from taggit.models import Tag
 
 from localhub.communities.models import Membership
-from localhub.common.fields import ChoiceArrayField
+from localhub.common.db.fields import ChoiceArrayField
 from localhub.common.search import SearchIndexer, SearchQuerySetMixin
 from localhub.notifications.models import Notification
 
