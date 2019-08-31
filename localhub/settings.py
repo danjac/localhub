@@ -234,8 +234,8 @@ class Base(Configuration):
                         "localhub.communities.context_processors.community",
                     ],
                     "libraries": {
-                        "form_tags": "localhub.common.templatetags.form_tags",
-                        "pagination_tags": "localhub.common.templatetags.pagination_tags", # noqa
+                        "form_tags": "localhub.common.forms.templatetags",
+                        "pagination_tags": "localhub.common.pagination.templatetags",  # noqa
                     },
                 },
             }
