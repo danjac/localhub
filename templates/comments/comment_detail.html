@@ -2,11 +2,21 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "comments/base.html" %}
+{% load i18n %}
 
 {% block content %}
 
 {% include "includes/breadcrumbs.html" %}
 {% include "comments/includes/comment.html" with is_detail=True %}
 {% include "flags/includes/flags.html" %}
+
+{% if replies %}
+<div class="divider text-center" data-content="{% trans 'Replies' %}"></div>
+{% for reply in replies %}
+<div class="mb-1">
+    {% include "comments/includes/comment.html" with comment=reply is_reply=True %}
+</div>
+{% endfor %}
+{% endif %}
 
 {% endblock content %}

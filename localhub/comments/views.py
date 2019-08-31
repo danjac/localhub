@@ -72,12 +72,18 @@ class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
             .with_common_annotations(self.request.user, self.request.community)
         )
 
+    def get_replies(self):
+        return (
+            self.get_queryset().filter(parent=self.object).order_by("created")
+        )
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.user.has_perm(
             "communities.moderate_community", self.request.community
         ):
             data["flags"] = self.get_flags()
+        data["replies"] = self.get_replies()
         return data
 
 
