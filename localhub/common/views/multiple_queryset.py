@@ -144,18 +144,7 @@ class MultipleQuerySetMixin:
         }
 
 
-class MultipleQuerySetContextMixin(MultipleQuerySetMixin):
-    """
-    Provides additional mixin functionality multiple queryset for use
-    in templates. Template context is same as for a ListView i.e.:
-
-    - page_obj
-    - paginator
-    - object_list
-    - is_paginated
-
-    """
-
+class BaseMultipleQuerySetListView(MultipleQuerySetMixin, TemplateView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.paginate_by:
@@ -171,7 +160,3 @@ class MultipleQuerySetContextMixin(MultipleQuerySetMixin):
         else:
             data.update({"object_list": self.get_object_list()})
         return data
-
-
-class MultipleQuerySetListView(MultipleQuerySetContextMixin, TemplateView):
-    ...
