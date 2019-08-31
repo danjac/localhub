@@ -22,7 +22,10 @@ def send_message_email(message):
 
             context = {"recipient": message.recipient, "message": message}
 
-            subject = _("Someone has sent you a message")
+            if message.parent:
+                subject = _("Someone has replied to your message")
+            else:
+                subject = _("Someone has sent you a message")
 
             send_mail(
                 f"{message.community.name} | {subject}",
