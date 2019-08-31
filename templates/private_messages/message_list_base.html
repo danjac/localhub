@@ -4,9 +4,20 @@
 {% extends "private_messages/base.html" %}
 
 {% load i18n %}
+{% load private_messages_tags %}
 
 {% block content %}
 <h3>{% trans "Messages" %}</h3>
+{% get_unread_message_count user community as unread_messages %}
+{% if unread_messages %}
+<div class="actions">
+  <a href="{% url 'private_messages:mark_all_read' %}"
+     data-controller="ajax"
+     data-action="ajax#post"
+     data-ajax-redirect="{{ request.path }}"
+     >{% trans "Mark All As Read" %}</a>
+</div>
+{% endif %}
 <div class="divider"></div>
 
 <ul class="tab tab-block mt-1">

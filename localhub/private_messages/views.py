@@ -13,6 +13,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
+from django.views.generic import View
 
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -295,11 +296,7 @@ message_delete_view = MessageDeleteView.as_view()
 
 class MessageMarkReadView(RecipientQuerySetMixin, GenericModelView):
     def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .filter(recipient=self.request.user, read__isnull=True)
-        )
+        return super().get_queryset().filter(read__isnull=True)
 
     def post(self, request, *args, **kwargs):
         message = self.get_object()
@@ -309,3 +306,15 @@ class MessageMarkReadView(RecipientQuerySetMixin, GenericModelView):
 
 
 message_mark_read_view = MessageMarkReadView.as_view()
+
+
+class MessageMarkAllReadView(RecipientQuerySetMixin, View):
+    def get_queryset(self):
+        return super().get_queryset().filter(read__isnull=True)
+
+    def post(self, request, *args, **kwargs):
+        self.get_queryset().update(read=timezone.now())
+        return redirect("private_messages:inbox")
+
+
+message_mark_all_read_view = MessageMarkAllReadView.as_view()
