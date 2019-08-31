@@ -36,7 +36,7 @@ class BaseStreamView(CommunityRequiredMixin, MultipleQuerySetListView):
     def get_queryset_for_model(self, model):
         return self.filter_queryset(
             model.objects.with_common_annotations(
-                self.request.community, self.request.user
+                self.request.user, self.request.community
             ).select_related("owner", "community", "parent", "parent__owner")
         )
 

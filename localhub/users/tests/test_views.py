@@ -5,7 +5,6 @@ import pytest
 
 from typing import List
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
@@ -22,6 +21,33 @@ pytestmark = pytest.mark.django_db
 
 
 User = get_user_model()
+
+
+class TestFollowingUserListView:
+    def test_get(self, client, member):
+        user = MembershipFactory(community=member.community).member
+        member.member.following.add(user)
+        response = client.get(reverse("users:following_list"))
+        assert response.status_code == 200
+        assert response.context["object_list"][0] == user
+
+
+class TestBlockedUserListView:
+    def test_get(self, client, member):
+        user = MembershipFactory(community=member.community).member
+        member.member.blocked.add(user)
+        response = client.get(reverse("users:blocked_list"))
+        assert response.status_code == 200
+        assert response.context["object_list"][0] == user
+
+
+class TestFollowerUserListView:
+    def test_get(self, client, member):
+        user = MembershipFactory(community=member.community).member
+        user.following.add(member.member)
+        response = client.get(reverse("users:follower_list"))
+        assert response.status_code == 200
+        assert response.context["object_list"][0] == user
 
 
 class TestUserCommentsView:

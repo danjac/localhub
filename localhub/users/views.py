@@ -145,7 +145,6 @@ class FollowingUserListView(LoginRequiredMixin, BaseUserListView):
             self.request.user.following.annotate(
                 is_following=Value(True, output_field=BooleanField())
             )
-            .active(self.request.community)
             .order_by("name", "username")
         )
 
@@ -237,7 +236,7 @@ class UserCommentListView(SingleUserMixin, BaseCommentListView):
             super()
             .get_queryset()
             .filter(owner=self.user_obj)
-            .with_common_annotations(self.request.community, self.request.user)
+            .with_common_annotations(self.request.user, self.request.community)
             .order_by("-created")
         )
 

@@ -29,7 +29,7 @@ class LikedCommentListView(LoginRequiredMixin, BaseCommentListView):
         return (
             super()
             .get_queryset()
-            .with_common_annotations(self.request.community, self.request.user)
+            .with_common_annotations(self.request.user, self.request.community)
             .filter(has_liked=True)
             .order_by("-created")
         )

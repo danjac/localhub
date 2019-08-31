@@ -95,7 +95,7 @@ class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
         qs = (
             super()
             .get_queryset()
-            .with_common_annotations(self.request.community, self.request.user)
+            .with_common_annotations(self.request.user, self.request.community)
             .blocked(self.request.user)
             .order_by(self.order_by)
         )
@@ -182,7 +182,7 @@ class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
         return (
             super()
             .get_queryset()
-            .with_common_annotations(self.request.community, self.request.user)
+            .with_common_annotations(self.request.user, self.request.community)
         )
 
     def get_breadcrumbs(self):
@@ -203,7 +203,7 @@ class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
     def get_comments(self):
         return (
             self.object.get_comments()
-            .with_common_annotations(self.request.community, self.request.user)
+            .with_common_annotations(self.request.user, self.request.community)
             .blocked_users(self.request.user)
             .for_community(self.request.community)
             .select_related(

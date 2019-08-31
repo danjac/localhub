@@ -18,7 +18,7 @@ from model_utils.models import TimeStampedModel
 
 from simple_history.models import HistoricalRecords
 
-from localhub.communities.models import Community
+from localhub.communities.models import Community, Membership
 from localhub.core.markdown.fields import MarkdownField
 from localhub.core.utils.content_types import (
     get_generic_related_count_subquery,
@@ -66,13 +66,24 @@ class CommentQuerySet(
             owner__is_active=True,
         )
 
+    def with_is_parent_owner_member(self, community):
+        return self.annotate(
+            is_parent_owner_member=models.Exists(
+                Membership.objects.filter(
+                    member=models.OuterRef("parent__owner__pk"),
+                    community=community,
+                    active=True,
+                )
+            )
+        )
+
     def blocked_users(self, user):
 
         if user.is_anonymous:
             return self
         return self.exclude(owner__in=user.blocked.all())
 
-    def with_common_annotations(self, community, user):
+    def with_common_annotations(self, user, community):
         """
         Combines all common annotations into a single call. Applies annotations
         conditionally e.g. if user is authenticated or not.
@@ -83,6 +94,7 @@ class CommentQuerySet(
                 self.with_num_likes()
                 .with_has_liked(user)
                 .with_has_flagged(user)
+                .with_is_parent_owner_member(community)
             )
 
             if user.has_perm("community.moderate_community", community):

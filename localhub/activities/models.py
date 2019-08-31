@@ -35,7 +35,7 @@ class ActivityQuerySet(
     SearchQuerySetMixin,
     models.QuerySet,
 ):
-    def with_common_annotations(self, community, user):
+    def with_common_annotations(self, user, community):
         """
         Combines commonly used annotations into a single call for
         convenience:

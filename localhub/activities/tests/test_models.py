@@ -285,7 +285,7 @@ class TestActivityManager:
 
     def test_with_common_annotations_if_anonymous(self, post):
         activity = Post.objects.with_common_annotations(
-            post.community, AnonymousUser()
+            AnonymousUser(), post.community
         ).get()
 
         assert hasattr(activity, "num_comments")
@@ -296,7 +296,7 @@ class TestActivityManager:
 
     def test_with_common_annotations_if_authenticated(self, post, user):
         activity = Post.objects.with_common_annotations(
-            post.community, user
+            user, post.community
         ).get()
 
         assert hasattr(activity, "num_comments")
@@ -308,7 +308,7 @@ class TestActivityManager:
     def test_with_common_annotations_if_moderator(self, moderator):
         PostFactory(community=moderator.community)
         activity = Post.objects.with_common_annotations(
-            moderator.community, moderator.member
+            moderator.member, moderator.community
         ).get()
 
         assert hasattr(activity, "num_comments")

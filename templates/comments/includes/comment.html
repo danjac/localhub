@@ -16,7 +16,7 @@
         <div class="card-title h6">
             {% include "activities/includes/timesince.html" with timestamp=comment.created owner=comment.owner %}
             {% with parent=comment.parent %}
-            {% if parent %}
+            {% if parent and comment.is_parent_owner_member %}
             {% if is_embedded %}
             <a href="#comment-{{ parent.id }}" data-turbolinks="false">
                 {% else %}

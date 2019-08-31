@@ -38,7 +38,42 @@ class TestCommentManager:
         assert my_comment in comments
         assert second_comment in comments
 
-    def test_For_community(self, community):
+    def test_with_is_parent_owner_member_true(self, community):
+        parent = CommentFactory(
+            community=community,
+            owner=MembershipFactory(community=community).member,
+        )
+
+        comment = CommentFactory(
+            community=community,
+            parent=parent,
+            owner=MembershipFactory(community=community).member,
+        )
+
+        assert (
+            Comment.objects.with_is_parent_owner_member(community)
+            .for_community(community)
+            .get(pk=comment.id)
+            .is_parent_owner_member
+        )
+
+    def test_with_is_parent_owner_member_false(self, community):
+        parent = CommentFactory(community=community)
+
+        comment = CommentFactory(
+            community=community,
+            parent=parent,
+            owner=MembershipFactory(community=community).member,
+        )
+
+        assert (
+            not Comment.objects.with_is_parent_owner_member(community)
+            .for_community(community)
+            .get(pk=comment.id)
+            .is_parent_owner_member
+        )
+
+    def test_for_community(self, community):
         comment = CommentFactory(
             community=community,
             owner=MembershipFactory(community=community).member,
@@ -95,7 +130,7 @@ class TestCommentManager:
 
     def test_with_common_annotations_if_anonymous(self, comment):
         comment = Comment.objects.with_common_annotations(
-            comment.community, AnonymousUser()
+            AnonymousUser(), comment.community
         ).get()
 
         assert not hasattr(comment, "num_likes")
@@ -105,7 +140,7 @@ class TestCommentManager:
 
     def test_with_common_annotations_if_authenticated(self, comment, user):
         comment = Comment.objects.with_common_annotations(
-            comment.community, user
+            user, comment.community
         ).get()
 
         assert hasattr(comment, "num_likes")
