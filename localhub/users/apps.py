@@ -6,6 +6,3 @@ from django.apps import AppConfig
 
 class UsersConfig(AppConfig):
     name = "localhub.users"
-
-    def ready(self):
-        import localhub.users.signals  # noqa

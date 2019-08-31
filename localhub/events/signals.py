@@ -28,13 +28,6 @@ def update_event_coordinates(instance, created=False, **kwargs):
         transaction.on_commit(run_task)
 
 
-@receiver(
-    post_save, sender=Event, dispatch_uid="events.update_search_document"
-)
-def update_search_document(instance, **kwargs):
-    transaction.on_commit(lambda: instance.search_indexer.update())
-
-
 @receiver(post_save, sender=Event, dispatch_uid="events.taggit")
 def taggit(instance, created, **kwargs):
     transaction.on_commit(lambda: instance.taggit(created))

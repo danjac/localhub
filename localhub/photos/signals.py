@@ -8,13 +8,6 @@ from django.dispatch import receiver
 from localhub.photos.models import Photo
 
 
-@receiver(
-    post_save, sender=Photo, dispatch_uid="photos.update_search_document"
-)
-def update_search_document(instance, **kwargs):
-    transaction.on_commit(lambda: instance.search_indexer.update())
-
-
 @receiver(post_save, sender=Photo, dispatch_uid="photos.taggit")
 def taggit(instance, created, **kwargs):
     transaction.on_commit(lambda: instance.taggit(created))
