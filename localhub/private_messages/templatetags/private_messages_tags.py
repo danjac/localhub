@@ -20,6 +20,7 @@ def show_message(
     show_sender_info=True,
     show_recipient_info=True,
     show_send_message=True,
+    show_parent_info=True,
     is_detail=False,
 ):
 
@@ -51,6 +52,7 @@ def show_message(
         "recipient_url": recipient_url,
         "sender_url": sender_url,
         "other_user": message.get_other_user(user),
+        "show_parent_info": show_parent_info,
         "show_recipient_info": show_recipient_info,
         "show_sender_info": show_sender_info,
         "can_create_message": can_create_message and show_send_message,

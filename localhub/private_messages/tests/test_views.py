@@ -118,6 +118,48 @@ class TestMessageDetailView:
         assert response.status_code == 404
 
 
+class TestMessageReplyView:
+    def test_post_if_sender_blocked(self, client, member):
+        sender = MembershipFactory(community=member.community).member
+        sender.blocked.add(member.member)
+        parent = MessageFactory(
+            sender=sender, recipient=member.member, community=member.community
+        )
+        response = client.post(
+            reverse("private_messages:message_reply", args=[parent.id]),
+            {"message": "test"},
+        )
+        assert response.status_code == 404
+
+    def test_post(self, client, member, send_notification_webpush_mock):
+        sender = MembershipFactory(community=member.community).member
+        parent = MessageFactory(
+            sender=sender, recipient=member.member, community=member.community
+        )
+        response = client.post(
+            reverse("private_messages:message_reply", args=[parent.id]),
+            {"message": "test"},
+        )
+        message = Message.objects.filter(parent__isnull=False).get()
+        assert message.get_absolute_url() == response.url
+        assert message.parent == parent
+        assert message.recipient == parent.sender
+        assert message.sender == member.member
+        assert message.community == member.community
+
+        assert send_notification_webpush_mock.called_once()
+
+    def test_get(self, client, member):
+        sender = MembershipFactory(community=member.community).member
+        parent = MessageFactory(
+            sender=sender, recipient=member.member, community=member.community
+        )
+        response = client.get(
+            reverse("private_messages:message_reply", args=[parent.id])
+        )
+        assert response.status_code == 200
+
+
 class TestMessageCreateView:
     def test_post_if_sender_blocked(self, client, member):
         recipient = MembershipFactory(community=member.community).member

@@ -17,17 +17,13 @@
             {% include "activities/includes/timesince.html" with timestamp=comment.created owner=comment.owner %}
             {% with parent=comment.parent %}
             {% if parent and comment.is_parent_owner_member and not is_reply %}
-            {% if is_embedded %}
-            <a href="#comment-{{ parent.id }}" data-turbolinks="false">
-                {% else %}
-                <a href="{{ parent.get_absolute_url }}">
-                    {% endif %}
-                    {% blocktrans with abbreviation=parent.get_abbreviation %}
-                    in reply to {{ abbreviation }}
-                    {% endblocktrans %}
-                </a>
-                {% endif %}
-                {% endwith %}
+            <a href="{{ parent.get_absolute_url }}">
+                {% blocktrans with abbreviation=parent.get_abbreviation %}
+                in reply to {{ abbreviation }}
+                {% endblocktrans %}
+            </a>
+            {% endif %}
+            {% endwith %}
         </div>
     </div>
     <div class="card-body">

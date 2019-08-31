@@ -185,7 +185,7 @@ class Comment(TimeStampedModel):
     def has_content_changed(self):
         return "content" in self.changed_fields
 
-    def get_abbreviation(self, length=60):
+    def get_abbreviation(self, length=30):
         text = " ".join(
             striptags(self.content.markdown()).strip().splitlines()
         )

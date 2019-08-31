@@ -18,7 +18,7 @@
   {% endif %}
   {% for comment in comments %}
   <div class="mb-1">
-    {% include "comments/includes/comment.html" with is_embedded=True %}
+    {% include "comments/includes/comment.html" %}
   </div>
   {% endfor %}
   {% if comment_form %}

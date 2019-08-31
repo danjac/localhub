@@ -10,6 +10,7 @@ from localhub.private_messages.views import (
     message_delete_view,
     message_detail_view,
     message_mark_read_view,
+    message_reply_view,
     message_update_view,
     outbox_view,
 )
@@ -23,6 +24,7 @@ urlpatterns = [
         "user/<slug:slug>/~send/", message_create_view, name="message_create"
     ),
     path("message/<int:pk>/", message_detail_view, name="message_detail"),
+    path("message/<int:pk>/~reply/", message_reply_view, name="message_reply"),
     path(
         "message/<int:pk>/~edit/", message_update_view, name="message_update"
     ),

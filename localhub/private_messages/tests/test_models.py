@@ -7,6 +7,7 @@ from localhub.communities.tests.factories import (
 )
 from localhub.private_messages.models import Message
 from localhub.private_messages.tests.factories import MessageFactory
+from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -55,6 +56,48 @@ class TestMessageManager:
             .first()
             .sender_has_blocked
         )
+
+    def test_for_sender(self, user):
+        MessageFactory(sender=user)
+        assert Message.objects.for_sender(user).exists()
+
+    def test_for_recipient(self, user):
+        MessageFactory(recipient=user)
+        assert Message.objects.for_recipient(user).exists()
+
+    def test_for_sender_or_recipient(self, user):
+
+        first = MessageFactory(sender=user)
+        second = MessageFactory(recipient=user)
+        third = MessageFactory()
+
+        messages = Message.objects.for_sender_or_recipient(user)
+        assert first in messages
+        assert second in messages
+        assert third not in messages
+
+    def test_for_users(self):
+
+        user_a = UserFactory()
+        user_b = UserFactory()
+
+        first = MessageFactory(sender=user_a, recipient=user_b)
+        second = MessageFactory(recipient=user_a, sender=user_b)
+        third = MessageFactory()
+        fourth = MessageFactory(sender=user_a)
+        fifth = MessageFactory(sender=user_b)
+        sixth = MessageFactory(recipient=user_a)
+        seventh = MessageFactory(recipient=user_b)
+
+        messages = Message.objects.between(user_a, user_b)
+
+        assert first in messages
+        assert second in messages
+        assert third not in messages
+        assert fourth not in messages
+        assert fifth not in messages
+        assert sixth not in messages
+        assert seventh not in messages
 
 
 class TestMessageModel:

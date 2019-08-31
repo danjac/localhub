@@ -145,6 +145,7 @@ class FollowingUserListView(LoginRequiredMixin, BaseUserListView):
             self.request.user.following.annotate(
                 is_following=Value(True, output_field=BooleanField())
             )
+            .for_community(self.request.community)
             .order_by("name", "username")
         )
 
@@ -267,14 +268,8 @@ class UserMessageListView(LoginRequiredMixin, SingleUserMixin, ListView):
 
     def get_queryset(self):
         return (
-            Message.objects.filter(
-                Q(Q(recipient=self.user_obj) | Q(sender=self.user_obj))
-                & Q(
-                    Q(recipient=self.request.user)
-                    | Q(sender=self.request.user)
-                ),
-                community=self.request.community,
-            )
+            Message.objects.for_community(self.request.community)
+            .between(self.request.user, self.user_obj)
             .with_sender_has_blocked(self.request.user)
             .select_related("sender", "recipient", "community")
             .order_by("-created")

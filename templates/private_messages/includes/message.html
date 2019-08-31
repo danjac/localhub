@@ -19,6 +19,10 @@
                 {% trans "to" %}
                 {% include "users/includes/chip.html" with profile=message.recipient profile_url=recipient_url %}
                 {% endif %}
+                {% if show_parent_info and message.parent %}
+                {% trans "in reply to" %}
+                <a href="{{ message.parent.get_absolute_url }}">{{ message.parent.get_abbreviation }}</a>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -60,12 +64,11 @@
                >{% trans "Delete" %}</a>
             {% endif %}
             {% if can_create_message %}
-            <a href="{% url 'private_messages:message_create' other_user.username %}">
-                {% user_display other_user as other_user_name %}
-                {% blocktrans %}
-                Send Message to {{ other_user_name }}
-                {% endblocktrans %}
-            </a>
+            {% if is_sender %}
+            <a href="{% url 'private_messages:message_create' other_user.username %}">{% trans "Send Message" %}</a>
+            {% else %}
+            <a href="{% url 'private_messages:message_reply' message.id %}">{% trans "Reply" %}</a>
+            {% endif %}
             {% endif %}
         </div>
     </div>

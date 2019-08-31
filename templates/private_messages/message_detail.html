@@ -21,4 +21,10 @@
 
 <div class="divider"></div>
 {% show_message user message is_detail=True %}
+{% if replies %}
+<div class="divider text-center" data-content="{% trans 'Replies' %}"></div>
+{% for reply in replies %}
+{% show_message user reply show_parent_info=False %}
+{% endfor %}
+{% endif %}
 {% endblock content %}

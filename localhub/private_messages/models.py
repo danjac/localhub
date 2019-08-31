@@ -27,6 +27,24 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
             recipient__is_active=True,
         )
 
+    def for_sender(self, user):
+        return self.filter(sender=user)
+
+    def for_recipient(self, user):
+        return self.filter(recipient=user)
+
+    def for_sender_or_recipient(self, user):
+        return self.filter(models.Q(sender=user) | models.Q(recipient=user))
+
+    def between(self, user_a, user_b):
+        """
+        Return all messages exchanged between two users.
+        """
+        return self.filter(
+            models.Q(recipient=user_a, sender=user_b)
+            | models.Q(recipient=user_b, sender=user_a)
+        )
+
     def with_sender_has_blocked(self, user):
         return self.annotate(
             sender_has_blocked=models.Exists(
@@ -48,6 +66,14 @@ class Message(TimeStampedModel):
 
     message = MarkdownField()
 
+    parent = models.ForeignKey(
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+
     read = models.DateTimeField(null=True, blank=True)
 
     search_document = SearchVectorField(null=True, editable=False)
@@ -64,7 +90,7 @@ class Message(TimeStampedModel):
     def __str__(self):
         return self.message
 
-    def get_abbreviation(self, length=60):
+    def get_abbreviation(self, length=30):
         """
         Returns non-HTML/markdown abbreviated version of message.
         """
