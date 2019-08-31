@@ -31,6 +31,7 @@ ipython
 micawber
 psycopg2
 pytest
+pytest-cov
 pytest-django
 pytest-mock
 pytz
