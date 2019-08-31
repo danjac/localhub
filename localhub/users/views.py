@@ -26,12 +26,12 @@ from localhub.users.emails import send_user_notification_email
 from localhub.users.forms import UserForm
 
 
-class BaseUserQuerySetMixin(CommunityRequiredMixin):
+class BaseUserQuerySetMixin:
     def get_user_queryset(self):
         return get_user_model().objects.active(self.request.community)
 
 
-class UserQuerySetMixin(BaseUserQuerySetMixin):
+class UserQuerySetMixin(CommunityRequiredMixin, BaseUserQuerySetMixin):
     def get_queryset(self):
         return self.get_user_queryset()
 
@@ -45,14 +45,15 @@ class CurrentUserMixin(LoginRequiredMixin):
         return self.request.user
 
 
-class SingleUserMixin(BaseUserQuerySetMixin):
+class SingleUserMixin(CommunityRequiredMixin, BaseUserQuerySetMixin):
     @cached_property
     def user_obj(self):
         return get_object_or_404(
             self.get_user_queryset(), username=self.kwargs["slug"]
         )
 
-    def get_membership(self):
+    @cached_property
+    def membership(self):
         return Membership.objects.filter(
             member=self.user_obj, community=self.request.community
         ).first()
@@ -62,8 +63,8 @@ class SingleUserMixin(BaseUserQuerySetMixin):
         data.update(
             {
                 "user_obj": self.user_obj,
-                "is_auth_user": self.user_obj == self.request.user,
-                "membership": self.get_membership(),
+                "is_current_user": self.user_obj == self.request.user,
+                "membership": self.membership,
             }
         )
         return data

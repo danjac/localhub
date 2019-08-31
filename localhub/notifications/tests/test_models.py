@@ -7,10 +7,41 @@ import pytest
 from pywebpush import WebPushException
 
 
-from localhub.communities.models import Membership
-from localhub.notifications.models import PushSubscription
+from localhub.communities.models import Community
+from localhub.communities.tests.factories import (
+    CommunityFactory,
+    MembershipFactory,
+)
+from localhub.notifications.models import Notification, PushSubscription
+from localhub.notifications.tests.factories import NotificationFactory
 
 pytestmark = pytest.mark.django_db
+
+
+class TestNotificationManager:
+    def test_for_community(self, community: Community):
+
+        notification = NotificationFactory(
+            community=community,
+            actor=MembershipFactory(community=community).member,
+        )
+        NotificationFactory(
+            actor=MembershipFactory(community=community).member
+        )
+        NotificationFactory(
+            actor=MembershipFactory(community=community, active=False).member
+        )
+        NotificationFactory(
+            actor=MembershipFactory(
+                community=CommunityFactory(), active=True
+            ).member
+        )
+        NotificationFactory(community=community)
+        NotificationFactory()
+
+        qs = Notification.objects.for_community(community)
+        assert qs.count() == 1
+        assert qs.first() == notification
 
 
 class TestPushSubscriptionModel:

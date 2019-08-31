@@ -18,11 +18,11 @@
 <p class="py-1">
   {{ user_obj.bio|urlize|linebreaksbr }}
 </p>
-{% elif is_auth_user %}
+{% elif is_current_user %}
 <p>{% trans "Click the 'My Settings' link to add a bio to your profile." %}</p>
 {% endif %}
 
-{% if is_auth_user %}
+{% if is_current_user %}
 {% blocktrans with created=membership.created|timesince %}
 You have been a member for <b>{{ created }}</b>.
 {% endblocktrans %}
@@ -103,7 +103,7 @@ You have been a member for <b>{{ created }}</b>.
   {% endwith %}
   {% endif %}
 
-  {% if not is_auth_user %}
+  {% if not is_current_user %}
 
   {% if can_create_message %}
   <a href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
@@ -129,7 +129,7 @@ You have been a member for <b>{{ created }}</b>.
     <a data-target="active-link.match"
        href="{% url 'users:comments' user_obj.username %}">{% trans "Comments" %}</a>
   </li>
-  {% if user.is_authenticated and not is_auth_user %}
+  {% if user.is_authenticated and not is_current_user %}
   <li class="tab-item" data-controller="active-link" data-active-link-exact>
     <a data-target="active-link.match"
        href="{% url 'users:messages' user_obj.username %}">{% trans "Messages" %}</a>

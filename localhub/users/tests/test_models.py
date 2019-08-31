@@ -7,11 +7,8 @@ from django.contrib.auth import get_user_model
 
 from allauth.account.models import EmailAddress
 
-from localhub.communities.models import Membership, RequestCommunity
+from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory
-from localhub.notifications.models import Notification
-from localhub.posts.tests.factories import PostFactory
-from localhub.private_messages.tests.factories import MessageFactory
 from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
@@ -137,44 +134,6 @@ class TestUserModel:
     def test_does_not_have_role(self, member):
         assert not member.member.has_role(
             member.community, Membership.ROLES.moderator
-        )
-
-    def test_get_unread_notification_count(self, user, community):
-        Notification.objects.create(
-            verb="mention",
-            recipient=user,
-            community=community,
-            content_object=PostFactory(),
-            actor=UserFactory(),
-        )
-        assert user.get_unread_notification_count(community) == 1
-
-    def test_get_unread_notification_count_if_community_id_none(
-        self, user, req_factory
-    ):
-        req = req_factory.get("/")
-        assert (
-            user.get_unread_notification_count(
-                RequestCommunity(req, "example.com", "example.com")
-            )
-            == 0
-        )
-
-    def test_get_unread_message_count(self):
-        message = MessageFactory()
-        assert (
-            message.recipient.get_unread_message_count(message.community) == 1
-        )
-
-    def test_get_unread_message_count_if_community_id_none(
-        self, user, req_factory
-    ):
-        req = req_factory.get("/")
-        assert (
-            user.get_unread_message_count(
-                RequestCommunity(req, "example.com", "example.com")
-            )
-            == 0
         )
 
     def test_notify_on_join(self, member):

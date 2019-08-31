@@ -16,6 +16,15 @@ from model_utils.models import TimeStampedModel
 from localhub.communities.models import Community
 
 
+class NotificationQuerySet(models.QuerySet):
+    def for_community(self, community):
+        return self.filter(
+            community=community,
+            actor__membership__community=community,
+            actor__membership__active=True,
+        )
+
+
 class Notification(TimeStampedModel):
     actor = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+"
@@ -31,6 +40,8 @@ class Notification(TimeStampedModel):
 
     verb = models.CharField(max_length=30)
     is_read = models.BooleanField(default=False)
+
+    objects = NotificationQuerySet.as_manager()
 
     class Meta:
         indexes = [

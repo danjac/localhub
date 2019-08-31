@@ -8,7 +8,10 @@ from django.contrib.auth.models import AnonymousUser
 from taggit.models import Tag
 
 from localhub.communities.models import Community
-from localhub.communities.tests.factories import MembershipFactory
+from localhub.communities.tests.factories import (
+    CommunityFactory,
+    MembershipFactory,
+)
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.posts.models import Post
@@ -215,6 +218,14 @@ class TestActivityManager:
             owner=MembershipFactory(community=community).member,
         )
         PostFactory(owner=MembershipFactory(community=community).member)
+        PostFactory(
+            owner=MembershipFactory(community=community, active=False).member
+        )
+        PostFactory(
+            owner=MembershipFactory(
+                community=CommunityFactory(), active=True
+            ).member
+        )
         PostFactory(community=community)
         PostFactory()
 

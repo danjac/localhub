@@ -4,6 +4,7 @@
 from django import template
 from django.conf import settings
 
+from localhub.notifications.models import Notification
 
 register = template.Library()
 
@@ -17,12 +18,22 @@ def notifications_subscribe_btn(user, community):
     }
 
 
-@register.simple_tag
-def get_unread_notification_count(user, community):
+@register.simple_tag(takes_context=True)
+def get_unread_notification_count(context, user, community):
     """
-    Returns a count of the total number of *unread* notifications
+    Returns a cached count of the total number of *unread* notifications
     for the current user. If user not logged in just returns 0.
     """
+    context_key = "_notifications_unread_count"
+    if context_key in context:
+        return context[context_key]
     if user.is_anonymous or not community.active:
-        return 0
-    return user.get_unread_notification_count(community)
+        count = 0
+    else:
+        count = (
+            Notification.objects.for_community(community)
+            .filter(recipient=user, is_read=False)
+            .count()
+        )
+    context[context_key] = count
+    return count

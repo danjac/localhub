@@ -16,6 +16,14 @@ from localhub.core.utils.search import SearchIndexer, SearchQuerySetMixin
 
 
 class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
+    def for_community(self, community):
+        return self.filter(
+            community=community,
+            sender__membership__community=community,
+            sender__membership__active=True,
+            recipient__membership__community=community,
+            recipient__membership__active=True,
+        )
 
     def with_sender_has_blocked(self, user):
         return self.annotate(

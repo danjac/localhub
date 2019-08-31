@@ -16,12 +16,10 @@ from localhub.communities.views import CommunityRequiredMixin
 from localhub.notifications.models import Notification, PushSubscription
 
 
-class NotificationQuerySetMixin(CommunityRequiredMixin, LoginRequiredMixin):
+class NotificationQuerySetMixin(LoginRequiredMixin, CommunityRequiredMixin):
     def get_queryset(self):
         return Notification.objects.filter(
-            recipient=self.request.user,
-            community=self.request.community,
-            actor__communities=self.request.community,
+            recipient=self.request.user, community=self.request.community
         )
 
 

@@ -5,6 +5,7 @@
 from django import template
 from django.urls import reverse
 
+from localhub.private_messages.models import Message
 
 register = template.Library()
 
@@ -57,12 +58,22 @@ def show_message(
     }
 
 
-@register.simple_tag
-def get_unread_message_count(user, community):
+@register.simple_tag(takes_context=True)
+def get_unread_message_count(context, user, community):
     """
-    Returns a count of the total number of *unread* messages
+    Returns a cached count of the total number of *unread* messages
     for the current user. If user not logged in just returns 0.
     """
+    context_key = "_private_messages_unread_count"
+    if context_key in context:
+        return context[context_key]
     if user.is_anonymous or not community.active:
-        return 0
-    return user.get_unread_message_count(community)
+        count = 0
+    else:
+        count = (
+            Message.objects.for_community(community)
+            .filter(recipient=user, read__isnull=True)
+            .count()
+        )
+    context[context_key] = count
+    return count

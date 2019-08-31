@@ -18,15 +18,19 @@
 <h3>{% avatar member "avatar-lg" %}{{ display_name }}</h3>
 
 <div class="actions">
+  {% if object.active %}
   <a href="{% url 'users:activities' member.username %}">{% trans "Posts" %}</a>
   <a href="{% url 'users:comments' member.username %}">{% trans "Comments" %}</a>
   <a href="{% url 'users:messages' member.username %}">{% trans "Messages" %}</a>
+  {% endif %}
   {% if member != user %}
   {% has_perm "communities.change_membership" user object as can_change %}
   {% has_perm "communities.delete_membership" user object as can_delete %}
+  {% if object.active %}
   <a href="{% url 'private_messages:message_create' member.username %}">
     {% trans "Send Message" %}
   </a>
+  {% endif %}
   {% if can_change %}
   <a href="{% url 'communities:membership_update' object.id %}">
     {% trans "Edit" %}

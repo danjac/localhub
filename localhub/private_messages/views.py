@@ -35,11 +35,7 @@ from localhub.users.utils import user_display
 
 class MessageQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
-        return Message.objects.filter(
-            community=self.request.community,
-            sender__communities=self.request.community,
-            recipient__communities=self.request.community,
-        )
+        return Message.objects.for_community(community=self.request.community)
 
 
 class SenderQuerySetMixin(MessageQuerySetMixin):

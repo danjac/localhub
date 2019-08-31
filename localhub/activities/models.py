@@ -94,7 +94,11 @@ class ActivityQuerySet(
         """
         Must match community, and owner must also be member.
         """
-        return self.filter(community=community, owner__communities=community)
+        return self.filter(
+            community=community,
+            owner__membership__community=community,
+            owner__membership__active=True,
+        )
 
     def following_users(self, user):
         """

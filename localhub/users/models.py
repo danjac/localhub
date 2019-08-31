@@ -17,7 +17,7 @@ from sorl.thumbnail import ImageField
 
 from taggit.models import Tag
 
-from localhub.communities.models import Community, Membership
+from localhub.communities.models import Membership
 from localhub.core.fields import ChoiceArrayField
 from localhub.core.utils.search import SearchIndexer, SearchQuerySetMixin
 from localhub.notifications.models import Notification
@@ -239,41 +239,6 @@ class User(AbstractUser):
         is cached.
         """
         return self.community_roles_cache.get(community.id, None) == role
-
-    def get_unread_notification_count(self, community):
-        """Gets number of unread notifications. Result is cached."""
-        return self.unread_notification_counts_cache.get(community.id, 0)
-
-    def get_unread_message_count(self, community):
-        """Gets number of unread direct messages. Result is cached."""
-        return self.unread_message_counts_cache.get(community.id, 0)
-
-    @cached_property
-    def unread_notification_counts_cache(self):
-        return dict(
-            Community.objects.annotate(
-                num_notifications=models.Count(
-                    "notification",
-                    filter=models.Q(
-                        notification__is_read=False,
-                        notification__recipient=self,
-                    ),
-                )
-            ).values_list("id", "num_notifications")
-        )
-
-    @cached_property
-    def unread_message_counts_cache(self):
-        return dict(
-            Community.objects.annotate(
-                num_messages=models.Count(
-                    "message",
-                    filter=models.Q(
-                        message__read__isnull=True, message__recipient=self
-                    ),
-                )
-            ).values_list("id", "num_messages")
-        )
 
     @cached_property
     def community_roles_cache(self):

@@ -59,7 +59,11 @@ class CommentQuerySet(
         """
         Both community and membership should match.
         """
-        return self.filter(community=community, owner__communities=community)
+        return self.filter(
+            community=community,
+            owner__membership__community=community,
+            owner__membership__active=True,
+        )
 
     def blocked_users(self, user):
 
