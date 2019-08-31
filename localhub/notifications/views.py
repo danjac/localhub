@@ -18,9 +18,9 @@ from localhub.notifications.models import Notification, PushSubscription
 
 class NotificationQuerySetMixin(LoginRequiredMixin, CommunityRequiredMixin):
     def get_queryset(self):
-        return Notification.objects.filter(
-            recipient=self.request.user, community=self.request.community
-        )
+        return Notification.objects.for_community(
+            self.request.community
+        ).filter(recipient=self.request.user)
 
 
 class UnreadNotificationQuerySetMixin(NotificationQuerySetMixin):
