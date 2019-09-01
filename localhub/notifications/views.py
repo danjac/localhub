@@ -33,6 +33,27 @@ class NotificationSuccessRedirectMixin:
         return reverse("notifications:list")
 
 
+class BasePushSubscriptionView(
+    CommunityRequiredMixin, LoginRequiredMixin, View
+):
+    def post(self, request, *args, **kwargs):
+        try:
+            json_body = json.loads(request.body.decode("utf-8"))
+
+            data = {"endpoint": json_body["endpoint"]}
+            keys = json_body["keys"]
+            data["auth"] = keys["auth"]
+            data["p256dh"] = keys["p256dh"]
+
+        except (ValueError, KeyError):
+            return HttpResponse(status=400)
+
+        return self.handle_action(request, **data)
+
+    def handle_action(self, request, auth, p256dh, endpoint):
+        raise NotImplementedError
+
+
 class NotificationListView(NotificationQuerySetMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
     template_name = "notifications/notification_list.html"
@@ -133,26 +154,7 @@ class ServiceWorkerView(TemplateView):
 service_worker_view = ServiceWorkerView.as_view()
 
 
-class PushSubscriptionView(CommunityRequiredMixin, LoginRequiredMixin, View):
-    def post(self, request, *args, **kwargs):
-        try:
-            json_body = json.loads(request.body.decode("utf-8"))
-
-            data = {"endpoint": json_body["endpoint"]}
-            keys = json_body["keys"]
-            data["auth"] = keys["auth"]
-            data["p256dh"] = keys["p256dh"]
-
-        except (ValueError, KeyError):
-            return HttpResponse(status=400)
-
-        return self.handle_action(request, **data)
-
-    def handle_action(self, request, auth, p256dh, endpoint):
-        raise NotImplementedError
-
-
-class SubscribeView(PushSubscriptionView):
+class SubscribeView(BasePushSubscriptionView):
     def handle_action(self, request, auth, p256dh, endpoint):
 
         try:
@@ -172,7 +174,7 @@ class SubscribeView(PushSubscriptionView):
 subscribe_view = SubscribeView.as_view()
 
 
-class UnsubscribeView(PushSubscriptionView):
+class UnsubscribeView(BasePushSubscriptionView):
     def handle_action(self, request, auth, p256dh, endpoint):
 
         PushSubscription.objects.filter(
