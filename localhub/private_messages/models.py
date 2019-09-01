@@ -90,7 +90,7 @@ class Message(TimeStampedModel):
     def __str__(self):
         return self.message
 
-    def get_abbreviation(self, length=30):
+    def abbreviate(self, length=30):
         """
         Returns non-HTML/markdown abbreviated version of message.
         """

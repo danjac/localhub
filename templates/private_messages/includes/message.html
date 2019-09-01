@@ -21,7 +21,7 @@
                 {% endif %}
                 {% if show_parent_info and message.parent %}
                 {% trans "in reply to" %}
-                <a href="{{ message.parent.get_absolute_url }}">{{ message.parent.get_abbreviation }}</a>
+                <a href="{{ message.parent.get_absolute_url }}">{{ message.parent.abbreviate }}</a>
                 {% endif %}
             </div>
         </div>

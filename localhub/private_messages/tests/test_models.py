@@ -106,7 +106,7 @@ class TestMessageModel:
         assert message.get_other_user(message.sender) == message.recipient
         assert message.get_other_user(message.recipient) == message.sender
 
-    def test_get_abbreviation(self):
+    def test_abbreviate(self):
 
         msg = Message(message="Hello\nthis is a *test*")
-        assert msg.get_abbreviation() == "Hello this is a test"
+        assert msg.abbreviate() == "Hello this is a test"

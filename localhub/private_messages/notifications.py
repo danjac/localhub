@@ -48,6 +48,6 @@ def send_message_push(message):
             message.community,
             head=_("%(sender)s has sent you a message")
             % {"sender": user_display(message.sender)},
-            body=message.get_abbreviation(),
+            body=message.abbreviate(),
             url=message.get_permalink(),
         )

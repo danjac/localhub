@@ -126,7 +126,7 @@ class MessageReplyView(
                 reverse("users:messages", args=[self.recipient.username]),
                 user_display(self.recipient),
             ),
-            (self.parent.get_absolute_url(), self.parent.get_abbreviation()),
+            (self.parent.get_absolute_url(), self.parent.abbreviate()),
             ("#", _("Reply")),
         ]
 
@@ -276,7 +276,7 @@ class MessageUpdateView(
     def get_breadcrumbs(self):
         return [
             (reverse("private_messages:outbox"), _("Outbox")),
-            (self.object.get_absolute_url, self.object.get_abbreviation()),
+            (self.object.get_absolute_url, self.object.abbreviate()),
             ("#", _("Edit Message")),
         ]
 

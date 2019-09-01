@@ -148,9 +148,9 @@ class TestCommentManager:
 
 
 class TestCommentModel:
-    def test_get_abbreviation(self):
+    def test_abbreviate(self):
         comment = Comment(content="Hello\nthis is a *test*")
-        assert comment.get_abbreviation() == "Hello this is a test"
+        assert comment.abbreviate() == "Hello this is a test"
 
     def test_notify_on_create(self, community):
 
