@@ -19,7 +19,7 @@ from taggit.models import Tag
 
 from localhub.communities.models import Membership
 from localhub.common.db.fields import ChoiceArrayField
-from localhub.common.search import SearchIndexer, SearchQuerySetMixin
+from localhub.common.db.search import SearchIndexer, SearchQuerySetMixin
 from localhub.notifications.models import Notification
 
 

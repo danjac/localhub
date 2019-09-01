@@ -11,7 +11,7 @@ from sorl.thumbnail import ImageField
 
 from localhub.activities.models import Activity
 from localhub.comments.models import Comment
-from localhub.common.search import SearchIndexer
+from localhub.common.db.search import SearchIndexer
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification

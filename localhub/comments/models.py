@@ -20,8 +20,8 @@ from simple_history.models import HistoricalRecords
 
 from localhub.common.content_types import get_generic_related_count_subquery
 from localhub.common.markdown.fields import MarkdownField
-from localhub.common.search import SearchIndexer, SearchQuerySetMixin
-from localhub.common.tracker import Tracker
+from localhub.common.db.search import SearchIndexer, SearchQuerySetMixin
+from localhub.common.db.tracker import Tracker
 from localhub.communities.models import Community, Membership
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin

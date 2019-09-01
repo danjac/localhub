@@ -9,7 +9,7 @@ from django.utils.translation import gettext as _
 from localhub.activities.models import Activity
 from localhub.activities.utils import get_domain
 from localhub.comments.models import Comment
-from localhub.common.search import SearchIndexer
+from localhub.common.db.search import SearchIndexer
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification

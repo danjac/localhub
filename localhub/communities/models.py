@@ -20,7 +20,7 @@ from simple_history.models import HistoricalRecords
 
 from localhub.common.markdown.fields import MarkdownField
 from localhub.common.markdown.utils import extract_hashtags
-from localhub.common.search import SearchQuerySetMixin
+from localhub.common.db.search import SearchQuerySetMixin
 
 DOMAIN_VALIDATOR = RegexValidator(
     regex=URLValidator.host_re, message=_("This is not a valid domain")

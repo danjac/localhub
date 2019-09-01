@@ -11,7 +11,7 @@ from django.urls import reverse
 from model_utils.models import TimeStampedModel
 
 from localhub.common.markdown.fields import MarkdownField
-from localhub.common.search import SearchIndexer, SearchQuerySetMixin
+from localhub.common.db.search import SearchIndexer, SearchQuerySetMixin
 from localhub.communities.models import Community
 
 
