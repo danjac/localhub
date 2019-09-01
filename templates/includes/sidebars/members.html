@@ -136,7 +136,7 @@
     <a data-controller="active-link" href="{% url 'communities:membership_list' %}">{% trans "Members" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'invites:list' %}">{% trans "Invite New Members" %}</a>
+    <a data-controller="active-link" href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
   </li>
   <li class="menu-item">
     {% get_pending_join_request_count community as pending_join_requests %}

@@ -1443,7 +1443,7 @@ msgid "You do not have permission to view this community"
 msgstr ""
 
 #: templates/communities/base.html:31
-msgid "Invite New Members"
+msgid "Invites"
 msgstr ""
 
 #: templates/communities/community_detail.html:13
