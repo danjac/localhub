@@ -76,6 +76,20 @@ class TestCommunityManager:
 
 
 class TestCommunityModel:
+    def test_is_email_blacklisted_if_ok(self):
+        community = Community()
+        assert not community.is_email_blacklisted("tester@gmail.com")
+
+    def test_is_email_blacklisted_if_domain_blacklisted(self):
+        community = Community(blacklisted_email_domains="gmail.com")
+        assert community.is_email_blacklisted("tester@gmail.com")
+        assert community.is_email_blacklisted("tester2@gmail.com")
+
+    def test_is_email_blacklisted_if_address_blacklisted(self):
+        community = Community(blacklisted_email_addresses="tester@gmail.com")
+        assert community.is_email_blacklisted("tester@gmail.com")
+        assert not community.is_email_blacklisted("tester2@gmail.com")
+
     def test_get_members(self, member):
         assert member.community.get_members().first() == member.member
 

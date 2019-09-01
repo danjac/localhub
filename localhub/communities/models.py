@@ -179,6 +179,22 @@ class Community(TimeStampedModel):
         related_name="+",
     )
 
+    blacklisted_email_domains = models.TextField(
+        blank=True,
+        help_text=_(
+            "Join requests from these domains will be automatically rejected. "
+            "Separate with spaces."
+        ),
+    )
+
+    blacklisted_email_addresses = models.TextField(
+        blank=True,
+        help_text=_(
+            "Join requests from these addresses will be automatically "
+            "rejected. Separate with spaces."
+        ),
+    )
+
     objects = CommunityManager()
 
     class Meta:
@@ -235,6 +251,22 @@ class Community(TimeStampedModel):
         if user.is_anonymous:
             return False
         return user.has_role(self, role)
+
+    def is_email_blacklisted(self, email):
+        """
+        Checks if email address or domain is blacklisted by this community.
+        """
+        email = email.strip().lower()
+        if email in [
+            address.lower()
+            for address in self.blacklisted_email_addresses.split()
+        ]:
+            return True
+
+        domain = email.split("@")[1]
+        return domain in [
+            domain.lower() for domain in self.blacklisted_email_domains.split()
+        ]
 
 
 class MembershipQuerySet(SearchQuerySetMixin, models.QuerySet):

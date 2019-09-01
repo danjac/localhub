@@ -24,6 +24,24 @@ class JoinRequestForm(forms.ModelForm):
 
     def clean(self):
         data = super().clean()
+
+        email = self.sender.email if self.sender else data["email"]
+        if self.community.is_email_blacklisted(email):
+            raise ValidationError(
+                _(
+                    "Sorry, we cannot accept your application "
+                    "to join at this time."
+                )
+            )
+
+        if self.sender:
+            qs = self.community.members.filter(pk=self.sender.id)
+        else:
+            qs = self.community.members.filter(email__iexact=data["email"])
+
+        if qs.exists():
+            raise ValidationError(_("You already belong to this community."))
+
         if self.sender:
             qs = JoinRequest.objects.filter(sender=self.sender)
         else:
@@ -33,6 +51,7 @@ class JoinRequestForm(forms.ModelForm):
             raise ValidationError(
                 _("You have already sent a request. Be patient.")
             )
+
         return data
 
     def save(self, commit=True):

@@ -123,6 +123,8 @@ class CommunityUpdateView(
         "content_warning_tags",
         "public",
         "email_domain",
+        "blacklisted_email_domains",
+        "blacklisted_email_addresses",
     )
 
     permission_required = "communities.manage_community"
