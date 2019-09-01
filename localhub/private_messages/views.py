@@ -135,6 +135,9 @@ class MessageReplyView(
         form["message"].label = _("Reply to %(recipient)s") % {
             "recipient": user_display(self.recipient)
         }
+        form["message"].initial = "\n".join(
+            ["> " + line for line in self.parent.message.splitlines()]
+        )
         return form
 
     def get_context_data(self, **kwargs):

@@ -14,13 +14,6 @@
 
 <h3>{% trans "Messages" %}</h3>
 
-{% if parent %}
-<h6>{% trans "In reply to" %}</h6>
-<div class="markdown-content">
-    {{ parent.message.markdown }}
-</div>
-{% endif %}
-
 <div class="divider"></div>
 
 {% simple_ajax_form form %}
