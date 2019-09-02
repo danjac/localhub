@@ -48,6 +48,11 @@
        href="{% url 'community_list' %}">{% trans "Local Network" %}
     </a>
   </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'help_pages:index' %}">{% trans "Help" %}
+    </a>
+  </li>
 </ul>
 
 {% if can_create_activity %}

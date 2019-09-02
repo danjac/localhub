@@ -6,8 +6,8 @@
 
 {% has_perm "communities.view_community" user community as can_view_community %}
 
-{% if can_view_community %}
 <ul class="menu">
+    {% if can_view_community %}
     <li class="menu-item">
         <a data-controller="active-link"
            data-active-link-exact
@@ -38,16 +38,17 @@
     <li class="menu-item">
         <a data-controller="active-link" href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
     </li>
-</ul>
-{% else %}
-<ul class="menu">
+    {% else %}
     <li class="menu-item">
         <a data-controller="active-link"
            data-active-link-exact
            href="{% url 'community_list' %}">{% trans "Local Network" %}
         </a>
     </li>
+    {% endif %}
+    <li class="menu-item">
+        <a data-controller="active-link"
+           href="{% url 'help_pages:index' %}">{% trans "Help" %}
+        </a>
+    </li>
 </ul>
-{% endif %}
-
-

@@ -28,6 +28,7 @@ urlpatterns = [
     path("photos/", include("localhub.photos.urls")),
     path("posts/", include("localhub.posts.urls")),
     path("people/", include("localhub.users.urls")),
+    path("help/", include("localhub.help_pages.urls")),
     path("community/", include("localhub.communities.urls")),
     path("network/", community_list_view, name="community_list"),
     path("account/~update", user_update_view, name="user_update"),

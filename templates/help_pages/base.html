@@ -1,0 +1,18 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block subtitle %} | {% trans "Help" %}{% endblock %}
+
+{% block sidebar_content %}
+{% include "help_pages/includes/sidebar.html" %}
+{% endblock %}
+
+{% block content %}
+<h3>{% trans "Help" %}</h3>
+<div class="divider"></div>
+{% block help_content %}{% endblock %}
+{% endblock %}
+
