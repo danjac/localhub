@@ -8,7 +8,7 @@
 {% if object.url %}
 {% if request.do_not_track and not user.show_embedded_content %}
 <div>
-  {{ object.url|url_to_img|domain }}
+  {{ object.url|domain }}
 </div>
 {% else %}
 <div data-controller="oembed" class="wordwrap">
