@@ -49,7 +49,16 @@ class RequestCommunity:
     def get_absolute_url(self):
         return self.request.full_path
 
-    def user_has_role(self, user, role):
+    def user_has_role(self, user, *roles):
+        return False
+
+    def is_member(self, user):
+        return False
+
+    def is_moderator(self, user):
+        return False
+
+    def is_admin(self, user):
         return False
 
 
@@ -235,22 +244,44 @@ class Community(TimeStampedModel):
         """
         return f"{local_part}@{self.get_email_domain()}"
 
-    def get_members_by_role(self, role):
-        return self.members.filter(membership__role=role)
+    def get_members_by_role(self, *roles):
+        return self.members.filter(membership__role__in=roles)
 
     def get_members(self):
-        return self.get_members_by_role(Membership.ROLES.member)
+        return self.get_members_by_role(
+            Membership.ROLES.member,
+            Membership.ROLES.moderator,
+            Membership.ROLES.admin,
+        )
 
     def get_moderators(self):
-        return self.get_members_by_role(Membership.ROLES.moderator)
+        return self.get_members_by_role(
+            Membership.ROLES.moderator, Membership.ROLES.admin
+        )
 
     def get_admins(self):
         return self.get_members_by_role(Membership.ROLES.admin)
 
-    def user_has_role(self, user, role):
+    def user_has_role(self, user, *roles):
         if user.is_anonymous:
             return False
-        return user.has_role(self, role)
+        return user.has_role(self, *roles)
+
+    def is_member(self, user):
+        return self.user_has_role(
+            user,
+            Membership.ROLES.member,
+            Membership.ROLES.moderator,
+            Membership.ROLES.admin,
+        )
+
+    def is_moderator(self, user):
+        return self.user_has_role(
+            user, Membership.ROLES.moderator, Membership.ROLES.admin
+        )
+
+    def is_admin(self, user):
+        return self.user_has_role(user, Membership.ROLES.admin)
 
     def is_email_blacklisted(self, email):
         """

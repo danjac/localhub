@@ -3,63 +3,51 @@
 
 import pytest
 
-from localhub.users.tests.factories import UserFactory
+from django.contrib.auth.models import AnonymousUser
 
 from localhub.communities.models import Membership
 from localhub.communities.rules import (
     is_admin,
-    is_moderator,
     is_member,
-    is_own_membership,
     is_membership_community_admin,
+    is_moderator,
+    is_own_membership,
 )
+from localhub.communities.tests.factories import MembershipFactory
+from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 
 
-class TestIsAdmin:
-    def test_is_admin_if_user_not_admin(self, user, community):
-        assert not is_admin.test(user, community)
-        assert not is_moderator.test(user, community)
+class TestMembershipRoles:
+    def test_anonymous_user(self, community):
+        user = AnonymousUser()
         assert not is_member.test(user, community)
+        assert not is_moderator.test(user, community)
+        assert not is_admin.test(user, community)
 
-    def test_is_admin_if_user_is_admin(self, user, community):
-        Membership.objects.create(
-            member=user, community=community, role="admin"
-        )
+    def test_non_member(self, user, community):
+        assert not is_member.test(user, community)
+        assert not is_moderator.test(user, community)
+        assert not is_admin.test(user, community)
+
+    def test_member(self, community):
+        user = MembershipFactory(community=community, role="member").member
+        assert is_member.test(user, community)
+        assert not is_moderator.test(user, community)
+        assert not is_admin.test(user, community)
+
+    def test_moderator(self, community):
+        user = MembershipFactory(community=community, role="moderator").member
+        assert is_member.test(user, community)
+        assert is_moderator.test(user, community)
+        assert not is_admin.test(user, community)
+
+    def test_admin(self, community):
+        user = MembershipFactory(community=community, role="admin").member
+        assert is_member.test(user, community)
+        assert is_moderator.test(user, community)
         assert is_admin.test(user, community)
-        assert is_moderator.test(user, community)
-        assert is_member.test(user, community)
-
-
-class TestIsModerator:
-    def test_is_moderator_if_user_not_moderator(self, user, community):
-        assert not is_admin.test(user, community)
-        assert not is_moderator.test(user, community)
-        assert not is_member.test(user, community)
-
-    def test_is_moderator_if_user_is_moderator(self, user, community):
-        Membership.objects.create(
-            member=user, community=community, role="moderator"
-        )
-        assert not is_admin.test(user, community)
-        assert is_moderator.test(user, community)
-        assert is_member.test(user, community)
-
-
-class TestIsMember:
-    def test_is_member_if_user_not_member(self, user, community):
-        assert not is_admin.test(user, community)
-        assert not is_moderator.test(user, community)
-        assert not is_member.test(user, community)
-
-    def test_is_member_if_user_is_member(self, user, community):
-        Membership.objects.create(
-            member=user, community=community, role="member"
-        )
-        assert not is_admin.test(user, community)
-        assert not is_moderator.test(user, community)
-        assert is_member.test(user, community)
 
 
 class TestIsOwnMembership:

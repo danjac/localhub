@@ -233,12 +233,12 @@ class User(AbstractUser):
             pref in self.email_preferences if self.email_preferences else False
         )
 
-    def has_role(self, community, role):
+    def has_role(self, community, *roles):
         """
         Checks if user has given role in the community, if any. Result
         is cached.
         """
-        return self.community_roles_cache.get(community.id, None) == role
+        return self.community_roles_cache.get(community.id, None) in roles
 
     @cached_property
     def community_roles_cache(self):

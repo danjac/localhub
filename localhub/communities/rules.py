@@ -7,17 +7,15 @@ Rulesets for communities/memberships
 
 import rules
 
-from localhub.communities.models import Membership
-
 
 @rules.predicate
 def is_admin(user, community):
-    return community.user_has_role(user, Membership.ROLES.admin)
+    return community.is_admin(user)
 
 
 @rules.predicate
 def is_moderator(user, community):
-    return community.user_has_role(user, Membership.ROLES.moderator)
+    return community.is_moderator(user)
 
 
 is_moderator = is_moderator | is_admin
@@ -25,7 +23,7 @@ is_moderator = is_moderator | is_admin
 
 @rules.predicate
 def is_member(user, community):
-    return community.user_has_role(user, Membership.ROLES.member)
+    return community.is_member(user)
 
 
 is_member = is_member | is_moderator
