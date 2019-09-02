@@ -1,0 +1,93 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "help_pages/base.html" %}
+
+{% load i18n %}
+
+{% block help_content %}
+
+{# List all URLs here #}
+{% url 'community_list' as community_list_url %}
+{% url 'user_update' as user_update_url %}
+{% url 'communities:leave' as community_leave_url %}
+
+<ul>
+  <li><a data-turbolinks="false" href="#what-is-a-community">{% trans "What is a Community?" %}</a></li>
+  <li><a data-turbolinks="false" href="#starting-a-community">{% trans "Starting a Community" %}</a></li>
+  <li>
+    <a data-turbolinks="false" href="#joining-a-community">{% trans "Joining a Community" %}</a>
+    <ul>
+      <li>
+        <a data-turbolinks="false" href="#join-requests">{% trans "Join requests" %}</a>
+      </li>
+      <li>
+        <a data-turbolinks="false" href="#invites">{% trans "Invites" %}</a>
+      </li>
+    </ul>
+  </li>
+  <li><a data-turbolinks="false" href="#leaving-a-community">{% trans "Leaving a Community" %}</a></li>
+  <li><a data-turbolinks="false" href="#public-and-private-communities">{% trans "Public and private Communities" %}</a></li>
+  <li><a data-turbolinks="false" href="#local-network">{% trans "Local network" %}</a></li>
+  <li><a data-turbolinks="false" href="#community-settings">{% trans "Community settings" %}</a></li>
+</ul>
+<div class="divider"></div>
+
+<h5 id="what-is-a-community">{% trans "What is a Community?" %}</h5>
+<div class="divider"></div>
+
+<h5 id="starting-a-community">{% trans "Starting a Community" %}</h5>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  If you are self-hosting please refer to <a href="">the instructions on how to create a new community [LINK REQUIRED]</a>. Otherwise you will need to contact the site admins of your LocalHub host to create a community for you.
+  {% endblocktrans %}
+</p>
+
+<h5 id="joining-a-community">{% trans "Joining a Community" %}</h5>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  There are two ways to join a Community (unless you have been assigned as a founding member by a site admin when setting up the Community). You can be sent an invite, or send a request to the Community Admins to join the Community. Details for Admins on managing invites and join requests are covered in the help page on <a href="">Memberships [LINK REQUIRED]</a>; this section is for prospective members wanting to join a Community.
+  {% endblocktrans %}
+</p>
+
+<h6 id="invites">{% trans "Invites" %}</h6>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  An <a href="#">Admin [LINK REQUIRED]</a> may send you an invite if they know your email address. You should receive an email with an invite link: if you click on the link you will automatically be added as a new member of the Community. Alternatively you may choose to reject the invite.
+  {% endblocktrans %}
+</p>
+
+<h5 id="leaving-a-community">{% trans "Leaving a Community" %}</h5>
+<p>
+  {% blocktrans %}
+  To leave a Community permanently, first click on the <a href="{{ user_update_url }}">My Settings</a> link in the Sidebar, then select the <a href="{{ community_leave_url }}">Leave Community</a> link in the settings Sidebar. Once you have left this Community you can only rejoin by sending a join request or accepting an invite.
+  {% endblocktrans %}
+</p>
+<p>
+  {% blocktrans %}
+  Your content - posts, photos, events as well as comments and private messages sent to other members - will not be visible to other members, but will not be deleted. You should delete any content before you leave, or request a <a href="">Moderator [LINK REQUIRED]</a> or <a href="">Admin [LINK REQUIRED]</a> do so. Remember that if you <a href="">delete your account [LINK REQUIRED]</a> completely, all your content, across all Communities, will be permanently deleted.
+  {% endblocktrans %}
+</p>
+<div class="divider"></div>
+
+<h5 id="public-and-private-communities">{% trans "Public and private Communities" %}</h5>
+<p>
+  {% blocktrans %}
+  Content published on public Communities is open to the world. Content published in private Communities is only available to members of that Community. Admins can change this setting in the <a data-turbolinks="false" href="#community-settings">Community Settings</a> page.
+  {% endblocktrans %}
+</p>
+<div class="divider"></div>
+
+<h5 id="local-network">{% trans "Local network" %}</h5>
+<p>
+  {% blocktrans %}
+  The <a href="{{ community_list_url }}">Local Network</a> lists all Communities available on this host. Public Communities are always visible. Private Communities are only shown if you are a member of these Communities. You can also search for a Community using the search field at the top of the page.
+  {% endblocktrans %}
+</p>
+<div class="divider"></div>
+
+<h5 id="community-settings">{% trans "Community settings" %}</h5>
+{% endblock %}

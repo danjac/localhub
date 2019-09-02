@@ -9,5 +9,10 @@ urlpatterns = [
         "",
         TemplateView.as_view(template_name="help_pages/index.html"),
         name="index",
-    )
+    ),
+    path(
+        "communities/",
+        TemplateView.as_view(template_name="help_pages/communities.html"),
+        name="communities",
+    ),
 ]

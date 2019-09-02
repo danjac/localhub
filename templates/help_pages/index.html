@@ -11,16 +11,16 @@
     <a href="">Introduction: what is LocalHub?</a>
   </li>
   <li>
-    <a href="">{% trans "Communities" %}</a>
+    {% url 'help_pages:communities' as communities_url %}
+    <a href="{{ communities_url }}">{% trans "Communities" %}</a>
     <ul>
-      <li><a href="">What is a Community?</a></li>
-      <li><a href="">Starting a Community</a></li>
-      <li><a href="">Joining a Community</a></li>
-      <li><a href="">Leaving a Community</a></li>
-      <li><a href="">Public and private Communities</a></li>
-      <li><a href="">Local network</a></li>
-      <li><a href="">Community settings</a></li>
-      <li><a href="">Managing memberships</a></li>
+      <li><a href="{{ communities_url }}#what-is-a-community">What is a Community?</a></li>
+      <li><a href="{{ communities_url }}#starting-a-community">Starting a Community</a></li>
+      <li><a href="{{ communities_url }}#joining-a-community">Joining a Community</a></li>
+      <li><a href="{{ communities_url }}#leaving-a-community">Leaving a Community</a></li>
+      <li><a href="{{ communities_url }}">Public and private Communities</a></li>
+      <li><a href="{{ communities_url }}#local-network">{% trans "Local network" %}</a></li>
+      <li><a href="{{ communities_url }}">Community settings</a></li>
     </ul>
   </li>
   <li>
@@ -39,7 +39,10 @@
     <a href="">{% trans "Content" %}</a>
     <ul>
       <li><a href="">Posts, events and photos</a></li>
+      <li><a href="">Home page</a></li>
+      <li><a href="">Timeline</a></li>
       <li><a href="">Adding new content</a></li>
+      <li><a href="">Introduction to Markdown</a></li>
       <li><a href="">Who can see my content?</a></li>
       <li><a href="">Tagging</a></li>
       <li><a href="">Content sensitive tags</a></li>
@@ -97,13 +100,21 @@
     </ul>
   </li>
   <li>
-    <a href="">{% trans "Self-Hosting" %}</a>
+    <a href="">{% trans "Memberships" %}</a>
     <ul>
-      <li><a href="">Deployment</a></li>
-      <li><a href="">Configuring DNS</a></li>
-      <li><a href="">Setting up a Community in the Django admin</a></li>
+      <li><a href="">Sending invites</a></li>
+      <li><a href="">Managing join requests</a></li>
+      <li><a href="">Editing memberships</a></li>
+      <li><a href="">Deleting memberships</a></li>
     </ul>
-  </li>
-  <li><a href="">{% trans "Contributing" %}</a></li>
+    <li>
+      <a href="">{% trans "Self-Hosting" %}</a>
+      <ul>
+        <li><a href="">Deployment</a></li>
+        <li><a href="">Configuring DNS</a></li>
+        <li><a href="">Setting up a Community in the Django admin</a></li>
+      </ul>
+    </li>
+    <li><a href="">{% trans "Contributing" %}</a></li>
 </ul>
 {% endblock %}
