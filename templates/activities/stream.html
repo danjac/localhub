@@ -40,14 +40,6 @@
 </p>
 {% endif %}
 
-<div class="actions">
-    {% if can_create_activity %}
-    <a href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
-    <a href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
-    {% endif %}
-    <a href="{% url 'activities:timeline' %}">{% trans "Timeline" %}</a>
-</div>
-
 {% if request.do_not_track and not user.show_embedded_content %}
 <p class="toast text-center my-1 d-hide"
    data-controller="cookie-notice"
@@ -66,6 +58,14 @@
     {% endif %}
 </p>
 {% endif %}
+
+<div class="actions">
+    {% if can_create_activity %}
+    <a href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
+    <a href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
+    {% endif %}
+    <a href="{% url 'activities:timeline' %}">{% trans "Timeline" %}</a>
+</div>
 
 <div class="divider"></div>
 
