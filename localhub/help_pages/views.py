@@ -1,5 +1,6 @@
 from django.http import Http404
 from django.template import TemplateDoesNotExist
+from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 
 from vanilla import TemplateView
@@ -26,8 +27,14 @@ class PageView(TemplateView):
         ]
 
     def render_to_response(self, context):
+        """
+        Enforce resolution of template before it hits the common middleware, so
+        we can catch the TemplateDoesNotExist error.
+        """
         try:
-            return super().render_to_response(context)
+            response = super().render_to_response(context)
+            response.resolve_template(self.get_template_names())
+            return response
         except TemplateDoesNotExist:
             raise Http404(_("This help page does not exist"))
 

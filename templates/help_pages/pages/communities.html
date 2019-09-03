@@ -8,6 +8,7 @@
 {% block help_content %}
 
 {# List all URLs here #}
+{% url 'activities:stream' as home_page_url %}
 {% url 'communities:community_update' as community_update_url %}
 {% url 'communities:leave' as community_leave_url %}
 {% url 'community_list' as community_list_url %}
@@ -65,6 +66,14 @@
 <p>
   {% blocktrans %}
   There are two ways to join a Community (unless you have been assigned as a founding member by a site admin when setting up the Community). You can be sent an invite, or send a request to the Community Admins to join the Community. Details for Admins on managing invites and join requests are covered in the help page on <a href="">Memberships [LINK REQUIRED]</a>; this section is for prospective members wanting to join a Community.
+  {% endblocktrans %}
+</p>
+
+<h6 id="join-requests">{% trans "Join Requests" %}</h6>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  Once you have signed into Localhub, you can apply to join any public Community without needing an invite first. Just click on the link on the <a href="{{ home_page_url }}">home page</a> and confirm you wish to send a request. An email will be sent to the Community <a href="">Admins [LINK REQUIRED]</a>. Once they approve - or reject - your application, you should receive an email in response. If you are accepted, you will automatically become a member of the Community.
   {% endblocktrans %}
 </p>
 
