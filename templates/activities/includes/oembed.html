@@ -6,13 +6,11 @@
 {% load activities_tags %}
 
 {% if object.url %}
-{% if request.do_not_track and not user.show_embedded_content %}
-<div>
-  {{ object.url|url_to_img|domain }}
-</div>
-{% else %}
 <div data-controller="oembed" class="wordwrap">
+{% if request.do_not_track and not user.show_embedded_content %}
+  {{ object.url|url_to_img|domain }}
+{% else %}
   {{ object.url|oembed_no_urlize|url_to_img|domain }}
-</div>
 {% endif %}
+</div>
 {% endif %}
