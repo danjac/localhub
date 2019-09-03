@@ -9,7 +9,7 @@
 <div id="{{ object_type }}-{{ object.id }}" class="card"{% if is_content_sensitive %} data-controller="content-sensitive"{% endif %}>
   {% if is_content_sensitive %}
   <div class="card-header" data-target="content-sensitive.togglable">
-    <div class="card-subtitle h6">
+    <div class="card-subtitle h7">
       {% include "activities/includes/timesince.html" with timestamp=object.created owner=object.owner %}
     </div>
   </div>
@@ -27,11 +27,11 @@
       </div>
       {% endif %}
 
-      <div class="card-title h5">
+      <div class="card-title h6">
 
         {% if object.is_reshare %}
 
-        <div class="card-subtitle h6">
+        <div class="card-subtitle h7">
           {% include "activities/includes/timesince.html" with timestamp=object.created owner=object.owner is_reshare=True %}
         </div>
         <div class="divider"></div>
@@ -55,7 +55,7 @@
         {% endif %}
 
       </div>
-      <div class="card-subtitle h6">
+      <div class="card-subtitle h7">
         {% if object.parent %}
         {% include "activities/includes/timesince.html" with timestamp=object.parent.created owner=object.parent.owner %}
         {% elif not object.is_reshare %}
