@@ -8,9 +8,10 @@
 {% block help_content %}
 
 {# List all URLs here #}
+{% url 'communities:community_update' as community_update_url %}
+{% url 'communities:leave' as community_leave_url %}
 {% url 'community_list' as community_list_url %}
 {% url 'user_update' as user_update_url %}
-{% url 'communities:leave' as community_leave_url %}
 
 <ul>
   <li><a data-turbolinks="false" href="#what-is-a-community">{% trans "What is a Community?" %}</a></li>
@@ -29,7 +30,7 @@
   <li><a data-turbolinks="false" href="#leaving-a-community">{% trans "Leaving a Community" %}</a></li>
   <li><a data-turbolinks="false" href="#public-and-private-communities">{% trans "Public and private Communities" %}</a></li>
   <li><a data-turbolinks="false" href="#local-network">{% trans "Local network" %}</a></li>
-  <li><a data-turbolinks="false" href="#community-settings">{% trans "Community settings" %}</a></li>
+  <li><a data-turbolinks="false" href="#community-settings">{% trans "Community settings" %}</a> <span class="chip">{% trans "Admins" %}</span></li>
 </ul>
 <div class="divider"></div>
 
@@ -37,7 +38,7 @@
 <div class="divider"></div>
 <p>
   {% blocktrans %}
-  A Community is a group of users. A Community can be based on common interests. Think of a Facebook group or Subreddit, but where
+  A Community is a group of users. A Community can be based on an organization, hobby, physical location, affiliation or any other common interest. Think of a Subreddit or Facebook group, but one where the group is completely isolated from other groups - so anything you post on that group, stays safely inside that group.
   {% endblocktrans %}
 </p>
 
@@ -94,5 +95,11 @@
 </p>
 <div class="divider"></div>
 
-<h5 id="community-settings">{% trans "Community settings" %}</h5>
+<h5 id="community-settings">{% trans "Community settings" %} <span class="chip">{% trans "Admins" %}</span></h5>
+<p>
+  {% blocktrans %}
+  The <a href="{{ community_update_url }}">Community Settings</a> link is located in the default Sidebar. The Community Settings page allows you to change a number of settings such as the name and logo of your Community, the description, terms and conditions, and some rules about membership and posting content. More detailed information on managing Community memberships can be found <a href="">here [LINK REQUIRED]</a>.
+  {% endblocktrans %}
+</p>
+
 {% endblock %}
