@@ -1,8 +1,11 @@
-{% extends "help_pages/content.html" %}
-{% load i8n %}
+{% extends "help_pages/base.html" %}
+{% load i18n %}
 {% block help_content %}
 
 {# List all URLs here #}
+{% url 'activities:stream' as home_page_url %}
+{% url 'activities:timeline' as timeline_url %}
+
 <ul>
   <li><a data-turbolinks="false" href="#posts-events-and-photos">Posts, events and photos</a></li>
   <li><a data-turbolinks="false" href="#home-page">Home page</a></li>
@@ -25,14 +28,14 @@
   <li><a data-turbolinks="false" href="#">Liking content</a></li>
 </ul>
 
-<h6 id="#">{% trans "" %}</h6>
+<h6 id="">{% trans "" %}</h6>
 <div class="divider"></div>
 <p>
   {% blocktrans %}
   {% endblocktrans %}
 </p>
 
-<h6 id="#posts-events-and-photos">{% trans "Posts, events and photos" %}</h6>
+<h6 id="posts-events-and-photos">{% trans "Posts, events and photos" %}</h6>
 <div class="divider"></div>
 <p>
   {% blocktrans %}
@@ -57,19 +60,19 @@
   </li>
 </ul>
 
-<h6 id="#home-page">{% trans "Home page" %}</h6>
+<h6 id="home-page">{% trans "Home page" %}</h6>
 <div class="divider"></div>
 <p>
   {% blocktrans %}
-  All content - Posts, Events and Photos - are shown on the home page. By default, all content is shown. As a logged-in user, you can filter this content in your <a href="">settings [LINK REQUIRED]</a> or by blocking <a href="">individual users [LINK REQUIRED]</a> and <a href="">tags [LINK REQUIRED]</a>. If you are not logged in - assuming the Community is public - you will see all content. Content is always shown in order of most recent.
+  All content - Posts, Events and Photos - are shown on the <a href="{{ home_page_url }}">home page</a>. By default, all content is shown. As a logged-in user, you can filter this content in your <a href="">settings [LINK REQUIRED]</a> or by blocking <a href="">individual users [LINK REQUIRED]</a> and <a href="">tags [LINK REQUIRED]</a>. If you are not logged in - assuming the Community is public - you will see all content. Content is always shown in order of most recent.
   {% endblocktrans %}
 </p>
 
-<h6 id="#timeline">{% trans "Timeline" %}</h6>
+<h6 id="timeline">{% trans "Timeline" %}</h6>
 <div class="divider"></div>
 <p>
   {% blocktrans %}
-  The Timeline provides a summarized, time-ordered view of all content. You can also filter by year and month.
+  The <a href="{{ timeline_url }}">Timeline</a> provides a summarized, time-ordered view of all content. You can also filter by year and month.
   {% endblocktrans %}
 </p>
 

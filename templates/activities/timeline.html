@@ -16,6 +16,7 @@
   {% if date_filters %}
   <a href="{{ request.path }}">{% trans "Show All" %}</a>
   {% endif %}
+  <a href="{% url 'help_pages:page' 'content' %}#timeline">{% trans "Help" %}</a>
   {% if years|length > 1 %}
   {% for year in years %}
   <a href="{{ request.path }}?year={{ year }}">{{ year }}</a>

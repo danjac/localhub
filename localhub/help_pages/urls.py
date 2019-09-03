@@ -6,5 +6,5 @@ app_name = "help_pages"
 
 urlpatterns = [
     path("", index_view, name="index"),
-    path("<page:slug>/", page_view, name="page"),
+    path("<slug:page>/", page_view, name="page"),
 ]
