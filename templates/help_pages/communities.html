@@ -33,13 +33,12 @@
   <li>
     <a data-turbolinks="false" href="#community-settings">{% trans "Community settings" %}</a> <span class="chip">{% trans "Admins" %}</span>
     <ul>
-      <li><a href="#" data-turbolinks="false">Name, tagline and description</a></li>
-      <li><a href="#" data-turbolinks="false">Community logo</a></li>
-      <li><a href="#" data-turbolinks="false">Terms and conditions</a></li>
-      <li><a href="#" data-turbolinks="false">Public/private</a></li>
-      <li><a href="#" data-turbolinks="false">Content sensitive tags</a></li>
-      <li><a href="#" data-turbolinks="false">Email domain</a></li>
-      <li><a href="#" data-turbolinks="false">Blacklisting emails</a></li>
+      <li><a href="#name-tagline-and-description" data-turbolinks="false">{% trans "Name, tagline and description" %}</a></li>
+      <li><a href="#community-logo" data-turbolinks="false">{% trans "Community logo" %}</a></li>
+      <li><a href="#terms-and-conditions" data-turbolinks="false">{% trans "Terms and conditions" %}</a></li>
+      <li><a href="#public" data-turbolinks="false">{% trans "Public" %}</a></li>
+      <li><a href="#content-sensitive-tags" data-turbolinks="false">{% trans "Content sensitive tags" %}</a></li>
+      <li><a href="#blacklisted-emails" data-turbolinks="false">{% trans "Blacklisted emails" %}</a></li>
     </ul>
   </li>
 </ul>
@@ -113,25 +112,58 @@
   {% endblocktrans %}
 </p>
 
-<h6 id="#">Name, tagline and description</h6>
+<h6 id="#name-tagline-and-description">{% trans "Name, tagline and description" %}</h6>
 <div class="divider"></div>
+<p>
+  {% blocktrans %}
+  You can set the name of your Community, the tagline (which appears in the <a data-turbolinks="false" href="#local-network">Local Network</a>) and the full page description here. The description, if available, will be linked to at the bottom of the default Sidebar. You can use <a href="">Markdown [LINK REQUIRED]</a> in the description. The name of the Community will appear in the Local Network and the top left of the Navbar, unless replaced with a logo (see below).
+  {% endblocktrans %}
+</p>
 
-<h6 id="#">Community logo</h6>
-<div class="divider"></div>
 
-<h6 id="#">Terms and conditions</h6>
+<h6 id="#community-logo">{% trans "Community logo" %}</h6>
 <div class="divider"></div>
+<p>
+  {% blocktrans %}
+  You can upload a company logo, which will replace the name of the Community in the top left of the Navbar. The logo should be a PNG or JPEG file and will be resized to a max width/height of 100 pixels. An aspect ratio of 16/9 probably works best in terms of layout.
+  {% endblocktrans %}
+</p>
 
-<h6 id="#">Public/private</h6>
-<div class="divider"></div>
 
-<h6 id="#">Content sensitive tags</h6>
+<h6 id="#terms-and-conditions">{% trans "Terms and conditions" %}</h6>
 <div class="divider"></div>
+<p>
+  {% blocktrans %}
+  The <em>Terms</em> field should include all terms and conditions you wish to apply to the Community. You can use <a href="">Markdown [LINK REQUIRED]</a> here. If you provide terms, a link will be added to the page in the default Sidebar.
+  {% endblocktrans %}
+</p>
 
-<h6 id="#">Email domain</h6>
-<div class="divider"></div>
 
-<h6 id="#">Blacklisting emails</h6>
+<h6 id="#public-private">{% trans "Public" %}</h6>
 <div class="divider"></div>
+<p>
+  {% blocktrans %}
+  Determines if the Community is <a data-turbolinks="false" href="#public-and-private-communities">public</a>. Otherwise it is <strong>private</strong>.
+  {% endblocktrans %}
+</p>
+
+
+<h6 id="#content-sensitive-tags">{% trans "Content sensitive tags" %}</h6>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  By default, <a href="">sensitive content is hidden from users [LINK REQUIRED]</a>. This is managed in the Community Settings by determining which tags are considered "sensitive". For example, if you add <em>#nsfw</em> to the list of sensitive tags in the Settings, any post, event or photo with an <em>#nsfw</em> tag in the description will automatically be considered sensitive and the post will be hidden.
+  {% endblocktrans %}
+</p>
+
+
+<h6 id="#blacklisted-emails">{% trans "Blacklisted emails" %}</h6>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  You can block <a data-turbolinks="false" href="#join-requests">join requests</a> from individual email addresses or entire domains in the two fields <em>Blacklisted email addresses</em> and <em>Blacklisted email domains</em> respectively. Users with matching email addresses will not be able to send a request to join your community. For example, if you set <em>gmail.com</em> under <em>Blacklisted email domains</em>, a user with the email address "someone@gmail.com" will be blocked from sending a join request.
+  {% endblocktrans %}
+</p>
+
 
 {% endblock %}
