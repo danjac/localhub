@@ -30,7 +30,18 @@
   <li><a data-turbolinks="false" href="#leaving-a-community">{% trans "Leaving a Community" %}</a></li>
   <li><a data-turbolinks="false" href="#public-and-private-communities">{% trans "Public and private Communities" %}</a></li>
   <li><a data-turbolinks="false" href="#local-network">{% trans "Local network" %}</a></li>
-  <li><a data-turbolinks="false" href="#community-settings">{% trans "Community settings" %}</a> <span class="chip">{% trans "Admins" %}</span></li>
+  <li>
+    <a data-turbolinks="false" href="#community-settings">{% trans "Community settings" %}</a> <span class="chip">{% trans "Admins" %}</span>
+    <ul>
+      <li><a href="#" data-turbolinks="false">Name, tagline and description</a></li>
+      <li><a href="#" data-turbolinks="false">Community logo</a></li>
+      <li><a href="#" data-turbolinks="false">Terms and conditions</a></li>
+      <li><a href="#" data-turbolinks="false">Public/private</a></li>
+      <li><a href="#" data-turbolinks="false">Content sensitive tags</a></li>
+      <li><a href="#" data-turbolinks="false">Email domain</a></li>
+      <li><a href="#" data-turbolinks="false">Blacklisting emails</a></li>
+    </ul>
+  </li>
 </ul>
 <div class="divider"></div>
 
@@ -101,5 +112,26 @@
   The <a href="{{ community_update_url }}">Community Settings</a> link is located in the default Sidebar. The Community Settings page allows you to change a number of settings such as the name and logo of your Community, the description, terms and conditions, and some rules about membership and posting content. More detailed information on managing Community memberships can be found <a href="">here [LINK REQUIRED]</a>.
   {% endblocktrans %}
 </p>
+
+<h6 id="#">Name, tagline and description</h6>
+<div class="divider"></div>
+
+<h6 id="#">Community logo</h6>
+<div class="divider"></div>
+
+<h6 id="#">Terms and conditions</h6>
+<div class="divider"></div>
+
+<h6 id="#">Public/private</h6>
+<div class="divider"></div>
+
+<h6 id="#">Content sensitive tags</h6>
+<div class="divider"></div>
+
+<h6 id="#">Email domain</h6>
+<div class="divider"></div>
+
+<h6 id="#">Blacklisting emails</h6>
+<div class="divider"></div>
 
 {% endblock %}
