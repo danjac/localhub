@@ -26,6 +26,11 @@
             {% endwith %}
         </div>
     </div>
+    {% if comment.is_blocked %}
+    <div class="card-body">
+        <a href="{% url 'users:comments' comment.owner.username %}">{% trans "You have blocked this user." %}</a>
+    </div>
+    {% else %}
     <div class="card-body">
         <div class="markdown-content">
             {{ comment.content.markdown }}
@@ -101,6 +106,6 @@
                 <a href="{% url 'comments:reply' comment.id %}">{% trans "Reply" %}</a>
                 {% endif %}
         </div>
-
     </div>
+    {% endif %}
 </div>

@@ -81,6 +81,19 @@ class CommentQuerySet(
             return self
         return self.exclude(owner__in=user.blocked.all())
 
+    def with_is_blocked(self, user):
+        if user.is_anonymous:
+            return self.annotate(
+                is_blocked=models.Value(
+                    False, output_field=models.BooleanField()
+                )
+            )
+        return self.annotate(
+            is_blocked=models.Exists(
+                user.blocked.filter(pk=models.OuterRef("owner_id"))
+            )
+        )
+
     def with_common_annotations(self, user, community):
         """
         Combines all common annotations into a single call. Applies annotations
@@ -92,6 +105,7 @@ class CommentQuerySet(
                 self.with_num_likes()
                 .with_has_liked(user)
                 .with_has_flagged(user)
+                .with_is_blocked(user)
                 .with_is_parent_owner_member(community)
             )
 

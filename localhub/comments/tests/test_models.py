@@ -36,6 +36,28 @@ class TestCommentManager:
         assert my_comment in comments
         assert second_comment in comments
 
+    def test_with_is_blocked_if_anonymous(self):
+
+        CommentFactory()
+        assert (
+            not Comment.objects.with_is_blocked(AnonymousUser())
+            .get()
+            .is_blocked
+        )
+
+    def test_with_is_blocked_if_not_blocked(self, user):
+
+        CommentFactory()
+
+        assert not Comment.objects.with_is_blocked(user).get().is_blocked
+
+    def test_with_is_blocked_if_blocked(self, user):
+
+        my_comment = CommentFactory()
+        user.blocked.add(my_comment.owner)
+
+        assert Comment.objects.with_is_blocked(user).get().is_blocked
+
     def test_with_is_parent_owner_member_true(self, community):
         parent = CommentFactory(
             community=community,
