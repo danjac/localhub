@@ -8,19 +8,21 @@
 {% block help_content %}
 <ul>
   <li>
-    <a href="">Getting started</a>
+    <a href="{% url 'help_pages:page' 'getting-started' %}">Getting started</a>
   </li>
   <li>
-    {% url 'help_pages:communities' as communities_url %}
+    {% url 'help_pages:page' 'communities' as communities_url %}
     <a href="{{ communities_url }}">{% trans "Communities" %}</a>
     <ul>
-      <li><a href="{{ communities_url }}#what-is-a-community">What is a Community?</a></li>
-      <li><a href="{{ communities_url }}#starting-a-community">Starting a Community</a></li>
-      <li><a href="{{ communities_url }}#joining-a-community">Joining a Community</a></li>
-      <li><a href="{{ communities_url }}#leaving-a-community">Leaving a Community</a></li>
-      <li><a href="{{ communities_url }}">Public and private Communities</a></li>
+      <li><a href="{{ communities_url }}#what-is-a-community">{% trans "What is a Community?" %}</a></li>
+      <li><a href="{{ communities_url }}#starting-a-community">{% trans "Starting a Community" %}</a></li>
+      <li><a href="{{ communities_url }}#joining-a-community">{% trans "Joining a Community" %}</a></li>
+      <li><a href="{{ communities_url }}#leaving-a-community">{% trans "Leaving a Community" %}</a></li>
+      <li><a href="{{ communities_url }}#private-and-public-communities">{% trans "Public and private Communities" %}</a></li>
       <li><a href="{{ communities_url }}#local-network">{% trans "Local network" %}</a></li>
-      <li><a href="{{ communities_url }}">Community settings</a></li>
+      <li>
+        <a href="{{ communities_url }}#community-settings">{% trans "Community settings" %}</a> <span class="chip">Admins</span>
+      </li>
     </ul>
   </li>
   <li>

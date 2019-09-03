@@ -1,18 +1,10 @@
 from django.urls import path
 
-from vanilla import TemplateView
+from localhub.help_pages.views import index_view, page_view
 
 app_name = "help_pages"
 
 urlpatterns = [
-    path(
-        "",
-        TemplateView.as_view(template_name="help_pages/index.html"),
-        name="index",
-    ),
-    path(
-        "communities/",
-        TemplateView.as_view(template_name="help_pages/communities.html"),
-        name="communities",
-    ),
+    path("", index_view, name="index"),
+    path("<page:slug>/", page_view, name="page"),
 ]
