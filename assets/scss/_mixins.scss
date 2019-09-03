@@ -5,3 +5,12 @@
   padding-bottom: 0.75rem;
   white-space: nowrap;
 }
+
+@mixin header-mixin() {
+  // copied from header, as we can't extend inside @media.
+  color: inherit;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: .5em;
+  margin-top: 0;
+}

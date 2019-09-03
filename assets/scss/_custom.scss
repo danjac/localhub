@@ -115,11 +115,14 @@ a {
 }
 
 .activity-title {
+    @include header-mixin();
     @media (max-width: $size-xl) {
-      @extend .h5;
+      // h5
+      font-size: 1rem;
     }
     @media (max-width: $size-lg) {
-      @extend .h6;
+      // h6
+      font-size: .8rem;
     }
 }
 
