@@ -59,15 +59,15 @@
 </p>
 {% endif %}
 
+{% if can_create_activity %}
 <div class="actions">
-    {% if can_create_activity %}
     <a href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
     <a href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
-    {% endif %}
     <a href="{% url 'activities:timeline' %}">{% trans "Timeline" %}</a>
 </div>
-
 <div class="divider"></div>
+{% endif %}
+
 
 {% include "activities/includes/activity_list.html" %}
 {% endblock content %}
