@@ -5,8 +5,8 @@
 {# List all URLs here #}
 <ul>
   <li><a data-turbolinks="false" href="#posts-events-and-photos">Posts, events and photos</a></li>
-  <li><a data-turbolinks="false" href="#">Home page</a></li>
-  <li><a data-turbolinks="false" href="#">Timeline</a></li>
+  <li><a data-turbolinks="false" href="#home-page">Home page</a></li>
+  <li><a data-turbolinks="false" href="#timeline">Timeline</a></li>
   <li><a data-turbolinks="false" href="#">Adding new content</a></li>
   <li><a data-turbolinks="false" href="#">Markdown</a></li>
   <li><a data-turbolinks="false" href="#">Resharing content</a></li>
@@ -56,5 +56,22 @@
   {% endblocktrans %}
   </li>
 </ul>
+
+<h6 id="#home-page">{% trans "Home page" %}</h6>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  All content - Posts, Events and Photos - are shown on the home page. By default, all content is shown. As a logged-in user, you can filter this content in your <a href="">settings [LINK REQUIRED]</a> or by blocking <a href="">individual users [LINK REQUIRED]</a> and <a href="">tags [LINK REQUIRED]</a>. If you are not logged in - assuming the Community is public - you will see all content. Content is always shown in order of most recent.
+  {% endblocktrans %}
+</p>
+
+<h6 id="#timeline">{% trans "Timeline" %}</h6>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  The Timeline provides a summarized, time-ordered view of all content. You can also filter by year and month.
+  {% endblocktrans %}
+</p>
+
 
 {% endblock %}

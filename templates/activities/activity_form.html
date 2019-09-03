@@ -8,6 +8,12 @@
 {% block content %}
 {% include "includes/breadcrumbs.html" %}
 
+<div class="actions">
+  <a href="{% url 'help_pages:page' 'content' %}#adding-new-content">{% trans "Help" %}</a>
+</div>
+
+<div class="divider"></div>
+
 {% simple_ajax_form form multipart=True %}
 
 {% endblock content %}
