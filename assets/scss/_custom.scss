@@ -114,6 +114,14 @@ a {
   color: $dark-color;
 }
 
+.activity-title {
+  @extend .h5;
+  @media (max-width: $size-lg) {
+    // h6
+    font-size: 0.8rem !important;
+  }
+}
+
 .table-responsive {
   &-xl {
     @media (max-width: $size-xl) {
