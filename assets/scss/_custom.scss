@@ -115,15 +115,11 @@ a {
 }
 
 .activity-title {
-    @include header-mixin();
-    @media (max-width: $size-xl) {
-      // h5
-      font-size: 1rem;
-    }
-    @media (max-width: $size-lg) {
-      // h6
-      font-size: .8rem;
-    }
+  @extend .h5;
+  @media (max-width: $size-lg) {
+    // h6
+    font-size: 0.8rem !important;
+  }
 }
 
 .table-responsive {
