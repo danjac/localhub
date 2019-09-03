@@ -1,0 +1,60 @@
+{% extends "help_pages/content.html" %}
+{% load i8n %}
+{% block help_content %}
+
+{# List all URLs here #}
+<ul>
+  <li><a data-turbolinks="false" href="#posts-events-and-photos">Posts, events and photos</a></li>
+  <li><a data-turbolinks="false" href="#">Home page</a></li>
+  <li><a data-turbolinks="false" href="#">Timeline</a></li>
+  <li><a data-turbolinks="false" href="#">Adding new content</a></li>
+  <li><a data-turbolinks="false" href="#">Markdown</a></li>
+  <li><a data-turbolinks="false" href="#">Resharing content</a></li>
+  <li><a data-turbolinks="false" href="#">Introduction to Markdown</a></li>
+  <li><a data-turbolinks="false" href="#">Who can see my content?</a></li>
+  <li><a data-turbolinks="false" href="#">Tagging</a></li>
+  <li><a data-turbolinks="false" href="#">Content sensitive tags</a></li>
+  <li><a data-turbolinks="false" href="#">Following tags</a></li>
+  <li><a data-turbolinks="false" href="#">Blocking tags</a></li>
+  <li><a data-turbolinks="false" href="#">@Mentions</a></li>
+  <li><a data-turbolinks="false" href="#">Embedded content</a></li>
+  <li><a data-turbolinks="false" href="#">Searching content</a></li>
+  <li><a data-turbolinks="false" href="#">Editing content</a></li>
+  <li><a data-turbolinks="false" href="#">Deleting content</a></li>
+  <li><a data-turbolinks="false" href="#">Flagging content</a></li>
+  <li><a data-turbolinks="false" href="#">Liking content</a></li>
+</ul>
+
+<h6 id="#">{% trans "" %}</h6>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  {% endblocktrans %}
+</p>
+
+<h6 id="#posts-events-and-photos">{% trans "Posts, events and photos" %}</h6>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  LocalHub has three kinds of content: <strong>Posts</strong>, <strong>Events</strong> and <strong>Photos</strong>. In fact, the last two - Events and Photos - are just special kinds of Posts, and we refer to all three collectively as "Posts". All kinds of posts have a Description field, where you can add rich content using <a href="#markdown">Markdown</a> syntax.
+  {% endblocktrans %}
+</p>
+<ul>
+  <li>
+  {% blocktrans %}
+  <strong>Posts</strong> are the most common form of content. A Post consists of a description or URL to an HTML page or image on the internet. You can optionally provide a title. You can create Posts if you want to link to an article on the web, display an external image e.g. from Imgur or Pinterest, embed a YouTube or Vimeo video, or write a post like you would on Twitter or Facebook. If you post a link to an HTML page and leave out the title, LocalHub will try and fetch the title of the page and insert this into the title for your post automatically.
+  {% endblocktrans %}
+  </li>
+  <li>
+  {% blocktrans %}
+  <strong>Events</strong> are posts with a specific future date and (optionally) a location. For example, you might want to let the Community know about a real-world or online meeting, or a concert, bake sale or meetup. If you provide a valid real-world location, LocalHub will display this location in an <a href="">OpenStreetMap [LINK REQUIRED]</a> map.
+  {% endblocktrans %}
+  </li>
+  <li>
+  {% blocktrans %}
+  <strong>Photos</strong> are uploaded photos and other images (JPEGs and PNGs). You can include some additional info about your photo such as information about the original artist or Creative Commons licensing. If you just want to show an image from a URL, however, you can just use a normal Post and either add the URL in the Link field or use <a href="#">Markdown</a> syntax in the Description field to embed any number of images.
+  {% endblocktrans %}
+  </li>
+</ul>
+
+{% endblock %}
