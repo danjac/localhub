@@ -28,7 +28,7 @@
     </div>
     {% if comment.is_blocked %}
     <div class="card-body">
-        <a href="{% url 'users:comments' comment.owner.username %}">{% trans "You have blocked this user." %}</a>
+        <strong>{% trans "You have blocked this user." %}</strong>
     </div>
     {% else %}
     <div class="card-body">
