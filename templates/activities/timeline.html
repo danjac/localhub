@@ -13,18 +13,22 @@
   {% else %}
   <a href="{{ request.path }}?order=asc">{% trans "Oldest First" %}</a>
   {% endif %}
+  <a href="{% url 'help_pages:page' 'content' %}#timeline">{% trans "Help" %}</a>
   {% if date_filters %}
   <a href="{{ request.path }}">{% trans "Show All" %}</a>
   {% endif %}
-  <a href="{% url 'help_pages:page' 'content' %}#timeline">{% trans "Help" %}</a>
-  {% if years|length > 1 %}
+</div>
+
+{% if years|length > 1 %}
+<div class="actions mt-1">
   {% for year in years %}
   <a href="{{ request.path }}?year={{ year }}">{{ year }}</a>
   {% endfor %}
-  {% endif %}
 </div>
+{% endif %}
+
 {% if months|length > 1 %}
-<div class="actions">
+<div class="actions mt-1">
   {% for order, name in months %}
   <a href="{{ request.path }}?month={{ order }}&year={{ current_year }}">{{ name }}</a>
   {% endfor %}
