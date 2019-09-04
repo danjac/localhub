@@ -7,65 +7,69 @@
 {% block content %}
 <h3>{% trans "Timeline" %}</h3>
 <div class="actions">
-  <a href="{% url 'activities:stream' %}">{% trans "Home" %}</a>
-  {% if view.sort_by_ascending %}
-  <a href="{{ request.path }}?order=desc">{% trans "Newest First" %}</a>
-  {% else %}
-  <a href="{{ request.path }}?order=asc">{% trans "Oldest First" %}</a>
-  {% endif %}
-  {% if date_filters %}
-  <a href="{{ request.path }}">{% trans "Show All" %}</a>
-  {% endif %}
-  {% if years|length > 1 %}
-  {% for year in years %}
-  <a href="{{ request.path }}?year={{ year }}">{{ year }}</a>
-  {% endfor %}
-  {% endif %}
+    <a href="{% url 'activities:stream' %}">{% trans "Home" %}</a>
+    {% if view.sort_by_ascending %}
+    <a href="{{ request.path }}?order=desc">{% trans "Newest First" %}</a>
+    {% else %}
+    <a href="{{ request.path }}?order=asc">{% trans "Oldest First" %}</a>
+    {% endif %}
+    {% if date_filters %}
+    <a href="{{ request.path }}">{% trans "Show All" %}</a>
+    {% endif %}
 </div>
+
+{% if years|length > 1 %}
+<div class="actions mt-1">
+    {% for year in years %}
+    <a href="{{ request.path }}?year={{ year }}">{{ year }}</a>
+    {% endfor %}
+</div>
+{% endif %}
+
 {% if months|length > 1 %}
-<div class="actions">
-  {% for order, name in months %}
-  <a href="{{ request.path }}?month={{ order }}&year={{ current_year }}">{{ name }}</a>
-  {% endfor %}
+<div class="actions mt-1">
+    {% for order, name in months %}
+    <a href="{{ request.path }}?month={{ order }}&year={{ current_year }}">{{ name }}</a>
+    {% endfor %}
 </div>
 {% endif %}
 <div class="divider"></div>
 
 {% if object_list %}
 <div class="timeline">
-  {% regroup object_list by month as months %}
-  {% for month, activities in months %}
-  <div class="timeline-item">
-    <div class="timeline-left"><a class="timeline-icon tooltip" href="#" data-tooltip="{{ month }}"></a></div>
+    {% regroup object_list by month as months %}
+    {% for month, activities in months %}
+    <div class="timeline-item">
+        <div class="timeline-left"><a class="timeline-icon tooltip" href="#" data-tooltip="{{ month }}"></a></div>
 
-    <div class="timeline-content">
-      <div class="tile">
-        <div class="tile-content">
-          <p class="tile-subtitle">{{ month }}</p>
-          {% for activity in activities %}
-          <p class="tile-title">
-            <a href="{{ activity.object.get_absolute_url }}">
-              {{ activity.object|truncatechars:100 }}
-            </a>
-            <span class="chip">{% trans activity.object_type|capfirst %}</span>
-          </p>
-          <p class="tile-title">
-            <div>
-              <span class="timesince">
-                {% blocktrans with since=activity.created|timesince %}
-                {{ since }} ago
-                {% endblocktrans %}
-                {% include "users/includes/chip.html" with profile=activity.object.owner %}
-              </span>
+        <div class="timeline-content">
+            <div class="tile">
+                <div class="tile-content">
+                    <p class="tile-subtitle">{{ month }}</p>
+                    {% for activity in activities %}
+                    <p class="tile-title">
+                        <a href="{{ activity.object.get_absolute_url }}">
+                            {{ activity.object|truncatechars:100 }}
+                        </a>
+                        <span class="chip">{% trans activity.object_type|capfirst %}</span>
+                    </p>
+                    <p class="tile-title">
+                        <div>
+                            <span class="timesince">
+                                {% blocktrans with since=activity.created|timesince %}
+                                {{ since }} ago
+                                {% endblocktrans %}
+                                {% include "users/includes/chip.html" with profile=activity.object.owner %}
+                            </span>
+                        </div>
+                    </p>
+                    <div class="divider"></div>
+                    {% endfor %}
+                </div>
             </div>
-          </p>
-          <div class="divider"></div>
-          {% endfor %}
         </div>
-      </div>
     </div>
-  </div>
-  {% endfor %}
+    {% endfor %}
 </div>
 {% include "includes/pagination.html" %}
 {% else %}

@@ -215,20 +215,22 @@ class Comment(TimeStampedModel):
             verb=verb,
         )
 
-    def notify_mentioned(self, recipients):
+    def notify_mentioned(self, recipients, notifications):
         return [
             self.make_notification("mention", recipient)
             for recipient in recipients.matches_usernames(  # noqa
                 self.content.extract_mentions()
-            ).exclude(pk=self.owner_id)
+            )
+            .exclude(pk=self.owner_id)
+            .exclude(pk__in=[n.recipient_id for n in notifications])
         ]
 
-    def notify_moderators(self):
+    def notify_moderators(self, notifications):
         return [
             self.make_notification("moderator_review_request", recipient)
-            for recipient in self.community.get_moderators().exclude(
-                pk=self.owner_id
-            )
+            for recipient in self.community.get_moderators()
+            .exclude(pk=self.owner_id)
+            .exclude(pk__in=[n.recipient_id for n in notifications])
         ]
 
     def get_notification_recipients(self):
@@ -237,11 +239,14 @@ class Comment(TimeStampedModel):
     def notify_on_create(self):
         notifications = []
         recipients = self.get_notification_recipients()
-        notifications += self.notify_mentioned(recipients)
-        notifications += self.notify_moderators()
+        notifications += self.notify_mentioned(recipients, notifications)
+        notifications += self.notify_moderators(notifications)
 
         # notify the activity owner
-        if self.owner_id != self.content_object.owner_id:
+        if (
+            self.owner_id != self.content_object.owner_id
+            and self.owner_id not in [n.recipient_id for n in notifications]
+        ):
             notifications.append(
                 self.make_notification(
                     "new_comment", self.content_object.owner

@@ -312,26 +312,30 @@ class Activity(TimeStampedModel):
             verb=verb,
         )
 
-    def notify_mentioned_users(self, recipients):
+    def notify_mentioned_users(self, recipients, notifications):
         qs = recipients.matches_usernames(
             self.description.extract_mentions()
         ).exclude(pk=self.owner_id)
 
         if self.parent:
             qs = qs.exclude(pk=self.parent.owner_id)
-        qs = qs.distinct()
+        qs = qs.exclude(
+            pk__in=[n.recipient_id for n in notifications]
+        ).distinct()
 
         return [
             self.make_notification(recipient, "mention") for recipient in qs
         ]
 
-    def notify_followers(self, recipients):
+    def notify_followers(self, recipients, notifications):
         return [
             self.make_notification(follower, "new_followed_user_post")
-            for follower in recipients.filter(following=self.owner).distinct()
+            for follower in recipients.filter(following=self.owner)
+            .exclude(pk__in=[n.recipient_id for n in notifications])
+            .distinct()
         ]
 
-    def notify_tag_followers(self, recipients):
+    def notify_tag_followers(self, recipients, notifications):
         hashtags = self.description.extract_hashtags()
         if hashtags:
             tags = Tag.objects.filter(slug__in=hashtags)
@@ -340,7 +344,9 @@ class Activity(TimeStampedModel):
             )
             if self.parent:
                 qs = qs.exclude(pk=self.parent.owner_id)
-            qs = qs.distinct()
+            qs = qs.exclude(
+                pk__in=[n.recipient_id for n in notifications]
+            ).distinct()
 
             if tags:
                 return [
@@ -349,7 +355,7 @@ class Activity(TimeStampedModel):
                 ]
         return []
 
-    def notify_owner_or_moderators(self):
+    def notify_owner_or_moderators(self, notifications):
         """
         Notifies moderators of updates. If change made by moderator,
         then notification sent to owner.
@@ -366,15 +372,21 @@ class Activity(TimeStampedModel):
         if self.parent:
             qs = qs.exclude(pk=self.parent.owner_id)
 
-        qs = qs.distinct()
+        qs = qs.exclude(
+            pk__in=[n.recipient_id for n in notifications]
+        ).distinct()
 
         return [
             self.make_notification(moderator, "moderator_review_request")
             for moderator in qs
         ]
 
-    def notify_parent_owner(self, recipients):
-        owner = recipients.filter(pk=self.parent.owner_id).first()
+    def notify_parent_owner(self, recipients, notifications):
+        owner = (
+            recipients.filter(pk=self.parent.owner_id)
+            .exclude(pk__in=[n.recipient_id for n in notifications])
+            .first()
+        )
         if owner:
             return [self.make_notification(owner, "reshare")]
         return []
@@ -396,15 +408,21 @@ class Activity(TimeStampedModel):
         recipients = self.get_notification_recipients()
 
         if self.description:
-            notifications += self.notify_mentioned_users(recipients)
-            notifications += self.notify_tag_followers(recipients)
+            notifications += self.notify_mentioned_users(
+                recipients, notifications
+            )
+            notifications += self.notify_tag_followers(
+                recipients, notifications
+            )
 
-        notifications += self.notify_followers(recipients)
+        notifications += self.notify_followers(recipients, notifications)
 
         if self.parent:
-            notifications += self.notify_parent_owner(recipients)
+            notifications += self.notify_parent_owner(
+                recipients, notifications
+            )
 
-        notifications += self.notify_owner_or_moderators()
+        notifications += self.notify_owner_or_moderators(notifications)
 
         Notification.objects.bulk_create(notifications)
         return notifications
@@ -415,10 +433,14 @@ class Activity(TimeStampedModel):
         recipients = self.get_notification_recipients()
 
         if self.description and self.description_tracker.changed():
-            notifications += self.notify_mentioned_users(recipients)
-            notifications += self.notify_tag_followers(recipients)
+            notifications += self.notify_mentioned_users(
+                recipients, notifications
+            )
+            notifications += self.notify_tag_followers(
+                recipients, notifications
+            )
 
-        notifications += self.notify_owner_or_moderators()
+        notifications += self.notify_owner_or_moderators(notifications)
 
         Notification.objects.bulk_create(notifications)
         return notifications
