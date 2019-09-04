@@ -9,6 +9,8 @@
 {% url 'events:create' as event_create_url %}
 {% url 'photos:create' as photo_create_url %}
 {% url 'user_update' as user_update_url %}
+{% url 'likes:activities' as 'favorites_url' %}
+{% url 'flags:list' as flags_url %}
 
 <ul>
   <li><a data-turbolinks="false" href="#posts-events-and-photos">Posts, events and photos</a></li>
@@ -18,10 +20,10 @@
   <li><a data-turbolinks="false" href="#resharing-content">Resharing content</a></li>
   <li><a data-turbolinks="false" href="#embedded-conent">Embedded content</a></li>
   <li><a data-turbolinks="false" href="#searching-content">Searching content</a></li>
-  <li><a data-turbolinks="false" href="#">Editing content</a></li>
-  <li><a data-turbolinks="false" href="#">Deleting content</a></li>
-  <li><a data-turbolinks="false" href="#">Flagging content</a></li>
-  <li><a data-turbolinks="false" href="#">Liking content</a></li>
+  <li><a data-turbolinks="false" href="#liking-content-and-favorites">Liking content and Favorites</a></li>
+  <li><a data-turbolinks="false" href="#editing-content">Editing content</a></li>
+  <li><a data-turbolinks="false" href="#deleting-content">Deleting content</a></li>
+  <li><a data-turbolinks="false" href="#flagging-content">Flagging content</a></li>
 </ul>
 
 <h6 id="posts-events-and-photos">{% trans "Posts, events and photos" %}</h6>
@@ -91,6 +93,51 @@
 <p>
   {% blocktrans %}
   By default embedding is disabled if your browser enforces a "Do Not Track" (DNT) policy. If you wish to view embedded content, you can whitelist this site in your browser settings, or (as a logged in user) go to <a href="{{ user_update_url }}">My Settings</a> page and check the "Show embedded content" checkbox.
+  {% endblocktrans %}
+</p>
+
+<h6 id="searching-content">{% trans "Searching content" %}</h6>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  To find individual posts, just enter your search query in the box in the middle of the Navbar. You will be shown all posts, events and photos matching your query.
+  {% endblocktrans %}
+</p>
+<p>
+  {% blocktrans %}
+  You can also search specifically for Posts, Events and Photos in their individual pages.
+  {% endblocktrans %}
+</p>
+
+<h6 id="liking-content-and-favorites">{% trans "Liking content and Favorites" %}</h6>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  You can like any other members' content and comments. If you like a post or comment, the other user will receive a notification that you liked their content (although not if you "unlike" it). You can see all posts and comments you have liked in the <a href="{{ favorites_url }}">Favorites</a> page.
+  {% endblocktrans %}
+</p>
+
+<h6 id="editing-content">{% trans "Editing content" %}</h6>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  You can edit any of your own posts at any time, just by clicking the "Edit" button on the individual post. <a href="">Moderators [LINK REQUIRED]</a> can also edit other members' posts, for example if they want to add a content sensitive tag to the description.
+  {% endblocktrans %}
+</p>
+
+<h6 id="deleting-content">{% trans "Deleting content" %}</h6>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  You can delete any of your posts at any time. <a href="">Moderators [LINK REQUIRED]</a> can also delete other members' posts. <strong>Note that if you delete a post, all comments belonging to that post - including those posted by other members - will also be deleted</strong>. If you delete your account, your posts (and subsequently comments) will be automatically deleted, across all Communities. If however you just leave a Community, your posts will not be visible, but will not be permanently deleted. Reshares will not themselves be deleted if the original post is deleted, but the content will be replaced by a note indicating that the original post no longer exists.
+  {% endblocktrans %}
+</p>
+
+<h6 id="flagging-content">{% trans "Flagging content" %}</h6>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  You can "flag" content you object to if you consider it spam, offensive, in breach of the Community rules, and so on. You can flag any content or comment you do not own. <a href="">Moderators [LINK REQUIRED]</a> will be notified of any flagged content. Flagged posts will be highlighted to Moderators, and they will be able to see individual flags in the detail page of each post or comment. The <a href="{{ flags_url }}">Flags</a> page, available only to Moderators, lists all flagged content across the site. It is up to Moderators how they wish to take action: whether to edit or remove content, escalate to have the offending member removed or suspended, or ignore the flag.
   {% endblocktrans %}
 </p>
 

@@ -7,125 +7,126 @@
 
 {% block help_content %}
 <ul>
-  <li>
-    <a href="{% url 'help_pages:page' 'getting-started' %}">Getting started</a>
-  </li>
-  <li>
-    {% url 'help_pages:page' 'communities' as communities_url %}
-    <a href="{{ communities_url }}">{% trans "Communities" %}</a>
-    <ul>
-      <li><a href="{{ communities_url }}#what-is-a-community">{% trans "What is a Community?" %}</a></li>
-      <li><a href="{{ communities_url }}#starting-a-community">{% trans "Starting a Community" %}</a></li>
-      <li><a href="{{ communities_url }}#joining-a-community">{% trans "Joining a Community" %}</a></li>
-      <li><a href="{{ communities_url }}#leaving-a-community">{% trans "Leaving a Community" %}</a></li>
-      <li><a href="{{ communities_url }}#private-and-public-communities">{% trans "Public and private Communities" %}</a></li>
-      <li><a href="{{ communities_url }}#local-network">{% trans "Local network" %}</a></li>
-      <li>
-        <a href="{{ communities_url }}#community-settings">{% trans "Community settings" %}</a> <span class="chip">Admins</span>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <a href="">{% trans "My Account" %}</a>
-    <ul>
-      <li><a href="">Signing up</a></li>
-      <li><a href="">Logging in</a></li>
-      <li><a href="">Deleting my account</a></li>
-      <li><a href="">Account settings</a></li>
-      <li><a href="">Email notifications</a></li>
-      <li><a href="">Managing email addresses</a></li>
-      <li><a href="">Changing my password</a></li>
-    </ul>
-  </li>
-  <li>
-    <a href="">{% trans "Content" %}</a>
-    <ul>
-      <li><a href="">Posts, events and photos</a></li>
-      <li><a href="">Home page</a></li>
-      <li><a href="">Timeline</a></li>
-      <li><a href="">Adding new content</a></li>
-      <li><a href="">Resharing content</a></li>
-      <li><a href="">Who can see my content?</a></li>
-      <li><a href="">Tagging</a></li>
-      <li><a href="">Content sensitive tags</a></li>
-      <li><a href="">Following tags</a></li>
-      <li><a href="">Blocking tags</a></li>
-      <li><a href="">@Mentions</a></li>
-      <li><a href="">Embedded content</a></li>
-      <li><a href="">Searching content</a></li>
-      <li><a href="">Editing content</a></li>
-      <li><a href="">Deleting content</a></li>
-      <li><a href="">Flagging content</a></li>
-      <li><a href="">Liking content</a></li>
-    </ul>
-  </li>
-  <li>
-    <a href="">{% trans "Markdown" %}</a>
-    <ul>
-      <li><a href="">The Markdown editor</a></li>
-      <li><a href="">Adding images</a></li>
-      <li><a href="">Mentions and hashtags</a></li>
-    </ul>
-  </li>
-  <li>
-    <a href="">{% trans "Comments" %}</a>
-    <ul>
-      <li><a href="">Posting comments</a></li>
-      <li><a href="">Tagging</a></li>
-      <li><a href="">@Mentions</a></li>
-      <li><a href="">Searching comments</a></li>
-      <li><a href="">Replying to comments</a></li>
-      <li><a href="">Editing comments</a></li>
-      <li><a href="">Deleting comments</a></li>
-      <li><a href="">Flagging comments</a></li>
-      <li><a href="">Liking comments</a></li>
-      <li><a href="">Disabling comments</a></li>
-    </ul>
-
-  </li>
-  <li>
-    <a href="">{% trans "People" %}</a>
-    <ul>
-      <li><a href="">My profile page</a></li>
-      <li><a href="">Following users</a></li>
-      <li><a href="">Blocking users</a></li>
-    </ul>
-  </li>
-  <li>
-    <a href="">{% trans "Messages" %}</a>
-    <ul>
-      <li><a href="">Inbox</a></li>
-      <li><a href="">Outbox</a></li>
-      <li><a href="">Sending a message</a></li>
-      <li><a href="">Replying to a message</a></li>
-      <li><a href="">Editing messages</a></li>
-      <li><a href="">Deleting messages</a></li>
-    </ul>
-  </li>
-  <li>
-    <a href="">{% trans "Notifications" %}</a>
-    <ul>
-      <li><a href="">Browser notifications</a></li>
-      <li><a href="">Email notifications</a></li>
-      <li><a href="">Deleting notifications</a></li>
-    </ul>
-  </li>
-  <li>
-    <a href="">{% trans "Memberships" %}</a>
-    <ul>
-      <li><a href="">Sending invites</a></li>
-      <li><a href="">Managing join requests</a></li>
-      <li><a href="">Editing memberships</a></li>
-      <li><a href="">Deleting memberships</a></li>
-    </ul>
     <li>
-      <a href="">{% trans "Self-Hosting" %}</a>
-      <ul>
-        <li><a href="">Deployment</a></li>
-        <li><a href="">Configuring DNS</a></li>
-        <li><a href="">Setting up a Community in the Django admin</a></li>
-      </ul>
+        <a href="{% url 'help_pages:page' 'getting-started' %}">Getting started</a>
     </li>
-    <li><a href="">{% trans "Contributing" %}</a></li>
+    <li>
+        {% url 'help_pages:page' 'communities' as communities_url %}
+        <a href="{{ communities_url }}">{% trans "Communities" %}</a>
+        <ul>
+            <li><a href="{{ communities_url }}#what-is-a-community">{% trans "What is a Community?" %}</a></li>
+            <li><a href="{{ communities_url }}#starting-a-community">{% trans "Starting a Community" %}</a></li>
+            <li><a href="{{ communities_url }}#joining-a-community">{% trans "Joining a Community" %}</a></li>
+            <li><a href="{{ communities_url }}#leaving-a-community">{% trans "Leaving a Community" %}</a></li>
+            <li><a href="{{ communities_url }}#private-and-public-communities">{% trans "Public and private Communities" %}</a></li>
+            <li><a href="{{ communities_url }}#local-network">{% trans "Local network" %}</a></li>
+            <li>
+                <a href="{{ communities_url }}#community-settings">{% trans "Community settings" %}</a> <span class="chip">Admins</span>
+            </li>
+        </ul>
+    </li>
+    <li>
+        <a href="">{% trans "My Account" %}</a>
+        <ul>
+            <li><a href="">Signing up</a></li>
+            <li><a href="">Logging in</a></li>
+            <li><a href="">Deleting my account</a></li>
+            <li><a href="">Account settings</a></li>
+            <li><a href="">Email notifications</a></li>
+            <li><a href="">Managing email addresses</a></li>
+            <li><a href="">Changing my password</a></li>
+        </ul>
+    </li>
+    <li>
+        {% url 'help_pages:page' 'content' as content_url %}
+        <a href="">{% trans "Content" %}</a>
+        <ul>
+            <li><a href="{{ content_url }}#posts-events-and-photos">Posts, events and photos</a></li>
+            <li><a href="{{ content_url }}#home-page">Home page</a></li>
+            <li><a href="{{ content_url }}#timeline">Timeline</a></li>
+            <li><a href="{{ content_url }}#adding-content">Adding new content</a></li>
+            <li><a href="{{ content_url }}#resharing-content">Resharing content</a></li>
+            <li><a href="{{ content_url }}#embedded-conent">Embedded content</a></li>
+            <li><a href="{{ content_url }}#searching-content">Searching content</a></li>
+            <li><a href="{{ content_url }}#liking-content-and-favorites">Liking content and Favorites</a></li>
+            <li><a href="{{ content_url }}#editing-content">Editing content</a></li>
+            <li><a href="{{ content_url }}#deleting-content">Deleting content</a></li>
+            <li><a href="{{ content_url }}#flagging-content">Flagging content</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="">{% trans "Markdown" %}</a>
+        <ul>
+            <li><a href="">The Markdown editor</a></li>
+            <li><a href="">Adding images</a></li>
+            <li><a href="">Mentions and hashtags</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="">{% trans "Tags" %}</a>
+        <ul>
+            <li><a href=""></a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="">{% trans "Comments" %}</a>
+        <ul>
+            <li><a href="">Posting comments</a></li>
+            <li><a href="">Tagging</a></li>
+            <li><a href="">@Mentions</a></li>
+            <li><a href="">Searching comments</a></li>
+            <li><a href="">Replying to comments</a></li>
+            <li><a href="">Editing comments</a></li>
+            <li><a href="">Deleting comments</a></li>
+            <li><a href="">Flagging comments</a></li>
+            <li><a href="">Liking comments</a></li>
+            <li><a href="">Disabling comments</a></li>
+        </ul>
+
+    </li>
+    <li>
+        <a href="">{% trans "People" %}</a>
+        <ul>
+            <li><a href="">My profile page</a></li>
+            <li><a href="">Following users</a></li>
+            <li><a href="">Blocking users</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="">{% trans "Messages" %}</a>
+        <ul>
+            <li><a href="">Inbox</a></li>
+            <li><a href="">Outbox</a></li>
+            <li><a href="">Sending a message</a></li>
+            <li><a href="">Replying to a message</a></li>
+            <li><a href="">Editing messages</a></li>
+            <li><a href="">Deleting messages</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="">{% trans "Notifications" %}</a>
+        <ul>
+            <li><a href="">Browser notifications</a></li>
+            <li><a href="">Email notifications</a></li>
+            <li><a href="">Deleting notifications</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="">{% trans "Memberships" %}</a>
+        <ul>
+            <li><a href="">Sending invites</a></li>
+            <li><a href="">Managing join requests</a></li>
+            <li><a href="">Editing memberships</a></li>
+            <li><a href="">Deleting memberships</a></li>
+        </ul>
+        <li>
+            <a href="">{% trans "Self-Hosting" %}</a>
+            <ul>
+                <li><a href="">Deployment</a></li>
+                <li><a href="">Configuring DNS</a></li>
+                <li><a href="">Setting up a Community in the Django admin</a></li>
+            </ul>
+        </li>
+        <li><a href="">{% trans "Contributing" %}</a></li>
 </ul>
 {% endblock %}
