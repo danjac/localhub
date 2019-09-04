@@ -49,6 +49,13 @@
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
+       href="{% url 'help_pages:page' 'markdown' %}">{% trans "Markdown" %}
+    </a>
+  </li>
+
+  <li class="menu-item">
+    <a data-controller="active-link"
+       data-active-link-exact
        href="{% url 'help_pages:page' 'comments' %}">{% trans "Comments" %}
     </a>
   </li>
