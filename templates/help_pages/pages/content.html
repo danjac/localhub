@@ -5,33 +5,24 @@
 {# List all URLs here #}
 {% url 'activities:stream' as home_page_url %}
 {% url 'activities:timeline' as timeline_url %}
+{% url 'posts:create' as post_create_url %}
+{% url 'events:create' as event_create_url %}
+{% url 'photos:create' as photo_create_url %}
+{% url 'user_update' as user_update_url %}
 
 <ul>
   <li><a data-turbolinks="false" href="#posts-events-and-photos">Posts, events and photos</a></li>
   <li><a data-turbolinks="false" href="#home-page">Home page</a></li>
   <li><a data-turbolinks="false" href="#timeline">Timeline</a></li>
   <li><a data-turbolinks="false" href="#adding-content">Adding new content</a></li>
-  <li><a data-turbolinks="false" href="#">Resharing content</a></li>
-  <li><a data-turbolinks="false" href="#">Who can see my content?</a></li>
-  <li><a data-turbolinks="false" href="#">Tagging</a></li>
-  <li><a data-turbolinks="false" href="#">Content sensitive tags</a></li>
-  <li><a data-turbolinks="false" href="#">Following tags</a></li>
-  <li><a data-turbolinks="false" href="#">Blocking tags</a></li>
-  <li><a data-turbolinks="false" href="#">@Mentions</a></li>
-  <li><a data-turbolinks="false" href="#">Embedded content</a></li>
-  <li><a data-turbolinks="false" href="#">Searching content</a></li>
+  <li><a data-turbolinks="false" href="#resharing-content">Resharing content</a></li>
+  <li><a data-turbolinks="false" href="#embedded-conent">Embedded content</a></li>
+  <li><a data-turbolinks="false" href="#searching-content">Searching content</a></li>
   <li><a data-turbolinks="false" href="#">Editing content</a></li>
   <li><a data-turbolinks="false" href="#">Deleting content</a></li>
   <li><a data-turbolinks="false" href="#">Flagging content</a></li>
   <li><a data-turbolinks="false" href="#">Liking content</a></li>
 </ul>
-
-<h6 id="">{% trans "" %}</h6>
-<div class="divider"></div>
-<p>
-  {% blocktrans %}
-  {% endblocktrans %}
-</p>
 
 <h6 id="posts-events-and-photos">{% trans "Posts, events and photos" %}</h6>
 <div class="divider"></div>
@@ -42,19 +33,19 @@
 </p>
 <ul>
   <li>
-  {% blocktrans %}
-  <strong>Posts</strong> are the most common form of content. A Post consists of a description or URL to an HTML page or image on the internet. You can optionally provide a title. You can create Posts if you want to link to an article on the web, display an external image e.g. from Imgur or Pinterest, embed a YouTube or Vimeo video, or write a post like you would on Twitter or Facebook. If you post a link to an HTML page and leave out the title, LocalHub will try and fetch the title of the page and insert this into the title for your post automatically.
-  {% endblocktrans %}
+    {% blocktrans %}
+    <strong>Posts</strong> are the most common form of content. A Post consists of a description or URL to an HTML page or image on the internet. You can optionally provide a title. You can create Posts if you want to link to an article on the web, display an external image e.g. from Imgur or Pinterest, embed a YouTube or Vimeo video, or write a post like you would on Twitter or Facebook. If you post a link to an HTML page and leave out the title, LocalHub will try and fetch the title of the page and insert this into the title for your post automatically.
+    {% endblocktrans %}
   </li>
   <li>
-  {% blocktrans %}
-  <strong>Events</strong> are posts with a specific future date and (optionally) a location. For example, you might want to let the Community know about a real-world or online meeting, or a concert, bake sale or meetup. If you provide a valid real-world location, LocalHub will display this location in an <a href="">OpenStreetMap [LINK REQUIRED]</a> map.
-  {% endblocktrans %}
+    {% blocktrans %}
+    <strong>Events</strong> are posts with a specific future date and (optionally) a location. For example, you might want to let the Community know about a real-world or online meeting, or a concert, bake sale or meetup. If you provide a valid real-world location, LocalHub will display this location in an <a href="">OpenStreetMap [LINK REQUIRED]</a> map.
+    {% endblocktrans %}
   </li>
   <li>
-  {% blocktrans %}
-  <strong>Photos</strong> are uploaded photos and other images (JPEGs and PNGs). You can include some additional info about your photo such as information about the original artist or Creative Commons licensing. If you just want to show an image from a URL, however, you can just use a normal Post and either add the URL in the Link field or use <a href="#">Markdown</a> syntax in the Description field to embed any number of images.
-  {% endblocktrans %}
+    {% blocktrans %}
+    <strong>Photos</strong> are uploaded photos and other images (JPEGs and PNGs). You can include some additional info about your photo such as information about the original artist or Creative Commons licensing. If you just want to show an image from a URL, however, you can just use a normal Post and either add the URL in the Link field or use <a href="#">Markdown</a> syntax in the Description field to embed any number of images.
+    {% endblocktrans %}
   </li>
 </ul>
 
@@ -78,8 +69,37 @@
 <div class="divider"></div>
 <p>
   {% blocktrans %}
+  You can publish a new Post, Event or Photo from the home page, or selecting <a href="{{ post_create_url }}">Submit Post</a>, <a href="{{ event_create_url }}">Submit Event</a> or <a href="{{ photo_create_url }}">Submit Photo</a> in the Sidebar. Once you have published a post it will be immediately available to the rest of the Community.
   {% endblocktrans %}
 </p>
 
+<h6 id="resharing-content">{% trans "Resharing content" %}</h6>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  You can reshare posts published by other members by clicking the Reshare button. Resharing is useful if members are only following certain users, as they may not otherwise see this content - they will see content that is reshared by users they are following, even if they are not following the owner of the original post.
+  {% endblocktrans %}
+</p>
+
+<h6 id="embedded-content">{% trans "#embedded-content" %}</h6>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  Embedded content here refers to links to certain sites which implement the <a href="">Oembed protocol [LINK REQUIRED]</a>. Examples include links to a YouTube or Vimeo video, Tweet, Facebook post, or Wordpress article. The content is typically embedded in an iframe.
+  {% endblocktrans %}
+</p>
+<p>
+  {% blocktrans %}
+  By default embedding is disabled if your browser enforces a "Do Not Track" (DNT) policy. If you wish to view embedded content, you can whitelist this site in your browser settings, or (as a logged in user) go to <a href="{{ user_update_url }}">My Settings</a> page and check the "Show embedded content" checkbox.
+  {% endblocktrans %}
+</p>
 
 {% endblock %}
+
+<h6 id="">{% trans "" %}</h6>
+<div class="divider"></div>
+<p>
+  {% blocktrans %}
+  {% endblocktrans %}
+</p>
+
