@@ -4,7 +4,7 @@
 import pytest
 
 from localhub.notifications.models import Notification
-from localhub.users.emails import send_user_notification_email
+from localhub.users.notifications import send_user_notification_email
 from localhub.users.tests.factories import UserFactory
 
 
