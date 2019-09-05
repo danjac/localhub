@@ -3,8 +3,6 @@
 
 import pytest
 
-from typing import List
-
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
@@ -118,7 +116,9 @@ class TestUserDeleteView:
 
 
 class TestUserFollowView:
-    def test_post(self, client, member, mailoutbox: List):
+    def test_post(
+        self, client, member, mailoutbox, send_notification_webpush_mock
+    ):
         user = MembershipFactory(
             community=member.community,
             member=UserFactory(email_preferences=["new_follower"]),

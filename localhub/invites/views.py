@@ -21,7 +21,7 @@ from localhub.communities.views import CommunityRequiredMixin
 from localhub.invites.emails import send_invitation_email
 from localhub.invites.forms import InviteForm
 from localhub.invites.models import Invite
-from localhub.users.emails import send_user_notification_email
+from localhub.users.notifications import send_user_notification
 
 
 class InviteQuerySetMixin(CommunityRequiredMixin):
@@ -179,7 +179,7 @@ class InviteAcceptView(BaseSingleInviteView):
             for notification in self.request.user.notify_on_join(
                 self.object.community
             ):
-                send_user_notification_email(self.request.user, notification)
+                send_user_notification(self.request.user, notification)
         else:
             message = _("You are already a member of this community")
 

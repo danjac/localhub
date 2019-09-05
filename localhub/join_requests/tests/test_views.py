@@ -42,7 +42,7 @@ class TestJoinRequestCreateView:
 
 
 class TestJoinRequestAcceptView:
-    def test_post_if_no_user(self, client, mailoutbox, admin):
+    def test_post_if_no_user(self, client, admin, mailoutbox):
         join_request = JoinRequestFactory(
             community=admin.community, sender=None
         )
@@ -55,7 +55,9 @@ class TestJoinRequestAcceptView:
         mail = mailoutbox[0]
         assert mail.to == [join_request.email]
 
-    def test_post_if_user(self, client, mailoutbox, admin):
+    def test_post_if_user(
+        self, client, mailoutbox, admin, send_notification_webpush_mock
+    ):
         admin.member.email_preferences = ["new_member"]
         admin.member.save()
         join_request = JoinRequestFactory(community=admin.community)
