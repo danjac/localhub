@@ -11,6 +11,7 @@ from localhub.communities.tests.factories import (
     CommunityFactory,
     MembershipFactory,
 )
+from localhub.join_requests.models import JoinRequest
 from localhub.users.tests.factories import UserFactory
 
 
@@ -122,3 +123,12 @@ class TestCommunityModel:
         community = Community(name="test", domain="testing")
         with pytest.raises(ValidationError):
             community.clean_fields()
+
+
+class TestMembershipModel:
+    def test_join_requests_deleted(self, member, transactional_db):
+        JoinRequest.objects.create(
+            sender=member.member, community=member.community
+        )
+        member.delete()
+        assert not JoinRequest.objects.exists()

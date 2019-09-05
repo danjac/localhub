@@ -305,6 +305,8 @@ class MembershipQuerySet(SearchQuerySetMixin, models.QuerySet):
 
 
 class Membership(TimeStampedModel):
+    # TBD: if membership is deleted, remove any join
+    # requests and invites for this user.
     ROLES = Choices(
         ("member", _("Member")),
         ("moderator", _("Moderator")),

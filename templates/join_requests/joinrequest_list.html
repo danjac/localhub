@@ -1,5 +1,6 @@
 {% extends "join_requests/base.html" %}
 {% load i18n %}
+{% load account %}
 
 {% block content %}
 
@@ -41,7 +42,7 @@
 
             <td>
                 {% if join_request.sender %}
-                {% include "users/includes/chip.html" with profile=join_request.sender %}
+                {% user_display join_request.sender %}
                 {% else %}
                 -
                 {% endif %}
