@@ -16,9 +16,7 @@ def fetch_post_title_from_url(post_id):
     try:
         post = Post.objects.get(pk=post_id)
         if post.url and not post.title:
-            post.title = (fetch_title_from_url(post.url) or post.get_domain())[
-                :300
-            ]
-            post.save()
+            title = (fetch_title_from_url(post.url) or post.get_domain())[:300]
+            Post.objects.filter(pk=post_id).update(title=title)
     except Post.DoesNotExist:
         logger.info("post not found:%s", post_id)
