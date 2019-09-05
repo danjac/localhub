@@ -22,7 +22,7 @@ from localhub.join_requests.emails import (
 )
 from localhub.join_requests.forms import JoinRequestForm
 from localhub.join_requests.models import JoinRequest
-from localhub.notifications.emails import send_user_notification
+from localhub.users.notifications import send_user_notification
 
 
 class JoinRequestQuerySetMixin(CommunityRequiredMixin):
