@@ -7,7 +7,17 @@
 
 {% block content %}
 <h3>{% trans "Request invitation" %}</h3>
+<div class="actions">
+  {% if community %}
+  <a href="{% url 'activities:stream' %}">{% trans "Home" %}</a>
+  {% endif %}
+  <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+  <a href="{% url 'community_list' %}">{% trans "Local Network" %}</a>
+</div>
+<div class="divider"></div>
 <p>{% trans "Your request will be sent to the site admins. If they approve your request, you will automatically become a member of this community." %}</p>
-{% trans "Send Join Request" as t_send_join_request %}
-{% simple_ajax_form form submit_btn=t_send_join_request %}
+<form action="{{ request.path }}" method="POST">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-primary">{% trans "Send Request" %}</button>
+</form>
 {% endblock %}

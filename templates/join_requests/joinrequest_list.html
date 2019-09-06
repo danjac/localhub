@@ -19,7 +19,6 @@
 <table class="table table-striped table-hover table-responsive-md">
     <thead>
         <tr>
-            <th>{% trans "Email" %}</th>
             <th>{% trans "User" %}</th>
             <th>{% trans "Status" %}</th>
             <th>{% trans "Actions" %}</th>
@@ -29,23 +28,7 @@
         {% for join_request in object_list %}
         <tr>
             <td>
-                {{ join_request.sender.email|default:join_request.email }}
-                <div class="info">
-                    {% blocktrans with created=join_request.created|timesince %}
-                    {{ created }} ago
-                    {% endblocktrans %}
-                </div>
-
-
-
-            </td>
-
-            <td>
-                {% if join_request.sender %}
                 {% user_display join_request.sender %}
-                {% else %}
-                -
-                {% endif %}
             </td>
             <td>{{ join_request.get_status_display }}</td>
             <td>
