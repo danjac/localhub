@@ -190,7 +190,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
         qs = (
             Community.objects.filter(active=True)
             .with_is_member(self.request.user)
-            .order_by("name")
+            .order_by("-created")
         )
         if self.search_query:
             qs = qs.filter(name__icontains=self.search_query)

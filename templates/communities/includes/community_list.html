@@ -9,22 +9,27 @@
 <div class="card mb-1">
   <div class="card-header">
     <div class="card-title h6">
-      {% thumbnail object.logo "100" format="PNG" as logo %}
-      <img src="{{ logo.url }}"
-           class="mr-2"
-           width="{{ logo.width }}"
-           height="{{ logo.height }}"
-           alt="{{ object.name }}">
-      {% endthumbnail %}
-      {% if object == community %}
-      {{ object.name }}
-      {% else %}
-      <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
-      {% endif %}
+      <div class="columns">
+        <div class="column">
+          {% if object == community %}
+          {{ object.name }}
+          {% else %}
+          <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+          {% endif %}
 
-      {% if object.is_member %}
-      <span class="chip bg-primary">{% trans "Member" %}</span>
-      {% endif %}
+          {% if object.is_member %}
+          <span class="chip bg-primary">{% trans "Member" %}</span>
+          {% endif %}
+        </div>
+        <div class="column col-auto">
+          {% thumbnail object.logo "100" format="PNG" as logo %}
+          <img src="{{ logo.url }}"
+               width="{{ logo.width }}"
+               height="{{ logo.height }}"
+               alt="{{ object.name }}">
+          {% endthumbnail %}
+        </div>
+      </div>
     </div>
   </div>
 
