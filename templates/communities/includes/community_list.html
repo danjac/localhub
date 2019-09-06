@@ -1,0 +1,38 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+
+{% include "includes/search_form.html" %}
+
+<table class="table table-striped table-hover table-responsive-sm">
+  <thead>
+    <tr>
+      <th>{% trans "Community" %}</th>
+      <th>{% trans "Members" %}</th>
+      <th>{% trans "Tagline" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for object in object_list %}
+    <tr>
+      <td>
+        {% if object == community %}
+        {{ object.name }}
+        {% else %}
+        <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+        {% endif %}
+
+        {% if object.is_member %}
+        <span class="chip bg-primary">{% trans "Member" %}</span>
+        {% endif %}
+
+      </td>
+      <td>{{ object.num_members }}</td>
+      <td>{{ object.tagline|default:"-"|linebreaksbr }}</td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+{% include "includes/pagination.html" %}

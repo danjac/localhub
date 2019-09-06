@@ -53,9 +53,7 @@ class TestCommunityRequiredMixin:
         req.user = AnonymousUser()
         assert my_view(req).url == reverse("community_access_denied")
 
-    def test_community_access_denied_if_non_members_allowed(
-        self, rf, user
-    ):
+    def test_community_access_denied_if_non_members_allowed(self, rf, user):
         req = rf.get("/")
         req.community = CommunityFactory()
         req.user = user
@@ -111,9 +109,21 @@ class TestCommunityUpdateView:
 
 
 class TestCommunityListView:
-    def test_get(self, client, member, user):
+    def test_get_if_member(self, client, member):
         CommunityFactory.create_batch(3)
-        assert client.get(reverse("community_list")).status_code == 200
+        response = client.get(reverse("community_list"))
+        assert "communities/member_community_list.html" in [
+            t.name for t in response.templates
+        ]
+        assert len(response.context["object_list"]) == 4
+
+    def test_get_if_not_member(self, client, login_user):
+        CommunityFactory.create_batch(3)
+        response = client.get(reverse("community_list"))
+        assert "communities/non_member_community_list.html" in [
+            t.name for t in response.templates
+        ]
+        assert len(response.context["object_list"]) == 3
 
 
 class TestMembershipListView:

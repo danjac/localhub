@@ -169,7 +169,13 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
     """
 
     paginate_by = settings.DEFAULT_PAGE_SIZE
-    model = Community
+
+    def get_template_names(self):
+        if self.request.community and is_member(
+            self.request.user, self.request.community
+        ):
+            return ["communities/member_community_list.html"]
+        return ["communities/non_member_community_list.html"]
 
     def get_queryset(self):
         qs = (
