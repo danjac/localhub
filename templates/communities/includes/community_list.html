@@ -9,13 +9,12 @@
 <div class="card">
   <div class="card-header">
     <div class="card-title h6">
-      {% thumbnail community.logo "60" format="PNG" as logo %}
-      {% if logo %}
+      {% thumbnail community.logo "100" format="PNG" as logo %}
       <img src="{{ logo.url }}"
            width="{{ logo.width }}"
            height="{{ logo.height }}"
            alt="{{ object.name }}">
-      {% endif %}
+      {% endthumbnail %}
       {% if object == community %}
       {{ object.name }}
       {% else %}
