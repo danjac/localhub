@@ -26,6 +26,12 @@ class TestJoinRequestCreateView:
     def test_get(self, client, login_user, community):
         assert client.get(reverse("join_requests:create")).status_code == 200
 
+    def test_get_if_join_request_not_allowed(self, client, login_user):
+        community = CommunityFactory(allow_join_requests=False)
+        assert client.get(
+            reverse("join_requests:create"), HTTP_HOST=community.domain
+        ).url == reverse("community_welcome")
+
     def test_post(self, client, mailoutbox, login_user, community):
 
         admin = UserFactory()

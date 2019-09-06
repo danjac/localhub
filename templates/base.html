@@ -138,7 +138,7 @@
 
 
       {% block main_layout %}
-      <div class="columns bg-light py-1" data-controller="sidebar">
+      <main class="columns bg-light py-1" data-controller="sidebar">
 
 
         <div class="column col-2 col-lg-12 hide-lg p-1"
@@ -174,7 +174,7 @@
           <div class="clearfix"></div>
           {% block content %}{% endblock content %}
         </div>
-      </div>
+      </main>
       {% endblock main_layout %}
     </div>
     {% include "includes/footer.html" %}

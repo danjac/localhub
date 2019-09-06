@@ -14,6 +14,7 @@
 {% if community.intro %}
 {{ community.intro.markdown }}
 {% endif %}
+
 {% if user.is_authenticated %}
 <p>
 
@@ -27,13 +28,15 @@
     {% endblocktrans %}
     {% endif %}
 
-    {% else %}
+    {% elif community.allow_join_requests %}
+
     {% url 'join_requests:create' as join_request_url %}
     {% blocktrans %}
     You are not a member of this community. You can request an invite <a href="{{ join_request_url }}">here</a>.
     {% endblocktrans %}
+
+    {% endif %}
 </p>
-{% endif %}
 
 {% else %}
 <h3>{% trans "Login" %}</h3>

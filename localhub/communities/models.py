@@ -194,6 +194,15 @@ class Community(TimeStampedModel):
         related_name="+",
     )
 
+    allow_join_requests = models.BooleanField(
+        default=True,
+        help_text=_(
+            "Users can send requests to join this community. "
+            "If disabled they will only be able to join if an admin sends "
+            "them an invite."
+        ),
+    )
+
     blacklisted_email_domains = models.TextField(
         blank=True,
         help_text=_(

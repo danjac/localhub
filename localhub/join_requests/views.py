@@ -64,6 +64,10 @@ class JoinRequestCreateView(
     allow_non_members = True
 
     def validate(self, request):
+        if not request.community.allow_join_requests:
+            raise ValidationError(
+                _("This community does not allow requests to join.")
+            )
         if request.community.members.filter(pk=request.user.id).exists():
             raise ValidationError(_("You are already a member"))
         if JoinRequest.objects.filter(

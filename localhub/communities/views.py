@@ -141,6 +141,7 @@ class CommunityUpdateView(
         "description",
         "terms",
         "content_warning_tags",
+        "allow_join_requests",
         "blacklisted_email_domains",
         "blacklisted_email_addresses",
     )
