@@ -6,45 +6,54 @@
 
 {% block subtitle %} | {% trans "Local Network" %}{% endblock %}
 
-{% block content %}
-<h3>{% trans "Local Network" %}</h3>
-<div class="divider"></div>
+{% block main_layout %}
+<div class="columns p-1 bg-light">
+  <div class="col-12">
 
-{% include "includes/search_form.html" %}
+    <h3>{% trans "Local Network" %}</h3>
+    <div class="actions">
+      {% if community %}
+      <a href="{% url 'activities:stream' %}">{% trans "Home" %}</a>
+      {% endif %}
+      <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+    </div>
 
-<table class="table table-striped table-hover table-responsive-sm">
-  <thead>
-    <tr>
-      <th>{% trans "Community" %}</th>
-      <th>{% trans "Members" %}</th>
-      <th>{% trans "Tagline" %}</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for object in object_list %}
-    <tr>
-      <td>
-        {% if object == community %}
-        {{ object.name }}
-        {% else %}
-        <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
-        {% endif %}
+    <div class="divider"></div>
 
-        {% if object.is_member %}
-        <span class="chip bg-primary">{% trans "Member" %}</span>
-        {% endif %}
+    {% include "includes/search_form.html" %}
 
-        {% if not object.public %}
-        <span class="chip bg-dark">{% trans "Private" %}</span>
-        {% endif %}
-      </td>
-      <td>{{ object.num_members }}</td>
-      <td>{{ object.tagline|default:"-"|linebreaksbr }}</td>
-    </tr>
-    {% endfor %}
+    <table class="table table-striped table-hover table-responsive-sm">
+      <thead>
+        <tr>
+          <th>{% trans "Community" %}</th>
+          <th>{% trans "Members" %}</th>
+          <th>{% trans "Tagline" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for object in object_list %}
+        <tr>
+          <td>
+            {% if object == community %}
+            {{ object.name }}
+            {% else %}
+            <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+            {% endif %}
 
-  </tbody>
-</table>
+            {% if object.is_member %}
+            <span class="chip bg-primary">{% trans "Member" %}</span>
+            {% endif %}
+
+          </td>
+          <td>{{ object.num_members }}</td>
+          <td>{{ object.tagline|default:"-"|linebreaksbr }}</td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+</div>
 
 {% include "includes/pagination.html" %}
-{% endblock content %}
+{% endblock %}

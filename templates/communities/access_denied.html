@@ -1,9 +1,13 @@
-{% extends user.is_authenticated|yesno:"base.html,no_sidebar_base.html" %}
+{% extends "no_sidebar_base.html" %}
 {% load i18n %}
 
 {% block content %}
-{% if user.is_anonymous %}
-<div class="col-6 col-mx-auto col-sm-12">
+{% if user.is_authenticated %}
+<div class="actions">
+    <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+    <a href="{% url 'community_list' %}">{% trans "Local Network" %}</a>
+</div>
+<div class="divider"></div>
 {% endif %}
 
 {% if community.intro %}
@@ -11,30 +15,27 @@
 <div class="divider"></div>
 {% endif %}
 <p>
-  {% if user.is_authenticated %}
+    {% if user.is_authenticated %}
 
-  {% if join_request_sent %}
+    {% if join_request_sent %}
 
-  {% blocktrans %}
-  Your request for an invite has been sent to the community admins. You will receive an email when they have made their decision.
-  {% endblocktrans %}
+    {% blocktrans %}
+    Your request for an invite has been sent to the community admins. You will receive an email when they have made their decision.
+    {% endblocktrans %}
 
-  {% else %}
-  {% url 'join_requests:create' as join_request_url %}
-  {% blocktrans %}
-  You are not a member of this community. You can request an invite <a href="{{ join_request_url }}">here</a>.
-  {% endblocktrans %}
-  {% endif %}
+    {% else %}
+    {% url 'join_requests:create' as join_request_url %}
+    {% blocktrans %}
+    You are not a member of this community. You can request an invite <a href="{{ join_request_url }}">here</a>.
+    {% endblocktrans %}
+    {% endif %}
 
-  {% else %}
+    {% else %}
 
-  {% url 'account_login' as login_url %}
-  {% url 'account_signup' as signup_url %}
-  {% blocktrans %}Please <a href="{{ login_url }}">sign in</a> to get started. If you haven't joined yet, get started by signing up <a href="{{ signup_url }}">here</a>.{% endblocktrans %}
-  {% endif %}
+    {% url 'account_login' as login_url %}
+    {% url 'account_signup' as signup_url %}
+    {% blocktrans %}Please <a href="{{ login_url }}">sign in</a> to get started. If you haven't joined yet, get started by signing up <a href="{{ signup_url }}">here</a>.{% endblocktrans %}
+    {% endif %}
 </p>
-{% if user.is_anonymous %}
-</div>
-{% endif %}
 
 {% endblock %}

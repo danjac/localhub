@@ -8,12 +8,11 @@
 
 {% block content %}
 
-<div class="col-6 col-mx-auto col-sm-12">
-  <h3>{% trans "Sign Up" %}</h3>
-  <div class="divider"></div>
+<h3>{% trans "Sign Up" %}</h3>
+<div class="divider"></div>
 
-  <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
-  <form method="post" action="{% url 'account_signup' %}">
+<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+<form method="post" action="{% url 'account_signup' %}">
     {% if redirect_field_value %}
     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
     {% endif %}
@@ -21,9 +20,8 @@
     {% include "includes/forms/fields.html" %}
 
     <button type="submit" class="btn btn-primary">
-      {% trans "Sign Up" %}
+        {% trans "Sign Up" %}
     </button>
-  </form>
-</div>
+</form>
 
 {% endblock content %}
