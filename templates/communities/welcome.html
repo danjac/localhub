@@ -37,7 +37,7 @@
 {% else %}
 <h3>{% trans "Login" %}</h3>
 <div class="divider"></div>
-{% url 'account:signup' as signup_url %}
+{% url 'account_signup' as signup_url %}
 {% include "account/includes/login_form.html" with form=login_form signup_url=signup_url %}
 {% endif %}
 
