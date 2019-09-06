@@ -115,14 +115,12 @@ class CommunityWelcomeView(CommunityRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data["join_request_sent"] = (
+        data["join_request"] = (
             self.request.user.is_authenticated
             and not is_member(self.request.user, self.request.community)
             and JoinRequest.objects.filter(
-                sender=self.request.user,
-                community=self.request.community,
-                status=JoinRequest.STATUS.pending,
-            ).exists()
+                sender=self.request.user, community=self.request.community
+            )
         )
         if self.request.user.is_anonymous:
             data["login_form"] = LoginForm()

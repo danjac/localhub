@@ -5,8 +5,8 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div class="actions">
-  <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
-  <a href="{% url 'community_list' %}">{% trans "Local Network" %}</a>
+    <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+    <a href="{% url 'community_list' %}">{% trans "Local Network" %}</a>
 </div>
 <div class="divider"></div>
 {% endif %}
@@ -17,19 +17,21 @@
 {% if user.is_authenticated %}
 <p>
 
-  {% if join_request_sent %}
+    {% if join_request %}
 
-  {% blocktrans %}
-  <strong>
-  Your request for an invite has been sent to the community admins. You will receive an email when they have made their decision.
-  </strong>
-  {% endblocktrans %}
+    {% if join_request.is_pending %}
+    {% blocktrans %}
+    <strong>
+        Your request for an invite has been sent to the community admins. You will receive an email when they have made their decision.
+    </strong>
+    {% endblocktrans %}
+    {% endif %}
 
-  {% else %}
-  {% url 'join_requests:create' as join_request_url %}
-  {% blocktrans %}
-  You are not a member of this community. You can request an invite <a href="{{ join_request_url }}">here</a>.
-  {% endblocktrans %}
+    {% else %}
+    {% url 'join_requests:create' as join_request_url %}
+    {% blocktrans %}
+    You are not a member of this community. You can request an invite <a href="{{ join_request_url }}">here</a>.
+    {% endblocktrans %}
 </p>
 {% endif %}
 
