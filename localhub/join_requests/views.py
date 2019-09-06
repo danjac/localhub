@@ -70,7 +70,7 @@ class JoinRequestCreateView(
         if JoinRequest.objects.filter(
             sender=request.user, community=request.community
         ).exists():
-            return redirect("community_access_denied")
+            return redirect("community_welcome")
         return super().get(request, *args, **kwargs)
 
     def get_form(self, data=None, files=None):

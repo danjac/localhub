@@ -28,10 +28,7 @@ class CommunityRequiredMixin:
     Ensures that a community is available on this domain. This requires
     the CurrentCommunityMiddleware is enabled.
 
-    If the community is private and the user is not a member then they
-    are shown an "Access Denied" screen. If they are not yet logged in,
-    then they are redirected to the login page first to authenticate so
-    their membership can be properly verified.
+    If the user is not a member they will be redirected to the Welcome view.
 
     If the view has the `allow_non_members` property *True* then the above
     rule is overriden - for example in some cases where we want to allow
@@ -56,7 +53,7 @@ class CommunityRequiredMixin:
     def handle_community_access_denied(self):
         if self.request.is_ajax():
             raise PermissionDenied(_("You must be a member of this community"))
-        return HttpResponseRedirect(reverse("community_access_denied"))
+        return HttpResponseRedirect(reverse("community_welcome"))
 
     def handle_community_not_found(self):
         if self.request.is_ajax():
@@ -99,12 +96,20 @@ class CommunityNotFoundView(TemplateView):
 community_not_found_view = CommunityNotFoundView.as_view()
 
 
-class CommunityAccessDeniedView(TemplateView):
+class CommunityWelcomeView(CommunityRequiredMixin, TemplateView):
     """
-    This is shown if no community exists for this domain.
+    This is shown if the user is not a member (or is not authenticated).
+
+    If user is already a member, redirects to home page.
     """
 
-    template_name = "communities/access_denied.html"
+    template_name = "communities/welcome.html"
+    allow_non_members = True
+
+    def get(self, request, *args, **kwargs):
+        if is_member(request.user, request.community):
+            return HttpResponseRedirect(settings.HOME_PAGE_URL)
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -120,7 +125,7 @@ class CommunityAccessDeniedView(TemplateView):
         return data
 
 
-community_access_denied_view = CommunityAccessDeniedView.as_view()
+community_welcome_view = CommunityWelcomeView.as_view()
 
 
 class CommunityUpdateView(

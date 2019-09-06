@@ -47,26 +47,28 @@ class TestCommunityRequiredMixin:
         with pytest.raises(Http404):
             my_view(req)
 
-    def test_community_access_denied_if_anonymous(self, rf):
+    def test_redirect_to_community_welcome_if_anonymous(self, rf):
         req = rf.get("/")
         req.community = CommunityFactory()
         req.user = AnonymousUser()
-        assert my_view(req).url == reverse("community_access_denied")
+        assert my_view(req).url == reverse("community_welcome")
 
-    def test_community_access_denied_if_non_members_allowed(self, rf, user):
+    def test_redirect_to_community_welcome_if_non_members_allowed(
+        self, rf, user
+    ):
         req = rf.get("/")
         req.community = CommunityFactory()
         req.user = user
         my_public_view = MyView.as_view(allow_non_members=True)
         assert my_public_view(req).status_code == 200
 
-    def test_community_access_denied_if_authenticated(self, rf, user):
+    def test_redirect_to_community_welcome_if_authenticated(self, rf, user):
         req = rf.get("/")
         req.community = CommunityFactory()
         req.user = user
-        assert my_view(req).url == reverse("community_access_denied")
+        assert my_view(req).url == reverse("community_welcome")
 
-    def test_community_access_denied_if_ajax(self, rf, user):
+    def test_permission_denied_if_ajax(self, rf, user):
         req = rf.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
         req.community = CommunityFactory()
         req.user = user
@@ -79,6 +81,20 @@ class TestCommunityDetailView:
         assert (
             client.get(reverse("communities:community_detail")).status_code
             == 200
+        )
+
+
+class TestCommunityWelcomeView:
+    def test_get_if_anonymous(self, client, community):
+        assert client.get(reverse("community_welcome")).status_code == 200
+
+    def test_get_if_authenticated(self, client, community, login_user):
+        assert client.get(reverse("community_welcome")).status_code == 200
+
+    def test_get_if_member(self, client, member):
+        assert (
+            client.get(reverse("community_welcome")).url
+            == settings.HOME_PAGE_URL
         )
 
 

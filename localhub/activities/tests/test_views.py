@@ -19,11 +19,11 @@ pytestmark = pytest.mark.django_db
 class TestActivityStreamView:
     def test_get_if_anonymous(self, client, community):
         response = client.get(reverse("activities:stream"))
-        assert response.url == reverse("community_access_denied")
+        assert response.url == reverse("community_welcome")
 
     def test_get_if_non_member(self, client, login_user, community):
         response = client.get(reverse("activities:stream"))
-        assert response.url == reverse("community_access_denied")
+        assert response.url == reverse("community_welcome")
 
     def test_get_if_member(self, client, member):
         EventFactory(community=member.community, owner=member.member)
