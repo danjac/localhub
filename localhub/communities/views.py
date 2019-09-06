@@ -11,6 +11,8 @@ from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
+from allauth.account.forms import LoginForm
+
 from rules.contrib.views import PermissionRequiredMixin
 
 from vanilla import DeleteView, DetailView, ListView, TemplateView, UpdateView
@@ -122,6 +124,8 @@ class CommunityWelcomeView(CommunityRequiredMixin, TemplateView):
                 status=JoinRequest.STATUS.pending,
             ).exists()
         )
+        if self.request.user.is_anonymous:
+            data["login_form"] = LoginForm()
         return data
 
 
