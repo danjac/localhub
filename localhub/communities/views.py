@@ -175,6 +175,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
         qs = (
             Community.objects.filter(active=True)
             .with_num_members()
+            .with_is_member(self.request.user)
             .order_by("name")
         )
         if self.search_query:

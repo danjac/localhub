@@ -24,6 +24,21 @@ class TestCommunityManager:
         community = Community.objects.with_num_members().first()
         assert community.num_members == 1
 
+    def test_with_is_member_if_member(self):
+        community = CommunityFactory()
+        member = MembershipFactory(community=community).member
+        assert Community.objects.with_is_member(member).first().is_member
+
+    def test_with_is_member_if_not_member(self):
+        CommunityFactory()
+        user = UserFactory()
+        assert not Community.objects.with_is_member(user).first().is_member
+
+    def test_with_is_member_if_anonymous(self):
+        CommunityFactory()
+        user = AnonymousUser()
+        assert not Community.objects.with_is_member(user).first().is_member
+
     def test_available_if_anonymous(self):
         CommunityFactory()
         assert Community.objects.available(AnonymousUser()).first() is None

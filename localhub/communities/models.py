@@ -65,10 +65,9 @@ class CommunityQuerySet(models.QuerySet):
     def with_num_members(self):
         return self.annotate(num_members=models.Count("membership"))
 
-    def available(self, user):
-        qs = self.filter(active=True)
+    def with_is_member(self, user):
         if user.is_authenticated:
-            qs = qs.annotate(
+            return self.annotate(
                 is_member=models.Exists(
                     self.model.objects.filter(
                         membership__member=user,
@@ -77,14 +76,17 @@ class CommunityQuerySet(models.QuerySet):
                     )
                 )
             )
-        else:
-            qs = self.annotate(
-                is_member=models.Value(
-                    False, output_field=models.BooleanField()
-                )
-            )
+        return self.annotate(
+            is_member=models.Value(False, output_field=models.BooleanField())
+        )
 
-        return qs.filter(is_member=True).distinct()
+    def available(self, user):
+        return (
+            self.filter(active=True)
+            .with_is_member(user)
+            .filter(is_member=True)
+            .distinct()
+        )
 
 
 class CommunityManager(models.Manager):
@@ -95,6 +97,9 @@ class CommunityManager(models.Manager):
 
     def with_num_members(self):
         return self.get_queryset().with_num_members()
+
+    def with_is_member(self, user):
+        return self.get_queryset().with_is_member(user)
 
     def available(self, user):
         return self.get_queryset().available(user)
