@@ -2,34 +2,21 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-{% load thumbnail %}
 
 {% include "includes/search_form.html" %}
 {% for object in object_list %}
 <div class="card mb-1">
   <div class="card-header">
     <div class="card-title h6">
-      <div class="columns">
-        <div class="column">
-          {% if object == community %}
-          {{ object.name }}
-          {% else %}
-          <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
-          {% endif %}
+      {% if object == community %}
+      {{ object.name }}
+      {% else %}
+      <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+      {% endif %}
 
-          {% if object.is_member %}
-          <span class="chip bg-primary">{% trans "Member" %}</span>
-          {% endif %}
-        </div>
-        <div class="column col-auto">
-          {% thumbnail object.logo "60" format="PNG" as logo %}
-          <img src="{{ logo.url }}"
-               width="{{ logo.width }}"
-               height="{{ logo.height }}"
-               alt="{{ object.name }}">
-          {% endthumbnail %}
-        </div>
-      </div>
+      {% if object.is_member %}
+      <span class="chip bg-primary">{% trans "Member" %}</span>
+      {% endif %}
     </div>
   </div>
 
