@@ -13,15 +13,17 @@
 
 {% if community.intro %}
 {{ community.intro.markdown }}
-<div class="divider"></div>
 {% endif %}
+{% if user.is_authenticated %}
+<div class="divider"></div>
 <p>
-  {% if user.is_authenticated %}
 
   {% if join_request_sent %}
 
   {% blocktrans %}
+  <strong>
   Your request for an invite has been sent to the community admins. You will receive an email when they have made their decision.
+  </strong>
   {% endblocktrans %}
 
   {% else %}
@@ -29,9 +31,8 @@
   {% blocktrans %}
   You are not a member of this community. You can request an invite <a href="{{ join_request_url }}">here</a>.
   {% endblocktrans %}
-
-  {% endif %}
 </p>
+{% endif %}
 
 {% else %}
 <h3>{% trans "Login" %}</h3>
