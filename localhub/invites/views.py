@@ -139,7 +139,7 @@ class InviteAcceptView(BaseSingleInviteView):
     community and the invite is flagged accordingly.
     """
 
-    allow_if_private = True
+    allow_non_members = True
 
     def get_queryset(self):
         # TBD: add a deadline of e.g. 3 days

@@ -30,11 +30,6 @@ is_member = is_member | is_moderator
 
 
 @rules.predicate
-def is_visitor(user, community):
-    return community.public or is_member.test(user, community)
-
-
-@rules.predicate
 def is_own_membership(user, membership):
     return membership.member_id == user.id
 
@@ -48,7 +43,7 @@ rules.add_rule("communities.is_admin", is_admin)
 rules.add_rule("communities.is_moderator", is_moderator)
 rules.add_rule("communities.is_member", is_member)
 
-rules.add_perm("communities.view_community", is_visitor)
+rules.add_perm("communities.view_community", is_member)
 rules.add_perm("communities.manage_community", is_admin)
 rules.add_perm("communities.moderate_community", is_moderator)
 

@@ -9,8 +9,5 @@
 {% include "includes/sidebars/members.html" %}
 {% elif user.is_authenticated %}
 {% include "includes/sidebars/non_members.html" %}
-{% else %}
-{% include "includes/sidebars/anonymous.html" %}
 {% endif %}
 
-{% include "includes/sidebars/description.html" %}

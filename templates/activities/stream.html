@@ -4,13 +4,10 @@
 {% extends "activities/base.html" %}
 
 {% load i18n %}
-{% load rules %}
 {% load users_tags %}
 
 {% block subtitle %} | {% trans "Home" %}{% endblock %}
 {% block content %}
-{% has_perm 'activities.create_activity' user community as can_create_activity %}
-{% if can_create_activity %}
 <div class="mb-1">
     <div class="input-group">
         <span class="input-group-addon">
@@ -24,21 +21,12 @@
                placeholder="{% trans "What's on your mind?" %}">
     </div>
 </div>
-{% elif user.is_authenticated %}
-<p class="toast text-center my-1">
-    {% if join_request_sent %}
-    {% trans "Your application to join this community is pending approval from the site admins." %}
-    {% else %}
-    {% url 'join_requests:create' as join_request_url %}
-    {% blocktrans %}You do not have permission to post to this site. You can send a request to join this community <a href="{{ join_request_url }}">here</a>.{% endblocktrans %}
-    {% endif %}
-</p>
-{% else %}
-<p class="toast text-center my-1">
-    {% url 'account_login' as login_url %}
-    {% blocktrans %}Please <a href="{{ login_url }}">sign in</a> to post content to this site.{% endblocktrans %}
-</p>
-{% endif %}
+<div class="actions">
+    <a href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
+    <a href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
+    <a href="{% url 'activities:timeline' %}">{% trans "Timeline" %}</a>
+</div>
+<div class="divider"></div>
 
 {% if request.do_not_track and not user.show_embedded_content %}
 <p class="toast text-center my-1 d-hide"
@@ -58,16 +46,6 @@
     {% endif %}
 </p>
 {% endif %}
-
-{% if can_create_activity %}
-<div class="actions">
-    <a href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
-    <a href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
-    <a href="{% url 'activities:timeline' %}">{% trans "Timeline" %}</a>
-</div>
-<div class="divider"></div>
-{% endif %}
-
 
 {% include "activities/includes/activity_list.html" %}
 {% endblock content %}

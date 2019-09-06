@@ -6,7 +6,6 @@ from PIL import Image
 from django.core.files import File
 from django.urls import reverse
 
-from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.likes.models import Like
 from localhub.photos.tests.factories import PhotoFactory
@@ -86,15 +85,7 @@ class TestPhotoDeleteView:
 
 
 class TestPhotoDetailView:
-    def test_get(self, client, photo):
-        response = client.get(
-            photo.get_absolute_url(), HTTP_HOST=photo.community.domain
-        )
-        assert response.status_code == 200
-        assert "comment_form" not in response.context
-
-    def test_get_if_can_photo_comment(self, client, photo, login_user):
-        Membership.objects.create(member=login_user, community=photo.community)
+    def test_get(self, client, photo, member):
         response = client.get(
             photo.get_absolute_url(), HTTP_HOST=photo.community.domain
         )

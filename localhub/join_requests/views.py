@@ -3,7 +3,9 @@
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 
@@ -56,11 +58,20 @@ class JoinRequestListView(
 join_request_list_view = JoinRequestListView.as_view()
 
 
-class JoinRequestCreateView(CommunityRequiredMixin, CreateView):
+class JoinRequestCreateView(
+    CommunityRequiredMixin, LoginRequiredMixin, CreateView
+):
     model = JoinRequest
     form_class = JoinRequestForm
     success_url = settings.HOME_PAGE_URL
-    allow_if_private = True
+    allow_non_members = True
+
+    def get(self, request, *args, **kwargs):
+        if JoinRequest.objects.filter(
+            sender=request.user, community=request.community
+        ).exists():
+            return redirect("community_access_denied")
+        return super().get(request, *args, **kwargs)
 
     def get_form(self, data=None, files=None):
         return self.form_class(

@@ -1,13 +1,40 @@
-{% extends "no_sidebar_base.html" %}
+{% extends user.is_authenticated|yesno:"base.html,no_sidebar_base.html" %}
 {% load i18n %}
 
 {% block content %}
-<div class="col-6 col-sm-12 col-mx-auto">
-  <div class="empty">
-    <h5 class="empty-title">{% trans "Access Denied" %}</h5>
-    <p>
-      {% trans "You do not have permission to view content in this community" %}
-    </p>
-  </div>
+{% if user.is_anonymous %}
+<div class="col-6 col-mx-auto col-sm-12">
+{% endif %}
+
+{% if community.intro %}
+{{ community.intro.markdown }}
+<div class="divider"></div>
+{% endif %}
+<p>
+  {% if user.is_authenticated %}
+
+  {% if join_request_sent %}
+
+  {% blocktrans %}
+  Your request for an invite has been sent to the community admins. You will receive an email when they have made their decision.
+  {% endblocktrans %}
+
+  {% else %}
+  {% url 'join_requests:create' as join_request_url %}
+  {% blocktrans %}
+  You are not a member of this community. You can request an invite <a href="{{ join_request_url }}">here</a>.
+  {% endblocktrans %}
+  {% endif %}
+
+  {% else %}
+
+  {% url 'account_login' as login_url %}
+  {% url 'account_signup' as signup_url %}
+  {% blocktrans %}Please <a href="{{ login_url }}">sign in</a> to get started. If you haven't joined yet, get started by signing up <a href="{{ signup_url }}">here</a>.{% endblocktrans %}
+  {% endif %}
+</p>
+{% if user.is_anonymous %}
 </div>
+{% endif %}
+
 {% endblock %}

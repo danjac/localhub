@@ -148,3 +148,20 @@
   </li>
   {% endif %}
 </ul>
+
+{% if community.description or community.terms %}
+<ul class="menu mt-1">
+  <li class="menu-item">
+    <a data-controller="active-link"
+       data-active-link-exact
+       href="{% url 'communities:community_detail' %}">
+      {% trans "About This Site" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'communities:community_terms' %}">
+      {% trans "Terms" %}
+    </a>
+  </li>
+</ul>
+{% endif %}

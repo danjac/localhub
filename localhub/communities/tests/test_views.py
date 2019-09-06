@@ -30,10 +30,10 @@ my_view = MyView.as_view()
 
 
 class TestCommunityRequiredMixin:
-    def test_community_available(self, community, rf):
+    def test_community_available(self, member, rf):
         req = rf.get("/")
-        req.community = community
-        req.user = AnonymousUser()
+        req.community = member.community
+        req.user = member.member
         assert my_view(req).status_code == 200
 
     def test_community_not_found(self, rf):
@@ -49,35 +49,35 @@ class TestCommunityRequiredMixin:
 
     def test_community_access_denied_if_anonymous(self, rf):
         req = rf.get("/")
-        req.community = CommunityFactory(public=False)
+        req.community = CommunityFactory()
         req.user = AnonymousUser()
-        assert my_view(req).url.startswith(reverse("account_login"))
+        assert my_view(req).url == reverse("community_access_denied")
 
-    def test_community_access_denied_if_private_allowed(
+    def test_community_access_denied_if_non_members_allowed(
         self, rf, user
     ):
         req = rf.get("/")
-        req.community = CommunityFactory(public=False)
+        req.community = CommunityFactory()
         req.user = user
-        my_public_view = MyView.as_view(allow_if_private=True)
+        my_public_view = MyView.as_view(allow_non_members=True)
         assert my_public_view(req).status_code == 200
 
     def test_community_access_denied_if_authenticated(self, rf, user):
         req = rf.get("/")
-        req.community = CommunityFactory(public=False)
+        req.community = CommunityFactory()
         req.user = user
         assert my_view(req).url == reverse("community_access_denied")
 
     def test_community_access_denied_if_ajax(self, rf, user):
         req = rf.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
-        req.community = CommunityFactory(public=False)
+        req.community = CommunityFactory()
         req.user = user
         with pytest.raises(PermissionDenied):
             my_view(req)
 
 
 class TestCommunityDetailView:
-    def test_get(self, client, community):
+    def test_get(self, client, member):
         assert (
             client.get(reverse("communities:community_detail")).status_code
             == 200
@@ -85,7 +85,7 @@ class TestCommunityDetailView:
 
 
 class TestCommunityTermsView:
-    def test_get(self, client, community):
+    def test_get(self, client, member):
         assert (
             client.get(reverse("communities:community_terms")).status_code
             == 200

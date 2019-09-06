@@ -4,7 +4,6 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import redirect_to_login
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.forms import ModelForm
@@ -19,7 +18,9 @@ from vanilla import DeleteView, DetailView, ListView, TemplateView, UpdateView
 from localhub.communities.emails import send_membership_deleted_email
 from localhub.communities.forms import MembershipForm
 from localhub.communities.models import Community, Membership
+from localhub.communities.rules import is_member
 from localhub.common.views import SearchMixin
+from localhub.join_requests.models import JoinRequest
 
 
 class CommunityRequiredMixin:
@@ -32,12 +33,12 @@ class CommunityRequiredMixin:
     then they are redirected to the login page first to authenticate so
     their membership can be properly verified.
 
-    If the view has the `allow_if_private` property *True* then the above
+    If the view has the `allow_non_members` property *True* then the above
     rule is overriden - for example in some cases where we want to allow
     the user to be able to handle an invitation.
     """
 
-    allow_if_private = False
+    allow_non_members = False
 
     def dispatch(self, request, *args, **kwargs):
         if not request.community.active:
@@ -47,7 +48,7 @@ class CommunityRequiredMixin:
             not request.user.has_perm(
                 "communities.view_community", request.community
             )
-            and not self.allow_if_private
+            and not self.allow_non_members
         ):
             return self.handle_community_access_denied()
         return super().dispatch(request, *args, **kwargs)
@@ -55,8 +56,6 @@ class CommunityRequiredMixin:
     def handle_community_access_denied(self):
         if self.request.is_ajax():
             raise PermissionDenied(_("You must be a member of this community"))
-        if self.request.user.is_anonymous:
-            return redirect_to_login(self.request.get_full_path())
         return HttpResponseRedirect(reverse("community_access_denied"))
 
     def handle_community_not_found(self):
@@ -107,6 +106,19 @@ class CommunityAccessDeniedView(TemplateView):
 
     template_name = "communities/access_denied.html"
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["join_request_sent"] = (
+            self.request.user.is_authenticated
+            and not is_member(self.request.user, self.request.community)
+            and JoinRequest.objects.filter(
+                sender=self.request.user,
+                community=self.request.community,
+                status=JoinRequest.STATUS.pending,
+            ).exists()
+        )
+        return data
+
 
 community_access_denied_view = CommunityAccessDeniedView.as_view()
 
@@ -118,10 +130,10 @@ class CommunityUpdateView(
         "name",
         "logo",
         "tagline",
+        "intro",
         "description",
         "terms",
         "content_warning_tags",
-        "public",
         "blacklisted_email_domains",
         "blacklisted_email_addresses",
     )
@@ -150,7 +162,7 @@ class CommunityUpdateView(
 community_update_view = CommunityUpdateView.as_view()
 
 
-class CommunityListView(SearchMixin, ListView):
+class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
     """
     Returns all public communities, or communities the
     current user belongs to.
@@ -161,7 +173,7 @@ class CommunityListView(SearchMixin, ListView):
 
     def get_queryset(self):
         qs = (
-            Community.objects.available(self.request.user)
+            Community.objects.filter(active=True)
             .with_num_members()
             .order_by("name")
         )

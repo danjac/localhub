@@ -43,7 +43,6 @@ class RequestCommunity:
     id = None
     pk = None
 
-    public: bool = False
     active: bool = False
 
     def get_absolute_url(self):
@@ -85,9 +84,7 @@ class CommunityQuerySet(models.QuerySet):
                 )
             )
 
-        return qs.filter(
-            models.Q(models.Q(public=True) | models.Q(is_member=True))
-        ).distinct()
+        return qs.filter(is_member=True).distinct()
 
 
 class CommunityManager(models.Manager):
@@ -129,9 +126,22 @@ class Community(TimeStampedModel):
         help_text=_("Logo will be rendered in PNG format."),
     )
 
-    tagline = models.TextField(blank=True)
+    tagline = models.TextField(
+        blank=True,
+        help_text=_("Short description shown in your Local Network."),
+    )
 
-    description = MarkdownField(blank=True)
+    intro = MarkdownField(
+        blank=True,
+        help_text=_("Text shown in Login and other pages to non-members."),
+    )
+
+    description = MarkdownField(
+        blank=True,
+        help_text=_(
+            "Longer description of site shown to members in Description page."
+        ),
+    )
 
     terms = MarkdownField(
         blank=True,
@@ -164,14 +174,6 @@ class Community(TimeStampedModel):
         settings.AUTH_USER_MODEL,
         through="Membership",
         related_name="communities",
-    )
-
-    public = models.BooleanField(
-        default=True,
-        help_text=_(
-            "This community is open to the world. "
-            "Non-members can view all published content."
-        ),
     )
 
     active = models.BooleanField(
