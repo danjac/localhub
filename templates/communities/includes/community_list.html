@@ -2,37 +2,36 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
+{% load thumbnail %}
 
 {% include "includes/search_form.html" %}
+{% for object in object_list %}
+<div class="card">
+  <div class="card-header">
+    <div class="card-title h6">
+      {% thumbnail community.logo "60" format="PNG" as logo %}
+      {% if logo %}
+      <img src="{{ logo.url }}"
+           width="{{ logo.width }}"
+           height="{{ logo.height }}"
+           alt="{{ object.name }}">
+      {% endif %}
+      {% if object == community %}
+      {{ object.name }}
+      {% else %}
+      <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+      {% endif %}
 
-<table class="table table-striped table-hover table-responsive-sm">
-  <thead>
-    <tr>
-      <th>{% trans "Community" %}</th>
-      <th>{% trans "Members" %}</th>
-      <th>{% trans "Tagline" %}</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for object in object_list %}
-    <tr>
-      <td>
-        {% if object == community %}
-        {{ object.name }}
-        {% else %}
-        <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
-        {% endif %}
+      {% if object.is_member %}
+      <span class="chip bg-primary">{% trans "Member" %}</span>
+      {% endif %}
+    </div>
+  </div>
 
-        {% if object.is_member %}
-        <span class="chip bg-primary">{% trans "Member" %}</span>
-        {% endif %}
+  <div class="card-body">
+    {{ object.tagline|linebreaksbr }}
+  </div>
+</div>
+{% endfor %}
 
-      </td>
-      <td>{{ object.num_members }}</td>
-      <td>{{ object.tagline|default:"-"|linebreaksbr }}</td>
-    </tr>
-    {% endfor %}
-
-  </tbody>
-</table>
 {% include "includes/pagination.html" %}

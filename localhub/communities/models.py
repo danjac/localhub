@@ -132,8 +132,7 @@ class Community(TimeStampedModel):
     )
 
     tagline = models.TextField(
-        blank=True,
-        help_text=_("Short description shown in your Local Network."),
+        blank=True, help_text=_("Summary shown in your Local Network.")
     )
 
     intro = MarkdownField(

@@ -189,7 +189,6 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
     def get_queryset(self):
         qs = (
             Community.objects.filter(active=True)
-            .with_num_members()
             .with_is_member(self.request.user)
             .order_by("name")
         )
