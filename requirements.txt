@@ -5,6 +5,7 @@
 #    pip-compile requirements.in
 #
 amqp==2.5.1               # via kombu
+apipkg==1.5               # via execnet
 asn1crypto==0.24.0        # via cryptography
 atomicwrites==1.3.0       # via pytest
 attrs==19.1.0             # via packaging, pytest
@@ -14,8 +15,8 @@ backcall==0.1.0           # via ipython
 beautifulsoup4==4.8.0
 billiard==3.6.1.0         # via celery
 bleach==3.1.0
-boto3==1.9.220
-botocore==1.12.220        # via boto3, s3transfer
+boto3==1.9.224
+botocore==1.12.224        # via boto3, s3transfer
 celery==4.3.0
 certifi==2019.6.16        # via requests
 cffi==1.12.3              # via cryptography
@@ -27,7 +28,7 @@ decorator==4.4.0          # via ipython, ratelim, traitlets
 defusedxml==0.6.0         # via python3-openid
 dj-database-url==0.5.0
 django-allauth==0.40.0
-django-anymail[mailgun]==6.1.0
+django-anymail[mailgun]==7.0.0
 django-appconf==1.0.3     # via django-celery-email
 django-celery-email==2.0.2
 django-configurations==2.1
@@ -46,6 +47,7 @@ django-vanilla-views==1.0.6
 django-widget-tweaks==1.4.5
 django==2.2.5
 docutils==0.15.2          # via botocore
+execnet==1.7.1            # via pytest-xdist
 factory-boy==2.12.0
 faker==2.0.1              # via factory-boy
 flower==0.9.3
@@ -85,7 +87,9 @@ pygments==2.4.2           # via django-silk, ipython
 pyparsing==2.4.2          # via packaging
 pytest-cov==2.7.1
 pytest-django==3.5.1
+pytest-forked==1.0.2      # via pytest-xdist
 pytest-mock==1.10.4
+pytest-xdist==1.29.0
 pytest==5.1.2
 python-dateutil==2.8.0    # via botocore, django-silk, faker, icalendar
 python3-openid==3.1.0     # via django-allauth
@@ -97,7 +101,7 @@ requests-oauthlib==1.2.0  # via django-allauth
 requests==2.22.0          # via django-allauth, django-anymail, django-silk, geocoder, pywebpush, requests-oauthlib
 rules==2.1
 s3transfer==0.2.1         # via boto3
-six==1.12.0               # via bleach, cryptography, django-anymail, django-appconf, django-extensions, django-simple-history, faker, geocoder, packaging, prompt-toolkit, python-dateutil, traitlets
+six==1.12.0               # via bleach, cryptography, django-anymail, django-appconf, django-extensions, django-simple-history, faker, geocoder, packaging, prompt-toolkit, pytest-xdist, python-dateutil, traitlets
 sorl-thumbnail==12.5.0
 soupsieve==1.9.3          # via beautifulsoup4
 sqlparse==0.3.0           # via django, django-debug-toolbar, django-silk
@@ -108,7 +112,7 @@ urllib3==1.25.3           # via botocore, requests
 vine==1.3.0               # via amqp, celery
 wcwidth==0.1.7            # via prompt-toolkit, pytest
 webencodings==0.5.1       # via bleach
-werkzeug==0.15.5
+werkzeug==0.15.6
 zipp==0.6.0               # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
