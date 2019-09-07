@@ -12,12 +12,12 @@
 {% include "includes/breadcrumbs.html" %}
 {% block activities_detail_content %}{% endblock %}
 {% include "flags/includes/flags.html" %}
-<div class="comments mt-1" id="comments">
+<div class="comments mt-2" id="comments">
   {% if comments %}
   <div class="divider text-center" data-content="{% trans 'Comments' %}"></div>
   {% endif %}
   {% for comment in comments %}
-  <div class="mb-1">
+  <div class="mb-2">
     {% include "comments/includes/comment.html" %}
   </div>
   {% endfor %}
@@ -25,14 +25,14 @@
   <div class="divider"></div>
   {% simple_ajax_form comment_form action=object.get_create_comment_url %}
   {% elif not object.allow_comments %}
-  <p class="toast text-center my-1">{% trans "Comments are locked" %}</p>
+  <p class="toast text-center my-2">{% trans "Comments are locked" %}</p>
   {% elif not user.is_authenticated %}
-  <p class="toast text-center my-1">
+  <p class="toast text-center my-2">
     {% url 'account_login' as login_url %}
     {% blocktrans with next_url=request.path %}Please <a href="{{ login_url }}?next={{ next_url }}">sign in</a> to post comments.{% endblocktrans %}
   </p>
   {% else %}
-  <p class="toast text-center my-1">
+  <p class="toast text-center my-2">
     {% trans "You do not have permission to post comments on this site." %}
   </p>
   {% endif %}

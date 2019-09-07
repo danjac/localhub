@@ -64,12 +64,10 @@
                 data-controller="form"
                 data-action="form#submit"
                 >
-                <div class="input-group input-inline">
-                  <input class="form-input bg-dark text-light" name="q" type="search" placeholder="{% trans "Search" %}">
-                  <button class="btn input-group-btn bg-dark text-light">
-                    {% trans "Search" %}
-                  </button>
-                </div>
+                <input class="form-input bg-dark text-light"
+                       name="q"
+                       type="search"
+                       placeholder="{% trans "Search" %}">
           </form>
         </section>
         {% endif %}
@@ -100,81 +98,76 @@
       {% if can_view_community %}
       <form method="GET"
             action="{% url 'activities:search' %}"
-            class="form-horizontal show-sm mb-1"
+            class="form-horizontal show-sm mb-2"
             data-controller="form"
             data-action="form#submit"
             >
-            <div class="input-group">
-              <input class="form-input" name="q" type="search" placeholder="{% trans "Search" %}">
-              <button class="btn input-group-btn">
-                {% trans "Search" %}
-              </button>
-            </div>
+            <input class="form-input bg-dark text-white" name="q" type="search" placeholder="{% trans "Search" %}">
       </form>
-      {% endif %}
-      {% endblock mobile_search_form %}
+        {% endif %}
+        {% endblock mobile_search_form %}
 
-      <div class="columns p-1 bg-light">
+        <div class="columns p-1 bg-light">
 
-        <div class="text-center mb-1 toast toast-primary d-hide"
-             data-controller="cookie-notice"
-             data-cookie-notice-name="accept-cookies"
-             data-cookie-notice-domain="{{ community.domain }}">
-          <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
-          {% blocktrans %}
-          This site uses cookies for authentication purposes only. We do not share your personal
-          information with third parties.
-          {% endblocktrans %}
-        </div>
-
-
-        {% for message in messages %}
-        <div class="text-center my-1 toast toast-{{ message.tags }}" data-controller="alert">
-          <button class="btn btn-clear float-right" data-action="alert#dismiss"></button>
-          {{ message }}
-        </div>
-        {% endfor %}
-      </div>
-
-
-      {% block main_layout %}
-      <main role="main" class="columns bg-light py-1" data-controller="sidebar">
-
-        <aside role="sidebar" class="column col-2 col-lg-12 hide-lg p-1"
-             data-target="sidebar.nav"
-             >
-             <div class="show-lg hide-xl mb-1">
-               <a href="#"
-                  class="btn btn-block"
-                  data-action="sidebar#toggle"
-                  >{% trans "Close Sidebar" %}</a>
-             </div>
-          {% block sidebar_content %}
-          {% include "includes/sidebar.html" %}
-          {% endblock %}
-        </aside>
-        <div class="column col-10 col-lg-12 bg-light pt-1" data-target="sidebar.main">
-          <div class="show-lg hide-xl mb-1">
-            <a href="#"
-               class="btn btn-block"
-               data-action="sidebar#toggle"
-               >
-               {% block sidebar_toggle %}
-               {% get_unread_notification_count user community as unread_notifications %}
-               {% get_unread_message_count user community as unread_messages %}
-               {% with total_notifications_count=unread_notifications|add:unread_messages %}
-               <span{% if total_notifications_count %} class="badge" data-badge="{{ total_notifications_count }}"{% endif %}>
-                 {% trans "Sidebar" %}
-               </span>
-              {% endwith %}
-              {% endblock %}
-            </a>
+          <div class="text-center mb-2 toast toast-primary d-hide"
+               data-controller="cookie-notice"
+               data-cookie-notice-name="accept-cookies"
+               data-cookie-notice-domain="{{ community.domain }}">
+            <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
+            {% blocktrans %}
+            This site uses cookies for authentication purposes only. We do not share your personal
+            information with third parties.
+            {% endblocktrans %}
           </div>
-          <div class="clearfix"></div>
-          {% block content %}{% endblock content %}
+
+
+          {% for message in messages %}
+          <div class="text-center my-2 toast toast-{{ message.tags }}" data-controller="alert">
+            <button class="btn btn-clear float-right" data-action="alert#dismiss"></button>
+            {{ message }}
+          </div>
+          {% endfor %}
         </div>
-      </main>
-      {% endblock main_layout %}
+
+
+        {% block main_layout %}
+        <main role="main" class="columns bg-light py-1" data-controller="sidebar">
+
+          <aside role="sidebar" class="column col-2 col-lg-12 hide-lg p-1"
+                                data-target="sidebar.nav"
+                                >
+                                <div class="show-lg hide-xl mb-2">
+                                  <a href="#"
+                                     class="btn btn-block"
+                                     data-action="sidebar#toggle"
+                                     >{% trans "Close Sidebar" %}</a>
+                                </div>
+            {% block sidebar_content %}
+            {% include "includes/sidebar.html" %}
+            {% endblock %}
+          </aside>
+          <div class="column col-10 col-lg-12 bg-light pt-1" data-target="sidebar.main">
+            <div class="show-lg hide-xl mb-2">
+              <a href="#"
+                 class="btn btn-block"
+                 data-action="sidebar#toggle"
+                 >
+                 {% block sidebar_toggle %}
+                 {% get_unread_notification_count user community as unread_notifications %}
+                 {% get_unread_message_count user community as unread_messages %}
+                 {% with total_notifications_count=unread_notifications|add:unread_messages %}
+                 <span{% if total_notifications_count %} class="badge" data-badge="{{ total_notifications_count }}"{% endif %}>
+                   {% trans "Sidebar" %}
+                 </span>
+                {% endwith %}
+                {% endblock %}
+              </a>
+            </div>
+            <div class="clearfix"></div>
+            {% block content %}{% endblock content %}
+          </div>
+        </main>
+        {% endblock main_layout %}
     </div>
     {% include "includes/footer.html" %}
     {% include "includes/confirm_dialog.html" %}

@@ -4,7 +4,7 @@
 {% load i18n %}
 
 {% if user.is_authenticated %}
-<div class="text-center my-1 toast d-hide"
+<div class="text-center my-2 toast d-hide"
      data-controller="notifications"
      data-notifications-service-worker-url="{% url 'notifications:service_worker' %}"
      data-notifications-subscribe-url="{% url 'notifications:subscribe' %}"

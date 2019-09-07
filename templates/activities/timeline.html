@@ -21,7 +21,7 @@
 </div>
 
 {% if years|length > 1 %}
-<div class="actions mt-1">
+<div class="actions mt-2">
     {% for year in years %}
     <a href="{{ request.path }}?year={{ year }}">{{ year }}</a>
     {% endfor %}
@@ -29,7 +29,7 @@
 {% endif %}
 
 {% if months|length > 1 %}
-<div class="actions mt-1">
+<div class="actions mt-2">
     {% for order, name in months %}
     <a href="{{ request.path }}?month={{ order }}&year={{ current_year }}">{{ name }}</a>
     {% endfor %}
