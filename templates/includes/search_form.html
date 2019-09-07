@@ -8,21 +8,16 @@
       data-action="form#submit"
       class="my-2"
       >
-      <div class="input-group{% if is_search_form_inline %} input-inline{% endif %}">
-        <input class="form-input"
-               name="q"
-               type="search"
-               placeholder="{% trans "Search" %}"
-               value="{{ view.search_query|default:"" }}">
-        <button class="btn input-group-btn">
-          {% trans "Search" %}
-        </button>
-      </div>
+      <input class="form-input"
+             name="q"
+             type="search"
+             placeholder="{% trans "Search" %}"
+             value="{{ view.search_query|default:"" }}">
       {% if view.search_query %}
-      <a class="btn btn-link btn-block" href="{{ request.path }}">
+      <a class="btn btn-link btn-block mt-2" href="{{ request.path }}">
         {% trans "Clear Search" %}
       </a>
-      {% endif %}
+  {% endif %}
 </form>
 
 {% if view.search_query and object_list %}

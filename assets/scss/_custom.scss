@@ -2,12 +2,17 @@ main {
   min-height: 800px;
 }
 
-header a, footer a {
-  @extend .text-light;
+header {
+  a {
+    @extend .text-light;
+  }
 }
 
-footer a {
-  text-decoration: underline;
+footer {
+  a {
+    @extend .text-light;
+    text-decoration: underline;
+  }
 }
 
 a {
@@ -87,8 +92,18 @@ a {
   font-weight: bold;
 }
 
+.form-input {
+  &::placeholder {
+    color: $gray-color-dark;
+  }
+  &.bg-dark {
+    &::placeholder {
+      color: $light-color;
+    }
+  }
+}
+
 .info {
-  // font-size: $font-size-sm;
   color: $gray-color-dark;
 }
 
