@@ -138,10 +138,9 @@
 
 
       {% block main_layout %}
-      <main class="columns bg-light py-1" data-controller="sidebar">
+      <main role="main" class="columns bg-light py-1" data-controller="sidebar">
 
-
-        <div class="column col-2 col-lg-12 hide-lg p-1"
+        <aside role="sidebar" class="column col-2 col-lg-12 hide-lg p-1"
              data-target="sidebar.nav"
              >
              <div class="show-lg hide-xl mb-1">
@@ -153,7 +152,7 @@
           {% block sidebar_content %}
           {% include "includes/sidebar.html" %}
           {% endblock %}
-        </div>
+        </aside>
         <div class="column col-10 col-lg-12 bg-light pt-1" data-target="sidebar.main">
           <div class="show-lg hide-xl mb-1">
             <a href="#"
