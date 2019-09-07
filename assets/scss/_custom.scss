@@ -8,6 +8,11 @@ a {
     color: $link-color;
   }
 }
+
+.navbar a {
+  @extend .text-light;
+}
+
 .actions {
   &.actions-sm {
     font-size: $font-size-sm;

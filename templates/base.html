@@ -41,7 +41,7 @@
     <script defer src="{% static 'dist/main.js' %}"></script>
   </head>
 
-  <body>
+  <body class="bg-dark text-dark">
     <div class="container">
       <header class="navbar p-1">
         <section class="navbar-section">
@@ -65,8 +65,8 @@
                 data-action="form#submit"
                 >
                 <div class="input-group input-inline">
-                  <input class="form-input" name="q" type="search" placeholder="{% trans "Search" %}">
-                  <button class="btn input-group-btn">
+                  <input class="form-input bg-dark text-light" name="q" type="search" placeholder="{% trans "Search" %}">
+                  <button class="btn input-group-btn bg-dark text-light">
                     {% trans "Search" %}
                   </button>
                 </div>
