@@ -2,15 +2,19 @@ main {
   min-height: 800px;
 }
 
+header a, footer a {
+  @extend .text-light;
+}
+
+footer a {
+  text-decoration: underline;
+}
+
 a {
   color: $link-color-dark;
   &:visited {
     color: $link-color;
   }
-}
-
-.navbar a {
-  @extend .text-light;
 }
 
 .actions {
