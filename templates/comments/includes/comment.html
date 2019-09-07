@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load rules %}
 
-<div class="card" id="comment-{{ comment.id }}">
+<article class="card" role="comment" id="comment-{{ comment.id }}">
     <div class="card-header">
         {% has_perm "communities.moderate_community" user community as can_moderate_community %}
         {% if comment.is_flagged and can_moderate_community %}
@@ -108,4 +108,4 @@
         </div>
     </div>
     {% endif %}
-</div>
+</article>
