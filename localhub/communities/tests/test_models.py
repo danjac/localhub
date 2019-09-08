@@ -11,6 +11,7 @@ from localhub.communities.tests.factories import (
     CommunityFactory,
     MembershipFactory,
 )
+from localhub.join_requests.models import JoinRequest
 from localhub.users.tests.factories import UserFactory
 
 
@@ -23,33 +24,31 @@ class TestCommunityManager:
         community = Community.objects.with_num_members().first()
         assert community.num_members == 1
 
-    def test_available_if_anonymous_and_public(self):
-        community = CommunityFactory(public=True)
-        assert (
-            Community.objects.available(AnonymousUser()).first() == community
-        )
+    def test_with_is_member_if_member(self):
+        community = CommunityFactory()
+        member = MembershipFactory(community=community).member
+        assert Community.objects.with_is_member(member).first().is_member
 
-    def test_available_if_anonymous_and_private(self):
-        CommunityFactory(public=False)
+    def test_with_is_member_if_not_member(self):
+        CommunityFactory()
+        user = UserFactory()
+        assert not Community.objects.with_is_member(user).first().is_member
+
+    def test_with_is_member_if_anonymous(self):
+        CommunityFactory()
+        user = AnonymousUser()
+        assert not Community.objects.with_is_member(user).first().is_member
+
+    def test_available_if_anonymous(self):
+        CommunityFactory()
         assert Community.objects.available(AnonymousUser()).first() is None
 
-    def test_available_if_not_member_and_public(self):
+    def test_available_if_not_member(self):
         user = UserFactory()
-        community = CommunityFactory(public=True)
-        assert Community.objects.available(user).first() == community
-
-    def test_available_if_not_member_and_private(self):
-        user = UserFactory()
-        CommunityFactory(public=False)
         assert Community.objects.available(user).first() is None
 
-    def test_available_if_member_and_public(self):
-        community = CommunityFactory(public=True)
-        member = MembershipFactory(community=community).member
-        assert Community.objects.available(member).first() == community
-
-    def test_available_if_member_and_private(self):
-        community = CommunityFactory(public=False)
+    def test_available_if_member(self):
+        community = CommunityFactory()
         member = MembershipFactory(community=community).member
         assert Community.objects.available(member).first() == community
 
@@ -122,3 +121,12 @@ class TestCommunityModel:
         community = Community(name="test", domain="testing")
         with pytest.raises(ValidationError):
             community.clean_fields()
+
+
+class TestMembershipModel:
+    def test_join_requests_deleted(self, member, transactional_db):
+        JoinRequest.objects.create(
+            sender=member.member, community=member.community
+        )
+        member.delete()
+        assert not JoinRequest.objects.exists()

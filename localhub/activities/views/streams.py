@@ -16,10 +16,8 @@ from django.views.generic.dates import (
 )
 
 from localhub.common.views import BaseMultipleQuerySetListView, SearchMixin
-from localhub.communities.rules import is_member
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.events.models import Event
-from localhub.join_requests.models import JoinRequest
 from localhub.photos.models import Photo
 from localhub.posts.models import Post
 
@@ -62,20 +60,6 @@ class StreamView(BaseStreamView):
             .following(self.request.user)
             .blocked(self.request.user)
         )
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["join_request_sent"] = (
-            self.request.user.is_authenticated
-            and not is_member(self.request.user, self.request.community)
-            and JoinRequest.objects.filter(
-                sender=self.request.user,
-                community=self.request.community,
-                status=JoinRequest.STATUS.pending,
-            ).exists()
-        )
-
-        return data
 
 
 stream_view = StreamView.as_view()

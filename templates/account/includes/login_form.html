@@ -1,0 +1,23 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+<p>{% blocktrans %}If you have not created an account yet, then please
+  <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}
+</p>
+
+<form method="POST" action="{% url 'account_login' %}">
+
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+
+  {% include "includes/forms/fields.html" %}
+
+  <div class="btn-group">
+    <button class="btn btn-primary" type="submit">{% trans "Sign in" %}</button>
+    <a class="btn btn-link" href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a>
+  </div>
+
+</form>
+

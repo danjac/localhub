@@ -1,0 +1,29 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+
+{% include "includes/search_form.html" %}
+{% for object in object_list %}
+<div class="card mb-2">
+  <div class="card-header">
+    <div class="card-title h6">
+      {% if object == community %}
+      {{ object.name }}
+      {% else %}
+      <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+      {% endif %}
+
+      {% if object.is_member %}
+      <span class="chip bg-primary">{% trans "Member" %}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card-body">
+    {{ object.tagline|linebreaksbr }}
+  </div>
+</div>
+{% endfor %}
+
+{% include "includes/pagination.html" %}

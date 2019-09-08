@@ -1,0 +1,23 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "no_sidebar_base.html" %}
+{% load i18n %}
+
+{% block subtitle %} | {% trans "Local Network" %}{% endblock %}
+
+{% block content %}
+
+<h3>{% trans "Local Network" %}</h3>
+<div class="actions">
+  {% if community %}
+  <a href="{% url 'activities:stream' %}">{% trans "Home" %}</a>
+  {% endif %}
+  <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+</div>
+
+<div class="divider"></div>
+{% include "communities/includes/community_list.html" %}
+
+
+{% endblock %}

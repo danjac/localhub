@@ -6,7 +6,6 @@ import pytest
 from django.urls import reverse
 from django.utils.encoding import force_str
 
-from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.events.models import Event
 from localhub.events.tests.factories import EventFactory
@@ -45,11 +44,11 @@ class TestEventCreateView:
 
 
 class TestEventListView:
-    def test_get(self, client, community):
+    def test_get(self, client, member):
         EventFactory.create_batch(
             3,
-            community=community,
-            owner=MembershipFactory(community=community).member,
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
         )
         response = client.get(reverse("events:list"))
         assert response.status_code == 200
@@ -100,16 +99,7 @@ class TestEventDeleteView:
 
 
 class TestEventDetailView:
-    def test_get(self, client, event):
-        response = client.get(
-            event.get_absolute_url(), HTTP_HOST=event.community.domain
-        )
-        assert response.status_code == 200
-        assert "comment_form" not in dict(response.context or {})
-
-    def test_get_if_can_post_comment(self, client, event, login_user):
-        Membership.objects.create(member=login_user, community=event.community)
-
+    def test_get(self, client, event, member):
         response = client.get(
             event.get_absolute_url(), HTTP_HOST=event.community.domain
         )
@@ -153,7 +143,7 @@ class TestEventDislikeView:
 
 
 class TestEventDownloadView:
-    def test_get(self, client, event):
+    def test_get(self, client, event, member):
         response = client.get(
             reverse("events:download", args=[event.id]),
             HTTP_HOST=event.community.domain,

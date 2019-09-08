@@ -8,7 +8,7 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 from localhub.communities.views import (
-    community_access_denied_view,
+    community_welcome_view,
     community_list_view,
     community_not_found_view,
 )
@@ -33,11 +33,7 @@ urlpatterns = [
     path("network/", community_list_view, name="community_list"),
     path("account/~update", user_update_view, name="user_update"),
     path("account/~delete", user_delete_view, name="user_delete"),
-    path(
-        "access-denied/",
-        view=community_access_denied_view,
-        name="community_access_denied",
-    ),
+    path("welcome/", view=community_welcome_view, name="community_welcome"),
     path(
         "not-found/", view=community_not_found_view, name="community_not_found"
     ),

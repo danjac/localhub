@@ -23,13 +23,8 @@ class JoinRequest(TimeStampedModel):
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
-    email = models.EmailField(null=True, blank=True)
-
     sender = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
     status = StatusField(db_index=True)
@@ -38,21 +33,13 @@ class JoinRequest(TimeStampedModel):
     sent = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        unique_together = ("email", "community", "sender")
+        unique_together = ("community", "sender")
         indexes = [models.Index(fields=["status"])]
 
     def __str__(self):
         if self.sender_id:
             return self.sender.email
         return self.email
-
-    def get_sender(self):
-        qs = get_user_model()._default_manager
-        if self.sender_id:
-            qs = qs.filter(pk=self.sender_id)
-        else:
-            qs = qs.for_email(self.email)
-        return qs.first()
 
     def is_pending(self):
         return self.status == self.STATUS.pending

@@ -17,18 +17,18 @@
     <script defer src="{% static 'dist/main.js' %}"></script>
   </head>
 
-  <body>
+  <body class="bg-dark text-dark">
     <div class="container">
-      <header class="navbar px-1 py-1 my-1">
+      <header class="navbar px-2 py-2 my-2">
         <section class="navbar-section">
           <a class="navbar-brand mr-2" href="/">{% trans "Home" %}</a>
         </section>
       </header>
-      <div class="columns bg-light p-1">
+      <main class="columns bg-light p-2">
         <div class="container text-center">
         {% block content %}{% endblock %}
         </div>
-      </div>
+      </main>
       {% include "includes/footer.html" %}
     </div>
   </body>

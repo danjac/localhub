@@ -1,0 +1,49 @@
+{% extends "no_sidebar_base.html" %}
+{% load i18n %}
+{% load form_tags %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="actions">
+    <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+    <a href="{% url 'community_list' %}">{% trans "Local Network" %}</a>
+</div>
+<div class="divider"></div>
+{% endif %}
+
+{% if community.intro %}
+{{ community.intro.markdown }}
+{% endif %}
+
+{% if user.is_authenticated %}
+<p>
+
+    {% if join_request %}
+
+    {% if join_request.is_pending %}
+    {% blocktrans %}
+    <strong>
+        Your request for an invite has been sent to the community admins. You will receive an email when they have made their decision.
+    </strong>
+    {% endblocktrans %}
+    {% endif %}
+
+    {% elif community.allow_join_requests %}
+
+    {% url 'join_requests:create' as join_request_url %}
+    {% blocktrans %}
+    You are not a member of this community. You can request an invite <a href="{{ join_request_url }}">here</a>.
+    {% endblocktrans %}
+
+    {% endif %}
+</p>
+
+{% else %}
+<h3>{% trans "Login" %}</h3>
+<div class="divider"></div>
+{% url 'account_signup' as signup_url %}
+{% include "account/includes/login_form.html" with form=login_form signup_url=signup_url %}
+{% endif %}
+
+
+{% endblock %}

@@ -101,7 +101,12 @@ class TestInviteAcceptView:
         assert invite.is_rejected()
 
     def test_current_user_is_not_member(
-        self, client, community, login_user, mailoutbox
+        self,
+        client,
+        community,
+        login_user,
+        mailoutbox,
+        send_notification_webpush_mock,
     ):
         sender = MembershipFactory(community=community).member
         sender.email_preferences = ["new_member"]

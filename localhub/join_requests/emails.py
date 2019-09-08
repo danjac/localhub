@@ -1,7 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.conf import settings
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.template.loader import render_to_string
@@ -34,9 +33,8 @@ def send_join_request_email(join_request):
 
 
 def send_acceptance_email(join_request):
-    sender = join_request.get_sender()
-    with override(sender.language if sender else settings.LANGUAGE_CODE):
-        context = {"join_request": join_request, "user": sender}
+    with override(join_request.sender.language):
+        context = {"join_request": join_request, "user": join_request.sender}
         send_mail(
             _("Your request has been approved"),
             render_to_string("join_requests/emails/accepted.txt", context),
@@ -49,14 +47,17 @@ def send_acceptance_email(join_request):
 
 
 def send_rejection_email(join_request):
-    sender = join_request.get_sender()
-    with override(sender.language if sender else settings.LANGUAGE_CODE):
+    with override(join_request.sender.language):
         context = {"join_request": join_request}
         send_mail(
             _("Your request has been rejected"),
             render_to_string("join_requests/emails/rejected.txt", context),
             join_request.community.resolve_email("no-reply"),
-            [sender.email if sender else join_request.email],
+            [
+                join_request.sender.email
+                if join_request.sender
+                else join_request.email
+            ],
             html_message=render_to_string(
                 "join_requests/emails/rejected.html", context
             ),

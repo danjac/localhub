@@ -57,7 +57,7 @@ class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
 
     def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.object.content_object) + [
-            ("#", _("Comment"))
+            (None, _("Comment"))
         ]
 
     def get_flags(self):
@@ -99,7 +99,7 @@ class CommentUpdateView(
 
     def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.object.content_object) + [
-            (self.request.path, _("Edit Comment"))
+            (None, _("Edit Comment"))
         ]
 
     def form_valid(self, form):
@@ -208,7 +208,7 @@ class CommentFlagView(
 
     def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.comment.content_object) + [
-            (self.request.path, _("Flag Comment"))
+            (None, _("Flag Comment"))
         ]
 
     def form_valid(self, form):
@@ -264,7 +264,7 @@ class CommentReplyView(
     def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.parent.content_object) + [
             (self.parent.get_absolute_url(), self.parent.abbreviate()),
-            ("#", _("Reply")),
+            (None, _("Reply")),
         ]
 
     @cached_property

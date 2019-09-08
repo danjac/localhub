@@ -15,7 +15,7 @@
 <h4>@{{ user_obj.username }}</h4>
 
 {% if user_obj.bio %}
-<p class="py-1">
+<p class="py-2">
   {{ user_obj.bio|urlize|linebreaksbr }}
 </p>
 {% elif is_current_user %}

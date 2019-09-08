@@ -18,15 +18,14 @@ pytestmark = pytest.mark.django_db
 
 class TestActivityStreamView:
     def test_get_if_anonymous(self, client, community):
-        member = MembershipFactory(community=community)
-        PostFactory(community=community, owner=member.member)
-        EventFactory(community=community, owner=member.member)
-
         response = client.get(reverse("activities:stream"))
-        assert response.status_code == 200
-        assert len(response.context["object_list"]) == 2
+        assert response.url == reverse("community_welcome")
 
-    def test_get_if_authenticated(self, client, member):
+    def test_get_if_non_member(self, client, login_user, community):
+        response = client.get(reverse("activities:stream"))
+        assert response.url == reverse("community_welcome")
+
+    def test_get_if_member(self, client, member):
         EventFactory(community=member.community, owner=member.member)
         PostFactory(community=member.community, owner=member.member)
         PostFactory(community=member.community, owner=member.member)
@@ -37,10 +36,9 @@ class TestActivityStreamView:
 
 
 class TestActivityTimelineView:
-    def test_get_if_anonymous(self, client, community):
-        member = MembershipFactory(community=community)
-        PostFactory(community=community, owner=member.member)
-        EventFactory(community=community, owner=member.member)
+    def test_get(self, client, member):
+        PostFactory(community=member.community, owner=member.member)
+        EventFactory(community=member.community, owner=member.member)
 
         response = client.get(reverse("activities:timeline"))
         assert response.status_code == 200
@@ -49,31 +47,30 @@ class TestActivityTimelineView:
 
 
 class TestActivitySearchView:
-    @pytest.mark.django_db(transaction=True)
-    def test_get(self, client, community):
-        member = MembershipFactory(community=community)
+    def test_get(self, client, member, transactional_db):
         PostFactory(
-            community=community, title="test", owner=member.member
+            community=member.community, title="test", owner=member.member
         )
         EventFactory(
-            community=community, title="test", owner=member.member
+            community=member.community, title="test", owner=member.member
         )
 
         response = client.get(reverse("activities:search"), {"q": "test"})
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 2
 
-    @pytest.mark.django_db(transaction=True)
-    def test_get_hashtag(self, client, community):
-        member = MembershipFactory(community=community)
+    def test_get_hashtag(self, client, member, transactional_db):
+        member = MembershipFactory(community=member.community)
         PostFactory(
-            community=community, description="#testme", owner=member.member
+            community=member.community,
+            description="#testme",
+            owner=member.member,
         )
         response = client.get(reverse("activities:search"), {"q": "#testme"})
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 1
 
-    def test_get_if_search_string_empty(self, client, community):
+    def test_get_if_search_string_empty(self, client, member):
 
         response = client.get(reverse("activities:search"))
         assert response.status_code == 200
@@ -81,16 +78,15 @@ class TestActivitySearchView:
 
 
 class TestTagAutocompleteListView:
-    def test_get(self, client, community):
+    def test_get(self, client, member):
 
-        member = MembershipFactory(community=community)
-        PostFactory(community=community, owner=member.member).tags.add(
+        PostFactory(community=member.community, owner=member.member).tags.add(
             "movies"
         )
-        EventFactory(community=community, owner=member.member).tags.add(
+        EventFactory(community=member.community, owner=member.member).tags.add(
             "movies"
         )
-        PhotoFactory(community=community, owner=member.member).tags.add(
+        PhotoFactory(community=member.community, owner=member.member).tags.add(
             "movies"
         )
 
@@ -160,9 +156,8 @@ class TestTagUnblockView:
 
 
 class TestTagListView:
-    def test_get(self, client, community):
-        member = MembershipFactory(community=community)
-        PostFactory(community=community, owner=member.member).tags.add(
+    def test_get(self, client, member):
+        PostFactory(community=member.community, owner=member.member).tags.add(
             "movies"
         )
 

@@ -23,7 +23,7 @@ def post_for_member(member):
 
 
 class TestPostListView:
-    def test_get_if_anonymous(self, client, member):
+    def test_get(self, client, member):
         PostFactory.create_batch(
             3, community=member.community, owner=member.member
         )
@@ -144,15 +144,7 @@ class TestPostDeleteView:
 
 
 class TestPostDetailView:
-    def test_get(self, client, post):
-        response = client.get(
-            post.get_absolute_url(), HTTP_HOST=post.community.domain
-        )
-        assert response.status_code == 200
-        assert "comment_form" not in response.context
-
-    def test_get_if_can_post_comment(self, client, post, login_user):
-        MembershipFactory(member=login_user, community=post.community)
+    def test_get(self, client, post, member):
         response = client.get(
             post.get_absolute_url(), HTTP_HOST=post.community.domain
         )

@@ -1,9 +1,27 @@
+main {
+  min-height: 800px;
+}
+
+header {
+  a {
+    @extend .text-light;
+  }
+}
+
+footer {
+  a {
+    @extend .text-light;
+    text-decoration: underline;
+  }
+}
+
 a {
   color: $link-color-dark;
   &:visited {
     color: $link-color;
   }
 }
+
 .actions {
   &.actions-sm {
     font-size: $font-size-sm;
@@ -26,7 +44,7 @@ a {
 }
 
 .activity-list-item {
-  @extend .mt-1;
+  @extend .mt-2;
 }
 
 .align-center {
@@ -74,8 +92,18 @@ a {
   font-weight: bold;
 }
 
+.form-input {
+  &::placeholder {
+    color: $gray-color-dark;
+  }
+  &.bg-dark {
+    &::placeholder {
+      color: $light-color;
+    }
+  }
+}
+
 .info {
-  // font-size: $font-size-sm;
   color: $gray-color-dark;
 }
 

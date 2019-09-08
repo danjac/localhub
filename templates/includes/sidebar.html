@@ -1,16 +1,167 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{% load i18n %}
 {% load rules %}
+{% load flags_tags %}
+{% load join_request_tags %}
+{% load private_messages_tags %}
+{% load notifications_tags %}
 
-{% test_rule "communities.is_member" user community as is_member %}
+{% has_perm "activities.create_activity" user community as can_create_activity %}
+{% has_perm "communities.moderate_community" user community as can_moderate_community %}
+{% has_perm "communities.manage_community" user community as can_manage_community %}
 
-{% if is_member %}
-{% include "includes/sidebars/members.html" %}
-{% elif user.is_authenticated %}
-{% include "includes/sidebars/non_members.html" %}
-{% else %}
-{% include "includes/sidebars/anonymous.html" %}
+{% get_unread_notification_count user community as unread_notifications %}
+{% get_unread_message_count user community as unread_messages %}
+
+<ul class="menu">
+  <li class="menu-item">
+    <a data-controller="active-link"
+       data-active-link-exact
+       href="{% url 'activities:stream' %}">{% trans "Home" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       data-active-link-exact
+       href="{% url 'activities:timeline' %}">{% trans "Timeline" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'notifications:list' %}">
+      <span {% if unread_notifications %}class="badge" data-badge="{{ unread_notifications }}"{% endif %}>
+        {% trans "Notifications" %}
+      </span>
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'private_messages:inbox' %}">
+      <span {% if unread_messages %}class="badge" data-badge="{{ unread_messages }}"{% endif %}>
+        {% trans "Messages" %}
+      </span>
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       data-active-link-exact
+       href="{% url 'community_list' %}">{% trans "Local Network" %}
+    </a>
+  </li>
+</ul>
+
+{% if can_create_activity %}
+<ul class="menu mt-2">
+  <li class="divider" data-content="{% trans 'Actions' %}"></li>
+  {% if can_create_activity %}
+  <li class="menu-item">
+    <a href="{% url 'posts:create' %}">{% trans "Submit Post" %}</a>
+  </li>
+  <li class="menu-item">
+    <a href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
+  </li>
+  <li class="menu-item">
+    <a href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
+  </li>
+  {% endif %}
+</ul>
 {% endif %}
 
-{% include "includes/sidebars/description.html" %}
+<ul class="menu mt-2">
+  <li class="divider" data-content="{% trans 'People' %}"></li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'users:following_list' %}">
+      {% trans "Following" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'users:follower_list' %}">
+      {% trans "Followers" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'users:blocked_list' %}">
+      {% trans "Blocked" %}
+    </a>
+  </li>
+</ul>
+
+<ul class="menu mt-2">
+  <li class="divider" data-content="{% trans 'Activity' %}"></li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'likes:activities' %}">
+      {% trans "Favorites" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'activities:tag_list' %}">
+      {% trans "Tags" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'events:list' %}">{% trans "Events" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
+  </li>
+  {% if can_moderate_community %}
+  {% get_flags_count as num_flags %}
+  {% if num_flags %}
+  <li class="menu-item">
+    <a href="{% url 'flags:list' %}">
+      <span class="badge" data-badge="{{ num_flags }}">
+        {% trans "Flagged" %}
+      </span>
+    </a>
+  </li>
+  {% endif %}
+  {% endif %}
+</ul>
+
+<ul class="menu mt-2">
+  <li class="divider" data-content="{% trans 'Settings' %}"></li>
+  <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
+  {% if can_manage_community %}
+  <li class="menu-item">
+    <a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'communities:membership_list' %}">{% trans "Members" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
+  </li>
+  <li class="menu-item">
+    {% get_pending_join_request_count community as pending_join_requests %}
+    <a data-controller="active-link" href="{% url 'join_requests:list' %}">
+      <span {% if pending_join_requests %}class="badge" data-badge="{{ pending_join_requests }}"{% endif %}>
+        {% trans "Join Requests" %}
+      </span>
+    </a>
+  </li>
+  {% endif %}
+</ul>
+
+{% if community.description or community.terms %}
+<ul class="menu mt-2">
+  <li class="menu-item">
+    <a data-controller="active-link"
+       data-active-link-exact
+       href="{% url 'communities:community_detail' %}">
+      {% trans "About This Site" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'communities:community_terms' %}">
+      {% trans "Terms" %}
+    </a>
+  </li>
+</ul>
+{% endif %}

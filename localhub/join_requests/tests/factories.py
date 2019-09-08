@@ -6,7 +6,6 @@ from localhub.join_requests.models import JoinRequest
 
 
 class JoinRequestFactory(DjangoModelFactory):
-    email = Faker("email")
     community = SubFactory(CommunityFactory)
     sender = SubFactory(UserFactory)
 

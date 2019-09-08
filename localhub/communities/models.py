@@ -43,7 +43,6 @@ class RequestCommunity:
     id = None
     pk = None
 
-    public: bool = False
     active: bool = False
 
     def get_absolute_url(self):
@@ -66,10 +65,9 @@ class CommunityQuerySet(models.QuerySet):
     def with_num_members(self):
         return self.annotate(num_members=models.Count("membership"))
 
-    def available(self, user):
-        qs = self.filter(active=True)
+    def with_is_member(self, user):
         if user.is_authenticated:
-            qs = qs.annotate(
+            return self.annotate(
                 is_member=models.Exists(
                     self.model.objects.filter(
                         membership__member=user,
@@ -78,16 +76,17 @@ class CommunityQuerySet(models.QuerySet):
                     )
                 )
             )
-        else:
-            qs = self.annotate(
-                is_member=models.Value(
-                    False, output_field=models.BooleanField()
-                )
-            )
+        return self.annotate(
+            is_member=models.Value(False, output_field=models.BooleanField())
+        )
 
-        return qs.filter(
-            models.Q(models.Q(public=True) | models.Q(is_member=True))
-        ).distinct()
+    def available(self, user):
+        return (
+            self.filter(active=True)
+            .with_is_member(user)
+            .filter(is_member=True)
+            .distinct()
+        )
 
 
 class CommunityManager(models.Manager):
@@ -98,6 +97,9 @@ class CommunityManager(models.Manager):
 
     def with_num_members(self):
         return self.get_queryset().with_num_members()
+
+    def with_is_member(self, user):
+        return self.get_queryset().with_is_member(user)
 
     def available(self, user):
         return self.get_queryset().available(user)
@@ -129,9 +131,21 @@ class Community(TimeStampedModel):
         help_text=_("Logo will be rendered in PNG format."),
     )
 
-    tagline = models.TextField(blank=True)
+    tagline = models.TextField(
+        blank=True, help_text=_("Summary shown in your Local Network.")
+    )
 
-    description = MarkdownField(blank=True)
+    intro = MarkdownField(
+        blank=True,
+        help_text=_("Text shown in Login and other pages to non-members."),
+    )
+
+    description = MarkdownField(
+        blank=True,
+        help_text=_(
+            "Longer description of site shown to members in Description page."
+        ),
+    )
 
     terms = MarkdownField(
         blank=True,
@@ -166,14 +180,6 @@ class Community(TimeStampedModel):
         related_name="communities",
     )
 
-    public = models.BooleanField(
-        default=True,
-        help_text=_(
-            "This community is open to the world. "
-            "Non-members can view all published content."
-        ),
-    )
-
     active = models.BooleanField(
         default=True, help_text=_("This community is currently live.")
     )
@@ -186,6 +192,15 @@ class Community(TimeStampedModel):
         null=True,
         blank=True,
         related_name="+",
+    )
+
+    allow_join_requests = models.BooleanField(
+        default=True,
+        help_text=_(
+            "Users can send requests to join this community. "
+            "If disabled they will only be able to join if an admin sends "
+            "them an invite."
+        ),
     )
 
     blacklisted_email_domains = models.TextField(
@@ -305,6 +320,8 @@ class MembershipQuerySet(SearchQuerySetMixin, models.QuerySet):
 
 
 class Membership(TimeStampedModel):
+    # TBD: if membership is deleted, remove any join
+    # requests and invites for this user.
     ROLES = Choices(
         ("member", _("Member")),
         ("moderator", _("Moderator")),

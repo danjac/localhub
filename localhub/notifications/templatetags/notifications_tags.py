@@ -33,6 +33,7 @@ def get_unread_notification_count(context, user, community):
         count = (
             Notification.objects.for_community(community)
             .filter(recipient=user, is_read=False)
+            .exclude(actor__in=user.blocked.all())
             .count()
         )
     context[context_key] = count

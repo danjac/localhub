@@ -5,6 +5,8 @@
 
 {% load i18n %}
 
+{% block subtitle %} | {% trans "Search" %}{% endblock %}
+
 {% block content %}
 <ul class="tab tab-block">
     <li class="tab-item" data-controller="active-link">
@@ -21,7 +23,7 @@
       action="{{ request.path }}"
       data-controller="form"
       data-action="form#submit"
-      class="my-1"
+      class="my-2"
       >
       <div class="input-group">
         <input class="form-input"
@@ -36,7 +38,7 @@
 </form>
 
 {% if object_list %}
-<div class="toast text-center mt-1">
+<div class="toast text-center mt-2">
   {% blocktrans count counter=paginator.count %}
   1 result found
   {% plural %}

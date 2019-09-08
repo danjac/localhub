@@ -6,7 +6,7 @@
 {% load rules %}
 
 {% with is_content_sensitive=object|is_content_sensitive:user %}
-<div id="{{ object_type }}-{{ object.id }}" class="card"{% if is_content_sensitive %} data-controller="content-sensitive"{% endif %}>
+<article role="{{ object_type }}" id="{{ object_type }}-{{ object.id }}" class="card"{% if is_content_sensitive %} data-controller="content-sensitive"{% endif %}>
   {% if is_content_sensitive %}
   <div class="card-header" data-target="content-sensitive.togglable">
     <div class="card-subtitle h6">
@@ -214,5 +214,5 @@
         {% endif %}
       </div>
     </div>
-  </div>
-  {% endwith %}
+</article>
+{% endwith %}

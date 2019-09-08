@@ -3,27 +3,18 @@
 
 import pytest
 
-from django.conf import settings
-from django.test.client import Client
 from django.urls import reverse
 
-from localhub.comments.models import Comment
-from localhub.events.models import Event
 from localhub.likes.models import Like
 
 pytestmark = pytest.mark.django_db
 
 
 class TestLikedActivityStreamView:
-    def test_get(
-        self,
-        client: Client,
-        event: Event,
-        login_user: settings.AUTH_USER_MODEL,
-    ):
+    def test_get(self, client, event, member):
         Like.objects.create(
             content_object=event,
-            user=login_user,
+            user=member.member,
             community=event.community,
             recipient=event.owner,
         )
@@ -36,15 +27,10 @@ class TestLikedActivityStreamView:
 
 
 class TestLikedCommentListView:
-    def test_get(
-        self,
-        client: Client,
-        comment: Comment,
-        login_user: settings.AUTH_USER_MODEL,
-    ):
+    def test_get(self, client, comment, member):
         Like.objects.create(
             content_object=comment,
-            user=login_user,
+            user=member.member,
             community=comment.community,
             recipient=comment.owner,
         )

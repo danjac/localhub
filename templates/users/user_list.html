@@ -11,7 +11,7 @@
 <div class="divider"></div>
 
 
-<ul class="tab tab-block mt-1">
+<ul class="tab tab-block mt-2">
   <li class="tab-item" data-controller="active-link" data-active-link-exact>
     <a data-target="active-link.match"
        href="{% url 'users:following_list' %}">{% trans "Following" %}</a>
@@ -32,7 +32,7 @@
 
 {% if object_list %}
 
-<div class="my-1 toast text-center">
+<div class="my-2 toast text-center">
   {% block counter %}
   {% endblock counter %}
 </div>

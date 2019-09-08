@@ -15,7 +15,7 @@ celery_logger = get_logger(__name__)
 
 @receiver(post_save, sender=Post, dispatch_uid="posts.fetch_title_from_url")
 def fetch_title_from_url(instance, **kwargs):
-    if not instance.url:
+    if not instance.url or instance.title:
         return
 
     def run_task():

@@ -3,26 +3,26 @@
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 
 from rules.contrib.views import PermissionRequiredMixin
 
-from vanilla import CreateView, GenericModelView, ListView
+from vanilla import GenericModelView, ListView, TemplateView
 
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.invites.emails import send_invitation_email
-from localhub.invites.models import Invite
 from localhub.join_requests.emails import (
     send_acceptance_email,
     send_join_request_email,
     send_rejection_email,
 )
-from localhub.join_requests.forms import JoinRequestForm
 from localhub.join_requests.models import JoinRequest
-from localhub.users.emails import send_user_notification_email
+from localhub.users.notifications import send_user_notification
 
 
 class JoinRequestQuerySetMixin(CommunityRequiredMixin):
@@ -56,27 +56,69 @@ class JoinRequestListView(
 join_request_list_view = JoinRequestListView.as_view()
 
 
-class JoinRequestCreateView(CommunityRequiredMixin, CreateView):
+class JoinRequestCreateView(
+    CommunityRequiredMixin, LoginRequiredMixin, TemplateView
+):
     model = JoinRequest
-    form_class = JoinRequestForm
-    success_url = settings.HOME_PAGE_URL
-    allow_if_private = True
+    template_name = "join_requests/joinrequest_form.html"
+    allow_non_members = True
 
-    def get_form(self, data=None, files=None):
-        return self.form_class(
-            self.request.community, self.request.user, data, files
+    def validate(self, request):
+        if not request.community.allow_join_requests:
+            raise ValidationError(
+                _("This community does not allow requests to join.")
+            )
+        if request.community.members.filter(pk=request.user.id).exists():
+            raise ValidationError(_("You are already a member"))
+        if JoinRequest.objects.filter(
+            sender=request.user, community=request.community
+        ).exists():
+            raise ValidationError(
+                _("You have already requested to join this community")
+            )
+
+        if request.community.is_email_blacklisted(request.user.email):
+
+            raise ValidationError(
+                _(
+                    "Sorry, we cannot accept your application "
+                    "to join at this time."
+                )
+            )
+
+    def handle_invalid(self, request, error):
+        messages.error(request, error.message)
+        return self.redirect_to_welcome_page()
+
+    def get(self, request):
+        try:
+            self.validate(request)
+        except ValidationError as e:
+            return self.handle_invalid(request, e)
+
+        return super().get(request)
+
+    def post(self, request):
+        try:
+            self.validate(request)
+        except ValidationError as e:
+            return self.handle_invalid(request, e)
+
+        join_request = JoinRequest.objects.create(
+            community=self.request.community, sender=self.request.user
         )
 
-    def form_valid(self, form):
-        self.object = form.save()
-        send_join_request_email(self.object)
+        send_join_request_email(join_request)
 
         messages.success(
             self.request,
             _("Your request has been sent to the community admins"),
         )
 
-        return HttpResponseRedirect(self.get_success_url())
+        return self.redirect_to_welcome_page()
+
+    def redirect_to_welcome_page(self):
+        return redirect("community_welcome")
 
 
 join_request_create_view = JoinRequestCreateView.as_view()
@@ -105,33 +147,21 @@ class JoinRequestAcceptView(JoinRequestActionView):
         self.object.status = JoinRequest.STATUS.accepted
         self.object.save()
 
-        user = self.object.get_sender()
+        _membership, created = Membership.objects.get_or_create(
+            member=self.object.sender, community=self.object.community
+        )
+        if created:
+            send_acceptance_email(self.object)
+            messages.success(request, _("Join request has been accepted"))
+            for notification in self.object.sender.notify_on_join(
+                self.object.community
+            ):
+                send_user_notification(self.object.sender, notification)
 
-        if user:
-            _membership, created = Membership.objects.get_or_create(
-                member=user, community=self.object.community
-            )
-            if created:
-                send_acceptance_email(self.object)
-                messages.success(request, _("Join request has been accepted"))
-                for notification in user.notify_on_join(self.object.community):
-                    send_user_notification_email(user, notification)
-
-            else:
-                messages.error(
-                    request, _("User already belongs to this community")
-                )
         else:
-            invite, created = Invite.objects.get_or_create(
-                sender=request.user,
-                community=self.object.community,
-                email=self.object.email,
+            messages.error(
+                request, _("User already belongs to this community")
             )
-            if created:
-                send_invitation_email(invite)
-                messages.success(
-                    self.request, _("An invite has been sent to this email")
-                )
 
         return HttpResponseRedirect(self.get_success_url())
 

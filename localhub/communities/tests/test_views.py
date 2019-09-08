@@ -30,10 +30,10 @@ my_view = MyView.as_view()
 
 
 class TestCommunityRequiredMixin:
-    def test_community_available(self, community, rf):
+    def test_community_available(self, member, rf):
         req = rf.get("/")
-        req.community = community
-        req.user = AnonymousUser()
+        req.community = member.community
+        req.user = member.member
         assert my_view(req).status_code == 200
 
     def test_community_not_found(self, rf):
@@ -47,45 +47,59 @@ class TestCommunityRequiredMixin:
         with pytest.raises(Http404):
             my_view(req)
 
-    def test_community_access_denied_if_anonymous(self, rf):
+    def test_redirect_to_community_welcome_if_anonymous(self, rf):
         req = rf.get("/")
-        req.community = CommunityFactory(public=False)
+        req.community = CommunityFactory()
         req.user = AnonymousUser()
-        assert my_view(req).url.startswith(reverse("account_login"))
+        assert my_view(req).url == reverse("community_welcome")
 
-    def test_community_access_denied_if_private_allowed(
+    def test_redirect_to_community_welcome_if_non_members_allowed(
         self, rf, user
     ):
         req = rf.get("/")
-        req.community = CommunityFactory(public=False)
+        req.community = CommunityFactory()
         req.user = user
-        my_public_view = MyView.as_view(allow_if_private=True)
+        my_public_view = MyView.as_view(allow_non_members=True)
         assert my_public_view(req).status_code == 200
 
-    def test_community_access_denied_if_authenticated(self, rf, user):
+    def test_redirect_to_community_welcome_if_authenticated(self, rf, user):
         req = rf.get("/")
-        req.community = CommunityFactory(public=False)
+        req.community = CommunityFactory()
         req.user = user
-        assert my_view(req).url == reverse("community_access_denied")
+        assert my_view(req).url == reverse("community_welcome")
 
-    def test_community_access_denied_if_ajax(self, rf, user):
+    def test_permission_denied_if_ajax(self, rf, user):
         req = rf.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
-        req.community = CommunityFactory(public=False)
+        req.community = CommunityFactory()
         req.user = user
         with pytest.raises(PermissionDenied):
             my_view(req)
 
 
 class TestCommunityDetailView:
-    def test_get(self, client, community):
+    def test_get(self, client, member):
         assert (
             client.get(reverse("communities:community_detail")).status_code
             == 200
         )
 
 
+class TestCommunityWelcomeView:
+    def test_get_if_anonymous(self, client, community):
+        assert client.get(reverse("community_welcome")).status_code == 200
+
+    def test_get_if_authenticated(self, client, community, login_user):
+        assert client.get(reverse("community_welcome")).status_code == 200
+
+    def test_get_if_member(self, client, member):
+        assert (
+            client.get(reverse("community_welcome")).url
+            == settings.HOME_PAGE_URL
+        )
+
+
 class TestCommunityTermsView:
-    def test_get(self, client, community):
+    def test_get(self, client, member):
         assert (
             client.get(reverse("communities:community_terms")).status_code
             == 200
@@ -111,9 +125,21 @@ class TestCommunityUpdateView:
 
 
 class TestCommunityListView:
-    def test_get(self, client, member, user):
+    def test_get_if_member(self, client, member):
         CommunityFactory.create_batch(3)
-        assert client.get(reverse("community_list")).status_code == 200
+        response = client.get(reverse("community_list"))
+        assert "communities/member_community_list.html" in [
+            t.name for t in response.templates
+        ]
+        assert len(response.context["object_list"]) == 4
+
+    def test_get_if_not_member(self, client, login_user):
+        CommunityFactory.create_batch(3)
+        response = client.get(reverse("community_list"))
+        assert "communities/non_member_community_list.html" in [
+            t.name for t in response.templates
+        ]
+        assert len(response.context["object_list"]) == 3
 
 
 class TestMembershipListView:
@@ -164,7 +190,9 @@ class TestMembershipUpdateView:
             reverse("communities:membership_update", args=[membership.id]),
             {"active": True, "role": "moderator"},
         )
-        assert response.url == reverse("communities:membership_list")
+        assert response.url == reverse(
+            "communities:membership_detail", args=[membership.id]
+        )
         membership.refresh_from_db()
         assert membership.role == "moderator"
 

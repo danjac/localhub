@@ -19,6 +19,6 @@ def fetch_post_title_from_url(post_id):
             post.title = (fetch_title_from_url(post.url) or post.get_domain())[
                 :300
             ]
-            post.save()
+            post.save(update_fields=["title"])
     except Post.DoesNotExist:
         logger.info("post not found:%s", post_id)

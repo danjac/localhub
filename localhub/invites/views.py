@@ -21,7 +21,7 @@ from localhub.communities.views import CommunityRequiredMixin
 from localhub.invites.emails import send_invitation_email
 from localhub.invites.forms import InviteForm
 from localhub.invites.models import Invite
-from localhub.users.emails import send_user_notification_email
+from localhub.users.notifications import send_user_notification
 
 
 class InviteQuerySetMixin(CommunityRequiredMixin):
@@ -139,7 +139,7 @@ class InviteAcceptView(BaseSingleInviteView):
     community and the invite is flagged accordingly.
     """
 
-    allow_if_private = True
+    allow_non_members = True
 
     def get_queryset(self):
         # TBD: add a deadline of e.g. 3 days
@@ -179,7 +179,7 @@ class InviteAcceptView(BaseSingleInviteView):
             for notification in self.request.user.notify_on_join(
                 self.object.community
             ):
-                send_user_notification_email(self.request.user, notification)
+                send_user_notification(self.request.user, notification)
         else:
             message = _("You are already a member of this community")
 
