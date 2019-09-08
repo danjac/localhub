@@ -72,28 +72,7 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
         )
 
 
-class UserManager(BaseUserManager):
-    def get_queryset(self):
-        return UserQuerySet(self.model, using=self._db)
-
-    def search(self, search_term, *args, **kwargs):
-        return self.get_queryset().search(search_term, *args, **kwargs)
-
-    def with_is_following(self, follower: settings.AUTH_USER_MODEL):
-        return self.get_queryset().with_is_following(follower)
-
-    def with_is_blocked(self, follower: settings.AUTH_USER_MODEL):
-        return self.get_queryset().with_is_blocked(follower)
-
-    def for_community(self, community):
-        return self.get_queryset().for_community(community)
-
-    def for_email(self, email):
-        return self.get_queryset().for_email(email)
-
-    def matches_usernames(self, names):
-        return self.get_queryset().matches_usernames(names)
-
+class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
     def create_user(self, username, email, password=None, **kwargs):
         user = self.model(
             username=username, email=self.normalize_email(email), **kwargs
