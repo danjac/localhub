@@ -190,7 +190,9 @@ class TestMembershipUpdateView:
             reverse("communities:membership_update", args=[membership.id]),
             {"active": True, "role": "moderator"},
         )
-        assert response.url == reverse("communities:membership_list")
+        assert response.url == reverse(
+            "communities:membership_detail", args=[membership.id]
+        )
         membership.refresh_from_db()
         assert membership.role == "moderator"
 

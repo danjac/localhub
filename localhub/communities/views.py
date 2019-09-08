@@ -251,8 +251,10 @@ class MembershipUpdateView(
     model = Membership
     form_class = MembershipForm
     permission_required = "communities.change_membership"
-    success_url = reverse_lazy("communities:membership_list")
     success_message = _("Membership has been updated")
+
+    def get_success_url(self):
+        return reverse("communities:membership_detail", args=[self.object.id])
 
 
 membership_update_view = MembershipUpdateView.as_view()
