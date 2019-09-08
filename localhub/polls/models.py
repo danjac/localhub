@@ -5,12 +5,24 @@ from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 
-from localhub.activities.models import Activity
+from localhub.activities.models import Activity, ActivityQuerySet
 from localhub.comments.models import Comment
 from localhub.common.db.search import SearchIndexer
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification
+
+
+class PollQuerySet(ActivityQuerySet):
+    def with_voting_counts(self):
+        return self.prefetch_related(
+            models.Prefetch(
+                "answers",
+                queryset=Answer.objects.annotate(
+                    num_votes=models.Count("voters")
+                ).order_by("id"),
+            )
+        ).annotate(total_num_votes=models.Count("answers__voters"))
 
 
 class Poll(Activity):
@@ -24,6 +36,8 @@ class Poll(Activity):
     notifications = GenericRelation(Notification, related_query_name="poll")
 
     search_indexer = SearchIndexer(("A", "title"), ("B", "description"))
+
+    objects = PollQuerySet.as_manager()
 
     def __str__(self):
         return self.title

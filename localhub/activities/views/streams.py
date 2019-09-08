@@ -3,7 +3,6 @@
 
 import itertools
 
-from django.db.models import Count, Prefetch
 from django.conf import settings
 from django.http import Http404
 from django.utils import timezone
@@ -20,7 +19,7 @@ from localhub.common.views import BaseMultipleQuerySetListView, SearchMixin
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.events.models import Event
 from localhub.photos.models import Photo
-from localhub.polls.models import Poll, Answer
+from localhub.polls.models import Poll
 from localhub.posts.models import Post
 
 
@@ -41,14 +40,7 @@ class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
         )
 
         if model == Poll:
-            qs = qs.prefetch_related(
-                Prefetch(
-                    "answers",
-                    queryset=Answer.objects.annotate(
-                        num_votes=Count("voters")
-                    ).order_by("id"),
-                )
-            ).annotate(total_num_votes=Count("answers__voters"))
+            return qs.with_voting_counts()
         return qs
 
     def get_count_queryset_for_model(self, model):

@@ -114,6 +114,9 @@
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
   </li>
+  <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
+  </li>
   {% if can_moderate_community %}
   {% get_flags_count as num_flags %}
   {% if num_flags %}

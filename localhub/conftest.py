@@ -13,6 +13,7 @@ from localhub.communities.tests.factories import (
 )
 from localhub.events.tests.factories import EventFactory
 from localhub.photos.tests.factories import PhotoFactory
+from localhub.polls.tests.factories import PollFactory
 from localhub.posts.tests.factories import PostFactory
 from localhub.users.tests.factories import UserFactory
 
@@ -69,6 +70,14 @@ def admin(client, login_user, community):
 @pytest.fixture
 def post(community):
     return PostFactory(
+        community=community,
+        owner=MembershipFactory(community=community).member,
+    )
+
+
+@pytest.fixture
+def poll(community):
+    return PollFactory(
         community=community,
         owner=MembershipFactory(community=community).member,
     )

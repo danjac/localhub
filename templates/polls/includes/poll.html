@@ -10,8 +10,10 @@
 <ol>
     {% for answer in object.answers.all %}
     <li>{{ answer }}
-        <meter class="meter" value="20" min="0" max="100"></meter>
-        <a href="#">{% trans "Vote" %}</a>
+        <meter class="meter" value="{% widthratio answer.num_votes object.total_num_votes 100 %}" min="0" max="100"></meter>
+        <a data-controller="ajax"
+           data-action="ajax#post"
+           href="{% url 'polls:vote' answer.id %}">{% trans "Vote" %}</a>
     </li>
     {% endfor %}
 </ol>

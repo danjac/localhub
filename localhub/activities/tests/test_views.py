@@ -40,7 +40,7 @@ class TestActivityStreamView:
 
         response = client.get(reverse("activities:stream"))
         assert response.status_code == 200
-        assert len(response.context["object_list"]) == 3
+        assert len(response.context["object_list"]) == 4
 
 
 class TestActivityTimelineView:

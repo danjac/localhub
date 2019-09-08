@@ -11,11 +11,12 @@
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
   <a href="{% url 'photos:create' %}">
-    {% trans "Submit Photo" %}
+    {% trans "New Photo" %}
   </a>
   {% endif %}
   <a href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
   <a href="{% url 'events:list' %}">{% trans "Events" %}</a>
+  <a href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
 </div>
 
 <div class="divider"></div>
