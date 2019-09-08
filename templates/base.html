@@ -43,7 +43,7 @@
 
   <body class="bg-dark text-dark">
     <div class="container">
-      <header class="navbar p-1">
+      <header class="navbar p-2">
         <section class="navbar-section">
           {% thumbnail community.logo "100" format="PNG" as logo %}
           <a class="navbar-brand d-inline-flex align-center" href="/">
@@ -110,7 +110,7 @@
         {% endif %}
         {% endblock mobile_search_form %}
 
-        <div class="columns p-1 bg-light">
+        <div class="columns p-2 bg-light">
 
           <div class="text-center mb-2 toast toast-primary d-hide"
                data-controller="cookie-notice"
@@ -134,9 +134,9 @@
 
 
         {% block main_layout %}
-        <main role="main" class="columns bg-light py-1" data-controller="sidebar">
+        <main role="main" class="columns bg-light py-2" data-controller="sidebar">
 
-          <aside role="sidebar" class="column col-2 col-lg-12 hide-lg p-1"
+          <aside role="sidebar" class="column col-2 col-lg-12 hide-lg p-2"
                                 data-target="sidebar.nav"
                                 >
                                 <div class="show-lg hide-xl mb-2">
