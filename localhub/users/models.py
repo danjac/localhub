@@ -24,8 +24,6 @@ from localhub.notifications.models import Notification
 
 
 class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
-    use_in_migrations = True
-
     def for_email(self, email):
         """
         Returns all users with primary or additional emails matching

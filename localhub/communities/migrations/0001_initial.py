@@ -83,9 +83,6 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={"verbose_name_plural": "Communities"},
-            managers=[
-                ("objects", localhub.communities.models.CommunityManager())
-            ],
         ),
         migrations.CreateModel(
             name="Membership",

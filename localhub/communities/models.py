@@ -98,10 +98,6 @@ class CommunityQuerySet(models.QuerySet):
             .distinct()
         )
 
-
-class CommunityManager(models.Manager.from_queryset(CommunityQuerySet)):
-    use_with_migrations = True
-
     def get_current(self, request):
         """
         Returns current community matching request domain if active.
@@ -222,7 +218,7 @@ class Community(TimeStampedModel):
         ),
     )
 
-    objects = CommunityManager()
+    objects = CommunityQuerySet.as_manager()
 
     class Meta:
         verbose_name_plural = _("Communities")
