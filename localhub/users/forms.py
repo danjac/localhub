@@ -31,6 +31,7 @@ class UserForm(forms.ModelForm):
             "show_embedded_content",
             "home_page_filters",
             "email_preferences",
+            "default_timezone",
             "bio",
         )
         widgets = {

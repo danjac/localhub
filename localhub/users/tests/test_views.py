@@ -97,7 +97,8 @@ class TestUserUpdateView:
 
     def test_post(self, client, login_user):
         response = client.post(
-            reverse("user_update"), {"name": "New Name", "language": "en"}
+            reverse("user_update"),
+            {"name": "New Name", "language": "en", "default_timezone": "UTC"},
         )
         assert response.url == reverse("user_update")
         login_user.refresh_from_db()

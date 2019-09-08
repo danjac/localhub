@@ -3,8 +3,18 @@
 
 from django.http import HttpResponse
 
-from localhub.activities.views.generic import BaseSingleActivityView
+from localhub.activities.views.generic import (
+    ActivityCreateView,
+    BaseSingleActivityView,
+)
 from localhub.events.models import Event
+
+
+class EventCreateView(ActivityCreateView):
+    def get_form(self, data=None, files=None):
+        form = super().get_form(data, files)
+        form.initial["timezone"] = self.request.user.default_timezone
+        return form
 
 
 class EventDownloadView(BaseSingleActivityView):

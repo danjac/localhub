@@ -15,6 +15,8 @@ from model_utils import Choices
 
 from sorl.thumbnail import ImageField
 
+from timezone_field import TimeZoneField
+
 from taggit.models import Tag
 
 from localhub.communities.models import Membership
@@ -161,6 +163,8 @@ class User(AbstractUser):
             "Preferred language. User content will not be translated."
         ),
     )
+
+    default_timezone = TimeZoneField(default=settings.TIME_ZONE)
 
     home_page_filters = ChoiceArrayField(
         models.CharField(max_length=12, choices=HOME_PAGE_FILTERS),

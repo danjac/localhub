@@ -7,13 +7,15 @@ from django.urls import path
 from localhub.activities.views import create_activity_urls
 from localhub.events.forms import EventForm
 from localhub.events.models import Event
-from localhub.events.views import event_download_view
+from localhub.events.views import event_download_view, EventCreateView
 
 
 app_name = "events"
 
 
-urlpatterns = create_activity_urls(Event, EventForm)
+urlpatterns = create_activity_urls(
+    Event, EventForm, create_view_class=EventCreateView
+)
 
 urlpatterns += [
     path("<int:pk>~download/", event_download_view, name="download")
