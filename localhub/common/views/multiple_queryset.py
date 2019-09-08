@@ -72,7 +72,7 @@ class MultipleQuerySetMixin:
 
     def get_combined_count_queryset(self):
         querysets = [qs.only("pk") for qs in self.get_count_querysets()]
-        return querysets[0].union(*querysets[1:])
+        return querysets[0].union(*querysets[1:], all=True)
 
     def get_combined_count(self):
         return self.get_combined_count_queryset().count()

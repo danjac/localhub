@@ -31,8 +31,8 @@ class TestActivityStreamView:
         EventFactory(community=member.community, owner=member.member)
         PostFactory(community=member.community, owner=member.member)
         PostFactory(community=member.community, owner=member.member)
-
         poll = PollFactory(community=member.community, owner=member.member)
+
         for _ in range(3):
             answer = AnswerFactory(poll=poll)
             answer.voters.add(UserFactory())
