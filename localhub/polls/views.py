@@ -22,7 +22,8 @@ from localhub.communities.views import CommunityRequiredMixin
 from localhub.polls.models import Poll, Answer
 
 AnswersFormSet = inlineformset_factory(
-    Poll, Answer, fields=("description",), extra=3, max_num=4
+    Poll, Answer, fields=("description",), extra=3, max_num=4, 
+    labels={"description":""}
 )
 
 
