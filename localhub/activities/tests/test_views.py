@@ -10,7 +10,10 @@ from taggit.models import Tag
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.events.tests.factories import EventFactory
 from localhub.photos.tests.factories import PhotoFactory
+from localhub.polls.models import Answer
+from localhub.polls.tests.factories import PollFactory
 from localhub.posts.tests.factories import PostFactory
+from localhub.users.tests.factories import UserFactory
 
 
 pytestmark = pytest.mark.django_db
@@ -29,6 +32,11 @@ class TestActivityStreamView:
         EventFactory(community=member.community, owner=member.member)
         PostFactory(community=member.community, owner=member.member)
         PostFactory(community=member.community, owner=member.member)
+
+        poll = PollFactory(community=member.community, owner=member.member)
+        for _ in range(3):
+            answer = Answer.objects.create(poll=poll)
+            answer.voters.add(UserFactory())
 
         response = client.get(reverse("activities:stream"))
         assert response.status_code == 200

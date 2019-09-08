@@ -1,0 +1,11 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/activity_detail_base.html" %}
+{% load i18n %}
+
+{% block subtitle %} | {% trans "Polls" %}{% if poll.title %} | {{ poll.title }}{% endif %}{% endblock %}
+
+{% block activities_detail_content %}
+{% include "polls/includes/poll.html" with is_detail=True object_type="poll" object=poll %}
+{% endblock activities_detail_content %}

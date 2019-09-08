@@ -1,0 +1,20 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/activity_base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+{% include "activities/includes/description.html" %}
+<ol>
+    {% for answer in object.answers.all %}
+    <li>{{ answer }}
+        <meter class="meter" value="20" min="0" max="100"></meter>
+        <a href="#">{% trans "Vote" %}</a>
+    </li>
+    {% endfor %}
+</ol>
+{% endblock content %}
+
+

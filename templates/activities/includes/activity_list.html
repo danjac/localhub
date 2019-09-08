@@ -10,6 +10,8 @@
   {% include "events/includes/event.html" with event=activity.object %}
   {% elif activity.object_type == "photo" %}
   {% include "photos/includes/photo.html" with photo=activity.object %}
+  {% elif activity.object_type == "poll" %}
+  {% include "polls/includes/poll.html" with poll=activity.object %}
   {% endif %}
   {% endwith %}
 </div>

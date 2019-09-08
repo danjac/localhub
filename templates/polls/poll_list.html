@@ -1,0 +1,43 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/base.html" %}
+{% load i18n %}
+{% load rules %}
+
+{% block subtitle %} | {% trans "Polls" %}{% endblock %}
+
+{% block content %}
+
+<h3>{% trans "Polls" %}</h3>
+
+
+<div class="actions">
+  {% has_perm 'activities.create_activity' user community as can_create_activity %}
+  {% if can_create_activity %}
+  <a href="{% url 'polls:create' %}">
+    {% trans "New Poll" %}
+  </a>
+  {% endif %}
+  <a href="{% url 'photos:list' %}">{% trans "Posts" %}</a>
+  <a href="{% url 'events:list' %}">{% trans "Events" %}</a>
+  <a href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
+</div>
+
+<div class="divider"></div>
+
+{% if paginator.count or view.search_query %}
+{% include "includes/search_form.html" %}
+{% endif %}
+
+{% for object in object_list %}
+<div class="activity-list-item">
+  {% include "polls/includes/poll.html" with object_type="poll" %}
+</div>
+{% empty %}
+{% include "includes/empty.html" %}
+{% endfor %}
+
+
+{% include "includes/pagination.html" %}
+{% endblock content %}

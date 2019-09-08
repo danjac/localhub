@@ -3,6 +3,7 @@
 
 import itertools
 
+from django.db.models import Count, Prefetch
 from django.conf import settings
 from django.http import Http404
 from django.utils import timezone
@@ -19,6 +20,7 @@ from localhub.common.views import BaseMultipleQuerySetListView, SearchMixin
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.events.models import Event
 from localhub.photos.models import Photo
+from localhub.polls.models import Poll, Answer
 from localhub.posts.models import Post
 
 
@@ -26,17 +28,28 @@ class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
     ordering = "-created"
     allow_empty = True
     paginate_by = settings.DEFAULT_PAGE_SIZE
-    models = [Photo, Post, Event]
+    models = [Photo, Post, Event, Poll]
 
     def filter_queryset(self, queryset):
         return queryset.for_community(community=self.request.community)
 
     def get_queryset_for_model(self, model):
-        return self.filter_queryset(
+        qs = self.filter_queryset(
             model.objects.with_common_annotations(
                 self.request.user, self.request.community
             ).select_related("owner", "community", "parent", "parent__owner")
         )
+
+        if model == Poll:
+            qs = qs.prefetch_related(
+                Prefetch(
+                    "answers",
+                    queryset=Answer.objects.annotate(
+                        num_votes=Count("voters")
+                    ).order_by("id"),
+                )
+            ).annotate(total_num_votes=Count("answers__voters"))
+        return qs
 
     def get_count_queryset_for_model(self, model):
         return self.filter_queryset(model.objects)

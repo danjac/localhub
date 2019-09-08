@@ -8,6 +8,8 @@
 {% block content %}
 {% include "includes/breadcrumbs.html" %}
 
+{% block form %}
 {% simple_ajax_form form multipart=True %}
+{% endblock %}
 
 {% endblock content %}

@@ -1,0 +1,25 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/activity_form.html" %}
+{% load i18n %}
+
+{% block subtitle %} | {% trans "Polls" %} | {{ view.page_title }}{% endblock %}
+
+{% block form %}
+<form method="POST"
+      action="{{ request.path }}"
+      data-controller="form"
+      data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload"
+      >
+      {{ answers_formset.management_form }}
+      {% include "includes/forms/fields.html" %}
+      <div class="divider text-center" data-content="Answers"></div>
+      {% for answer_form in answers_formset.forms %}
+      {% include "includes/forms/fields.html" with form=answer_form %}
+      {% endfor %}
+      <button type="submit" class="btn btn-primary">
+          {% trans "Submit" %}
+      </button>
+</form>
+{% endblock %}
