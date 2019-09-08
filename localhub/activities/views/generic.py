@@ -69,7 +69,11 @@ class ActivityCreateView(
 
     def get_breadcrumbs(self):
         return get_breadcrumbs_for_model(self.model) + [
-            (self.request.path, _("Submit"))
+            (
+                None,
+                _("New %(activity_name)s")
+                % {"activity_name": self.model._meta.verbose_name},
+            )
         ]
 
     def form_valid(self, form):
@@ -117,7 +121,13 @@ class ActivityUpdateView(
 
     def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.object) + [
-            (self.request.path, _("Edit"))
+            (
+                None,
+                _(
+                    "Edit %(activity_name)s"
+                    % {"activity_name": self.object._meta.verbose_name}
+                ),
+            )
         ]
 
     def get_success_message(self):
@@ -308,7 +318,7 @@ class ActivityFlagView(
 
     def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.activity) + [
-            (self.request.path, _("Flag"))
+            (None, _("Flag"))
         ]
 
     def form_valid(self, form):

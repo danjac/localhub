@@ -127,7 +127,7 @@ class MessageReplyView(
                 user_display(self.recipient),
             ),
             (self.parent.get_absolute_url(), self.parent.abbreviate()),
-            ("#", _("Reply")),
+            (None, _("Reply")),
         ]
 
     def get_form(self, data=None, files=None):
@@ -182,7 +182,7 @@ class MessageCreateView(BreadcrumbsMixin, BaseMessageFormView):
                 reverse("users:messages", args=[self.recipient.username]),
                 user_display(self.recipient),
             ),
-            ("#", _("Send Message")),
+            (None, _("Send Message")),
         ]
 
     def get_form(self, data=None, files=None):
@@ -277,7 +277,7 @@ class MessageUpdateView(
         return [
             (reverse("private_messages:outbox"), _("Outbox")),
             (self.object.get_absolute_url, self.object.abbreviate()),
-            ("#", _("Edit Message")),
+            (None, _("Edit Message")),
         ]
 
     def get_form(self, *args, **kwargs):
