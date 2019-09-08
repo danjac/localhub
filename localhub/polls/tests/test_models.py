@@ -4,14 +4,15 @@
 
 import pytest
 
-from localhub.polls.models import Answer, Poll
+from localhub.polls.models import Poll
+from localhub.polls.tests.factories import AnswerFactory
 
 pytestmark = pytest.mark.django_db
 
 
 class TestPollManager:
     def test_with_voting_counts(self, poll, user):
-        answer = Answer.objects.create(poll=poll, description="test")
+        answer = AnswerFactory(poll=poll)
         answer.voters.add(user)
 
         poll = Poll.objects.with_voting_counts().first()

@@ -5,8 +5,8 @@ import pytest
 
 from django.urls import reverse
 
-from localhub.polls.models import Answer, Poll
-from localhub.polls.tests.factories import PollFactory
+from localhub.polls.models import Poll
+from localhub.polls.tests.factories import AnswerFactory, PollFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -55,12 +55,8 @@ class TestPollUpdateView:
 
     def test_post(self, client, member, send_notification_webpush_mock):
         poll = PollFactory(community=member.community, owner=member.member)
-        first_answer = Answer.objects.create(
-            poll=poll, description="answer-one"
-        )
-        second_answer = Answer.objects.create(
-            poll=poll, description="answer-two"
-        )
+        first_answer = AnswerFactory(poll=poll, description="answer-one")
+        second_answer = AnswerFactory(poll=poll, description="answer-two")
         response = client.post(
             reverse("polls:update", args=[poll.id]),
             {
@@ -96,3 +92,15 @@ class TestPollDetailView:
         )
         assert response.status_code == 200
         assert "comment_form" in response.context
+
+
+class TestAnswerVoteView:
+    def test_post(self, client, poll, member):
+        answer = AnswerFactory(poll=poll)
+        voted = AnswerFactory(poll=poll)
+        voted.voters.add(member.member)
+        response = client.post(reverse("polls:vote", args=[answer.id]))
+        assert response.url == poll.get_absolute_url()
+        assert answer.voters.first() == member.member
+        # original vote should be removed
+        assert voted.voters.count() == 0

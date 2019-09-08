@@ -10,8 +10,7 @@ from taggit.models import Tag
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.events.tests.factories import EventFactory
 from localhub.photos.tests.factories import PhotoFactory
-from localhub.polls.models import Answer
-from localhub.polls.tests.factories import PollFactory
+from localhub.polls.tests.factories import AnswerFactory, PollFactory
 from localhub.posts.tests.factories import PostFactory
 from localhub.users.tests.factories import UserFactory
 
@@ -35,7 +34,7 @@ class TestActivityStreamView:
 
         poll = PollFactory(community=member.community, owner=member.member)
         for _ in range(3):
-            answer = Answer.objects.create(poll=poll)
+            answer = AnswerFactory(poll=poll)
             answer.voters.add(UserFactory())
 
         response = client.get(reverse("activities:stream"))
