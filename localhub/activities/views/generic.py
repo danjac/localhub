@@ -72,7 +72,9 @@ class ActivityCreateView(
             (
                 None,
                 _("New %(activity_name)s")
-                % {"activity_name": self.model._meta.verbose_name},
+                % {
+                    "activity_name": self.model._meta.verbose_name.capitalize()
+                },
             )
         ]
 
@@ -125,7 +127,9 @@ class ActivityUpdateView(
                 None,
                 _(
                     "Edit %(activity_name)s"
-                    % {"activity_name": self.object._meta.verbose_name}
+                    % {
+                        "activity_name": self.object._meta.verbose_name.capitalize() # noqa
+                    }
                 ),
             )
         ]
