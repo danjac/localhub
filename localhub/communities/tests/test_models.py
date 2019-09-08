@@ -39,6 +39,19 @@ class TestCommunityManager:
         user = AnonymousUser()
         assert not Community.objects.with_is_member(user).first().is_member
 
+    def test_listed_if_listed(self, user):
+        CommunityFactory(listed=True)
+        assert Community.objects.listed(user).exists()
+
+    def test_listed_if_not_listed_and_member(self):
+        community = CommunityFactory(listed=False)
+        user = MembershipFactory(community=community).member
+        assert Community.objects.listed(user).exists()
+
+    def test_listed_if_not_listed_and_not_member(self, user):
+        CommunityFactory(listed=False)
+        assert not Community.objects.listed(user).exists()
+
     def test_available_if_anonymous(self):
         CommunityFactory()
         assert Community.objects.available(AnonymousUser()).first() is None

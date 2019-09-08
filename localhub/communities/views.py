@@ -8,7 +8,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.forms import ModelForm
 from django.http import Http404, HttpResponseRedirect
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from allauth.account.forms import LoginForm
@@ -186,11 +186,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
         return ["communities/non_member_community_list.html"]
 
     def get_queryset(self):
-        qs = (
-            Community.objects.filter(active=True)
-            .with_is_member(self.request.user)
-            .order_by("-created")
-        )
+        qs = Community.objects.listed(self.request.user).order_by("-created")
         if self.search_query:
             qs = qs.filter(name__icontains=self.search_query)
         return qs

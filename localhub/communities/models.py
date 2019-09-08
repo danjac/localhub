@@ -80,6 +80,16 @@ class CommunityQuerySet(models.QuerySet):
             is_member=models.Value(False, output_field=models.BooleanField())
         )
 
+    def listed(self, user):
+        """
+        Returns all communities either listed or where user is a member
+        """
+        return (
+            self.with_is_member(user)
+            .filter(models.Q(models.Q(is_member=True) | models.Q(listed=True)))
+            .distinct()
+        )
+
     def available(self, user):
         return (
             self.filter(active=True)
@@ -89,20 +99,8 @@ class CommunityQuerySet(models.QuerySet):
         )
 
 
-class CommunityManager(models.Manager):
-    use_in_migrations = True
-
-    def get_queryset(self):
-        return CommunityQuerySet(self.model, using=self._db)
-
-    def with_num_members(self):
-        return self.get_queryset().with_num_members()
-
-    def with_is_member(self, user):
-        return self.get_queryset().with_is_member(user)
-
-    def available(self, user):
-        return self.get_queryset().available(user)
+class CommunityManager(models.Manager.from_queryset(CommunityQuerySet)):
+    use_with_migrations = True
 
     def get_current(self, request):
         """
@@ -192,6 +190,11 @@ class Community(TimeStampedModel):
         null=True,
         blank=True,
         related_name="+",
+    )
+
+    listed = models.BooleanField(
+        default=True,
+        help_text=_("Community is visible to non-members in Local Network."),
     )
 
     allow_join_requests = models.BooleanField(
