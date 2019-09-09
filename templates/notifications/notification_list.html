@@ -52,6 +52,8 @@
         {% include "activities/includes/notification.html" with activity=content_object activity_name="post" %}
         {% elif content_type == "photo" %}
         {% include "activities/includes/notification.html" with activity=content_object activity_name="photo" %}
+        {% elif content_type == "poll" %}
+        {% include "activities/includes/notification.html" with activity=content_object activity_name="poll" %}
         {% elif content_type == "event" %}
         {% include "activities/includes/notification.html" with activity=content_object activity_name="event" %}
         {% elif content_type == "comment" %}
