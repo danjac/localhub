@@ -107,7 +107,7 @@ class AnswerVoteView(
     def get_queryset(self):
         return Answer.objects.filter(
             poll__community=self.request.community
-        ).select_related("poll", "community")
+        ).select_related("poll", "poll__community")
 
     def post(self, request, *args, **kwargs):
         for voted in Answer.objects.filter(
