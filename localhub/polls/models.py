@@ -22,7 +22,7 @@ class PollQuerySet(ActivityQuerySet):
                     num_votes=models.Count("voters")
                 ).order_by("id"),
             )
-        ).annotate(total_num_votes=models.Count("answers__voters"))
+        ).annotate(total_num_votes=models.Count("answers__voters")).distinct()
 
 
 class Poll(Activity):
