@@ -25,7 +25,7 @@ AnswersFormSet = inlineformset_factory(
     Poll,
     Answer,
     fields=("description",),
-    extra=3,
+    extra=4,
     max_num=4,
     labels={"description": None},
 )
