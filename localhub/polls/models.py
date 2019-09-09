@@ -30,8 +30,7 @@ class PollQuerySet(ActivityQuerySet):
 class Poll(Activity):
     RESHARED_FIELDS = ("title", "description")
 
-    title = models.CharField(max_length=300, blank=True)
-
+    title = models.CharField(max_length=300)
     comments = GenericRelation(Comment, related_query_name="poll")
     flags = GenericRelation(Flag, related_query_name="poll")
     likes = GenericRelation(Like, related_query_name="poll")
