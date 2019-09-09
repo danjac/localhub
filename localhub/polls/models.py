@@ -19,10 +19,12 @@ class PollQuerySet(ActivityQuerySet):
             models.Prefetch(
                 "answers",
                 queryset=Answer.objects.annotate(
-                    num_votes=models.Count("voters")
+                    num_votes=models.Count("voters", distinct=True)
                 ).order_by("id"),
             )
-        ).annotate(total_num_votes=models.Count("answers__voters")).distinct()
+        ).annotate(
+            total_num_votes=models.Count("answers__voters", distinct=True)
+        )
 
 
 class Poll(Activity):
