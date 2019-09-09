@@ -61,7 +61,6 @@ class PollCreateView(ActivityCreateView):
 
 
 class PollUpdateView(ActivityUpdateView):
-
     @cached_property
     def answers_formset(self):
         if self.request.method == "POST":
@@ -98,21 +97,26 @@ class AnswerVoteView(
 
     permission_required = "polls.vote"
 
+    @cached_property
+    def object(self):
+        return self.get_object()
+
     def get_permission_object(self):
-        return self.get_object().poll
+        return self.object.poll
 
     def get_queryset(self):
-        return Answer.objects.filter(poll__community=self.request.community)
+        return Answer.objects.filter(
+            poll__community=self.request.community
+        ).select_related("poll", "community")
 
     def post(self, request, *args, **kwargs):
-        answer = self.get_object()
         for voted in Answer.objects.filter(
-            voters=self.request.user, poll=answer.poll
+            voters=self.request.user, poll=self.object.poll
         ):
             voted.voters.remove(self.request.user)
-        answer.voters.add(self.request.user)
+        self.object.voters.add(self.request.user)
         messages.success(self.request, _("Thanks for voting!"))
-        return redirect(answer.poll)
+        return redirect(self.object.poll)
 
 
 answer_vote_view = AnswerVoteView.as_view()
