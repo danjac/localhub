@@ -27,7 +27,7 @@ AnswersFormSet = inlineformset_factory(
     fields=("description",),
     extra=3,
     max_num=4,
-    labels={"description": None},
+    labels={"description": ""},
 )
 
 
