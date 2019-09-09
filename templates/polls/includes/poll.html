@@ -9,7 +9,7 @@
 {% include "activities/includes/description.html" %}
 <ol>
     {% for answer in object.answers.all %}
-    <li>{{ answer }}
+    <li>{{ answer }} {{ answer.num_votes }}
         <meter class="meter" value="{% widthratio answer.num_votes object.total_num_votes 100 %}" min="0" max="100"></meter>
         <a data-controller="ajax"
            data-action="ajax#post"
@@ -17,6 +17,7 @@
     </li>
     {% endfor %}
 </ol>
+Total: {{ object.total_num_votes }}
 {% endblock content %}
 
 
