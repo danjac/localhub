@@ -55,7 +55,9 @@ class Photo(Activity):
     likes = GenericRelation(Like, related_query_name="photo")
     notifications = GenericRelation(Notification, related_query_name="photo")
 
-    search_indexer = SearchIndexer(("A", "title"), ("B", "description"))
+    search_indexer = SearchIndexer(
+        ("A", "title"), ("B", "description"), ("C", "artist")
+    )
 
     def __str__(self):
         return self.title
