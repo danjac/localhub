@@ -141,14 +141,12 @@ class ServiceWorkerView(TemplateView):
     """
 
     template_name = "notifications/service_worker.js"
-
-    def get(self, *args, **kwargs):
-        response = super().get(*args, **kwargs)
-        response["Content-Type"] = "application/javascript"
-        return response
+    content_type = "application/javascript"
 
     def get_context_data(self, **kwargs):
-        return {"vapid_public_key": settings.VAPID_PUBLIC_KEY}
+        data = super().get_context_data(**kwargs)
+        data["vapid_public_key"] = settings.VAPID_PUBLIC_KEY
+        return data
 
 
 service_worker_view = ServiceWorkerView.as_view()

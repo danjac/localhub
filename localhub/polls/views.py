@@ -97,9 +97,9 @@ class AnswerVoteView(
 
     permission_required = "polls.vote"
 
-    @cached_property
-    def object(self):
-        return self.get_object()
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.object = self.get_object()
 
     def get_permission_object(self):
         return self.object.poll
