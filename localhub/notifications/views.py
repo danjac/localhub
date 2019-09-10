@@ -141,7 +141,11 @@ class ServiceWorkerView(TemplateView):
     """
 
     template_name = "notifications/service_worker.js"
-    content_type = "application/javascript"
+
+    def get(self, request):
+        response = super().get(request)
+        response["Content-Type"] = "application/javascript"
+        return response
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
