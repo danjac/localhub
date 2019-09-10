@@ -11,7 +11,14 @@
 
 {% block content %}
 
-<h3>{% avatar user_obj "avatar-lg" %}{% user_display user_obj %}</h3>
+<h3>
+  {% avatar user_obj "avatar-lg" %}{% user_display user_obj %}
+  {% if membership.is_admin %}
+  <span class="chip bg-primary">{% trans "Admin" %}</span>
+  {% elif membership.is_moderator %}
+  <span class="chip bg-primary">{% trans "Moderator" %}</span>
+  {% endif %}
+</h3>
 <h4>@{{ user_obj.username }}</h4>
 
 {% if user_obj.bio %}
@@ -28,15 +35,8 @@ You have been a member for <b>{{ created }}</b>.
 {% endblocktrans %}
 {% elif membership %}
 <p>
-  {% if membership.is_admin %}
-  {% trans "This user is a community admin." %}
-  {% elif membership.is_moderator %}
-  {% trans "This user is a community moderator." %}
-  {% else %}
-  {% trans "This user is a member of this community." %}
-  {% endif %}
   {% blocktrans with created=membership.created|timesince %}
-  They have been a member for <b>{{ created }}</b>.
+  This user has been a member for <b>{{ created }}</b>.
   {% endblocktrans %}
 </p>
 {% endif %}
