@@ -176,33 +176,32 @@ class ActivityQuerySet(
         return self.blocked_users(user).blocked_tags(user)
 
 
-class TagExtractor:
-    """
-    Extracts tags automatically in description field. This sets
-    up signals so we don't have to do this with every subclass.
-    """
-
-    def finalize(self, sender, **kwargs):
-        def _extract_tags(instance, created, **kwargs):
-            if created or instance.description_tracker.changed():
-                hashtags = instance.description.extract_hashtags()
-                if hashtags:
-                    instance.tags.set(*hashtags, clear=True)
-                else:
-                    instance.tags.clear()
-
-        models.signals.post_save.connect(_extract_tags, weak=False)
-
-    def contribute_to_class(self, cls, name):
-        models.signals.class_prepared.connect(
-            self.finalize, sender=cls, weak=False
-        )
-
-
 class Activity(TimeStampedModel):
     """
     Base class for all activity-related entities e.g. posts, events, photos.
     """
+
+    class TagExtractor:
+        """
+        Extracts tags automatically in description field. This sets
+        up signals so we don't have to do this with every subclass.
+        """
+
+        def finalize(self, sender, **kwargs):
+            def _extract_tags(instance, created, **kwargs):
+                if created or instance.description_tracker.changed():
+                    hashtags = instance.description.extract_hashtags()
+                    if hashtags:
+                        instance.tags.set(*hashtags, clear=True)
+                    else:
+                        instance.tags.clear()
+
+            models.signals.post_save.connect(_extract_tags, weak=False)
+
+        def contribute_to_class(self, cls, name):
+            models.signals.class_prepared.connect(
+                self.finalize, sender=cls, weak=False
+            )
 
     RESHARED_FIELDS = ()
 
@@ -237,12 +236,11 @@ class Activity(TimeStampedModel):
     history = HistoricalRecords(inherit=True)
 
     tags = TaggableManager(blank=True)
+    tag_extractor = TagExtractor()
 
     search_document = SearchVectorField(null=True, editable=False)
 
     description_tracker = Tracker(["description"])
-
-    tag_extractor = TagExtractor()
 
     objects = ActivityQuerySet.as_manager()
 

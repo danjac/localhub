@@ -6,6 +6,3 @@ from django.apps import AppConfig
 
 class PhotosConfig(AppConfig):
     name = "localhub.photos"
-
-    def ready(self):
-        import localhub.photos.signals # noqa
