@@ -181,28 +181,6 @@ class Activity(TimeStampedModel):
     Base class for all activity-related entities e.g. posts, events, photos.
     """
 
-    class TagExtractor:
-        """
-        Extracts tags automatically in description field. This sets
-        up signals so we don't have to do this with every subclass.
-        """
-
-        def finalize(self, sender, **kwargs):
-            def _extract_tags(instance, created, **kwargs):
-                if created or instance.description_tracker.changed():
-                    hashtags = instance.description.extract_hashtags()
-                    if hashtags:
-                        instance.tags.set(*hashtags, clear=True)
-                    else:
-                        instance.tags.clear()
-
-            models.signals.post_save.connect(_extract_tags, weak=False)
-
-        def contribute_to_class(self, cls, name):
-            models.signals.class_prepared.connect(
-                self.finalize, sender=cls, weak=False
-            )
-
     RESHARED_FIELDS = ()
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
@@ -236,7 +214,6 @@ class Activity(TimeStampedModel):
     history = HistoricalRecords(inherit=True)
 
     tags = TaggableManager(blank=True)
-    tag_extractor = TagExtractor()
 
     search_document = SearchVectorField(null=True, editable=False)
 
@@ -455,3 +432,16 @@ class Activity(TimeStampedModel):
         if commit:
             reshared.save(**kwargs)
         return reshared
+
+    def extract_tags(self, is_new):
+        if is_new or self.description_tracker.changed():
+            hashtags = self.description.extract_hashtags()
+            if hashtags:
+                self.tags.set(*hashtags, clear=True)
+            else:
+                self.tags.clear()
+
+    def save(self, *args, **kwargs):
+        is_new = self._state.adding
+        super().save(self, *args, **kwargs)
+        self.extract_tags(is_new)
