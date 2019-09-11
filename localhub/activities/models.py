@@ -443,5 +443,5 @@ class Activity(TimeStampedModel):
 
     def save(self, *args, **kwargs):
         is_new = self._state.adding
-        super().save(self, *args, **kwargs)
+        super().save(*args, **kwargs)
         self.extract_tags(is_new)
