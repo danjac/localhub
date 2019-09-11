@@ -18,6 +18,19 @@ pytestmark = pytest.mark.django_db
 
 
 class TestPostModel:
+    def test_extract_tags(self, post):
+
+        post.description = "a post about #movies"
+        post.save()
+
+        tags = [t.name for t in post.tags.all()]
+        assert "movies" in tags
+
+        # clear tags
+        post.description = "a post about movies"
+        post.save()
+        assert post.tags.count() == 0
+
     def test_reshare(self, post, user):
 
         reshared = post.reshare(user)

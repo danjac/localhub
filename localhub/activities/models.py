@@ -176,6 +176,29 @@ class ActivityQuerySet(
         return self.blocked_users(user).blocked_tags(user)
 
 
+class TagExtractor:
+    """
+    Extracts tags automatically in description field. This sets
+    up signals so we don't have to do this with every subclass.
+    """
+
+    def finalize(self, sender, **kwargs):
+        def _extract_tags(instance, created, **kwargs):
+            if created or instance.description_tracker.changed():
+                hashtags = instance.description.extract_hashtags()
+                if hashtags:
+                    instance.tags.set(*hashtags, clear=True)
+                else:
+                    instance.tags.clear()
+
+        models.signals.post_save.connect(_extract_tags, weak=False)
+
+    def contribute_to_class(self, cls, name):
+        models.signals.class_prepared.connect(
+            self.finalize, sender=cls, weak=False
+        )
+
+
 class Activity(TimeStampedModel):
     """
     Base class for all activity-related entities e.g. posts, events, photos.
@@ -218,6 +241,8 @@ class Activity(TimeStampedModel):
     search_document = SearchVectorField(null=True, editable=False)
 
     description_tracker = Tracker(["description"])
+
+    tag_extractor = TagExtractor()
 
     objects = ActivityQuerySet.as_manager()
 
@@ -290,18 +315,6 @@ class Activity(TimeStampedModel):
             self.description.extract_hashtags()
             & self.community.get_content_warning_tags()
         )
-
-    def taggit(self, created):
-        """
-        Generates Tag instances from #hashtags in the description field when
-        changed. Pre-existing tags are deleted.
-        """
-        if created or self.description_tracker.changed():
-            hashtags = self.description.extract_hashtags()
-            if hashtags:
-                self.tags.set(*hashtags, clear=True)
-            else:
-                self.tags.clear()
 
     def make_notification(self, recipient, verb, actor=None):
         return Notification(

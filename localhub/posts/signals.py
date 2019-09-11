@@ -25,8 +25,3 @@ def fetch_title_from_url(instance, **kwargs):
             celery_logger.exception(e)
 
     transaction.on_commit(run_task)
-
-
-@receiver(post_save, sender=Post, dispatch_uid="posts.taggit")
-def taggit(instance, created, **kwargs):
-    transaction.on_commit(lambda: instance.taggit(created))
