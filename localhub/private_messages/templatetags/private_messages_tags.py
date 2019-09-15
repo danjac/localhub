@@ -29,6 +29,10 @@ def show_message(
     inbox_url = reverse("private_messages:inbox")
     outbox_url = reverse("private_messages:outbox")
 
+    show_parent_info = show_parent_info and (
+        is_sender or (is_recipient and not message.parent.is_hidden)
+    )
+
     if is_sender:
         sender_url = outbox_url
         recipient_url = reverse(
