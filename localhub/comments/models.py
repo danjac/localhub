@@ -10,7 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
-from django.template.defaultfilters import truncatechars, striptags
+from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils.functional import cached_property
 
@@ -198,9 +198,7 @@ class Comment(TimeStampedModel):
         return "content" in self.changed_fields
 
     def abbreviate(self, length=30):
-        text = " ".join(
-            striptags(self.content.markdown()).strip().splitlines()
-        )
+        text = " ".join(self.content.plaintext().splitlines())
         return truncatechars(text, length)
 
     def get_flags(self):

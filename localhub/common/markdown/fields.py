@@ -13,6 +13,7 @@ This provides additional methods on the field:
 """
 
 from django.db.models import Field
+from django.template.defaultfilters import striptags
 from django.utils.safestring import mark_safe
 
 from markdownx.models import MarkdownxField
@@ -29,6 +30,9 @@ class MarkdownProxy(str):
 
     def extract_hashtags(self):
         return extract_hashtags(self)
+
+    def plaintext(self):
+        return striptags(self.markdown()).strip()
 
 
 class MarkdownFieldDescriptor:

@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
-from django.template.defaultfilters import truncatechars, striptags
+from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 
 from model_utils.models import TimeStampedModel
@@ -94,9 +94,7 @@ class Message(TimeStampedModel):
         """
         Returns non-HTML/markdown abbreviated version of message.
         """
-        text = " ".join(
-            striptags(self.message.markdown()).strip().splitlines()
-        )
+        text = " ".join(self.message.plaintext()).splitlines()
         return truncatechars(text, length)
 
     def get_absolute_url(self):
