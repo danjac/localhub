@@ -1,6 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from django.db.models import Count, Q
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -187,7 +188,35 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
         return ["communities/non_member_community_list.html"]
 
     def get_queryset(self):
-        qs = Community.objects.listed(self.request.user).order_by("-created")
+        blocked = self.request.user.blocked.all()
+        qs = (
+            Community.objects.listed(self.request.user)
+            .annotate(
+                num_notifications=Count(
+                    "notification",
+                    filter=Q(
+                        notification__recipient=self.request.user,
+                        notification__is_read=False,
+                        notification__actor__is_active=True,
+                        notification__actor__membership__active=True,
+                    )
+                    & ~Q(notification__actor__in=blocked),
+                    distinct=True,
+                ),
+                num_messages=Count(
+                    "message",
+                    filter=Q(
+                        message__recipient=self.request.user,
+                        message__read__isnull=True,
+                        message__sender__is_active=True,
+                        message__sender__membership__active=True,
+                    )
+                    & ~Q(message__sender__in=blocked),
+                    distinct=True,
+                ),
+            )
+            .order_by("-created")
+        )
         if self.search_query:
             qs = qs.filter(name__icontains=self.search_query)
         return qs
