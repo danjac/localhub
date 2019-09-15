@@ -94,7 +94,7 @@ class Message(TimeStampedModel):
         """
         Returns non-HTML/markdown abbreviated version of message.
         """
-        text = " ".join(self.message.plaintext()).splitlines()
+        text = " ".join(self.message.plaintext().splitlines())
         return truncatechars(text, length)
 
     def get_absolute_url(self):
