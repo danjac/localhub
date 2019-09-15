@@ -32,7 +32,7 @@ def show_message(
     show_parent_info = (
         show_parent_info
         and message.parent
-        and (is_sender or (is_recipient and not message.parent.is_hidden))
+        and (is_recipient or (is_sender and not message.parent.is_hidden))
     )
 
     if is_sender:
