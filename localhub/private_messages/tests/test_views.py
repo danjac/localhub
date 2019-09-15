@@ -89,15 +89,28 @@ class TestMessageMarkReadView:
         assert message.read is not None
 
 
-class TestMessageMarkAllReadView:
+class TestMessageHideView:
     def test_post(self, client, member):
         sender = MembershipFactory(community=member.community).member
         message = MessageFactory(
             community=member.community, recipient=member.member, sender=sender
         )
         response = client.post(
-            reverse("private_messages:mark_all_read")
+            reverse("private_messages:message_hide", args=[message.id])
         )
+        assert response.url == message.get_absolute_url()
+        message.refresh_from_db()
+        assert message.is_hidden
+        assert message.read is not None
+
+
+class TestMessageMarkAllReadView:
+    def test_post(self, client, member):
+        sender = MembershipFactory(community=member.community).member
+        message = MessageFactory(
+            community=member.community, recipient=member.member, sender=sender
+        )
+        response = client.post(reverse("private_messages:mark_all_read"))
         assert response.url == reverse("private_messages:inbox")
         message.refresh_from_db()
         assert message.read is not None

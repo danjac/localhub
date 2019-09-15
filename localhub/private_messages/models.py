@@ -31,18 +31,23 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
         return self.filter(sender=user)
 
     def for_recipient(self, user):
-        return self.filter(recipient=user)
+        return self.filter(recipient=user, is_hidden=False)
 
     def for_sender_or_recipient(self, user):
-        return self.filter(models.Q(sender=user) | models.Q(recipient=user))
+        return self.filter(
+            models.Q(sender=user) | models.Q(recipient=user, is_hidden=False)
+        )
 
-    def between(self, user_a, user_b):
+    def between(self, current_user, other_user):
         """
         Return all messages exchanged between two users.
         """
         return self.filter(
-            models.Q(recipient=user_a, sender=user_b)
-            | models.Q(recipient=user_b, sender=user_a)
+            models.Q(
+                models.Q(recipient=current_user, is_hidden=False),
+                sender=other_user,
+            )
+            | models.Q(recipient=other_user, sender=current_user)
         )
 
     def with_sender_has_blocked(self, user):
@@ -75,6 +80,8 @@ class Message(TimeStampedModel):
     )
 
     read = models.DateTimeField(null=True, blank=True)
+
+    is_hidden = models.BooleanField(default=False)
 
     search_document = SearchVectorField(null=True, editable=False)
     search_indexer = SearchIndexer(("A", "message"))

@@ -297,6 +297,24 @@ class MessageDeleteView(SenderQuerySetMixin, DeleteView):
 message_delete_view = MessageDeleteView.as_view()
 
 
+class MessageHideView(RecipientQuerySetMixin, GenericModelView):
+    """
+    "Removes" message by marking it hidden. Also marks it read. Removes
+    message from view for recipient, but does not delete it completely.
+    """
+
+    def post(self, request, *args, **kwargs):
+        message = self.get_object()
+        if not message.read:
+            message.read = timezone.now()
+        message.is_hidden = True
+        message.save()
+        return redirect(message)
+
+
+message_hide_view = MessageHideView.as_view()
+
+
 class MessageMarkReadView(RecipientQuerySetMixin, GenericModelView):
     def get_queryset(self):
         return super().get_queryset().filter(read__isnull=True)

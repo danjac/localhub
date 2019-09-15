@@ -46,12 +46,21 @@
     <div class="card-footer">
         <div class="actions">
             <a href="{{ message.get_permalink }}">{% trans "Permalink" %}</a>
-            {% if not message.read and is_recipient %}
+            {% if is_recipient %}
+            <a href="{% url 'private_messages:message_hide' message.id %}"
+               data-controller="ajax confirm"
+               data-action="confirm#check ajax#post"
+               data-ajax-redirect="{{ request.path }}"
+               data-confirm-header="{% trans 'Hide Message' %}"
+               data-confirm-body="{% trans 'Are you sure you want to permanently hide this message?' %}"
+               >{% trans "Hide" %}</a>
+             {% if not message.read %}
             <a href="{% url 'private_messages:message_mark_read' message.id %}"
                data-controller="ajax"
                data-action="ajax#post"
                data-ajax-redirect="{{ request.path }}"
                >{% trans "Mark As Read" %}</a>
+            {% endif %}
             {% endif %}
             {% if is_sender %}
             <a href="{% url 'private_messages:message_update' message.id %}">{% trans "Edit" %}</a>
@@ -59,7 +68,7 @@
                data-controller="ajax confirm"
                data-action="confirm#check ajax#post"
                data-ajax-redirect="{{ post_delete_redirect|default:request.path }}"
-               data-confirm-header="{% trans 'Delete' %}"
+               data-confirm-header="{% trans 'Delete Message' %}"
                data-confirm-body="{% trans 'Are you sure you want to delete this message?' %}"
                >{% trans "Delete" %}</a>
             {% endif %}
