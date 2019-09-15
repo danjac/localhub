@@ -50,7 +50,7 @@
             <a href="{% url 'private_messages:message_hide' message.id %}"
                data-controller="ajax confirm"
                data-action="confirm#check ajax#post"
-               data-ajax-redirect="{{ request.path }}"
+               data-ajax-redirect="{{ post_hide_redirect|default:request.path }}"
                data-confirm-header="{% trans 'Hide Message' %}"
                data-confirm-body="{% trans 'Are you sure you want to permanently hide this message?' %}"
                >{% trans "Hide" %}</a>

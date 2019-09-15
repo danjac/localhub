@@ -25,6 +25,8 @@ def show_message(
 
     is_sender = user == message.sender
     is_recipient = user == message.recipient
+
+    inbox_url = reverse("private_messages:inbox")
     outbox_url = reverse("private_messages:outbox")
 
     if is_sender:
@@ -55,6 +57,7 @@ def show_message(
         "show_recipient_info": show_recipient_info,
         "show_sender_info": show_sender_info,
         "can_create_message": can_create_message,
+        "post_hide_redirect": inbox_url if is_detail else None,
         "post_delete_redirect": outbox_url if is_detail else None,
     }
 
