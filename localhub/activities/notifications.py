@@ -7,8 +7,6 @@ from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import override
 
-from localhub.activities.models import Activity
-from localhub.notifications.models import Notification
 from localhub.notifications.emails import send_notification_email
 from localhub.notifications.utils import send_push_notification
 from localhub.users.utils import user_display
@@ -47,9 +45,7 @@ def send_activity_notification_push(activity, notification):
         )
 
 
-def send_activity_notification_email(
-    activity: Activity, notification: Notification
-):
+def send_activity_notification_email(activity, notification):
 
     if notification.recipient.has_email_pref(notification.verb):
         with override(notification.recipient.language):
