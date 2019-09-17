@@ -94,7 +94,7 @@ class TestGetUnreadLocalNetworkMessageCount:
         MessageFactory(
             community=other,
             recipient=member.member,
-            sender=MembershipFactory(community=member.community).member,
+            sender=MembershipFactory(community=other).member,
         )
         assert (
             get_unread_local_network_message_count(
