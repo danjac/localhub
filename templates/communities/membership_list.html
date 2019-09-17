@@ -67,7 +67,7 @@
           {% if can_delete %}
           <a href="{% url 'communities:membership_delete' member.id %}"
              data-controller="ajax confirm"
-             data-action="confirm#check ajax#delete"
+             data-action="confirm#check ajax#post"
              data-confirm-header="{% trans 'Delete' %}"
              data-confirm-body="{% trans 'Are you sure you want to delete this membership?' %}"
              >{% trans "Delete" %}</a>
