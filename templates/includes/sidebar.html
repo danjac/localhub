@@ -49,7 +49,7 @@
        data-active-link-exact
        href="{% url 'community_list' %}">
        {% with total_local_network_notifications=unread_local_network_notifications|add:get_unread_local_network_message_count %}
-       <span {% if unread_local_network_notifications %}class="badge" data-badge="{{ unread_local_network_notifications }}"{% endif %}>
+       <span {% if total_local_network_notifications %}class="badge" data-badge="{{ total_local_network_notifications }}"{% endif %}>
        {% trans "Local Network" %}
        </span>
        {% endwith %}
