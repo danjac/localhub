@@ -82,7 +82,8 @@ def get_unread_message_count(context, user, community):
     else:
         count = (
             Message.objects.for_community(community)
-            .filter(recipient=user, read__isnull=True)
+            .for_recipient(user)
+            .filter(read__isnull=True)
             .count()
         )
     context[context_key] = count
@@ -103,8 +104,8 @@ def get_unread_local_network_message_count(context, user, community):
         count = 0
     else:
         count = (
-            Message.objects.filter(
-                recipient=user,
+            Message.objects.for_recipient(user)
+            .filter(
                 read__isnull=True,
                 community__membership__member=user,
                 community__membership__active=True,
