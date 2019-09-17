@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django import template
-from django.db.models import OuterRef
+from django.db.models import F
 from django.conf import settings
 
 from localhub.notifications.models import Notification
@@ -61,7 +61,7 @@ def get_unread_local_network_notification_count(context, user, community):
                 community__membership__member=user,
                 community__membership__active=True,
                 community__active=True,
-                actor__membership__community=OuterRef("community"),
+                actor__membership__community=F("community"),
                 actor__membership__active=True,
                 actor__is_active=True,
             )
