@@ -26,7 +26,7 @@ class PollQuerySet(ActivityQuerySet):
             total_num_votes=models.Count("answers__voters", distinct=True)
         )
 
-    def for_activity_stream(user, community):
+    def for_activity_stream(self, user, community):
         return (
             super().for_activity_stream(user, community).with_voting_counts()
         )
