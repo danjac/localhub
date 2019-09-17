@@ -3,6 +3,7 @@
 
 
 from django import template
+from django.db.models import OuterRef
 from django.urls import reverse
 
 from localhub.private_messages.models import Message
@@ -83,7 +84,12 @@ def get_unread_message_count(context, user, community):
         count = (
             Message.objects.for_community(community)
             .for_recipient(user)
-            .filter(read__isnull=True)
+            .filter(
+                read__isnull=True,
+                sender__membership__community=community,
+                sender__membership__active=True,
+                sender__is_active=True,
+            )
             .count()
         )
     context[context_key] = count
@@ -110,6 +116,9 @@ def get_unread_local_network_message_count(context, user, community):
                 community__membership__member=user,
                 community__membership__active=True,
                 community__active=True,
+                sender__membership__community=OuterRef("community"),
+                sender__membership__active=True,
+                sender__is_active=True,
             )
             .exclude(community=community)
             .count()
