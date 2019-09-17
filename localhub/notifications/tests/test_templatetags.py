@@ -5,6 +5,7 @@ from django.contrib.auth.models import AnonymousUser
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.notifications.models import Notification
 from localhub.notifications.templatetags.notifications_tags import (
+    get_unread_local_network_notification_count,
     get_unread_notification_count,
     notifications_subscribe_btn,
 )
@@ -57,5 +58,48 @@ class TestGetUnreadNotificationCount:
 
         assert (
             get_unread_notification_count({}, member.member, member.community)
+            == 1
+        )
+
+
+class TestGetUnreadLocalNetworkNotificationCount:
+    def test_anonymous(self, community):
+        assert (
+            get_unread_local_network_notification_count(
+                {}, AnonymousUser(), community
+            )
+            == 0
+        )
+
+    def test_authenticated(self, member):
+
+        other = MembershipFactory(member=member.member).community
+
+        post = PostFactory(
+            community=other, owner=MembershipFactory(community=other).member
+        )
+
+        Notification.objects.create(
+            content_object=post,
+            recipient=member.member,
+            actor=post.owner,
+            community=post.community,
+            verb="updated",
+            is_read=False,
+        )
+
+        Notification.objects.create(
+            content_object=post,
+            recipient=member.member,
+            actor=post.owner,
+            community=post.community,
+            verb="updated",
+            is_read=True,
+        )
+
+        assert (
+            get_unread_local_network_notification_count(
+                {}, member.member, member.community
+            )
             == 1
         )

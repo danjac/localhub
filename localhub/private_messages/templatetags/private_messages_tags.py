@@ -87,3 +87,31 @@ def get_unread_message_count(context, user, community):
         )
     context[context_key] = count
     return count
+
+
+@register.simple_tag(takes_context=True)
+def get_unread_local_network_message_count(context, user, community):
+    """
+    Returns cached count of unread messages *outside* the current community,
+    where the user is an active member. If user not logged in returns 0.
+    """
+
+    context_key = "_private_messages_unread_local_network_count"
+    if context_key in context:
+        return context[context_key]
+    if user.is_anonymous or not community.active:
+        count = 0
+    else:
+        count = (
+            Message.objects.filter(
+                recipient=user,
+                read__isnull=True,
+                community__membership__member=user,
+                community__membership__active=True,
+                community__active=True,
+            )
+            .exclude(community=community)
+            .count()
+        )
+    context[context_key] = count
+    return count
