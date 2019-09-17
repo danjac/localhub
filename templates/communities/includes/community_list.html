@@ -25,7 +25,7 @@
     </div>
 
     {% if community != object and object.is_member %}
-    {% with num_notifications=object.num_notifications num_messages=object.num_messages object_url=object.get_absolute_ul %}
+    {% with num_notifications=object.num_notifications num_messages=object.num_messages object_url=object.get_absolute_url %}
     {% if num_notifications or num_messages %}
     <div class="card-footer">
         <div class="actions">
