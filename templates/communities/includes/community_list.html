@@ -37,7 +37,7 @@
             </a>
             {% endif %}
             {% if num_messages %}
-            <a href="{{ object_url }}{% url 'messages:inbox' %}">
+            <a href="{{ object_url }}{% url 'private_messages:inbox' %}">
                 <span class="badge" data-badge="{{ num_messages }}">
                     {% trans "Messages" %}
                 </span>
