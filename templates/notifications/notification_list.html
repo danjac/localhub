@@ -96,7 +96,7 @@
           {% endif %}
           <a href="{% url 'notifications:delete' notification.pk %}"
              data-controller="ajax"
-             data-action="ajax#delete"
+             data-action="ajax#post"
              >{% trans "Delete" %}</a>
         </div>
 
