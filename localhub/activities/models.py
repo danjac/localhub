@@ -175,6 +175,14 @@ class ActivityQuerySet(
             return self
         return self.blocked_users(user).blocked_tags(user)
 
+    def for_activity_stream(self, user, community):
+        """
+        Common operations when querying in stream
+        """
+        return self.with_common_annotations(user, community).select_related(
+            "owner", "community", "parent", "parent__owner"
+        )
+
 
 class Activity(TimeStampedModel):
     """

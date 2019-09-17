@@ -33,15 +33,11 @@ class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
         return queryset.for_community(community=self.request.community)
 
     def get_queryset_for_model(self, model):
-        qs = self.filter_queryset(
-            model.objects.with_common_annotations(
+        return self.filter_queryset(
+            model.objects.for_activity_stream(
                 self.request.user, self.request.community
-            ).select_related("owner", "community", "parent", "parent__owner")
+            )
         )
-
-        if model == Poll:
-            return qs.with_voting_counts()
-        return qs
 
     def get_count_queryset_for_model(self, model):
         return self.filter_queryset(model.objects)
