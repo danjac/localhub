@@ -32,6 +32,7 @@ class TestPollCreateView:
                 "title": "test",
                 "description": "test",
                 "answers-0-description": "answer-one",
+                "answers-1-description": "answer-two",
                 "answers-TOTAL_FORMS": 3,
                 "answers-INITIAL_FORMS": 0,
                 "answers-MIN_NUM_FORMS": 0,
@@ -43,8 +44,7 @@ class TestPollCreateView:
         assert poll.owner == member.member
         assert poll.community == member.community
 
-        answer = poll.answers.first()
-        assert answer.description == "answer-one"
+        assert poll.answers.count() == 2
 
 
 class TestPollUpdateView:
