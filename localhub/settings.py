@@ -50,6 +50,7 @@ class Base(Configuration):
         "allauth",
         "allauth.account",
         "allauth.socialaccount",
+        "channels",
         "djcelery_email",
         "markdownx",
         "micawber.contrib.mcdjango",
@@ -182,6 +183,19 @@ class Base(Configuration):
     VAPID_PUBLIC_KEY = values.Value()
     VAPID_PRIVATE_KEY = values.Value()
     VAPID_ADMIN_EMAIL = values.Value()
+
+    # Django channels
+
+    ASGI_APPLICATION = "localhub.routing.application"
+
+    @property
+    def CHANNEL_LAYERS(self):
+        return {
+            "default": {
+                "BACKEND": "channels_redis.core.RedisChannelLayer",
+                "CONFIG": {"hosts": [self.REDIS_URL]},
+            }
+        }
 
     @property
     def BASE_DIR(self):

@@ -28,6 +28,9 @@ RUN chmod +x /entrypoint
 COPY ./scripts/start-django /start-django
 RUN chmod +x /start-django
 
+COPY ./scripts/start-daphne /start-daphne
+RUN chmod +x /start-daphne
+
 COPY ./scripts/start-celeryworker /start-celeryworker
 RUN chmod +x /start-celeryworker
 

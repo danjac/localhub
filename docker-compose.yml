@@ -59,21 +59,19 @@ services:
       - "8000:8000"
     command: /start-django
 
+  daphne:
+    <<: *django
+    ports:
+      - "8001:8001"
+    command: /start-daphne
+
   celeryworker:
     <<: *django
-    depends_on:
-      - postgres
-      - mailhog
-      - redis
     ports: []
     command: /start-celeryworker
 
   celerybeat:
     <<: *django
-    depends_on:
-      - postgres
-      - mailhog
-      - redis
     ports: []
     command: /start-celerybeat
 

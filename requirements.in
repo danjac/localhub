@@ -3,6 +3,8 @@ beautifulsoup4
 bleach
 boto3
 celery
+channels
+channels-redis
 dj-database-url
 django
 django-allauth
