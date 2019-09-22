@@ -12,11 +12,11 @@ from channels.layers import get_channel_layer
 from localhub.private_messages.models import Message
 
 
-@receiver(
-    post_save,
-    sender=Message,
-    dispatch_uid="private_messages.send_message_to_channel",
-)
+# @receiver(
+# post_save,
+# sender=Message,
+# dispatch_uid="private_messages.send_message_to_channel",
+# )
 def send_message_to_channel(instance, created, **kwargs):
     if not created:
         return

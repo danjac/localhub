@@ -59,6 +59,7 @@ services:
       - "8000:8000"
     command: /start-django
 
+  # don't need this in dev
   daphne:
     <<: *django
     ports:

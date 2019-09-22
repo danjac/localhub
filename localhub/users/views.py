@@ -21,6 +21,7 @@ from localhub.comments.views import BaseCommentListView
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.likes.models import Like
+from localhub.private_messages.forms import MessageForm
 from localhub.private_messages.models import Message
 from localhub.users.forms import UserForm
 from localhub.users.notifications import send_user_notification
@@ -272,7 +273,7 @@ class UserMessageListView(LoginRequiredMixin, SingleUserMixin, ListView):
             .thread(self.request.user, self.user_obj)
             .with_sender_has_blocked(self.request.user)
             .select_related("sender", "recipient", "community")
-            .order_by("-created")
+            .order_by("created")
             .distinct()
         )
 
@@ -289,6 +290,8 @@ class UserMessageListView(LoginRequiredMixin, SingleUserMixin, ListView):
                 ).count(),
             }
         )
+        if self.request.user not in self.user_obj.blocked.all():
+            data["message_form"] = MessageForm()
         return data
 
 

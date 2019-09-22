@@ -311,14 +311,14 @@ class Local(DockerConfigMixin, Base):
     ALLOWED_HOSTS = ["*"]
 
     THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + [
-        "debug_toolbar",
+        # "debug_toolbar",
         "django_extensions",
         "silk",
     ]
 
     MIDDLEWARE = Base.MIDDLEWARE + [
         "silk.middleware.SilkyMiddleware",
-        "debug_toolbar.middleware.DebugToolbarMiddleware",
+        # "debug_toolbar.middleware.DebugToolbarMiddleware",
     ]
 
     DEBUG_TOOLBAR_CONFIG = {

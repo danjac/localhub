@@ -13,26 +13,37 @@
 {% block user_content %}
 
 <div class="my-2 toast text-center">
-  {% blocktrans count counter=num_messages_sent %}
-  You have sent <strong>1 message</strong>
-  {% plural %}
-  You have sent <strong>{{ counter }} messages</strong>
-  {% endblocktrans %}
-  {% blocktrans count counter=num_messages_received %}
-  and have received a total of <strong>1 message</strong> from this user.
-  {% plural %}
-  and have received a total of <strong>{{ counter }} messages</strong> from this user.
-  {% endblocktrans %}
+    {% blocktrans count counter=num_messages_sent %}
+    You have sent <strong>1 message</strong>
+    {% plural %}
+    You have sent <strong>{{ counter }} messages</strong>
+    {% endblocktrans %}
+    {% blocktrans count counter=num_messages_received %}
+    and have received a total of <strong>1 message</strong> from this user.
+    {% plural %}
+    and have received a total of <strong>{{ counter }} messages</strong> from this user.
+    {% endblocktrans %}
 </div>
 
 {% include "private_messages/includes/email_settings.html" %}
 
 {% if object_list %}
+<div data-controller="messages" data-messages-url="/ws/messages/{{ user_obj.username }}/">
+{% include "includes/pagination.html" %}
 {% for message in object_list %}
 {% show_message user message %}
 {% endfor %}
-{% include "includes/pagination.html" %}
 {% else %}
 {% include "includes/empty.html" %}
 {% endif %}
+{% if message_form and page_obj.number == 1 %}
+<form method="POST"
+      data-action="messages#sendMessage"
+      id="send-message"
+      >
+      {% include "includes/forms/fields.html" with form=message_form %}
+      <button type="submit" class="btn btn-primary">Send</button>
+</form>
+{% endif %}
+</div>
 {% endblock user_content %}
