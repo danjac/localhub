@@ -97,7 +97,7 @@ class TestMessageManager:
         assert third not in messages
         assert fourth not in messages
 
-    def test_between(self):
+    def test_thread(self):
 
         user_a = UserFactory()
         user_b = UserFactory()

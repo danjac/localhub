@@ -38,7 +38,7 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
             models.Q(sender=user) | models.Q(recipient=user, is_hidden=False)
         )
 
-    def between(self, current_user, other_user):
+    def thread(self, current_user, other_user):
         """
         Return all messages exchanged between two users.
         """

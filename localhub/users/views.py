@@ -269,7 +269,7 @@ class UserMessageListView(LoginRequiredMixin, SingleUserMixin, ListView):
     def get_queryset(self):
         return (
             Message.objects.for_community(self.request.community)
-            .between(self.request.user, self.user_obj)
+            .thread(self.request.user, self.user_obj)
             .with_sender_has_blocked(self.request.user)
             .select_related("sender", "recipient", "community")
             .order_by("-created")
