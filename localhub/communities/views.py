@@ -141,6 +141,7 @@ class CommunityUpdateView(
         "intro",
         "description",
         "terms",
+        "google_tracking_id",
         "content_warning_tags",
         "listed",
         "allow_join_requests",
