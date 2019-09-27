@@ -10,8 +10,8 @@ from django.utils.translation import gettext_lazy as _
 from model_utils import Choices
 from model_utils.models import TimeStampedModel
 
+from localhub.common.db.content_types import get_generic_related_exists
 from localhub.communities.models import Community
-from localhub.common.content_types import get_generic_related_exists
 from localhub.notifications.models import Notification
 
 

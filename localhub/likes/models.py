@@ -9,7 +9,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from model_utils.models import TimeStampedModel
 
-from localhub.common.content_types import (
+from localhub.common.db.content_types import (
     get_generic_related_count_subquery,
     get_generic_related_exists,
 )
