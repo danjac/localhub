@@ -16,7 +16,20 @@
 {% block content %}
 
 {% include "activities/includes/oembed.html" %}
-{% if object.url and object.description %}
+{% if object.url %}
+<div class="divider"></div>
+{% endif %}
+{% if object.metadata_description %}
+<div class="columns">
+  {% if object.metadata_image %}
+  <div class="column col-2">
+    <img src="{{ object.metadata_image }}" alt="{{ object.title }}" style="width: 99%;">
+  </div>
+  {% endif %}
+  <div class="column col-{{ object.metadata_image|yesno:"10,12" }}">
+    <p>{{ object.metadata_description }}</p>
+  </div>
+</div>
 <div class="divider"></div>
 {% endif %}
 {% include "activities/includes/description.html" %}

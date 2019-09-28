@@ -16,8 +16,8 @@ class PostForm(forms.ModelForm):
         help_texts = {
             "title": _(
                 "If you add a URL in the Link field below and leave the Title "
-                "field empty, we will try to automatically fetch a title for "
-                "your post from the web page."
+                "field empty, we will try to automatically fetch a title and "
+                "description for your post from the web page."
             )
         }
 

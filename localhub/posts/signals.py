@@ -13,15 +13,16 @@ from localhub.posts.models import Post
 celery_logger = get_logger(__name__)
 
 
-@receiver(post_save, sender=Post, dispatch_uid="posts.fetch_title_from_url")
-def fetch_title_from_url(instance, **kwargs):
-    if not instance.url or instance.title:
-        return
+@receiver(
+    post_save, sender=Post, dispatch_uid="posts.fetch_post_metadata_from_url"
+)
+def fetch_post_metadata_from_url(instance, created=False, **kwargs):
+    if created or instance.url_tracker.changed():
 
-    def run_task():
-        try:
-            tasks.fetch_post_title_from_url.delay(instance.id)
-        except tasks.fetch_post_title_from_url.OperationalError as e:
-            celery_logger.exception(e)
+        def run_task():
+            try:
+                tasks.fetch_post_metadata_from_url.delay(instance.id)
+            except tasks.fetch_post_metadata_from_url.OperationalError as e:
+                celery_logger.exception(e)
 
-    transaction.on_commit(run_task)
+        transaction.on_commit(run_task)

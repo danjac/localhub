@@ -219,3 +219,54 @@ class TestPostModel:
         assert notifications[3].recipient == moderator
         assert notifications[3].actor == reshare.owner
         assert notifications[3].verb == "moderator_review_request"
+
+    def test_fetch_metadata_from_url_if_ok(self, mocker):
+        class Response:
+            ok = True
+            headers = {"Content-Type": "text/html; charset=utf-8"}
+            content = """
+<html>
+<head>
+<title>Hello</title>
+<meta property="og:title" content="a test site">
+<meta property="og:image" content="http://test.jpg">
+<meta property="og:description" content="test description">
+</head>
+<body>
+</body>
+</html>"""
+
+        mocker.patch("requests.get", lambda url: Response)
+        post = PostFactory(url="http://google.com", title="", description="")
+        post.fetch_metadata_from_url()
+
+        assert post.title == "a test site"
+        assert post.metadata_image == "http://test.jpg"
+        assert post.metadata_description == "test description"
+
+    def test_fetch_metadata_from_url_if_not_ok(self, mocker):
+        class MockResponse:
+            ok = False
+
+        mocker.patch("requests.get", lambda url: MockResponse)
+        post = PostFactory(url="http://google.com", title="", description="")
+        post.fetch_metadata_from_url()
+
+        assert post.title == "google.com"
+        assert post.metadata_image == ""
+        assert post.metadata_description == ""
+
+    def test_if_not_html(self, mocker):
+        class MockResponse:
+            ok = True
+            headers = {"Content-Type": "image/jpeg"}
+
+        mocker.patch("requests.get", lambda url: MockResponse)
+        post = PostFactory(
+            url="http://google.com/test.jpg", title="", description=""
+        )
+        post.fetch_metadata_from_url()
+
+        assert post.title == "google.com"
+        assert post.metadata_image == ""
+        assert post.metadata_description == ""
