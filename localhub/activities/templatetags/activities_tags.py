@@ -1,6 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import html
 import mimetypes
 
 from urllib.parse import urlparse
@@ -20,6 +21,14 @@ def is_content_sensitive(activity, user):
     if user.is_authenticated and user.show_sensitive_content:
         return False
     return bool(activity.get_content_warning_tags())
+
+
+@register.filter
+def html_unescape(text):
+    """
+    Removes any html entities from the text.
+    """
+    return html.unescape(text)
 
 
 @register.filter

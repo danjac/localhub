@@ -4,6 +4,7 @@
 {% extends "activities/activity_base.html" %}
 
 {% load i18n %}
+{% load activities_tags %}
 
 {% block title %}
 {% if object.url %}
@@ -27,7 +28,7 @@
   </div>
   {% endif %}
   <div class="column col-{{ object.metadata_image|yesno:"9,12" }} col-md-12">
-    <p>{{ object.metadata_description }}</p>
+    <p>{{ object.metadata_description|html_unescape }}</p>
   </div>
 </div>
 <div class="divider"></div>

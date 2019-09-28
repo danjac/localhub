@@ -7,6 +7,7 @@ from django.contrib.auth.models import AnonymousUser
 
 from localhub.activities.templatetags.activities_tags import (
     domain,
+    html_unescape,
     is_content_sensitive,
     url_to_img,
 )
@@ -39,6 +40,12 @@ class TestUrlToImg:
     def test_if_not_url(self):
         text = "<div></div>"
         assert url_to_img(text) == "<div></div>"
+
+
+class TestHtmlUnescape:
+    def test_html_unescape(self):
+        text = "this is &gt; that"
+        assert html_unescape(text) == "this is > that"
 
 
 class TestIsContentSensitive:
