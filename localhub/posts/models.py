@@ -65,7 +65,7 @@ class Post(Activity):
         registry = bootstrap_oembed()
         return registry.provider_for_url(self.url) is not None
 
-    def fetch_metadata_from_url(self, commit=True):
+    def fetch_metadata_from_url(self):
         """
         Looks for og/twitter title, description and image if available and
         title and/or description missing.
@@ -74,23 +74,29 @@ class Post(Activity):
 
         No action if post does not have a URL.
         """
+
+        update_fields = ["title", "metadata_description", "metadata_image"]
+
         if not self.url:
+            self.metadata_description = ""
+            self.metadata_image = ""
+            self.save(update_fields=update_fields)
             return
 
         response = requests.get(self.url)
         if not response.ok or "text/html" not in response.headers.get(
             "Content-Type", ""
         ):
-            self.title = self.get_domain()[:300]
-            self.save(update_fields=["title"])
+            if not self.title:
+                self.title = self.get_domain()[:300]
+            self.metadata_description = ""
+            self.metadata_image = ""
+            self.save(update_fields=update_fields)
             return
 
         soup = BeautifulSoup(response.content, "html.parser")
 
-        fields = []
-
         if not self.title:
-
             title = soup.find(
                 "meta", attrs={"property": "og:title"}
             ) or soup.find("meta", attrs={"name": "twitter:title"})
@@ -103,19 +109,19 @@ class Post(Activity):
                 )
 
             self.title = self.title.strip()[:300]
-            fields.append("title")
 
         image = soup.find("meta", attrs={"property": "og:image"})
         if image and "content" in image.attrs:
             self.metadata_image = image.attrs["content"]
-            fields.append("metadata_image")
+        else:
+            self.metadata_image = ""
 
         description = soup.find(
             "meta", attrs={"property": "og:description"}
         ) or soup.find("meta", attrs={"name": "twitter:description"})
         if description and "content" in description.attrs:
             self.metadata_description = description.attrs["content"]
-            fields.append("metadata_description")
+        else:
+            self.metadata_description = ""
 
-        if commit and fields:
-            self.save(update_fields=fields)
+        self.save(update_fields=update_fields)
