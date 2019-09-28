@@ -22,11 +22,11 @@
 {% if object.metadata_description and not object.is_oembed %}
 <div class="columns">
   {% if object.metadata_image %}
-  <div class="column col-2 col-md-12">
+  <div class="column col-3 col-md-12">
     <img src="{{ object.metadata_image }}" alt="{{ object.title }}" style="width: 99%;">
   </div>
   {% endif %}
-  <div class="column col-{{ object.metadata_image|yesno:"10,12" }} col-md-12">
+  <div class="column col-{{ object.metadata_image|yesno:"9,12" }} col-md-12">
     <p>{{ object.metadata_description }}</p>
   </div>
 </div>
