@@ -11,7 +11,7 @@
 {% block message_list %}
 
 {% if paginator.count or view.search_query %}
-{% include "includes/search_form.html" %}
+{% include "includes/forms/search_form.html" %}
 {% endif %}
 
 {% if object_list %}

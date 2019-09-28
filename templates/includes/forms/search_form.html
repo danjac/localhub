@@ -14,7 +14,7 @@
              placeholder="{% trans "Search" %}"
              value="{{ view.search_query|default:"" }}">
       {% if view.search_query %}
-      <a class="btn btn-link btn-block mt-2" href="{{ request.path }}">
+      <a class="btn btn-block mt-2" href="{{ request.path }}">
         {% trans "Clear Search" %}
       </a>
   {% endif %}
