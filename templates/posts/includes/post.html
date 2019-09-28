@@ -19,7 +19,7 @@
 {% if object.url %}
 <div class="divider"></div>
 {% endif %}
-{% if object.metadata_description %}
+{% if object.metadata_description and not object.is_oembed %}
 <div class="columns">
   {% if object.metadata_image %}
   <div class="column col-2">

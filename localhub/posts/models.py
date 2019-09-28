@@ -9,6 +9,7 @@ from django.utils.translation import gettext as _
 
 from bs4 import BeautifulSoup
 
+from localhub.activities.oembed import bootstrap_oembed
 from localhub.activities.models import Activity
 from localhub.activities.utils import get_domain
 from localhub.comments.models import Comment
@@ -57,6 +58,12 @@ class Post(Activity):
                 if value
             ]
         )
+
+    def is_oembed(self):
+        if not self.url:
+            return False
+        registry = bootstrap_oembed()
+        return registry.provider_for_url(self.url) is not None
 
     def fetch_metadata_from_url(self, commit=True):
         """

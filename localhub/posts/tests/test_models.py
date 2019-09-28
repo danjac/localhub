@@ -18,6 +18,14 @@ pytestmark = pytest.mark.django_db
 
 
 class TestPostModel:
+    def test_is_oembed(self):
+        post = Post(url="https://www.youtube.com/watch?v=eLeIJtLebZk")
+        assert post.is_oembed()
+
+    def test_is_not_oembed(self):
+        post = Post(url="https://google.com")
+        assert not post.is_oembed()
+
     def test_extract_tags(self, post):
 
         post.description = "a post about #movies"
