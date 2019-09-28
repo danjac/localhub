@@ -6,11 +6,12 @@
 {% load activities_tags %}
 
 {% if object.url %}
+{% is_oembed_allowed user as oembed_allowed %}
 <div data-controller="oembed" class="wordwrap">
-{% if request.do_not_track and not user.show_embedded_content %}
-  {{ object.url|url_to_img|domain }}
-{% else %}
+{% if oembed_allowed %}
   {{ object.url|oembed_no_urlize|url_to_img|domain }}
+{% else %}
+  {{ object.url|url_to_img|domain }}
 {% endif %}
 </div>
 {% endif %}

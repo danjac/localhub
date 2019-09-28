@@ -3,12 +3,14 @@
 
 import pytest
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 
 from localhub.activities.templatetags.activities_tags import (
     domain,
     html_unescape,
     is_content_sensitive,
+    is_oembed_allowed,
     url_to_img,
 )
 from localhub.communities.tests.factories import CommunityFactory
@@ -16,6 +18,32 @@ from localhub.posts.tests.factories import PostFactory
 from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
+
+
+class TestIsOembedAllowed:
+    def test_if_does_track(self, rf):
+        req = rf.get("/")
+        req.do_not_track = False
+        assert is_oembed_allowed(
+            {"request": req}, get_user_model()(show_embedded_content=False)
+        )
+
+    def test_if_anonymous(self, rf):
+        req = rf.get("/")
+        req.do_not_track = True
+        assert not is_oembed_allowed({"request": req}, AnonymousUser())
+
+    def test_if_user_allows(self, rf):
+        req = rf.get("/")
+        req.do_not_track = True
+        user = get_user_model()(show_embedded_content=True)
+        assert is_oembed_allowed({"request": req}, user)
+
+    def test_if_user_not_allows(self, rf):
+        req = rf.get("/")
+        req.do_not_track = True
+        user = get_user_model()(show_embedded_content=False)
+        assert not is_oembed_allowed({"request": req}, user)
 
 
 class TestUrlToImg:

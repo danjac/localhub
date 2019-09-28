@@ -5,6 +5,7 @@
 
 {% load i18n %}
 {% load activities_tags %}
+{% load posts_tags %}
 
 {% block title %}
 {% if object.url %}
@@ -20,7 +21,8 @@
 {% if object.url %}
 <div class="divider"></div>
 {% endif %}
-{% if object.metadata_description and not object.is_oembed %}
+{% is_post_oembed user object as is_oembed %}
+{% if object.metadata_description and not is_oembed %}
 <div class="columns">
   {% if object.metadata_image %}
   <div class="column col-3 col-md-12">
