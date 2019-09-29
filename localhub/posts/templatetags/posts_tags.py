@@ -10,4 +10,4 @@ register = template.Library()
 
 @register.simple_tag(takes_context=True)
 def is_post_oembed(context, user, post):
-    return post.is_oembed() and is_oembed_allowed(context, user)
+    return is_oembed_allowed(context, user) and post.is_oembed()
