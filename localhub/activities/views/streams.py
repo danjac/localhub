@@ -15,6 +15,9 @@ from django.views.generic.dates import (
     _date_from_string,
 )
 
+
+from silk.profiling.profiler import silk_profile
+
 from localhub.common.views import BaseMultipleQuerySetListView, SearchMixin
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.events.models import Event
@@ -63,7 +66,7 @@ class StreamView(BaseStreamView):
         )
 
 
-stream_view = StreamView.as_view()
+stream_view = silk_profile(StreamView.as_view(), name="Stream View")
 
 
 class TimelineView(YearMixin, MonthMixin, DateMixin, StreamView):
