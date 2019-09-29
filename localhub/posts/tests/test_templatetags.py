@@ -11,6 +11,7 @@ class TestIsPostOembed:
     def test_not_oembed(self, rf):
         post = Post()
         req = rf.get("/")
+        req.do_not_track = False
         assert not is_post_oembed({"request": req}, get_user_model()(), post)
 
     def test_if_allowed(self, rf):
