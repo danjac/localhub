@@ -21,6 +21,17 @@ pytestmark = pytest.mark.django_db
 User = get_user_model()
 
 
+class TestMemberListView:
+    def test_get(self, client, member):
+        user = MembershipFactory(community=member.community).member
+        response = client.get(reverse("users:member_list"))
+        assert response.status_code == 200
+
+        object_list = response.context["object_list"]
+        assert user in object_list
+        assert member.member in object_list
+
+
 class TestFollowingUserListView:
     def test_get(self, client, member):
         user = MembershipFactory(community=member.community).member

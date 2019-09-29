@@ -18,6 +18,7 @@ from vanilla import DeleteView, ListView, UpdateView, GenericModelView
 from localhub.activities.views.streams import BaseStreamView
 from localhub.comments.models import Comment
 from localhub.comments.views import BaseCommentListView
+from localhub.common.views import SearchMixin
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.likes.models import Like
@@ -70,21 +71,26 @@ class SingleUserMixin(BaseUserQuerySetMixin):
         return data
 
 
-class BaseSingleUserView(UserQuerySetMixin, GenericModelView):
+class BaseSingleUserView(
+    LoginRequiredMixin, UserQuerySetMixin, GenericModelView
+):
     lookup_field = "username"
     lookup_url_kwarg = "slug"
 
 
-class BaseUserListView(UserQuerySetMixin, ListView):
+class BaseUserListView(LoginRequiredMixin, UserQuerySetMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
     def get_queryset(self):
-        return super().get_queryset().order_by("name", "username")
+        return (
+            super()
+            .get_queryset()
+            .order_by("name", "username")
+            .exclude(blocked=self.request.user)
+        )
 
 
-class UserFollowView(
-    LoginRequiredMixin, PermissionRequiredMixin, BaseSingleUserView
-):
+class UserFollowView(PermissionRequiredMixin, BaseSingleUserView):
     permission_required = "users.follow_user"
 
     def post(self, request, *args, **kwargs):
@@ -103,7 +109,7 @@ class UserFollowView(
 user_follow_view = UserFollowView.as_view()
 
 
-class UserUnfollowView(LoginRequiredMixin, BaseSingleUserView):
+class UserUnfollowView(BaseSingleUserView):
     def post(self, request, *args, **kwargs):
         user = self.get_object()
         self.request.user.following.remove(user)
@@ -113,9 +119,7 @@ class UserUnfollowView(LoginRequiredMixin, BaseSingleUserView):
 user_unfollow_view = UserUnfollowView.as_view()
 
 
-class UserBlockView(
-    LoginRequiredMixin, PermissionRequiredMixin, BaseSingleUserView
-):
+class UserBlockView(PermissionRequiredMixin, BaseSingleUserView):
     permission_required = "users.block_user"
 
     def post(self, request, *args, **kwargs):
@@ -127,7 +131,7 @@ class UserBlockView(
 user_block_view = UserBlockView.as_view()
 
 
-class UserUnblockView(LoginRequiredMixin, BaseSingleUserView):
+class UserUnblockView(BaseSingleUserView):
     def post(self, request, *args, **kwargs):
         user = self.get_object()
         self.request.user.blocked.remove(user)
@@ -137,7 +141,7 @@ class UserUnblockView(LoginRequiredMixin, BaseSingleUserView):
 user_unblock_view = UserUnblockView.as_view()
 
 
-class FollowingUserListView(LoginRequiredMixin, BaseUserListView):
+class FollowingUserListView(BaseUserListView):
     template_name = "users/following_user_list.html"
 
     def get_queryset(self):
@@ -153,7 +157,7 @@ class FollowingUserListView(LoginRequiredMixin, BaseUserListView):
 following_user_list_view = FollowingUserListView.as_view()
 
 
-class FollowerUserListView(LoginRequiredMixin, BaseUserListView):
+class FollowerUserListView(BaseUserListView):
     template_name = "users/follower_user_list.html"
 
     def get_queryset(self):
@@ -168,7 +172,7 @@ class FollowerUserListView(LoginRequiredMixin, BaseUserListView):
 follower_user_list_view = FollowerUserListView.as_view()
 
 
-class BlockedUserListView(LoginRequiredMixin, BaseUserListView):
+class BlockedUserListView(BaseUserListView):
     template_name = "users/blocked_user_list.html"
 
     def get_queryset(self):
@@ -183,7 +187,7 @@ class BlockedUserListView(LoginRequiredMixin, BaseUserListView):
 blocked_user_list_view = BlockedUserListView.as_view()
 
 
-class UserAutocompleteListView(LoginRequiredMixin, BaseUserListView):
+class UserAutocompleteListView(BaseUserListView):
     template_name = "users/user_autocomplete_list.html"
 
     def get_queryset(self):
@@ -200,6 +204,28 @@ class UserAutocompleteListView(LoginRequiredMixin, BaseUserListView):
 
 
 user_autocomplete_list_view = UserAutocompleteListView.as_view()
+
+
+class MemberListView(SearchMixin, BaseUserListView):
+    """
+    Shows all members of community
+    """
+
+    template_name = "users/member_list.html"
+
+    def get_queryset(self):
+        qs = (
+            super()
+            .get_queryset()
+            .exclude(blocked=self.request.user)
+            .with_is_following(self.request.user)
+        )
+        if self.search_query:
+            qs = qs.search(self.search_query)
+        return qs
+
+
+member_list_view = MemberListView.as_view()
 
 
 class UserStreamView(SingleUserMixin, BaseStreamView):
@@ -254,7 +280,7 @@ class UserCommentListView(SingleUserMixin, BaseCommentListView):
 user_comment_list_view = UserCommentListView.as_view()
 
 
-class UserMessageListView(LoginRequiredMixin, SingleUserMixin, ListView):
+class UserMessageListView(SingleUserMixin, ListView):
     """
     Renders thread of all private messages between this user
     and the current user.

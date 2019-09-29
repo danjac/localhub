@@ -14,6 +14,10 @@
 <ul class="tab tab-block mt-2">
   <li class="tab-item" data-controller="active-link" data-active-link-exact>
     <a data-target="active-link.match"
+       href="{% url 'users:member_list' %}">{% trans "Members" %}</a>
+  </li>
+  <li class="tab-item" data-controller="active-link" data-active-link-exact>
+    <a data-target="active-link.match"
        href="{% url 'users:following_list' %}">{% trans "Following" %}</a>
   </li>
   <li class="tab-item" data-controller="active-link" data-active-link-exact>
@@ -26,16 +30,16 @@
   </li>
 </ul>
 
-
-
-{% test_rule "communities.is_member" user community as is_member %}
+{% block user_list %}
 
 {% if object_list %}
 
+{% block counter_container %}
 <div class="my-2 toast text-center">
   {% block counter %}
   {% endblock counter %}
 </div>
+{% endblock counter_container %}
 
 <table class="table table-striped table-hover">
   <tbody>
@@ -44,7 +48,6 @@
       <td>
         {% include "users/includes/chip.html" with profile=object %}
       </td>
-      {% if is_member %}
       <td>
         {% if user != object %}
         <div class="actions float-right" data-controller="toggle">
@@ -75,7 +78,6 @@
         </div>
         {% endif %}
       </td>
-      {% endif %}
     </tr>
     {% endfor %}
   </tbody>
@@ -84,4 +86,5 @@
 {% else %}
 {% include "includes/empty.html" %}
 {% endif %}
+{% endblock user_list %}
 {% endblock content %}

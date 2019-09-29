@@ -1,0 +1,30 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "users/base_user_list.html" %}
+{% load i18n %}
+
+{% block subtitle %} | {% trans "Users" %} | {% trans "Members" %}{% endblock %}
+
+{% block counter_container %}
+{% if not view.search_query %}
+{{ block.super }}
+{% endif %}
+{% endblock counter_container %}
+
+
+{% block counter %}
+{% blocktrans count counter=paginator.count %}
+This community has one member.
+{% plural %}
+This community has {{ counter }} members.
+{% endblocktrans %}
+{% endblock counter %}
+
+{% block user_list %}
+<div class="mb-1">
+{% include "includes/forms/search_form.html" %}
+</div>
+{{ block.super }}
+{% endblock user_list %}
+

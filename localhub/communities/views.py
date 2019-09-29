@@ -216,7 +216,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
                     distinct=True,
                 ),
             )
-            .order_by("-created")
+            .order_by("name")
         )
         if self.search_query:
             qs = qs.filter(name__icontains=self.search_query)

@@ -84,6 +84,11 @@
        href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
   </li>
   <li class="menu-item">
+    <a data-controller="active-link" href="{% url 'users:member_list' %}">
+      {% trans "Members" %}
+    </a>
+  </li>
+  <li class="menu-item">
     <a data-controller="active-link" href="{% url 'users:following_list' %}">
       {% trans "Following" %}
     </a>
@@ -146,7 +151,7 @@
     <a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'communities:membership_list' %}">{% trans "Members" %}</a>
+    <a data-controller="active-link" href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
