@@ -19,6 +19,8 @@ from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification
 
+_oembed_registry = bootstrap_oembed()
+
 
 class Post(Activity):
 
@@ -62,8 +64,7 @@ class Post(Activity):
     def is_oembed(self):
         if not self.url:
             return False
-        registry = bootstrap_oembed()
-        return registry.provider_for_url(self.url) is not None
+        return _oembed_registry.provider_for_url(self.url) is not None
 
     def fetch_metadata_from_url(self):
         """
