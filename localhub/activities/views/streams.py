@@ -66,7 +66,7 @@ class StreamView(BaseStreamView):
         )
 
 
-stream_view = silk_profile(StreamView.as_view(), name="Stream View")
+stream_view = silk_profile(name="Stream View")(StreamView.as_view())
 
 
 class TimelineView(YearMixin, MonthMixin, DateMixin, StreamView):
