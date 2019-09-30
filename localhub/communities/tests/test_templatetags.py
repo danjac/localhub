@@ -22,6 +22,6 @@ class TestGetAvailableCommunityCount:
         assert get_available_community_count({}, AnonymousUser()) == 0
 
     def test_authenticated(self, member):
-        CommunityFactory()
+        CommunityFactory(listed=False)
         MembershipFactory(member=member.member).community
         assert get_available_community_count({}, member.member) == 2
