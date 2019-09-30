@@ -13,7 +13,7 @@
 {% has_perm "communities.moderate_community" user community as can_moderate_community %}
 {% has_perm "communities.manage_community" user community as can_manage_community %}
 
-{% get_available_communities_count user as num_communities %}
+{% get_available_community_count user as num_communities %}
 {% get_unread_notification_count user community as unread_notifications %}
 {% get_unread_message_count user community as unread_messages %}
 
