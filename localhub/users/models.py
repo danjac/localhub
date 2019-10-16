@@ -19,9 +19,9 @@ from timezone_field import TimeZoneField
 
 from taggit.models import Tag
 
-from localhub.communities.models import Membership
 from localhub.common.db.fields import ChoiceArrayField
 from localhub.common.db.search import SearchIndexer, SearchQuerySetMixin
+from localhub.communities.models import Membership
 from localhub.notifications.models import Notification
 
 
@@ -65,7 +65,6 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
         """
 
         return self.filter(
-            # test with more than 1 community
             membership__community=community,
             membership__active=True,
             is_active=True,
