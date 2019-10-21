@@ -229,7 +229,7 @@ class TestPostModel:
         assert notifications[3].verb == "moderator_review_request"
 
     def test_fetch_metadata_from_url_if_ok(self, mocker):
-        class Response:
+        class MockResponse:
             ok = True
             headers = {"Content-Type": "text/html; charset=utf-8"}
             content = """
@@ -244,7 +244,7 @@ class TestPostModel:
 </body>
 </html>"""
 
-        mocker.patch("requests.get", lambda url: Response)
+        mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
         post = PostFactory(url="http://google.com", title="", description="")
         post.fetch_metadata_from_url()
 
@@ -256,7 +256,7 @@ class TestPostModel:
         class MockResponse:
             ok = False
 
-        mocker.patch("requests.get", lambda url: MockResponse)
+        mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
         post = PostFactory(url="http://google.com", title="", description="")
         post.fetch_metadata_from_url()
 
@@ -269,7 +269,7 @@ class TestPostModel:
             ok = True
             headers = {"Content-Type": "image/jpeg"}
 
-        mocker.patch("requests.get", lambda url: MockResponse)
+        mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
         post = PostFactory(
             url="http://google.com/test.jpg", title="", description=""
         )
