@@ -71,7 +71,7 @@ class Post(Activity):
             return False
         return _oembed_registry.provider_for_url(self.url) is not None
 
-    def fetch_metadata_from_url(self):
+    def fetch_metadata_from_url(self, commit=True):
         """
         Looks for og/twitter title, description and image if available and
         title and/or description missing.
@@ -81,13 +81,14 @@ class Post(Activity):
         No action if post does not have a URL.
         """
 
-        update_fields = ["title", "metadata_description", "metadata_image"]
+        def _save_if_commit():
+            if commit:
+                self.save()
 
         if not self.url:
             self.metadata_description = ""
             self.metadata_image = ""
-            self.save(update_fields=update_fields)
-            return
+            return self._save_if_commit()
 
         response = requests.get(self.url, headers={"User-Agent": USER_AGENT})
         if not response.ok or "text/html" not in response.headers.get(
@@ -97,8 +98,7 @@ class Post(Activity):
                 self.title = self.get_domain()[:300]
             self.metadata_description = ""
             self.metadata_image = ""
-            self.save(update_fields=update_fields)
-            return
+            return self._save_if_commit()
 
         soup = BeautifulSoup(response.content, "html.parser")
 
@@ -130,4 +130,5 @@ class Post(Activity):
         else:
             self.metadata_description = ""
 
-        self.save(update_fields=update_fields)
+        self._save_if_commit()
+

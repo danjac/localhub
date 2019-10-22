@@ -1,28 +1,15 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.db import transaction
-from django.db.models.signals import post_save
+from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
-from celery.utils.log import get_logger
-
-from localhub.posts import tasks
 from localhub.posts.models import Post
-
-celery_logger = get_logger(__name__)
 
 
 @receiver(
-    post_save, sender=Post, dispatch_uid="posts.fetch_post_metadata_from_url"
+    pre_save, sender=Post, dispatch_uid="posts.fetch_post_metadata_from_url"
 )
 def fetch_post_metadata_from_url(instance, created=False, **kwargs):
     if created or instance.url_tracker.changed():
-
-        def run_task():
-            try:
-                tasks.fetch_post_metadata_from_url.delay(instance.id)
-            except tasks.fetch_post_metadata_from_url.OperationalError as e:
-                celery_logger.exception(e)
-
-        transaction.on_commit(run_task)
+        instance.fetch_metadata_from_url(commit=False)
