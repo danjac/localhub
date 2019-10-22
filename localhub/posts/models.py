@@ -88,7 +88,7 @@ class Post(Activity):
         if not self.url:
             self.metadata_description = ""
             self.metadata_image = ""
-            return self._save_if_commit()
+            return _save_if_commit()
 
         response = requests.get(self.url, headers={"User-Agent": USER_AGENT})
         if not response.ok or "text/html" not in response.headers.get(
@@ -98,7 +98,7 @@ class Post(Activity):
                 self.title = self.get_domain()[:300]
             self.metadata_description = ""
             self.metadata_image = ""
-            return self._save_if_commit()
+            return _save_if_commit()
 
         soup = BeautifulSoup(response.content, "html.parser")
 
@@ -130,5 +130,4 @@ class Post(Activity):
         else:
             self.metadata_description = ""
 
-        self._save_if_commit()
-
+        _save_if_commit()
