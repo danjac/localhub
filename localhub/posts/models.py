@@ -90,10 +90,15 @@ class Post(Activity):
             self.metadata_image = ""
             return _save_if_commit()
 
-        response = requests.get(self.url, headers={"User-Agent": USER_AGENT})
-        if not response.ok or "text/html" not in response.headers.get(
-            "Content-Type", ""
-        ):
+        try:
+            response = requests.get(
+                self.url, headers={"User-Agent": USER_AGENT}
+            )
+            if not response.ok or "text/html" not in response.headers.get(
+                "Content-Type", ""
+            ):
+                raise ValueError
+        except (requests.ConnectionError, ValueError):
             if not self.title:
                 self.title = self.get_domain()[:300]
             self.metadata_description = ""
