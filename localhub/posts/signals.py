@@ -10,6 +10,6 @@ from localhub.posts.models import Post
 @receiver(
     pre_save, sender=Post, dispatch_uid="posts.fetch_post_metadata_from_url"
 )
-def fetch_post_metadata_from_url(instance, created=False, **kwargs):
-    if created or instance.url_tracker.changed():
+def fetch_post_metadata_from_url(instance, **kwargs):
+    if instance._state.adding or instance.url_tracker.changed():
         instance.fetch_metadata_from_url(commit=False)
