@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import html
-import mimetypes
+import os
 
 from urllib.parse import urlparse
 
@@ -13,7 +13,20 @@ from localhub.activities.utils import get_domain, is_url
 
 register = template.Library()
 
-IMAGE_TYPES = ("image/jpeg", "image/png", "image/gif")
+
+IMAGE_EXTENSIONS = (
+    "bmp",
+    "gif",
+    "gifv",
+    "jpeg",
+    "jpg",
+    "pjpeg",
+    "png",
+    "svg",
+    "tif",
+    "tiff",
+    "webp",
+)
 
 
 @register.simple_tag(takes_context=True)
@@ -50,8 +63,7 @@ def url_to_img(url, linkify=True):
     """
     if url is None or not is_url(url):
         return url
-    mimetype, _ = mimetypes.guess_type(urlparse(url).path)
-    if mimetype in IMAGE_TYPES:
+    if _is_image(urlparse(url).path):
         html = f'<img src="{url}" alt="{get_domain(url)}">'
         if linkify:
             html = f'<a href="{url}" rel="nofollow">{html}</a>'
@@ -70,3 +82,8 @@ def domain(url):
     if domain:
         return mark_safe(f'<a href="{url}" rel="nofollow">{domain}</a>')
     return url
+
+
+def _is_image(url):
+    _, ext = os.path.splitext(url.lower())
+    return ext[1:] in IMAGE_EXTENSIONS
