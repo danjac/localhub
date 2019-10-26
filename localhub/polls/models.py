@@ -46,7 +46,7 @@ class Poll(Activity):
     objects = PollQuerySet.as_manager()
 
     def __str__(self):
-        return self.title
+        return self.title or _("Poll")
 
 
 class Answer(models.Model):

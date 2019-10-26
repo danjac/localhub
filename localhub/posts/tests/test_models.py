@@ -18,6 +18,13 @@ pytestmark = pytest.mark.django_db
 
 
 class TestPostModel:
+    def test_get_absolute_url_if_non_ascii(self):
+        """
+        If non-ASCII slug returns empty just use a placeholder
+        """
+        post = PostFactory(title="中国研究方法")
+        assert post.get_absolute_url() == f"/posts/{post.id}/post/"
+
     def test_is_oembed(self):
         post = Post(url="https://www.youtube.com/watch?v=eLeIJtLebZk")
         assert post.is_oembed()

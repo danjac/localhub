@@ -60,7 +60,7 @@ class Photo(Activity):
     )
 
     def __str__(self):
-        return self.title
+        return self.title or _("Photo")
 
     def has_attribution(self):
         return any((self.artist, self.original_url, self.cc_license))
