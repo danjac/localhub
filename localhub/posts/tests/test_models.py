@@ -18,6 +18,13 @@ pytestmark = pytest.mark.django_db
 
 
 class TestPostModel:
+    def test_get_absolute_url(self):
+        """
+        If non-ASCII slug returns empty just use a placeholder
+        """
+        post = PostFactory(title="test post")
+        assert post.get_absolute_url() == f"/posts/{post.id}/test-post/"
+
     def test_get_absolute_url_if_non_ascii(self):
         """
         If non-ASCII slug returns empty just use a placeholder
