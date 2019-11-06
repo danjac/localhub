@@ -5,6 +5,7 @@ import pytest
 
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError
+from django.test import override_settings
 
 from localhub.communities.models import Community, Membership
 from localhub.communities.tests.factories import (
@@ -88,6 +89,17 @@ class TestCommunityManager:
 
 
 class TestCommunityModel:
+
+    @override_settings(DEBUG=True)
+    def test_get_absolute_url_if_debug(self):
+        community = Community(domain="testing.com")
+        assert community.get_absolute_url() == "http://testing.com"
+
+    @override_settings(DEBUG=False)
+    def test_get_absolute_url_if_production(self):
+        community = Community(domain="testing.com")
+        assert community.get_absolute_url() == "https://testing.com"
+
     def test_is_email_blacklisted_if_ok(self):
         community = Community()
         assert not community.is_email_blacklisted("tester@gmail.com")
