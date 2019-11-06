@@ -90,12 +90,12 @@ class TestCommunityManager:
 
 class TestCommunityModel:
 
-    @override_settings(DEBUG=True)
+    @override_settings(SECURE_SSL_REDIRECT=False)
     def test_get_absolute_url_if_debug(self):
         community = Community(domain="testing.com")
         assert community.get_absolute_url() == "http://testing.com"
 
-    @override_settings(DEBUG=False)
+    @override_settings(SECURE_SSL_REDIRECT=True)
     def test_get_absolute_url_if_production(self):
         community = Community(domain="testing.com")
         assert community.get_absolute_url() == "https://testing.com"

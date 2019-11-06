@@ -237,7 +237,7 @@ class Community(TimeStampedModel):
         self.admin = value
 
     def get_absolute_url(self):
-        protocol = "http" if settings.DEBUG else "https"
+        protocol = "https" if settings.SECURE_SSL_REDIRECT else "http"
         return f"{protocol}://{self.domain}"
 
     def get_email_domain(self):
