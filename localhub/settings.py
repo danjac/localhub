@@ -331,6 +331,7 @@ class Production(DockerConfigMixin, Base):
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SECURE_HSTS_SECONDS = 3600
+    SECURE_SSL_REDIRECT = True
     # This is required for Heroku SSL.
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
