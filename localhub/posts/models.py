@@ -32,11 +32,11 @@ class Post(Activity):
     RESHARED_FIELDS = ("title", "description", "url")
 
     title = models.CharField(max_length=300, blank=True)
-    url = models.URLField(blank=True)
+    url = models.URLField(max_length=500, blank=True)
 
     # metadata fetched from URL if available
 
-    metadata_image = models.URLField(blank=True)
+    metadata_image = models.URLField(max_length=500, blank=True)
     metadata_description = models.TextField(blank=True)
 
     comments = GenericRelation(Comment, related_query_name="post")
@@ -126,7 +126,7 @@ class Post(Activity):
             image = soup.find("meta", attrs={"property": "og:image"}).attrs[
                 "content"
             ]
-            if len(image) < 201 and is_url(image) and is_image_url(image):
+            if len(image) < 501 and is_url(image) and is_image_url(image):
                 self.metadata_image = image
         except (AttributeError, KeyError):
             pass

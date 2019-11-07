@@ -51,7 +51,9 @@ class Event(Activity):
     )
 
     title = models.CharField(max_length=200)
-    url = models.URLField(verbose_name=_("Link"), null=True, blank=True)
+    url = models.URLField(
+        verbose_name=_("Link"), max_length=500, null=True, blank=True
+    )
 
     starts = models.DateTimeField(verbose_name=_("Starts on (UTC)"))
     ends = models.DateTimeField(null=True, blank=True)

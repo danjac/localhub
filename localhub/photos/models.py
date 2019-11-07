@@ -41,7 +41,7 @@ class Photo(Activity):
     image = ImageField(upload_to="photos")
 
     artist = models.CharField(max_length=100, blank=True)
-    original_url = models.URLField(null=True, blank=True)
+    original_url = models.URLField(max_length=500, null=True, blank=True)
     cc_license = models.CharField(
         max_length=10,
         choices=CC_LICENSES,
