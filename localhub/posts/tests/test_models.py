@@ -251,7 +251,7 @@ class TestPostModel:
 <head>
 <title>Hello</title>
 <meta property="og:title" content="a test site">
-<meta property="og:image" content="http://test.jpg">
+<meta property="og:image" content="http://example.com/test.jpg">
 <meta property="og:description" content="test description">
 </head>
 <body>
@@ -263,7 +263,7 @@ class TestPostModel:
         post.fetch_metadata_from_url()
 
         assert post.title == "a test site"
-        assert post.metadata_image == "http://test.jpg"
+        assert post.metadata_image == "http://example.com/test.jpg"
         assert post.metadata_description == "test description"
 
     def test_fetch_metadata_from_url_if_not_ok(self, mocker):
