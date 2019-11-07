@@ -2,31 +2,14 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import html
-import os
 
-from urllib.parse import urlparse
 
 from django import template
 from django.utils.safestring import mark_safe
 
-from localhub.activities.utils import get_domain, is_url
+from localhub.activities.utils import get_domain, is_image_url, is_url
 
 register = template.Library()
-
-
-IMAGE_EXTENSIONS = (
-    "bmp",
-    "gif",
-    "gifv",
-    "jpeg",
-    "jpg",
-    "pjpeg",
-    "png",
-    "svg",
-    "tif",
-    "tiff",
-    "webp",
-)
 
 
 @register.simple_tag(takes_context=True)
@@ -63,7 +46,7 @@ def url_to_img(url, linkify=True):
     """
     if url is None or not is_url(url):
         return url
-    if _is_image(urlparse(url).path):
+    if is_image_url(url):
         html = f'<img src="{url}" alt="{get_domain(url)}">'
         if linkify:
             html = f'<a href="{url}" rel="nofollow">{html}</a>'
@@ -82,8 +65,3 @@ def domain(url):
     if domain:
         return mark_safe(f'<a href="{url}" rel="nofollow">{domain}</a>')
     return url
-
-
-def _is_image(url):
-    _, ext = os.path.splitext(url.lower())
-    return ext[1:] in IMAGE_EXTENSIONS

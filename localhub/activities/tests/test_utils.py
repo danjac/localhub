@@ -10,6 +10,7 @@ from localhub.activities.utils import (
     get_breadcrumbs_for_instance,
     get_breadcrumbs_for_model,
     get_domain,
+    is_image_url,
     is_url,
 )
 from localhub.posts.models import Post
@@ -27,6 +28,14 @@ class TestIsUrl:
 
     def test_if_url(self):
         assert is_url("https://reddit.com")
+
+
+class TestIsImageUrl:
+    def test_if_is_image(self):
+        assert is_image_url("https://example.com/test.jpg")
+
+    def test_if_is_not_image(self):
+        assert not is_image_url("https://example.com/test.txt")
 
 
 class TestGetDomain:

@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 
 from localhub.activities.oembed import bootstrap_oembed
 from localhub.activities.models import Activity
-from localhub.activities.utils import get_domain
+from localhub.activities.utils import get_domain, is_image_url, is_url
 from localhub.comments.models import Comment
 from localhub.common.db.search import SearchIndexer
 from localhub.common.db.tracker import Tracker
@@ -98,7 +98,7 @@ class Post(Activity):
                 "Content-Type", ""
             ):
                 raise ValueError
-        except (requests.ConnectionError, ValueError):
+        except (requests.RequestException, ValueError):
             if not self.title:
                 self.title = self.get_domain()[:300]
             self.metadata_description = ""
@@ -121,11 +121,15 @@ class Post(Activity):
 
             self.title = self.title.strip()[:300]
 
-        image = soup.find("meta", attrs={"property": "og:image"})
-        if image and "content" in image.attrs:
-            self.metadata_image = image.attrs["content"]
-        else:
-            self.metadata_image = ""
+        self.metadata_image = ""
+        try:
+            image = soup.find("meta", attrs={"property": "og:image"}).attrs[
+                "content"
+            ]
+            if len(image) < 201 and is_url(image) and is_image_url(image):
+                self.metadata_image = image
+        except (AttributeError, KeyError):
+            pass
 
         description = soup.find(
             "meta", attrs={"property": "og:description"}

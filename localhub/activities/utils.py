@@ -1,6 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import os
 
 from urllib.parse import urlparse
 
@@ -15,6 +16,20 @@ from django.utils.translation import gettext as _
 
 _urlvalidator = URLValidator()
 
+IMAGE_EXTENSIONS = (
+    "bmp",
+    "gif",
+    "gifv",
+    "jpeg",
+    "jpg",
+    "pjpeg",
+    "png",
+    "svg",
+    "tif",
+    "tiff",
+    "webp",
+)
+
 
 def is_url(url):
     """
@@ -28,6 +43,11 @@ def is_url(url):
     except ValidationError:
         return False
     return True
+
+
+def is_image_url(url):
+    _, ext = os.path.splitext(urlparse(url).path.lower())
+    return ext[1:] in IMAGE_EXTENSIONS
 
 
 def get_domain(url):
