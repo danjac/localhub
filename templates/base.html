@@ -39,16 +39,18 @@
     <link rel="apple-touch-icon image_src" href="{% static 'apple-touch-icon.png' %}">
     <link rel="stylesheet" href="{% static 'dist/main.css' %}">
     <script defer src="{% static 'dist/main.js' %}"></script>
-    {% if community.google_tracking_id %}
+    {% with google_tracking_id=community.google_tracking_id %}
+    {% if google_tracking_id %}
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-148753737-1"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ google_tracking_id }}"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', '{{ community.google_tracking_id }}');
+      gtag('config', '{{ google_tracking_id }}');
     </script>
     {% endif %}
+    {% endwith %}
   </head>
 
   <body class="bg-dark text-dark">
