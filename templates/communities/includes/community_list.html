@@ -25,8 +25,8 @@
     </div>
 
     {% if community != object and object.is_member %}
-    {% with num_notifications=object.num_notifications num_messages=object.num_messages object_url=object.get_absolute_url %}
-    {% if num_notifications or num_messages %}
+    {% with num_notifications=object.num_notifications num_messages=object.num_messages num_join_requests=object.num_join_requests object_url=object.get_absolute_url %}
+    {% if num_notifications or num_messages or num_join_requests %}
     <div class="card-footer">
         <div class="actions">
             {% if num_notifications %}
@@ -40,6 +40,13 @@
             <a href="{{ object_url }}{% url 'private_messages:inbox' %}">
                 <span class="badge" data-badge="{{ num_messages }}">
                     {% trans "Messages" %}
+                </span>
+            </a>
+            {% endif %}
+            {% if num_join_requests %}
+            <a href="{{ object_url }}{% url 'join_requests:list' %}">
+                <span class="badge" data-badge="{{ num_join_requests }}">
+                    {% trans "Join Requests" %}
                 </span>
             </a>
             {% endif %}

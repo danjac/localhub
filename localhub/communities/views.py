@@ -215,6 +215,16 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
                     & ~Q(message__sender__in=blocked),
                     distinct=True,
                 ),
+                num_join_requests=Count(
+                    "joinrequest",
+                    filter=Q(
+                        joinrequest__community__membership__member=self.request.user,  # noqa
+                        joinrequest__community__membership__active=True,
+                        joinrequest__community__membership__role=Membership.ROLES.admin,  # noqa
+                        joinrequest__status=JoinRequest.STATUS.pending,
+                    ),
+                    distinct=True,
+                ),
             )
             .order_by("name")
         )

@@ -5,7 +5,7 @@
 {% load rules %}
 {% load communities_tags %}
 {% load flags_tags %}
-{% load join_request_tags %}
+{% load join_requests_tags %}
 {% load private_messages_tags %}
 {% load notifications_tags %}
 
@@ -45,13 +45,14 @@
         </a>
     </li>
     {% if num_communities > 1 %}
+    {% get_pending_local_network_join_request_count user community as pending_local_network_join_requests %}
     {% get_unread_local_network_notification_count user community as unread_local_network_notifications %}
     {% get_unread_local_network_message_count user community as unread_local_network_messages %}
     <li class="menu-item">
         <a data-controller="active-link"
            data-active-link-exact
            href="{% url 'community_list' %}">
-            {% with total_local_network_notifications=unread_local_network_notifications|add:unread_local_network_messages %}
+            {% with total_local_network_notifications=unread_local_network_notifications|add:unread_local_network_messages|add:pending_local_network_join_requests %}
             <span {% if total_local_network_notifications %}class="badge" data-badge="{{ total_local_network_notifications }}"{% endif %}>
                 {% trans "Local Network" %}
             </span>
