@@ -1,9 +1,10 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.db.models import Count, Q
+from django.db.models import Count, OuterRef, Q, Subquery
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
@@ -189,48 +190,80 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
         return ["communities/non_member_community_list.html"]
 
     def get_queryset(self):
-        blocked = self.request.user.blocked.all()
-        qs = (
-            Community.objects.listed(self.request.user)
+        return Community.objects.listed(self.request.user).order_by("name")
+
+    def get_member_communities(self):
+        return Community.objects.filter(
+            membership__member=self.request.user, membership__active=True
+        ).exclude(pk=self.request.community.id)
+
+    def get_available_users(self):
+        return (
+            get_user_model()
+            .objects.filter(is_active=True)
+            .exclude(pk__in=self.request.user.blocked.all())
+        )
+
+    def get_notifications_count(self):
+        return dict(
+            self.get_member_communities()
             .annotate(
                 num_notifications=Count(
                     "notification",
                     filter=Q(
                         notification__recipient=self.request.user,
                         notification__is_read=False,
-                        notification__actor__is_active=True,
+                        notification__actor__pk__in=self.get_available_users(),
                         notification__actor__membership__active=True,
-                    )
-                    & ~Q(notification__actor__in=blocked),
+                    ),
                     distinct=True,
-                ),
+                )
+            )
+            .values_list("id", "num_notifications")
+        )
+
+    def get_messages_count(self):
+        return dict(
+            self.get_member_communities()
+            .annotate(
                 num_messages=Count(
                     "message",
                     filter=Q(
                         message__recipient=self.request.user,
                         message__read__isnull=True,
-                        message__sender__is_active=True,
+                        message__sender__pk__in=self.get_available_users(),
                         message__sender__membership__active=True,
-                    )
-                    & ~Q(message__sender__in=blocked),
-                    distinct=True,
-                ),
-                num_join_requests=Count(
-                    "joinrequest",
-                    filter=Q(
-                        joinrequest__community__membership__member=self.request.user,  # noqa
-                        joinrequest__community__membership__active=True,
-                        joinrequest__community__membership__role=Membership.ROLES.admin,  # noqa
-                        joinrequest__status=JoinRequest.STATUS.pending,
                     ),
                     distinct=True,
-                ),
+                )
             )
-            .order_by("name")
+            .values_list("id", "num_messages")
         )
-        if self.search_query:
-            qs = qs.filter(name__icontains=self.search_query)
-        return qs
+
+    def get_join_requests_count(self):
+        return dict(
+            self.get_member_communities()
+            .filter(membership__role=Membership.ROLES.admin)
+            .annotate(
+                num_join_requests=Count(
+                    "joinrequest",
+                    filter=Q(joinrequest__status=JoinRequest.STATUS.pending),
+                    distinct=True,
+                )
+            )
+            .values_list("id", "num_join_requests")
+        )
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data.update(
+            {
+                "join_requests_count": self.get_join_requests_count(),
+                "messages_count": self.get_messages_count(),
+                "notifications_count": self.get_notifications_count(),
+            }
+        )
+        return data
 
 
 community_list_view = CommunityListView.as_view()

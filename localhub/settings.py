@@ -223,6 +223,7 @@ class Base(Configuration):
                 "APP_DIRS": True,
                 "OPTIONS": {
                     "debug": self.DEBUG,
+                    "builtins": ["localhub.common.template.defaultfilters"],
                     "context_processors": [
                         "django.template.context_processors.debug",
                         "django.template.context_processors.request",

@@ -23,9 +23,8 @@
     <div class="card-body">
         {{ object.tagline|linebreaksbr }}
     </div>
-
     {% if community != object and object.is_member %}
-    {% with num_notifications=object.num_notifications num_messages=object.num_messages num_join_requests=object.num_join_requests object_url=object.get_absolute_url %}
+    {% with num_notifications=notifications_count|from_dictkey:object.id num_messages=messages_count|from_dictkey:object.id num_join_requests=join_requests_count|from_dictkey:object.id object_url=object.get_absolute_url %}
     {% if num_notifications or num_messages or num_join_requests %}
     <div class="card-footer">
         <div class="actions">
