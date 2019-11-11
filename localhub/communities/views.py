@@ -190,7 +190,10 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
         return ["communities/non_member_community_list.html"]
 
     def get_queryset(self):
-        return Community.objects.listed(self.request.user).order_by("name")
+        qs = Community.objects.listed(self.request.user).order_by("name")
+        if self.search_query:
+            qs = qs.filter(name__icontains=self.search_query)
+        return qs
 
     def get_member_communities(self):
         return Community.objects.filter(
