@@ -63,7 +63,7 @@ class TestUrlToImg:
 
     def test_if_not_image(self):
         url = "http://somedomain.org/"
-        assert url_to_img(url) == url
+        assert url_to_img(url) == ""
 
     def test_if_not_url(self):
         text = "<div></div>"

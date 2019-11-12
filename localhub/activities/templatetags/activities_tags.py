@@ -41,8 +41,8 @@ def html_unescape(text):
 @register.filter
 def url_to_img(url, linkify=True):
     """
-    Given a URL, tries to render the <img> tag. Returns URL unparsed
-    if not an image.
+    Given a URL, tries to render the <img> tag. Returns text as-is
+    if not an image, returns empty string if plain URL.
     """
     if url is None or not is_url(url):
         return url
@@ -51,7 +51,7 @@ def url_to_img(url, linkify=True):
         if linkify:
             html = f'<a href="{url}" rel="nofollow">{html}</a>'
         return mark_safe(html)
-    return url
+    return ""
 
 
 @register.filter
