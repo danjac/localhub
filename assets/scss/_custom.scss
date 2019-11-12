@@ -90,6 +90,9 @@ table {
 .divider,
 .divider-vert {
   color: $dark-color;
+  &[data-content]::after {
+    color: $dark-color;
+  }
 }
 
 .event-map {
