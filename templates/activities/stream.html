@@ -8,6 +8,7 @@
 
 {% block subtitle %} | {% trans "Home" %}{% endblock %}
 {% block content %}
+{% if page_obj.number == 1 %}
 <div class="mb-2">
     <div class="input-group">
         <span class="input-group-addon">
@@ -45,6 +46,10 @@
     {% endblocktrans %}
     {% endif %}
 </p>
+{% endif %}
+{% elif page_obj.paginator.num_pages > 1 %}
+{% include "includes/pagination.html" %}
+<div class="divider"></div>
 {% endif %}
 
 {% include "activities/includes/activity_list.html" %}
