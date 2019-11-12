@@ -9,6 +9,7 @@
 <div>
   {{ object.url|domain }}
 </div>
+<div class="divider"></div>
 {% is_oembed_allowed user as oembed_allowed %}
 <div data-controller="oembed" class="wordwrap">
   {% if oembed_allowed %}
