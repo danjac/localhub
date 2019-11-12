@@ -6,12 +6,16 @@
 {% load activities_tags %}
 
 {% if object.url %}
+<div>
+  {{ object.url|domain }}
+</div>
+{% endif %}
 {% is_oembed_allowed user as oembed_allowed %}
 <div data-controller="oembed" class="wordwrap">
-{% if oembed_allowed %}
-  {{ object.url|oembed_no_urlize|url_to_img|domain }}
-{% else %}
-  {{ object.url|url_to_img|domain }}
-{% endif %}
+  {% if oembed_allowed %}
+  {{ object.url|oembed_no_urlize|url_to_img }}
+  {% else %}
+  {{ object.url|url_to_img }}
+  {% endif %}
 </div>
 {% endif %}

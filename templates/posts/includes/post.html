@@ -7,14 +7,6 @@
 {% load activities_tags %}
 {% load posts_tags %}
 
-{% block title %}
-{% if object.url %}
-<a href="{{ object.url }}" rel="nofollow">{% if is_detail %}{{ object.title }}{% else %}{{ object.title|truncatechars:130 }}{% endif %}</a>
-{% else %}
-{{ block.super }}
-{% endif %}
-{% endblock title %}
-
 {% block content %}
 
 {% include "activities/includes/oembed.html" %}
