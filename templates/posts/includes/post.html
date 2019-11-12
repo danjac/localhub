@@ -10,9 +10,6 @@
 {% block content %}
 
 {% include "activities/includes/oembed.html" %}
-{% if object.url %}
-<div class="divider"></div>
-{% endif %}
 {% is_post_oembed user object as is_oembed %}
 {% if object.metadata_description and not is_oembed %}
 <div class="columns">
