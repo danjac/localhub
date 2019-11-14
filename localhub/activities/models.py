@@ -37,7 +37,7 @@ class ActivityQuerySet(
 ):
     def with_common_annotations(self, user, community):
         """
-        Combines utilsly used annotations into a single call for
+        Combines commonly used annotations into a single call for
         convenience:
             - with_num_reshares
             - with_num_comments
