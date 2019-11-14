@@ -237,7 +237,7 @@ class UserStreamView(SingleUserMixin, BaseStreamView):
         return (
             super()
             .filter_queryset(queryset)
-            .blocked_tags(self.request.user)
+            .without_blocked_tags(self.request.user)
             .filter(owner=self.user_obj)
         )
 

@@ -60,7 +60,7 @@ class StreamView(BaseStreamView):
             super()
             .filter_queryset(queryset)
             .following(self.request.user)
-            .blocked(self.request.user)
+            .without_blocked(self.request.user)
         )
 
 
@@ -197,7 +197,7 @@ class SearchView(SearchMixin, BaseStreamView):
             return (
                 super()
                 .filter_queryset(queryset)
-                .blocked(self.request.user)
+                .without_blocked(self.request.user)
                 .search(self.search_query)
             )
         return queryset.none()
