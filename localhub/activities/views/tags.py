@@ -105,7 +105,7 @@ class TagDetailView(BaseStreamView):
         if self.request.user.is_authenticated:
             qs = qs.exclude(
                 Q(
-                    tags__in=self.request.user.without_blocked_tags.exclude(
+                    tags__in=self.request.user.blocked_tags.exclude(
                         id=self.tag.id
                     )
                 ),
