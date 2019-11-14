@@ -318,7 +318,14 @@ class Local(DockerConfigMixin, Base):
     SITE_ID = 1
 
 
-class Production(DockerConfigMixin, Base):
+class Production(Base):
+    """
+    Production settings for 12-factor deployment using environment variables.
+
+    Assumes AWS/S3 and Mailgun integration.
+
+    Silk is enabled for performance monitoring.
+    """
 
     THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + ["anymail", "silk"]
 
@@ -333,8 +340,6 @@ class Production(DockerConfigMixin, Base):
     SECURE_HSTS_PRELOAD = True
     SECURE_HSTS_SECONDS = 3600
     SECURE_SSL_REDIRECT = True
-    # This is required for Heroku SSL.
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
     DEFAULT_FILE_STORAGE = "localhub.common.storages.MediaStorage"
     STATICFILES_STORAGE = "localhub.common.storages.StaticStorage"
@@ -355,13 +360,6 @@ class Production(DockerConfigMixin, Base):
     CELERY_EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
     MAILGUN_API_KEY = values.Value()
     MAILGUN_SENDER_DOMAIN = values.Value()
-
-    LOGGING = {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "handlers": {"console": {"class": "logging.StreamHandler"}},
-        "loggers": {"django": {"handlers": ["console"], "level": "INFO"}},
-    }
 
     MIDDLEWARE = Base.MIDDLEWARE + ["silk.middleware.SilkyMiddleware"]
 
@@ -388,3 +386,22 @@ class Production(DockerConfigMixin, Base):
     @property
     def DEFAULT_FROM_EMAIL(self):
         return f"support@{self.MAILGUN_SENDER_DOMAIN}"
+
+
+class Heroku(DockerConfigMixin, Production):
+    """
+    Production settings specific to Heroku docker-based setup.
+
+    See heroku.yml for additional settings.
+    """
+
+    # This is required for Heroku SSL.
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+    # Stream logging to stdout: use `heroku log` to view
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "handlers": {"console": {"class": "logging.StreamHandler"}},
+        "loggers": {"django": {"handlers": ["console"], "level": "INFO"}},
+    }

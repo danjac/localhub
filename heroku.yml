@@ -1,6 +1,6 @@
 build:
   config:
-    DJANGO_CONFIGURATION: Production
+    DJANGO_CONFIGURATION: Heroku
   docker:
     web: Dockerfile.heroku
     worker: Dockerfile.heroku
