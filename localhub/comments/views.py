@@ -238,7 +238,7 @@ class CommentSearchView(SearchMixin, BaseCommentListView):
         return (
             super()
             .get_queryset()
-            .blocked_users(self.request.user)
+            .without_blocked_users(self.request.user)
             .search(self.search_query)
             .order_by("-rank", "-created")
         )

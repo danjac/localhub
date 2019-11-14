@@ -75,7 +75,7 @@ class CommentQuerySet(
             )
         )
 
-    def blocked_users(self, user):
+    def without_blocked_users(self, user):
 
         if user.is_anonymous:
             return self

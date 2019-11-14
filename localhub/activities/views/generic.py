@@ -102,7 +102,7 @@ class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
             super()
             .get_queryset()
             .with_common_annotations(self.request.user, self.request.community)
-            .blocked(self.request.user)
+            .without_blocked(self.request.user)
             .order_by(self.order_by)
         )
 
@@ -128,7 +128,7 @@ class ActivityUpdateView(
                 _(
                     "Edit %(activity_name)s"
                     % {
-                        "activity_name": self.object._meta.verbose_name.capitalize() # noqa
+                        "activity_name": self.object._meta.verbose_name.capitalize()  # noqa
                     }
                 ),
             )
@@ -209,7 +209,7 @@ class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
 
     def get_reshares(self):
         return (
-            self.object.reshares.blocked_users(self.request.user)
+            self.object.reshares.without_blocked_users(self.request.user)
             .select_related("owner")
             .order_by("-created")
         )

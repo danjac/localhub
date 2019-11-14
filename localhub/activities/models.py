@@ -145,7 +145,7 @@ class ActivityQuerySet(
 
         return qs
 
-    def blocked_users(self, user):
+    def without_blocked_users(self, user):
         """
         Excludes any activities of users blocked by this user. If user
         is anonymous then passes unfiltered queryset.
@@ -155,7 +155,7 @@ class ActivityQuerySet(
             return self
         return self.exclude(owner__in=user.blocked.all())
 
-    def blocked_tags(self, user):
+    def without_blocked_tags(self, user):
         """
         Excludes any activities of tags blocked by this user. If user
         is anonymous then passes unfiltered queryset.
@@ -167,13 +167,13 @@ class ActivityQuerySet(
             models.Q(tags__in=user.blocked_tags.all()), ~models.Q(owner=user)
         )
 
-    def blocked(self, user):
+    def without_blocked(self, user):
         """
         Wraps methods `blocked_users` and `blocked_tags`.
         """
         if user.is_anonymous:
             return self
-        return self.blocked_users(user).blocked_tags(user)
+        return self.without_blocked_users(user).without_blocked_tags(user)
 
     def for_activity_stream(self, user, community):
         """
