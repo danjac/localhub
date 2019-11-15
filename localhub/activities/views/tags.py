@@ -62,8 +62,6 @@ class TagQuerySetMixin(CommunityRequiredMixin):
 
 class BaseSingleTagView(GenericModelView):
     model = Tag
-    lookup_field = "slug"
-    lookup_url_kwarg = "slug"
 
 
 class BaseTagListView(ListView):

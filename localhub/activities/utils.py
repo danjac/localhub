@@ -11,7 +11,10 @@ from django.core.validators import URLValidator
 from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils.encoding import smart_text
+from django.utils.text import slugify
 from django.utils.translation import gettext as _
+
+from unidecode import unidecode
 
 
 _urlvalidator = URLValidator()
@@ -87,3 +90,10 @@ def get_breadcrumbs_for_instance(instance):
     return get_breadcrumbs_for_model(instance.__class__) + [
         (instance.get_absolute_url(), truncatechars(smart_text(instance), 60))
     ]
+
+
+def slugify_unicode(text):
+    """
+    Slugify to ASCII attempting to render any Unicode text.
+    """
+    return slugify(unidecode(smart_text(text)), allow_unicode=False)

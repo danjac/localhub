@@ -23,15 +23,15 @@ urlpatterns = [
         tags.tag_autocomplete_list_view,
         name="tag_autocomplete_list",
     ),
-    path("tags/<slug:slug>/~follow/", tags.tag_follow_view, name="tag_follow"),
+    path("tags/<int:pk>/~follow/", tags.tag_follow_view, name="tag_follow"),
     path(
-        "tags/<slug:slug>/~unfollow/",
+        "tags/<int:pk>/~unfollow/",
         tags.tag_unfollow_view,
         name="tag_unfollow",
     ),
-    path("tags/<slug:slug>/~block/", tags.tag_block_view, name="tag_block"),
+    path("tags/<int:pk>/~block/", tags.tag_block_view, name="tag_block"),
     path(
-        "tags/<slug:slug>/~unblock/", tags.tag_unblock_view, name="tag_unblock"
+        "tags/<int:pk>/~unblock/", tags.tag_unblock_view, name="tag_unblock"
     ),
     path("tags/<slug:slug>/", tags.tag_detail_view, name="tag_detail"),
 ]

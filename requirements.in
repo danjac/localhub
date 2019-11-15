@@ -40,4 +40,5 @@ pywebpush
 redis
 rules
 sorl-thumbnail
+unidecode
 werkzeug

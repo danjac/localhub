@@ -30,7 +30,10 @@ class TestPostModel:
         If non-ASCII slug is empty just use ID
         """
         post = PostFactory(title="中国研究方法")
-        assert post.get_absolute_url() == f"/posts/{post.id}/"
+        assert (
+            post.get_absolute_url()
+            == f"/posts/{post.id}/zhong-guo-yan-jiu-fang-fa/"
+        )
 
     def test_is_oembed(self):
         post = Post(url="https://www.youtube.com/watch?v=eLeIJtLebZk")

@@ -5,7 +5,7 @@
 {% load i18n %}
 {% load rules %}
 
-{% block subtitle %} | {% trans "Tags" %} | {{ tag.slug }}{% endblock %}
+{% block subtitle %} | {% trans "Tags" %} | {{ tag }}{% endblock %}
 {% block content %}
 
 
@@ -21,7 +21,7 @@
 <div class="actions" data-controller="toggle">
     {% if can_follow_tag %}
     {% with following=user.following_tags.all %}
-    <a href="{% url 'activities:tag_unfollow' tag.slug %}"
+    <a href="{% url 'activities:tag_unfollow' tag.id %}"
        {% if not tag in following %}class="d-hide"{% endif %}
        data-controller="ajax"
        data-ajax-redirect="none"
@@ -30,7 +30,7 @@
        data-action="ajax#post toggle#toggle">
         {% trans "Unfollow" %}
     </a>
-    <a href="{% url 'activities:tag_follow' tag.slug %}"
+    <a href="{% url 'activities:tag_follow' tag.id %}"
        {% if tag in following %}class="d-hide"{% endif %}
        data-controller="ajax"
        data-ajax-redirect="none"
@@ -43,7 +43,7 @@
     {% endif %}
     {% if can_block_tag %}
     {% with blocked=user.blocked_tags.all %}
-    <a href="{% url 'activities:tag_unblock' tag.slug %}"
+    <a href="{% url 'activities:tag_unblock' tag.id %}"
        {% if tag not in blocked %}class="d-hide"{% endif %}
        data-controller="ajax"
        data-ajax-redirect="none"
@@ -52,7 +52,7 @@
        data-action="ajax#post toggle#toggle">
         {% trans "Unblock" %}
     </a>
-    <a href="{% url 'activities:tag_block' tag.slug %}"
+    <a href="{% url 'activities:tag_block' tag.id %}"
        {% if tag in blocked %}class="d-hide"{% endif %}
        data-controller="ajax"
        data-ajax-redirect="none"

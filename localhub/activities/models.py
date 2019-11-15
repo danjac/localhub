@@ -7,8 +7,6 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.urls import reverse
-from django.utils.encoding import smart_text
-from django.utils.text import slugify
 
 from model_utils.models import TimeStampedModel
 
@@ -17,6 +15,7 @@ from simple_history.models import HistoricalRecords
 from taggit.managers import TaggableManager
 from taggit.models import Tag
 
+from localhub.activities.utils import slugify_unicode
 from localhub.comments.models import Comment, CommentAnnotationsQuerySetMixin
 from localhub.common.db.content_types import get_generic_related_queryset
 from localhub.common.db.search import SearchQuerySetMixin
@@ -247,7 +246,7 @@ class Activity(TimeStampedModel):
         self.editor = value
 
     def slugify(self):
-        return slugify(smart_text(self), allow_unicode=False)
+        return slugify_unicode(self)
 
     def resolve_url(self, view_name, *args):
         return reverse(
@@ -255,7 +254,8 @@ class Activity(TimeStampedModel):
         )
 
     def get_absolute_url(self):
-        if slug := self.slugify(): # noqa
+        slug = self.slugify()
+        if slug:
             return self.resolve_url("detail", slug)
         return self.resolve_url("detail_no_slug")
 

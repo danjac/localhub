@@ -109,9 +109,7 @@ class TestTagFollowView:
         post = PostFactory(community=member.community, owner=member.member)
         post.tags.set("movies")
         tag = Tag.objects.get()
-        response = client.post(
-            reverse("activities:tag_follow", args=[tag.slug])
-        )
+        response = client.post(reverse("activities:tag_follow", args=[tag.id]))
         assert response.url == reverse(
             "activities:tag_detail", args=[tag.slug]
         )
@@ -125,7 +123,7 @@ class TestTagUnfollowView:
         tag = Tag.objects.get()
         member.member.following_tags.add(tag)
         response = client.post(
-            reverse("activities:tag_unfollow", args=[tag.slug])
+            reverse("activities:tag_unfollow", args=[tag.id])
         )
         assert response.url == reverse(
             "activities:tag_detail", args=[tag.slug]
@@ -138,9 +136,7 @@ class TestTagBlockView:
         post = PostFactory(community=member.community, owner=member.member)
         post.tags.set("movies")
         tag = Tag.objects.get()
-        response = client.post(
-            reverse("activities:tag_block", args=[tag.slug])
-        )
+        response = client.post(reverse("activities:tag_block", args=[tag.id]))
         assert response.url == reverse(
             "activities:tag_detail", args=[tag.slug]
         )
@@ -154,7 +150,7 @@ class TestTagUnblockView:
         tag = Tag.objects.get()
         member.member.blocked_tags.add(tag)
         response = client.post(
-            reverse("activities:tag_unblock", args=[tag.slug])
+            reverse("activities:tag_unblock", args=[tag.id])
         )
         assert response.url == reverse(
             "activities:tag_detail", args=[tag.slug]

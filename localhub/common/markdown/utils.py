@@ -12,9 +12,10 @@ from bleach import Cleaner  # type: ignore
 from bleach.linkifier import LinkifyFilter
 
 from django.urls import reverse
-from django.utils.text import slugify
 
 from markdownx.utils import markdownify as default_markdownify
+
+from localhub.activities.utils import slugify_unicode
 
 ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
     "code",
@@ -75,7 +76,7 @@ def linkify_mentions(content):
     rv = []
     for token in tokens:
         for mention in MENTIONS_RE.findall(token):
-            url = reverse("users:activities", args=[slugify(mention)])
+            url = reverse("users:activities", args=[slugify_unicode(mention)])
             token = token.replace(
                 "@" + mention, f'<a href="{url}">@{mention}</a>'
             )
@@ -108,7 +109,7 @@ def linkify_hashtags(content):
     for token in tokens:
 
         for tag in HASHTAGS_RE.findall(token):
-            if slug := slugify(tag): # noqa
+            if slug := slugify_unicode(tag): # noqa
                 url = reverse("activities:tag_detail", args=[slug])
                 token = token.replace("#" + tag, f'<a href="{url}">#{tag}</a>')
 

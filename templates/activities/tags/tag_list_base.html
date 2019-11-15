@@ -52,7 +52,7 @@
       <td>
         <div class="actions float-right" data-controller="toggle">
           {% if can_follow_tag %}
-          <a href="{% url 'activities:tag_unfollow' tag.slug %}"
+          <a href="{% url 'activities:tag_unfollow' tag.id %}"
              {% if not tag in following %}class="d-hide"{% endif %}
              data-controller="ajax"
              data-ajax-redirect="none"
@@ -61,7 +61,7 @@
              data-action="ajax#post toggle#toggle">
             {% trans "Unfollow" %}
           </a>
-          <a href="{% url 'activities:tag_follow' tag.slug %}"
+          <a href="{% url 'activities:tag_follow' tag.id %}"
              {% if tag in following %}class="d-hide"{% endif %}
              data-controller="ajax"
              data-ajax-redirect="none"
@@ -72,7 +72,7 @@
           </a>
           {% endif %}
           {% if can_block_tag %}
-          <a href="{% url 'activities:tag_unblock' tag.slug %}"
+          <a href="{% url 'activities:tag_unblock' tag.id %}"
              {% if not tag in blocked %}class="d-hide"{% endif %}
              data-controller="ajax"
              data-ajax-redirect="none"
@@ -81,7 +81,7 @@
              data-action="ajax#post toggle#toggle">
             {% trans "Unblock" %}
           </a>
-          <a href="{% url 'activities:tag_block' tag.slug %}"
+          <a href="{% url 'activities:tag_block' tag.id %}"
              {% if tag in blocked %}class="d-hide"{% endif %}
              data-controller="ajax"
              data-ajax-redirect="none"
