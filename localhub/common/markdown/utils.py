@@ -108,8 +108,9 @@ def linkify_hashtags(content):
     for token in tokens:
 
         for tag in HASHTAGS_RE.findall(token):
-            url = reverse("activities:tag_detail", args=[slugify(tag)])
-            token = token.replace("#" + tag, f'<a href="{url}">#{tag}</a>')
+            if slug := slugify(tag): # noqa
+                url = reverse("activities:tag_detail", args=[slug])
+                token = token.replace("#" + tag, f'<a href="{url}">#{tag}</a>')
 
         rv.append(token)
 
