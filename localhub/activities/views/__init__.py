@@ -26,7 +26,6 @@ def create_activity_urls(
     Simple usage (in a urls.py)
 
     urlpatterns = create_activity_urls(Post)
-    # add more urlpatterns...
     """
     return [
         path("", list_view_class.as_view(model=model), name="list"),

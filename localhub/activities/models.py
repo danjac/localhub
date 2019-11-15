@@ -255,7 +255,7 @@ class Activity(TimeStampedModel):
         )
 
     def get_absolute_url(self):
-        if slug := self.slugify():
+        if slug := self.slugify(): # noqa
             return self.resolve_url("detail", slug)
         return self.resolve_url("detail_no_slug")
 
