@@ -255,8 +255,9 @@ class Activity(TimeStampedModel):
         )
 
     def get_absolute_url(self):
-        slug = self.slugify() or self._meta.verbose_name
-        return self.resolve_url("detail", slug)
+        if slug := self.slugify():
+            return self.resolve_url("detail", slug)
+        return self.resolve_url("detail_no_slug")
 
     def get_create_comment_url(self):
         return self.resolve_url("comment")

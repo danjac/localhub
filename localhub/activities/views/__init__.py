@@ -75,4 +75,9 @@ def create_activity_urls(
             detail_view_class.as_view(model=model),
             name="detail",
         ),
+        path(
+            "<int:pk>/",
+            detail_view_class.as_view(model=model),
+            name="detail_no_slug",
+        ),
     ]
