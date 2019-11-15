@@ -12,6 +12,7 @@ from localhub.activities.utils import (
     get_domain,
     is_image_url,
     is_url,
+    slugify_unicode,
 )
 from localhub.posts.models import Post
 
@@ -64,3 +65,11 @@ class TestGetBreadcrumbs:
         assert breadcrumbs[0][0] == settings.HOME_PAGE_URL
         assert breadcrumbs[1][0] == reverse("posts:list")
         assert breadcrumbs[2][0] == post.get_absolute_url()
+
+
+class TestSlugifyUnicode:
+    def test_slugify_unicode_if_plain_ascii(self):
+        assert slugify_unicode("test") == "test"
+
+    def test_slugify_unicode_if_unicode(self):
+        assert slugify_unicode("Байконур") == "baikonur"
