@@ -17,7 +17,8 @@ from localhub.activities.views.generic import (
     ActivityUpdateView,
 )
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.polls.models import Answer, Poll
+
+from .models import Answer, Poll
 
 AnswersFormSet = inlineformset_factory(
     Poll,

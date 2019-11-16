@@ -4,9 +4,10 @@
 from factory import DjangoModelFactory, SubFactory
 
 from localhub.communities.tests.factories import CommunityFactory
-from localhub.notifications.models import Notification
 from localhub.posts.tests.factories import PostFactory
 from localhub.users.tests.factories import UserFactory
+
+from ..models import Notification
 
 
 class NotificationFactory(DjangoModelFactory):

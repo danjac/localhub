@@ -3,8 +3,9 @@
 
 
 from localhub.activities.views import create_activity_urls
-from localhub.photos.forms import PhotoForm
-from localhub.photos.models import Photo
+
+from .forms import PhotoForm
+from .models import Photo
 
 app_name = "photos"
 

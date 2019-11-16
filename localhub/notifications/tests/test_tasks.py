@@ -3,8 +3,8 @@
 
 import pytest
 
-from localhub.notifications.models import PushSubscription
-from localhub.notifications.tasks import send_push_notification
+from ..models import PushSubscription
+from ..tasks import send_push_notification
 
 pytestmark = pytest.mark.django_db
 

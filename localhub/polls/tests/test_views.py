@@ -4,8 +4,8 @@
 import pytest
 from django.urls import reverse
 
-from localhub.polls.models import Poll
-from localhub.polls.tests.factories import AnswerFactory, PollFactory
+from ..models import Poll
+from .factories import AnswerFactory, PollFactory
 
 pytestmark = pytest.mark.django_db
 

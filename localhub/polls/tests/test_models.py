@@ -4,8 +4,8 @@
 
 import pytest
 
-from localhub.polls.models import Poll
-from localhub.polls.tests.factories import AnswerFactory
+from ..models import Poll
+from .factories import AnswerFactory
 
 pytestmark = pytest.mark.django_db
 

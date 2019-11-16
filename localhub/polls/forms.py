@@ -3,7 +3,7 @@
 
 from django import forms
 
-from localhub.polls.models import Poll
+from .models import Poll
 
 
 class PollForm(forms.ModelForm):

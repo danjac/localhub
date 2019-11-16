@@ -12,7 +12,8 @@ from django.views.generic import View
 from vanilla import DeleteView, GenericModelView, ListView, TemplateView
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.notifications.models import Notification, PushSubscription
+
+from .models import Notification, PushSubscription
 
 
 class NotificationQuerySetMixin(LoginRequiredMixin, CommunityRequiredMixin):

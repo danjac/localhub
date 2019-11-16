@@ -5,13 +5,14 @@ import pytest
 from django.contrib.auth.models import AnonymousUser
 
 from localhub.communities.tests.factories import MembershipFactory
-from localhub.notifications.models import Notification
-from localhub.notifications.templatetags.notifications_tags import (
+from localhub.posts.tests.factories import PostFactory
+
+from ..models import Notification
+from ..templatetags.notifications_tags import (
     get_unread_local_network_notification_count,
     get_unread_notification_count,
     notifications_subscribe_btn,
 )
-from localhub.posts.tests.factories import PostFactory
 
 pytestmark = pytest.mark.django_db
 

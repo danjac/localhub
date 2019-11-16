@@ -9,9 +9,10 @@ from django.urls import reverse
 from localhub.comments.tests.factories import CommentFactory
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.events.tests.factories import EventFactory
-from localhub.notifications.models import Notification, PushSubscription
 from localhub.photos.tests.factories import PhotoFactory
 from localhub.posts.tests.factories import PostFactory
+
+from ..models import Notification, PushSubscription
 
 pytestmark = pytest.mark.django_db
 

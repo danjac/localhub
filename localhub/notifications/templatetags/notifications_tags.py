@@ -5,7 +5,7 @@ from django import template
 from django.conf import settings
 from django.db.models import F
 
-from localhub.notifications.models import Notification
+from ..models import Notification
 
 register = template.Library()
 

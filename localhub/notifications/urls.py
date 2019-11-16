@@ -3,7 +3,7 @@
 
 from django.urls import path
 
-from localhub.notifications.views import (
+from .views import (
     notification_delete_all_view,
     notification_delete_view,
     notification_list_view,

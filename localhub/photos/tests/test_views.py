@@ -7,8 +7,9 @@ from PIL import Image
 
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.likes.models import Like
-from localhub.photos.models import Photo
-from localhub.photos.tests.factories import PhotoFactory
+
+from ..models import Photo
+from .factories import PhotoFactory
 
 pytestmark = pytest.mark.django_db
 

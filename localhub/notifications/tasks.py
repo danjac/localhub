@@ -5,7 +5,7 @@
 from celery import shared_task
 from celery.utils.log import get_task_logger
 
-from localhub.notifications.models import PushSubscription
+from .models import PushSubscription
 
 logger = get_task_logger(__name__)
 

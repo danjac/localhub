@@ -7,8 +7,9 @@ from pywebpush import WebPushException
 
 from localhub.communities.models import Community
 from localhub.communities.tests.factories import CommunityFactory, MembershipFactory
-from localhub.notifications.models import Notification, PushSubscription
-from localhub.notifications.tests.factories import NotificationFactory
+
+from ..models import Notification, PushSubscription
+from .factories import NotificationFactory
 
 pytestmark = pytest.mark.django_db
 

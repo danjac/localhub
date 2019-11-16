@@ -4,9 +4,10 @@
 from django.urls import path
 
 from localhub.activities.views import create_activity_urls
-from localhub.polls.forms import PollForm
-from localhub.polls.models import Poll
-from localhub.polls.views import (
+
+from .forms import PollForm
+from .models import Poll
+from .views import (
     PollCreateView,
     PollDetailView,
     PollListView,
