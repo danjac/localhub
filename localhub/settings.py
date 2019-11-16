@@ -79,8 +79,8 @@ class Base(Configuration):
         "django.contrib.sites.middleware.CurrentSiteMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
         "django.middleware.locale.LocaleMiddleware",
-        "localhub.common.middleware.TurbolinksMiddleware",
-        "localhub.common.middleware.DoNotTrackMiddleware",
+        "localhub.core.middleware.TurbolinksMiddleware",
+        "localhub.core.middleware.DoNotTrackMiddleware",
         "localhub.communities.middleware.CurrentCommunityMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
@@ -157,7 +157,7 @@ class Base(Configuration):
 
     # https://neutronx.github.io/django-markdownx/customization/
 
-    MARKDOWNX_MARKDOWNIFY_FUNCTION = "localhub.common.markdown.utils.markdownify"
+    MARKDOWNX_MARKDOWNIFY_FUNCTION = "localhub.core.markdown.utils.markdownify"
 
     # https://micawber.readthedocs.io/en/latest/django.html
     MICAWBER_PROVIDERS = "localhub.activities.oembed.bootstrap_oembed"
@@ -216,7 +216,7 @@ class Base(Configuration):
                 "APP_DIRS": True,
                 "OPTIONS": {
                     "debug": self.DEBUG,
-                    "builtins": ["localhub.common.template.defaultfilters"],
+                    "builtins": ["localhub.core.template.defaultfilters"],
                     "context_processors": [
                         "django.template.context_processors.debug",
                         "django.template.context_processors.request",
@@ -229,8 +229,8 @@ class Base(Configuration):
                         "localhub.communities.context_processors.community",
                     ],
                     "libraries": {
-                        "form_tags": "localhub.common.forms.templatetags",
-                        "pagination_tags": "localhub.common.pagination.templatetags",  # noqa
+                        "form_tags": "localhub.core.forms.templatetags",
+                        "pagination_tags": "localhub.core.pagination.templatetags",  # noqa
                     },
                 },
             }
@@ -330,8 +330,8 @@ class Production(Base):
     SECURE_HSTS_SECONDS = 3600
     SECURE_SSL_REDIRECT = True
 
-    DEFAULT_FILE_STORAGE = "localhub.common.storages.MediaStorage"
-    STATICFILES_STORAGE = "localhub.common.storages.StaticStorage"
+    DEFAULT_FILE_STORAGE = "localhub.core.storages.MediaStorage"
+    STATICFILES_STORAGE = "localhub.core.storages.StaticStorage"
 
     AWS_MEDIA_LOCATION = "media"
     AWS_STATIC_LOCATION = "static"

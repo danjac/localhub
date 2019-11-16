@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.db import migrations, models
 
-import localhub.common.db.fields
+import localhub.core.db.fields
 
 
 class Migration(migrations.Migration):
@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='user',
             name='email_preferences',
-            field=localhub.common.db.fields.ChoiceArrayField(base_field=models.CharField(choices=[('messages', 'I receive a direct message'), ('follows', 'Someone starts following me'), ('comments', 'Someone comments on my post'), ('mentions', 'I am @mentioned in a post or comment'), ('deletes', 'A moderator deletes my post or comment'), ('edits', 'A moderator edits my post or comment'), ('followings', "Someone I'm following creates a post"), ('likes', 'Someone likes my post or comment'), ('tags', "A post is created containing tags I'm following"), ('flags', 'Post or comment is flagged (MODERATORS ONLY)'), ('reviews', 'Content to be reviewed (MODERATORS ONLY)')], max_length=12), blank=True, default=list, size=None),
+            field=localhub.core.db.fields.ChoiceArrayField(base_field=models.CharField(choices=[('messages', 'I receive a direct message'), ('follows', 'Someone starts following me'), ('comments', 'Someone comments on my post'), ('mentions', 'I am @mentioned in a post or comment'), ('deletes', 'A moderator deletes my post or comment'), ('edits', 'A moderator edits my post or comment'), ('followings', "Someone I'm following creates a post"), ('likes', 'Someone likes my post or comment'), ('tags', "A post is created containing tags I'm following"), ('flags', 'Post or comment is flagged (MODERATORS ONLY)'), ('reviews', 'Content to be reviewed (MODERATORS ONLY)')], max_length=12), blank=True, default=list, size=None),
         ),
         migrations.AlterField(
             model_name='user',

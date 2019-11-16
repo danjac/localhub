@@ -10,7 +10,7 @@ import taggit.managers
 from django.conf import settings
 from django.db import migrations, models
 
-import localhub.common.markdown.fields
+import localhub.core.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
                 ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
-                ('description', localhub.common.markdown.fields.MarkdownField(blank=True)),
+                ('description', localhub.core.markdown.fields.MarkdownField(blank=True)),
                 ('allow_comments', models.BooleanField(default=True)),
                 ('is_reshare', models.BooleanField(default=False)),
                 ('search_document', django.contrib.postgres.search.SearchVectorField(editable=False, null=True)),
@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
                 ('id', models.IntegerField(auto_created=True, blank=True, db_index=True, verbose_name='ID')),
                 ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
                 ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
-                ('description', localhub.common.markdown.fields.MarkdownField(blank=True)),
+                ('description', localhub.core.markdown.fields.MarkdownField(blank=True)),
                 ('allow_comments', models.BooleanField(default=True)),
                 ('is_reshare', models.BooleanField(default=False)),
                 ('search_document', django.contrib.postgres.search.SearchVectorField(editable=False, null=True)),

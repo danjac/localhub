@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 
-import localhub.common.markdown.fields
+import localhub.core.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -23,17 +23,17 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='community',
             name='intro',
-            field=localhub.common.markdown.fields.MarkdownField(blank=True, help_text='Text shown in Login and other pages to non-members.'),
+            field=localhub.core.markdown.fields.MarkdownField(blank=True, help_text='Text shown in Login and other pages to non-members.'),
         ),
         migrations.AddField(
             model_name='historicalcommunity',
             name='intro',
-            field=localhub.common.markdown.fields.MarkdownField(blank=True, help_text='Text shown in Login and other pages to non-members.'),
+            field=localhub.core.markdown.fields.MarkdownField(blank=True, help_text='Text shown in Login and other pages to non-members.'),
         ),
         migrations.AlterField(
             model_name='community',
             name='description',
-            field=localhub.common.markdown.fields.MarkdownField(blank=True, help_text='Longer description of site shown to members in Description page.'),
+            field=localhub.core.markdown.fields.MarkdownField(blank=True, help_text='Longer description of site shown to members in Description page.'),
         ),
         migrations.AlterField(
             model_name='community',
@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='historicalcommunity',
             name='description',
-            field=localhub.common.markdown.fields.MarkdownField(blank=True, help_text='Longer description of site shown to members in Description page.'),
+            field=localhub.core.markdown.fields.MarkdownField(blank=True, help_text='Longer description of site shown to members in Description page.'),
         ),
         migrations.AlterField(
             model_name='historicalcommunity',

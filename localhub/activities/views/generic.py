@@ -22,8 +22,8 @@ from vanilla import (
 
 from localhub.comments.forms import CommentForm
 from localhub.comments.notifications import send_comment_notifications
-from localhub.common.views import BreadcrumbsMixin, SearchMixin
 from localhub.communities.views import CommunityRequiredMixin
+from localhub.core.views import BreadcrumbsMixin, SearchMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
 

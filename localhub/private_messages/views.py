@@ -24,8 +24,8 @@ from vanilla import (
     UpdateView,
 )
 
-from localhub.common.views import BreadcrumbsMixin, SearchMixin
 from localhub.communities.views import CommunityRequiredMixin
+from localhub.core.views import BreadcrumbsMixin, SearchMixin
 from localhub.users.utils import user_display
 
 from .forms import MessageForm

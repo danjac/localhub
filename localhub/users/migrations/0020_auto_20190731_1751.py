@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 
-import localhub.common.db.fields
+import localhub.core.db.fields
 
 
 class Migration(migrations.Migration):
@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='home_page_filters',
-            field=localhub.common.db.fields.ChoiceArrayField(base_field=models.CharField(choices=[('users', "Posts from people I'm following"), ('tags', "Posts containing tags I'm following")], max_length=12), blank=True, default=list, size=None),
+            field=localhub.core.db.fields.ChoiceArrayField(base_field=models.CharField(choices=[('users', "Posts from people I'm following"), ('tags', "Posts containing tags I'm following")], max_length=12), blank=True, default=list, size=None),
         ),
         migrations.AddField(
             model_name='user',

@@ -8,8 +8,8 @@ import django.utils.timezone
 import model_utils.fields
 from django.db import migrations, models
 
-import localhub.common.markdown.fields
 import localhub.communities.models
+import localhub.core.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -63,7 +63,7 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=255)),
                 (
                     "description",
-                    localhub.common.markdown.fields.MarkdownField(blank=True),
+                    localhub.core.markdown.fields.MarkdownField(blank=True),
                 ),
                 (
                     "public",

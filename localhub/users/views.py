@@ -16,9 +16,9 @@ from vanilla import DeleteView, GenericModelView, ListView, UpdateView
 from localhub.activities.views.streams import BaseStreamView
 from localhub.comments.models import Comment
 from localhub.comments.views import BaseCommentListView
-from localhub.common.views import SearchMixin
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
+from localhub.core.views import SearchMixin
 from localhub.likes.models import Like
 from localhub.private_messages.models import Message
 

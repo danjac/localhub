@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 
-import localhub.common.db.fields
+import localhub.core.db.fields
 import localhub.users.models
 
 
@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="user",
             name="email_notifications",
-            field=localhub.common.db.fields.ChoiceArrayField(
+            field=localhub.core.db.fields.ChoiceArrayField(
                 base_field=models.CharField(
                     choices=[
                         ("comments", "Someone comments on my post"),

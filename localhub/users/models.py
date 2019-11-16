@@ -15,9 +15,9 @@ from sorl.thumbnail import ImageField
 from taggit.models import Tag
 from timezone_field import TimeZoneField
 
-from localhub.common.db.fields import ChoiceArrayField
-from localhub.common.db.search import SearchIndexer, SearchQuerySetMixin
 from localhub.communities.models import Membership
+from localhub.core.db.fields import ChoiceArrayField
+from localhub.core.db.search import SearchIndexer, SearchQuerySetMixin
 from localhub.notifications.models import Notification
 
 

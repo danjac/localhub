@@ -16,8 +16,8 @@ from rules.contrib.views import PermissionRequiredMixin
 from taggit.models import Tag, TaggedItem
 from vanilla import GenericModelView, ListView
 
-from localhub.common.views import SearchMixin
 from localhub.communities.views import CommunityRequiredMixin
+from localhub.core.views import SearchMixin
 from localhub.events.models import Event
 from localhub.photos.models import Photo
 from localhub.posts.models import Post

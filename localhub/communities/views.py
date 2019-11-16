@@ -16,7 +16,7 @@ from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView, DetailView, ListView, TemplateView, UpdateView
 
-from localhub.common.views import SearchMixin
+from localhub.core.views import SearchMixin
 from localhub.join_requests.models import JoinRequest
 
 from .emails import send_membership_deleted_email
