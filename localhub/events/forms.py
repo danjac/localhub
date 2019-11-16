@@ -54,9 +54,7 @@ class EventForm(forms.ModelForm):
             value = getattr(self.instance, field)
             if value:
                 self.initial[field] = make_aware(
-                    localtime(value, self.instance.timezone).replace(
-                        tzinfo=None
-                    ),
+                    localtime(value, self.instance.timezone).replace(tzinfo=None),
                     pytz.UTC,
                     is_dst=True,
                 )
@@ -78,9 +76,7 @@ class EventForm(forms.ModelForm):
             value = cleaned_data.get(field)
             if value:
                 cleaned_data[field] = localtime(
-                    make_aware(
-                        value.replace(tzinfo=None), timezone, is_dst=True
-                    ),
+                    make_aware(value.replace(tzinfo=None), timezone, is_dst=True),
                     pytz.UTC,
                 )
         return cleaned_data

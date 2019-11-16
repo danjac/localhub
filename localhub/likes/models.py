@@ -40,11 +40,7 @@ class LikeAnnotationsQuerySetMixin:
         Appends the total number of likes each object has received.
         """
         return self.annotate(
-            **{
-                annotated_name: get_generic_related_count_subquery(
-                    self.model, Like
-                )
-            }
+            **{annotated_name: get_generic_related_count_subquery(self.model, Like)}
         )
 
 
@@ -54,17 +50,13 @@ class LikeQuerySet(models.QuerySet):
         Returns instances of a Like for a given set of models.
         """
         return self.filter(
-            content_type__in=ContentType.objects.get_for_models(
-                *models
-            ).values()
+            content_type__in=ContentType.objects.get_for_models(*models).values()
         )
 
 
 class Like(TimeStampedModel):
 
-    community = models.ForeignKey(
-        Community, related_name="+", on_delete=models.CASCADE
-    )
+    community = models.ForeignKey(Community, related_name="+", on_delete=models.CASCADE)
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name="+", on_delete=models.CASCADE
@@ -83,8 +75,7 @@ class Like(TimeStampedModel):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["user", "content_type", "object_id"],
-                name="unique_like",
+                fields=["user", "content_type", "object_id"], name="unique_like",
             )
         ]
         indexes = [models.Index(fields=["content_type", "object_id"])]

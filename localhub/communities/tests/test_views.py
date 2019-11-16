@@ -53,9 +53,7 @@ class TestCommunityRequiredMixin:
         req.user = AnonymousUser()
         assert my_view(req).url == reverse("community_welcome")
 
-    def test_redirect_to_community_welcome_if_non_members_allowed(
-        self, rf, user
-    ):
+    def test_redirect_to_community_welcome_if_non_members_allowed(self, rf, user):
         req = rf.get("/")
         req.community = CommunityFactory()
         req.user = user
@@ -78,10 +76,7 @@ class TestCommunityRequiredMixin:
 
 class TestCommunityDetailView:
     def test_get(self, client, member):
-        assert (
-            client.get(reverse("communities:community_detail")).status_code
-            == 200
-        )
+        assert client.get(reverse("communities:community_detail")).status_code == 200
 
 
 class TestCommunityWelcomeView:
@@ -92,26 +87,17 @@ class TestCommunityWelcomeView:
         assert client.get(reverse("community_welcome")).status_code == 200
 
     def test_get_if_member(self, client, member):
-        assert (
-            client.get(reverse("community_welcome")).url
-            == settings.HOME_PAGE_URL
-        )
+        assert client.get(reverse("community_welcome")).url == settings.HOME_PAGE_URL
 
 
 class TestCommunityTermsView:
     def test_get(self, client, member):
-        assert (
-            client.get(reverse("communities:community_terms")).status_code
-            == 200
-        )
+        assert client.get(reverse("communities:community_terms")).status_code == 200
 
 
 class TestCommunityUpdateView:
     def test_get(self, client, admin):
-        assert (
-            client.get(reverse("communities:community_update")).status_code
-            == 200
-        )
+        assert client.get(reverse("communities:community_update")).status_code == 200
 
     def test_post(self, client, admin):
         url = reverse("communities:community_update")
@@ -157,8 +143,7 @@ class TestMembershipListView:
         member = MembershipFactory(community=admin.community)
 
         response = client.get(
-            reverse("communities:membership_list"),
-            {"q": member.member.username},
+            reverse("communities:membership_list"), {"q": member.member.username},
         )
         assert len(response.context["object_list"]) == 1
 

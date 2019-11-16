@@ -83,9 +83,7 @@ class TestCommunityPermissions:
         assert not user.has_perm("communities.manage_community", community)
 
     def test_can_manage_community_if_user_is_admin(self, user, community):
-        Membership.objects.create(
-            member=user, community=community, role="admin"
-        )
+        Membership.objects.create(member=user, community=community, role="admin")
         assert user.has_perm("communities.manage_community", community)
 
 
@@ -93,9 +91,7 @@ class TestMembershipPermissions:
     def test_can_change_membership_if_is_admin_and_is_other_membership(
         self, user, community
     ):
-        Membership.objects.create(
-            member=user, community=community, role="admin"
-        )
+        Membership.objects.create(member=user, community=community, role="admin")
         membership = Membership.objects.create(
             member=UserFactory(), community=community, role="admin"
         )
@@ -112,9 +108,7 @@ class TestMembershipPermissions:
     def test_can_delete_membership_if_is_admin_and_is_other_membership(
         self, user, community
     ):
-        Membership.objects.create(
-            member=user, community=community, role="admin"
-        )
+        Membership.objects.create(member=user, community=community, role="admin")
         membership = Membership.objects.create(
             member=UserFactory(), community=community, role="admin"
         )
@@ -123,9 +117,7 @@ class TestMembershipPermissions:
     def test_can_delete_membership_if_not_is_admin_and_is_other_membership(
         self, user, community
     ):
-        Membership.objects.create(
-            member=user, community=community, role="member"
-        )
+        Membership.objects.create(member=user, community=community, role="member")
         membership = Membership.objects.create(
             member=UserFactory(), community=community, role="admin"
         )

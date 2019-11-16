@@ -13,10 +13,6 @@ from localhub.events.views import event_download_view, EventCreateView
 app_name = "events"
 
 
-urlpatterns = create_activity_urls(
-    Event, EventForm, create_view_class=EventCreateView
-)
+urlpatterns = create_activity_urls(Event, EventForm, create_view_class=EventCreateView)
 
-urlpatterns += [
-    path("<int:pk>~download/", event_download_view, name="download")
-]
+urlpatterns += [path("<int:pk>~download/", event_download_view, name="download")]

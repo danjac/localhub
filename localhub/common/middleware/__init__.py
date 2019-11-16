@@ -36,9 +36,7 @@ class TurbolinksMiddleware:
     def __call__(self, request):
 
         response = self.get_response(request)
-        if response.status_code in (301, 302) and response.has_header(
-            "Location"
-        ):
+        if response.status_code in (301, 302) and response.has_header("Location"):
             return self.handle_redirect(request, response)
         if response.status_code in range(200, 299):
             location = request.session.pop(self.session_key, None)
@@ -60,9 +58,7 @@ class TurbolinksMiddleware:
         if request.method not in ("GET", "HEAD", "OPTIONS", "TRACE"):
             js.append("Turbolinks.clearCache();")
         js.append("Turbolinks.visit('{}');".format(response["Location"]))
-        js_response = HttpResponse(
-            "\n".join(js), content_type="text/javascript"
-        )
+        js_response = HttpResponse("\n".join(js), content_type="text/javascript")
         # make sure we pass down any cookies e.g. for handling messages
         for k, v in response.cookies.items():
             js_response.set_cookie(k, v)

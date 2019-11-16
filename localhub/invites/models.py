@@ -31,9 +31,7 @@ class Invite(TimeStampedModel):
 
     sent = models.DateTimeField(null=True, blank=True)
 
-    sender = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
-    )
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ("email", "community")

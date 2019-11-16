@@ -30,9 +30,7 @@ class TestShowMessage:
         message = MessageFactory(
             sender=auth_request.user, community=auth_request.community
         )
-        context = show_message(
-            {"request": auth_request}, auth_request.user, message
-        )
+        context = show_message({"request": auth_request}, auth_request.user, message)
         assert context["sender_url"] == reverse("private_messages:outbox")
         assert context["recipient_url"] == reverse(
             "users:messages", args=[message.recipient.username]
@@ -43,9 +41,7 @@ class TestShowMessage:
             recipient=auth_request.user, community=auth_request.community
         )
         message.sender_has_blocked = False
-        context = show_message(
-            {"request": auth_request}, auth_request.user, message
-        )
+        context = show_message({"request": auth_request}, auth_request.user, message)
         assert context["recipient_url"] == reverse("private_messages:outbox")
         assert context["sender_url"] == reverse(
             "users:messages", args=[message.sender.username]
@@ -56,9 +52,7 @@ class TestShowMessage:
             recipient=auth_request.user, community=auth_request.community
         )
         message.sender_has_blocked = True
-        context = show_message(
-            {"request": auth_request}, auth_request.user, message
-        )
+        context = show_message({"request": auth_request}, auth_request.user, message)
         assert context["recipient_url"] == reverse("private_messages:outbox")
         assert context["sender_url"] == reverse(
             "users:messages", args=[message.sender.username]
@@ -75,18 +69,13 @@ class TestGetUnreadMessageCount:
             recipient=member.member,
             sender=MembershipFactory(community=member.community).member,
         )
-        assert (
-            get_unread_message_count({}, member.member, member.community) == 1
-        )
+        assert get_unread_message_count({}, member.member, member.community) == 1
 
 
 class TestGetUnreadLocalNetworkMessageCount:
     def test_anonymous(self, community):
         assert (
-            get_unread_local_network_message_count(
-                {}, AnonymousUser(), community
-            )
-            == 0
+            get_unread_local_network_message_count({}, AnonymousUser(), community) == 0
         )
 
     def test_authenticated(self, member):
@@ -97,8 +86,6 @@ class TestGetUnreadLocalNetworkMessageCount:
             sender=MembershipFactory(community=other).member,
         )
         assert (
-            get_unread_local_network_message_count(
-                {}, member.member, member.community
-            )
+            get_unread_local_network_message_count({}, member.member, member.community)
             == 1
         )

@@ -22,19 +22,14 @@ class TestNotificationManager:
     def test_for_community(self, community: Community):
 
         notification = NotificationFactory(
-            community=community,
-            actor=MembershipFactory(community=community).member,
+            community=community, actor=MembershipFactory(community=community).member,
         )
-        NotificationFactory(
-            actor=MembershipFactory(community=community).member
-        )
+        NotificationFactory(actor=MembershipFactory(community=community).member)
         NotificationFactory(
             actor=MembershipFactory(community=community, active=False).member
         )
         NotificationFactory(
-            actor=MembershipFactory(
-                community=CommunityFactory(), active=True
-            ).member
+            actor=MembershipFactory(community=CommunityFactory(), active=True).member
         )
         NotificationFactory(community=community)
         NotificationFactory()
@@ -81,9 +76,7 @@ class TestPushSubscriptionModel:
 
         e = WebPushException("BOOM", response=mocker.Mock(status_code=410))
 
-        with mocker.patch(
-            "localhub.notifications.models.webpush", side_effect=e
-        ):
+        with mocker.patch("localhub.notifications.models.webpush", side_effect=e):
             assert not sub.push(payload)
 
         assert not PushSubscription.objects.exists()

@@ -9,9 +9,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestCurrentCommunityMiddleware:
-    def test_if_community_available(
-        self, community, rf, get_response
-    ):
+    def test_if_community_available(self, community, rf, get_response):
         mw = CurrentCommunityMiddleware(get_response)
         req = rf.get("/", HTTP_HOST=community.domain)
         mw(req)

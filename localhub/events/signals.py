@@ -13,9 +13,7 @@ from localhub.events.models import Event
 celery_logger = get_logger(__name__)
 
 
-@receiver(
-    post_save, sender=Event, dispatch_uid="events.update_event_coordinates"
-)
+@receiver(post_save, sender=Event, dispatch_uid="events.update_event_coordinates")
 def update_event_coordinates(instance, created=False, **kwargs):
     if created or instance.location_tracker.changed():
 

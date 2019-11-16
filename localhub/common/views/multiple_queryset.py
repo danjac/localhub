@@ -88,9 +88,9 @@ class MultipleQuerySetMixin:
             values += [field.lstrip("-") for field in ordering]
 
         querysets = [
-            qs.annotate(
-                object_type=Value(key, output_field=CharField())
-            ).values(*values)
+            qs.annotate(object_type=Value(key, output_field=CharField())).values(
+                *values
+            )
             for key, qs in queryset_dict.items()
         ]
         qs = querysets[0].union(*querysets[1:])

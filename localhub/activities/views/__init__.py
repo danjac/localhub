@@ -40,25 +40,15 @@ def create_activity_urls(
             name="comment",
         ),
         path(
-            "<int:pk>/~delete/",
-            delete_view_class.as_view(model=model),
-            name="delete",
+            "<int:pk>/~delete/", delete_view_class.as_view(model=model), name="delete",
         ),
         path(
             "<int:pk>/~dislike/",
             dislike_view_class.as_view(model=model),
             name="dislike",
         ),
-        path(
-            "<int:pk>/~flag/",
-            flag_view_class.as_view(model=model),
-            name="flag",
-        ),
-        path(
-            "<int:pk>/~like/",
-            like_view_class.as_view(model=model),
-            name="like",
-        ),
+        path("<int:pk>/~flag/", flag_view_class.as_view(model=model), name="flag",),
+        path("<int:pk>/~like/", like_view_class.as_view(model=model), name="like",),
         path(
             "<int:pk>/~reshare/",
             reshare_view_class.as_view(model=model),
@@ -75,8 +65,6 @@ def create_activity_urls(
             name="detail",
         ),
         path(
-            "<int:pk>/",
-            detail_view_class.as_view(model=model),
-            name="detail_no_slug",
+            "<int:pk>/", detail_view_class.as_view(model=model), name="detail_no_slug",
         ),
     ]

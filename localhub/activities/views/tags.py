@@ -102,11 +102,7 @@ class TagDetailView(BaseStreamView):
         # in question.
         if self.request.user.is_authenticated:
             qs = qs.exclude(
-                Q(
-                    tags__in=self.request.user.blocked_tags.exclude(
-                        id=self.tag.id
-                    )
-                ),
+                Q(tags__in=self.request.user.blocked_tags.exclude(id=self.tag.id)),
                 ~Q(owner=self.request.user),
             )
         return qs
@@ -120,9 +116,7 @@ class TagDetailView(BaseStreamView):
 tag_detail_view = TagDetailView.as_view()
 
 
-class TagFollowView(
-    LoginRequiredMixin, PermissionRequiredMixin, BaseSingleTagView
-):
+class TagFollowView(LoginRequiredMixin, PermissionRequiredMixin, BaseSingleTagView):
     permission_required = "users.follow_tag"
 
     def get_permission_object(self):
@@ -154,9 +148,7 @@ class TagUnfollowView(LoginRequiredMixin, BaseSingleTagView):
 tag_unfollow_view = TagUnfollowView.as_view()
 
 
-class TagBlockView(
-    LoginRequiredMixin, PermissionRequiredMixin, BaseSingleTagView
-):
+class TagBlockView(LoginRequiredMixin, PermissionRequiredMixin, BaseSingleTagView):
     permission_required = "users.block_tag"
 
     def get_permission_object(self):
@@ -201,9 +193,7 @@ class TagListView(SearchMixin, TagQuerySetMixin, BaseTagListView):
         if self.request.user.is_authenticated:
             qs = qs.annotate(
                 is_following=Exists(
-                    self.request.user.following_tags.filter(
-                        pk__in=OuterRef("id")
-                    )
+                    self.request.user.following_tags.filter(pk__in=OuterRef("id"))
                 )
             )
         else:
@@ -212,9 +202,7 @@ class TagListView(SearchMixin, TagQuerySetMixin, BaseTagListView):
         qs = qs.annotate(
             item_count=Count(
                 "taggit_taggeditem_items",
-                filter=Q(
-                    taggit_taggeditem_items__pk__in=self.get_tagged_items()
-                ),
+                filter=Q(taggit_taggeditem_items__pk__in=self.get_tagged_items()),
             )
         )
 

@@ -48,9 +48,7 @@ class TestJoinRequestCreateView:
 
     def test_post_if_blacklist(self, client, mailoutbox, login_user):
 
-        community = CommunityFactory(
-            blacklisted_email_addresses=login_user.email
-        )
+        community = CommunityFactory(blacklisted_email_addresses=login_user.email)
 
         admin = UserFactory()
         Membership.objects.create(
@@ -68,18 +66,14 @@ class TestJoinRequestCreateView:
 
         admin = UserFactory()
         Membership.objects.create(
-            community=member.community,
-            member=admin,
-            role=Membership.ROLES.admin,
+            community=member.community, member=admin, role=Membership.ROLES.admin,
         )
         response = client.post(reverse("join_requests:create"))
         assert response.url == reverse("community_welcome")
         assert not JoinRequest.objects.exists()
         assert len(mailoutbox) == 0
 
-    def test_post_if_already_request(
-        self, client, mailoutbox, community, login_user
-    ):
+    def test_post_if_already_request(self, client, mailoutbox, community, login_user):
 
         admin = UserFactory()
         Membership.objects.create(
@@ -96,15 +90,11 @@ class TestJoinRequestCreateView:
 
 
 class TestJoinRequestAcceptView:
-    def test_post(
-        self, client, mailoutbox, admin, send_notification_webpush_mock
-    ):
+    def test_post(self, client, mailoutbox, admin, send_notification_webpush_mock):
         admin.member.email_preferences = ["new_member"]
         admin.member.save()
         join_request = JoinRequestFactory(community=admin.community)
-        response = client.post(
-            reverse("join_requests:accept", args=[join_request.id])
-        )
+        response = client.post(reverse("join_requests:accept", args=[join_request.id]))
         assert response.url == reverse("join_requests:list")
         join_request.refresh_from_db()
         assert join_request.is_accepted()
@@ -120,9 +110,7 @@ class TestJoinRequestAcceptView:
 class TestJoinRequestRejectView:
     def test_post(self, client, mailoutbox, admin):
         join_request = JoinRequestFactory(community=admin.community)
-        response = client.post(
-            reverse("join_requests:reject", args=[join_request.id])
-        )
+        response = client.post(reverse("join_requests:reject", args=[join_request.id]))
         assert response.url == reverse("join_requests:list")
         join_request.refresh_from_db()
         assert join_request.is_rejected()

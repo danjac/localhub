@@ -51,9 +51,7 @@ class Event(Activity):
     )
 
     title = models.CharField(max_length=200)
-    url = models.URLField(
-        verbose_name=_("Link"), max_length=500, null=True, blank=True
-    )
+    url = models.URLField(verbose_name=_("Link"), max_length=500, null=True, blank=True)
 
     starts = models.DateTimeField(verbose_name=_("Starts on (UTC)"))
     ends = models.DateTimeField(null=True, blank=True)
@@ -123,9 +121,7 @@ class Event(Activity):
         """
         rv = [
             smart_text(value)
-            for value in [
-                getattr(self, field) for field in self.LOCATION_FIELDS[:-1]
-            ]
+            for value in [getattr(self, field) for field in self.LOCATION_FIELDS[:-1]]
             if value
         ]
 
@@ -139,11 +135,7 @@ class Event(Activity):
         Includes venue if available
         """
         return ", ".join(
-            [
-                smart_text(value)
-                for value in [self.venue, self.location]
-                if value
-            ]
+            [smart_text(value) for value in [self.venue, self.location] if value]
         )
 
     def to_ical(self):

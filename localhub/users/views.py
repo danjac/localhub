@@ -49,9 +49,7 @@ class CurrentUserMixin(LoginRequiredMixin):
 class SingleUserMixin(BaseUserQuerySetMixin):
     @cached_property
     def user_obj(self):
-        return get_object_or_404(
-            self.get_user_queryset(), username=self.kwargs["slug"]
-        )
+        return get_object_or_404(self.get_user_queryset(), username=self.kwargs["slug"])
 
     @cached_property
     def membership(self):
@@ -71,9 +69,7 @@ class SingleUserMixin(BaseUserQuerySetMixin):
         return data
 
 
-class BaseSingleUserView(
-    LoginRequiredMixin, UserQuerySetMixin, GenericModelView
-):
+class BaseSingleUserView(LoginRequiredMixin, UserQuerySetMixin, GenericModelView):
     lookup_field = "username"
     lookup_url_kwarg = "slug"
 
@@ -307,12 +303,8 @@ class UserMessageListView(SingleUserMixin, ListView):
         qs = self.get_queryset()
         data.update(
             {
-                "num_messages_sent": qs.filter(
-                    sender=self.request.user
-                ).count(),
-                "num_messages_received": qs.filter(
-                    recipient=self.request.user
-                ).count(),
+                "num_messages_sent": qs.filter(sender=self.request.user).count(),
+                "num_messages_received": qs.filter(recipient=self.request.user).count(),
             }
         )
         return data

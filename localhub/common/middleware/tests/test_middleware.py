@@ -37,9 +37,7 @@ class TestTurbolinksMiddleware:
 
         mw = TurbolinksMiddleware(get_response)
         req = rf.get(
-            "/",
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-            HTTP_TURBOLINKS_REFERRER="/",
+            "/", HTTP_X_REQUESTED_WITH="XMLHttpRequest", HTTP_TURBOLINKS_REFERRER="/",
         )
         resp = mw(req)
         assert resp["Content-Type"] == "text/javascript"

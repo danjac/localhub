@@ -11,9 +11,7 @@ from localhub.private_messages.models import Message
 register = template.Library()
 
 
-@register.inclusion_tag(
-    "private_messages/includes/message.html", takes_context=True
-)
+@register.inclusion_tag("private_messages/includes/message.html", takes_context=True)
 def show_message(
     context,
     user,
@@ -38,9 +36,7 @@ def show_message(
 
     if is_sender:
         sender_url = outbox_url
-        recipient_url = reverse(
-            "users:messages", args=[message.recipient.username]
-        )
+        recipient_url = reverse("users:messages", args=[message.recipient.username])
     else:
         sender_url = reverse("users:messages", args=[message.sender.username])
         recipient_url = outbox_url

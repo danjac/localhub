@@ -23,9 +23,7 @@ class TestOutboxView:
     def test_get(self, client, member):
         recipient = MembershipFactory(community=member.community).member
         MessageFactory(
-            community=member.community,
-            sender=member.member,
-            recipient=recipient,
+            community=member.community, sender=member.member, recipient=recipient,
         )
         response = client.get(reverse("private_messages:outbox"))
         assert len(response.context["object_list"]) == 1
@@ -35,9 +33,7 @@ class TestMessageUpdateView:
     def test_get(self, client, member):
         recipient = MembershipFactory(community=member.community).member
         message = MessageFactory(
-            community=member.community,
-            sender=member.member,
-            recipient=recipient,
+            community=member.community, sender=member.member, recipient=recipient,
         )
         response = client.get(
             reverse("private_messages:message_update", args=[message.id])
@@ -47,9 +43,7 @@ class TestMessageUpdateView:
     def test_post(self, client, member):
         recipient = MembershipFactory(community=member.community).member
         message = MessageFactory(
-            community=member.community,
-            sender=member.member,
-            recipient=recipient,
+            community=member.community, sender=member.member, recipient=recipient,
         )
         response = client.post(
             reverse("private_messages:message_update", args=[message.id]),
@@ -64,9 +58,7 @@ class TestMessageDeleteView:
     def test_post(self, client, member):
         recipient = MembershipFactory(community=member.community).member
         message = MessageFactory(
-            community=member.community,
-            sender=member.member,
-            recipient=recipient,
+            community=member.community, sender=member.member, recipient=recipient,
         )
         response = client.post(
             reverse("private_messages:message_delete", args=[message.id])
@@ -120,9 +112,7 @@ class TestMessageDetailView:
     def test_get_if_sender(self, client, member):
         recipient = MembershipFactory(community=member.community).member
         message = MessageFactory(
-            community=member.community,
-            sender=member.member,
-            recipient=recipient,
+            community=member.community, sender=member.member, recipient=recipient,
         )
         response = client.get(message.get_absolute_url())
         assert response.status_code == 200
@@ -192,9 +182,7 @@ class TestMessageCreateView:
         recipient = MembershipFactory(community=member.community).member
         recipient.blocked.add(member.member)
         response = client.post(
-            reverse(
-                "private_messages:message_create", args=[recipient.username]
-            ),
+            reverse("private_messages:message_create", args=[recipient.username]),
             {"message": "test"},
         )
         assert response.status_code == 404
@@ -202,9 +190,7 @@ class TestMessageCreateView:
     def test_post(self, client, member, send_notification_webpush_mock):
         recipient = MembershipFactory(community=member.community).member
         response = client.post(
-            reverse(
-                "private_messages:message_create", args=[recipient.username]
-            ),
+            reverse("private_messages:message_create", args=[recipient.username]),
             {"message": "test"},
         )
         message = Message.objects.get()
@@ -218,8 +204,6 @@ class TestMessageCreateView:
     def test_get(self, client, member):
         recipient = MembershipFactory(community=member.community).member
         response = client.get(
-            reverse(
-                "private_messages:message_create", args=[recipient.username]
-            )
+            reverse("private_messages:message_create", args=[recipient.username])
         )
         assert response.status_code == 200

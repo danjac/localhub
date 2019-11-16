@@ -57,14 +57,10 @@ class TestEventListView:
 
 class TestEventUpdateView:
     def test_get(self, client, event_for_member):
-        response = client.get(
-            reverse("events:update", args=[event_for_member.id])
-        )
+        response = client.get(reverse("events:update", args=[event_for_member.id]))
         assert response.status_code == 200
 
-    def test_post(
-        self, client, event_for_member, send_notification_webpush_mock
-    ):
+    def test_post(self, client, event_for_member, send_notification_webpush_mock):
         response = client.post(
             reverse("events:update", args=[event_for_member.id]),
             {
@@ -85,15 +81,11 @@ class TestEventUpdateView:
 class TestEventDeleteView:
     def test_get(self, client, event_for_member):
         # test confirmation page for non-JS clients
-        response = client.get(
-            reverse("events:delete", args=[event_for_member.id])
-        )
+        response = client.get(reverse("events:delete", args=[event_for_member.id]))
         assert response.status_code == 200
 
     def test_post(self, client, event_for_member):
-        response = client.post(
-            reverse("events:delete", args=[event_for_member.id])
-        )
+        response = client.post(reverse("events:delete", args=[event_for_member.id]))
         assert response.url == reverse("activities:stream")
         assert Event.objects.count() == 0
 

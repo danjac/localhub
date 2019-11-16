@@ -32,8 +32,7 @@ def send_user_notification_push(user, notification):
             notification.recipient,
             notification.community,
             head=NOTIFICATION_HEADERS[notification.verb],
-            body=NOTIFICATION_BODY[notification.verb]
-            % {"user": user_display(user)},
+            body=NOTIFICATION_BODY[notification.verb] % {"user": user_display(user)},
             url=notification.community.resolve_url(user.get_absolute_url()),
         )
 

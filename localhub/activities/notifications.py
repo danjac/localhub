@@ -21,8 +21,7 @@ NOTIFICATION_HEADERS = {
     ),
     "new_followed_user_post": _("%(actor)s has submitted a new %(activity)s"),
     "new_followed_tag_post": _(
-        "Someone has submitted a new %(activity)s containing "
-        "tags you are following"
+        "Someone has submitted a new %(activity)s containing tags you are following"
     ),
     "reshare": _("%(actor)s has reshared your %(activity)s"),
 }
@@ -85,9 +84,7 @@ def send_activity_deleted_email(activity):
 
             send_mail(
                 _("Your %s has been deleted by a moderator" % activity_name),
-                render_to_string(
-                    "activities/emails/activity_deleted.txt", context
-                ),
+                render_to_string("activities/emails/activity_deleted.txt", context),
                 activity.community.resolve_email("no-reply"),
                 [activity.owner.email],
                 html_message=render_to_string(

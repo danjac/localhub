@@ -103,9 +103,7 @@ class TestNotificationDeleteView:
             community=post.community,
             verb="created",
         )
-        response = client.post(
-            reverse("notifications:delete", args=[notification.id])
-        )
+        response = client.post(reverse("notifications:delete", args=[notification.id]))
         assert response.url == reverse("notifications:list")
         assert not Notification.objects.exists()
 

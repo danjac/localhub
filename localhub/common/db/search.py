@@ -50,17 +50,14 @@ class SearchIndexer:
         ))
     """
 
-    def __init__(
-        self, *search_components, search_document_field="search_document"
-    ):
+    def __init__(self, *search_components, search_document_field="search_document"):
         self.search_components = search_components
         self.search_document_field = search_document_field
 
     def get_search_vectors(self, instance):
         return [
             SearchVector(
-                models.Value(text, output_field=models.CharField()),
-                weight=weight,
+                models.Value(text, output_field=models.CharField()), weight=weight,
             )
             for (weight, text) in [
                 (k, getattr(instance, v)) for k, v in self.search_components
@@ -88,6 +85,4 @@ class SearchIndexer:
 
         self.cls = cls
 
-        models.signals.class_prepared.connect(
-            self.finalize, sender=cls, weak=False
-        )
+        models.signals.class_prepared.connect(self.finalize, sender=cls, weak=False)

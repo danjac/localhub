@@ -32,7 +32,5 @@ class PostForm(forms.ModelForm):
         title = cleaned_data.get("title")
         url = cleaned_data.get("url")
         if not any((title, url)):
-            raise forms.ValidationError(
-                _("Either title or URL must be provided")
-            )
+            raise forms.ValidationError(_("Either title or URL must be provided"))
         return cleaned_data

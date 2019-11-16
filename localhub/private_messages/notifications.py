@@ -29,9 +29,7 @@ def send_message_email(message):
 
             send_mail(
                 f"{message.community.name} | {subject}",
-                render_to_string(
-                    "private_messages/emails/message.txt", context
-                ),
+                render_to_string("private_messages/emails/message.txt", context),
                 message.community.resolve_email("no-reply"),
                 [message.recipient.email],
                 html_message=render_to_string(

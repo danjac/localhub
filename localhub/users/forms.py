@@ -39,9 +39,7 @@ class UserForm(forms.ModelForm):
             "home_page_filters": forms.CheckboxSelectMultiple,
         }
         help_texts = {
-            "home_page_filters": _(
-                "Blocked users and tags will not be shown."
-            ),
+            "home_page_filters": _("Blocked users and tags will not be shown."),
             "show_sensitive_content": _(
                 "Sensitive content will be hidden by default. "
                 "If you wish to remove sensitive content completely "

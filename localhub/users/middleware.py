@@ -16,7 +16,5 @@ class UserLocaleMiddleware:
     def __call__(self, request):
         response = self.get_response(request)
         if request.user.is_authenticated:
-            response.set_cookie(
-                settings.LANGUAGE_COOKIE_NAME, request.user.language
-            )
+            response.set_cookie(settings.LANGUAGE_COOKIE_NAME, request.user.language)
         return response

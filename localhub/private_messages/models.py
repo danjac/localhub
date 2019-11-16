@@ -44,8 +44,7 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
         """
         return self.filter(
             models.Q(
-                models.Q(recipient=current_user, is_hidden=False),
-                sender=other_user,
+                models.Q(recipient=current_user, is_hidden=False), sender=other_user,
             )
             | models.Q(recipient=other_user, sender=current_user)
         )
@@ -72,11 +71,7 @@ class Message(TimeStampedModel):
     message = MarkdownField()
 
     parent = models.ForeignKey(
-        "self",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="+",
+        "self", null=True, blank=True, on_delete=models.SET_NULL, related_name="+",
     )
 
     read = models.DateTimeField(null=True, blank=True)

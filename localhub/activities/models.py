@@ -77,15 +77,11 @@ class ActivityQuerySet(
         """
         if user.is_anonymous:
             return self.annotate(
-                has_reshared=models.Value(
-                    False, output_field=models.BooleanField()
-                )
+                has_reshared=models.Value(False, output_field=models.BooleanField())
             )
         return self.annotate(
             has_reshared=models.Exists(
-                self.model.objects.filter(
-                    parent=models.OuterRef("pk"), owner=user
-                )
+                self.model.objects.filter(parent=models.OuterRef("pk"), owner=user)
             )
         )
 
@@ -109,9 +105,7 @@ class ActivityQuerySet(
 
         if user.is_anonymous:
             return self
-        return self.filter(owner=user) | self.filter(
-            owner__in=user.following.all()
-        )
+        return self.filter(owner=user) | self.filter(owner__in=user.following.all())
 
     def following_tags(self, user):
         """
@@ -122,9 +116,7 @@ class ActivityQuerySet(
 
         if user.is_anonymous:
             return self
-        return self.filter(owner=user) | self.filter(
-            tags__in=user.following_tags.all()
-        )
+        return self.filter(owner=user) | self.filter(tags__in=user.following_tags.all())
 
     def following(self, user):
         """
@@ -192,9 +184,7 @@ class Activity(TimeStampedModel):
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
-    )
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     editor = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -311,17 +301,15 @@ class Activity(TimeStampedModel):
         )
 
     def notify_mentioned_users(self, recipients):
-        qs = recipients.matches_usernames(
-            self.description.extract_mentions()
-        ).exclude(pk=self.owner_id)
+        qs = recipients.matches_usernames(self.description.extract_mentions()).exclude(
+            pk=self.owner_id
+        )
 
         if self.parent:
             qs = qs.exclude(pk=self.parent.owner_id)
         qs = qs.distinct()
 
-        return [
-            self.make_notification(recipient, "mention") for recipient in qs
-        ]
+        return [self.make_notification(recipient, "mention") for recipient in qs]
 
     def notify_followers(self, recipients):
         return [
@@ -333,9 +321,7 @@ class Activity(TimeStampedModel):
         hashtags = self.description.extract_hashtags()
         if hashtags:
             tags = Tag.objects.filter(slug__in=hashtags)
-            qs = recipients.filter(following_tags__in=tags).exclude(
-                pk=self.owner.id
-            )
+            qs = recipients.filter(following_tags__in=tags).exclude(pk=self.owner.id)
             if self.parent:
                 qs = qs.exclude(pk=self.parent.owner_id)
             qs = qs.distinct()
@@ -354,9 +340,7 @@ class Activity(TimeStampedModel):
         """
         if self.editor and self.editor != self.owner:
             return [
-                self.make_notification(
-                    self.owner, "moderator_edit", actor=self.editor
-                )
+                self.make_notification(self.owner, "moderator_edit", actor=self.editor)
             ]
 
         qs = self.community.get_moderators().exclude(pk=self.owner_id)
@@ -432,10 +416,7 @@ class Activity(TimeStampedModel):
 
         parent = self.parent or self
         reshared = self.__class__(
-            owner=owner,
-            is_reshare=True,
-            parent=parent,
-            community=parent.community,
+            owner=owner, is_reshare=True, parent=parent, community=parent.community,
         )
         for field in self.RESHARED_FIELDS:
             setattr(reshared, field, getattr(self, field))

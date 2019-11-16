@@ -38,9 +38,7 @@ class MessageQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
         return Message.objects.for_community(
             community=self.request.community
-        ).select_related(
-            "sender", "recipient", "community", "parent", "parent__sender"
-        )
+        ).select_related("sender", "recipient", "community", "parent", "parent__sender")
 
 
 class SenderQuerySetMixin(MessageQuerySetMixin):
@@ -92,9 +90,7 @@ class OutboxView(SearchMixin, SenderQuerySetMixin, BaseMessageListView):
 outbox_view = OutboxView.as_view()
 
 
-class BaseMessageFormView(
-    CommunityRequiredMixin, PermissionRequiredMixin, FormView
-):
+class BaseMessageFormView(CommunityRequiredMixin, PermissionRequiredMixin, FormView):
 
     permission_required = "private_messages.create_message"
     template_name = "private_messages/message_form.html"
@@ -104,9 +100,7 @@ class BaseMessageFormView(
         return self.request.community
 
 
-class MessageReplyView(
-    BreadcrumbsMixin, RecipientQuerySetMixin, BaseMessageFormView
-):
+class MessageReplyView(BreadcrumbsMixin, RecipientQuerySetMixin, BaseMessageFormView):
     @cached_property
     def parent(self):
         return get_object_or_404(
@@ -228,9 +222,7 @@ class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
         )
 
     def get_replies(self):
-        return (
-            self.get_queryset().filter(parent=self.object).order_by("created")
-        )
+        return self.get_queryset().filter(parent=self.object).order_by("created")
 
     def get_previous_message(self):
         return (

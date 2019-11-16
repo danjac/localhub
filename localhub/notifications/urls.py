@@ -22,13 +22,7 @@ urlpatterns = [
     path("~subscribe/", subscribe_view, name="subscribe"),
     path("~unsubscribe/", unsubscribe_view, name="unsubscribe"),
     path("<int:pk>/~delete/", notification_delete_view, name="delete"),
-    path(
-        "<int:pk>/~mark-read/", notification_mark_read_view, name="mark_read"
-    ),
+    path("<int:pk>/~mark-read/", notification_mark_read_view, name="mark_read"),
     path("~delete-all/", notification_delete_all_view, name="delete_all"),
-    path(
-        "~mark-all-read/",
-        notification_mark_all_read_view,
-        name="mark_all_read",
-    ),
+    path("~mark-all-read/", notification_mark_all_read_view, name="mark_all_read",),
 ]

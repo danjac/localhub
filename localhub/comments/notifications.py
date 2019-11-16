@@ -19,9 +19,7 @@ NOTIFICATION_HEADERS = {
     "mention": _("%(actor)s has mentioned you in their comment"),
     "moderator_delete": _("A moderator has deleted your comment"),
     "moderator_edit": _("A moderator has edited your comment"),
-    "moderator_review_request": _(
-        "%(actor)s has submitted a new comment to review"
-    ),
+    "moderator_review_request": _("%(actor)s has submitted a new comment to review"),
     "new_comment": _("%(actor)s has submitted a comment on one of your posts"),
     "new_sibling_comment": _(
         "%(actor)s has made a comment on a post you've commented on"
@@ -81,9 +79,7 @@ def send_comment_deleted_email(comment):
             context = {"comment": comment}
             send_mail(
                 NOTIFICATION_HEADERS["moderator_delete"],
-                render_to_string(
-                    "comments/emails/comment_deleted.txt", context
-                ),
+                render_to_string("comments/emails/comment_deleted.txt", context),
                 comment.community.resolve_email("no-reply"),
                 [comment.owner.email],
                 html_message=render_to_string(

@@ -22,9 +22,7 @@ class JoinRequest(TimeStampedModel):
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
-    sender = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
-    )
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     status = StatusField(db_index=True)
     status_changed = MonitorField(monitor="status")

@@ -39,9 +39,7 @@ class TestCommentDetailView:
     def test_get(self, client, member):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
-            owner=member.member,
-            community=member.community,
-            content_object=post,
+            owner=member.member, community=member.community, content_object=post,
         )
         response = client.get(
             reverse("comments:detail", args=[comment.id]),
@@ -54,9 +52,7 @@ class TestCommentUpdateView:
     def test_get(self, client, member):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
-            owner=member.member,
-            content_object=post,
-            community=member.community,
+            owner=member.member, content_object=post, community=member.community,
         )
         response = client.get(reverse("comments:update", args=[comment.id]))
         assert response.status_code == 200
@@ -64,13 +60,10 @@ class TestCommentUpdateView:
     def test_post(self, client, member, send_notification_webpush_mock):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
-            owner=member.member,
-            content_object=post,
-            community=member.community,
+            owner=member.member, content_object=post, community=member.community,
         )
         response = client.post(
-            reverse("comments:update", args=[comment.id]),
-            {"content": "new content"},
+            reverse("comments:update", args=[comment.id]), {"content": "new content"},
         )
         assert response.url == post.get_absolute_url()
         comment.refresh_from_db()
@@ -81,9 +74,7 @@ class TestCommentDeleteView:
     def test_post(self, client, member):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
-            owner=member.member,
-            content_object=post,
-            community=member.community,
+            owner=member.member, content_object=post, community=member.community,
         )
         response = client.post(reverse("comments:delete", args=[comment.id]))
         assert response.url == post.get_absolute_url()
@@ -93,9 +84,7 @@ class TestCommentDeleteView:
         member = MembershipFactory(community=moderator.community)
         post = PostFactory(community=moderator.community, owner=member.member)
         comment = CommentFactory(
-            owner=member.member,
-            content_object=post,
-            community=moderator.community,
+            owner=member.member, content_object=post, community=moderator.community,
         )
         response = client.post(reverse("comments:delete", args=[comment.id]))
 
@@ -164,8 +153,7 @@ class TestFlagView:
             community=post.community, role=Membership.ROLES.moderator
         )
         response = client.post(
-            reverse("comments:flag", args=[comment.id]),
-            data={"reason": "spam"},
+            reverse("comments:flag", args=[comment.id]), data={"reason": "spam"},
         )
         assert response.url == post.get_absolute_url()
 
@@ -208,7 +196,5 @@ class TestCommentReplyView:
         )
         assert notification.verb == "new_comment"
 
-        notification = Notification.objects.get(
-            recipient=parent.owner, comment=comment
-        )
+        notification = Notification.objects.get(recipient=parent.owner, comment=comment)
         assert notification.verb == "replied_to_comment"

@@ -46,9 +46,7 @@ class Post(Activity):
 
     url_tracker = Tracker(["url"])
 
-    search_indexer = SearchIndexer(
-        ("A", "title"), ("B", "indexable_description")
-    )
+    search_indexer = SearchIndexer(("A", "title"), ("B", "indexable_description"))
 
     def __str__(self):
         return self.title or self.get_domain() or _("Post")
@@ -59,11 +57,7 @@ class Post(Activity):
     @property
     def indexable_description(self):
         return " ".join(
-            [
-                value
-                for value in (self.description, self.metadata_description)
-                if value
-            ]
+            [value for value in (self.description, self.metadata_description) if value]
         )
 
     def is_oembed(self):
@@ -91,9 +85,7 @@ class Post(Activity):
             return _save_if_commit()
 
         try:
-            response = requests.get(
-                self.url, headers={"User-Agent": USER_AGENT}
-            )
+            response = requests.get(self.url, headers={"User-Agent": USER_AGENT})
             if not response.ok or "text/html" not in response.headers.get(
                 "Content-Type", ""
             ):
@@ -108,24 +100,20 @@ class Post(Activity):
         soup = BeautifulSoup(response.content, "html.parser")
 
         if not self.title:
-            title = soup.find(
-                "meta", attrs={"property": "og:title"}
-            ) or soup.find("meta", attrs={"name": "twitter:title"})
+            title = soup.find("meta", attrs={"property": "og:title"}) or soup.find(
+                "meta", attrs={"name": "twitter:title"}
+            )
 
             if title and "content" in title.attrs:
                 self.title = title["content"]
             else:
-                self.title = (
-                    soup.title.string if soup.title else self.get_domain()
-                )
+                self.title = soup.title.string if soup.title else self.get_domain()
 
             self.title = self.title.strip()[:300]
 
         self.metadata_image = ""
         try:
-            image = soup.find("meta", attrs={"property": "og:image"}).attrs[
-                "content"
-            ]
+            image = soup.find("meta", attrs={"property": "og:image"}).attrs["content"]
             if len(image) < 501 and is_url(image) and is_image_url(image):
                 self.metadata_image = image
         except (AttributeError, KeyError):

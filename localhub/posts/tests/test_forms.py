@@ -7,20 +7,13 @@ from localhub.posts.forms import PostForm
 class TestPostForm:
     def test_url_missing(self):
 
-        form = PostForm(
-            {"title": "something", "url": "", "description": "test"}
-        )
+        form = PostForm({"title": "something", "url": "", "description": "test"})
 
         assert form.is_valid()
 
     def test_title_missing(self):
 
-        form = PostForm(
-            {
-                "title": "",
-                "url": "http://google.com",
-            }
-        )
+        form = PostForm({"title": "", "url": "http://google.com"})
 
         assert form.is_valid()
 

@@ -11,9 +11,7 @@ class LikedStreamView(LoginRequiredMixin, BaseStreamView):
     template_name = "likes/activities.html"
 
     def get_count_queryset_for_model(self, model):
-        return self.filter_queryset(
-            model.objects.with_has_liked(self.request.user)
-        )
+        return self.filter_queryset(model.objects.with_has_liked(self.request.user))
 
     def filter_queryset(self, queryset):
         return super().filter_queryset(queryset).filter(has_liked=True)

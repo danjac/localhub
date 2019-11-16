@@ -160,15 +160,11 @@ class Base(Configuration):
 
     # https://neutronx.github.io/django-markdownx/customization/
 
-    MARKDOWNX_MARKDOWNIFY_FUNCTION = (
-        "localhub.common.markdown.utils.markdownify"
-    )
+    MARKDOWNX_MARKDOWNIFY_FUNCTION = "localhub.common.markdown.utils.markdownify"
 
     # https://micawber.readthedocs.io/en/latest/django.html
     MICAWBER_PROVIDERS = "localhub.activities.oembed.bootstrap_oembed"
-    MICAWBER_TEMPLATE_EXTENSIONS = [
-        ("oembed_no_urlize", {"urlize_all": False})
-    ]
+    MICAWBER_TEMPLATE_EXTENSIONS = [("oembed_no_urlize", {"urlize_all": False})]
     # https://celery.readthedocs.io/en/latest/userguide/configuration.html
 
     CELERY_RESULT_BACKEND = CELERY_BROKER_URL = REDIS_URL
@@ -255,9 +251,7 @@ class Base(Configuration):
             "default": {
                 "BACKEND": "django_redis.cache.RedisCache",
                 "LOCATION": self.REDIS_URL,
-                "OPTIONS": {
-                    "CLIENT_CLASS": "django_redis.client.DefaultClient"
-                },
+                "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
             }
         }
 
@@ -278,9 +272,7 @@ class DockerConfigMixin:
 class Testing(Base):
     PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
     ALLOWED_HOSTS = Configuration.ALLOWED_HOSTS + [".example.com"]
-    CACHES = {
-        "default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}
-    }
+    CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
     THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + ["django_extensions"]
     SITE_ID = 1
 

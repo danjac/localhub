@@ -37,14 +37,8 @@ from localhub.likes.models import Like
 
 class CommentQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
-        return Comment.objects.for_community(
-            self.request.community
-        ).select_related(
-            "owner",
-            "community",
-            "parent",
-            "parent__owner",
-            "parent__community",
+        return Comment.objects.for_community(self.request.community).select_related(
+            "owner", "community", "parent", "parent__owner", "parent__community",
         )
 
 
@@ -61,9 +55,7 @@ class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
         ]
 
     def get_flags(self):
-        return (
-            self.object.get_flags().select_related("user").order_by("-created")
-        )
+        return self.object.get_flags().select_related("user").order_by("-created")
 
     def get_queryset(self):
         return (
@@ -73,9 +65,7 @@ class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
         )
 
     def get_replies(self):
-        return (
-            self.get_queryset().filter(parent=self.object).order_by("created")
-        )
+        return self.get_queryset().filter(parent=self.object).order_by("created")
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -115,9 +105,7 @@ class CommentUpdateView(
 comment_update_view = CommentUpdateView.as_view()
 
 
-class CommentDeleteView(
-    PermissionRequiredMixin, CommentQuerySetMixin, DeleteView
-):
+class CommentDeleteView(PermissionRequiredMixin, CommentQuerySetMixin, DeleteView):
     permission_required = "comments.delete_comment"
     template_name = "comments/comment_confirm_delete.html"
 
@@ -135,10 +123,7 @@ comment_delete_view = CommentDeleteView.as_view()
 
 
 class CommentLikeView(
-    LoginRequiredMixin,
-    PermissionRequiredMixin,
-    CommentQuerySetMixin,
-    GenericModelView,
+    LoginRequiredMixin, PermissionRequiredMixin, CommentQuerySetMixin, GenericModelView,
 ):
     permission_required = "comments.like_comment"
 
@@ -163,9 +148,7 @@ class CommentLikeView(
 comment_like_view = CommentLikeView.as_view()
 
 
-class CommentDislikeView(
-    LoginRequiredMixin, CommentQuerySetMixin, GenericModelView
-):
+class CommentDislikeView(LoginRequiredMixin, CommentQuerySetMixin, GenericModelView):
     def post(self, request, *args, **kwargs):
         comment = self.get_object()
         Like.objects.filter(user=request.user, comment=comment).delete()

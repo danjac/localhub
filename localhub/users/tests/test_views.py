@@ -63,9 +63,7 @@ class TestUserCommentsView:
     def test_get(self, client, member):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
-            content_object=post,
-            owner=member.member,
-            community=member.community,
+            content_object=post, owner=member.member, community=member.community,
         )
         Like.objects.create(
             content_object=comment,
@@ -73,9 +71,7 @@ class TestUserCommentsView:
             community=comment.community,
             recipient=comment.owner,
         )
-        response = client.get(
-            reverse("users:comments", args=[comment.owner.username])
-        )
+        response = client.get(reverse("users:comments", args=[comment.owner.username]))
         assert response.status_code == 200
         assert len(dict(response.context or {})["object_list"]) == 1
         assert dict(response.context or {})["num_likes"] == 1
@@ -128,9 +124,7 @@ class TestUserDeleteView:
 
 
 class TestUserFollowView:
-    def test_post(
-        self, client, member, mailoutbox, send_notification_webpush_mock
-    ):
+    def test_post(self, client, member, mailoutbox, send_notification_webpush_mock):
         user = MembershipFactory(
             community=member.community,
             member=UserFactory(email_preferences=["new_follower"]),
@@ -183,9 +177,7 @@ class TestUserAutocompleteListView:
 
         blocker.blocked.add(member.member)
 
-        response = client.get(
-            reverse("users:autocomplete_list"), {"q": "tester"}
-        )
+        response = client.get(reverse("users:autocomplete_list"), {"q": "tester"})
         object_list = response.context["object_list"]
         assert other in object_list
         assert blocker not in object_list
@@ -195,21 +187,13 @@ class TestUserMessageListView:
     def test_get(self, client, member):
         other_user = MembershipFactory(community=member.community).member
         from_me = MessageFactory(
-            community=member.community,
-            sender=member.member,
-            recipient=other_user,
+            community=member.community, sender=member.member, recipient=other_user,
         )
         to_me = MessageFactory(
-            community=member.community,
-            sender=other_user,
-            recipient=member.member,
+            community=member.community, sender=other_user, recipient=member.member,
         )
-        to_someone_else = MessageFactory(
-            community=member.community, sender=other_user
-        )
-        response = client.get(
-            reverse("users:messages", args=[other_user.username])
-        )
+        to_someone_else = MessageFactory(community=member.community, sender=other_user)
+        response = client.get(reverse("users:messages", args=[other_user.username]))
         assert response.status_code == 200
 
         object_list = response.context["object_list"]

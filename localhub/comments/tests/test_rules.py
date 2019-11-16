@@ -29,9 +29,7 @@ class TestIsCommentCommunityModerator:
         assert not is_comment_community_moderator.test(user, comment)
 
     def test_is_moderator_of_different_community(self, user, community):
-        Membership.objects.create(
-            member=user, community=community, role="moderator"
-        )
+        Membership.objects.create(member=user, community=community, role="moderator")
         assert not is_comment_community_moderator.test(user, CommentFactory())
 
 

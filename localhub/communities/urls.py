@@ -17,17 +17,13 @@ from localhub.communities.views import (
 app_name = "communities"
 
 urlpatterns = [
-
     path("", view=community_detail_view, name="community_detail"),
     path("terms/", view=community_terms_view, name="community_terms"),
     path("~leave/", view=community_leave_view, name="leave"),
     path("~update/", view=community_update_view, name="community_update"),
-
     path("memberships/", view=membership_list_view, name="membership_list"),
     path(
-        "memberships/<int:pk>/",
-        view=membership_detail_view,
-        name="membership_detail",
+        "memberships/<int:pk>/", view=membership_detail_view, name="membership_detail",
     ),
     path(
         "memberships/<int:pk>/~update/",

@@ -33,9 +33,7 @@ class TestPhotoCreateView:
         response = client.get(reverse("photos:create"))
         assert response.status_code == 200
 
-    def test_post(
-        self, client, member, fake_image, send_notification_webpush_mock
-    ):
+    def test_post(self, client, member, fake_image, send_notification_webpush_mock):
         response = client.post(
             reverse("photos:create"), {"title": "test", "image": fake_image}
         )
@@ -47,17 +45,11 @@ class TestPhotoCreateView:
 
 class TestPhotoUpdateView:
     def test_get(self, client, photo_for_member):
-        response = client.get(
-            reverse("photos:update", args=[photo_for_member.id])
-        )
+        response = client.get(reverse("photos:update", args=[photo_for_member.id]))
         assert response.status_code == 200
 
     def test_post(
-        self,
-        client,
-        photo_for_member,
-        fake_image,
-        send_notification_webpush_mock,
+        self, client, photo_for_member, fake_image, send_notification_webpush_mock,
     ):
         response = client.post(
             reverse("photos:update", args=[photo_for_member.id]),
@@ -71,15 +63,11 @@ class TestPhotoUpdateView:
 class TestPhotoDeleteView:
     def test_get(self, client, photo_for_member):
         # test confirmation page for non-JS clients
-        response = client.get(
-            reverse("photos:delete", args=[photo_for_member.id])
-        )
+        response = client.get(reverse("photos:delete", args=[photo_for_member.id]))
         assert response.status_code == 200
 
     def test_post(self, client, photo_for_member):
-        response = client.post(
-            reverse("photos:delete", args=[photo_for_member.id])
-        )
+        response = client.post(reverse("photos:delete", args=[photo_for_member.id]))
         assert response.url == reverse("activities:stream")
         assert Photo.objects.count() == 0
 

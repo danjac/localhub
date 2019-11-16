@@ -35,9 +35,7 @@ class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
 
     def get_queryset_for_model(self, model):
         return self.filter_queryset(
-            model.objects.for_activity_stream(
-                self.request.user, self.request.community
-            )
+            model.objects.for_activity_stream(self.request.user, self.request.community)
         )
 
     def get_count_queryset_for_model(self, model):
@@ -47,9 +45,7 @@ class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
         return [self.get_queryset_for_model(model) for model in self.models]
 
     def get_count_querysets(self):
-        return [
-            self.get_count_queryset_for_model(model) for model in self.models
-        ]
+        return [self.get_count_queryset_for_model(model) for model in self.models]
 
 
 class StreamView(BaseStreamView):
@@ -160,9 +156,7 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, StreamView):
         queryset.
         """
         querysets = [
-            qs.only("id", "created")
-            .select_related(None)
-            .dates("created", "month")
+            qs.only("id", "created").select_related(None).dates("created", "month")
             for qs in self.get_queryset_dict().values()
         ]
         return sorted(set(itertools.chain.from_iterable(querysets)))

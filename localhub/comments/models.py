@@ -39,11 +39,7 @@ class CommentAnnotationsQuerySetMixin:
         Annotates `num_comments` to the model.
         """
         return self.annotate(
-            **{
-                annotated_name: get_generic_related_count_subquery(
-                    self.model, Comment
-                )
-            }
+            **{annotated_name: get_generic_related_count_subquery(self.model, Comment)}
         )
 
 
@@ -84,9 +80,7 @@ class CommentQuerySet(
     def with_is_blocked(self, user):
         if user.is_anonymous:
             return self.annotate(
-                is_blocked=models.Value(
-                    False, output_field=models.BooleanField()
-                )
+                is_blocked=models.Value(False, output_field=models.BooleanField())
             )
         return self.annotate(
             is_blocked=models.Exists(
@@ -119,9 +113,7 @@ class Comment(TimeStampedModel):
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
-    )
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     editor = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -137,9 +129,7 @@ class Comment(TimeStampedModel):
     object_id = models.PositiveIntegerField(null=True, blank=True)
     content_object = GenericForeignKey("content_type", "object_id")
 
-    parent = models.ForeignKey(
-        "self", null=True, blank=True, on_delete=models.SET_NULL
-    )
+    parent = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL)
 
     content = MarkdownField()
 
@@ -224,9 +214,7 @@ class Comment(TimeStampedModel):
     def notify_moderators(self):
         return [
             self.make_notification("moderator_review_request", recipient)
-            for recipient in self.community.get_moderators().exclude(
-                pk=self.owner_id
-            )
+            for recipient in self.community.get_moderators().exclude(pk=self.owner_id)
         ]
 
     def get_notification_recipients(self):
@@ -241,9 +229,7 @@ class Comment(TimeStampedModel):
         # notify the activity owner
         if self.owner_id != self.content_object.owner_id:
             notifications.append(
-                self.make_notification(
-                    "new_comment", self.content_object.owner
-                )
+                self.make_notification("new_comment", self.content_object.owner)
             )
 
         # notify the person being replied to
@@ -261,9 +247,7 @@ class Comment(TimeStampedModel):
             .distinct()
         )
         if self.parent:
-            other_commentors = other_commentors.exclude(
-                pk=self.parent.owner.id
-            )
+            other_commentors = other_commentors.exclude(pk=self.parent.owner.id)
 
         notifications += [
             self.make_notification("new_sibling_comment", commentor)
@@ -288,15 +272,9 @@ class Comment(TimeStampedModel):
         notifications += self.notify_mentioned(recipients)
         if self.editor == self.owner:
             notifications += self.notify_moderators()
-        if (
-            self.editor
-            and self.editor != self.owner
-            and self.owner in recipients
-        ):
+        if self.editor and self.editor != self.owner and self.owner in recipients:
             notifications += [
-                self.make_notification(
-                    "moderator_edit", self.owner, self.editor
-                )
+                self.make_notification("moderator_edit", self.owner, self.editor)
             ]
 
         Notification.objects.bulk_create(notifications)

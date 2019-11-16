@@ -15,8 +15,6 @@ def send_push_notification(recipient, community, head, body, url, icon=""):
         payload["icon"] = icon
 
     try:
-        return tasks.send_push_notification.delay(
-            recipient.id, community.id, payload
-        )
+        return tasks.send_push_notification.delay(recipient.id, community.id, payload)
     except tasks.send_push_notification.OperationalError as e:
         celery_logger.exception(e)

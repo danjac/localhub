@@ -32,8 +32,7 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
         this email (case insensitive).
         """
         return self.filter(
-            models.Q(emailaddress__email__iexact=email)
-            | models.Q(email__iexact=email)
+            models.Q(emailaddress__email__iexact=email) | models.Q(email__iexact=email)
         )
 
     def with_is_following(self, follower: settings.AUTH_USER_MODEL):
@@ -45,9 +44,7 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
 
     def with_is_blocked(self, user: settings.AUTH_USER_MODEL):
         return self.annotate(
-            is_blocked=models.Exists(
-                user.blocked.filter(pk__in=models.OuterRef("id"))
-            )
+            is_blocked=models.Exists(user.blocked.filter(pk__in=models.OuterRef("id")))
         )
 
     def matches_usernames(self, names):
@@ -65,9 +62,7 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
         """
 
         return self.filter(
-            membership__community=community,
-            membership__active=True,
-            is_active=True,
+            membership__community=community, membership__active=True, is_active=True,
         )
 
 
@@ -82,12 +77,7 @@ class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
 
     def create_superuser(self, username, email, password, **kwargs):
         return self.create_user(
-            username,
-            email,
-            password,
-            is_staff=True,
-            is_superuser=True,
-            **kwargs
+            username, email, password, is_staff=True, is_superuser=True, **kwargs
         )
 
 
@@ -115,20 +105,14 @@ class User(AbstractUser):
             "moderator_delete",
             _("A moderator deletes my post, event, photo or comment"),
         ),
-        (
-            "moderator_edit",
-            _("A moderator edits my post, event, photo or comment"),
-        ),
+        ("moderator_edit", _("A moderator edits my post, event, photo or comment"),),
         ("like", _("Someone likes my post, event, photo or comment")),
         (
             "new_followed_user_post",
             _("Someone I'm following submits a post, event or photo"),
         ),
         ("replied_to_comment", _("Someone replies to my comment")),
-        (
-            "new_followed_user_comment",
-            _("Someone I'm following submits a comment"),
-        ),
+        ("new_followed_user_comment", _("Someone I'm following submits a comment"),),
         (
             "new_followed_tag_post",
             _(
@@ -158,9 +142,7 @@ class User(AbstractUser):
         max_length=6,
         choices=settings.LANGUAGES,
         default=settings.LANGUAGE_CODE,
-        help_text=_(
-            "Preferred language. User content will not be translated."
-        ),
+        help_text=_("Preferred language. User content will not be translated."),
     )
 
     default_timezone = TimeZoneField(default=settings.TIME_ZONE)
@@ -209,9 +191,7 @@ class User(AbstractUser):
         return reverse("users:activities", args=[self.username])
 
     def has_email_pref(self, pref):
-        return (
-            pref in self.email_preferences if self.email_preferences else False
-        )
+        return pref in self.email_preferences if self.email_preferences else False
 
     def has_role(self, community, *roles):
         """

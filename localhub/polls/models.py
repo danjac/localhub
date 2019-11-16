@@ -4,6 +4,7 @@
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
+from django.utils.translation import gettext as _
 
 from localhub.activities.models import Activity, ActivityQuerySet
 from localhub.comments.models import Comment
@@ -22,14 +23,10 @@ class PollQuerySet(ActivityQuerySet):
                     num_votes=models.Count("voters", distinct=True)
                 ).order_by("id"),
             )
-        ).annotate(
-            total_num_votes=models.Count("answers__voters", distinct=True)
-        )
+        ).annotate(total_num_votes=models.Count("answers__voters", distinct=True))
 
     def for_activity_stream(self, user, community):
-        return (
-            super().for_activity_stream(user, community).with_voting_counts()
-        )
+        return super().for_activity_stream(user, community).with_voting_counts()
 
 
 class Poll(Activity):
@@ -50,9 +47,7 @@ class Poll(Activity):
 
 
 class Answer(models.Model):
-    poll = models.ForeignKey(
-        Poll, related_name="answers", on_delete=models.CASCADE
-    )
+    poll = models.ForeignKey(Poll, related_name="answers", on_delete=models.CASCADE)
     description = models.CharField(max_length=180)
     voters = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
 

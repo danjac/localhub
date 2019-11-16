@@ -39,11 +39,7 @@ class TestCommentManager:
     def test_with_is_blocked_if_anonymous(self):
 
         CommentFactory()
-        assert (
-            not Comment.objects.with_is_blocked(AnonymousUser())
-            .get()
-            .is_blocked
-        )
+        assert not Comment.objects.with_is_blocked(AnonymousUser()).get().is_blocked
 
     def test_with_is_blocked_if_not_blocked(self, user):
 
@@ -60,8 +56,7 @@ class TestCommentManager:
 
     def test_with_is_parent_owner_member_true(self, community):
         parent = CommentFactory(
-            community=community,
-            owner=MembershipFactory(community=community).member,
+            community=community, owner=MembershipFactory(community=community).member,
         )
 
         comment = CommentFactory(
@@ -95,8 +90,7 @@ class TestCommentManager:
 
     def test_for_community(self, community):
         comment = CommentFactory(
-            community=community,
-            owner=MembershipFactory(community=community).member,
+            community=community, owner=MembershipFactory(community=community).member,
         )
         CommentFactory(owner=MembershipFactory(community=community).member)
         CommentFactory(community=community)
@@ -159,9 +153,7 @@ class TestCommentManager:
         assert not hasattr(comment, "is_flagged")
 
     def test_with_common_annotations_if_authenticated(self, comment, user):
-        comment = Comment.objects.with_common_annotations(
-            user, comment.community
-        ).get()
+        comment = Comment.objects.with_common_annotations(user, comment.community).get()
 
         assert hasattr(comment, "num_likes")
         assert hasattr(comment, "has_liked")
@@ -189,8 +181,7 @@ class TestCommentModel:
         post = PostFactory(owner=post_owner, community=community)
 
         other_comment = CommentFactory(
-            owner=MembershipFactory(community=community).member,
-            content_object=post,
+            owner=MembershipFactory(community=community).member, content_object=post,
         )
 
         comment = CommentFactory(
@@ -244,8 +235,7 @@ class TestCommentModel:
         post = PostFactory(owner=post_owner, community=community)
 
         other_comment = CommentFactory(
-            owner=MembershipFactory(community=community).member,
-            content_object=post,
+            owner=MembershipFactory(community=community).member, content_object=post,
         )
 
         parent = CommentFactory(

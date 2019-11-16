@@ -47,10 +47,7 @@ invite_list_view = InviteListView.as_view()
 
 
 class InviteCreateView(
-    LoginRequiredMixin,
-    CommunityRequiredMixin,
-    PermissionRequiredMixin,
-    CreateView,
+    LoginRequiredMixin, CommunityRequiredMixin, PermissionRequiredMixin, CreateView,
 ):
     model = Invite
     form_class = InviteForm
@@ -74,8 +71,7 @@ class InviteCreateView(
         send_invitation_email(invite)
 
         messages.success(
-            self.request,
-            _("Your invitation has been sent to %s") % invite.email,
+            self.request, _("Your invitation has been sent to %s") % invite.email,
         )
 
         return HttpResponseRedirect(self.get_success_url())
@@ -101,9 +97,7 @@ class InviteResendView(
         invite.save()
 
         send_invitation_email(invite)
-        messages.success(
-            self.request, _("Email has been re-sent to %s") % invite.email
-        )
+        messages.success(self.request, _("Email has been re-sent to %s") % invite.email)
         return redirect("invites:list")
 
 
@@ -111,10 +105,7 @@ invite_resend_view = InviteResendView.as_view()
 
 
 class InviteDeleteView(
-    LoginRequiredMixin,
-    PermissionRequiredMixin,
-    InviteQuerySetMixin,
-    DeleteView,
+    LoginRequiredMixin, PermissionRequiredMixin, InviteQuerySetMixin, DeleteView,
 ):
     permission_required = "communities.manage_community"
     success_url = reverse_lazy("invites:list")
@@ -176,9 +167,7 @@ class InviteAcceptView(BaseSingleInviteView):
 
         if created:
             message = _("Welcome to %s") % self.object.community.name
-            for notification in self.request.user.notify_on_join(
-                self.object.community
-            ):
+            for notification in self.request.user.notify_on_join(self.object.community):
                 send_user_notification(self.request.user, notification)
         else:
             message = _("You are already a member of this community")

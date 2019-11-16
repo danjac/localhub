@@ -34,9 +34,7 @@ urlpatterns = [
     path("account/~update", user_update_view, name="user_update"),
     path("account/~delete", user_delete_view, name="user_delete"),
     path("welcome/", view=community_welcome_view, name="community_welcome"),
-    path(
-        "not-found/", view=community_not_found_view, name="community_not_found"
-    ),
+    path("not-found/", view=community_not_found_view, name="community_not_found"),
     # Third-party
     path("account/", include("allauth.urls")),
     path("markdownx/", include("markdownx.urls")),
@@ -52,14 +50,10 @@ if settings.DEBUG:
     # debug toolbar
     import debug_toolbar
 
-    urlpatterns = [
-        path("__debug__/", include(debug_toolbar.urls))
-    ] + urlpatterns
+    urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
 
     # static views
-    urlpatterns += static(
-        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
-    )
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
     # allow preview/debugging of error views in development
     urlpatterns += [
@@ -67,7 +61,5 @@ if settings.DEBUG:
         path("errors/403/", TemplateView.as_view(template_name="403.html")),
         path("errors/404/", TemplateView.as_view(template_name="404.html")),
         path("errors/500/", TemplateView.as_view(template_name="500.html")),
-        path(
-            "errors/csrf/", TemplateView.as_view(template_name="403_csrf.html")
-        ),
+        path("errors/csrf/", TemplateView.as_view(template_name="403_csrf.html")),
     ]

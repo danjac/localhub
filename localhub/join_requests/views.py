@@ -30,9 +30,7 @@ class JoinRequestQuerySetMixin(CommunityRequiredMixin):
         return JoinRequest.objects.filter(community=self.request.community)
 
 
-class JoinRequestListView(
-    PermissionRequiredMixin, JoinRequestQuerySetMixin, ListView
-):
+class JoinRequestListView(PermissionRequiredMixin, JoinRequestQuerySetMixin, ListView):
     permission_required = "communities.manage_community"
     paginate_by = settings.DEFAULT_PAGE_SIZE
     model = JoinRequest
@@ -56,18 +54,14 @@ class JoinRequestListView(
 join_request_list_view = JoinRequestListView.as_view()
 
 
-class JoinRequestCreateView(
-    CommunityRequiredMixin, LoginRequiredMixin, TemplateView
-):
+class JoinRequestCreateView(CommunityRequiredMixin, LoginRequiredMixin, TemplateView):
     model = JoinRequest
     template_name = "join_requests/joinrequest_form.html"
     allow_non_members = True
 
     def validate(self, request):
         if not request.community.allow_join_requests:
-            raise ValidationError(
-                _("This community does not allow requests to join.")
-            )
+            raise ValidationError(_("This community does not allow requests to join."))
         if request.community.members.filter(pk=request.user.id).exists():
             raise ValidationError(_("You are already a member"))
         if JoinRequest.objects.filter(
@@ -80,10 +74,7 @@ class JoinRequestCreateView(
         if request.community.is_email_blacklisted(request.user.email):
 
             raise ValidationError(
-                _(
-                    "Sorry, we cannot accept your application "
-                    "to join at this time."
-                )
+                _("Sorry, we cannot accept your application " "to join at this time.")
             )
 
     def handle_invalid(self, request, error):
@@ -111,8 +102,7 @@ class JoinRequestCreateView(
         send_join_request_email(join_request)
 
         messages.success(
-            self.request,
-            _("Your request has been sent to the community admins"),
+            self.request, _("Your request has been sent to the community admins"),
         )
 
         return self.redirect_to_welcome_page()
@@ -159,9 +149,7 @@ class JoinRequestAcceptView(JoinRequestActionView):
                 send_user_notification(self.object.sender, notification)
 
         else:
-            messages.error(
-                request, _("User already belongs to this community")
-            )
+            messages.error(request, _("User already belongs to this community"))
 
         return HttpResponseRedirect(self.get_success_url())
 

@@ -20,9 +20,7 @@ pytestmark = pytest.mark.django_db
 class TestNotificationsSubscribeBtn:
     def test_authenticated(self, member):
 
-        assert notifications_subscribe_btn(
-            member.member, member.community
-        ) == {
+        assert notifications_subscribe_btn(member.member, member.community) == {
             "user": member.member,
             "community": member.community,
             "vapid_public_key": None,
@@ -31,9 +29,7 @@ class TestNotificationsSubscribeBtn:
 
 class TestGetUnreadNotificationCount:
     def test_anonymous(self, community):
-        assert (
-            get_unread_notification_count({}, AnonymousUser(), community) == 0
-        )
+        assert get_unread_notification_count({}, AnonymousUser(), community) == 0
 
     def test_authenticated(self, member):
         post = PostFactory(
@@ -59,18 +55,13 @@ class TestGetUnreadNotificationCount:
             is_read=True,
         )
 
-        assert (
-            get_unread_notification_count({}, member.member, member.community)
-            == 1
-        )
+        assert get_unread_notification_count({}, member.member, member.community) == 1
 
 
 class TestGetUnreadLocalNetworkNotificationCount:
     def test_anonymous(self, community):
         assert (
-            get_unread_local_network_notification_count(
-                {}, AnonymousUser(), community
-            )
+            get_unread_local_network_notification_count({}, AnonymousUser(), community)
             == 0
         )
 

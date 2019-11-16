@@ -47,21 +47,13 @@ class Notification(TimeStampedModel):
     class Meta:
         indexes = [
             models.Index(
-                fields=[
-                    "content_type",
-                    "object_id",
-                    "created",
-                    "-created",
-                    "is_read",
-                ]
+                fields=["content_type", "object_id", "created", "-created", "is_read"]
             )
         ]
 
 
 class PushSubscription(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
     endpoint = models.TextField()
     auth = models.TextField()

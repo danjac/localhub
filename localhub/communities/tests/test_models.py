@@ -89,7 +89,6 @@ class TestCommunityManager:
 
 
 class TestCommunityModel:
-
     @override_settings(SECURE_SSL_REDIRECT=False)
     def test_get_absolute_url_if_debug(self):
         community = Community(domain="testing.com")
@@ -150,8 +149,6 @@ class TestCommunityModel:
 
 class TestMembershipModel:
     def test_join_requests_deleted(self, member, transactional_db):
-        JoinRequest.objects.create(
-            sender=member.member, community=member.community
-        )
+        JoinRequest.objects.create(sender=member.member, community=member.community)
         member.delete()
         assert not JoinRequest.objects.exists()

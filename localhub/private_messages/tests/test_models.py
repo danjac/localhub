@@ -38,9 +38,7 @@ class TestMessageManager:
 
     def test_for_community_if_sender_not_member(self, community):
         MessageFactory(
-            sender=MembershipFactory(
-                community=CommunityFactory(), active=True
-            ).member,
+            sender=MembershipFactory(community=CommunityFactory(), active=True).member,
             recipient=MembershipFactory(community=community).member,
         )
         assert not Message.objects.for_community(community).exists()
@@ -109,9 +107,7 @@ class TestMessageManager:
         fifth = MessageFactory(sender=user_b)
         sixth = MessageFactory(recipient=user_a)
         seventh = MessageFactory(recipient=user_b)
-        eighth = MessageFactory(
-            recipient=user_a, sender=user_b, is_hidden=True
-        )
+        eighth = MessageFactory(recipient=user_a, sender=user_b, is_hidden=True)
 
         messages = Message.objects.between(user_a, user_b)
 

@@ -18,9 +18,9 @@ from localhub.notifications.models import Notification, PushSubscription
 
 class NotificationQuerySetMixin(LoginRequiredMixin, CommunityRequiredMixin):
     def get_queryset(self):
-        return Notification.objects.for_community(
-            self.request.community
-        ).filter(recipient=self.request.user)
+        return Notification.objects.for_community(self.request.community).filter(
+            recipient=self.request.user
+        )
 
 
 class UnreadNotificationQuerySetMixin(NotificationQuerySetMixin):
@@ -33,9 +33,7 @@ class NotificationSuccessRedirectMixin:
         return reverse("notifications:list")
 
 
-class BasePushSubscriptionView(
-    CommunityRequiredMixin, LoginRequiredMixin, View
-):
+class BasePushSubscriptionView(CommunityRequiredMixin, LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         try:
             json_body = json.loads(request.body.decode("utf-8"))
@@ -81,9 +79,7 @@ notification_list_view = NotificationListView.as_view()
 
 
 class NotificationMarkAllReadView(
-    UnreadNotificationQuerySetMixin,
-    NotificationSuccessRedirectMixin,
-    GenericModelView,
+    UnreadNotificationQuerySetMixin, NotificationSuccessRedirectMixin, GenericModelView,
 ):
     def post(self, request, *args, **kwargs):
         self.get_queryset().update(is_read=True)
@@ -94,9 +90,7 @@ notification_mark_all_read_view = NotificationMarkAllReadView.as_view()
 
 
 class NotificationMarkReadView(
-    UnreadNotificationQuerySetMixin,
-    NotificationSuccessRedirectMixin,
-    GenericModelView,
+    UnreadNotificationQuerySetMixin, NotificationSuccessRedirectMixin, GenericModelView,
 ):
     def post(self, request, *args, **kwargs):
         notification = self.get_object()
@@ -109,9 +103,7 @@ notification_mark_read_view = NotificationMarkReadView.as_view()
 
 
 class NotificationDeleteAllView(
-    NotificationQuerySetMixin,
-    NotificationSuccessRedirectMixin,
-    GenericModelView,
+    NotificationQuerySetMixin, NotificationSuccessRedirectMixin, GenericModelView,
 ):
     def delete(self, request):
         self.get_queryset().delete()

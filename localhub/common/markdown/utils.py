@@ -77,9 +77,7 @@ def linkify_mentions(content):
     for token in tokens:
         for mention in MENTIONS_RE.findall(token):
             url = reverse("users:activities", args=[slugify_unicode(mention)])
-            token = token.replace(
-                "@" + mention, f'<a href="{url}">@{mention}</a>'
-            )
+            token = token.replace("@" + mention, f'<a href="{url}">@{mention}</a>')
 
         rv.append(token)
 
@@ -109,7 +107,8 @@ def linkify_hashtags(content):
     for token in tokens:
 
         for tag in HASHTAGS_RE.findall(token):
-            if slug := slugify_unicode(tag): # noqa
+            slug = slugify_unicode(tag)
+            if slug:
                 url = reverse("activities:tag_detail", args=[slug])
                 token = token.replace("#" + tag, f'<a href="{url}">#{tag}</a>')
 

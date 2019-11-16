@@ -13,9 +13,7 @@ pytestmark = pytest.mark.django_db
 
 class TestPollListView:
     def test_get(self, client, member):
-        PollFactory.create_batch(
-            3, community=member.community, owner=member.member
-        )
+        PollFactory.create_batch(3, community=member.community, owner=member.member)
         response = client.get(reverse("polls:list"))
         assert len(response.context["object_list"]) == 3
 
@@ -87,9 +85,7 @@ class TestPollUpdateView:
 
 class TestPollDetailView:
     def test_get(self, client, poll, member):
-        response = client.get(
-            poll.get_absolute_url(), HTTP_HOST=poll.community.domain
-        )
+        response = client.get(poll.get_absolute_url(), HTTP_HOST=poll.community.domain)
         assert response.status_code == 200
         assert "comment_form" in response.context
 

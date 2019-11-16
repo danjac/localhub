@@ -1,4 +1,4 @@
-from factory import DjangoModelFactory, SubFactory, Faker
+from factory import DjangoModelFactory, SubFactory
 
 from localhub.communities.tests.factories import CommunityFactory
 from localhub.users.tests.factories import UserFactory

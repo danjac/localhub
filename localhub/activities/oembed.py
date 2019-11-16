@@ -16,8 +16,7 @@ def bootstrap_oembed():
     # add some missing ones e.g. imgur
 
     pr.register(
-        r"https?://gist\.github\.com/\S*",
-        Provider("https://github.com/api/oembed"),
+        r"https?://gist\.github\.com/\S*", Provider("https://github.com/api/oembed"),
     )
     pr.register(
         r"https?://\S*imgur\.com/\S+", Provider("https://api.imgur.com/oembed")

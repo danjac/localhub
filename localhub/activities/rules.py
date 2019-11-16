@@ -53,9 +53,7 @@ rules.add_perm(
     is_activity_community_member & ~is_owner & ~is_parent_owner,
 )
 
-rules.add_perm(
-    "activities.like_activity", is_activity_community_member & ~is_owner
-)
+rules.add_perm("activities.like_activity", is_activity_community_member & ~is_owner)
 
 rules.add_perm(
     "activities.reshare_activity",

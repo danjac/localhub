@@ -21,10 +21,7 @@ class InviteForm(forms.ModelForm):
         email = self.cleaned_data["email"]
         if self.community.members.for_email(email).exists():
             raise ValidationError(
-                _(
-                    "A user with this email address already belongs to "
-                    "this community"
-                )
+                _("A user with this email address already belongs to " "this community")
             )
         if Invite.objects.filter(
             email__iexact=email, community=self.community

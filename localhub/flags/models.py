@@ -28,9 +28,7 @@ class FlagAnnotationsQuerySetMixin:
             **{annotated_name: get_generic_related_exists(self.model, Flag)}
         )
 
-    def with_has_flagged(
-        self, user, annotated_name="has_flagged"
-    ):
+    def with_has_flagged(self, user, annotated_name="has_flagged"):
         """
         Adds True if the user in question has flagged the object.
         """
@@ -57,9 +55,7 @@ class Flag(TimeStampedModel):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+"
     )
 
-    community = models.ForeignKey(
-        Community, on_delete=models.CASCADE, related_name="+"
-    )
+    community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name="+")
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField(db_index=True)
@@ -73,21 +69,16 @@ class Flag(TimeStampedModel):
         blank=True,
     )
 
-    reason = models.CharField(
-        max_length=30, choices=REASONS, default=REASONS.spam
-    )
+    reason = models.CharField(max_length=30, choices=REASONS, default=REASONS.spam)
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["user", "content_type", "object_id"],
-                name="unique_flag",
+                fields=["user", "content_type", "object_id"], name="unique_flag",
             )
         ]
         indexes = [
-            models.Index(
-                fields=["content_type", "object_id", "created", "-created"]
-            )
+            models.Index(fields=["content_type", "object_id", "created", "-created"])
         ]
 
     def notify(self):

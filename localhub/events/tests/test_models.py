@@ -46,15 +46,11 @@ class TestEventModel:
         assert Event(url="http://google.com").get_domain() == "google.com"
 
     def test_clean_if_ok(self):
-        event = Event(
-            starts=timezone.now(), ends=timezone.now() + timedelta(days=3)
-        )
+        event = Event(starts=timezone.now(), ends=timezone.now() + timedelta(days=3))
         event.clean()
 
     def test_clean_if_ends_before_starts(self):
-        event = Event(
-            starts=timezone.now(), ends=timezone.now() - timedelta(days=3)
-        )
+        event = Event(starts=timezone.now(), ends=timezone.now() - timedelta(days=3))
         with pytest.raises(ValidationError):
             event.clean()
 
@@ -67,8 +63,7 @@ class TestEventModel:
             country="FI",
         )
         assert (
-            event.location
-            == "Areenankuja 1, Helsinki, 00240, Uusimaa, Finland"
+            event.location == "Areenankuja 1, Helsinki, 00240, Uusimaa, Finland"
         ), "location property should include all event location fields"
 
     def test_full_location(self):
@@ -81,12 +76,8 @@ class TestEventModel:
             country="FI",
         )
         assert event.full_location == (
-            "Hartwall Arena, Areenankuja 1, "
-            "Helsinki, 00240, Uusimaa, Finland"
-        ), (
-            "location property should include all event "
-            "location fields plus venue"
-        )
+            "Hartwall Arena, Areenankuja 1, " "Helsinki, 00240, Uusimaa, Finland"
+        ), ("location property should include all event " "location fields plus venue")
 
     def test_location_no_country(self):
         event = Event(

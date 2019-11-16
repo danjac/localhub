@@ -42,9 +42,7 @@ class FlagListView(FlagPermissionRequiredMixin, FlagQuerySetMixin, ListView):
 flag_list_view = FlagListView.as_view()
 
 
-class FlagDeleteView(
-    FlagPermissionRequiredMixin, FlagQuerySetMixin, DeleteView
-):
+class FlagDeleteView(FlagPermissionRequiredMixin, FlagQuerySetMixin, DeleteView):
     model = Flag
 
     def get_success_url(self):

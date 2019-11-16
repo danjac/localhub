@@ -30,10 +30,7 @@ class TestPostModel:
         If non-ASCII slug is empty just use ID
         """
         post = PostFactory(title="中国研究方法")
-        assert (
-            post.get_absolute_url()
-            == f"/posts/{post.id}/zhong-guo-yan-jiu-fang-fa/"
-        )
+        assert post.get_absolute_url() == f"/posts/{post.id}/zhong-guo-yan-jiu-fang-fa/"
 
     def test_is_oembed(self):
         post = Post(url="https://www.youtube.com/watch?v=eLeIJtLebZk")
@@ -287,9 +284,7 @@ class TestPostModel:
             headers = {"Content-Type": "image/jpeg"}
 
         mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
-        post = PostFactory(
-            url="http://google.com/test.jpg", title="", description=""
-        )
+        post = PostFactory(url="http://google.com/test.jpg", title="", description="")
         post.fetch_metadata_from_url()
 
         assert post.title == "google.com"

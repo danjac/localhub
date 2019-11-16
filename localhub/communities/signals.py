@@ -10,9 +10,7 @@ from localhub.join_requests.models import JoinRequest
 
 
 @receiver(
-    post_delete,
-    sender=Membership,
-    dispatch_uid="memberships.membership_deleted",
+    post_delete, sender=Membership, dispatch_uid="memberships.membership_deleted",
 )
 def membership_deleted(instance, **kwargs):
     """

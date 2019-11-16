@@ -82,11 +82,7 @@ def get_generic_related_queryset(
     of a related content type matching the object's primary key.
     """
     return _get_generic_related_by_id_and_content_type(
-        model.pk,
-        model,
-        related,
-        related_object_id_field,
-        related_content_type_field,
+        model.pk, model, related, related_object_id_field, related_content_type_field,
     )
 
 
@@ -101,9 +97,7 @@ def _get_generic_related_by_id_and_content_type(
     return _get_queryset(related).filter(
         **{
             related_object_id_field: pk,
-            related_content_type_field: ContentType.objects.get_for_model(
-                model
-            ),
+            related_content_type_field: ContentType.objects.get_for_model(model),
         }
     )
 

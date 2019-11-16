@@ -27,9 +27,7 @@ class TestInviteCreateView:
         assert response.status_code == 200
 
     def test_post(self, client, admin, mailoutbox):
-        response = client.post(
-            reverse("invites:create"), {"email": "tester@gmail.com"}
-        )
+        response = client.post(reverse("invites:create"), {"email": "tester@gmail.com"})
 
         assert response.url == reverse("invites:list")
         invite = Invite.objects.get()
@@ -85,9 +83,7 @@ class TestInviteAcceptView:
         assert invite.is_pending()
 
     def test_current_user_is_member(self, client, community, member):
-        invite = InviteFactory(
-            community=member.community, email=member.member.email
-        )
+        invite = InviteFactory(community=member.community, email=member.member.email)
         response = client.get(reverse("invites:accept", args=[invite.id]))
         assert response.url == settings.HOME_PAGE_URL
         invite.refresh_from_db()
@@ -101,12 +97,7 @@ class TestInviteAcceptView:
         assert invite.is_rejected()
 
     def test_current_user_is_not_member(
-        self,
-        client,
-        community,
-        login_user,
-        mailoutbox,
-        send_notification_webpush_mock,
+        self, client, community, login_user, mailoutbox, send_notification_webpush_mock,
     ):
         sender = MembershipFactory(community=community).member
         sender.email_preferences = ["new_member"]

@@ -38,6 +38,4 @@ class InstanceTracker:
         return self.first_record.diff_against(self.prev_record).changed_fields
 
     def changed(self, *fields):
-        return bool(
-            set(self.changed_fields).intersection(set(fields or self.fields))
-        )
+        return bool(set(self.changed_fields).intersection(set(fields or self.fields)))

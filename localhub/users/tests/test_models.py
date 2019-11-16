@@ -53,19 +53,13 @@ class TestUserManager:
     def test_for_email_matching_email_field(self):
 
         user = UserFactory(email="test@gmail.com")
-        assert (
-            get_user_model().objects.for_email("test@gmail.com").first()
-            == user
-        )
+        assert get_user_model().objects.for_email("test@gmail.com").first() == user
 
     def test_for_email_matching_email_address_instance(self):
 
         user = UserFactory()
         EmailAddress.objects.create(user=user, email="test@gmail.com")
-        assert (
-            get_user_model().objects.for_email("test@gmail.com").first()
-            == user
-        )
+        assert get_user_model().objects.for_email("test@gmail.com").first() == user
 
     def test_matches_usernames(self):
         user_1 = UserFactory(username="first")
@@ -132,9 +126,7 @@ class TestUserModel:
         )
 
     def test_does_not_have_role(self, member):
-        assert not member.member.has_role(
-            member.community, Membership.ROLES.moderator
-        )
+        assert not member.member.has_role(member.community, Membership.ROLES.moderator)
 
     def test_notify_on_join(self, member):
         other_member = MembershipFactory(community=member.community).member
@@ -148,9 +140,7 @@ class TestUserModel:
 
     def test_notify_on_follow(self, member):
         follower = MembershipFactory(community=member.community).member
-        notifications = follower.notify_on_follow(
-            member.member, member.community
-        )
+        notifications = follower.notify_on_follow(member.member, member.community)
         assert len(notifications) == 1
         assert notifications[0].recipient == member.member
         assert notifications[0].content_object == follower
