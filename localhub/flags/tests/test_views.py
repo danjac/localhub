@@ -4,9 +4,10 @@
 import pytest
 from django.urls import reverse
 
-from localhub.flags.models import Flag
 from localhub.posts.tests.factories import PostFactory
 from localhub.users.tests.factories import UserFactory
+
+from ..models import Flag
 
 pytestmark = pytest.mark.django_db
 

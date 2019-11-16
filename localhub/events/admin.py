@@ -4,7 +4,8 @@
 from django.contrib import admin
 
 from localhub.activities.admin import ActivityAdmin
-from localhub.events.models import Event
+
+from .models import Event
 
 
 @admin.register(Event)

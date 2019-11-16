@@ -7,7 +7,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from localhub.events import tasks
-from localhub.events.models import Event
+
+from .models import Event
 
 celery_logger = get_logger(__name__)
 

@@ -3,7 +3,7 @@
 
 from django.contrib import admin
 
-from localhub.flags.models import Flag
+from .models import Flag
 
 
 @admin.register(Flag)

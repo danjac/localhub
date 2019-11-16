@@ -1,6 +1,6 @@
 from django import forms
 
-from localhub.flags.models import Flag
+from .models import Flag
 
 
 class FlagForm(forms.ModelForm):

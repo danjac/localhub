@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from django.apps import AppConfig
 
 
@@ -5,4 +8,4 @@ class CommunitiesConfig(AppConfig):
     name = "localhub.communities"
 
     def ready(self):
-        import localhub.communities.signals  # noqa
+        from . import signals  # noqa

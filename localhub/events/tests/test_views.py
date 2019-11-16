@@ -6,9 +6,10 @@ from django.urls import reverse
 from django.utils.encoding import force_str
 
 from localhub.communities.tests.factories import MembershipFactory
-from localhub.events.models import Event
-from localhub.events.tests.factories import EventFactory
 from localhub.likes.models import Like
+
+from ..models import Event
+from .factories import EventFactory
 
 pytestmark = pytest.mark.django_db
 

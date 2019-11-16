@@ -7,7 +7,8 @@ from django.utils.timezone import localtime, make_aware
 from django.utils.translation import gettext_lazy as _
 
 from localhub.common.forms.fields import CalendarField
-from localhub.events.models import Event
+
+from .models import Event
 
 
 class EventForm(forms.ModelForm):

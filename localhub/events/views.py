@@ -4,7 +4,8 @@
 from django.http import HttpResponse
 
 from localhub.activities.views.generic import ActivityCreateView, BaseSingleActivityView
-from localhub.events.models import Event
+
+from .models import Event
 
 
 class EventCreateView(ActivityCreateView):

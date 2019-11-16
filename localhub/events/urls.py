@@ -5,9 +5,10 @@
 from django.urls import path
 
 from localhub.activities.views import create_activity_urls
-from localhub.events.forms import EventForm
-from localhub.events.models import Event
-from localhub.events.views import EventCreateView, event_download_view
+
+from .forms import EventForm
+from .models import Event
+from .views import EventCreateView, event_download_view
 
 app_name = "events"
 

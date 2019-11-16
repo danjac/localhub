@@ -3,9 +3,10 @@
 
 import pytest
 
-from localhub.flags.models import Flag
-from localhub.flags.templatetags.flags_tags import get_flags_count
 from localhub.users.tests.factories import UserFactory
+
+from ..models import Flag
+from ..templatetags.flags_tags import get_flags_count
 
 pytestmark = pytest.mark.django_db
 

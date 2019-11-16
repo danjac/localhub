@@ -11,8 +11,8 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.utils.encoding import force_str
 
-from localhub.events.models import Event
-from localhub.events.tests.factories import EventFactory
+from ..models import Event
+from .factories import EventFactory
 
 pytestmark = pytest.mark.django_db
 

@@ -8,7 +8,8 @@ from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.flags.models import Flag
+
+from .models import Flag
 
 
 class FlagQuerySetMixin(CommunityRequiredMixin):

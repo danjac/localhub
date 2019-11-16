@@ -3,7 +3,7 @@
 
 from django import template
 
-from localhub.flags.models import Flag
+from ..models import Flag
 
 register = template.Library()
 

@@ -6,8 +6,8 @@ import datetime
 import pytest
 import pytz
 
-from localhub.events.forms import EventForm
-from localhub.events.tests.factories import EventFactory
+from ..forms import EventForm
+from .factories import EventFactory
 
 pytestmark = pytest.mark.django_db
 
