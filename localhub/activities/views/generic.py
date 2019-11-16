@@ -23,12 +23,15 @@ from vanilla import (
 from localhub.comments.forms import CommentForm
 from localhub.comments.notifications import send_comment_notifications
 from localhub.communities.views import CommunityRequiredMixin
+from localhub.core.utils.breadcrumbs import (
+    get_breadcrumbs_for_instance,
+    get_breadcrumbs_for_model,
+)
 from localhub.core.views import BreadcrumbsMixin, SearchMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
 
 from ..notifications import send_activity_deleted_email, send_activity_notifications
-from ..utils import get_breadcrumbs_for_instance, get_breadcrumbs_for_model
 
 
 class ActivityQuerySetMixin(CommunityRequiredMixin):

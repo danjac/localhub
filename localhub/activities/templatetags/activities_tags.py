@@ -6,7 +6,7 @@ import html
 from django import template
 from django.utils.safestring import mark_safe
 
-from ..utils import get_domain, is_image_url, is_url
+from localhub.core.utils.urls import get_domain, is_image_url, is_url
 
 register = template.Library()
 

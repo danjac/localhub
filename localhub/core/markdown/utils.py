@@ -13,7 +13,7 @@ from bleach.linkifier import LinkifyFilter
 from django.urls import reverse
 from markdownx.utils import markdownify as default_markdownify
 
-from localhub.activities.utils import slugify_unicode
+from ..utils.text import slugify_unicode
 
 ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
     "code",

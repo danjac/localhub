@@ -18,11 +18,10 @@ from localhub.core.db.content_types import get_generic_related_queryset
 from localhub.core.db.search import SearchQuerySetMixin
 from localhub.core.db.tracker import Tracker
 from localhub.core.markdown.fields import MarkdownField
+from localhub.core.utils.text import slugify_unicode
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.notifications.models import Notification
-
-from .utils import slugify_unicode
 
 
 class ActivityQuerySet(
