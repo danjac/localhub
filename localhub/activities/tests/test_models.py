@@ -5,14 +5,14 @@ import pytest
 from django.contrib.auth.models import AnonymousUser
 from taggit.models import Tag
 
-from localhub.comments.tests.factories import CommentFactory
+from localhub.comments.factories import CommentFactory
+from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Community
-from localhub.communities.tests.factories import CommunityFactory, MembershipFactory
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
+from localhub.posts.factories import PostFactory
 from localhub.posts.models import Post
-from localhub.posts.tests.factories import PostFactory
-from localhub.users.tests.factories import UserFactory
+from localhub.users.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 

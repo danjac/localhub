@@ -6,8 +6,8 @@ import factory
 import pytest
 from django.db.models import signals
 
-from localhub.comments.tests.factories import CommentFactory
-from localhub.posts.tests.factories import PostFactory
+from localhub.comments.factories import CommentFactory
+from localhub.posts.factories import PostFactory
 
 from ..models import Flag
 

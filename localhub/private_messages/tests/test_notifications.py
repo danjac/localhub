@@ -3,10 +3,10 @@
 
 import pytest
 
-from localhub.users.tests.factories import UserFactory
+from localhub.users.factories import UserFactory
 
+from ..factories import MessageFactory
 from ..notifications import send_message_email
-from .factories import MessageFactory
 
 pytestmark = pytest.mark.django_db
 

@@ -5,14 +5,14 @@ import pytest
 from django.contrib.auth.models import AnonymousUser
 from django.urls import reverse
 
-from localhub.communities.tests.factories import MembershipFactory
+from localhub.communities.factories import MembershipFactory
 
+from ..factories import MessageFactory
 from ..templatetags.private_messages_tags import (
     get_unread_local_network_message_count,
     get_unread_message_count,
     show_message,
 )
-from .factories import MessageFactory
 
 pytestmark = pytest.mark.django_db
 

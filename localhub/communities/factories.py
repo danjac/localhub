@@ -3,9 +3,9 @@
 
 from factory import DjangoModelFactory, Faker, Sequence, SubFactory
 
-from localhub.users.tests.factories import UserFactory
+from localhub.users.factories import UserFactory
 
-from ..models import Community, Membership
+from .models import Community, Membership
 
 
 class CommunityFactory(DjangoModelFactory):

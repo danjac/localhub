@@ -5,9 +5,9 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 
-from localhub.communities.tests.factories import CommunityFactory
-from localhub.posts.tests.factories import PostFactory
-from localhub.users.tests.factories import UserFactory
+from localhub.communities.factories import CommunityFactory
+from localhub.posts.factories import PostFactory
+from localhub.users.factories import UserFactory
 
 from ..templatetags.activities_tags import (
     domain,

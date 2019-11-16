@@ -4,12 +4,12 @@
 import pytest
 from django.urls import reverse
 
+from localhub.communities.factories import CommunityFactory
 from localhub.communities.models import Membership
-from localhub.communities.tests.factories import CommunityFactory
-from localhub.users.tests.factories import UserFactory
+from localhub.users.factories import UserFactory
 
+from ..factories import JoinRequestFactory
 from ..models import JoinRequest
-from .factories import JoinRequestFactory
 
 pytestmark = pytest.mark.django_db
 

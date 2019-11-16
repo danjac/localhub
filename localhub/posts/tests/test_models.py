@@ -4,14 +4,14 @@
 import pytest
 from taggit.models import Tag
 
+from localhub.comments.factories import CommentFactory
 from localhub.comments.models import Comment
-from localhub.comments.tests.factories import CommentFactory
+from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
-from localhub.communities.tests.factories import MembershipFactory
-from localhub.users.tests.factories import UserFactory
+from localhub.users.factories import UserFactory
 
+from ..factories import PostFactory
 from ..models import Post
-from .factories import PostFactory
 
 pytestmark = pytest.mark.django_db
 

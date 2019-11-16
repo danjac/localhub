@@ -4,7 +4,7 @@
 import pytest
 
 from localhub.communities.models import Community, Membership
-from localhub.posts.tests.factories import PostFactory
+from localhub.posts.factories import PostFactory
 
 from ..rules import is_activity_community_moderator, is_editor, is_owner
 

@@ -4,15 +4,15 @@
 import pytest
 from django.urls import reverse
 
+from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
-from localhub.communities.tests.factories import MembershipFactory
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification
-from localhub.posts.tests.factories import PostFactory
+from localhub.posts.factories import PostFactory
 
+from ..factories import CommentFactory
 from ..models import Comment
-from .factories import CommentFactory
 
 pytestmark = pytest.mark.django_db
 

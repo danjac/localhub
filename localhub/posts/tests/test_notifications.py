@@ -8,7 +8,7 @@ from localhub.activities.notifications import (
     send_activity_notification_email,
 )
 from localhub.notifications.models import Notification
-from localhub.users.tests.factories import UserFactory
+from localhub.users.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 

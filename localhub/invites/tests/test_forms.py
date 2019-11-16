@@ -3,8 +3,8 @@
 
 import pytest
 
+from ..factories import InviteFactory
 from ..forms import InviteForm
-from .factories import InviteFactory
 
 pytestmark = pytest.mark.django_db
 

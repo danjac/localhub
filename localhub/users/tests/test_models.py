@@ -5,10 +5,10 @@ import pytest
 from allauth.account.models import EmailAddress
 from django.contrib.auth import get_user_model
 
+from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
-from localhub.communities.tests.factories import MembershipFactory
 
-from .factories import UserFactory
+from ..factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 

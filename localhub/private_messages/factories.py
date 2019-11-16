@@ -2,10 +2,10 @@
 
 from factory import DjangoModelFactory, Faker, SubFactory
 
-from localhub.communities.tests.factories import CommunityFactory
-from localhub.users.tests.factories import UserFactory
+from localhub.communities.factories import CommunityFactory
+from localhub.users.factories import UserFactory
 
-from ..models import Message
+from .models import Message
 
 
 class MessageFactory(DjangoModelFactory):

@@ -3,11 +3,11 @@
 
 from factory import DjangoModelFactory, Faker, SubFactory
 
-from localhub.communities.tests.factories import CommunityFactory
-from localhub.posts.tests.factories import PostFactory
-from localhub.users.tests.factories import UserFactory
+from localhub.communities.factories import CommunityFactory
+from localhub.posts.factories import PostFactory
+from localhub.users.factories import UserFactory
 
-from ..models import Comment
+from .models import Comment
 
 
 class CommentFactory(DjangoModelFactory):

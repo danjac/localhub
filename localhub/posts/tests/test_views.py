@@ -5,14 +5,14 @@ import pytest
 from django.urls import reverse
 
 from localhub.comments.models import Comment
+from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
-from localhub.communities.tests.factories import MembershipFactory
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification
 
+from ..factories import PostFactory
 from ..models import Post
-from .factories import PostFactory
 
 pytestmark = pytest.mark.django_db
 

@@ -5,12 +5,12 @@ import pytest
 from django.urls import reverse
 from taggit.models import Tag
 
-from localhub.communities.tests.factories import MembershipFactory
-from localhub.events.tests.factories import EventFactory
-from localhub.photos.tests.factories import PhotoFactory
-from localhub.polls.tests.factories import AnswerFactory, PollFactory
-from localhub.posts.tests.factories import PostFactory
-from localhub.users.tests.factories import UserFactory
+from localhub.communities.factories import MembershipFactory
+from localhub.events.factories import EventFactory
+from localhub.photos.factories import PhotoFactory
+from localhub.polls.factories import AnswerFactory, PollFactory
+from localhub.posts.factories import PostFactory
+from localhub.users.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 

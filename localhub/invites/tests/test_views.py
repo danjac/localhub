@@ -2,13 +2,13 @@ import pytest
 from django.conf import settings
 from django.urls import reverse
 
+from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
-from localhub.communities.tests.factories import MembershipFactory
 from localhub.notifications.models import Notification
-from localhub.users.tests.factories import UserFactory
+from localhub.users.factories import UserFactory
 
+from ..factories import InviteFactory
 from ..models import Invite
-from .factories import InviteFactory
 
 pytestmark = pytest.mark.django_db
 

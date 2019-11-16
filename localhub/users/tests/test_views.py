@@ -5,15 +5,15 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from localhub.comments.tests.factories import CommentFactory
-from localhub.communities.tests.factories import MembershipFactory
-from localhub.events.tests.factories import EventFactory
+from localhub.comments.factories import CommentFactory
+from localhub.communities.factories import MembershipFactory
+from localhub.events.factories import EventFactory
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification
-from localhub.posts.tests.factories import PostFactory
-from localhub.private_messages.tests.factories import MessageFactory
+from localhub.posts.factories import PostFactory
+from localhub.private_messages.factories import MessageFactory
 
-from .factories import UserFactory
+from ..factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 

@@ -5,11 +5,11 @@ from django.core.files import File
 from django.urls import reverse
 from PIL import Image
 
-from localhub.communities.tests.factories import MembershipFactory
+from localhub.communities.factories import MembershipFactory
 from localhub.likes.models import Like
 
+from ..factories import PhotoFactory
 from ..models import Photo
-from .factories import PhotoFactory
 
 pytestmark = pytest.mark.django_db
 

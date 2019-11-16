@@ -1,7 +1,7 @@
 import pytest
 
 from ..context_processors import community
-from .factories import CommunityFactory
+from ..factories import CommunityFactory
 
 pytestmark = pytest.mark.django_db
 

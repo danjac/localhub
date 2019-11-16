@@ -7,10 +7,10 @@ from django.core.exceptions import ValidationError
 from django.test import override_settings
 
 from localhub.join_requests.models import JoinRequest
-from localhub.users.tests.factories import UserFactory
+from localhub.users.factories import UserFactory
 
+from ..factories import CommunityFactory, MembershipFactory
 from ..models import Community, Membership
-from .factories import CommunityFactory, MembershipFactory
 
 pytestmark = pytest.mark.django_db
 

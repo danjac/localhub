@@ -4,10 +4,10 @@
 
 from factory import DjangoModelFactory, Faker, SubFactory
 
-from localhub.communities.tests.factories import CommunityFactory
-from localhub.users.tests.factories import UserFactory
+from localhub.communities.factories import CommunityFactory
+from localhub.users.factories import UserFactory
 
-from ..models import Answer, Poll
+from .models import Answer, Poll
 
 
 class PollFactory(DjangoModelFactory):

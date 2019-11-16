@@ -1,10 +1,10 @@
 import pytest
 from django.urls import reverse
 
-from localhub.communities.tests.factories import MembershipFactory
+from localhub.communities.factories import MembershipFactory
 
+from ..factories import MessageFactory
 from ..models import Message
-from .factories import MessageFactory
 
 pytestmark = pytest.mark.django_db
 

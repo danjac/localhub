@@ -4,8 +4,8 @@
 import pytest
 from django.urls import reverse
 
-from localhub.posts.tests.factories import PostFactory
-from localhub.users.tests.factories import UserFactory
+from localhub.posts.factories import PostFactory
+from localhub.users.factories import UserFactory
 
 from ..models import Flag
 

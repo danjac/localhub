@@ -4,7 +4,7 @@
 import pytest
 
 from localhub.notifications.models import Notification
-from localhub.users.tests.factories import UserFactory
+from localhub.users.factories import UserFactory
 
 from ..notifications import send_comment_deleted_email, send_comment_notification_email
 

@@ -4,8 +4,8 @@
 import pytest
 from django.contrib.auth.models import AnonymousUser
 
-from localhub.communities.tests.factories import MembershipFactory
-from localhub.posts.tests.factories import PostFactory
+from localhub.communities.factories import MembershipFactory
+from localhub.posts.factories import PostFactory
 
 from ..models import Notification
 from ..templatetags.notifications_tags import (

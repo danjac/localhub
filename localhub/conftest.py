@@ -4,14 +4,14 @@
 import pytest
 from django.http import HttpResponse
 
-from localhub.comments.tests.factories import CommentFactory
+from localhub.comments.factories import CommentFactory
+from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Membership
-from localhub.communities.tests.factories import CommunityFactory, MembershipFactory
-from localhub.events.tests.factories import EventFactory
-from localhub.photos.tests.factories import PhotoFactory
-from localhub.polls.tests.factories import PollFactory
-from localhub.posts.tests.factories import PostFactory
-from localhub.users.tests.factories import UserFactory
+from localhub.events.factories import EventFactory
+from localhub.photos.factories import PhotoFactory
+from localhub.polls.factories import PollFactory
+from localhub.posts.factories import PostFactory
+from localhub.users.factories import UserFactory
 
 
 @pytest.fixture
