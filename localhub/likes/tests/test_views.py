@@ -4,7 +4,7 @@
 import pytest
 from django.urls import reverse
 
-from localhub.likes.models import Like
+from ..models import Like
 
 pytestmark = pytest.mark.django_db
 

@@ -3,7 +3,7 @@
 
 from django.urls import path
 
-from localhub.likes.views import liked_comment_list_view, liked_stream_view
+from .views import liked_comment_list_view, liked_stream_view
 
 app_name = "likes"
 

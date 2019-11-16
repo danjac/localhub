@@ -7,8 +7,9 @@ import pytest
 from django.conf import settings
 from django.db.models import signals
 
-from localhub.likes.models import Like
 from localhub.posts.models import Post
+
+from ..models import Like
 
 pytestmark = pytest.mark.django_db
 
