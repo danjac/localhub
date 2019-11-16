@@ -1,6 +1,6 @@
 from django.urls import path
 
-from localhub.comments.views import (
+from .views import (
     comment_delete_view,
     comment_detail_view,
     comment_dislike_view,

@@ -3,11 +3,10 @@
 
 import html
 
-
 from django import template
 from django.utils.safestring import mark_safe
 
-from localhub.activities.utils import get_domain, is_image_url, is_url
+from ..utils import get_domain, is_image_url, is_url
 
 register = template.Library()
 

@@ -2,11 +2,12 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-
 from django.conf import settings
 from django.urls import reverse
 
-from localhub.activities.utils import (
+from localhub.posts.models import Post
+
+from ..utils import (
     get_breadcrumbs_for_instance,
     get_breadcrumbs_for_model,
     get_domain,
@@ -14,8 +15,6 @@ from localhub.activities.utils import (
     is_url,
     slugify_unicode,
 )
-from localhub.posts.models import Post
-
 
 pytestmark = pytest.mark.django_db
 

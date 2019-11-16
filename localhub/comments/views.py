@@ -6,12 +6,16 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.http import HttpResponse
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 
+from localhub.activities.utils import get_breadcrumbs_for_instance
+from localhub.common.views import BreadcrumbsMixin, SearchMixin
+from localhub.communities.views import CommunityRequiredMixin
+from localhub.flags.forms import FlagForm
+from localhub.likes.models import Like
 from rules.contrib.views import PermissionRequiredMixin
-
 from vanilla import (
     CreateView,
     DeleteView,
@@ -22,17 +26,9 @@ from vanilla import (
     UpdateView,
 )
 
-from localhub.activities.utils import get_breadcrumbs_for_instance
-from localhub.comments.forms import CommentForm
-from localhub.comments.models import Comment
-from localhub.comments.notifications import (
-    send_comment_deleted_email,
-    send_comment_notifications,
-)
-from localhub.common.views import BreadcrumbsMixin, SearchMixin
-from localhub.communities.views import CommunityRequiredMixin
-from localhub.flags.forms import FlagForm
-from localhub.likes.models import Like
+from .forms import CommentForm
+from .models import Comment
+from .notifications import send_comment_deleted_email, send_comment_notifications
 
 
 class CommentQuerySetMixin(CommunityRequiredMixin):

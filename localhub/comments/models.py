@@ -2,10 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
-from django.contrib.contenttypes.fields import (
-    GenericForeignKey,
-    GenericRelation,
-)
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
@@ -13,10 +10,6 @@ from django.db import models
 from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils.functional import cached_property
-
-from model_utils.models import TimeStampedModel
-
-from simple_history.models import HistoricalRecords
 
 from localhub.common.db.content_types import get_generic_related_count_subquery
 from localhub.common.db.search import SearchIndexer, SearchQuerySetMixin
@@ -26,6 +19,8 @@ from localhub.communities.models import Community, Membership
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.notifications.models import Notification
+from model_utils.models import TimeStampedModel
+from simple_history.models import HistoricalRecords
 
 
 class CommentAnnotationsQuerySetMixin:

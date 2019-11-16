@@ -3,7 +3,7 @@
 
 from django.urls import path
 
-from localhub.activities.views import streams, tags
+from .views import streams, tags
 
 app_name = "activities"
 

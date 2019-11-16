@@ -3,10 +3,10 @@
 
 from django.contrib import admin
 
+from localhub.common.markdown.admin import MarkdownFieldMixin
 from simple_history.admin import SimpleHistoryAdmin
 
-from localhub.comments.models import Comment
-from localhub.common.markdown.admin import MarkdownFieldMixin
+from .models import Comment
 
 
 @admin.register(Comment)

@@ -2,10 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-
 from django.urls import reverse
-
-from taggit.models import Tag
 
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.events.tests.factories import EventFactory
@@ -13,7 +10,7 @@ from localhub.photos.tests.factories import PhotoFactory
 from localhub.polls.tests.factories import AnswerFactory, PollFactory
 from localhub.posts.tests.factories import PostFactory
 from localhub.users.tests.factories import UserFactory
-
+from taggit.models import Tag
 
 pytestmark = pytest.mark.django_db
 

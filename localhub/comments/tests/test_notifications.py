@@ -3,13 +3,10 @@
 
 import pytest
 
-from localhub.comments.notifications import (
-    send_comment_deleted_email,
-    send_comment_notification_email,
-)
 from localhub.notifications.models import Notification
 from localhub.users.tests.factories import UserFactory
 
+from ..notifications import send_comment_deleted_email, send_comment_notification_email
 
 pytestmark = pytest.mark.django_db
 

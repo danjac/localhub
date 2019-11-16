@@ -2,20 +2,20 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 
-from localhub.activities.templatetags.activities_tags import (
+from localhub.communities.tests.factories import CommunityFactory
+from localhub.posts.tests.factories import PostFactory
+from localhub.users.tests.factories import UserFactory
+
+from ..templatetags.activities_tags import (
     domain,
     html_unescape,
     is_content_sensitive,
     is_oembed_allowed,
     url_to_img,
 )
-from localhub.communities.tests.factories import CommunityFactory
-from localhub.posts.tests.factories import PostFactory
-from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 

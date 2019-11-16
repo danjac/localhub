@@ -1,12 +1,12 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import pytest
 
-from localhub.activities.rules import (
-    is_activity_community_moderator,
-    is_editor,
-    is_owner,
-)
 from localhub.communities.models import Community, Membership
 from localhub.posts.tests.factories import PostFactory
+
+from ..rules import is_activity_community_moderator, is_editor, is_owner
 
 pytestmark = pytest.mark.django_db
 

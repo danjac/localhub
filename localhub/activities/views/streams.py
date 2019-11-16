@@ -15,7 +15,6 @@ from django.views.generic.dates import (
     _date_from_string,
 )
 
-
 from localhub.common.views import BaseMultipleQuerySetListView, SearchMixin
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.events.models import Event

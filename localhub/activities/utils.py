@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import os
-
 from urllib.parse import urlparse
 
 from django.conf import settings
@@ -13,9 +12,7 @@ from django.urls import reverse
 from django.utils.encoding import smart_text
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
-
 from unidecode import unidecode
-
 
 _urlvalidator = URLValidator()
 

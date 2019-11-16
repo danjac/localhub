@@ -1,15 +1,18 @@
-import pytest
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
 
+import pytest
 from django.contrib.auth.models import AnonymousUser
 
-from localhub.comments.models import Comment
-from localhub.comments.tests.factories import CommentFactory
 from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.posts.tests.factories import PostFactory
 from localhub.users.tests.factories import UserFactory
+
+from ..models import Comment
+from .factories import CommentFactory
 
 pytestmark = pytest.mark.django_db
 

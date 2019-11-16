@@ -4,8 +4,9 @@
 import pytest
 
 from localhub.communities.models import Membership
-from localhub.comments.tests.factories import CommentFactory
-from localhub.comments.rules import is_owner, is_comment_community_moderator
+
+from ..rules import is_comment_community_moderator, is_owner
+from .factories import CommentFactory
 
 pytestmark = pytest.mark.django_db
 

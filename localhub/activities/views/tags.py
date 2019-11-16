@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import operator
-
 from functools import reduce
 
 from django.conf import settings
@@ -11,21 +10,19 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.utils.functional import cached_property
 from django.urls import reverse
+from django.utils.functional import cached_property
 
-from rules.contrib.views import PermissionRequiredMixin
-
-from taggit.models import Tag, TaggedItem
-
-from vanilla import ListView, GenericModelView
-
-from localhub.activities.views.streams import BaseStreamView
 from localhub.common.views import SearchMixin
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.events.models import Event
 from localhub.photos.models import Photo
 from localhub.posts.models import Post
+from rules.contrib.views import PermissionRequiredMixin
+from taggit.models import Tag, TaggedItem
+from vanilla import GenericModelView, ListView
+
+from .streams import BaseStreamView
 
 
 class TagQuerySetMixin(CommunityRequiredMixin):
