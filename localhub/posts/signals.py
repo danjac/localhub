@@ -4,7 +4,7 @@
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
-from localhub.posts.models import Post
+from .models import Post
 
 
 @receiver(pre_save, sender=Post, dispatch_uid="posts.fetch_post_metadata_from_url")

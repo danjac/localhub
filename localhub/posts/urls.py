@@ -3,8 +3,9 @@
 
 
 from localhub.activities.views import create_activity_urls
-from localhub.posts.forms import PostForm
-from localhub.posts.models import Post
+
+from .forms import PostForm
+from .models import Post
 
 app_name = "posts"
 

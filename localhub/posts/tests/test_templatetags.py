@@ -3,8 +3,8 @@
 
 from django.contrib.auth import get_user_model
 
-from localhub.posts.models import Post
-from localhub.posts.templatetags.posts_tags import is_post_oembed
+from ..models import Post
+from ..templatetags.posts_tags import is_post_oembed
 
 
 class TestIsPostOembed:

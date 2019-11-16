@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 from localhub.activities.admin import ActivityAdmin
-from localhub.posts.models import Post
+
+from .models import Post
 
 
 @admin.register(Post)

@@ -5,8 +5,9 @@
 from factory import DjangoModelFactory, Faker, SubFactory
 
 from localhub.communities.tests.factories import CommunityFactory
-from localhub.posts.models import Post
 from localhub.users.tests.factories import UserFactory
+
+from ..models import Post
 
 
 class PostFactory(DjangoModelFactory):

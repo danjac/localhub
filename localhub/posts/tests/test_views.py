@@ -10,8 +10,9 @@ from localhub.communities.tests.factories import MembershipFactory
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification
-from localhub.posts.models import Post
-from localhub.posts.tests.factories import PostFactory
+
+from ..models import Post
+from .factories import PostFactory
 
 pytestmark = pytest.mark.django_db
 

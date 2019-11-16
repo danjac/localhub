@@ -8,9 +8,10 @@ from localhub.comments.models import Comment
 from localhub.comments.tests.factories import CommentFactory
 from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory
-from localhub.posts.models import Post
-from localhub.posts.tests.factories import PostFactory
 from localhub.users.tests.factories import UserFactory
+
+from ..models import Post
+from .factories import PostFactory
 
 pytestmark = pytest.mark.django_db
 

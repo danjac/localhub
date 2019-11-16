@@ -5,4 +5,4 @@ class PostsConfig(AppConfig):
     name = "localhub.posts"
 
     def ready(self):
-        import localhub.posts.signals  # noqa
+        from . import signals  # noqa
