@@ -4,10 +4,11 @@ from django.urls import reverse
 
 from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory
-from localhub.invites.models import Invite
-from localhub.invites.tests.factories import InviteFactory
 from localhub.notifications.models import Notification
 from localhub.users.tests.factories import UserFactory
+
+from ..models import Invite
+from .factories import InviteFactory
 
 pytestmark = pytest.mark.django_db
 

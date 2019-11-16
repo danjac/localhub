@@ -3,7 +3,7 @@
 
 from django.contrib import admin
 
-from localhub.invites.models import Invite
+from .models import Invite
 
 
 @admin.register(Invite)

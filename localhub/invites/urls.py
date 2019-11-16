@@ -1,6 +1,9 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from django.urls import path
 
-from localhub.invites.views import (
+from .views import (
     invite_accept_view,
     invite_create_view,
     invite_delete_view,

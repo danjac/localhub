@@ -16,10 +16,11 @@ from vanilla import CreateView, DeleteView, GenericModelView, ListView
 
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.invites.emails import send_invitation_email
-from localhub.invites.forms import InviteForm
-from localhub.invites.models import Invite
 from localhub.users.notifications import send_user_notification
+
+from .emails import send_invitation_email
+from .forms import InviteForm
+from .models import Invite
 
 
 class InviteQuerySetMixin(CommunityRequiredMixin):

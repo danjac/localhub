@@ -5,7 +5,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 
-from localhub.invites.models import Invite
+from .models import Invite
 
 
 class InviteForm(forms.ModelForm):
