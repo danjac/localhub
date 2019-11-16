@@ -3,7 +3,7 @@
 
 from django.contrib import admin
 
-from localhub.join_requests.models import JoinRequest
+from .models import JoinRequest
 
 
 @admin.register(JoinRequest)

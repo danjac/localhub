@@ -5,7 +5,8 @@
 from django import template
 
 from localhub.communities.models import Membership
-from localhub.join_requests.models import JoinRequest
+
+from ..models import JoinRequest
 
 register = template.Library()
 

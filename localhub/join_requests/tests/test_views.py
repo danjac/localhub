@@ -6,9 +6,10 @@ from django.urls import reverse
 
 from localhub.communities.models import Membership
 from localhub.communities.tests.factories import CommunityFactory
-from localhub.join_requests.models import JoinRequest
-from localhub.join_requests.tests.factories import JoinRequestFactory
 from localhub.users.tests.factories import UserFactory
+
+from ..models import JoinRequest
+from .factories import JoinRequestFactory
 
 pytestmark = pytest.mark.django_db
 

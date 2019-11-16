@@ -14,13 +14,10 @@ from vanilla import GenericModelView, ListView, TemplateView
 
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.join_requests.emails import (
-    send_acceptance_email,
-    send_join_request_email,
-    send_rejection_email,
-)
-from localhub.join_requests.models import JoinRequest
 from localhub.users.notifications import send_user_notification
+
+from .emails import send_acceptance_email, send_join_request_email, send_rejection_email
+from .models import JoinRequest
 
 
 class JoinRequestQuerySetMixin(CommunityRequiredMixin):
