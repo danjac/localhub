@@ -3,7 +3,7 @@
 
 from django.urls import path
 
-from localhub.users.views import (
+from .views import (
     blocked_user_list_view,
     follower_user_list_view,
     following_user_list_view,

@@ -6,7 +6,8 @@ from django.utils.translation import override
 
 from localhub.notifications.emails import send_notification_email
 from localhub.notifications.utils import send_push_notification
-from localhub.users.utils import user_display
+
+from .utils import user_display
 
 NOTIFICATION_HEADERS = {
     "new_follower": _("Someone has started following you"),

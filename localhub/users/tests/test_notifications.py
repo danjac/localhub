@@ -4,8 +4,9 @@
 import pytest
 
 from localhub.notifications.models import Notification
-from localhub.users.notifications import send_user_notification_email
-from localhub.users.tests.factories import UserFactory
+
+from ..notifications import send_user_notification_email
+from .factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 

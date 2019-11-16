@@ -3,7 +3,7 @@ from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
 from sorl.thumbnail.admin import AdminImageMixin
 
-from localhub.users.forms import UserChangeForm, UserCreationForm
+from .forms import UserChangeForm, UserCreationForm
 
 User = get_user_model()
 

@@ -3,8 +3,9 @@
 from factory import DjangoModelFactory, Faker, SubFactory
 
 from localhub.communities.tests.factories import CommunityFactory
-from localhub.private_messages.models import Message
 from localhub.users.tests.factories import UserFactory
+
+from ..models import Message
 
 
 class MessageFactory(DjangoModelFactory):

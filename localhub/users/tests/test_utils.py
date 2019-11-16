@@ -3,7 +3,7 @@
 
 from django.contrib.auth import get_user_model
 
-from localhub.users.utils import user_display
+from ..utils import user_display
 
 
 class TestUserDisplay:

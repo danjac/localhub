@@ -12,7 +12,8 @@ from localhub.likes.models import Like
 from localhub.notifications.models import Notification
 from localhub.posts.tests.factories import PostFactory
 from localhub.private_messages.tests.factories import MessageFactory
-from localhub.users.tests.factories import UserFactory
+
+from .factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 

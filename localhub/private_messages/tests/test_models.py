@@ -1,9 +1,10 @@
 import pytest
 
 from localhub.communities.tests.factories import CommunityFactory, MembershipFactory
-from localhub.private_messages.models import Message
-from localhub.private_messages.tests.factories import MessageFactory
 from localhub.users.tests.factories import UserFactory
+
+from ..models import Message
+from .factories import MessageFactory
 
 pytestmark = pytest.mark.django_db
 

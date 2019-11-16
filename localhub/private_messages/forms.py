@@ -5,7 +5,7 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from localhub.private_messages.models import Message
+from .models import Message
 
 
 class MessageForm(forms.ModelForm):

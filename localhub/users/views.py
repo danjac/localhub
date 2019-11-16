@@ -21,8 +21,9 @@ from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.likes.models import Like
 from localhub.private_messages.models import Message
-from localhub.users.forms import UserForm
-from localhub.users.notifications import send_user_notification
+
+from .forms import UserForm
+from .notifications import send_user_notification
 
 
 class BaseUserQuerySetMixin(CommunityRequiredMixin):

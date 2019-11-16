@@ -4,8 +4,8 @@
 import pytest
 from django.contrib.auth.models import AnonymousUser
 
-from localhub.users.rules import is_self
-from localhub.users.tests.factories import UserFactory
+from ..rules import is_self
+from .factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 

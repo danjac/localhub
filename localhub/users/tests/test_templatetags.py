@@ -3,8 +3,8 @@
 
 import pytest
 
-from localhub.users.templatetags.users_tags import avatar
-from localhub.users.tests.factories import UserFactory
+from ..templatetags.users_tags import avatar
+from .factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 

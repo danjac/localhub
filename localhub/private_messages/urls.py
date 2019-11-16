@@ -3,7 +3,7 @@
 
 from django.urls import path
 
-from localhub.private_messages.views import (
+from .views import (
     inbox_view,
     message_create_view,
     message_delete_view,

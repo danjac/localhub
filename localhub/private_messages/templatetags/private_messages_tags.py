@@ -6,7 +6,7 @@ from django import template
 from django.db.models import F
 from django.urls import reverse
 
-from localhub.private_messages.models import Message
+from ..models import Message
 
 register = template.Library()
 

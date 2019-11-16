@@ -7,7 +7,8 @@ from django.contrib.auth import get_user_model
 
 from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory
-from localhub.users.tests.factories import UserFactory
+
+from .factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 

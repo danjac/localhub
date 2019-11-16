@@ -3,7 +3,7 @@
 
 from django import template
 
-from localhub.users.utils import user_display
+from ..utils import user_display
 
 register = template.Library()
 

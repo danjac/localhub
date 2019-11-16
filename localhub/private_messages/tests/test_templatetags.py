@@ -6,12 +6,13 @@ from django.contrib.auth.models import AnonymousUser
 from django.urls import reverse
 
 from localhub.communities.tests.factories import MembershipFactory
-from localhub.private_messages.templatetags.private_messages_tags import (
+
+from ..templatetags.private_messages_tags import (
     get_unread_local_network_message_count,
     get_unread_message_count,
     show_message,
 )
-from localhub.private_messages.tests.factories import MessageFactory
+from .factories import MessageFactory
 
 pytestmark = pytest.mark.django_db
 

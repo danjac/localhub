@@ -26,10 +26,11 @@ from vanilla import (
 
 from localhub.common.views import BreadcrumbsMixin, SearchMixin
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.private_messages.forms import MessageForm
-from localhub.private_messages.models import Message
-from localhub.private_messages.notifications import send_message_notifications
 from localhub.users.utils import user_display
+
+from .forms import MessageForm
+from .models import Message
+from .notifications import send_message_notifications
 
 
 class MessageQuerySetMixin(CommunityRequiredMixin):
