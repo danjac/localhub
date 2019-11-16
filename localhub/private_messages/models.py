@@ -7,11 +7,10 @@ from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.template.defaultfilters import truncatechars
 from django.urls import reverse
-
 from model_utils.models import TimeStampedModel
 
-from localhub.common.markdown.fields import MarkdownField
 from localhub.common.db.search import SearchIndexer, SearchQuerySetMixin
+from localhub.common.markdown.fields import MarkdownField
 from localhub.communities.models import Community
 
 

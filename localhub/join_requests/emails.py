@@ -2,9 +2,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.core.mail import send_mail
-from django.urls import reverse
 from django.template.loader import render_to_string
-from django.utils.translation import gettext as _, override
+from django.urls import reverse
+from django.utils.translation import gettext as _
+from django.utils.translation import override
 
 
 def send_join_request_email(join_request):

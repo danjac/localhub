@@ -1,11 +1,9 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from django.utils.encoding import force_str
 
-from localhub.common.markdown.utils import (
-    extract_mentions,
-    linkify_hashtags,
-    linkify_mentions,
-    markdownify,
-)
+from ..utils import extract_mentions, linkify_hashtags, linkify_mentions, markdownify
 
 
 class TestMarkdownifySafe:

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from localhub.common.pagination.templatetags import pagination_url
+from ..templatetags import pagination_url
 
 
 class TestPaginationUrl:

@@ -10,17 +10,14 @@ from django.core.validators import RegexValidator, URLValidator
 from django.db import models
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
-
-from sorl.thumbnail import ImageField
-
 from model_utils import Choices
 from model_utils.models import TimeStampedModel
-
 from simple_history.models import HistoricalRecords
+from sorl.thumbnail import ImageField
 
+from localhub.common.db.search import SearchQuerySetMixin
 from localhub.common.markdown.fields import MarkdownField
 from localhub.common.markdown.utils import extract_hashtags
-from localhub.common.db.search import SearchQuerySetMixin
 
 DOMAIN_VALIDATOR = RegexValidator(
     regex=URLValidator.host_re, message=_("This is not a valid domain")

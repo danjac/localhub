@@ -1,8 +1,8 @@
 from factory import DjangoModelFactory, SubFactory
 
 from localhub.communities.tests.factories import CommunityFactory
-from localhub.users.tests.factories import UserFactory
 from localhub.join_requests.models import JoinRequest
+from localhub.users.tests.factories import UserFactory
 
 
 class JoinRequestFactory(DjangoModelFactory):

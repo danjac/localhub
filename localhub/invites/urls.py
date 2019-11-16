@@ -1,11 +1,11 @@
 from django.urls import path
 
 from localhub.invites.views import (
-    invite_list_view,
-    invite_create_view,
-    invite_resend_view,
-    invite_delete_view,
     invite_accept_view,
+    invite_create_view,
+    invite_delete_view,
+    invite_list_view,
+    invite_resend_view,
 )
 
 app_name = "invites"

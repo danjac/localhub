@@ -2,14 +2,13 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-
 from django.urls import reverse
 
 from localhub.communities.models import Membership
 from localhub.communities.tests.factories import CommunityFactory
-from localhub.users.tests.factories import UserFactory
 from localhub.join_requests.models import JoinRequest
 from localhub.join_requests.tests.factories import JoinRequestFactory
+from localhub.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 

@@ -5,13 +5,11 @@ from typing import Any, List
 import django.core.validators
 import django.db.models.deletion
 import django.utils.timezone
-
+import model_utils.fields
 from django.db import migrations, models
 
-import model_utils.fields
-
-import localhub.communities.models
 import localhub.common.markdown.fields
+import localhub.communities.models
 
 
 class Migration(migrations.Migration):

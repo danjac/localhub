@@ -7,11 +7,8 @@ from django.forms import inlineformset_factory
 from django.shortcuts import redirect
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
-
-
-from vanilla import GenericModelView
-
 from rules.contrib.views import PermissionRequiredMixin
+from vanilla import GenericModelView
 
 from localhub.activities.views.generic import (
     ActivityCreateView,
@@ -20,7 +17,7 @@ from localhub.activities.views.generic import (
     ActivityUpdateView,
 )
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.polls.models import Poll, Answer
+from localhub.polls.models import Answer, Poll
 
 AnswersFormSet = inlineformset_factory(
     Poll,

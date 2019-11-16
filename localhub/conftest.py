@@ -2,15 +2,11 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-
 from django.http import HttpResponse
 
 from localhub.comments.tests.factories import CommentFactory
 from localhub.communities.models import Membership
-from localhub.communities.tests.factories import (
-    CommunityFactory,
-    MembershipFactory,
-)
+from localhub.communities.tests.factories import CommunityFactory, MembershipFactory
 from localhub.events.tests.factories import EventFactory
 from localhub.photos.tests.factories import PhotoFactory
 from localhub.polls.tests.factories import PollFactory

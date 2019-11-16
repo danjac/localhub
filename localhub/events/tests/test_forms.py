@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import datetime
-import pytz
-import pytest
 
+import pytest
+import pytz
 
 from localhub.events.forms import EventForm
 from localhub.events.tests.factories import EventFactory

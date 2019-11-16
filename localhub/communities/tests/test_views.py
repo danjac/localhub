@@ -2,8 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-
-
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import PermissionDenied
@@ -12,10 +10,7 @@ from django.urls import reverse
 from django.views.generic import View
 
 from localhub.communities.models import Membership, RequestCommunity
-from localhub.communities.tests.factories import (
-    CommunityFactory,
-    MembershipFactory,
-)
+from localhub.communities.tests.factories import CommunityFactory, MembershipFactory
 from localhub.communities.views import CommunityRequiredMixin
 
 pytestmark = pytest.mark.django_db

@@ -1,8 +1,9 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from localhub.common.markdown.admin import MarkdownFieldMixin
 from simple_history.admin import SimpleHistoryAdmin
+
+from localhub.common.markdown.admin import MarkdownFieldMixin
 
 
 class ActivityAdmin(MarkdownFieldMixin, SimpleHistoryAdmin):

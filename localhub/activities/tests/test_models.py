@@ -3,6 +3,7 @@
 
 import pytest
 from django.contrib.auth.models import AnonymousUser
+from taggit.models import Tag
 
 from localhub.comments.tests.factories import CommentFactory
 from localhub.communities.models import Community
@@ -12,7 +13,6 @@ from localhub.likes.models import Like
 from localhub.posts.models import Post
 from localhub.posts.tests.factories import PostFactory
 from localhub.users.tests.factories import UserFactory
-from taggit.models import Tag
 
 pytestmark = pytest.mark.django_db
 

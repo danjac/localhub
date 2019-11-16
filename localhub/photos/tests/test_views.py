@@ -1,15 +1,14 @@
 import io
+
 import pytest
-
-from PIL import Image
-
 from django.core.files import File
 from django.urls import reverse
+from PIL import Image
 
 from localhub.communities.tests.factories import MembershipFactory
 from localhub.likes.models import Like
-from localhub.photos.tests.factories import PhotoFactory
 from localhub.photos.models import Photo
+from localhub.photos.tests.factories import PhotoFactory
 
 pytestmark = pytest.mark.django_db
 

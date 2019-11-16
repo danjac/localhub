@@ -1,6 +1,5 @@
 import factory
-
-from factory import DjangoModelFactory, SubFactory, Faker
+from factory import DjangoModelFactory, Faker, SubFactory
 
 from localhub.communities.tests.factories import CommunityFactory
 from localhub.photos.models import Photo

@@ -4,15 +4,8 @@
 import functools
 import operator
 
-
-from django.db import transaction
-
-from django.contrib.postgres.search import (
-    SearchVector,
-    SearchRank,
-    SearchQuery,
-)
-from django.db import models
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+from django.db import models, transaction
 
 
 class SearchQuerySetMixin:

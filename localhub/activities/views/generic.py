@@ -9,13 +9,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-
-from localhub.comments.forms import CommentForm
-from localhub.comments.notifications import send_comment_notifications
-from localhub.common.views import BreadcrumbsMixin, SearchMixin
-from localhub.communities.views import CommunityRequiredMixin
-from localhub.flags.forms import FlagForm
-from localhub.likes.models import Like
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import (
     CreateView,
@@ -26,6 +19,13 @@ from vanilla import (
     ListView,
     UpdateView,
 )
+
+from localhub.comments.forms import CommentForm
+from localhub.comments.notifications import send_comment_notifications
+from localhub.common.views import BreadcrumbsMixin, SearchMixin
+from localhub.communities.views import CommunityRequiredMixin
+from localhub.flags.forms import FlagForm
+from localhub.likes.models import Like
 
 from ..notifications import send_activity_deleted_email, send_activity_notifications
 from ..utils import get_breadcrumbs_for_instance, get_breadcrumbs_for_model

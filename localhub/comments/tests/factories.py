@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from factory import DjangoModelFactory, Faker, SubFactory
+
 from localhub.communities.tests.factories import CommunityFactory
 from localhub.posts.tests.factories import PostFactory
 from localhub.users.tests.factories import UserFactory

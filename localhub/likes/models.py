@@ -1,12 +1,10 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.db import models
-
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-
+from django.db import models
 from model_utils.models import TimeStampedModel
 
 from localhub.common.db.content_types import (

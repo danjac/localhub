@@ -3,7 +3,6 @@
 
 from django import forms
 
-
 from localhub.polls.models import Poll
 
 

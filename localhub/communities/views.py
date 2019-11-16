@@ -1,29 +1,26 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.db.models import Count, Q
+from allauth.account.forms import LoginForm
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
+from django.db.models import Count, Q
 from django.forms import ModelForm
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-
-from allauth.account.forms import LoginForm
-
 from rules.contrib.views import PermissionRequiredMixin
-
 from vanilla import DeleteView, DetailView, ListView, TemplateView, UpdateView
 
+from localhub.common.views import SearchMixin
 from localhub.communities.emails import send_membership_deleted_email
 from localhub.communities.forms import MembershipForm
 from localhub.communities.models import Community, Membership
 from localhub.communities.rules import is_member
-from localhub.common.views import SearchMixin
 from localhub.join_requests.models import JoinRequest
 
 

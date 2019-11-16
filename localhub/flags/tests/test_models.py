@@ -4,13 +4,11 @@
 
 import factory
 import pytest
-
 from django.db.models import signals
 
 from localhub.comments.tests.factories import CommentFactory
 from localhub.flags.models import Flag
 from localhub.posts.tests.factories import PostFactory
-
 
 pytestmark = pytest.mark.django_db
 

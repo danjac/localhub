@@ -9,9 +9,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
-
 from rules.contrib.views import PermissionRequiredMixin
-
 from vanilla import GenericModelView, ListView, TemplateView
 
 from localhub.communities.models import Membership

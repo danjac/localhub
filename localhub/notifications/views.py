@@ -9,8 +9,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.views.generic import View
-
-from vanilla import DeleteView, ListView, TemplateView, GenericModelView
+from vanilla import DeleteView, GenericModelView, ListView, TemplateView
 
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.notifications.models import Notification, PushSubscription

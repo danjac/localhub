@@ -4,9 +4,7 @@
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
 from model_utils import Choices
-
 from sorl.thumbnail import ImageField
 
 from localhub.activities.models import Activity

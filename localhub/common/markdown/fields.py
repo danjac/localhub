@@ -15,10 +15,9 @@ This provides additional methods on the field:
 from django.db.models import Field
 from django.template.defaultfilters import striptags
 from django.utils.safestring import mark_safe
-
 from markdownx.models import MarkdownxField
 
-from .utils import markdownify, extract_mentions, extract_hashtags
+from .utils import extract_hashtags, extract_mentions, markdownify
 
 
 class MarkdownProxy(str):

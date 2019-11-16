@@ -3,7 +3,7 @@
 
 from django.forms import Form
 
-from localhub.common.forms.templatetags import simple_ajax_form
+from ..templatetags import simple_ajax_form
 
 
 class TestSimpleAjaxForm:

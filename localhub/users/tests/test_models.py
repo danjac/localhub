@@ -2,10 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-
-from django.contrib.auth import get_user_model
-
 from allauth.account.models import EmailAddress
+from django.contrib.auth import get_user_model
 
 from localhub.communities.models import Membership
 from localhub.communities.tests.factories import MembershipFactory

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from localhub.common.template.defaultfilters import from_dictkey
+from ..defaultfilters import from_dictkey
 
 
 class TestFromDictkey:

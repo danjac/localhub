@@ -2,7 +2,6 @@
 
 from django.db import migrations
 
-
 ACTIVITY_VERBS = (
     ("delete", "moderator_delete"),
     ("edit", "moderator_edit"),

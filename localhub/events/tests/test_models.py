@@ -2,19 +2,17 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import datetime
-import geocoder
-import pytz
-import pytest
-
 from datetime import timedelta
 
+import geocoder
+import pytest
+import pytz
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.utils.encoding import force_str
 
 from localhub.events.models import Event
 from localhub.events.tests.factories import EventFactory
-
 
 pytestmark = pytest.mark.django_db
 

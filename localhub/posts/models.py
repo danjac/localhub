@@ -2,15 +2,13 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import requests
-
+from bs4 import BeautifulSoup
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.utils.translation import gettext as _
 
-from bs4 import BeautifulSoup
-
-from localhub.activities.oembed import bootstrap_oembed
 from localhub.activities.models import Activity
+from localhub.activities.oembed import bootstrap_oembed
 from localhub.activities.utils import get_domain, is_image_url, is_url
 from localhub.comments.models import Comment
 from localhub.common.db.search import SearchIndexer

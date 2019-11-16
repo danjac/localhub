@@ -1,5 +1,4 @@
 import pytest
-
 from django.utils.encoding import force_str
 
 from localhub.posts.tests.factories import PostFactory

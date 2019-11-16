@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/2.2/howto/deployment/wsgi/
 
 import os
 
+from configurations.wsgi import get_wsgi_application  # noqa
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "localhub.settings")
 os.environ.setdefault("DJANGO_CONFIGURATION", "Local")
-
-from configurations.wsgi import get_wsgi_application  # noqa
 
 
 application = get_wsgi_application()

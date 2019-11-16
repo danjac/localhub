@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-
 from django.urls import reverse
 
 from localhub.likes.models import Like

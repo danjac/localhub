@@ -3,14 +3,12 @@
 
 import pytest
 
-
 from localhub.activities.notifications import (
     send_activity_deleted_email,
     send_activity_notification_email,
 )
 from localhub.notifications.models import Notification
 from localhub.users.tests.factories import UserFactory
-
 
 pytestmark = pytest.mark.django_db
 

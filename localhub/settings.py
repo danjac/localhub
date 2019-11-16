@@ -4,11 +4,8 @@
 import os
 import socket
 
-
-from django.urls import reverse_lazy
-
-
 from configurations import Configuration, values
+from django.urls import reverse_lazy
 
 
 class Base(Configuration):

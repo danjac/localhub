@@ -10,14 +10,10 @@ from django.db import models
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-
 from model_utils import Choices
-
 from sorl.thumbnail import ImageField
-
-from timezone_field import TimeZoneField
-
 from taggit.models import Tag
+from timezone_field import TimeZoneField
 
 from localhub.common.db.fields import ChoiceArrayField
 from localhub.common.db.search import SearchIndexer, SearchQuerySetMixin

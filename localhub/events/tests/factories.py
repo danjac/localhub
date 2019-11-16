@@ -1,7 +1,6 @@
-from factory.fuzzy import FuzzyDateTime
-
 from django.utils import timezone
-from factory import DjangoModelFactory, SubFactory, Faker
+from factory import DjangoModelFactory, Faker, SubFactory
+from factory.fuzzy import FuzzyDateTime
 
 from localhub.communities.tests.factories import CommunityFactory
 from localhub.events.models import Event

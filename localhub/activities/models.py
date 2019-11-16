@@ -7,6 +7,10 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.urls import reverse
+from model_utils.models import TimeStampedModel
+from simple_history.models import HistoricalRecords
+from taggit.managers import TaggableManager
+from taggit.models import Tag
 
 from localhub.comments.models import Comment, CommentAnnotationsQuerySetMixin
 from localhub.common.db.content_types import get_generic_related_queryset
@@ -17,10 +21,6 @@ from localhub.communities.models import Community
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.notifications.models import Notification
-from model_utils.models import TimeStampedModel
-from simple_history.models import HistoricalRecords
-from taggit.managers import TaggableManager
-from taggit.models import Tag
 
 from .utils import slugify_unicode
 

@@ -3,10 +3,8 @@
 
 import pytest
 
-
 from localhub.invites.forms import InviteForm
 from localhub.invites.tests.factories import InviteFactory
-
 
 pytestmark = pytest.mark.django_db
 

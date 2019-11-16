@@ -1,5 +1,4 @@
 import pytest
-
 from django.urls import reverse
 
 from localhub.communities.tests.factories import MembershipFactory

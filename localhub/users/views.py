@@ -10,10 +10,8 @@ from django.db.models import BooleanField, Q, QuerySet, Value
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-
 from rules.contrib.views import PermissionRequiredMixin
-
-from vanilla import DeleteView, ListView, UpdateView, GenericModelView
+from vanilla import DeleteView, GenericModelView, ListView, UpdateView
 
 from localhub.activities.views.streams import BaseStreamView
 from localhub.comments.models import Comment

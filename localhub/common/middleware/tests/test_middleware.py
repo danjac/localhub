@@ -3,10 +3,7 @@
 
 from django.http import HttpRequest, HttpResponseRedirect
 
-from localhub.common.middleware import (
-    DoNotTrackMiddleware,
-    TurbolinksMiddleware,
-)
+from .. import DoNotTrackMiddleware, TurbolinksMiddleware
 
 
 class TestDoNotTrackMiddleware:

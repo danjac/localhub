@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import json
-import pytest
 
+import pytest
 from django.urls import reverse
 
 from localhub.comments.tests.factories import CommentFactory

@@ -7,14 +7,7 @@ objects with querysets.
 """
 
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import (
-    Count,
-    Exists,
-    IntegerField,
-    OuterRef,
-    Subquery,
-    QuerySet,
-)
+from django.db.models import Count, Exists, IntegerField, OuterRef, QuerySet, Subquery
 
 
 def get_generic_related_exists(

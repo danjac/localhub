@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django import template
-from django.db.models import F
 from django.conf import settings
+from django.db.models import F
 
 from localhub.notifications.models import Notification
 

@@ -3,13 +3,12 @@
 
 import pytest
 
+from localhub.communities.models import Membership
+from localhub.communities.tests.factories import MembershipFactory
 from localhub.join_requests.templatetags.join_requests_tags import (
     get_pending_join_request_count,
     get_pending_local_network_join_request_count,
 )
-
-from localhub.communities.models import Membership
-from localhub.communities.tests.factories import MembershipFactory
 from localhub.join_requests.tests.factories import JoinRequestFactory
 
 pytestmark = pytest.mark.django_db

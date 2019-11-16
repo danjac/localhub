@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.contrib import admin
+from simple_history.admin import SimpleHistoryAdmin
 
 from localhub.common.markdown.admin import MarkdownFieldMixin
-from simple_history.admin import SimpleHistoryAdmin
 
 from .models import Comment
 

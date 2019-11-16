@@ -14,9 +14,7 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from django.views.generic import View
-
 from rules.contrib.views import PermissionRequiredMixin
-
 from vanilla import (
     DeleteView,
     DetailView,

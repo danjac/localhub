@@ -1,8 +1,8 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.forms import MultipleChoiceField
 from django.contrib.postgres.fields import ArrayField
+from django.forms import MultipleChoiceField
 
 
 class ChoiceArrayField(ArrayField):

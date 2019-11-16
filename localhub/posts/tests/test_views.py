@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-
 from django.urls import reverse
 
 from localhub.comments.models import Comment
@@ -11,8 +10,8 @@ from localhub.communities.tests.factories import MembershipFactory
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification
-from localhub.posts.tests.factories import PostFactory
 from localhub.posts.models import Post
+from localhub.posts.tests.factories import PostFactory
 
 pytestmark = pytest.mark.django_db
 

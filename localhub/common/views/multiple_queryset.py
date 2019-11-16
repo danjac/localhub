@@ -4,10 +4,9 @@
 from collections import defaultdict
 
 from django.db.models import CharField, Value
-
 from vanilla import TemplateView
 
-from localhub.common.pagination import PresetCountPaginator
+from ..pagination import PresetCountPaginator
 
 
 class MultipleQuerySetMixin:

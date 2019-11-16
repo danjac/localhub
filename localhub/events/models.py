@@ -2,19 +2,16 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import geocoder
-
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.encoding import smart_text
 from django.utils.translation import gettext_lazy as _
-
 from django_countries.fields import CountryField
-
+from icalendar import Calendar
+from icalendar import Event as CalendarEvent
 from timezone_field import TimeZoneField
-
-from icalendar import Calendar, Event as CalendarEvent
 
 from localhub.activities.models import Activity
 from localhub.activities.utils import get_domain

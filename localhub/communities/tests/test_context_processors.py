@@ -1,6 +1,5 @@
 import pytest
 
-
 from localhub.communities.context_processors import community
 from localhub.communities.tests.factories import CommunityFactory
 

@@ -2,13 +2,12 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from django.db import models
 from django.conf import settings
+from django.db import models
 from django.utils.translation import gettext_lazy as _
-
 from model_utils import Choices
+from model_utils.fields import MonitorField, StatusField
 from model_utils.models import TimeStampedModel
-from model_utils.fields import StatusField, MonitorField
 
 from localhub.communities.models import Community
 

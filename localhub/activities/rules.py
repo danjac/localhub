@@ -6,6 +6,7 @@ Rulesets for the activities app and subclassed models.
 """
 
 import rules
+
 from localhub.communities.rules import is_member, is_moderator
 
 

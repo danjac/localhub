@@ -11,9 +11,7 @@ from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
-
 from rules.contrib.views import PermissionRequiredMixin
-
 from vanilla import CreateView, DeleteView, GenericModelView, ListView
 
 from localhub.communities.models import Membership
