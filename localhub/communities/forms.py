@@ -1,6 +1,6 @@
 from django import forms
 
-from localhub.communities.models import Membership
+from .models import Membership
 
 
 class MembershipForm(forms.ModelForm):

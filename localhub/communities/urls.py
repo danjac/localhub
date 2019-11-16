@@ -3,7 +3,7 @@
 
 from django.urls import path
 
-from localhub.communities.views import (
+from .views import (
     community_detail_view,
     community_leave_view,
     community_terms_view,

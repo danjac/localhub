@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 from localhub.common.markdown.admin import MarkdownFieldMixin
-from localhub.communities.models import Community, Membership
+
+from .models import Community, Membership
 
 
 @admin.register(Community)

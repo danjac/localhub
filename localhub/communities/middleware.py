@@ -3,7 +3,7 @@
 
 from django.utils.functional import SimpleLazyObject
 
-from localhub.communities.models import Community
+from .models import Community
 
 
 class CurrentCommunityMiddleware:

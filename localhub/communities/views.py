@@ -17,11 +17,12 @@ from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView, DetailView, ListView, TemplateView, UpdateView
 
 from localhub.common.views import SearchMixin
-from localhub.communities.emails import send_membership_deleted_email
-from localhub.communities.forms import MembershipForm
-from localhub.communities.models import Community, Membership
-from localhub.communities.rules import is_member
 from localhub.join_requests.models import JoinRequest
+
+from .emails import send_membership_deleted_email
+from .forms import MembershipForm
+from .models import Community, Membership
+from .rules import is_member
 
 
 class CommunityRequiredMixin:

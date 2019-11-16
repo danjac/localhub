@@ -3,7 +3,7 @@
 
 import pytest
 
-from localhub.communities.middleware import CurrentCommunityMiddleware
+from ..middleware import CurrentCommunityMiddleware
 
 pytestmark = pytest.mark.django_db
 

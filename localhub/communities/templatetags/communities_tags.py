@@ -4,7 +4,7 @@
 
 from django import template
 
-from localhub.communities.models import Community
+from ..models import Community
 
 register = template.Library()
 

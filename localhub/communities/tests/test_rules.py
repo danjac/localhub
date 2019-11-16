@@ -4,16 +4,17 @@
 import pytest
 from django.contrib.auth.models import AnonymousUser
 
-from localhub.communities.models import Membership
-from localhub.communities.rules import (
+from localhub.users.tests.factories import UserFactory
+
+from ..models import Membership
+from ..rules import (
     is_admin,
     is_member,
     is_membership_community_admin,
     is_moderator,
     is_own_membership,
 )
-from localhub.communities.tests.factories import MembershipFactory
-from localhub.users.tests.factories import UserFactory
+from .factories import MembershipFactory
 
 pytestmark = pytest.mark.django_db
 

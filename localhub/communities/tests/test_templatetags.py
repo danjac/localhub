@@ -5,10 +5,8 @@
 import pytest
 from django.contrib.auth.models import AnonymousUser
 
-from localhub.communities.templatetags.communities_tags import (
-    get_available_community_count,
-)
-from localhub.communities.tests.factories import CommunityFactory, MembershipFactory
+from ..templatetags.communities_tags import get_available_community_count
+from .factories import CommunityFactory, MembershipFactory
 
 pytestmark = pytest.mark.django_db
 

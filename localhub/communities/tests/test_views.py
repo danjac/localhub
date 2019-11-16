@@ -9,9 +9,9 @@ from django.http import Http404, HttpResponse
 from django.urls import reverse
 from django.views.generic import View
 
-from localhub.communities.models import Membership, RequestCommunity
-from localhub.communities.tests.factories import CommunityFactory, MembershipFactory
-from localhub.communities.views import CommunityRequiredMixin
+from ..models import Membership, RequestCommunity
+from ..views import CommunityRequiredMixin
+from .factories import CommunityFactory, MembershipFactory
 
 pytestmark = pytest.mark.django_db
 
