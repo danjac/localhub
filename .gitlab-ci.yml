@@ -42,6 +42,7 @@ test:django:
   extends: .docker_config
   stage: test
   script:
+    - docker-compose -f docker-compose.deploy.yml pull postgres
     - docker-compose -f docker-compose.deploy.yml pull django
     - docker-compose -f docker-compose.deploy.yml run django ./manage.py validate_templates
     - docker-compose -f docker-compose.deploy.yml run django pytest
@@ -55,6 +56,7 @@ deploy:assets:
     paths:
       - assets
   script:
+    - docker-compose -f docker-compose.deploy.yml pull postgres
     - docker-compose -f docker-compose.deploy.yml pull django
     - docker-compose -f docker-compose.deploy.yml pull webpack
     - docker-compose -f docker-compose.deploy.yml run webpack npm run build
