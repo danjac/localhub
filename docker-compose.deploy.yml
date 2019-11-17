@@ -22,9 +22,9 @@ services:
       context: .
       dockerfile: Dockerfile.webpack
       cache_from:
-        - deploy/webpack
+        - ${CI_REGISTRY_IMAGE-deploy}/webpack:${CI_COMMIT_SHORT_SHA-deploy}
     image:
-      - deploy/webpack
+      - ${CI_REGISTRY_IMAGE-deploy}/webpack:${CI_COMMIT_SHORT_SHA-deploy}
     volumes:
       - .:/app
       - /app/node_modules
@@ -34,9 +34,9 @@ services:
       context: .
       dockerfile: Dockerfile.local
       cache_from:
-        - deploy/webpack
+        - ${CI_REGISTRY_IMAGE-deploy}/django:${CI_COMMIT_SHORT_SHA-deploy}
     image:
-      - deploy/webpack
+        - ${CI_REGISTRY_IMAGE-deploy}/django:${CI_COMMIT_SHORT_SHA-deploy}
     environment: *default-env
     depends_on:
       - postgres
