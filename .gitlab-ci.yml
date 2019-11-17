@@ -1,6 +1,7 @@
 image: docker
 
 stages:
+  - build
   - test
   - deploy
 
@@ -9,6 +10,8 @@ services:
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - ./node_modules/
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -28,11 +31,20 @@ variables:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
     - docker info
 
+build:
+  extends: .docker_compose
+  stage: build
+  script:
+    - docker-compose build django
+    - docker-compose push django
+  only:
+    - master
 
 test:django:
   extends: .docker_compose
   stage: test
   script:
+    - docker-compose pull django
     - docker-compose run django ./manage.py validate_templates
     - docker-compose run django pytest
   only:
@@ -45,6 +57,7 @@ deploy:assets:
     paths:
       - assets
   script:
+    - docker-compose pull django
     - docker-compose run webpack npm run build
     - docker-compose run -e DJANGO_CONFIGURATION=Production -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
   only:
