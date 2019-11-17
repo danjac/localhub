@@ -8,14 +8,16 @@ stages:
 services:
   - docker:stable-dind
 
+# Official docker compose image.
+image:
+  name: docker/compose:1.24.0
+  entrypoint: ["/bin/sh", "-c"]
+
 cache:
   key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - ./node_modules/
 
 variables:
   DOCKER_DRIVER: overlay2
-  # for testing/deployment only
   DATABASE_URL: postgres://postgres@postgres:5432/postgres
   SECRET_KEY: ${SECRET_KEY}
   AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
@@ -24,15 +26,15 @@ variables:
   HEROKU_APP_NAME: ${HEROKU_APP_NAME}
   HEROKU_API_KEY: ${HEROKU_API_KEY}
 
-.docker_compose:
+.docker_config:
   before_script:
-    - apk add --update py-pip gcc python-dev build-base libffi-dev openssl-dev libgcc
-    - pip install docker-compose
+    # - apk add --update py-pip gcc python-dev build-base libffi-dev openssl-dev libgcc
+    # - pip install docker-compose
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
     - docker info
 
 build:
-  extends: .docker_compose
+  extends: .docker_config
   stage: build
   script:
     - docker-compose build django
@@ -43,17 +45,17 @@ build:
     - master
 
 test:django:
-  extends: .docker_compose
+  extends: .docker_config
   stage: test
   script:
     - docker-compose pull django
-    - docker-compose exec django ./manage.py validate_templates
-    - docker-compose exec django pytest
+    - docker-compose run django ./manage.py validate_templates
+    - docker-compose run django pytest
   only:
     - master
 
 deploy:assets:
-  extends: .docker_compose
+  extends: .docker_config
   stage: deploy
   artifacts:
     paths:
@@ -62,7 +64,7 @@ deploy:assets:
     - docker-compose pull django
     - docker-compose pull webpack
     - docker-compose run webpack npm run build
-    - docker-compose exec -e DJANGO_CONFIGURATION=Production -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
+    - docker-compose run -e DJANGO_CONFIGURATION=Production -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
   only:
     - master
 
