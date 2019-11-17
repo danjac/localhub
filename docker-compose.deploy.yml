@@ -21,7 +21,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.webpack
-    command: npm run dev
     volumes:
         - .:/app
         - /app/node_modules
@@ -30,15 +29,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.local
-    restart: on-failure
     environment: *default-env
     depends_on:
       - postgres
-      - mailhog
-      - redis
     volumes:
       - .:/app
-    ports:
-      - "8000:8000"
-    command: /start-django
-
