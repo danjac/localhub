@@ -162,8 +162,8 @@ class Base(Configuration):
     # https://micawber.readthedocs.io/en/latest/django.html
     MICAWBER_PROVIDERS = "localhub.activities.oembed.bootstrap_oembed"
     MICAWBER_TEMPLATE_EXTENSIONS = [("oembed_no_urlize", {"urlize_all": False})]
-    # https://celery.readthedocs.io/en/latest/userguide/configuration.html
 
+    # https://celery.readthedocs.io/en/latest/userguide/configuration.html
     CELERY_RESULT_BACKEND = CELERY_BROKER_URL = REDIS_URL
     CELERY_TASK_SERIALIZER = CELERY_RESULT_SERIALIZER = "json"
 
