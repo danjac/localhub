@@ -33,10 +33,8 @@ build:
   extends: .docker_config
   stage: build
   script:
-    - docker-compose build django
-    - docker-compose push django
-    - docker-compose build webpack
-    - docker-compose push webpack
+    - docker-compose build
+    - docker-compose push
   only:
     - master
 
@@ -44,7 +42,7 @@ test:django:
   extends: .docker_config
   stage: test
   script:
-    - docker-compose pull django
+    - docker-compose pull
     - docker-compose run django ./manage.py validate_templates
     - docker-compose run django pytest
   only:
@@ -57,8 +55,7 @@ deploy:assets:
     paths:
       - assets
   script:
-    - docker-compose pull django
-    - docker-compose pull webpack
+    - docker-compose pull
     - docker-compose run webpack npm run build
     - docker-compose run -e DJANGO_CONFIGURATION=Production -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
   only:
