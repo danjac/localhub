@@ -1,4 +1,8 @@
-image: docker
+# image: docker
+# Official docker compose image.
+image:
+  name: docker/compose:1.24.0
+  entrypoint: ["/bin/sh", "-c"]
 
 stages:
   - build
@@ -7,11 +11,6 @@ stages:
 
 services:
   - docker:stable-dind
-
-# Official docker compose image.
-image:
-  name: docker/compose:1.24.0
-  entrypoint: ["/bin/sh", "-c"]
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
