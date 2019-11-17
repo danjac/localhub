@@ -37,6 +37,8 @@ build:
   script:
     - docker-compose build django
     - docker-compose push django
+    - docker-compose build webpack
+    - docker-compose push webpack
   only:
     - master
 
@@ -45,8 +47,8 @@ test:django:
   stage: test
   script:
     - docker-compose pull django
-    - docker-compose run django ./manage.py validate_templates
-    - docker-compose run django pytest
+    - docker-compose exec django ./manage.py validate_templates
+    - docker-compose exec django pytest
   only:
     - master
 
@@ -58,8 +60,9 @@ deploy:assets:
       - assets
   script:
     - docker-compose pull django
+    - docker-compose pull webpack
     - docker-compose run webpack npm run build
-    - docker-compose run -e DJANGO_CONFIGURATION=Production -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
+    - docker-compose exec -e DJANGO_CONFIGURATION=Production -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
   only:
     - master
 
