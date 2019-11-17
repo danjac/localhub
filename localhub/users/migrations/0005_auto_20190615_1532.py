@@ -2,7 +2,7 @@
 
 from django.db import migrations
 
-import localhub.core.markdown.fields
+import localhub.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='user',
             name='bio',
-            field=localhub.core.markdown.fields.MarkdownField(blank=True),
+            field=localhub.markdown.fields.MarkdownField(blank=True),
         ),
     ]

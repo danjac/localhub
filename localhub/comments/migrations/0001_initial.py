@@ -6,7 +6,7 @@ import model_utils.fields
 from django.conf import settings
 from django.db import migrations, models
 
-import localhub.core.markdown.fields
+import localhub.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
                 ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
                 ('object_id', models.PositiveIntegerField()),
-                ('content', localhub.core.markdown.fields.MarkdownField()),
+                ('content', localhub.markdown.fields.MarkdownField()),
                 ('community', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='communities.Community')),
                 ('content_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contenttypes.ContentType')),
                 ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),

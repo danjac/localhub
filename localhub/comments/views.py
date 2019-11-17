@@ -21,10 +21,10 @@ from vanilla import (
 )
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.core.utils.breadcrumbs import get_breadcrumbs_for_instance
-from localhub.core.views import BreadcrumbsMixin, SearchMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
+from localhub.utils.breadcrumbs import get_breadcrumbs_for_instance
+from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from .forms import CommentForm
 from .models import Comment

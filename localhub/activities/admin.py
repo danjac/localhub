@@ -3,7 +3,7 @@
 
 from simple_history.admin import SimpleHistoryAdmin
 
-from localhub.core.markdown.admin import MarkdownFieldMixin
+from localhub.markdown.admin import MarkdownFieldMixin
 
 
 class ActivityAdmin(MarkdownFieldMixin, SimpleHistoryAdmin):

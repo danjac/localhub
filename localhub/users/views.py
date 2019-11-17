@@ -18,9 +18,9 @@ from localhub.comments.models import Comment
 from localhub.comments.views import BaseCommentListView
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.core.views import SearchMixin
 from localhub.likes.models import Like
 from localhub.private_messages.models import Message
+from localhub.views import SearchMixin
 
 from .forms import UserForm
 from .notifications import send_user_notification

@@ -10,8 +10,8 @@ from django.urls import reverse
 from model_utils.models import TimeStampedModel
 
 from localhub.communities.models import Community
-from localhub.core.db.search import SearchIndexer, SearchQuerySetMixin
-from localhub.core.markdown.fields import MarkdownField
+from localhub.db.search import SearchIndexer, SearchQuerySetMixin
+from localhub.markdown.fields import MarkdownField
 
 
 class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):

@@ -25,8 +25,8 @@ from vanilla import (
 )
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.core.views import BreadcrumbsMixin, SearchMixin
 from localhub.users.utils import user_display
+from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from .forms import MessageForm
 from .models import Message

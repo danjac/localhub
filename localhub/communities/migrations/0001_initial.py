@@ -9,7 +9,7 @@ import model_utils.fields
 from django.db import migrations, models
 
 import localhub.communities.models
-import localhub.core.markdown.fields
+import localhub.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -63,7 +63,7 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=255)),
                 (
                     "description",
-                    localhub.core.markdown.fields.MarkdownField(blank=True),
+                    localhub.markdown.fields.MarkdownField(blank=True),
                 ),
                 (
                     "public",

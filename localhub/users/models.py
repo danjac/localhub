@@ -16,8 +16,8 @@ from taggit.models import Tag
 from timezone_field import TimeZoneField
 
 from localhub.communities.models import Membership
-from localhub.core.db.fields import ChoiceArrayField
-from localhub.core.db.search import SearchIndexer, SearchQuerySetMixin
+from localhub.db.fields import ChoiceArrayField
+from localhub.db.search import SearchIndexer, SearchQuerySetMixin
 from localhub.notifications.models import Notification
 
 

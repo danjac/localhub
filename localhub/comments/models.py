@@ -14,12 +14,12 @@ from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 
 from localhub.communities.models import Community, Membership
-from localhub.core.db.content_types import get_generic_related_count_subquery
-from localhub.core.db.search import SearchIndexer, SearchQuerySetMixin
-from localhub.core.db.tracker import Tracker
-from localhub.core.markdown.fields import MarkdownField
+from localhub.db.content_types import get_generic_related_count_subquery
+from localhub.db.search import SearchIndexer, SearchQuerySetMixin
+from localhub.db.tracker import Tracker
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
+from localhub.markdown.fields import MarkdownField
 from localhub.notifications.models import Notification
 
 

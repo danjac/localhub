@@ -10,7 +10,7 @@ import timezone_field.fields
 from django.conf import settings
 from django.db import migrations, models
 
-import localhub.core.markdown.fields
+import localhub.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ('id', models.IntegerField(auto_created=True, blank=True, db_index=True, verbose_name='ID')),
                 ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
                 ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
-                ('description', localhub.core.markdown.fields.MarkdownField(blank=True)),
+                ('description', localhub.markdown.fields.MarkdownField(blank=True)),
                 ('search_document', django.contrib.postgres.search.SearchVectorField(editable=False, null=True)),
                 ('title', models.CharField(max_length=200)),
                 ('url', models.URLField(blank=True, null=True, verbose_name='Link')),

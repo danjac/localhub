@@ -4,7 +4,7 @@
 from django.contrib import admin
 from simple_history.admin import SimpleHistoryAdmin
 
-from localhub.core.markdown.admin import MarkdownFieldMixin
+from localhub.markdown.admin import MarkdownFieldMixin
 
 from .models import Comment
 

@@ -10,12 +10,12 @@ from django.utils.translation import gettext as _
 from localhub.activities.models import Activity
 from localhub.activities.oembed import bootstrap_oembed
 from localhub.comments.models import Comment
-from localhub.core.db.search import SearchIndexer
-from localhub.core.db.tracker import Tracker
-from localhub.core.utils.urls import get_domain, is_image_url, is_url
+from localhub.db.search import SearchIndexer
+from localhub.db.tracker import Tracker
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification
+from localhub.utils.urls import get_domain, is_image_url, is_url
 
 _oembed_registry = bootstrap_oembed()
 

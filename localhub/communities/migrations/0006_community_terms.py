@@ -2,7 +2,7 @@
 
 from django.db import migrations
 
-import localhub.core.markdown.fields
+import localhub.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='community',
             name='terms',
-            field=localhub.core.markdown.fields.MarkdownField(blank=True, help_text='Terms and conditions, code of conduct and other membership terms.'),
+            field=localhub.markdown.fields.MarkdownField(blank=True, help_text='Terms and conditions, code of conduct and other membership terms.'),
         ),
     ]

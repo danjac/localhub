@@ -8,7 +8,7 @@ import simple_history.models
 from django.conf import settings
 from django.db import migrations, models
 
-import localhub.core.markdown.fields
+import localhub.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -32,8 +32,8 @@ class Migration(migrations.Migration):
                 ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
                 ('domain', models.CharField(db_index=True, max_length=100, validators=[django.core.validators.RegexValidator(message='This is not a valid domain', regex='([a-z¡-\uffff0-9](?:[a-z¡-\uffff0-9-]{0,61}[a-z¡-\uffff0-9])?(?:\\.(?!-)[a-z¡-\uffff0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z¡-\uffff-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost)')])),
                 ('name', models.CharField(max_length=255)),
-                ('description', localhub.core.markdown.fields.MarkdownField(blank=True)),
-                ('terms', localhub.core.markdown.fields.MarkdownField(blank=True, help_text='Terms and conditions, code of conduct and other membership terms.')),
+                ('description', localhub.markdown.fields.MarkdownField(blank=True)),
+                ('terms', localhub.markdown.fields.MarkdownField(blank=True, help_text='Terms and conditions, code of conduct and other membership terms.')),
                 ('content_warning_tags', models.TextField(blank=True, default='#nsfw', help_text='Any posts containing these tags in their description will be automatically hidden by default')),
                 ('email_domain', models.CharField(blank=True, help_text='Will add domain to notification emails from this site, e.g. notifications@this-domain.com. If left empty will use the site domain by default.', max_length=100, null=True, validators=[django.core.validators.RegexValidator(message='This is not a valid domain', regex='([a-z¡-\uffff0-9](?:[a-z¡-\uffff0-9-]{0,61}[a-z¡-\uffff0-9])?(?:\\.(?!-)[a-z¡-\uffff0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z¡-\uffff-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost)')])),
                 ('public', models.BooleanField(default=True, help_text='This community is open to the world. Non-members can view all published content.')),
