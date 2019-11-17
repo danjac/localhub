@@ -260,13 +260,8 @@ class Base(Configuration):
 class DockerConfigMixin:
     @property
     def INTERNAL_IPS(self):
-        ips = ["127.0.0.1", "10.0.2.2"]
-        try:
-            _, _, host_ips = socket.gethostbyname_ex(socket.gethostname())
-            ips += [ip[:-1] + "1" for ip in host_ips]
-        except socket.gaierror:
-            pass
-        return ips
+        _, _, ips = socket.gethostbyname_ex(socket.gethostname())
+        return [ip[:-1] + "1" for ip in ips]
 
 
 class Testing(Base):

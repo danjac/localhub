@@ -4,4 +4,4 @@ set -o errexit
 set -o nounset
 
 
-celery -A localhub.celery worker -l INFO
+celery -A localhub.celery_app worker -l INFO
