@@ -36,7 +36,7 @@ services:
   django: &django
     build:
       context: .
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile.deploy
       cache_from:
         - "${CI_REGISTRY_IMAGE-deploy}/django:${CI_COMMIT_SHORT_SHA-deploy}"
     image: "${CI_REGISTRY_IMAGE-deploy}/django:${CI_COMMIT_SHORT_SHA-deploy}"
