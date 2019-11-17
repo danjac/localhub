@@ -12,6 +12,7 @@ cache:
   key: ${CI_COMMIT_REF_SLUG}
 
 variables:
+  DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   DATABASE_URL: postgres://postgres@postgres:5432/postgres
   SECRET_KEY: ${SECRET_KEY}
@@ -45,7 +46,7 @@ test:django:
     - docker-compose -f docker-compose.deploy.yml pull postgres
     - docker-compose -f docker-compose.deploy.yml pull django
     - docker-compose -f docker-compose.deploy.yml run django ./manage.py validate_templates
-    - docker-compose -f docker-compose.deploy.yml run django pytest
+    - docker-compose -f docker-compose.deploy.yml run django pytest -v
   only:
     - master
 
