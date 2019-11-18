@@ -22,19 +22,19 @@ RUN pip install -r /requirements.txt
 
 WORKDIR /app
 
-COPY ./scripts/entrypoint /entrypoint
+COPY ./docker/entrypoint /entrypoint
 RUN chmod +x /entrypoint
 
-COPY ./scripts/start-django /start-django
+COPY ./docker/start-django /start-django
 RUN chmod +x /start-django
 
-COPY ./scripts/start-celeryworker /start-celeryworker
+COPY ./docker/start-celeryworker /start-celeryworker
 RUN chmod +x /start-celeryworker
 
-COPY ./scripts/start-celerybeat /start-celerybeat
+COPY ./docker/start-celerybeat /start-celerybeat
 RUN chmod +x /start-celerybeat
 
-COPY ./scripts/start-flower /start-flower
+COPY ./docker/start-flower /start-flower
 RUN chmod +x /start-flower
 
 ENTRYPOINT ["/entrypoint"]
