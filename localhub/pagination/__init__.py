@@ -14,10 +14,10 @@ class PresetCountPaginator(Paginator):
     all annotations across multiple sub-querysets.
     """
 
-    @property
-    def count(self):
-        return self._preset_count
-
     def __init__(self, count, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._preset_count = count
+
+    @property
+    def count(self):
+        return self._preset_count
