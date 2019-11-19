@@ -5,6 +5,7 @@
 from django import template
 
 from localhub.communities.models import Membership
+from localhub.template.decorators import with_cached_context_value
 
 from ..models import JoinRequest
 
@@ -22,27 +23,22 @@ def get_pending_join_request_count(community):
 
 
 @register.simple_tag(takes_context=True)
+@with_cached_context_value
 def get_pending_local_network_join_request_count(context, user, community):
     """
     Returns total number of pending join requests excluding this community,
     where the current user is an admin.
     """
-    context_key = "_join_requests_local_network_count"
-    if context_key in context:
-        return context[context_key]
     if user.is_anonymous:
-        count = 0
-    else:
-        count = (
-            JoinRequest.objects.filter(
-                status=JoinRequest.STATUS.pending,
-                community__membership__member=user,
-                community__membership__active=True,
-                community__membership__role=Membership.ROLES.admin,
-            )
-            .exclude(community=community)
-            .distinct()
-            .count()
+        return 0
+    return (
+        JoinRequest.objects.filter(
+            status=JoinRequest.STATUS.pending,
+            community__membership__member=user,
+            community__membership__active=True,
+            community__membership__role=Membership.ROLES.admin,
         )
-    context[context_key] = count
-    return count
+        .exclude(community=community)
+        .distinct()
+        .count()
+    )

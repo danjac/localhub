@@ -6,6 +6,8 @@ from django import template
 from django.db.models import F
 from django.urls import reverse
 
+from localhub.template.decorators import with_cached_context_value
+
 from ..models import Message
 
 register = template.Library()
@@ -66,57 +68,48 @@ def show_message(
 
 
 @register.simple_tag(takes_context=True)
+@with_cached_context_value
 def get_unread_message_count(context, user, community):
     """
     Returns a cached count of the total number of *unread* messages
     for the current user. If user not logged in just returns 0.
     """
-    context_key = "_private_messages_unread_count"
-    if context_key in context:
-        return context[context_key]
     if user.is_anonymous or not community.active:
-        count = 0
-    else:
-        count = (
-            Message.objects.for_community(community)
-            .for_recipient(user)
-            .filter(
-                read__isnull=True,
-                sender__membership__community=community,
-                sender__membership__active=True,
-                sender__is_active=True,
-            )
-            .count()
+        return 0
+    return (
+        Message.objects.for_community(community)
+        .for_recipient(user)
+        .filter(
+            read__isnull=True,
+            sender__membership__community=community,
+            sender__membership__active=True,
+            sender__is_active=True,
         )
-    context[context_key] = count
-    return count
+        .count()
+    )
 
 
 @register.simple_tag(takes_context=True)
+@with_cached_context_value
 def get_unread_local_network_message_count(context, user, community):
     """
     Returns cached count of unread messages *outside* the current community,
     where the user is an active member. If user not logged in returns 0.
     """
 
-    if (context_key := "_private_messages_unread_local_network_count") in context:
-        return context[context_key]
     if user.is_anonymous or not community.active:
-        count = 0
-    else:
-        count = (
-            Message.objects.for_recipient(user)
-            .filter(
-                read__isnull=True,
-                community__membership__member=user,
-                community__membership__active=True,
-                community__active=True,
-                sender__membership__community=F("community"),
-                sender__membership__active=True,
-                sender__is_active=True,
-            )
-            .exclude(community=community)
-            .count()
+        return 0
+    return (
+        Message.objects.for_recipient(user)
+        .filter(
+            read__isnull=True,
+            community__membership__member=user,
+            community__membership__active=True,
+            community__active=True,
+            sender__membership__community=F("community"),
+            sender__membership__active=True,
+            sender__is_active=True,
         )
-    context[context_key] = count
-    return count
+        .exclude(community=community)
+        .count()
+    )
