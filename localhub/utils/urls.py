@@ -52,7 +52,6 @@ def get_domain(url):
     if url is None or not is_url(url):
         return None
 
-    domain = urlparse(url).netloc
-    if domain.startswith("www."):
+    if (domain := urlparse(url).netloc).startswith("www."):
         domain = domain[4:]
     return domain
