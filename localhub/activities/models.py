@@ -241,8 +241,7 @@ class Activity(TimeStampedModel):
         )
 
     def get_absolute_url(self):
-        slug = self.slugify()
-        if slug:
+        if slug := self.slugify():
             return self.resolve_url("detail", slug)
         return self.resolve_url("detail_no_slug")
 
@@ -315,8 +314,7 @@ class Activity(TimeStampedModel):
         ]
 
     def notify_tag_followers(self, recipients):
-        hashtags = self.description.extract_hashtags()
-        if hashtags:
+        if hashtags := self.description.extract_hashtags():
             tags = Tag.objects.filter(slug__in=hashtags)
             qs = recipients.filter(following_tags__in=tags).exclude(pk=self.owner.id)
             if self.parent:
@@ -353,8 +351,7 @@ class Activity(TimeStampedModel):
         ]
 
     def notify_parent_owner(self, recipients):
-        owner = recipients.filter(pk=self.parent.owner_id).first()
-        if owner:
+        if owner := recipients.filter(pk=self.parent.owner_id).first():
             return [self.make_notification(owner, "reshare")]
         return []
 
@@ -423,8 +420,7 @@ class Activity(TimeStampedModel):
 
     def extract_tags(self, is_new):
         if is_new or self.description_tracker.changed():
-            hashtags = self.description.extract_hashtags()
-            if hashtags:
+            if hashtags := self.description.extract_hashtags():
                 self.tags.set(*hashtags, clear=True)
             else:
                 self.tags.clear()
