@@ -11,8 +11,7 @@ register = template.Library()
 
 @register.simple_tag(takes_context=True)
 def get_available_community_count(context, user):
-    context_key = "_available_community_count"
-    if context_key in context:
+    if (context_key := "_available_community_count") in context:
         return context[context_key]
     if user.is_anonymous:
         count = 0

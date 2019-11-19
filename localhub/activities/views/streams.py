@@ -85,15 +85,13 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, StreamView):
 
     @cached_property
     def date_kwargs(self):
-        date = self.get_current_month()
-        if date:
+        if date := self.get_current_month():
             return self.make_date_lookup_kwargs(
                 self._make_date_lookup_arg(date),
                 self._make_date_lookup_arg(self._get_next_month(date)),
             )
 
-        date = self.get_current_year()
-        if date:
+        if date := self.get_current_year():
             return self.make_date_lookup_kwargs(
                 self._make_date_lookup_arg(date),
                 self._make_date_lookup_arg(self._get_next_year(date)),

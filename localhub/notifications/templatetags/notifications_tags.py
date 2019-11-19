@@ -25,8 +25,7 @@ def get_unread_notification_count(context, user, community):
     Returns a cached count of the total number of *unread* notifications
     for the current user. If user not logged in just returns 0.
     """
-    context_key = "_notifications_unread_count"
-    if context_key in context:
+    if (context_key := "_notifications_unread_count") in context:
         return context[context_key]
     if user.is_anonymous or not community.active:
         count = 0
@@ -48,8 +47,7 @@ def get_unread_local_network_notification_count(context, user, community):
     for the current user for all communities where user is member, excluding
     the current community. If user not logged in just returns 0.
     """
-    context_key = "_notifications_unread_local_network_count"
-    if context_key in context:
+    if (context_key := "_notifications_unread_local_network_count") in context:
         return context[context_key]
     if user.is_anonymous or not community.active:
         count = 0

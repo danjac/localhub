@@ -70,8 +70,7 @@ class TagAutocompleteListView(TagQuerySetMixin, BaseTagListView):
     template_name = "activities/tags/tag_autocomplete_list.html"
 
     def get_queryset(self):
-        search_term = self.request.GET.get("q", "").strip()
-        if not search_term:
+        if not (search_term := self.request.GET.get("q", "").strip()):
             return Tag.objects.none()
         return super().get_queryset().filter(name__istartswith=search_term)
 

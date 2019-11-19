@@ -99,8 +99,7 @@ def get_unread_local_network_message_count(context, user, community):
     where the user is an active member. If user not logged in returns 0.
     """
 
-    context_key = "_private_messages_unread_local_network_count"
-    if context_key in context:
+    if (context_key := "_private_messages_unread_local_network_count") in context:
         return context[context_key]
     if user.is_anonymous or not community.active:
         count = 0
