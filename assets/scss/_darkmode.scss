@@ -9,9 +9,9 @@
     &-title {
       color: $darkmode-text;
     }
-    //&.active .modal-overlay {
-      //background-color: $darkmode-lighter;
-    //}
+    &.active .modal-overlay {
+      background: rgba($darkmode-lighter, .85);
+    }
   }
 
 
