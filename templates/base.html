@@ -116,7 +116,7 @@
             data-controller="form"
             data-action="form#submit"
             >
-            <input class="form-input bg-dark text-white"
+            <input class="form-input{% if not darkmode %} bg-dark text-white{% endif %}"
                    name="q"
                    type="search"
                    placeholder="{% trans "Search" %}">
