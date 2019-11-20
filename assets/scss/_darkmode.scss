@@ -1,0 +1,79 @@
+.darkmode {
+  color: $gray-color;
+  a {
+    color: $darkmode-link;
+  }
+  .btn {
+    background-color: $darkmode-lighter;
+    color: $darkmode-text;
+  }
+  .navbar .btn {
+    background-color: inherit;
+  }
+  .bg-gray {
+    background-color: $darkmode-darker !important;
+  }
+  .bg-light {
+    background-color: $darkmode-darker;
+  }
+  .form-input, .form-select {
+    background-color: $darkmode-darker;
+    color: $darkmode-text;
+    &::placeholder {
+      background-color: $darkmode-darker;
+      color: $darkmode-text;
+    }
+  }
+  .form-select:not([multiple]):not([size]) {
+    background-color: $darkmode-darker;
+  }
+  .card {
+    background-color: $darkmode-darker;
+    border-color: $gray-color;
+  }
+  .chip {
+    background-color: $darkmode-lighter;
+  }
+  .menu {
+    background-color: $darkmode-lighter;
+
+    .menu-item {
+      &.selected {
+        background-color: $darkmode-darker !important;
+      }
+      a.active,
+      a:hover,
+      a:visited {
+        background-color: $darkmode-darker;
+      }
+    }
+  }
+  .input-group-addon {
+    background-color: $darkmode-lighter;
+  }
+  .toast {
+    background-color: $darkmode-lighter;
+    color: $gray-color;
+  }
+  .badge {
+    &[data-badge],
+    &:not([data-badge]) {
+      &::after {
+        background: $link-color-dark;
+      }
+    }
+  }
+
+  .divider,
+  .divider-vert {
+    &[data-content]::after {
+      background: $darkmode-lighter;
+      color: $gray-color;
+    }
+    border-top: $border-width solid $gray-color;
+  }
+
+  blockquote {
+    border-left: $border-width-lg solid $gray-color;
+  }
+}
