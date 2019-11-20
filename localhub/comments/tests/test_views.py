@@ -34,6 +34,14 @@ class TestCommentSearchView:
         )
         assert len(response.context["object_list"]) == 1
 
+    def test_get_if_empty(self, client, member):
+        response = client.get(
+            reverse("comments:search"),
+            {"q": "testme"},
+            HTTP_HOST=member.community.domain,
+        )
+        assert len(response.context["object_list"]) == 0
+
 
 class TestCommentDetailView:
     def test_get(self, client, member):
