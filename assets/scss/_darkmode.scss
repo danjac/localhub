@@ -3,7 +3,7 @@
   a, a:visited {
     color: $darkmode-link;
   }
-  .btn {
+  .btn-secondary, .btn-link {
     background-color: $darkmode-lighter;
     color: $darkmode-text;
   }
@@ -62,10 +62,6 @@
   }
   .input-group-addon {
     background-color: $darkmode-lighter;
-  }
-  .toast {
-    background-color: $darkmode-lighter;
-    color: $gray-color;
   }
   .badge {
     &[data-badge],
