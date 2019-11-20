@@ -10,25 +10,22 @@
     color: $darkmode-link;
   }
 
-  .actions {
-    a {
-      color: $darkmode-link;
-    }
-  }
-
+  .btn-block,
   .btn-secondary,
   .btn-link {
     background-color: $darkmode-lighter;
     border-color: $gray-color;
-    color: $darkmode-text;
-    a {
-      color: $darkmode-text;
-    }
+    color: $darkmode-link;
   }
 
   .navbar .btn {
     background-color: inherit;
     border: none;
+  }
+
+  .actions a {
+    color: $darkmode-link;
+    background-color: inherit;
   }
 
   .empty {
