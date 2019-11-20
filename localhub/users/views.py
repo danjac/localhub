@@ -344,13 +344,13 @@ class DarkmodeToggleView(View):
         response = HttpResponse()
 
         if "darkmode" in request.COOKIES:
-            response.delete_cookie("darkmode", domain=settings.DARKMODE_COOKIE_DOMAIN)
+            response.delete_cookie("darkmode", domain=settings.SESSION_COOKIE_DOMAIN)
         else:
             response.set_cookie(
                 "darkmode",
                 "true",
                 expires=datetime.datetime.now() + datetime.timedelta(days=365),
-                domain=settings.DARKMODE_COOKIE_DOMAIN,
+                domain=settings.SESSION_COOKIE_DOMAIN,
                 httponly=True,
             )
         return response

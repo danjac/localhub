@@ -99,8 +99,6 @@ class Base(Configuration):
 
     HOME_PAGE_URL = reverse_lazy("activities:stream")
 
-    DARKMODE_COOKIE_DOMAIN = values.Value()
-
     # sorl
 
     THUMBNAIL_KVSTORE = "sorl.thumbnail.kvstores.redis_kvstore.KVStore"
