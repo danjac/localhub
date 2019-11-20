@@ -9,6 +9,9 @@
   }
   .btn-link {
     border-color: $gray-color;
+    a {
+      color: $darkmode-text;
+    }
   }
   .navbar .btn {
     background-color: inherit;
