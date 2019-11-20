@@ -1,6 +1,6 @@
 .darkmode {
   color: $gray-color;
-  a, a:visited {
+  a, a:visited, .actions a {
     color: $darkmode-link;
   }
   .btn-secondary, .btn-link {
