@@ -22,7 +22,14 @@
         <a data-controller="active-link" href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
     </li>
     {% endif %}
-
+    <li class="menu-item">
+      <a href="{% url 'darkmode_toggle' %}"
+         data-controller="ajax"
+         data-action="ajax#post"
+         data-ajax-redirect="{{ request.path }}">
+        {% if darkmode %}{% trans "Light Mode" %}{% else %}{% trans "Dark Mode" %}{% endif %}
+      </a>
+    </li>
     {% if can_manage_community %}
     <li class="menu-item"><a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a></li>
     {% endif %}
