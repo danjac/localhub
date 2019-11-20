@@ -50,10 +50,13 @@
       &.selected {
         background-color: $darkmode-darker !important;
       }
-      a.active,
-      a:hover,
-      a:visited {
-        background-color: $darkmode-darker;
+      a {
+        color: $darkmode-link;
+        &.active,
+        &:hover,
+        &:visited {
+          background-color: $darkmode-darker;
+        }
       }
     }
   }
