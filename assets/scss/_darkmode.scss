@@ -1,6 +1,20 @@
 .darkmode {
   color: $gray-color;
 
+  .modal {
+    &-container {
+      color: $darkmode-text;
+      background-color: $darkmode-darker;
+    }
+    &-title {
+      color: $darkmode-text;
+    }
+    //&.active .modal-overlay {
+      //background-color: $darkmode-lighter;
+    //}
+  }
+
+
   blockquote {
     border-left: $border-width-lg solid $gray-color;
   }
