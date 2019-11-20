@@ -3,4 +3,4 @@
 
 
 def user_preferences(request):
-    return {"darkmode": request.COOKIES.get("darkmode") == "true"}
+    return {"darkmode": "darkmode" in request.COOKIES}

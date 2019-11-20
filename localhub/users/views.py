@@ -343,15 +343,16 @@ user_delete_view = UserDeleteView.as_view()
 class DarkmodeToggleView(View):
     def post(self, request):
         response = HttpResponse()
+        domain = get_current_site(request).domain
 
         if "darkmode" in request.COOKIES:
-            response.delete_cookie("darkmode")
+            response.delete_cookie("darkmode", domain=domain)
         else:
             response.set_cookie(
                 "darkmode",
                 "true",
                 expires=datetime.datetime.now() + datetime.timedelta(days=365),
-                domain=get_current_site(request).domain,
+                domain=domain,
                 httponly=True,
             )
         return response
