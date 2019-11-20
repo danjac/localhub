@@ -1,6 +1,6 @@
 .darkmode {
   color: $gray-color;
-  a {
+  a, a:visited {
     color: $darkmode-link;
   }
   .btn {
@@ -13,6 +13,10 @@
   .navbar .btn {
     background-color: inherit;
     border: none;
+  }
+  .empty {
+    background-color: $darkmode-darker;
+    color: $darkmode-text;
   }
   .bg-gray {
     background-color: $darkmode-darker !important;
