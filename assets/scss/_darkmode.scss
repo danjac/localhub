@@ -1,32 +1,49 @@
 .darkmode {
   color: $gray-color;
-  a, a:visited, .actions a {
+
+  blockquote {
+    border-left: $border-width-lg solid $gray-color;
+  }
+
+  a,
+  a:visited {
     color: $darkmode-link;
   }
-  .btn-secondary, .btn-link {
-    background-color: $darkmode-lighter;
-    color: $darkmode-text;
+
+  .actions {
+    a {
+      color: $darkmode-link;
+    }
   }
+
+  .btn-secondary,
   .btn-link {
+    background-color: $darkmode-lighter;
     border-color: $gray-color;
+    color: $darkmode-text;
     a {
       color: $darkmode-text;
     }
   }
+
   .navbar .btn {
     background-color: inherit;
     border: none;
   }
+
   .empty {
     background-color: $darkmode-darker;
     color: $darkmode-text;
   }
+
   .bg-gray {
     background-color: $darkmode-darker !important;
   }
+
   .bg-light {
     background-color: $darkmode-darker;
   }
+
   .form-input,
   .form-select {
     background-color: $darkmode-darker;
@@ -36,16 +53,20 @@
       color: $darkmode-text;
     }
   }
+
   .form-select:not([multiple]):not([size]) {
     background-color: $darkmode-darker;
   }
+
   .card {
     background-color: $darkmode-darker;
     border-color: $gray-color;
   }
+
   .chip {
     background-color: $darkmode-lighter;
   }
+
   .menu {
     background-color: $darkmode-lighter;
 
@@ -63,9 +84,11 @@
       }
     }
   }
+
   .input-group-addon {
     background-color: $darkmode-lighter;
   }
+
   .badge {
     &[data-badge],
     &:not([data-badge]) {
@@ -84,9 +107,6 @@
     border-top: $border-width solid $gray-color;
   }
 
-  blockquote {
-    border-left: $border-width-lg solid $gray-color;
-  }
   .table.table-striped tbody {
     tr:nth-of-type(2n + 1),
     tr:hover {
