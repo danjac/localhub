@@ -12,7 +12,11 @@ from localhub.communities.views import (
     community_not_found_view,
     community_welcome_view,
 )
-from localhub.users.views import user_delete_view, user_update_view
+from localhub.users.views import (
+    darkmode_toggle_view,
+    user_delete_view,
+    user_update_view,
+)
 
 urlpatterns = [
     # Local
@@ -33,6 +37,7 @@ urlpatterns = [
     path("network/", community_list_view, name="community_list"),
     path("account/~update", user_update_view, name="user_update"),
     path("account/~delete", user_delete_view, name="user_delete"),
+    path("~toggle-darkmode/", darkmode_toggle_view, name="darkmode_toggle"),
     path("welcome/", view=community_welcome_view, name="community_welcome"),
     path("not-found/", view=community_not_found_view, name="community_not_found"),
     # Third-party

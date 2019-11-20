@@ -200,3 +200,16 @@ class TestUserMessageListView:
         assert from_me in object_list
         assert to_me in object_list
         assert to_someone_else not in object_list
+
+
+class TestDarkmodeToggleView:
+    def test_post_if_lightmode(self, client):
+        response = client.post(reverse("darkmode_toggle"))
+        assert response.status_code == 200
+        assert response.cookies["darkmode"].value == "true"
+
+    def test_post_if_darkmode(self, client):
+        client.cookies["darkmode"] = "1"
+        response = client.post(reverse("darkmode_toggle"))
+        assert response.status_code == 200
+        assert response.cookies["darkmode"].value == ""

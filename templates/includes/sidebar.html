@@ -151,6 +151,14 @@
 <ul class="menu mt-2">
     <li class="divider" data-content="{% trans 'Settings' %}"></li>
     <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
+    <li class="menu-item">
+      <a href="{% url 'darkmode_toggle' %}"
+         data-controller="ajax"
+         data-action="ajax#post"
+         data-ajax-redirect="{{ request.path }}">
+        {% if darkmode %}{% trans "Light Mode" %}{% else %}{% trans "Dark Mode" %}{% endif %}
+      </a>
+    </li>
     {% if can_manage_community %}
     <li class="menu-item">
         <a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>

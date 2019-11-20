@@ -1,15 +1,19 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import datetime
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import BooleanField, Q, QuerySet, Value
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
+from django.views.generic import View
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView, GenericModelView, ListView, UpdateView
 
@@ -334,3 +338,23 @@ class UserDeleteView(CurrentUserMixin, PermissionRequiredMixin, DeleteView):
 
 
 user_delete_view = UserDeleteView.as_view()
+
+
+class DarkmodeToggleView(View):
+    def post(self, request):
+        response = HttpResponse()
+
+        if "darkmode" in request.COOKIES:
+            response.delete_cookie("darkmode")
+        else:
+            response.set_cookie(
+                "darkmode",
+                "true",
+                expires=datetime.datetime.now() + datetime.timedelta(days=365),
+                domain=get_current_site(request).domain,
+                httponly=True,
+            )
+        return response
+
+
+darkmode_toggle_view = DarkmodeToggleView.as_view()

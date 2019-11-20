@@ -16,7 +16,8 @@
   .bg-light {
     background-color: $darkmode-darker;
   }
-  .form-input, .form-select {
+  .form-input,
+  .form-select {
     background-color: $darkmode-darker;
     color: $darkmode-text;
     &::placeholder {
@@ -75,5 +76,11 @@
 
   blockquote {
     border-left: $border-width-lg solid $gray-color;
+  }
+  .table.table-striped tbody {
+    tr:nth-of-type(2n + 1),
+    tr:hover {
+      background-color: $darkmode-lighter;
+    }
   }
 }

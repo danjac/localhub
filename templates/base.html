@@ -54,7 +54,7 @@
     {% endwith %}
   </head>
 
-  <body class="bg-dark darkmode">
+  <body class="bg-dark {% if darkmode %}darkmode{% else %}text-dark{% endif %}">
     <div class="container">
       <header class="navbar py-1 col-10 col-lg-12 col-mx-auto">
         <section class="navbar-section">
@@ -78,7 +78,7 @@
                 data-action="form#submit"
                 class="search-form"
                 >
-                <input class="form-input bg-dark text-light"
+                <input class="form-input{% if not darkmode %} bg-dark text-light{% endif %}"
                        name="q"
                        type="search"
                        placeholder="{% trans "Search" %}">

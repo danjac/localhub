@@ -1,0 +1,18 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+from django.http import HttpRequest
+
+from ..context_processors import user_preferences
+
+
+class TestUserPreferences:
+    def test_is_darkmode(self):
+        req = HttpRequest()
+        req.COOKIES = {"darkmode": "1"}
+        assert user_preferences(req) == {"darkmode": True}
+
+    def test_is_not_darkmode(self):
+        req = HttpRequest()
+        req.COOKIES = {}
+        assert user_preferences(req) == {"darkmode": False}
