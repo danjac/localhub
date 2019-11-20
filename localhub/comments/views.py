@@ -212,12 +212,11 @@ class CommentSearchView(SearchMixin, BaseCommentListView):
     template_name = "comments/search.html"
 
     def get_queryset(self):
+        qs = super().get_queryset()
         if not self.search_query:
-            return self.none()
+            return qs.none()
         return (
-            super()
-            .get_queryset()
-            .without_blocked_users(self.request.user)
+            qs.without_blocked_users(self.request.user)
             .search(self.search_query)
             .order_by("-rank", "-created")
         )
