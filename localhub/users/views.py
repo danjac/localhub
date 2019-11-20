@@ -7,7 +7,6 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import BooleanField, Q, QuerySet, Value
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -343,16 +342,15 @@ user_delete_view = UserDeleteView.as_view()
 class DarkmodeToggleView(View):
     def post(self, request):
         response = HttpResponse()
-        domain = get_current_site(request).domain
 
         if "darkmode" in request.COOKIES:
-            response.delete_cookie("darkmode", domain=domain)
+            response.delete_cookie("darkmode", domain=settings.DARKMODE_COOKIE_DOMAIN)
         else:
             response.set_cookie(
                 "darkmode",
                 "true",
                 expires=datetime.datetime.now() + datetime.timedelta(days=365),
-                domain=domain,
+                domain=settings.DARKMODE_COOKIE_DOMAIN,
                 httponly=True,
             )
         return response
