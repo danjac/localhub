@@ -58,7 +58,7 @@
                     <p class="tile-title">
                         <div>
                             <span class="timesince">
-                                {% blocktrans with since=activity.published|timesince %}
+                                {% blocktrans with since=activity.object.published|timesince %}
                                 {{ since }} ago
                                 {% endblocktrans %}
                                 {% include "users/includes/chip.html" with profile=activity.object.owner %}
