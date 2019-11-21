@@ -5,6 +5,7 @@
 {% load i18n %}
 {% load rules %}
 {% load thumbnail %}
+{% load activities_tags %}
 {% load join_requests_tags %}
 {% load notifications_tags %}
 {% load private_messages_tags %}
@@ -177,7 +178,8 @@
                  {% get_unread_message_count user community as unread_messages %}
                  {% get_unread_local_network_notification_count user community as unread_local_network_notifications %}
                  {% get_unread_local_network_message_count user community as unread_local_network_messages %}
-                 {% with total_notifications_count=unread_notifications|add:unread_messages|add:unread_local_network_notifications|add:unread_local_network_messages|add:pending_local_network_join_requests %}
+                 {% get_draft_count user community as unread_drafts %}
+                 {% with total_notifications_count=unread_notifications|add:unread_messages|add:unread_local_network_notifications|add:unread_local_network_messages|add:pending_local_network_join_requests|add:unread_drafts %}
                  <span{% if total_notifications_count %} class="badge" data-badge="{{ total_notifications_count }}"{% endif %}>
                    {% trans "Sidebar" %}
                  </span>
