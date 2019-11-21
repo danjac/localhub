@@ -120,7 +120,7 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, StreamView):
             return None
 
     def make_date_lookup_kwargs(self, since, until):
-        return {"created__gte": since, "created__lt": until}
+        return {"published__gte": since, "published__lt": until}
 
     def filter_queryset(self, queryset):
         qs = super().filter_queryset(queryset)
@@ -145,7 +145,7 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, StreamView):
         return sorted(set([date.year for date in dates]))
 
     def get_ordering(self):
-        return "created" if self.sort_by_ascending else "-created"
+        return "published" if self.sort_by_ascending else "-published"
 
     def get_dates(self):
         """
@@ -154,7 +154,7 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, StreamView):
         queryset.
         """
         querysets = [
-            qs.only("id", "created").select_related(None).dates("created", "month")
+            qs.only("id", "published").select_related(None).dates("published", "month")
             for qs in self.get_queryset_dict().values()
         ]
         return sorted(set(itertools.chain.from_iterable(querysets)))
@@ -162,7 +162,7 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, StreamView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         for object in data["object_list"]:
-            object["month"] = date_format(object["created"], "F Y")
+            object["month"] = date_format(object["published"], "F Y")
         dates = self.get_dates()
         data.update(
             {
@@ -182,7 +182,7 @@ class SearchView(SearchMixin, BaseStreamView):
     template_name = "activities/search.html"
 
     def get_ordering(self):
-        return ("-rank", "-created") if self.search_query else None
+        return ("-rank", "-published") if self.search_query else None
 
     def filter_queryset(self, queryset):
         if self.search_query:
