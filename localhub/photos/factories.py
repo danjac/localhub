@@ -1,7 +1,8 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from datetime import datetime
+
+from django.utils import timezone
 
 import factory
 from factory import DjangoModelFactory, Faker, SubFactory, LazyFunction
@@ -17,7 +18,7 @@ class PhotoFactory(DjangoModelFactory):
     image = factory.django.ImageField()
     community = SubFactory(CommunityFactory)
     owner = SubFactory(UserFactory)
-    published = LazyFunction(datetime.now)
+    published = LazyFunction(timezone.now)
 
     class Meta:
         model = Photo

@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from datetime import datetime
+from django.utils import timezone
 
 from factory import DjangoModelFactory, Faker, SubFactory, LazyFunction
 
@@ -16,7 +16,7 @@ class PostFactory(DjangoModelFactory):
     description = Faker("text")
     community = SubFactory(CommunityFactory)
     owner = SubFactory(UserFactory)
-    published = LazyFunction(datetime.now)
+    published = LazyFunction(timezone.now)
 
     class Meta:
         model = Post

@@ -24,8 +24,8 @@ from localhub.views import BaseMultipleQuerySetListView, SearchMixin
 
 
 class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
-    order_by = ("-published", "-created")
     allow_empty = True
+    ordering = ("-published", "-created")
     paginate_by = settings.DEFAULT_PAGE_SIZE
     models = [Photo, Post, Event, Poll]
 
@@ -203,7 +203,7 @@ class DraftsView(BaseStreamView):
     """
     Shows draft posts belonging to this user.
     """
-
+    ordering = "-created"
     template_name = "activities/drafts.html"
 
     def filter_queryset(self, queryset):

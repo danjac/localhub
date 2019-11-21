@@ -18,8 +18,13 @@
       {% for answer_form in answers_formset.forms %}
       {% include "includes/forms/fields.html" with form=answer_form %}
       {% endfor %}
-      <button type="submit" class="btn btn-primary">
+      <button type="submit" name="submit" class="btn btn-primary">
           {% trans "Submit" %}
       </button>
+      {% if not object.published %}
+      <button type="submit" name="save_as_draft" class="btn btn-secondary">
+          {% trans "Save Draft" %}
+      </button>
+      {% endif %}
 </form>
 {% endblock %}

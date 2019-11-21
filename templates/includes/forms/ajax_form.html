@@ -8,7 +8,7 @@
       data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload"
       {% block form_extra_attrs %}{% endblock %}>
   {% include "includes/forms/fields.html" %}
-  <button type="submit" class="btn btn-primary">
+  <button type="submit" name="submit" class="btn btn-primary">
     {{ submit_btn }}
   </button>
   {% for name, label in extra_btns %}
