@@ -9,7 +9,7 @@
 {% include "includes/breadcrumbs.html" %}
 
 {% block form %}
-{% simple_ajax_form form multipart=True %}
+{% simple_ajax_form form multipart=True extra_btns=extra_btns %}
 {% endblock %}
 
 {% endblock content %}

@@ -11,4 +11,9 @@
   <button type="submit" class="btn btn-primary">
     {{ submit_btn }}
   </button>
+  {% for name, label in extra_btns %}
+  <button type="submit" name="{{ name }}" class="btn btn-secondary">
+    {{ label }}
+  </button>
+  {% endfor %}
 </form>

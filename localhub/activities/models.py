@@ -59,6 +59,15 @@ class ActivityQuerySet(
                 qs = qs.with_is_flagged()
         return qs
 
+    def published(self):
+        return self.filter(published__isnull=False)
+
+    def published_or_owner(self, user):
+        return self.published() | self.filter(owner=user)
+
+    def drafts(self, user):
+        return self.filter(published__isnull=True, owner=user)
+
     def with_num_reshares(self):
         """
         Annotates int value `num_reshares`, indicating how many times
@@ -204,6 +213,8 @@ class Activity(TimeStampedModel):
         related_name="reshares",
         on_delete=models.SET_NULL,
     )
+
+    published = DateTimeField(null=True, blank=True)
 
     history = HistoricalRecords(inherit=True)
 

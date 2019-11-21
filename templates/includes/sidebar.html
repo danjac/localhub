@@ -3,6 +3,7 @@
 
 {% load i18n %}
 {% load rules %}
+{% load activities_tags %}
 {% load communities_tags %}
 {% load flags_tags %}
 {% load join_requests_tags %}
@@ -65,6 +66,14 @@
 {% if can_create_activity %}
 <ul class="menu mt-2">
     <li class="divider" data-content="{% trans 'Actions' %}"></li>
+    {% get_draft_count user community as num_drafts %}
+    {% if num_drafts %}
+    <li class="menu-item">
+        <a href="{% url 'activities:drafts' %}">
+            <span class="badge" data-badge="{{ num_drafts }}">{% trans "Drafts" %}</span>
+        </a>
+    </li>
+    {% endif %}
     {% if can_create_activity %}
     <li class="menu-item">
         <a href="{% url 'posts:create' %}">{% trans "New Post" %}</a>
