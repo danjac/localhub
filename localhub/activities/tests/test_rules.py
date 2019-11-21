@@ -43,20 +43,34 @@ class TestPermissions:
         post = PostFactory(community=member.community)
         assert member.member.has_perm("activities.like_activity", post)
 
+    def test_member_can_like_activity_if_not_published(self, member):
+        post = PostFactory(community=member.community, published=None)
+        assert not member.member.has_perm("activities.like_activity", post)
+
     def test_owner_can_reshare_activity(self, post):
         assert not post.owner.has_perm("activities.reshare_activity", post)
 
     def test_parent_owner_can_reshare_activity(self, post):
         post = PostFactory(parent=PostFactory())
-        assert not post.parent.owner.has_perm("activities.reshare_activity", post)
+        assert not post.parent.owner.has_perm(
+            "activities.reshare_activity", post
+        )
 
     def test_member_can_reshare_activity(self, member):
         post = PostFactory(community=member.community)
         assert member.member.has_perm("activities.reshare_activity", post)
 
+    def test_member_can_reshare_activity_if_not_published(self, member):
+        post = PostFactory(community=member.community, published=None)
+        assert not member.member.has_perm("activities.reshare_activity", post)
+
     def test_can_create_comment_if_member(self, post, user):
         Membership.objects.create(member=user, community=post.community)
         assert user.has_perm("activities.create_comment", post)
+
+    def test_can_create_comment_if_member_if_not_published(self, member):
+        post = PostFactory(community=member.community, published=None)
+        assert not member.member.has_perm("activities.create_comment", post)
 
     def test_can_create_comment_if_does_not_allow_comments(self, post, user):
         post.allow_comments = False
@@ -74,7 +88,9 @@ class TestPermissions:
         assert member.member.has_perm("activities.flag_activity", post)
 
     def test_member_can_create_activity(self, member):
-        assert member.member.has_perm("activities.create_activity", member.community)
+        assert member.member.has_perm(
+            "activities.create_activity", member.community
+        )
 
     def test_non_member_can_create_activity(self, user, community: Community):
         assert not user.has_perm("activities.create_activity", community)

@@ -86,9 +86,14 @@ class ActivityQuerySet(
         return self.filter(published__isnull=False)
 
     def published_or_owner(self, user):
-        return self.published() | self.filter(owner=user)
+        qs = self.published()
+        if user.is_anonymous:
+            return qs
+        return qs | self.filter(owner=user)
 
     def drafts(self, user):
+        if user.is_anonymous:
+            return self.none()
         return self.filter(published__isnull=True, owner=user)
 
     def for_community(self, community):
