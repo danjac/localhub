@@ -24,9 +24,7 @@ def post_for_member(member):
 
 class TestPostListView:
     def test_get(self, client, member):
-        PostFactory.create_batch(
-            3, community=member.community, owner=member.member
-        )
+        PostFactory.create_batch(3, community=member.community, owner=member.member)
         response = client.get(reverse("posts:list"))
         assert len(response.context["object_list"]) == 3
 
@@ -49,9 +47,7 @@ class TestPostCreateView:
         response = client.post(
             reverse("posts:create"), {"title": "test", "description": "test"}
         )
-        MembershipFactory(
-            community=member.community, role=Membership.ROLES.moderator
-        )
+        MembershipFactory(community=member.community, role=Membership.ROLES.moderator)
 
         post = Post.objects.get()
         assert response.url == post.get_absolute_url()
@@ -59,13 +55,9 @@ class TestPostCreateView:
         assert post.community == member.community
         assert post.published
 
-    def test_post_to_draft(
-        self, client, member, send_notification_webpush_mock
-    ):
+    def test_post_to_draft(self, client, member, send_notification_webpush_mock):
 
-        MembershipFactory(
-            community=member.community, role=Membership.ROLES.moderator
-        )
+        MembershipFactory(community=member.community, role=Membership.ROLES.moderator)
 
         response = client.post(
             reverse("posts:create"),
@@ -80,14 +72,10 @@ class TestPostCreateView:
 
 class TestPostUpdateView:
     def test_get(self, client, post_for_member):
-        response = client.get(
-            reverse("posts:update", args=[post_for_member.id])
-        )
+        response = client.get(reverse("posts:update", args=[post_for_member.id]))
         assert response.status_code == 200
 
-    def test_post(
-        self, client, post_for_member, send_notification_webpush_mock
-    ):
+    def test_post(self, client, post_for_member, send_notification_webpush_mock):
         response = client.post(
             reverse("posts:update", args=[post_for_member.id]),
             {"title": "UPDATED", "description": post_for_member.description},
@@ -130,9 +118,7 @@ class TestPostUpdateView:
         assert post.title == "UPDATED"
         assert not post.published
 
-    def test_post_moderator(
-        self, client, moderator, send_notification_webpush_mock
-    ):
+    def test_post_moderator(self, client, moderator, send_notification_webpush_mock):
         post = PostFactory(
             community=moderator.community,
             owner=MembershipFactory(community=moderator.community).member,
@@ -169,24 +155,18 @@ class TestPostCommentCreateView:
         assert comment.owner == member.member
         assert comment.content_object == post
 
-        notification = Notification.objects.get(
-            recipient=post.owner, comment=comment
-        )
+        notification = Notification.objects.get(recipient=post.owner, comment=comment)
         assert notification.verb == "new_comment"
 
 
 class TestPostDeleteView:
     def test_get(self, client, post_for_member: Post):
         # test confirmation page for non-JS clients
-        response = client.get(
-            reverse("posts:delete", args=[post_for_member.id])
-        )
+        response = client.get(reverse("posts:delete", args=[post_for_member.id]))
         assert response.status_code == 200
 
     def test_post(self, client, post_for_member: Post):
-        response = client.post(
-            reverse("posts:delete", args=[post_for_member.id])
-        )
+        response = client.post(reverse("posts:delete", args=[post_for_member.id]))
         assert response.url == reverse("activities:stream")
         assert Post.objects.count() == 0
 
@@ -202,9 +182,7 @@ class TestPostDeleteView:
 
 class TestPostDetailView:
     def test_get(self, client, post, member):
-        response = client.get(
-            post.get_absolute_url(), HTTP_HOST=post.community.domain
-        )
+        response = client.get(post.get_absolute_url(), HTTP_HOST=post.community.domain)
         assert response.status_code == 200
         assert "comment_form" in response.context
 

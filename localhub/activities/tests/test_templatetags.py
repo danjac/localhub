@@ -11,6 +11,7 @@ from localhub.users.factories import UserFactory
 
 from ..templatetags.activities_tags import (
     domain,
+    get_draft_count,
     html_unescape,
     is_content_sensitive,
     is_oembed_allowed,
@@ -18,6 +19,12 @@ from ..templatetags.activities_tags import (
 )
 
 pytestmark = pytest.mark.django_db
+
+
+class TestGetDraftCount:
+    def test_get_draft_count(self, member):
+        PostFactory(community=member.community, owner=member.member, published=None)
+        assert get_draft_count({}, member.member, member.community) == 1
 
 
 class TestIsOembedAllowed:
