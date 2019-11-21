@@ -214,7 +214,7 @@ class Activity(TimeStampedModel):
         on_delete=models.SET_NULL,
     )
 
-    published = DateTimeField(null=True, blank=True)
+    published = models.DateTimeField(null=True, blank=True)
 
     history = HistoricalRecords(inherit=True)
 
