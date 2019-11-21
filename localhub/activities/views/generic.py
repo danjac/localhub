@@ -67,7 +67,7 @@ class ActivityCreateView(
         message = (
             _("Your %(activity)s has been published")
             if self.object.published
-            else _("Your %s(activity)s has been saved to Drafts")
+            else _("Your %(activity)s has been saved to Drafts")
         )
         return message % {"activity": self.object._meta.verbose_name}
 
@@ -81,12 +81,6 @@ class ActivityCreateView(
                 },
             )
         ]
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        extra_btns = [("save_as_draft", _("Save Draft"))]
-        data["extra_btns"] = extra_btns
-        return data
 
     def form_valid(self, form):
 
@@ -156,17 +150,9 @@ class ActivityUpdateView(
         message = (
             _("Your %(activity)s has been published")
             if publish
-            else _("Your %s(activity)s has been updated")
+            else _("Your %(activity)s has been updated")
         )
         return message % {"activity": self.object._meta.verbose_name}
-
-    def get_context_data(self, **kwargs):
-
-        data = super().get_context_data(**kwargs)
-        if not self.object.published:
-            extra_btns = [("save_as_draft", _("Save Draft"))]
-            data["extra_btns"] = extra_btns
-        return data
 
     def form_valid(self, form):
 
