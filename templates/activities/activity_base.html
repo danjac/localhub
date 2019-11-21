@@ -10,7 +10,7 @@
   {% if is_content_sensitive %}
   <div class="card-header" data-target="content-sensitive.togglable">
     <div class="card-subtitle h6">
-      {% include "activities/includes/timesince.html" with timestamp=object.created owner=object.owner %}
+      {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
     </div>
   </div>
   <div class="card-header d-hide" data-target="content-sensitive.togglable">
