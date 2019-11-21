@@ -203,6 +203,7 @@ class DraftsView(BaseStreamView):
     """
     Shows draft posts belonging to this user.
     """
+
     ordering = "-created"
     template_name = "activities/drafts.html"
 

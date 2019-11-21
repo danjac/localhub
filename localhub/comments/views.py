@@ -20,10 +20,10 @@ from vanilla import (
     UpdateView,
 )
 
+from localhub.activities.utils import get_breadcrumbs_for_instance
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
-from localhub.utils.breadcrumbs import get_breadcrumbs_for_instance
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from .forms import CommentForm

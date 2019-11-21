@@ -7,8 +7,6 @@ from django.urls import reverse
 from django.utils.encoding import smart_text
 from django.utils.translation import gettext as _
 
-# TBD: MOVE THIS TO ACTIVITIES
-
 
 def get_breadcrumbs_for_model(model_cls):
     """

@@ -7,7 +7,7 @@ from django.urls import reverse
 
 from localhub.posts.models import Post
 
-from ..breadcrumbs import get_breadcrumbs_for_instance, get_breadcrumbs_for_model
+from ..utils import get_breadcrumbs_for_instance, get_breadcrumbs_for_model
 
 pytestmark = pytest.mark.django_db
 

@@ -26,16 +26,10 @@ from localhub.comments.notifications import send_comment_notifications
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
-from localhub.utils.breadcrumbs import (
-    get_breadcrumbs_for_instance,
-    get_breadcrumbs_for_model,
-)
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
-from ..notifications import (
-    send_activity_deleted_email,
-    send_activity_notifications,
-)
+from ..notifications import send_activity_deleted_email, send_activity_notifications
+from ..utils import get_breadcrumbs_for_instance, get_breadcrumbs_for_model
 
 
 class ActivityQuerySetMixin(CommunityRequiredMixin):
@@ -52,10 +46,7 @@ class BaseSingleActivityView(ActivityQuerySetMixin, GenericModelView):
 
 
 class ActivityCreateView(
-    CommunityRequiredMixin,
-    PermissionRequiredMixin,
-    BreadcrumbsMixin,
-    CreateView,
+    CommunityRequiredMixin, PermissionRequiredMixin, BreadcrumbsMixin, CreateView,
 ):
     permission_required = "activities.create_activity"
     page_title = _("Submit")
@@ -76,9 +67,7 @@ class ActivityCreateView(
             (
                 None,
                 _("New %(activity_name)s")
-                % {
-                    "activity_name": self.model._meta.verbose_name.capitalize()
-                },
+                % {"activity_name": self.model._meta.verbose_name.capitalize()},
             )
         ]
 
@@ -124,10 +113,7 @@ class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
 
 
 class ActivityUpdateView(
-    PermissionRequiredMixin,
-    ActivityQuerySetMixin,
-    BreadcrumbsMixin,
-    UpdateView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, BreadcrumbsMixin, UpdateView,
 ):
     permission_required = "activities.change_activity"
     success_message = _("Your changes have been saved")
@@ -157,8 +143,7 @@ class ActivityUpdateView(
     def form_valid(self, form):
 
         publish = (
-            not (self.object.published)
-            and "save_as_draft" not in self.request.POST
+            not (self.object.published) and "save_as_draft" not in self.request.POST
         )
 
         self.object = form.save(commit=False)
@@ -175,9 +160,7 @@ class ActivityUpdateView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityDeleteView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, DeleteView
-):
+class ActivityDeleteView(PermissionRequiredMixin, ActivityQuerySetMixin, DeleteView):
     permission_required = "activities.delete_activity"
     success_url = settings.HOME_PAGE_URL
     success_message = _("The %s has been deleted")
@@ -208,9 +191,7 @@ class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
             data["flags"] = self.get_flags()
 
         data["comments"] = self.get_comments()
-        if self.request.user.has_perm(
-            "activities.create_comment", self.object
-        ):
+        if self.request.user.has_perm("activities.create_comment", self.object):
             data.update({"comment_form": CommentForm()})
 
         data["reshares"] = self.get_reshares()
@@ -229,9 +210,7 @@ class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
         return get_breadcrumbs_for_instance(self.object)
 
     def get_flags(self):
-        return (
-            self.object.get_flags().select_related("user").order_by("-created")
-        )
+        return self.object.get_flags().select_related("user").order_by("-created")
 
     def get_reshares(self):
         return (
@@ -246,11 +225,7 @@ class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
             .with_common_annotations(self.request.user, self.request.community)
             .for_community(self.request.community)
             .select_related(
-                "owner",
-                "community",
-                "parent",
-                "parent__owner",
-                "parent__community",
+                "owner", "community", "parent", "parent__owner", "parent__community",
             )
             .order_by("created")
         )
@@ -275,8 +250,7 @@ class ActivityReshareView(PermissionRequiredMixin, BaseSingleActivityView):
         reshare = obj.reshare(self.request.user)
 
         messages.success(
-            self.request,
-            _("You have reshared this %s") % obj._meta.verbose_name,
+            self.request, _("You have reshared this %s") % obj._meta.verbose_name,
         )
 
         for notification in reshare.notify_on_create():
@@ -347,9 +321,7 @@ class ActivityFlagView(
         return self.activity
 
     def get_breadcrumbs(self):
-        return get_breadcrumbs_for_instance(self.activity) + [
-            (None, _("Flag"))
-        ]
+        return get_breadcrumbs_for_instance(self.activity) + [(None, _("Flag"))]
 
     def form_valid(self, form):
         flag = form.save(commit=False)
