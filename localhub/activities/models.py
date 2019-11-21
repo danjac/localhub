@@ -59,15 +59,6 @@ class ActivityQuerySet(
                 qs = qs.with_is_flagged()
         return qs
 
-    def published(self):
-        return self.filter(published__isnull=False)
-
-    def published_or_owner(self, user):
-        return self.published() | self.filter(owner=user)
-
-    def drafts(self, user):
-        return self.filter(published__isnull=True, owner=user)
-
     def with_num_reshares(self):
         """
         Annotates int value `num_reshares`, indicating how many times
@@ -90,6 +81,15 @@ class ActivityQuerySet(
                 self.model.objects.filter(parent=models.OuterRef("pk"), owner=user)
             )
         )
+
+    def published(self):
+        return self.filter(published__isnull=False)
+
+    def published_or_owner(self, user):
+        return self.published() | self.filter(owner=user)
+
+    def drafts(self, user):
+        return self.filter(published__isnull=True, owner=user)
 
     def for_community(self, community):
         """

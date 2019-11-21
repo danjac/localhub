@@ -24,7 +24,7 @@ from localhub.views import BaseMultipleQuerySetListView, SearchMixin
 
 
 class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
-    ordering = "-created"
+    order_by = ("-published", "-created")
     allow_empty = True
     paginate_by = settings.DEFAULT_PAGE_SIZE
     models = [Photo, Post, Event, Poll]
