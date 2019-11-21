@@ -32,9 +32,24 @@
     color: $darkmode-link;
   }
 
+  .btn-action {
+    color: $darkmode-link;
+  }
+
   .navbar .btn {
     background-color: inherit;
     border: none;
+  }
+
+  .input-group-btn {
+    background-color: inherit;
+    border-color: $gray-color;
+    color: $darkmode-text;
+  }
+
+  .calendar-header {
+    background-color: $darkmode-lighter;
+    color: $darkmode-text;
   }
 
   .actions a {
