@@ -230,6 +230,7 @@ class Activity(TimeStampedModel):
         indexes = [
             GinIndex(fields=["search_document"]),
             models.Index(fields=["created", "-created"]),
+            models.Index(fields=["published", "-published"]),
         ]
         abstract = True
 

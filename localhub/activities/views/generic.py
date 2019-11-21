@@ -105,6 +105,7 @@ class ActivityCreateView(
 class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
     allow_empty = True
     paginate_by = settings.DEFAULT_PAGE_SIZE
+    # TBD order by published THEN id, need to index published
     order_by = "-id"
 
     def get_queryset(self):
