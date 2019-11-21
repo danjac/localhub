@@ -18,8 +18,6 @@
       {% for answer_form in answers_formset.forms %}
       {% include "includes/forms/fields.html" with form=answer_form %}
       {% endfor %}
-      <button type="submit" class="btn btn-primary">
-          {% trans "Submit" %}
-      </button>
+      {% include "activities/includes/activity_form_buttons.html" %}
 </form>
 {% endblock %}

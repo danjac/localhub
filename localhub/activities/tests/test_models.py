@@ -18,12 +18,54 @@ pytestmark = pytest.mark.django_db
 
 
 class TestActivityManager:
+    def test_published_if_false(self):
+        PostFactory(published=None)
+        assert Post.objects.published().count() == 0
+
+    def test_published_if_true(self):
+        PostFactory()
+        assert Post.objects.published().count() == 1
+
+    def test_published_or_owner_if_false_and_owner(self, user):
+        PostFactory(published=None, owner=user)
+        assert Post.objects.published_or_owner(user).count() == 1
+
+    def test_published_or_owner_if_false_and_not_owner(self, user):
+        PostFactory(published=None)
+        assert Post.objects.published_or_owner(user).count() == 0
+
+    def test_published_or_owner_if_true_and_owner(self, user):
+        PostFactory(owner=user)
+        assert Post.objects.published_or_owner(user).count() == 1
+
+    def test_published_or_owner_if_true_and_not_owner(self, user):
+        PostFactory()
+        assert Post.objects.published_or_owner(user).count() == 1
+
+    def test_drafts_if_published_and_owner(self, user):
+        PostFactory(owner=user)
+        assert Post.objects.drafts(user).count() == 0
+
+    def test_drafts_if_not_published_and_owner(self, user):
+        PostFactory(published=None, owner=user)
+        assert Post.objects.drafts(user).count() == 1
+
+    def test_drafts_if_published_and_not_owner(self, user):
+        PostFactory()
+        assert Post.objects.drafts(user).count() == 0
+
+    def test_drafts_if_not_published_and_not_owner(self, user):
+        PostFactory(published=None)
+        assert Post.objects.drafts(user).count() == 0
+
     def test_num_reshares(self, post):
 
         for _ in range(3):
             post.reshare(UserFactory())
 
-        post = Post.objects.with_num_reshares().filter(is_reshare=False).first()
+        post = (
+            Post.objects.with_num_reshares().filter(is_reshare=False).first()
+        )
         assert post.num_reshares == 3
 
     def test_has_reshared(self, post, user):
@@ -40,7 +82,10 @@ class TestActivityManager:
         assert posts[0] == first
 
         assert (
-            Post.objects.with_has_reshared(other).filter(has_reshared=True).count() == 0
+            Post.objects.with_has_reshared(other)
+            .filter(has_reshared=True)
+            .count()
+            == 0
         )
         assert (
             Post.objects.with_has_reshared(AnonymousUser())
@@ -199,17 +244,24 @@ class TestActivityManager:
         user.blocked.add(fourth_post.owner)
         user.blocked_tags.add(Tag.objects.get(name="movies"))
 
-        assert Post.objects.without_blocked(user).distinct().get() == third_post
+        assert (
+            Post.objects.without_blocked(user).distinct().get() == third_post
+        )
 
     def test_for_community(self, community: Community):
 
         post = PostFactory(
-            community=community, owner=MembershipFactory(community=community).member,
+            community=community,
+            owner=MembershipFactory(community=community).member,
         )
         PostFactory(owner=MembershipFactory(community=community).member)
-        PostFactory(owner=MembershipFactory(community=community, active=False).member)
         PostFactory(
-            owner=MembershipFactory(community=CommunityFactory(), active=True).member
+            owner=MembershipFactory(community=community, active=False).member
+        )
+        PostFactory(
+            owner=MembershipFactory(
+                community=CommunityFactory(), active=True
+            ).member
         )
         PostFactory(community=community)
         PostFactory()
@@ -235,12 +287,16 @@ class TestActivityManager:
         assert Post.objects.with_num_likes().get().num_likes == 2
 
     def test_with_has_flagged_if_user_has_not_flagged(self, post, user):
-        Flag.objects.create(user=user, content_object=post, community=post.community)
+        Flag.objects.create(
+            user=user, content_object=post, community=post.community
+        )
         activity = Post.objects.with_has_flagged(UserFactory()).get()
         assert not activity.has_flagged
 
     def test_with_has_flagged_if_user_has_flagged(self, post, user):
-        Flag.objects.create(user=user, content_object=post, community=post.community)
+        Flag.objects.create(
+            user=user, content_object=post, community=post.community
+        )
         activity = Post.objects.with_has_flagged(user).get()
         assert activity.has_flagged
 
@@ -276,7 +332,9 @@ class TestActivityManager:
         assert not hasattr(activity, "has_flagged")
 
     def test_with_common_annotations_if_authenticated(self, post, user):
-        activity = Post.objects.with_common_annotations(user, post.community).get()
+        activity = Post.objects.with_common_annotations(
+            user, post.community
+        ).get()
 
         assert hasattr(activity, "num_comments")
         assert hasattr(activity, "num_likes")

@@ -2,14 +2,19 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "activities/base.html" %}
-{% load i18n %}
-{% load form_tags %}
 
 {% block content %}
 {% include "includes/breadcrumbs.html" %}
 
 {% block form %}
-{% simple_ajax_form form multipart=True %}
+<form method="POST"
+      action="{{ request.path }}"
+      data-controller="form"
+      data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload"
+      >
+      {% include "includes/forms/fields.html" %}
+      {% include "activities/includes/activity_form_buttons.html" %}
+</form>
 {% endblock %}
 
 {% endblock content %}

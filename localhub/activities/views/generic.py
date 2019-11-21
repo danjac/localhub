@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
+from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
@@ -25,13 +26,10 @@ from localhub.comments.notifications import send_comment_notifications
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
-from localhub.utils.breadcrumbs import (
-    get_breadcrumbs_for_instance,
-    get_breadcrumbs_for_model,
-)
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from ..notifications import send_activity_deleted_email, send_activity_notifications
+from ..utils import get_breadcrumbs_for_instance, get_breadcrumbs_for_model
 
 
 class ActivityQuerySetMixin(CommunityRequiredMixin):
@@ -51,14 +49,18 @@ class ActivityCreateView(
     CommunityRequiredMixin, PermissionRequiredMixin, BreadcrumbsMixin, CreateView,
 ):
     permission_required = "activities.create_activity"
-    success_message = _("Your update has been posted")
     page_title = _("Submit")
 
     def get_permission_object(self):
         return self.request.community
 
     def get_success_message(self):
-        return self.success_message
+        message = (
+            _("Your %(activity)s has been published")
+            if self.object.published
+            else _("Your %(activity)s has been saved to Drafts")
+        )
+        return message % {"activity": self.object._meta.verbose_name}
 
     def get_breadcrumbs(self):
         return get_breadcrumbs_for_model(self.model) + [
@@ -71,13 +73,20 @@ class ActivityCreateView(
 
     def form_valid(self, form):
 
+        publish = "save_as_draft" not in self.request.POST
+
         self.object = form.save(commit=False)
         self.object.owner = self.request.user
         self.object.community = self.request.community
+
+        if publish:
+            self.object.published = timezone.now()
+
         self.object.save()
 
-        for notification in self.object.notify_on_create():
-            send_activity_notifications(self.object, notification)
+        if publish:
+            for notification in self.object.notify_on_create():
+                send_activity_notifications(self.object, notification)
 
         messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
@@ -86,19 +95,20 @@ class ActivityCreateView(
 class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
     allow_empty = True
     paginate_by = settings.DEFAULT_PAGE_SIZE
-    order_by = "-id"
+    order_by = ("-published", "-created")
 
     def get_queryset(self):
         qs = (
             super()
             .get_queryset()
+            .published()
             .with_common_annotations(self.request.user, self.request.community)
             .without_blocked(self.request.user)
-            .order_by(self.order_by)
+            .order_by(*self.order_by)
         )
 
         if self.search_query:
-            qs = qs.search(self.search_query).order_by("-rank")
+            qs = qs.search(self.search_query).order_by("-rank", *self.order_by)
         return qs
 
 
@@ -122,19 +132,31 @@ class ActivityUpdateView(
             )
         ]
 
-    def get_success_message(self):
-        return self.success_message
+    def get_success_message(self, publish):
+        message = (
+            _("Your %(activity)s has been published")
+            if publish
+            else _("Your %(activity)s has been updated")
+        )
+        return message % {"activity": self.object._meta.verbose_name}
 
     def form_valid(self, form):
 
+        publish = (
+            not (self.object.published) and "save_as_draft" not in self.request.POST
+        )
+
         self.object = form.save(commit=False)
         self.object.editor = self.request.user
+        if publish:
+            self.object.published = timezone.now()
         self.object.save()
 
-        for notification in self.object.notify_on_update():
-            send_activity_notifications(self.object, notification)
+        if self.object.published:
+            for notification in self.object.notify_on_update():
+                send_activity_notifications(self.object, notification)
 
-        messages.success(self.request, self.get_success_message())
+        messages.success(self.request, self.get_success_message(publish))
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -180,6 +202,7 @@ class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
         return (
             super()
             .get_queryset()
+            .published_or_owner(self.request.user)
             .with_common_annotations(self.request.user, self.request.community)
         )
 

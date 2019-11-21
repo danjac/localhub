@@ -50,10 +50,34 @@ class TestActivityTimelineView:
         assert response.context["object_list"][0]["month"]
 
 
+class TestActivityDraftsView:
+    def test_get(self, client, member):
+        PostFactory(community=member.community, owner=member.member)
+        PostFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+            published=None,
+        )
+        PostFactory(
+            community=member.community, owner=member.member, published=None
+        )
+        EventFactory(
+            community=member.community, owner=member.member, published=None
+        )
+
+        response = client.get(reverse("activities:drafts"))
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 2
+
+
 class TestActivitySearchView:
     def test_get(self, client, member, transactional_db):
-        PostFactory(community=member.community, title="test", owner=member.member)
-        EventFactory(community=member.community, title="test", owner=member.member)
+        PostFactory(
+            community=member.community, title="test", owner=member.member
+        )
+        EventFactory(
+            community=member.community, title="test", owner=member.member
+        )
 
         response = client.get(reverse("activities:search"), {"q": "test"})
         assert response.status_code == 200
@@ -62,7 +86,9 @@ class TestActivitySearchView:
     def test_get_hashtag(self, client, member, transactional_db):
         member = MembershipFactory(community=member.community)
         PostFactory(
-            community=member.community, description="#testme", owner=member.member,
+            community=member.community,
+            description="#testme",
+            owner=member.member,
         )
         response = client.get(reverse("activities:search"), {"q": "#testme"})
         assert response.status_code == 200
@@ -78,9 +104,15 @@ class TestActivitySearchView:
 class TestTagAutocompleteListView:
     def test_get(self, client, member):
 
-        PostFactory(community=member.community, owner=member.member).tags.add("movies")
-        EventFactory(community=member.community, owner=member.member).tags.add("movies")
-        PhotoFactory(community=member.community, owner=member.member).tags.add("movies")
+        PostFactory(community=member.community, owner=member.member).tags.add(
+            "movies"
+        )
+        EventFactory(community=member.community, owner=member.member).tags.add(
+            "movies"
+        )
+        PhotoFactory(community=member.community, owner=member.member).tags.add(
+            "movies"
+        )
 
         response = client.get(
             reverse("activities:tag_autocomplete_list"), {"q": "movie"}
@@ -95,7 +127,9 @@ class TestTagFollowView:
         post.tags.set("movies")
         tag = Tag.objects.get()
         response = client.post(reverse("activities:tag_follow", args=[tag.id]))
-        assert response.url == reverse("activities:tag_detail", args=[tag.slug])
+        assert response.url == reverse(
+            "activities:tag_detail", args=[tag.slug]
+        )
         assert tag in member.member.following_tags.all()
 
 
@@ -105,8 +139,12 @@ class TestTagUnfollowView:
         post.tags.set("movies")
         tag = Tag.objects.get()
         member.member.following_tags.add(tag)
-        response = client.post(reverse("activities:tag_unfollow", args=[tag.id]))
-        assert response.url == reverse("activities:tag_detail", args=[tag.slug])
+        response = client.post(
+            reverse("activities:tag_unfollow", args=[tag.id])
+        )
+        assert response.url == reverse(
+            "activities:tag_detail", args=[tag.slug]
+        )
         assert tag not in member.member.following_tags.all()
 
 
@@ -116,7 +154,9 @@ class TestTagBlockView:
         post.tags.set("movies")
         tag = Tag.objects.get()
         response = client.post(reverse("activities:tag_block", args=[tag.id]))
-        assert response.url == reverse("activities:tag_detail", args=[tag.slug])
+        assert response.url == reverse(
+            "activities:tag_detail", args=[tag.slug]
+        )
         assert tag in member.member.blocked_tags.all()
 
 
@@ -126,14 +166,20 @@ class TestTagUnblockView:
         post.tags.set("movies")
         tag = Tag.objects.get()
         member.member.blocked_tags.add(tag)
-        response = client.post(reverse("activities:tag_unblock", args=[tag.id]))
-        assert response.url == reverse("activities:tag_detail", args=[tag.slug])
+        response = client.post(
+            reverse("activities:tag_unblock", args=[tag.id])
+        )
+        assert response.url == reverse(
+            "activities:tag_detail", args=[tag.slug]
+        )
         assert tag not in member.member.blocked_tags.all()
 
 
 class TestTagListView:
     def test_get(self, client, member):
-        PostFactory(community=member.community, owner=member.member).tags.add("movies")
+        PostFactory(community=member.community, owner=member.member).tags.add(
+            "movies"
+        )
 
         response = client.get(reverse("activities:tag_list"))
         assert len(response.context["object_list"]) == 1
@@ -169,6 +215,8 @@ class TestTagDetailView:
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
         ).tags.add("movies")
-        response = client.get(reverse("activities:tag_detail", args=["movies"]))
+        response = client.get(
+            reverse("activities:tag_detail", args=["movies"])
+        )
         assert response.context["tag"].name == "movies"
         assert len(response.context["object_list"]) == 1

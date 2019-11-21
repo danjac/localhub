@@ -4,16 +4,21 @@
 {% extends "activities/activity_base.html" %}
 
 {% load i18n %}
+{% load rules %}
 
 {% block content %}
 {% include "activities/includes/description.html" %}
+
+{% has_perm "polls.vote" user object as can_vote %}
 <ol>
     {% for answer in object.answers.all %}
-    <li>{{ answer }} 
+    <li>{{ answer }}
         <meter class="meter" value="{% widthratio answer.num_votes object.total_num_votes 100 %}" min="0" max="100"></meter>
+        {% if can_vote %}
         <a data-controller="ajax"
            data-action="ajax#post"
            href="{% url 'polls:vote' answer.id %}">{% trans "Vote" %}</a>
+        {% endif %}
     </li>
     {% endfor %}
 </ol>

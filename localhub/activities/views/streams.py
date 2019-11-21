@@ -24,8 +24,8 @@ from localhub.views import BaseMultipleQuerySetListView, SearchMixin
 
 
 class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
-    ordering = "-created"
     allow_empty = True
+    ordering = ("-published", "-created")
     paginate_by = settings.DEFAULT_PAGE_SIZE
     models = [Photo, Post, Event, Poll]
 
@@ -55,6 +55,7 @@ class StreamView(BaseStreamView):
             super()
             .filter_queryset(queryset)
             .following(self.request.user)
+            .published()
             .without_blocked(self.request.user)
         )
 
@@ -189,9 +190,25 @@ class SearchView(SearchMixin, BaseStreamView):
                 super()
                 .filter_queryset(queryset)
                 .without_blocked(self.request.user)
+                .published()
                 .search(self.search_query)
             )
         return queryset.none()
 
 
 search_view = SearchView.as_view()
+
+
+class DraftsView(BaseStreamView):
+    """
+    Shows draft posts belonging to this user.
+    """
+
+    ordering = "-created"
+    template_name = "activities/drafts.html"
+
+    def filter_queryset(self, queryset):
+        return super().filter_queryset(queryset).drafts(self.request.user)
+
+
+drafts_view = DraftsView.as_view()

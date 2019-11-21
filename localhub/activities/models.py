@@ -82,6 +82,20 @@ class ActivityQuerySet(
             )
         )
 
+    def published(self):
+        return self.filter(published__isnull=False)
+
+    def published_or_owner(self, user):
+        qs = self.published()
+        if user.is_anonymous:
+            return qs
+        return qs | self.filter(owner=user)
+
+    def drafts(self, user):
+        if user.is_anonymous:
+            return self.none()
+        return self.filter(published__isnull=True, owner=user)
+
     def for_community(self, community):
         """
         Must match community, and owner must also be member.
@@ -205,6 +219,8 @@ class Activity(TimeStampedModel):
         on_delete=models.SET_NULL,
     )
 
+    published = models.DateTimeField(null=True, blank=True)
+
     history = HistoricalRecords(inherit=True)
 
     tags = TaggableManager(blank=True)
@@ -219,6 +235,7 @@ class Activity(TimeStampedModel):
         indexes = [
             GinIndex(fields=["search_document"]),
             models.Index(fields=["created", "-created"]),
+            models.Index(fields=["published", "-published"]),
         ]
         abstract = True
 

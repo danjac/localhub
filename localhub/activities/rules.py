@@ -38,6 +38,11 @@ def allows_comments(user, activity):
 
 
 @rules.predicate
+def is_published(user, activity):
+    return activity.published is not None
+
+
+@rules.predicate
 def is_reshare(user, activity):
     return activity.is_reshare
 
@@ -50,16 +55,19 @@ rules.add_perm("activities.delete_activity", is_editor)
 
 rules.add_perm(
     "activities.flag_activity",
-    is_activity_community_member & ~is_owner & ~is_parent_owner,
+    is_activity_community_member & ~is_owner & ~is_parent_owner & is_published,
 )
 
-rules.add_perm("activities.like_activity", is_activity_community_member & ~is_owner)
+rules.add_perm(
+    "activities.like_activity", is_activity_community_member & ~is_owner & is_published
+)
 
 rules.add_perm(
     "activities.reshare_activity",
-    is_activity_community_member & ~is_owner & ~is_parent_owner,
+    is_activity_community_member & ~is_owner & ~is_parent_owner & is_published,
 )
 
 rules.add_perm(
-    "activities.create_comment", is_activity_community_member & allows_comments
+    "activities.create_comment",
+    is_activity_community_member & allows_comments & is_published,
 )

@@ -6,9 +6,24 @@ import html
 from django import template
 from django.utils.safestring import mark_safe
 
+from localhub.events.models import Event
+from localhub.photos.models import Photo
+from localhub.polls.models import Poll
+from localhub.posts.models import Post
+from localhub.template.decorators import with_cached_context_value
 from localhub.utils.urls import get_domain, is_image_url, is_url
 
 register = template.Library()
+
+
+@register.simple_tag(takes_context=True)
+@with_cached_context_value
+def get_draft_count(context, user, community):
+    querysets = [
+        model.objects.for_community(community).drafts(user).only("pk")
+        for model in (Post, Event, Photo, Poll)
+    ]
+    return querysets[0].union(*querysets[1:], all=True).count()
 
 
 @register.simple_tag(takes_context=True)

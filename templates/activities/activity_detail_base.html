@@ -10,6 +10,12 @@
 
 {% block content %}
 {% include "includes/breadcrumbs.html" %}
+{% if not object.published %}
+<p class="toast text-center my-2">
+  {% trans "This post is currently in Draft. You can publish a post from the Edit form." %}
+</p>
+{% endif %}
+
 {% block activities_detail_content %}{% endblock %}
 {% include "flags/includes/flags.html" %}
 <div class="comments mt-2" id="comments">
@@ -31,7 +37,7 @@
     {% url 'account_login' as login_url %}
     {% blocktrans with next_url=request.path %}Please <a href="{{ login_url }}?next={{ next_url }}">sign in</a> to post comments.{% endblocktrans %}
   </p>
-  {% else %}
+  {% elif object.published %}
   <p class="toast text-center my-2">
     {% trans "You do not have permission to post comments on this site." %}
   </p>

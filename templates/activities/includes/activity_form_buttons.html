@@ -1,0 +1,22 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+
+{% if object.published %}
+<button type="submit" name="submit" class="btn btn-primary">
+    {% trans "Submit" %}
+</button>
+{% else %}
+<button type="submit" name="submit" class="btn btn-primary">
+    {% trans "Published" %}
+</button>
+<button type="submit"
+        name="save_as_draft"
+        value="true"
+        data-action="form#submit"
+        class="btn btn-secondary">
+    {% trans "Save Draft" %}
+</button>
+{% endif %}
+
