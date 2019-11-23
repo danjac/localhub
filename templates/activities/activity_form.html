@@ -9,6 +9,7 @@
 {% block form %}
 <form method="POST"
       action="{{ request.path }}"
+      enctype="multipart/form-data"
       data-controller="form"
       data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload"
       >
