@@ -19,6 +19,10 @@
     border-left: $border-width-lg solid $gray-color;
   }
 
+  code {
+    background-color: $darkmode-lighter;
+  }
+
   a,
   a:visited {
     color: $darkmode-link;
