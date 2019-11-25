@@ -34,6 +34,12 @@
   </div>
   {% else %}
   <div class="card-body">
+    {% if not is_detail %}
+    <div>
+      <a href="{{ comment.get_absolute_url }}">{% trans "Link" %}</a>
+    </div>
+    <div class="divider"></div>
+    {% endif %}
     <div class="markdown-content">
       {{ comment.content.markdown }}
     </div>
