@@ -34,9 +34,9 @@
   </div>
   {% else %}
   <div class="card-body">
-    {% if not is_detail %}
+    {% if not is_detail and not is_activity_detail %}
     <div>
-      <a href="{{ comment.get_absolute_url }}">{% trans "Link" %}</a>
+      <a href="{{ comment.content_object.get_absolute_url }}">{{ comment.content_object }}</a>
     </div>
     <div class="divider"></div>
     {% endif %}

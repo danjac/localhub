@@ -24,7 +24,7 @@
   {% endif %}
   {% for comment in comments %}
   <div class="mb-2">
-    {% include "comments/includes/comment.html" %}
+    {% include "comments/includes/comment.html" with is_activity_detail=True %}
   </div>
   {% endfor %}
   {% if comment_form %}

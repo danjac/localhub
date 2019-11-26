@@ -35,7 +35,7 @@ class CommentQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
         return Comment.objects.for_community(self.request.community).select_related(
             "owner", "community", "parent", "parent__owner", "parent__community",
-        )
+        ).prefetch_related("content_object")
 
 
 class BaseCommentListView(CommentQuerySetMixin, ListView):
