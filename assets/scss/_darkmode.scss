@@ -10,10 +10,9 @@
       color: $darkmode-text;
     }
     &.active .modal-overlay {
-      background: rgba($darkmode-lighter, .85);
+      background: rgba($darkmode-lighter, 0.85);
     }
   }
-
 
   blockquote {
     border-left: $border-width-lg solid $gray-color;
@@ -51,7 +50,8 @@
     color: $darkmode-text;
   }
 
-  .calendar-header, .calendar-nav {
+  .calendar-header,
+  .calendar-nav {
     background-color: $darkmode-lighter;
     color: $darkmode-text;
   }
@@ -81,6 +81,9 @@
     &::placeholder {
       background-color: $darkmode-darker;
       color: $darkmode-text;
+    }
+    &:not(:placeholder-shown):invalid:focus {
+      background-color: $darkmode-darker;
     }
   }
 
