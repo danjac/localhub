@@ -11,6 +11,4 @@ def from_dictkey(dct, key, default=None):
     """
     Returns value from a dict.
     """
-    if not dct:
-        return default
-    return dct.get(key, default)
+    return dict(dct or {}).get(key, default)

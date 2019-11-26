@@ -24,17 +24,23 @@ class TestCommunityManager:
     def test_with_is_member_if_member(self):
         community = CommunityFactory()
         member = MembershipFactory(community=community).member
-        assert Community.objects.with_is_member(member).first().is_member
+        first = Community.objects.with_is_member(member).first()
+        assert first.is_member
+        assert first.member_role == Membership.ROLES.member
 
     def test_with_is_member_if_not_member(self):
         CommunityFactory()
         user = UserFactory()
-        assert not Community.objects.with_is_member(user).first().is_member
+        first = Community.objects.with_is_member(user).first()
+        assert not first.is_member
+        assert first.member_role is None
 
     def test_with_is_member_if_anonymous(self):
         CommunityFactory()
         user = AnonymousUser()
-        assert not Community.objects.with_is_member(user).first().is_member
+        first = Community.objects.with_is_member(user).first()
+        assert not first.is_member
+        assert first.member_role is None
 
     def test_listed_if_listed(self, user):
         CommunityFactory(listed=True)
@@ -145,6 +151,8 @@ class TestCommunityModel:
 
 class TestMembershipModel:
     def test_join_requests_deleted(self, member, transactional_db):
-        JoinRequest.objects.create(sender=member.member, community=member.community)
+        JoinRequest.objects.create(
+            sender=member.member, community=member.community
+        )
         member.delete()
         assert not JoinRequest.objects.exists()

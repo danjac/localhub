@@ -258,6 +258,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
                 "join_requests_count": self.get_join_requests_count(),
                 "messages_count": self.get_messages_count(),
                 "notifications_count": self.get_notifications_count(),
+                "roles": Membership.ROLES,
             }
         )
         return data

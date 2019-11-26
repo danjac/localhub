@@ -6,7 +6,11 @@ import json
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import (
+    HttpResponseBadRequest,
+    HttpResponseRedirect,
+    JsonResponse,
+)
 from django.urls import reverse
 from django.views.generic import View
 from vanilla import DeleteView, GenericModelView, ListView, TemplateView
@@ -18,9 +22,9 @@ from .models import Notification, PushSubscription
 
 class NotificationQuerySetMixin(LoginRequiredMixin, CommunityRequiredMixin):
     def get_queryset(self):
-        return Notification.objects.for_community(self.request.community).filter(
-            recipient=self.request.user
-        )
+        return Notification.objects.for_community(
+            self.request.community
+        ).filter(recipient=self.request.user)
 
 
 class UnreadNotificationQuerySetMixin(NotificationQuerySetMixin):
@@ -33,7 +37,9 @@ class NotificationSuccessRedirectMixin:
         return reverse("notifications:list")
 
 
-class BasePushSubscriptionView(CommunityRequiredMixin, LoginRequiredMixin, View):
+class BasePushSubscriptionView(
+    CommunityRequiredMixin, LoginRequiredMixin, View
+):
     def post(self, request, *args, **kwargs):
         try:
             json_body = json.loads(request.body.decode("utf-8"))
@@ -44,7 +50,7 @@ class BasePushSubscriptionView(CommunityRequiredMixin, LoginRequiredMixin, View)
             data["p256dh"] = keys["p256dh"]
 
         except (ValueError, KeyError):
-            return HttpResponse(status=400)
+            return HttpResponseBadRequest()
 
         return self.handle_action(request, **data)
 
@@ -79,7 +85,9 @@ notification_list_view = NotificationListView.as_view()
 
 
 class NotificationMarkAllReadView(
-    UnreadNotificationQuerySetMixin, NotificationSuccessRedirectMixin, GenericModelView,
+    UnreadNotificationQuerySetMixin,
+    NotificationSuccessRedirectMixin,
+    GenericModelView,
 ):
     def post(self, request, *args, **kwargs):
         self.get_queryset().update(is_read=True)
@@ -90,7 +98,9 @@ notification_mark_all_read_view = NotificationMarkAllReadView.as_view()
 
 
 class NotificationMarkReadView(
-    UnreadNotificationQuerySetMixin, NotificationSuccessRedirectMixin, GenericModelView,
+    UnreadNotificationQuerySetMixin,
+    NotificationSuccessRedirectMixin,
+    GenericModelView,
 ):
     def post(self, request, *args, **kwargs):
         notification = self.get_object()
@@ -103,7 +113,9 @@ notification_mark_read_view = NotificationMarkReadView.as_view()
 
 
 class NotificationDeleteAllView(
-    NotificationQuerySetMixin, NotificationSuccessRedirectMixin, GenericModelView,
+    NotificationQuerySetMixin,
+    NotificationSuccessRedirectMixin,
+    GenericModelView,
 ):
     def delete(self, request):
         self.get_queryset().delete()
