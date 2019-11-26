@@ -151,8 +151,6 @@ class TestCommunityModel:
 
 class TestMembershipModel:
     def test_join_requests_deleted(self, member, transactional_db):
-        JoinRequest.objects.create(
-            sender=member.member, community=member.community
-        )
+        JoinRequest.objects.create(sender=member.member, community=member.community)
         member.delete()
         assert not JoinRequest.objects.exists()

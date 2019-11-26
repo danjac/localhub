@@ -74,11 +74,9 @@ class CommunityQuerySet(models.QuerySet):
                 ),
                 member_role=models.Subquery(
                     Membership.objects.filter(
-                        member=user,
-                        active=True,
-                        community=models.OuterRef("pk"),
+                        member=user, active=True, community=models.OuterRef("pk"),
                     ).values("role")[:1],
-                )
+                ),
             )
         return self.annotate(
             is_member=models.Value(False, output_field=models.BooleanField()),
@@ -135,15 +133,12 @@ class Community(TimeStampedModel):
     )
 
     intro = MarkdownField(
-        blank=True,
-        help_text=_("Text shown in Login and other pages to non-members."),
+        blank=True, help_text=_("Text shown in Login and other pages to non-members."),
     )
 
     description = MarkdownField(
         blank=True,
-        help_text=_(
-            "Longer description of site shown to members in Description page."
-        ),
+        help_text=_("Longer description of site shown to members in Description page."),
     )
 
     terms = MarkdownField(
@@ -176,9 +171,7 @@ class Community(TimeStampedModel):
     google_tracking_id = models.CharField(null=True, blank=True, max_length=30)
 
     members = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        through="Membership",
-        related_name="communities",
+        settings.AUTH_USER_MODEL, through="Membership", related_name="communities",
     )
 
     active = models.BooleanField(
@@ -271,9 +264,7 @@ class Community(TimeStampedModel):
 
     def get_members(self):
         return self.get_members_by_role(
-            Membership.ROLES.member,
-            Membership.ROLES.moderator,
-            Membership.ROLES.admin,
+            Membership.ROLES.member, Membership.ROLES.moderator, Membership.ROLES.admin,
         )
 
     def get_moderators(self):
@@ -311,8 +302,7 @@ class Community(TimeStampedModel):
         """
         email = email.strip().lower()
         if email in [
-            address.lower()
-            for address in self.blacklisted_email_addresses.split()
+            address.lower() for address in self.blacklisted_email_addresses.split()
         ]:
             return True
 
@@ -328,14 +318,10 @@ class MembershipQuerySet(SearchQuerySetMixin, models.QuerySet):
 
 class Membership(TimeStampedModel):
     ROLES = Choices(
-        ("member", _("Member")),
-        ("moderator", _("Moderator")),
-        ("admin", _("Admin")),
+        ("member", _("Member")), ("moderator", _("Moderator")), ("admin", _("Admin")),
     )
 
-    member = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
-    )
+    member = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
     role = models.CharField(
