@@ -42,7 +42,7 @@ class BaseCommentListView(CommentQuerySetMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
     def get_queryset(self):
-        super().get_queryset().prefetch_related("content_object")
+        return super().get_queryset().prefetch_related("content_object")
 
 
 class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
