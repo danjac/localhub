@@ -34,7 +34,7 @@
   </div>
   {% else %}
   <div class="card-body">
-    {% if not is_detail and not is_activity_detail %}
+    {% if with_activity %}
     <div>
       <a href="{{ comment.content_object.get_absolute_url }}">{{ comment.content_object }}</a>
     </div>

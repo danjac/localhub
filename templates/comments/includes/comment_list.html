@@ -3,7 +3,7 @@
 
 {% for comment in object_list %}
 <div class="activity-list-item">
-    {% include "comments/includes/comment.html" %}
+  {% include "comments/includes/comment.html" with_activity=True %}
 </div>
 {% empty %}
 {% include "includes/empty.html" %}
