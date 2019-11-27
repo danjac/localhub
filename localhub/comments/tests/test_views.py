@@ -17,8 +17,7 @@ from ..models import Comment
 pytestmark = pytest.mark.django_db
 
 
-class TestCommentSearchView:
-    @pytest.mark.django_db(transaction=True)
+class TestCommentListView:
     def test_get(self, client, member):
         post = PostFactory(community=member.community, owner=member.member)
         comment = CommentFactory(
@@ -28,15 +27,29 @@ class TestCommentSearchView:
             owner=post.owner,
         )
         response = client.get(
-            reverse("comments:search"),
+            reverse("comments:list"), HTTP_HOST=comment.community.domain,
+        )
+        assert len(response.context["object_list"]) == 1
+
+    @pytest.mark.django_db(transaction=True)
+    def test_get_search(self, client, member):
+        post = PostFactory(community=member.community, owner=member.member)
+        comment = CommentFactory(
+            community=member.community,
+            content="testme",
+            content_object=post,
+            owner=post.owner,
+        )
+        response = client.get(
+            reverse("comments:list"),
             {"q": "testme"},
             HTTP_HOST=comment.community.domain,
         )
         assert len(response.context["object_list"]) == 1
 
-    def test_get_if_empty(self, client, member):
+    def test_get_search_if_empty(self, client, member):
         response = client.get(
-            reverse("comments:search"),
+            reverse("comments:list"),
             {"q": "testme"},
             HTTP_HOST=member.community.domain,
         )

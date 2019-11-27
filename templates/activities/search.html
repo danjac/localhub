@@ -1,10 +1,35 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "search_base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
-{% load rules %}
 
-{% block search_content %}
-{% include "activities/includes/activity_list.html" %}
-{% endblock search_content %}
+{% block subtitle %} | {% trans "Search" %}{% endblock %}
+
+{% block content %}
+<h3>{% trans "Search" %}</h3>
+<div class="divider"></div>
+
+<form method="GET"
+      action="{{ request.path }}"
+      data-controller="form"
+      data-action="form#submit"
+      class="my-2 search-form"
+      >
+      <input class="form-input"
+             name="q"
+             type="search"
+             placeholder="{% trans "Search" %}"
+             value="{{ view.search_query }}">
+</form>
+  {% if object_list %}
+  <div class="toast text-center mt-2">
+    {% blocktrans count counter=paginator.count %}
+    1 result found
+    {% plural %}
+    {{ counter }} results found
+    {% endblocktrans %}
+  </div>
+  {% endif %}
+  {% include "activities/includes/activity_list.html" %}
+  {% endblock content %}

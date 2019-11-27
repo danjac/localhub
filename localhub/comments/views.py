@@ -45,6 +45,19 @@ class BaseCommentListView(CommentQuerySetMixin, ListView):
         return super().get_queryset().prefetch_related("content_object")
 
 
+class CommentListView(SearchMixin, BaseCommentListView):
+    template_name = "comments/comment_list.html"
+
+    def get_queryset(self):
+        qs = super().get_queryset().without_blocked_users(self.request.user)
+        if self.search_query:
+            return qs.search(self.search_query).order_by("-rank", "-created")
+        return qs.order_by("-created")
+
+
+comment_list_view = CommentListView.as_view()
+
+
 class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
     model = Comment
 
@@ -209,23 +222,6 @@ class CommentFlagView(
 
 
 comment_flag_view = CommentFlagView.as_view()
-
-
-class CommentSearchView(SearchMixin, BaseCommentListView):
-    template_name = "comments/search.html"
-
-    def get_queryset(self):
-        qs = super().get_queryset()
-        if not self.search_query:
-            return qs.none()
-        return (
-            qs.without_blocked_users(self.request.user)
-            .search(self.search_query)
-            .order_by("-rank", "-created")
-        )
-
-
-comment_search_view = CommentSearchView.as_view()
 
 
 class CommentReplyView(
