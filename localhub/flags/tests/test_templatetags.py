@@ -3,16 +3,13 @@
 
 import pytest
 
-from localhub.communities.models import Membership
 from localhub.communities.factories import MembershipFactory
+from localhub.communities.models import Membership
 from localhub.posts.factories import PostFactory
 from localhub.users.factories import UserFactory
 
 from ..models import Flag
-from ..templatetags.flags_tags import (
-    get_flag_count,
-    get_local_network_flag_count,
-)
+from ..templatetags.flags_tags import get_flag_count, get_local_network_flag_count
 
 pytestmark = pytest.mark.django_db
 
@@ -46,12 +43,7 @@ class TestGetLocalNetworkFlagsCount:
         Flag.objects.create(
             content_object=post, community=post.community, user=UserFactory()
         )
-        assert (
-            get_local_network_flag_count(
-                moderator.member, moderator.community
-            )
-            == 1
-        )
+        assert get_local_network_flag_count(moderator.member, moderator.community) == 1
 
     def test_get_count_if_not_moderator(self, member):
         other = MembershipFactory(member=member.member)
@@ -59,6 +51,4 @@ class TestGetLocalNetworkFlagsCount:
         Flag.objects.create(
             content_object=post, community=post.community, user=UserFactory()
         )
-        assert (
-            get_local_network_flag_count(member.member, member.community) == 0
-        )
+        assert get_local_network_flag_count(member.member, member.community) == 0

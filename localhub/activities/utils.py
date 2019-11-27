@@ -7,7 +7,6 @@ from django.urls import reverse
 from django.utils.encoding import smart_text
 from django.utils.translation import gettext as _
 
-
 from .models import Activity
 
 

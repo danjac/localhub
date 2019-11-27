@@ -45,9 +45,7 @@ class CommunityRequiredMixin:
             return self.handle_community_not_found()
 
         if (
-            not request.user.has_perm(
-                "communities.view_community", request.community
-            )
+            not request.user.has_perm("communities.view_community", request.community)
             and not self.allow_non_members
         ):
             return self.handle_community_access_denied()
@@ -131,9 +129,7 @@ class CommunityWelcomeView(CommunityRequiredMixin, TemplateView):
 community_welcome_view = CommunityWelcomeView.as_view()
 
 
-class CommunityUpdateView(
-    CommunityRequiredMixin, PermissionRequiredMixin, UpdateView
-):
+class CommunityUpdateView(CommunityRequiredMixin, PermissionRequiredMixin, UpdateView):
     fields = (
         "name",
         "logo",
@@ -217,11 +213,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
 
         return {
             community.id: len(
-                [
-                    draft
-                    for draft in drafts
-                    if draft.community_id == community.id
-                ]
+                [draft for draft in drafts if draft.community_id == community.id]
             )
             for community in communities
         }
@@ -325,9 +317,7 @@ class MembershipListView(
 
     def get_queryset(self):
 
-        qs = (
-            super().get_queryset().order_by("member__name", "member__username")
-        )
+        qs = super().get_queryset().order_by("member__name", "member__username")
 
         if self.search_query:
             qs = qs.search(self.search_query)
@@ -338,10 +328,7 @@ membership_list_view = MembershipListView.as_view()
 
 
 class MembershipDetailView(
-    LoginRequiredMixin,
-    PermissionRequiredMixin,
-    MembershipQuerySetMixin,
-    DetailView,
+    LoginRequiredMixin, PermissionRequiredMixin, MembershipQuerySetMixin, DetailView,
 ):
 
     permission_required = "communities.view_membership"
@@ -371,10 +358,7 @@ membership_update_view = MembershipUpdateView.as_view()
 
 
 class MembershipDeleteView(
-    LoginRequiredMixin,
-    PermissionRequiredMixin,
-    MembershipQuerySetMixin,
-    DeleteView,
+    LoginRequiredMixin, PermissionRequiredMixin, MembershipQuerySetMixin, DeleteView,
 ):
     permission_required = "communities.delete_membership"
     model = Membership
@@ -389,12 +373,9 @@ class MembershipDeleteView(
         self.object.delete()
         messages.success(
             self.request,
-            _("Membership for user %s has been deleted")
-            % self.object.member.username,
+            _("Membership for user %s has been deleted") % self.object.member.username,
         )
-        send_membership_deleted_email(
-            self.object.member, self.object.community
-        )
+        send_membership_deleted_email(self.object.member, self.object.community)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -409,12 +390,7 @@ class CommunityLeaveView(MembershipDeleteView):
     template_name = "communities/leave.html"
 
     def get_object(self):
-        return (
-            super()
-            .get_queryset()
-            .filter(member__pk=self.request.user.id)
-            .get()
-        )
+        return super().get_queryset().filter(member__pk=self.request.user.id).get()
 
     def get_success_url(self):
         return settings.HOME_PAGE_URL
