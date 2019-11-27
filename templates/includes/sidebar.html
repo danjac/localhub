@@ -3,20 +3,14 @@
 
 {% load i18n %}
 {% load rules %}
-{% load activities_tags %}
 {% load communities_tags %}
 {% load flags_tags %}
-{% load join_requests_tags %}
-{% load private_messages_tags %}
-{% load notifications_tags %}
 
 {% has_perm "activities.create_activity" user community as can_create_activity %}
 {% has_perm "communities.moderate_community" user community as can_moderate_community %}
 {% has_perm "communities.manage_community" user community as can_manage_community %}
 
-{% get_available_community_count user as num_communities %}
-{% get_unread_notification_count user community as unread_notifications %}
-{% get_unread_message_count user community as unread_messages %}
+{% get_available_community_count user as communities_count %}
 
 <ul class="menu">
   <li class="menu-item">
@@ -39,27 +33,24 @@
   </li>
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'notifications:list' %}">
-      <span {% if unread_notifications %}class="badge" data-badge="{{ unread_notifications }}"{% endif %}>
+      <span {% if unread_notifications_count %}class="badge" data-badge="{{ unread_notifications_count }}"{% endif %}>
         {% trans "Notifications" %}
       </span>
     </a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'private_messages:inbox' %}">
-      <span {% if unread_messages %}class="badge" data-badge="{{ unread_messages }}"{% endif %}>
+      <span {% if unread_messages_count %}class="badge" data-badge="{{ unread_messages_count }}"{% endif %}>
         {% trans "Messages" %}
       </span>
     </a>
   </li>
-  {% if num_communities > 1 %}
-  {% get_pending_local_network_join_request_count user community as pending_local_network_join_requests %}
-  {% get_unread_local_network_notification_count user community as unread_local_network_notifications %}
-  {% get_unread_local_network_message_count user community as unread_local_network_messages %}
+  {% if communities_count > 1 %}
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
        href="{% url 'community_list' %}">
-      {% with total_local_network_notifications=unread_local_network_notifications|add:unread_local_network_messages|add:pending_local_network_join_requests %}
+      {% with total_local_network_notifications=unread_local_network_notifications_count|add:unread_local_network_messages_count|add:pending_local_network_join_requests_count %}
       <span {% if total_local_network_notifications %}class="badge" data-badge="{{ total_local_network_notifications }}"{% endif %}>
         {% trans "Local Network" %}
       </span>
@@ -72,11 +63,10 @@
 {% if can_create_activity %}
 <ul class="menu mt-2">
   <li class="divider" data-content="{% trans 'Actions' %}"></li>
-  {% get_draft_count user community as num_drafts %}
-  {% if num_drafts %}
+  {% if drafts_count %}
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'activities:drafts' %}">
-      <span class="badge" data-badge="{{ num_drafts }}">{% trans "Drafts" %}</span>
+      <span class="badge" data-badge="{{ drafts_count }}">{% trans "Drafts" %}</span>
     </a>
   </li>
   {% endif %}
@@ -153,17 +143,14 @@
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
   </li>
-  {% if can_moderate_community %}
-  {% get_flags_count as num_flags %}
-  {% if num_flags %}
+  {% if flags_count %}
   <li class="menu-item">
     <a href="{% url 'flags:list' %}">
-      <span class="badge" data-badge="{{ num_flags }}">
+      <span class="badge" data-badge="{{ flags_count }}">
         {% trans "Flagged" %}
       </span>
     </a>
   </li>
-  {% endif %}
   {% endif %}
 </ul>
 
@@ -180,7 +167,7 @@
   </li>
   {% if can_manage_community %}
   <li class="menu-item">
-    <a href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
+    <a data-controller="active-link" href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
@@ -189,9 +176,8 @@
     <a data-controller="active-link" href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
   </li>
   <li class="menu-item">
-    {% get_pending_join_request_count community as pending_join_requests %}
     <a data-controller="active-link" href="{% url 'join_requests:list' %}">
-      <span {% if pending_join_requests %}class="badge" data-badge="{{ pending_join_requests }}"{% endif %}>
+      <span {% if pending_join_requests_count %}class="badge" data-badge="{{ pending_join_requests_count }}"{% endif %}>
         {% trans "Join Requests" %}
       </span>
     </a>

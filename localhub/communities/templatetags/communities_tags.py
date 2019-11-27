@@ -4,16 +4,16 @@
 
 from django import template
 
-from localhub.template.decorators import with_cached_context_value
-
 from ..models import Community
 
 register = template.Library()
 
 
-@register.simple_tag(takes_context=True)
-@with_cached_context_value
-def get_available_community_count(context, user):
+@register.simple_tag
+def get_available_community_count(user):
+    """
+    Returns number of communities visible to this user
+    """
     if user.is_anonymous:
         return 0
     return Community.objects.listed(user).count()

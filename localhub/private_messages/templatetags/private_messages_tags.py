@@ -6,8 +6,6 @@ from django import template
 from django.db.models import F
 from django.urls import reverse
 
-from localhub.template.decorators import with_cached_context_value
-
 from ..models import Message
 
 register = template.Library()
@@ -67,11 +65,10 @@ def show_message(
     }
 
 
-@register.simple_tag(takes_context=True)
-@with_cached_context_value
-def get_unread_message_count(context, user, community):
+@register.simple_tag
+def get_unread_message_count(user, community):
     """
-    Returns a cached count of the total number of *unread* messages
+    Returns a count of the total number of *unread* messages
     for the current user. If user not logged in just returns 0.
     """
     if user.is_anonymous or not community.active:
@@ -89,11 +86,10 @@ def get_unread_message_count(context, user, community):
     )
 
 
-@register.simple_tag(takes_context=True)
-@with_cached_context_value
-def get_unread_local_network_message_count(context, user, community):
+@register.simple_tag
+def get_unread_local_network_message_count(user, community):
     """
-    Returns cached count of unread messages *outside* the current community,
+    Returns count of unread messages *outside* the current community,
     where the user is an active member. If user not logged in returns 0.
     """
 

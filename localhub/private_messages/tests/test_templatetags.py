@@ -61,7 +61,7 @@ class TestShowMessage:
 
 class TestGetUnreadMessageCount:
     def test_anonymous(self, community):
-        assert get_unread_message_count({}, AnonymousUser(), community) == 0
+        assert get_unread_message_count(AnonymousUser(), community) == 0
 
     def test_authenticated(self, member):
         MessageFactory(
@@ -69,13 +69,13 @@ class TestGetUnreadMessageCount:
             recipient=member.member,
             sender=MembershipFactory(community=member.community).member,
         )
-        assert get_unread_message_count({}, member.member, member.community) == 1
+        assert get_unread_message_count(member.member, member.community) == 1
 
 
 class TestGetUnreadLocalNetworkMessageCount:
     def test_anonymous(self, community):
         assert (
-            get_unread_local_network_message_count({}, AnonymousUser(), community) == 0
+            get_unread_local_network_message_count(AnonymousUser(), community) == 0
         )
 
     def test_authenticated(self, member):
@@ -86,6 +86,6 @@ class TestGetUnreadLocalNetworkMessageCount:
             sender=MembershipFactory(community=other).member,
         )
         assert (
-            get_unread_local_network_message_count({}, member.member, member.community)
+            get_unread_local_network_message_count(member.member, member.community)
             == 1
         )

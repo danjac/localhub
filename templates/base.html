@@ -6,6 +6,7 @@
 {% load rules %}
 {% load thumbnail %}
 {% load activities_tags %}
+{% load flags_tags %}
 {% load join_requests_tags %}
 {% load notifications_tags %}
 {% load private_messages_tags %}
@@ -13,6 +14,15 @@
 
 {% test_rule "communities.is_member" user community as is_member %}
 {% has_perm "communities.view_community" user community as can_view_community %}
+
+{% get_draft_count user community as drafts_count %}
+{% get_flags_count user community as flags_count %}
+{% get_pending_join_request_count user community as pending_join_requests_count %}
+{% get_pending_local_network_join_request_count user community as pending_local_network_join_requests_count %}
+{% get_unread_notification_count user community as unread_notifications_count %}
+{% get_unread_message_count user community as unread_messages_count %}
+{% get_unread_local_network_notification_count user community as unread_local_network_notifications_count %}
+{% get_unread_local_network_message_count user community as unread_local_network_messages_count %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -173,13 +183,7 @@
                  data-action="sidebar#toggle"
                  >
                  {% block sidebar_toggle %}
-                 {% get_pending_local_network_join_request_count user community as pending_local_network_join_requests %}
-                 {% get_unread_notification_count user community as unread_notifications %}
-                 {% get_unread_message_count user community as unread_messages %}
-                 {% get_unread_local_network_notification_count user community as unread_local_network_notifications %}
-                 {% get_unread_local_network_message_count user community as unread_local_network_messages %}
-                 {% get_draft_count user community as unread_drafts %}
-                 {% with total_notifications_count=unread_notifications|add:unread_messages|add:unread_local_network_notifications|add:unread_local_network_messages|add:pending_local_network_join_requests|add:unread_drafts %}
+                 {% with total_notifications_count=unread_notifications_count|add:unread_messages_count|add:unread_local_network_notifications_count|add:unread_local_network_messages_count|add:pending_local_network_join_requests_count|add:pending_join_requests_count|add:drafts_count|add:flags_count %}
                  <span{% if total_notifications_count %} class="badge" data-badge="{{ total_notifications_count }}"{% endif %}>
                    {% trans "Sidebar" %}
                  </span>

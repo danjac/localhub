@@ -114,13 +114,13 @@ class TestCommunityListView:
         ]
         assert len(response.context["object_list"]) == 4
 
-    def test_get_if_not_member(self, client, login_user):
+    def test_get_if_not_member(self, client, login_user, community):
         CommunityFactory.create_batch(3)
-        response = client.get(reverse("community_list"))
+        response = client.get(reverse("community_list"), HTTP_HOST=community.domain)
         assert "communities/non_member_community_list.html" in [
             t.name for t in response.templates
         ]
-        assert len(response.context["object_list"]) == 3
+        assert len(response.context["object_list"]) == 4
 
 
 class TestMembershipListView:

@@ -8,9 +8,11 @@ from ..models import Flag
 register = template.Library()
 
 
-@register.simple_tag(takes_context=True)
-def get_flags_count(context):
+@register.simple_tag
+def get_flags_count(user, community):
+    if not community.active or not user.has_perm(
+        "communities.moderate_community", community
+    ):
+        return 0
 
-    request = context["request"]
-
-    return Flag.objects.filter(community=request.community).count()
+    return Flag.objects.filter(community=community).count()
