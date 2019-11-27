@@ -17,17 +17,23 @@ def get_activity_models():
     return Activity.__subclasses__()
 
 
-def get_combined_activity_queryset(query_fn, all=False):
+def get_combined_activity_queryset(fn, all=False):
     """
     Creates a combined UNION queryset of all Activity subclasses.
-    Remember that each queryset must have the same columns!
+
+    fn should take a model class and return a QuerySet. QuerySets
+    for all models should have identical columns.
+
+    Example:
+
+    get_combined_activity_queryset(lambda model: model.objects.only("pk", "title"))
     """
-    querysets = [query_fn(model.objects) for model in get_activity_models()]
+    querysets = [fn(model) for model in get_activity_models()]
     return querysets[0].union(*querysets[1:], all=all)
 
 
-def get_combined_activity_queryset_count(query_fn):
-    return get_combined_activity_queryset(query_fn, all=True).count()
+def get_combined_activity_queryset_count(fn):
+    return get_combined_activity_queryset(fn, all=True).count()
 
 
 def get_breadcrumbs_for_model(model_cls):

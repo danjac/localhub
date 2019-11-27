@@ -38,7 +38,9 @@ class TestGetCombinedActivityQueryset:
         PostFactory()
         EventFactory()
 
-        qs = get_combined_activity_queryset(lambda qs: qs.only("pk", "title"))
+        qs = get_combined_activity_queryset(
+            lambda model: model.objects.only("pk", "title")
+        )
 
         assert len(qs) == 2
 
@@ -48,7 +50,10 @@ class TestGetCombinedActivityQuerysetCount:
         PostFactory()
         EventFactory()
 
-        assert get_combined_activity_queryset_count(lambda qs: qs.only("pk")) == 2
+        assert (
+            get_combined_activity_queryset_count(lambda model: model.objects.only("pk"))
+            == 2
+        )
 
 
 class TestGetBreadcrumbs:

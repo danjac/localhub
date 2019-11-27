@@ -18,7 +18,7 @@ def get_draft_count(user, community):
     if user.is_anonymous or not community.active:
         return 0
     return get_combined_activity_queryset_count(
-        lambda qs: qs.for_community(community).drafts(user).only("pk")
+        lambda model: model.objects.for_community(community).drafts(user).only("pk")
     )
 
 
@@ -28,7 +28,7 @@ def get_local_network_draft_count(user, community):
         return 0
 
     return get_combined_activity_queryset_count(
-        lambda qs: qs.filter(
+        lambda model: model.objects.filter(
             community__active=True,
             community__membership__active=True,
             community__membership__member=user,

@@ -206,7 +206,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
         communities = self.get_member_communities()
 
         drafts = get_combined_activity_queryset(
-            lambda qs: qs.filter(community__in=communities)
+            lambda model: model.objects.filter(community__in=communities)
             .drafts(self.request.user)
             .only("pk", "community")
         )
