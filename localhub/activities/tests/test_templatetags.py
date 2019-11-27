@@ -23,9 +23,7 @@ pytestmark = pytest.mark.django_db
 
 class TestGetDraftCount:
     def test_get_draft_count(self, member):
-        PostFactory(
-            community=member.community, owner=member.member, published=None
-        )
+        PostFactory(community=member.community, owner=member.member, published=None)
         assert get_draft_count(member.member, member.community) == 1
 
     def test_get_draft_count_if_anonymous(self, community):
@@ -97,17 +95,13 @@ class TestIsContentSensitive:
     def test_is_sensitive_auth_ok(self):
         community = CommunityFactory(content_warning_tags="#nsfw")
         post = PostFactory(community=community, description="#nsfw")
-        assert not is_content_sensitive(
-            post, UserFactory(show_sensitive_content=True)
-        )
+        assert not is_content_sensitive(post, UserFactory(show_sensitive_content=True))
 
     def test_is_sensitive_auth_not_ok(self):
 
         community = CommunityFactory(content_warning_tags="#nsfw")
         post = PostFactory(community=community, description="#nsfw")
-        assert is_content_sensitive(
-            post, UserFactory(show_sensitive_content=False)
-        )
+        assert is_content_sensitive(post, UserFactory(show_sensitive_content=False))
 
     def test_not_is_sensitive_anon(self):
         community = CommunityFactory(content_warning_tags="#nsfw")
@@ -117,9 +111,7 @@ class TestIsContentSensitive:
     def test_not_is_sensitive_auth(self):
         community = CommunityFactory(content_warning_tags="#nsfw")
         post = PostFactory(community=community)
-        assert not is_content_sensitive(
-            post, UserFactory(show_sensitive_content=False)
-        )
+        assert not is_content_sensitive(post, UserFactory(show_sensitive_content=False))
 
 
 class TestDomain:

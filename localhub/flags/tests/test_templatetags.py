@@ -3,8 +3,8 @@
 
 import pytest
 
-from localhub.users.factories import UserFactory
 from localhub.posts.factories import PostFactory
+from localhub.users.factories import UserFactory
 
 from ..models import Flag
 from ..templatetags.flags_tags import get_flags_count
