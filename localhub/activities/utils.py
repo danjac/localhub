@@ -8,6 +8,29 @@ from django.utils.encoding import smart_text
 from django.utils.translation import gettext as _
 
 
+from .models import Activity
+
+
+def get_activity_models():
+    """
+    Returns all Activity subclasses
+    """
+    return Activity.__subclasses__()
+
+
+def get_combined_activity_queryset(query_fn, all=False):
+    """
+    Creates a combined UNION queryset of all Activity subclasses.
+    Remember that each queryset must have the same columns!
+    """
+    querysets = [query_fn(model.objects) for model in get_activity_models()]
+    return querysets[0].union(*querysets[1:], all=all)
+
+
+def get_combined_activity_queryset_count(query_fn):
+    return get_combined_activity_queryset(query_fn, all=True).count()
+
+
 def get_breadcrumbs_for_model(model_cls):
     """
     Returns default breadcrumbs for an Activity model class. Use

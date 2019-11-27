@@ -6,11 +6,9 @@ import html
 from django import template
 from django.utils.safestring import mark_safe
 
-from localhub.events.models import Event
-from localhub.photos.models import Photo
-from localhub.polls.models import Poll
-from localhub.posts.models import Post
 from localhub.utils.urls import get_domain, is_image_url, is_url
+
+from ..utils import get_combined_activity_queryset_count
 
 register = template.Library()
 
@@ -19,11 +17,26 @@ register = template.Library()
 def get_draft_count(user, community):
     if user.is_anonymous or not community.active:
         return 0
-    querysets = [
-        model.objects.for_community(community).drafts(user).only("pk")
-        for model in (Post, Event, Photo, Poll)
-    ]
-    return querysets[0].union(*querysets[1:], all=True).count()
+    return get_combined_activity_queryset_count(
+        lambda qs: qs.for_community(community).drafts(user).only("pk")
+    )
+
+
+@register.simple_tag
+def get_local_network_draft_count(user, community):
+    if user.is_anonymous or not community.active:
+        return 0
+
+    return get_combined_activity_queryset_count(
+        lambda qs: qs.filter(
+            community__active=True,
+            community__membership__active=True,
+            community__membership__member=user,
+        )
+        .exclude(community=community)
+        .drafts(user)
+        .only("pk")
+    )
 
 
 @register.simple_tag(takes_context=True)

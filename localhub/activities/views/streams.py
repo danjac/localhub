@@ -22,12 +22,17 @@ from localhub.polls.models import Poll
 from localhub.posts.models import Post
 from localhub.views import BaseMultipleQuerySetListView, SearchMixin
 
+from ..utils import get_activity_models
+
 
 class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
     allow_empty = True
     ordering = ("-published", "-created")
     paginate_by = settings.DEFAULT_PAGE_SIZE
-    models = [Photo, Post, Event, Poll]
+
+    @cached_property
+    def models(self):
+        return get_activity_models()
 
     def filter_queryset(self, queryset):
         return queryset.for_community(community=self.request.community)
@@ -41,6 +46,7 @@ class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
         return self.filter_queryset(model.objects)
 
     def get_querysets(self):
+        # get_activity_models
         return [self.get_queryset_for_model(model) for model in self.models]
 
     def get_count_querysets(self):

@@ -5,13 +5,14 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 
-from localhub.communities.factories import CommunityFactory
+from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.posts.factories import PostFactory
 from localhub.users.factories import UserFactory
 
 from ..templatetags.activities_tags import (
     domain,
     get_draft_count,
+    get_local_network_draft_count,
     html_unescape,
     is_content_sensitive,
     is_oembed_allowed,
@@ -28,6 +29,18 @@ class TestGetDraftCount:
 
     def test_get_draft_count_if_anonymous(self, community):
         assert get_draft_count(AnonymousUser(), community) == 0
+
+
+class TestGetLocalNetworkDraftCount:
+    def test_get_local_network_draft_count(self, member):
+        PostFactory(community=member.community, owner=member.member, published=None)
+        other = CommunityFactory()
+        MembershipFactory(member=member.member, community=other)
+        PostFactory(community=other, owner=member.member, published=None)
+        assert get_local_network_draft_count(member.member, member.community) == 1
+
+    def test_get_local_network_draft_count_if_anonymous(self, community):
+        assert get_local_network_draft_count(AnonymousUser(), community) == 0
 
 
 class TestIsOembedAllowed:

@@ -50,7 +50,7 @@
     <a data-controller="active-link"
        data-active-link-exact
        href="{% url 'community_list' %}">
-      {% with total_local_network_notifications=unread_local_network_notifications_count|add:unread_local_network_messages_count|add:pending_local_network_join_requests_count %}
+      {% with total_local_network_notifications=unread_local_network_notifications_count|add:unread_local_network_messages_count|add:pending_local_network_join_requests_count|add:local_network_drafts_count %}
       <span {% if total_local_network_notifications %}class="badge" data-badge="{{ total_local_network_notifications }}"{% endif %}>
         {% trans "Local Network" %}
       </span>

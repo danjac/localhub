@@ -24,10 +24,17 @@
         {{ object.tagline|linebreaksbr }}
     </div>
     {% if community != object and object.is_member %}
-    {% with num_notifications=notifications_count|from_dictkey:object.id num_messages=messages_count|from_dictkey:object.id num_join_requests=join_requests_count|from_dictkey:object.id object_url=object.get_absolute_url %}
-    {% if num_notifications or num_messages or num_join_requests %}
+    {% with num_notifications=counters.notifications|from_dictkey:object.id num_messages=counters.messages|from_dictkey:object.id num_join_requests=counters.join_requests|from_dictkey:object.id num_drafts=counters.drafts|from_dictkey:object.id num_flags=counters.flags|from_dictkey:object.id object_url=object.get_absolute_url %}
+    {% if num_notifications or num_messages or num_join_requests or num_drafts or num_flags %}
     <div class="card-footer">
         <div class="actions">
+            {% if num_flags %}
+            <a href="{{ object_url }}{% url 'flags:list' %}">
+                <span class="badge" data-badge="{{ num_flags }}">
+                    {% trans "flags" %}
+                </span>
+            </a>
+            {% endif %}
             {% if num_notifications %}
             <a href="{{ object_url }}{% url 'notifications:list' %}">
                 <span class="badge" data-badge="{{ num_notifications }}">
@@ -46,6 +53,13 @@
             <a href="{{ object_url }}{% url 'join_requests:list' %}">
                 <span class="badge" data-badge="{{ num_join_requests }}">
                     {% trans "Join Requests" %}
+                </span>
+            </a>
+            {% endif %}
+            {% if num_drafts %}
+            <a href="{{ object_url }}{% url 'activities:drafts' %}">
+                <span class="badge" data-badge="{{ num_drafts }}">
+                    {% trans "Drafts" %}
                 </span>
             </a>
             {% endif %}
