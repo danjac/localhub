@@ -16,10 +16,6 @@ from django.views.generic.dates import (
 )
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.events.models import Event
-from localhub.photos.models import Photo
-from localhub.polls.models import Poll
-from localhub.posts.models import Post
 from localhub.views import BaseMultipleQuerySetListView, SearchMixin
 
 from ..utils import get_activity_models
