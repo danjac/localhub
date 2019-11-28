@@ -12,9 +12,8 @@
 {% include "includes/breadcrumbs.html" %}
 {% if not object.published %}
 <p class="toast text-center my-2">
-  {% url object.get_update_url as update_url %}
-  {% blocktrans %}
-  This post is currently in <b>Draft</b> and is currently only available to you.
+  {% blocktrans with update_url=object.get_update_url %}
+  This post is currently in <b>Draft</b> and is only available to you.
   Click the <b>Publish</b> button on the <a href="{{ update_url }}">Edit</a> page to
   make the post public.
   {% endblocktrans %}
