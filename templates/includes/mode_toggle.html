@@ -1,0 +1,12 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+
+<a href="{% url 'darkmode_toggle' %}"
+   data-controller="ajax"
+   data-action="ajax#post"
+   data-ajax-redirect="{{ request.get_full_path }}">
+  {% if darkmode %}{% trans "Light Mode" %}{% else %}{% trans "Dark Mode" %}{% endif %}
+</a>
+
