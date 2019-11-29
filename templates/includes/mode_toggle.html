@@ -3,7 +3,7 @@
 
 {% load i18n %}
 
-<a href="{% url 'darkmode_toggle' %}
+<a href="{% url 'darkmode_toggle' %}"
    {% if css_class %}class="{{ css_class }}"{% endif %}
    data-controller="ajax"
    data-action="ajax#post"
