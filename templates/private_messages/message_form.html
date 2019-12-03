@@ -4,7 +4,7 @@
 {% extends "private_messages/base.html" %}
 
 {% load i18n %}
-{% load form_tags %}
+
 
 {% block private_messages_subtitle %} | {% if message.id %}{% trans "Edit Message" %}{% else %}{% trans "Send Message" %}{% endif %}{% endblock %}
 
@@ -16,6 +16,6 @@
 
 <div class="divider"></div>
 
-{% simple_ajax_form form %}
+{% include "includes/forms/form.html" %}
 
 {% endblock %}

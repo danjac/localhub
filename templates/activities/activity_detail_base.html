@@ -4,7 +4,7 @@
 {% extends "activities/base.html" %}
 
 {% load i18n %}
-{% load form_tags %}
+
 
 {% block subtitle %}{{ object }}{% endblock %}
 
@@ -33,7 +33,7 @@
   {% endfor %}
   {% if comment_form %}
   <div class="divider"></div>
-  {% simple_ajax_form comment_form action=object.get_create_comment_url %}
+  {% include "includes/forms/form.html" with action=object.get_create_comment_url form=comment_form %}
   {% elif not object.allow_comments %}
   <p class="toast text-center my-2">{% trans "Comments are locked" %}</p>
   {% elif not user.is_authenticated %}

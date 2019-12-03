@@ -4,7 +4,7 @@
 {% extends "communities/base.html" %}
 
 {% load i18n %}
-{% load form_tags %}
+
 
 {% block content %}
 <h3>{% trans "Community Settings" %}</h3>
@@ -16,6 +16,7 @@
 <div class="divider"></div>
 
 {% trans "Save Settings" as t_save_settings %}
-{% simple_ajax_form form multipart=True submit_btn=t_save_settings %}
+
+{% include "includes/forms/form.html" with multipart=True submit_btn=t_save_settings %}
 
 {% endblock content %}

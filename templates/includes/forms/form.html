@@ -3,18 +3,22 @@
 
 {% load i18n %}
 
-<form method="POST"
-      action="{{ action }}"
+<form {% spaceless %}
+      method="{{ method|default:'POST' }}"
+      action="{{ action|default:request.path }}"
       {% if multipart %}enctype="multipart/form-data"{% endif %}
+      {% block form_stimulusjs_attrs %}
       data-controller="form"
       data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload"
-      {% block form_extra_attrs %}{% endblock %}>
+      {% endblock form_stimulusjs_attrs %}
+      {% endspaceless %}>
       {% block form_fields %}
       {% include "includes/forms/fields.html" %}
       {% endblock form_fields %}
       {% block form_buttons %}
+      {% trans "Submit" as t_submit %}
       <button type="submit" name="submit" class="btn btn-primary">
-        {% trans "Submit" %}
+          {{ submit_btn|default:t_submit }}
       </button>
       {% endblock %}
 </form>

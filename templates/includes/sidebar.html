@@ -156,10 +156,10 @@
 
 <ul class="menu mt-2">
   <li class="divider" data-content="{% trans 'Settings' %}"></li>
-  <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
   <li class="menu-item">
     {% include "includes/mode_toggle.html" %}
   </li>
+  <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
   {% if can_manage_community %}
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
