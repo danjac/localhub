@@ -1,6 +1,9 @@
-{% extends "no_sidebar_base.html" %}
-{% load i18n %}
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{% extends "no_sidebar_base.html" %}
+
+{% load i18n %}
 
 {% block content %}
 {% if user.is_authenticated %}
@@ -41,8 +44,10 @@
 {% else %}
 <h3>{% trans "Login" %}</h3>
 <div class="divider"></div>
+{% include "account/includes/signup_link.html" %}
+{% url 'account_login' as login_url %}
 {% url 'account_signup' as signup_url %}
-{% include "account/includes/login_form.html" with form=login_form signup_url=signup_url %}
+{% include "account/includes/login_form.html" with form=login_form signup_url=signup_url action=login_url %}
 {% endif %}
 
 
