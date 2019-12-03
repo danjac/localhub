@@ -44,7 +44,7 @@ django-taggit==1.1.0
 django-timezone-field==3.1
 django-vanilla-views==1.0.6
 django-widget-tweaks==1.4.5
-django==2.2.7
+django==2.2.8
 docutils==0.15.2          # via botocore
 execnet==1.7.1            # via pytest-xdist
 factory-boy==2.12.0
