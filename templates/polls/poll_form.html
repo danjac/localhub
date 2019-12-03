@@ -7,17 +7,5 @@
 {% block subtitle %} | {% trans "Polls" %} | {{ view.page_title }}{% endblock %}
 
 {% block form %}
-<form method="POST"
-      action="{{ request.path }}"
-      data-controller="form"
-      data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload"
-      >
-      {{ answers_formset.management_form }}
-      {% include "includes/forms/fields.html" %}
-      <div class="divider text-center" data-content="Answers"></div>
-      {% for answer_form in answers_formset.forms %}
-      {% include "includes/forms/fields.html" with form=answer_form %}
-      {% endfor %}
-      {% include "activities/includes/activity_form_buttons.html" %}
-</form>
+{% include "polls/includes/poll_form.html" %}
 {% endblock %}

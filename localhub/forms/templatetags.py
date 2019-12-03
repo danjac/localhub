@@ -8,7 +8,14 @@ register = template.Library()
 
 
 @register.inclusion_tag("includes/forms/ajax_form.html", takes_context=True)
-def simple_ajax_form(context, form, multipart=False, action=None, submit_btn=None):
+def simple_ajax_form(
+    context,
+    form,
+    multipart=False,
+    action=None,
+    submit_btn=None,
+    extra_btns=None,
+):
     """
     Renders a simple AJAX form including Stimulus bindings.
     """
@@ -19,4 +26,5 @@ def simple_ajax_form(context, form, multipart=False, action=None, submit_btn=Non
         "form": form,
         "multipart": multipart,
         "submit_btn": submit_btn,
+        "extra_btns": extra_btns or (),
     }

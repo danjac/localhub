@@ -1,19 +1,15 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-<form method="POST"
-      action="{{ action }}"
-      {% if multipart %}enctype="multipart/form-data"{% endif %}
-      data-controller="form"
-      data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload"
-      {% block form_extra_attrs %}{% endblock %}>
-  {% include "includes/forms/fields.html" %}
-  <button type="submit" name="submit" class="btn btn-primary">
-    {{ submit_btn }}
-  </button>
-  {% for name, label in extra_btns %}
-  <button type="submit" name="{{ name }}" class="btn btn-secondary">
-    {{ label }}
-  </button>
-  {% endfor %}
-</form>
+{% extends "includes/forms/base_ajax_form.html" %}
+
+{% block form_buttons %}
+<button type="submit" name="submit" class="btn btn-primary">
+  {{ submit_btn }}
+</button>
+{% for btn in extra_btns %}
+<button type="submit" name="{{ btn.name }}" class="btn btn-secondary" {% for name, value in btn.attrs %}{{ name }}="{{ value }}"{% endfor %}>
+  {{ btn.label }}
+</button>
+{% endfor %}
+{% endblock %}

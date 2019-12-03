@@ -1,0 +1,16 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/includes/activity_form.html" %}
+
+{% load i18n %}
+
+{% block form_fields %}
+{{ answers_formset.management_form }}
+{{ block.super }}
+<div class="divider text-center" data-content="{% trans 'Answers' %}"></div>
+{% for answer_form in answers_formset.forms %}
+{% include "includes/forms/fields.html" with form=answer_form %}
+{% endfor %}
+{% endblock form_fields %}
+

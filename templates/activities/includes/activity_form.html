@@ -1,11 +1,14 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{% extends "includes/forms/base_ajax_form.html" %}
+
 {% load i18n %}
 
+{% block form_buttons %}
 {% if object.published %}
 <button type="submit" name="submit" class="btn btn-primary">
-    {% trans "Submit" %}
+    {% trans "Update" %}
 </button>
 {% else %}
 <button type="submit" name="submit" class="btn btn-primary">
@@ -19,4 +22,6 @@
     {% trans "Save Draft" %}
 </button>
 {% endif %}
+
+{% endblock form_buttons %}
 

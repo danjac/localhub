@@ -7,15 +7,7 @@
 {% include "includes/breadcrumbs.html" %}
 
 {% block form %}
-<form method="POST"
-      action="{{ request.path }}"
-      enctype="multipart/form-data"
-      data-controller="form"
-      data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload"
-      >
-      {% include "includes/forms/fields.html" %}
-      {% include "activities/includes/activity_form_buttons.html" %}
-</form>
+{% include "activities/includes/activity_form.html" with multipart=True %}
 {% endblock %}
 
 {% endblock content %}
