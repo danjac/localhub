@@ -28,14 +28,13 @@
   }
 
   .btn-block,
-  .btn-secondary,
-  .btn-link {
+  .btn-secondary {
     background-color: $darkmode-lighter;
     border-color: $gray-color;
     color: $darkmode-link;
   }
 
-  .btn-action {
+  .btn-action, .btn-link {
     color: $darkmode-link;
   }
 
