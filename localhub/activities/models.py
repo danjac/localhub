@@ -7,6 +7,7 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 from taggit.managers import TaggableManager
@@ -423,6 +424,9 @@ class Activity(TimeStampedModel):
 
         If the activity is already a reshare, a copy is made of the
         *original* model, not the reshare.
+
+        Reshares are published immediately, i.e. they do not have a
+        "draft mode".
         """
 
         parent = self.parent or self
@@ -431,6 +435,9 @@ class Activity(TimeStampedModel):
         )
         for field in self.RESHARED_FIELDS:
             setattr(reshared, field, getattr(self, field))
+
+        reshared.published = timezone.now()
+
         if commit:
             reshared.save(**kwargs)
         return reshared

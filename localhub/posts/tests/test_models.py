@@ -61,6 +61,7 @@ class TestPostModel:
         assert reshared.parent == post
         assert reshared.community == post.community
         assert reshared.owner == user
+        assert reshared.published
 
     def test_reshare_a_reshare(self, post, user):
 
@@ -73,6 +74,7 @@ class TestPostModel:
         assert reshared.parent == post
         assert reshared.community == post.community
         assert reshared.owner == user
+        assert reshared.published
 
     def test_delete_comments_on_delete(self, post):
         CommentFactory(content_object=post)
