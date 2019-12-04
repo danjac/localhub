@@ -4,14 +4,15 @@
 {% extends "account/base.html" %}
 
 {% load i18n %}
-{% load account %}
 
 {% block account_subtitle %}{% trans "Login" %}{% endblock %}
 
 {% block content %}
 
-  <h3>{% trans "Login" %}</h3>
-  <div class="divider"></div>
-  {% include "account/includes/login_form.html" %}
+<h3>{% trans "Login" %}</h3>
+<div class="divider"></div>
+{% include "account/includes/signup_link.html" %}
+{% url 'account_login' as login_url %}
+{% include "account/includes/login_form.html" with action=login_url %}
 
 {% endblock content %}

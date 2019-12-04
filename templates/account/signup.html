@@ -12,16 +12,8 @@
 <div class="divider"></div>
 
 <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
-<form method="post" action="{% url 'account_signup' %}">
-    {% if redirect_field_value %}
-    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-    {% endif %}
 
-    {% include "includes/forms/fields.html" %}
-
-    <button type="submit" class="btn btn-primary">
-        {% trans "Sign Up" %}
-    </button>
-</form>
-
+{% url 'account_signup' as signup_url %}
+{% trans "Sign Up" as t_signup %}
+{% include "account/includes/signup_form.html" with action=signup_url submit_btn=t_signup %}
 {% endblock content %}

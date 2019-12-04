@@ -7,10 +7,7 @@
       method="{{ method|default:'POST' }}"
       action="{{ action|default:request.path }}"
       {% if multipart %}enctype="multipart/form-data"{% endif %}
-      {% block form_stimulusjs_attrs %}
-      data-controller="form"
-      data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload"
-      {% endblock form_stimulusjs_attrs %}
+      {% block form_extra_attrs %}{% endblock %}
       {% endspaceless %}>
       {% block form_fields %}
       {% include "includes/forms/fields.html" %}

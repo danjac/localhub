@@ -14,12 +14,3 @@
 {{ block.super }}
 
 {% endblock form_fields %}
-
-{% block form_buttons %}
-
-<div class="btn-group">
-  <button class="btn btn-primary" type="submit">{% trans "Sign in" %}</button>
-  <a class="btn btn-link" href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a>
-</div>
-
-{% endblock form_buttons %}
