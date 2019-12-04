@@ -5,6 +5,7 @@ import operator
 from functools import reduce
 
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
 from django.http import HttpResponseRedirect
@@ -122,7 +123,7 @@ class TagDetailView(BaseStreamView):
 tag_detail_view = TagDetailView.as_view()
 
 
-class TagFollowView(PermissionRequiredMixin, BaseSingleTagView):
+class TagFollowView(LoginRequiredMixin, PermissionRequiredMixin, BaseSingleTagView):
     permission_required = "users.follow_tag"
 
     def get_permission_object(self):
@@ -141,7 +142,7 @@ class TagFollowView(PermissionRequiredMixin, BaseSingleTagView):
 tag_follow_view = TagFollowView.as_view()
 
 
-class TagUnfollowView(BaseSingleTagView):
+class TagUnfollowView(LoginRequiredMixin, BaseSingleTagView):
     def get_success_url(self):
         return reverse("activities:tag_detail", args=[self.object.slug])
 
@@ -154,7 +155,7 @@ class TagUnfollowView(BaseSingleTagView):
 tag_unfollow_view = TagUnfollowView.as_view()
 
 
-class TagBlockView(PermissionRequiredMixin, BaseSingleTagView):
+class TagBlockView(LoginRequiredMixin, PermissionRequiredMixin, BaseSingleTagView):
     permission_required = "users.block_tag"
 
     def get_permission_object(self):
@@ -172,7 +173,7 @@ class TagBlockView(PermissionRequiredMixin, BaseSingleTagView):
 tag_block_view = TagBlockView.as_view()
 
 
-class TagUnblockView(BaseSingleTagView):
+class TagUnblockView(LoginRequiredMixin, BaseSingleTagView):
     def get_success_url(self):
         return reverse("activities:tag_detail", args=[self.object.slug])
 
@@ -219,7 +220,7 @@ class TagListView(SearchMixin, BaseTagListView):
 tag_list_view = TagListView.as_view()
 
 
-class FollowingTagListView(BaseTagListView):
+class FollowingTagListView(LoginRequiredMixin, BaseTagListView):
     template_name = "activities/tags/following_tag_list.html"
 
     def get_queryset(self):
@@ -229,7 +230,7 @@ class FollowingTagListView(BaseTagListView):
 following_tag_list_view = FollowingTagListView.as_view()
 
 
-class BlockedTagListView(BaseTagListView):
+class BlockedTagListView(LoginRequiredMixin, BaseTagListView):
     template_name = "activities/tags/blocked_tag_list.html"
 
     def get_queryset(self):
