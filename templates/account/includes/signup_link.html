@@ -2,6 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
+{% url 'account_signup' as signup_url %}
 <p>{% blocktrans %}If you have not created an account yet, then please
-  <a href="{% url 'account_signup' %}">sign up</a> first.{% endblocktrans %}
+  <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}
 </p>
