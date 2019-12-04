@@ -1,7 +1,7 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "includes/forms/stimulusjs_form.html" %}
+{% extends "includes/forms/form.html" %}
 {% block form_extra_attrs %}
 data-controller="form"
 data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload"
