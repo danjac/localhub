@@ -45,7 +45,11 @@
     <tr>
       <td>
         <a href="{% url 'activities:tag_detail' tag.slug %}">
+            {% if tag.name.lower in content_warnings %}
+            <span class="badge" data-badge="{% trans 'Sensitive' %}">#{{ tag.name }}</span>
+            {% else %}
             #{{ tag.name }}
+            {% endif %}
         </a>
       </td>
       {% if can_follow_tag or can_block_tag %}

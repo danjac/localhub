@@ -5,7 +5,6 @@ import operator
 from functools import reduce
 
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
 from django.http import HttpResponseRedirect
@@ -16,21 +15,20 @@ from rules.contrib.views import PermissionRequiredMixin
 from taggit.models import Tag, TaggedItem
 from vanilla import GenericModelView, ListView
 
+from localhub.activities.utils import get_activity_models
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.events.models import Event
-from localhub.photos.models import Photo
-from localhub.posts.models import Post
 from localhub.views import SearchMixin
 
 from .streams import BaseStreamView
 
 
 class TagQuerySetMixin(CommunityRequiredMixin):
-    """
-    Only shows tags where content is available within the community.
-    """
 
-    tagged_models = [Post, Event, Photo]
+    model = Tag
+
+    # if True, only those tags used in this community by activities
+    # will be included
+    exclude_unused_tags = False
 
     def get_tagged_items(self):
         q = Q(
@@ -43,8 +41,8 @@ class TagQuerySetMixin(CommunityRequiredMixin):
                         ).values("id"),
                         content_type=content_type,
                     )
-                    for model, content_type in ContentType.objects.get_for_models(  # noqa
-                        *self.tagged_models
+                    for model, content_type in ContentType.objects.get_for_models(
+                        *get_activity_models()
                     ).items()
                 ],
             )
@@ -52,22 +50,33 @@ class TagQuerySetMixin(CommunityRequiredMixin):
         return TaggedItem.objects.filter(q)
 
     def get_queryset(self):
-        return Tag.objects.filter(
-            taggit_taggeditem_items__in=self.get_tagged_items()
-        ).distinct()
+        if self.exclude_unused_tags:
+            return Tag.objects.filter(
+                taggit_taggeditem_items__in=self.get_tagged_items()
+            ).distinct()
+        return super().get_queryset()
 
 
-class BaseSingleTagView(GenericModelView):
-    model = Tag
+class BaseSingleTagView(TagQuerySetMixin, GenericModelView):
+    ...
 
 
-class BaseTagListView(ListView):
+class BaseTagListView(TagQuerySetMixin, ListView):
     def get_queryset(self):
         return super().get_queryset().order_by("name")
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data()
+        data["content_warnings"] = [
+            tag.strip().lower()[1:]
+            for tag in self.request.community.content_warning_tags.split()
+        ]
+        return data
 
-class TagAutocompleteListView(TagQuerySetMixin, BaseTagListView):
+
+class TagAutocompleteListView(BaseTagListView):
     template_name = "activities/tags/tag_autocomplete_list.html"
+    exclude_unused_tags = True
 
     def get_queryset(self):
         if not (search_term := self.request.GET.get("q", "").strip()):
@@ -113,7 +122,7 @@ class TagDetailView(BaseStreamView):
 tag_detail_view = TagDetailView.as_view()
 
 
-class TagFollowView(LoginRequiredMixin, PermissionRequiredMixin, BaseSingleTagView):
+class TagFollowView(PermissionRequiredMixin, BaseSingleTagView):
     permission_required = "users.follow_tag"
 
     def get_permission_object(self):
@@ -132,7 +141,7 @@ class TagFollowView(LoginRequiredMixin, PermissionRequiredMixin, BaseSingleTagVi
 tag_follow_view = TagFollowView.as_view()
 
 
-class TagUnfollowView(LoginRequiredMixin, BaseSingleTagView):
+class TagUnfollowView(BaseSingleTagView):
     def get_success_url(self):
         return reverse("activities:tag_detail", args=[self.object.slug])
 
@@ -145,7 +154,7 @@ class TagUnfollowView(LoginRequiredMixin, BaseSingleTagView):
 tag_unfollow_view = TagUnfollowView.as_view()
 
 
-class TagBlockView(LoginRequiredMixin, PermissionRequiredMixin, BaseSingleTagView):
+class TagBlockView(PermissionRequiredMixin, BaseSingleTagView):
     permission_required = "users.block_tag"
 
     def get_permission_object(self):
@@ -163,7 +172,7 @@ class TagBlockView(LoginRequiredMixin, PermissionRequiredMixin, BaseSingleTagVie
 tag_block_view = TagBlockView.as_view()
 
 
-class TagUnblockView(LoginRequiredMixin, BaseSingleTagView):
+class TagUnblockView(BaseSingleTagView):
     def get_success_url(self):
         return reverse("activities:tag_detail", args=[self.object.slug])
 
@@ -176,9 +185,10 @@ class TagUnblockView(LoginRequiredMixin, BaseSingleTagView):
 tag_unblock_view = TagUnblockView.as_view()
 
 
-class TagListView(SearchMixin, TagQuerySetMixin, BaseTagListView):
+class TagListView(SearchMixin, BaseTagListView):
     template_name = "activities/tags/tag_list.html"
     paginate_by = settings.DEFAULT_PAGE_SIZE * 2
+    exclude_unused_tags = True
 
     def get_queryset(self):
 
@@ -209,7 +219,7 @@ class TagListView(SearchMixin, TagQuerySetMixin, BaseTagListView):
 tag_list_view = TagListView.as_view()
 
 
-class FollowingTagListView(LoginRequiredMixin, BaseTagListView):
+class FollowingTagListView(BaseTagListView):
     template_name = "activities/tags/following_tag_list.html"
 
     def get_queryset(self):
@@ -219,7 +229,7 @@ class FollowingTagListView(LoginRequiredMixin, BaseTagListView):
 following_tag_list_view = FollowingTagListView.as_view()
 
 
-class BlockedTagListView(LoginRequiredMixin, BaseTagListView):
+class BlockedTagListView(BaseTagListView):
     template_name = "activities/tags/blocked_tag_list.html"
 
     def get_queryset(self):
