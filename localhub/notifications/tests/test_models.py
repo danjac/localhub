@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+from unittest import mock
+
 import pytest
 from pywebpush import WebPushException
 
@@ -59,7 +61,7 @@ class TestPushSubscriptionModel:
 
         assert PushSubscription.objects.exists()
 
-    def test_push_if_timeout(self, member, mocker):
+    def test_push_if_timeout(self, member):
         sub = PushSubscription.objects.create(
             user=member.member,
             community=member.community,
@@ -70,9 +72,9 @@ class TestPushSubscriptionModel:
 
         payload = {"head": "hello", "body": "testing"}
 
-        e = WebPushException("BOOM", response=mocker.Mock(status_code=410))
+        e = WebPushException("BOOM", response=mock.Mock(status_code=410))
 
-        with mocker.patch("localhub.notifications.models.webpush", side_effect=e):
+        with mock.patch("localhub.notifications.models.webpush", side_effect=e):
             assert not sub.push(payload)
 
         assert not PushSubscription.objects.exists()
