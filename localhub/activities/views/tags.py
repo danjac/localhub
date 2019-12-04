@@ -66,7 +66,7 @@ class BaseTagListView(TagQuerySetMixin, ListView):
         return super().get_queryset().order_by("name")
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data()
+        data = super().get_context_data(**kwargs)
         data["content_warnings"] = [
             tag.strip().lower()[1:]
             for tag in self.request.community.content_warning_tags.split()

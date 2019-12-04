@@ -5,7 +5,7 @@ import pytest
 from django.urls import reverse
 from taggit.models import Tag
 
-from localhub.communities.factories import MembershipFactory
+from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.events.factories import EventFactory
 from localhub.photos.factories import PhotoFactory
 from localhub.polls.factories import AnswerFactory, PollFactory
@@ -148,11 +148,18 @@ class TestTagUnblockView:
 
 
 class TestTagListView:
-    def test_get(self, client, member):
+    def test_get(self, client, login_user):
+
+        community = CommunityFactory(content_warning_tags="#nsfw #spoilers\n#aliens")
+        member = MembershipFactory(community=community, member=login_user)
+
         PostFactory(community=member.community, owner=member.member).tags.add("movies")
 
-        response = client.get(reverse("activities:tag_list"))
+        response = client.get(
+            reverse("activities:tag_list"), HTTP_HOST=community.domain
+        )
         assert len(response.context["object_list"]) == 1
+        assert response.context["content_warnings"] == ["nsfw", "spoilers", "aliens"]
 
 
 class TestFollowingTagListView:
