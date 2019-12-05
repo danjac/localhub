@@ -39,9 +39,9 @@ class MarkdownFieldDescriptor:
         self.field = field
 
     def __get__(self, instance=None, owner=None):
-        value = instance.__dict__[self.field]
+        value = instance.__dict__[self.field] if instance else None
         if value is None:
-            return value
+            return None
         return MarkdownProxy(value)
 
     def __set__(self, instance, value):
