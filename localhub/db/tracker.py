@@ -6,6 +6,11 @@ class Tracker:
     """
     Uses simple_history HistoricalRecords to track if a set of fields
     have changed.
+
+    We use this instead of model_utils.FieldTracker due to numerous
+    issues around model inheritance and descriptors e.g.:
+
+    https://github.com/jazzband/django-model-utils/pull/80
     """
 
     def __init__(self, fields, history_attr="history"):
