@@ -71,12 +71,15 @@ class Post(Activity):
 
     def fetch_metadata_from_url(self, commit=True):
         """
-        Looks for og/twitter title, description and image if available and
-        title and/or description missing.
+        Tries to fetch image/description/title from metadata in the target
+        URL.
 
-        If no title found then uses URL subdomain by default.
+        If present will set the `title`, `metadata_description` and
+        `metadata_image` fields from values extracted from the HTML.
 
-        No action if post does not have a URL.
+        If URL is empty or the page does not return valid HTML or tags
+        then metadata_description and metadata_image are set to empty. If
+        not set the title will be set to the domain of the URL.
         """
 
         def _save_if_commit():
