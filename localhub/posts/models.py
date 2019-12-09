@@ -27,7 +27,13 @@ USER_AGENT = (
 
 class Post(Activity):
 
-    RESHARED_FIELDS = ("title", "description", "url")
+    RESHARED_FIELDS = (
+        "description",
+        "metadata_description",
+        "metadata_image",
+        "title",
+        "url",
+    )
 
     title = models.CharField(max_length=300, blank=True)
     url = models.URLField(max_length=500, blank=True)
