@@ -24,7 +24,7 @@ from localhub.markdown.fields import MarkdownField
 from localhub.notifications.models import Notification
 from localhub.utils.text import slugify_unicode
 
-from .fields import ActivityGenericRelations
+from .fields import CommonActivityGenericRelations
 
 
 class ActivityQuerySet(
@@ -232,7 +232,7 @@ class Activity(TimeStampedModel):
 
     description_tracker = Tracker(["description"])
 
-    common_generic_relations = ActivityGenericRelations()
+    common_generic_relations = CommonActivityGenericRelations()
 
     objects = ActivityQuerySet.as_manager()
 

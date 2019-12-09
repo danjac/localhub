@@ -10,13 +10,13 @@ from localhub.likes.models import Like
 from localhub.notifications.models import Notification
 
 
-class ActivityGenericRelations:
+class CommonActivityGenericRelations:
 
     """
     Usage:
 
     class Post(Activity):
-        ActivityGenericRelations()
+        relations = CommonActivityGenericRelations()
 
     adds following generic relations:
 
@@ -25,16 +25,15 @@ class ActivityGenericRelations:
     post.notifications
     post.likes
     """
+    relations = (
+        (Comment, "comments"),
+        (Flag, "flags"),
+        (Like, "likes"),
+        (Notification, "notifications"),
+    )
 
     def contribute_to_class(self, cls, name):
 
-        relations = (
-            (Comment, "comments"),
-            (Flag, "flags"),
-            (Like, "likes"),
-            (Notification, "notifications"),
-        )
-
-        for model, relation_name in relations:
+        for model, relation_name in self.relations:
             relation = GenericRelation(model, related_query_name=cls._meta.model_name)
             relation.contribute_to_class(cls, relation_name)
