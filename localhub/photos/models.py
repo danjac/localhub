@@ -1,18 +1,13 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from model_utils import Choices
 from sorl.thumbnail import ImageField
 
 from localhub.activities.models import Activity
-from localhub.comments.models import Comment
 from localhub.db.search import SearchIndexer
-from localhub.flags.models import Flag
-from localhub.likes.models import Like
-from localhub.notifications.models import Notification
 
 
 class Photo(Activity):
@@ -47,11 +42,6 @@ class Photo(Activity):
         blank=True,
         verbose_name="Creative Commons license",
     )
-
-    comments = GenericRelation(Comment, related_query_name="photo")
-    flags = GenericRelation(Flag, related_query_name="photo")
-    likes = GenericRelation(Like, related_query_name="photo")
-    notifications = GenericRelation(Notification, related_query_name="photo")
 
     search_indexer = SearchIndexer(
         ("A", "title"), ("B", "description"), ("C", "artist")

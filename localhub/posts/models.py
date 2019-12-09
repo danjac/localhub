@@ -3,17 +3,12 @@
 
 import requests
 from bs4 import BeautifulSoup
-from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.utils.translation import gettext as _
 
 from localhub.activities.models import Activity
-from localhub.comments.models import Comment
 from localhub.db.search import SearchIndexer
 from localhub.db.tracker import Tracker
-from localhub.flags.models import Flag
-from localhub.likes.models import Like
-from localhub.notifications.models import Notification
 from localhub.oembed import bootstrap_oembed
 from localhub.utils.urls import get_domain, is_image_url, is_url
 
@@ -42,11 +37,6 @@ class Post(Activity):
 
     metadata_image = models.URLField(max_length=500, blank=True)
     metadata_description = models.TextField(blank=True)
-
-    comments = GenericRelation(Comment, related_query_name="post")
-    flags = GenericRelation(Flag, related_query_name="post")
-    likes = GenericRelation(Like, related_query_name="post")
-    notifications = GenericRelation(Notification, related_query_name="post")
 
     url_tracker = Tracker(["url"])
 

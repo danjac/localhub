@@ -3,7 +3,6 @@
 
 import geocoder
 from django.conf import settings
-from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.encoding import smart_text
@@ -14,12 +13,8 @@ from icalendar import Event as CalendarEvent
 from timezone_field import TimeZoneField
 
 from localhub.activities.models import Activity
-from localhub.comments.models import Comment
 from localhub.db.search import SearchIndexer
 from localhub.db.tracker import Tracker
-from localhub.flags.models import Flag
-from localhub.likes.models import Like
-from localhub.notifications.models import Notification
 from localhub.utils.urls import get_domain
 
 
@@ -71,11 +66,6 @@ class Event(Activity):
 
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
-
-    comments = GenericRelation(Comment, related_query_name="event")
-    flags = GenericRelation(Flag, related_query_name="event")
-    likes = GenericRelation(Like, related_query_name="event")
-    notifications = GenericRelation(Notification, related_query_name="event")
 
     location_tracker = Tracker(LOCATION_FIELDS)
 

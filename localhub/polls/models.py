@@ -2,16 +2,11 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
-from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.utils.translation import gettext as _
 
 from localhub.activities.models import Activity, ActivityQuerySet
-from localhub.comments.models import Comment
 from localhub.db.search import SearchIndexer
-from localhub.flags.models import Flag
-from localhub.likes.models import Like
-from localhub.notifications.models import Notification
 
 
 class PollQuerySet(ActivityQuerySet):
@@ -33,10 +28,6 @@ class Poll(Activity):
     RESHARED_FIELDS = ("title", "description")
 
     title = models.CharField(max_length=300)
-    comments = GenericRelation(Comment, related_query_name="poll")
-    flags = GenericRelation(Flag, related_query_name="poll")
-    likes = GenericRelation(Like, related_query_name="poll")
-    notifications = GenericRelation(Notification, related_query_name="poll")
 
     search_indexer = SearchIndexer(("A", "title"), ("B", "description"))
 

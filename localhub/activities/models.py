@@ -24,6 +24,8 @@ from localhub.markdown.fields import MarkdownField
 from localhub.notifications.models import Notification
 from localhub.utils.text import slugify_unicode
 
+from .fields import ActivityGenericRelations
+
 
 class ActivityQuerySet(
     CommentAnnotationsQuerySetMixin,
@@ -229,6 +231,8 @@ class Activity(TimeStampedModel):
     search_document = SearchVectorField(null=True, editable=False)
 
     description_tracker = Tracker(["description"])
+
+    common_generic_relations = ActivityGenericRelations()
 
     objects = ActivityQuerySet.as_manager()
 
