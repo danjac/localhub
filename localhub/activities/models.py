@@ -197,13 +197,6 @@ class Activity(TimeStampedModel):
 
     RESHARED_FIELDS = ()
 
-    COMMON_GENERIC_RELATIONS = (
-        (Comment, "comments"),
-        (Flag, "flags"),
-        (Like, "likes"),
-        (Notification, "notifications"),
-    )
-
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
