@@ -14,7 +14,7 @@ from django.db.models import Count, Exists, IntegerField, OuterRef, QuerySet, Su
 class AbstractGenericRelation:
     """
     Wraps GenericRelation. Allows setting a generic relation on abstract model
-    and automatically setting name on the subclass.
+    and automatically setting related_query_name based on the concrete subclass.
 
     class Activity(Model):
         comments = AbstractGenericRelation(Comment)
