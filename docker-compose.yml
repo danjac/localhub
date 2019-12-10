@@ -67,18 +67,3 @@ services:
       - redis
     ports: []
     command: /start-celeryworker
-
-  celerybeat:
-    <<: *django
-    depends_on:
-      - postgres
-      - mailhog
-      - redis
-    ports: []
-    command: /start-celerybeat
-
-  flower:
-    <<: *django
-    ports:
-      - "5555:5555"
-    command: /start-flower

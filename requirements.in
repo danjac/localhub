@@ -23,7 +23,6 @@ django-timezone-field
 django-vanilla-views
 django-widget-tweaks
 factory-boy
-flower
 geocoder
 gunicorn
 icalendar

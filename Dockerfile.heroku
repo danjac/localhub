@@ -6,13 +6,26 @@ FROM python:3.8.0-alpine3.10
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-RUN apk update \
-      && apk add --virtual build-deps gcc python3-dev musl-dev \
-      && apk add postgresql-dev \
-      && apk add jpeg-dev zlib-dev freetype-dev lcms2-dev openjpeg-dev tiff-dev tk-dev tcl-dev \
-      && apk add libffi-dev py-cffi \
-      && apk add gettext \
-      && apk add postgresql-client
+RUN apk add --update --virtual \
+      build-deps \
+      gcc \
+      musl-dev \
+      python3-dev \
+      && apk add --update \
+      freetype-dev \
+      gettext \
+      jpeg-dev \
+      lcms2-dev \
+      libffi-dev \
+      openjpeg-dev \
+      postgresql-client \
+      postgresql-dev \
+      py-cffi \
+      tcl-dev \
+      tiff-dev \
+      tk-dev \
+      zlib-dev \
+      && rm -rf /var/cache/apk/*
 
 # Copy requirements to insure caching
 COPY ./requirements.txt /requirements.txt
