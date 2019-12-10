@@ -6,8 +6,31 @@ Functions for more efficient handling of ContentType related
 objects with querysets.
 """
 
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Exists, IntegerField, OuterRef, QuerySet, Subquery
+
+
+class AbstractGenericRelation:
+    """
+    Wraps GenericRelation. Allows setting a generic relation on abstract model
+    and automatically setting name on the subclass.
+
+    class Activity(Model):
+        comments = AbstractGenericRelation(Comment)
+
+    class Post(Activity):
+        ...
+
+    post.comments
+    """
+
+    def __init__(self, model):
+        self.model = model
+
+    def contribute_to_class(self, cls, name):
+        relation = GenericRelation(self.model, related_query_name=cls._meta.model_name)
+        relation.contribute_to_class(cls, name)
 
 
 def get_generic_related_exists(

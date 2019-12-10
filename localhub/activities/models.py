@@ -15,7 +15,10 @@ from taggit.models import Tag
 
 from localhub.comments.models import Comment, CommentAnnotationsQuerySetMixin
 from localhub.communities.models import Community
-from localhub.db.content_types import get_generic_related_queryset
+from localhub.db.content_types import (
+    AbstractGenericRelation,
+    get_generic_related_queryset,
+)
 from localhub.db.search import SearchQuerySetMixin
 from localhub.db.tracker import Tracker
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
@@ -23,8 +26,6 @@ from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.models import Notification
 from localhub.utils.text import slugify_unicode
-
-from .fields import CommonActivityGenericRelations
 
 
 class ActivityQuerySet(
@@ -196,6 +197,13 @@ class Activity(TimeStampedModel):
 
     RESHARED_FIELDS = ()
 
+    COMMON_GENERIC_RELATIONS = (
+        (Comment, "comments"),
+        (Flag, "flags"),
+        (Like, "likes"),
+        (Notification, "notifications"),
+    )
+
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -224,6 +232,11 @@ class Activity(TimeStampedModel):
 
     published = models.DateTimeField(null=True, blank=True)
 
+    comments = AbstractGenericRelation(Comment)
+    flags = AbstractGenericRelation(Flag)
+    likes = AbstractGenericRelation(Like)
+    notification = AbstractGenericRelation(Notification)
+
     history = HistoricalRecords(inherit=True)
 
     tags = TaggableManager(blank=True)
@@ -231,8 +244,6 @@ class Activity(TimeStampedModel):
     search_document = SearchVectorField(null=True, editable=False)
 
     description_tracker = Tracker(["description"])
-
-    common_generic_relations = CommonActivityGenericRelations()
 
     objects = ActivityQuerySet.as_manager()
 
