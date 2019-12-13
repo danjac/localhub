@@ -61,9 +61,18 @@ class TestActivityManager:
     def test_num_reshares(self, post):
 
         for _ in range(3):
-            post.reshare(UserFactory())
+            member = MembershipFactory(community=post.community)
+            post.reshare(member.member)
 
-        post = Post.objects.with_num_reshares().filter(is_reshare=False).first()
+        # non-member
+
+        post.reshare(UserFactory())
+
+        post = (
+            Post.objects.with_num_reshares(UserFactory(), post.community)
+            .filter(is_reshare=False)
+            .first()
+        )
         assert post.num_reshares == 3
 
     def test_has_reshared(self, post, user):
@@ -80,7 +89,10 @@ class TestActivityManager:
         assert posts[0] == first
 
         assert (
-            Post.objects.with_has_reshared(other).filter(has_reshared=True).count() == 0
+            Post.objects.with_has_reshared(other)
+            .filter(has_reshared=True)
+            .count()
+            == 0
         )
         assert (
             Post.objects.with_has_reshared(AnonymousUser())
@@ -239,17 +251,24 @@ class TestActivityManager:
         user.blocked.add(fourth_post.owner)
         user.blocked_tags.add(Tag.objects.get(name="movies"))
 
-        assert Post.objects.without_blocked(user).distinct().get() == third_post
+        assert (
+            Post.objects.without_blocked(user).distinct().get() == third_post
+        )
 
     def test_for_community(self, community: Community):
 
         post = PostFactory(
-            community=community, owner=MembershipFactory(community=community).member,
+            community=community,
+            owner=MembershipFactory(community=community).member,
         )
         PostFactory(owner=MembershipFactory(community=community).member)
-        PostFactory(owner=MembershipFactory(community=community, active=False).member)
         PostFactory(
-            owner=MembershipFactory(community=CommunityFactory(), active=True).member
+            owner=MembershipFactory(community=community, active=False).member
+        )
+        PostFactory(
+            owner=MembershipFactory(
+                community=CommunityFactory(), active=True
+            ).member
         )
         PostFactory(community=community)
         PostFactory()
@@ -275,12 +294,16 @@ class TestActivityManager:
         assert Post.objects.with_num_likes().get().num_likes == 2
 
     def test_with_has_flagged_if_user_has_not_flagged(self, post, user):
-        Flag.objects.create(user=user, content_object=post, community=post.community)
+        Flag.objects.create(
+            user=user, content_object=post, community=post.community
+        )
         activity = Post.objects.with_has_flagged(UserFactory()).get()
         assert not activity.has_flagged
 
     def test_with_has_flagged_if_user_has_flagged(self, post, user):
-        Flag.objects.create(user=user, content_object=post, community=post.community)
+        Flag.objects.create(
+            user=user, content_object=post, community=post.community
+        )
         activity = Post.objects.with_has_flagged(user).get()
         assert activity.has_flagged
 
@@ -316,7 +339,9 @@ class TestActivityManager:
         assert not hasattr(activity, "has_flagged")
 
     def test_with_common_annotations_if_authenticated(self, post, user):
-        activity = Post.objects.with_common_annotations(user, post.community).get()
+        activity = Post.objects.with_common_annotations(
+            user, post.community
+        ).get()
 
         assert hasattr(activity, "num_comments")
         assert hasattr(activity, "num_likes")

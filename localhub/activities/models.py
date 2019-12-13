@@ -50,7 +50,7 @@ class ActivityQuerySet(
             [2]: moderators only
         """
 
-        qs = self.with_num_comments().with_num_reshares()
+        qs = self.with_num_comments().with_num_reshares(user, community)
         if user.is_authenticated:
             qs = (
                 qs.with_num_likes()
@@ -63,12 +63,22 @@ class ActivityQuerySet(
                 qs = qs.with_is_flagged()
         return qs
 
-    def with_num_reshares(self):
+    def with_num_reshares(self, user, community):
         """
         Annotates int value `num_reshares`, indicating how many times
         this activity has been reshared.
         """
-        return self.annotate(num_reshares=models.Count("reshares"))
+        return self.annotate(
+            num_reshares=models.Subquery(
+                self.model.objects.filter(parent=models.OuterRef("pk"))
+                .for_community(community)
+                .without_blocked_users(user)
+                .values("parent")
+                .annotate(count=models.Count("pk"))
+                .values("count"),
+                output_field=models.IntegerField(),
+            )
+        )
 
     def with_has_reshared(self, user):
         """
