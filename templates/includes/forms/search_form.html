@@ -1,20 +1,25 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{# Use this template together with SearchMixin views #}
+
 {% load i18n %}
 <form method="GET"
-      action="{{ search_url|default:request.path }}"
+      action="{{ request.path }}"
       data-controller="form"
       data-action="form#submit"
       class="my-2 search-form"
       >
+      {% for name, value in non_search_params.items %}
+      <input type="hidden" name="{{ name }}" value="{{ value }}">
+      {% endfor %}
       <input class="form-input"
              name="q"
              type="search"
              placeholder="{% trans "Search" %}"
              value="{{ view.search_query|default:"" }}">
       {% if view.search_query %}
-      <a class="btn btn-block mt-2" href="{{ request.path }}">
+      <a class="btn btn-block mt-2" href="{{ non_search_path }}">
         {% trans "Clear Search" %}
       </a>
   {% endif %}

@@ -10,12 +10,14 @@
     {% if view.show_all %}
     <a href="{{ request.path }}">{% trans "Show Pending" %}</a>
     {% else %}
-    <a href="{{ request.path }}?all">{% trans "Show All" %}</a>
+    <a href="{{ request.path }}?all=true">{% trans "Show All" %}</a>
     {% endif %}
 </div>
 <div class="divider"></div>
 
+{% if paginator.count or view.search_query %}
 {% include "includes/forms/search_form.html" %}
+{% endif %}
 
 {% if object_list %}
 <table class="table table-striped table-hover table-responsive-md">
