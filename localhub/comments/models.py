@@ -2,7 +2,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
-from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.fields import (
+    GenericForeignKey,
+    GenericRelation,
+)
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
@@ -185,10 +188,6 @@ class Comment(TimeStampedModel):
             return []
         return self.first_record.diff_against(self.prev_record).changed_fields
 
-    @cached_property
-    def has_content_changed(self):
-        return "content" in self.changed_fields
-
     def abbreviate(self, length=30):
         text = " ".join(self.content.plaintext().splitlines())
         return truncatechars(text, length)
@@ -230,9 +229,9 @@ class Comment(TimeStampedModel):
 
         # notify the activity owner
         if self.owner_id != self.content_object.owner_id:
-            notifications.append(
+            notifications += [
                 self.make_notification("new_comment", self.content_object.owner)
-            )
+            ]
 
         # notify the person being replied to
 
