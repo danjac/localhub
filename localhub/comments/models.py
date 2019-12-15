@@ -29,12 +29,19 @@ class CommentAnnotationsQuerySetMixin:
     queryset.
     """
 
-    def with_num_comments(self, annotated_name="num_comments"):
+    def with_num_comments(self, user, community, annotated_name="num_comments"):
         """
         Annotates `num_comments` to the model.
         """
         return self.annotate(
-            **{annotated_name: get_generic_related_count_subquery(self.model, Comment)}
+            **{
+                annotated_name: get_generic_related_count_subquery(
+                    self.model,
+                    Comment.objects.for_community(community).without_blocked_users(
+                        user
+                    ),
+                )
+            }
         )
 
 

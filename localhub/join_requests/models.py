@@ -10,6 +10,11 @@ from model_utils.fields import MonitorField, StatusField
 from model_utils.models import TimeStampedModel
 
 from localhub.communities.models import Community
+from localhub.db.search import SearchQuerySetMixin
+
+
+class JoinRequestQuerySet(SearchQuerySetMixin, models.QuerySet):
+    search_document_field = "sender__search_document"
 
 
 class JoinRequest(TimeStampedModel):
@@ -27,6 +32,8 @@ class JoinRequest(TimeStampedModel):
     status_changed = MonitorField(monitor="status")
 
     sent = models.DateTimeField(null=True, blank=True)
+
+    objects = JoinRequestQuerySet.as_manager()
 
     class Meta:
         unique_together = ("community", "sender")

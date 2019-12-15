@@ -28,10 +28,7 @@ from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
-from ..notifications import (
-    send_activity_deleted_email,
-    send_activity_notifications,
-)
+from ..notifications import send_activity_deleted_email, send_activity_notifications
 from ..utils import get_breadcrumbs_for_instance, get_breadcrumbs_for_model
 
 
