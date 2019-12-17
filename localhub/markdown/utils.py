@@ -16,6 +16,7 @@ from markdownx.utils import markdownify as default_markdownify
 from localhub.utils.text import slugify_unicode
 
 ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
+    "abbr",
     "code",
     "h1",
     "h2",
@@ -23,9 +24,15 @@ ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
     "h4",
     "h5",
     "h6",
+    "hr",
     "img",
     "p",
     "pre",
+    "table",
+    "tbody",
+    "td",
+    "thead",
+    "tr",
 ]
 
 ALLOWED_ATTRIBUTES = bleach.ALLOWED_ATTRIBUTES.copy()
