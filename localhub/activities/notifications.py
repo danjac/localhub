@@ -17,7 +17,7 @@ NOTIFICATION_HEADERS = {
     "mention": _("%(actor)s has mentioned you in their %(activity)s"),
     "moderator_edit": _("A moderator has edited your %(activity)s"),
     "moderator_review_request": _(
-        "%(actor)s has submitted a new %(activity)s to review"
+        "%(actor)s has submitted or updated their %(activity)s for review"
     ),
     "new_followed_user_post": _("%(actor)s has submitted a new %(activity)s"),
     "new_followed_tag_post": _(
