@@ -31,6 +31,7 @@ ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
     "table",
     "tbody",
     "td",
+    "th",
     "thead",
     "tr",
 ]
