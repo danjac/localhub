@@ -4,7 +4,6 @@ bleach
 boto3
 celery
 dj-database-url
-django==2.2.8
 django-allauth
 django-anymail[mailgun]
 django-celery-email
@@ -22,6 +21,7 @@ django-taggit
 django-timezone-field
 django-vanilla-views
 django-widget-tweaks
+django==2.2.8
 factory-boy
 geocoder
 gunicorn
