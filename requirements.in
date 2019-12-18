@@ -21,7 +21,7 @@ django-taggit
 django-timezone-field
 django-vanilla-views
 django-widget-tweaks
-django==2.2.8
+django==2.2.9
 factory-boy
 geocoder
 gunicorn
