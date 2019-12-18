@@ -38,7 +38,7 @@ class CommentQuerySetMixin(CommunityRequiredMixin):
         )
 
 
-class BaseCommentListView(CommentQuerySetMixin, ListView):
+class BaseCommentListView(CommentQuerySetMixin, LoginRequiredMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
     def get_queryset(self):
@@ -58,7 +58,9 @@ class CommentListView(SearchMixin, BaseCommentListView):
 comment_list_view = CommentListView.as_view()
 
 
-class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
+class CommentDetailView(
+    CommentQuerySetMixin, BreadcrumbsMixin, LoginRequiredMixin, DetailView
+):
     model = Comment
 
     def get_breadcrumbs(self):

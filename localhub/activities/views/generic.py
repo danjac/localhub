@@ -46,7 +46,11 @@ class BaseSingleActivityView(ActivityQuerySetMixin, GenericModelView):
 
 
 class ActivityCreateView(
-    CommunityRequiredMixin, PermissionRequiredMixin, BreadcrumbsMixin, CreateView,
+    LoginRequiredMixin,
+    CommunityRequiredMixin,
+    PermissionRequiredMixin,
+    BreadcrumbsMixin,
+    CreateView,
 ):
     permission_required = "activities.create_activity"
     page_title = _("Submit")
@@ -92,7 +96,9 @@ class ActivityCreateView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
+class ActivityListView(
+    ActivityQuerySetMixin, SearchMixin, LoginRequiredMixin, ListView
+):
     allow_empty = True
     paginate_by = settings.DEFAULT_PAGE_SIZE
     order_by = ("-published", "-created")
@@ -113,7 +119,11 @@ class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
 
 
 class ActivityUpdateView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, BreadcrumbsMixin, UpdateView,
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    ActivityQuerySetMixin,
+    BreadcrumbsMixin,
+    UpdateView,
 ):
     permission_required = "activities.change_activity"
     success_message = _("Your changes have been saved")
@@ -160,7 +170,9 @@ class ActivityUpdateView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityDeleteView(PermissionRequiredMixin, ActivityQuerySetMixin, DeleteView):
+class ActivityDeleteView(
+    LoginRequiredMixin, PermissionRequiredMixin, ActivityQuerySetMixin, DeleteView
+):
     permission_required = "activities.delete_activity"
     success_url = settings.HOME_PAGE_URL
     success_message = _("The %s has been deleted")
@@ -182,7 +194,9 @@ class ActivityDeleteView(PermissionRequiredMixin, ActivityQuerySetMixin, DeleteV
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
+class ActivityDetailView(
+    ActivityQuerySetMixin, BreadcrumbsMixin, LoginRequiredMixin, DetailView
+):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.user.has_perm(
@@ -232,7 +246,9 @@ class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
         )
 
 
-class ActivityReshareView(PermissionRequiredMixin, BaseSingleActivityView):
+class ActivityReshareView(
+    LoginRequiredMixin, PermissionRequiredMixin, BaseSingleActivityView
+):
     permission_required = "activities.reshare_activity"
 
     def get_queryset(self):
@@ -260,7 +276,9 @@ class ActivityReshareView(PermissionRequiredMixin, BaseSingleActivityView):
         return redirect(obj)
 
 
-class ActivityLikeView(PermissionRequiredMixin, BaseSingleActivityView):
+class ActivityLikeView(
+    LoginRequiredMixin, PermissionRequiredMixin, BaseSingleActivityView
+):
     permission_required = "activities.like_activity"
 
     def post(self, request, *args, **kwargs):
@@ -348,7 +366,7 @@ activity_flag_view = ActivityFlagView.as_view()
 
 
 class ActivityCommentCreateView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, FormView
+    LoginRequiredMixin, PermissionRequiredMixin, ActivityQuerySetMixin, FormView
 ):
     form_class = CommentForm
     template_name = "comments/comment_form.html"

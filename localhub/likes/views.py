@@ -1,13 +1,11 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-
 from localhub.activities.views.streams import BaseStreamView
 from localhub.comments.views import BaseCommentListView
 
 
-class LikedStreamView(LoginRequiredMixin, BaseStreamView):
+class LikedStreamView(BaseStreamView):
     template_name = "likes/activities.html"
 
     def get_count_queryset_for_model(self, model):
@@ -20,7 +18,7 @@ class LikedStreamView(LoginRequiredMixin, BaseStreamView):
 liked_stream_view = LikedStreamView.as_view()
 
 
-class LikedCommentListView(LoginRequiredMixin, BaseCommentListView):
+class LikedCommentListView(BaseCommentListView):
     template_name = "likes/comments.html"
 
     def get_queryset(self):
