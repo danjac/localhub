@@ -4,7 +4,6 @@
 import itertools
 
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.utils import timezone
 from django.utils.formats import date_format
@@ -22,9 +21,7 @@ from localhub.views import BaseMultipleQuerySetListView, SearchMixin
 from ..utils import get_activity_models
 
 
-class BaseStreamView(
-    LoginRequiredMixin, CommunityRequiredMixin, BaseMultipleQuerySetListView
-):
+class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
     allow_empty = True
     ordering = ("-published", "-created")
     paginate_by = settings.DEFAULT_PAGE_SIZE
