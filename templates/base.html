@@ -191,10 +191,9 @@
                  data-action="sidebar#toggle"
                  >
                  {% block sidebar_toggle %}
-                <span{% if total_notifications_count %} class="badge" data-badge="{{ total_notifications_count }}"{% endif %}>
+                 <span{% if total_notifications_count %} class="badge" data-badge="{{ total_notifications_count }}"{% endif %}>
                    {% trans "Sidebar" %}
                  </span>
-                {% endwith %}
                 {% endblock %}
               </a>
             </div>
