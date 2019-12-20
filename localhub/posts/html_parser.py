@@ -12,9 +12,9 @@ USER_AGENT = (
 )
 
 
-def fetch_metadata_from_url(url):
+def parse_metadata_from_url(url):
     """
-    Given a URL, will try and fetch the following data as a tuple:
+    Given a URL, will try and parse the following data as a tuple:
 
     title, image, description
 
@@ -33,34 +33,45 @@ def fetch_metadata_from_url(url):
     except (requests.RequestException, ValueError):
         return (None, None, None)
 
-    soup = BeautifulSoup(response.content, "html.parser")
+    return parse_metadata_from_html(response.content)
 
+
+def parse_metadata_from_html(html):
+    soup = BeautifulSoup(html, "html.parser")
+
+    return (
+        _parse_title_from_html(soup),
+        _parse_image_from_html(soup),
+        _parse_description_from_html(soup),
+    )
+
+
+def _parse_title_from_html(soup):
     title = soup.find("meta", attrs={"property": "og:title"}) or soup.find(
         "meta", attrs={"name": "twitter:title"}
     )
-
     if title and "content" in title.attrs:
-        title = title["content"]
-    else:
-        title = soup.title.string if soup.title else None
+        return title["content"]
+    return soup.title.string if soup.title else None
 
-    image = None
 
+def _parse_image_from_html(soup):
     try:
         image = soup.find("meta", attrs={"property": "og:image"}).attrs[
             "content"
         ]
         if len(image) < 501 and is_url(image) and is_image_url(image):
-            image = image
+            return image
     except (AttributeError, KeyError):
         pass
 
+    return None
+
+
+def _parse_description_from_html(soup):
     description = soup.find(
         "meta", attrs={"property": "og:description"}
     ) or soup.find("meta", attrs={"name": "twitter:description"})
     if description and "content" in description.attrs:
-        description = description.attrs["content"]
-    else:
-        description = None
-
-    return title, image, description
+        return description.attrs["content"]
+    return None

@@ -10,7 +10,7 @@ from localhub.db.tracker import Tracker
 from localhub.oembed import bootstrap_oembed
 from localhub.utils.urls import get_domain
 
-from .utils import fetch_metadata_from_url
+from .html_parser import parse_metadata_from_url
 
 _oembed_registry = bootstrap_oembed()
 
@@ -73,7 +73,7 @@ class Post(Activity):
         not set the title will be set to the domain of the URL.
         """
 
-        title, image, description = fetch_metadata_from_url(self.url)
+        title, image, description = parse_metadata_from_url(self.url)
 
         self.metadata_image = image or ""
         self.metadata_description = description or ""
