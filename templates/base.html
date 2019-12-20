@@ -34,7 +34,7 @@
   <head>
     <title>
       {% block title %}
-      {% if total_notifications_count %} ({{ total_notifications_count }}) {% endif %}
+      {% if total_notifications_count %}*!{% endif %}
       {% if community %}{{ community.name }}{% endif %}
       {% block subtitle %}{% endblock %}
       {% endblock %}
