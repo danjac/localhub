@@ -38,13 +38,13 @@
          data-markdown="[[SELECTION]](url)"
          >{% trans "Link" %}</a>
 
-       <a class="btn btn-link btn-sm my-1"
+      <a class="btn btn-link btn-sm my-1"
          href="#"
          data-action="markdown#select"
          data-markdown="![]([SELECTION])"
          >{% trans "Image" %}</a>
 
-     <a class="btn btn-link btn-sm my-1"
+      <a class="btn btn-link btn-sm my-1"
          href="#"
          data-action="markdown#select"
          data-markdown="> [SELECTION]"
@@ -156,6 +156,13 @@
               <li>List item 1</li>
               <li>List item 2</li>
             </ol>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            {% blocktrans %}
+            A more complete guide can be found <a target="_blank" rel="nofollow" href="https://www.markdownguide.org/basic-syntax">here</a>.
+            {% endblocktrans %}
           </td>
         </tr>
       </tbody>
