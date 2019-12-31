@@ -22,9 +22,7 @@ class TestParseMetadataFromUrl:
 </html>"""
 
         mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
-        title, image, description = parse_metadata_from_url(
-            "https://google.com"
-        )
+        title, image, description = parse_metadata_from_url("https://google.com")
         assert title == "a test site"
         assert image == "http://example.com/test.jpg"
         assert description == "test description"
@@ -34,9 +32,7 @@ class TestParseMetadataFromUrl:
             ok = False
 
         mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
-        title, image, description = parse_metadata_from_url(
-            "https://google.com"
-        )
+        title, image, description = parse_metadata_from_url("https://google.com")
 
         assert (title, image, description) == (None, None, None)
 

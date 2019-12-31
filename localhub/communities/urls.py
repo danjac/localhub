@@ -5,11 +5,11 @@ from django.urls import path
 
 from .views import (
     community_detail_view,
-    community_leave_view,
     community_terms_view,
     community_update_view,
     membership_delete_view,
     membership_detail_view,
+    membership_leave_view,
     membership_list_view,
     membership_update_view,
 )
@@ -19,8 +19,8 @@ app_name = "communities"
 urlpatterns = [
     path("", view=community_detail_view, name="community_detail"),
     path("terms/", view=community_terms_view, name="community_terms"),
-    path("~leave/", view=community_leave_view, name="leave"),
     path("~update/", view=community_update_view, name="community_update"),
+    path("~leave/", view=membership_leave_view, name="membership_leave"),
     path("memberships/", view=membership_list_view, name="membership_list"),
     path(
         "memberships/<int:pk>/", view=membership_detail_view, name="membership_detail",

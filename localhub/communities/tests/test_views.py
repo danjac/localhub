@@ -206,12 +206,12 @@ class TestMembershipDeleteView:
         assert not Membership.objects.filter(pk=member.id).exists()
 
 
-class TestCommunityLeaveView:
+class TestMembershipLeaveView:
     def test_get(self, client, member, user):
-        assert client.get(reverse("communities:leave")).status_code == 200
+        assert client.get(reverse("communities:membership_leave")).status_code == 200
 
     def test_delete(self, client, member, user):
-        response = client.post(reverse("communities:leave"))
+        response = client.post(reverse("communities:membership_leave"))
 
         assert response.url == "/"
         assert not Membership.objects.filter(pk=member.pk).exists()

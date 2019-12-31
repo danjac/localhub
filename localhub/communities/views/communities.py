@@ -6,67 +6,20 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages.views import SuccessMessageMixin
-from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Q
 from django.forms import ModelForm
-from django.http import Http404, HttpResponseRedirect
-from django.urls import reverse
+from django.http import HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import DeleteView, DetailView, ListView, TemplateView, UpdateView
+from vanilla import DetailView, ListView, TemplateView, UpdateView
 
 from localhub.activities.utils import get_combined_activity_queryset
 from localhub.join_requests.models import JoinRequest
 from localhub.views import SearchMixin
 
-from .emails import send_membership_deleted_email
-from .forms import MembershipForm
-from .models import Community, Membership
-from .rules import is_member
-
-
-class CommunityRequiredMixin:
-    """
-    Ensures that a community is available on this domain. This requires
-    the CurrentCommunityMiddleware is enabled.
-
-    If the user is not a member they will be redirected to the Welcome view.
-
-    If the view has the `allow_non_members` property *True* then the above
-    rule is overriden - for example in some cases where we want to allow
-    the user to be able to handle an invitation.
-    """
-
-    allow_non_members = False
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.community.active:
-            return self.handle_community_not_found()
-
-        if (
-            not request.user.has_perm("communities.view_community", request.community)
-            and not self.allow_non_members
-        ):
-            return self.handle_community_access_denied()
-        return super().dispatch(request, *args, **kwargs)
-
-    def handle_community_access_denied(self):
-        if self.request.is_ajax():
-            raise PermissionDenied(_("You must be a member of this community"))
-        return HttpResponseRedirect(reverse("community_welcome"))
-
-    def handle_community_not_found(self):
-        if self.request.is_ajax():
-            raise Http404(_("No community is available for this domain"))
-        return HttpResponseRedirect(reverse("community_not_found"))
-
-
-class MembershipQuerySetMixin(CommunityRequiredMixin):
-    def get_queryset(self):
-        return Membership.objects.filter(
-            community=self.request.community
-        ).select_related("community", "member")
+from ..models import Community, Membership
+from ..rules import is_member
+from .base import CommunityRequiredMixin
 
 
 class CommunityDetailView(CommunityRequiredMixin, DetailView):
@@ -299,101 +252,3 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
 
 
 community_list_view = CommunityListView.as_view()
-
-
-class MembershipListView(
-    LoginRequiredMixin,
-    PermissionRequiredMixin,
-    MembershipQuerySetMixin,
-    SearchMixin,
-    ListView,
-):
-    paginate_by = settings.DEFAULT_PAGE_SIZE
-    permission_required = "communities.manage_community"
-    model = Membership
-
-    def get_permission_object(self):
-        return self.request.community
-
-    def get_queryset(self):
-
-        qs = super().get_queryset().order_by("member__name", "member__username")
-
-        if self.search_query:
-            qs = qs.search(self.search_query)
-        return qs
-
-
-membership_list_view = MembershipListView.as_view()
-
-
-class MembershipDetailView(
-    LoginRequiredMixin, PermissionRequiredMixin, MembershipQuerySetMixin, DetailView,
-):
-
-    permission_required = "communities.view_membership"
-    model = Membership
-
-
-membership_detail_view = MembershipDetailView.as_view()
-
-
-class MembershipUpdateView(
-    LoginRequiredMixin,
-    PermissionRequiredMixin,
-    MembershipQuerySetMixin,
-    SuccessMessageMixin,
-    UpdateView,
-):
-    model = Membership
-    form_class = MembershipForm
-    permission_required = "communities.change_membership"
-    success_message = _("Membership has been updated")
-
-    def get_success_url(self):
-        return reverse("communities:membership_detail", args=[self.object.id])
-
-
-membership_update_view = MembershipUpdateView.as_view()
-
-
-class MembershipDeleteView(
-    LoginRequiredMixin, PermissionRequiredMixin, MembershipQuerySetMixin, DeleteView,
-):
-    permission_required = "communities.delete_membership"
-    model = Membership
-
-    def get_success_url(self):
-        if self.object.member == self.request.user:
-            return settings.HOME_PAGE_URL
-        return reverse("communities:membership_list")
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-        messages.success(
-            self.request,
-            _("Membership for user %s has been deleted") % self.object.member.username,
-        )
-        send_membership_deleted_email(self.object.member, self.object.community)
-        return HttpResponseRedirect(self.get_success_url())
-
-
-membership_delete_view = MembershipDeleteView.as_view()
-
-
-class CommunityLeaveView(MembershipDeleteView):
-    """
-    Allows the current user to be able to leave the community.
-    """
-
-    template_name = "communities/leave.html"
-
-    def get_object(self):
-        return super().get_queryset().filter(member__pk=self.request.user.id).get()
-
-    def get_success_url(self):
-        return settings.HOME_PAGE_URL
-
-
-community_leave_view = CommunityLeaveView.as_view()

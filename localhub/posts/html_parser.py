@@ -57,9 +57,7 @@ def _parse_title_from_html(soup):
 
 def _parse_image_from_html(soup):
     try:
-        image = soup.find("meta", attrs={"property": "og:image"}).attrs[
-            "content"
-        ]
+        image = soup.find("meta", attrs={"property": "og:image"}).attrs["content"]
         if len(image) < 501 and is_url(image) and is_image_url(image):
             return image
     except (AttributeError, KeyError):
@@ -69,9 +67,9 @@ def _parse_image_from_html(soup):
 
 
 def _parse_description_from_html(soup):
-    description = soup.find(
-        "meta", attrs={"property": "og:description"}
-    ) or soup.find("meta", attrs={"name": "twitter:description"})
+    description = soup.find("meta", attrs={"property": "og:description"}) or soup.find(
+        "meta", attrs={"name": "twitter:description"}
+    )
     if description and "content" in description.attrs:
         return description.attrs["content"]
     return None

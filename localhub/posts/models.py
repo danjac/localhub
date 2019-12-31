@@ -35,9 +35,7 @@ class Post(Activity):
 
     url_tracker = Tracker(["url"])
 
-    search_indexer = SearchIndexer(
-        ("A", "title"), ("B", "indexable_description")
-    )
+    search_indexer = SearchIndexer(("A", "title"), ("B", "indexable_description"))
 
     def __str__(self):
         return self.title or self.get_domain() or _("Post")
@@ -48,11 +46,7 @@ class Post(Activity):
     @property
     def indexable_description(self):
         return " ".join(
-            [
-                value
-                for value in (self.description, self.metadata_description)
-                if value
-            ]
+            [value for value in (self.description, self.metadata_description) if value]
         )
 
     def is_oembed(self):
