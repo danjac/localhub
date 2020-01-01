@@ -5,9 +5,9 @@
     "build": "cross-env NODE_ENV=production webpack --no-progress"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.4",
+    "@babel/core": "^7.7.7",
     "@babel/plugin-proposal-class-properties": "^7.7.4",
-    "@babel/preset-env": "^7.7.4",
+    "@babel/preset-env": "^7.7.7",
     "babel-loader": "^8.0.6",
     "cross-env": "^5.2.1",
     "css-loader": "^2.1.1",
@@ -17,9 +17,9 @@
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "sass-loader": "^7.3.1",
     "style-loader": "^0.20.3",
-    "terser-webpack-plugin": "^1.4.1",
+    "terser-webpack-plugin": "^1.4.3",
     "url-loader": "^1.1.2",
-    "webpack": "^4.41.2",
+    "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
