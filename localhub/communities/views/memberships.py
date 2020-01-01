@@ -19,7 +19,7 @@ from ..models import Membership
 from .base import CommunityRequiredMixin
 
 
-class MembershipQuerySetMixin(CommunityRequiredMixin):
+class MembershipQuerySetMixin(LoginRequiredMixin, CommunityRequiredMixin):
     def get_queryset(self):
         return Membership.objects.filter(
             community=self.request.community
@@ -27,11 +27,7 @@ class MembershipQuerySetMixin(CommunityRequiredMixin):
 
 
 class MembershipListView(
-    LoginRequiredMixin,
-    PermissionRequiredMixin,
-    MembershipQuerySetMixin,
-    SearchMixin,
-    ListView,
+    PermissionRequiredMixin, MembershipQuerySetMixin, SearchMixin, ListView,
 ):
     paginate_by = settings.DEFAULT_PAGE_SIZE
     permission_required = "communities.manage_community"
@@ -53,7 +49,7 @@ membership_list_view = MembershipListView.as_view()
 
 
 class MembershipDetailView(
-    LoginRequiredMixin, PermissionRequiredMixin, MembershipQuerySetMixin, DetailView,
+    PermissionRequiredMixin, MembershipQuerySetMixin, DetailView,
 ):
 
     permission_required = "communities.view_membership"
@@ -64,11 +60,7 @@ membership_detail_view = MembershipDetailView.as_view()
 
 
 class MembershipUpdateView(
-    LoginRequiredMixin,
-    PermissionRequiredMixin,
-    MembershipQuerySetMixin,
-    SuccessMessageMixin,
-    UpdateView,
+    PermissionRequiredMixin, MembershipQuerySetMixin, SuccessMessageMixin, UpdateView,
 ):
     model = Membership
     form_class = MembershipForm
@@ -83,7 +75,7 @@ membership_update_view = MembershipUpdateView.as_view()
 
 
 class MembershipDeleteView(
-    LoginRequiredMixin, PermissionRequiredMixin, MembershipQuerySetMixin, DeleteView,
+    PermissionRequiredMixin, MembershipQuerySetMixin, DeleteView,
 ):
     permission_required = "communities.delete_membership"
     model = Membership
