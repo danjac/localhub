@@ -1,7 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from allauth.account.forms import LoginForm
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -19,7 +18,7 @@ from localhub.views import SearchMixin
 
 from ..models import Community, Membership
 from ..rules import is_member
-from .base import CommunityLoginRequiredMixin, CommunityRequiredMixin
+from .base import CommunityRequiredMixin
 
 
 class CommunityDetailView(CommunityRequiredMixin, DetailView):
@@ -67,24 +66,18 @@ class CommunityWelcomeView(CommunityRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data["join_request"] = (
-            self.request.user.is_authenticated
-            and not is_member(self.request.user, self.request.community)
-            and JoinRequest.objects.filter(
-                sender=self.request.user, community=self.request.community
-            )
+        data["join_request"] = not is_member(
+            self.request.user, self.request.community
+        ) and JoinRequest.objects.filter(
+            sender=self.request.user, community=self.request.community
         )
-        if self.request.user.is_anonymous:
-            data["login_form"] = LoginForm()
         return data
 
 
 community_welcome_view = CommunityWelcomeView.as_view()
 
 
-class CommunityUpdateView(
-    CommunityLoginRequiredMixin, PermissionRequiredMixin, UpdateView
-):
+class CommunityUpdateView(CommunityRequiredMixin, PermissionRequiredMixin, UpdateView):
     fields = (
         "name",
         "logo",

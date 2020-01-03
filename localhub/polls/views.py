@@ -15,7 +15,7 @@ from localhub.activities.views.generic import (
     ActivityListView,
     ActivityUpdateView,
 )
-from localhub.communities.views import CommunityLoginRequiredMixin
+from localhub.communities.views import CommunityRequiredMixin
 
 from .models import Answer, Poll
 
@@ -87,7 +87,7 @@ class PollListView(PollQuerySetMixin, ActivityListView):
 
 
 class AnswerVoteView(
-    PermissionRequiredMixin, CommunityLoginRequiredMixin, GenericModelView,
+    PermissionRequiredMixin, CommunityRequiredMixin, GenericModelView,
 ):
 
     permission_required = "polls.vote"

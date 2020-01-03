@@ -15,16 +15,13 @@ from django.views.generic.dates import (
     _date_from_string,
 )
 
-from localhub.communities.views import (
-    CommunityLoginRequiredMixin,
-    CommunityRequiredMixin,
-)
+from localhub.communities.views import CommunityRequiredMixin
 from localhub.views import BaseMultipleQuerySetListView, SearchMixin
 
 from ..utils import get_activity_models
 
 
-class BaseStreamQuerySetListView(BaseMultipleQuerySetListView):
+class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
 
     allow_empty = True
     ordering = ("-published", "-created")
@@ -53,16 +50,7 @@ class BaseStreamQuerySetListView(BaseMultipleQuerySetListView):
         return [self.get_count_queryset_for_model(model) for model in self.models]
 
 
-class BaseStreamView(CommunityLoginRequiredMixin, BaseStreamQuerySetListView):
-    ...
-
-
-class HomePageView(CommunityRequiredMixin, BaseStreamQuerySetListView):
-    """
-    The "Home page" of the community.  Redirects to welcome page instead of login
-    page if user not authenticated.
-    """
-
+class HomePageView(BaseStreamView):
     template_name = "activities/stream.html"
 
     def filter_queryset(self, queryset):

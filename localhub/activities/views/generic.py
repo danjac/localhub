@@ -22,7 +22,7 @@ from vanilla import (
 
 from localhub.comments.forms import CommentForm
 from localhub.comments.notifications import send_comment_notifications
-from localhub.communities.views import CommunityLoginRequiredMixin
+from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
 from localhub.views import BreadcrumbsMixin, SearchMixin
@@ -31,7 +31,7 @@ from ..notifications import send_activity_deleted_email, send_activity_notificat
 from ..utils import get_breadcrumbs_for_instance, get_breadcrumbs_for_model
 
 
-class ActivityQuerySetMixin(CommunityLoginRequiredMixin):
+class ActivityQuerySetMixin(CommunityRequiredMixin):
     model = None
 
     def get_queryset(self):
@@ -45,7 +45,7 @@ class BaseSingleActivityView(ActivityQuerySetMixin, GenericModelView):
 
 
 class ActivityCreateView(
-    CommunityLoginRequiredMixin, PermissionRequiredMixin, BreadcrumbsMixin, CreateView,
+    CommunityRequiredMixin, PermissionRequiredMixin, BreadcrumbsMixin, CreateView,
 ):
     permission_required = "activities.create_activity"
     page_title = _("Submit")

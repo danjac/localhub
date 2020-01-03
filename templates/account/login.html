@@ -11,6 +11,11 @@
 
 <h3>{% trans "Login" %}</h3>
 <div class="divider"></div>
+
+{% if community.intro %}
+{{ community.intro.markdown }}
+{% endif %}
+
 {% include "account/includes/signup_link.html" %}
 {% url 'account_login' as login_url %}
 {% include "account/includes/login_form.html" with action=login_url %}

@@ -16,13 +16,13 @@ from taggit.models import Tag, TaggedItem
 from vanilla import GenericModelView, ListView
 
 from localhub.activities.utils import get_activity_models
-from localhub.communities.views import CommunityLoginRequiredMixin
+from localhub.communities.views import CommunityRequiredMixin
 from localhub.views import SearchMixin
 
 from .streams import BaseStreamView
 
 
-class TagQuerySetMixin(CommunityLoginRequiredMixin):
+class TagQuerySetMixin(CommunityRequiredMixin):
 
     model = Tag
 

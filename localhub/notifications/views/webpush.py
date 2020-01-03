@@ -9,12 +9,12 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from django.views.generic import View
 from vanilla import TemplateView
 
-from localhub.communities.views import CommunityLoginRequiredMixin
+from localhub.communities.views import CommunityRequiredMixin
 
 from ..models import PushSubscription
 
 
-class BasePushSubscriptionView(CommunityLoginRequiredMixin, View):
+class BasePushSubscriptionView(CommunityRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         try:
             json_body = json.loads(request.body.decode("utf-8"))

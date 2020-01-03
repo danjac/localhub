@@ -20,7 +20,7 @@ from localhub.activities.views.streams import BaseStreamView
 from localhub.comments.models import Comment
 from localhub.comments.views import BaseCommentListView
 from localhub.communities.models import Membership
-from localhub.communities.views import CommunityLoginRequiredMixin
+from localhub.communities.views import CommunityRequiredMixin
 from localhub.likes.models import Like
 from localhub.private_messages.models import Message
 from localhub.views import SearchMixin
@@ -29,7 +29,7 @@ from .forms import UserForm
 from .notifications import send_user_notification
 
 
-class BaseUserQuerySetMixin(CommunityLoginRequiredMixin):
+class BaseUserQuerySetMixin(CommunityRequiredMixin):
     def get_user_queryset(self):
         return get_user_model().objects.for_community(self.request.community)
 

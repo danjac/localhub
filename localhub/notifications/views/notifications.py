@@ -6,12 +6,12 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from vanilla import DeleteView, GenericModelView, ListView
 
-from localhub.communities.views import CommunityLoginRequiredMixin
+from localhub.communities.views import CommunityRequiredMixin
 
 from ..models import Notification
 
 
-class NotificationQuerySetMixin(CommunityLoginRequiredMixin):
+class NotificationQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
         return Notification.objects.for_community(self.request.community).filter(
             recipient=self.request.user

@@ -16,10 +16,6 @@ pytestmark = pytest.mark.django_db
 
 
 class TestActivityStreamView:
-    def test_get_if_anonymous(self, client, community):
-        response = client.get(reverse("activities:home_page"))
-        assert response.url == reverse("community_welcome")
-
     def test_get_if_non_member(self, client, login_user, community):
         response = client.get(reverse("activities:home_page"))
         assert response.url == reverse("community_welcome")

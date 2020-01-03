@@ -15,10 +15,10 @@ from localhub.views import SearchMixin
 from ..emails import send_membership_deleted_email
 from ..forms import MembershipForm
 from ..models import Membership
-from .base import CommunityLoginRequiredMixin
+from .base import CommunityRequiredMixin
 
 
-class MembershipQuerySetMixin(CommunityLoginRequiredMixin):
+class MembershipQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
         return Membership.objects.filter(
             community=self.request.community

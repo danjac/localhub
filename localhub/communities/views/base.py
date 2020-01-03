@@ -3,12 +3,12 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.http import Http404, HttpResponseRedirect
-from django.urls import reverse
+from django.http import Http404
+from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 
 
-class CommunityRequiredMixin:
+class CommunityRequiredMixin(LoginRequiredMixin):
     """
     Ensures that a community is available on this domain. This requires
     the CurrentCommunityMiddleware is enabled.
@@ -27,7 +27,10 @@ class CommunityRequiredMixin:
             return self.handle_community_not_found()
 
         if (
-            not request.user.has_perm("communities.view_community", request.community)
+            request.user.is_authenticated
+            and not request.user.has_perm(
+                "communities.view_community", request.community
+            )
             and not self.allow_non_members
         ):
             return self.handle_community_access_denied()
@@ -36,17 +39,9 @@ class CommunityRequiredMixin:
     def handle_community_access_denied(self):
         if self.request.is_ajax():
             raise PermissionDenied(_("You must be a member of this community"))
-        return HttpResponseRedirect(reverse("community_welcome"))
+        return redirect("community_welcome")
 
     def handle_community_not_found(self):
         if self.request.is_ajax():
             raise Http404(_("No community is available for this domain"))
-        return HttpResponseRedirect(reverse("community_not_found"))
-
-
-class CommunityLoginRequiredMixin(LoginRequiredMixin, CommunityRequiredMixin):
-    """
-    Redirects to login instead of welcome page if user not authenticated.
-    """
-
-    ...
+        return redirect("community_not_found")

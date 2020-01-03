@@ -23,7 +23,7 @@ from vanilla import (
     UpdateView,
 )
 
-from localhub.communities.views import CommunityLoginRequiredMixin
+from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.utils import user_display
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
@@ -32,7 +32,7 @@ from .models import Message
 from .notifications import send_message_notifications
 
 
-class MessageQuerySetMixin(CommunityLoginRequiredMixin):
+class MessageQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
         return Message.objects.for_community(
             community=self.request.community
@@ -157,9 +157,7 @@ class MessageReplyView(BreadcrumbsMixin, RecipientQuerySetMixin, BaseMessageForm
 message_reply_view = MessageReplyView.as_view()
 
 
-class MessageCreateView(
-    BreadcrumbsMixin, CommunityLoginRequiredMixin, BaseMessageFormView
-):
+class MessageCreateView(BreadcrumbsMixin, CommunityRequiredMixin, BaseMessageFormView):
     @cached_property
     def recipient(self):
         return get_object_or_404(

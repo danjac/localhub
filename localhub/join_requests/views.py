@@ -12,7 +12,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from vanilla import GenericModelView, ListView, TemplateView
 
 from localhub.communities.models import Membership
-from localhub.communities.views import CommunityLoginRequiredMixin
+from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.notifications import send_user_notification
 from localhub.views import SearchMixin
 
@@ -20,7 +20,7 @@ from .emails import send_acceptance_email, send_join_request_email, send_rejecti
 from .models import JoinRequest
 
 
-class JoinRequestQuerySetMixin(CommunityLoginRequiredMixin):
+class JoinRequestQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
         return JoinRequest.objects.filter(community=self.request.community)
 
@@ -54,7 +54,7 @@ class JoinRequestListView(
 join_request_list_view = JoinRequestListView.as_view()
 
 
-class JoinRequestCreateView(CommunityLoginRequiredMixin, TemplateView):
+class JoinRequestCreateView(CommunityRequiredMixin, TemplateView):
     model = JoinRequest
     template_name = "join_requests/joinrequest_form.html"
     allow_non_members = True

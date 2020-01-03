@@ -20,7 +20,7 @@ from vanilla import (
 )
 
 from localhub.activities.utils import get_breadcrumbs_for_instance
-from localhub.communities.views import CommunityLoginRequiredMixin
+from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
 from localhub.views import BreadcrumbsMixin, SearchMixin
@@ -30,7 +30,7 @@ from .models import Comment
 from .notifications import send_comment_deleted_email, send_comment_notifications
 
 
-class CommentQuerySetMixin(CommunityLoginRequiredMixin):
+class CommentQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
         return Comment.objects.for_community(self.request.community).select_related(
             "owner", "community", "parent", "parent__owner", "parent__community",

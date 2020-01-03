@@ -67,21 +67,6 @@ class TestInviteDeleteView:
 
 
 class TestInviteAcceptView:
-    def test_get_user_does_not_exist(self, client, community):
-        invite = InviteFactory(community=community)
-        response = client.get(reverse("invites:accept", args=[invite.id]))
-        assert response.url.startswith(reverse("account_signup"))
-        invite.refresh_from_db()
-        assert invite.is_pending()
-
-    def test_get_user_exists(self, client, community):
-        invite = InviteFactory(community=community)
-        UserFactory(email=invite.email)
-        response = client.get(reverse("invites:accept", args=[invite.id]))
-        assert response.url.startswith(reverse("account_login"))
-        invite.refresh_from_db()
-        assert invite.is_pending()
-
     def test_current_user_is_member(self, client, community, member):
         invite = InviteFactory(community=member.community, email=member.member.email)
         response = client.get(reverse("invites:accept", args=[invite.id]))

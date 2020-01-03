@@ -11,7 +11,7 @@ from django.views.generic import View
 
 from ..factories import CommunityFactory, MembershipFactory
 from ..models import Membership, RequestCommunity
-from ..views import CommunityLoginRequiredMixin, CommunityRequiredMixin
+from ..views import CommunityRequiredMixin
 
 pytestmark = pytest.mark.django_db
 
@@ -24,14 +24,6 @@ class MyView(CommunityRequiredMixin, View):
 my_view = MyView.as_view()
 
 
-class MyAuthView(CommunityLoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        return HttpResponse()
-
-
-my_auth_view = MyAuthView.as_view()
-
-
 class TestCommunityRequiredMixin:
     def test_community_available(self, member, rf):
         req = rf.get("/")
@@ -39,22 +31,24 @@ class TestCommunityRequiredMixin:
         req.user = member.member
         assert my_view(req).status_code == 200
 
-    def test_community_not_found(self, rf):
+    def test_community_not_found(self, rf, user):
         req = rf.get("/")
+        req.user = user
         req.community = RequestCommunity(req, "example.com", "example.com")
         assert my_view(req).url == reverse("community_not_found")
 
-    def test_community_not_found_if_ajax(self, rf):
+    def test_community_not_found_if_ajax(self, rf, user):
         req = rf.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+        req.user = user
         req.community = RequestCommunity(req, "example.com", "example.com")
         with pytest.raises(Http404):
-            my_view(req)
+            my_view(req).url
 
     def test_redirect_to_community_welcome_if_anonymous(self, rf):
         req = rf.get("/")
         req.community = CommunityFactory()
         req.user = AnonymousUser()
-        assert my_view(req).url == reverse("community_welcome")
+        assert my_view(req).url == reverse("account_login") + "?next=/"
 
     def test_redirect_to_community_welcome_if_non_members_allowed(self, rf, user):
         req = rf.get("/")
@@ -75,58 +69,6 @@ class TestCommunityRequiredMixin:
         req.user = user
         with pytest.raises(PermissionDenied):
             my_view(req)
-
-
-class TestCommunityLoginRequiredMixin:
-    def test_community_available(self, member, rf):
-        req = rf.get("/")
-        req.community = member.community
-        req.user = member.member
-        assert my_auth_view(req).status_code == 200
-
-    def test_community_not_found_if_anonymous(self, rf):
-        req = rf.get("/")
-        req.user = AnonymousUser()
-        req.community = RequestCommunity(req, "example.com", "example.com")
-        assert my_auth_view(req).url == reverse("account_login") + "?next=/"
-
-    def test_community_not_found_if_auth(self, rf, user):
-        req = rf.get("/")
-        req.user = user
-        req.community = RequestCommunity(req, "example.com", "example.com")
-        assert my_auth_view(req).url == reverse("community_not_found")
-
-    def test_community_not_found_if_ajax(self, rf):
-        req = rf.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
-        req.user = AnonymousUser()
-        req.community = RequestCommunity(req, "example.com", "example.com")
-        assert my_auth_view(req).url == reverse("account_login") + "?next=/"
-
-    def test_redirect_to_community_welcome_if_anonymous(self, rf):
-        req = rf.get("/")
-        req.community = CommunityFactory()
-        req.user = AnonymousUser()
-        assert my_auth_view(req).url == reverse("account_login") + "?next=/"
-
-    def test_redirect_to_community_welcome_if_non_members_allowed(self, rf, user):
-        req = rf.get("/")
-        req.community = CommunityFactory()
-        req.user = user
-        my_public_view = MyView.as_view(allow_non_members=True)
-        assert my_public_view(req).status_code == 200
-
-    def test_redirect_to_community_welcome_if_authenticated(self, rf, user):
-        req = rf.get("/")
-        req.community = CommunityFactory()
-        req.user = user
-        assert my_auth_view(req).url == reverse("community_welcome")
-
-    def test_permission_denied_if_ajax(self, rf, user):
-        req = rf.get("/", HTTP_X_REQUESTED_WITH="XMLHttpRequest")
-        req.community = CommunityFactory()
-        req.user = user
-        with pytest.raises(PermissionDenied):
-            my_auth_view(req)
 
 
 class TestCommunityDetailView:
@@ -135,9 +77,6 @@ class TestCommunityDetailView:
 
 
 class TestCommunityWelcomeView:
-    def test_get_if_anonymous(self, client, community):
-        assert client.get(reverse("community_welcome")).status_code == 200
-
     def test_get_if_authenticated(self, client, community, login_user):
         assert client.get(reverse("community_welcome")).status_code == 200
 

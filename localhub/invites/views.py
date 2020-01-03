@@ -5,10 +5,9 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import redirect_to_login
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from rules.contrib.views import PermissionRequiredMixin
@@ -134,25 +133,13 @@ class InviteAcceptView(BaseSingleInviteView):
         self.object = self.get_object()
         user = get_user_model().objects.for_email(self.object.email).first()
 
-        if request.user.is_anonymous:
-            if user:
-                return self.handle_logged_out_user()
-            return self.handle_new_user()
-
         if user == request.user:
             return self.handle_current_user()
 
         return self.handle_invalid_invite()
 
-    def handle_new_user(self):
-        messages.info(self.request, _("Sign up to join this community"))
-        return redirect_to_login(
-            self.request.get_full_path(), reverse("account_signup")
-        )
-
-    def handle_logged_out_user(self):
-        messages.info(self.request, _("Login to join this community"))
-        return redirect_to_login(self.request.get_full_path())
+    def get_success_url(self):
+        return settings.HOME_PAGE_URL
 
     def handle_current_user(self):
         _membership, created = Membership.objects.get_or_create(
@@ -171,7 +158,7 @@ class InviteAcceptView(BaseSingleInviteView):
         self.object.status = Invite.STATUS.accepted
         self.object.save()
 
-        return HttpResponseRedirect(settings.HOME_PAGE_URL)
+        return HttpResponseRedirect(self.get_success_url())
 
     def handle_invalid_invite(self):
         messages.error(self.request, _("This invite is invalid"))
@@ -179,7 +166,7 @@ class InviteAcceptView(BaseSingleInviteView):
         self.object.status = Invite.STATUS.rejected
         self.object.save()
 
-        return HttpResponseRedirect(settings.HOME_PAGE_URL)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 invite_accept_view = InviteAcceptView.as_view()
