@@ -178,7 +178,7 @@
                                   <a href="#"
                                      class="btn btn-block"
                                      data-action="sidebar#toggle"
-                                     >{% trans "Close Sidebar" %}</a>
+                                     >{% trans "Close Menu" %}</a>
                                 </div>
             {% block sidebar_content %}
             {% include "includes/sidebar.html" %}
@@ -192,7 +192,7 @@
                  >
                  {% block sidebar_toggle %}
                  <span{% if total_notifications_count %} class="badge" data-badge="{{ total_notifications_count }}"{% endif %}>
-                   {% trans "Sidebar" %}
+                   {% trans "Menu" %}
                  </span>
                 {% endblock %}
               </a>
