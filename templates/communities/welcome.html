@@ -12,6 +12,10 @@
 </div>
 <div class="divider"></div>
 
+{% if community.intro %}
+{{ community.intro.markdown }}
+{% endif %}
+
 <p>
 
   {% if join_request %}
