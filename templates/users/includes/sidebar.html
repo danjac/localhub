@@ -3,7 +3,9 @@
 
 {% load i18n %}
 {% load rules %}
+{% load communities_tags %}
 
+{% get_available_community_count user as communities_count %}
 
 <ul class="menu">
     {% if community %}
@@ -11,9 +13,11 @@
         <a href="{% url 'activities:home_page' %}">{% trans "Home" %}
         </a>
     </li>
+    {% if communities_count > 1 %}
     <li class="menu-item">
         <a href="{% url 'community_list' %}">{% trans "Local Network" %}</a>
     </li>
+    {% endif %}
     {% if community %}
     {% test_rule "communities.is_member" user community as is_member %}
     {% has_perm "communities.manage_community" user community as can_manage_community %}
