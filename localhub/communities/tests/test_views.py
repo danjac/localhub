@@ -11,7 +11,7 @@ from django.views.generic import View
 
 from ..factories import CommunityFactory, MembershipFactory
 from ..models import Membership, RequestCommunity
-from ..views import CommunityRequiredMixin, CommunityLoginRequiredMixin
+from ..views import CommunityLoginRequiredMixin, CommunityRequiredMixin
 
 pytestmark = pytest.mark.django_db
 
@@ -20,7 +20,9 @@ class MyView(CommunityRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         return HttpResponse()
 
+
 my_view = MyView.as_view()
+
 
 class MyAuthView(CommunityLoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -28,8 +30,6 @@ class MyAuthView(CommunityLoginRequiredMixin, View):
 
 
 my_auth_view = MyAuthView.as_view()
-
-
 
 
 class TestCommunityRequiredMixin:

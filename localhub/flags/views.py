@@ -21,7 +21,6 @@ class FlagQuerySetMixin(PermissionRequiredMixin, CommunityLoginRequiredMixin):
         return Flag.objects.filter(community=self.request.community)
 
 
-
 class FlagListView(FlagQuerySetMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
     model = Flag

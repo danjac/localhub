@@ -48,4 +48,5 @@ class CommunityLoginRequiredMixin(LoginRequiredMixin, CommunityRequiredMixin):
     """
     Redirects to login instead of welcome page if user not authenticated.
     """
+
     ...

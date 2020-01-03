@@ -19,7 +19,7 @@ from localhub.views import SearchMixin
 
 from ..models import Community, Membership
 from ..rules import is_member
-from .base import CommunityRequiredMixin, CommunityLoginRequiredMixin
+from .base import CommunityLoginRequiredMixin, CommunityRequiredMixin
 
 
 class CommunityDetailView(CommunityRequiredMixin, DetailView):
@@ -82,7 +82,9 @@ class CommunityWelcomeView(CommunityRequiredMixin, TemplateView):
 community_welcome_view = CommunityWelcomeView.as_view()
 
 
-class CommunityUpdateView(CommunityLoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class CommunityUpdateView(
+    CommunityLoginRequiredMixin, PermissionRequiredMixin, UpdateView
+):
     fields = (
         "name",
         "logo",

@@ -175,10 +175,7 @@ comment_dislike_view = CommentDislikeView.as_view()
 
 
 class CommentFlagView(
-    PermissionRequiredMixin,
-    BreadcrumbsMixin,
-    CommentQuerySetMixin,
-    FormView,
+    PermissionRequiredMixin, BreadcrumbsMixin, CommentQuerySetMixin, FormView,
 ):
     form_class = FlagForm
     template_name = "flags/flag_form.html"
@@ -223,10 +220,7 @@ comment_flag_view = CommentFlagView.as_view()
 
 
 class CommentReplyView(
-    CommentQuerySetMixin,
-    BreadcrumbsMixin,
-    PermissionRequiredMixin,
-    CreateView,
+    CommentQuerySetMixin, BreadcrumbsMixin, PermissionRequiredMixin, CreateView,
 ):
     permission_required = "comments.reply_to_comment"
     model = Comment

@@ -87,9 +87,7 @@ class PollListView(PollQuerySetMixin, ActivityListView):
 
 
 class AnswerVoteView(
-    PermissionRequiredMixin,
-    CommunityLoginRequiredMixin,
-    GenericModelView,
+    PermissionRequiredMixin, CommunityLoginRequiredMixin, GenericModelView,
 ):
 
     permission_required = "polls.vote"

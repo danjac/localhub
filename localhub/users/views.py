@@ -20,7 +20,7 @@ from localhub.activities.views.streams import BaseStreamView
 from localhub.comments.models import Comment
 from localhub.comments.views import BaseCommentListView
 from localhub.communities.models import Membership
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.views import CommunityLoginRequiredMixin
 from localhub.likes.models import Like
 from localhub.private_messages.models import Message
 from localhub.views import SearchMixin
@@ -29,7 +29,7 @@ from .forms import UserForm
 from .notifications import send_user_notification
 
 
-class BaseUserQuerySetMixin(CommunityRequiredMixin):
+class BaseUserQuerySetMixin(CommunityLoginRequiredMixin):
     def get_user_queryset(self):
         return get_user_model().objects.for_community(self.request.community)
 
@@ -71,12 +71,12 @@ class SingleUserMixin(BaseUserQuerySetMixin):
         return data
 
 
-class BaseSingleUserView(LoginRequiredMixin, UserQuerySetMixin, GenericModelView):
+class BaseSingleUserView(UserQuerySetMixin, GenericModelView):
     lookup_field = "username"
     lookup_url_kwarg = "slug"
 
 
-class BaseUserListView(LoginRequiredMixin, UserQuerySetMixin, ListView):
+class BaseUserListView(UserQuerySetMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
     def get_queryset(self):

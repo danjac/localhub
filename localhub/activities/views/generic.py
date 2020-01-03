@@ -295,10 +295,7 @@ class ActivityDislikeView(BaseSingleActivityView):
 
 
 class ActivityFlagView(
-    PermissionRequiredMixin,
-    BreadcrumbsMixin,
-    ActivityQuerySetMixin,
-    FormView,
+    PermissionRequiredMixin, BreadcrumbsMixin, ActivityQuerySetMixin, FormView,
 ):
     form_class = FlagForm
     template_name = "flags/flag_form.html"

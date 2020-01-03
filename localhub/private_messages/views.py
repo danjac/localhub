@@ -157,7 +157,9 @@ class MessageReplyView(BreadcrumbsMixin, RecipientQuerySetMixin, BaseMessageForm
 message_reply_view = MessageReplyView.as_view()
 
 
-class MessageCreateView(BreadcrumbsMixin, CommunityLoginRequiredMixin, BaseMessageFormView):
+class MessageCreateView(
+    BreadcrumbsMixin, CommunityLoginRequiredMixin, BaseMessageFormView
+):
     @cached_property
     def recipient(self):
         return get_object_or_404(

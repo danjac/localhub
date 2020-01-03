@@ -36,9 +36,7 @@ class InviteAdminMixin(LoginRequiredMixin, PermissionRequiredMixin):
     permission_required = "communities.manage_community"
 
 
-class InviteListView(
-    InviteAdminMixin, InviteQuerySetMixin, ListView
-):
+class InviteListView(InviteAdminMixin, InviteQuerySetMixin, ListView):
     model = Invite
 
     def get_permission_object(self):
@@ -81,10 +79,7 @@ class InviteCreateView(
 invite_create_view = InviteCreateView.as_view()
 
 
-class InviteResendView(
-    InviteAdminMixin, BaseSingleInviteView
-):
-
+class InviteResendView(InviteAdminMixin, BaseSingleInviteView):
     def get_permission_object(self):
         return self.request.community
 

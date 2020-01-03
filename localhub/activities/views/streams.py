@@ -15,7 +15,10 @@ from django.views.generic.dates import (
     _date_from_string,
 )
 
-from localhub.communities.views import CommunityRequiredMixin, CommunityLoginRequiredMixin
+from localhub.communities.views import (
+    CommunityLoginRequiredMixin,
+    CommunityRequiredMixin,
+)
 from localhub.views import BaseMultipleQuerySetListView, SearchMixin
 
 from ..utils import get_activity_models
@@ -59,6 +62,7 @@ class HomePageView(CommunityRequiredMixin, BaseStreamQuerySetListView):
     The "Home page" of the community.  Redirects to welcome page instead of login
     page if user not authenticated.
     """
+
     template_name = "activities/stream.html"
 
     def filter_queryset(self, queryset):
@@ -134,7 +138,7 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseStreamView):
         return {"published__gte": since, "published__lt": until}
 
     def filter_queryset(self, queryset):
-        qs = super().filter_queryset(queryset)
+        qs = super().filter_queryset(queryset).published()
         if self.date_kwargs:
             return qs.filter(**self.date_kwargs)
         return qs
