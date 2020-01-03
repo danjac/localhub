@@ -138,7 +138,12 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseStreamView):
         return {"published__gte": since, "published__lt": until}
 
     def filter_queryset(self, queryset):
-        qs = super().filter_queryset(queryset).published()
+        qs = (
+            super()
+            .filter_queryset(queryset)
+            .published()
+            .without_blocked(self.request.user)
+        )
         if self.date_kwargs:
             return qs.filter(**self.date_kwargs)
         return qs
