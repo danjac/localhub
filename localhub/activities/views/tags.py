@@ -5,7 +5,6 @@ import operator
 from functools import reduce
 
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
 from django.http import HttpResponseRedirect
@@ -17,13 +16,13 @@ from taggit.models import Tag, TaggedItem
 from vanilla import GenericModelView, ListView
 
 from localhub.activities.utils import get_activity_models
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.views import CommunityLoginRequiredMixin
 from localhub.views import SearchMixin
 
 from .streams import BaseStreamView
 
 
-class TagQuerySetMixin(CommunityRequiredMixin):
+class TagQuerySetMixin(CommunityLoginRequiredMixin):
 
     model = Tag
 
@@ -123,7 +122,7 @@ class TagDetailView(BaseStreamView):
 tag_detail_view = TagDetailView.as_view()
 
 
-class TagFollowView(LoginRequiredMixin, PermissionRequiredMixin, BaseSingleTagView):
+class TagFollowView(PermissionRequiredMixin, BaseSingleTagView):
     permission_required = "users.follow_tag"
 
     def get_permission_object(self):
@@ -142,7 +141,7 @@ class TagFollowView(LoginRequiredMixin, PermissionRequiredMixin, BaseSingleTagVi
 tag_follow_view = TagFollowView.as_view()
 
 
-class TagUnfollowView(LoginRequiredMixin, BaseSingleTagView):
+class TagUnfollowView(BaseSingleTagView):
     def get_success_url(self):
         return reverse("activities:tag_detail", args=[self.object.slug])
 
@@ -155,7 +154,7 @@ class TagUnfollowView(LoginRequiredMixin, BaseSingleTagView):
 tag_unfollow_view = TagUnfollowView.as_view()
 
 
-class TagBlockView(LoginRequiredMixin, PermissionRequiredMixin, BaseSingleTagView):
+class TagBlockView(PermissionRequiredMixin, BaseSingleTagView):
     permission_required = "users.block_tag"
 
     def get_permission_object(self):
@@ -173,7 +172,7 @@ class TagBlockView(LoginRequiredMixin, PermissionRequiredMixin, BaseSingleTagVie
 tag_block_view = TagBlockView.as_view()
 
 
-class TagUnblockView(LoginRequiredMixin, BaseSingleTagView):
+class TagUnblockView(BaseSingleTagView):
     def get_success_url(self):
         return reverse("activities:tag_detail", args=[self.object.slug])
 
@@ -220,7 +219,7 @@ class TagListView(SearchMixin, BaseTagListView):
 tag_list_view = TagListView.as_view()
 
 
-class FollowingTagListView(LoginRequiredMixin, BaseTagListView):
+class FollowingTagListView(BaseTagListView):
     template_name = "activities/tags/following_tag_list.html"
 
     def get_queryset(self):
@@ -230,7 +229,7 @@ class FollowingTagListView(LoginRequiredMixin, BaseTagListView):
 following_tag_list_view = FollowingTagListView.as_view()
 
 
-class BlockedTagListView(LoginRequiredMixin, BaseTagListView):
+class BlockedTagListView(BaseTagListView):
     template_name = "activities/tags/blocked_tag_list.html"
 
     def get_queryset(self):

@@ -1,6 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
@@ -41,3 +42,10 @@ class CommunityRequiredMixin:
         if self.request.is_ajax():
             raise Http404(_("No community is available for this domain"))
         return HttpResponseRedirect(reverse("community_not_found"))
+
+
+class CommunityLoginRequiredMixin(LoginRequiredMixin, CommunityRequiredMixin):
+    """
+    Redirects to login instead of welcome page if user not authenticated.
+    """
+    ...

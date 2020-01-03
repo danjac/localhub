@@ -3,7 +3,6 @@
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -16,10 +15,10 @@ from localhub.views import SearchMixin
 from ..emails import send_membership_deleted_email
 from ..forms import MembershipForm
 from ..models import Membership
-from .base import CommunityRequiredMixin
+from .base import CommunityLoginRequiredMixin
 
 
-class MembershipQuerySetMixin(LoginRequiredMixin, CommunityRequiredMixin):
+class MembershipQuerySetMixin(CommunityLoginRequiredMixin):
     def get_queryset(self):
         return Membership.objects.filter(
             community=self.request.community

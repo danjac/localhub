@@ -3,28 +3,26 @@
 
 
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView, ListView
 
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.views import CommunityLoginRequiredMixin
 
 from .models import Flag
 
 
-class FlagQuerySetMixin(CommunityRequiredMixin):
-    def get_queryset(self):
-        return Flag.objects.filter(community=self.request.community)
-
-
-class FlagPermissionRequiredMixin(LoginRequiredMixin, PermissionRequiredMixin):
+class FlagQuerySetMixin(PermissionRequiredMixin, CommunityLoginRequiredMixin):
     permission_required = "communities.moderate_community"
 
     def get_permission_object(self):
         return self.request.community
 
+    def get_queryset(self):
+        return Flag.objects.filter(community=self.request.community)
 
-class FlagListView(FlagPermissionRequiredMixin, FlagQuerySetMixin, ListView):
+
+
+class FlagListView(FlagQuerySetMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
     model = Flag
 
@@ -41,7 +39,7 @@ class FlagListView(FlagPermissionRequiredMixin, FlagQuerySetMixin, ListView):
 flag_list_view = FlagListView.as_view()
 
 
-class FlagDeleteView(FlagPermissionRequiredMixin, FlagQuerySetMixin, DeleteView):
+class FlagDeleteView(FlagQuerySetMixin, DeleteView):
     model = Flag
 
     def get_success_url(self):

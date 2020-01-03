@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory
 from django.shortcuts import redirect
 from django.utils.functional import cached_property
@@ -16,7 +15,7 @@ from localhub.activities.views.generic import (
     ActivityListView,
     ActivityUpdateView,
 )
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.views import CommunityLoginRequiredMixin
 
 from .models import Answer, Poll
 
@@ -88,9 +87,8 @@ class PollListView(PollQuerySetMixin, ActivityListView):
 
 
 class AnswerVoteView(
-    LoginRequiredMixin,
     PermissionRequiredMixin,
-    CommunityRequiredMixin,
+    CommunityLoginRequiredMixin,
     GenericModelView,
 ):
 

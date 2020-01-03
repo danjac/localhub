@@ -15,13 +15,14 @@ from django.views.generic.dates import (
     _date_from_string,
 )
 
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.views import CommunityRequiredMixin, CommunityLoginRequiredMixin
 from localhub.views import BaseMultipleQuerySetListView, SearchMixin
 
 from ..utils import get_activity_models
 
 
-class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
+class BaseStreamQuerySetListView(BaseMultipleQuerySetListView):
+
     allow_empty = True
     ordering = ("-published", "-created")
     paginate_by = settings.DEFAULT_PAGE_SIZE
@@ -49,7 +50,15 @@ class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
         return [self.get_count_queryset_for_model(model) for model in self.models]
 
 
-class StreamView(BaseStreamView):
+class BaseStreamView(CommunityLoginRequiredMixin, BaseStreamQuerySetListView):
+    ...
+
+
+class HomePageView(CommunityRequiredMixin, BaseStreamQuerySetListView):
+    """
+    The "Home page" of the community.  Redirects to welcome page instead of login
+    page if user not authenticated.
+    """
     template_name = "activities/stream.html"
 
     def filter_queryset(self, queryset):
@@ -62,10 +71,10 @@ class StreamView(BaseStreamView):
         )
 
 
-stream_view = StreamView.as_view()
+home_page_view = HomePageView.as_view()
 
 
-class TimelineView(YearMixin, MonthMixin, DateMixin, StreamView):
+class TimelineView(YearMixin, MonthMixin, DateMixin, BaseStreamView):
     template_name = "activities/timeline.html"
     paginate_by = settings.DEFAULT_PAGE_SIZE * 2
     month_format = "%B"

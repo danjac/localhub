@@ -5,7 +5,6 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import F
 from django.shortcuts import get_object_or_404, redirect
@@ -24,7 +23,7 @@ from vanilla import (
     UpdateView,
 )
 
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.views import CommunityLoginRequiredMixin
 from localhub.users.utils import user_display
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
@@ -33,7 +32,7 @@ from .models import Message
 from .notifications import send_message_notifications
 
 
-class MessageQuerySetMixin(CommunityRequiredMixin):
+class MessageQuerySetMixin(CommunityLoginRequiredMixin):
     def get_queryset(self):
         return Message.objects.for_community(
             community=self.request.community
@@ -50,11 +49,11 @@ class RecipientQuerySetMixin(MessageQuerySetMixin):
         return super().get_queryset().for_recipient(self.request.user)
 
 
-class BaseMessageListView(LoginRequiredMixin, MessageQuerySetMixin, ListView):
+class BaseMessageListView(SearchMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
 
-class InboxView(SearchMixin, RecipientQuerySetMixin, BaseMessageListView):
+class InboxView(RecipientQuerySetMixin, BaseMessageListView):
     """
     Messages received by current user
     Here we should show the sender, timestamp...
@@ -72,7 +71,7 @@ class InboxView(SearchMixin, RecipientQuerySetMixin, BaseMessageListView):
 inbox_view = InboxView.as_view()
 
 
-class OutboxView(SearchMixin, SenderQuerySetMixin, BaseMessageListView):
+class OutboxView(SenderQuerySetMixin, BaseMessageListView):
     """
     Messages sent by current user
     """
@@ -89,7 +88,7 @@ class OutboxView(SearchMixin, SenderQuerySetMixin, BaseMessageListView):
 outbox_view = OutboxView.as_view()
 
 
-class BaseMessageFormView(CommunityRequiredMixin, PermissionRequiredMixin, FormView):
+class BaseMessageFormView(PermissionRequiredMixin, FormView):
 
     permission_required = "private_messages.create_message"
     template_name = "private_messages/message_form.html"
@@ -158,7 +157,7 @@ class MessageReplyView(BreadcrumbsMixin, RecipientQuerySetMixin, BaseMessageForm
 message_reply_view = MessageReplyView.as_view()
 
 
-class MessageCreateView(BreadcrumbsMixin, BaseMessageFormView):
+class MessageCreateView(BreadcrumbsMixin, CommunityLoginRequiredMixin, BaseMessageFormView):
     @cached_property
     def recipient(self):
         return get_object_or_404(
@@ -208,7 +207,7 @@ class MessageCreateView(BreadcrumbsMixin, BaseMessageFormView):
 message_create_view = MessageCreateView.as_view()
 
 
-class MessageDetailView(MessageQuerySetMixin, LoginRequiredMixin, DetailView):
+class MessageDetailView(MessageQuerySetMixin, DetailView):
 
     model = Message
 

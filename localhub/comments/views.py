@@ -3,7 +3,6 @@
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -21,7 +20,7 @@ from vanilla import (
 )
 
 from localhub.activities.utils import get_breadcrumbs_for_instance
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.views import CommunityLoginRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
 from localhub.views import BreadcrumbsMixin, SearchMixin
@@ -31,7 +30,7 @@ from .models import Comment
 from .notifications import send_comment_deleted_email, send_comment_notifications
 
 
-class CommentQuerySetMixin(CommunityRequiredMixin):
+class CommentQuerySetMixin(CommunityLoginRequiredMixin):
     def get_queryset(self):
         return Comment.objects.for_community(self.request.community).select_related(
             "owner", "community", "parent", "parent__owner", "parent__community",
@@ -135,7 +134,7 @@ comment_delete_view = CommentDeleteView.as_view()
 
 
 class CommentLikeView(
-    LoginRequiredMixin, PermissionRequiredMixin, CommentQuerySetMixin, GenericModelView,
+    PermissionRequiredMixin, CommentQuerySetMixin, GenericModelView,
 ):
     permission_required = "comments.like_comment"
 
@@ -160,7 +159,7 @@ class CommentLikeView(
 comment_like_view = CommentLikeView.as_view()
 
 
-class CommentDislikeView(LoginRequiredMixin, CommentQuerySetMixin, GenericModelView):
+class CommentDislikeView(CommentQuerySetMixin, GenericModelView):
     def post(self, request, *args, **kwargs):
         comment = self.get_object()
         Like.objects.filter(user=request.user, comment=comment).delete()
@@ -176,7 +175,6 @@ comment_dislike_view = CommentDislikeView.as_view()
 
 
 class CommentFlagView(
-    LoginRequiredMixin,
     PermissionRequiredMixin,
     BreadcrumbsMixin,
     CommentQuerySetMixin,
@@ -225,7 +223,6 @@ comment_flag_view = CommentFlagView.as_view()
 
 
 class CommentReplyView(
-    LoginRequiredMixin,
     CommentQuerySetMixin,
     BreadcrumbsMixin,
     PermissionRequiredMixin,

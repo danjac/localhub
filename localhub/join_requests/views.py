@@ -3,7 +3,6 @@
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
@@ -13,7 +12,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from vanilla import GenericModelView, ListView, TemplateView
 
 from localhub.communities.models import Membership
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.views import CommunityLoginRequiredMixin
 from localhub.users.notifications import send_user_notification
 from localhub.views import SearchMixin
 
@@ -21,7 +20,7 @@ from .emails import send_acceptance_email, send_join_request_email, send_rejecti
 from .models import JoinRequest
 
 
-class JoinRequestQuerySetMixin(CommunityRequiredMixin):
+class JoinRequestQuerySetMixin(CommunityLoginRequiredMixin):
     def get_queryset(self):
         return JoinRequest.objects.filter(community=self.request.community)
 
@@ -55,7 +54,7 @@ class JoinRequestListView(
 join_request_list_view = JoinRequestListView.as_view()
 
 
-class JoinRequestCreateView(CommunityRequiredMixin, LoginRequiredMixin, TemplateView):
+class JoinRequestCreateView(CommunityLoginRequiredMixin, TemplateView):
     model = JoinRequest
     template_name = "join_requests/joinrequest_form.html"
     allow_non_members = True

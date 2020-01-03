@@ -68,7 +68,7 @@ class TestPhotoDeleteView:
 
     def test_post(self, client, photo_for_member):
         response = client.post(reverse("photos:delete", args=[photo_for_member.id]))
-        assert response.url == reverse("activities:stream")
+        assert response.url == reverse("activities:home_page")
         assert Photo.objects.count() == 0
 
 

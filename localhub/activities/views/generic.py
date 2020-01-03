@@ -3,7 +3,6 @@
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
@@ -23,7 +22,7 @@ from vanilla import (
 
 from localhub.comments.forms import CommentForm
 from localhub.comments.notifications import send_comment_notifications
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.views import CommunityLoginRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
 from localhub.views import BreadcrumbsMixin, SearchMixin
@@ -32,7 +31,7 @@ from ..notifications import send_activity_deleted_email, send_activity_notificat
 from ..utils import get_breadcrumbs_for_instance, get_breadcrumbs_for_model
 
 
-class ActivityQuerySetMixin(CommunityRequiredMixin):
+class ActivityQuerySetMixin(CommunityLoginRequiredMixin):
     model = None
 
     def get_queryset(self):
@@ -46,7 +45,7 @@ class BaseSingleActivityView(ActivityQuerySetMixin, GenericModelView):
 
 
 class ActivityCreateView(
-    CommunityRequiredMixin, PermissionRequiredMixin, BreadcrumbsMixin, CreateView,
+    CommunityLoginRequiredMixin, PermissionRequiredMixin, BreadcrumbsMixin, CreateView,
 ):
     permission_required = "activities.create_activity"
     page_title = _("Submit")
@@ -283,7 +282,7 @@ class ActivityLikeView(PermissionRequiredMixin, BaseSingleActivityView):
         return redirect(obj)
 
 
-class ActivityDislikeView(LoginRequiredMixin, BaseSingleActivityView):
+class ActivityDislikeView(BaseSingleActivityView):
     def post(self, request, *args, **kwargs):
         obj = self.get_object()
         obj.get_likes().filter(user=request.user).delete()
@@ -296,7 +295,6 @@ class ActivityDislikeView(LoginRequiredMixin, BaseSingleActivityView):
 
 
 class ActivityFlagView(
-    LoginRequiredMixin,
     PermissionRequiredMixin,
     BreadcrumbsMixin,
     ActivityQuerySetMixin,

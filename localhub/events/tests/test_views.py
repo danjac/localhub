@@ -86,7 +86,7 @@ class TestEventDeleteView:
 
     def test_post(self, client, event_for_member):
         response = client.post(reverse("events:delete", args=[event_for_member.id]))
-        assert response.url == reverse("activities:stream")
+        assert response.url == reverse("activities:home_page")
         assert Event.objects.count() == 0
 
 

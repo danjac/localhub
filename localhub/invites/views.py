@@ -32,10 +32,13 @@ class BaseSingleInviteView(InviteQuerySetMixin, GenericModelView):
     ...
 
 
-class InviteListView(
-    LoginRequiredMixin, PermissionRequiredMixin, InviteQuerySetMixin, ListView
-):
+class InviteAdminMixin(LoginRequiredMixin, PermissionRequiredMixin):
     permission_required = "communities.manage_community"
+
+
+class InviteListView(
+    InviteAdminMixin, InviteQuerySetMixin, ListView
+):
     model = Invite
 
     def get_permission_object(self):
@@ -46,12 +49,11 @@ invite_list_view = InviteListView.as_view()
 
 
 class InviteCreateView(
-    LoginRequiredMixin, CommunityRequiredMixin, PermissionRequiredMixin, CreateView,
+    InviteAdminMixin, CommunityRequiredMixin, CreateView,
 ):
     model = Invite
     form_class = InviteForm
     success_url = reverse_lazy("invites:list")
-    permission_required = "communities.manage_community"
 
     def get_permission_object(self):
         return self.request.community
@@ -80,9 +82,8 @@ invite_create_view = InviteCreateView.as_view()
 
 
 class InviteResendView(
-    LoginRequiredMixin, PermissionRequiredMixin, BaseSingleInviteView
+    InviteAdminMixin, BaseSingleInviteView
 ):
-    permission_required = "communities.manage_community"
 
     def get_permission_object(self):
         return self.request.community
@@ -104,9 +105,8 @@ invite_resend_view = InviteResendView.as_view()
 
 
 class InviteDeleteView(
-    LoginRequiredMixin, PermissionRequiredMixin, InviteQuerySetMixin, DeleteView,
+    InviteAdminMixin, InviteQuerySetMixin, DeleteView,
 ):
-    permission_required = "communities.manage_community"
     success_url = reverse_lazy("invites:list")
     model = Invite
 

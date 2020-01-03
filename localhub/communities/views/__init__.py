@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from .base import CommunityRequiredMixin
+from .base import CommunityLoginRequiredMixin, CommunityRequiredMixin
 from .communities import (
     community_detail_view,
     community_list_view,
@@ -19,6 +19,7 @@ from .memberships import (
 )
 
 __all__ = [
+    "CommunityLoginRequiredMixin",
     "CommunityRequiredMixin",
     "community_detail_view",
     "community_list_view",

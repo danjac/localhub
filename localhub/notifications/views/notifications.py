@@ -2,17 +2,16 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from vanilla import DeleteView, GenericModelView, ListView
 
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.views import CommunityLoginRequiredMixin
 
 from ..models import Notification
 
 
-class NotificationQuerySetMixin(LoginRequiredMixin, CommunityRequiredMixin):
+class NotificationQuerySetMixin(CommunityLoginRequiredMixin):
     def get_queryset(self):
         return Notification.objects.for_community(self.request.community).filter(
             recipient=self.request.user

@@ -4,18 +4,17 @@
 import json
 
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.views.generic import View
 from vanilla import TemplateView
 
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.views import CommunityLoginRequiredMixin
 
 from ..models import PushSubscription
 
 
-class BasePushSubscriptionView(CommunityRequiredMixin, LoginRequiredMixin, View):
+class BasePushSubscriptionView(CommunityLoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         try:
             json_body = json.loads(request.body.decode("utf-8"))
