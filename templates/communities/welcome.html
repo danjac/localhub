@@ -35,6 +35,12 @@
   You are not a member of this community. You can request an invite <a href="{{ join_request_url }}">here</a>.
   {% endblocktrans %}
 
+  {% else %}
+  <b>
+  {% blocktrans %}
+  This community is locked and new members are accepted only by private invitation.
+  {% endblocktrans %}
+  </b>
   {% endif %}
 </p>
 
