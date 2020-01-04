@@ -6,10 +6,10 @@
 {% load i18n %}
 
 
-{% block account_subtitle %}{% trans "Update Profile" %}{% endblock %}
+{% block account_subtitle %}{% trans "Profile Settings" %}{% endblock %}
 
 {% block content %}
-<h3>{% trans "My Settings" %}</h3>
+<h3>{% trans "Profile Settings" %}</h3>
 <div class="actions">
     <a href="{% url 'account_email' %}">{% trans "Email Addresses" %}</a>
     <a href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a>
