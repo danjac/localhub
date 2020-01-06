@@ -71,7 +71,9 @@ class Post(Activity):
 
         self.metadata_image = image or ""
         self.metadata_description = description or ""
-        self.title = (title or self.get_domain() or self.title)[:300]
+
+        if not self.title:
+            self.title = (title or self.get_domain() or self.title)[:300]
 
         if commit:
             self.save()
