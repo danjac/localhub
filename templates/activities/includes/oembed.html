@@ -7,15 +7,18 @@
 
 {% if object.url %}
 <div>
-  {{ object.url|domain }}
+    <strong>
+        {% trans "Link" %} &rarr;
+        {{ object.url|domain }}
+    </strong>
 </div>
 <div class="divider"></div>
 {% is_oembed_allowed user as oembed_allowed %}
 <div data-controller="oembed" class="wordwrap">
-  {% if oembed_allowed %}
-  {{ object.url|oembed_no_urlize|url_to_img }}
-  {% else %}
-  {{ object.url|url_to_img }}
-  {% endif %}
+    {% if oembed_allowed %}
+    {{ object.url|oembed_no_urlize|url_to_img }}
+    {% else %}
+    {{ object.url|url_to_img }}
+    {% endif %}
 </div>
 {% endif %}
