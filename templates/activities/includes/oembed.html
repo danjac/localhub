@@ -6,11 +6,9 @@
 {% load activities_tags %}
 
 {% if object.url %}
-<div>
-    <strong>
-        {% trans "Link" %} &rarr;
-        {{ object.url|domain }}
-    </strong>
+<div class="info">
+    {% trans "Link:" %}
+    {{ object.url|domain }}
 </div>
 <div class="divider"></div>
 {% is_oembed_allowed user as oembed_allowed %}
