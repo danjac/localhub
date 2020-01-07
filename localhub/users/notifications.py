@@ -39,13 +39,12 @@ def send_user_notification_push(user, notification):
 
 def send_user_notification_email(user, notification):
 
-    if notification.recipient.has_email_pref(notification.verb):
-        with override(notification.recipient.language):
-            send_notification_email(
-                notification,
-                NOTIFICATION_HEADERS[notification.verb],
-                notification.community.resolve_url(user.get_absolute_url()),
-                "users/emails/notification.txt",
-                "users/emails/notification.html",
-                {"user": user},
-            )
+    with override(notification.recipient.language):
+        send_notification_email(
+            notification,
+            NOTIFICATION_HEADERS[notification.verb],
+            notification.community.resolve_url(user.get_absolute_url()),
+            "users/emails/notification.txt",
+            "users/emails/notification.html",
+            {"user": user},
+        )

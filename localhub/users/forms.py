@@ -30,12 +30,12 @@ class UserForm(forms.ModelForm):
             "show_sensitive_content",
             "show_embedded_content",
             "home_page_filters",
-            "email_preferences",
+            "notification_preferences",
             "default_timezone",
             "bio",
         )
         widgets = {
-            "email_preferences": forms.CheckboxSelectMultiple,
+            "notification_preferences": forms.CheckboxSelectMultiple,
             "home_page_filters": forms.CheckboxSelectMultiple,
         }
         help_texts = {

@@ -22,6 +22,19 @@ class NotificationQuerySet(models.QuerySet):
             actor__is_active=True,
         )
 
+    def bulk_create_if_prefs(self, notifications, *args, **kwargs):
+        """
+        Filters notifications to include only those
+        where user has selected that specific preference
+        and performs bulk INSERT.
+        """
+
+        return self.bulk_create(
+            [n for n in notifications if n.recipient.has_notification_pref(n.verb)],
+            *args,
+            **kwargs,
+        )
+
 
 class Notification(TimeStampedModel):
     actor = models.ForeignKey(
@@ -44,7 +57,7 @@ class Notification(TimeStampedModel):
     class Meta:
         indexes = [
             models.Index(
-                fields=["content_type", "object_id", "created", "-created", "is_read"]
+                fields=["content_type", "object_id", "created", "-created", "is_read",]
             )
         ]
 

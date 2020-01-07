@@ -127,7 +127,7 @@ class TestUserFollowView:
     def test_post(self, client, member, mailoutbox, send_notification_webpush_mock):
         user = MembershipFactory(
             community=member.community,
-            member=UserFactory(email_preferences=["new_follower"]),
+            member=UserFactory(notification_preferences=["new_follower"]),
         ).member
         response = client.post(reverse("users:follow", args=[user.username]))
         assert response.url == user.get_absolute_url()

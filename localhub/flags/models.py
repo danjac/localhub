@@ -97,5 +97,5 @@ class Flag(TimeStampedModel):
         ]
 
         if notifications:
-            Notification.objects.bulk_create(notifications)
+            Notification.objects.bulk_create_if_prefs(notifications)
         return notifications

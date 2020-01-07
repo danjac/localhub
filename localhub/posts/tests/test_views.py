@@ -10,6 +10,7 @@ from localhub.communities.models import Membership
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification
+from localhub.users.factories import UserFactory
 
 from ..factories import PostFactory
 from ..models import Post
@@ -143,12 +144,13 @@ class TestPostCommentCreateView:
         assert response.status_code == 200
 
     def test_post(self, client, member, send_notification_webpush_mock):
-        post = PostFactory(
-            community=member.community,
-            owner=MembershipFactory(community=member.community).member,
-        )
+        owner = UserFactory(notification_preferences=["new_comment"])
+        MembershipFactory(member=owner, community=member.community)
+        post = PostFactory(community=member.community, owner=owner)
         response = client.post(
-            reverse("posts:comment", args=[post.id]), {"content": "test"}
+            reverse("posts:comment", args=[post.id]),
+            {"content": "test"},
+            HTTP_HOST=member.community.domain,
         )
         assert response.url == post.get_absolute_url()
         comment = Comment.objects.get()
@@ -192,7 +194,10 @@ class TestPostReshareView:
 
         post = PostFactory(
             community=member.community,
-            owner=MembershipFactory(community=member.community).member,
+            owner=MembershipFactory(
+                community=member.community,
+                member=UserFactory(notification_preferences=["reshare"]),
+            ).member,
         )
         response = client.post(
             reverse("posts:reshare", args=[post.id]),
@@ -258,7 +263,9 @@ class TestFlagView:
             owner=MembershipFactory(community=member.community).member,
         )
         moderator = MembershipFactory(
-            community=post.community, role=Membership.ROLES.moderator
+            community=post.community,
+            role=Membership.ROLES.moderator,
+            member=UserFactory(notification_preferences=["flag"]),
         )
         response = client.post(
             reverse("posts:flag", args=[post.id]), data={"reason": "spam"}

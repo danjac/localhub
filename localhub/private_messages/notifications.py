@@ -11,31 +11,31 @@ from localhub.users.utils import user_display
 
 
 def send_message_notifications(message):
-    send_message_push(message)
-    send_message_email(message)
+    if message.recipient.has_notification_pref("new_message"):
+        send_message_push(message)
+        send_message_email(message)
 
 
 def send_message_email(message):
 
-    if message.recipient.has_email_pref("new_message"):
-        with override(message.recipient.language):
+    with override(message.recipient.language):
 
-            context = {"recipient": message.recipient, "message": message}
+        context = {"recipient": message.recipient, "message": message}
 
-            if message.parent:
-                subject = _("Someone has replied to your message")
-            else:
-                subject = _("Someone has sent you a message")
+        if message.parent:
+            subject = _("Someone has replied to your message")
+        else:
+            subject = _("Someone has sent you a message")
 
-            send_mail(
-                f"{message.community.name} | {subject}",
-                render_to_string("private_messages/emails/message.txt", context),
-                message.community.resolve_email("no-reply"),
-                [message.recipient.email],
-                html_message=render_to_string(
-                    "private_messages/emails/message.html", context
-                ),
-            )
+        send_mail(
+            f"{message.community.name} | {subject}",
+            render_to_string("private_messages/emails/message.txt", context),
+            message.community.resolve_email("no-reply"),
+            [message.recipient.email],
+            html_message=render_to_string(
+                "private_messages/emails/message.html", context
+            ),
+        )
 
 
 def send_message_push(message):

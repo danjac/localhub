@@ -45,26 +45,20 @@ def send_activity_notification_push(activity, notification):
 
 
 def send_activity_notification_email(activity, notification):
+    with override(notification.recipient.language):
+        activity_name = activity._meta.verbose_name
 
-    if notification.recipient.has_email_pref(notification.verb):
-        with override(notification.recipient.language):
-            activity_name = activity._meta.verbose_name
+        plain_template_name = f"activities/emails/notifications/{notification.verb}.txt"
+        html_template_name = f"activities/emails/notifications/{notification.verb}.html"
 
-            plain_template_name = (
-                f"activities/emails/notifications/{notification.verb}.txt"
-            )
-            html_template_name = (
-                f"activities/emails/notifications/{notification.verb}.html"
-            )
-
-            send_notification_email(
-                notification,
-                get_notification_header(activity, notification),
-                activity.get_permalink(),
-                plain_template_name,
-                html_template_name,
-                {"activity_name": activity_name},
-            )
+        send_notification_email(
+            notification,
+            get_notification_header(activity, notification),
+            activity.get_permalink(),
+            plain_template_name,
+            html_template_name,
+            {"activity_name": activity_name},
+        )
 
 
 def get_notification_header(activity, notification):
@@ -76,7 +70,7 @@ def get_notification_header(activity, notification):
 
 def send_activity_deleted_email(activity):
 
-    if activity.owner.has_email_pref("moderator_delete"):
+    if activity.owner.has_notification_pref("moderator_delete"):
         with override(activity.owner.language):
             activity_name = activity._meta.verbose_name
 

@@ -54,27 +54,22 @@ def send_comment_notification_push(comment, notification):
 
 def send_comment_notification_email(comment, notification):
 
-    if notification.recipient.has_email_pref(notification.verb):
-        with override(notification.recipient.language):
-            plain_template_name = (
-                f"comments/emails/notifications/{notification.verb}.txt"
-            )
-            html_template_name = (
-                f"comments/emails/notifications/{notification.verb}.html"
-            )
+    with override(notification.recipient.language):
+        plain_template_name = f"comments/emails/notifications/{notification.verb}.txt"
+        html_template_name = f"comments/emails/notifications/{notification.verb}.html"
 
-            send_notification_email(
-                notification,
-                get_notification_header(notification),
-                comment.get_permalink(),
-                plain_template_name,
-                html_template_name,
-                {"comment": comment},
-            )
+        send_notification_email(
+            notification,
+            get_notification_header(notification),
+            comment.get_permalink(),
+            plain_template_name,
+            html_template_name,
+            {"comment": comment},
+        )
 
 
 def send_comment_deleted_email(comment):
-    if comment.owner.has_email_pref("moderator_delete"):
+    if comment.owner.has_notification_pref("moderator_delete"):
         with override(comment.owner.language):
             context = {"comment": comment}
             send_mail(

@@ -84,7 +84,7 @@ class User(AbstractUser):
         ("tags", _("Posts, events and photos containing tags I'm following")),
     )
 
-    EMAIL_PREFERENCES = Choices(
+    NOTIFICATION_PREFERENCES = Choices(
         ("new_message", _("I receive a direct message")),
         ("new_follower", _("Someone starts following me")),
         ("new_member", _("Someone joins a community I belong to")),
@@ -152,8 +152,8 @@ class User(AbstractUser):
     show_sensitive_content = models.BooleanField(default=False)
     show_embedded_content = models.BooleanField(default=False)
 
-    email_preferences = ChoiceArrayField(
-        models.CharField(max_length=30, choices=EMAIL_PREFERENCES),
+    notification_preferences = ChoiceArrayField(
+        models.CharField(max_length=30, choices=NOTIFICATION_PREFERENCES),
         default=list,
         blank=True,
     )
@@ -186,8 +186,12 @@ class User(AbstractUser):
     def get_absolute_url(self):
         return reverse("users:activities", args=[self.username])
 
-    def has_email_pref(self, pref):
-        return pref in self.email_preferences if self.email_preferences else False
+    def has_notification_pref(self, pref):
+        return (
+            pref in self.notification_preferences
+            if self.notification_preferences
+            else False
+        )
 
     def has_role(self, community, *roles):
         """
@@ -215,7 +219,7 @@ class User(AbstractUser):
             )
             for member in community.members.exclude(pk=self.pk)
         ]
-        Notification.objects.bulk_create(notifications)
+        Notification.objects.bulk_create_if_prefs(notifications)
         return notifications
 
     def notify_on_follow(self, recipient, community):

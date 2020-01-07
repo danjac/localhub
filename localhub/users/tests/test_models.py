@@ -111,13 +111,13 @@ class TestUserModel:
     def test_get_absolute_url(self, user):
         assert user.get_absolute_url() == f"/people/{user.username}/"
 
-    def test_has_email_pref(self):
-        user = UserFactory(email_preferences=["messages"])
-        assert user.has_email_pref("messages")
+    def test_has_notification_pref(self):
+        user = UserFactory(notification_preferences=["messages"])
+        assert user.has_notification_pref("messages")
 
-    def test_does_not_have_email_pref(self):
+    def test_does_not_have_notification_pref(self):
         user = UserFactory()
-        assert not user.has_email_pref("messages")
+        assert not user.has_notification_pref("messages")
 
     def test_has_role(self, moderator):
         assert moderator.member.has_role(

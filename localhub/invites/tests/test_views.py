@@ -85,7 +85,7 @@ class TestInviteAcceptView:
         self, client, community, login_user, mailoutbox, send_notification_webpush_mock,
     ):
         sender = MembershipFactory(community=community).member
-        sender.email_preferences = ["new_member"]
+        sender.notification_preferences = ["new_member"]
         sender.save()
         invite = InviteFactory(
             community=community, email=login_user.email, sender=sender

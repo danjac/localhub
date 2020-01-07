@@ -9,6 +9,7 @@ from pywebpush import WebPushException
 
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Community
+from localhub.users.factories import UserFactory
 
 from ..factories import NotificationFactory
 from ..models import Notification, PushSubscription
@@ -35,6 +36,18 @@ class TestNotificationManager:
         qs = Notification.objects.for_community(community)
         assert qs.count() == 1
         assert qs.first() == notification
+
+    def test_bulk_create_if_prefs_has_pref(self, post):
+        user = UserFactory(notification_preferences=["reshare"])
+        notification = post.make_notification(user, "reshare")
+        created = Notification.objects.bulk_create_if_prefs([notification])
+        assert created[0] == notification
+
+    def test_bulk_create_if_prefs_does_not_have_pref(self, post):
+        user = UserFactory(notification_preferences=[])
+        notification = post.make_notification(user, "reshare")
+        created = Notification.objects.bulk_create_if_prefs([notification])
+        assert not created
 
 
 class TestPushSubscriptionModel:

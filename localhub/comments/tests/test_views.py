@@ -10,6 +10,7 @@ from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.notifications.models import Notification
 from localhub.posts.factories import PostFactory
+from localhub.users.factories import UserFactory
 
 from ..factories import CommentFactory
 from ..models import Comment
@@ -171,7 +172,9 @@ class TestFlagView:
             owner=MembershipFactory(community=member.community).member,
         )
         moderator = MembershipFactory(
-            community=post.community, role=Membership.ROLES.moderator
+            community=post.community,
+            role=Membership.ROLES.moderator,
+            member=UserFactory(notification_preferences=["flag"]),
         )
         response = client.post(
             reverse("comments:flag", args=[comment.id]), data={"reason": "spam"},
@@ -211,11 +214,3 @@ class TestCommentReplyView:
         assert comment.owner == member.member
         assert comment.content_object == parent.content_object
         assert comment.parent == parent
-
-        notification = Notification.objects.get(
-            recipient=comment.content_object.owner, comment=comment
-        )
-        assert notification.verb == "new_comment"
-
-        notification = Notification.objects.get(recipient=parent.owner, comment=comment)
-        assert notification.verb == "replied_to_comment"
