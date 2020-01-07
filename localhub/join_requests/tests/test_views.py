@@ -91,7 +91,7 @@ class TestJoinRequestCreateView:
 
 class TestJoinRequestAcceptView:
     def test_post(self, client, mailoutbox, admin, send_notification_webpush_mock):
-        admin.member.email_preferences = ["new_member"]
+        admin.member.notification_preferences = ["new_member"]
         admin.member.save()
         join_request = JoinRequestFactory(community=admin.community)
         response = client.post(reverse("join_requests:accept", args=[join_request.id]))

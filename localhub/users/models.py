@@ -219,8 +219,7 @@ class User(AbstractUser):
             )
             for member in community.members.exclude(pk=self.pk)
         ]
-        Notification.objects.bulk_create_if_prefs(notifications)
-        return notifications
+        return Notification.objects.bulk_create_if_prefs(notifications)
 
     def notify_on_follow(self, recipient, community):
         """

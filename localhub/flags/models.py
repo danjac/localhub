@@ -96,6 +96,4 @@ class Flag(TimeStampedModel):
             if moderator != self.user
         ]
 
-        if notifications:
-            Notification.objects.bulk_create_if_prefs(notifications)
-        return notifications
+        return Notification.objects.bulk_create_if_prefs(notifications)

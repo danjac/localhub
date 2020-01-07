@@ -418,8 +418,7 @@ class Activity(TimeStampedModel):
 
         notifications += self.notify_owner_or_moderators()
 
-        Notification.objects.bulk_create_if_prefs(notifications)
-        return notifications
+        return Notification.objects.bulk_create_if_prefs(notifications)
 
     def notify_on_update(self):
 
@@ -432,8 +431,7 @@ class Activity(TimeStampedModel):
 
         notifications += self.notify_owner_or_moderators()
 
-        Notification.objects.bulk_create_if_prefs(notifications)
-        return notifications
+        return Notification.objects.bulk_create_if_prefs(notifications)
 
     def reshare(self, owner, commit=True, **kwargs):
         """

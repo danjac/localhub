@@ -258,8 +258,7 @@ class Comment(TimeStampedModel):
             .distinct()
         ]
 
-        Notification.objects.bulk_create_if_prefs(notifications)
-        return notifications
+        return Notification.objects.bulk_create_if_prefs(notifications)
 
     def notify_on_update(self):
         notifications = []
@@ -275,5 +274,4 @@ class Comment(TimeStampedModel):
                 self.make_notification("moderator_edit", self.owner, self.editor)
             ]
 
-        Notification.objects.bulk_create_if_prefs(notifications)
-        return notifications
+        return Notification.objects.bulk_create_if_prefs(notifications)

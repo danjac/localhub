@@ -17,6 +17,10 @@ pytestmark = pytest.mark.django_db
 class TestFlagModel:
     @factory.django.mute_signals(signals.post_save)
     def test_notify_comment(self, user, moderator):
+
+        moderator.member.notification_preferences = ["flag"]
+        moderator.member.save()
+
         post = PostFactory(community=moderator.community)
         comment = CommentFactory(content_object=post)
         flag = Flag.objects.create(
@@ -32,6 +36,9 @@ class TestFlagModel:
 
     @factory.django.mute_signals(signals.post_save)
     def test_notify_post(self, user, moderator):
+        moderator.member.notification_preferences = ["flag"]
+        moderator.member.save()
+
         post = PostFactory(community=moderator.community)
         flag = Flag.objects.create(
             content_object=post, user=user, community=post.community
