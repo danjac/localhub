@@ -128,7 +128,10 @@ class TestUserModel:
         assert not member.member.has_role(member.community, Membership.ROLES.moderator)
 
     def test_notify_on_join(self, member):
-        other_member = MembershipFactory(community=member.community, member=UserFactory(notification_preferences=["new_member"])).member
+        other_member = MembershipFactory(
+            community=member.community,
+            member=UserFactory(notification_preferences=["new_member"]),
+        ).member
         notifications = member.member.notify_on_join(member.community)
         assert len(notifications) == 1
         assert notifications[0].recipient == other_member
@@ -138,7 +141,10 @@ class TestUserModel:
         assert notifications[0].verb == "new_member"
 
     def test_notify_on_follow(self, member):
-        follower = MembershipFactory(community=member.community, member=UserFactory(notification_preferences=["new_follower"])).member
+        follower = MembershipFactory(
+            community=member.community,
+            member=UserFactory(notification_preferences=["new_follower"]),
+        ).member
         notifications = follower.notify_on_follow(member.member, member.community)
         assert len(notifications) == 1
         assert notifications[0].recipient == member.member

@@ -29,10 +29,7 @@ class TestPostModel:
         If non-ASCII slug is empty just use ID
         """
         post = PostFactory(title="中国研究方法")
-        assert (
-            post.get_absolute_url()
-            == f"/posts/{post.id}/zhong-guo-yan-jiu-fang-fa/"
-        )
+        assert post.get_absolute_url() == f"/posts/{post.id}/zhong-guo-yan-jiu-fang-fa/"
 
     def test_is_oembed(self):
         post = Post(url="https://www.youtube.com/watch?v=eLeIJtLebZk")
@@ -107,15 +104,11 @@ class TestPostModel:
         moderator = MembershipFactory(
             community=community,
             role=Membership.ROLES.moderator,
-            member=UserFactory(
-                notification_preferences=["moderator_review_request"]
-            ),
+            member=UserFactory(notification_preferences=["moderator_review_request"]),
         ).member
 
         mentioned = MembershipFactory(
-            member=UserFactory(
-                username="danjac", notification_preferences=["mention"]
-            ),
+            member=UserFactory(username="danjac", notification_preferences=["mention"]),
             community=community,
             role=Membership.ROLES.member,
         ).member
@@ -133,9 +126,7 @@ class TestPostModel:
 
         tag_follower = MembershipFactory(
             community=community,
-            member=UserFactory(
-                notification_preferences=["new_followed_tag_post"]
-            ),
+            member=UserFactory(notification_preferences=["new_followed_tag_post"]),
         ).member
         tag_follower.following_tags.add(movies, reviews)
 
@@ -146,9 +137,7 @@ class TestPostModel:
 
         user_follower = MembershipFactory(
             community=community,
-            member=UserFactory(
-                notification_preferences=["new_followed_user_post"]
-            ),
+            member=UserFactory(notification_preferences=["new_followed_user_post"]),
         ).member
         user_follower.following.add(post.owner)
 
@@ -180,7 +169,8 @@ class TestPostModel:
         ).member
 
         moderator = MembershipFactory(
-            community=community, role=Membership.ROLES.moderator,
+            community=community,
+            role=Membership.ROLES.moderator,
             member=UserFactory(notification_preferences=["moderator_review_request"]),
         ).member
 
@@ -225,17 +215,24 @@ class TestPostModel:
         movies = Tag.objects.create(name="movies")
         reviews = Tag.objects.create(name="reviews")
 
-        tag_follower = MembershipFactory(community=community, member=UserFactory(notification_preferences=["new_followed_tag_post"])).member
+        tag_follower = MembershipFactory(
+            community=community,
+            member=UserFactory(notification_preferences=["new_followed_tag_post"]),
+        ).member
         tag_follower.following_tags.add(movies, reviews)
 
         assert tag_follower.following_tags.count() == 2
 
         owner = MembershipFactory(
-            community=community, role=Membership.ROLES.moderator, member=UserFactory(notification_preferences=["reshare"])
+            community=community,
+            role=Membership.ROLES.moderator,
+            member=UserFactory(notification_preferences=["reshare"]),
         ).member
 
         moderator = MembershipFactory(
-            community=community, role=Membership.ROLES.moderator, member=UserFactory(notification_preferences=["moderator_review_request"])
+            community=community,
+            role=Membership.ROLES.moderator,
+            member=UserFactory(notification_preferences=["moderator_review_request"]),
         ).member
 
         post = PostFactory(
@@ -307,9 +304,7 @@ class TestPostModel:
             headers = {"Content-Type": "image/jpeg"}
 
         mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
-        post = PostFactory(
-            url="http://google.com/test.jpg", title="", description=""
-        )
+        post = PostFactory(url="http://google.com/test.jpg", title="", description="")
         post.fetch_metadata_from_url()
 
         assert post.title == "google.com"
