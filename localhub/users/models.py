@@ -31,6 +31,9 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
             models.Q(emailaddress__email__iexact=email) | models.Q(email__iexact=email)
         )
 
+    def with_notification_prefs(self, *prefs):
+        return self.filter(notification_preferences__contains=list(prefs))
+
     def with_is_following(self, follower: settings.AUTH_USER_MODEL):
         return self.annotate(
             is_following=models.Exists(
@@ -217,9 +220,11 @@ class User(AbstractUser):
                 community=community,
                 verb="new_member",
             )
-            for member in community.members.exclude(pk=self.pk)
+            for member in community.members.with_notification_prefs(
+                "new_member"
+            ).exclude(pk=self.pk)
         ]
-        return Notification.objects.bulk_create_if_prefs(notifications)
+        return Notification.objects.bulk_create(notifications)
 
     def notify_on_follow(self, recipient, community):
         """

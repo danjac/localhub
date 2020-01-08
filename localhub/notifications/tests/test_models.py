@@ -37,18 +37,6 @@ class TestNotificationManager:
         assert qs.count() == 1
         assert qs.first() == notification
 
-    def test_bulk_create_if_prefs_has_pref(self, post):
-        user = UserFactory(notification_preferences=["reshare"])
-        notification = post.make_notification(user, "reshare")
-        created = Notification.objects.bulk_create_if_prefs([notification])
-        assert created[0] == notification
-
-    def test_bulk_create_if_prefs_does_not_have_pref(self, post):
-        user = UserFactory(notification_preferences=[])
-        notification = post.make_notification(user, "reshare")
-        created = Notification.objects.bulk_create_if_prefs([notification])
-        assert not created
-
 
 class TestPushSubscriptionModel:
     def test_push_if_ok(self, member, send_notification_webpush_mock):

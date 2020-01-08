@@ -92,8 +92,10 @@ class Flag(TimeStampedModel):
                 community=self.community,
                 verb="flag",
             )
-            for moderator in self.community.get_moderators()
+            for moderator in self.community.get_moderators().with_notification_prefs(
+                "flag"
+            )
             if moderator != self.user
         ]
 
-        return Notification.objects.bulk_create_if_prefs(notifications)
+        return Notification.objects.bulk_create(notifications)
