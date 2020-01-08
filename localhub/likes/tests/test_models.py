@@ -4,10 +4,7 @@
 
 import factory
 import pytest
-from django.conf import settings
 from django.db.models import signals
-
-from localhub.posts.models import Post
 
 from ..models import Like
 
@@ -16,7 +13,9 @@ pytestmark = pytest.mark.django_db
 
 class TestLikeModel:
     @factory.django.mute_signals(signals.post_save)
-    def test_notify(self, user: settings.AUTH_USER_MODEL, post: Post):
+    def test_notify(self, user, post):
+        post.owner.notification_preferences = ["like"]
+        post.owner.save()
         like = Like.objects.create(
             content_object=post,
             user=user,
