@@ -47,7 +47,7 @@ def send_comment_notification_push(comment, notification):
             notification.recipient,
             notification.community,
             head=get_notification_header(notification),
-            body=force_text(truncatechars(comment.content, 60)),
+            body=force_text(truncatechars(comment.content.plaintext(), 60)),
             url=comment.get_permalink(),
         )
 
