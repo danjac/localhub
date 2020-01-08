@@ -37,18 +37,21 @@ class CommentQuerySetMixin(CommunityRequiredMixin):
         )
 
 
-class BaseCommentListView(CommentQuerySetMixin, ListView):
+class CommentListView(SearchMixin, CommentQuerySetMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
-
-    def get_queryset(self):
-        return super().get_queryset().prefetch_related("content_object")
-
-
-class CommentListView(SearchMixin, BaseCommentListView):
     template_name = "comments/comment_list.html"
 
     def get_queryset(self):
-        qs = super().get_queryset().without_blocked_users(self.request.user)
+        qs = (
+            super()
+            .get_queryset()
+            .for_community(self.request.community)
+            .with_common_annotations(self.request.user)
+            .prefetch_related("content_object")
+            .select_related(
+                "owner", "community", "parent", "parent__owner", "parent__community",
+            )
+        )
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank", "-created")
         return qs.order_by("-created")
