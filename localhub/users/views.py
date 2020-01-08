@@ -258,12 +258,7 @@ class UserCommentListView(SingleUserMixin, BaseCommentListView):
     template_name = "users/comments.html"
 
     def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .filter(owner=self.user_obj)
-            .order_by("-created")
-        )
+        return super().get_queryset().filter(owner=self.user_obj).order_by("-created")
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -276,6 +271,22 @@ class UserCommentListView(SingleUserMixin, BaseCommentListView):
 
 
 user_comment_list_view = UserCommentListView.as_view()
+
+
+class UserCommentReplyListView(SingleUserMixin, BaseCommentListView):
+    active_tab = "replies"
+    template_name = "users/replies.html"
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .filter(parent__owner=self.user_obj)
+            .order_by("-created")
+        )
+
+
+user_comment_reply_list_view = UserCommentReplyListView.as_view()
 
 
 class UserMessageListView(SingleUserMixin, ListView):

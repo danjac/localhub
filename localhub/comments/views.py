@@ -44,7 +44,7 @@ class BaseCommentListView(CommentQuerySetMixin, ListView):
         return (
             super()
             .get_queryset()
-            .with_common_annotations(self.request.user)
+            .with_common_annotations(self.request.user, self.request.community)
             .prefetch_related("content_object")
         )
 

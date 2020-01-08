@@ -13,6 +13,7 @@ from .views import (
     user_comment_list_view,
     user_follow_view,
     user_message_list_view,
+    user_comment_reply_list_view,
     user_stream_view,
     user_unblock_view,
     user_unfollow_view,
@@ -31,6 +32,7 @@ urlpatterns = [
     path("<slug:slug>/block/", view=user_block_view, name="block"),
     path("<slug:slug>/unblock/", view=user_unblock_view, name="unblock"),
     path("<slug:slug>/comments/", view=user_comment_list_view, name="comments"),
+    path("<slug:slug>/replies/", view=user_comment_reply_list_view, name="replies"),
     path("<slug:slug>/messages/", view=user_message_list_view, name="messages"),
     path("<slug:slug>/", view=user_stream_view, name="activities"),
 ]

@@ -77,6 +77,22 @@ class TestUserCommentsView:
         assert dict(response.context or {})["num_likes"] == 1
 
 
+class TestUserRepliesView:
+    def test_get(self, client, member):
+        post = PostFactory(community=member.community)
+        comment = CommentFactory(
+            content_object=post, owner=member.member, community=member.community,
+        )
+        CommentFactory(
+            parent=comment,
+            community=comment.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
+        response = client.get(reverse("users:replies", args=[comment.owner.username]))
+        assert response.status_code == 200
+        assert len(dict(response.context or {})["object_list"]) == 1
+
+
 class TestUserActivitiesView:
     def test_get(self, client, member):
         post = PostFactory(community=member.community, owner=member.member)

@@ -129,7 +129,12 @@ You have been a member for <b>{{ created }}</b>.
     <a data-target="active-link.match"
        href="{% url 'users:comments' user_obj.username %}">{% trans "Comments" %}</a>
   </li>
-  {% if user.is_authenticated and not is_current_user %}
+  {% if is_current_user %}
+  <li class="tab-item" data-controller="active-link" data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'users:replies' user_obj.username %}">{% trans "Replies" %}</a>
+  </li>
+  {% else %}
   <li class="tab-item" data-controller="active-link" data-active-link-exact>
     <a data-target="active-link.match"
        href="{% url 'users:messages' user_obj.username %}">{% trans "Messages" %}</a>
