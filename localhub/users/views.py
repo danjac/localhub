@@ -262,7 +262,6 @@ class UserCommentListView(SingleUserMixin, BaseCommentListView):
             super()
             .get_queryset()
             .filter(owner=self.user_obj)
-            .with_common_annotations(self.request.user, self.request.community)
             .order_by("-created")
         )
 
