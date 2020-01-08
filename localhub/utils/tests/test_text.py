@@ -1,11 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import pytest
-
 from ..text import slugify_unicode
-
-pytestmark = pytest.mark.django_db
 
 
 class TestSlugifyUnicode:

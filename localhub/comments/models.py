@@ -21,6 +21,7 @@ from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.models import Notification
+from localhub.utils.iterable import takefirst
 
 
 class CommentAnnotationsQuerySetMixin:
@@ -269,7 +270,9 @@ class Comment(TimeStampedModel):
             .distinct()
         ]
 
-        return Notification.objects.bulk_create(notifications)
+        return Notification.objects.bulk_create(
+            takefirst(notifications, lambda n: n.recipient)
+        )
 
     def notify_on_update(self):
         notifications = []
@@ -290,4 +293,6 @@ class Comment(TimeStampedModel):
                 self.make_notification("moderator_edit", self.owner, self.editor)
             ]
 
-        return Notification.objects.bulk_create(notifications)
+        return Notification.objects.bulk_create(
+            takefirst(notifications, lambda n: n.recipient)
+        )

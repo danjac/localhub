@@ -25,6 +25,7 @@ from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.models import Notification
+from localhub.utils.iterable import takefirst
 from localhub.utils.text import slugify_unicode
 
 
@@ -435,7 +436,9 @@ class Activity(TimeStampedModel):
 
         notifications += self.notify_owner_or_moderators()
 
-        return Notification.objects.bulk_create(notifications)
+        return Notification.objects.bulk_create(
+            takefirst(notifications, lambda n: n.recipient)
+        )
 
     def notify_on_update(self):
 
@@ -448,7 +451,9 @@ class Activity(TimeStampedModel):
 
         notifications += self.notify_owner_or_moderators()
 
-        return Notification.objects.bulk_create(notifications)
+        return Notification.objects.bulk_create(
+            takefirst(notifications, lambda n: n.recipient)
+        )
 
     def reshare(self, owner, commit=True, **kwargs):
         """

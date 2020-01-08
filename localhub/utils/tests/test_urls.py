@@ -1,11 +1,8 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import pytest
 
 from ..urls import get_domain, is_image_url, is_url
-
-pytestmark = pytest.mark.django_db
 
 
 class TestIsUrl:
