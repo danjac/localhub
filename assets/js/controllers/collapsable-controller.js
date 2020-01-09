@@ -5,14 +5,19 @@ import {
   Controller
 } from 'stimulus';
 
+const MAX_HEIGHT = 300;
+
 export default class extends Controller {
   static targets = ['container', 'toggle'];
 
   connect() {
     this.checkContainerHeight();
-    // ensure we check heights of all images
+    // ensure we check heights of all images and other dynamic elements
     for (const img of this.containerTarget.getElementsByTagName("img")) {
       img.onload = () => this.checkContainerHeight();
+    }
+    for (const iframe of this.containerTarget.getElementsByTagName("iframe")) {
+      iframe.onload = () => this.checkContainerHeight();
     }
   }
 
@@ -23,7 +28,8 @@ export default class extends Controller {
   }
 
   checkContainerHeight() {
-    if (this.containerTarget.offsetHeight < this.containerTarget.scrollHeight) {
+    if (this.containerTarget.offsetHeight < this.containerTarget.scrollHeight ||
+      this.containerTarget.offsetHeight >= MAX_HEIGHT) {
       this.toggleTarget.classList.remove('d-hide');
     }
   }
