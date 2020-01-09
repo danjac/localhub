@@ -133,6 +133,11 @@ table {
   }
 }
 
+.collapsed {
+  overflow: hidden;
+  max-height: 300px;
+}
+
 .markdown-content {
   word-wrap: break-word;
 

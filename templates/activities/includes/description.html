@@ -3,19 +3,19 @@
 
 {% load i18n %}
 {% if object.description %}
-{% if object.description|wordcount > 60 and not is_detail %}
-<div data-controller="toggle">
-  <div class="markdown-content d-hide" data-target="toggle.togglable">
-    {{ object.description.markdown }}
-  </div>
-  <div class="markdown-content" data-target="toggle.togglable">
-    {{ object.description.markdown|truncatewords_html:60 }}
-  </div>
-  <a href="#" data-action="toggle#toggle" data-target="toggle.togglable">{% trans "Read more" %}</a>
-</div>
-{% else %}
+{% if is_detail %}
 <div class="markdown-content">
   {{ object.description.markdown }}
+</div>
+{% else %}
+<div data-controller="collapsable">
+  <div class="markdown-content collapsed" data-target="collapsable.container">
+    {{ object.description.markdown }}
+  </div>
+  <a class="mt-1 d-hide"
+     data-target="collapsable.toggle"
+     data-action="collapsable#toggle"
+     href="#">{% trans "Show More" %}</a>
 </div>
 {% endif %}
 {% endif %}
