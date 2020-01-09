@@ -11,13 +11,13 @@ export default class extends Controller {
   connect() {
     console.log(this.containerTarget.offsetHeight, this.containerTarget.scrollHeight);
     if (this.containerTarget.offsetHeight < this.containerTarget.scrollHeight) {
-      this.toggleTarget.classList.toggle('d-hide');
+      this.toggleTarget.classList.remove('d-hide');
     }
   }
 
   toggle(event) {
     event.preventDefault();
-    this.containerTarget.classList.toggle('collapsed');
-    this.toggleTarget.classList.toggle('d-hide');
+    this.containerTarget.classList.remove('collapsed');
+    this.toggleTarget.classList.add('d-hide');
   }
 }
