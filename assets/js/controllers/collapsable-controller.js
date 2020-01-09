@@ -9,8 +9,9 @@ export default class extends Controller {
   static targets = ['container', 'toggle'];
 
   connect() {
-    console.log(this.containerTarget.offsetHeight, this.containerTarget.scrollHeight);
-    if (this.containerTarget.offsetHeight < this.containerTarget.scrollHeight) {
+    // reload container from DOM to get "true" heights
+    const container = document.getElementById(this.containerTarget.id);
+    if (container && container.offsetHeight < container.scrollHeight) {
       this.toggleTarget.classList.remove('d-hide');
     }
   }

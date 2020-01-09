@@ -9,7 +9,9 @@
 </div>
 {% else %}
 <div data-controller="collapsable">
-  <div class="markdown-content collapsed" data-target="collapsable.container">
+  <div class="markdown-content collapsed"
+       data-target="collapsable.container"
+       id="markdown-content-{{ object_type }}-{{ object.id }}">
     {{ object.description.markdown }}
   </div>
   <a class="mt-1 d-hide"
