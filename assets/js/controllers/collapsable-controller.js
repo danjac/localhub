@@ -5,15 +5,16 @@ import {
   Controller
 } from 'stimulus';
 
+const MAX_HEIGHT = 300;
+
 export default class extends Controller {
   static targets = ['container', 'toggle'];
 
   connect() {
-    // reload container from DOM to get "true" heights
-    const container = document.getElementById(this.containerTarget.id);
-    console.log('container', container.offsetHeight, container.scrollHeight);
+    const style = window.getComputedStyle(this.containerTarget, null);
+    const height = style && style.height ? parseInt(style.height, 10) : 0;
 
-    if (container && container.offsetHeight < container.scrollHeight) {
+    if (height >= MAX_HEIGHT) {
       this.toggleTarget.classList.remove('d-hide');
     }
   }
