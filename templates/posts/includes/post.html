@@ -9,6 +9,10 @@
 
 {% block content %}
 
+{% if not is_detail %}
+<div data-controller="collapsable">
+  <div class="collapsed" data-target="collapsable.container">
+{% endif %}
 {% include "activities/includes/oembed.html" %}
 {% is_post_oembed user object as is_oembed %}
 {% if object.metadata_description and not is_oembed %}
@@ -27,7 +31,13 @@
 <div class="divider"></div>
 {% endif %}
 {% include "activities/includes/description.html" %}
+{% if not is_detail %}
+  </div>
+  <a class="mt-1 d-hide"
+     data-target="collapsable.toggle"
+     data-action="collapsable#toggle"
+     href="#">{% trans "Show More" %}</a>
+</div>
+{% endif %}
 
 {% endblock content %}
-
-

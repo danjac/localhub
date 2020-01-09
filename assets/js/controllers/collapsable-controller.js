@@ -5,18 +5,14 @@ import {
   Controller
 } from 'stimulus';
 
-const MAX_HEIGHT = 300;
-
 export default class extends Controller {
   static targets = ['container', 'toggle'];
 
   connect() {
-    const style = window.getComputedStyle(this.containerTarget, null);
-    const height = style && style.height ? parseInt(style.height, 10) : 0;
-    console.log("container", style, height)
-
-    if (height >= MAX_HEIGHT) {
-      this.toggleTarget.classList.remove('d-hide');
+    this.checkContainerHeight();
+    // ensure we check heights of all images
+    for (const img of this.containerTarget.getElementsByTagName("img")) {
+      img.onload = () => this.checkContainerHeight();
     }
   }
 
@@ -24,5 +20,11 @@ export default class extends Controller {
     event.preventDefault();
     this.containerTarget.classList.remove('collapsed');
     this.toggleTarget.classList.add('d-hide');
+  }
+
+  checkContainerHeight() {
+    if (this.containerTarget.offsetHeight < this.containerTarget.scrollHeight) {
+      this.toggleTarget.classList.remove('d-hide');
+    }
   }
 }
