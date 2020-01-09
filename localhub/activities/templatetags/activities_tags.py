@@ -86,9 +86,11 @@ def domain(url):
     """
     Shows a linked URL domain e.g. if http://reddit.com:
 
-    <a href="http://reddit.com">reddit.com</a>
+    <a href="http://reddit.com" ...>reddit.com</a>
     """
     domain = get_domain(url)
     if domain:
-        return mark_safe(f'<a href="{url}" rel="nofollow">{domain}</a>')
+        return mark_safe(
+            f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{domain}</a>' # noqa
+        )
     return url
