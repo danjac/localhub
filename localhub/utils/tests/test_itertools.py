@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from ..iterable import takefirst
+from ..itertools import takefirst
 
 
 class TestTakefirst:

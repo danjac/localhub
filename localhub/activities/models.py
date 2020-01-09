@@ -25,7 +25,7 @@ from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.models import Notification
-from localhub.utils.iterable import takefirst
+from localhub.utils.itertools import takefirst
 from localhub.utils.text import slugify_unicode
 
 

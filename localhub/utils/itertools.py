@@ -3,8 +3,8 @@ import itertools
 
 def takefirst(iterable, key=None):
     """
-    Works like itertools.groupby, but only
-    returns the first instance matching the key.
+    Returns iterable containing the first
+    instance of each item matching the key func.
     """
     keys = set()
 
