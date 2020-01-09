@@ -13,6 +13,7 @@ export default class extends Controller {
   connect() {
     const style = window.getComputedStyle(this.containerTarget, null);
     const height = style && style.height ? parseInt(style.height, 10) : 0;
+    console.log("container", style, height)
 
     if (height >= MAX_HEIGHT) {
       this.toggleTarget.classList.remove('d-hide');
