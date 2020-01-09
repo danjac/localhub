@@ -7,6 +7,11 @@
 {% load tz %}
 
 {% block content %}
+{% include "activities/includes/oembed.html" %}
+{% if object.url and object.description %}
+<div class="divider"></div>
+{% endif %}
+{% include "activities/includes/description.html" %}
 <dl>
 
   {% timezone object.timezone %}
@@ -53,11 +58,6 @@
      ></div>
 <div class="divider"></div>
 {% endif %}
-{% include "activities/includes/oembed.html" %}
-{% if object.url and object.description %}
-<div class="divider"></div>
-{% endif %}
-{% include "activities/includes/description.html" %}
 {% endblock content %}
 
 {% block actions %}
