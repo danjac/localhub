@@ -1,18 +1,13 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% if object.description %}
+{% load i18n %}
+
 {% if not is_detail %}
-<div data-controller="collapsable">
-  <div class="collapsed" data-target="collapsable.container">
-    {% endif %}
-    {% include "activities/includes/description.html" %}
-    {% if not is_detail %}
   </div>
   <a class="mt-1 d-hide"
      data-target="collapsable.toggle"
      data-action="collapsable#toggle"
      href="#">{% trans "Show More" %}</a>
 </div>
-{% endif %}
 {% endif %}
