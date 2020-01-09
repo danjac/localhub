@@ -8,9 +8,6 @@
 
 {% block content %}
 {% include "activities/includes/oembed.html" %}
-{% if object.url and object.description %}
-<div class="divider"></div>
-{% endif %}
 {% include "activities/includes/description.html" %}
 <dl>
 
@@ -49,6 +46,7 @@
   {% endif %}
 
 </dl>
+<div class="divider"></div>
 {% if is_detail and object.latitude and object.longitude %}
 <div id="map-for-event-{{ object.id }}"
      class="event-map{% if is_detail %} event-map-lg{% endif %}"
