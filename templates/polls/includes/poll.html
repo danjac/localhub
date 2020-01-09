@@ -7,7 +7,7 @@
 {% load rules %}
 
 {% block content %}
-{% include "activities/includes/description.html" %}
+{% include "activities/includes/collapsable_description.html" %}
 
 {% has_perm "polls.vote" user object as can_vote %}
 <ol>

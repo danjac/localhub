@@ -21,7 +21,9 @@
 {% empty %}
 <em>{% trans "No photo available" %}</em>
 {% endthumbnail %}
-{% include "activities/includes/description.html" %}
+
+{% include "activities/includes/collapsable_description.html" %}
+
 {% if object.has_attribution %}
 <dl>
   {% if object.artist %}
@@ -42,7 +44,7 @@
 
 {% block actions %}
 <a href="{{ object.image.url }}" download>
-    {% trans "Download" %}
+  {% trans "Download" %}
 </a>
 {{ block.super }}
 {% endblock actions %}

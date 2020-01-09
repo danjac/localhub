@@ -7,8 +7,21 @@
 {% load tz %}
 
 {% block content %}
+{% if not is_detail %}
+<div data-controller="collapsable">
+  <div class="collapsed" data-target="collapsable.container">
+{% endif %}
 {% include "activities/includes/oembed.html" %}
 {% include "activities/includes/description.html" %}
+{% if not is_detail %}
+  </div>
+  <a class="mt-1 d-hide"
+     data-target="collapsable.toggle"
+     data-action="collapsable#toggle"
+     href="#">{% trans "Show More" %}</a>
+</div>
+{% endif %}
+
 <dl>
 
   {% timezone object.timezone %}
