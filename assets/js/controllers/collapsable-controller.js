@@ -13,11 +13,11 @@ export default class extends Controller {
   connect() {
     this.checkContainerHeight();
     // ensure we check heights of all images and other dynamic elements
-    for (const img of this.containerTarget.getElementsByTagName("img")) {
-      img.onload = () => this.checkContainerHeight();
-    }
-    for (const iframe of this.containerTarget.getElementsByTagName("iframe")) {
-      iframe.onload = () => this.checkContainerHeight();
+    // and handle when these are individually loaded
+    for (const tag of ["img", "iframe"]) {
+      for (const el of this.containerTarget.getElementsByTagName(tag)) {
+        el.onload = () => this.checkContainerHeight();
+      }
     }
   }
 
