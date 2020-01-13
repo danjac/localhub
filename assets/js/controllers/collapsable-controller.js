@@ -5,7 +5,7 @@ import {
   Controller
 } from 'stimulus';
 
-const MAX_HEIGHT = 300;
+const MAX_HEIGHT = 500;
 
 export default class extends Controller {
   static targets = ['container', 'toggle'];
