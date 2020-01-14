@@ -12,9 +12,6 @@ export default class extends Controller {
     event.preventDefault();
     this.togglableTargets.forEach(el => {
       el.classList.toggle("d-hide");
-      for (const child of el.getElementsByClassName("collapsed")) {
-        child.classList.toggle("collapsed");
-      }
     });
   }
 }

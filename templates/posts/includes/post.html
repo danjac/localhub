@@ -9,7 +9,6 @@
 
 {% block content %}
 
-{% include "activities/includes/collapsable_header.html" %}
 {% include "activities/includes/oembed.html" %}
 {% is_post_oembed user object as is_oembed %}
 {% if object.metadata_description and not is_oembed %}
@@ -28,5 +27,4 @@
 <div class="divider"></div>
 {% endif %}
 {% include "activities/includes/description.html" %}
-{% include "activities/includes/collapsable_footer.html" %}
 {% endblock content %}

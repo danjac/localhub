@@ -86,7 +86,20 @@
         </div>
         <div class="d-hide" data-target="content-sensitive.togglable">
           {% endif %}
-          {% block content %}{% endblock %}
+          {% if not is_detail and not is_content_sensitive %}
+          <div data-controller="collapsable">
+            <div class="collapsed" data-target="collapsable.container">
+              {% endif %}
+              {% block content %}{% endblock %}
+              {% if not is_detail and not is_content_sensitive %}
+            </div>
+            <div class="divider d-hide" data-target="collapsable.toggle"></div>
+            <a class="mt-1 d-hide"
+               data-target="collapsable.toggle"
+               data-action="collapsable#toggle"
+               href="#">{% trans "Show More" %}</a>
+          </div>
+          {% endif %}
           {% if is_content_sensitive %}</div>{% endif %}
         {% if object.is_reshare %}</blockquote>{% endif %}
       {% endif %}
