@@ -22,24 +22,37 @@
 <h4>@{{ user_obj.username }}</h4>
 
 {% if user_obj.bio %}
-<p class="py-2">
-  {{ user_obj.bio|urlize|linebreaksbr }}
-</p>
+
+<div data-controller="collapsable">
+  <div class="collapsable" data-target="collapsable.container">
+    <div class="markdown-content">
+      {{ user_obj.bio.markdown }}
+    </div>
+  </div>
+  <div class="divider mt-2 d-hide" data-target="collapsable.toggle"></div>
+  <button
+    class="mt-1 btn btn-link btn-block d-hide"
+    data-target="collapsable.toggle"
+    data-action="collapsable#toggle"
+    href="#">{% trans "Show More" %}</button>
+</div>
+
 {% elif is_current_user %}
 <p>{% trans "Click the 'My Settings' link to add a bio to your profile." %}</p>
 {% endif %}
 
-{% if is_current_user %}
-{% blocktrans with created=membership.created|timesince %}
-You have been a member for <b>{{ created }}</b>.
-{% endblocktrans %}
-{% elif membership %}
-<p>
+
+<p class="py-1">
+  {% if is_current_user %}
+  {% blocktrans with created=membership.created|timesince %}
+  You have been a member for <b>{{ created }}</b>.
+  {% endblocktrans %}
+  {% elif membership %}
   {% blocktrans with created=membership.created|timesince %}
   This user has been a member for <b>{{ created }}</b>.
   {% endblocktrans %}
+  {% endif %}
 </p>
-{% endif %}
 
 {% if user.is_authenticated %}
 

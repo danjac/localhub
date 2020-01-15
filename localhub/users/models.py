@@ -18,6 +18,7 @@ from timezone_field import TimeZoneField
 from localhub.communities.models import Membership
 from localhub.db.fields import ChoiceArrayField
 from localhub.db.search import SearchIndexer, SearchQuerySetMixin
+from localhub.markdown.fields import MarkdownField
 from localhub.notifications.models import Notification
 
 
@@ -134,7 +135,7 @@ class User(AbstractUser):
     )
 
     name = models.CharField(_("Full name"), blank=True, max_length=255)
-    bio = models.TextField(blank=True)
+    bio = MarkdownField(blank=True)
     avatar = ImageField(upload_to="avatars", null=True, blank=True)
 
     language = models.CharField(
