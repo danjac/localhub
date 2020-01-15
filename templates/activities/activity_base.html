@@ -88,13 +88,14 @@
           {% endif %}
           {% if not is_detail and not is_content_sensitive %}
           <div data-controller="collapsable">
-            <div class="collapsed" data-target="collapsable.container">
+            <div class="collapsable" data-target="collapsable.container">
               {% endif %}
               {% block content %}{% endblock %}
               {% if not is_detail and not is_content_sensitive %}
             </div>
+            <div class="divider mt-2" data-target="collapsable.toggle"></div>
             <button
-               class="mt-2 btn btn-block d-hide"
+               class="mt-1 btn btn-link btn-block d-hide"
                data-target="collapsable.toggle"
                data-action="collapsable#toggle"
                href="#">{% trans "Show More" %}</button>

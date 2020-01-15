@@ -23,7 +23,7 @@ export default class extends Controller {
 
   toggle(event) {
     event.preventDefault();
-    this.containerTarget.classList.remove('collapsed');
+    this.containerTarget.classList.remove('collapsable');
     this.toggleTargets.forEach(el => el.classList.add('d-hide'));
   }
 
