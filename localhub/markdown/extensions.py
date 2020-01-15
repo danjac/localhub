@@ -11,13 +11,15 @@ from markdown.inlinepatterns import (
     LinkInlineProcessor,
 )
 
+from localhub.utils.urls import REL_SAFE_VALUES
+
 
 class NewTabMixin:
     def handleMatch(self, match, data):
         element, start, end = super().handleMatch(match, data)
         if element is not None:
             element.set("target", "_blank")
-            element.set("rel", "nofollow noopener noreferrer")
+            element.set("rel", REL_SAFE_VALUES)
         return element, start, end
 
 
@@ -31,7 +33,9 @@ class NewTabAutolinkProcessor(NewTabMixin, AutolinkInlineProcessor):
 
 class NewTabExtension(Extension):
     def extendMarkdown(self, md):
-        md.inlinePatterns.register(NewTabLinkInlineProcessor(LINK_RE, md), "link", 160)
+        md.inlinePatterns.register(
+            NewTabLinkInlineProcessor(LINK_RE, md), "link", 160
+        )
         md.inlinePatterns.register(
             NewTabAutolinkProcessor(AUTOLINK_RE, md), "autolink", 120
         )

@@ -15,6 +15,7 @@ from django.urls import reverse
 from markdownx.utils import markdownify as default_markdownify
 
 from localhub.utils.text import slugify_unicode
+from localhub.utils.urls import REL_SAFE_VALUES
 
 ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
     "abbr",
@@ -38,9 +39,7 @@ ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
 ]
 
 ALLOWED_ATTRIBUTES = bleach.ALLOWED_ATTRIBUTES.copy()
-ALLOWED_ATTRIBUTES.update(
-    {"img": ["alt", "src"], "a": ["rel", "target", "href"]}
-)
+ALLOWED_ATTRIBUTES.update({"img": ["alt", "src"], "a": ["rel", "target", "href"]})
 
 HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")
 MENTIONS_RE = re.compile(r"(?:^|\s)[＠ @]{1}([^\s#<>!.?[\]|{}]+)")
@@ -51,7 +50,7 @@ def set_link_target(attrs, new=False):
     href = attrs.get((None, "href"))
     if href and href.startswith("http"):
         attrs[(None, "target")] = "_blank"
-        attrs[(None, "rel")] = "nofollow noopener noreferrer"
+        attrs[(None, "rel")] = REL_SAFE_VALUES
     return attrs
 
 
@@ -91,9 +90,7 @@ def linkify_mentions(content):
     for token in tokens:
         for mention in MENTIONS_RE.findall(token):
             url = reverse("users:activities", args=[slugify_unicode(mention)])
-            token = token.replace(
-                "@" + mention, f'<a href="{url}">@{mention}</a>'
-            )
+            token = token.replace("@" + mention, f'<a href="{url}">@{mention}</a>')
 
         rv.append(token)
 

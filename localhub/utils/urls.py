@@ -9,6 +9,8 @@ from django.core.validators import URLValidator
 
 _urlvalidator = URLValidator()
 
+REL_SAFE_VALUES = "nofollow noopener noreferrer"
+
 IMAGE_EXTENSIONS = (
     "bmp",
     "gif",

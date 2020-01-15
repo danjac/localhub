@@ -2,7 +2,48 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from ..defaultfilters import from_dictkey
+from ..defaultfilters import domain, from_dictkey, html_unescape, url_to_img
+
+
+class TestUrlToImg:
+    def test_if_image(self):
+        url = "http://somedomain.org/test.jpg"
+        assert url_to_img(url) == (
+            '<a href="http://somedomain.org/test.jpg" rel="nofollow"'
+            '><img src="http://somedomain.org/test.jpg" '
+            'alt="somedomain.org"></a>'
+        )
+
+    def test_if_image_no_link(self):
+        url = "http://somedomain.org/test.jpg"
+        assert url_to_img(url, False) == (
+            '<img src="http://somedomain.org/test.jpg" alt="somedomain.org">'
+        )
+
+    def test_if_not_image(self):
+        url = "http://somedomain.org/"
+        assert url_to_img(url) == ""
+
+    def test_if_not_url(self):
+        text = "<div></div>"
+        assert url_to_img(text) == "<div></div>"
+
+
+class TestHtmlUnescape:
+    def test_html_unescape(self):
+        text = "this is &gt; that"
+        assert html_unescape(text) == "this is > that"
+
+
+class TestDomain:
+    def test_if_not_valid_url(self):
+        assert domain("<div />") == "<div />"
+
+    def test_if_valid_url(self):
+        assert domain("http://reddit.com").endswith(">reddit.com</a>")
+
+    def test_if_www(self):
+        assert domain("http://www.reddit.com").endswith(">reddit.com</a>")
 
 
 class TestFromDictkey:
