@@ -152,7 +152,11 @@ class Base(Configuration):
     # https://neutronx.github.io/django-markdownx/customization/
 
     MARKDOWNX_MARKDOWNIFY_FUNCTION = "localhub.markdown.utils.markdownify"
-    MARKDOWNX_MARKDOWN_EXTENSIONS = ["markdown.extensions.extra"]
+
+    MARKDOWNX_MARKDOWN_EXTENSIONS = [
+        "markdown.extensions.extra",
+        "localhub.markdown.extensions:NewTabExtension",
+    ]
 
     # https://micawber.readthedocs.io/en/latest/django.html
     MICAWBER_PROVIDERS = "localhub.oembed.bootstrap_oembed"

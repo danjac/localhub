@@ -91,6 +91,6 @@ def domain(url):
     domain = get_domain(url)
     if domain:
         return mark_safe(
-            f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{domain}</a>' # noqa
+            f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{domain}</a>'  # noqa
         )
     return url

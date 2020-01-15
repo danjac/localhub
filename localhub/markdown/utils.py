@@ -6,6 +6,7 @@ Custom Markdown-related functions.
 """
 
 import re
+from functools import partial
 
 import bleach
 from bleach import Cleaner  # type: ignore
@@ -37,14 +38,21 @@ ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
 ]
 
 ALLOWED_ATTRIBUTES = bleach.ALLOWED_ATTRIBUTES.copy()
-ALLOWED_ATTRIBUTES.update({"img": ["alt", "src"]})
-
-cleaner = Cleaner(
-    tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, filters=[LinkifyFilter]
+ALLOWED_ATTRIBUTES.update(
+    {"img": ["alt", "src"], "a": ["rel", "target", "href"]}
 )
 
 HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")
 MENTIONS_RE = re.compile(r"(?:^|\s)[＠ @]{1}([^\s#<>!.?[\]|{}]+)")
+
+
+def set_link_target(attrs, new=False):
+    # ignore any internal links
+    href = attrs.get((None, "href"))
+    if href and href.startswith("http"):
+        attrs[(None, "target")] = "_blank"
+        attrs[(None, "rel")] = "nofollow noopener noreferrer"
+    return attrs
 
 
 def markdownify(content):
@@ -83,7 +91,9 @@ def linkify_mentions(content):
     for token in tokens:
         for mention in MENTIONS_RE.findall(token):
             url = reverse("users:activities", args=[slugify_unicode(mention)])
-            token = token.replace("@" + mention, f'<a href="{url}">@{mention}</a>')
+            token = token.replace(
+                "@" + mention, f'<a href="{url}">@{mention}</a>'
+            )
 
         rv.append(token)
 
@@ -121,3 +131,10 @@ def linkify_hashtags(content):
         rv.append(token)
 
     return " ".join(rv)
+
+
+cleaner = Cleaner(
+    tags=ALLOWED_TAGS,
+    attributes=ALLOWED_ATTRIBUTES,
+    filters=[partial(LinkifyFilter, callbacks=[set_link_target])],
+)
