@@ -93,11 +93,11 @@
               {% block content %}{% endblock %}
               {% if not is_detail and not is_content_sensitive %}
             </div>
-            <div class="divider d-hide" data-target="collapsable.toggle"></div>
-            <a class="mt-1 d-hide"
+            <button
+               class="mt-2 btn btn-block d-hide"
                data-target="collapsable.toggle"
                data-action="collapsable#toggle"
-               href="#">{% trans "Show More" %}</a>
+               href="#">{% trans "Show More" %}</button>
           </div>
           {% endif %}
           {% if is_content_sensitive %}</div>{% endif %}
