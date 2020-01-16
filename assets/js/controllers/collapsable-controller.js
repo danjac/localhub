@@ -30,7 +30,7 @@ export default class extends Controller {
     if (this.isCollapsableHeight) {
       this.makeCollapsable();
     } else {
-      this.removeCollapable();
+      this.removeCollapsable();
     }
   }
 
