@@ -5,28 +5,11 @@ import {
   Controller
 } from 'stimulus';
 
-const MAX_HEIGHT = 500;
 
 export default class extends Controller {
   static targets = ['container', 'toggle'];
 
-  initialize() {
-    document.addEventListener(
-      'turbolinks:render', () => this.checkContainerHeights()
-    )
-  }
-
   connect() {
-    this.checkContainerHeights()
-  }
-
-  toggle(event) {
-    event.preventDefault();
-    this.containerTarget.classList.remove('collapsable');
-    this.toggleTargets.forEach(el => el.classList.add('d-hide'));
-  }
-
-  checkContainerHeights() {
     this.checkContainerHeight();
     // ensure we check heights of all images and other dynamic elements
     // and handle when these are individually loaded
@@ -37,10 +20,15 @@ export default class extends Controller {
     }
   }
 
+  toggle(event) {
+    event.preventDefault();
+    this.containerTarget.classList.remove('collapsable');
+    this.toggleTargets.forEach(el => el.classList.add('d-hide'));
+  }
+
   checkContainerHeight() {
     // show "show more" button if container higher than max height
-    if (this.containerTarget.offsetHeight < this.containerTarget.scrollHeight ||
-      this.containerTarget.offsetHeight >= MAX_HEIGHT) {
+    if (this.containerTarget.offsetHeight < this.containerTarget.scrollHeight) {
       this.toggleTargets.forEach(el => el.classList.remove('d-hide'));
     }
   }
