@@ -5,6 +5,7 @@ import {
   Controller
 } from 'stimulus';
 
+const MAX_HEIGHT = 500;
 
 export default class extends Controller {
   static targets = ['container', 'toggle'];
@@ -26,8 +27,8 @@ export default class extends Controller {
 
   checkContainerHeight() {
     // show "show more" button if container higher than max height
-    if (this.containerTarget.offsetHeight < this.containerTarget.scrollHeight) {
-      this.toggleTargets.forEach(el => el.classList.remove('d-hide'));
+    if (this.isCollapsableHeight) {
+      this.makeCollapsable();
     } else {
       this.removeCollapable();
     }
@@ -45,8 +46,19 @@ export default class extends Controller {
 
   }
 
+  makeCollapsable() {
+    this.containerTarget.classList.add('collapsable');
+    this.toggleTargets.forEach(el => el.classList.remove('d-hide'));
+  }
+
   removeCollapsable() {
     this.containerTarget.classList.remove('collapsable');
     this.toggleTargets.forEach(el => el.classList.add('d-hide'));
+  }
+
+  get isCollapsableHeight() {
+    return this.containerTarget.offsetHeight <
+      this.containerTarget.scrollHeight ||
+      this.containerTarget.offsetHeight >= MAX_HEIGHT
   }
 }

@@ -88,7 +88,7 @@
           {% endif %}
           {% if not is_detail and not is_content_sensitive %}
           <div data-controller="collapsable">
-            <div class="collapsable" data-target="collapsable.container">
+            <div data-target="collapsable.container">
               {% endif %}
               {% block content %}{% endblock %}
               {% if not is_detail and not is_content_sensitive %}
