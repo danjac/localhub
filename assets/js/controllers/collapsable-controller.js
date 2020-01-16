@@ -57,6 +57,8 @@ export default class extends Controller {
   }
 
   get isCollapsableHeight() {
-    return this.containerTarget.offsetHeight >= MAX_HEIGHT
+    return this.containerTarget.offsetHeight <
+      this.containerTarget.scrollHeight ||
+      this.containerTarget.offsetHeight >= MAX_HEIGHT
   }
 }
