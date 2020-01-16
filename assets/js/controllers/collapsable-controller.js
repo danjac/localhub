@@ -10,7 +10,23 @@ const MAX_HEIGHT = 500;
 export default class extends Controller {
   static targets = ['container', 'toggle'];
 
+  initialize() {
+    document.addEventListener(
+      'turbolinks:render', () => this.checkContainerHeights()
+    )
+  }
+
   connect() {
+    this.checkContainerHeights()
+  }
+
+  toggle(event) {
+    event.preventDefault();
+    this.containerTarget.classList.remove('collapsable');
+    this.toggleTargets.forEach(el => el.classList.add('d-hide'));
+  }
+
+  checkContainerHeights() {
     this.checkContainerHeight();
     // ensure we check heights of all images and other dynamic elements
     // and handle when these are individually loaded
@@ -19,12 +35,6 @@ export default class extends Controller {
         el.onload = () => this.checkContainerHeight();
       }
     }
-  }
-
-  toggle(event) {
-    event.preventDefault();
-    this.containerTarget.classList.remove('collapsable');
-    this.toggleTargets.forEach(el => el.classList.add('d-hide'));
   }
 
   checkContainerHeight() {
