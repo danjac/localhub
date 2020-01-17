@@ -21,6 +21,7 @@ django-taggit
 django-timezone-field
 django-vanilla-views
 django-widget-tweaks
+# Awaiting dependency upgrades in future packages
 django==2.2.9
 factory-boy
 geocoder
@@ -29,7 +30,8 @@ icalendar
 ipython
 micawber
 psycopg2-binary
-pytest
+# https://github.com/pytest-dev/pytest/issues/6492
+pytest==5.3.2
 pytest-cov
 pytest-django
 pytest-mock
