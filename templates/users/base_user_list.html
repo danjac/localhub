@@ -52,6 +52,11 @@
       <td>
         {% if user != object %}
         <div class="actions float-right" data-controller="toggle">
+          {% if can_create_message %}
+          <a href="{% url 'private_messages:message_create' object.username %}">
+            {% trans "Send Message" %}
+          </a>
+          {% endif %}
           {% has_perm "users.follow_user" user object as can_follow_user %}
           {% if can_follow_user %}
           <a href="{% url 'users:unfollow' object.username %}"
@@ -71,11 +76,6 @@
              data-toggle-target="follow"
              data-action="ajax#post toggle#toggle">
             {% trans "Follow" %}
-          </a>
-          {% endif %}
-          {% if can_create_message %}
-          <a href="{% url 'private_messages:message_create' object.username %}">
-            {% trans "Send Message" %}
           </a>
           {% endif %}
         </div>
