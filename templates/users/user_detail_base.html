@@ -11,6 +11,12 @@
 
 {% block content %}
 
+{% has_perm "users.block_user" user user_obj as can_block_user %}
+{% has_perm "users.follow_user" user user_obj as can_follow_user %}
+{% has_perm "users.change_user" user user_obj as can_change_user %}
+{% has_perm "private_messages.create_message" user community as can_create_message %}
+{% has_perm "communities.view_membership" user membership as can_view_membership %}
+
 <h3>
   {% avatar user_obj "avatar-lg" %}{% user_display user_obj %}
   {% if membership.is_admin %}
@@ -41,7 +47,6 @@
 <p>{% trans "Click the 'My Settings' link to add a bio to your profile." %}</p>
 {% endif %}
 
-
 <p class="py-1">
   {% if is_current_user %}
   {% blocktrans with created=membership.created|timesince %}
@@ -54,20 +59,16 @@
   {% endif %}
 </p>
 
-{% if user.is_authenticated %}
-
-{% has_perm "users.block_user" user user_obj as can_block_user %}
-{% has_perm "users.follow_user" user user_obj as can_follow_user %}
-{% has_perm "users.change_user" user user_obj as can_change_user %}
-{% has_perm "private_messages.create_message" user community as can_create_message %}
-{% has_perm "communities.view_membership" user membership as can_view_membership %}
-
 <div class="actions" data-controller="toggle">
 
   {% if can_change_user %}
   <a href="{% url 'user_update' %}">
     {% trans "My Settings" %}
   </a>
+  {% endif %}
+
+  {% if can_create_message %}
+  <a href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
   {% endif %}
 
   {% if can_follow_user %}
@@ -91,12 +92,6 @@
     {% trans "Follow" %}
   </a>
   {% endwith %}
-  {% endif %}
-
-  {% if not is_current_user %}
-
-  {% if can_create_message %}
-  <a href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
   {% endif %}
 
   {% if can_view_membership %}
@@ -126,11 +121,7 @@
   {% endwith %}
   {% endif %}
 
-  {% endif %}
-
 </div>
-
-{% endif %}
 
 <div class="divider"></div>
 
