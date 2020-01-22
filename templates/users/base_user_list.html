@@ -10,6 +10,7 @@
 <h3>{% trans "People" %}</h3>
 <div class="divider"></div>
 
+{% has_perm "private_messages.create_message" user community as can_create_message %}
 
 <ul class="tab tab-block mt-2">
   <li class="tab-item" data-controller="active-link" data-active-link-exact>
@@ -72,9 +73,11 @@
             {% trans "Follow" %}
           </a>
           {% endif %}
+          {% if can_create_message %}
           <a href="{% url 'private_messages:message_create' object.username %}">
             {% trans "Send Message" %}
           </a>
+          {% endif %}
         </div>
         {% endif %}
       </td>
