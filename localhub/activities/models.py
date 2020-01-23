@@ -324,6 +324,9 @@ class Activity(TimeStampedModel):
             & self.community.get_content_warning_tags()
         )
 
+    def is_edited_by_moderator(self):
+        return self.editor and self.editor != self.owner
+
     def make_notification(self, recipient, verb, actor=None):
         return Notification(
             content_object=self,
@@ -373,19 +376,26 @@ class Activity(TimeStampedModel):
                 ]
         return []
 
-    def notify_owner_or_moderators(self):
+    def notify_owner_of_moderator_edit(self):
         """
-        Notifies moderators of updates. If change made by moderator,
-        then notification sent to owner.
+        If change made by moderator, then notification sent to owner.
         """
-        if (
-            self.editor
-            and self.editor != self.owner
-            and self.owner.has_notification_pref("moderator_edit")
+
+        if self.is_edited_by_moderator() and self.owner.has_notification_pref(
+            "moderator_edit"
         ):
             return [
                 self.make_notification(self.owner, "moderator_edit", actor=self.editor)
             ]
+        return []
+
+    def notify_moderators(self):
+        """
+        Notifies moderators of updates.
+        """
+
+        if self.is_edited_by_moderator():
+            return []
 
         qs = (
             self.community.get_moderators()
@@ -434,7 +444,7 @@ class Activity(TimeStampedModel):
         if self.parent:
             notifications += self.notify_parent_owner(recipients)
 
-        notifications += self.notify_owner_or_moderators()
+        notifications += self.notify_moderators()
 
         return Notification.objects.bulk_create(
             takefirst(notifications, lambda n: n.recipient)
@@ -449,7 +459,8 @@ class Activity(TimeStampedModel):
             notifications += self.notify_mentioned_users(recipients)
             notifications += self.notify_tag_followers(recipients)
 
-        notifications += self.notify_owner_or_moderators()
+        notifications += self.notify_owner_of_moderator_edit()
+        notifications += self.notify_moderators()
 
         return Notification.objects.bulk_create(
             takefirst(notifications, lambda n: n.recipient)

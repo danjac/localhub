@@ -33,9 +33,7 @@ class NewTabAutolinkProcessor(NewTabMixin, AutolinkInlineProcessor):
 
 class NewTabExtension(Extension):
     def extendMarkdown(self, md):
-        md.inlinePatterns.register(
-            NewTabLinkInlineProcessor(LINK_RE, md), "link", 160
-        )
+        md.inlinePatterns.register(NewTabLinkInlineProcessor(LINK_RE, md), "link", 160)
         md.inlinePatterns.register(
             NewTabAutolinkProcessor(AUTOLINK_RE, md), "autolink", 120
         )
