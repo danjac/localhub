@@ -8,6 +8,7 @@ from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
+from localhub.notifications.factories import NotificationFactory
 from localhub.notifications.models import Notification
 from localhub.posts.factories import PostFactory
 from localhub.users.factories import UserFactory
@@ -63,11 +64,16 @@ class TestCommentDetailView:
         comment = CommentFactory(
             owner=member.member, community=member.community, content_object=post,
         )
+        notification = NotificationFactory(
+            recipient=member.member, content_object=comment, is_read=False
+        )
         response = client.get(
             reverse("comments:detail", args=[comment.id]),
             HTTP_HOST=comment.community.domain,
         )
         assert response.status_code == 200
+        notification.refresh_from_db()
+        assert notification.is_read
 
 
 class TestCommentUpdateView:

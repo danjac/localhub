@@ -315,6 +315,9 @@ class Activity(TimeStampedModel):
     def get_likes(self):
         return get_generic_related_queryset(self, Like)
 
+    def get_notifications(self):
+        return get_generic_related_queryset(self, Notification)
+
     def get_content_warning_tags(self):
         """
         Checks if any tags matching in description

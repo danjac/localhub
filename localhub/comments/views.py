@@ -65,6 +65,13 @@ comment_list_view = CommentListView.as_view()
 class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
     model = Comment
 
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        self.object.get_notifications().filter(
+            recipient=self.request.user, is_read=False
+        ).update(is_read=True)
+        return response
+
     def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.object.content_object) + [
             (None, _("Comment"))

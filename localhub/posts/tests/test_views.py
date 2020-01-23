@@ -9,6 +9,7 @@ from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
+from localhub.notifications.factories import NotificationFactory
 from localhub.notifications.models import Notification
 from localhub.users.factories import UserFactory
 
@@ -184,9 +185,15 @@ class TestPostDeleteView:
 
 class TestPostDetailView:
     def test_get(self, client, post, member):
+
+        notification = NotificationFactory(
+            recipient=member.member, content_object=post, is_read=False
+        )
         response = client.get(post.get_absolute_url(), HTTP_HOST=post.community.domain)
         assert response.status_code == 200
         assert "comment_form" in response.context
+        notification.refresh_from_db()
+        assert notification.is_read
 
 
 class TestPostReshareView:

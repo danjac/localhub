@@ -14,7 +14,10 @@ from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 
 from localhub.communities.models import Community, Membership
-from localhub.db.content_types import get_generic_related_count_subquery
+from localhub.db.content_types import (
+    get_generic_related_count_subquery,
+    get_generic_related_queryset,
+)
 from localhub.db.search import SearchIndexer, SearchQuerySetMixin
 from localhub.db.tracker import Tracker
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
@@ -163,6 +166,9 @@ class Comment(TimeStampedModel):
         Returns absolute URL including the community domain.
         """
         return self.community.resolve_url(self.get_absolute_url())
+
+    def get_notifications(self):
+        return get_generic_related_queryset(self, Notification)
 
     @property
     def _history_user(self):

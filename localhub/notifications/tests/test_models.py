@@ -9,7 +9,6 @@ from pywebpush import WebPushException
 
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Community
-from localhub.users.factories import UserFactory
 
 from ..factories import NotificationFactory
 from ..models import Notification, PushSubscription

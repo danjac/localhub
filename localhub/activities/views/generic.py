@@ -182,6 +182,13 @@ class ActivityDeleteView(PermissionRequiredMixin, ActivityQuerySetMixin, DeleteV
 
 
 class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        self.object.get_notifications().filter(
+            recipient=self.request.user, is_read=False
+        ).update(is_read=True)
+        return response
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.user.has_perm(
