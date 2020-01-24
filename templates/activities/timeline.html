@@ -37,7 +37,16 @@
 {% endif %}
 <div class="divider"></div>
 
+<div class="my-2 toast text-center">
+{% blocktrans count counter=paginator.count %}
+A total of <strong>1 post</strong> has been published in this period.
+{% plural %}
+A total of <strong>{{ counter }} posts</strong> have been published in this period.
+{% endblocktrans %}
+</div>
+
 {% if object_list %}
+
 <div class="timeline">
     {% regroup object_list by month as months %}
     {% for month, activities in months %}
