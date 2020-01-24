@@ -10,11 +10,13 @@ const MAX_HEIGHT = 500;
 export default class extends Controller {
   static targets = ['container', 'toggle'];
 
+  /*
   initialize() {
     document.addEventListener(
       'turbolinks:render', () => this.checkContainerHeights()
     )
   }
+  */
 
   connect() {
     this.checkContainerHeights();
@@ -57,6 +59,7 @@ export default class extends Controller {
   }
 
   get isCollapsableHeight() {
-    return this.containerTarget.scrollHeight > MAX_HEIGHT
+    return this.containerTarget.clientHeight > MAX_HEIGHT
+    // return this.containerTarget.scrollHeight > MAX_HEIGHT
   }
 }
