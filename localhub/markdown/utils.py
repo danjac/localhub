@@ -19,6 +19,7 @@ from localhub.utils.urls import REL_SAFE_VALUES
 
 ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
     "abbr",
+    "br",
     "code",
     "h1",
     "h2",
