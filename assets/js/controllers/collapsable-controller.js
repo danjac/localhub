@@ -29,10 +29,13 @@ export default class extends Controller {
 
   checkContainerHeight() {
     // show "show more" button if container higher than max height
+    console.log('clientHeight', this.containerTarget.clientHeight);
+    console.log('offsetHeight', this.containerTarget.offsetHeight);
+    console.log('scrollHeight', this.containerTarget.scrollHeight);
     if (this.isCollapsableHeight) {
       this.makeCollapsable();
     } else {
-      this.removeCollapsable();
+      // this.removeCollapsable();
     }
   }
 
