@@ -14,11 +14,11 @@ export default class extends Controller {
     this.makeCollapsable();
     // ensure we check heights of all images and other dynamic elements
     // and handle when these are individually loaded
-    //for (const tag of ["img", "iframe"]) {
-    //for (const el of this.containerTarget.getElementsByTagName(tag)) {
-    //el.onload = () => this.makeCollapsable();
-    //}
-    //}
+    for (const tag of ["img", "iframe"]) {
+      for (const el of this.containerTarget.getElementsByTagName(tag)) {
+        el.onload = () => this.makeCollapsable();
+      }
+    }
   }
 
   toggle(event) {
