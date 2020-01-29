@@ -15,7 +15,7 @@
 <div class="columns metadata{% if not is_detail %} metadata-small{% endif %}">
   {% if object.metadata_image %}
   <div class="column col-3 col-md-12">
-    <img src="{{ object.metadata_image }}" alt="{{ object.title }}">
+    <img src="{{ object.metadata_image }}" alt="{{ object.title }}" data-collapsable-ignore>
   </div>
   {% endif %}
   <div class="column col-{{ object.metadata_image|yesno:"9,12" }} col-md-12">
