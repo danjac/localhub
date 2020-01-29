@@ -16,11 +16,7 @@ export default class extends Controller {
     // and handle when these are individually loaded
     for (const tag of ["img", "iframe"]) {
       for (const el of this.containerTarget.getElementsByTagName(tag)) {
-        el.onload = () => {
-          if (!el.dataset.collapsableIgnore) {
-            this.makeCollapsable();
-          }
-        }
+        el.onload = () => this.makeCollapsable();
       }
     }
   }

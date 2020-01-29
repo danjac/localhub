@@ -142,10 +142,10 @@ table {
   img {
     width: 99%;
   }
-  //&-small {
-    //overflow: hidden;
-    //max-height: 150px;
-  //}
+  &-small {
+    overflow: hidden;
+    max-height: 150px;
+  }
 }
 
 .markdown-content {
