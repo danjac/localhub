@@ -30,7 +30,7 @@ export default class extends Controller {
   makeCollapsable() {
     // show "show more" button if container higher than max height
     if (!this.containerTarget.classList.contains('collapsable') &&
-      this.containerTarget.clientHeight > MAX_HEIGHT) {
+      this.containerTarget.getBoundingClientRect().height > MAX_HEIGHT) {
       this.containerTarget.classList.add('collapsable');
       this.toggleTargets.forEach(
         target => target.classList.remove('d-hide')
