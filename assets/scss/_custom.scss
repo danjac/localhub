@@ -138,6 +138,13 @@ table {
   max-height: 400px;
 }
 
+.metadata {
+  max-height: 150px;
+  img {
+    width: 99%;
+  }
+}
+
 .markdown-content {
   word-wrap: break-word;
 
