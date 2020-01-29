@@ -143,13 +143,10 @@ table {
     width: 99%;
   }
   &-small {
-    img {
-      overflow: hidden;
-      max-height: 150px;
-    }
+    overflow: hidden;
+    max-height: 150px;
   }
 }
-
 
 .markdown-content {
   word-wrap: break-word;
