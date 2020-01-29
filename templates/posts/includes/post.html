@@ -12,7 +12,7 @@
 {% include "activities/includes/oembed.html" %}
 {% is_post_oembed user object as is_oembed %}
 {% if object.metadata_description and not is_oembed %}
-<div class="columns metadata">
+<div class="columns metadata{% if not is_detail %} metadata-small{% endif %}">
   {% if object.metadata_image %}
   <div class="column col-3 col-md-12">
     <img src="{{ object.metadata_image }}" alt="{{ object.title }}">

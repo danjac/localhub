@@ -139,12 +139,15 @@ table {
 }
 
 .metadata {
-  overflow: hidden;
-  max-height: 150px;
   img {
     width: 99%;
   }
+  &-small {
+    overflow: hidden;
+    max-height: 150px;
+  }
 }
+
 
 .markdown-content {
   word-wrap: break-word;
