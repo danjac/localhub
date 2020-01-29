@@ -42,7 +42,8 @@ export default class extends Controller {
   }
 
   get containerHeight() {
-    const style = getComputedStyle(this.containerTarget);
-    return style && style.height ? parseFloat(style.height) : 0;
+    return this.containerTarget.scrollHeight;
+    // const style = getComputedStyle(this.containerTarget);
+    // return style && style.height ? parseFloat(style.height) : 0;
   }
 }
