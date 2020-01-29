@@ -135,16 +135,13 @@ table {
 
 .collapsable {
   overflow: hidden;
-  max-height: 400px;
+  text-shadow: 0 0 7px #fff;
 }
 
 .metadata {
   img {
     width: 99%;
-  }
-  &-small {
-    overflow: hidden;
-    max-height: 150px;
+    height: auto;
   }
 }
 
