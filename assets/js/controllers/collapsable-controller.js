@@ -14,7 +14,6 @@ export default class extends Controller {
     if (ResizeObserver) {
       this.observer = new ResizeObserver(entries => {
         for (const entry of entries) {
-          console.log(entry);
           this.makeCollapsable(entry.contentRect.height);
         }
       });
