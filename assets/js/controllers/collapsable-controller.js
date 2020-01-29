@@ -11,26 +11,37 @@ export default class extends Controller {
   static targets = ['container', 'toggle'];
 
   connect() {
-    this.makeCollapsable();
-    // ensure we check heights of all images and other dynamic elements
-    // and handle when these are individually loaded
-    for (const tag of ["img", "iframe"]) {
-      for (const el of this.containerTarget.getElementsByTagName(tag)) {
-        el.onload = () => this.makeCollapsable();
-      }
+    if (ResizeObserver) {
+      this.observer = new ResizeObserver(entries => {
+        for (const entry of entries) {
+          console.log(entry);
+          this.makeCollapsable(entry.contentRect.height);
+        }
+      });
+      this.observer.observe(this.containerTarget);
+    }
+  }
+
+  disconnect() {
+    if (this.observer) {
+      this.observer.disconnect(this.containerTarget);
     }
   }
 
   toggle(event) {
     event.preventDefault();
-    this.containerTarget.classList.remove('collapsable');
-    this.toggleTargets.forEach(el => el.classList.add('d-hide'));
+    this.removeCollapsable();
   }
 
-  makeCollapsable() {
-    // show "show more" button if container higher than max height
-    if (!this.containerTarget.classList.contains('collapsable') &&
-      this.containerTarget.getBoundingClientRect().height > MAX_HEIGHT) {
+  removeCollapsable() {
+    this.containerTarget.classList.remove('collapsable');
+    this.toggleTargets.forEach(el => el.classList.add('d-hide'));
+    this.observer.disconnect(this.containerTarget);
+  }
+
+  makeCollapsable(height) {
+    if (height > MAX_HEIGHT &&
+      !this.containerTarget.classList.contains('collapsable')) {
       this.containerTarget.classList.add('collapsable');
       this.toggleTargets.forEach(
         target => target.classList.remove('d-hide')
