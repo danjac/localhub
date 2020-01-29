@@ -143,8 +143,10 @@ table {
     width: 99%;
   }
   &-small {
-    overflow: hidden;
-    max-height: 150px;
+    img {
+      overflow: hidden;
+      max-height: 150px;
+    }
   }
 }
 
