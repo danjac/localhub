@@ -29,10 +29,15 @@ export default class extends Controller {
 
   makeCollapsable() {
     // show "show more" button if container higher than max height
-    if (this.containerTarget.scrollHeight > MAX_HEIGHT &&
+    if (this.containerHeight > MAX_HEIGHT &&
       !this.containerTarget.classList.contains('collapsable')) {
       this.containerTarget.classList.add('collapsable');
       this.toggleTargets.forEach(el => el.classList.remove('d-hide'));
     }
+  }
+
+  get containerHeight() {
+    const style = getComputedStyle(this.containerTarget);
+    return style && style.height ? parseFloat(style.height) : 0;
   }
 }
