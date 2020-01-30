@@ -8,20 +8,28 @@
 {% block form_buttons %}
 {% if object.published %}
 <button type="submit" name="submit" class="btn btn-primary">
-    {% trans "Update" %}
+  {% trans "Update" %}
 </button>
 {% else %}
-<button type="submit" name="submit" class="btn btn-primary">
-    {% trans "Publish" %}
-</button>
 <button type="submit"
-        name="save_as_draft"
-        value="true"
-        data-action="form#submit"
-        class="btn btn-secondary">
-    {% trans "Save Draft" %}
+        name="submit"
+        class="btn btn-primary"
+        {% if object.id %}
+        data-controller="confirm"
+        data-action="confirm#check form#submit"
+        data-confirm-body="{% trans 'Are you sure you want to publish this draft?' %}"
+        {% endif %}
+        >
+        {% trans "Publish" %}
 </button>
-{% endif %}
+  <button type="submit"
+          name="save_as_draft"
+          value="true"
+          data-action="form#submit"
+          class="btn btn-secondary">
+    {% trans "Save Draft" %}
+  </button>
+  {% endif %}
 
-{% endblock form_buttons %}
+  {% endblock form_buttons %}
 
