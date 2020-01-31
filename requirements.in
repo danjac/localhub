@@ -21,8 +21,7 @@ django-taggit
 django-timezone-field
 django-vanilla-views
 django-widget-tweaks
-# Awaiting dependency upgrades in future packages
-django==2.2.9
+django
 factory-boy
 geocoder
 gunicorn
