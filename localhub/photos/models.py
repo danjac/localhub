@@ -31,7 +31,15 @@ class Photo(Activity):
     )
 
     title = models.CharField(max_length=300)
-    image = ImageField(upload_to="photos")
+
+    image = ImageField(
+        upload_to="photos",
+        verbose_name=_("Photo"),
+        help_text=_(
+            "For best results, photos should be no larger than 1MB. "
+            "If the image is too large it will not be accepted."
+        ),
+    )
 
     artist = models.CharField(max_length=100, blank=True)
     original_url = models.URLField(max_length=500, null=True, blank=True)

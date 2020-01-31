@@ -49,7 +49,6 @@ class CurrentUserMixin(LoginRequiredMixin):
 
 
 class SingleUserMixin(BaseUserQuerySetMixin):
-
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
         if self.user_obj != self.request.user:

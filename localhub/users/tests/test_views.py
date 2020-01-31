@@ -136,9 +136,7 @@ class TestUserActivitiesView:
             recipient=post.owner,
         )
 
-        response = client.get(
-            reverse("users:activities", args=[other.member.username])
-        )
+        response = client.get(reverse("users:activities", args=[other.member.username]))
         assert response.status_code == 200
         assert len(dict(response.context or {})["object_list"]) == 2
         assert dict(response.context or {})["num_likes"] == 1
