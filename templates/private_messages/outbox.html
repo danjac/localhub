@@ -16,7 +16,7 @@
 
 {% if object_list %}
 {% for message in object_list %}
-{% show_message user message show_sender_info=False %}
+{% show_message user message show_sender_info=False is_blocked=message.recipient_has_blocked %}
 {% endfor %}
 
 {% include "includes/pagination.html" %}

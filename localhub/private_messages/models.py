@@ -58,6 +58,13 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
     def exclude_blocked_by_sender(self, user):
         return self.with_sender_has_blocked(user).exclude(sender_has_blocked=True)
 
+    def with_recipient_has_blocked(self, user):
+        return self.annotate(
+            recipient_has_blocked=models.Exists(
+                user.blockers.filter(pk=models.OuterRef("recipient_id"))
+            )
+        )
+
 
 class Message(TimeStampedModel):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
