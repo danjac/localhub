@@ -59,7 +59,7 @@ class HomePageView(BaseStreamView):
             .filter_queryset(queryset)
             .following(self.request.user)
             .published()
-            .without_blocked(self.request.user)
+            .exclude_blocked(self.request.user)
         )
 
 
@@ -130,7 +130,7 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseStreamView):
             super()
             .filter_queryset(queryset)
             .published()
-            .without_blocked(self.request.user)
+            .exclude_blocked(self.request.user)
         )
         if self.date_kwargs:
             return qs.filter(**self.date_kwargs)
@@ -197,7 +197,7 @@ class SearchView(SearchMixin, BaseStreamView):
             return (
                 super()
                 .filter_queryset(queryset)
-                .without_blocked(self.request.user)
+                .exclude_blocked(self.request.user)
                 .published()
                 .search(self.search_query)
             )

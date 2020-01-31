@@ -55,6 +55,9 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
             )
         )
 
+    def exclude_blocked_by_sender(self, user):
+        return self.with_sender_has_blocked(user).exclude(sender_has_blocked=True)
+
 
 class Message(TimeStampedModel):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)

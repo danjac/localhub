@@ -26,7 +26,7 @@ class TestCommentManager:
 
         assert Comment.objects.search("testme").get() == comment
 
-    def test_without_blocked_users(self, user):
+    def test_exclude_blocked_users(self, user):
 
         my_comment = CommentFactory(owner=user)
 
@@ -34,7 +34,7 @@ class TestCommentManager:
         second_comment = CommentFactory()
         user.blocked.add(first_comment.owner)
 
-        comments = Comment.objects.without_blocked_users(user).all()
+        comments = Comment.objects.exclude_blocked_users(user).all()
         assert len(comments) == 2
         assert my_comment in comments
         assert second_comment in comments

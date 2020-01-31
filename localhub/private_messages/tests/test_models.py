@@ -67,6 +67,17 @@ class TestMessageManager:
             .sender_has_blocked
         )
 
+    def test_exclude_blocked_by_sender_if_blocked(self):
+        message = MessageFactory()
+        message.sender.blocked.add(message.recipient)
+
+        assert Message.objects.exclude_blocked_by_sender(message.recipient).count() == 0
+
+    def test_exclude_blocked_by_sender_if_not_blocked(self):
+        message = MessageFactory()
+
+        assert Message.objects.exclude_blocked_by_sender(message.recipient).count() == 1
+
     def test_for_sender(self, user):
         MessageFactory(sender=user)
         assert Message.objects.for_sender(user).exists()

@@ -98,7 +98,7 @@ class TagDetailView(BaseStreamView):
         qs = (
             super()
             .filter_queryset(queryset)
-            .without_blocked_users(self.request.user)
+            .exclude_blocked_users(self.request.user)
             .published()
             .filter(tags__name__in=[self.tag.name])
             .distinct()

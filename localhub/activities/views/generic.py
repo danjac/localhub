@@ -102,7 +102,7 @@ class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
             .get_queryset()
             .published()
             .with_common_annotations(self.request.user, self.request.community)
-            .without_blocked(self.request.user)
+            .exclude_blocked(self.request.user)
             .order_by(*self.order_by)
         )
 
@@ -221,7 +221,7 @@ class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
     def get_reshares(self):
         return (
             self.object.reshares.for_community(self.request.community)
-            .without_blocked_users(self.request.user)
+            .exclude_blocked_users(self.request.user)
             .select_related("owner")
             .order_by("-created")
         )

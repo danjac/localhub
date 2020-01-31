@@ -34,9 +34,13 @@ from .notifications import send_message_notifications
 
 class MessageQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
-        return Message.objects.for_community(
-            community=self.request.community
-        ).select_related("sender", "recipient", "community", "parent", "parent__sender")
+        return (
+            Message.objects.for_community(community=self.request.community)
+            .exclude_blocked_by_sender(self.request.user)
+            .select_related(
+                "sender", "recipient", "community", "parent", "parent__sender"
+            )
+        )
 
 
 class SenderQuerySetMixin(MessageQuerySetMixin):
@@ -62,7 +66,7 @@ class InboxView(RecipientQuerySetMixin, BaseMessageListView):
     template_name = "private_messages/inbox.html"
 
     def get_queryset(self):
-        qs = super().get_queryset().with_sender_has_blocked(self.request.user)
+        qs = super().get_queryset()
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank", "-created")
         return qs.order_by(F("read").desc(nulls_first=True), "-created")
@@ -102,10 +106,7 @@ class MessageReplyView(BreadcrumbsMixin, RecipientQuerySetMixin, BaseMessageForm
     @cached_property
     def parent(self):
         return get_object_or_404(
-            self.get_queryset()
-            .exclude(sender__pk=self.request.user.id)
-            .with_sender_has_blocked(self.request.user)
-            .exclude(sender_has_blocked=True),
+            self.get_queryset().exclude(sender__pk=self.request.user.id),
             pk=self.kwargs["pk"],
         )
 
@@ -213,12 +214,7 @@ class MessageDetailView(MessageQuerySetMixin, DetailView):
     model = Message
 
     def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .with_sender_has_blocked(self.request.user)
-            .for_sender_or_recipient(self.request.user)
-        )
+        return super().get_queryset().for_sender_or_recipient(self.request.user)
 
     def get_replies(self):
         return self.get_queryset().filter(parent=self.object).order_by("created")

@@ -41,7 +41,7 @@ class CommentAnnotationsQuerySetMixin:
             **{
                 annotated_name: get_generic_related_count_subquery(
                     self.model,
-                    Comment.objects.for_community(community).without_blocked_users(
+                    Comment.objects.for_community(community).exclude_blocked_users(
                         user
                     ),
                 )
@@ -77,7 +77,7 @@ class CommentQuerySet(
             )
         )
 
-    def without_blocked_users(self, user):
+    def exclude_blocked_users(self, user):
 
         if user.is_anonymous:
             return self

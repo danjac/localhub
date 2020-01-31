@@ -204,7 +204,7 @@ class TestActivityManager:
         assert first_post in posts
         assert second_post in posts
 
-    def test_without_blocked_users(self, user):
+    def test_exclude_blocked_users(self, user):
 
         my_post = PostFactory(owner=user)
 
@@ -212,12 +212,12 @@ class TestActivityManager:
         second_post = PostFactory()
         user.blocked.add(first_post.owner)
 
-        posts = Post.objects.without_blocked_users(user).all()
+        posts = Post.objects.exclude_blocked_users(user).all()
         assert len(posts) == 2
         assert my_post in posts
         assert second_post in posts
 
-    def test_without_blocked_tags(self, user):
+    def test_exclude_blocked_tags(self, user):
         first_post = PostFactory()
         second_post = PostFactory()
         third_post = PostFactory()
@@ -229,13 +229,13 @@ class TestActivityManager:
         third_post.tags.add("reviews")
 
         user.blocked_tags.add(Tag.objects.get(name="movies"))
-        posts = Post.objects.without_blocked_tags(user)
+        posts = Post.objects.exclude_blocked_tags(user)
 
         assert posts.count() == 2
         assert my_post in posts
         assert third_post in posts
 
-    def test_without_blocked(self, user):
+    def test_exclude_blocked(self, user):
         first_post = PostFactory()
         second_post = PostFactory()
         third_post = PostFactory()
@@ -248,7 +248,7 @@ class TestActivityManager:
         user.blocked.add(fourth_post.owner)
         user.blocked_tags.add(Tag.objects.get(name="movies"))
 
-        assert Post.objects.without_blocked(user).distinct().get() == third_post
+        assert Post.objects.exclude_blocked(user).distinct().get() == third_post
 
     def test_for_community(self, community: Community):
 

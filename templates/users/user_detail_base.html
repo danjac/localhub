@@ -27,7 +27,11 @@
 </h3>
 <h4>@{{ user_obj.username }}</h4>
 
-{% if user_obj.bio %}
+{% if is_blocked %}
+<p>
+    <b>{% trans "This user has blocked you." %}</b>
+</p>
+{% elif user_obj.bio %}
 
 <div data-controller="collapsable">
   <div data-target="collapsable.container">
@@ -47,6 +51,7 @@
 <p>{% trans "Click the 'My Settings' link to add a bio to your profile." %}</p>
 {% endif %}
 
+{% if not is_blocked %}
 <p class="py-1">
   {% if is_current_user %}
   {% blocktrans with created=membership.created|timesince %}
@@ -58,6 +63,7 @@
   {% endblocktrans %}
   {% endif %}
 </p>
+{% endif %}
 
 <div class="actions" data-controller="toggle">
 
@@ -67,7 +73,7 @@
   </a>
   {% endif %}
 
-  {% if can_create_message and not is_current_user and user not in user_obj.blocked.all %}
+  {% if can_create_message and not is_current_user and not is_blocked %}
   <a href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
   {% endif %}
 
@@ -139,7 +145,7 @@
     <a data-target="active-link.match"
        href="{% url 'users:replies' user_obj.username %}">{% trans "Replies" %}</a>
   </li>
-  {% else %}
+  {% elif not is_blocked %}
   <li class="tab-item" data-controller="active-link" data-active-link-exact>
     <a data-target="active-link.match"
        href="{% url 'users:messages' user_obj.username %}">{% trans "Messages" %}</a>

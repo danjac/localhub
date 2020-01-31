@@ -69,10 +69,15 @@ class SingleUserMixin(BaseUserQuerySetMixin):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        is_current_user = self.user_obj == self.request.user
+        is_blocked = (
+            not is_current_user and self.request.user in self.user_obj.blocked.all()
+        )
         data.update(
             {
+                "is_current_user": is_current_user,
+                "is_blocked": is_blocked,
                 "user_obj": self.user_obj,
-                "is_current_user": self.user_obj == self.request.user,
                 "membership": self.membership,
             }
         )
@@ -243,7 +248,7 @@ class UserStreamView(SingleUserMixin, BaseStreamView):
         return (
             super()
             .filter_queryset(queryset)
-            .without_blocked_tags(self.request.user)
+            .exclude_blocked_tags(self.request.user)
             .published()
             .filter(owner=self.user_obj)
         )

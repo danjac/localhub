@@ -73,7 +73,7 @@ class ActivityQuerySet(
             num_reshares=models.Subquery(
                 self.model.objects.filter(parent=models.OuterRef("pk"))
                 .for_community(community)
-                .without_blocked_users(user)
+                .exclude_blocked_users(user)
                 .values("parent")
                 .annotate(count=models.Count("pk"))
                 .values("count"),
@@ -162,7 +162,7 @@ class ActivityQuerySet(
 
         return qs
 
-    def without_blocked_users(self, user):
+    def exclude_blocked_users(self, user):
         """
         Excludes any activities of users blocked by this user. If user
         is anonymous then passes unfiltered queryset.
@@ -172,7 +172,7 @@ class ActivityQuerySet(
             return self
         return self.exclude(owner__in=user.blocked.all())
 
-    def without_blocked_tags(self, user):
+    def exclude_blocked_tags(self, user):
         """
         Excludes any activities of tags blocked by this user. If user
         is anonymous then passes unfiltered queryset.
@@ -184,13 +184,13 @@ class ActivityQuerySet(
             models.Q(tags__in=user.blocked_tags.all()), ~models.Q(owner=user)
         )
 
-    def without_blocked(self, user):
+    def exclude_blocked(self, user):
         """
         Wraps methods `blocked_users` and `blocked_tags`.
         """
         if user.is_anonymous:
             return self
-        return self.without_blocked_users(user).without_blocked_tags(user)
+        return self.exclude_blocked_users(user).exclude_blocked_tags(user)
 
     def for_activity_stream(self, user, community):
         """
