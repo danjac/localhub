@@ -247,7 +247,6 @@ class MessageDetailView(MessageQuerySetMixin, DetailView):
                 "previous_message": self.get_previous_message(),
                 "next_message": self.get_next_message(),
                 "replies": self.get_replies(),
-                "is_blocked": self.object.recipient_has_blocked,
             }
         )
 
