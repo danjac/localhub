@@ -32,7 +32,7 @@ AnswersFormSet = inlineformset_factory(
 
 class PollQuerySetMixin:
     def get_queryset(self):
-        return super().get_queryset().with_voting_counts()
+        return super().get_queryset().with_answers()
 
 
 class PollCreateView(ActivityCreateView):

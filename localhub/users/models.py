@@ -35,16 +35,16 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
     def with_notification_prefs(self, *prefs):
         return self.filter(notification_preferences__contains=list(prefs))
 
-    def with_is_following(self, follower: settings.AUTH_USER_MODEL):
+    def with_is_following(self, follower):
         return self.annotate(
             is_following=models.Exists(
-                follower.following.filter(pk__in=models.OuterRef("id"))
+                follower.following.filter(pk=models.OuterRef("id"))
             )
         )
 
-    def with_is_blocked(self, user: settings.AUTH_USER_MODEL):
+    def with_is_blocked(self, user):
         return self.annotate(
-            is_blocked=models.Exists(user.blocked.filter(pk__in=models.OuterRef("id")))
+            is_blocked=models.Exists(user.blocked.filter(pk=models.OuterRef("id")))
         )
 
     def matches_usernames(self, names):

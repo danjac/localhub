@@ -11,11 +11,11 @@ pytestmark = pytest.mark.django_db
 
 
 class TestPollManager:
-    def test_with_voting_counts(self, poll, user):
+    def test_with_answers(self, poll, user):
         answer = AnswerFactory(poll=poll)
         answer.voters.add(user)
 
-        poll = Poll.objects.with_voting_counts().first()
+        poll = Poll.objects.with_answers().first()
         assert poll.total_num_votes == 1
 
         answer = poll.answers.all()[0]

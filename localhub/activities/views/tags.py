@@ -200,7 +200,7 @@ class TagListView(SearchMixin, BaseTagListView):
         if self.request.user.is_authenticated:
             qs = qs.annotate(
                 is_following=Exists(
-                    self.request.user.following_tags.filter(pk__in=OuterRef("id"))
+                    self.request.user.following_tags.filter(pk=OuterRef("id"))
                 )
             )
         else:

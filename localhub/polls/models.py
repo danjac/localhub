@@ -3,6 +3,7 @@
 
 from django.conf import settings
 from django.db import models
+from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 
 from localhub.activities.models import Activity, ActivityQuerySet
@@ -10,7 +11,7 @@ from localhub.db.search import SearchIndexer
 
 
 class PollQuerySet(ActivityQuerySet):
-    def with_voting_counts(self):
+    def with_answers(self):
         return self.prefetch_related(
             models.Prefetch(
                 "answers",
@@ -18,10 +19,10 @@ class PollQuerySet(ActivityQuerySet):
                     num_votes=models.Count("voters", distinct=True)
                 ).order_by("id"),
             )
-        ).annotate(total_num_votes=models.Count("answers__voters", distinct=True))
+        )
 
     def for_activity_stream(self, user, community):
-        return super().for_activity_stream(user, community).with_voting_counts()
+        return super().for_activity_stream(user, community).with_answers()
 
 
 class Poll(Activity):
@@ -35,6 +36,14 @@ class Poll(Activity):
 
     def __str__(self):
         return self.title or _("Poll")
+
+    @cached_property
+    def total_num_votes(self):
+        """
+        Returns number of votes. Use in conjunction with with_answers()
+        method in queryset!
+        """
+        return sum([a.num_votes for a in self.answers.all()])
 
 
 class Answer(models.Model):

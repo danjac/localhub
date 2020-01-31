@@ -48,7 +48,9 @@ test:django:
   script:
     - docker-compose -f docker-compose.deploy.yml pull
     - docker-compose -f docker-compose.deploy.yml run django ./manage.py validate_templates
-    - docker-compose -f docker-compose.deploy.yml run django pytest -v
+    # -W ignore due to deprecation warnings in django-countries
+    # https://github.com/SmileyChris/django-countries/issues/290
+    - docker-compose -f docker-compose.deploy.yml run django pytest -v -W ignore
   only:
     - master
 
