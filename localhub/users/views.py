@@ -49,6 +49,15 @@ class CurrentUserMixin(LoginRequiredMixin):
 
 
 class SingleUserMixin(BaseUserQuerySetMixin):
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        if self.user_obj != self.request.user:
+            self.user_obj.get_notifications().filter(
+                recipient=self.request.user, is_read=False
+            ).update(is_read=True)
+        return response
+
     @cached_property
     def user_obj(self):
         return get_object_or_404(self.get_user_queryset(), username=self.kwargs["slug"])

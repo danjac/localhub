@@ -9,6 +9,7 @@ from localhub.comments.factories import CommentFactory
 from localhub.communities.factories import MembershipFactory
 from localhub.events.factories import EventFactory
 from localhub.likes.models import Like
+from localhub.notifications.factories import NotificationFactory
 from localhub.notifications.models import Notification
 from localhub.posts.factories import PostFactory
 from localhub.private_messages.factories import MessageFactory
@@ -94,10 +95,14 @@ class TestUserRepliesView:
 
 
 class TestUserActivitiesView:
-    def test_get(self, client, member):
+    def test_get_if_current_user(self, client, member):
+
         post = PostFactory(community=member.community, owner=member.member)
         EventFactory(community=member.community, owner=member.member)
-
+        # unlikely, but just for testing
+        notification = NotificationFactory(
+            recipient=member.member, content_object=member.member, is_read=False
+        )
         Like.objects.create(
             user=UserFactory(),
             content_object=post,
@@ -111,6 +116,35 @@ class TestUserActivitiesView:
         assert response.status_code == 200
         assert len(dict(response.context or {})["object_list"]) == 2
         assert dict(response.context or {})["num_likes"] == 1
+
+        # ignore: user is self
+        notification.refresh_from_db()
+        assert not notification.is_read
+
+    def test_get_if_other_user(self, client, member):
+
+        other = MembershipFactory(community=member.community)
+        post = PostFactory(community=member.community, owner=other.member)
+        EventFactory(community=member.community, owner=other.member)
+        notification = NotificationFactory(
+            recipient=member.member, content_object=other.member, is_read=False
+        )
+        Like.objects.create(
+            user=UserFactory(),
+            content_object=post,
+            community=post.community,
+            recipient=post.owner,
+        )
+
+        response = client.get(
+            reverse("users:activities", args=[other.member.username])
+        )
+        assert response.status_code == 200
+        assert len(dict(response.context or {})["object_list"]) == 2
+        assert dict(response.context or {})["num_likes"] == 1
+
+        notification.refresh_from_db()
+        assert notification.is_read
 
 
 class TestUserUpdateView:

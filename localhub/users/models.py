@@ -16,6 +16,9 @@ from taggit.models import Tag
 from timezone_field import TimeZoneField
 
 from localhub.communities.models import Membership
+from localhub.db.content_types import (
+    get_generic_related_queryset,
+)
 from localhub.db.fields import ChoiceArrayField
 from localhub.db.search import SearchIndexer, SearchQuerySetMixin
 from localhub.markdown.fields import MarkdownField
@@ -196,6 +199,13 @@ class User(AbstractUser):
             if self.notification_preferences
             else False
         )
+
+    def get_notifications(self):
+        """
+        Note: returns notifications triggered by this user, not
+        received by this user.
+        """
+        return get_generic_related_queryset(self, Notification)
 
     def has_role(self, community, *roles):
         """
