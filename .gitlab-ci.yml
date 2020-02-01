@@ -48,7 +48,7 @@ test:django:
   script:
     - docker-compose -f docker-compose.deploy.yml pull
     - docker-compose -f docker-compose.deploy.yml run django ./manage.py validate_templates
-    - docker-compose -f docker-compose.deploy.yml run django pytest -v
+    - docker-compose -f docker-compose.deploy.yml run django pytest --reuse-db
   only:
     - master
 
