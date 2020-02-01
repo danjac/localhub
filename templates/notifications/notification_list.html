@@ -47,21 +47,7 @@
     <tr>
       <td>
 
-        {% with content_type=notification.content_type.name content_object=notification.content_object %}
-        {% if content_type == "post" %}
-        {% include "activities/includes/notification.html" with activity=content_object activity_name="post" %}
-        {% elif content_type == "photo" %}
-        {% include "activities/includes/notification.html" with activity=content_object activity_name="photo" %}
-        {% elif content_type == "poll" %}
-        {% include "activities/includes/notification.html" with activity=content_object activity_name="poll" %}
-        {% elif content_type == "event" %}
-        {% include "activities/includes/notification.html" with activity=content_object activity_name="event" %}
-        {% elif content_type == "comment" %}
-        {% include "comments/includes/notification.html" with comment=content_object %}
-        {% elif content_type == "user" %}
-        {% include "users/includes/notification.html" with user_obj=content_object %}
-        {% endif %}
-        {% endwith %}
+        {% include "notifications/includes/notification.html" %}
 
         <div>
           <span class="timesince">

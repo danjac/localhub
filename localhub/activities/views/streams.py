@@ -16,6 +16,7 @@ from django.views.generic.dates import (
 )
 
 from localhub.communities.views import CommunityRequiredMixin
+from localhub.notifications.models import Notification
 from localhub.views import BaseMultipleQuerySetListView, SearchMixin
 
 from ..utils import get_activity_models
@@ -51,7 +52,7 @@ class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
 
 
 class HomePageView(BaseStreamView):
-    template_name = "activities/stream.html"
+    template_name = "activities/home.html"
 
     def filter_queryset(self, queryset):
         return (
@@ -61,6 +62,18 @@ class HomePageView(BaseStreamView):
             .published()
             .exclude_blocked(self.request.user)
         )
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["latest_notification"] = (
+            Notification.objects.for_community(self.request.community)
+            .exclude(actor__in=self.request.user.blocked.all())
+            .filter(recipient=self.request.user, is_read=False)
+            .select_related("actor", "content_type")
+            .order_by("-created")
+            .first()
+        )
+        return data
 
 
 home_page_view = HomePageView.as_view()

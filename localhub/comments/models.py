@@ -40,8 +40,7 @@ class CommentAnnotationsQuerySetMixin:
         return self.annotate(
             **{
                 annotated_name: get_generic_related_count_subquery(
-                    self.model,
-                    Comment.objects.for_community(community)
+                    self.model, Comment.objects.for_community(community)
                 )
             }
         )

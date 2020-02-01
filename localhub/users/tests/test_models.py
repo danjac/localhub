@@ -117,7 +117,6 @@ class TestUserManager:
 
 
 class TestUserModel:
-
     def test_get_blocked_users(self, user):
         blocked = UserFactory()
         blocker = UserFactory()

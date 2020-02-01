@@ -38,7 +38,7 @@ export default class extends Controller {
     this.element.setAttribute('disabled', 'disabled');
 
     const referrer = location.href;
-    const url = this.element.getAttribute('href');
+    const url = this.element.getAttribute('href') || this.data.get('url');
 
     axios({
       headers: {

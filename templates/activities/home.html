@@ -28,6 +28,16 @@
     <a href="{% url 'polls:create' %}">{% trans "New Poll" %}</a>
 </div>
 <div class="divider"></div>
+{% if latest_notification %}
+<p class="toast toast-primary text-center my-2" data-controller="toggle" data-target="toggle.togglable">
+  <button class="btn btn-clear float-right"
+          data-controller="ajax"
+          data-ajax-url="{% url 'notifications:mark_read' latest_notification.id %}"
+          data-ajax-redirect="none"
+          data-action="ajax#post toggle#toggle"></button>
+  {% include "notifications/includes/notification.html" with notification=latest_notification %}
+</p>
+{% endif %}
 
 {% if request.do_not_track and not user.show_embedded_content %}
 <p class="toast text-center my-2 d-hide"

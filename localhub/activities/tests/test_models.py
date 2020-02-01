@@ -274,12 +274,7 @@ class TestActivityManager:
             2, content_object=post, owner=member.member, community=member.community,
         )
 
-        assert (
-            Post.objects.with_num_comments(post.community)
-            .get()
-            .num_comments
-            == 2
-        )
+        assert Post.objects.with_num_comments(post.community).get().num_comments == 2
 
     def test_with_num_likes(self, post):
         for _ in range(2):
