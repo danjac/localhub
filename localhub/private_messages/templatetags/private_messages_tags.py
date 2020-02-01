@@ -76,7 +76,7 @@ def get_unread_message_count(user, community):
     return (
         Message.objects.for_community(community)
         .for_recipient(user)
-        .exclude_blocked_by_sender(user)
+        .exclude_blocked(user)
         .filter(
             read__isnull=True,
             sender__membership__community=community,
@@ -98,6 +98,7 @@ def get_unread_local_network_message_count(user, community):
         return 0
     return (
         Message.objects.for_recipient(user)
+        .exclude_blocked(user)
         .filter(
             read__isnull=True,
             community__membership__member=user,

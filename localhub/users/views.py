@@ -67,16 +67,27 @@ class SingleUserMixin(BaseUserQuerySetMixin):
             member=self.user_obj, community=self.request.community
         ).first()
 
+    @cached_property
+    def is_current_user(self):
+        return self.user_obj == self.request.user
+
+    @cached_property
+    def is_blocked(self):
+        return self.request.user.is_blocked(self.user_obj)
+
+    @cached_property
+    def is_blocker(self):
+        if self.is_current_user or not self.is_blocked:
+            return False
+        return self.request.user.blockers.filter(pk=self.user_obj.id).exists()
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        is_current_user = self.user_obj == self.request.user
-        is_blocked = (
-            not is_current_user and self.request.user in self.user_obj.blocked.all()
-        )
         data.update(
             {
-                "is_current_user": is_current_user,
-                "is_blocked": is_blocked,
+                "is_current_user": self.is_current_user,
+                "is_blocked": self.is_blocked,
+                "is_blocker": self.is_blocker,
                 "user_obj": self.user_obj,
                 "membership": self.membership,
             }
@@ -99,6 +110,11 @@ class BaseUserListView(UserQuerySetMixin, ListView):
             .order_by("name", "username")
             .exclude(blocked=self.request.user)
         )
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["blocked_users"] = self.request.user.get_blocked_users()
+        return data
 
 
 class UserFollowView(PermissionRequiredMixin, BaseSingleUserView):

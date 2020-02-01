@@ -212,6 +212,21 @@ class User(AbstractUser):
         """
         return self.community_roles_cache.get(community.id, None) in roles
 
+    def is_blocked(self, user):
+        """
+        Check if user is blocking this other user, or is blocked by this other
+        user.
+        """
+        if self == user:
+            return False
+        return self.get_blocked_users().filter(pk=user.id)
+
+    def get_blocked_users(self):
+        """
+        Return a) users I'm blocking and b) users blocking me.
+        """
+        return (self.blockers.all() | self.blocked.all()).distinct()
+
     @cached_property
     def community_roles_cache(self):
         return dict(

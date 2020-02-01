@@ -29,7 +29,22 @@
 
 {% if is_blocked %}
 <p>
-    <b>{% trans "This user has blocked you." %}</b>
+    <b>
+        {% if is_blocker %}
+        {% trans "This user has blocked you." %}
+        {% else %}
+        {% trans "You are blocking this user." %}
+        {% endif %}
+    </b>
+</p>
+<p>
+    <b>
+        {% if is_blocker %}
+        {% trans "You cannot send or receive private messages." %}
+        {% else %}
+        {% trans "You cannot send or receive private messages and their content has been removed from your feeds." %}
+        {% endif %}
+    </b>
 </p>
 {% elif user_obj.bio %}
 

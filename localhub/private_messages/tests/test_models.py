@@ -48,65 +48,39 @@ class TestMessageManager:
         MessageFactory()
         assert not Message.objects.for_community(community).exists()
 
-    def test_with_sender_has_blocked_if_not_blocked(self):
-        message = MessageFactory()
-
-        assert (
-            not Message.objects.with_sender_has_blocked(message.recipient)
-            .first()
-            .sender_has_blocked
-        )
-
-    def test_with_sender_has_blocked_if_blocked(self):
+    def test_exclude_sender_blocked_if_sender_blocking(self):
         message = MessageFactory()
         message.sender.blocked.add(message.recipient)
 
-        assert (
-            Message.objects.with_sender_has_blocked(message.recipient)
-            .first()
-            .sender_has_blocked
-        )
+        assert Message.objects.exclude_sender_blocked(message.recipient).count() == 0
 
-    def test_with_recipient_has_blocked_if_not_blocked(self):
+    def test_exclude_sender_blocked_if_sender_blocked(self):
+        message = MessageFactory()
+        message.sender.blockers.add(message.recipient)
+
+        assert Message.objects.exclude_sender_blocked(message.recipient).count() == 0
+
+    def test_exclude_sender_blocked_if_not_blocked(self):
         message = MessageFactory()
 
-        assert (
-            not Message.objects.with_recipient_has_blocked(message.sender)
-            .first()
-            .recipient_has_blocked
-        )
+        assert Message.objects.exclude_sender_blocked(message.recipient).count() == 1
 
-    def test_with_recipient_has_blocked_if_blocked(self):
+    def test_exclude_recipient_blocked_if_recipient_blocking(self):
         message = MessageFactory()
         message.recipient.blocked.add(message.sender)
 
-        assert (
-            Message.objects.with_recipient_has_blocked(message.sender)
-            .first()
-            .recipient_has_blocked
-        )
+        assert Message.objects.exclude_recipient_blocked(message.sender).count() == 0
 
-    def test_exclude_blocked_by_sender_if_blocked(self):
+    def test_exclude_recipient_blocked_if_recipient_blocked(self):
         message = MessageFactory()
-        message.sender.blocked.add(message.recipient)
+        message.recipient.blockers.add(message.sender)
 
-        assert Message.objects.exclude_blocked_by_sender(message.recipient).count() == 0
-
-    def test_exclude_blocked_by_sender_if_not_blocked(self):
-        message = MessageFactory()
-
-        assert Message.objects.exclude_blocked_by_sender(message.recipient).count() == 1
-
-    def test_exclude_blocked_by_recipient_if_blocked(self):
-        message = MessageFactory()
-        message.recipient.blocked.add(message.sender)
-
-        assert Message.objects.exclude_blocked_by_recipient(message.sender).count() == 0
+        assert Message.objects.exclude_recipient_blocked(message.sender).count() == 0
 
     def test_exclude_blocked_by_recipient_if_not_blocked(self):
         message = MessageFactory()
 
-        assert Message.objects.exclude_blocked_by_recipient(message.sender).count() == 1
+        assert Message.objects.exclude_recipient_blocked(message.sender).count() == 1
 
     def test_exclude_blocked_if_sender_blocked(self, user):
 

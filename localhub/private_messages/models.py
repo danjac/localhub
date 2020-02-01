@@ -48,28 +48,35 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
             | models.Q(recipient=other_user, sender=current_user)
         )
 
-    def with_sender_has_blocked(self, user):
-        return self.annotate(
-            sender_has_blocked=models.Exists(
-                user.blockers.filter(pk=models.OuterRef("sender_id"))
-            )
+    def exclude_sender_blocked(self, user):
+        """
+        Exclude:
+        1) user is blocked by sender
+        2) user is blocking sender
+        """
+        return self.exclude(
+            models.Q(sender__blockers=user) | models.Q(sender__blocked=user)
         )
 
-    def exclude_blocked_by_sender(self, user):
-        return self.with_sender_has_blocked(user).exclude(sender_has_blocked=True)
-
-    def with_recipient_has_blocked(self, user):
-        return self.annotate(
-            recipient_has_blocked=models.Exists(
-                user.blockers.filter(pk=models.OuterRef("recipient_id"))
-            )
+    def exclude_recipient_blocked(self, user):
+        """
+        Exclude:
+        1) user is blocked by recipient
+        2) user is blocking recipient
+        """
+        return self.exclude(
+            models.Q(recipient__blockers=user) | models.Q(recipient__blocked=user)
         )
-
-    def exclude_blocked_by_recipient(self, user):
-        return self.with_recipient_has_blocked(user).exclude(recipient_has_blocked=True)
 
     def exclude_blocked(self, user):
-        return self.exclude_blocked_by_sender(user).exclude_blocked_by_recipient(user)
+        """
+        Exclude:
+        1) user is blocked by recipient
+        2) user is blocking recipient
+        3) user is blocked by sender
+        4) user is blocking sender
+        """
+        return self.exclude_sender_blocked(user).exclude_recipient_blocked(user)
 
 
 class Message(TimeStampedModel):

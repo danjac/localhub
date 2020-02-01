@@ -165,6 +165,7 @@ class MessageCreateView(BreadcrumbsMixin, CommunityRequiredMixin, BaseMessageFor
         return get_object_or_404(
             get_user_model()
             .objects.exclude(pk=self.request.user.id)
+            .exclude(blockers=self.request.user)
             .exclude(blocked=self.request.user)
             .for_community(self.request.community),
             username=self.kwargs["slug"],

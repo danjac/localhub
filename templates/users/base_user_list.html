@@ -52,7 +52,7 @@
       <td>
         {% if user != object %}
         <div class="actions float-right" data-controller="toggle">
-          {% if can_create_message %}
+          {% if can_create_message and object not in blocked_users %}
           <a href="{% url 'private_messages:message_create' object.username %}">
             {% trans "Send Message" %}
           </a>

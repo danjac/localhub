@@ -117,6 +117,33 @@ class TestUserManager:
 
 
 class TestUserModel:
+
+    def test_get_blocked_users(self, user):
+        blocked = UserFactory()
+        blocker = UserFactory()
+        not_blocked = UserFactory()
+
+        user.blocked.add(blocked)
+        user.blockers.add(blocker)
+
+        users = user.get_blocked_users()
+        assert blocked in users
+        assert blocker in users
+        assert not_blocked not in users
+
+    def test_is_blocked(self, user):
+        blocked = UserFactory()
+        blocker = UserFactory()
+        not_blocked = UserFactory()
+
+        user.blocked.add(blocked)
+        user.blockers.add(blocker)
+
+        assert user.is_blocked(blocked)
+        assert user.is_blocked(blocker)
+        assert not user.is_blocked(not_blocked)
+        assert not user.is_blocked(user)
+
     def test_get_absolute_url(self, user):
         assert user.get_absolute_url() == f"/people/{user.username}/"
 
