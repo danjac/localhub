@@ -120,25 +120,22 @@
   {% endif %}
 
   {% if can_block_user %}
-  {% with blocked=user.blocked.all %}
+  {% with redirect_url=user_obj.get_absolute_url %}
+  {% if is_blocking %}
   <a href="{% url 'users:unblock' user_obj.username %}"
-     {% if user_obj not in blocked %}class="d-hide"{% endif %}
      data-controller="ajax"
      data-action="ajax#post toggle#toggle"
-     data-target="toggle.togglable"
-     data-toggle-target="block"
-     data-ajax-redirect="none">
+     data-ajax-redirect="{{ redirect_url }}">
     {% trans "Unblock" %}
   </a>
+  {% else %}
   <a href="{% url 'users:block' user_obj.username %}"
-     {% if user_obj in blocked %}class="d-hide"{% endif %}
      data-controller="ajax"
      data-action="ajax#post toggle#toggle"
-     data-target="toggle.togglable"
-     data-toggle-target="block"
-     data-ajax-redirect="none">
+     data-ajax-redirect="{{ redirect_url }}">
     {% trans "Block" %}
   </a>
+  {% endif %}
   {% endwith %}
   {% endif %}
 

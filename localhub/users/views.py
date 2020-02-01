@@ -6,6 +6,7 @@ import datetime
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import BooleanField, Q, QuerySet, Value
 from django.http import HttpResponse
@@ -73,13 +74,19 @@ class SingleUserMixin(BaseUserQuerySetMixin):
 
     @cached_property
     def is_blocked(self):
-        return self.request.user.is_blocked(self.user_obj)
+        return self.is_blocker or self.is_blocking
 
     @cached_property
     def is_blocker(self):
-        if self.is_current_user or not self.is_blocked:
+        if self.is_current_user:
             return False
         return self.request.user.blockers.filter(pk=self.user_obj.id).exists()
+
+    @cached_property
+    def is_blocking(self):
+        if self.is_current_user:
+            return False
+        return self.request.user.blocked.filter(pk=self.user_obj.id).exists()
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -88,6 +95,7 @@ class SingleUserMixin(BaseUserQuerySetMixin):
                 "is_current_user": self.is_current_user,
                 "is_blocked": self.is_blocked,
                 "is_blocker": self.is_blocker,
+                "is_blocking": self.is_blocking,
                 "user_obj": self.user_obj,
                 "membership": self.membership,
             }
@@ -152,6 +160,7 @@ class UserBlockView(PermissionRequiredMixin, BaseSingleUserView):
     def post(self, request, *args, **kwargs):
         user = self.get_object()
         self.request.user.blocked.add(user)
+        messages.success(self.request, _("You are now blocking this user"))
         return redirect(user)
 
 
@@ -162,6 +171,7 @@ class UserUnblockView(BaseSingleUserView):
     def post(self, request, *args, **kwargs):
         user = self.get_object()
         self.request.user.blocked.remove(user)
+        messages.success(self.request, _("You have stopped blocking this user"))
         return redirect(user)
 
 
