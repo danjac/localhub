@@ -275,7 +275,7 @@ class TestActivityManager:
         )
 
         assert (
-            Post.objects.with_num_comments(post.owner, post.community)
+            Post.objects.with_num_comments(post.community)
             .get()
             .num_comments
             == 2

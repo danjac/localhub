@@ -51,7 +51,7 @@ class ActivityQuerySet(
             [2]: moderators only
         """
 
-        qs = self.with_num_comments(user, community).with_num_reshares(user, community)
+        qs = self.with_num_comments(community).with_num_reshares(user, community)
         if user.is_authenticated:
             qs = (
                 qs.with_num_likes()

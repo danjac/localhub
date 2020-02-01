@@ -29,8 +29,22 @@
     </div>
   </div>
   {% if comment.is_blocked %}
-  <div class="card-body">
+  <div class="card-body" data-controller="toggle">
     <strong>{% trans "You have blocked this user." %}</strong>
+    <div class="divider"></div>
+    <div class="markdown-content d-hide"
+         data-target="toggle.togglable"
+         data-toggle-target="blocked-comment"
+         >
+      {{ comment.content.markdown }}
+    </div>
+    <div class="actions">
+      <a href="#"
+         data-target="toggle.togglable"
+         data-toggle-target="blocked-comment"
+         data-action="toggle#toggle"
+         >{% trans "View Comment" %}</a>
+    </div>
   </div>
   {% else %}
   <div class="card-body">
