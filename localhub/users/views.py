@@ -318,8 +318,7 @@ class UserMessageListView(SingleUserMixin, ListView):
         return (
             Message.objects.for_community(self.request.community)
             .between(self.request.user, self.user_obj)
-            .exclude_blocked_by_sender(self.request.user)
-            .with_recipient_has_blocked(self.request.user)
+            .exclude_blocked(self.request.user)
             .select_related("sender", "recipient", "community")
             .order_by("-created")
             .distinct()

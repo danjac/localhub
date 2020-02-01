@@ -97,6 +97,45 @@ class TestMessageManager:
 
         assert Message.objects.exclude_blocked_by_sender(message.recipient).count() == 1
 
+    def test_exclude_blocked_by_recipient_if_blocked(self):
+        message = MessageFactory()
+        message.recipient.blocked.add(message.sender)
+
+        assert Message.objects.exclude_blocked_by_recipient(message.sender).count() == 0
+
+    def test_exclude_blocked_by_recipient_if_not_blocked(self):
+        message = MessageFactory()
+
+        assert Message.objects.exclude_blocked_by_recipient(message.sender).count() == 1
+
+    def test_exclude_blocked_if_sender_blocked(self, user):
+
+        message = MessageFactory()
+        message.sender.blocked.add(user)
+
+        assert Message.objects.exclude_blocked(user).count() == 0
+
+    def test_exclude_blocked_if_recipient_blocked(self, user):
+
+        message = MessageFactory()
+        message.recipient.blocked.add(user)
+
+        assert Message.objects.exclude_blocked(user).count() == 0
+
+    def test_exclude_blocked_if_neither_blocked(self, user):
+
+        MessageFactory()
+
+        assert Message.objects.exclude_blocked(user).count() == 1
+
+    def test_exclude_blocked_if_both_blocked(self, user):
+
+        message = MessageFactory()
+        message.recipient.blocked.add(user)
+        message.sender.blocked.add(user)
+
+        assert Message.objects.exclude_blocked(user).count() == 0
+
     def test_for_sender(self, user):
         MessageFactory(sender=user)
         assert Message.objects.for_sender(user).exists()

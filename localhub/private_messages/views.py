@@ -36,7 +36,7 @@ class MessageQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
         return (
             Message.objects.for_community(community=self.request.community)
-            .exclude_blocked_by_sender(self.request.user)
+            .exclude_blocked(self.request.user)
             .select_related(
                 "sender", "recipient", "community", "parent", "parent__sender"
             )
@@ -83,7 +83,7 @@ class OutboxView(SenderQuerySetMixin, BaseMessageListView):
     template_name = "private_messages/outbox.html"
 
     def get_queryset(self):
-        qs = super().get_queryset().with_recipient_has_blocked(self.request.user)
+        qs = super().get_queryset()
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank", "-created")
         return qs.order_by("-created")
@@ -214,12 +214,7 @@ class MessageDetailView(MessageQuerySetMixin, DetailView):
     model = Message
 
     def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .for_sender_or_recipient(self.request.user)
-            .with_recipient_has_blocked(self.request.user)
-        )
+        return super().get_queryset().for_sender_or_recipient(self.request.user)
 
     def get_replies(self):
         return self.get_queryset().filter(parent=self.object).order_by("created")

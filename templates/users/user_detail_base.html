@@ -145,11 +145,12 @@
     <a data-target="active-link.match"
        href="{% url 'users:replies' user_obj.username %}">{% trans "Replies" %}</a>
   </li>
-  {% endif %}
+  {% elif not is_blocked %}
   <li class="tab-item" data-controller="active-link" data-active-link-exact>
     <a data-target="active-link.match"
        href="{% url 'users:messages' user_obj.username %}">{% trans "Messages" %}</a>
   </li>
+  {% endif %}
 </ul>
 
 {% block user_content %}{% endblock %}

@@ -20,7 +20,6 @@ def show_message(
     show_recipient_info=True,
     show_parent_info=True,
     is_detail=False,
-    is_blocked=False,
 ):
 
     is_sender = user == message.sender
@@ -46,7 +45,7 @@ def show_message(
 
     can_create_message = request.user.has_perm(
         "private_messages.create_message", request.community
-    ) and not is_blocked
+    )
 
     return {
         "request": request,
