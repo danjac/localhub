@@ -13,16 +13,18 @@
 {% is_post_oembed user object as is_oembed %}
 {% if object.metadata_description and not is_oembed %}
 <div class="columns metadata{% if not is_detail %} metadata-small{% endif %}">
-  {% if object.metadata_image %}
+  {% with metadata_image=object.get_metadata_image_if_safe %}
+  {% if metadata_image %}
   <div class="column col-3 col-md-12">
-    <img src="{{ object.metadata_image }}" alt="{{ object.title }}"  class="img-responsive">
+    <img src="{{ metadata_image }}" alt="{{ object.title }}"  class="img-responsive">
   </div>
   {% endif %}
-  <div class="column col-{{ object.metadata_image|yesno:"9,12" }} col-md-12">
+  <div class="column col-{{ metadata_image|yesno:"9,12" }} col-md-12">
     <p>
       {{ object.metadata_description|html_unescape|urlize|truncatewords_html:300 }}
     </p>
   </div>
+  {% endwith %}
 </div>
 <div class="divider"></div>
 {% endif %}

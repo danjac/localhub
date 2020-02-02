@@ -310,3 +310,19 @@ class TestPostModel:
         assert post.title == "google.com"
         assert post.metadata_image == ""
         assert post.metadata_description == ""
+
+    def test_get_metadata_image_if_safe_if_https_img(self):
+        post = Post(metadata_image="https://imgur.com/img.jpg")
+        assert post.get_metadata_image_if_safe() == "https://imgur.com/img.jpg"
+
+    def test_get_metadata_image_if_safe_if_http_img(self):
+        post = Post(metadata_image="http://imgur.com/img.jpg")
+        assert post.get_metadata_image_if_safe() == ""
+
+    def test_get_metadata_image_if_safe_if_not_valid_img(self):
+        post = Post(metadata_image="https://imgur.com/img.txt")
+        assert post.get_metadata_image_if_safe() == ""
+
+    def test_get_metadata_image_if_safe_if_empty(self):
+        post = Post(metadata_image="")
+        assert post.get_metadata_image_if_safe() == ""

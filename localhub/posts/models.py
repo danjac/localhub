@@ -8,7 +8,7 @@ from localhub.activities.models import Activity
 from localhub.db.search import SearchIndexer
 from localhub.db.tracker import Tracker
 from localhub.oembed import bootstrap_oembed
-from localhub.utils.urls import get_domain
+from localhub.utils.urls import get_domain, is_image_url
 
 from .html_parser import parse_metadata_from_url
 
@@ -53,6 +53,18 @@ class Post(Activity):
         if not self.url:
             return False
         return _oembed_registry.provider_for_url(self.url) is not None
+
+    def get_metadata_image_if_safe(self):
+        """
+        Returns metadata image if it is an https URL and a valid image extension.
+        Otherwise returns empty string.
+        """
+        return (
+            self.metadata_image
+            if self.metadata_image.startswith("https://")
+            and is_image_url(self.metadata_image)
+            else ""
+        )
 
     def fetch_metadata_from_url(self, commit=True):
         """
