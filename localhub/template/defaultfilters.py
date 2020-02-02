@@ -32,10 +32,12 @@ def url_to_img(url, linkify=True):
     """
     Given a URL, tries to render the <img> tag. Returns text as-is
     if not an image, returns empty string if plain URL.
+
+    Only https links are permitted.
     """
     if url is None or not is_url(url):
         return url
-    if is_image_url(url):
+    if is_image_url(url) and url.startswith("https://"):
         html = f'<img src="{url}" alt="{get_domain(url)}">'
         if linkify:
             html = f'<a href="{url}" rel="nofollow">{html}</a>'

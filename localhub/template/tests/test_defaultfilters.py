@@ -7,21 +7,25 @@ from ..defaultfilters import domain, from_dictkey, html_unescape, url_to_img
 
 class TestUrlToImg:
     def test_if_image(self):
-        url = "http://somedomain.org/test.jpg"
+        url = "https://somedomain.org/test.jpg"
         assert url_to_img(url) == (
-            '<a href="http://somedomain.org/test.jpg" rel="nofollow"'
-            '><img src="http://somedomain.org/test.jpg" '
+            '<a href="https://somedomain.org/test.jpg" rel="nofollow"'
+            '><img src="https://somedomain.org/test.jpg" '
             'alt="somedomain.org"></a>'
         )
 
-    def test_if_image_no_link(self):
+    def test_if_unsafe_image(self):
         url = "http://somedomain.org/test.jpg"
+        assert url_to_img(url) == ""
+
+    def test_if_image_no_link(self):
+        url = "https://somedomain.org/test.jpg"
         assert url_to_img(url, False) == (
-            '<img src="http://somedomain.org/test.jpg" alt="somedomain.org">'
+            '<img src="https://somedomain.org/test.jpg" alt="somedomain.org">'
         )
 
     def test_if_not_image(self):
-        url = "http://somedomain.org/"
+        url = "https://somedomain.org/"
         assert url_to_img(url) == ""
 
     def test_if_not_url(self):
