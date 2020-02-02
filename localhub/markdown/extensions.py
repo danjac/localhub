@@ -12,20 +12,28 @@ from markdown.inlinepatterns import (
     ImageInlineProcessor,
     LinkInlineProcessor,
 )
+from markdown.util import etree
 
 from localhub.utils.urls import REL_SAFE_VALUES
 
 
 class SafeImageMixin:
     """
-    Only permit images starting with https://
+    Only permit images starting with https://. Others
+    will be converted to plain links.
     """
 
     def handleMatch(self, match, data):
         element, start, end = super().handleMatch(match, data)
         if element is not None:
-            if not element.get("src").startswith("https://"):
-                return None, None, None
+            src = element.get("src")
+            if not src or not src.startswith("https://"):
+                link = etree.Element("a")
+                link.set("href", src)
+                link.set("target", "_blank")
+                link.set("rel", REL_SAFE_VALUES)
+                link.text = src
+                return link, start, end
         return element, start, end
 
 
