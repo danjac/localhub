@@ -4,9 +4,9 @@
 import datetime
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import BooleanField, Q, QuerySet, Value
 from django.http import HttpResponse

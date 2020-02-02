@@ -156,6 +156,7 @@ class Base(Configuration):
     MARKDOWNX_MARKDOWN_EXTENSIONS = [
         "markdown.extensions.extra",
         "localhub.markdown.extensions:NewTabExtension",
+        "localhub.markdown.extensions:SafeImageExtension",
     ]
 
     # https://micawber.readthedocs.io/en/latest/django.html
