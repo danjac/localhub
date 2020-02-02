@@ -262,7 +262,7 @@ class TestPostModel:
         assert notifications[3].actor == reshare.owner
         assert notifications[3].verb == "moderator_review_request"
 
-    def test_fetch_metadata_from_url_if_ok(self, mocker):
+    def test_fetch_opengraph_data_from_url_if_ok(self, mocker):
         class MockResponse:
             ok = True
             headers = {"Content-Type": "text/html; charset=utf-8"}
@@ -280,23 +280,23 @@ class TestPostModel:
 
         mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
         post = PostFactory(url="http://google.com", title="", description="")
-        post.fetch_metadata_from_url()
+        post.fetch_opengraph_data_from_url()
 
         assert post.title == "a test site"
-        assert post.metadata_image == "http://example.com/test.jpg"
-        assert post.metadata_description == "test description"
+        assert post.opengraph_image == "http://example.com/test.jpg"
+        assert post.opengraph_description == "test description"
 
-    def test_fetch_metadata_from_url_if_not_ok(self, mocker):
+    def test_fetch_opengraph_data_from_url_if_not_ok(self, mocker):
         class MockResponse:
             ok = False
 
         mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
         post = PostFactory(url="http://google.com", title="", description="")
-        post.fetch_metadata_from_url()
+        post.fetch_opengraph_data_from_url()
 
         assert post.title == "google.com"
-        assert post.metadata_image == ""
-        assert post.metadata_description == ""
+        assert post.opengraph_image == ""
+        assert post.opengraph_description == ""
 
     def test_if_not_html(self, mocker):
         class MockResponse:
@@ -305,24 +305,24 @@ class TestPostModel:
 
         mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
         post = PostFactory(url="http://google.com/test.jpg", title="", description="")
-        post.fetch_metadata_from_url()
+        post.fetch_opengraph_data_from_url()
 
         assert post.title == "google.com"
-        assert post.metadata_image == ""
-        assert post.metadata_description == ""
+        assert post.opengraph_image == ""
+        assert post.opengraph_description == ""
 
-    def test_get_metadata_image_if_safe_if_https_img(self):
-        post = Post(metadata_image="https://imgur.com/img.jpg")
-        assert post.get_metadata_image_if_safe() == "https://imgur.com/img.jpg"
+    def test_get_opengraph_image_if_safe_if_https_img(self):
+        post = Post(opengraph_image="https://imgur.com/img.jpg")
+        assert post.get_opengraph_image_if_safe() == "https://imgur.com/img.jpg"
 
-    def test_get_metadata_image_if_safe_if_http_img(self):
-        post = Post(metadata_image="http://imgur.com/img.jpg")
-        assert post.get_metadata_image_if_safe() == ""
+    def test_get_opengraph_image_if_safe_if_http_img(self):
+        post = Post(opengraph_image="http://imgur.com/img.jpg")
+        assert post.get_opengraph_image_if_safe() == ""
 
-    def test_get_metadata_image_if_safe_if_not_valid_img(self):
-        post = Post(metadata_image="https://imgur.com/img.txt")
-        assert post.get_metadata_image_if_safe() == ""
+    def test_get_opengraph_image_if_safe_if_not_valid_img(self):
+        post = Post(opengraph_image="https://imgur.com/img.txt")
+        assert post.get_opengraph_image_if_safe() == ""
 
-    def test_get_metadata_image_if_safe_if_empty(self):
-        post = Post(metadata_image="")
-        assert post.get_metadata_image_if_safe() == ""
+    def test_get_opengraph_image_if_safe_if_empty(self):
+        post = Post(opengraph_image="")
+        assert post.get_opengraph_image_if_safe() == ""

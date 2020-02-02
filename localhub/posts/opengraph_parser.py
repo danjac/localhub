@@ -12,7 +12,7 @@ USER_AGENT = (
 )
 
 
-def parse_metadata_from_url(url):
+def parse_opengraph_data_from_url(url):
     """
     Given a URL, will try and parse the following data as a tuple:
 
@@ -33,10 +33,10 @@ def parse_metadata_from_url(url):
     except (requests.RequestException, ValueError):
         return (None, None, None)
 
-    return parse_metadata_from_html(response.content)
+    return parse_opengraph_data_from_html(response.content)
 
 
-def parse_metadata_from_html(html):
+def parse_opengraph_data_from_html(html):
     soup = BeautifulSoup(html, "html.parser")
 
     return (

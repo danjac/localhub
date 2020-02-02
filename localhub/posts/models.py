@@ -10,7 +10,7 @@ from localhub.db.tracker import Tracker
 from localhub.oembed import bootstrap_oembed
 from localhub.utils.urls import get_domain, is_image_url
 
-from .html_parser import parse_metadata_from_url
+from .opengraph_parser import parse_opengraph_data_from_url
 
 _oembed_registry = bootstrap_oembed()
 
@@ -19,8 +19,8 @@ class Post(Activity):
 
     RESHARED_FIELDS = (
         "description",
-        "metadata_description",
-        "metadata_image",
+        "opengraph_description",
+        "opengraph_image",
         "title",
         "url",
     )
@@ -30,8 +30,8 @@ class Post(Activity):
 
     # metadata fetched from URL if available
 
-    metadata_image = models.URLField(max_length=500, blank=True)
-    metadata_description = models.TextField(blank=True)
+    opengraph_image = models.URLField(max_length=500, blank=True)
+    opengraph_description = models.TextField(blank=True)
 
     url_tracker = Tracker(["url"])
 
@@ -46,7 +46,7 @@ class Post(Activity):
     @property
     def indexable_description(self):
         return " ".join(
-            [value for value in (self.description, self.metadata_description) if value]
+            [value for value in (self.description, self.opengraph_description) if value]
         )
 
     def is_oembed(self):
@@ -54,35 +54,35 @@ class Post(Activity):
             return False
         return _oembed_registry.provider_for_url(self.url) is not None
 
-    def get_metadata_image_if_safe(self):
+    def get_opengraph_image_if_safe(self):
         """
         Returns metadata image if it is an https URL and a valid image extension.
         Otherwise returns empty string.
         """
         return (
-            self.metadata_image
-            if self.metadata_image.startswith("https://")
-            and is_image_url(self.metadata_image)
+            self.opengraph_image
+            if self.opengraph_image.startswith("https://")
+            and is_image_url(self.opengraph_image)
             else ""
         )
 
-    def fetch_metadata_from_url(self, commit=True):
+    def fetch_opengraph_data_from_url(self, commit=True):
         """
         Tries to fetch image/description/title from metadata in the target
         URL.
 
-        If present will set the `title`, `metadata_description` and
-        `metadata_image` fields from values extracted from the HTML.
+        If present will set the `title`, `opengraph_description` and
+        `opengraph_image` fields from values extracted from the HTML.
 
         If URL is empty or the page does not return valid HTML or tags
-        then metadata_description and metadata_image are set to empty. If
+        then opengraph_description and opengraph_image are set to empty. If
         not set the title will be set to the domain of the URL.
         """
 
-        title, image, description = parse_metadata_from_url(self.url)
+        title, image, description = parse_opengraph_data_from_url(self.url)
 
-        self.metadata_image = image or ""
-        self.metadata_description = description or ""
+        self.opengraph_image = image or ""
+        self.opengraph_description = description or ""
 
         if not self.title:
             self.title = (title or self.get_domain())[:300]

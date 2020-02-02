@@ -11,17 +11,17 @@
 
 {% include "activities/includes/oembed.html" %}
 {% is_post_oembed user object as is_oembed %}
-{% if object.metadata_description and not is_oembed %}
+{% if object.opengraph_description and not is_oembed %}
 <div class="columns metadata{% if not is_detail %} metadata-small{% endif %}">
-  {% with metadata_image=object.get_metadata_image_if_safe %}
-  {% if metadata_image %}
+  {% with opengraph_image=object.get_opengraph_image_if_safe %}
+  {% if opengraph_image %}
   <div class="column col-3 col-md-12">
-    <img src="{{ metadata_image }}" alt="{{ object.title }}"  class="img-responsive">
+    <img src="{{ opengraph_image }}" alt="{{ object.title }}"  class="img-responsive">
   </div>
   {% endif %}
-  <div class="column col-{{ metadata_image|yesno:"9,12" }} col-md-12">
+  <div class="column col-{{ opengraph_image|yesno:"9,12" }} col-md-12">
     <p>
-      {{ object.metadata_description|html_unescape|urlize|truncatewords_html:300 }}
+      {{ object.opengraph_description|html_unescape|urlize|truncatewords_html:300 }}
     </p>
   </div>
   {% endwith %}
