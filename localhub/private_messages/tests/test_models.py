@@ -1,5 +1,7 @@
 import pytest
 
+from django.utils import timezone
+
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.users.factories import UserFactory
 
@@ -21,6 +23,14 @@ class TestMessageManager:
         qs = Message.objects.for_community(community)
         assert qs.count() == 1
         assert qs.first() == message
+
+    def test_unread_if_read(self):
+        MessageFactory(read=timezone.now())
+        assert not Message.objects.unread().exists()
+
+    def test_unread_if_unread(self):
+        MessageFactory(read=None)
+        assert Message.objects.unread().exists()
 
     def test_for_community_if_recipient_not_member(self, community):
         MessageFactory(sender=MembershipFactory(community=community).member)

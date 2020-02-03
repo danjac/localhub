@@ -22,6 +22,15 @@ class NotificationQuerySet(models.QuerySet):
             actor__is_active=True,
         )
 
+    def exclude_blocked_actors(self, recipient):
+        return self.exclude(actor__in=recipient.blocked.all())
+
+    def for_recipient(self, recipient):
+        return self.filter(recipient=recipient)
+
+    def unread(self):
+        return self.filter(is_read=False)
+
 
 class Notification(TimeStampedModel):
     actor = models.ForeignKey(

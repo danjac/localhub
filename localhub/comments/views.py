@@ -68,9 +68,9 @@ class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
 
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
-        self.object.get_notifications().filter(
-            recipient=self.request.user, is_read=False
-        ).update(is_read=True)
+        self.object.get_notifications().for_recipient(
+            self.request.user
+        ).unread().update(is_read=True)
         return response
 
     def get_breadcrumbs(self):

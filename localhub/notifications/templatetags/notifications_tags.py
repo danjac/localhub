@@ -29,8 +29,9 @@ def get_unread_notification_count(user, community):
         return 0
     return (
         Notification.objects.for_community(community)
-        .filter(recipient=user, is_read=False)
-        .exclude(actor__in=user.blocked.all())
+        .for_recipient(user)
+        .exclude_blocked_actors(user)
+        .unread()
         .count()
     )
 
@@ -46,8 +47,6 @@ def get_unread_local_network_notification_count(user, community):
         return 0
     return (
         Notification.objects.filter(
-            recipient=user,
-            is_read=False,
             community__membership__member=user,
             community__membership__active=True,
             community__active=True,
@@ -55,7 +54,9 @@ def get_unread_local_network_notification_count(user, community):
             actor__membership__active=True,
             actor__is_active=True,
         )
-        .exclude(actor__in=user.blocked.all())
         .exclude(community=community)
+        .for_recipient(user)
+        .exclude_blocked_actors(user)
+        .unread()
         .count()
     )

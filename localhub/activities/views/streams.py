@@ -67,8 +67,9 @@ class HomePageView(BaseStreamView):
     def get_latest_notification(self):
         return (
             Notification.objects.for_community(self.request.community)
-            .exclude(actor__in=self.request.user.blocked.all())
-            .filter(recipient=self.request.user, is_read=False)
+            .for_recipient(self.request.user)
+            .exclude_blocked_actors(self.request.user)
+            .unread()
             .select_related("actor", "content_type")
             .order_by("-created")
             .first()
@@ -77,8 +78,9 @@ class HomePageView(BaseStreamView):
     def get_latest_message(self):
         return (
             Message.objects.for_community(self.request.community)
+            .for_recipient(self.request.user)
             .exclude_blocked(self.request.user)
-            .filter(recipient=self.request.user, read__isnull=True)
+            .unread()
             .select_related("sender")
             .order_by("-created")
             .first()

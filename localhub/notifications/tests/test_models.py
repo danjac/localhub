@@ -1,7 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-
 from unittest import mock
 
 import pytest
@@ -9,6 +8,7 @@ from pywebpush import WebPushException
 
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Community
+from localhub.users.factories import UserFactory
 
 from ..factories import NotificationFactory
 from ..models import Notification, PushSubscription
@@ -35,6 +35,29 @@ class TestNotificationManager:
         qs = Notification.objects.for_community(community)
         assert qs.count() == 1
         assert qs.first() == notification
+
+    def test_unread_if_read(self):
+        NotificationFactory(is_read=True)
+        assert Notification.objects.unread().count() == 0
+
+    def test_unread_if_unread(self):
+        NotificationFactory(is_read=False)
+        assert Notification.objects.unread().count() == 1
+
+    def test_exclude_blocked_actors_if_blocked(self, user):
+        other = UserFactory()
+        user.blocked.add(other)
+        NotificationFactory(actor=other)
+        assert Notification.objects.exclude_blocked_actors(user).count() == 0
+
+    def test_exclude_blocked_actors_if_not_blocked(self, user):
+        other = UserFactory()
+        NotificationFactory(actor=other)
+        assert Notification.objects.exclude_blocked_actors(user).count() == 1
+
+    def test_for_recipient(self, user):
+        NotificationFactory(recipient=user)
+        assert Notification.objects.for_recipient(user).count() == 1
 
 
 class TestPushSubscriptionModel:

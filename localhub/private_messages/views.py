@@ -312,7 +312,7 @@ message_hide_view = MessageHideView.as_view()
 
 class MessageMarkReadView(RecipientQuerySetMixin, GenericModelView):
     def get_queryset(self):
-        return super().get_queryset().filter(read__isnull=True)
+        return super().get_queryset().unread()
 
     def post(self, request, *args, **kwargs):
         message = self.get_object()
@@ -326,7 +326,7 @@ message_mark_read_view = MessageMarkReadView.as_view()
 
 class MessageMarkAllReadView(RecipientQuerySetMixin, View):
     def get_queryset(self):
-        return super().get_queryset().filter(read__isnull=True)
+        return super().get_queryset().unread()
 
     def post(self, request, *args, **kwargs):
         self.get_queryset().update(read=timezone.now())

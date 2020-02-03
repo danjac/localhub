@@ -13,14 +13,14 @@ from ..models import Notification
 
 class NotificationQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
-        return Notification.objects.for_community(self.request.community).filter(
-            recipient=self.request.user
+        return Notification.objects.for_community(self.request.community).for_recipient(
+            self.request.user
         )
 
 
 class UnreadNotificationQuerySetMixin(NotificationQuerySetMixin):
     def get_queryset(self):
-        return super().get_queryset().filter(is_read=False)
+        return super().get_queryset().unread()
 
 
 class NotificationSuccessRedirectMixin:
@@ -37,9 +37,9 @@ class NotificationListView(NotificationQuerySetMixin, ListView):
         return (
             super()
             .get_queryset()
+            .exclude_blocked_actors(self.request.user)
             .prefetch_related("content_object")
             .select_related("actor", "content_type")
-            .exclude(actor__in=self.request.user.blocked.all())
             .order_by("is_read", "-created")
         )
 
@@ -95,6 +95,7 @@ notification_delete_all_view = NotificationDeleteAllView.as_view()
 class NotificationDeleteView(
     NotificationQuerySetMixin, NotificationSuccessRedirectMixin, DeleteView
 ):
+
     ...
 
 

@@ -78,6 +78,9 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
         """
         return self.exclude_sender_blocked(user).exclude_recipient_blocked(user)
 
+    def unread(self):
+        return self.filter(read__isnull=True)
+
 
 class Message(TimeStampedModel):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
