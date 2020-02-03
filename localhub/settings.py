@@ -154,7 +154,8 @@ class Base(Configuration):
     MARKDOWNX_MARKDOWNIFY_FUNCTION = "localhub.markdown.utils.markdownify"
 
     MARKDOWNX_MARKDOWN_EXTENSIONS = [
-        "markdown.extensions.extra",
+        "pymdownx.extra",
+        "pymdownx.emoji",
         "localhub.markdown.extensions:NewTabExtension",
         "localhub.markdown.extensions:SafeImageExtension",
     ]
