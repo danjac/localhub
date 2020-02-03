@@ -3,8 +3,6 @@
 
 from django import template
 
-from ..utils import user_display
-
 register = template.Library()
 
 
@@ -15,6 +13,6 @@ def avatar(user, avatar_class="avatar-sm"):
     will render initials (based on name/username)
     """
 
-    initials = "".join([n[0].upper() for n in user_display(user).split()][:2])
+    initials = "".join([n[0].upper() for n in user.get_display_name().split()][:2])
 
     return {"user": user, "avatar_class": avatar_class, "initials": initials}

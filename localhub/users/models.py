@@ -22,6 +22,8 @@ from localhub.db.search import SearchIndexer, SearchQuerySetMixin
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.models import Notification
 
+from .utils import user_display
+
 
 class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
     def for_email(self, email):
@@ -187,6 +189,9 @@ class User(AbstractUser):
             GinIndex(fields=["search_document"]),
             models.Index(fields=["name", "username", "email"]),
         ]
+
+    def get_display_name(self):
+        return user_display(self)
 
     def get_absolute_url(self):
         return reverse("users:activities", args=[self.username])

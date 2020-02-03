@@ -39,6 +39,20 @@
 </p>
 {% endif %}
 
+{% if latest_message %}
+<p class="toast toast-primary text-center my-2" data-controller="toggle" data-target="toggle.togglable">
+  <button class="btn btn-clear float-right"
+          data-controller="ajax"
+          data-ajax-url="{% url 'private_messages:message_mark_read' latest_message.id %}"
+          data-ajax-redirect="none"
+          data-action="ajax#post toggle#toggle"></button>
+  {% blocktrans with message_sender=latest_message.sender.get_display_name message_url=latest_message.get_absolute_url %}
+  {{ message_sender }} has sent you a <a href="{{ message_url }}">message</a>.
+  {% endblocktrans %}
+</p>
+{% endif %}
+
+
 {% if request.do_not_track and not user.show_embedded_content %}
 <p class="toast text-center my-2 d-hide"
    data-controller="cookie-notice"

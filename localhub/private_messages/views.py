@@ -214,6 +214,13 @@ class MessageDetailView(MessageQuerySetMixin, DetailView):
 
     model = Message
 
+    def get(self, *args, **kwargs):
+        response = super().get(*args, **kwargs)
+        if self.object.recipient == self.request.user and not self.object.read:
+            self.object.read = timezone.now()
+            self.object.save()
+        return response
+
     def get_queryset(self):
         return super().get_queryset().for_sender_or_recipient(self.request.user)
 

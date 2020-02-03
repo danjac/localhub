@@ -116,6 +116,8 @@ class TestMessageDetailView:
         )
         response = client.get(message.get_absolute_url())
         assert response.status_code == 200
+        message.refresh_from_db()
+        assert message.read is None
 
     def test_get_if_recipient(self, client, member):
         sender = MembershipFactory(community=member.community).member
@@ -124,6 +126,8 @@ class TestMessageDetailView:
         )
         response = client.get(message.get_absolute_url())
         assert response.status_code == 200
+        message.refresh_from_db()
+        assert message.read is not None
 
     def test_get_if_neither_recipient_nor_sender(self, client, member):
         sender = MembershipFactory(community=member.community).member

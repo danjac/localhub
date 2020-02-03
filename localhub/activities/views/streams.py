@@ -17,6 +17,7 @@ from django.views.generic.dates import (
 
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.notifications.models import Notification
+from localhub.private_messages.models import Message
 from localhub.views import BaseMultipleQuerySetListView, SearchMixin
 
 from ..utils import get_activity_models
@@ -63,15 +64,33 @@ class HomePageView(BaseStreamView):
             .exclude_blocked(self.request.user)
         )
 
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["latest_notification"] = (
+    def get_latest_notification(self):
+        return (
             Notification.objects.for_community(self.request.community)
             .exclude(actor__in=self.request.user.blocked.all())
             .filter(recipient=self.request.user, is_read=False)
             .select_related("actor", "content_type")
             .order_by("-created")
             .first()
+        )
+
+    def get_latest_message(self):
+        return (
+            Message.objects.for_community(self.request.community)
+            .exclude_blocked(self.request.user)
+            .filter(recipient=self.request.user, read__isnull=True)
+            .select_related("sender")
+            .order_by("-created")
+            .first()
+        )
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data.update(
+            {
+                "latest_notification": self.get_latest_notification(),
+                "latest_message": self.get_latest_message(),
+            }
         )
         return data
 
