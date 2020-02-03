@@ -21,14 +21,14 @@
   </li>
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'notifications:list' %}">
-      <span {% if unread_notifications_count %}class="badge" data-badge="{{ unread_notifications_count }}"{% endif %}>
+      <span {% if unread_notifications_count %}class="badge" id="sidebar-notifications" data-badge="{{ unread_notifications_count }}"{% endif %}>
         {% trans "Notifications" %}
       </span>
     </a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'private_messages:inbox' %}">
-      <span {% if unread_messages_count %}class="badge" data-badge="{{ unread_messages_count }}"{% endif %}>
+      <span {% if unread_messages_count %}class="badge" id="sidebar-messages" data-badge="{{ unread_messages_count }}"{% endif %}>
         {% trans "Messages" %}
       </span>
     </a>
