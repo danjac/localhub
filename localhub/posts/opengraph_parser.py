@@ -47,29 +47,27 @@ def parse_opengraph_data_from_html(html):
 
 
 def _parse_title_from_html(soup):
-    title = soup.find("meta", attrs={"property": "og:title"}) or soup.find(
-        "meta", attrs={"name": "twitter:title"}
-    )
-    if title and "content" in title.attrs:
-        return title["content"]
+    if title := _parse_meta_content(soup, "og:title", "twitter:title"):
+        return title
     return soup.title.string if soup.title else None
 
 
 def _parse_image_from_html(soup):
-    try:
-        image = soup.find("meta", attrs={"property": "og:image"}).attrs["content"]
-        if len(image) < 501 and is_url(image) and is_image_url(image):
-            return image
-    except (AttributeError, KeyError):
-        pass
-
+    image = _parse_meta_content(soup, "og:image", "twitter:image")
+    if image and len(image) < 501 and is_url(image) and is_image_url(image):
+        return image
     return None
 
 
 def _parse_description_from_html(soup):
-    description = soup.find("meta", attrs={"property": "og:description"}) or soup.find(
-        "meta", attrs={"name": "twitter:description"}
-    )
-    if description and "content" in description.attrs:
-        return description.attrs["content"]
+    return _parse_meta_content(soup, "og:description", "twitter:description")
+
+
+def _parse_meta_content(soup, *names):
+    for name in names:
+        meta = soup.find("meta", attrs={"property": name}) or soup.find(
+            "meta", attrs={"name": name}
+        )
+        if meta and "content" in meta.attrs:
+            return meta.attrs["content"]
     return None

@@ -86,12 +86,26 @@ class TestParseOpengraphDataFromHtml:
         title, _, _ = parse_opengraph_data_from_html(html)
         assert title == "page title"
 
-    def test_image_in_meta(self):
+    def test_image_in_meta_property(self):
         html = """
         <html>
         <head>
             <title>page title</title>
             <meta property="og:image" content="http://imgur.com/test.jpg">
+        </head>
+        </body>
+        <body>
+        </html>
+        """
+        _, image, _ = parse_opengraph_data_from_html(html)
+        assert image == "http://imgur.com/test.jpg"
+
+    def test_image_in_meta_name(self):
+        html = """
+        <html>
+        <head>
+            <title>page title</title>
+            <meta name="og:image" content="http://imgur.com/test.jpg">
         </head>
         </body>
         <body>
@@ -112,12 +126,26 @@ class TestParseOpengraphDataFromHtml:
         _, image, _ = parse_opengraph_data_from_html(html)
         assert image is None
 
-    def test_description_in_meta(self):
+    def test_description_in_meta_property(self):
         html = """
         <html>
         <head>
             <title>page title</title>
             <meta property="og:description" content="test">
+        </head>
+        </body>
+        <body>
+        </html>
+        """
+        _, _, description = parse_opengraph_data_from_html(html)
+        assert description == "test"
+
+    def test_description_in_meta_name(self):
+        html = """
+        <html>
+        <head>
+            <title>page title</title>
+            <meta name="og:description" content="test">
         </head>
         </body>
         <body>
