@@ -3,8 +3,8 @@
 
 import os
 import socket
-import pymdownx.emoji
 
+import pymdownx.emoji
 from configurations import Configuration, values
 from django.urls import reverse_lazy
 
@@ -166,9 +166,7 @@ class Base(Configuration):
     ]
 
     MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {
-        "pymdownx.emoji": {
-            "emoji_generator": pymdownx.emoji.to_alt,
-        }
+        "pymdownx.emoji": {"emoji_generator": pymdownx.emoji.to_alt,}
     }
 
     # https://micawber.readthedocs.io/en/latest/django.html
@@ -228,7 +226,10 @@ class Base(Configuration):
                 "APP_DIRS": True,
                 "OPTIONS": {
                     "debug": self.DEBUG,
-                    "builtins": ["localhub.template.defaultfilters"],
+                    "builtins": [
+                        "localhub.template.defaultfilters",
+                        "localhub.template.defaulttags",
+                    ],
                     "context_processors": [
                         "django.template.context_processors.debug",
                         "django.template.context_processors.request",

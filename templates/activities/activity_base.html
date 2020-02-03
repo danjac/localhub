@@ -86,21 +86,11 @@
         </div>
         <div class="d-hide" data-target="content-sensitive.togglable">
           {% endif %}
-          {% if not is_detail and not is_content_sensitive %}
-          <div data-controller="collapsable">
-            <div data-target="collapsable.container">
-              {% endif %}
-              {% block content %}{% endblock %}
-              {% if not is_detail and not is_content_sensitive %}
-            </div>
-            <div class="divider mt-2 d-hide" data-target="collapsable.toggle"></div>
-            <button
-               class="mt-1 btn btn-block d-hide"
-               data-target="collapsable.toggle"
-               data-action="collapsable#toggle"
-               href="#">{% trans "Show More" %}</button>
-          </div>
-          {% endif %}
+          {% with ignore_collapsable=is_detail|default:is_content_sensitive %}
+          {% collapsable ignore_collapsable %}
+          {% block content %}{% endblock %}
+          {% endcollapsable %}
+          {% endwith %}
           {% if is_content_sensitive %}</div>{% endif %}
         {% if object.is_reshare %}</blockquote>{% endif %}
       {% endif %}

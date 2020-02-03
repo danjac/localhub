@@ -27,25 +27,11 @@
     </div>
   </div>
   <div class="card-body">
-    {% if not is_detail %}
-    <div data-controller="collapsable">
-      <div data-target="collapsable.container">
-        {% endif %}
-
+    {% collapsable is_detail %}
         <div class="markdown-content">
           {{ message.message.markdown }}
         </div>
-
-        {% if not is_detail %}
-      </div>
-      <div class="divider mt-2 d-hide" data-target="collapsable.toggle"></div>
-      <button
-        class="mt-1 btn btn-block d-hide"
-        data-target="collapsable.toggle"
-        data-action="collapsable#toggle"
-        href="#">{% trans "Show More" %}</button>
-    </div>
-    {% endif %}
+    {% endcollapsable %}
   </div>
   <div class="card-footer">
     <div class="actions">

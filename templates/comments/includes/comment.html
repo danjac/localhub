@@ -6,142 +6,130 @@
 {% load rules %}
 
 <article class="card" role="comment" id="comment-{{ comment.id }}">
-  <div class="card-header">
-    {% has_perm "communities.moderate_community" user community as can_moderate_community %}
-    {% if comment.is_flagged and can_moderate_community %}
-    <div class="toast toast-info text-center mb-2">
-      <a href="{{ comment.get_absolute_url }}">{% trans "This comment has been flagged" %}</a>
-    </div>
-    {% endif %}
-
-    <div class="card-title h6">
-      {% include "activities/includes/timesince.html" with timestamp=comment.created owner=comment.owner %}
-      {% with parent=comment.parent %}
-      {% if parent and comment.is_parent_owner_member and not is_reply %}
-      {% user_display parent.owner as parent_owner %}
-      <a href="{{ parent.get_absolute_url }}">
-        {% blocktrans %}
-        in reply to {{ parent_owner }}
-        {% endblocktrans %}
-      </a>
-      {% endif %}
-      {% endwith %}
-    </div>
-  </div>
-  {% if comment.is_blocked %}
-  <div class="card-body" data-controller="toggle">
-    <strong>{% trans "You have blocked this user." %}</strong>
-    <div class="divider"></div>
-    <div class="markdown-content d-hide"
-         data-target="toggle.togglable"
-         data-toggle-target="blocked-comment"
-         >
-      {{ comment.content.markdown }}
-    </div>
-    <div class="actions">
-      <a href="#"
-         data-target="toggle.togglable"
-         data-toggle-target="blocked-comment"
-         data-action="toggle#toggle"
-         >{% trans "View Comment" %}</a>
-    </div>
-  </div>
-  {% else %}
-  <div class="card-body">
-    {% if with_activity %}
-    <div>
-      <a href="{{ comment.content_object.get_absolute_url }}">{{ comment.content_object }}</a>
-    </div>
-    <div class="divider"></div>
-    {% endif %}
-    {% if not is_detail %}
-    <div data-controller="collapsable">
-      <div data-target="collapsable.container">
-        {% endif %}
-        <div class="markdown-content">
-          {{ comment.content.markdown }}
+    <div class="card-header">
+        {% has_perm "communities.moderate_community" user community as can_moderate_community %}
+        {% if comment.is_flagged and can_moderate_community %}
+        <div class="toast toast-info text-center mb-2">
+            <a href="{{ comment.get_absolute_url }}">{% trans "This comment has been flagged" %}</a>
         </div>
-        {% if not is_detail %}
-      </div>
-      <div class="divider mt-2 d-hide" data-target="collapsable.toggle"></div>
-      <button
-        class="mt-1 btn btn-block d-hide"
-        data-target="collapsable.toggle"
-        data-action="collapsable#toggle"
-        href="#">{% trans "Show More" %}</button>
+        {% endif %}
+
+        <div class="card-title h6">
+            {% include "activities/includes/timesince.html" with timestamp=comment.created owner=comment.owner %}
+            {% with parent=comment.parent %}
+            {% if parent and comment.is_parent_owner_member and not is_reply %}
+            {% user_display parent.owner as parent_owner %}
+            <a href="{{ parent.get_absolute_url }}">
+                {% blocktrans %}
+                in reply to {{ parent_owner }}
+                {% endblocktrans %}
+            </a>
+            {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+    {% if comment.is_blocked %}
+    <div class="card-body" data-controller="toggle">
+        <strong>{% trans "You have blocked this user." %}</strong>
+        <div class="divider"></div>
+        <div class="markdown-content d-hide"
+             data-target="toggle.togglable"
+             data-toggle-target="blocked-comment"
+             >
+             {{ comment.content.markdown }}
+        </div>
+            <div class="actions">
+                <a href="#"
+                   data-target="toggle.togglable"
+                   data-toggle-target="blocked-comment"
+                   data-action="toggle#toggle"
+                   >{% trans "View Comment" %}</a>
+            </div>
+    </div>
+    {% else %}
+    <div class="card-body">
+        {% if with_activity %}
+        <div>
+            <a href="{{ comment.content_object.get_absolute_url }}">{{ comment.content_object }}</a>
+        </div>
+        <div class="divider"></div>
+        {% endif %}
+        {% collapsable is_detail %}
+        <div class="markdown-content">
+            {{ comment.content.markdown }}
+        </div>
+        {% endcollapsable %}
+    </div>
+    <div class="card-footer">
+        {% if comment.num_likes and comment.owner == user %}
+        <div class="info">
+            {{ comment.num_likes }}
+            {% blocktrans count counter=comment.num_likes %}
+            person liked this comment
+            {% plural %}
+            people liked this comment
+            {% endblocktrans %}
+        </div>
+        {% endif %}
+
+        {% has_perm "comments.like_comment" user comment as can_like_comment %}
+        <div class="actions" data-controller="toggle">
+            <a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a>
+            {% if can_like_comment %}
+
+            <a href="{% url 'comments:like' comment.id %}"
+               {% if comment.has_liked %} class="d-hide"{% endif %}
+                                          data-controller="ajax"
+                                          data-target="toggle.togglable"
+                                          data-toggle-target="like"
+                                          data-ajax-redirect="none"
+                                          data-action="ajax#post toggle#toggle"
+                                          >{% trans "Like" %}</a>
+            <a href="{% url 'comments:dislike' comment.id %}"
+               {% if not comment.has_liked %} class="d-hide"{% endif %}
+                                              data-controller="ajax"
+                                              data-target="toggle.togglable"
+                                              data-toggle-target="like"
+                                              data-ajax-redirect="none"
+                                              data-action="ajax#post toggle#toggle"
+                                              >{% trans "Unlike" %}</a>
+            {% endif %}
+
+            {% has_perm "comments.flag_comment" user comment as can_flag_comment %}
+            {% if can_flag_comment and not comment.has_flagged %}
+            <a href="{% url 'comments:flag' comment.id %}">
+                {% trans "Flag" %}
+            </a>
+            {% endif %}
+
+            {% has_perm "comments.change_comment" user comment as can_change_comment %}
+
+            {% if can_change_comment %}
+            <a href="{% url 'comments:update' comment.id %}">
+                {% trans "Edit" %}
+            </a>
+            {% endif %}
+
+            {% has_perm "comments.delete_comment" user comment as can_delete_comment %}
+            {% if can_delete_comment %}
+            {% url 'comments:delete' comment.id as delete_url %}
+            <a href="{{ delete_url }}"
+               data-controller="ajax confirm"
+               data-action="confirm#check ajax#post"
+               {% if not is_detail %}
+               data-ajax-redirect="{{ request.get_full_path }}"
+               {% endif %}
+               data-confirm-header="{% trans 'Delete Comment' %}"
+               data-confirm-body="{% trans 'Are you sure you want to delete this comment?' %}"
+               >
+               {% trans "Delete" %}
+            </a>
+                {% endif %}
+                {% has_perm "comments.reply_to_comment" user comment as can_reply %}
+                {% if can_reply %}
+                <a href="{% url 'comments:reply' comment.id %}">{% trans "Reply" %}</a>
+                {% endif %}
+        </div>
     </div>
     {% endif %}
-  </div>
-  <div class="card-footer">
-    {% if comment.num_likes and comment.owner == user %}
-    <div class="info">
-      {{ comment.num_likes }}
-      {% blocktrans count counter=comment.num_likes %}
-      person liked this comment
-      {% plural %}
-      people liked this comment
-      {% endblocktrans %}
-    </div>
-    {% endif %}
-
-    {% has_perm "comments.like_comment" user comment as can_like_comment %}
-    <div class="actions" data-controller="toggle">
-      <a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a>
-      {% if can_like_comment %}
-
-      <a href="{% url 'comments:like' comment.id %}"
-         {% if comment.has_liked %} class="d-hide"{% endif %}
-                                    data-controller="ajax"
-                                    data-target="toggle.togglable"
-                                    data-toggle-target="like"
-                                    data-ajax-redirect="none"
-                                    data-action="ajax#post toggle#toggle"
-                                    >{% trans "Like" %}</a>
-      <a href="{% url 'comments:dislike' comment.id %}"
-         {% if not comment.has_liked %} class="d-hide"{% endif %}
-                                        data-controller="ajax"
-                                        data-target="toggle.togglable"
-                                        data-toggle-target="like"
-                                        data-ajax-redirect="none"
-                                        data-action="ajax#post toggle#toggle"
-                                        >{% trans "Unlike" %}</a>
-      {% endif %}
-
-      {% has_perm "comments.flag_comment" user comment as can_flag_comment %}
-      {% if can_flag_comment and not comment.has_flagged %}
-      <a href="{% url 'comments:flag' comment.id %}">
-        {% trans "Flag" %}
-      </a>
-      {% endif %}
-
-      {% has_perm "comments.change_comment" user comment as can_change_comment %}
-
-      {% if can_change_comment %}
-      <a href="{% url 'comments:update' comment.id %}">
-        {% trans "Edit" %}
-      </a>
-      {% endif %}
-
-      {% has_perm "comments.delete_comment" user comment as can_delete_comment %}
-      {% if can_delete_comment %}
-      {% url 'comments:delete' comment.id as delete_url %}
-      <a href="{{ delete_url }}"
-         data-controller="ajax confirm"
-         data-action="confirm#check ajax#post"
-         {% if not is_detail %}
-         data-ajax-redirect="{{ request.get_full_path }}"
-         {% endif %}
-         data-confirm-header="{% trans 'Delete Comment' %}"
-         data-confirm-body="{% trans 'Are you sure you want to delete this comment?' %}"
-         >
-         {% trans "Delete" %}
-      </a>
-        {% endif %}
-        {% has_perm "comments.reply_to_comment" user comment as can_reply %}
-        {% if can_reply %}
-        <a href="{% url 'comments:reply' comment.id %}">{% trans "Reply" %}</a>
-        {% endif %}
-    </div>
-  </div>
-  {% endif %}
 </article>
