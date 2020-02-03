@@ -3,6 +3,7 @@
 
 import os
 import socket
+import pymdownx.emoji
 
 from configurations import Configuration, values
 from django.urls import reverse_lazy
@@ -163,6 +164,12 @@ class Base(Configuration):
         "localhub.markdown.extensions:NewTabExtension",
         "localhub.markdown.extensions:SafeImageExtension",
     ]
+
+    MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {
+        "pymdownx.emoji": {
+            "emoji_generator": pymdownx.emoji.to_alt,
+        }
+    }
 
     # https://micawber.readthedocs.io/en/latest/django.html
     MICAWBER_PROVIDERS = "localhub.oembed.bootstrap_oembed"
