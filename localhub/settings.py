@@ -93,6 +93,10 @@ class Base(Configuration):
 
     ROOT_URLCONF = "localhub.urls"
 
+    # base Django admin URL (should be something obscure in production)
+
+    ADMIN_URL = values.Value("admin/")
+
     # project-specific
 
     DEFAULT_PAGE_SIZE = 12
