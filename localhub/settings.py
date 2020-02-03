@@ -158,11 +158,19 @@ class Base(Configuration):
     MARKDOWNX_MARKDOWNIFY_FUNCTION = "localhub.markdown.utils.markdownify"
 
     MARKDOWNX_MARKDOWN_EXTENSIONS = [
-        "pymdownx.extra",
+        "markdown.extensions.extra",
         "pymdownx.emoji",
         "localhub.markdown.extensions:NewTabExtension",
         "localhub.markdown.extensions:SafeImageExtension",
     ]
+
+    MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {
+        "pymdownx.emoji": {
+            "options": {
+                "attributes": {"align": "absmiddle", "height": "20px", "width": "20px"},
+            },
+        }
+    }
 
     # https://micawber.readthedocs.io/en/latest/django.html
     MICAWBER_PROVIDERS = "localhub.oembed.bootstrap_oembed"
