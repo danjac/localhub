@@ -11,7 +11,7 @@ attrs==19.3.0             # via pytest
 autopep8==1.5             # via django-silk
 backcall==0.1.0           # via ipython
 beautifulsoup4==4.8.2
-billiard==3.6.1.0         # via celery
+billiard==3.6.2.0         # via celery
 bleach==3.1.0
 boto3==1.11.9
 botocore==1.14.9          # via boto3, s3transfer
@@ -31,7 +31,7 @@ django-appconf==1.0.3     # via django-celery-email
 django-celery-email==3.0.0
 django-configurations==2.2
 django-countries==5.5
-django-debug-toolbar==2.1
+django-debug-toolbar==2.2
 django-extensions==2.2.6
 django-markdownx==3.0.1
 django-model-utils==4.0.0
@@ -43,7 +43,7 @@ django-taggit==1.2.0
 django-timezone-field==4.0
 django-vanilla-views==1.0.6
 django-widget-tweaks==1.4.5
-django==3.0.2
+django==3.0.3
 docutils==0.15.2          # via botocore
 execnet==1.7.1            # via pytest-xdist
 factory-boy==2.12.0
@@ -57,7 +57,7 @@ icalendar==4.0.4
 idna==2.8                 # via requests
 importlib-metadata==1.5.0  # via kombu, pluggy, pytest
 ipython-genutils==0.2.0   # via traitlets
-ipython==7.11.1
+ipython==7.12.0
 jedi==0.16.0              # via ipython
 jinja2==2.11.1            # via django-silk
 jmespath==0.9.4           # via boto3, botocore
