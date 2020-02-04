@@ -34,7 +34,7 @@
           data-controller="ajax badge"
           data-ajax-url="{% url 'notifications:mark_read' latest_notification.id %}"
           data-ajax-redirect="none"
-          data-badge-id="sidebar-notifications"
+          data-badge-counters="sidebar-notifications-counter,total-notifications-counter"
           data-action="ajax#post toggle#toggle badge#decrement"></button>
   {% include "notifications/includes/notification.html" with notification=latest_notification %}
 </p>
@@ -46,7 +46,7 @@
           data-controller="ajax badge"
           data-ajax-url="{% url 'private_messages:message_mark_read' latest_message.id %}"
           data-ajax-redirect="none"
-          data-badge-id="sidebar-messages"
+          data-badge-counters="sidebar-messages-counter,total-notifications-counter"
           data-action="ajax#post toggle#toggle badge#decrement"></button>
   {% blocktrans with message_sender=latest_message.sender.get_display_name message_url=latest_message.get_absolute_url %}
   {{ message_sender }} has sent you a <a href="{{ message_url }}">message</a>.
