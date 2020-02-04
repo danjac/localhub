@@ -14,7 +14,7 @@ from markdown.inlinepatterns import (
 )
 from markdown.util import etree
 
-from localhub.utils.urls import REL_SAFE_VALUES
+from localhub.utils.urls import REL_SAFE_VALUES, is_https
 
 
 class SafeImageMixin:
@@ -27,7 +27,7 @@ class SafeImageMixin:
         element, start, end = super().handleMatch(match, data)
         if element is not None:
             src = element.get("src")
-            if not src or not src.startswith("https://"):
+            if not src or not is_https(src):
                 link = etree.Element("a")
                 link.set("href", src)
                 link.set("target", "_blank")

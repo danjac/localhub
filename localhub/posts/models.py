@@ -8,7 +8,7 @@ from localhub.activities.models import Activity
 from localhub.db.search import SearchIndexer
 from localhub.db.tracker import Tracker
 from localhub.oembed import bootstrap_oembed
-from localhub.utils.urls import get_domain, is_image_url
+from localhub.utils.urls import get_domain, is_https, is_image_url
 
 from .opengraph_parser import parse_opengraph_data_from_url
 
@@ -61,8 +61,7 @@ class Post(Activity):
         """
         return (
             self.opengraph_image
-            if self.opengraph_image.startswith("https://")
-            and is_image_url(self.opengraph_image)
+            if is_https(self.opengraph_image) and is_image_url(self.opengraph_image)
             else ""
         )
 

@@ -6,7 +6,13 @@ import html
 from django import template
 from django.utils.safestring import mark_safe
 
-from localhub.utils.urls import REL_SAFE_VALUES, get_domain, is_image_url, is_url
+from localhub.utils.urls import (
+    REL_SAFE_VALUES,
+    get_domain,
+    is_https,
+    is_image_url,
+    is_url,
+)
 
 register = template.Library()
 
@@ -37,7 +43,7 @@ def url_to_img(url, linkify=True):
     """
     if url is None or not is_url(url):
         return url
-    if is_image_url(url) and url.startswith("https://"):
+    if is_image_url(url) and is_https(url):
         html = f'<img src="{url}" alt="{get_domain(url)}">'
         if linkify:
             html = f'<a href="{url}" rel="nofollow">{html}</a>'

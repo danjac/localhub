@@ -2,7 +2,18 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from ..urls import get_domain, is_image_url, is_url
+from ..urls import get_domain, is_https, is_image_url, is_url
+
+
+class TestIsHttps:
+    def test_if_not_url(self):
+        assert not is_https("reddit")
+
+    def test_if_not_https(self):
+        assert not is_https("http://reddit.com")
+
+    def test_if_https(self):
+        assert is_https("https://reddit.com")
 
 
 class TestIsUrl:
