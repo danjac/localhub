@@ -8,7 +8,7 @@
 
 {% block content %}
 
-{% with is_oembed_url|user:object.url as is_oembed %}
+{% with user|is_oembed_url:object.url as is_oembed %}
 {% include "activities/includes/oembed.html" %}
 {% if object.opengraph_description and not is_oembed %}
 <div class="columns metadata{% if not is_detail %} metadata-small{% endif %}">

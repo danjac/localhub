@@ -8,7 +8,7 @@
 {% load activities_tags %}
 
 {% block content %}
-{% with is_oembed_url|user:object.url as is_oembed %}
+{% with user|is_oembed_url:object.url as is_oembed %}
 {% include "activities/includes/oembed.html" %}
 {% endwith %}
 {% include "activities/includes/description.html" %}
