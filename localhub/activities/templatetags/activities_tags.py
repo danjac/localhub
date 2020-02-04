@@ -35,17 +35,6 @@ def get_local_network_draft_count(user, community):
     )
 
 
-@register.simple_tag(takes_context=True)
-def is_oembed_allowed(context, user):
-    if not context["request"].do_not_track:
-        return True
-
-    if user.is_authenticated and user.show_embedded_content:
-        return True
-
-    return False
-
-
 @register.filter
 def is_content_sensitive(activity, user):
     if user.is_authenticated and user.show_sensitive_content:

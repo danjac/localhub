@@ -55,22 +55,17 @@
 {% endif %}
 
 
-{% if request.do_not_track and not user.show_embedded_content %}
+{% if not user.show_embedded_content %}
 <p class="toast text-center my-2 d-hide"
    data-controller="cookie-notice"
    data-cookie-notice-name="embedded-content"
    data-cookie-notice-domain="{{ community.domain }}">
     <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
-    {% blocktrans %}
-    Embedded content has been removed because your browser has enabled Do Not Track (DNT).
-    {% endblocktrans %}
-    {% if user.is_authenticated %}
     {% url "user_update" as user_update_url %}
     {% blocktrans %}
     You can view embedded content by checking the <b>Show embedded content</b> option in your
     <a href="{{ user_update_url }}">user settings</a>.
     {% endblocktrans %}
-    {% endif %}
 </p>
 {% endif %}
 {% elif page_obj.paginator.num_pages > 1 %}

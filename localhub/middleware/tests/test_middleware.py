@@ -1,23 +1,9 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.http import HttpRequest, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 
-from .. import DoNotTrackMiddleware, TurbolinksMiddleware
-
-
-class TestDoNotTrackMiddleware:
-    def test_if_header_present(self, rf, get_response):
-        mw = DoNotTrackMiddleware(get_response)
-        req = rf.get("/", HTTP_DNT="1")
-        mw(req)
-        assert req.do_not_track
-
-    def test_if_header_not_present(self, rf, get_response):
-        mw = DoNotTrackMiddleware(get_response)
-        req = rf.get("/")
-        mw(req)
-        assert not req.do_not_track
+from .. import TurbolinksMiddleware
 
 
 class TestTurbolinksMiddleware:
@@ -29,7 +15,7 @@ class TestTurbolinksMiddleware:
         assert resp["Turbolinks-Location"] == "/"
 
     def test_handle_redirect_if_turbolinks(self, rf):
-        def get_response(req: HttpRequest):
+        def get_response(req):
             return HttpResponseRedirect("/")
 
         mw = TurbolinksMiddleware(get_response)

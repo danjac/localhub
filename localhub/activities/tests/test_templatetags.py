@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 
 from localhub.communities.factories import CommunityFactory, MembershipFactory
@@ -13,7 +12,6 @@ from ..templatetags.activities_tags import (
     get_draft_count,
     get_local_network_draft_count,
     is_content_sensitive,
-    is_oembed_allowed,
 )
 
 pytestmark = pytest.mark.django_db
@@ -38,32 +36,6 @@ class TestGetLocalNetworkDraftCount:
 
     def test_get_local_network_draft_count_if_anonymous(self, community):
         assert get_local_network_draft_count(AnonymousUser(), community) == 0
-
-
-class TestIsOembedAllowed:
-    def test_if_does_track(self, rf):
-        req = rf.get("/")
-        req.do_not_track = False
-        assert is_oembed_allowed(
-            {"request": req}, get_user_model()(show_embedded_content=False)
-        )
-
-    def test_if_anonymous(self, rf):
-        req = rf.get("/")
-        req.do_not_track = True
-        assert not is_oembed_allowed({"request": req}, AnonymousUser())
-
-    def test_if_user_allows(self, rf):
-        req = rf.get("/")
-        req.do_not_track = True
-        user = get_user_model()(show_embedded_content=True)
-        assert is_oembed_allowed({"request": req}, user)
-
-    def test_if_user_not_allows(self, rf):
-        req = rf.get("/")
-        req.do_not_track = True
-        user = get_user_model()(show_embedded_content=False)
-        assert not is_oembed_allowed({"request": req}, user)
 
 
 class TestIsContentSensitive:

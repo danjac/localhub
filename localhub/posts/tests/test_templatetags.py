@@ -10,18 +10,21 @@ from ..templatetags.posts_tags import is_post_oembed
 class TestIsPostOembed:
     def test_not_oembed(self, rf):
         post = Post()
+        user = get_user_model()
+        user.show_embedded_content = True
         req = rf.get("/")
-        req.do_not_track = False
-        assert not is_post_oembed({"request": req}, get_user_model()(), post)
+        assert not is_post_oembed({"request": req}, user, post)
 
     def test_if_allowed(self, rf):
         req = rf.get("/")
-        req.do_not_track = False
+        user = get_user_model()
+        user.show_embedded_content = True
         post = Post(url="https://www.youtube.com/watch?v=eLeIJtLebZk")
-        assert is_post_oembed({"request": req}, get_user_model()(), post)
+        assert is_post_oembed({"request": req}, user, post)
 
     def test_if_not_allowed(self, rf):
         req = rf.get("/")
-        req.do_not_track = True
+        user = get_user_model()
+        user.show_embedded_content = False
         post = Post(url="https://www.youtube.com/watch?v=eLeIJtLebZk")
-        assert not is_post_oembed({"request": req}, get_user_model()(), post)
+        assert not is_post_oembed({"request": req}, user, post)

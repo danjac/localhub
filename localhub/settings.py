@@ -81,7 +81,6 @@ class Base(Configuration):
         "django.contrib.sessions.middleware.SessionMiddleware",
         "django.middleware.locale.LocaleMiddleware",
         "localhub.middleware.TurbolinksMiddleware",
-        "localhub.middleware.DoNotTrackMiddleware",
         "localhub.communities.middleware.CurrentCommunityMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
