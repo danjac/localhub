@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 
 from localhub.communities.factories import CommunityFactory, MembershipFactory
@@ -12,9 +13,27 @@ from ..templatetags.activities_tags import (
     get_draft_count,
     get_local_network_draft_count,
     is_content_sensitive,
+    is_oembed_url,
 )
 
 pytestmark = pytest.mark.django_db
+
+
+class TestIsOembedUrl:
+    def test_is_oembed_if_oembed_url_and_user_permitted(self):
+        url = "https://www.youtube.com/watch?v=eLeIJtLebZk"
+        user = get_user_model()(show_embedded_content=True)
+        assert is_oembed_url(user, url)
+
+    def test_is_oembed_if_oembed_url_and_user_not_permitted(self):
+        url = "https://www.youtube.com/watch?v=eLeIJtLebZk"
+        user = get_user_model()(show_embedded_content=False)
+        assert not is_oembed_url(user, url)
+
+    def test_is_oembed_if_not_oembed_url(self):
+        url = "https://reddit.com"
+        user = get_user_model()(show_embedded_content=True)
+        assert not is_oembed_url(user, url)
 
 
 class TestGetDraftCount:

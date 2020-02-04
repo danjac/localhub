@@ -11,9 +11,8 @@
     {{ object.url|domain }}
 </div>
 <div class="divider"></div>
-{% if user.show_embedded_content %}
 <div data-controller="oembed" class="wordwrap">
-    {% if oembed_allowed %}
+    {% if is_oembed %}
     {{ object.url|oembed_no_urlize|url_to_img }}
     {% else %}
     {{ object.url|url_to_img }}

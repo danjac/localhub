@@ -27,7 +27,7 @@ IMAGE_EXTENSIONS = (
 
 
 def is_https(url):
-    return urlparse(url).scheme == "https"
+    return url and urlparse(url).scheme == "https"
 
 
 def is_url(url):

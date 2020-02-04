@@ -31,14 +31,6 @@ class TestPostModel:
         post = PostFactory(title="中国研究方法")
         assert post.get_absolute_url() == f"/posts/{post.id}/zhong-guo-yan-jiu-fang-fa/"
 
-    def test_is_oembed(self):
-        post = Post(url="https://www.youtube.com/watch?v=eLeIJtLebZk")
-        assert post.is_oembed()
-
-    def test_is_not_oembed(self):
-        post = Post(url="https://google.com")
-        assert not post.is_oembed()
-
     def test_extract_tags(self, post):
 
         post.description = "a post about #movies"

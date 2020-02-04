@@ -7,12 +7,9 @@ from django.utils.translation import gettext as _
 from localhub.activities.models import Activity
 from localhub.db.search import SearchIndexer
 from localhub.db.tracker import Tracker
-from localhub.oembed import bootstrap_oembed
 from localhub.utils.urls import get_domain, is_https, is_image_url
 
 from .opengraph_parser import parse_opengraph_data_from_url
-
-_oembed_registry = bootstrap_oembed()
 
 
 class Post(Activity):
@@ -48,11 +45,6 @@ class Post(Activity):
         return " ".join(
             [value for value in (self.description, self.opengraph_description) if value]
         )
-
-    def is_oembed(self):
-        if not self.url:
-            return False
-        return _oembed_registry.provider_for_url(self.url) is not None
 
     def get_opengraph_image_if_safe(self):
         """

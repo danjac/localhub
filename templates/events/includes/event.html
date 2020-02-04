@@ -5,8 +5,10 @@
 
 {% load i18n %}
 {% load tz %}
+{% load activities_tags %}
 
 {% block content %}
+{% is_oembed_url user object.url as is_oembed %}
 {% include "activities/includes/oembed.html" %}
 {% include "activities/includes/description.html" %}
 <dl>

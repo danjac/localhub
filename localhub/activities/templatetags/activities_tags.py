@@ -4,9 +4,27 @@
 
 from django import template
 
+from localhub.utils.urls import is_https
+
+from ..oembed import bootstrap_oembed
 from ..utils import get_combined_activity_queryset_count
 
 register = template.Library()
+
+
+_oembed_registry = bootstrap_oembed()
+
+
+@register.simple_tag
+def is_oembed_url(user, url):
+    if (
+        not url
+        or not is_https(url)
+        or not user.is_authenticated
+        or not user.show_embedded_content
+    ):
+        return False
+    return _oembed_registry.provider_for_url(url) is not None
 
 
 @register.simple_tag

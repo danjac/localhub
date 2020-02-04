@@ -5,12 +5,11 @@
 
 {% load i18n %}
 {% load activities_tags %}
-{% load posts_tags %}
 
 {% block content %}
 
+{% is_oembed_url user object.url as is_oembed %}
 {% include "activities/includes/oembed.html" %}
-{% is_post_oembed user object as is_oembed %}
 {% if object.opengraph_description and not is_oembed %}
 <div class="columns metadata{% if not is_detail %} metadata-small{% endif %}">
   {% with opengraph_image=object.get_opengraph_image_if_safe %}
