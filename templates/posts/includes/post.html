@@ -8,7 +8,7 @@
 
 {% block content %}
 
-{% is_oembed_url user object.url as is_oembed %}
+{% with is_oembed_url|user:object.url as is_oembed %}
 {% include "activities/includes/oembed.html" %}
 {% if object.opengraph_description and not is_oembed %}
 <div class="columns metadata{% if not is_detail %} metadata-small{% endif %}">
@@ -28,4 +28,5 @@
 <div class="divider"></div>
 {% endif %}
 {% include "activities/includes/description.html" %}
+{% endwith %}
 {% endblock content %}

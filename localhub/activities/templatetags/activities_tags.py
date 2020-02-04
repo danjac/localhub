@@ -16,18 +16,6 @@ _oembed_registry = bootstrap_oembed()
 
 
 @register.simple_tag
-def is_oembed_url(user, url):
-    if (
-        not url
-        or not is_https(url)
-        or not user.is_authenticated
-        or not user.show_embedded_content
-    ):
-        return False
-    return _oembed_registry.provider_for_url(url) is not None
-
-
-@register.simple_tag
 def get_draft_count(user, community):
     if user.is_anonymous or not community.active:
         return 0
@@ -58,3 +46,15 @@ def is_content_sensitive(activity, user):
     if user.is_authenticated and user.show_sensitive_content:
         return False
     return bool(activity.get_content_warning_tags())
+
+
+@register.filter
+def is_oembed_url(user, url):
+    if (
+        not url
+        or not is_https(url)
+        or not user.is_authenticated
+        or not user.show_embedded_content
+    ):
+        return False
+    return _oembed_registry.provider_for_url(url) is not None
