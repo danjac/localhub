@@ -16,8 +16,7 @@ django-model-utils
 django-redis
 django-silk
 django-simple-history
-# https://github.com/jschneier/django-storages/issues/831
-django-storages==1.8
+django-storages
 django-taggit
 django-timezone-field
 django-vanilla-views
