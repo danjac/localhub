@@ -55,6 +55,15 @@ class TestPostModel:
         assert reshared.owner == user
         assert reshared.published
 
+    def test_update_reshares(self, post, user):
+
+        reshared = post.reshare(user)
+        post.title = "a new title"
+        post.save()
+        post.update_reshares()
+        reshared.refresh_from_db()
+        assert reshared.title == "a new title"
+
     def test_reshare_a_reshare(self, post, user):
 
         reshared = post.reshare(user)

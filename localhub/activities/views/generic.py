@@ -150,6 +150,7 @@ class ActivityUpdateView(
         if publish:
             self.object.published = timezone.now()
         self.object.save()
+        self.object.update_reshares()
 
         if self.object.published:
             for notification in self.object.notify_on_update():

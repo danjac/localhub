@@ -86,6 +86,22 @@ class TestPostUpdateView:
         assert response.url == post_for_member.get_absolute_url()
         assert post_for_member.title == "UPDATED"
 
+    def test_post_with_reshare(
+        self, client, post_for_member, send_notification_webpush_mock
+    ):
+
+        reshare = post_for_member.reshare(UserFactory())
+
+        client.post(
+            reverse("posts:update", args=[post_for_member.id]),
+            {"title": "UPDATED", "description": post_for_member.description},
+        )
+
+        post_for_member.refresh_from_db()
+        reshare.refresh_from_db()
+        assert post_for_member.title == "UPDATED"
+        assert reshare.title == "UPDATED"
+
     def test_post_unpublished_to_publish(
         self, client, member, send_notification_webpush_mock
     ):

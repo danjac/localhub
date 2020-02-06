@@ -483,16 +483,27 @@ class Activity(TimeStampedModel):
 
         parent = self.parent or self
         reshared = self.__class__(
-            owner=owner, is_reshare=True, parent=parent, community=parent.community,
+            is_reshare=True,
+            owner=owner,
+            parent=parent,
+            community=parent.community,
+            **self.get_resharable_data(),
         )
-        for field in self.RESHARED_FIELDS:
-            setattr(reshared, field, getattr(self, field))
 
         reshared.published = timezone.now()
 
         if commit:
             reshared.save(**kwargs)
         return reshared
+
+    def update_reshares(self):
+        """
+        Sync latest updates with all reshares.
+        """
+        self.reshares.update(**self.get_resharable_data())
+
+    def get_resharable_data(self):
+        return {k: getattr(self, k) for k in self.RESHARED_FIELDS}
 
     def extract_tags(self, is_new):
         if is_new or self.description_tracker.changed():
