@@ -1,5 +1,6 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% spaceless %}
 
 {% load static %}
 {% load i18n %}
@@ -28,6 +29,7 @@
 
 {% with total_notifications_count=unread_notifications_count|add:unread_messages_count|add:unread_local_network_notifications_count|add:unread_local_network_messages_count|add:pending_local_network_join_requests_count|add:pending_join_requests_count|add:drafts_count|add:local_network_drafts_count|add:flags_count|add:local_network_flags_count %}
 
+{% endspaceless %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,16 +40,10 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="turbolinks-cache-control" content="no-cache">
-        {% if community.public %}
-        {% if community.tagline %}
-        <meta name="description" content="{{ community.tagline }}">
-        {% endif %}
         <meta name="copyright" content="Dan Jacob {% now "Y" %}">
-        <meta name="keywords" content="open source,social network">
+        <meta name="description" content="Open source community web application">
+        <meta name="keywords" content="open source,communities,private,local">
         <meta name="robots" content="index,follow">
-        {% else %}
-        <meta name="robots" content="noindex">
-        {% endif %}
         <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
         <link rel="apple-touch-icon image_src" href="{% static 'apple-touch-icon.png' %}">
         <link rel="stylesheet" href="{% static 'dist/main.css' %}">
