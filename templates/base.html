@@ -27,9 +27,10 @@
 {% get_unread_message_count user community as unread_messages_count %}
 {% get_unread_notification_count user community as unread_notifications_count %}
 
+{% endspaceless %}
+
 {% with total_notifications_count=unread_notifications_count|add:unread_messages_count|add:unread_local_network_notifications_count|add:unread_local_network_messages_count|add:pending_local_network_join_requests_count|add:pending_join_requests_count|add:drafts_count|add:local_network_drafts_count|add:flags_count|add:local_network_flags_count %}
 
-{% endspaceless %}
 <!DOCTYPE html>
 <html lang="en">
 
