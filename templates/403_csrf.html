@@ -8,5 +8,9 @@
 <p>
 {% trans "Sorry, an error has occurred when posting your form. Please refresh this page and try again." %}
 </p>
+<div class="divider"></div>
+<p>
+  <a class="btn btn-block btn-primary" href="{{ request.get_full_path }}">{% trans "Reload Page"}</a>
+</p>
 
 {% endblock %}
