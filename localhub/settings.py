@@ -364,7 +364,10 @@ class Production(Base):
     MAILGUN_API_KEY = values.Value()
     MAILGUN_SENDER_DOMAIN = values.Value()
 
-    MIDDLEWARE = Base.MIDDLEWARE + ["silk.middleware.SilkyMiddleware"]
+    MIDDLEWARE = Base.MIDDLEWARE + [
+        "localhub.middleware.HttpResponseNotAllowedMiddleware",
+        "silk.middleware.SilkyMiddleware",
+    ]
 
     # https://github.com/jazzband/django-silk#configuration
 
