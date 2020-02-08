@@ -135,8 +135,16 @@
                 {% endblock mobile_search_form %}
 
                 <div class="columns p-2 bg-gray">
-
                     <div class="col-10 col-mx-auto col-lg-12">
+                        <noscript>
+                            <div class="text-center mb-2 toast toast-warning">
+                                {% blocktrans %}
+                                This site is best enjoyed with JavaScript enabled. While you can do most things without
+                                JavaScript, some actions might not work properly or as efficiently.
+                                {% endblocktrans %}
+                            </div>
+                        </noscript>
+
                         <div class="text-center mb-2 toast toast-primary d-hide"
                              data-controller="cookie-notice"
                              data-cookie-notice-name="accept-cookies"

@@ -285,6 +285,8 @@ message_update_view = MessageUpdateView.as_view()
 
 
 class MessageDeleteView(SenderQuerySetMixin, DeleteView):
+    model = Message
+
     def get_success_url(self):
         return reverse("private_messages:outbox")
 
