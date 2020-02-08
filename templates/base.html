@@ -34,179 +34,187 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <title>
-            {% spaceless %}{% block title %}{% if total_notifications_count %}*!{% endif %}{% if community %}{{ community.name }}{% endif %}{% block subtitle %}{% endblock %}{% endblock %}{% endspaceless %}
-        </title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="turbolinks-cache-control" content="no-cache">
-        <meta name="copyright" content="Dan Jacob {% now "Y" %}">
-        <meta name="description" content="Open source community web application">
-        <meta name="keywords" content="open source,communities,private,local">
-        <meta name="robots" content="index,follow">
-        <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
-        <link rel="apple-touch-icon image_src" href="{% static 'apple-touch-icon.png' %}">
-        <link rel="stylesheet" href="{% static 'dist/main.css' %}">
-        <script defer src="{% static 'dist/main.js' %}"></script>
-        {% with google_tracking_id=community.google_tracking_id %}
-        {% if google_tracking_id %}
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id={{ google_tracking_id }}"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '{{ google_tracking_id }}');
-        </script>
+  <head>
+    <title>
+      {% spaceless %}{% block title %}{% if total_notifications_count %}*!{% endif %}{% if community %}{{ community.name }}{% endif %}{% block subtitle %}{% endblock %}{% endblock %}{% endspaceless %}
+    </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="turbolinks-cache-control" content="no-cache">
+    <meta name="copyright" content="Dan Jacob {% now "Y" %}">
+    <meta name="description" content="Open source community web application">
+    <meta name="keywords" content="open source,communities,private,local">
+    <meta name="robots" content="index,follow">
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+    <link rel="apple-touch-icon image_src" href="{% static 'apple-touch-icon.png' %}">
+    <link rel="stylesheet" href="{% static 'dist/main.css' %}">
+    <script defer src="{% static 'dist/main.js' %}"></script>
+    {% with google_tracking_id=community.google_tracking_id %}
+    {% if google_tracking_id %}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ google_tracking_id }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '{{ google_tracking_id }}');
+    </script>
+    {% endif %}
+    {% endwith %}
+  </head>
+
+  <body class="bg-dark {% if darkmode %}darkmode{% else %}text-dark{% endif %}">
+    <div class="container">
+      <header class="navbar py-1 col-10 col-lg-12 col-mx-auto">
+        <section class="navbar-section">
+          {% thumbnail community.logo "100" format="PNG" as logo %}
+          <a class="navbar-brand d-inline-flex align-center" href="/">
+            <img src="{{ logo.url }}"
+                 width="{{ logo.width }}"
+                 height="{{ logo.height }}"
+                 alt="{{ community.name }}">
+          </a>
+          {% empty %}
+          <a class="navbar-brand" href="/">{{ community.name }}</a>
+          {% endthumbnail %}
+        </section>
+        {% block search_form %}
+        {% if can_view_community %}
+        <section class="navbar-center hide-sm">
+          <form method="GET"
+                action="{% url 'activities:search' %}"
+                data-controller="form"
+                data-action="form#submit"
+                class="search-form"
+                >
+                <input class="form-input"
+                       name="q"
+                       type="search"
+                       placeholder="{% trans "Search" %}">
+          </form>
+        </section>
         {% endif %}
-        {% endwith %}
-    </head>
+        {% endblock search_form %}
+        {% block navbar_auth %}
+        <section class="navbar-section">
+          {% with current_url=request.resolver_match.url_name %}
+          {% if user.is_authenticated %}
+          <a class="btn btn-link" href="{% if is_member %}{{ user.get_absolute_url }}{% else %}{% url 'user_update' %}{% endif %}">
+            {% avatar user %}
+            {{ user.username }}
+          </a>
+          <a class="btn btn-link"
+             href="{% url 'account_logout' %}"
+             data-controller="ajax"
+             data-action="ajax#post"
+             data-ajax-redirect="/"
+             >{% trans "Logout" %}</a>
+          {% else %}
+          {% include "includes/mode_toggle.html" with css_class="btn btn-link" %}
+          <a class="btn btn-link" href="{% url 'account_login' %}">{% trans "Login" %}</a>
+          <a class="btn btn-link" href="{% url 'account_signup' %}">{% trans "Signup" %}</a>
+          {% endif %}
+          {% endwith %}
+        </section>
+        {% endblock %}
+      </header>
+      {% block mobile_search_form %}
+      {% if can_view_community %}
+      <form method="GET"
+            action="{% url 'activities:search' %}"
+            class="form-horizontal show-sm mb-2 search-form"
+            data-controller="form"
+            data-action="form#submit"
+            >
+            <input class="form-input"
+                   name="q"
+                   type="search"
+                   placeholder="{% trans "Search" %}">
+      </form>
+        {% endif %}
+        {% endblock mobile_search_form %}
 
-    <body class="bg-dark {% if darkmode %}darkmode{% else %}text-dark{% endif %}">
-        <div class="container">
-            <header class="navbar py-1 col-10 col-lg-12 col-mx-auto">
-                <section class="navbar-section">
-                    {% thumbnail community.logo "100" format="PNG" as logo %}
-                    <a class="navbar-brand d-inline-flex align-center" href="/">
-                        <img src="{{ logo.url }}"
-                             width="{{ logo.width }}"
-                             height="{{ logo.height }}"
-                             alt="{{ community.name }}">
-                    </a>
-                    {% empty %}
-                    <a class="navbar-brand" href="/">{{ community.name }}</a>
-                    {% endthumbnail %}
-                </section>
-                {% block search_form %}
-                {% if can_view_community %}
-                <section class="navbar-center hide-sm">
-                    <form method="GET"
-                          action="{% url 'activities:search' %}"
-                          data-controller="form"
-                          data-action="form#submit"
-                          class="search-form"
-                          >
-                          <input class="form-input"
-                                 name="q"
-                                 type="search"
-                                 placeholder="{% trans "Search" %}">
-                    </form>
-                </section>
-                {% endif %}
-                {% endblock search_form %}
-                {% block navbar_auth %}
-                <section class="navbar-section">
-                    {% with current_url=request.resolver_match.url_name %}
-                    {% if user.is_authenticated %}
-                    <a class="btn btn-link" href="{% if is_member %}{{ user.get_absolute_url }}{% else %}{% url 'user_update' %}{% endif %}">
-                        {% avatar user %}
-                        {{ user.username }}
-                    </a>
-                    <a class="btn btn-link"
-                       href="{% url 'account_logout' %}"
-                       data-controller="ajax"
-                       data-action="ajax#post"
-                       data-ajax-redirect="/"
-                       >{% trans "Logout" %}</a>
-                    {% else %}
-                    {% include "includes/mode_toggle.html" with css_class="btn btn-link" %}
-                    <a class="btn btn-link" href="{% url 'account_login' %}">{% trans "Login" %}</a>
-                    <a class="btn btn-link" href="{% url 'account_signup' %}">{% trans "Signup" %}</a>
-                    {% endif %}
-                    {% endwith %}
-                </section>
-                {% endblock %}
-            </header>
-            {% block mobile_search_form %}
-            {% if can_view_community %}
-            <form method="GET"
-                  action="{% url 'activities:search' %}"
-                  class="form-horizontal show-sm mb-2 search-form"
-                  data-controller="form"
-                  data-action="form#submit"
-                  >
-                  <input class="form-input"
-                         name="q"
-                         type="search"
-                         placeholder="{% trans "Search" %}">
-            </form>
-                {% endif %}
-                {% endblock mobile_search_form %}
+        <div class="columns p-2 bg-gray">
+          <div class="col-10 col-mx-auto col-lg-12">
+            <noscript>
+              <div class="text-center mb-2 toast toast-primary">
+                {% blocktrans %}
+                This site uses cookies for authentication purposes only. We do not share your personal
+                information with third parties.
+                {% endblocktrans %}
+              </div>
+              <div class="text-center mb-2 toast">
+                {% blocktrans %}
+                This site is best enjoyed with JavaScript enabled. While you can access the site without
+                JavaScript and perform many activities, some actions may not be available or work as efficiently.
+                {% endblocktrans %}
+              </div>
+            </noscript>
 
-                <div class="columns p-2 bg-gray">
-                    <div class="col-10 col-mx-auto col-lg-12">
-                        <noscript>
-                            <div class="text-center mb-2 toast toast-warning">
-                                {% blocktrans %}
-                                This site is best enjoyed with JavaScript enabled. While you can do most things without
-                                JavaScript, some actions might not work properly or as efficiently.
-                                {% endblocktrans %}
-                            </div>
-                        </noscript>
-
-                        <div class="text-center mb-2 toast toast-primary d-hide"
-                             data-controller="cookie-notice"
-                             data-cookie-notice-name="accept-cookies"
-                             data-cookie-notice-domain="{{ community.domain }}">
-                            <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
-                            {% blocktrans %}
-                            This site uses cookies for authentication purposes only. We do not share your personal
-                            information with third parties.
-                            {% endblocktrans %}
-                        </div>
+            <div class="text-center mb-2 toast toast-primary d-hide"
+                 data-controller="cookie-notice"
+                 data-cookie-notice-name="accept-cookies"
+                 data-cookie-notice-domain="{{ community.domain }}">
+              <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
+              {% blocktrans %}
+              This site uses cookies for authentication purposes only. We do not share your personal
+              information with third parties.
+              {% endblocktrans %}
+            </div>
 
 
-                        {% for message in messages %}
-                        <div class="text-center my-2 toast toast-{{ message.tags }}" data-controller="alert">
-                            <button class="btn btn-clear float-right" data-action="alert#dismiss"></button>
-                            {{ message }}
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-
-
-                {% block main_layout %}
-
-
-                <main role="main" class="columns bg-gray py-2" data-controller="sidebar">
-
-                    <aside role="sidebar" class="column col-2 col-ml-auto col-lg-12 hide-lg mb-2"
-                                          data-target="sidebar.nav"
-                                          >
-                                          <div class="show-lg hide-xl mb-2">
-                                              <a href="#"
-                                                 class="btn btn-block"
-                                                 data-action="sidebar#toggle"
-                                                 >{% trans "Close Menu" %}</a>
-                                          </div>
-                        {% block sidebar_content %}
-                        {% include "includes/sidebar.html" %}
-                        {% endblock %}
-                    </aside>
-                    <div class="column col-8 col-mr-auto col-lg-12 bg-gray pt-1" data-target="sidebar.main">
-                        <div class="show-lg hide-xl mb-2">
-                            <a href="#"
-                               class="btn btn-block"
-                               data-action="sidebar#toggle"
-                               >
-                               {% block sidebar_toggle %}
-                               <span{% if total_notifications_count %} id="total-notifications-counter" class="badge" data-badge="{{ total_notifications_count }}"{% endif %}>
-                                   {% trans "Menu" %}
-                               </span>
-                                {% endblock %}
-                            </a>
-                        </div>
-                        <div class="clearfix"></div>
-                        {% block content %}{% endblock content %}
-                    </div>
-                </main>
-                {% endblock main_layout %}
+            {% for message in messages %}
+            <div class="text-center my-2 toast toast-{{ message.tags }}" data-controller="alert">
+              <button class="btn btn-clear float-right d-hide"
+                      data-controller="js-toggle"
+                      data-action="alert#dismiss"></button>
+              {{ message }}
+            </div>
+            {% endfor %}
+          </div>
         </div>
-        {% include "includes/footer.html" %}
-        {% include "includes/confirm_dialog.html" %}
-    </body>
+
+
+        {% block main_layout %}
+
+
+        <main role="main" class="columns bg-gray py-2" data-controller="sidebar">
+
+          <aside role="sidebar" class="column col-2 col-ml-auto col-lg-12 hide-lg mb-2"
+                                data-target="sidebar.nav"
+                                >
+                                <div class="show-lg hide-xl mb-2">
+                                  <a href="#"
+                                     class="btn btn-block"
+                                     data-action="sidebar#toggle"
+                                     >{% trans "Close Menu" %}</a>
+                                </div>
+            {% block sidebar_content %}
+            {% include "includes/sidebar.html" %}
+            {% endblock %}
+          </aside>
+          <div class="column col-8 col-mr-auto col-lg-12 bg-gray pt-1" data-target="sidebar.main">
+            <div class="show-lg hide-xl mb-2">
+              <a href="#"
+                 class="btn btn-block"
+                 data-action="sidebar#toggle"
+                 >
+                 {% block sidebar_toggle %}
+                 <span{% if total_notifications_count %} id="total-notifications-counter" class="badge" data-badge="{{ total_notifications_count }}"{% endif %}>
+                   {% trans "Menu" %}
+                 </span>
+                {% endblock %}
+              </a>
+            </div>
+            <div class="clearfix"></div>
+            {% block content %}{% endblock content %}
+          </div>
+        </main>
+        {% endblock main_layout %}
+    </div>
+    {% include "includes/footer.html" %}
+    {% include "includes/confirm_dialog.html" %}
+  </body>
 
 </html>
 {% endwith %}

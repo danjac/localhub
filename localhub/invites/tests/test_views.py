@@ -41,10 +41,10 @@ class TestInviteCreateView:
 
 
 class TestInviteResendView:
-    def test_get(self, client, admin, mailoutbox):
+    def test_post(self, client, admin, mailoutbox):
 
         invite = InviteFactory(community=admin.community)
-        response = client.get(reverse("invites:resend", args=[invite.id]))
+        response = client.post(reverse("invites:resend", args=[invite.id]))
 
         assert response.url == reverse("invites:list")
         mail = mailoutbox[0]

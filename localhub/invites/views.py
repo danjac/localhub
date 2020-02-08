@@ -85,7 +85,7 @@ class InviteResendView(InviteAdminMixin, BaseSingleInviteView):
     def get_queryset(self):
         return super().get_queryset().filter(status=Invite.STATUS.pending)
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         invite = self.get_object()
         invite.sent = timezone.now()
         invite.save()

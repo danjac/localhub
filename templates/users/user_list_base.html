@@ -13,22 +13,22 @@
 {% has_perm "private_messages.create_message" user community as can_create_message %}
 
 <ul class="tab tab-block mt-2">
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:member_list' %}">{% trans "Members" %}</a>
-  </li>
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:following_list' %}">{% trans "Following" %}</a>
-  </li>
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:follower_list' %}">{% trans "Followers" %}</a>
-  </li>
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:blocked_list' %}">{% trans "Blocked" %}</a>
-  </li>
+    <li class="tab-item" data-controller="active-link" data-active-link-exact>
+        <a data-target="active-link.match"
+           href="{% url 'users:member_list' %}">{% trans "Members" %}</a>
+    </li>
+    <li class="tab-item" data-controller="active-link" data-active-link-exact>
+        <a data-target="active-link.match"
+           href="{% url 'users:following_list' %}">{% trans "Following" %}</a>
+    </li>
+    <li class="tab-item" data-controller="active-link" data-active-link-exact>
+        <a data-target="active-link.match"
+           href="{% url 'users:follower_list' %}">{% trans "Followers" %}</a>
+    </li>
+    <li class="tab-item" data-controller="active-link" data-active-link-exact>
+        <a data-target="active-link.match"
+           href="{% url 'users:blocked_list' %}">{% trans "Blocked" %}</a>
+    </li>
 </ul>
 
 {% block user_list %}
@@ -37,53 +37,55 @@
 
 {% block counter_container %}
 <div class="my-2 toast text-center">
-  {% block counter %}
-  {% endblock counter %}
+    {% block counter %}
+    {% endblock counter %}
 </div>
 {% endblock counter_container %}
 
 <table class="table table-striped table-hover">
-  <tbody>
-    {% for object in object_list %}
-    <tr>
-      <td>
-        {% include "users/includes/chip.html" with profile=object %}
-      </td>
-      <td>
-        {% if user != object %}
-        <div class="actions float-right" data-controller="toggle">
-          {% if can_create_message and object not in blocked_users %}
-          <a href="{% url 'private_messages:message_create' object.username %}">
-            {% trans "Send Message" %}
-          </a>
-          {% endif %}
-          {% has_perm "users.follow_user" user object as can_follow_user %}
-          {% if can_follow_user %}
-          <a href="{% url 'users:unfollow' object.username %}"
-             {% if not object.is_following %}class="d-hide"{% endif %}
-             data-controller="ajax"
-             data-ajax-redirect="none"
-             data-target="toggle.togglable"
-             data-toggle-target="follow"
-             data-action="ajax#post toggle#toggle">
-            {% trans "Unfollow" %}
-          </a>
-          <a href="{% url 'users:follow' object.username %}"
-             {% if object.is_following %}class="d-hide"{% endif %}
-             data-controller="ajax"
-             data-ajax-redirect="none"
-             data-target="toggle.togglable"
-             data-toggle-target="follow"
-             data-action="ajax#post toggle#toggle">
-            {% trans "Follow" %}
-          </a>
-          {% endif %}
-        </div>
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
+    <tbody>
+        {% for object in object_list %}
+        <tr>
+            <td>
+                {% include "users/includes/chip.html" with profile=object %}
+            </td>
+            <td>
+                {% if user != object %}
+                <div class="actions float-right" data-controller="toggle">
+                    {% if can_create_message and object not in blocked_users %}
+                    <a href="{% url 'private_messages:message_create' object.username %}">
+                        {% trans "Send Message" %}
+                    </a>
+                    {% endif %}
+                    {% has_perm "users.follow_user" user object as can_follow_user %}
+                    {% if can_follow_user %}
+                    <span class="d-hide" data-controller="js-toggle">
+                        <a href="{% url 'users:unfollow' object.username %}"
+                           {% if not object.is_following %}class="d-hide"{% endif %}
+                           data-controller="ajax"
+                           data-ajax-redirect="none"
+                           data-target="toggle.togglable"
+                           data-toggle-target="follow"
+                           data-action="ajax#post toggle#toggle">
+                            {% trans "Unfollow" %}
+                        </a>
+                        <a href="{% url 'users:follow' object.username %}"
+                           {% if object.is_following %}class="d-hide"{% endif %}
+                           data-controller="ajax"
+                           data-ajax-redirect="none"
+                           data-target="toggle.togglable"
+                           data-toggle-target="follow"
+                           data-action="ajax#post toggle#toggle">
+                            {% trans "Follow" %}
+                        </a>
+                    </span>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 {% include "includes/pagination.html" %}
 {% else %}

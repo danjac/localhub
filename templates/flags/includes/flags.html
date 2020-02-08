@@ -8,7 +8,7 @@
       <th>{% trans "Date" %}</th>
       <th>{% trans "User" %}</th>
       <th>{% trans "Reason" %}</th>
-      <th>{% trans "Actions" %}</th>
+      <th class="d-hide" data-controller="js-toggle">{% trans "Actions" %}</th>
     </tr>
   </thead>
   <tbody>
@@ -19,7 +19,7 @@
         {% include "users/includes/chip.html" with profile=flag.user %}
       </td>
       <td>{{ flag.get_reason_display }}</td>
-      <td>
+      <td class="hide" data-controller="js-toggle">
           <div class="actions">
               <a href="{% url 'flags:delete' flag.id %}"
                  data-controller="ajax"

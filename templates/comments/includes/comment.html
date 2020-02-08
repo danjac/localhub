@@ -76,23 +76,25 @@
         <div class="actions" data-controller="toggle">
             <a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a>
             {% if can_like_comment %}
+            <span class="d-hide" data-controller="js-toggle">
 
-            <a href="{% url 'comments:like' comment.id %}"
-               {% if comment.has_liked %} class="d-hide"{% endif %}
-                                          data-controller="ajax"
-                                          data-target="toggle.togglable"
-                                          data-toggle-target="like"
-                                          data-ajax-redirect="none"
-                                          data-action="ajax#post toggle#toggle"
-                                          >{% trans "Like" %}</a>
-            <a href="{% url 'comments:dislike' comment.id %}"
-               {% if not comment.has_liked %} class="d-hide"{% endif %}
+                <a href="{% url 'comments:like' comment.id %}"
+                   {% if comment.has_liked %} class="d-hide"{% endif %}
                                               data-controller="ajax"
                                               data-target="toggle.togglable"
                                               data-toggle-target="like"
                                               data-ajax-redirect="none"
                                               data-action="ajax#post toggle#toggle"
-                                              >{% trans "Unlike" %}</a>
+                                              >{% trans "Like" %}</a>
+                <a href="{% url 'comments:dislike' comment.id %}"
+                   {% if not comment.has_liked %} class="d-hide"{% endif %}
+                                                  data-controller="ajax"
+                                                  data-target="toggle.togglable"
+                                                  data-toggle-target="like"
+                                                  data-ajax-redirect="none"
+                                                  data-action="ajax#post toggle#toggle"
+                                                  >{% trans "Unlike" %}</a>
+            </span>
             {% endif %}
 
             {% has_perm "comments.flag_comment" user comment as can_flag_comment %}

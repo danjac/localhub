@@ -4,8 +4,8 @@
 {% load i18n %}
 
 <a href="{% url 'darkmode_toggle' %}"
-   {% if css_class %}class="{{ css_class }}"{% endif %}
-   data-controller="ajax"
+   class="d-hide{{ css_class|default:"" }}"
+   data-controller="js-toggle ajax"
    data-action="ajax#post"
    data-ajax-redirect="{{ request.get_full_path }}">
   {% if darkmode %}{% trans "Light Mode" %}{% else %}{% trans "Dark Mode" %}{% endif %}

@@ -10,7 +10,7 @@
 <h3>{% trans "Notifications" %}</h3>
 
 {% if object_list %}
-<div class="actions">
+<div class="actions d-hide" data-controller="js-toggle">
   {% if is_unread_notifications %}
   <a href="{% url 'notifications:mark_all_read' %}"
      data-controller="ajax"
@@ -58,7 +58,7 @@
           {% include "users/includes/chip.html" with profile=notification.actor %}
         </div>
 
-        <div class="actions show-md hide-lg">
+        <div class="actions show-md hide-lg d-hide" data-controller="js-toggle">
           {% if not notification.is_read %}
           <a href="{% url 'notifications:mark_read' notification.pk %}"
              data-controller="ajax"

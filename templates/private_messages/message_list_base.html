@@ -10,7 +10,7 @@
 <h3>{% trans "Messages" %}</h3>
 {% get_unread_message_count user community as unread_messages %}
 {% if unread_messages %}
-<div class="actions">
+<div class="actions d-hide" data-controller="js-toggle">
   <a href="{% url 'private_messages:mark_all_read' %}"
      data-controller="ajax"
      data-action="ajax#post"

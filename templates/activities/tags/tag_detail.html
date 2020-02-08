@@ -17,7 +17,7 @@
 {% has_perm "users.block_tag" user as can_block_tag %}
 
 {% if can_follow_tag or can_block_tag %}
-<div class="actions" data-controller="toggle">
+<div class="actions d-hide" data-controller="js-toggle toggle">
     {% if can_follow_tag %}
     {% with following=user.following_tags.all %}
     <a href="{% url 'activities:tag_unfollow' tag.id %}"

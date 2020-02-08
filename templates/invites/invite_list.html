@@ -42,7 +42,10 @@
             <td>
                 <div class="actions">
                     {% if invite.is_pending %}
-                    <a href="{% url 'invites:resend' invite.id %}">{% trans "Re-send" %}</a>
+                    <a href="{% url 'invites:resend' invite.id %}"
+                       class="d-hide"
+                       data-controller="js-toggle ajax"
+                       data-action="ajax#post">{% trans "Re-send" %}</a>
                     {% endif %}
                     {% url 'invites:delete' invite.id as delete_url %}
                     <a href="{{ delete_url }}"

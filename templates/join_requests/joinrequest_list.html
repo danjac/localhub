@@ -25,7 +25,7 @@
         <tr>
             <th>{% trans "User" %}</th>
             <th>{% trans "Status" %}</th>
-            <th>{% trans "Actions" %}</th>
+            <th class="d-hide" data-controller="js-toggle">{% trans "Actions" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -35,7 +35,7 @@
                 {% user_display join_request.sender %}
             </td>
             <td>{{ join_request.get_status_display }}</td>
-            <td>
+            <td class="d-hide" data-controller="js-toggle">
                 {% if join_request.is_pending %}
                 <div class="actions">
                     <a data-controller="ajax"

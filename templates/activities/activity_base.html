@@ -74,13 +74,13 @@
         {% if is_content_sensitive %}
         <div class="empty bg-dark" data-target="content-sensitive.togglable">
           <p class="empty-title h5">{% trans "Sensitive Content" %}</p>
-          <p class="empty-subtitle">{% trans "This post has been tagged sensitive. Click the button below to view the content." %}</p>
+          <p class="empty-subtitle">{% trans "This post has been tagged sensitive. You can view all sensitive content by default in your settings." %}</p>
           <p>
             {% for tag in object.get_content_warning_tags %}
             #{{ tag }}{% if not forloop.last %}, {% endif %}
             {% endfor %}
           </p>
-          <div class="empty-action">
+          <div class="empty-action d-hide" data-controller="js-toggle">
             <button class="btn btn-primary" data-action="content-sensitive#toggle">{% trans "Show Content" %}</button>
           </div>
         </div>
@@ -162,28 +162,31 @@
 
         {% has_perm "activities.like_activity" user object as can_like %}
         {% if can_like %}
-        <a href="{{ object.get_like_url }}"
-           {% if object.has_liked %} class="d-hide"{% endif %}
-                                     data-controller="ajax"
-                                     data-target="toggle.togglable"
-                                     data-toggle-target="like"
-                                     data-ajax-redirect="none"
-                                     data-action="ajax#post toggle#toggle"
-                                     >{% trans "Like" %}</a>
-        <a href="{{ object.get_dislike_url }}"
-           {% if not object.has_liked %} class="d-hide"{% endif %}
-                                         data-controller="ajax"
-                                         data-target="toggle.togglable"
-                                         data-toggle-target="like"
-                                         data-ajax-redirect="none"
-                                         data-action="ajax#post toggle#toggle"
-                                         >{% trans "Unlike" %}</a>
+        <span class="d-hide" data-controller="js-toggle">
+          <a href="{{ object.get_like_url }}"
+             {% if object.has_liked %} class="d-hide"{% endif %}
+                                       data-controller="ajax"
+                                       data-target="toggle.togglable"
+                                       data-toggle-target="like"
+                                       data-ajax-redirect="none"
+                                       data-action="ajax#post toggle#toggle"
+                                       >{% trans "Like" %}</a>
+          <a href="{{ object.get_dislike_url }}"
+             {% if not object.has_liked %} class="d-hide"{% endif %}
+                                           data-controller="ajax"
+                                           data-target="toggle.togglable"
+                                           data-toggle-target="like"
+                                           data-ajax-redirect="none"
+                                           data-action="ajax#post toggle#toggle"
+                                           >{% trans "Unlike" %}</a>
+        </span>
         {% endif %}
 
         {% if not object.has_reshared %}
         {% has_perm "activities.reshare_activity" user object as can_reshare %}
         {% if can_reshare %}
-        <a data-controller="ajax"
+        <a class="d-hide"
+           data-controller="js-toggle ajax"
            data-action="ajax#post"
            data-ajax-redirect="{{ request.path }}"
            href="{{ object.get_reshare_url }}"

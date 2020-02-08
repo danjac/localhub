@@ -5,71 +5,73 @@
 {% load account %}
 
 <div class="card mb-2{% if is_sender %} bg-gray{% endif %}">
-  <div class="card-header">
-    <div class="card-title h6">
-      <div class="timesince">
-        {% blocktrans with created=message.created|timesince %}
-        Sent {{ created }} ago
-        {% endblocktrans %}
-        {% if show_sender_info %}
-        {% trans "from" %}
-        {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url %}
-        {% endif %}
-        {% if show_recipient_info %}
-        {% trans "to" %}
-        {% include "users/includes/chip.html" with profile=message.recipient profile_url=recipient_url %}
-        {% endif %}
-        {% if show_parent_info and message.parent %}
-        {% trans "in reply to" %}
-        <a href="{{ message.parent.get_absolute_url }}">{{ message.parent.abbreviate }}</a>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-  <div class="card-body">
-    {% collapsable is_detail %}
-        <div class="markdown-content">
-          {{ message.message.markdown }}
+    <div class="card-header">
+        <div class="card-title h6">
+            <div class="timesince">
+                {% blocktrans with created=message.created|timesince %}
+                Sent {{ created }} ago
+                {% endblocktrans %}
+                {% if show_sender_info %}
+                {% trans "from" %}
+                {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url %}
+                {% endif %}
+                {% if show_recipient_info %}
+                {% trans "to" %}
+                {% include "users/includes/chip.html" with profile=message.recipient profile_url=recipient_url %}
+                {% endif %}
+                {% if show_parent_info and message.parent %}
+                {% trans "in reply to" %}
+                <a href="{{ message.parent.get_absolute_url }}">{{ message.parent.abbreviate }}</a>
+                {% endif %}
+            </div>
         </div>
-    {% endcollapsable %}
-  </div>
-  <div class="card-footer">
-    <div class="actions">
-      <a href="{{ message.get_permalink }}">{% trans "Permalink" %}</a>
-      {% if is_recipient %}
-      <a href="{% url 'private_messages:message_hide' message.id %}"
-         data-controller="ajax confirm"
-         data-action="confirm#check ajax#post"
-         data-ajax-redirect="{{ post_hide_redirect|default:request.path }}"
-         data-confirm-header="{% trans 'Hide Message' %}"
-         data-confirm-body="{% trans 'Are you sure you want to permanently hide this message?' %}"
-         >{% trans "Hide" %}</a>
-      {% if not message.read %}
-      <a href="{% url 'private_messages:message_mark_read' message.id %}"
-         data-controller="ajax"
-         data-action="ajax#post"
-         data-ajax-redirect="{{ request.path }}"
-         >{% trans "Mark As Read" %}</a>
-      {% endif %}
-      {% endif %}
-      {% if is_sender %}
-      <a href="{% url 'private_messages:message_update' message.id %}">{% trans "Edit" %}</a>
-      <a href="{% url 'private_messages:message_delete' message.id %}"
-         data-controller="ajax confirm"
-         data-action="confirm#check ajax#post"
-         data-ajax-redirect="{{ post_delete_redirect|default:request.path }}"
-         data-confirm-header="{% trans 'Delete Message' %}"
-         data-confirm-body="{% trans 'Are you sure you want to delete this message?' %}"
-         >{% trans "Delete" %}</a>
-      {% endif %}
-      {% if can_create_message %}
-      {% if is_sender %}
-      <a href="{% url 'private_messages:message_create' other_user.username %}">{% trans "Send Message" %}</a>
-      {% else %}
-      <a href="{% url 'private_messages:message_reply' message.id %}">{% trans "Reply" %}</a>
-      {% endif %}
-      {% endif %}
     </div>
-  </div>
+    <div class="card-body">
+        {% collapsable is_detail %}
+        <div class="markdown-content">
+            {{ message.message.markdown }}
+        </div>
+        {% endcollapsable %}
+    </div>
+    <div class="card-footer">
+        <div class="actions">
+            <a href="{{ message.get_permalink }}">{% trans "Permalink" %}</a>
+            {% if is_recipient %}
+            <a href="{% url 'private_messages:message_hide' message.id %}"
+               class="d-hide"
+               data-controller="js-toggle ajax confirm"
+               data-action="confirm#check ajax#post"
+               data-ajax-redirect="{{ post_hide_redirect|default:request.path }}"
+               data-confirm-header="{% trans 'Hide Message' %}"
+               data-confirm-body="{% trans 'Are you sure you want to permanently hide this message?' %}"
+               >{% trans "Hide" %}</a>
+            {% if not message.read %}
+            <a href="{% url 'private_messages:message_mark_read' message.id %}"
+               class="d-hide"
+               data-controller="js-toggle ajax"
+               data-action="ajax#post"
+               data-ajax-redirect="{{ request.path }}"
+               >{% trans "Mark As Read" %}</a>
+            {% endif %}
+            {% endif %}
+            {% if is_sender %}
+            <a href="{% url 'private_messages:message_update' message.id %}">{% trans "Edit" %}</a>
+            <a href="{% url 'private_messages:message_delete' message.id %}"
+               data-controller="ajax confirm"
+               data-action="confirm#check ajax#post"
+               data-ajax-redirect="{{ post_delete_redirect|default:request.path }}"
+               data-confirm-header="{% trans 'Delete Message' %}"
+               data-confirm-body="{% trans 'Are you sure you want to delete this message?' %}"
+               >{% trans "Delete" %}</a>
+            {% endif %}
+            {% if can_create_message %}
+            {% if is_sender %}
+            <a href="{% url 'private_messages:message_create' other_user.username %}">{% trans "Send Message" %}</a>
+            {% else %}
+            <a href="{% url 'private_messages:message_reply' message.id %}">{% trans "Reply" %}</a>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
 </div>
 
