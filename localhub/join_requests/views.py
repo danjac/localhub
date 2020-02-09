@@ -8,6 +8,7 @@ from django.db.models import Case, IntegerField, Value, When
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import GenericModelView, ListView, TemplateView
@@ -40,23 +41,48 @@ class JoinRequestListView(
     def get_permission_object(self):
         return self.request.community
 
+    @cached_property
+    def status(self):
+        status = self.request.GET.get("status")
+        if status in JoinRequest.STATUS and self.total_count:
+            return status
+        return None
+
+    @cached_property
+    def total_count(self):
+        return super().get_queryset().count()
+
     def get_queryset(self):
-        qs = (
-            super()
-            .get_queryset()
-            .select_related("community", "sender")
-            .annotate(
-                priority=Case(
-                    When(status=JoinRequest.STATUS.pending, then=Value(1)),
-                    default_value=0,
-                    output_field=IntegerField(),
-                )
-            )
-            .order_by("priority", "-created")
-        )
+        qs = super().get_queryset().select_related("community", "sender")
         if self.search_query:
             qs = qs.search(self.search_query)
+
+        if self.status:
+            qs = (
+                qs.filter(status=self.status)
+                .annotate(
+                    priority=Case(
+                        When(status=JoinRequest.STATUS.pending, then=Value(1)),
+                        default_value=0,
+                        output_field=IntegerField(),
+                    )
+                )
+                .order_by("priority", "-created")
+            )
+        else:
+            qs = qs.order_by("-created")
         return qs
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data.update(
+            {
+                "total_count": self.total_count,
+                "status": self.status,
+                "status_choices": list(JoinRequest.STATUS),
+            }
+        )
+        return data
 
 
 join_request_list_view = JoinRequestListView.as_view()

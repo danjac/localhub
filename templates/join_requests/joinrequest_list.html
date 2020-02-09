@@ -1,3 +1,6 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% extends "join_requests/base.html" %}
 {% load i18n %}
 {% load account %}
@@ -5,6 +8,22 @@
 {% block content %}
 
 <h3>{% trans "Join Requests" %}</h3>
+
+{% if total_count %}
+<div class="actions">
+    {% if status %}
+    <a href="{{ request.path }}">{% trans "Show All" %}</a>
+    {% endif %}
+    {% for value, label in status_choices %}
+    {% if status == value %}
+    <b>{{ label }}</b>
+    {% else %}
+    <a href="{{ request.path }}?status={{ value }}">{{ label }}</a>
+    {% endif %}
+    {% endfor %}
+</div>
+<div class="divider"></div>
+{% endif %}
 
 {% if paginator.count or view.search_query %}
 {% include "includes/forms/search_form.html" %}
