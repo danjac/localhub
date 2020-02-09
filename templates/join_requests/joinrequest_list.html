@@ -6,15 +6,6 @@
 
 <h3>{% trans "Join Requests" %}</h3>
 
-<div class="actions">
-    {% if view.show_all %}
-    <a href="{{ request.path }}">{% trans "Show Pending" %}</a>
-    {% else %}
-    <a href="{{ request.path }}?all=true">{% trans "Show All" %}</a>
-    {% endif %}
-</div>
-<div class="divider"></div>
-
 {% if paginator.count or view.search_query %}
 {% include "includes/forms/search_form.html" %}
 {% endif %}
@@ -30,13 +21,20 @@
     </thead>
     <tbody>
         {% for join_request in object_list %}
+        {% with is_pending=join_request.is_pending %}
         <tr>
             <td>
+                {% if is_pending %}<b>{% endif %}
                 {% user_display join_request.sender %}
+                {% if is_pending %}</b>{% endif %}
             </td>
-            <td>{{ join_request.get_status_display }}</td>
+            <td>
+              {% if is_pending %}<b>{% endif %}
+              {{ join_request.get_status_display }}
+              {% if is_pending %}</b>{% endif %}
+            </td>
             <td class="d-hide" data-controller="js-toggle">
-                {% if join_request.is_pending %}
+                {% if is_pending %}
                 <div class="actions">
                     <a data-controller="ajax"
                        data-action="ajax#post"
@@ -53,6 +51,7 @@
                 {% endif %}
             </td>
         </tr>
+        {% endwith %}
         {% endfor %}
     </tbody>
 </table>

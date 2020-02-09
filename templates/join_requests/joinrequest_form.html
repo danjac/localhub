@@ -5,18 +5,18 @@
 {% load i18n %}
 
 {% block content %}
-<h3>{% trans "Request invitation" %}</h3>
+<h3>{% trans "Request Invitation" %}</h3>
 <div class="actions">
-  {% if community %}
-  <a href="{% url 'activities:home_page' %}">{% trans "Home" %}</a>
-  {% endif %}
-  <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
-  <a href="{% url 'community_list' %}">{% trans "Local Network" %}</a>
+    {% if community %}
+    <a href="{% url 'activities:home_page' %}">{% trans "Home" %}</a>
+    {% endif %}
+    <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+    <a href="{% url 'community_list' %}">{% trans "Local Network" %}</a>
 </div>
 <div class="divider"></div>
-<p>{% trans "Your request will be sent to the site admins. If they approve your request, you will automatically become a member of this community." %}</p>
-<form action="{{ request.path }}" method="POST">
-  {% csrf_token %}
-  <button type="submit" class="btn btn-primary">{% trans "Send Request" %}</button>
+<form action="{{ request.path }}" method="POST" class="text-center">
+    {% csrf_token %}
+    <p>{% trans "Your request will be sent to the site admins. If they approve your request, you will automatically become a member of this community." %}</p>
+    <button type="submit" class="btn btn-primary">{% trans "Send Request" %}</button>
 </form>
 {% endblock %}

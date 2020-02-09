@@ -4,6 +4,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from django.db.models import Case, IntegerField, Value, When
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -16,7 +17,11 @@ from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.notifications import send_user_notification
 from localhub.views import SearchMixin
 
-from .emails import send_acceptance_email, send_join_request_email, send_rejection_email
+from .emails import (
+    send_acceptance_email,
+    send_join_request_email,
+    send_rejection_email,
+)
 from .models import JoinRequest
 
 
@@ -40,12 +45,15 @@ class JoinRequestListView(
             super()
             .get_queryset()
             .select_related("community", "sender")
-            .order_by("created")
+            .annotate(
+                priority=Case(
+                    When(status=JoinRequest.STATUS.pending, then=Value(1)),
+                    default_value=0,
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("priority", "-created")
         )
-        self.show_all = "all" in self.request.GET
-        if not self.show_all:
-            qs = qs.filter(status=JoinRequest.STATUS.pending)
-
         if self.search_query:
             qs = qs.search(self.search_query)
         return qs
