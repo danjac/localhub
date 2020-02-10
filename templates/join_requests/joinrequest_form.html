@@ -14,9 +14,6 @@
     <a href="{% url 'community_list' %}">{% trans "Local Network" %}</a>
 </div>
 <div class="divider"></div>
-<form action="{{ request.path }}" method="POST" class="text-center">
-    {% csrf_token %}
-    <p>{% trans "Your request will be sent to the site admins. If they approve your request, you will automatically become a member of this community." %}</p>
-    <button type="submit" class="btn btn-primary">{% trans "Send Request" %}</button>
-</form>
+<p>{% trans "Your request will be sent to the site admins. If they approve your request, you will automatically become a member of this community." %}</p>
+{% include "includes/forms/stimulusjs_form.html" %}
 {% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h3>{% trans "Delete Join Requst" %}</h3>
+
+<form method="POST" action="{{ request.path }}">
+  {% csrf_token %}
+  <p>{% trans "Do you really want to delete this request?" %}</p>
+  <a class="btn btn-link" href="{{ object.get_absolute_url }}">{% trans "Cancel" %}</a>
+  <button class="btn btn-primary" type="submit">{% trans "Delete" %}</button>
+</form>
+
+{% endblock content %}

@@ -33,6 +33,14 @@ class JoinRequest(TimeStampedModel):
 
     sent = models.DateTimeField(null=True, blank=True)
 
+    intro = models.TextField(
+        blank=True,
+        help_text=_(
+            "Tell us a little bit about yourself and why you "
+            "would like to join this community (Optional)"
+        ),
+    )
+
     objects = JoinRequestQuerySet.as_manager()
 
     class Meta:

@@ -3,7 +3,6 @@
 
 from django.conf import settings
 from django.contrib import messages
-from django.core.exceptions import ValidationError
 from django.db.models import Case, IntegerField, Value, When
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
@@ -11,7 +10,13 @@ from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import GenericModelView, ListView, TemplateView
+from vanilla import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    GenericModelView,
+    ListView,
+)
 
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
@@ -23,6 +28,7 @@ from .emails import (
     send_join_request_email,
     send_rejection_email,
 )
+from .forms import JoinRequestForm
 from .models import JoinRequest
 
 
@@ -31,15 +37,16 @@ class JoinRequestQuerySetMixin(CommunityRequiredMixin):
         return JoinRequest.objects.filter(community=self.request.community)
 
 
-class JoinRequestListView(
-    PermissionRequiredMixin, JoinRequestQuerySetMixin, SearchMixin, ListView
-):
+class JoinRequestManageMixin(PermissionRequiredMixin, JoinRequestQuerySetMixin):
     permission_required = "communities.manage_community"
-    paginate_by = settings.DEFAULT_PAGE_SIZE
-    model = JoinRequest
 
     def get_permission_object(self):
         return self.request.community
+
+
+class JoinRequestListView(JoinRequestManageMixin, SearchMixin, ListView):
+    paginate_by = settings.DEFAULT_PAGE_SIZE
+    model = JoinRequest
 
     @cached_property
     def status(self):
@@ -88,75 +95,17 @@ class JoinRequestListView(
 join_request_list_view = JoinRequestListView.as_view()
 
 
-class JoinRequestCreateView(CommunityRequiredMixin, TemplateView):
-    model = JoinRequest
-    template_name = "join_requests/joinrequest_form.html"
-    allow_non_members = True
-
-    def validate(self, request):
-        if not request.community.allow_join_requests:
-            raise ValidationError(_("This community does not allow requests to join."))
-        if request.community.members.filter(pk=request.user.id).exists():
-            raise ValidationError(_("You are already a member"))
-        if JoinRequest.objects.filter(
-            sender=request.user, community=request.community
-        ).exists():
-            raise ValidationError(
-                _("You have already requested to join this community")
-            )
-
-        if request.community.is_email_blacklisted(request.user.email):
-
-            raise ValidationError(
-                _("Sorry, we cannot accept your application " "to join at this time.")
-            )
-
-    def handle_invalid(self, request, error):
-        messages.error(request, error.message)
-        return self.redirect_to_welcome_page()
-
-    def get(self, request):
-        try:
-            self.validate(request)
-        except ValidationError as e:
-            return self.handle_invalid(request, e)
-
-        return super().get(request)
-
-    def post(self, request):
-        try:
-            self.validate(request)
-        except ValidationError as e:
-            return self.handle_invalid(request, e)
-
-        join_request = JoinRequest.objects.create(
-            community=self.request.community, sender=self.request.user
-        )
-
-        send_join_request_email(join_request)
-
-        messages.success(
-            self.request, _("Your request has been sent to the community admins"),
-        )
-
-        return self.redirect_to_welcome_page()
-
-    def redirect_to_welcome_page(self):
-        return redirect("community_welcome")
+class JoinRequestDetailView(JoinRequestManageMixin, DetailView):
+    ...
 
 
-join_request_create_view = JoinRequestCreateView.as_view()
+class JoinRequestDeleteView(JoinRequestManageMixin, DeleteView):
+    ...
 
 
-class JoinRequestActionView(
-    PermissionRequiredMixin, JoinRequestQuerySetMixin, GenericModelView
-):
+class JoinRequestActionView(JoinRequestManageMixin, GenericModelView):
 
-    permission_required = "communities.manage_community"
     success_url = reverse_lazy("join_requests:list")
-
-    def get_permission_object(self):
-        return self.request.community
 
     def get_queryset(self):
         return super().get_queryset().filter(status=JoinRequest.STATUS.pending)
@@ -206,3 +155,30 @@ class JoinRequestRejectView(JoinRequestActionView):
 
 
 join_request_reject_view = JoinRequestRejectView.as_view()
+
+
+class JoinRequestCreateView(CommunityRequiredMixin, CreateView):
+    model = JoinRequest
+    form_class = JoinRequestForm
+    template_name = "join_requests/joinrequest_form.html"
+    allow_non_members = True
+
+    def get_form(self, *args, **kwargs):
+        return self.get_form_class()(
+            self.request.user, self.request.community, *args, **kwargs
+        )
+
+    def form_valid(self, form):
+
+        join_request = form.save()
+
+        send_join_request_email(join_request)
+
+        messages.success(
+            self.request, _("Your request has been sent to the community admins"),
+        )
+
+        return redirect("community_welcome")
+
+
+join_request_create_view = JoinRequestCreateView.as_view()
