@@ -52,7 +52,7 @@ class JoinRequest(TimeStampedModel):
         return str(self.sender)
 
     def get_absolute_url(self):
-        return reverse("joinrequests:detail", args=[self.id])
+        return reverse("join_requests:detail", args=[self.id])
 
     def is_pending(self):
         return self.status == self.STATUS.pending

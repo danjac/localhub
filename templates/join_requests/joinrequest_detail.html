@@ -3,11 +3,45 @@
 
 {% extends "join_requests/base.html" %}
 {% load i18n %}
+{% load users_tags %}
 
 {% block content %}
 
-{% include "includes/breadcrumbs.html" %}
+{% user_display object.sender as display_name %}
 
-Join request details and actions go here...
+{% include "includes/breadcrumbs.html" %}
+{% with is_pending=object.is_pending %}
+<div class="actions d-hide" data-controller="js-toggle">
+  {% if is_pending %}
+  <a data-controller="ajax"
+     data-action="ajax#post"
+     href="{% url 'join_requests:accept' join_request.id %}">{% trans "Accept" %}
+  </a>
+  <a data-controller="ajax confirm"
+     data-action="confirm#check ajax#post"
+     data-confirm-header="{% trans 'Reject' %}"
+     data-confirm-body="{% trans 'Are you sure you want to reject this request?' %}"
+     href="{% url 'join_requests:reject' join_request.id %}">{% trans "Reject" %}</a>
+  {% endif %}
+  <a data-controller="ajax"
+     data-action="ajax#post"
+     href="{% url 'join_requests:delete' join_request.id %}">{% trans "Delete" %}</a>
+</div>
+{% endwith %}
+
+<h3>{% avatar member "avatar-lg" %}{{ display_name }}</h3>
+
+{% if object.sender.bio %}
+{% collapsable %}
+<div class="markdown-content">
+    {{ object.sender.bio.markdown }}
+</div>
+{% endcollapsable %}
+{% endif %}
+
+{% if object.intro %}
+<div class="divider"></div>
+{{ object.intro|linebreaks }}
+{% endif %}
 
 {% endblock content %}
