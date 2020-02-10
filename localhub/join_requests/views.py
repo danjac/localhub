@@ -99,13 +99,19 @@ join_request_list_view = JoinRequestListView.as_view()
 class JoinRequestDetailView(JoinRequestManageMixin, BreadcrumbsMixin, DetailView):
     def get_breadcrumbs(self):
         return [
-            (reverse("joinrequests:list"), _("Join Requests"))
+            (reverse("joinrequests:list"), _("Join Requests")),
             (None, user_display(self.object.sender)),
         ]
 
 
+join_request_detail_view = JoinRequestDetailView.as_view()
+
+
 class JoinRequestDeleteView(JoinRequestManageMixin, DeleteView):
     ...
+
+
+join_request_delete_view = JoinRequestDeleteView.as_view()
 
 
 class JoinRequestActionView(JoinRequestManageMixin, GenericModelView):
