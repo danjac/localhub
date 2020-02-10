@@ -62,8 +62,10 @@
             <td class="d-hide" data-controller="js-toggle">
                 <div class="actions">
                     {% if is_pending or is_rejected %}
-                    <a data-controller="ajax"
-                       data-action="ajax#post"
+                    <a data-controller="ajax confirm"
+                       data-action="confirm#check ajax#post"
+                       data-confirm-header="{% trans 'Accept' %}"
+                       data-confirm-body="{% trans 'Are you sure you want to accept this request?' %}"
                        href="{% url 'join_requests:accept' join_request.id %}">{% trans "Accept" %}
                     </a>
                     {% endif %}
