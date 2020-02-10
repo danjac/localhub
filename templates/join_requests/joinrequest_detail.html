@@ -11,14 +11,16 @@
 {% user_display object.sender as display_name %}
 
 {% include "includes/breadcrumbs.html" %}
-{% with is_pending=object.is_pending %}
+{% with is_pending=object.is_pending is_rejected=object.is_rejectd %}
 <div class="actions d-hide" data-controller="js-toggle">
-    {% if is_pending %}
+    {% if is_pending or is_rejected %}
     <a data-controller="ajax"
        data-action="ajax#post"
        data-ajax-redirect="{{ request.path }}"
        href="{% url 'join_requests:accept' object.id %}">{% trans "Accept" %}
     </a>
+    {% endif %}
+    {% if is_pending %}
     <a data-controller="ajax confirm"
        data-action="confirm#check ajax#post"
        data-ajax-redirect="{{ request.path }}"

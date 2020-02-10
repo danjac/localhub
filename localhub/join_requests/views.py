@@ -132,14 +132,20 @@ join_request_delete_view = JoinRequestDeleteView.as_view()
 class JoinRequestActionView(JoinRequestManageMixin, GenericModelView):
     success_url = reverse_lazy("join_requests:list")
 
-    def get_queryset(self):
-        return super().get_queryset().filter(status=JoinRequest.STATUS.pending)
-
     def get_success_url(self):
         return self.success_url
 
 
 class JoinRequestAcceptView(JoinRequestActionView):
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .filter(
+                status__in=(JoinRequest.STATUS.pending, JoinRequest.STATUS.rejected)
+            )
+        )
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.status = JoinRequest.STATUS.accepted
@@ -170,6 +176,9 @@ join_request_accept_view = JoinRequestAcceptView.as_view()
 
 
 class JoinRequestRejectView(JoinRequestActionView):
+    def get_queryset(self):
+        return super().get_queryset().filter(status=JoinRequest.STATUS.pending)
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
