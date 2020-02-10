@@ -20,14 +20,7 @@ class JoinRequestForm(forms.ModelForm):
 
     def clean(self):
         data = super().clean()
-        if not self.community.allow_join_requests:
-            raise forms.ValidationError(
-                _("This community does not allow requests to join.")
-            )
-        if self.community.members.filter(pk=self.user.id).exists():
-            raise forms.ValidationError(_("You are already a member"))
-
-        if self.model.objects.filter(
+        if JoinRequest.objects.filter(
             sender=self.user, community=self.community
         ).exists():
             raise forms.ValidationError(
@@ -41,8 +34,8 @@ class JoinRequestForm(forms.ModelForm):
         return data
 
     def save(self, commit=True):
-        instance = super().save(commit)
-        instance.user = self.user
+        instance = super().save(commit=False)
+        instance.sender = self.user
         instance.community = self.community
         if commit:
             instance.save()

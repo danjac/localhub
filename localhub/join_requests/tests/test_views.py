@@ -4,7 +4,6 @@
 import pytest
 from django.urls import reverse
 
-from localhub.communities.factories import CommunityFactory
 from localhub.communities.models import Membership
 from localhub.users.factories import UserFactory
 
@@ -22,15 +21,29 @@ class TestJoinRequestListView:
         assert len(response.context["object_list"]) == 3
 
 
+class TestJoinRequestDetailView:
+    def test_get(self, client, admin):
+        join_request = JoinRequestFactory(community=admin.community)
+        response = client.get(join_request.get_absolute_url())
+        assert response.status_code == 200
+
+
+class TestJoinRequestDeleteView:
+    def test_get(self, client, admin):
+        join_request = JoinRequestFactory(community=admin.community)
+        response = client.get(reverse("join_requests:delete", args=[join_request.id]))
+        assert response.status_code == 200
+
+    def test_post(self, client, admin):
+        join_request = JoinRequestFactory(community=admin.community)
+        response = client.post(reverse("join_requests:delete", args=[join_request.id]))
+        assert response.url == reverse("join_requests:list")
+        assert JoinRequest.objects.count() == 0
+
+
 class TestJoinRequestCreateView:
     def test_get(self, client, login_user, community):
         assert client.get(reverse("join_requests:create")).status_code == 200
-
-    def test_get_if_join_request_not_allowed(self, client, login_user):
-        community = CommunityFactory(allow_join_requests=False)
-        assert client.get(
-            reverse("join_requests:create"), HTTP_HOST=community.domain
-        ).url == reverse("community_welcome")
 
     def test_post(self, client, mailoutbox, login_user, community):
 
@@ -45,48 +58,6 @@ class TestJoinRequestCreateView:
         assert join_request.community == community
         mail = mailoutbox[0]
         assert mail.to == [admin.email]
-
-    def test_post_if_blacklist(self, client, mailoutbox, login_user):
-
-        community = CommunityFactory(blacklisted_email_addresses=login_user.email)
-
-        admin = UserFactory()
-        Membership.objects.create(
-            community=community, member=admin, role=Membership.ROLES.admin
-        )
-        response = client.post(
-            reverse("join_requests:create"), HTTP_HOST=community.domain
-        )
-
-        assert response.url == reverse("community_welcome")
-        assert not JoinRequest.objects.exists()
-        assert len(mailoutbox) == 0
-
-    def test_post_if_already_member(self, client, mailoutbox, member):
-
-        admin = UserFactory()
-        Membership.objects.create(
-            community=member.community, member=admin, role=Membership.ROLES.admin,
-        )
-        response = client.post(reverse("join_requests:create"))
-        assert response.url == reverse("community_welcome")
-        assert not JoinRequest.objects.exists()
-        assert len(mailoutbox) == 0
-
-    def test_post_if_already_request(self, client, mailoutbox, community, login_user):
-
-        admin = UserFactory()
-        Membership.objects.create(
-            community=community, member=admin, role=Membership.ROLES.admin
-        )
-
-        JoinRequest.objects.create(community=community, sender=login_user)
-
-        response = client.post(reverse("join_requests:create"))
-
-        assert response.url == reverse("community_welcome")
-        assert JoinRequest.objects.count() == 1
-        assert len(mailoutbox) == 0
 
 
 class TestJoinRequestAcceptView:

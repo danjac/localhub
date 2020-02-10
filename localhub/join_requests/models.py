@@ -36,9 +36,10 @@ class JoinRequest(TimeStampedModel):
 
     intro = models.TextField(
         blank=True,
+        verbose_name=_("Introduction"),
         help_text=_(
             "Tell us a little bit about yourself and why you "
-            "would like to join this community (Optional)"
+            "would like to join this community (Optional)."
         ),
     )
 

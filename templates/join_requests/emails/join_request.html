@@ -14,6 +14,7 @@
 </p>
 
 <p>
+  <a href="{{ detail_url }}">
   {% if sender %}
   {% blocktrans %}
   {{ sender }} has requested to join this community.
@@ -23,6 +24,7 @@
   You have received a request from {{ email }} to join this community.
   {% endblocktrans %}
   {% endif %}
+  </a>
 </p>
 
 <p>

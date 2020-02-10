@@ -21,11 +21,11 @@
   {% if join_request %}
 
   {% if join_request.is_pending %}
-  {% blocktrans %}
   <strong>
+  {% blocktrans %}
     Your request for an invite has been sent to the community admins. You will receive an email when they have made their decision.
-  </strong>
   {% endblocktrans %}
+  </strong>
   {% endif %}
 
   {% elif community.allow_join_requests %}

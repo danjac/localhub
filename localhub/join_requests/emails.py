@@ -11,6 +11,9 @@ from django.utils.translation import override
 def send_join_request_email(join_request):
     context = {
         "join_request": join_request,
+        "detail_url": join_request.community.resolve_url(
+            join_request.get_absolute_url()
+        ),
         "list_url": join_request.community.resolve_url(reverse("join_requests:list")),
     }
 

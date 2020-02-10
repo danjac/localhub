@@ -110,6 +110,7 @@ join_request_detail_view = JoinRequestDetailView.as_view()
 
 
 class JoinRequestDeleteView(JoinRequestManageMixin, DeleteView):
+    model = JoinRequest
     success_url = reverse_lazy("join_requests:list")
 
     def post(self, request, *args, **kwargs):
@@ -149,7 +150,11 @@ class JoinRequestAcceptView(JoinRequestActionView):
         )
         if created:
             send_acceptance_email(self.object)
-            messages.success(request, _("Join request has been accepted"))
+            messages.success(
+                request,
+                _("Join request for %(sender)s has been accepted")
+                % {"sender": user_display(self.object.sender)},
+            )
             for notification in self.object.sender.notify_on_join(
                 self.object.community
             ):
@@ -173,7 +178,11 @@ class JoinRequestRejectView(JoinRequestActionView):
 
         send_rejection_email(self.object)
 
-        messages.info(self.request, _("Join request has been rejected"))
+        messages.info(
+            request,
+            _("Join request for %(sender)s has been rejected")
+            % {"sender": user_display(self.object.sender)},
+        )
 
         return HttpResponseRedirect(self.get_success_url())
 
@@ -181,11 +190,17 @@ class JoinRequestRejectView(JoinRequestActionView):
 join_request_reject_view = JoinRequestRejectView.as_view()
 
 
-class JoinRequestCreateView(CommunityRequiredMixin, CreateView):
+class JoinRequestCreateView(
+    PermissionRequiredMixin, CommunityRequiredMixin, CreateView
+):
     model = JoinRequest
     form_class = JoinRequestForm
     template_name = "join_requests/joinrequest_form.html"
     allow_non_members = True
+    permission_required = "join_requests.create"
+
+    def get_permission_object(self):
+        return self.request.community
 
     def get_form(self, *args, **kwargs):
         return self.get_form_class()(

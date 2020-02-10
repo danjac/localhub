@@ -66,11 +66,10 @@ class CommunityWelcomeView(CommunityRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data["join_request"] = not is_member(
-            self.request.user, self.request.community
-        ) and JoinRequest.objects.filter(
-            sender=self.request.user, community=self.request.community
-        )
+        if not is_member(self.request.user, self.request.community):
+            data["join_request"] = JoinRequest.objects.filter(
+                sender=self.request.user, community=self.request.community
+            ).first()
         return data
 
 
