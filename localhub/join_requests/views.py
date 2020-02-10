@@ -97,9 +97,11 @@ join_request_list_view = JoinRequestListView.as_view()
 
 
 class JoinRequestDetailView(JoinRequestManageMixin, BreadcrumbsMixin, DetailView):
+    model = JoinRequest
+
     def get_breadcrumbs(self):
         return [
-            (reverse("joinrequests:list"), _("Join Requests")),
+            (reverse("join_requests:list"), _("Join Requests")),
             (None, user_display(self.object.sender)),
         ]
 
@@ -108,14 +110,25 @@ join_request_detail_view = JoinRequestDetailView.as_view()
 
 
 class JoinRequestDeleteView(JoinRequestManageMixin, DeleteView):
-    ...
+    success_url = reverse_lazy("join_requests:list")
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+
+        messages.success(
+            request,
+            _("Join request for %(sender)s has been deleted")
+            % {"sender": user_display(self.object.sender)},
+        )
+
+        return redirect(self.get_success_url())
 
 
 join_request_delete_view = JoinRequestDeleteView.as_view()
 
 
 class JoinRequestActionView(JoinRequestManageMixin, GenericModelView):
-
     success_url = reverse_lazy("join_requests:list")
 
     def get_queryset(self):
