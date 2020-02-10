@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.db.models import Case, IntegerField, Value, When
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from rules.contrib.views import PermissionRequiredMixin
@@ -21,7 +21,8 @@ from vanilla import (
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.notifications import send_user_notification
-from localhub.views import SearchMixin
+from localhub.users.utils import user_display
+from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from .emails import (
     send_acceptance_email,
@@ -95,8 +96,12 @@ class JoinRequestListView(JoinRequestManageMixin, SearchMixin, ListView):
 join_request_list_view = JoinRequestListView.as_view()
 
 
-class JoinRequestDetailView(JoinRequestManageMixin, DetailView):
-    ...
+class JoinRequestDetailView(JoinRequestManageMixin, BreadcrumbsMixin, DetailView):
+    def get_breadcrumbs(self):
+        return [
+            (reverse("joinrequests:list"), _("Join Requests"))
+            (None, user_display(self.object.sender)),
+        ]
 
 
 class JoinRequestDeleteView(JoinRequestManageMixin, DeleteView):
