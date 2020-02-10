@@ -239,7 +239,7 @@ class Base(Configuration):
                         "django.template.context_processors.tz",
                         "django.contrib.messages.context_processors.messages",
                         "localhub.communities.context_processors.community",
-                        "localhub.users.context_processors.user_preferences",
+                        "localhub.template.context_processors.darkmode",
                     ],
                     "libraries": {
                         "pagination_tags": "localhub.pagination.templatetags",
