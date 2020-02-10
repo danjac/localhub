@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count, Q
+from django.db.models import Count, F, Q
 from django.forms import ModelForm
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
@@ -176,6 +176,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
                         notification__is_read=False,
                         notification__actor__pk__in=self.get_available_users(),
                         notification__actor__membership__active=True,
+                        notification__actor__membership__community=F("pk"),
                     ),
                     distinct=True,
                 )
@@ -207,6 +208,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
                         message__read__isnull=True,
                         message__sender__pk__in=self.get_available_users(),
                         message__sender__membership__active=True,
+                        message__sender__membership__community=F("pk"),
                     ),
                     distinct=True,
                 )
