@@ -9,6 +9,13 @@
 
 <h3>{% trans "Join Requests" %}</h3>
 
+{% if not community.allow_join_requests %}
+<p class="toast text-center my-2">
+  {% url 'communities:community_update' as settings_url %}
+  {% blocktrans %}Join requests are currently disabled for this community. You can re-enable them <a href="{{ settings_url }}">in your community settings</a>.{% endblocktrans %}
+</p>
+{% endif %}
+
 {% if total_count %}
 <div class="actions">
     {% if status %}
