@@ -259,31 +259,6 @@ class MessageDetailView(MessageQuerySetMixin, DetailView):
 message_detail_view = MessageDetailView.as_view()
 
 
-class MessageUpdateView(
-    SenderQuerySetMixin, BreadcrumbsMixin, SuccessMessageMixin, UpdateView
-):
-    form_class = MessageForm
-    model = Message
-
-    def get_success_message(self, cleaned_data):
-        return _("Your message has been updated")
-
-    def get_breadcrumbs(self):
-        return [
-            (reverse("private_messages:outbox"), _("Outbox")),
-            (self.object.get_absolute_url, self.object.abbreviate()),
-            (None, _("Edit Message")),
-        ]
-
-    def get_form(self, *args, **kwargs):
-        form = super().get_form(*args, **kwargs)
-        form.fields["message"].label = _("Edit Message")
-        return form
-
-
-message_update_view = MessageUpdateView.as_view()
-
-
 class MessageDeleteView(SenderQuerySetMixin, DeleteView):
     model = Message
 

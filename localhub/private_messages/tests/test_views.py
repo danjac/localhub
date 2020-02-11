@@ -29,31 +29,6 @@ class TestOutboxView:
         assert len(response.context["object_list"]) == 1
 
 
-class TestMessageUpdateView:
-    def test_get(self, client, member):
-        recipient = MembershipFactory(community=member.community).member
-        message = MessageFactory(
-            community=member.community, sender=member.member, recipient=recipient,
-        )
-        response = client.get(
-            reverse("private_messages:message_update", args=[message.id])
-        )
-        assert response.status_code == 200
-
-    def test_post(self, client, member):
-        recipient = MembershipFactory(community=member.community).member
-        message = MessageFactory(
-            community=member.community, sender=member.member, recipient=recipient,
-        )
-        response = client.post(
-            reverse("private_messages:message_update", args=[message.id]),
-            {"message": "updated"},
-        )
-        assert response.url == message.get_absolute_url()
-        message.refresh_from_db()
-        assert message.message == "updated"
-
-
 class TestMessageDeleteView:
     def test_post(self, client, member):
         recipient = MembershipFactory(community=member.community).member
