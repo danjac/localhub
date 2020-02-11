@@ -38,9 +38,7 @@ class JoinRequestQuerySetMixin(CommunityRequiredMixin):
         return JoinRequest.objects.filter(community=self.request.community)
 
 
-class JoinRequestManageMixin(
-    PermissionRequiredMixin, JoinRequestQuerySetMixin
-):
+class JoinRequestManageMixin(PermissionRequiredMixin, JoinRequestQuerySetMixin):
     permission_required = "communities.manage_community"
 
     def get_permission_object(self):
@@ -94,9 +92,7 @@ class JoinRequestListView(JoinRequestManageMixin, SearchMixin, ListView):
 join_request_list_view = JoinRequestListView.as_view()
 
 
-class JoinRequestDetailView(
-    JoinRequestManageMixin, BreadcrumbsMixin, DetailView
-):
+class JoinRequestDetailView(JoinRequestManageMixin, BreadcrumbsMixin, DetailView):
     model = JoinRequest
 
     def get_breadcrumbs(self):
@@ -142,10 +138,7 @@ class JoinRequestAcceptView(JoinRequestActionView):
             super()
             .get_queryset()
             .filter(
-                status__in=(
-                    JoinRequest.STATUS.pending,
-                    JoinRequest.STATUS.rejected,
-                )
+                status__in=(JoinRequest.STATUS.pending, JoinRequest.STATUS.rejected,)
             )
         )
 
@@ -170,9 +163,7 @@ class JoinRequestAcceptView(JoinRequestActionView):
                 send_user_notification(self.object.sender, notification)
 
         else:
-            messages.error(
-                request, _("User already belongs to this community")
-            )
+            messages.error(request, _("User already belongs to this community"))
 
         return HttpResponseRedirect(self.get_success_url())
 
@@ -228,8 +219,7 @@ class JoinRequestCreateView(
         send_join_request_email(join_request)
 
         messages.success(
-            self.request,
-            _("Your request has been sent to the community admins"),
+            self.request, _("Your request has been sent to the community admins"),
         )
 
         return redirect("community_welcome")

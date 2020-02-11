@@ -5,7 +5,6 @@ from django.urls import reverse
 from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
 from localhub.notifications.models import Notification
-from localhub.users.factories import UserFactory
 
 from ..factories import InviteFactory
 from ..models import Invite
@@ -67,21 +66,21 @@ class TestInviteDeleteView:
 
 
 class TestInviteAcceptView:
-    def test_current_user_is_member(self, client, community, member):
+    def test_get_current_user_is_member(self, client, community, member):
         invite = InviteFactory(community=member.community, email=member.member.email)
         response = client.get(reverse("invites:accept", args=[invite.id]))
         assert response.url == settings.HOME_PAGE_URL
         invite.refresh_from_db()
-        assert invite.is_accepted()
+        assert invite.is_rejected()
 
-    def test_current_user_has_wrong_email(self, client, community, member):
+    def test_get_current_user_has_wrong_email(self, client, community, member):
         invite = InviteFactory(community=member.community)
         response = client.get(reverse("invites:accept", args=[invite.id]))
         assert response.url == settings.HOME_PAGE_URL
         invite.refresh_from_db()
         assert invite.is_rejected()
 
-    def test_current_user_is_not_member(
+    def test_get_current_user_is_not_member(
         self, client, community, login_user, mailoutbox, send_notification_webpush_mock,
     ):
         sender = MembershipFactory(community=community).member
@@ -91,6 +90,57 @@ class TestInviteAcceptView:
             community=community, email=login_user.email, sender=sender
         )
         response = client.get(reverse("invites:accept", args=[invite.id]))
+        assert response.status_code == 200
+        invite.refresh_from_db()
+        assert invite.is_pending()
+
+    def test_post_current_user_is_member(self, client, community, member):
+        invite = InviteFactory(community=member.community, email=member.member.email)
+        response = client.post(reverse("invites:accept", args=[invite.id]))
+        assert response.url == settings.HOME_PAGE_URL
+        invite.refresh_from_db()
+        assert invite.is_rejected()
+
+    def test_post_current_user_has_wrong_email(self, client, community, login_user):
+        invite = InviteFactory(community=community)
+        response = client.post(reverse("invites:accept", args=[invite.id]))
+        assert response.url == settings.HOME_PAGE_URL
+        invite.refresh_from_db()
+        assert invite.is_rejected()
+
+    def test_post_user_rejects(self, client, community, login_user, mailoutbox):
+        sender = MembershipFactory(community=community).member
+        sender.notification_preferences = ["new_member"]
+        sender.save()
+        invite = InviteFactory(
+            community=community, email=login_user.email, sender=sender
+        )
+        response = client.post(
+            reverse("invites:accept", args=[invite.id]), {"reject": 1},
+        )
+
+        assert not Membership.objects.filter(
+            community=community, member=login_user
+        ).exists()
+
+        assert response.url == settings.HOME_PAGE_URL
+        invite.refresh_from_db()
+        assert invite.is_rejected()
+
+        assert not Notification.objects.filter(recipient=sender).exists()
+        assert len(mailoutbox) == 0
+
+    def test_post_user_accepts(self, client, community, login_user, mailoutbox):
+        sender = MembershipFactory(community=community).member
+        sender.notification_preferences = ["new_member"]
+        sender.save()
+        invite = InviteFactory(
+            community=community, email=login_user.email, sender=sender
+        )
+        response = client.post(
+            reverse("invites:accept", args=[invite.id]), {"accept": 1},
+        )
+
         assert response.url == settings.HOME_PAGE_URL
         assert Membership.objects.filter(
             community=community, member=login_user
@@ -100,14 +150,3 @@ class TestInviteAcceptView:
         assert Notification.objects.filter(recipient=sender).exists()
         assert len(mailoutbox) == 1
         assert mailoutbox[0].to == [sender.email]
-
-    def test_invalid_invite(self, client, community, login_user):
-        user = UserFactory()
-        invite = InviteFactory(community=community, email=user.email)
-        response = client.get(reverse("invites:accept", args=[invite.id]))
-        assert response.url == settings.HOME_PAGE_URL
-        assert not Membership.objects.filter(
-            community=community, member=login_user
-        ).exists()
-        invite.refresh_from_db()
-        assert invite.is_rejected()

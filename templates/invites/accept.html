@@ -1,0 +1,23 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "no_sidebar_base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<h3>{% trans "Accept Invitation" %}</h3>
+
+<form method="POST">
+  {% csrf_token %}
+  <p>
+    {% blocktrans with community=community.name %}
+    You have been invited to join the community <b>{{ community }}</b>. If you click the option <b>Accept</b> you will be added as a new member.
+    {% endblocktrans %}
+  </p>
+
+  <button type="submit" class="btn btn-primary" name="accept" value="1">{% trans "Accept" %}</button>
+  <button type="submit" class="btn btn-secondary" name="reject" value="1">{% trans "Reject" %}</button>
+</form>
+
+{% endblock content %}

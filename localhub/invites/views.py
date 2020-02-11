@@ -3,15 +3,21 @@
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import CreateView, DeleteView, GenericModelView, ListView
+from vanilla import (
+    CreateView,
+    DeleteView,
+    GenericModelView,
+    ListView,
+    DetailView,
+)
 
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
@@ -72,7 +78,7 @@ class InviteCreateView(
             self.request, _("Your invitation has been sent to %s") % invite.email,
         )
 
-        return HttpResponseRedirect(self.get_success_url())
+        return redirect(self.get_success_url())
 
 
 invite_create_view = InviteCreateView.as_view()
@@ -111,62 +117,84 @@ class InviteDeleteView(
 invite_delete_view = InviteDeleteView.as_view()
 
 
-class InviteAcceptView(BaseSingleInviteView):
+class InviteAcceptView(InviteQuerySetMixin, DetailView):
     """
     Handles an invite accept action.
-
-    If no current user matches the invite email, then redirects
-    the user to sign up (on sign up they are redirected back here to complete
-    the invite process).
 
     If user matches then a new membership instance is created for the
     community and the invite is flagged accordingly.
     """
 
     allow_non_members = True
+    template_name = "invites/accept.html"
 
     def get_queryset(self):
-        # TBD: add a deadline of e.g. 3 days
         return super().get_queryset().filter(status=Invite.STATUS.pending)
 
     def get(self, request, *args, **kwargs):
+
         self.object = self.get_object()
-        user = get_user_model().objects.for_email(self.object.email).first()
+        if response := self.validate_invite():
+            return response
 
-        if user == request.user:
-            return self.handle_current_user()
+        return self.render_to_response(self.get_context_data())
 
-        return self.handle_invalid_invite()
+    def post(self, request, *args, **kwargs):
 
-    def get_success_url(self):
+        self.object = self.get_object()
+
+        if response := self.validate_invite():
+            return response
+
+        if "reject" in request.POST:
+            self.reject_invite()
+            messages.info(request, _("Your invitation has been rejected"))
+            return redirect(self.get_redirect_url())
+
+        try:
+            Membership.objects.create(
+                member=request.user, community=self.object.community
+            )
+            messages.success(
+                request,
+                _("Welcome to %(community)s")
+                % {"community": self.object.community.name},
+            )
+            for notification in request.user.notify_on_join(self.object.community):
+                send_user_notification(request.user, notification)
+        except IntegrityError:
+            pass
+
+        self.accept_invite()
+
+        return redirect(self.get_redirect_url())
+
+    def get_redirect_url(self):
         return settings.HOME_PAGE_URL
 
-    def handle_current_user(self):
-        _membership, created = Membership.objects.get_or_create(
-            member=self.request.user, community=self.object.community
-        )
-
-        if created:
-            message = _("Welcome to %s") % self.object.community.name
-            for notification in self.request.user.notify_on_join(self.object.community):
-                send_user_notification(self.request.user, notification)
-        else:
-            message = _("You are already a member of this community")
-
-        messages.success(self.request, message)
-
-        self.object.status = Invite.STATUS.accepted
+    def save_new_status(self, status):
+        self.object.status = status
         self.object.save()
 
-        return HttpResponseRedirect(self.get_success_url())
+    def accept_invite(self):
+        self.save_new_status(Invite.STATUS.accepted)
 
-    def handle_invalid_invite(self):
-        messages.error(self.request, _("This invite is invalid"))
+    def reject_invite(self):
+        self.save_new_status(Invite.STATUS.rejected)
 
-        self.object.status = Invite.STATUS.rejected
-        self.object.save()
-
-        return HttpResponseRedirect(self.get_success_url())
+    def validate_invite(self):
+        try:
+            if Membership.objects.filter(
+                community=self.request.community, member=self.request.user
+            ).exists():
+                raise ValidationError(_("You are already a member of this community."))
+            if self.object.get_recipient() != self.request.user:
+                raise ValidationError(_("This invite is no longer valid"))
+        except ValidationError as e:
+            self.reject_invite()
+            messages.error(self.request, e.message)  # noqa
+            return redirect(self.get_redirect_url())
+        return None
 
 
 invite_accept_view = InviteAcceptView.as_view()
