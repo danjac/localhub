@@ -9,6 +9,19 @@ from .models import Message
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
 
-    raw_id_fields = ("sender", "recipient", "parent", "thread")
-    readonly_fields = ("sender", "recipient", "parent", "thread", "message")
+    readonly_fields = (
+        "sender",
+        "recipient",
+        "parent",
+        "thread",
+        "message",
+        "community",
+        "read",
+    )
+    list_display = ("sender", "recipient", "created")
+    search_fields = (
+        "search_document",
+        "recipient__username",
+        "sender__username",
+    )
     ordering = ("-created",)
