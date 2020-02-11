@@ -9,6 +9,7 @@ from django.db import IntegrityError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import (
@@ -22,6 +23,7 @@ from vanilla import (
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.notifications import send_user_notification
+from localhub.views import SearchMixin
 
 from .emails import send_invitation_email
 from .forms import InviteForm
@@ -41,11 +43,44 @@ class InviteAdminMixin(LoginRequiredMixin, PermissionRequiredMixin):
     permission_required = "communities.manage_community"
 
 
-class InviteListView(InviteAdminMixin, InviteQuerySetMixin, ListView):
+class InviteListView(InviteAdminMixin, InviteQuerySetMixin, SearchMixin, ListView):
     model = Invite
+    paginate_by = settings.DEFAULT_PAGE_SIZE
 
     def get_permission_object(self):
         return self.request.community
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if self.search_query:
+            qs = qs.filter(email__icontains=self.search_query)
+
+        if self.status:
+            qs = qs.filter(status=self.status)
+
+        return qs
+
+    @cached_property
+    def status(self):
+        status = self.request.GET.get("status")
+        if status in Invite.STATUS and self.total_count:
+            return status
+        return None
+
+    @cached_property
+    def total_count(self):
+        return super().get_queryset().count()
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data.update(
+            {
+                "total_count": self.total_count,
+                "status": self.status,
+                "status_choices": list(Invite.STATUS),
+            }
+        )
+        return data
 
 
 invite_list_view = InviteListView.as_view()
