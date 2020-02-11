@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
@@ -15,15 +15,15 @@ from rules.contrib.views import PermissionRequiredMixin
 from vanilla import (
     CreateView,
     DeleteView,
+    DetailView,
     GenericModelView,
     ListView,
-    DetailView,
 )
 
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.notifications import send_user_notification
-from localhub.views import SearchMixin
+from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from .emails import send_invitation_email
 from .forms import InviteForm
@@ -87,7 +87,7 @@ invite_list_view = InviteListView.as_view()
 
 
 class InviteCreateView(
-    InviteAdminMixin, CommunityRequiredMixin, CreateView,
+    InviteAdminMixin, CommunityRequiredMixin, BreadcrumbsMixin, CreateView
 ):
     model = Invite
     form_class = InviteForm
@@ -95,6 +95,9 @@ class InviteCreateView(
 
     def get_permission_object(self):
         return self.request.community
+
+    def get_breadcrumbs(self):
+        return [(reverse("invites:list"), _("Invites")), (None, _("Send invite"))]
 
     def get_form(self, data=None, files=None):
         return self.form_class(self.request.community, data, files)
