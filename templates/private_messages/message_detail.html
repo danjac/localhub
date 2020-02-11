@@ -11,12 +11,6 @@
 <div class="actions">
     <a href="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</a>
     <a href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
-    {% if previous_message %}
-    <a href="{{ previous_message.get_absolute_url }}">{% trans "Previous" %}</a>
-    {% endif %}
-    {% if next_message %}
-    <a href="{{ next_message.get_absolute_url }}">{% trans "Next" %}</a>
-    {% endif %}
 </div>
 
 <div class="divider"></div>
@@ -24,7 +18,7 @@
 {% if replies %}
 <div class="divider text-center" data-content="{% trans 'Replies' %}"></div>
 {% for reply in replies %}
-{% show_message user reply show_parent_info=False %}
+{% show_message user reply show_thread_info=False %}
 {% endfor %}
 {% endif %}
 {% endblock content %}

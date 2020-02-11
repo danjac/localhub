@@ -19,9 +19,9 @@
                 {% trans "to" %}
                 {% include "users/includes/chip.html" with profile=message.recipient profile_url=recipient_url %}
                 {% endif %}
-                {% if show_parent_info and message.parent %}
+                {% if parent %}
                 {% trans "in reply to" %}
-                <a href="{{ message.parent.get_absolute_url }}">{{ message.parent.abbreviate }}</a>
+                <a href="{{ parent.get_absolute_url }}">{{ parent.abbreviate }}</a>
                 {% endif %}
             </div>
         </div>
@@ -36,6 +36,11 @@
     <div class="card-footer">
         <div class="actions">
             <a href="{{ message.get_permalink }}">{% trans "Permalink" %}</a>
+            {% if message.has_thread and not is_detail %}
+            <a href="{{ message.get_absolute_url }}">{% trans "Thread" %}</a>
+            {% elif message.thread and show_thread_info %}
+            <a href="{{ message.thread.get_absolute_url }}">{% trans "Thread" %}</a>
+            {% endif %}
             {% if is_recipient %}
             <a href="{% url 'private_messages:message_hide' message.id %}"
                class="d-hide"

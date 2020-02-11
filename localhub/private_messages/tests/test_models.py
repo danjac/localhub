@@ -144,6 +144,27 @@ class TestMessageManager:
         assert third not in messages
         assert fourth not in messages
 
+    def test_has_thread(self, user):
+        first = MessageFactory(sender=user)
+        MessageFactory(recipient=user, thread=first)
+
+        message = Message.objects.with_has_thread(user).get(pk=first.id)
+        assert message.has_thread
+
+    def test_has_thread_if_no_replies(self, user):
+
+        first = MessageFactory(sender=user)
+
+        message = Message.objects.with_has_thread(user).get(pk=first.id)
+        assert not message.has_thread
+
+    def test_has_thread_if_reply_hidden(self, user):
+        first = MessageFactory(sender=user)
+        MessageFactory(recipient=user, thread=first, is_hidden=True)
+
+        message = Message.objects.with_has_thread(user).get(pk=first.id)
+        assert not message.has_thread
+
     def test_between(self):
 
         user_a = UserFactory()

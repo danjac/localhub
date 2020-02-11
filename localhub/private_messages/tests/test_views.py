@@ -139,16 +139,22 @@ class TestMessageReplyView:
 
     def test_post(self, client, member, send_notification_webpush_mock):
         sender = MembershipFactory(community=member.community).member
+        thread = MessageFactory()
         parent = MessageFactory(
-            sender=sender, recipient=member.member, community=member.community
+            sender=sender,
+            recipient=member.member,
+            community=member.community,
+            parent=thread,
+            thread=thread,
         )
         response = client.post(
             reverse("private_messages:message_reply", args=[parent.id]),
             {"message": "test"},
         )
-        message = Message.objects.filter(parent__isnull=False).get()
+        message = Message.objects.latest("created")
         assert message.get_absolute_url() == response.url
         assert message.parent == parent
+        assert message.thread == thread
         assert message.recipient == parent.sender
         assert message.sender == member.member
         assert message.community == member.community

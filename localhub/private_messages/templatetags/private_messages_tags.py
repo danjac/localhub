@@ -18,7 +18,7 @@ def show_message(
     message,
     show_sender_info=True,
     show_recipient_info=True,
-    show_parent_info=True,
+    show_thread_info=True,
     is_detail=False,
 ):
 
@@ -28,8 +28,8 @@ def show_message(
     inbox_url = reverse("private_messages:inbox")
     outbox_url = reverse("private_messages:outbox")
 
-    show_parent_info = (
-        show_parent_info
+    show_thread_info = (
+        show_thread_info
         and message.parent
         and (is_recipient or (is_sender and not message.parent.is_hidden))
     )
@@ -47,16 +47,21 @@ def show_message(
         "private_messages.create_message", request.community
     )
 
+    parent = message.parent
+    if not show_thread_info and parent == message.thread:
+        parent = None
+
     return {
         "request": request,
         "is_detail": is_detail,
         "is_recipient": is_recipient,
         "is_sender": is_sender,
         "message": message,
+        "parent": parent,
         "recipient_url": recipient_url,
         "sender_url": sender_url,
         "other_user": message.get_other_user(user),
-        "show_parent_info": show_parent_info,
+        "show_thread_info": show_thread_info,
         "show_recipient_info": show_recipient_info,
         "show_sender_info": show_sender_info,
         "can_create_message": can_create_message,

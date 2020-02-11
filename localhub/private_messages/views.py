@@ -5,7 +5,6 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import F
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -20,7 +19,6 @@ from vanilla import (
     FormView,
     GenericModelView,
     ListView,
-    UpdateView,
 )
 
 from localhub.communities.views import CommunityRequiredMixin
@@ -38,7 +36,13 @@ class MessageQuerySetMixin(CommunityRequiredMixin):
             Message.objects.for_community(community=self.request.community)
             .exclude_blocked(self.request.user)
             .select_related(
-                "sender", "recipient", "community", "parent", "parent__sender"
+                "sender",
+                "recipient",
+                "community",
+                "parent",
+                "parent__sender",
+                "thread",
+                "thread__sender",
             )
         )
 
@@ -60,13 +64,13 @@ class BaseMessageListView(SearchMixin, ListView):
 class InboxView(RecipientQuerySetMixin, BaseMessageListView):
     """
     Messages received by current user
-    Here we should show the sender, timestamp...
+    oere we should show the sender, timestamp...
     """
 
     template_name = "private_messages/inbox.html"
 
     def get_queryset(self):
-        qs = super().get_queryset()
+        qs = super().get_queryset().with_has_thread(self.request.user)
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank", "-created")
         return qs.order_by(F("read").desc(nulls_first=True), "-created")
@@ -83,7 +87,7 @@ class OutboxView(SenderQuerySetMixin, BaseMessageListView):
     template_name = "private_messages/outbox.html"
 
     def get_queryset(self):
-        qs = super().get_queryset()
+        qs = super().get_queryset().with_has_thread(self.request.user)
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank", "-created")
         return qs.order_by("-created")
@@ -146,6 +150,7 @@ class MessageReplyView(BreadcrumbsMixin, RecipientQuerySetMixin, BaseMessageForm
         message.sender = self.request.user
         message.recipient = self.recipient
         message.parent = self.parent
+        message.thread = self.parent.thread or self.parent
         message.save()
         messages.success(
             self.request,
@@ -225,30 +230,12 @@ class MessageDetailView(MessageQuerySetMixin, DetailView):
         return super().get_queryset().for_sender_or_recipient(self.request.user)
 
     def get_replies(self):
-        return self.get_queryset().filter(parent=self.object).order_by("created")
-
-    def get_previous_message(self):
-        return (
-            self.get_queryset()
-            .filter(created__lt=self.object.created)
-            .order_by("-created")
-            .first()
-        )
-
-    def get_next_message(self):
-        return (
-            self.get_queryset()
-            .filter(created__gt=self.object.created)
-            .order_by("created")
-            .first()
-        )
+        return self.get_queryset().filter(thread=self.object).order_by("created")
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data.update(
             {
-                "previous_message": self.get_previous_message(),
-                "next_message": self.get_next_message(),
                 "replies": self.get_replies(),
             }
         )

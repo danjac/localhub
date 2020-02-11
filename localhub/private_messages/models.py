@@ -81,6 +81,15 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
     def unread(self):
         return self.filter(read__isnull=True)
 
+    def with_has_thread(self, user):
+        return self.annotate(
+            has_thread=models.Exists(
+                Message.objects.for_sender_or_recipient(user).filter(
+                    thread=models.OuterRef("pk")
+                )
+            )
+        )
+
 
 class Message(TimeStampedModel):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
@@ -95,8 +104,21 @@ class Message(TimeStampedModel):
 
     message = MarkdownField()
 
+    thread = models.ForeignKey(
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="replies",
+    )
+
+    # immediate parent
     parent = models.ForeignKey(
-        "self", null=True, blank=True, on_delete=models.SET_NULL, related_name="+",
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="children",
     )
 
     read = models.DateTimeField(null=True, blank=True)

@@ -107,7 +107,7 @@ class CommunityQuerySet(models.QuerySet):
         """
         try:
             return self.get(
-                active=True, domain__iexact=request.get_host().split(":")[0]
+                active=True, domain__iexact=request.get_host()
             )
         except self.model.DoesNotExist:
             site = get_current_site(request)
