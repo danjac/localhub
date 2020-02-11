@@ -58,7 +58,7 @@ class InviteListView(InviteAdminMixin, InviteQuerySetMixin, SearchMixin, ListVie
         if self.status:
             qs = qs.filter(status=self.status)
 
-        return qs
+        return qs.order_by("-created")
 
     @cached_property
     def status(self):
