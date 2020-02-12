@@ -4,6 +4,9 @@
 {% load i18n %}
 
 {% include "includes/forms/search_form.html" %}
+<p class="toast text-center my-2">
+    {% trans "This is an index of communities available on this host." %}
+</p>
 {% for object in object_list %}
 <div class="card mb-2">
     <div class="card-header">
