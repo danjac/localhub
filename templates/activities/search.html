@@ -8,6 +8,12 @@
 
 {% block content %}
 <h3>{% trans "Search" %}</h3>
+
+<div class="actions">
+  <a href="{% url 'comments:list' %}?q={{ view.search_query }}">{% trans "Search Comments" %}</a>
+  <a href="{% url 'private_messages:inbox' %}?q={{ view.search_query }}">{% trans "Search Messages" %}</a>
+</div>
+
 <div class="divider"></div>
 
 <form method="GET"
