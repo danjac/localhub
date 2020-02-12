@@ -34,7 +34,7 @@ urlpatterns = [
     path("posts/", include("localhub.posts.urls")),
     path("people/", include("localhub.users.urls")),
     path("community/", include("localhub.communities.urls")),
-    path("network/", community_list_view, name="community_list"),
+    path("communities/", community_list_view, name="community_list"),
     path("account/~update", user_update_view, name="user_update"),
     path("account/~delete", user_delete_view, name="user_delete"),
     path("~toggle-darkmode/", darkmode_toggle_view, name="darkmode_toggle"),

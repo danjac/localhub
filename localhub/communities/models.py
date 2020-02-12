@@ -129,7 +129,7 @@ class Community(TimeStampedModel):
     )
 
     tagline = models.TextField(
-        blank=True, help_text=_("Summary shown in your Local Network.")
+        blank=True, help_text=_("Summary shown in Communities index page")
     )
 
     intro = MarkdownField(
@@ -190,7 +190,7 @@ class Community(TimeStampedModel):
 
     listed = models.BooleanField(
         default=True,
-        help_text=_("Community is visible to non-members in Local Network."),
+        help_text=_("Community is visible to non-members in Communities index page."),
     )
 
     allow_join_requests = models.BooleanField(
