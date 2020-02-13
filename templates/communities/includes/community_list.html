@@ -73,10 +73,12 @@
   {% endif %}
   {% endwith %}
   {% elif not object.is_member and object.allow_join_requests %}
-  <div class="actions">
-    <a href="{{ object_url }}{% url 'join_requests:create' %}">
-      {% trans "Request an invite" %}
-    </a>
+  <div class="card-footer">
+    <div class="actions">
+      <a href="{{ object_url }}{% url 'join_requests:create' %}">
+        {% trans "Request an invite" %}
+      </a>
+    </div>
   </div>
   {% endif %}
 </div>
