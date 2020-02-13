@@ -110,7 +110,6 @@
              data-ajax-redirect="/"
              >{% trans "Logout" %}</a>
           {% else %}
-          {% include "includes/mode_toggle.html" with css_class="btn btn-link" %}
           <a class="btn btn-link" href="{% url 'account_login' %}">{% trans "Login" %}</a>
           <a class="btn btn-link" href="{% url 'account_signup' %}">{% trans "Signup" %}</a>
           {% endif %}
