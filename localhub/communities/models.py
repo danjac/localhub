@@ -106,9 +106,7 @@ class CommunityQuerySet(models.QuerySet):
         Returns current community matching request domain if active.
         """
         try:
-            return self.get(
-                active=True, domain__iexact=request.get_host()
-            )
+            return self.get(active=True, domain__iexact=request.get_host())
         except self.model.DoesNotExist:
             site = get_current_site(request)
             return RequestCommunity(request, site.name, site.domain)

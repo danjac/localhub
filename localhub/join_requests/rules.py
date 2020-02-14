@@ -3,7 +3,6 @@
 
 import rules
 
-
 from localhub.communities.rules import is_member
 
 

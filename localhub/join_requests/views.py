@@ -6,17 +6,11 @@ from django.contrib import messages
 from django.db.models import Case, IntegerField, Value, When
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import (
-    CreateView,
-    DeleteView,
-    DetailView,
-    GenericModelView,
-    ListView,
-)
+from vanilla import CreateView, DeleteView, DetailView, GenericModelView, ListView
 
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
@@ -24,11 +18,7 @@ from localhub.users.notifications import send_user_notification
 from localhub.users.utils import user_display
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
-from .emails import (
-    send_acceptance_email,
-    send_join_request_email,
-    send_rejection_email,
-)
+from .emails import send_acceptance_email, send_join_request_email, send_rejection_email
 from .forms import JoinRequestForm
 from .models import JoinRequest
 

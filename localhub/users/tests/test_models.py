@@ -117,6 +117,13 @@ class TestUserManager:
 
 
 class TestUserModel:
+    def test_get_email_addresses(self, user):
+
+        user.emailaddress_set.create(email="test1@gmail.com")
+        emails = user.get_email_addresses()
+        assert user.email in emails
+        assert "test1@gmail.com" in emails
+
     def test_get_blocked_users(self, user):
         blocked = UserFactory()
         blocker = UserFactory()

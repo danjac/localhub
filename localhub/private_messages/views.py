@@ -13,13 +13,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from django.views.generic import View
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import (
-    DeleteView,
-    DetailView,
-    FormView,
-    GenericModelView,
-    ListView,
-)
+from vanilla import DeleteView, DetailView, FormView, GenericModelView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.utils import user_display
@@ -235,9 +229,7 @@ class MessageDetailView(MessageQuerySetMixin, DetailView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data.update(
-            {
-                "replies": self.get_replies(),
-            }
+            {"replies": self.get_replies(),}
         )
 
         return data

@@ -13,6 +13,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DetailView, ListView, TemplateView, UpdateView
 
 from localhub.activities.utils import get_combined_activity_queryset
+from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
 from localhub.views import SearchMixin
 
@@ -70,6 +71,12 @@ class CommunityWelcomeView(CommunityRequiredMixin, TemplateView):
             data["join_request"] = JoinRequest.objects.filter(
                 sender=self.request.user, community=self.request.community
             ).first()
+            data["invite"] = (
+                Invite.objects.pending()
+                .for_user(self.request.user)
+                .filter(community=self.request.community)
+                .first()
+            )
         return data
 
 

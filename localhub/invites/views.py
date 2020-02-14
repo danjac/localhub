@@ -12,13 +12,7 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import (
-    CreateView,
-    DeleteView,
-    DetailView,
-    GenericModelView,
-    ListView,
-)
+from vanilla import CreateView, DeleteView, DetailView, GenericModelView, ListView
 
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin

@@ -17,14 +17,17 @@
 {% endif %}
 
 <p>
-
-  {% if join_request %}
-
+  {% if invite %}
+  {% url 'invites:accept' invite.id as invite_url %}
+    {% blocktrans %}
+    You have a pending invite. Please go <a href="{{ invite_url }}">here</a> to accept or reject your invite.
+    {% endblocktrans %}
+  {% elif join_request %}
   {% if join_request.is_pending %}
   <strong>
-  {% blocktrans %}
+    {% blocktrans %}
     Your request for an invite has been sent to the community admins. You will receive an email when they have made their decision.
-  {% endblocktrans %}
+    {% endblocktrans %}
   </strong>
   {% endif %}
 
@@ -37,9 +40,9 @@
 
   {% else %}
   <b>
-  {% blocktrans %}
-  This community is locked and new members are accepted only by private invitation.
-  {% endblocktrans %}
+    {% blocktrans %}
+    This community is locked and new members are accepted only by private invitation.
+    {% endblocktrans %}
   </b>
   {% endif %}
 </p>

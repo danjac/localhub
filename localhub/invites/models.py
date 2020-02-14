@@ -14,6 +14,20 @@ from model_utils.models import TimeStampedModel
 from localhub.communities.models import Community
 
 
+class InviteQuerySet(models.QuerySet):
+    def for_user(self, user):
+        return self.filter(email__in=user.get_email_addresses())
+
+    def pending(self):
+        return self.filter(status=self.model.STATUS.pending)
+
+    def accepted(self):
+        return self.filter(status=self.model.STATUS.accepted)
+
+    def rejected(self):
+        return self.filter(status=self.model.STATUS.rejected)
+
+
 class Invite(TimeStampedModel):
     STATUS = Choices(
         ("pending", _("Pending")),
@@ -32,6 +46,8 @@ class Invite(TimeStampedModel):
     sent = models.DateTimeField(null=True, blank=True)
 
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    objects = InviteQuerySet.as_manager()
 
     class Meta:
         unique_together = ("email", "community")
