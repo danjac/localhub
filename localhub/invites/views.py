@@ -121,7 +121,7 @@ class InviteResendView(InviteAdminMixin, BaseSingleInviteView):
         return self.request.community
 
     def get_queryset(self):
-        return super().get_queryset().filter(status=Invite.STATUS.pending)
+        return super().get_queryset().pending()
 
     def post(self, request, *args, **kwargs):
         invite = self.get_object()
@@ -161,7 +161,7 @@ class InviteAcceptView(InviteQuerySetMixin, DetailView):
     template_name = "invites/accept.html"
 
     def get_queryset(self):
-        return super().get_queryset().filter(status=Invite.STATUS.pending)
+        return super().get_queryset().pending().for_user(self.request.user)
 
     def get(self, request, *args, **kwargs):
 
@@ -220,8 +220,6 @@ class InviteAcceptView(InviteQuerySetMixin, DetailView):
                 community=self.request.community, member=self.request.user
             ).exists():
                 raise ValidationError(_("You are already a member of this community."))
-            if self.object.get_recipient() != self.request.user:
-                raise ValidationError(_("This invite is no longer valid"))
         except ValidationError as e:
             self.reject_invite()
             messages.error(self.request, e.message)  # noqa

@@ -273,6 +273,6 @@ class User(AbstractUser):
         return notifications
 
     def get_email_addresses(self):
-        return [self.email] + list(
-            self.emailaddress_set.values_list("email", flat=True)
+        return set(
+            [self.email] + list(self.emailaddress_set.values_list("email", flat=True))
         )

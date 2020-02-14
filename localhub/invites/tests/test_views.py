@@ -76,9 +76,9 @@ class TestInviteAcceptView:
     def test_get_current_user_has_wrong_email(self, client, community, member):
         invite = InviteFactory(community=member.community)
         response = client.get(reverse("invites:accept", args=[invite.id]))
-        assert response.url == settings.HOME_PAGE_URL
+        assert response.status_code == 404
         invite.refresh_from_db()
-        assert invite.is_rejected()
+        assert invite.is_pending()
 
     def test_get_current_user_is_not_member(
         self, client, community, login_user, mailoutbox, send_notification_webpush_mock,
@@ -104,9 +104,9 @@ class TestInviteAcceptView:
     def test_post_current_user_has_wrong_email(self, client, community, login_user):
         invite = InviteFactory(community=community)
         response = client.post(reverse("invites:accept", args=[invite.id]))
-        assert response.url == settings.HOME_PAGE_URL
+        assert response.status_code == 404
         invite.refresh_from_db()
-        assert invite.is_rejected()
+        assert invite.is_pending()
 
     def test_post_user_rejects(self, client, community, login_user, mailoutbox):
         sender = MembershipFactory(community=community).member

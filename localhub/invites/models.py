@@ -4,7 +4,6 @@
 import uuid
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from model_utils import Choices
@@ -63,6 +62,3 @@ class Invite(TimeStampedModel):
 
     def is_rejected(self):
         return self.status == self.STATUS.rejected
-
-    def get_recipient(self):
-        return get_user_model().objects.for_email(self.email).first()
