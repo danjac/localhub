@@ -10,6 +10,7 @@ stages:
 
 services:
   - docker:stable-dind
+  - postgres
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
