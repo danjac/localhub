@@ -9,8 +9,7 @@ stages:
   - deploy
 
 services:
-  - docker:19.03.5-dind
-  # - docker:stable-dind
+  - docker:stable-dind
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
