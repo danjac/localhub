@@ -273,6 +273,9 @@ class User(AbstractUser):
         return notifications
 
     def get_email_addresses(self):
+        """
+        Get set of emails belonging to user.
+        """
         return set([self.email]) | set(
             self.emailaddress_set.values_list("email", flat=True)
         )
