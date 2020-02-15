@@ -11,13 +11,13 @@ stages:
 services:
   - docker:19.03.5-dind
   # - docker:stable-dind
+
 cache:
   key: ${CI_COMMIT_REF_SLUG}
 
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
-  DOCKER_TLS_CERTDIR: ""
   DATABASE_URL: postgres://postgres@postgres:5432/postgres
   SECRET_KEY: ${SECRET_KEY}
   AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
