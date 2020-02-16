@@ -20,7 +20,7 @@ volumes:
 
 services:
   postgres:
-    image: postgres:9.6
+    image: postgres:11.7
     environment:
       # for development only!
       - POSTGRES_PASSWORD=password
