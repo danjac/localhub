@@ -16,9 +16,7 @@ class Command(BaseCommand):
             "domain", help="Community domain e.g. mydomain.localhub.social"
         )
         parser.add_argument("name", help="Full name of the community")
-        parser.add_argument(
-            "--admin", default=None, help="Username of admin user"
-        )
+        parser.add_argument("--admin", default=None, help="Username of admin user")
 
     def handle(self, *args, **options):
 
