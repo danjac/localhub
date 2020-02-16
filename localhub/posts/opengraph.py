@@ -1,6 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import logging
 from dataclasses import dataclass
 from urllib.parse import urlparse
 
@@ -17,6 +18,9 @@ FAKE_BROWSER_USER_AGENT = (
 
 
 IGNORE_FAKE_BROWSER_HEADERS = ("tumblr.com",)
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -45,8 +49,9 @@ def get_opengraph_from_url(url):
         if not response.ok or "text/html" not in response.headers.get(
             "Content-Type", ""
         ):
-            raise ValueError
-    except (requests.RequestException, ValueError):
+            raise ValueError("URL does not return valid HTML response")
+    except (requests.RequestException, ValueError) as e:
+        logger.error("Error fetching response for URL %s: %s", url, e)
         return Opengraph(None, None, None)
 
     return get_opengraph_from_html(response.content)
