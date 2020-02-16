@@ -5,7 +5,7 @@ version: '3.4'
 
 x-env:
   &default-env
-  DATABASE_URL: postgres://postgres@postgres:5432/postgres
+  DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
   REDIS_URL: redis://redis:6379/0
   DJANGO_EMAIL_HOST: mailhog
   DJANGO_EMAIL_PORT: 1025
@@ -23,7 +23,7 @@ services:
     image: postgres:9.6
     environment:
       # for development only!
-      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_PASSWORD=password
     volumes:
       - pg_data:/var/lib/postgresql/data
 
