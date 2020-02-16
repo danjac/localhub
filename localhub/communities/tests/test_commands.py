@@ -13,14 +13,10 @@ pytestmark = pytest.mark.django_db
 class TestCreateCommunity:
     def test_community_with_domain_already_exists(self, community):
         with pytest.raises(CommandError):
-            call_command(
-                "createcommunity", community.domain, community.name
-            )
+            call_command("createcommunity", community.domain, community.name)
 
     def test_with_new_domain(self):
-        call_command(
-            "createcommunity", "mydomain.localhub.social", "My Domain"
-        )
+        call_command("createcommunity", "mydomain.localhub.social", "My Domain")
         community = Community.objects.first()
         assert community.name == "My Domain"
         assert community.domain == "mydomain.localhub.social"
@@ -29,10 +25,7 @@ class TestCreateCommunity:
     def test_with_new_domain_and_nonexistent_user(self):
         with pytest.raises(CommandError):
             call_command(
-                "createcommunity",
-                "mydomain.localhub.social",
-                "My Domain",
-                admin="me",
+                "createcommunity", "mydomain.localhub.social", "My Domain", admin="me",
             )
         community = Community.objects.first()
         assert community is None

@@ -6,6 +6,7 @@ from urllib.parse import urlparse
 
 import requests
 from bs4 import BeautifulSoup
+from django.conf import settings
 
 from localhub.utils.urls import is_image_url, is_url
 
@@ -15,9 +16,7 @@ FAKE_BROWSER_USER_AGENT = (
 )
 
 
-IGNORE_FAKE_BROWSER_HEADERS = (
-    "tumblr.com",
-)
+IGNORE_FAKE_BROWSER_HEADERS = ("tumblr.com",)
 
 
 @dataclass
@@ -40,7 +39,9 @@ def get_opengraph_from_url(url):
         return Opengraph(None, None, None)
 
     try:
-        response = requests.get(url, headers=get_request_headers(url))
+        response = requests.get(
+            url, headers=get_request_headers(url), proxies=get_proxies()
+        )
         if not response.ok or "text/html" not in response.headers.get(
             "Content-Type", ""
         ):
@@ -93,6 +94,13 @@ def get_request_headers(url):
     for domain in IGNORE_FAKE_BROWSER_HEADERS:
         if netloc.endswith(domain):
             return {}
-    return {
-        "User-Agent": FAKE_BROWSER_USER_AGENT
-    }
+    return {"User-Agent": FAKE_BROWSER_USER_AGENT}
+
+
+def get_proxies():
+    if settings.OPENGRAPH_PROXY_URL:
+        return {
+            "http": settings.OPENGRAPH_PROXY_URL,
+            "https": settings.OPENGRAPH_PROXY_URL,
+        }
+    return {}
