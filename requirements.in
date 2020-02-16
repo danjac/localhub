@@ -30,6 +30,7 @@ ipython
 micawber
 psycopg2-binary
 pymdown-extensions
+pyopenssl
 # https://github.com/pytest-dev/pytest/issues/6492
 pytest==5.3.2
 pytest-cov
