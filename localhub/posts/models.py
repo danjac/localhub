@@ -9,7 +9,7 @@ from localhub.db.search import SearchIndexer
 from localhub.db.tracker import Tracker
 from localhub.utils.urls import get_domain, is_https, is_image_url
 
-from .opengraph_parser import parse_opengraph_data_from_url
+from .opengraph import get_opengraph_from_url
 
 
 class Post(Activity):
@@ -70,13 +70,13 @@ class Post(Activity):
         not set the title will be set to the domain of the URL.
         """
 
-        title, image, description = parse_opengraph_data_from_url(self.url)
+        og = get_opengraph_from_url(self.url)
 
-        self.opengraph_image = image or ""
-        self.opengraph_description = description or ""
+        self.opengraph_image = og.image or ""
+        self.opengraph_description = og.description or ""
 
         if not self.title:
-            self.title = (title or self.get_domain())[:300]
+            self.title = (og.title or self.get_domain())[:300]
 
         if commit:
             self.save()

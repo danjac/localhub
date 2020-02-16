@@ -1,13 +1,13 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from ..opengraph_parser import (
-    parse_opengraph_data_from_html,
-    parse_opengraph_data_from_url,
+from ..opengraph import (
+    get_opengraph_from_html,
+    get_opengraph_from_url,
 )
 
 
-class TestParseOpengraphDataFromUrl:
+class TestGetOpengraphDataFromUrl:
     def test_if_good_response(self, mocker):
         class MockResponse:
             ok = True
@@ -25,27 +25,26 @@ class TestParseOpengraphDataFromUrl:
 </html>"""
 
         mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
-        title, image, description = parse_opengraph_data_from_url("https://google.com")
-        assert title == "a test site"
-        assert image == "http://example.com/test.jpg"
-        assert description == "test description"
+        og = get_opengraph_from_url("https://google.com")
+        assert og.title == "a test site"
+        assert og.image == "http://example.com/test.jpg"
+        assert og.description == "test description"
 
     def test_if_bad_response(self, mocker):
         class MockResponse:
             ok = False
 
         mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
-        title, image, description = parse_opengraph_data_from_url("https://google.com")
-
-        assert (title, image, description) == (None, None, None)
+        og = get_opengraph_from_url("https://google.com")
+        assert og.title is None
 
     def test_if_no_url(self):
-        title, image, description = parse_opengraph_data_from_url(None)
-        assert (title, image, description) == (None, None, None)
+        og = get_opengraph_from_url(None)
+        assert og.title is None
 
 
-class TestParseOpengraphDataFromHtml:
-    def test_parse_title_in_meta(self):
+class TestGetOpengraphDataFromHtml:
+    def test_get_title_in_meta(self):
         html = """
         <html>
         <head>
@@ -56,10 +55,10 @@ class TestParseOpengraphDataFromHtml:
         <body>
         </html>
         """
-        title, _, _ = parse_opengraph_data_from_html(html)
-        assert title == "meta title"
+        og = get_opengraph_from_html(html)
+        assert og.title == "meta title"
 
-    def test_parse_title_in_twitter(self):
+    def test_get_title_in_twitter(self):
         html = """
         <html>
         <head>
@@ -70,10 +69,10 @@ class TestParseOpengraphDataFromHtml:
         <body>
         </html>
         """
-        title, _, _ = parse_opengraph_data_from_html(html)
-        assert title == "meta title"
+        og = get_opengraph_from_html(html)
+        assert og.title == "meta title"
 
-    def test_parse_from_page_title(self):
+    def test_get_from_page_title(self):
         html = """
         <html>
         <head>
@@ -83,8 +82,8 @@ class TestParseOpengraphDataFromHtml:
         <body>
         </html>
         """
-        title, _, _ = parse_opengraph_data_from_html(html)
-        assert title == "page title"
+        og = get_opengraph_from_html(html)
+        assert og.title == "page title"
 
     def test_image_in_meta_property(self):
         html = """
@@ -97,8 +96,8 @@ class TestParseOpengraphDataFromHtml:
         <body>
         </html>
         """
-        _, image, _ = parse_opengraph_data_from_html(html)
-        assert image == "http://imgur.com/test.jpg"
+        og = get_opengraph_from_html(html)
+        assert og.image == "http://imgur.com/test.jpg"
 
     def test_image_in_meta_name(self):
         html = """
@@ -111,8 +110,8 @@ class TestParseOpengraphDataFromHtml:
         <body>
         </html>
         """
-        _, image, _ = parse_opengraph_data_from_html(html)
-        assert image == "http://imgur.com/test.jpg"
+        og = get_opengraph_from_html(html)
+        assert og.image == "http://imgur.com/test.jpg"
 
     def test_image_not_in_meta(self):
         html = """
@@ -123,8 +122,8 @@ class TestParseOpengraphDataFromHtml:
         <body>
         </html>
         """
-        _, image, _ = parse_opengraph_data_from_html(html)
-        assert image is None
+        og = get_opengraph_from_html(html)
+        assert og.image is None
 
     def test_description_in_meta_property(self):
         html = """
@@ -137,8 +136,8 @@ class TestParseOpengraphDataFromHtml:
         <body>
         </html>
         """
-        _, _, description = parse_opengraph_data_from_html(html)
-        assert description == "test"
+        og = get_opengraph_from_html(html)
+        assert og.description == "test"
 
     def test_description_in_meta_name(self):
         html = """
@@ -151,8 +150,8 @@ class TestParseOpengraphDataFromHtml:
         <body>
         </html>
         """
-        _, _, description = parse_opengraph_data_from_html(html)
-        assert description == "test"
+        og = get_opengraph_from_html(html)
+        assert og.description == "test"
 
     def test_description_not_in_meta(self):
         html = """
@@ -164,5 +163,5 @@ class TestParseOpengraphDataFromHtml:
         <body>
         </html>
         """
-        _, _, description = parse_opengraph_data_from_html(html)
-        assert description is None
+        og = get_opengraph_from_html(html)
+        assert og.description is None
