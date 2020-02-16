@@ -14,7 +14,7 @@ volumes:
 
 services:
   postgres:
-    image: postgres:9.6
+    image: postgres:9.5
     volumes:
       - pg_data:/var/lib/postgresql/data
 
