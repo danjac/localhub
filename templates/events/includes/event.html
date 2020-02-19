@@ -66,10 +66,5 @@
    download>
   {% trans "Download" %}
 </a>
-{% if not is_detail and object.latitude and object.longitude %}
-<a href="{{ object.get_absolute_url }}#map-for-event-{{ object.id }}">
-  {% trans "Map" %}
-</a>
-{% endif %}
 {{ block.super }}
 {% endblock actions %}

@@ -83,6 +83,17 @@ class TestCommunityWelcomeView:
     def test_get_if_member(self, client, member):
         assert client.get(reverse("community_welcome")).url == settings.HOME_PAGE_URL
 
+class TestCommunityNotFoundView:
+
+    def test_get_if_does_not_exist_anon_user(self, client):
+        assert client.get(reverse("community_not_found")).status_code == 200
+
+    def test_get_if_does_not_exist_auth_user(self, client, login_user):
+        assert client.get(reverse("community_not_found")).status_code == 200
+
+    def test_community_does_exist(self, client, member):
+        assert client.get(reverse("community_not_found")).url == settings.HOME_PAGE_URL
+
 
 class TestCommunityTermsView:
     def test_get(self, client, member):

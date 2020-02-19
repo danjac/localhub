@@ -46,6 +46,11 @@ class CommunityNotFoundView(TemplateView):
 
     template_name = "communities/not_found.html"
 
+    def get(self, request):
+        if request.community.active:
+            return HttpResponseRedirect(settings.HOME_PAGE_URL)
+        return super().get(request)
+
 
 community_not_found_view = CommunityNotFoundView.as_view()
 
