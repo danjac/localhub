@@ -125,6 +125,10 @@ class Event(Activity):
             [smart_text(value) for value in [self.venue, self.location] if value]
         )
 
+    @property
+    def has_map(self):
+        return self.latitude and self.longitude
+
     def to_ical(self):
         event = CalendarEvent()
 

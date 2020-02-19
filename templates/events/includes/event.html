@@ -49,15 +49,14 @@
   {% endif %}
 
 </dl>
+{% if object.has_map %}
 <div class="divider"></div>
-{% if is_detail and object.latitude and object.longitude %}
 <div id="map-for-event-{{ object.id }}"
-     class="event-map{% if is_detail %} event-map-lg{% endif %}"
+     class="event-map event-map-lg"
      data-controller="map"
      data-map-latitude="{{ object.latitude }}"
      data-map-longitude="{{ object.longitude }}"
      ></div>
-<div class="divider"></div>
 {% endif %}
 {% endblock content %}
 
