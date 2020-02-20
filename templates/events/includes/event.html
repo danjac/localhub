@@ -16,17 +16,25 @@
 <dl>
 
   {% timezone object.timezone %}
-  <dt>{% trans "Starts" %}</dt>
-  <dd>{{ object.starts|date:"DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }}</dd>
-
   {% if object.ends %}
-  <dt>{% trans "Ends" %}</dt>
-  <dd>{{ object.ends|date:"DATE_FORMAT" }} @ {{ object.ends|date:"TIME_FORMAT" }}</dd>
+
+  {% with start_date=object.starts|date:"DATE_FORMAT" end_date=object.ends|date:"DATE_FORMAT" start_time=object.starts|date:"TIME_FORMAT" end_time=object.ends|date:"TIME_FORMAT" %}
+  {% if start_date == end_date %}
+  <dt>{% trans "Date" %}</dt>
+  <dd>{{ start_date }} @ {{ start_time }} - {{ end_time }} {{ object.timezone }}</dd>
+  {% else %}
+  <dt>{% trans "Dates" %}</dt>
+  <dd>{{ start_date }} @ {{ start_time }} - {{ end_date }} @ {{ end_time }} {{ object.timezone }}</dd>
+  {% endif %}
+  {% endwith %}
+
+  {% else %}
+  <dt>{% trans "Date" %}</dt>
+  <dd>
+  {{ object.starts|date:"DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }} {{ object.timezone }}
+  </dd>
   {% endif %}
   {% endtimezone %}
-
-  <dt>{% trans "Timezone" %}</dt>
-  <dd>{{ object.timezone }}</dd>
 
   <dt>{% trans "Location" %}</dt>
   <dd>
