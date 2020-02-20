@@ -21,17 +21,17 @@
   {% with start_date=object.starts|date:"DATE_FORMAT" end_date=object.ends|date:"DATE_FORMAT" start_time=object.starts|date:"TIME_FORMAT" end_time=object.ends|date:"TIME_FORMAT" %}
   {% if start_date == end_date %}
   <dt>{% trans "Date" %}</dt>
-  <dd>{{ start_date }} @ {{ start_time }} - {{ end_time }} {{ object.timezone }}</dd>
+  <dd>{{ start_date }} @ {{ start_time }} - {{ end_time }} <span class="chip">{{ object.timezone }}</span></dd>
   {% else %}
   <dt>{% trans "Dates" %}</dt>
-  <dd>{{ start_date }} @ {{ start_time }} - {{ end_date }} @ {{ end_time }} {{ object.timezone }}</dd>
+  <dd>{{ start_date }} @ {{ start_time }} - {{ end_date }} @ {{ end_time }} <span class="chip">{{ object.timezone }}</span></dd>
   {% endif %}
   {% endwith %}
 
   {% else %}
   <dt>{% trans "Date" %}</dt>
   <dd>
-  {{ object.starts|date:"DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }} {{ object.timezone }}
+  {{ object.starts|date:"DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }} <span class="chip">{{ object.timezone }}</span>
   </dd>
   {% endif %}
   {% endtimezone %}
