@@ -1,13 +1,11 @@
 // Copyright (c) 2019 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Controller } from 'stimulus';
+import {
+  Controller
+} from 'stimulus';
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
-
-// should be prop
-const unloadMsg =
-  'Are you sure you want to leave this page? All your changes will be lost.';
 
 export default class extends Controller {
   static targets = ['errorMessage', 'errorDetail'];
@@ -19,7 +17,8 @@ export default class extends Controller {
   }
 
   unload(event) {
-    if (this.data.has('changed')) {
+    const unloadMsg = this.data.get('unload');
+    if (this.data.has('changed') && unloadMsg) {
       if (event.type === 'turbolinks:before-visit') {
         if (!window.confirm(unloadMsg)) {
           event.preventDefault();
@@ -59,13 +58,13 @@ export default class extends Controller {
     const referrer = location.href;
 
     axios({
-      data,
-      headers: {
-        'Turbolinks-Referrer': referrer
-      },
-      method,
-      url
-    })
+        data,
+        headers: {
+          'Turbolinks-Referrer': referrer
+        },
+        method,
+        url
+      })
       .then(response => {
         window.onbeforeunload = null;
         const contentType = response.headers['content-type'];
@@ -77,23 +76,30 @@ export default class extends Controller {
             referrer,
             Turbolinks.Snapshot.wrap(response.data)
           );
-          Turbolinks.visit(referrer, { action: 'restore' });
+          Turbolinks.visit(referrer, {
+            action: 'restore'
+          });
         } else if (contentType.match(/javascript/)) {
           /* eslint-disable-next-line no-eval */
           eval(response.data);
         }
       })
-      .catch(err => {
-        console.log('form error', err);
-        this.enableFormElements();
-        let errMsg = '';
-        if (err.response) {
-          console.log(err.response);
-          const { status, statusText } = err.response;
-          errMsg = `${status}: ${statusText}`;
-        }
-        this.renderErrorMessage(errMsg);
-      });
+      .catch(this.handleFormError);
+  }
+
+  handleFormError(err) {
+    console.log('form error', err);
+    this.enableFormElements();
+    let errMsg = '';
+    if (err.response) {
+      console.log(err.response);
+      const {
+        status,
+        statusText
+      } = err.response;
+      errMsg = `${status}: ${statusText}`;
+    }
+    this.renderErrorMessage(errMsg);
   }
 
   clearErrorMessage() {
@@ -135,7 +141,7 @@ export default class extends Controller {
             // do this in markup by explictly adding a name/value and
             // data-action="form#submit" to the button
             if (event.target.name === field.name && field.value) {
-               data.append(field.name, field.value);
+              data.append(field.name, field.value);
             }
             break;
           case 'file':
