@@ -60,8 +60,7 @@
 {% if not user.show_embedded_content %}
 <p class="toast text-center my-2 d-hide"
    data-controller="cookie-notice"
-   data-cookie-notice-name="embedded-content"
-   data-cookie-notice-domain="{{ community.domain }}">
+   data-cookie-notice-name="embedded-content">
     <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
     {% url "user_update" as user_update_url %}
     {% blocktrans %}

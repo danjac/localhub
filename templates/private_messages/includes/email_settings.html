@@ -5,8 +5,7 @@
 
 <p class="toast text-center my-2 d-hide"
    data-controller="cookie-notice"
-   data-cookie-notice-name="private_messages-emails"
-   data-cookie-notice-domain="{{ community.domain }}">
+   data-cookie-notice-name="private_messages-emails">
   <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
   {% url 'user_update' as user_settings_url %}
   {% blocktrans %}You can enable emails for new messages <a href="{{ user_settings_url }}">in your settings</a>.{% endblocktrans %}
