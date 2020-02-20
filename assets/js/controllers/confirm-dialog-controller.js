@@ -7,6 +7,8 @@ export default class extends Controller {
   static targets = ['header', 'body'];
 
   connect() {
+    // allow this to be identified by name
+    this.element[this.identifier] = this;
     this.onConfirm = null;
     // TBD: prob. need to remove listener in disconnect
     document.addEventListener('keydown', event => {
