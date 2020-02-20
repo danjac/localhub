@@ -28,7 +28,7 @@ export default class extends Controller {
 
     const {
       dialog
-    } = document.getElementById('confirm-dialog').confirmDialog;
+    } = document.getElementById('confirm-dialog')['confirm-dialog'];
 
     // const dialog = this.application.getControllerForElementAndIdentifier(
     // document.getElementById('confirm-dialog'),
