@@ -8,6 +8,7 @@
    data-controller="cookie-notice"
    data-cookie-notice-name="community-list"
    data-cookie-notice-domain="{{ community.domain }}">
+    <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
   {% trans "This is an index of communities available on this host." %}
 </p>
 {% for object in object_list %}
