@@ -62,7 +62,7 @@
         {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
         {% endif %}
       </div>
-      {% if is_detail and object.edited %}
+      {% if is_detail and object.edited and object.published and object.edited > object.published %}
       <div class="card-subtitle h6">
         <span class="timesince">
           {% blocktrans with edited=object.edited|timesince %}Last edited {{ edited }} ago{% endblocktrans %}
