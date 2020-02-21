@@ -40,9 +40,9 @@
 <p>
     <b>
         {% if is_blocker %}
-        {% trans "You cannot send or receive private messages." %}
+        {% trans "You cannot send or receive direct messages between this person." %}
         {% else %}
-        {% trans "You cannot send or receive private messages and their content has been removed from your feeds." %}
+        {% trans "You cannot send or receive direct messages between this person and their content has been removed from your feeds." %}
         {% endif %}
     </b>
 </p>
@@ -154,7 +154,7 @@
     {% elif not is_blocked %}
     <li class="tab-item" data-controller="active-link" data-active-link-exact>
         <a data-target="active-link.match"
-           href="{% url 'users:messages' user_obj.username %}">{% trans "Messages" %}</a>
+           href="{% url 'users:messages' user_obj.username %}">{% trans "Direct Messages" %}</a>
     </li>
     {% endif %}
 </ul>

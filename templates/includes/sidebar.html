@@ -29,7 +29,7 @@
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'private_messages:inbox' %}">
       <span {% if unread_messages_count %}class="badge" id="sidebar-messages-counter" data-badge="{{ unread_messages_count }}"{% endif %}>
-        {% trans "Messages" %}
+        {% trans "Direct Messages" %}
       </span>
     </a>
   </li>
