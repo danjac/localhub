@@ -21,7 +21,37 @@
 {% endif %}
 
 {% block activities_detail_content %}{% endblock %}
+
+{% if history %}
+<div class="mt-2">
+  <div class="divider text-center" data-content="{% trans 'Edit History' %}"></div>
+  <table class="table table-striped table-hover table-responsive-md">
+    <thead>
+      <tr>
+        <th>{% trans "Date" %}</th>
+        <th>{% trans "User" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for edit in history %}
+      <tr>
+        <td>
+          {% blocktrans with timesince=edit.history_date|timesince %}
+          {{ timesince }} ago
+          {% endblocktrans %}
+        </td>
+        <td>
+          {% include "users/includes/chip.html" with profile=edit.editor|default:edit.owner %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
 {% include "flags/includes/flags.html" %}
+
 <div class="comments mt-2" id="comments">
   {% if comments %}
   <div class="divider text-center" data-content="{% trans 'Comments' %}"></div>

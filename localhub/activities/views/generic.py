@@ -192,10 +192,15 @@ class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        if self.request.user.has_perm(
+        is_moderator = self.request.user.has_perm(
             "communities.moderate_community", self.request.community
-        ):
+        )
+
+        if is_moderator:
             data["flags"] = self.get_flags()
+
+        if is_moderator or self.request.user == self.object.owner:
+            data["history"] = self.get_history()
 
         data["comments"] = self.get_comments()
         if self.request.user.has_perm("activities.create_comment", self.object):
@@ -215,6 +220,11 @@ class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
 
     def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.object)
+
+    def get_history(self):
+        return self.object.history.select_related("owner", "editor").order_by(
+            "-history_date"
+        )
 
     def get_flags(self):
         return self.object.get_flags().select_related("user").order_by("-created")
