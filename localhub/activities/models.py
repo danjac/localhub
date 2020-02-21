@@ -346,6 +346,9 @@ class Activity(TimeStampedModel):
             .exclude(pk=self.owner_id)
         )
 
+        if self.editor:
+            qs = qs.exclude(pk=self.editor.id)
+
         if self.parent:
             qs = qs.exclude(pk=self.parent.owner_id)
         qs = qs.distinct()
@@ -353,11 +356,18 @@ class Activity(TimeStampedModel):
         return [self.make_notification(recipient, "mention") for recipient in qs]
 
     def notify_followers(self, recipients):
-        return [
-            self.make_notification(follower, "new_followed_user_post")
-            for follower in recipients.with_notification_prefs("new_followed_user_post")
+        qs = (
+            recipients.with_notification_prefs("new_followed_user_post")
             .filter(following=self.owner)
             .distinct()
+        )
+
+        if self.editor:
+            qs = qs.exclude(pk=self.editor.id)
+
+        return [
+            self.make_notification(follower, "new_followed_user_post")
+            for follower in qs
         ]
 
     def notify_tag_followers(self, recipients):
@@ -368,8 +378,13 @@ class Activity(TimeStampedModel):
                 .filter(following_tags__in=tags)
                 .exclude(pk=self.owner.id)
             )
+
+            if self.editor:
+                qs = qs.exclude(pk=self.editor.id)
+
             if self.parent:
                 qs = qs.exclude(pk=self.parent.owner_id)
+
             qs = qs.distinct()
 
             if tags:

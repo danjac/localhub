@@ -83,8 +83,8 @@ class TestCommunityWelcomeView:
     def test_get_if_member(self, client, member):
         assert client.get(reverse("community_welcome")).url == settings.HOME_PAGE_URL
 
-class TestCommunityNotFoundView:
 
+class TestCommunityNotFoundView:
     def test_get_if_does_not_exist_anon_user(self, client):
         assert client.get(reverse("community_not_found")).status_code == 200
 
