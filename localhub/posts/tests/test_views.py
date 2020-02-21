@@ -85,6 +85,8 @@ class TestPostUpdateView:
         post_for_member.refresh_from_db()
         assert response.url == post_for_member.get_absolute_url()
         assert post_for_member.title == "UPDATED"
+        assert post_for_member.editor == post_for_member.owner
+        assert post_for_member.edited
 
     def test_post_with_reshare(
         self, client, post_for_member, send_notification_webpush_mock
@@ -149,6 +151,7 @@ class TestPostUpdateView:
         assert response.url == post.get_absolute_url()
         assert post.title == "UPDATED"
         assert post.editor == moderator.member
+        assert post.edited
 
 
 class TestPostCommentCreateView:

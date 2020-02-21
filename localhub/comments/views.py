@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
+from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from rules.contrib.views import PermissionRequiredMixin
@@ -85,6 +86,7 @@ class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
         return (
             super()
             .get_queryset()
+            .select_related("editor")
             .with_common_annotations(self.request.user, self.request.community)
         )
 
@@ -119,6 +121,7 @@ class CommentUpdateView(
     def form_valid(self, form):
         comment = form.save(commit=False)
         comment.editor = self.request.user
+        comment.edited = timezone.now()
         comment.save()
         for notification in comment.notify_on_update():
             send_comment_notifications(comment, notification)

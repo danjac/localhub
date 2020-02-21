@@ -234,6 +234,7 @@ class Activity(TimeStampedModel):
         on_delete=models.SET_NULL,
     )
 
+    edited = models.DateTimeField(null=True, blank=True)
     published = models.DateTimeField(null=True, blank=True)
 
     comments = AbstractGenericRelation(Comment)

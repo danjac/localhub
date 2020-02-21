@@ -62,6 +62,18 @@
         {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
         {% endif %}
       </div>
+      {% if is_detail and object.edited %}
+      <div class="card-subtitle h6">
+        <span class="timesince">
+          {% blocktrans with edited=object.edited|timesince %}Last edited {{ edited }} ago{% endblocktrans %}
+          {% if object.editor != object.owner %}
+          {% trans "by" %}
+          {% include "users/includes/chip.html" with profile=object.editor %}
+          {% endif %}
+        </span>
+      </div>
+      {% endif %}
+
 
     </div>
     <div class="card-body">

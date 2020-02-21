@@ -21,7 +21,7 @@ NOTIFICATION_HEADERS = {
     ),
     "new_followed_user_post": _("%(actor)s has submitted a new %(activity)s"),
     "new_followed_tag_post": _(
-        "Someone has submitted or updated a new %(activity)s containing tags you are following" # noqa
+        "Someone has submitted or updated a new %(activity)s containing tags you are following"  # noqa
     ),
     "reshare": _("%(actor)s has reshared your %(activity)s"),
 }

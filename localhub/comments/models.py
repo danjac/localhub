@@ -126,6 +126,8 @@ class Comment(TimeStampedModel):
         related_name="+",
     )
 
+    edited = models.DateTimeField(null=True, blank=True)
+
     content_type = models.ForeignKey(
         ContentType, on_delete=models.SET_NULL, null=True, blank=True
     )

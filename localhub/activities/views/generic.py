@@ -147,6 +147,7 @@ class ActivityUpdateView(
 
         self.object = form.save(commit=False)
         self.object.editor = self.request.user
+        self.object.edited = timezone.now()
         if publish:
             self.object.published = timezone.now()
         self.object.save()
@@ -209,6 +210,7 @@ class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
         return (
             super()
             .get_queryset()
+            .select_related("editor")
             .published_or_owner(self.request.user)
             .with_common_annotations(self.request.user, self.request.community)
         )

@@ -96,6 +96,8 @@ class TestCommentUpdateView:
         assert response.url == post.get_absolute_url()
         comment.refresh_from_db()
         assert comment.content == "new content"
+        assert comment.editor == member.member
+        assert comment.edited
 
 
 class TestCommentDeleteView:

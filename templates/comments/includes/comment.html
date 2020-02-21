@@ -27,6 +27,17 @@
             {% endif %}
             {% endwith %}
         </div>
+        {% if is_detail and comment.edited %}
+        <div class="card-subtitle h6">
+            <span class="timesince">
+                {% blocktrans with edited=comment.edited|timesince %}Last edited {{ edited }} ago{% endblocktrans %}
+                {% if comment.editor != comment.owner %}
+                {% trans "by" %}
+                {% include "users/includes/chip.html" with profile=comment.editor %}
+                {% endif %}
+            </span>
+        </div>
+        {% endif %}
     </div>
     {% if comment.is_blocked %}
     <div class="card-body" data-controller="toggle">
