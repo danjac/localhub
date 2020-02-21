@@ -6,6 +6,6 @@
 
 {% block notification_body %}
 {% blocktrans %}
-{{ actor }} has submitted a new {{ activity_name }} containing tags you are following.
+{{ actor }} has submitted or updated a new {{ activity_name }} containing tags you are following.
 {% endblocktrans %}
 {% endblock notification_body %}
