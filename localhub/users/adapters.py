@@ -8,3 +8,6 @@ from django.conf import settings
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
     def get_login_redirect_url(self, request):
         return settings.HOME_PAGE_URL
+
+    def get_connect_redirect_url(self, request, socialaccount):
+        return settings.HOME_PAGE_URL
