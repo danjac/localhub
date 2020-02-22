@@ -1,0 +1,20 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "socialaccount/base.html" %}
+
+{% load i18n %}
+
+{% block subtitle %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+<h3>{% trans "Sign Up" %}</h3>
+
+<p>{% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use your {{provider_name}} account to login to
+  {{site_name}}. As a final step, please complete the following form:{% endblocktrans %}</p>
+
+{% url 'socialaccount_signup' as signup_url %}
+{% trans "Sign Up" as t_signup %}
+{% include "account/includes/signup_form.html" with action=signup_url submit_btn=t_signup %}
+
+{% endblock %}
