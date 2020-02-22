@@ -1,0 +1,17 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% load socialaccount %}
+
+{% providers_media_js %}
+{% get_providers as socialaccount_providers %}
+{% for provider in socialaccount_providers %}
+<p>
+  <a href="{% provider_login_url provider.id process="login" next="/" %}">
+    {% blocktrans with provider_name=provider.name %}
+    Login or signup through {{ provider_name }}
+    {% endblocktrans %}
+  </a>
+</p>
+{% endfor %}

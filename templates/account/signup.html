@@ -3,7 +3,6 @@
 
 {% extends "account/base.html" %}
 {% load i18n %}
-{% load socialaccount %}
 
 {% block account_subtitle %}{% trans "Signup" %}{% endblock %}
 
@@ -18,8 +17,5 @@
 {% trans "Sign Up" as t_signup %}
 {% include "account/includes/signup_form.html" with action=signup_url submit_btn=t_signup %}
 <div class="divider"></div>
-<p>
-{% providers_media_js %}
-<a href="{% provider_login_url "google" next="/" %}">Sign up through Google</a>
-</p>
+{% include "account/includes/social_logins.html" %}
 {% endblock content %}
