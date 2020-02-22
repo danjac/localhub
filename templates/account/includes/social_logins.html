@@ -6,9 +6,11 @@
 
 {% providers_media_js %}
 {% get_providers as socialaccount_providers %}
+{% if socialaccount_providers %}
 <p>
   {% trans "Login or signup through" %}
   {% for provider in socialaccount_providers %}
   <a href="{% provider_login_url provider.id process="login" next="/" %}">{{ provider.name }}</a>
   {% endfor %}
 </p>
+{% endif %}
