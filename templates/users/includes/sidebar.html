@@ -3,9 +3,11 @@
 
 {% load i18n %}
 {% load rules %}
+{% load socialaccount %}
 {% load communities_tags %}
 
 {% get_available_community_count user as communities_count %}
+{% get_providers as socialaccount_providers %}
 
 <ul class="menu">
 
@@ -48,9 +50,11 @@
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'account_email' %}">{% trans "Email Addresses" %}</a>
   </li>
+  {% if socialaccount_providers|length %}
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'socialaccount_connections' %}">{% trans "Social Logins" %}</a>
   </li>
+  {% endif %}
   <li class="menu-item">
     <a data-controller="active-link" href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a>
   </li>
