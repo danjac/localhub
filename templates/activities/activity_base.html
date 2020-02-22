@@ -62,19 +62,6 @@
         {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
         {% endif %}
       </div>
-      {% if is_detail and object.edited and object.published and object.edited > object.published %}
-      <div class="card-subtitle h6">
-        <span class="timesince">
-          {% blocktrans with edited=object.edited|timesince %}Last edited {{ edited }} ago{% endblocktrans %}
-          {% if object.editor != object.owner %}
-          {% trans "by" %}
-          {% include "users/includes/chip.html" with profile=object.editor %}
-          {% endif %}
-        </span>
-      </div>
-      {% endif %}
-
-
     </div>
     <div class="card-body">
       {% if object.is_reshare and not object.parent %}
@@ -109,6 +96,17 @@
     </div>
     <div class="card-footer">
       {% if is_detail %}
+
+      {% if object.edited and object.published and object.edited > object.published %}
+        <div class="info">
+          {% blocktrans with edited=object.edited|timesince %}Updated {{ edited }} ago{% endblocktrans %}
+          {% if object.editor != object.owner %}
+          {% trans "by" %}
+          {% include "users/includes/chip.html" with profile=object.editor %}
+          {% endif %}
+        </div>
+      {% endif %}
+
       {% with num_reshares=reshares.count %}
       {% if num_reshares %}
       {% if num_reshares > 20 %}
