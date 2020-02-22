@@ -48,6 +48,7 @@ class Base(Configuration):
         "allauth",
         "allauth.account",
         "allauth.socialaccount",
+        "allauth.socialaccount.providers.google",
         "djcelery_email",
         "markdownx",
         "micawber.contrib.mcdjango",
@@ -136,6 +137,15 @@ class Base(Configuration):
 
     ACCOUNT_USER_DISPLAY = "localhub.users.utils.user_display"
     ACCOUNT_EMAIL_REQUIRED = True
+
+    SOCIALACCOUNT_PROVIDERS = {
+        "google": {
+            "SCOPE": ["profile", "email",],
+            "AUTH_PARAMS": {"access_type": "online",},
+        }
+    }
+
+    SOCIALACCOUNT_ADAPTER = "localhub.users.adapters.SocialAccountAdapter"
 
     # Internationalization
     # https://docs.djangoproject.com/en/2.2/topics/i18n/
