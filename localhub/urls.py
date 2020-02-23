@@ -10,6 +10,7 @@ from django.views.generic import TemplateView
 from localhub.communities.views import (
     community_list_view,
     community_not_found_view,
+    community_sidebar_view,
     community_welcome_view,
 )
 from localhub.users.views import (
@@ -39,6 +40,7 @@ urlpatterns = [
     path("account/~delete", user_delete_view, name="user_delete"),
     path("~toggle-darkmode/", darkmode_toggle_view, name="darkmode_toggle"),
     path("welcome/", view=community_welcome_view, name="community_welcome"),
+    path("sidebar/", view=community_sidebar_view, name="community_sidebar"),
     path("not-found/", view=community_not_found_view, name="community_not_found"),
     # Third-party
     path("account/", include("allauth.urls")),

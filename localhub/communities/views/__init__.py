@@ -8,6 +8,7 @@ from .communities import (
     community_not_found_view,
     community_terms_view,
     community_update_view,
+    community_sidebar_view,
     community_welcome_view,
 )
 from .memberships import (
@@ -26,6 +27,7 @@ __all__ = [
     "community_not_found_view",
     "community_terms_view",
     "community_update_view",
+    "community_sidebar_view",
     "community_welcome_view",
     "membership_delete_view",
     "membership_detail_view",

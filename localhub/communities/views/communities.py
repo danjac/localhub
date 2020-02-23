@@ -32,6 +32,16 @@ class CommunityDetailView(CommunityRequiredMixin, DetailView):
 community_detail_view = CommunityDetailView.as_view()
 
 
+class CommunitySidebarView(CommunityDetailView):
+    """
+    Renders sidebar for non-JS browsers.
+    """
+    template_name = "communities/sidebar.html"
+
+
+community_sidebar_view = CommunitySidebarView.as_view()
+
+
 class CommunityTermsView(CommunityDetailView):
     template_name = "communities/terms.html"
 
