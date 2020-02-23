@@ -6,7 +6,7 @@
      data-controller="tabs typeahead"
      data-typeahead-mention-search-url="{% url 'users:autocomplete_list' %}"
      data-typeahead-tag-search-url="{% url 'activities:tag_autocomplete_list' %}">
-  <ul class="tab">
+  <ul class="tab d-hide" data-controller="js-toggle">
     <li class="tab-item active" data-target="tabs.tab" data-tab="editor">
       <a href="#" data-action="tabs#select" data-tab="editor">{% trans "Edit" %}</a>
     </li>
@@ -18,7 +18,7 @@
     </li>
   </ul>
   <div class="tab-pane" data-target="tabs.pane" data-tab="editor" data-controller="markdown">
-    <div class="py-1">
+    <div class="py-1 d-hide" data-controller="js-toggle">
 
       <a class="btn btn-link btn-sm my-1"
          href="#"

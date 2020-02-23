@@ -153,7 +153,9 @@
             <div class="text-center mb-2 toast toast-primary d-hide"
                  data-controller="cookie-notice"
                  data-cookie-notice-name="accept-cookies">
-              <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
+              <button class="btn btn-clear float-right d-hide"
+                      data-controller="js-toggle"
+                      data-action="cookie-notice#accept"></button>
               {% blocktrans %}
               This site uses cookies for authentication purposes only. We do not share your personal
               information with third parties.
