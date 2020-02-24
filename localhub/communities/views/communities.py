@@ -22,20 +22,64 @@ from ..rules import is_member
 from .base import CommunityRequiredMixin
 
 
-class CommunityDetailView(CommunityRequiredMixin, DetailView):
+class CommunitySingleObjectMixin(CommunityRequiredMixin):
     model = Community
 
     def get_object(self):
         return self.request.community
 
 
+class CommunityDetailView(CommunitySingleObjectMixin, DetailView):
+    ...
+
+
 community_detail_view = CommunityDetailView.as_view()
+
+
+class CommunityWelcomeView(CommunityDetailView):
+    """
+    This is shown if the user is not a member (or is not authenticated).
+
+    If user is already a member, redirects to home page.
+    """
+
+    template_name = "communities/welcome.html"
+    allow_non_members = True
+
+    def get(self, request):
+        if is_member(request.user, request.community):
+            return HttpResponseRedirect(settings.HOME_PAGE_URL)
+        return super().get(request)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data.update(
+            {"join_request": self.get_join_request(), "invite": self.get_invite()}
+        )
+        return data
+
+    def get_join_request(self):
+        return JoinRequest.objects.filter(
+            sender=self.request.user, community=self.request.community
+        ).first()
+
+    def get_invite(self):
+        return (
+            Invite.objects.pending()
+            .for_user(self.request.user)
+            .filter(community=self.request.community)
+            .first()
+        )
+
+
+community_welcome_view = CommunityWelcomeView.as_view()
 
 
 class CommunitySidebarView(CommunityDetailView):
     """
     Renders sidebar for non-JS browsers.
     """
+
     template_name = "communities/sidebar.html"
 
 
@@ -65,40 +109,9 @@ class CommunityNotFoundView(TemplateView):
 community_not_found_view = CommunityNotFoundView.as_view()
 
 
-class CommunityWelcomeView(CommunityRequiredMixin, TemplateView):
-    """
-    This is shown if the user is not a member (or is not authenticated).
-
-    If user is already a member, redirects to home page.
-    """
-
-    template_name = "communities/welcome.html"
-    allow_non_members = True
-
-    def get(self, request, *args, **kwargs):
-        if is_member(request.user, request.community):
-            return HttpResponseRedirect(settings.HOME_PAGE_URL)
-        return super().get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        if not is_member(self.request.user, self.request.community):
-            data["join_request"] = JoinRequest.objects.filter(
-                sender=self.request.user, community=self.request.community
-            ).first()
-            data["invite"] = (
-                Invite.objects.pending()
-                .for_user(self.request.user)
-                .filter(community=self.request.community)
-                .first()
-            )
-        return data
-
-
-community_welcome_view = CommunityWelcomeView.as_view()
-
-
-class CommunityUpdateView(CommunityRequiredMixin, PermissionRequiredMixin, UpdateView):
+class CommunityUpdateView(
+    CommunitySingleObjectMixin, PermissionRequiredMixin, UpdateView
+):
     fields = (
         "name",
         "logo",
@@ -116,10 +129,6 @@ class CommunityUpdateView(CommunityRequiredMixin, PermissionRequiredMixin, Updat
 
     permission_required = "communities.manage_community"
     success_message = _("Community settings have been updated")
-    model = Community
-
-    def get_object(self):
-        return self.request.community
 
     def get_success_url(self):
         return self.request.path
