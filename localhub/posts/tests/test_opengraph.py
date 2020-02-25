@@ -1,10 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from ..opengraph import (
-    get_opengraph_from_html,
-    get_opengraph_from_url,
-)
+from ..opengraph import get_opengraph_from_html, get_opengraph_from_url
 
 
 class TestGetOpengraphDataFromUrl:

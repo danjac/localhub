@@ -1,5 +1,7 @@
 from django import forms
 
+from localhub.forms.widgets import TypeaheadInput
+
 from .models import Photo
 
 
@@ -16,3 +18,6 @@ class PhotoForm(forms.ModelForm):
             "original_url",
             "cc_license",
         )
+        widgets = {
+            "title": TypeaheadInput,
+        }

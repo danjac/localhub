@@ -3,6 +3,8 @@
 
 from django import forms
 
+from localhub.forms.widgets import TypeaheadInput
+
 from .models import Poll
 
 
@@ -10,3 +12,7 @@ class PollForm(forms.ModelForm):
     class Meta:
         model = Poll
         fields = ("title", "description", "allow_comments")
+
+        widgets = {
+            "title": TypeaheadInput,
+        }

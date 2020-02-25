@@ -7,6 +7,7 @@ from django.utils.timezone import localtime, make_aware
 from django.utils.translation import gettext_lazy as _
 
 from localhub.forms.fields import CalendarField
+from localhub.forms.widgets import TypeaheadInput
 
 from .models import Event
 
@@ -39,6 +40,10 @@ class EventForm(forms.ModelForm):
 
         help_texts = {
             "timezone": _("Start and end times will be shown in this timezone")
+        }
+
+        widgets = {
+            "title": TypeaheadInput,
         }
 
     def __init__(self, *args, **kwargs):
