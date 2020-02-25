@@ -5,11 +5,16 @@
 
 {% load i18n %}
 {% load private_messages_tags %}
+{% load rules %}
+
 
 {% block content %}
 <h3>{% trans "Direct Messages" %}</h3>
+
+{% has_perm "private_messages.create_message" user community as can_create_message %}
+{% get_unread_message_count user community as unread_messages %}
+{% if can_create_message or unread_messages %}
 <div class="actions">
-    {% get_unread_message_count user community as unread_messages %}
     {% if unread_messages %}
     <a href="{% url 'private_messages:mark_all_read' %}"
        class="d-hide"
@@ -18,8 +23,11 @@
        data-ajax-redirect="{{ request.path }}"
        >{% trans "Mark All As Read" %}</a>
     {% endif %}
+    {% if can_create_message %}
     <a href="{% url 'private_messages:recipients' %}">{% trans "Send Message" %}</a>
+    {% endif %}
 </div>
+{% endif %}
 <div class="divider"></div>
 
 <ul class="tab tab-block mt-2">
