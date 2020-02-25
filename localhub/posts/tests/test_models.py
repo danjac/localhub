@@ -31,7 +31,12 @@ class TestPostModel:
         post = PostFactory(title="中国研究方法")
         assert post.get_absolute_url() == f"/posts/{post.id}/zhong-guo-yan-jiu-fang-fa/"
 
-    def test_extract_tags(self, post):
+    def test_extract_tags(self):
+
+        post = Post(title="something #movies", description="content #movies and #films")
+        assert post.extract_tags() == {"movies", "films"}
+
+    def test_save_tags(self, post):
 
         post.description = "a post about #movies"
         post.save()

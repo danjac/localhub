@@ -3,7 +3,9 @@
 
 
 from django import template
+from django.utils.safestring import mark_safe
 
+from localhub.markdown.utils import linkify_hashtags, linkify_mentions
 from localhub.utils.urls import is_https
 
 from ..oembed import bootstrap_oembed
@@ -58,3 +60,13 @@ def is_oembed_url(user, url):
     ):
         return False
     return _oembed_registry.provider_for_url(url) is not None
+
+
+@register.filter(name="linkify_mentions")
+def _linkify_mentions(content):
+    return mark_safe(linkify_mentions(content))
+
+
+@register.filter(name="linkify_hashtags")
+def _linkify_hashtags(content):
+    return mark_safe(linkify_hashtags(content))

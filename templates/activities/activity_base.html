@@ -45,7 +45,7 @@
         {% block title %}
 
         {% if is_detail %}
-        {{ object.title }}
+        {{ object.title|linkify_hashtags|linkify_mentions }}
         {% else %}
         <a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:130 }}</a>
         {% endif %}

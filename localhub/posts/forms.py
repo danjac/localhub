@@ -4,6 +4,8 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from localhub.forms.widgets import TypeaheadInput
+
 from .models import Post
 
 
@@ -12,6 +14,9 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ("title", "url", "description", "allow_comments")
         labels = {"title": _("Title"), "url": _("Link")}
+        widgets = {
+            "title": TypeaheadInput,
+        }
         help_texts = {
             "title": _(
                 "If you add a URL in the Link field below and leave the Title "

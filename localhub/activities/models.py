@@ -24,6 +24,7 @@ from localhub.db.tracker import Tracker
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
+from localhub.markdown.utils import extract_hashtags
 from localhub.notifications.models import Notification
 from localhub.utils.itertools import takefirst
 from localhub.utils.text import slugify_unicode
@@ -206,7 +207,7 @@ class Activity(TimeStampedModel):
     Base class for all activity-related entities e.g. posts, events, photos.
     """
 
-    RESHARED_FIELDS = ()
+    RESHARED_FIELDS = ("title", "description")
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
@@ -219,6 +220,8 @@ class Activity(TimeStampedModel):
         blank=True,
         related_name="+",
     )
+
+    title = models.CharField(max_length=300)
 
     description = MarkdownField(blank=True)
 
@@ -248,7 +251,7 @@ class Activity(TimeStampedModel):
 
     search_document = SearchVectorField(null=True, editable=False)
 
-    description_tracker = Tracker(["description"])
+    description_tracker = Tracker(["title", "description"])
 
     objects = ActivityQuerySet.as_manager()
 
@@ -321,12 +324,9 @@ class Activity(TimeStampedModel):
 
     def get_content_warning_tags(self):
         """
-        Checks if any tags matching in description
+        Checks if any tags matching in title/description
         """
-        return (
-            self.description.extract_hashtags()
-            & self.community.get_content_warning_tags()
-        )
+        return self.extract_tags() & self.community.get_content_warning_tags()
 
     def is_edited_by_moderator(self):
         return self.editor and self.editor != self.owner
@@ -521,9 +521,15 @@ class Activity(TimeStampedModel):
     def get_resharable_data(self):
         return {k: getattr(self, k) for k in self.RESHARED_FIELDS}
 
-    def extract_tags(self, is_new):
-        if is_new or self.description_tracker.changed():
-            if hashtags := self.description.extract_hashtags():
+    def should_extract_tags(self, is_new):
+        return is_new or self.description_tracker.changed()
+
+    def extract_tags(self):
+        return self.description.extract_hashtags() | extract_hashtags(self.title)
+
+    def save_tags(self, is_new):
+        if self.should_extract_tags(is_new):
+            if hashtags := self.extract_tags():
                 self.tags.set(*hashtags, clear=True)
             else:
                 self.tags.clear()
@@ -531,4 +537,4 @@ class Activity(TimeStampedModel):
     def save(self, *args, **kwargs):
         is_new = self._state.adding
         super().save(*args, **kwargs)
-        self.extract_tags(is_new)
+        self.save_tags(is_new)

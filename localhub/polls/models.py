@@ -26,9 +26,6 @@ class PollQuerySet(ActivityQuerySet):
 
 
 class Poll(Activity):
-    RESHARED_FIELDS = ("title", "description")
-
-    title = models.CharField(max_length=300)
 
     search_indexer = SearchIndexer(("A", "title"), ("B", "description"))
 

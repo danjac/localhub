@@ -28,21 +28,22 @@ class Event(Activity):
         "country",
     )
 
-    RESHARED_FIELDS = LOCATION_FIELDS + (
-        "title",
-        "description",
-        "url",
-        "starts",
-        "ends",
-        "timezone",
-        "venue",
-        "ticket_price",
-        "ticket_vendor",
-        "latitude",
-        "longitude",
+    RESHARED_FIELDS = (
+        Activity.RESHARED_FIELDS
+        + LOCATION_FIELDS
+        + (
+            "url",
+            "starts",
+            "ends",
+            "timezone",
+            "venue",
+            "ticket_price",
+            "ticket_vendor",
+            "latitude",
+            "longitude",
+        )
     )
 
-    title = models.CharField(max_length=200)
     url = models.URLField(verbose_name=_("Link"), max_length=500, null=True, blank=True)
 
     starts = models.DateTimeField(verbose_name=_("Starts on (UTC)"))

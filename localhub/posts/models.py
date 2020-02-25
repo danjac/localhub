@@ -14,11 +14,9 @@ from .opengraph import get_opengraph_from_url
 
 class Post(Activity):
 
-    RESHARED_FIELDS = (
-        "description",
+    RESHARED_FIELDS = Activity.RESHARED_FIELDS + (
         "opengraph_description",
         "opengraph_image",
-        "title",
         "url",
     )
 
