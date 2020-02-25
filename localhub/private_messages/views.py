@@ -17,6 +17,7 @@ from vanilla import DeleteView, DetailView, FormView, GenericModelView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.utils import user_display
+from localhub.users.views import BaseUserListView
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from .forms import MessageForm
@@ -172,6 +173,7 @@ class MessageCreateView(BreadcrumbsMixin, CommunityRequiredMixin, BaseMessageFor
 
     def get_breadcrumbs(self):
         return [
+            (reverse("private_messages:recipients"), _("Recipients"),),
             (
                 reverse("users:messages", args=[self.recipient.username]),
                 user_display(self.recipient),
@@ -290,3 +292,31 @@ class MessageMarkAllReadView(RecipientQuerySetMixin, View):
 
 
 message_mark_all_read_view = MessageMarkAllReadView.as_view()
+
+
+class RecipientListView(SearchMixin, BaseUserListView):
+    """
+    Allows user to find a possible recipient to send
+    a new message to.
+    """
+
+    template_name = "private_messages/recipient_list.html"
+    permission_required = "private_messages.create_message"
+
+    def get_permission_object(self):
+        return self.request.community
+
+    def get_queryset(self):
+        qs = (
+            super()
+            .get_queryset()
+            .exclude(blocked=self.request.user)
+            .exclude(blockers=self.request.user.id)
+            .exclude(pk=self.request.user.id)
+        )
+        if self.search_query:
+            qs = qs.search(self.search_query)
+        return qs
+
+
+recipient_list_view = RecipientListView.as_view()

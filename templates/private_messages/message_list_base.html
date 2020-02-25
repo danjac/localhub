@@ -8,27 +8,29 @@
 
 {% block content %}
 <h3>{% trans "Direct Messages" %}</h3>
-{% get_unread_message_count user community as unread_messages %}
-{% if unread_messages %}
-<div class="actions d-hide" data-controller="js-toggle">
-  <a href="{% url 'private_messages:mark_all_read' %}"
-     data-controller="ajax"
-     data-action="ajax#post"
-     data-ajax-redirect="{{ request.path }}"
-     >{% trans "Mark All As Read" %}</a>
+<div class="actions">
+    {% get_unread_message_count user community as unread_messages %}
+    {% if unread_messages %}
+    <a href="{% url 'private_messages:mark_all_read' %}"
+       class="d-hide"
+       data-controller="ajax js-toggle"
+       data-action="ajax#post"
+       data-ajax-redirect="{{ request.path }}"
+       >{% trans "Mark All As Read" %}</a>
+    {% endif %}
+    <a href="{% url 'private_messages:recipients' %}">{% trans "Send Message" %}</a>
 </div>
-{% endif %}
 <div class="divider"></div>
 
 <ul class="tab tab-block mt-2">
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</a>
-  </li>
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
-  </li>
+    <li class="tab-item" data-controller="active-link" data-active-link-exact>
+        <a data-target="active-link.match"
+           href="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</a>
+    </li>
+    <li class="tab-item" data-controller="active-link" data-active-link-exact>
+        <a data-target="active-link.match"
+           href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
+    </li>
 </ul>
 
 {% block message_list %}{% endblock %}

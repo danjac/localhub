@@ -13,6 +13,7 @@ from .views import (
     message_mark_read_view,
     message_reply_view,
     outbox_view,
+    recipient_list_view,
 )
 
 app_name = "private_messages"
@@ -21,6 +22,7 @@ urlpatterns = [
     path("", inbox_view, name="inbox"),
     path("~/mark-read/", message_mark_all_read_view, name="mark_all_read"),
     path("outbox/", outbox_view, name="outbox"),
+    path("recipients/", recipient_list_view, name="recipients"),
     path("user/<slug:slug>/~send/", message_create_view, name="message_create"),
     path("message/<int:pk>/", message_detail_view, name="message_detail"),
     path("message/<int:pk>/~hide/", message_hide_view, name="message_hide"),

@@ -70,7 +70,7 @@
             {% endif %}
             {% if can_create_message %}
             {% if is_sender %}
-            <a href="{% url 'private_messages:message_create' other_user.username %}">{% trans "Send Message" %}</a>
+            <a href="{% url 'private_messages:message_create' other_user.username %}">{% trans "Send New Message" %}</a>
             {% else %}
             <a href="{% url 'private_messages:message_reply' message.id %}">{% trans "Reply" %}</a>
             {% endif %}
