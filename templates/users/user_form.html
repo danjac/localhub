@@ -16,6 +16,17 @@
 </div>
 
 <div class="divider"></div>
+
+<div class="text-center my-2 toast d-hide"
+     data-controller="cookie-notice"
+     data-cookie-notice-name="profile-settings">
+    <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
+    {% blocktrans %}
+    Your settings apply to all communities you belong to.
+    {% endblocktrans %}
+</div>
+
+
 {% trans "Save Settings" as t_save_settings %}
 {% include "includes/forms/stimulusjs_form.html" with submit_btn=t_save_settings multipart=True %}
 {% endblock content %}
