@@ -1393,7 +1393,7 @@ msgstr[1] ""
 #: templates/events/includes/event.html:95
 #: templates/photos/includes/photo.html:64
 #: templates/posts/includes/post.html:44
-msgid "Permalink"
+msgid "Link"
 msgstr "Pysyvä linkki"
 
 #: templates/comments/includes/notification.html:13

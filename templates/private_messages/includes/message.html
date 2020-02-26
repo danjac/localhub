@@ -35,7 +35,7 @@
     </div>
     <div class="card-footer">
         <div class="actions">
-            <a href="{{ message.get_permalink }}">{% trans "Permalink" %}</a>
+            <a href="{{ message.get_permalink }}">{% trans "Link" %}</a>
             {% if message.has_thread and not is_detail %}
             <a href="{{ message.get_absolute_url }}">{% trans "Thread" %}</a>
             {% elif message.thread and show_thread_info %}
