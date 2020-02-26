@@ -159,7 +159,7 @@ class MessageReplyView(BreadcrumbsMixin, RecipientQuerySetMixin, BaseMessageForm
             % {"recipient": user_display(message.recipient)},
         )
         send_message_notifications(message)
-        return redirect(message)
+        return redirect(message.thread)
 
 
 message_reply_view = MessageReplyView.as_view()
