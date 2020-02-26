@@ -83,6 +83,4 @@ class TestGetUnreadLocalNetworkMessageCount:
             recipient=member.member,
             sender=MembershipFactory(community=other).member,
         )
-        assert (
-            get_unread_external_message_count(member.member, member.community) == 1
-        )
+        assert get_unread_external_message_count(member.member, member.community) == 1

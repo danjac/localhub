@@ -227,6 +227,34 @@ class TestMessageManager:
 
 
 class TestMessageModel:
+    def test_is_visible_to_neither_sender_or_recipient(self):
+        message = MessageFactory()
+        assert not message.is_visible(UserFactory())
+
+    def test_is_visible_to_sender(self):
+        message = MessageFactory()
+        assert message.is_visible(message.sender)
+
+    def test_is_visible_to_sender_if_sender_deleted(self):
+        message = MessageFactory(sender_deleted=timezone.now())
+        assert not message.is_visible(message.sender)
+
+    def test_is_visible_to_sender_if_recipient_deleted(self):
+        message = MessageFactory(recipient_deleted=timezone.now())
+        assert message.is_visible(message.sender)
+
+    def test_is_visible_to_recipient(self):
+        message = MessageFactory()
+        assert message.is_visible(message.recipient)
+
+    def test_is_visible_to_recipient_if_recipient_deleted(self):
+        message = MessageFactory(recipient_deleted=timezone.now())
+        assert not message.is_visible(message.recipient)
+
+    def test_is_visible_to_recipient_if_sender_deleted(self):
+        message = MessageFactory(sender_deleted=timezone.now())
+        assert message.is_visible(message.recipient)
+
     def test_get_other_user(self):
         message = MessageFactory()
         assert message.get_other_user(message.sender) == message.recipient

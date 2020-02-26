@@ -9,7 +9,7 @@ from localhub.posts.factories import PostFactory
 from localhub.users.factories import UserFactory
 
 from ..models import Flag
-from ..templatetags.flags_tags import get_flag_count, get_external_flag_count
+from ..templatetags.flags_tags import get_external_flag_count, get_flag_count
 
 pytestmark = pytest.mark.django_db
 

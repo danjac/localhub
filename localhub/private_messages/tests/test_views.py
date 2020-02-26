@@ -1,5 +1,6 @@
 import pytest
 from django.urls import reverse
+from django.utils import timezone
 
 from localhub.communities.factories import MembershipFactory
 
@@ -61,6 +62,20 @@ class TestMessageDeleteView:
         message.refresh_from_db()
         assert message.sender_deleted
 
+    def test_post_if_sender_and_recipient_deleted(self, client, member):
+        recipient = MembershipFactory(community=member.community).member
+        message = MessageFactory(
+            community=member.community,
+            sender=member.member,
+            recipient=recipient,
+            recipient_deleted=timezone.now(),
+        )
+        response = client.post(
+            reverse("private_messages:message_delete", args=[message.id])
+        )
+        assert response.url == reverse("private_messages:outbox")
+        assert not Message.objects.count()
+
     def test_post_if_recipient(self, client, member):
         sender = MembershipFactory(community=member.community).member
         message = MessageFactory(
@@ -72,6 +87,20 @@ class TestMessageDeleteView:
         assert response.url == reverse("private_messages:inbox")
         message.refresh_from_db()
         assert message.recipient_deleted
+
+    def test_post_if_recipient_and_sender_deleted(self, client, member):
+        sender = MembershipFactory(community=member.community).member
+        message = MessageFactory(
+            community=member.community,
+            recipient=member.member,
+            sender=sender,
+            sender_deleted=timezone.now(),
+        )
+        response = client.post(
+            reverse("private_messages:message_delete", args=[message.id])
+        )
+        assert response.url == reverse("private_messages:inbox")
+        assert not Message.objects.count()
 
     def test_get(self, client, member):
         recipient = MembershipFactory(community=member.community).member

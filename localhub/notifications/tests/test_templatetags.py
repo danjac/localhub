@@ -60,9 +60,7 @@ class TestGetUnreadNotificationCount:
 
 class TestGetUnreadLocalNetworkNotificationCount:
     def test_anonymous(self, community):
-        assert (
-            get_unread_external_notification_count(AnonymousUser(), community) == 0
-        )
+        assert get_unread_external_notification_count(AnonymousUser(), community) == 0
 
     def test_authenticated(self, member):
 
@@ -91,6 +89,5 @@ class TestGetUnreadLocalNetworkNotificationCount:
         )
 
         assert (
-            get_unread_external_notification_count(member.member, member.community)
-            == 1
+            get_unread_external_notification_count(member.member, member.community) == 1
         )

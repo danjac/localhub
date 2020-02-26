@@ -247,6 +247,9 @@ class MessageDeleteView(SenderOrRecipientQuerySetMixin, DeleteView):
     """
     Does a "soft delete" which sets sender/recipient deleted flag
     accordingly.
+
+    If both sender and recipient have soft-deleted, then the message
+    is "hard" deleted.
     """
 
     model = Message
@@ -257,8 +260,10 @@ class MessageDeleteView(SenderOrRecipientQuerySetMixin, DeleteView):
             self.object.recipient_deleted = timezone.now()
         else:
             self.object.sender_deleted = timezone.now()
-        # TBD: if both are "soft deleted" then delete message entirely
-        self.object.save()
+        if self.object.recipient_deleted and self.object.sender_deleted:
+            self.object.delete()
+        else:
+            self.object.save()
         messages.success(request, _("This message has been deleted"))
         return HttpResponseRedirect(self.get_success_url())
 

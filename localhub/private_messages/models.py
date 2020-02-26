@@ -154,9 +154,7 @@ class Message(TimeStampedModel):
         return truncatechars(text, length)
 
     def is_visible(self, user):
-        return (
-            self.sender == user and self.sender_deleted is None
-        ) or (
+        return (self.sender == user and self.sender_deleted is None) or (
             self.recipient == user and self.recipient_deleted is None
         )
 

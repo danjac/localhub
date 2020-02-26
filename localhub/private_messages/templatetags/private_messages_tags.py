@@ -29,9 +29,7 @@ def show_message(
     outbox_url = reverse("private_messages:outbox")
 
     show_thread_info = (
-        show_thread_info
-        and message.parent
-        and message.parent.is_visible(user)
+        show_thread_info and message.parent and message.parent.is_visible(user)
     )
 
     if is_sender:
