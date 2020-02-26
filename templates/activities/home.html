@@ -4,6 +4,7 @@
 {% extends "activities/base.html" %}
 
 {% load i18n %}
+{% load rules %}
 {% load users_tags %}
 
 {% block subtitle %} | {% trans "Home" %}{% endblock %}
@@ -63,7 +64,6 @@
 </p>
 {% endif %}
 
-
 {% if not user.show_embedded_content %}
 <p class="toast text-center my-2 d-hide"
    data-controller="cookie-notice"
@@ -76,9 +76,12 @@
     {% endblocktrans %}
 </p>
 {% endif %}
+
 {% elif page_obj.paginator.num_pages > 1 %}
+
 {% include "includes/pagination.html" %}
 <div class="divider"></div>
+
 {% endif %}
 
 {% include "activities/includes/activity_list.html" %}
