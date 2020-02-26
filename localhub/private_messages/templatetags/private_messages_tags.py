@@ -93,7 +93,7 @@ def get_unread_message_count(user, community):
 
 
 @register.simple_tag
-def get_unread_local_network_message_count(user, community):
+def get_unread_external_message_count(user, community):
     """
     Returns count of unread messages *outside* the current community,
     where the user is an active member. If user not logged in returns 0.

@@ -9,7 +9,7 @@ from localhub.posts.factories import PostFactory
 
 from ..models import Notification
 from ..templatetags.notifications_tags import (
-    get_unread_local_network_notification_count,
+    get_unread_external_notification_count,
     get_unread_notification_count,
     notifications_subscribe_btn,
 )
@@ -61,7 +61,7 @@ class TestGetUnreadNotificationCount:
 class TestGetUnreadLocalNetworkNotificationCount:
     def test_anonymous(self, community):
         assert (
-            get_unread_local_network_notification_count(AnonymousUser(), community) == 0
+            get_unread_external_notification_count(AnonymousUser(), community) == 0
         )
 
     def test_authenticated(self, member):
@@ -91,6 +91,6 @@ class TestGetUnreadLocalNetworkNotificationCount:
         )
 
         assert (
-            get_unread_local_network_notification_count(member.member, member.community)
+            get_unread_external_notification_count(member.member, member.community)
             == 1
         )

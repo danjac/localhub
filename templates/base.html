@@ -18,18 +18,18 @@
 
 {% get_draft_count user community as drafts_count %}
 {% get_flag_count user community as flags_count %}
-{% get_local_network_draft_count user community as local_network_drafts_count %}
-{% get_local_network_flag_count user community as local_network_flags_count %}
+{% get_external_draft_count user community as external_drafts_count %}
+{% get_external_flag_count user community as external_flags_count %}
 {% get_pending_join_request_count user community as pending_join_requests_count %}
-{% get_pending_local_network_join_request_count user community as pending_local_network_join_requests_count %}
-{% get_unread_local_network_message_count user community as unread_local_network_messages_count %}
-{% get_unread_local_network_notification_count user community as unread_local_network_notifications_count %}
+{% get_pending_external_join_request_count user community as pending_external_join_requests_count %}
+{% get_unread_external_message_count user community as unread_external_messages_count %}
+{% get_unread_external_notification_count user community as unread_external_notifications_count %}
 {% get_unread_message_count user community as unread_messages_count %}
 {% get_unread_notification_count user community as unread_notifications_count %}
 
 {% endspaceless %}
 
-{% with total_notifications_count=unread_notifications_count|add:unread_messages_count|add:unread_local_network_notifications_count|add:unread_local_network_messages_count|add:pending_local_network_join_requests_count|add:pending_join_requests_count|add:drafts_count|add:local_network_drafts_count|add:flags_count|add:local_network_flags_count %}
+{% with total_notifications_count=unread_notifications_count|add:unread_messages_count|add:unread_external_notifications_count|add:unread_external_messages_count|add:pending_external_join_requests_count|add:pending_join_requests_count|add:drafts_count|add:external_drafts_count|add:flags_count|add:external_flags_count %}
 
 <!DOCTYPE html>
 <html lang="en">

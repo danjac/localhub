@@ -39,8 +39,8 @@
     <a data-controller="active-link"
        data-active-link-exact
        href="{% url 'community_list' %}">
-      {% with total_local_network_notifications=unread_local_network_notifications_count|add:unread_local_network_messages_count|add:pending_local_network_join_requests_count|add:local_network_drafts_count|add:local_network_flags_count %}
-      <span {% if total_local_network_notifications %}class="badge" data-badge="{{ total_local_network_notifications }}"{% endif %}>
+      {% with total_external_notifications=unread_external_notifications_count|add:unread_external_messages_count|add:pending_external_join_requests_count|add:external_drafts_count|add:external_flags_count %}
+      <span {% if total_external_notifications %}class="badge" data-badge="{{ total_external_notifications }}"{% endif %}>
         {% trans "Communities" %}
       </span>
       {% endwith %}

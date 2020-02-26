@@ -27,7 +27,7 @@ def get_draft_count(user, community):
 
 
 @register.simple_tag
-def get_local_network_draft_count(user, community):
+def get_external_draft_count(user, community):
     if user.is_anonymous or not community.active:
         return 0
 

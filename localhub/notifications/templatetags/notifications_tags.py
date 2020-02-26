@@ -37,7 +37,7 @@ def get_unread_notification_count(user, community):
 
 
 @register.simple_tag
-def get_unread_local_network_notification_count(user, community):
+def get_unread_external_notification_count(user, community):
     """
     Returns a count of the total number of *unread* notifications
     for the current user for all communities where user is member, excluding

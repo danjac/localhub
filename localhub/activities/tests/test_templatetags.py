@@ -11,7 +11,7 @@ from localhub.users.factories import UserFactory
 
 from ..templatetags.activities_tags import (
     get_draft_count,
-    get_local_network_draft_count,
+    get_external_draft_count,
     is_content_sensitive,
     is_oembed_url,
 )
@@ -46,15 +46,15 @@ class TestGetDraftCount:
 
 
 class TestGetLocalNetworkDraftCount:
-    def test_get_local_network_draft_count(self, member):
+    def test_get_external_draft_count(self, member):
         PostFactory(community=member.community, owner=member.member, published=None)
         other = CommunityFactory()
         MembershipFactory(member=member.member, community=other)
         PostFactory(community=other, owner=member.member, published=None)
-        assert get_local_network_draft_count(member.member, member.community) == 1
+        assert get_external_draft_count(member.member, member.community) == 1
 
-    def test_get_local_network_draft_count_if_anonymous(self, community):
-        assert get_local_network_draft_count(AnonymousUser(), community) == 0
+    def test_get_external_draft_count_if_anonymous(self, community):
+        assert get_external_draft_count(AnonymousUser(), community) == 0
 
 
 class TestIsContentSensitive:

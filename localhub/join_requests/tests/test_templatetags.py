@@ -10,7 +10,7 @@ from localhub.communities.models import Membership
 from ..factories import JoinRequestFactory
 from ..templatetags.join_requests_tags import (
     get_pending_join_request_count,
-    get_pending_local_network_join_request_count,
+    get_pending_external_join_request_count,
 )
 
 pytestmark = pytest.mark.django_db
@@ -36,7 +36,7 @@ class TestGetPendingLocalNetworkJoinRequestCount:
             role=Membership.ROLES.admin, member=member.member
         )
         JoinRequestFactory(community=membership.community)
-        count = get_pending_local_network_join_request_count(
+        count = get_pending_external_join_request_count(
             member.member, member.community
         )
         assert count == 1
@@ -46,19 +46,19 @@ class TestGetPendingLocalNetworkJoinRequestCount:
             role=Membership.ROLES.member, member=member.member
         )
         JoinRequestFactory(community=membership.community)
-        count = get_pending_local_network_join_request_count(
+        count = get_pending_external_join_request_count(
             member.member, member.community
         )
         assert count == 0
 
     def test_get_count_if_anonymous_user(self, community):
         JoinRequestFactory(community=community)
-        count = get_pending_local_network_join_request_count(AnonymousUser(), community)
+        count = get_pending_external_join_request_count(AnonymousUser(), community)
         assert count == 0
 
     def test_get_count_if_current_community(self, admin):
         JoinRequestFactory(community=admin.community)
-        count = get_pending_local_network_join_request_count(
+        count = get_pending_external_join_request_count(
             admin.member, admin.community
         )
         assert count == 0

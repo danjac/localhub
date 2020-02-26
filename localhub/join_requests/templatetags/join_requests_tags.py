@@ -27,7 +27,7 @@ def get_pending_join_request_count(user, community):
 
 
 @register.simple_tag
-def get_pending_local_network_join_request_count(user, community):
+def get_pending_external_join_request_count(user, community):
     """
     Returns total number of pending join requests excluding this community,
     where the current user is an admin.
