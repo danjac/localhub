@@ -27,15 +27,13 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
         )
 
     def for_sender(self, user):
-        return self.filter(sender=user)
+        return self.filter(sender=user, sender_deleted__isnull=True)
 
     def for_recipient(self, user):
-        return self.filter(recipient=user, is_hidden=False)
+        return self.filter(recipient=user, recipient_deleted__isnull=True)
 
     def for_sender_or_recipient(self, user):
-        return self.filter(
-            models.Q(sender=user) | models.Q(recipient=user, is_hidden=False)
-        )
+        return self.for_sender(user) | self.for_recipient(user)
 
     def between(self, current_user, other_user):
         """
@@ -43,10 +41,18 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
         """
         return self.filter(
             models.Q(
-                models.Q(recipient=current_user, is_hidden=False), sender=other_user,
+                models.Q(
+                    sender=current_user,
+                    sender_deleted__isnull=True,
+                    recipient=other_user,
+                )
+                | models.Q(
+                    recipient=current_user,
+                    recipient_deleted__isnull=True,
+                    sender=other_user,
+                )
             )
-            | models.Q(recipient=other_user, sender=current_user)
-        )
+        ).distinct()
 
     def exclude_sender_blocked(self, user):
         """
@@ -123,7 +129,8 @@ class Message(TimeStampedModel):
 
     read = models.DateTimeField(null=True, blank=True)
 
-    is_hidden = models.BooleanField(default=False)
+    recipient_deleted = models.DateTimeField(null=True, blank=True)
+    sender_deleted = models.DateTimeField(null=True, blank=True)
 
     search_document = SearchVectorField(null=True, editable=False)
     search_indexer = SearchIndexer(("A", "message"))
@@ -145,6 +152,13 @@ class Message(TimeStampedModel):
         """
         text = " ".join(self.message.plaintext().splitlines())
         return truncatechars(text, length)
+
+    def is_visible(self, user):
+        return (
+            self.sender == user and self.sender_deleted is None
+        ) or (
+            self.recipient == user and self.recipient_deleted is None
+        )
 
     def get_absolute_url(self):
         return reverse("private_messages:message_detail", args=[self.id])

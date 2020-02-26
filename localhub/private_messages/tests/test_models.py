@@ -127,22 +127,36 @@ class TestMessageManager:
         MessageFactory(recipient=user)
         assert Message.objects.for_recipient(user).exists()
 
-    def test_for_recipient_if_hidden(self, user):
-        MessageFactory(recipient=user, is_hidden=True)
+    def test_for_sender_if_sender_deleted(self, user):
+        MessageFactory(sender=user, sender_deleted=timezone.now())
+        assert not Message.objects.for_sender(user).exists()
+
+    def test_for_sender_if_recipient_deleted(self, user):
+        MessageFactory(sender=user, recipient_deleted=timezone.now())
+        assert Message.objects.for_sender(user).exists()
+
+    def test_for_recipient_if_recipient_deleted(self, user):
+        MessageFactory(recipient=user, recipient_deleted=timezone.now())
         assert not Message.objects.for_recipient(user).exists()
+
+    def test_for_recipient_if_sender_deleted(self, user):
+        MessageFactory(recipient=user, sender_deleted=timezone.now())
+        assert Message.objects.for_recipient(user).exists()
 
     def test_for_sender_or_recipient(self, user):
 
         first = MessageFactory(sender=user)
         second = MessageFactory(recipient=user)
         third = MessageFactory()
-        fourth = MessageFactory(recipient=user, is_hidden=True)
+        fourth = MessageFactory(recipient=user, recipient_deleted=timezone.now())
+        fifth = MessageFactory(sender=user, sender_deleted=timezone.now())
 
         messages = Message.objects.for_sender_or_recipient(user)
         assert first in messages
         assert second in messages
         assert third not in messages
         assert fourth not in messages
+        assert fifth not in messages
 
     def test_has_thread(self, user):
         first = MessageFactory(sender=user)
@@ -158,9 +172,16 @@ class TestMessageManager:
         message = Message.objects.with_has_thread(user).get(pk=first.id)
         assert not message.has_thread
 
-    def test_has_thread_if_reply_hidden(self, user):
+    def test_has_thread_if_reply_recipient_deleted(self, user):
         first = MessageFactory(sender=user)
-        MessageFactory(recipient=user, thread=first, is_hidden=True)
+        MessageFactory(recipient=user, thread=first, recipient_deleted=timezone.now())
+
+        message = Message.objects.with_has_thread(user).get(pk=first.id)
+        assert not message.has_thread
+
+    def test_has_thread_if_reply_sender_deleted(self, user):
+        first = MessageFactory(sender=user)
+        MessageFactory(sender=user, thread=first, sender_deleted=timezone.now())
 
         message = Message.objects.with_has_thread(user).get(pk=first.id)
         assert not message.has_thread
@@ -177,7 +198,18 @@ class TestMessageManager:
         fifth = MessageFactory(sender=user_b)
         sixth = MessageFactory(recipient=user_a)
         seventh = MessageFactory(recipient=user_b)
-        eighth = MessageFactory(recipient=user_a, sender=user_b, is_hidden=True)
+        eighth = MessageFactory(
+            recipient=user_a, sender=user_b, recipient_deleted=timezone.now()
+        )
+        ninth = MessageFactory(
+            sender=user_a, recipient=user_b, sender_deleted=timezone.now()
+        )
+        tenth = MessageFactory(
+            sender=user_a, recipient=user_b, recipient_deleted=timezone.now()
+        )
+        eleventh = MessageFactory(
+            recipient=user_a, sender=user_b, sender_deleted=timezone.now()
+        )
 
         messages = Message.objects.between(user_a, user_b)
 
@@ -189,6 +221,9 @@ class TestMessageManager:
         assert sixth not in messages
         assert seventh not in messages
         assert eighth not in messages
+        assert ninth not in messages
+        assert tenth in messages
+        assert eleventh in messages
 
 
 class TestMessageModel:

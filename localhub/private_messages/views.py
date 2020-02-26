@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.db.models import F
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
@@ -50,6 +51,11 @@ class SenderQuerySetMixin(MessageQuerySetMixin):
 class RecipientQuerySetMixin(MessageQuerySetMixin):
     def get_queryset(self):
         return super().get_queryset().for_recipient(self.request.user)
+
+
+class SenderOrRecipientQuerySetMixin(MessageQuerySetMixin):
+    def get_queryset(self):
+        return super().get_queryset().for_sender_or_recipient(self.request.user)
 
 
 class BaseMessageListView(SearchMixin, ListView):
@@ -211,7 +217,7 @@ class MessageCreateView(BreadcrumbsMixin, CommunityRequiredMixin, BaseMessageFor
 message_create_view = MessageCreateView.as_view()
 
 
-class MessageDetailView(MessageQuerySetMixin, DetailView):
+class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
 
     model = Message
 
@@ -221,9 +227,6 @@ class MessageDetailView(MessageQuerySetMixin, DetailView):
             self.object.read = timezone.now()
             self.object.save()
         return response
-
-    def get_queryset(self):
-        return super().get_queryset().for_sender_or_recipient(self.request.user)
 
     def get_replies(self):
         return self.get_queryset().filter(thread=self.object).order_by("created")
@@ -240,32 +243,32 @@ class MessageDetailView(MessageQuerySetMixin, DetailView):
 message_detail_view = MessageDetailView.as_view()
 
 
-class MessageDeleteView(SenderQuerySetMixin, DeleteView):
+class MessageDeleteView(SenderOrRecipientQuerySetMixin, DeleteView):
+    """
+    Does a "soft delete" which sets sender/recipient deleted flag
+    accordingly.
+    """
+
     model = Message
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.request.user == self.object.recipient:
+            self.object.recipient_deleted = timezone.now()
+        else:
+            self.object.sender_deleted = timezone.now()
+        # TBD: if both are "soft deleted" then delete message entirely
+        self.object.save()
+        messages.success(request, _("This message has been deleted"))
+        return HttpResponseRedirect(self.get_success_url())
+
     def get_success_url(self):
+        if self.request.user == self.object.recipient:
+            return reverse("private_messages:inbox")
         return reverse("private_messages:outbox")
 
 
 message_delete_view = MessageDeleteView.as_view()
-
-
-class MessageHideView(RecipientQuerySetMixin, GenericModelView):
-    """
-    "Removes" message by marking it hidden. Also marks it read. Removes
-    message from view for recipient, but does not delete it completely.
-    """
-
-    def post(self, request, *args, **kwargs):
-        message = self.get_object()
-        if not message.read:
-            message.read = timezone.now()
-        message.is_hidden = True
-        message.save()
-        return redirect(message)
-
-
-message_hide_view = MessageHideView.as_view()
 
 
 class MessageMarkReadView(RecipientQuerySetMixin, GenericModelView):

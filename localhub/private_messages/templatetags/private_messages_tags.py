@@ -31,7 +31,7 @@ def show_message(
     show_thread_info = (
         show_thread_info
         and message.parent
-        and (is_recipient or (is_sender and not message.parent.is_hidden))
+        and message.parent.is_visible(user)
     )
 
     if is_sender:

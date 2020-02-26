@@ -49,7 +49,7 @@ class TestRecipientListView:
 
 
 class TestMessageDeleteView:
-    def test_post(self, client, member):
+    def test_post_if_sender(self, client, member):
         recipient = MembershipFactory(community=member.community).member
         message = MessageFactory(
             community=member.community, sender=member.member, recipient=recipient,
@@ -58,7 +58,20 @@ class TestMessageDeleteView:
             reverse("private_messages:message_delete", args=[message.id])
         )
         assert response.url == reverse("private_messages:outbox")
-        assert not Message.objects.exists()
+        message.refresh_from_db()
+        assert message.sender_deleted
+
+    def test_post_if_recipient(self, client, member):
+        sender = MembershipFactory(community=member.community).member
+        message = MessageFactory(
+            community=member.community, recipient=member.member, sender=sender,
+        )
+        response = client.post(
+            reverse("private_messages:message_delete", args=[message.id])
+        )
+        assert response.url == reverse("private_messages:inbox")
+        message.refresh_from_db()
+        assert message.recipient_deleted
 
     def test_get(self, client, member):
         recipient = MembershipFactory(community=member.community).member
@@ -82,21 +95,6 @@ class TestMessageMarkReadView:
         )
         assert response.url == message.get_absolute_url()
         message.refresh_from_db()
-        assert message.read is not None
-
-
-class TestMessageHideView:
-    def test_post(self, client, member):
-        sender = MembershipFactory(community=member.community).member
-        message = MessageFactory(
-            community=member.community, recipient=member.member, sender=sender
-        )
-        response = client.post(
-            reverse("private_messages:message_hide", args=[message.id])
-        )
-        assert response.url == message.get_absolute_url()
-        message.refresh_from_db()
-        assert message.is_hidden
         assert message.read is not None
 
 
