@@ -8,8 +8,12 @@
 
 {% block subtitle %} | {% trans "Home" %}{% endblock %}
 {% block content %}
-Submit
-{% if can_create_activity and page_obj.number == 1 %}
+
+{% if page_obj.number == 1 %}
+
+{% has_perm "activities.create_activity" user community as can_create_activity %}
+
+{% if can_create_activity %}
 <div class="d-hide" data-controller="js-toggle">
     <div class="mb-2">
         <div class="input-group">
@@ -31,6 +35,8 @@ Submit
     </div>
     <div class="divider"></div>
 </div>
+{% endif %}
+
 {% if latest_notification %}
 <p class="toast toast-primary text-center my-2" data-controller="toggle" data-target="toggle.togglable">
     <button class="btn btn-clear float-right d-hide"
