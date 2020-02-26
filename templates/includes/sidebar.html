@@ -59,6 +59,12 @@
     </a>
   </li>
   {% endif %}
+  {% if can_create_message %}
+  <li class="menu-item">
+    <a data-controller="active-link" data-active-link-exact
+       href="{% url 'private_messages:recipients' %}">{% trans "Send Message" %}</a>
+  </li>
+  {% endif %}
   {% if can_create_activity %}
   <li class="menu-item">
     <a data-controller="active-link" data-active-link-exact
@@ -75,12 +81,6 @@
   <li class="menu-item">
     <a data-controller="active-link" data-active-link-exact
        href="{% url 'polls:create' %}">{% trans "New Poll" %}</a>
-  </li>
-  {% endif %}
-  {% if can_create_message %}
-  <li class="menu-item">
-    <a data-controller="active-link" data-active-link-exact
-       href="{% url 'private_messages:recipients' %}">{% trans "Send Message" %}</a>
   </li>
   {% endif %}
 </ul>

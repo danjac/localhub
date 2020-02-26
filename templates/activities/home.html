@@ -8,7 +8,8 @@
 
 {% block subtitle %} | {% trans "Home" %}{% endblock %}
 {% block content %}
-{% if page_obj.number == 1 %}
+Submit
+{% if can_create_activity and page_obj.number == 1 %}
 <div class="d-hide" data-controller="js-toggle">
     <div class="mb-2">
         <div class="input-group">
