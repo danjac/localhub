@@ -40,15 +40,13 @@
             {% elif thread %}
             <a href="{{ thread.get_absolute_url }}">{% trans "Thread" %}</a>
             {% endif %}
-            {% if is_recipient %}
-            {% if not message.read %}
+            {% if is_recipient and not message.read %}
             <a href="{% url 'private_messages:message_mark_read' message.id %}"
                class="d-hide"
                data-controller="js-toggle ajax"
                data-action="ajax#post"
                data-ajax-redirect="{{ request.path }}"
                >{% trans "Mark As Read" %}</a>
-            {% endif %}
             {% endif %}
             <a href="{% url 'private_messages:message_delete' message.id %}"
                data-controller="ajax confirm"
