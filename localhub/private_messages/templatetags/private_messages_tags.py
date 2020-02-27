@@ -32,8 +32,8 @@ def show_message(
         sender_url = outbox_url
         recipient_url = reverse("users:messages", args=[message.recipient.username])
     else:
-        sender_url = reverse("users:messages", args=[message.sender.username])
         recipient_url = outbox_url
+        sender_url = reverse("users:messages", args=[message.sender.username])
 
     if message.parent and message.parent.is_visible(user):
         parent = message.parent
