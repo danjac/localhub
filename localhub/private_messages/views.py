@@ -36,8 +36,10 @@ class MessageQuerySetMixin(CommunityRequiredMixin):
                 "recipient",
                 "community",
                 "parent",
+                "parent__recipient",
                 "parent__sender",
                 "thread",
+                "thread__recipient",
                 "thread__sender",
             )
         )
