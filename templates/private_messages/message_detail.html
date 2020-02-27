@@ -19,11 +19,11 @@
 </div>
 
 <div class="divider"></div>
-{% show_message user message is_detail=True %}
+{% show_message user community message is_detail=True %}
 {% if replies %}
 <div class="divider text-center" data-content="{% trans 'Replies' %}"></div>
 {% for reply in replies %}
-{% show_message user reply show_thread_info=False %}
+{% show_message user community reply show_thread_info=False %}
 {% endfor %}
 {% endif %}
 {% endblock content %}

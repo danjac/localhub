@@ -37,8 +37,8 @@
         <div class="actions">
             {% if message.has_thread and not is_detail %}
             <a href="{{ message.get_absolute_url }}">{% trans "Thread" %}</a>
-            {% elif message.thread and show_thread_info %}
-            <a href="{{ message.thread.get_absolute_url }}">{% trans "Thread" %}</a>
+            {% elif thread %}
+            <a href="{{ thread.get_absolute_url }}">{% trans "Thread" %}</a>
             {% endif %}
             {% if is_recipient %}
             {% if not message.read %}
@@ -57,7 +57,7 @@
                data-confirm-header="{% trans 'Delete Message' %}"
                data-confirm-body="{% trans "Are you sure you want to delete this message? Replies to this message will not be deleted. The message may still be available to the other person." %}"
                >{% trans "Delete" %}</a>
-            {% if can_create_message and is_recipient %}
+            {% if can_reply %}
             <a href="{% url 'private_messages:message_reply' message.id %}">{% trans "Reply" %}</a>
             {% endif %}
         </div>

@@ -162,6 +162,8 @@ class MessageReplyView(BreadcrumbsMixin, RecipientQuerySetMixin, BaseMessageForm
             % {"recipient": user_display(message.recipient)},
         )
         send_message_notifications(message)
+        if message.thread.is_visible(self.request.user):
+            return redirect(message.thread)
         return redirect(message)
 
 

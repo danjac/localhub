@@ -19,7 +19,7 @@
 
 {% if object_list %}
 {% for message in object_list %}
-{% show_message user message show_recipient_info=False %}
+{% show_message user community message show_recipient_info=False %}
 {% endfor %}
 
 {% include "includes/pagination.html" %}

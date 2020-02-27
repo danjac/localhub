@@ -27,32 +27,56 @@ def auth_request(rf, member):
 
 class TestShowMessage:
     def test_is_sender(self, auth_request):
+        parent = MessageFactory(recipient=auth_request.user)
         message = MessageFactory(
-            sender=auth_request.user, community=auth_request.community
+            sender=auth_request.user, community=auth_request.community, thread=parent
         )
-        context = show_message({"request": auth_request}, auth_request.user, message)
+        context = show_message(
+            {"request": auth_request},
+            auth_request.user,
+            auth_request.community,
+            message,
+        )
         assert context["sender_url"] == reverse("private_messages:outbox")
         assert context["recipient_url"] == reverse(
             "users:messages", args=[message.recipient.username]
         )
+        assert context["thread"] == parent
+        assert not context["can_reply"]
 
     def test_is_recipient(self, auth_request):
+        parent = MessageFactory(sender=auth_request.user)
         message = MessageFactory(
-            recipient=auth_request.user, community=auth_request.community
+            recipient=auth_request.user,
+            community=auth_request.community,
+            parent=parent,
+            thread=parent,
         )
         message.sender_has_blocked = False
-        context = show_message({"request": auth_request}, auth_request.user, message)
+        context = show_message(
+            {"request": auth_request},
+            auth_request.user,
+            auth_request.community,
+            message,
+        )
         assert context["recipient_url"] == reverse("private_messages:outbox")
         assert context["sender_url"] == reverse(
             "users:messages", args=[message.sender.username]
         )
+        assert context["thread"] == parent
+        assert context["can_reply"]
 
     def test_is_recipient_sender_has_blocked(self, auth_request):
         message = MessageFactory(
             recipient=auth_request.user, community=auth_request.community
         )
         message.sender_has_blocked = True
-        context = show_message({"request": auth_request}, auth_request.user, message)
+        context = show_message(
+            {"request": auth_request},
+            auth_request.user,
+            auth_request.community,
+            message,
+        )
         assert context["recipient_url"] == reverse("private_messages:outbox")
         assert context["sender_url"] == reverse(
             "users:messages", args=[message.sender.username]

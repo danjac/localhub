@@ -15,6 +15,7 @@ register = template.Library()
 def show_message(
     context,
     user,
+    community,
     message,
     show_sender_info=True,
     show_recipient_info=True,
@@ -28,10 +29,6 @@ def show_message(
     inbox_url = reverse("private_messages:inbox")
     outbox_url = reverse("private_messages:outbox")
 
-    show_thread_info = (
-        show_thread_info and message.parent and message.parent.is_visible(user)
-    )
-
     if is_sender:
         sender_url = outbox_url
         recipient_url = reverse("users:messages", args=[message.recipient.username])
@@ -39,30 +36,36 @@ def show_message(
         sender_url = reverse("users:messages", args=[message.sender.username])
         recipient_url = outbox_url
 
-    request = context["request"]
-
-    can_create_message = request.user.has_perm(
-        "private_messages.create_message", request.community
-    )
-
-    parent = message.parent
-    if not show_thread_info and parent == message.thread:
+    if message.parent and message.parent.is_visible(user):
+        parent = message.parent
+    else:
         parent = None
 
+    if show_thread_info and message.thread and message.thread.is_visible(user):
+        thread = message.thread
+    else:
+        thread = None
+
+    can_reply = (
+        is_recipient
+        and parent is not None
+        and user.has_perm("private_messages.create_message", community)
+    )
+
     return {
-        "request": request,
+        "request": context["request"],
         "is_detail": is_detail,
         "is_recipient": is_recipient,
         "is_sender": is_sender,
         "message": message,
         "parent": parent,
+        "thread": thread,
         "recipient_url": recipient_url,
         "sender_url": sender_url,
         "other_user": message.get_other_user(user),
-        "show_thread_info": show_thread_info,
         "show_recipient_info": show_recipient_info,
         "show_sender_info": show_sender_info,
-        "can_create_message": can_create_message,
+        "can_reply": can_reply,
         "post_hide_redirect": inbox_url if is_detail else None,
         "post_delete_redirect": outbox_url if is_detail else None,
     }
