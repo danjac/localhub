@@ -144,6 +144,16 @@ class TestUserActivitiesView:
         notification.refresh_from_db()
         assert notification.is_read
 
+    def test_get_if_other_user_email_same_as_username(self, client, member):
+        """
+        Test for regex
+        """
+        other = MembershipFactory(
+            community=member.community, member=UserFactory(username="tester@gmail.com")
+        )
+        response = client.get(reverse("users:activities", args=[other.member.username]))
+        assert response.status_code == 200
+
 
 class TestUserUpdateView:
     def test_get(self, client, login_user):
@@ -200,8 +210,8 @@ class TestUserUnfollowView:
         user = MembershipFactory(community=member.community).member
         member.member.following.add(user)
         response = client.post(reverse("users:unfollow", args=[user.username]))
-        assert user not in member.member.following.all()
         assert response.url == user.get_absolute_url()
+        assert user not in member.member.following.all()
 
 
 class TestUserUnblockView:

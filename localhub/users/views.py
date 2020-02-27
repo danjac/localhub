@@ -60,7 +60,9 @@ class SingleUserMixin(BaseUserQuerySetMixin):
 
     @cached_property
     def user_obj(self):
-        return get_object_or_404(self.get_user_queryset(), username=self.kwargs["slug"])
+        return get_object_or_404(
+            self.get_user_queryset(), username=self.kwargs["username"]
+        )
 
     @cached_property
     def membership(self):
@@ -105,7 +107,7 @@ class SingleUserMixin(BaseUserQuerySetMixin):
 
 class BaseSingleUserView(UserQuerySetMixin, GenericModelView):
     lookup_field = "username"
-    lookup_url_kwarg = "slug"
+    lookup_url_kwarg = "username"
 
 
 class BaseUserListView(UserQuerySetMixin, ListView):

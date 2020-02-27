@@ -174,7 +174,7 @@ class MessageCreateView(BreadcrumbsMixin, CommunityRequiredMixin, BaseMessageFor
             .exclude(blockers=self.request.user)
             .exclude(blocked=self.request.user)
             .for_community(self.request.community),
-            username=self.kwargs["slug"],
+            username=self.kwargs["username"],
         )
 
     def get_breadcrumbs(self):

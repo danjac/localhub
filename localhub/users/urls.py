@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.urls import path
+from django.urls import path, re_path
 
 from .views import (
     blocked_user_list_view,
@@ -21,18 +21,22 @@ from .views import (
 
 app_name = "users"
 
+USERNAME_RE = r"^(?P<username>[\w.@+-]+)/"
+
 urlpatterns = [
     path("autocomplete/", view=user_autocomplete_list_view, name="autocomplete_list",),
     path("members/", view=member_list_view, name="member_list"),
     path("following/", view=following_user_list_view, name="following_list"),
     path("followers/", view=follower_user_list_view, name="follower_list"),
     path("blocked/", view=blocked_user_list_view, name="blocked_list"),
-    path("<slug:slug>/follow/", view=user_follow_view, name="follow"),
-    path("<slug:slug>/unfollow/", view=user_unfollow_view, name="unfollow"),
-    path("<slug:slug>/block/", view=user_block_view, name="block"),
-    path("<slug:slug>/unblock/", view=user_unblock_view, name="unblock"),
-    path("<slug:slug>/comments/", view=user_comment_list_view, name="comments"),
-    path("<slug:slug>/replies/", view=user_comment_reply_list_view, name="replies"),
-    path("<slug:slug>/messages/", view=user_message_list_view, name="messages"),
-    path("<slug:slug>/", view=user_stream_view, name="activities"),
+    re_path(USERNAME_RE + r"follow/$", view=user_follow_view, name="follow"),
+    re_path(USERNAME_RE + r"unfollow/$", view=user_unfollow_view, name="unfollow"),
+    re_path(USERNAME_RE + r"block/$", view=user_block_view, name="block"),
+    re_path(USERNAME_RE + r"unblock/$", view=user_unblock_view, name="unblock"),
+    re_path(USERNAME_RE + r"comments/$", view=user_comment_list_view, name="comments"),
+    re_path(
+        USERNAME_RE + r"replies/$", view=user_comment_reply_list_view, name="replies",
+    ),
+    re_path(USERNAME_RE + r"messages/$", view=user_message_list_view, name="messages"),
+    re_path(USERNAME_RE + r"$", view=user_stream_view, name="activities"),
 ]
