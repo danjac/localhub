@@ -15,9 +15,9 @@ from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 from sorl.thumbnail import ImageField
 
+from localhub.activities.utils import extract_hashtags
 from localhub.db.search import SearchQuerySetMixin
 from localhub.markdown.fields import MarkdownField
-from localhub.markdown.utils import extract_hashtags
 
 DOMAIN_VALIDATOR = RegexValidator(
     regex=URLValidator.host_re, message=_("This is not a valid domain")

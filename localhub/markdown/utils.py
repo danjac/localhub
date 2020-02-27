@@ -5,17 +5,15 @@
 Custom Markdown-related functions.
 """
 
-import re
 from functools import partial
 
 import bleach
 from bleach import Cleaner  # type: ignore
 from bleach.linkifier import LinkifyFilter
-from django.urls import reverse
 from markdownx.utils import markdownify as default_markdownify
 
+from localhub.activities.utils import linkify_hashtags
 from localhub.users.utils import linkify_mentions
-from localhub.utils.text import slugify_unicode
 from localhub.utils.urls import REL_SAFE_VALUES
 
 ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
@@ -43,9 +41,6 @@ ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
 ALLOWED_ATTRIBUTES = bleach.ALLOWED_ATTRIBUTES.copy()
 ALLOWED_ATTRIBUTES.update({"img": ["alt", "src"], "a": ["rel", "target", "href"]})
 
-HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")
-MENTIONS_RE = re.compile(r"(?:^|\s)[＠ @]{1}([^\s#<>!.?[\]|{}]+)")
-
 
 def set_link_target(attrs, new=False):
     # ignore any internal links
@@ -67,39 +62,6 @@ def markdownify(content):
     return cleaner.clean(
         default_markdownify(linkify_hashtags(linkify_mentions(content)))
     )
-
-
-def extract_hashtags(content):
-    """
-    Extracts tags (prefixed with "#") in string into a set of tags.
-    The extracted tags do not include the hash("#") prefix.
-    """
-    return set(
-        [
-            hashtag.lower()
-            for token in content.split(" ")
-            for hashtag in HASHTAGS_RE.findall(token)
-        ]
-    )
-
-
-def linkify_hashtags(content):
-    """
-    Replace all #hashtags in text with links to some tag search page.
-    """
-    tokens = content.split(" ")
-    rv = []
-    for token in tokens:
-
-        for tag in HASHTAGS_RE.findall(token):
-            slug = slugify_unicode(tag)
-            if slug:
-                url = reverse("activities:tag_detail", args=[slug])
-                token = token.replace("#" + tag, f'<a href="{url}">#{tag}</a>')
-
-        rv.append(token)
-
-    return " ".join(rv)
 
 
 cleaner = Cleaner(

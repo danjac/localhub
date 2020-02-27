@@ -3,7 +3,7 @@
 
 from django.contrib.auth import get_user_model
 
-from ..utils import user_display, linkify_mentions, extract_mentions
+from ..utils import extract_mentions, linkify_mentions, user_display
 
 
 class TestUserDisplay:
@@ -37,5 +37,3 @@ class TestExtractMentions:
             "kesämies",
             "someone-else",
         }
-
-

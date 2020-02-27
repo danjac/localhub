@@ -12,7 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DetailView, ListView, TemplateView, UpdateView
 
-from localhub.activities.utils import get_combined_activity_queryset
+from localhub.activities.models import get_combined_activity_queryset
 from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
 from localhub.views import SearchMixin

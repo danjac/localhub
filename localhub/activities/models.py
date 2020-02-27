@@ -24,10 +24,11 @@ from localhub.db.tracker import Tracker
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
-from localhub.markdown.utils import extract_hashtags
 from localhub.notifications.models import Notification
 from localhub.utils.itertools import takefirst
 from localhub.utils.text import slugify_unicode
+
+from .utils import extract_hashtags
 
 
 class ActivityQuerySet(
@@ -538,3 +539,29 @@ class Activity(TimeStampedModel):
         is_new = self._state.adding
         super().save(*args, **kwargs)
         self.save_tags(is_new)
+
+
+def get_activity_models():
+    """
+    Returns all Activity subclasses
+    """
+    return Activity.__subclasses__()
+
+
+def get_combined_activity_queryset(fn, all=False):
+    """
+    Creates a combined UNION queryset of all Activity subclasses.
+
+    fn should take a model class and return a QuerySet. QuerySets
+    for all models should have identical columns.
+
+    Example:
+
+    get_combined_activity_queryset(lambda model: model.objects.only("pk", "title"))
+    """
+    querysets = [fn(model) for model in get_activity_models()]
+    return querysets[0].union(*querysets[1:], all=all)
+
+
+def get_combined_activity_queryset_count(fn):
+    return get_combined_activity_queryset(fn, all=True).count()

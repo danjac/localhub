@@ -20,7 +20,7 @@ from localhub.notifications.models import Notification
 from localhub.private_messages.models import Message
 from localhub.views import BaseMultipleQuerySetListView, SearchMixin
 
-from ..utils import get_activity_models
+from ..models import get_activity_models
 
 
 class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):

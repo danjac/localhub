@@ -5,55 +5,16 @@ import pytest
 from django.conf import settings
 from django.urls import reverse
 
-from localhub.events.factories import EventFactory
-from localhub.events.models import Event
-from localhub.photos.models import Photo
-from localhub.polls.models import Poll
-from localhub.posts.factories import PostFactory
 from localhub.posts.models import Post
 
 from ..utils import (
-    get_activity_models,
+    extract_hashtags,
     get_breadcrumbs_for_instance,
     get_breadcrumbs_for_model,
-    get_combined_activity_queryset,
-    get_combined_activity_queryset_count,
+    linkify_hashtags,
 )
 
 pytestmark = pytest.mark.django_db
-
-
-class TestGetActivityModels:
-    def test_get_activity_models(self):
-        models = get_activity_models()
-        assert len(models) == 4
-        assert Event in models
-        assert Poll in models
-        assert Photo in models
-        assert Post in models
-
-
-class TestGetCombinedActivityQueryset:
-    def test_get_combined_activity_queryset(self):
-        PostFactory()
-        EventFactory()
-
-        qs = get_combined_activity_queryset(
-            lambda model: model.objects.only("pk", "title")
-        )
-
-        assert len(qs) == 2
-
-
-class TestGetCombinedActivityQuerysetCount:
-    def test_get_combined_activity_queryset_count(self):
-        PostFactory()
-        EventFactory()
-
-        assert (
-            get_combined_activity_queryset_count(lambda model: model.objects.only("pk"))
-            == 2
-        )
 
 
 class TestGetBreadcrumbs:
@@ -80,3 +41,26 @@ class TestGetBreadcrumbs:
         assert breadcrumbs[0][0] == settings.HOME_PAGE_URL
         assert breadcrumbs[1][0] == reverse("activities:drafts")
         assert breadcrumbs[2][0] == post.get_absolute_url()
+
+
+class TestExtractHashtags:
+    def test_extract(self):
+        content = "tags: #coding #opensource #Coding2019 #kesä"
+        assert extract_hashtags(content) == {
+            "coding",
+            "opensource",
+            "coding2019",
+            "kesä",
+        }
+
+
+class TestLinkifyHashtags:
+    def test_linkify(self):
+        content = "tags: #coding #opensource #Coding2019 #kesä"
+        replaced = linkify_hashtags(content)
+        assert (
+            replaced == 'tags: <a href="/tags/coding/">#coding</a>'
+            ' <a href="/tags/opensource/">#opensource</a>'
+            ' <a href="/tags/coding2019/">#Coding2019</a>'
+            ' <a href="/tags/kesa/">#kesä</a>'
+        )

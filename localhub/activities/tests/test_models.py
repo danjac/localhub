@@ -8,11 +8,21 @@ from taggit.models import Tag
 from localhub.comments.factories import CommentFactory
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Community
+from localhub.events.factories import EventFactory
+from localhub.events.models import Event
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
+from localhub.photos.models import Photo
+from localhub.polls.models import Poll
 from localhub.posts.factories import PostFactory
 from localhub.posts.models import Post
 from localhub.users.factories import UserFactory
+
+from ..models import (
+    get_activity_models,
+    get_combined_activity_queryset,
+    get_combined_activity_queryset_count,
+)
 
 pytestmark = pytest.mark.django_db
 
@@ -348,3 +358,36 @@ class TestActivityManager:
         assert hasattr(activity, "has_liked")
         assert hasattr(activity, "has_flagged")
         assert hasattr(activity, "is_flagged")
+
+
+class TestGetActivityModels:
+    def test_get_activity_models(self):
+        models = get_activity_models()
+        assert len(models) == 4
+        assert Event in models
+        assert Poll in models
+        assert Photo in models
+        assert Post in models
+
+
+class TestGetCombinedActivityQueryset:
+    def test_get_combined_activity_queryset(self):
+        PostFactory()
+        EventFactory()
+
+        qs = get_combined_activity_queryset(
+            lambda model: model.objects.only("pk", "title")
+        )
+
+        assert len(qs) == 2
+
+
+class TestGetCombinedActivityQuerysetCount:
+    def test_get_combined_activity_queryset_count(self):
+        PostFactory()
+        EventFactory()
+
+        assert (
+            get_combined_activity_queryset_count(lambda model: model.objects.only("pk"))
+            == 2
+        )

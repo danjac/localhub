@@ -3,7 +3,7 @@
 
 from django.utils.encoding import force_str
 
-from ..utils import linkify_hashtags, markdownify
+from ..utils import markdownify
 
 
 class TestMarkdownifySafe:
@@ -16,16 +16,4 @@ class TestMarkdownifySafe:
         assert (
             force_str(markdownify(content))
             == "&lt;script&gt;alert('howdy');&lt;/script&gt;"
-        )
-
-
-class TestLinkifyHashtags:
-    def test_linkify(self):
-        content = "tags: #coding #opensource #Coding2019 #kesä"
-        replaced = linkify_hashtags(content)
-        assert (
-            replaced == 'tags: <a href="/tags/coding/">#coding</a>'
-            ' <a href="/tags/opensource/">#opensource</a>'
-            ' <a href="/tags/coding2019/">#Coding2019</a>'
-            ' <a href="/tags/kesa/">#kesä</a>'
         )

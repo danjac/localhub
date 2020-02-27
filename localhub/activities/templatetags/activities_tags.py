@@ -5,12 +5,12 @@
 from django import template
 from django.utils.safestring import mark_safe
 
-from localhub.markdown.utils import linkify_hashtags
 from localhub.users.utils import linkify_mentions
 from localhub.utils.urls import is_https
 
+from ..models import get_combined_activity_queryset_count
 from ..oembed import bootstrap_oembed
-from ..utils import get_combined_activity_queryset_count
+from ..utils import linkify_hashtags
 
 register = template.Library()
 
