@@ -17,7 +17,9 @@ from django.template.defaultfilters import striptags
 from django.utils.safestring import mark_safe
 from markdownx.models import MarkdownxField
 
-from .utils import extract_hashtags, extract_mentions, markdownify
+from localhub.users.utils import extract_mentions
+
+from .utils import extract_hashtags, markdownify
 
 
 class MarkdownProxy(str):

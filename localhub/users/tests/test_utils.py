@@ -3,7 +3,7 @@
 
 from django.contrib.auth import get_user_model
 
-from ..utils import user_display
+from ..utils import user_display, linkify_mentions, extract_mentions
 
 
 class TestUserDisplay:
@@ -14,3 +14,28 @@ class TestUserDisplay:
     def test_user_display_no_name(self):
         user = get_user_model()(username="tester")
         assert user_display(user) == "tester"
+
+
+class TestLinkifyMentions:
+    def test_linkify(self):
+        content = "hello @danjac"
+        replaced = linkify_mentions(content)
+        assert replaced == 'hello <a href="/people/danjac/">@danjac</a>'
+
+    def test_linkify_unicode(self):
+        content = "hello @kesämies"
+        replaced = linkify_mentions(content)
+        assert replaced == 'hello <a href="/people/kesamies/">@kesämies</a>'
+
+
+class TestExtractMentions:
+    def test_extract(self):
+        content = "hello @danjac and @weegill and @kesämies and @someone-else!"
+        assert extract_mentions(content) == {
+            "danjac",
+            "weegill",
+            "kesämies",
+            "someone-else",
+        }
+
+

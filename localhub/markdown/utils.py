@@ -14,6 +14,7 @@ from bleach.linkifier import LinkifyFilter
 from django.urls import reverse
 from markdownx.utils import markdownify as default_markdownify
 
+from localhub.users.utils import linkify_mentions
 from localhub.utils.text import slugify_unicode
 from localhub.utils.urls import REL_SAFE_VALUES
 
@@ -66,36 +67,6 @@ def markdownify(content):
     return cleaner.clean(
         default_markdownify(linkify_hashtags(linkify_mentions(content)))
     )
-
-
-def extract_mentions(content):
-    """
-    Returns set of @mentions in text
-    """
-    return set(
-        [
-            mention
-            for token in content.split(" ")
-            for mention in MENTIONS_RE.findall(token)
-        ]
-    )
-
-
-def linkify_mentions(content):
-    """
-    Replace all @mentions in the text with links to user profile page.
-    """
-
-    tokens = content.split(" ")
-    rv = []
-    for token in tokens:
-        for mention in MENTIONS_RE.findall(token):
-            url = reverse("users:activities", args=[slugify_unicode(mention)])
-            token = token.replace("@" + mention, f'<a href="{url}">@{mention}</a>')
-
-        rv.append(token)
-
-    return " ".join(rv)
 
 
 def extract_hashtags(content):

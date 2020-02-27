@@ -3,7 +3,7 @@
 
 from django.utils.encoding import force_str
 
-from ..utils import extract_mentions, linkify_hashtags, linkify_mentions, markdownify
+from ..utils import linkify_hashtags, markdownify
 
 
 class TestMarkdownifySafe:
@@ -17,29 +17,6 @@ class TestMarkdownifySafe:
             force_str(markdownify(content))
             == "&lt;script&gt;alert('howdy');&lt;/script&gt;"
         )
-
-
-class TestExtractMentions:
-    def test_extract(self):
-        content = "hello @danjac and @weegill and @kesämies and @someone-else!"
-        assert extract_mentions(content) == {
-            "danjac",
-            "weegill",
-            "kesämies",
-            "someone-else",
-        }
-
-
-class TestLinkifyMentions:
-    def test_linkify(self):
-        content = "hello @danjac"
-        replaced = linkify_mentions(content)
-        assert replaced == 'hello <a href="/people/danjac/">@danjac</a>'
-
-    def test_linkify_unicode(self):
-        content = "hello @kesämies"
-        replaced = linkify_mentions(content)
-        assert replaced == 'hello <a href="/people/kesamies/">@kesämies</a>'
 
 
 class TestLinkifyHashtags:
