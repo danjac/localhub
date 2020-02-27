@@ -23,6 +23,12 @@ class TestMessageManager:
         assert qs.count() == 1
         assert qs.first() == message
 
+    def test_mark_read(self):
+        message = MessageFactory()
+        Message.objects.mark_read()
+        message.refresh_from_db()
+        assert message.read
+
     def test_unread_if_read(self):
         MessageFactory(read=timezone.now())
         assert not Message.objects.unread().exists()
@@ -261,6 +267,11 @@ class TestMessageModel:
         assert message.get_other_user(message.recipient) == message.sender
 
     def test_abbreviate(self):
+        message = Message(message="Hello\nthis is a *test*")
+        assert message.abbreviate() == "Hello this is a test"
 
-        msg = Message(message="Hello\nthis is a *test*")
-        assert msg.abbreviate() == "Hello this is a test"
+    def test_mark_read(self):
+        message = MessageFactory()
+        message.mark_read()
+        message.refresh_from_db()
+        assert message.read

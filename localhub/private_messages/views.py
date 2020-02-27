@@ -154,8 +154,7 @@ class MessageReplyView(BreadcrumbsMixin, RecipientQuerySetMixin, BaseMessageForm
         message.thread = self.parent.thread or self.parent
         message.save()
         if self.parent:
-            self.parent.read = timezone.now()
-            self.parent.save()
+            self.parent.mark_read()
         messages.success(
             self.request,
             _("Your message has been sent to %(recipient)s")
@@ -229,10 +228,9 @@ class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
     def get(self, *args, **kwargs):
         response = super().get(*args, **kwargs)
         if self.object.recipient == self.request.user and not self.object.read:
-            self.object.read = timezone.now()
-            self.object.save()
+            self.object.mark_read()
         # mark all messages in thread read
-        self.object.replies.for_recipient(self.request.user).update(read=timezone.now())
+        self.object.replies.for_recipient(self.request.user).mark_read()
         return response
 
     def get_replies(self):

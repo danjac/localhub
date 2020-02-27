@@ -7,6 +7,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.template.defaultfilters import truncatechars
 from django.urls import reverse
+from django.utils import timezone
 from model_utils.models import TimeStampedModel
 
 from localhub.communities.models import Community
@@ -96,6 +97,12 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
             )
         )
 
+    def mark_read(self):
+        """
+        Mark read any un-read items
+        """
+        return self.unread().update(read=timezone.now())
+
 
 class Message(TimeStampedModel):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
@@ -146,6 +153,12 @@ class Message(TimeStampedModel):
     def __str__(self):
         return self.message
 
+    def get_absolute_url(self):
+        return reverse("private_messages:message_detail", args=[self.id])
+
+    def get_permalink(self):
+        return self.community.resolve_url(self.get_absolute_url())
+
     def abbreviate(self, length=30):
         """
         Returns non-HTML/markdown abbreviated version of message.
@@ -154,18 +167,21 @@ class Message(TimeStampedModel):
         return truncatechars(text, length)
 
     def is_visible(self, user):
+        """
+        Checks if user is a) sender or recipient and b) has not deleted
+        the message.
+        """
         return (self.sender == user and self.sender_deleted is None) or (
             self.recipient == user and self.recipient_deleted is None
         )
-
-    def get_absolute_url(self):
-        return reverse("private_messages:message_detail", args=[self.id])
-
-    def get_permalink(self):
-        return self.community.resolve_url(self.get_absolute_url())
 
     def get_other_user(self, user):
         """
         Return either recipient or sender, depending on user match
         """
         return self.recipient if user == self.sender else self.sender
+
+    def mark_read(self):
+        if not self.read:
+            self.read = timezone.now()
+            self.save(update_fields=["read"])
