@@ -47,7 +47,15 @@
         {% if is_detail %}
         {{ object.title|linkify_hashtags|linkify_mentions }}
         {% else %}
-        <a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:130 }}</a>
+
+        {% with object.title|truncatechars:130 as object_title %}
+        {% if object.url %}
+        {{ object.url|linkify:object_title }}
+        {% else %}
+        <a href="{{ object.get_absolute_url }}">{{ object_title }}</a>
+        {% endif %}
+        {% endwith %}
+
         {% endif %}
 
         {% endblock title %}
@@ -56,10 +64,9 @@
 
       </div>
 
-      {% if object.url %}
+      {% if is_detail and object.url %}
       <div class="card-subtitle h6">
-        <i class="icon icon-link"></i>
-        {{ object.url|domain }}
+        Link: {{ object.url|linkify }}
       </div>
       {% endif %}
 

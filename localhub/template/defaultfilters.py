@@ -52,15 +52,15 @@ def url_to_img(url, linkify=True):
 
 
 @register.filter
-def domain(url):
+def linkify(url, text=None):
     """
-    Shows a linked URL domain e.g. if http://reddit.com:
+    Creates a "safe" external link to a new tab.
+    If text is falsy, uses the URL domain e.g. reddit.com.
+    """
+    text = text or get_domain(url)
+    if not text:
+        return url
 
-    <a href="http://reddit.com" ...>reddit.com</a>
-    """
-    domain = get_domain(url)
-    if domain:
-        return mark_safe(
-            f'<a href="{url}" rel="{REL_SAFE_VALUES}" target="_blank">{domain}</a>'
-        )
-    return url
+    return mark_safe(
+        f'<a href="{url}" rel="{REL_SAFE_VALUES}" target="_blank">{text}</a>'
+    )

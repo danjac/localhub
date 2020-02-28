@@ -32,7 +32,7 @@
   {% endif %}
   {% if object.original_url %}
   <dt>{% trans "Original URL" %}</dt>
-  <dd>{{ object.original_url|domain }}</dd>
+  <dd>{{ object.original_url|linkify }}</dd>
   {% endif %}
   {% if object.cc_license %}
   <dt>{% trans "Creative Commons License" %}</dt>

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from ..defaultfilters import domain, from_dictkey, html_unescape, url_to_img
+from ..defaultfilters import from_dictkey, html_unescape, linkify, url_to_img
 
 
 class TestUrlToImg:
@@ -39,15 +39,18 @@ class TestHtmlUnescape:
         assert html_unescape(text) == "this is > that"
 
 
-class TestDomain:
+class TestLinkify:
     def test_if_not_valid_url(self):
-        assert domain("<div />") == "<div />"
+        assert linkify("<div />") == "<div />"
 
     def test_if_valid_url(self):
-        assert domain("http://reddit.com").endswith(">reddit.com</a>")
+        assert linkify("http://reddit.com").endswith(">reddit.com</a>")
 
     def test_if_www(self):
-        assert domain("http://www.reddit.com").endswith(">reddit.com</a>")
+        assert linkify("http://www.reddit.com").endswith(">reddit.com</a>")
+
+    def test_if_text(self):
+        assert linkify("http://reddit.com", "REDDIT").endswith(">REDDIT</a>")
 
 
 class TestFromDictkey:
