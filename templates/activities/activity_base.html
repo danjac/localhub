@@ -50,16 +50,19 @@
         <a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:130 }}</a>
         {% endif %}
 
-        {% if object.url %}
-        <i class="icon icon-link"></i>
-        {{ object.url|domain }}
-        {% endif %}
-
         {% endblock title %}
 
         {% endif %}
 
       </div>
+
+      {% if object.url %}
+      <div class="card-subtitle h6">
+        <i class="icon icon-link"></i>
+        {{ object.url|domain }}
+      </div>
+      {% endif %}
+
       <div class="card-subtitle h6">
         {% if object.parent %}
         {% include "activities/includes/timesince.html" with timestamp=object.parent.published owner=object.parent.owner %}
@@ -103,13 +106,13 @@
       {% if is_detail %}
 
       {% if object.edited and object.published and object.edited > object.published %}
-        <div class="info">
-          {% blocktrans with edited=object.edited|timesince %}Updated {{ edited }} ago{% endblocktrans %}
-          {% if object.editor != object.owner %}
-          {% trans "by" %}
-          {% include "users/includes/chip.html" with profile=object.editor %}
-          {% endif %}
-        </div>
+      <div class="info">
+        {% blocktrans with edited=object.edited|timesince %}Updated {{ edited }} ago{% endblocktrans %}
+        {% if object.editor != object.owner %}
+        {% trans "by" %}
+        {% include "users/includes/chip.html" with profile=object.editor %}
+        {% endif %}
+      </div>
       {% endif %}
 
       {% with num_reshares=reshares.count %}
