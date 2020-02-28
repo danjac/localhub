@@ -41,7 +41,6 @@ class TestShowMessage:
         assert context["recipient_url"] == reverse(
             "users:messages", args=[message.recipient.username]
         )
-        assert context["thread"] == parent
         assert not context["can_reply"]
 
     def test_is_recipient(self, auth_request):
@@ -63,7 +62,6 @@ class TestShowMessage:
         assert context["sender_url"] == reverse(
             "users:messages", args=[message.sender.username]
         )
-        assert context["thread"] == parent
         assert context["can_reply"]
 
     def test_is_recipient_sender_has_blocked(self, auth_request):
