@@ -15,7 +15,7 @@ Hi {{ recipient_name }},
 {{ message }}
 {% endblocktrans %}
 
-{{ recipient.get_permalink }}
+{{ message_url }}
 
 {% blocktrans with community_name=community.name %}
 Thank you from {{ community_name }} !

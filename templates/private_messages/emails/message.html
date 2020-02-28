@@ -23,8 +23,8 @@
 </div>
 
 <div class="section">
-  {% blocktrans with url=message.get_permalink %}
-  {{ sender }} has sent you a <a href="{{ url }}">message</a>: <br>
+  {% blocktrans %}
+  {{ sender }} has sent you a <a href="{{ message_url }}">message</a>: <br>
   {% endblocktrans %}
 </div>
 

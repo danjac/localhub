@@ -20,7 +20,11 @@ def send_message_email(message):
 
     with override(message.recipient.language):
 
-        context = {"recipient": message.recipient, "message": message}
+        context = {
+            "recipient": message.recipient,
+            "message": message,
+            "message_url": message.get_permalink(message.recipient),
+        }
 
         if message.parent:
             subject = _("Someone has replied to your message")
