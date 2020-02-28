@@ -39,14 +39,18 @@ def show_message(
     thread = message.get_thread(user) if not is_thread else None
     thread_url = thread.get_absolute_url() if thread else None
 
-    message_url = thread_url or message.get_absolute_url()
+    message_url = (
+        f"{thread_url}#message-{message.id}"
+        if thread_url
+        else message.get_absolute_url()
+    )
 
     if parent := message.get_parent(user):
-        # if in thread view just show anchor link
+        anchor = f"#message-{parent.id}"
         if is_thread:
-            parent_url = f"#message-{parent.id}"
+            parent_url = anchor
         else:
-            parent_url = thread_url or parent.get_absolute_url()
+            parent_url = thread_url + anchor or parent.get_absolute_url()
     else:
         parent_url = None
 
