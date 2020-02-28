@@ -117,16 +117,16 @@
     {% with redirect_url=user_obj.get_absolute_url %}
     {% if is_blocking %}
     <a href="{% url 'users:unblock' user_obj.username %}" class="d-hide"
-       data-controller="js-toggle ajax"
-       data-action="ajax#post toggle#toggle"
-       data-ajax-redirect="{{ redirect_url }}">
+                                                          data-controller="js-toggle ajax"
+                                                          data-action="ajax#post toggle#toggle"
+                                                          data-ajax-redirect="{{ redirect_url }}">
         {% trans "Unblock" %}
     </a>
     {% else %}
     <a href="{% url 'users:block' user_obj.username %}" class="d-hide"
-       data-controller="js-toggle ajax"
-       data-action="ajax#post toggle#toggle"
-       data-ajax-redirect="{{ redirect_url }}">
+                                                        data-controller="js-toggle ajax"
+                                                        data-action="ajax#post toggle#toggle"
+                                                        data-ajax-redirect="{{ redirect_url }}">
         {% trans "Block" %}
     </a>
     {% endif %}
@@ -137,6 +137,7 @@
 
 <div class="divider"></div>
 
+{% if not is_blocked %}
 <ul class="tab tab-block">
     <li class="tab-item" data-controller="active-link" data-active-link-exact>
         <a data-target="active-link.match"
@@ -151,13 +152,13 @@
         <a data-target="active-link.match"
            href="{% url 'users:replies' user_obj.username %}">{% trans "Replies" %}</a>
     </li>
-    {% elif not is_blocked %}
+    {% else %}
     <li class="tab-item" data-controller="active-link" data-active-link-exact>
         <a data-target="active-link.match"
            href="{% url 'users:messages' user_obj.username %}">{% trans "Messages" %}</a>
     </li>
     {% endif %}
 </ul>
-
 {% block user_content %}{% endblock %}
+{% endif %}
 {% endblock content %}

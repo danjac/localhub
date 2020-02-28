@@ -20,7 +20,7 @@
 
 <div class="divider"></div>
 {% show_message user community message is_detail=True %}
-{% for reply in replies %}
-{% show_message user community reply show_thread_info=False %}
+{% for child in children %}
+{% show_message user community child show_thread_info=False %}
 {% endfor %}
 {% endblock content %}

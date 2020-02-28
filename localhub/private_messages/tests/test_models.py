@@ -164,33 +164,40 @@ class TestMessageManager:
         assert fourth not in messages
         assert fifth not in messages
 
-    def test_has_thread(self, user):
+    def test_with_num_replies_if_reply_recipient(self, user):
         first = MessageFactory(sender=user)
-        MessageFactory(recipient=user, thread=first)
+        MessageFactory(recipient=user, parent=first)
 
-        message = Message.objects.with_has_thread(user).get(pk=first.id)
-        assert message.has_thread
+        message = Message.objects.with_num_replies(user).get(pk=first.id)
+        assert message.num_replies == 1
 
-    def test_has_thread_if_no_replies(self, user):
+    def test_with_num_replies_if_reply_sender(self, user):
+        first = MessageFactory(recipient=user)
+        MessageFactory(sender=user, parent=first)
+
+        message = Message.objects.with_num_replies(user).get(pk=first.id)
+        assert message.num_replies == 1
+
+    def test_with_num_replies_if_no_replies(self, user):
 
         first = MessageFactory(sender=user)
 
-        message = Message.objects.with_has_thread(user).get(pk=first.id)
-        assert not message.has_thread
+        message = Message.objects.with_num_replies(user).get(pk=first.id)
+        assert message.num_replies == 0
 
-    def test_has_thread_if_reply_recipient_deleted(self, user):
+    def test_with_num_replies_if_reply_recipient_deleted(self, user):
         first = MessageFactory(sender=user)
-        MessageFactory(recipient=user, thread=first, recipient_deleted=timezone.now())
+        MessageFactory(recipient=user, parent=first, recipient_deleted=timezone.now())
 
-        message = Message.objects.with_has_thread(user).get(pk=first.id)
-        assert not message.has_thread
+        message = Message.objects.with_num_replies(user).get(pk=first.id)
+        assert message.num_replies == 0
 
-    def test_has_thread_if_reply_sender_deleted(self, user):
+    def test_with_num_replies_if_reply_sender_deleted(self, user):
         first = MessageFactory(sender=user)
-        MessageFactory(sender=user, thread=first, sender_deleted=timezone.now())
+        MessageFactory(sender=user, parent=first, sender_deleted=timezone.now())
 
-        message = Message.objects.with_has_thread(user).get(pk=first.id)
-        assert not message.has_thread
+        message = Message.objects.with_num_replies(user).get(pk=first.id)
+        assert message.num_replies == 0
 
     def test_between(self):
 
@@ -233,6 +240,34 @@ class TestMessageManager:
 
 
 class TestMessageModel:
+    def test_get_parent_if_none(self, user):
+        message = MessageFactory(sender=user)
+        assert message.get_parent(user) is None
+
+    def test_get_parent_if_not_visible(self, user):
+        parent = MessageFactory(recipient=user, recipient_deleted=timezone.now())
+        message = MessageFactory(sender=user, parent=parent)
+        assert message.get_parent(user) is None
+
+    def test_get_parent_if_visible(self, user):
+        parent = MessageFactory(recipient=user)
+        message = MessageFactory(sender=user, parent=parent)
+        assert message.get_parent(user) == parent
+
+    def test_get_thread_if_none(self, user):
+        message = MessageFactory(sender=user)
+        assert message.get_thread(user) is None
+
+    def test_get_thread_if_not_visible(self, user):
+        thread = MessageFactory(recipient=user, recipient_deleted=timezone.now())
+        message = MessageFactory(sender=user, thread=thread)
+        assert message.get_thread(user) is None
+
+    def test_get_thread_if_visible(self, user):
+        thread = MessageFactory(recipient=user)
+        message = MessageFactory(sender=user, thread=thread)
+        assert message.get_thread(user) == thread
+
     def test_is_visible_to_neither_sender_or_recipient(self):
         message = MessageFactory()
         assert not message.is_visible(UserFactory())
@@ -266,9 +301,13 @@ class TestMessageModel:
         assert message.get_other_user(message.sender) == message.recipient
         assert message.get_other_user(message.recipient) == message.sender
 
-    def test_abbreviate(self):
+    def test_abbreviate_with_markdown(self):
         message = Message(message="Hello\nthis is a *test*")
         assert message.abbreviate() == "Hello this is a test"
+
+    def test_abbreviate_long_message(self):
+        message = Message(message="this is a test with more content")
+        assert message.abbreviate(length=12) == "...more content"
 
     def test_mark_read(self):
         message = MessageFactory()

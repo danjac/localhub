@@ -88,12 +88,20 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
     def unread(self):
         return self.filter(read__isnull=True)
 
-    def with_has_thread(self, user):
+    def with_num_replies(self, user):
         return self.annotate(
-            has_thread=models.Exists(
-                Message.objects.for_sender_or_recipient(user).filter(
-                    thread=models.OuterRef("pk")
-                )
+            num_replies=models.Count(
+                "replies",
+                filter=models.Q(
+                    models.Q(
+                        replies__recipient=user,
+                        replies__recipient_deleted__isnull=True,
+                    )
+                    | models.Q(
+                        replies__sender=user, replies__sender_deleted__isnull=True,
+                    )
+                ),
+                distinct=True,
             )
         )
 
@@ -122,7 +130,7 @@ class Message(TimeStampedModel):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name="replies",
+        related_name="children",
     )
 
     # immediate parent
@@ -131,7 +139,7 @@ class Message(TimeStampedModel):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name="children",
+        related_name="replies",
     )
 
     read = models.DateTimeField(null=True, blank=True)
@@ -161,10 +169,13 @@ class Message(TimeStampedModel):
 
     def abbreviate(self, length=30):
         """
-        Returns non-HTML/markdown abbreviated version of message.
+        Returns *final* non-HTML/markdown abbreviated version of message.
         """
         text = " ".join(self.message.plaintext().splitlines())
-        return truncatechars(text, length)
+        total_length = len(text)
+        if total_length < length:
+            return text
+        return "..." + text[total_length - length :]
 
     def is_visible(self, user):
         """
@@ -174,6 +185,22 @@ class Message(TimeStampedModel):
         return (self.sender == user and self.sender_deleted is None) or (
             self.recipient == user and self.recipient_deleted is None
         )
+
+    def get_thread(self, user):
+        """
+        Returns thread if exists and is visible to user, otherwise returns None.
+        """
+        if self.thread and self.thread.is_visible(user):
+            return self.thread
+        return None
+
+    def get_parent(self, user):
+        """
+        Returns parent if exists and is visible to user, otherwise returns None.
+        """
+        if self.parent and self.parent.is_visible(user):
+            return self.parent
+        return None
 
     def get_other_user(self, user):
         """

@@ -73,7 +73,7 @@ class InboxView(RecipientQuerySetMixin, BaseMessageListView):
     template_name = "private_messages/inbox.html"
 
     def get_queryset(self):
-        qs = super().get_queryset().with_has_thread(self.request.user)
+        qs = super().get_queryset().with_num_replies(self.request.user)
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank", "-created")
         return qs.order_by(F("read").desc(nulls_first=True), "-created")
@@ -90,7 +90,7 @@ class OutboxView(SenderQuerySetMixin, BaseMessageListView):
     template_name = "private_messages/outbox.html"
 
     def get_queryset(self):
-        qs = super().get_queryset().with_has_thread(self.request.user)
+        qs = super().get_queryset().with_num_replies(self.request.user)
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank", "-created")
         return qs.order_by("-created")
@@ -163,9 +163,7 @@ class MessageReplyView(BreadcrumbsMixin, RecipientQuerySetMixin, BaseMessageForm
             % {"recipient": user_display(message.recipient)},
         )
         send_message_notifications(message)
-        if message.thread.is_visible(self.request.user):
-            return redirect(message.thread)
-        return redirect(message)
+        return redirect(message.get_thread(self.request.user) or message)
 
 
 message_reply_view = MessageReplyView.as_view()
@@ -232,18 +230,18 @@ class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
         if self.object.recipient == self.request.user and not self.object.read:
             self.object.mark_read()
         # mark all messages in thread read
-        self.object.replies.for_recipient(self.request.user).mark_read()
+        self.object.children.for_recipient(self.request.user).mark_read()
         return response
 
-    def get_replies(self):
-        return self.object.replies.for_sender_or_recipient(self.request.user).order_by(
+    def get_children(self):
+        return self.object.children.for_sender_or_recipient(self.request.user).order_by(
             "created"
         )
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data.update(
-            {"replies": self.get_replies(),}
+            {"children": self.get_children(),}
         )
 
         return data

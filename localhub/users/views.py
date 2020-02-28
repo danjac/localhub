@@ -173,7 +173,9 @@ class UserUnblockView(BaseSingleUserView):
     def post(self, request, *args, **kwargs):
         user = self.get_object()
         self.request.user.blocked.remove(user)
-        messages.success(self.request, _("You have stopped blocking this user"))
+        messages.success(
+            self.request, _("You have stopped blocking this user")
+        )
         return redirect(user)
 
 
@@ -299,7 +301,12 @@ class UserCommentListView(SingleUserMixin, BaseCommentListView):
     template_name = "users/comments.html"
 
     def get_queryset(self):
-        return super().get_queryset().filter(owner=self.user_obj).order_by("-created")
+        return (
+            super()
+            .get_queryset()
+            .filter(owner=self.user_obj)
+            .order_by("-created")
+        )
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -343,12 +350,23 @@ class UserMessageListView(SingleUserMixin, ListView):
         return super().get_user_queryset().exclude(pk=self.request.user.id)
 
     def get_queryset(self):
+        if self.is_blocked:
+            return Message.objects.none()
         return (
             Message.objects.for_community(self.request.community)
             .between(self.request.user, self.user_obj)
-            .exclude_blocked(self.request.user)
-            .with_has_thread(self.request.user)
-            .select_related("sender", "recipient", "community", "thread", "parent")
+            .with_num_replies(self.request.user)
+            .select_related(
+                "sender",
+                "recipient",
+                "community",
+                "thread",
+                "parent",
+                "thread__sender",
+                "thread__recipient",
+                "parent__sender",
+                "parent__recipient",
+            )
             .order_by("-created")
             .distinct()
         )
@@ -358,8 +376,12 @@ class UserMessageListView(SingleUserMixin, ListView):
         qs = self.get_queryset()
         data.update(
             {
-                "num_messages_sent": qs.filter(sender=self.request.user).count(),
-                "num_messages_received": qs.filter(recipient=self.request.user).count(),
+                "num_messages_sent": qs.filter(
+                    sender=self.request.user
+                ).count(),
+                "num_messages_received": qs.filter(
+                    recipient=self.request.user
+                ).count(),
             }
         )
         return data
@@ -397,7 +419,9 @@ class DarkmodeToggleView(View):
         response = HttpResponse()
 
         if "darkmode" in request.COOKIES:
-            response.delete_cookie("darkmode", domain=settings.SESSION_COOKIE_DOMAIN)
+            response.delete_cookie(
+                "darkmode", domain=settings.SESSION_COOKIE_DOMAIN
+            )
         else:
             response.set_cookie(
                 "darkmode",
