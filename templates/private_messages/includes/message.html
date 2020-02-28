@@ -5,72 +5,77 @@
 {% load account %}
 
 <div class="card mb-2{% if is_sender %} bg-gray{% endif %}">
-    <div class="card-header">
-        <div class="card-title h6">
-            <div class="timesince">
-                {% blocktrans with created=message.created|timesince %}
-                Sent {{ created }} ago
-                {% endblocktrans %}
-                {% if show_sender_info %}
-                {% trans "from" %}
-                {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url %}
-                {% endif %}
-                {% if show_recipient_info %}
-                {% trans "to" %}
-                {% include "users/includes/chip.html" with profile=message.recipient profile_url=recipient_url %}
-                {% endif %}
-                {% if parent %}
-                {% trans "in reply to" %}
-                <a href="{{ parent_url }}">{{ parent.abbreviate }}</a>
-                {% endif %}
-            </div>
-        </div>
+  <div class="card-header">
+    <div class="card-title h6">
+      <div class="timesince">
+        {% blocktrans with created=message.created|timesince %}
+        Sent {{ created }} ago
+        {% endblocktrans %}
+        {% if show_sender_info %}
+        {% trans "from" %}
+        {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url %}
+        {% endif %}
+        {% if show_recipient_info %}
+        {% trans "to" %}
+        {% include "users/includes/chip.html" with profile=message.recipient profile_url=recipient_url %}
+        {% endif %}
+        {% if parent %}
+        {% trans "in reply to" %}
+        <a href="{{ parent_url }}">{{ parent.abbreviate }}</a>
+        {% endif %}
+      </div>
     </div>
-    <div class="card-body">
-        {% collapsable is_detail %}
-        <div class="markdown-content">
-            {{ message.message.markdown }}
-        </div>
-        {% endcollapsable %}
+  </div>
+  <div class="card-body">
+    {% collapsable is_detail %}
+    <div class="markdown-content">
+      {{ message.message.markdown }}
     </div>
-    <div class="card-footer">
-        <div class="actions">
+    {% endcollapsable %}
+  </div>
+  <div class="card-footer">
+    <div class="actions">
 
-            {% spaceless %}
-            <a href="{% if can_reply %}{% url 'private_messages:message_reply' message.id %}{% else %}{{ message_url }}{% endif %}">
+      {% spaceless %}
 
+      {% if is_detail and can_reply %}
+      <a href="{% url 'private_messages:message_reply' message.id %}">{% trans "Reply" %}</a>
+      {% else %}
 
-                {% with num_replies=message.num_replies|default:0 %}
-                {% if num_replies %}
-                {% blocktrans count counter=num_replies %}
-                1 Reply
-                {% plural %}
-                {{ counter }} Replies
-                {% endblocktrans %}
-                {% elif can_reply %}
-                Reply
-                {% endif %}
-                {% endwith %}
+      {% with num_replies=message.num_replies|default:0 %}
+      {% if num_replies %}
+      <a href="{{ message_url }}">
+        {% blocktrans count counter=num_replies %}
+        1 Reply
+        {% plural %}
+        {{ counter }} Replies
+        {% endblocktrans %}
+      </a>
+      {% elif can_reply %}
+      <a href="{% url 'private_messages:message_reply' message.id %}">{% trans "Reply" %}</a>
+      {% endif %}
+      {% endwith %}
 
-            </a>
-            {% endspaceless %}
+      {% endif %}
 
-            {% if is_recipient and not message.read %}
-            <a href="{% url 'private_messages:message_mark_read' message.id %}"
-               class="d-hide"
-               data-controller="js-toggle ajax"
-               data-action="ajax#post"
-               data-ajax-redirect="{{ request.path }}"
-               >{% trans "Mark As Read" %}</a>
-            {% endif %}
-            <a href="{% url 'private_messages:message_delete' message.id %}"
-               data-controller="ajax confirm"
-               data-action="confirm#check ajax#post"
-               data-ajax-redirect="{{ post_delete_redirect|default:request.path }}"
-               data-confirm-header="{% trans 'Delete Message' %}"
-               data-confirm-body="{% trans "Are you sure you want to delete this message? Replies to this message will not be deleted. The message may still be available to the other person." %}"
-               >{% trans "Delete" %}</a>
-        </div>
+      {% endspaceless %}
+
+      {% if is_recipient and not message.read %}
+      <a href="{% url 'private_messages:message_mark_read' message.id %}"
+         class="d-hide"
+         data-controller="js-toggle ajax"
+         data-action="ajax#post"
+         data-ajax-redirect="{{ request.path }}"
+         >{% trans "Mark As Read" %}</a>
+      {% endif %}
+      <a href="{% url 'private_messages:message_delete' message.id %}"
+         data-controller="ajax confirm"
+         data-action="confirm#check ajax#post"
+         data-ajax-redirect="{{ post_delete_redirect|default:request.path }}"
+         data-confirm-header="{% trans 'Delete Message' %}"
+         data-confirm-body="{% trans "Are you sure you want to delete this message? Replies to this message will not be deleted. The message may still be available to the other person." %}"
+         >{% trans "Delete" %}</a>
     </div>
+  </div>
 </div>
 
