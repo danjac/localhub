@@ -173,9 +173,7 @@ class UserUnblockView(BaseSingleUserView):
     def post(self, request, *args, **kwargs):
         user = self.get_object()
         self.request.user.blocked.remove(user)
-        messages.success(
-            self.request, _("You have stopped blocking this user")
-        )
+        messages.success(self.request, _("You have stopped blocking this user"))
         return redirect(user)
 
 
@@ -301,12 +299,7 @@ class UserCommentListView(SingleUserMixin, BaseCommentListView):
     template_name = "users/comments.html"
 
     def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .filter(owner=self.user_obj)
-            .order_by("-created")
-        )
+        return super().get_queryset().filter(owner=self.user_obj).order_by("-created")
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -376,12 +369,8 @@ class UserMessageListView(SingleUserMixin, ListView):
         qs = self.get_queryset()
         data.update(
             {
-                "num_messages_sent": qs.filter(
-                    sender=self.request.user
-                ).count(),
-                "num_messages_received": qs.filter(
-                    recipient=self.request.user
-                ).count(),
+                "num_messages_sent": qs.filter(sender=self.request.user).count(),
+                "num_messages_received": qs.filter(recipient=self.request.user).count(),
             }
         )
         return data
@@ -419,9 +408,7 @@ class DarkmodeToggleView(View):
         response = HttpResponse()
 
         if "darkmode" in request.COOKIES:
-            response.delete_cookie(
-                "darkmode", domain=settings.SESSION_COOKIE_DOMAIN
-            )
+            response.delete_cookie("darkmode", domain=settings.SESSION_COOKIE_DOMAIN)
         else:
             response.set_cookie(
                 "darkmode",

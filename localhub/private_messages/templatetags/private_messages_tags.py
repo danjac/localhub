@@ -35,18 +35,9 @@ def show_message(
         recipient_url = outbox_url
         sender_url = reverse("users:messages", args=[message.sender.username])
 
-    if show_thread_info:
-        thread = message.thread
-    else:
-        thread = None
-
     thread = message.get_thread(user) if show_thread_info else None
-
-    can_reply = is_recipient and user.has_perm(
-        "private_messages.create_message", community
-    )
-
     thread_url = thread.get_absolute_url() if thread else None
+
     message_url = thread_url or message.get_absolute_url()
 
     parent = message.get_parent(user)
@@ -55,6 +46,10 @@ def show_message(
         parent_url = thread_url or parent.get_absolute_url()
     else:
         parent_url = None
+
+    can_reply = is_recipient and user.has_perm(
+        "private_messages.create_message", community
+    )
 
     return {
         "request": context["request"],

@@ -164,8 +164,12 @@ class Message(TimeStampedModel):
     def get_absolute_url(self):
         return reverse("private_messages:message_detail", args=[self.id])
 
-    def get_permalink(self):
-        return self.community.resolve_url(self.get_absolute_url())
+    def get_default_url(self, user=None):
+        thread = self.get_thread(user) if user else None
+        return thread.get_absolute_url() if thread else self.get_absolute_url()
+
+    def get_permalink(self, user=None):
+        return self.community.resolve_url(self.get_default_url(user))
 
     def abbreviate(self, length=30):
         """

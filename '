@@ -122,12 +122,15 @@ class MessageReplyView(BreadcrumbsMixin, RecipientQuerySetMixin, BaseMessageForm
         return self.parent.sender
 
     def get_breadcrumbs(self):
+        thread = self.parent.get_thread(self.request.user)
+        parent_url = thread.get_absolute_url() if thread else self.parent.get_absolute_url()
+
         return [
             (
                 reverse("users:messages", args=[self.recipient.username]),
                 user_display(self.recipient),
             ),
-            (self.parent.get_default_url(self.request.user), self.parent.abbreviate()),
+            (parent_url, self.parent.abbreviate()),
             (None, _("Reply")),
         ]
 

@@ -47,5 +47,5 @@ def send_message_push(message):
             head=_("%(sender)s has sent you a message")
             % {"sender": user_display(message.sender)},
             body=message.abbreviate(),
-            url=message.get_permalink(),
+            url=message.get_permalink(message.recipient),
         )
