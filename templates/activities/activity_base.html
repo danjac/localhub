@@ -58,6 +58,10 @@
 
         {% endif %}
 
+        {% if object.url %}
+        <small class="float-right">{{ object.url|linkify }}</small>
+        {% endif %}
+
         {% endblock title %}
 
         {% endif %}
@@ -71,11 +75,6 @@
         {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
         {% endif %}
       </div>
-      {% if is_detail and object.url %}
-      <div class="card-subtitle h6">
-        <i class="icon icon-link"></i> {{ object.url|linkify }}
-      </div>
-      {% endif %}
     </div>
     <div class="card-body">
       {% if object.is_reshare and not object.parent %}
