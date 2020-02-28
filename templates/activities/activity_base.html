@@ -64,17 +64,14 @@
 
       </div>
 
-      {% if is_detail and object.url %}
-      <div class="card-subtitle h6">
-        Link: {{ object.url|linkify }}
-      </div>
-      {% endif %}
-
       <div class="card-subtitle h6">
         {% if object.parent %}
         {% include "activities/includes/timesince.html" with timestamp=object.parent.published owner=object.parent.owner %}
         {% elif not object.is_reshare %}
         {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
+        {% endif %}
+        {% if is_detail and object.url %}
+        <i class="icon icon-link"></i> {{ object.url|linkify }}
         {% endif %}
       </div>
     </div>
