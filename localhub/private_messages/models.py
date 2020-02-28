@@ -5,7 +5,6 @@ from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
-from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils import timezone
 from model_utils.models import TimeStampedModel
@@ -166,7 +165,11 @@ class Message(TimeStampedModel):
 
     def get_default_url(self, user=None):
         thread = self.get_thread(user) if user else None
-        return thread.get_absolute_url() if thread else self.get_absolute_url()
+        return (
+            f"{thread.get_absolute_url()}#message-{self.id}"
+            if thread
+            else self.get_absolute_url()
+        )
 
     def get_permalink(self, user=None):
         return self.community.resolve_url(self.get_default_url(user))
