@@ -58,12 +58,7 @@
 
         {% endif %}
 
-        {% if object.url %}
-        <small class="float-right">{{ object.url|linkify }}</small>
-        {% endif %}
-
         {% endblock title %}
-
         {% endif %}
 
       </div>
@@ -76,6 +71,13 @@
         {% endif %}
       </div>
     </div>
+
+    {% if object.url %}
+    <div class="card-subtitle h6">
+      <small><i class="icon icon-link"></i> {{ object.url|linkify }}</small>
+    </div>
+    {% endif %}
+
     <div class="card-body">
       {% if object.is_reshare and not object.parent %}
       {% blocktrans %}
