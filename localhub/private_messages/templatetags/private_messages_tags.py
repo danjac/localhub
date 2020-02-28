@@ -19,7 +19,7 @@ def show_message(
     message,
     show_sender_info=True,
     show_recipient_info=True,
-    show_thread_info=True,
+    is_thread=False,
     is_detail=False,
 ):
 
@@ -35,15 +35,16 @@ def show_message(
         recipient_url = outbox_url
         sender_url = reverse("users:messages", args=[message.sender.username])
 
-    thread = message.get_thread(user) if show_thread_info else None
+    thread = message.get_thread(user) if not is_thread else None
     thread_url = thread.get_absolute_url() if thread else None
 
     message_url = thread_url or message.get_absolute_url()
 
-    parent = message.get_parent(user)
-
-    if parent:
-        parent_url = thread_url or parent.get_absolute_url()
+    if parent := message.get_parent(user):
+        if is_thread:
+            parent_url = f"#message-{parent.id}"
+        else:
+            parent_url = thread_url or parent.get_absolute_url()
     else:
         parent_url = None
 
@@ -54,6 +55,7 @@ def show_message(
     return {
         "request": context["request"],
         "is_detail": is_detail,
+        "is_thread": is_thread,
         "is_recipient": is_recipient,
         "is_sender": is_sender,
         "message": message,

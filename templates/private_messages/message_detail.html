@@ -21,6 +21,6 @@
 <div class="divider"></div>
 {% show_message user community message is_detail=True %}
 {% for child in children %}
-{% show_message user community child show_thread_info=False %}
+{% show_message user community child is_thread=True %}
 {% endfor %}
 {% endblock content %}
