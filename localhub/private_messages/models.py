@@ -163,16 +163,23 @@ class Message(TimeStampedModel):
     def get_absolute_url(self):
         return reverse("private_messages:message_detail", args=[self.id])
 
-    def get_default_url(self, user=None):
-        thread = self.get_thread(user) if user else None
-        return (
-            f"{thread.get_absolute_url()}#message-{self.id}"
-            if thread
-            else self.get_absolute_url()
-        )
+    def resolve_url(self, user=None, is_thread=False):
+        """
+        Resolves the correct URL for this message:
+
+        1) if is_thread then just returns the hash.
+        2) if has a *visible* thread returns the thread absolute URL + hash.
+        3) if no thread then returns the absolute URL of this message.
+        """
+        hash = f"#message-{self.id}"
+        if is_thread:
+            return hash
+        if user and (thread := self.get_thread(user)):
+            return f"{thread.get_absolute_url()}{hash}"
+        return self.get_absolute_url()
 
     def get_permalink(self, user=None):
-        return self.community.resolve_url(self.get_default_url(user))
+        return self.community.resolve_url(self.resolve_url(user))
 
     def abbreviate(self, length=30):
         """

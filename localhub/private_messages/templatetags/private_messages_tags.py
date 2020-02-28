@@ -35,28 +35,14 @@ def show_message(
         recipient_url = outbox_url
         sender_url = reverse("users:messages", args=[message.sender.username])
 
-    # we don't need to get the thread if message is already in thread view
-    thread = message.get_thread(user) if not is_thread else None
-    thread_url = thread.get_absolute_url() if thread else None
-
-    message_url = (
-        f"{thread_url}#message-{message.id}"
-        if thread_url
-        else message.get_absolute_url()
-    )
-
-    if parent := message.get_parent(user):
-        anchor = f"#message-{parent.id}"
-        if is_thread:
-            parent_url = anchor
-        else:
-            parent_url = thread_url + anchor or parent.get_absolute_url()
-    else:
-        parent_url = None
-
     can_reply = is_recipient and user.has_perm(
         "private_messages.create_message", community
     )
+
+    message_url = message.resolve_url(user, is_thread)
+
+    parent = message.get_parent(user)
+    parent_url = parent.resolve_url(user, is_thread) if parent else None
 
     return {
         "request": context["request"],
@@ -65,9 +51,8 @@ def show_message(
         "is_recipient": is_recipient,
         "is_sender": is_sender,
         "message": message,
-        "parent": parent,
-        "thread": thread,
         "message_url": message_url,
+        "parent": parent,
         "parent_url": parent_url,
         "recipient_url": recipient_url,
         "sender_url": sender_url,

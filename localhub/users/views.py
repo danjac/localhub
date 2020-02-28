@@ -359,6 +359,9 @@ class UserMessageListView(SingleUserMixin, ListView):
                 "thread__recipient",
                 "parent__sender",
                 "parent__recipient",
+                "parent__thread",
+                "parent__thread__recipient",
+                "parent__thread__sender",
             )
             .order_by("-created")
             .distinct()

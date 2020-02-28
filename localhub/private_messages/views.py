@@ -41,6 +41,9 @@ class MessageQuerySetMixin(CommunityRequiredMixin):
                 "thread",
                 "thread__recipient",
                 "thread__sender",
+                "parent__thread",
+                "parent__thread__recipient",
+                "parent__thread__sender",
             )
         )
 
@@ -127,7 +130,7 @@ class MessageReplyView(BreadcrumbsMixin, RecipientQuerySetMixin, BaseMessageForm
                 reverse("users:messages", args=[self.recipient.username]),
                 user_display(self.recipient),
             ),
-            (self.parent.get_default_url(self.request.user), self.parent.abbreviate()),
+            (self.parent.resolve_url(self.request.user), self.parent.abbreviate()),
             (None, _("Reply")),
         ]
 
@@ -163,7 +166,7 @@ class MessageReplyView(BreadcrumbsMixin, RecipientQuerySetMixin, BaseMessageForm
             % {"recipient": user_display(message.recipient)},
         )
         send_message_notifications(message)
-        return redirect(message.get_default_url(self.request.user))
+        return redirect(message.resolve_url(self.request.user))
 
 
 message_reply_view = MessageReplyView.as_view()
