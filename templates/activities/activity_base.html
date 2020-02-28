@@ -70,13 +70,14 @@
         {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
         {% endif %}
       </div>
-    </div>
 
-    {% if object.url %}
-    <div class="card-subtitle h6">
-      <small><i class="icon icon-link"></i> {{ object.url|linkify }}</small>
+      {% if object.url %}
+      <div class="card-subtitle h6">
+        <i class="icon icon-link"></i> {{ object.url|linkify }}
+      </div>
+      {% endif %}
+
     </div>
-    {% endif %}
 
     <div class="card-body">
       {% if object.is_reshare and not object.parent %}
