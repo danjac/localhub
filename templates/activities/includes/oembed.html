@@ -6,10 +6,6 @@
 {% load activities_tags %}
 
 {% if object.url %}
-<div class="info">
-    {% trans "Link:" %}
-    {{ object.url|domain }}
-</div>
 <div class="divider"></div>
 <div data-controller="oembed" class="wordwrap">
     {% if is_oembed %}

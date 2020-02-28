@@ -50,6 +50,11 @@
         <a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:130 }}</a>
         {% endif %}
 
+        {% if object.url %}
+        <i class="icon icon-link"></i>
+        {{ object.url|domain }}
+        {% endif %}
+
         {% endblock title %}
 
         {% endif %}
