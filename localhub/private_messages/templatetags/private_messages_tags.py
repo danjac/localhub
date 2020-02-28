@@ -35,12 +35,14 @@ def show_message(
         recipient_url = outbox_url
         sender_url = reverse("users:messages", args=[message.sender.username])
 
+    # we don't need to get the thread if message is already in thread view
     thread = message.get_thread(user) if not is_thread else None
     thread_url = thread.get_absolute_url() if thread else None
 
     message_url = thread_url or message.get_absolute_url()
 
     if parent := message.get_parent(user):
+        # if in thread view just show anchor link
         if is_thread:
             parent_url = f"#message-{parent.id}"
         else:
