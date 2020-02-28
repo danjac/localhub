@@ -198,7 +198,7 @@ class TestMessageReplyView:
             {"message": "test"},
         )
         message = Message.objects.latest("created")
-        assert thread.get_absolute_url() == response.url
+        assert thread.get_absolute_url() + f"#message-{message.id}" == response.url
         assert message.parent == parent
         assert message.thread == thread
         assert message.recipient == parent.sender
