@@ -45,7 +45,7 @@
     {% plural %}
     A total of <strong>{{ counter }} posts</strong> were published
     {% endblocktrans %}
-    {% with earliest=dates|first|date:"E, Y" latest=dates|last|date:"E, Y" %}
+    {% with earliest=dates|first|date:"E Y" latest=dates|last|date:"E Y" %}
     {% if months|length == 1 and years|length == 1 %}
     {% blocktrans %}
     in {{ earliest }}.
