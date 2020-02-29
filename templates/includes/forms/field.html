@@ -8,7 +8,8 @@
   {% with widget=field.field.widget %}
   {% if widget.input_type == 'checkbox' %}
   {% if widget.allow_multiple_selected %}
-  <label for="{{ field.id_for_label }}" class="form-label">{{ label }}</label>
+  <label for="{{ field.id_for_label }}"
+         class="form-label">{{ label }}</label>
   {% render_field field %}
   {% else %}
   {% include "includes/forms/widgets/checkbox_input.html" %}
@@ -24,7 +25,8 @@
   </div>
   {% endfor %}
   {% else %}
-  <label for="{{ field.id_for_label }}" class="form-label">{{ label }}</label>
+  <label for="{{ field.id_for_label }}"
+         class="form-label">{{ label }}</label>
   {% if widget.input_type == 'select' %}
   {% render_field field class="form-select" %}
   {% elif widget.input_type == 'calendar' %}

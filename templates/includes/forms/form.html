@@ -6,16 +6,19 @@
 <form {% spaceless %}
       method="{{ method|default:'POST' }}"
       action="{{ action|default:request.path }}"
-      {% if multipart %}enctype="multipart/form-data"{% endif %}
+      {% if multipart %}enctype="multipart/form-data"
+      {% endif %}
       {% block form_extra_attrs %}{% endblock %}
       {% endspaceless %}>
-      {% block form_fields %}
-      {% include "includes/forms/fields.html" %}
-      {% endblock form_fields %}
-      {% block form_buttons %}
-      {% trans "Submit" as t_submit %}
-      <button type="submit" name="submit" class="btn btn-primary">
-          {{ submit_btn|default:t_submit }}
-      </button>
-      {% endblock %}
+    {% block form_fields %}
+    {% include "includes/forms/fields.html" %}
+    {% endblock form_fields %}
+    {% block form_buttons %}
+    {% trans "Submit" as t_submit %}
+    <button type="submit"
+            name="submit"
+            class="btn btn-primary">
+        {{ submit_btn|default:t_submit }}
+    </button>
+    {% endblock %}
 </form>

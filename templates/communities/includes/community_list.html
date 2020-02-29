@@ -7,7 +7,8 @@
 <p class="toast text-center my-2 d-hide"
    data-controller="cookie-notice"
    data-cookie-notice-name="community-list">
-    <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
+  <button class="btn btn-clear float-right"
+          data-action="cookie-notice#accept"></button>
   {% trans "This is an index of communities available on this host." %}
 </p>
 {% for object in object_list %}
@@ -38,35 +39,40 @@
     <div class="actions">
       {% if num_flags %}
       <a href="{{ object_url }}{% url 'flags:list' %}">
-        <span class="badge" data-badge="{{ num_flags }}">
+        <span class="badge"
+              data-badge="{{ num_flags }}">
           {% trans "Flags" %}
         </span>
       </a>
       {% endif %}
       {% if num_notifications %}
       <a href="{{ object_url }}{% url 'notifications:list' %}">
-        <span class="badge" data-badge="{{ num_notifications }}">
+        <span class="badge"
+              data-badge="{{ num_notifications }}">
           {% trans "Notifications" %}
         </span>
       </a>
       {% endif %}
       {% if num_messages %}
       <a href="{{ object_url }}{% url 'private_messages:inbox' %}">
-        <span class="badge" data-badge="{{ num_messages }}">
+        <span class="badge"
+              data-badge="{{ num_messages }}">
           {% trans "Direct Messages" %}
         </span>
       </a>
       {% endif %}
       {% if num_join_requests %}
       <a href="{{ object_url }}{% url 'join_requests:list' %}">
-        <span class="badge" data-badge="{{ num_join_requests }}">
+        <span class="badge"
+              data-badge="{{ num_join_requests }}">
           {% trans "Join Requests" %}
         </span>
       </a>
       {% endif %}
       {% if num_drafts %}
       <a href="{{ object_url }}{% url 'activities:drafts' %}">
-        <span class="badge" data-badge="{{ num_drafts }}">
+        <span class="badge"
+              data-badge="{{ num_drafts }}">
           {% trans "Drafts" %}
         </span>
       </a>

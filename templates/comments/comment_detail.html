@@ -11,7 +11,8 @@
 {% include "flags/includes/flags.html" %}
 
 {% if replies %}
-<div class="divider text-center" data-content="{% trans 'Replies' %}"></div>
+<div class="divider text-center"
+     data-content="{% trans 'Replies' %}"></div>
 {% for reply in replies %}
 <div class="mb-2">
   {% include "comments/includes/comment.html" with comment=reply is_reply=True %}

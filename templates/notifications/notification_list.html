@@ -10,19 +10,18 @@
 <h3>{% trans "Notifications" %}</h3>
 
 {% if object_list %}
-<div class="actions d-hide" data-controller="js-toggle">
+<div class="actions d-hide"
+     data-controller="js-toggle">
   {% if is_unread_notifications %}
   <a href="{% url 'notifications:mark_all_read' %}"
      data-controller="ajax"
-     data-action="ajax#post"
-     >{% trans "Mark All As Read" %}</a>
+     data-action="ajax#post">{% trans "Mark All As Read" %}</a>
   {% endif %}
   <a href="{% url 'notifications:delete_all' %}"
      data-controller="confirm ajax"
      data-action="confirm#check ajax#post"
      data-confirm-header="{% trans 'Delete All' %}"
-     data-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}"
-     >{% trans "Delete All" %}</a>
+     data-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}">{% trans "Delete All" %}</a>
 </div>
 {% endif %}
 
@@ -31,9 +30,11 @@
 <p class="toast text-center my-2 d-hide"
    data-controller="cookie-notice"
    data-cookie-notice-name="notifications-emails">
-  <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
+  <button class="btn btn-clear float-right"
+          data-action="cookie-notice#accept"></button>
   {% url 'user_update' as user_settings_url %}
-  {% blocktrans %}You can enable emails for your notifications <a href="{{ user_settings_url }}">in your settings</a>.{% endblocktrans %}
+  {% blocktrans %}You can enable emails for your notifications <a href="{{ user_settings_url }}">in your
+    settings</a>.{% endblocktrans %}
 </p>
 
 {% notifications_subscribe_btn user community %}
@@ -57,17 +58,16 @@
           {% include "users/includes/chip.html" with profile=notification.actor %}
         </div>
 
-        <div class="actions show-md hide-lg d-hide" data-controller="js-toggle">
+        <div class="actions show-md hide-lg d-hide"
+             data-controller="js-toggle">
           {% if not notification.is_read %}
           <a href="{% url 'notifications:mark_read' notification.pk %}"
              data-controller="ajax"
-             data-action="ajax#post"
-             >{% trans "Mark As Read" %}</a>
+             data-action="ajax#post">{% trans "Mark As Read" %}</a>
           {% endif %}
           <a href="{% url 'notifications:delete' notification.pk %}"
              data-controller="ajax"
-             data-action="ajax#post"
-             >{% trans "Delete" %}</a>
+             data-action="ajax#post">{% trans "Delete" %}</a>
         </div>
 
       </td>
@@ -76,13 +76,11 @@
           {% if not notification.is_read %}
           <a href="{% url 'notifications:mark_read' notification.pk %}"
              data-controller="ajax"
-             data-action="ajax#post"
-             >{% trans "Mark As Read" %}</a>
+             data-action="ajax#post">{% trans "Mark As Read" %}</a>
           {% endif %}
           <a href="{% url 'notifications:delete' notification.pk %}"
              data-controller="ajax"
-             data-action="ajax#post"
-             >{% trans "Delete" %}</a>
+             data-action="ajax#post">{% trans "Delete" %}</a>
         </div>
 
       </td>

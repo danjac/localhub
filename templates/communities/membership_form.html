@@ -14,7 +14,8 @@
 
 <ul class="breadcrumb">
   <li class="breadcrumb-item"><a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a></li>
-  <li class="breadcrumb-item"><a href="{% url 'communities:membership_detail' membership.id %}">{{ display_name }}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'communities:membership_detail' membership.id %}">{{ display_name }}</a>
+  </li>
   <li class="breadcrumb-item"><a href="#">Edit</a></li>
 </ul>
 

@@ -23,7 +23,8 @@
 <div class="text-center my-2 toast d-hide"
      data-controller="cookie-notice"
      data-cookie-notice-name="recipients-send-message">
-    <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
+    <button class="btn btn-clear float-right"
+            data-action="cookie-notice#accept"></button>
     {% blocktrans %}
     Select a recipient below and click the "Send Message" link. You cannot send messages
     to other members you have blocked, or who have blocked you.
@@ -56,4 +57,3 @@
 {% endif %}
 
 {% endblock content %}
-

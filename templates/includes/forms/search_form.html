@@ -8,20 +8,22 @@
       action="{{ request.path }}"
       data-controller="form"
       data-action="form#submit"
-      class="my-2 search-form"
-      >
-      {% for name, value in non_search_params.items %}
-      <input type="hidden" name="{{ name }}" value="{{ value }}">
-      {% endfor %}
-      <input class="form-input"
-             name="q"
-             type="search"
-             placeholder="{% trans "Search" %}"
-             value="{{ view.search_query|default:"" }}">
-      {% if view.search_query %}
-      <a class="btn btn-block mt-2" href="{{ non_search_path }}">
-        {% trans "Clear Search" %}
-      </a>
+      class="my-2 search-form">
+  {% for name, value in non_search_params.items %}
+  <input type="hidden"
+         name="{{ name }}"
+         value="{{ value }}">
+  {% endfor %}
+  <input class="form-input"
+         name="q"
+         type="search"
+         placeholder="{% trans "Search" %}"
+         value="{{ view.search_query|default:"" }}">
+  {% if view.search_query %}
+  <a class="btn btn-block mt-2"
+     href="{{ non_search_path }}">
+    {% trans "Clear Search" %}
+  </a>
   {% endif %}
 </form>
 
@@ -34,4 +36,3 @@
   {% endblocktrans %}
 </div>
 {% endif %}
-

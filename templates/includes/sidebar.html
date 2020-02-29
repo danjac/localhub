@@ -21,15 +21,23 @@
     </a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'notifications:list' %}">
-      <span {% if unread_notifications_count %}class="badge" id="sidebar-notifications-counter" data-badge="{{ unread_notifications_count }}"{% endif %}>
+    <a data-controller="active-link"
+       href="{% url 'notifications:list' %}">
+      <span {% if unread_notifications_count %}class="badge"
+            id="sidebar-notifications-counter"
+            data-badge="{{ unread_notifications_count }}"
+            {% endif %}>
         {% trans "Notifications" %}
       </span>
     </a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'private_messages:inbox' %}">
-      <span {% if unread_messages_count %}class="badge" id="sidebar-messages-counter" data-badge="{{ unread_messages_count }}"{% endif %}>
+    <a data-controller="active-link"
+       href="{% url 'private_messages:inbox' %}">
+      <span {% if unread_messages_count %}class="badge"
+            id="sidebar-messages-counter"
+            data-badge="{{ unread_messages_count }}"
+            {% endif %}>
         {% trans "Direct Messages" %}
       </span>
     </a>
@@ -40,7 +48,9 @@
        data-active-link-exact
        href="{% url 'community_list' %}">
       {% with total_external_notifications=unread_external_notifications_count|add:unread_external_messages_count|add:pending_external_join_requests_count|add:external_drafts_count|add:external_flags_count %}
-      <span {% if total_external_notifications %}class="badge" data-badge="{{ total_external_notifications }}"{% endif %}>
+      <span {% if total_external_notifications %}class="badge"
+            data-badge="{{ total_external_notifications }}"
+            {% endif %}>
         {% trans "Communities" %}
       </span>
       {% endwith %}
@@ -51,35 +61,43 @@
 
 {% if can_create_activity %}
 <ul class="menu mt-2">
-  <li class="divider" data-content="{% trans 'Actions' %}"></li>
+  <li class="divider"
+      data-content="{% trans 'Actions' %}"></li>
   {% if drafts_count %}
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'activities:drafts' %}">
-      <span class="badge" data-badge="{{ drafts_count }}">{% trans "Drafts" %}</span>
+    <a data-controller="active-link"
+       href="{% url 'activities:drafts' %}">
+      <span class="badge"
+            data-badge="{{ drafts_count }}">{% trans "Drafts" %}</span>
     </a>
   </li>
   {% endif %}
   {% if can_create_message %}
   <li class="menu-item">
-    <a data-controller="active-link" data-active-link-exact
+    <a data-controller="active-link"
+       data-active-link-exact
        href="{% url 'private_messages:recipients' %}">{% trans "Send Message" %}</a>
   </li>
   {% endif %}
   {% if can_create_activity %}
   <li class="menu-item">
-    <a data-controller="active-link" data-active-link-exact
+    <a data-controller="active-link"
+       data-active-link-exact
        href="{% url 'posts:create' %}">{% trans "New Post" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" data-active-link-exact
+    <a data-controller="active-link"
+       data-active-link-exact
        href="{% url 'events:create' %}">{% trans "New Event" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" data-active-link-exact
+    <a data-controller="active-link"
+       data-active-link-exact
        href="{% url 'photos:create' %}">{% trans "New Photo" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" data-active-link-exact
+    <a data-controller="active-link"
+       data-active-link-exact
        href="{% url 'polls:create' %}">{% trans "New Poll" %}</a>
   </li>
   {% endif %}
@@ -87,35 +105,41 @@
 {% endif %}
 
 <ul class="menu mt-2">
-  <li class="divider" data-content="{% trans 'People' %}"></li>
+  <li class="divider"
+      data-content="{% trans 'People' %}"></li>
   <li class="menu-item">
     <a data-controller="active-link"
        href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'users:member_list' %}">
+    <a data-controller="active-link"
+       href="{% url 'users:member_list' %}">
       {% trans "Members" %}
     </a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'users:following_list' %}">
+    <a data-controller="active-link"
+       href="{% url 'users:following_list' %}">
       {% trans "Following" %}
     </a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'users:follower_list' %}">
+    <a data-controller="active-link"
+       href="{% url 'users:follower_list' %}">
       {% trans "Followers" %}
     </a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'users:blocked_list' %}">
+    <a data-controller="active-link"
+       href="{% url 'users:blocked_list' %}">
       {% trans "Blocked" %}
     </a>
   </li>
 </ul>
 
 <ul class="menu mt-2">
-  <li class="divider" data-content="{% trans 'Content' %}"></li>
+  <li class="divider"
+      data-content="{% trans 'Content' %}"></li>
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
@@ -129,31 +153,38 @@
     </a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'likes:activities' %}">
+    <a data-controller="active-link"
+       href="{% url 'likes:activities' %}">
       {% trans "Likes" %}
     </a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'activities:tag_list' %}">
+    <a data-controller="active-link"
+       href="{% url 'activities:tag_list' %}">
       {% trans "Tags" %}
     </a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
+    <a data-controller="active-link"
+       href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'events:list' %}">{% trans "Events" %}</a>
+    <a data-controller="active-link"
+       href="{% url 'events:list' %}">{% trans "Events" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
+    <a data-controller="active-link"
+       href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
+    <a data-controller="active-link"
+       href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
   </li>
   {% if flags_count %}
   <li class="menu-item">
     <a href="{% url 'flags:list' %}">
-      <span class="badge" data-badge="{{ flags_count }}">
+      <span class="badge"
+            data-badge="{{ flags_count }}">
         {% trans "Flagged" %}
       </span>
     </a>
@@ -162,24 +193,31 @@
 </ul>
 
 <ul class="menu mt-2">
-  <li class="divider" data-content="{% trans 'Settings' %}"></li>
+  <li class="divider"
+      data-content="{% trans 'Settings' %}"></li>
   <li class="menu-item">
     {% include "includes/mode_toggle.html" %}
   </li>
   <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
   {% if can_manage_community %}
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
+    <a data-controller="active-link"
+       href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
+    <a data-controller="active-link"
+       href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
+    <a data-controller="active-link"
+       href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'join_requests:list' %}">
-      <span {% if pending_join_requests_count %}class="badge" data-badge="{{ pending_join_requests_count }}"{% endif %}>
+    <a data-controller="active-link"
+       href="{% url 'join_requests:list' %}">
+      <span {% if pending_join_requests_count %}class="badge"
+            data-badge="{{ pending_join_requests_count }}"
+            {% endif %}>
         {% trans "Join Requests" %}
       </span>
     </a>
@@ -189,7 +227,8 @@
 
 {% if community.description or community.terms %}
 <ul class="menu mt-2">
-  <li class="divider" data-content="{% trans 'Site Info' %}"></li>
+  <li class="divider"
+      data-content="{% trans 'Site Info' %}"></li>
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
@@ -198,7 +237,8 @@
     </a>
   </li>
   <li class="menu-item">
-    <a data-controller="active-link" href="{% url 'communities:community_terms' %}">
+    <a data-controller="active-link"
+       href="{% url 'communities:community_terms' %}">
       {% trans "Terms" %}
     </a>
   </li>
