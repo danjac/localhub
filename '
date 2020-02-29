@@ -55,13 +55,11 @@
         {% else %}
 
         {% with object.title|truncatechars:130 as object_title %}
-
         {% if object.url %}
         {{ object.url|linkify:object_title }}
         {% else %}
         <a href="{{ object.get_absolute_url }}">{{ object_title }}</a>
         {% endif %}
-
         {% endwith %}
 
         {% endif %}
@@ -81,7 +79,7 @@
 
       {% if object.url %}
       <div class="card-subtitle h6">
-        {{ object.url|domain|linkify }}
+        {{ object.url|linkify }}
       </div>
       {% endif %}
 

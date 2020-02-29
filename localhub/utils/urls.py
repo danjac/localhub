@@ -49,15 +49,34 @@ def is_image_url(url):
     return ext[1:] in IMAGE_EXTENSIONS
 
 
+def get_domain_url(url):
+    """
+    Returns the root domain URL minus path etc.
+    """
+
+    if not is_url(url):
+        return url
+
+    parts = urlparse(url)
+    return parts.scheme + "://" + parts.netloc
+
+
+def clean_domain(domain):
+    """
+    Removes www. segment of a domain.
+    """
+    if domain and domain.startswith("www."):
+        return domain[4:]
+    return domain
+
+
 def get_domain(url):
     """
-    Returns the domain of a URL. Removes any "www." at the start.
+    Returns the domain of a URL.
     Returns None if invalid.
     """
 
-    if url is None or not is_url(url):
-        return None
+    if not is_url(url):
+        return url
 
-    if (domain := urlparse(url).netloc).startswith("www."):
-        domain = domain[4:]
-    return domain
+    return clean_domain(urlparse(url).netloc)

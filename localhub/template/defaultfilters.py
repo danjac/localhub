@@ -9,6 +9,7 @@ from django.utils.safestring import mark_safe
 from localhub.utils.urls import (
     REL_SAFE_VALUES,
     get_domain,
+    get_domain_url,
     is_https,
     is_image_url,
     is_url,
@@ -41,7 +42,7 @@ def url_to_img(url, linkify=True):
 
     Only https links are permitted.
     """
-    if url is None or not is_url(url):
+    if not is_url(url):
         return url
     if is_image_url(url) and is_https(url):
         html = f'<img src="{url}" alt="{get_domain(url)}">'
@@ -52,11 +53,22 @@ def url_to_img(url, linkify=True):
 
 
 @register.filter
+def domain(url):
+    """
+    Returns domain URL (i.e. minus path)
+    """
+    return get_domain_url(url) or url
+
+
+@register.filter
 def linkify(url, text=None):
     """
     Creates a "safe" external link to a new tab.
     If text is falsy, uses the URL domain e.g. reddit.com.
     """
+    if not is_url(url):
+        return url
+
     text = text or get_domain(url)
     if not text:
         return url

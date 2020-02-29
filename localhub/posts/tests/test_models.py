@@ -88,7 +88,7 @@ class TestPostModel:
         assert Comment.objects.count() == 0
 
     def test_get_domain_if_no_url(self):
-        assert Post().get_domain() is None
+        assert Post().get_domain() == ""
 
     def test_get_domain_if_url(self):
         assert Post(url="http://google.com").get_domain() == "google.com"

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from ..urls import get_domain, is_https, is_image_url, is_url
+from ..urls import get_domain, get_domain_url, is_https, is_image_url, is_url
 
 
 class TestIsHttps:
@@ -35,9 +35,17 @@ class TestIsImageUrl:
         assert not is_image_url("https://example.com/test.txt")
 
 
+class TestGetDomainUrl:
+    def test_if_empty(self):
+        assert get_domain_url("") == ""
+
+    def test_with_path(self):
+        assert get_domain_url("http://google.com/test/") == "http://google.com"
+
+
 class TestGetDomain:
     def test_if_empty(self):
-        assert get_domain("") is None
+        assert get_domain("") == ""
 
     def test_with_path(self):
         assert get_domain("http://google.com/test/") == "google.com"
