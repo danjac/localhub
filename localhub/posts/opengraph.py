@@ -29,6 +29,10 @@ class Opengraph:
     description: str
     image: str
 
+    @property
+    def is_empty(self):
+        return not (self.title) and not (self.description) and not (self.image)
+
 
 def get_opengraph_from_url(url):
     """
@@ -68,8 +72,11 @@ def get_opengraph_from_html(html):
 
 
 def get_title_from_html(soup):
-    if title := get_meta_content(soup, "og:title", "twitter:title"):
+    title = get_meta_content(soup, "og:title", "twitter:title")
+    if title:
         return title
+    elif soup.h1 and soup.h1.text:
+        return soup.h1.text
     return soup.title.string if soup.title else None
 
 

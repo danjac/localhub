@@ -33,11 +33,11 @@ class TestGetOpengraphDataFromUrl:
 
         mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
         og = get_opengraph_from_url("https://google.com")
-        assert og.title is None
+        assert og.is_empty
 
     def test_if_no_url(self):
         og = get_opengraph_from_url(None)
-        assert og.title is None
+        assert og.is_empty
 
 
 class TestGetOpengraphDataFromHtml:
@@ -48,8 +48,8 @@ class TestGetOpengraphDataFromHtml:
             <title>page title</title>
             <meta property="og:title" content="meta title">
         </head>
-        </body>
         <body>
+        </body>
         </html>
         """
         og = get_opengraph_from_html(html)
@@ -62,12 +62,26 @@ class TestGetOpengraphDataFromHtml:
             <title>page title</title>
             <meta name="twitter:title" content="meta title">
         </head>
-        </body>
         <body>
+        </body>
         </html>
         """
         og = get_opengraph_from_html(html)
         assert og.title == "meta title"
+
+    def test_get_from_header(self):
+        html = """
+        <html>
+        <head> 
+            <title>page title</title>
+        </head>
+        <body>
+            <h1>PAGE HEADER</h1>
+        </body>
+        </html>
+        """
+        og = get_opengraph_from_html(html)
+        assert og.title == "PAGE HEADER"
 
     def test_get_from_page_title(self):
         html = """
@@ -89,8 +103,8 @@ class TestGetOpengraphDataFromHtml:
             <title>page title</title>
             <meta property="og:image" content="http://imgur.com/test.jpg">
         </head>
-        </body>
         <body>
+        </body>
         </html>
         """
         og = get_opengraph_from_html(html)
@@ -103,8 +117,8 @@ class TestGetOpengraphDataFromHtml:
             <title>page title</title>
             <meta name="og:image" content="http://imgur.com/test.jpg">
         </head>
-        </body>
         <body>
+        </body>
         </html>
         """
         og = get_opengraph_from_html(html)
@@ -115,8 +129,8 @@ class TestGetOpengraphDataFromHtml:
         <html>
         <head>
         </head>
-        </body>
         <body>
+        </body>
         </html>
         """
         og = get_opengraph_from_html(html)
@@ -129,8 +143,8 @@ class TestGetOpengraphDataFromHtml:
             <title>page title</title>
             <meta property="og:description" content="test">
         </head>
-        </body>
         <body>
+        </body>
         </html>
         """
         og = get_opengraph_from_html(html)
@@ -143,8 +157,8 @@ class TestGetOpengraphDataFromHtml:
             <title>page title</title>
             <meta name="og:description" content="test">
         </head>
-        </body>
         <body>
+        </body>
         </html>
         """
         og = get_opengraph_from_html(html)
@@ -156,8 +170,8 @@ class TestGetOpengraphDataFromHtml:
         <head>
             <title>page title</title>
         </head>
-        </body>
         <body>
+        </body>
         </html>
         """
         og = get_opengraph_from_html(html)
