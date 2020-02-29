@@ -38,6 +38,7 @@
 <div class="divider"></div>
 
 {% if dates %}
+{% spaceless %}
 {% with earliest=dates|first latest=dates|last %}
 <div class="my-2 toast text-center">
     {% blocktrans count counter=paginator.count %}
@@ -56,6 +57,7 @@
     {% endif %}
 </div>
 {% endwith %}
+{% endspaceless %}
 {% endif %}
 
 {% if object_list %}
