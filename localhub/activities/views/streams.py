@@ -208,16 +208,13 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseStreamView):
         for object in data["object_list"]:
             object["month"] = date_format(object["published"], "F Y")
         dates = self.get_dates()
-        if dates:
-            earliest, latest = dates[0], dates[-1]
         data.update(
             {
+                "dates": dates,
                 "current_year": self.current_year,
                 "months": self.get_months(dates),
                 "years": self.get_years(dates),
                 "date_filters": self.date_kwargs,
-                "earliest": earliest,
-                "latest": latest,
             }
         )
         return data
