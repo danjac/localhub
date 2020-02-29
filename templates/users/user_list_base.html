@@ -13,19 +13,27 @@
 {% has_perm "private_messages.create_message" user community as can_create_message %}
 
 <ul class="tab tab-block mt-2">
-    <li class="tab-item" data-controller="active-link" data-active-link-exact>
+    <li class="tab-item"
+        data-controller="active-link"
+        data-active-link-exact>
         <a data-target="active-link.match"
            href="{% url 'users:member_list' %}">{% trans "Members" %}</a>
     </li>
-    <li class="tab-item" data-controller="active-link" data-active-link-exact>
+    <li class="tab-item"
+        data-controller="active-link"
+        data-active-link-exact>
         <a data-target="active-link.match"
            href="{% url 'users:following_list' %}">{% trans "Following" %}</a>
     </li>
-    <li class="tab-item" data-controller="active-link" data-active-link-exact>
+    <li class="tab-item"
+        data-controller="active-link"
+        data-active-link-exact>
         <a data-target="active-link.match"
            href="{% url 'users:follower_list' %}">{% trans "Followers" %}</a>
     </li>
-    <li class="tab-item" data-controller="active-link" data-active-link-exact>
+    <li class="tab-item"
+        data-controller="active-link"
+        data-active-link-exact>
         <a data-target="active-link.match"
            href="{% url 'users:blocked_list' %}">{% trans "Blocked" %}</a>
     </li>
@@ -51,7 +59,8 @@
             </td>
             <td>
                 {% if user != object %}
-                <div class="actions float-right" data-controller="toggle">
+                <div class="actions float-right"
+                     data-controller="toggle">
                     {% if can_create_message and object not in blocked_users %}
                     <a href="{% url 'private_messages:message_create' object.username %}">
                         {% trans "Send Message" %}
@@ -59,9 +68,11 @@
                     {% endif %}
                     {% has_perm "users.follow_user" user object as can_follow_user %}
                     {% if can_follow_user %}
-                    <span class="d-hide" data-controller="js-toggle">
+                    <span class="d-hide"
+                          data-controller="js-toggle">
                         <a href="{% url 'users:unfollow' object.username %}"
-                           {% if not object.is_following %}class="d-hide"{% endif %}
+                           {% if not object.is_following %}class="d-hide"
+                           {% endif %}
                            data-controller="ajax"
                            data-ajax-redirect="none"
                            data-target="toggle.togglable"
@@ -70,7 +81,8 @@
                             {% trans "Unfollow" %}
                         </a>
                         <a href="{% url 'users:follow' object.username %}"
-                           {% if object.is_following %}class="d-hide"{% endif %}
+                           {% if object.is_following %}class="d-hide"
+                           {% endif %}
                            data-controller="ajax"
                            data-ajax-redirect="none"
                            data-target="toggle.togglable"

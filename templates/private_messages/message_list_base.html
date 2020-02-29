@@ -20,8 +20,7 @@
        class="d-hide"
        data-controller="ajax js-toggle"
        data-action="ajax#post"
-       data-ajax-redirect="{{ request.path }}"
-       >{% trans "Mark All As Read" %}</a>
+       data-ajax-redirect="{{ request.path }}">{% trans "Mark All As Read" %}</a>
     {% endif %}
     {% if can_create_message %}
     <a href="{% url 'private_messages:recipients' %}">{% trans "Send Message" %}</a>
@@ -30,16 +29,22 @@
 {% endif %}
 <div class="divider"></div>
 
+{% with search=view.search_query %}
 <ul class="tab tab-block mt-2">
-    <li class="tab-item" data-controller="active-link" data-active-link-exact>
+    <li class="tab-item"
+        data-controller="active-link"
+        data-active-link-exact>
         <a data-target="active-link.match"
-           href="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</a>
+           href="{% url 'private_messages:inbox' %}{% if search %}?q={{ search }}{% endif %}">{% trans "Inbox" %}</a>
     </li>
-    <li class="tab-item" data-controller="active-link" data-active-link-exact>
+    <li class="tab-item"
+        data-controller="active-link"
+        data-active-link-exact>
         <a data-target="active-link.match"
-           href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
+           href="{% url 'private_messages:outbox' %}{% if search %}?q={{ search }}{% endif %}">{% trans "Outbox" %}</a>
     </li>
 </ul>
+{% endwith %}
 
 {% block message_list %}{% endblock %}
 

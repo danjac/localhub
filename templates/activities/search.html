@@ -10,8 +10,10 @@
 <h3>{% trans "Search" %}</h3>
 
 <div class="actions">
-  <a href="{% url 'comments:list' %}?q={{ view.search_query }}">{% trans "Search Comments" %}</a>
-  <a href="{% url 'private_messages:inbox' %}?q={{ view.search_query }}">{% trans "Search Messages" %}</a>
+  <a href="{% url 'comments:list' %}?q={{ view.search_query }}">{% trans "Comments" %}</a>
+  <a href="{% url 'users:member_list' %}?q={{ view.search_query }}">{% trans "Members" %}</a>
+  <a href="{% url 'private_messages:inbox' %}?q={{ view.search_query }}">{% trans "Inbox" %}</a>
+  <a href="{% url 'private_messages:outbox' %}?q={{ view.search_query }}">{% trans "Outbox" %}</a>
 </div>
 
 <div class="divider"></div>
@@ -20,22 +22,21 @@
       action="{{ request.path }}"
       data-controller="form"
       data-action="form#submit"
-      class="my-2 search-form"
-      >
-      <input class="form-input"
-             name="q"
-             type="search"
-             placeholder="{% trans "Search" %}"
-             value="{{ view.search_query }}">
+      class="my-2 search-form">
+  <input class="form-input"
+         name="q"
+         type="search"
+         placeholder="{% trans "Search" %}"
+         value="{{ view.search_query }}">
 </form>
-  {% if object_list %}
-  <div class="toast text-center mt-2">
-    {% blocktrans count counter=paginator.count %}
-    1 result found
-    {% plural %}
-    {{ counter }} results found
-    {% endblocktrans %}
-  </div>
-  {% endif %}
-  {% include "activities/includes/activity_list.html" %}
-  {% endblock content %}
+{% if object_list %}
+<div class="toast text-center mt-2">
+  {% blocktrans count counter=paginator.count %}
+  1 result found
+  {% plural %}
+  {{ counter }} results found
+  {% endblocktrans %}
+</div>
+{% endif %}
+{% include "activities/includes/activity_list.html" %}
+{% endblock content %}
