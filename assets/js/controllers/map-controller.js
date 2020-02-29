@@ -4,7 +4,9 @@
 import 'leaflet/dist/leaflet.css';
 
 import L from 'leaflet';
-import { Controller } from 'stimulus';
+import {
+  Controller
+} from 'stimulus';
 
 // https://github.com/PaulLeCam/react-leaflet/issues/255
 
@@ -28,8 +30,7 @@ export default class extends Controller {
     const coords = [this.latitude, this.longitude];
     const map = L.map(this.element.id).setView(coords, this.defaultZoom);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution:
-        'Map data &copy; <a href="https://www.openstreetmap.org/">' +
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">' +
         'OpenStreetMap</a> contributors,' +
         '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
     }).addTo(map);

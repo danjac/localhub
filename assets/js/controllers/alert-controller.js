@@ -1,5 +1,9 @@
-import { Controller } from 'stimulus';
-import { fadeOut } from '../effects';
+import {
+  Controller
+} from 'stimulus';
+import {
+  fadeOut
+} from '../effects';
 
 export default class extends Controller {
   connect() {

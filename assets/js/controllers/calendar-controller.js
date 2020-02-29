@@ -16,7 +16,9 @@ import {
   subMonths
 } from 'date-fns';
 
-import { Controller } from 'stimulus';
+import {
+  Controller
+} from 'stimulus';
 
 export default class extends Controller {
   static targets = ['calendar', 'dateInput', 'currentMonth', 'days'];
@@ -24,7 +26,9 @@ export default class extends Controller {
   open(event) {
     event.preventDefault();
     if (!this.calendarTarget.classList.toggle('d-none')) {
-      const { value } = this.dateInputTarget;
+      const {
+        value
+      } = this.dateInputTarget;
 
       this.selectedDate = value ? parse(value) : null;
       this.firstOfMonthDate = startOfMonth(this.selectedDate || new Date());

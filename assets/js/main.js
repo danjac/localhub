@@ -5,8 +5,12 @@
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-import { Application } from 'stimulus';
-import { definitionsFromContext } from 'stimulus/webpack-helpers';
+import {
+    Application
+} from 'stimulus';
+import {
+    definitionsFromContext
+} from 'stimulus/webpack-helpers';
 
 // Axios setup
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
