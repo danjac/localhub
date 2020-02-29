@@ -2,9 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import Cookies from 'js-cookie';
-import {
-  Controller
-} from 'stimulus';
+import { Controller } from 'stimulus';
 
 export default class extends Controller {
   connect() {

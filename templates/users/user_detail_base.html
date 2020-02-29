@@ -17,8 +17,10 @@
 {% has_perm "private_messages.create_message" user community as can_create_message %}
 {% has_perm "communities.view_membership" user membership as can_view_membership %}
 
+{% user_display user_obj as display_name %}
+
 <h3>
-    {% avatar user_obj "avatar-lg" %}{% user_display user_obj %}
+    {% avatar user_obj "avatar-lg" %}{{ display_name }}
     {% if membership.is_admin %}
     <span class="chip bg-primary">{% trans "Admin" %}</span>
     {% elif membership.is_moderator %}
@@ -66,7 +68,7 @@
     {% endblocktrans %}
     {% elif membership %}
     {% blocktrans with created=membership.created|timesince %}
-    This user has been a member for <b>{{ created }}</b>.
+    {{ display_name }} has been a member for <b>{{ created }}</b>.
     {% endblocktrans %}
     {% endif %}
 </p>
