@@ -50,7 +50,9 @@
     on {{ earliest }}.
     {% endblocktrans %}
     {% else %}
+    {% blocktrans %}
     from {{ earliest }} to {{ latest }}.
+    {% endblocktrans %}
     {% endif %}
 </div>
 {% endwith %}
