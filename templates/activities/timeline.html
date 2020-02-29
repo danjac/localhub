@@ -39,24 +39,24 @@
 
 {% if dates %}
 {% spaceless %}
-{% with earliest=dates|first latest=dates|last %}
 <div class="my-2 toast text-center">
     {% blocktrans count counter=paginator.count %}
     A total of <strong>1 post</strong> has been published
     {% plural %}
     A total of <strong>{{ counter }} posts</strong> have been published
     {% endblocktrans %}
-    {% if earliest == latest %}
+    {% with earliest=dates|first|date:"E, Y" latest=dates|last|date:"E, Y" %}
+    {% if months|length == 1 and years|length == 1 %}
     {% blocktrans %}
-    on {{ earliest }}.
+    in {{ earliest }}.
     {% endblocktrans %}
     {% else %}
     {% blocktrans %}
     from {{ earliest }} to {{ latest }}.
     {% endblocktrans %}
     {% endif %}
+    {% endwith %}
 </div>
-{% endwith %}
 {% endspaceless %}
 {% endif %}
 
