@@ -37,13 +37,24 @@
 {% endif %}
 <div class="divider"></div>
 
+{% if paginator.count %}
 <div class="my-2 toast text-center">
-{% blocktrans count counter=paginator.count %}
-A total of <strong>1 post</strong> has been published in this period.
-{% plural %}
-A total of <strong>{{ counter }} posts</strong> have been published in this period.
-{% endblocktrans %}
+    {% blocktrans count counter=paginator.count %}
+    A total of <strong>1 post</strong> has been published
+    {% plural %}
+    A total of <strong>{{ counter }} posts</strong> have been published
+    {% endblocktrans %}
+    {% with earliest_date=earliest|date:"DATE_FORMAT" latest_date=latest|date:"DATE_FORMAT" %}
+    {% if earliest_date == latest_date %}
+    {% blocktrans %}
+    on {{ earliest_date }}.
+    {% endblocktrans %}
+    {% else %}
+    from {{ earliest_date }} to {{ latest_date }}.
+    {% endif %}
+    {% endwith %}
 </div>
+{% endif %}
 
 {% if object_list %}
 

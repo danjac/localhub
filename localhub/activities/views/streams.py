@@ -123,13 +123,15 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseStreamView):
 
     @cached_property
     def date_kwargs(self):
-        if date := self.get_current_month():
+        date = self.get_current_month()
+        if date:
             return self.make_date_lookup_kwargs(
                 self._make_date_lookup_arg(date),
                 self._make_date_lookup_arg(self._get_next_month(date)),
             )
 
-        if date := self.get_current_year():
+        date = self.get_current_year()
+        if date:
             return self.make_date_lookup_kwargs(
                 self._make_date_lookup_arg(date),
                 self._make_date_lookup_arg(self._get_next_year(date)),
@@ -206,12 +208,16 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseStreamView):
         for object in data["object_list"]:
             object["month"] = date_format(object["published"], "F Y")
         dates = self.get_dates()
+        if dates:
+            earliest, latest = dates[0], dates[-1]
         data.update(
             {
                 "current_year": self.current_year,
                 "months": self.get_months(dates),
                 "years": self.get_years(dates),
                 "date_filters": self.date_kwargs,
+                "earliest": earliest,
+                "latest": latest,
             }
         )
         return data
