@@ -6,9 +6,11 @@
       color: $darkmode-text;
       background-color: $darkmode-darker;
     }
+
     &-title {
       color: $darkmode-text;
     }
+
     &.active .modal-overlay {
       background: rgba($darkmode-lighter, 0.85);
     }
@@ -34,7 +36,8 @@
     color: $darkmode-link;
   }
 
-  .btn-action, .btn-link {
+  .btn-action,
+  .btn-link {
     color: $darkmode-link;
   }
 
@@ -77,10 +80,12 @@
   .form-select {
     background-color: $darkmode-darker;
     color: $darkmode-text;
+
     &::placeholder {
       background-color: $darkmode-darker;
       color: $darkmode-text;
     }
+
     &:not(:placeholder-shown):invalid:focus {
       background-color: $darkmode-darker;
     }
@@ -106,8 +111,10 @@
       &.selected {
         background-color: $darkmode-darker !important;
       }
+
       a {
         color: $darkmode-link;
+
         &.active,
         &:hover,
         &:visited {
@@ -122,6 +129,7 @@
   }
 
   .badge {
+
     &[data-badge],
     &:not([data-badge]) {
       &::after {
@@ -136,10 +144,12 @@
       background: $darkmode-lighter;
       color: $gray-color;
     }
+
     border-top: $border-width solid $gray-color;
   }
 
   .table.table-striped tbody {
+
     tr:nth-of-type(2n + 1),
     tr:hover {
       background-color: $darkmode-lighter;

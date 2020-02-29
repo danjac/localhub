@@ -17,6 +17,7 @@ footer {
 
 a {
   color: $link-color-dark;
+
   &:visited {
     color: $link-color;
   }
@@ -26,17 +27,21 @@ a {
   &.actions-sm {
     font-size: $font-size-sm;
   }
+
   a {
     color: $link-color-dark;
 
     @extend .btn-link;
+
     &:not(:last-child) {
       @extend .pr-1;
       // border-right: 1pt solid $gray-color-dark;
     }
+
     &:not(:first-child) {
       @extend .pl-1;
     }
+
     &:visited {
       color: $link-color-dark;
     }
@@ -71,9 +76,11 @@ table {
 .btn {
   color: $dark-color;
   border-color: $border-color-dark;
+
   &.btn-link {
     color: $dark-color;
   }
+
   &:visited {
     color: $dark-color;
   }
@@ -90,9 +97,11 @@ table {
 .divider,
 .divider-vert {
   color: $dark-color;
+
   &[data-content]::after {
     color: $dark-color;
   }
+
   &[data-content] {
     font-weight: bold;
   }
@@ -100,6 +109,7 @@ table {
 
 .event-map {
   height: $map-height;
+
   &-lg {
     height: $map-height * 2;
   }
@@ -113,6 +123,7 @@ table {
   &::placeholder {
     color: $gray-color-dark;
   }
+
   &.bg-dark {
     &::placeholder {
       color: $light-color;
@@ -127,10 +138,12 @@ table {
 .menu-item {
   a {
     color: $dark-color;
+
     @media (min-width: $size-lg) {
       font-size: $font-size-sm;
     }
   }
+
   &.selected {
     @extend .bg-secondary;
   }
@@ -173,6 +186,7 @@ table {
 
 .activity-title {
   @extend .h5;
+
   @media (max-width: $size-lg) {
     // h6
     font-size: 0.8rem !important;
@@ -185,21 +199,25 @@ table {
       @include table-responsive-mixin();
     }
   }
+
   &-lg {
     @media (max-width: $size-lg) {
       @include table-responsive-mixin();
     }
   }
+
   &-md {
     @media (max-width: $size-md) {
       @include table-responsive-mixin();
     }
   }
+
   &-sm {
     @media (max-width: $size-sm) {
       @include table-responsive-mixin();
     }
   }
+
   &-xs {
     @media (max-width: $size-xs) {
       @include table-responsive-mixin();
