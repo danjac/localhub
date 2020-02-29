@@ -15,7 +15,9 @@
   {% with opengraph_image=object.get_opengraph_image_if_safe %}
   {% if opengraph_image %}
   <div class="column col-3 col-md-12">
-    <img src="{{ opengraph_image }}" alt="{{ object.title }}"  class="img-responsive">
+    <img src="{{ opengraph_image }}"
+         alt="{{ object.title }}"
+         class="img-responsive">
   </div>
   {% endif %}
   <div class="column col-{{ opengraph_image|yesno:"9,12" }} col-md-12">

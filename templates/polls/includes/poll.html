@@ -13,7 +13,10 @@
 <ol>
     {% for answer in object.answers.all %}
     <li>{{ answer }}
-        <meter class="meter" value="{% widthratio answer.num_votes object.total_num_votes 100 %}" min="0" max="100"></meter>
+        <meter class="meter"
+               value="{% widthratio answer.num_votes object.total_num_votes 100 %}"
+               min="0"
+               max="100"></meter>
         {% if can_vote %}
         <a class="d-hide"
            data-controller="js-toggle ajax"
@@ -25,5 +28,3 @@
 </ol>
 
 {% endblock content %}
-
-

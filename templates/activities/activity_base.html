@@ -6,14 +6,21 @@
 {% load rules %}
 
 {% with is_content_sensitive=object|is_content_sensitive:user %}
-<article role="{{ object_type }}" id="{{ object_type }}-{{ object.id }}" class="card"{% if is_content_sensitive %} data-controller="content-sensitive"{% endif %}>
+<article role="{{ object_type }}"
+         id="{{ object_type }}-{{ object.id }}"
+         class="card"
+         {% if is_content_sensitive %}
+         data-controller="content-sensitive"
+         {% endif %}>
   {% if is_content_sensitive %}
-  <div class="card-header" data-target="content-sensitive.togglable">
+  <div class="card-header"
+       data-target="content-sensitive.togglable">
     <div class="card-subtitle h6">
       {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
     </div>
   </div>
-  <div class="card-header d-hide" data-target="content-sensitive.togglable">
+  <div class="card-header d-hide"
+       data-target="content-sensitive.togglable">
     {% else %}
     <div class="card-header">
       {% endif %}
@@ -95,19 +102,25 @@
       {% else %}
       {% if object.is_reshare %}<blockquote>{% endif %}
         {% if is_content_sensitive %}
-        <div class="empty bg-dark" data-target="content-sensitive.togglable">
+        <div class="empty bg-dark"
+             data-target="content-sensitive.togglable">
           <p class="empty-title h5">{% trans "Sensitive Content" %}</p>
-          <p class="empty-subtitle">{% trans "This post has been tagged sensitive. You can view all sensitive content by default in your settings." %}</p>
+          <p class="empty-subtitle">
+            {% trans "This post has been tagged sensitive. You can view all sensitive content by default in your settings." %}
+          </p>
           <p>
             {% for tag in object.get_content_warning_tags %}
             #{{ tag }}{% if not forloop.last %}, {% endif %}
             {% endfor %}
           </p>
-          <div class="empty-action d-hide" data-controller="js-toggle">
-            <button class="btn btn-primary" data-action="content-sensitive#toggle">{% trans "Show Content" %}</button>
+          <div class="empty-action d-hide"
+               data-controller="js-toggle">
+            <button class="btn btn-primary"
+                    data-action="content-sensitive#toggle">{% trans "Show Content" %}</button>
           </div>
         </div>
-        <div class="d-hide" data-target="content-sensitive.togglable">
+        <div class="d-hide"
+             data-target="content-sensitive.togglable">
           {% endif %}
           {% with ignore_collapsable=is_detail|default:is_content_sensitive %}
           {% collapsable ignore_collapsable %}
@@ -115,7 +128,8 @@
           {% endcollapsable %}
           {% endwith %}
           {% if is_content_sensitive %}</div>{% endif %}
-        {% if object.is_reshare %}</blockquote>{% endif %}
+        {% if object.is_reshare %}
+      </blockquote>{% endif %}
       {% endif %}
     </div>
     <div class="card-footer">
@@ -167,7 +181,8 @@
         {% endblocktrans %}
       </div>
       {% endif %}
-      <div class="actions" data-controller="toggle">
+      <div class="actions"
+           data-controller="toggle">
         {% if not is_detail %}
         {% has_perm "activities.create_comment" user object as can_create_comment %}
         {% with num_comments=object.num_comments|default:0 %}
@@ -192,23 +207,26 @@
 
         {% has_perm "activities.like_activity" user object as can_like %}
         {% if can_like %}
-        <span class="d-hide" data-controller="js-toggle">
+        <span class="d-hide"
+              data-controller="js-toggle">
           <a href="{{ object.get_like_url }}"
-             {% if object.has_liked %} class="d-hide"{% endif %}
-                                       data-controller="ajax"
-                                       data-target="toggle.togglable"
-                                       data-toggle-target="like"
-                                       data-ajax-redirect="none"
-                                       data-action="ajax#post toggle#toggle"
-                                       >{% trans "Like" %}</a>
+             {% if object.has_liked %}
+             class="d-hide"
+             {% endif %}
+             data-controller="ajax"
+             data-target="toggle.togglable"
+             data-toggle-target="like"
+             data-ajax-redirect="none"
+             data-action="ajax#post toggle#toggle">{% trans "Like" %}</a>
           <a href="{{ object.get_dislike_url }}"
-             {% if not object.has_liked %} class="d-hide"{% endif %}
-                                           data-controller="ajax"
-                                           data-target="toggle.togglable"
-                                           data-toggle-target="like"
-                                           data-ajax-redirect="none"
-                                           data-action="ajax#post toggle#toggle"
-                                           >{% trans "Unlike" %}</a>
+             {% if not object.has_liked %}
+             class="d-hide"
+             {% endif %}
+             data-controller="ajax"
+             data-target="toggle.togglable"
+             data-toggle-target="like"
+             data-ajax-redirect="none"
+             data-action="ajax#post toggle#toggle">{% trans "Unlike" %}</a>
         </span>
         {% endif %}
 
@@ -219,8 +237,7 @@
            data-controller="js-toggle ajax"
            data-action="ajax#post"
            data-ajax-redirect="{{ request.path }}"
-           href="{{ object.get_reshare_url }}"
-           >{% trans "Reshare" %}</a>
+           href="{{ object.get_reshare_url }}">{% trans "Reshare" %}</a>
         {% endif %}
         {% endif %}
 
@@ -243,8 +260,7 @@
            data-controller="ajax confirm"
            data-action="confirm#check ajax#post"
            data-confirm-header="{% trans 'Delete' %}"
-           data-confirm-body="{% trans 'Are you sure you want to delete this item?' %}"
-           >{% trans "Delete" %}</a>
+           data-confirm-body="{% trans 'Are you sure you want to delete this item?' %}">{% trans "Delete" %}</a>
         {% endif %}
 
         {% endblock %}

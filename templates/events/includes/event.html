@@ -31,20 +31,20 @@
   {% else %}
   <dt>{% trans "Date" %} <span class="chip">{{ object.timezone }}</span></dt>
   <dd>
-  {{ object.starts|date:"DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }}
+    {{ object.starts|date:"DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }}
   </dd>
   {% endif %}
   {% endtimezone %}
 
   <dt>{% trans "Location" %}</dt>
   <dd>
-  {% with location=object.full_location %}
-  {% if location %}
-  {{ location }}
-  {% else %}
-  {% trans "Online" %}
-  {% endif %}
-  {% endwith %}
+    {% with location=object.full_location %}
+    {% if location %}
+    {{ location }}
+    {% else %}
+    {% trans "Online" %}
+    {% endif %}
+    {% endwith %}
   </dd>
 
   {% if object.ticket_price %}
@@ -64,8 +64,7 @@
      class="event-map event-map-lg"
      data-controller="map"
      data-map-latitude="{{ object.latitude }}"
-     data-map-longitude="{{ object.longitude }}"
-     ></div>
+     data-map-longitude="{{ object.longitude }}"></div>
 {% endif %}
 {% endblock content %}
 
