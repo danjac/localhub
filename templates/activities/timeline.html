@@ -45,16 +45,31 @@
     {% plural %}
     A total of <strong>{{ counter }} posts</strong> were published
     {% endblocktrans %}
-    {% with earliest=dates|first|date:"E Y" latest=dates|last|date:"E Y" %}
-    {% if months|length == 1 and years|length == 1 %}
+
+    {% with num_months=months|length num_years=years|length %}
+
+    {% if num_months == 1 and num_years == 1 %}
+    {% with earliest=dates|first|date:"E Y" %}
     {% blocktrans %}
     in {{ earliest }}.
     {% endblocktrans %}
-    {% else %}
+    {% endwith %}
+
+    {% elif num_years == 1 %}
+    {% with earliest=dates|first|date:"E" latest=dates|last|date:"E Y" %}
     {% blocktrans %}
     from {{ earliest }} to {{ latest }}.
     {% endblocktrans %}
+    {% endwith %}
+
+    {% else %}
+    {% with earliest=dates|first|date:"E Y" latest=dates|last|date:"E Y" %}
+    {% blocktrans %}
+    from {{ earliest }} to {{ latest }}.
+    {% endblocktrans %}
+    {% endwith %}
     {% endif %}
+
     {% endwith %}
 </div>
 {% endspaceless %}
