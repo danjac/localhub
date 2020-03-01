@@ -6,7 +6,7 @@
 {% load i18n %}
 <form method="GET"
       action="{{ request.path }}"
-      data-controller="form"
+      data-controller="form{% if selector %} search{% endif %}"
       data-action="form#submit"
       class="my-2 search-form">
   {% for name, value in non_search_params.items %}
@@ -14,11 +14,37 @@
          name="{{ name }}"
          value="{{ value }}">
   {% endfor %}
-  <input class="form-input"
-         name="q"
-         type="search"
-         placeholder="{% trans "Search" %}"
-         value="{{ view.search_query|default:"" }}">
+  <div class="form-group">
+    <input class="form-input"
+           name="q"
+           type="search"
+           {% if selector %}
+           data-target="search.input"
+           {% endif %}
+           data-action="keyup->search#change"
+           placeholder="{% trans "Search" %}"
+           value="{{ view.search_query|default:"" }}">
+  </div>
+  {% if selector %}
+  <div class="form-group">
+    <select class="form-select d-hide"
+            data-controller="js-toggle"
+            data-target="search.selector"
+            data-action="search#select">
+      <option value="">{% trans "Search in..." %}</option>
+      <option value="{% url 'activities:search' %}">{% trans "All posts, events, photos, polls" %}</option>
+      <option value="{% url 'posts:list' %}">{% trans "Posts" %}</option>
+      <option value="{% url 'events:list' %}">{% trans "Events" %}</option>
+      <option value="{% url 'photos:list' %}">{% trans "Photos" %}</option>
+      <option value="{% url 'polls:list' %}">{% trans "Polls" %}</option>
+      <option value="{% url 'comments:list' %}">{% trans "Comments" %}</option>
+      <option value="{% url 'users:member_list' %}">{% trans "Members" %}</option>
+      <option value="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</option>
+      <option value="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</option>
+    </select>
+  </div>
+  {% endif %}
+
   {% if view.search_query %}
   <a class="btn btn-block mt-2"
      href="{{ non_search_path }}">
