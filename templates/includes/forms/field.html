@@ -32,7 +32,7 @@
   {% elif widget.input_type == 'calendar' %}
   {% render_field field class="form-input form-calendar" %}
   {% else %}
-  {% render_field field class="form-input" placeholder=widget.attrs.placeholder|default:label %}
+  {% render_field field class="form-input" placeholder=widget.attrs.placeholder %}
   {% endif %}
   {% endif %}
 
