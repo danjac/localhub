@@ -119,6 +119,12 @@ table {
   font-weight: bold;
 }
 
+.form-select {
+  &:not([multiple]):not([size]) {
+    background: $bg-color-light;
+  }
+}
+
 .form-input {
   &::placeholder {
     color: $gray-color-dark;
