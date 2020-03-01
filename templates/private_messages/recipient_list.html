@@ -37,15 +37,8 @@
         {% for object in object_list %}
         <tr>
             <td>
-                {% url 'users:messages' object.username as messages_url %}
-                {% include "users/includes/chip.html" with profile=object profile_url=messages_url %}
-            </td>
-            <td>
-                <div class="actions float-right">
-                    <a href="{% url 'private_messages:message_create' object.username %}">
-                        {% trans "Send Message" %}
-                    </a>
-                </div>
+                {% url 'private_messages:message_create' object.username as message_create_url %}
+                {% include "users/includes/chip.html" with profile=object profile_url=message_create_url %}
             </td>
         </tr>
         {% endfor %}
