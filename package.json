@@ -5,9 +5,9 @@
     "build": "cross-env NODE_ENV=production webpack --no-progress"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.4",
+    "@babel/core": "^7.8.6",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-env": "^7.8.6",
     "babel-loader": "^8.0.6",
     "cross-env": "^5.2.1",
     "css-loader": "^2.1.1",
