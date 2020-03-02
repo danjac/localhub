@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-FROM node:11
+FROM node:12.16.1-slim
 WORKDIR /app
 COPY assets ./assets
 COPY webpack.config.js ./webpack.config.js
