@@ -4,10 +4,9 @@
 {% load account %}
 {% load users_tags %}
 {% user_display profile as profile_name %}
-<div class="chip{% if profile == user %} bg-primary{% endif %}">
+<div class="chip">
   {% avatar profile "avatar-xs" %}
   <a title="@{{ profile.username }}"
-     {% if profile == user %}class="text-light"{% endif %}
      href="{{ profile_url|default:profile.get_absolute_url }}">{{ profile_name|truncatechars:30 }}</a>
 </div>
 
