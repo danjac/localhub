@@ -81,17 +81,22 @@ class HomePageView(BaseStreamView):
             .for_recipient(self.request.user)
             .exclude_blocked(self.request.user)
             .unread()
-            .select_related("sender")
+            .select_related(
+                "sender", "recipient", "thread", "thread__sender", "thread__recipient"
+            )
             .order_by("-created")
             .first()
         )
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        message = self.get_latest_message()
+        message_url = message.resolve_url(self.request.user) if message else None
         data.update(
             {
                 "latest_notification": self.get_latest_notification(),
-                "latest_message": self.get_latest_message(),
+                "latest_message": message,
+                "latest_message_url": message_url,
             }
         )
         return data
