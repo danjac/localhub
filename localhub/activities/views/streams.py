@@ -90,8 +90,10 @@ class HomePageView(BaseStreamView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+
         message = self.get_latest_message()
         message_url = message.resolve_url(self.request.user) if message else None
+
         data.update(
             {
                 "latest_notification": self.get_latest_notification(),

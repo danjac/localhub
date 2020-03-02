@@ -1,7 +1,7 @@
 # image: docker
 image:
   name: docker/compose:1.24.1
-  entrypoint: [""]
+  entrypoint: ['']
 
 stages:
   - build
@@ -64,7 +64,10 @@ deploy:assets:
     - docker-compose -f docker-compose.deploy.yml run webpack npm run build
     - docker-compose -f docker-compose.deploy.yml run -e DJANGO_CONFIGURATION=Production -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
   only:
-    - master
+    # - master
+    - tags
+    - triggers
+    - schedules
 
 deploy:heroku:
   image: node:11
@@ -75,4 +78,7 @@ deploy:heroku:
     - gem install dpl
     - dpl --provider=heroku --app=${HEROKU_APP_NAME} --api-key=${HEROKU_API_KEY} --skip-cleanup
   only:
-    - master
+    # - master
+    - tags
+    - triggers
+    - schedules
