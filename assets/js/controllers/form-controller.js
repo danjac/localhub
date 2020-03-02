@@ -88,11 +88,9 @@ export default class extends Controller {
   }
 
   handleFormError(err) {
-    console.log('form error', err);
     this.enableFormElements();
     let errMsg = '';
     if (err.response) {
-      console.log(err.response);
       const {
         status,
         statusText
