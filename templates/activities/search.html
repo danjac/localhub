@@ -12,15 +12,5 @@
 <div class="divider"></div>
 
 {% include "includes/forms/search_form.html" with selector=True %}
-
-{% if object_list %}
-<div class="toast text-center mt-2">
-  {% blocktrans count counter=paginator.count %}
-  1 result found
-  {% plural %}
-  {{ counter }} results found
-  {% endblocktrans %}
-</div>
-{% endif %}
 {% include "activities/includes/activity_list.html" %}
 {% endblock content %}
