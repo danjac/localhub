@@ -116,6 +116,7 @@
 </div>
 {% include "includes/pagination.html" %}
 {% else %}
-{% include "includes/empty.html" %}
+{% trans "There are no posts for this period" as t_empty %}
+{% include "includes/empty.html" with empty_message=t_empty %}
 {% endif %}
 {% endblock content %}

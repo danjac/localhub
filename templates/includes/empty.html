@@ -4,5 +4,15 @@
 {% load i18n %}
 
 <div class="empty">
-  <p class="empty-title h5">{% trans "There's nothing to see here right now." %}</p>
+  <p class="empty-title h5">
+    {% if empty_message %}
+    {{ empty_message }}
+    {% elif view.search_query %}
+    {% blocktrans with query=view.search_query %}
+    Sorry, no results found for &quot;{{ query }}&quot;
+    {% endblocktrans %}
+    {% else %}
+    {% trans "There's nothing to see here right now." %}
+    {% endif %}
+  </p>
 </div>
