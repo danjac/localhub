@@ -314,22 +314,6 @@ class UserCommentListView(SingleUserMixin, BaseCommentListView):
 user_comment_list_view = UserCommentListView.as_view()
 
 
-class UserCommentReplyListView(SingleUserMixin, BaseCommentListView):
-    active_tab = "replies"
-    template_name = "users/replies.html"
-
-    def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .filter(parent__owner=self.user_obj)
-            .order_by("-created")
-        )
-
-
-user_comment_reply_list_view = UserCommentReplyListView.as_view()
-
-
 class UserMessageListView(SingleUserMixin, ListView):
     """
     Renders thread of all private messages between this user
@@ -339,15 +323,11 @@ class UserMessageListView(SingleUserMixin, ListView):
     template_name = "users/messages.html"
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
-    def get_user_queryset(self):
-        return super().get_user_queryset().exclude(pk=self.request.user.id)
-
     def get_queryset(self):
         if self.is_blocked:
             return Message.objects.none()
-        return (
+        qs = (
             Message.objects.for_community(self.request.community)
-            .between(self.request.user, self.user_obj)
             .with_num_replies(self.request.user)
             .select_related(
                 "sender",
@@ -366,6 +346,12 @@ class UserMessageListView(SingleUserMixin, ListView):
             .order_by("-created")
             .distinct()
         )
+
+        if self.is_current_user:
+            qs = qs.for_sender_or_recipient(self.request.user)
+        else:
+            qs = qs.between(self.request.user, self.user_obj)
+        return qs
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)

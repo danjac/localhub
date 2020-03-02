@@ -11,7 +11,6 @@ from .views import (
     user_autocomplete_list_view,
     user_block_view,
     user_comment_list_view,
-    user_comment_reply_list_view,
     user_follow_view,
     user_message_list_view,
     user_stream_view,
@@ -34,9 +33,6 @@ urlpatterns = [
     re_path(USERNAME_RE + r"block/$", view=user_block_view, name="block"),
     re_path(USERNAME_RE + r"unblock/$", view=user_unblock_view, name="unblock"),
     re_path(USERNAME_RE + r"comments/$", view=user_comment_list_view, name="comments"),
-    re_path(
-        USERNAME_RE + r"replies/$", view=user_comment_reply_list_view, name="replies",
-    ),
     re_path(USERNAME_RE + r"messages/$", view=user_message_list_view, name="messages"),
     re_path(USERNAME_RE + r"$", view=user_stream_view, name="activities"),
 ]

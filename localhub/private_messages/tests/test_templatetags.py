@@ -37,7 +37,9 @@ class TestShowMessage:
             auth_request.community,
             message,
         )
-        assert context["sender_url"] == reverse("private_messages:outbox")
+        assert context["sender_url"] == reverse(
+            "users:messages", args=[message.sender.username]
+        )
         assert context["recipient_url"] == reverse(
             "users:messages", args=[message.recipient.username]
         )
@@ -58,7 +60,9 @@ class TestShowMessage:
             auth_request.community,
             message,
         )
-        assert context["recipient_url"] == reverse("private_messages:outbox")
+        assert context["recipient_url"] == reverse(
+            "users:messages", args=[message.recipient.username]
+        )
         assert context["sender_url"] == reverse(
             "users:messages", args=[message.sender.username]
         )
@@ -75,7 +79,9 @@ class TestShowMessage:
             auth_request.community,
             message,
         )
-        assert context["recipient_url"] == reverse("private_messages:outbox")
+        assert context["recipient_url"] == reverse(
+            "users:messages", args=[message.recipient.username]
+        )
         assert context["sender_url"] == reverse(
             "users:messages", args=[message.sender.username]
         )

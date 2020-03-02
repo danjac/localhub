@@ -1,7 +1,6 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-
 {% extends "users/user_detail_base.html" %}
 
 {% load i18n %}
@@ -13,16 +12,21 @@
 {% block user_content %}
 
 <div class="my-2 toast text-center">
+  {% spaceless %}
   {% blocktrans count counter=num_messages_sent %}
   You have sent <strong>1 message</strong>
   {% plural %}
   You have sent <strong>{{ counter }} messages</strong>
   {% endblocktrans %}
   {% blocktrans count counter=num_messages_received %}
-  and have received a total of <strong>1 message</strong> from this user.
+  and have received a total of <strong>1 message</strong>
   {% plural %}
-  and have received a total of <strong>{{ counter }} messages</strong> from this user.
+  and have received a total of <strong>{{ counter }} messages</strong>
   {% endblocktrans %}
+  {% if not is_current_user %}
+  {% trans "from this user" %}
+  {% endif %}.
+  {% endspaceless %}
 </div>
 
 {% include "private_messages/includes/email_settings.html" %}

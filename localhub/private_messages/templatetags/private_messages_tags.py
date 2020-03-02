@@ -27,13 +27,8 @@ def show_message(
     is_recipient = user == message.recipient
 
     outbox_url = reverse("private_messages:outbox")
-
-    if is_sender:
-        sender_url = outbox_url
-        recipient_url = reverse("users:messages", args=[message.recipient.username])
-    else:
-        recipient_url = outbox_url
-        sender_url = reverse("users:messages", args=[message.sender.username])
+    sender_url = reverse("users:messages", args=[message.sender.username])
+    recipient_url = reverse("users:messages", args=[message.recipient.username])
 
     can_reply = is_recipient and user.has_perm(
         "private_messages.create_message", community
