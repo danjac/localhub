@@ -6,6 +6,7 @@ from django.utils.functional import cached_property
 
 class SearchMixin:
     search_query_parameter = "q"
+    search_optional = True
 
     @cached_property
     def search_query(self):

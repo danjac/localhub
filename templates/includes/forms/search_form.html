@@ -8,6 +8,7 @@
       action="{{ request.path }}"
       data-controller="form{% if selector %} search{% endif %}"
       data-action="form#submit"
+      data-search-param="{{ view.search_parameter|default:'q' }}"
       class="my-2 search-form">
   {% for name, value in non_search_params.items %}
   <input type="hidden"
@@ -16,8 +17,11 @@
   {% endfor %}
   <div class="form-group">
     <input class="form-input"
-           name="q"
+           name="{{ view.search_parameter|default:'q' }}"
            type="search"
+           {% if not view.search_optional %}
+           required
+           {% endif %}
            {% if selector %}
            data-target="search.input"
            {% endif %}
@@ -46,7 +50,7 @@
   </div>
   {% endif %}
 
-  {% if view.search_query %}
+  {% if view.search_query and view.search_optional %}
   <a class="btn btn-block mt-2"
      href="{{ non_search_path }}">
     {% trans "Clear Search" %}

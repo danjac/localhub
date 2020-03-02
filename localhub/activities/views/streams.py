@@ -225,6 +225,7 @@ timeline_view = TimelineView.as_view()
 
 class SearchView(SearchMixin, BaseStreamView):
     template_name = "activities/search.html"
+    search_optional = False
 
     def get_ordering(self):
         return ("-rank", "-published") if self.search_query else None
