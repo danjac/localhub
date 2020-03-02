@@ -11,7 +11,6 @@ export default class extends Controller {
   connect() {
     const {
       pathname,
-      search
     } = window.location;
     const href =
       (this.element.getAttribute('href') ||
