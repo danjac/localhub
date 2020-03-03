@@ -19,20 +19,12 @@
         </a>
         <ul class="menu">
             {% if date_filters %}
-            <li class="menu-item">
-                <a href="{{ request.path }}">{% trans "Show All" %}</a>
-            </li>
-            {% endif %}
-
             <li class="divider"
-                data-content="{% trans "Order" %}">
+                data-content="{% trans "Show All" %}">
             </li>
-
-            {% if view.sort_by_ascending %}
             <li class="menu-item">
                 <a href="{{ request.path }}?order=desc">{% trans "Newest First" %}</a>
             </li>
-            {% else %}
             <li class="menu-item">
                 <a href="{{ request.path }}?order=asc">{% trans "Oldest First" %}</a>
             </li>
