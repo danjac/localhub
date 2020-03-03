@@ -69,7 +69,7 @@ deploy:assets:
     - tags
 
 deploy:heroku:
-  image: node:11
+  image: node:12.16.1-slim
   stage: deploy
   script:
     - apt-get update -qy
