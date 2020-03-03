@@ -9,24 +9,41 @@
 
 
 {% block content %}
-<h3>{% trans "Direct Messages" %}</h3>
+<div class="float-left">
+    <h3>{% trans "Messages" %}</h3>
+</div>
 
 {% has_perm "private_messages.create_message" user community as can_create_message %}
 {% get_unread_message_count user community as unread_messages %}
 {% if can_create_message or unread_messages %}
-<div class="actions">
-    {% if unread_messages %}
-    <a href="{% url 'private_messages:mark_all_read' %}"
-       class="d-hide"
-       data-controller="ajax js-toggle"
-       data-action="ajax#post"
-       data-ajax-redirect="{{ request.path }}">{% trans "Mark All As Read" %}</a>
-    {% endif %}
-    {% if can_create_message %}
-    <a href="{% url 'private_messages:recipients' %}">{% trans "Send Message" %}</a>
-    {% endif %}
+<div class="float-right">
+    <div class="dropdown dropdown-right">
+        <a class="btn btn-default dropdown-toggle"
+           tabindex="0">
+            {% trans "Actions" %}
+            <i class="icon icon-caret"></i>
+        </a>
+        <ul class="menu">
+            {% if unread_messages %}
+            <li class="menu-item">
+                <a href="{% url 'private_messages:mark_all_read' %}"
+                   class="d-hide"
+                   data-controller="ajax js-toggle"
+                   data-action="ajax#post"
+                   data-ajax-redirect="{{ request.path }}">{% trans "Mark All As Read" %}</a>
+            </li>
+            {% endif %}
+            {% if can_create_message %}
+            <li class="menu-item">
+                <a href="{% url 'private_messages:recipients' %}">{% trans "Send Message" %}</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
 </div>
 {% endif %}
+<div class="clearfix"></div>
+
 <div class="divider"></div>
 
 {% with search=view.search_query %}

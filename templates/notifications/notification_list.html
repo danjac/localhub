@@ -7,23 +7,39 @@
 
 {% block content %}
 
-<h3>{% trans "Notifications" %}</h3>
+<div class="float-left">
+  <h3>{% trans "Notifications" %}</h3>
+</div>
 
 {% if object_list %}
-<div class="actions d-hide"
+<div class="float-right d-hide"
      data-controller="js-toggle">
-  {% if is_unread_notifications %}
-  <a href="{% url 'notifications:mark_all_read' %}"
-     data-controller="ajax"
-     data-action="ajax#post">{% trans "Mark All As Read" %}</a>
-  {% endif %}
-  <a href="{% url 'notifications:delete_all' %}"
-     data-controller="confirm ajax"
-     data-action="confirm#check ajax#post"
-     data-confirm-header="{% trans 'Delete All' %}"
-     data-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}">{% trans "Delete All" %}</a>
+  <div class="dropdown dropdown-right">
+    <a class="btn btn-default dropdown-toggle"
+       tabindex="0">
+      {% trans "Actions" %}
+      <i class="icon icon-caret"></i>
+    </a>
+    <ul class="menu">
+      {% if is_unread_notifications %}
+      <li class="menu-item">
+        <a href="{% url 'notifications:mark_all_read' %}"
+           data-controller="ajax"
+           data-action="ajax#post">{% trans "Mark All As Read" %}</a>
+      </li>
+      {% endif %}
+      <li class="menu-item">
+        <a href="{% url 'notifications:delete_all' %}"
+           data-controller="confirm ajax"
+           data-action="confirm#check ajax#post"
+           data-confirm-header="{% trans 'Delete All' %}"
+           data-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}">{% trans "Delete All" %}</a>
+    </ul>
+    </li>
+  </div>
 </div>
 {% endif %}
+<div class="clearfix"></div>
 
 <div class="divider"></div>
 
@@ -57,32 +73,54 @@
           </span>
           {% include "users/includes/chip.html" with profile=notification.actor %}
         </div>
-
-        <div class="actions show-md hide-lg d-hide"
-             data-controller="js-toggle">
-          {% if not notification.is_read %}
-          <a href="{% url 'notifications:mark_read' notification.pk %}"
-             data-controller="ajax"
-             data-action="ajax#post">{% trans "Mark As Read" %}</a>
-          {% endif %}
-          <a href="{% url 'notifications:delete' notification.pk %}"
-             data-controller="ajax"
-             data-action="ajax#post">{% trans "Delete" %}</a>
+        <div class="dropdown show-lg">
+          <a class="btn btn-default dropdown-toggle"
+             tabindex="0">
+            {% trans "Actions" %}
+            <i class="icon icon-caret"></i>
+          </a>
+          <ul class="menu">
+            {% if not notification.is_read %}
+            <li class="menu-item">
+              <a href="{% url 'notifications:mark_read' notification.pk %}"
+                 data-controller="ajax"
+                 data-action="ajax#post">{% trans "Mark As Read" %}</a>
+            </li>
+            {% endif %}
+            <li class="menu-item">
+              <a href="{% url 'notifications:delete' notification.pk %}"
+                 data-controller="ajax"
+                 data-action="ajax#post">{% trans "Delete" %}</a>
+            </li>
+          </ul>
         </div>
 
       </td>
-      <td class="hide-md">
-        <div class="actions actions-md float-right">
-          {% if not notification.is_read %}
-          <a href="{% url 'notifications:mark_read' notification.pk %}"
-             data-controller="ajax"
-             data-action="ajax#post">{% trans "Mark As Read" %}</a>
-          {% endif %}
-          <a href="{% url 'notifications:delete' notification.pk %}"
-             data-controller="ajax"
-             data-action="ajax#post">{% trans "Delete" %}</a>
-        </div>
 
+      <td class="hide-lg">
+        <div class="float-right">
+          <div class="dropdown dropdown-right">
+            <a class="btn btn-default dropdown-toggle"
+               tabindex="0">
+              {% trans "Actions" %}
+              <i class="icon icon-caret"></i>
+            </a>
+            <ul class="menu">
+              {% if not notification.is_read %}
+              <li class="menu-item">
+                <a href="{% url 'notifications:mark_read' notification.pk %}"
+                   data-controller="ajax"
+                   data-action="ajax#post">{% trans "Mark As Read" %}</a>
+              </li>
+              {% endif %}
+              <li class="menu-item">
+                <a href="{% url 'notifications:delete' notification.pk %}"
+                   data-controller="ajax"
+                   data-action="ajax#post">{% trans "Delete" %}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </td>
     </tr>
     {% endfor %}
