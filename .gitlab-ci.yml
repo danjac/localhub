@@ -67,11 +67,11 @@ deploy:assets:
     - master
 
 deploy:heroku:
-  image: node:12.16.1-slim
+  image: node:12
   stage: deploy
   script:
     - apt-get update -qy
-    - apt-get install -y rubygems git
+    - apt-get install -y rubygems
     - gem install dpl
     - dpl --provider=heroku --app=${HEROKU_APP_NAME} --api-key=${HEROKU_API_KEY} --skip-cleanup
   only:
