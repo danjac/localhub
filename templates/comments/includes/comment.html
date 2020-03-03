@@ -21,7 +21,14 @@
       {% with parent=comment.parent %}
       {% if parent and comment.is_parent_owner_member and not is_reply %}
       {% user_display parent.owner as parent_owner %}
-      <a href="{{ parent.get_absolute_url }}">
+      <a {% spaceless %}
+         {% if is_thread %}
+         href="#comment-{{ parent.id }}"
+         data-turbolinks="false"
+         {% else %}
+         href="{{ parent.get_absolute_url }}"
+         {% endif %}
+         {% endspaceless %}>
         {% blocktrans %}
         in reply to {{ parent_owner }}
         {% endblocktrans %}
