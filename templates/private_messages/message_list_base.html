@@ -16,8 +16,8 @@
 {% has_perm "private_messages.create_message" user community as can_create_message %}
 {% get_unread_message_count user community as unread_messages %}
 {% if can_create_message or unread_messages %}
-<div class="float-right">
-    <div class="dropdown dropdown-right">
+<div class="float-right-responsive-xl">
+    <div class="dropdown">
         <a class="btn btn-default dropdown-toggle"
            tabindex="0">
             {% trans "Actions" %}

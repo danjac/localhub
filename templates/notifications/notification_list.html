@@ -7,14 +7,14 @@
 
 {% block content %}
 
-<div class="float-left">
+<div class="float-left-responsive-xl">
   <h3>{% trans "Notifications" %}</h3>
 </div>
 
 {% if object_list %}
-<div class="float-right d-hide"
+<div class="float-right-responsive-xl d-hide"
      data-controller="js-toggle">
-  <div class="dropdown dropdown-right">
+  <div class="dropdown">
     <a class="btn btn-default dropdown-toggle"
        tabindex="0">
       {% trans "Actions" %}

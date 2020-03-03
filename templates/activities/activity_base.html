@@ -133,7 +133,7 @@
       {% endif %}
     </div>
     <div class="card-footer">
-      <div class="float-left">
+      <div class="float-left-responsive-xl">
         {% if is_detail %}
         {% if object.edited and object.published and object.edited > object.published %}
         <div class="info">
@@ -195,8 +195,8 @@
         {% endwith %}
       </div>
 
-      <div class="float-right">
-        <div class="dropdown dropdown-right">
+      <div class="float-right-responsive-xl">
+        <div class="dropdown">
           <a class="btn dropdown-toggle"
              tabindex="0">
             {% trans "Actions" %}

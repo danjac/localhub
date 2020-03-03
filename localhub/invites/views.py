@@ -62,6 +62,10 @@ class InviteListView(InviteAdminMixin, InviteQuerySetMixin, SearchMixin, ListVie
         return None
 
     @cached_property
+    def status_display(self):
+        return Invite.STATUS[self.status] if self.status else None
+
+    @cached_property
     def total_count(self):
         return super().get_queryset().count()
 
@@ -71,6 +75,7 @@ class InviteListView(InviteAdminMixin, InviteQuerySetMixin, SearchMixin, ListVie
             {
                 "total_count": self.total_count,
                 "status": self.status,
+                "status_display": self.status_display,
                 "status_choices": list(Invite.STATUS),
             }
         )
@@ -166,7 +171,8 @@ class InviteAcceptView(InviteQuerySetMixin, DetailView):
     def get(self, request, *args, **kwargs):
 
         self.object = self.get_object()
-        if response := self.validate_invite():
+        response = self.validate_invite()
+        if response:
             return response
 
         return self.render_to_response(self.get_context_data())
@@ -175,7 +181,8 @@ class InviteAcceptView(InviteQuerySetMixin, DetailView):
 
         self.object = self.get_object()
 
-        if response := self.validate_invite():
+        response = self.validate_invite()
+        if response:
             return response
 
         if "reject" in request.POST:

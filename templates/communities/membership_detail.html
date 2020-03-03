@@ -17,7 +17,7 @@
 
 <h3>{% avatar member "avatar-lg" %}{{ display_name }}</h3>
 
-<div class="float-left">
+<div class="float-left-responsive-xl">
   <div class="actions">
 
     {% if object.active %}
@@ -27,10 +27,10 @@
     {% endif %}
   </div>
 </div>
-<div class="float-right">
+<div class="float-right-responsive-xl">
   {% has_perm "communities.change_membership" user object as can_change %}
   {% has_perm "communities.delete_membership" user object as can_delete %}
-  {% include "communities/includes/membership_actions.html" with member=object css_class="dropdown-right" %}
+  {% include "communities/includes/membership_actions.html" with member=object %}
 </div>
 <div class="clearfix"></div>
 <div class="divider"></div>

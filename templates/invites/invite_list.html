@@ -7,9 +7,14 @@
 
 {% block content %}
 
-<h3>{% trans "Invites" %}</h3>
+<h3>
+    {% trans "Invites" %}
+    {% if status_display %}
+    - {{ status_display }}
+    {% endif %}
+</h3>
 
-<div class="float-left">
+<div class="float-left-responsive-xl">
     <div class="actions">
         <a href="{% url 'invites:create' %}">
             {% trans "Send an invite" %}
@@ -21,8 +26,8 @@
     </div>
 </div>
 {% if total_count %}
-<div class="float-right">
-    <div class="dropdown dropdown-right">
+<div class="float-right-responsive-xl">
+    <div class="dropdown">
         <a class="btn btn-default dropdown-toggle"
            tabindex="0">
             {% trans "Filter" %}

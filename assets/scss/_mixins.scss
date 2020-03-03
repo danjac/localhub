@@ -17,6 +17,17 @@
   }
 }
 
+@mixin float-left-responsive-mixin() {
+  float: left !important;
+}
+
 @mixin float-right-responsive-mixin() {
   float: right !important;
+
+  .dropdown {
+    .menu {
+      left: auto;
+      right: 0;
+    }
+  }
 }

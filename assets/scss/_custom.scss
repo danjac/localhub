@@ -207,6 +207,39 @@ table {
   }
 }
 
+.float-left-responsive {
+
+  &-xl {
+    @media (min-width: $size-xl) {
+      @include float-left-responsive-mixin();
+    }
+  }
+
+  &-lg {
+    @media (min-width: $size-lg) {
+      @include float-left-responsive-mixin();
+    }
+  }
+
+  &-md {
+    @media (min-width: $size-md) {
+      @include float-left-responsive-mixin();
+    }
+  }
+
+  &-sm {
+    @media (min-width: $size-sm) {
+      @include float-left-responsive-mixin();
+    }
+  }
+
+  &-xs {
+    @media (min-width: $size-xs) {
+      @include float-left-responsive-mixin();
+    }
+  }
+}
+
 .float-right-responsive {
 
   &-xl {
