@@ -12,6 +12,12 @@
     <i class="icon icon-caret"></i>
   </a>
   <ul class="menu">
+
+    <li class="menu-item">
+      <a href="{% url 'private_messages:message_create' member.member.username %}">
+        {% trans "Send Message" %}
+      </a>
+    </li>
     {% if can_change %}
     <li class="menu-item">
       <a href="{% url 'communities:membership_update' member.id %}">

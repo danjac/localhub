@@ -6,101 +6,112 @@
      data-controller="tabs typeahead"
      data-typeahead-mention-search-url="{% url 'users:autocomplete_list' %}"
      data-typeahead-tag-search-url="{% url 'activities:tag_autocomplete_list' %}">
-  <ul class="tab d-hide" data-controller="js-toggle">
-    <li class="tab-item active" data-target="tabs.tab" data-tab="editor">
-      <a href="#" data-action="tabs#select" data-tab="editor">{% trans "Edit" %}</a>
+  <ul class="tab d-hide"
+      data-controller="js-toggle">
+    <li class="tab-item active"
+        data-target="tabs.tab"
+        data-tab="editor">
+      <a href="#"
+         data-action="tabs#select"
+         data-tab="editor">{% trans "Edit" %}</a>
     </li>
-    <li class="tab-item" data-target="tabs.tab" data-tab="preview">
-      <a href="#" data-action="tabs#select" data-tab="preview">{% trans "Preview" %}</a>
+    <li class="tab-item"
+        data-target="tabs.tab"
+        data-tab="preview">
+      <a href="#"
+         data-action="tabs#select"
+         data-tab="preview">{% trans "Preview" %}</a>
     </li>
-    <li class="tab-item" data-target="tabs.tab" data-tab="guide">
-      <a href="#" data-action="tabs#select" data-tab="guide">{% trans "Formatting Help" %}</a>
+    <li class="tab-item"
+        data-target="tabs.tab"
+        data-tab="guide">
+      <a href="#"
+         data-action="tabs#select"
+         data-tab="guide">{% trans "Formatting Help" %}</a>
     </li>
   </ul>
-  <div class="tab-pane" data-target="tabs.pane" data-tab="editor" data-controller="markdown">
-    <div class="py-1 d-hide" data-controller="js-toggle">
+  <div class="tab-pane"
+       data-target="tabs.pane"
+       data-tab="editor"
+       data-controller="markdown">
+    <div class="py-1 d-hide"
+         data-controller="js-toggle">
 
       <a class="btn btn-link btn-sm my-1"
          href="#"
          data-action="markdown#select"
-         data-markdown="**[SELECTION]**"
-         >{% trans "Bold" %}</a>
+         data-markdown="**[SELECTION]**">{% trans "Bold" %}</a>
 
       <a class="btn btn-link btn-sm my-1"
          href="#"
          data-action="markdown#select"
-         data-markdown="_[SELECTION]_"
-         >{% trans "Italic" %}</a>
+         data-markdown="_[SELECTION]_">{% trans "Italic" %}</a>
 
       <a class="btn btn-link btn-sm my-1"
          href="#"
          data-action="markdown#select"
-         data-markdown="[[SELECTION]](url)"
-         >{% trans "Link" %}</a>
+         data-markdown="[[SELECTION]](url)">{% trans "Link" %}</a>
 
       <a class="btn btn-link btn-sm my-1"
          href="#"
          data-action="markdown#select"
-         data-markdown="![]([SELECTION])"
-         >{% trans "Image" %}</a>
+         data-markdown="![]([SELECTION])">{% trans "Image" %}</a>
 
       <a class="btn btn-link btn-sm my-1"
          href="#"
          data-action="markdown#select"
-         data-markdown="> [SELECTION]"
-         >{% trans "Quote" %}</a>
+         data-markdown="> [SELECTION]">{% trans "Quote" %}</a>
 
       <a class="btn btn-link btn-sm my-1"
          href="#"
          data-action="markdown#select"
-         data-markdown="`[SELECTION]`"
-         >{% trans "Code" %}</a>
-
-      <a class="btn btn-link btn-sm my-1"
-         href="#"
-         data-action="markdown#select"
-         data-multiline
-         data-markdown="* [SELECTION]"
-         >{% trans "List (Bullets)" %}</a>
+         data-markdown="`[SELECTION]`">{% trans "Code" %}</a>
 
       <a class="btn btn-link btn-sm my-1"
          href="#"
          data-action="markdown#select"
          data-multiline
-         data-markdown="1. [SELECTION]"
-         >{% trans "List (Numbers)" %}</a>
+         data-markdown="* [SELECTION]">{% trans "List (Bullets)" %}</a>
+
+      <a class="btn btn-link btn-sm my-1"
+         href="#"
+         data-action="markdown#select"
+         data-multiline
+         data-markdown="1. [SELECTION]">{% trans "List (Numbers)" %}</a>
 
     </div>
-    <ul class="menu d-hide p-absolute" data-target="typeahead.selector"></ul>
-    <textarea
-      data-target="markdown.textarea typeahead.input"
-      data-action="keyup->typeahead#keyup keydown->typeahead#keydown"
-      name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}
-      >{% spaceless %}{% if widget.value %}{{ widget.value }}{% endif %}{% endspaceless %}</textarea>
+    <ul class="menu d-hide p-absolute"
+        data-target="typeahead.selector"></ul>
+    <textarea data-target="markdown.textarea typeahead.input"
+              data-action="keyup->typeahead#keyup keydown->typeahead#keydown"
+              name="{{ widget.name }}"
+              {% include "django/forms/widgets/attrs.html" %}>{% spaceless %}{% if widget.value %}{{ widget.value }}{% endif %}{% endspaceless %}</textarea>
   </div>
   <div class="tab-pane d-none markdownx-preview markdown-content"
        data-target="tabs.pane"
        data-tab="preview"></div>
-  <div class="tab-pane d-none" data-target="tabs.pane" data-tab="guide">
-    <table class="table table-striped table-hover table-responsive-md">
-      <thead>
-        <tr>
-          <th>{% trans "Markdown" %}</th>
-          <th>{% trans "Output" %}</th>
-        </tr>
-      </thead>
+  <div class="tab-pane d-none"
+       data-target="tabs.pane"
+       data-tab="guide">
+    <table class="table table-hover table-responsive-lg">
       <tbody>
         <tr>
           <td># Header</td>
-          <td><h1>{% trans "Header (h1)" %}</h1></td>
+          <td>
+            <h1>{% trans "Header (h1)" %}</h1>
+          </td>
         </tr>
         <tr>
           <td>## Header</td>
-          <td><h2>{% trans "Header (h2)" %}</h2></td>
+          <td>
+            <h2>{% trans "Header (h2)" %}</h2>
+          </td>
         </tr>
         <tr>
           <td>### Header</td>
-          <td><h3>{% trans "Header (h3)" %}</h3></td>
+          <td>
+            <h3>{% trans "Header (h3)" %}</h3>
+          </td>
         </tr>
         <tr>
           <td>*Bold*</td>
@@ -136,7 +147,9 @@
         </tr>
         <tr>
           <td>&gt; Quote</td>
-          <td><blockquote>{% trans "Quote" %}</blockquote></td>
+          <td>
+            <blockquote>{% trans "Quote" %}</blockquote>
+          </td>
         </tr>
         <tr>
           <td>
@@ -165,7 +178,9 @@
         <tr>
           <td colspan="2">
             {% blocktrans %}
-            A more complete guide can be found <a target="_blank" rel="nofollow" href="https://www.markdownguide.org/basic-syntax">here</a>.
+            A more complete guide can be found <a target="_blank"
+               rel="nofollow"
+               href="https://www.markdownguide.org/basic-syntax">here</a>.
             {% endblocktrans %}
           </td>
         </tr>

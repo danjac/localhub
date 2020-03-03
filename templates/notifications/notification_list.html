@@ -35,7 +35,7 @@
            data-confirm-header="{% trans 'Delete All' %}"
            data-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}">{% trans "Delete All" %}</a>
     </ul>
-      </li>
+    </li>
   </div>
 </div>
 {% endif %}
@@ -57,15 +57,14 @@
 
 {% if object_list %}
 
-<table class="table table-striped table-hover">
+<table class="table table-hover table-responsive-lg">
   <tbody>
     {% for notification in object_list %}
     <tr>
       <td>
-
-        {% include "notifications/includes/notification.html" %}
-
-        <div>
+        <div class="d-block">
+          {% include "notifications/includes/notification.html" %}
+          <br />
           <span class="timesince">
             {% blocktrans with created=notification.created|timesince %}
             {{ created }} ago from
@@ -73,12 +72,10 @@
           </span>
           {% include "users/includes/chip.html" with profile=notification.actor %}
         </div>
-        {% include "notifications/includes/actions.html" with css_class="show-lg" %}
       </td>
-
-      <td class="hide-lg">
-        <div class="float-right">
-          {% include "notifications/includes/actions.html" with css_class="dropdown-right" %}
+      <td>
+        <div class="float-right-responsive-xl">
+          {% include "notifications/includes/actions.html" %}
         </div>
       </td>
     </tr>

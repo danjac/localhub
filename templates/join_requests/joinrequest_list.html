@@ -64,15 +64,7 @@
 {% endif %}
 
 {% if object_list %}
-<table class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th>{% trans "User" %}</th>
-            <th>{% trans "Status" %}</th>
-            <th class="d-hide"
-                data-controller="js-toggle">{% trans "Actions" %}</th>
-        </tr>
-    </thead>
+<table class="table table-hover table-responsive-lg">
     <tbody>
         {% for join_request in object_list %}
         {% with is_pending=join_request.is_pending is_rejected=join_request.is_rejected detail_url=join_request.get_absolute_url %}
@@ -89,41 +81,43 @@
             </td>
             <td class="d-hide"
                 data-controller="js-toggle">
-                <div class="dropdown">
-                    <a class="btn btn-default dropdown-toggle"
-                       tabindex="0">
-                        {% trans "Actions" %}
-                        <i class="icon icon-caret"></i>
-                    </a>
-                    <ul class="menu">
-                        {% if is_pending or is_rejected %}
-                        <li class="menu-item">
-                            <a data-controller="ajax confirm"
-                               data-action="confirm#check ajax#post"
-                               data-confirm-header="{% trans 'Accept' %}"
-                               data-confirm-body="{% trans 'Are you sure you want to accept this request?' %}"
-                               href="{% url 'join_requests:accept' join_request.id %}">{% trans "Accept" %}
-                            </a>
-                        </li>
-                        {% endif %}
-                        {% if is_pending %}
-                        <li class="menu-item">
-                            <a data-controller="ajax confirm"
-                               data-action="confirm#check ajax#post"
-                               data-confirm-header="{% trans 'Reject' %}"
-                               data-confirm-body="{% trans 'Are you sure you want to reject this request?' %}"
-                               href="{% url 'join_requests:reject' join_request.id %}">{% trans "Reject" %}</a>
-                        </li>
-                        {% endif %}
+                <div class="float-right-responsive-xl">
+                    <div class="dropdown">
+                        <a class="btn btn-default dropdown-toggle"
+                           tabindex="0">
+                            {% trans "Actions" %}
+                            <i class="icon icon-caret"></i>
+                        </a>
+                        <ul class="menu">
+                            {% if is_pending or is_rejected %}
+                            <li class="menu-item">
+                                <a data-controller="ajax confirm"
+                                   data-action="confirm#check ajax#post"
+                                   data-confirm-header="{% trans 'Accept' %}"
+                                   data-confirm-body="{% trans 'Are you sure you want to accept this request?' %}"
+                                   href="{% url 'join_requests:accept' join_request.id %}">{% trans "Accept" %}
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if is_pending %}
+                            <li class="menu-item">
+                                <a data-controller="ajax confirm"
+                                   data-action="confirm#check ajax#post"
+                                   data-confirm-header="{% trans 'Reject' %}"
+                                   data-confirm-body="{% trans 'Are you sure you want to reject this request?' %}"
+                                   href="{% url 'join_requests:reject' join_request.id %}">{% trans "Reject" %}</a>
+                            </li>
+                            {% endif %}
 
-                        <li class="menu-item">
-                            <a data-controller="ajax confirm"
-                               data-action="confirm#check ajax#post"
-                               data-confirm-header="{% trans 'Delete' %}"
-                               data-confirm-body="{% trans 'Are you sure you want to delete this request?' %}"
-                               href="{% url 'join_requests:delete' join_request.id %}">{% trans "Delete" %}</a>
-                        </li>
-                    </ul>
+                            <li class="menu-item">
+                                <a data-controller="ajax confirm"
+                                   data-action="confirm#check ajax#post"
+                                   data-confirm-header="{% trans 'Delete' %}"
+                                   data-confirm-body="{% trans 'Are you sure you want to delete this request?' %}"
+                                   href="{% url 'join_requests:delete' join_request.id %}">{% trans "Delete" %}</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </td>
         </tr>

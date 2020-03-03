@@ -25,12 +25,6 @@
     <a href="{% url 'users:comments' member.username %}">{% trans "Comments" %}</a>
     <a href="{% url 'users:messages' member.username %}">{% trans "Messages" %}</a>
     {% endif %}
-    {% if member != user %}
-    <a href="{% url 'private_messages:message_create' member.username %}">
-      {% trans "Send Message" %}
-    </a>
-    {% endif %}
-
   </div>
 </div>
 <div class="float-right">

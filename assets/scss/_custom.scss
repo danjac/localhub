@@ -24,7 +24,6 @@ a {
 }
 
 .actions {
-
   a {
     &:not(:last-child) {
       @extend .pr-1;
@@ -41,7 +40,6 @@ a {
     color: $link-color-dark;
 
     @extend .btn-link;
-
 
     &:visited {
       color: $link-color-dark;
@@ -140,7 +138,7 @@ table {
 
 .info {
   color: $gray-color-dark;
-  @extend .my-2
+  @extend .my-2;
 }
 
 .form-input[type='file'] {
@@ -207,6 +205,40 @@ table {
     // h6
     font-size: 0.8rem !important;
   }
+}
+
+.float-right-responsive {
+
+  &-xl {
+    @media (min-width: $size-xl) {
+      @include float-right-responsive-mixin();
+    }
+  }
+
+  &-lg {
+    @media (min-width: $size-lg) {
+      @include float-right-responsive-mixin();
+    }
+  }
+
+  &-md {
+    @media (min-width: $size-md) {
+      @include float-right-responsive-mixin();
+    }
+  }
+
+  &-sm {
+    @media (min-width: $size-sm) {
+      @include float-right-responsive-mixin();
+    }
+  }
+
+  &-xs {
+    @media (min-width: $size-xs) {
+      @include float-right-responsive-mixin();
+    }
+  }
+
 }
 
 .table-responsive {

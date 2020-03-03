@@ -32,13 +32,18 @@
 </div>
 
 
-<table class="table table-striped table-hover">
+<table class="table table-hover table-responsive-lg">
     <tbody>
         {% for object in object_list %}
         <tr>
             <td>
-                {% url 'private_messages:message_create' object.username as message_create_url %}
-                {% include "users/includes/chip.html" with profile=object profile_url=message_create_url %}
+                {% url 'users:messages' object.username as profile_url %}
+                {% include "users/includes/chip.html" with profile=object %}
+            </td>
+            <td>
+                <div class="float-right-responsive-xl">
+                    <a href="{% url 'private_messages:message_create' object.username %}">{% trans "Send Message" %}</a>
+                </div>
             </td>
         </tr>
         {% endfor %}

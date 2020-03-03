@@ -1,7 +1,22 @@
 @mixin table-responsive-mixin() {
-  // copied from table scroll, as we can't extend inside @media.
-  display: block;
-  overflow-x: auto;
-  padding-bottom: 0.75rem;
-  white-space: nowrap;
+  td {
+    display: flex;
+    flex-direction: row;
+
+    &:first-child {
+      background: $bg-color-dark;
+    }
+  }
+}
+
+@mixin table-darkmode-responsive-mixin() {
+  td {
+    &:first-child {
+      background: $darkmode-lighter;
+    }
+  }
+}
+
+@mixin float-right-responsive-mixin() {
+  float: right !important;
 }

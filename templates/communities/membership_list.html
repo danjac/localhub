@@ -31,25 +31,15 @@
 {% include "includes/forms/search_form.html" %}
 
 {% if object_list %}
-<table class="table table-scroll">
-  <thead>
-    <tr>
-      <th>{% trans "Member" %}</th>
-      <th>{% trans "Status" %}</th>
-      <th>{% trans "Role" %}</th>
-      <th class="hide-lg">{% trans "Actions" %}</th>
-    </tr>
-  </thead>
+<table class="table table-hover table-responsive-lg">
   <tbody>
     {% for member in object_list %}
     {% has_perm "communities.change_membership" user member as can_change %}
     {% has_perm "communities.delete_membership" user member as can_delete %}
-
     <tr>
       <td>
         {% url 'communities:membership_detail' member.id as membership_detail_url %}
         {% include "users/includes/chip.html" with profile=member.member profile_url=membership_detail_url %}
-        {% include "communities/includes/membership_actions.html" with css_class="show-lg" %}
       </td>
       {% if member.active %}
       <td>{% trans "Active" %}</td>
@@ -59,8 +49,10 @@
       <td {% if not member.active %}
           class="text-gray"
           {% endif %}>{{ member.get_role_display }}</td>
-      <td class="hide-lg">
-        {% include "communities/includes/membership_actions.html" %}
+      <td>
+        <div class="float-right-responsive-xl">
+          {% include "communities/includes/membership_actions.html" %}
+        </div>
       </td>
     </tr>
     {% endfor %}
