@@ -10,11 +10,20 @@
 <h3>{% trans "Terms & Conditions" %}</h3>
 
 {% has_perm "communities.manage_community" user community as can_manage %}
-{% if can_manage %}
+{% if can_manage or community.description %}
 <div class="actions">
+  {% if community.description %}
+  <a href="{% url 'communities:community_detail' %}">
+    {% blocktrans with community_name=community.name %}
+    About {{ community.name }}
+    {% endblocktrans %}
+  </a>
+  {% endif %}
+  {% if can_manage %}
   <a href="{% url "communities:community_update" %}">
     {% trans "Community Settings" %}
   </a>
+  {% endif %}
 </div>
 {% endif %}
 

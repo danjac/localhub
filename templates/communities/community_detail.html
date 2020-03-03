@@ -9,6 +9,8 @@
 
 <h3>{{ community.name }}</h3>
 
+{% has_perm "communities.manage_community" user community as can_manage %}
+{% if community.terms or can_manage %}
 <div class="actions">
     {% if community.terms %}
     <a href="{% url 'communities:community_terms' %}">
@@ -16,13 +18,13 @@
     </a>
     {% endif %}
 
-    {% has_perm "communities.manage_community" user community as can_manage %}
     {% if can_manage %}
     <a href="{% url "communities:community_update" %}">
         {% trans "Community Settings" %}
     </a>
     {% endif %}
 </div>
+{% endif %}
 
 <div class="divider"></div>
 <div class="markdown-content">
