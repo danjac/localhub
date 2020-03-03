@@ -198,10 +198,10 @@
 <ul class="menu mt-2">
   <li class="divider"
       data-content="{% trans 'Settings' %}"></li>
+  <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
   <li class="menu-item">
     {% include "includes/mode_toggle.html" %}
   </li>
-  <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
 </ul>
 
 {% if can_manage_community or community.terms or community.description %}
@@ -256,6 +256,14 @@
 
 {% else %}
 <ul class="menu">
+  {% if community.active %}
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'community_welcome' %}">
+      {{ community.name }}
+    </a>
+  </li>
+  {% endif %}
   {% if communities_count > 1 %}
   <li class="menu-item">
     <a data-controller="active-link"
@@ -272,8 +280,11 @@
   </li>
   {% endif %}
   <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+  </li>
+  <li class="menu-item">
     {% include "includes/mode_toggle.html" %}
   </li>
-  <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
 </ul>
 {% endif %}

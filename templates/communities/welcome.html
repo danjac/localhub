@@ -1,16 +1,11 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "no_sidebar_base.html" %}
+{% extends "base.html" %}
 
 {% load i18n %}
 
 {% block content %}
-<div class="actions">
-  <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
-  <a href="{% url 'community_list' %}">{% trans "Communities" %}</a>
-</div>
-<div class="divider"></div>
 
 {% if community.intro %}
 {{ community.intro.markdown }}
@@ -19,14 +14,15 @@
 <p>
   {% if invite %}
   {% url 'invites:accept' invite.id as invite_url %}
-    {% blocktrans %}
-    You have a pending invite. Please go <a href="{{ invite_url }}">here</a> to accept or reject your invite.
-    {% endblocktrans %}
+  {% blocktrans %}
+  You have a pending invite. Please go <a href="{{ invite_url }}">here</a> to accept or reject your invite.
+  {% endblocktrans %}
   {% elif join_request %}
   {% if join_request.is_pending %}
   <strong>
     {% blocktrans %}
-    Your request for an invite has been sent to the community admins. You will receive an email when they have made their decision.
+    Your request for an invite has been sent to the community admins. You will receive an email when they have made
+    their decision.
     {% endblocktrans %}
   </strong>
   {% endif %}
