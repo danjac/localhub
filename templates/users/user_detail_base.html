@@ -76,7 +76,7 @@
 </p>
 {% endif %}
 {% if is_current_user or can_view_membership %}
-<div class="float-left-responsive-xl">
+<div class="float-left-responsive">
     <div class="actions">
         {% if is_current_user %}
         <a href="{% url 'user_update' %}">
@@ -90,7 +90,7 @@
 </div>
 {% endif %}
 {% if not is_current_user %}
-<div class="float-right-responsive-xl">
+<div class="float-right-responsive">
     <div class="dropdown">
         <a class="btn btn-default dropdown-toggle"
            tabindex="0">

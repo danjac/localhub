@@ -156,33 +156,11 @@
   }
 
   .table-responsive {
-    &-xl {
-      @media (max-width: $size-xl) {
-        @include table-responsive-mixin();
-      }
-    }
-
-    &-lg {
-      @media (max-width: $size-lg) {
-        @include table-darkmode-responsive-mixin();
-      }
-    }
-
-    &-md {
-      @media (max-width: $size-md) {
-        @include table-darkmode-responsive-mixin();
-      }
-    }
-
-    &-sm {
-      @media (max-width: $size-sm) {
-        @include table-darkmode-responsive-mixin();
-      }
-    }
-
-    &-xs {
-      @media (max-width: $size-xs) {
-        @include table-darkmode-responsive-mixin();
+    @media (max-width: $size-lg) {
+      td {
+        &:first-child {
+          background: $darkmode-lighter;
+        }
       }
     }
   }

@@ -45,7 +45,7 @@
 {% block tag_list %}
 {% if object_list %}
 {% with blocked=user.blocked_tags.all following=user.following_tags.all %}
-<table class="table table-hover table-responsive-lg">
+<table class="table table-hover table-responsive">
   <tbody>
     {% for tag in object_list %}
     <tr>
@@ -62,7 +62,7 @@
       {% if can_follow_tag or can_block_tag %}
       <td class="d-hide"
           data-controller="js-toggle">
-        <div class="float-right-responsive-xl">
+        <div class="float-right-responsive">
           <div class="dropdown">
             <a class="btn btn-default dropdown-toggle"
                tabindex="0">

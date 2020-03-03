@@ -31,7 +31,7 @@
 {% include "includes/forms/search_form.html" %}
 
 {% if object_list %}
-<table class="table table-hover table-responsive-lg">
+<table class="table table-hover table-responsive">
   <tbody>
     {% for member in object_list %}
     {% has_perm "communities.change_membership" user member as can_change %}
@@ -50,7 +50,7 @@
           class="text-gray"
           {% endif %}>{{ member.get_role_display }}</td>
       <td>
-        <div class="float-right-responsive-xl">
+        <div class="float-right-responsive">
           {% include "communities/includes/membership_actions.html" %}
         </div>
       </td>

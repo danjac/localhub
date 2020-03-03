@@ -8,7 +8,7 @@
 {% block subtitle %} | {% trans "Tags" %} | {{ tag }}{% endblock %}
 {% block content %}
 
-<div class="float-left-responsive-xl">
+<div class="float-left-responsive">
     <ul class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'activities:tag_list' %}">{% trans "Tags" %}</a></li>
         <li class="breadcrumb-item"><a href="#">{{ tag.name }}</a></li>
@@ -19,7 +19,7 @@
 {% has_perm "users.block_tag" user as can_block_tag %}
 
 {% if can_follow_tag or can_block_tag %}
-<div class="float-right-responsive-xl d-hide"
+<div class="float-right-responsive d-hide"
      data-controller="js-toggle toggle">
     <div class="dropdown">
         <a class="btn btn-default dropdown-toggle"

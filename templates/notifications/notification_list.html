@@ -7,12 +7,12 @@
 
 {% block content %}
 
-<div class="float-left-responsive-xl">
+<div class="float-left-responsive">
   <h3>{% trans "Notifications" %}</h3>
 </div>
 
 {% if object_list %}
-<div class="float-right-responsive-xl d-hide"
+<div class="float-right-responsive d-hide"
      data-controller="js-toggle">
   <div class="dropdown">
     <a class="btn btn-default dropdown-toggle"
@@ -57,7 +57,7 @@
 
 {% if object_list %}
 
-<table class="table table-hover table-responsive-lg">
+<table class="table table-hover table-responsive">
   <tbody>
     {% for notification in object_list %}
     <tr>
@@ -74,7 +74,7 @@
         </div>
       </td>
       <td>
-        <div class="float-right-responsive-xl">
+        <div class="float-right-responsive">
           {% include "notifications/includes/actions.html" %}
         </div>
       </td>
