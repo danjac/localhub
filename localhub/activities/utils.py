@@ -20,7 +20,7 @@ def get_breadcrumbs_for_model(model_cls):
     this with BreadcrumbMixin views.
     """
     return [
-        (settings.HOME_PAGE_URL, _("Home")),
+        (settings.HOME_PAGE_URL, _("Stream")),
         (
             reverse(f"{model_cls._meta.app_label}:list"),
             _(model_cls._meta.verbose_name_plural.title()),
@@ -40,7 +40,7 @@ def get_breadcrumbs_for_instance(instance):
     if instance.published:
         return get_breadcrumbs_for_model(instance.__class__) + [current]
     return [
-        (settings.HOME_PAGE_URL, _("Home")),
+        (settings.HOME_PAGE_URL, _("Stream")),
         (reverse("activities:drafts"), _("Drafts")),
         current,
     ]

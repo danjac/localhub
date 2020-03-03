@@ -5,15 +5,24 @@
 {% load i18n %}
 
 {% block content %}
-<form method="POST" action="{{ request.path }}">
+<form method="POST"
+      action="{{ request.path }}">
   {% csrf_token %}
   <p>
-  {% blocktrans %}
-  Please confirm you want to leave this community.  Your posts and comments will not be deleted until you delete your account.
-  {% endblocktrans %}
+    {% blocktrans with community_name=community.name %}
+    Please confirm you want to leave the community <b>{{ community_name }}</b>. Your posts and comments will not be
+    deleted until you delete your
+    account.
+    {% endblocktrans %}
   </p>
-  <a class="btn btn-secondary" href="{{ user.get_absolute_url }}">{% trans "Cancel" %}</a>
-  <button class="btn btn-primary" type="submit">{% trans "Leave community" %}</button>
+  <a class="btn btn-secondary"
+     href="{{ user.get_absolute_url }}">{% trans "Cancel" %}</a>
+  <button class="btn btn-primary"
+          type="submit">
+    {% blocktrans with community_name=community.name %}
+    Leave {{ community_name }}
+    {% endblocktrans %}
+  </button>
 </form>
 
 {% endblock content %}

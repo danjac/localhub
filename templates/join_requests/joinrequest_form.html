@@ -8,12 +8,13 @@
 <h3>{% trans "Request Invitation" %}</h3>
 <div class="actions">
     {% if community %}
-    <a href="{% url 'activities:home_page' %}">{% trans "Home" %}</a>
+    <a href="{% url 'activities:home_page' %}">{% trans "Stream" %}</a>
     {% endif %}
     <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
     <a href="{% url 'community_list' %}">{% trans "Communities" %}</a>
 </div>
 <div class="divider"></div>
-<p>{% trans "Your request will be sent to the site admins. If they approve your request, you will automatically become a member of this community." %}</p>
+<p>{% trans "Your request will be sent to the site admins. If they approve your request, you will automatically become a member of this community." %}
+</p>
 {% include "includes/forms/stimulusjs_form.html" %}
 {% endblock %}

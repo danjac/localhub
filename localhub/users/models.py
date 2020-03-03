@@ -154,6 +154,7 @@ class User(AbstractUser):
         models.CharField(max_length=12, choices=HOME_PAGE_FILTERS),
         default=list,
         blank=True,
+        verbose_name=_("Stream Filters"),
     )
 
     show_sensitive_content = models.BooleanField(default=False)
