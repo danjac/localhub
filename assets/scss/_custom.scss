@@ -140,6 +140,7 @@ table {
 
 .info {
   color: $gray-color-dark;
+  @extend .my-2
 }
 
 .form-input[type='file'] {

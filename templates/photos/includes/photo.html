@@ -43,9 +43,11 @@
 {% endblock content %}
 
 {% block actions %}
-<a href="{{ object.image.url }}"
-   download>
-  {% trans "Download" %}
-</a>
+<li class="menu-item">
+  <a href="{{ object.image.url }}"
+     download>
+    {% trans "Download" %}
+  </a>
+</li>
 {{ block.super }}
 {% endblock actions %}
