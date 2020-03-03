@@ -24,15 +24,8 @@ a {
 }
 
 .actions {
-  &.actions-sm {
-    font-size: $font-size-sm;
-  }
 
   a {
-    color: $link-color-dark;
-
-    @extend .btn-link;
-
     &:not(:last-child) {
       @extend .pr-1;
     }
@@ -40,6 +33,15 @@ a {
     &:not(:first-child) {
       @extend .pl-1;
     }
+
+    @media (max-width: $size-lg) {
+      font-size: $font-size-sm;
+    }
+
+    color: $link-color-dark;
+
+    @extend .btn-link;
+
 
     &:visited {
       color: $link-color-dark;

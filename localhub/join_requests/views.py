@@ -47,6 +47,10 @@ class JoinRequestListView(JoinRequestManageMixin, SearchMixin, ListView):
         return None
 
     @cached_property
+    def status_display(self):
+        return JoinRequest.STATUS[self.status] if self.status else None
+
+    @cached_property
     def total_count(self):
         return super().get_queryset().count()
 
@@ -73,6 +77,7 @@ class JoinRequestListView(JoinRequestManageMixin, SearchMixin, ListView):
             {
                 "total_count": self.total_count,
                 "status": self.status,
+                "status_display": self.status_display,
                 "status_choices": list(JoinRequest.STATUS),
             }
         )

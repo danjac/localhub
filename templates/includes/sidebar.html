@@ -20,7 +20,7 @@
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
-       href="{% url 'activities:home_page' %}">{% trans "Home" %}
+       href="{% url 'activities:home_page' %}">{% trans "Stream" %}
     </a>
   </li>
   <li class="menu-item">
@@ -202,6 +202,31 @@
     {% include "includes/mode_toggle.html" %}
   </li>
   <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
+</ul>
+
+{% if can_manage_community or community.terms or community.description %}
+<ul class="menu mt-2">
+  <li class="divider"
+      data-content="{% trans 'Community' %}"></li>
+  </li>
+  {% if community.description %}
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'communities:community_detail' %}">
+      {% blocktrans with community_name=community.name %}
+      About {{ community_name }}
+      {% endblocktrans %}
+    </a>
+  </li>
+  {% endif %}
+  {% if community.terms %}
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'communities:community_terms' %}">
+      {% trans "Terms" %}
+    </a>
+  </li>
+  {% endif %}
   {% if can_manage_community %}
   <li class="menu-item">
     <a data-controller="active-link"
@@ -227,6 +252,7 @@
   </li>
   {% endif %}
 </ul>
+{% endif %}
 
 {% else %}
 <ul class="menu">

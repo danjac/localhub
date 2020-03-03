@@ -17,7 +17,7 @@ from .views import (
 app_name = "communities"
 
 urlpatterns = [
-    path("", view=community_detail_view, name="community_detail"),
+    path("about/", view=community_detail_view, name="community_detail"),
     path("terms/", view=community_terms_view, name="community_terms"),
     path("~update/", view=community_update_view, name="community_update"),
     path("~leave/", view=membership_leave_view, name="membership_leave"),

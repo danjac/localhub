@@ -7,7 +7,12 @@
 
 {% block content %}
 
-<h3>{% trans "Join Requests" %}</h3>
+<h3>
+    {% trans "Join Requests" %}
+    {% if status_display %}
+    - {{ status_display}}
+    {% endif %}
+</h3>
 
 {% if total_count %}
 <div class="actions">
@@ -15,12 +20,14 @@
     <a href="{{ request.path }}">{% trans "Show All" %}</a>
     {% endif %}
     {% for value, label in status_choices %}
-    {% if status == value %}
-    <b>{{ label }}</b>
-    {% else %}
+    {% if status != value %}
     <a href="{{ request.path }}?status={{ value }}">{{ label }}</a>
     {% endif %}
     {% endfor %}
+    <a href="{% url 'invites:list' %}">
+        {% trans "Invites" %}
+    </a>
+    <a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
 </div>
 <div class="divider"></div>
 {% endif %}
@@ -31,8 +38,9 @@
 
 {% if not community.allow_join_requests %}
 <p class="toast text-center my-2">
-  {% url 'communities:community_update' as settings_url %}
-  {% blocktrans %}Join requests are currently disabled for this community. You can re-enable them <a href="{{ settings_url }}">in your community settings</a>.{% endblocktrans %}
+    {% url 'communities:community_update' as settings_url %}
+    {% blocktrans %}Join requests are currently disabled for this community. You can re-enable them <a
+       href="{{ settings_url }}">in your community settings</a>.{% endblocktrans %}
 </p>
 {% endif %}
 
@@ -42,7 +50,8 @@
         <tr>
             <th>{% trans "User" %}</th>
             <th>{% trans "Status" %}</th>
-            <th class="d-hide" data-controller="js-toggle">{% trans "Actions" %}</th>
+            <th class="d-hide"
+                data-controller="js-toggle">{% trans "Actions" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -59,7 +68,8 @@
                     {{ join_request.get_status_display }}
                     {% if is_pending %}</b>{% endif %}
             </td>
-            <td class="d-hide" data-controller="js-toggle">
+            <td class="d-hide"
+                data-controller="js-toggle">
                 <div class="actions">
                     {% if is_pending or is_rejected %}
                     <a data-controller="ajax confirm"
