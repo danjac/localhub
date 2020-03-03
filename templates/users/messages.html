@@ -11,6 +11,7 @@
 
 {% block user_content %}
 
+{% if paginator.count %}
 <div class="my-2 toast text-center">
   {% spaceless %}
   {% blocktrans count counter=num_messages_sent %}
@@ -28,6 +29,7 @@
   {% endif %}.
   {% endspaceless %}
 </div>
+{% endif %}
 
 {% include "private_messages/includes/email_settings.html" %}
 
