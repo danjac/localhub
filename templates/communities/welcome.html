@@ -4,6 +4,7 @@
 {% extends "base.html" %}
 
 {% load i18n %}
+{% load communities_tags %}
 
 {% block content %}
 
@@ -43,4 +44,13 @@
   {% endif %}
 </p>
 
+{% get_available_community_count user as communities_count %}
+{% if communities_count > 1 %}
+<p>
+  {% url 'community_list' as community_list_url %}
+  {% blocktrans %}
+  You can find other communities in the <a href="{{ community_list_url }}">Community Hub</a>.
+  {% endblocktrans %}
+</p>
+{% endif %}
 {% endblock %}
