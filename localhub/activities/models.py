@@ -283,7 +283,8 @@ class Activity(TimeStampedModel):
         )
 
     def get_absolute_url(self):
-        if slug := self.slugify():
+        slug = self.slugify()
+        if slug:
             return self.resolve_url("detail", slug)
         return self.resolve_url("detail_no_slug")
 
@@ -373,7 +374,8 @@ class Activity(TimeStampedModel):
         ]
 
     def notify_tag_followers(self, recipients):
-        if hashtags := self.description.extract_hashtags():
+        hashtags = self.description.extract_hashtags()
+        if hashtags:
             tags = Tag.objects.filter(slug__in=hashtags)
             qs = (
                 recipients.with_notification_prefs("new_followed_tag_post")
@@ -530,7 +532,8 @@ class Activity(TimeStampedModel):
 
     def save_tags(self, is_new):
         if self.should_extract_tags(is_new):
-            if hashtags := self.extract_tags():
+            hashtags = self.extract_tags()
+            if hashtags:
                 self.tags.set(*hashtags, clear=True)
             else:
                 self.tags.clear()

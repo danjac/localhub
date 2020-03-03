@@ -141,6 +141,14 @@ table {
   color: $gray-color-dark;
 }
 
+.form-input[type='file'] {
+  &:not(:placeholder-shown) {
+    &:invalid {
+      border-color: $border-color-dark;
+    }
+  }
+}
+
 .menu-item {
   a {
     color: $dark-color;
