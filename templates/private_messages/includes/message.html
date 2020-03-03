@@ -41,11 +41,10 @@
     <div class="actions">
 
       {% spaceless %}
-
+      <a href="{{ message.get_permalink }}">{% trans "Permalink" %}</a>
       {% if is_detail and can_reply %}
       <a href="{% url 'private_messages:message_reply' message.id %}">{% trans "Reply" %}</a>
       {% else %}
-
       {% with num_replies=message.num_replies|default:0 %}
       {% if num_replies %}
       <a href="{{ message_url }}">

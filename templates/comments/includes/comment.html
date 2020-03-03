@@ -93,6 +93,7 @@
     {% has_perm "comments.like_comment" user comment as can_like_comment %}
     <div class="actions"
          data-controller="toggle">
+      <a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a>
       {% if can_like_comment %}
       <span class="d-hide"
             data-controller="js-toggle">

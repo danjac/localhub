@@ -174,8 +174,10 @@ class Message(TimeStampedModel):
         hash = f"#message-{self.id}"
         if is_thread:
             return hash
-        if user and (thread := self.get_thread(user)):
-            return f"{thread.get_absolute_url()}{hash}"
+        if user:
+            thread = self.get_thread(user)
+            if thread:
+                return f"{thread.get_absolute_url()}{hash}"
         return self.get_absolute_url()
 
     def get_permalink(self, user=None):
