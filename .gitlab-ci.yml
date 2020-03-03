@@ -42,7 +42,6 @@ build:
     - docker-compose -f docker-compose.deploy.yml push
   only:
     - master
-    - tags
 
 test:django:
   extends: .docker_config
@@ -53,7 +52,6 @@ test:django:
     - docker-compose -f docker-compose.deploy.yml run django pytest
   only:
     - master
-    - tags
 
 deploy:assets:
   extends: .docker_config
@@ -66,7 +64,7 @@ deploy:assets:
     - docker-compose -f docker-compose.deploy.yml run webpack npm run build
     - docker-compose -f docker-compose.deploy.yml run -e DJANGO_CONFIGURATION=Production -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
   only:
-    - tags
+    - master
 
 deploy:heroku:
   image: node:12.16.1-slim
@@ -77,4 +75,4 @@ deploy:heroku:
     - gem install dpl
     - dpl --provider=heroku --app=${HEROKU_APP_NAME} --api-key=${HEROKU_API_KEY} --skip-cleanup
   only:
-    - tags
+    - master
