@@ -6,18 +6,21 @@
 {% load communities_tags %}
 {% load flags_tags %}
 
+{% get_available_community_count user as communities_count %}
+{% test_rule "communities.is_member" user community as is_member %}
+
+{% if is_member %}
+
 {% has_perm "activities.create_activity" user community as can_create_activity %}
 {% has_perm "communities.moderate_community" user community as can_moderate_community %}
 {% has_perm "communities.manage_community" user community as can_manage_community %}
 {% has_perm "private_messages.create_message" user community as can_create_message %}
 
-{% get_available_community_count user as communities_count %}
-
 <ul class="menu">
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
-       href="{% url 'activities:home_page' %}">{% trans "Stream" %}
+       href="{% url 'activities:home_page' %}">{% trans "Home" %}
     </a>
   </li>
   <li class="menu-item">
@@ -51,7 +54,7 @@
       <span {% if total_external_notifications %}class="badge"
             data-badge="{{ total_external_notifications }}"
             {% endif %}>
-        {% trans "Communities" %}
+        {% trans "Community Hub" %}
       </span>
       {% endwith %}
     </a>
@@ -225,22 +228,26 @@
   {% endif %}
 </ul>
 
-{% if community.description or community.terms %}
-<ul class="menu mt-2">
-  <li class="divider"
-      data-content="{% trans 'Site Info' %}"></li>
+{% else %}
+<ul class="menu">
+  {% if communities_count > 1 %}
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
-       href="{% url 'communities:community_detail' %}">
-      {% trans "About This Site" %}
+       href="{% url 'community_list' %}">
+      {% with total_external_notifications=unread_external_notifications_count|add:unread_external_messages_count|add:pending_external_join_requests_count|add:external_drafts_count|add:external_flags_count %}
+      <span {% if total_external_notifications %}class="badge"
+            data-badge="{{ total_external_notifications }}"
+            {% endif %}>
+        {% trans "Communities" %}
+      </span>
+      {% endwith %}
     </a>
   </li>
+  {% endif %}
   <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'communities:community_terms' %}">
-      {% trans "Terms" %}
-    </a>
+    {% include "includes/mode_toggle.html" %}
   </li>
+  <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
 </ul>
 {% endif %}

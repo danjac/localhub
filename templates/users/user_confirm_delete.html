@@ -5,15 +5,27 @@
 {% load i18n %}
 
 {% block content %}
-<form method="POST" action="{% url 'user_delete' %}">
+<h3>{% trans "Delete Account" %}</h3>
+
+<div class="actions">
+  <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+</div>
+
+<div class="divider"></div>
+
+<form method="POST"
+      action="{% url 'user_delete' %}">
   {% csrf_token %}
   <p>
-  {% blocktrans %}
-  Please confirm you want to delete your account. This will also <b>permanently</b> remove all your posts and comments.
-  {% endblocktrans %}
+    {% blocktrans %}
+    Please confirm you want to delete your account. This will also <b>permanently</b> remove all your posts and
+    comments.
+    {% endblocktrans %}
   </p>
-  <a class="btn btn-secondary" href="{{ user.get_absolute_url }}">{% trans "Cancel" %}</a>
-  <button class="btn btn-primary" type="submit">{% trans "Delete account" %}</button>
+  <a class="btn btn-secondary"
+     href="{{ user.get_absolute_url }}">{% trans "Cancel" %}</a>
+  <button class="btn btn-primary"
+          type="submit">{% trans "Delete account" %}</button>
 </form>
 
 {% endblock content %}

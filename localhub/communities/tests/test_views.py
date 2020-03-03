@@ -124,17 +124,11 @@ class TestCommunityListView:
     def test_get_if_member(self, client, member):
         CommunityFactory.create_batch(3)
         response = client.get(reverse("community_list"))
-        assert "communities/member_community_list.html" in [
-            t.name for t in response.templates
-        ]
         assert len(response.context["object_list"]) == 4
 
     def test_get_if_not_member(self, client, login_user, community):
         CommunityFactory.create_batch(3)
         response = client.get(reverse("community_list"), HTTP_HOST=community.domain)
-        assert "communities/non_member_community_list.html" in [
-            t.name for t in response.templates
-        ]
         assert len(response.context["object_list"]) == 4
 
 
