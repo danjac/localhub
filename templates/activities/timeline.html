@@ -8,33 +8,61 @@
 
 {% block content %}
 <h3>{% trans "Timeline" %}</h3>
-<div class="actions">
-    <a href="{% url 'activities:home_page' %}">{% trans "Stream" %}</a>
-    {% if view.sort_by_ascending %}
-    <a href="{{ request.path }}?order=desc">{% trans "Newest First" %}</a>
-    {% else %}
-    <a href="{{ request.path }}?order=asc">{% trans "Oldest First" %}</a>
-    {% endif %}
-    {% if date_filters %}
-    <a href="{{ request.path }}">{% trans "Show All" %}</a>
-    {% endif %}
+<div class="float-right">
+    <div class="dropdown dropdown-right">
+        <a class="btn btn-default dropdown-toggle"
+           tabindex="0">
+            {% trans "Filter Timeline" %}
+            <i class="icon icon-caret"></i>
+        </a>
+        <ul class="menu">
+            {% if date_filters %}
+            <li class="menu-item">
+                <a href="{{ request.path }}">{% trans "Show All" %}</a>
+            </li>
+            {% endif %}
+
+            <li class="divider"
+                data-content="{% trans "Order" %}">
+            </li>
+
+            {% if view.sort_by_ascending %}
+            <li class="menu-item">
+                <a href="{{ request.path }}?order=desc">{% trans "Newest First" %}</a>
+            </li>
+            {% else %}
+            <li class="menu-item">
+                <a href="{{ request.path }}?order=asc">{% trans "Oldest First" %}</a>
+            </li>
+            {% endif %}
+
+            {% if years|length > 1 %}
+            <li class="divider"
+                data-content="{% trans "Year" %}">
+            </li>
+            {% for year in years %}
+            <li class="menu-item">
+                <a href="{{ request.path }}?year={{ year }}">{{ year }}</a>
+            </li>
+            {% endfor %}
+            {% endif %}
+
+            {% if months|length > 1 %}
+            <li class="divider"
+                data-content="{% trans "Month" %}">
+            </li>
+            {% for order, name in months %}
+            <li class="menu-item">
+                <a href="{{ request.path }}?month={{ order }}&year={{ current_year }}">{{ name }}</a>
+            </li>
+            {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
 </div>
 
-{% if years|length > 1 %}
-<div class="actions mt-2">
-    {% for year in years %}
-    <a href="{{ request.path }}?year={{ year }}">{{ year }}</a>
-    {% endfor %}
-</div>
-{% endif %}
+<div class="clearfix"></div>
 
-{% if months|length > 1 %}
-<div class="actions mt-2">
-    {% for order, name in months %}
-    <a href="{{ request.path }}?month={{ order }}&year={{ current_year }}">{{ name }}</a>
-    {% endfor %}
-</div>
-{% endif %}
 <div class="divider"></div>
 
 {% if dates %}
