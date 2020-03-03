@@ -35,7 +35,7 @@
            data-confirm-header="{% trans 'Delete All' %}"
            data-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}">{% trans "Delete All" %}</a>
     </ul>
-    </li>
+      </li>
   </div>
 </div>
 {% endif %}
@@ -73,53 +73,12 @@
           </span>
           {% include "users/includes/chip.html" with profile=notification.actor %}
         </div>
-        <div class="dropdown show-lg">
-          <a class="btn btn-default dropdown-toggle"
-             tabindex="0">
-            {% trans "Actions" %}
-            <i class="icon icon-caret"></i>
-          </a>
-          <ul class="menu">
-            {% if not notification.is_read %}
-            <li class="menu-item">
-              <a href="{% url 'notifications:mark_read' notification.pk %}"
-                 data-controller="ajax"
-                 data-action="ajax#post">{% trans "Mark As Read" %}</a>
-            </li>
-            {% endif %}
-            <li class="menu-item">
-              <a href="{% url 'notifications:delete' notification.pk %}"
-                 data-controller="ajax"
-                 data-action="ajax#post">{% trans "Delete" %}</a>
-            </li>
-          </ul>
-        </div>
-
+        {% include "notifications/includes/actions.html" with css_class="show-lg" %}
       </td>
 
       <td class="hide-lg">
         <div class="float-right">
-          <div class="dropdown dropdown-right">
-            <a class="btn btn-default dropdown-toggle"
-               tabindex="0">
-              {% trans "Actions" %}
-              <i class="icon icon-caret"></i>
-            </a>
-            <ul class="menu">
-              {% if not notification.is_read %}
-              <li class="menu-item">
-                <a href="{% url 'notifications:mark_read' notification.pk %}"
-                   data-controller="ajax"
-                   data-action="ajax#post">{% trans "Mark As Read" %}</a>
-              </li>
-              {% endif %}
-              <li class="menu-item">
-                <a href="{% url 'notifications:delete' notification.pk %}"
-                   data-controller="ajax"
-                   data-action="ajax#post">{% trans "Delete" %}</a>
-              </li>
-            </ul>
-          </div>
+          {% include "notifications/includes/actions.html" with css_class="dropdown-right" %}
         </div>
       </td>
     </tr>

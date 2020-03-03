@@ -1,0 +1,26 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+
+<div class="dropdown{% if css_class %} {{ css_class }}{% endif %}">
+  <a class="btn btn-default dropdown-toggle"
+     tabindex="0">
+    {% trans "Actions" %}
+    <i class="icon icon-caret"></i>
+  </a>
+  <ul class="menu">
+    {% if not notification.is_read %}
+    <li class="menu-item">
+      <a href="{% url 'notifications:mark_read' notification.pk %}"
+         data-controller="ajax"
+         data-action="ajax#post">{% trans "Mark As Read" %}</a>
+    </li>
+    {% endif %}
+    <li class="menu-item">
+      <a href="{% url 'notifications:delete' notification.pk %}"
+         data-controller="ajax"
+         data-action="ajax#post">{% trans "Delete" %}</a>
+    </li>
+  </ul>
+</div>
