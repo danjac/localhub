@@ -17,35 +17,29 @@
 
 <h3>{% avatar member "avatar-lg" %}{{ display_name }}</h3>
 
-<div class="actions">
+<div class="float-left">
+  <div class="actions">
 
-  {% if object.active %}
-  <a href="{% url 'users:activities' member.username %}">{% trans "Posts" %}</a>
-  <a href="{% url 'users:comments' member.username %}">{% trans "Comments" %}</a>
-  {% if member != user %}
-  <a href="{% url 'users:messages' member.username %}">{% trans "Messages" %}</a>
-  <a href="{% url 'private_messages:message_create' member.username %}">
-    {% trans "Send Message" %}
-  </a>
-  {% endif %}
-  {% endif %}
+    {% if object.active %}
+    <a href="{% url 'users:activities' member.username %}">{% trans "Posts" %}</a>
+    <a href="{% url 'users:comments' member.username %}">{% trans "Comments" %}</a>
+    <a href="{% url 'users:messages' member.username %}">{% trans "Messages" %}</a>
+    {% endif %}
+    {% if member != user %}
+    <a href="{% url 'private_messages:message_create' member.username %}">
+      {% trans "Send Message" %}
+    </a>
+    {% endif %}
 
+  </div>
+</div>
+<div class="float-right">
   {% has_perm "communities.change_membership" user object as can_change %}
   {% has_perm "communities.delete_membership" user object as can_delete %}
-  {% if can_change %}
-  <a href="{% url 'communities:membership_update' object.id %}">
-    {% trans "Edit" %}
-  </a>
-  {% endif %}
-  {% if can_delete %}
-  <a href="{% url 'communities:membership_delete' object.id %}"
-     data-controller="ajax confirm"
-     data-action="confirm#check ajax#post"
-     data-confirm-header="{% trans 'Delete' %}"
-     data-confirm-body="{% trans 'Are you sure you want to delete this membership?' %}">{% trans "Delete" %}</a>
-  {% endif %}
-
+  {% include "communities/includes/membership_actions.html" with member=object css_class="dropdown-right" %}
 </div>
+<div class="clearfix"></div>
+<div class="divider"></div>
 
 <dl>
   <dt>{% trans "Status" %}</dt>
