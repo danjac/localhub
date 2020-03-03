@@ -22,7 +22,10 @@
         {% endif %}
         {% if parent %}
         {% trans "in reply to" %}
-        <a href="{{ parent_url }}">{{ parent.abbreviate }}</a>
+        <a {% if is_thread %}
+           data-turbolinks="false"
+           {% endif %}
+           href="{{ parent_url }}">{{ parent.abbreviate }}</a>
         {% endif %}
       </div>
     </div>
