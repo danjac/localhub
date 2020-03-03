@@ -8,10 +8,12 @@
 {% block subtitle %} | {% trans "Tags" %} | {{ tag }}{% endblock %}
 {% block content %}
 
-<ul class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'activities:tag_list' %}">{% trans "Tags" %}</a></li>
-    <li class="breadcrumb-item"><a href="#">{{ tag.name }}</a></li>
-</ul>
+<div class="float-left">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'activities:tag_list' %}">{% trans "Tags" %}</a></li>
+        <li class="breadcrumb-item"><a href="#">{{ tag.name }}</a></li>
+    </ul>
+</div>
 
 {% has_perm "users.follow_tag" user as can_follow_tag %}
 {% has_perm "users.block_tag" user as can_block_tag %}

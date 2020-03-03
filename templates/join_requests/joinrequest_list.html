@@ -14,23 +14,42 @@
     {% endif %}
 </h3>
 
-{% if total_count %}
-<div class="actions">
-    {% if status %}
-    <a href="{{ request.path }}">{% trans "Show All" %}</a>
-    {% endif %}
-    {% for value, label in status_choices %}
-    {% if status != value %}
-    <a href="{{ request.path }}?status={{ value }}">{{ label }}</a>
-    {% endif %}
-    {% endfor %}
-    <a href="{% url 'invites:list' %}">
-        {% trans "Invites" %}
-    </a>
-    <a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
+<div class="float-left">
+    <div class="actions">
+        <a href="{% url 'invites:list' %}">
+            {% trans "Invites" %}
+        </a>
+        <a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
+    </div>
 </div>
-<div class="divider"></div>
+{% if total_count %}
+<div class="float-right">
+    <div class="dropdown dropdown-right">
+        <a class="btn btn-default dropdown-toggle"
+           tabindex="0">
+            {% trans "Filter" %}
+            <i class="icon icon-caret"></i>
+        </a>
+        <ul class="menu">
+            {% if status %}
+            <li class="menu-item">
+                <a href="{{ request.path }}">{% trans "Show All" %}</a>
+            </li>
+            {% endif %}
+            {% for value, label in status_choices %}
+            {% if status != value %}
+            <li class="menu-item">
+                <a href="{{ request.path }}?status={{ value }}">{{ label }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endif %}
+<div class="clearfix"></div>
+
+<div class="divider"></div>
 
 {% if paginator.count or view.search_query %}
 {% include "includes/forms/search_form.html" %}
@@ -70,28 +89,41 @@
             </td>
             <td class="d-hide"
                 data-controller="js-toggle">
-                <div class="actions">
-                    {% if is_pending or is_rejected %}
-                    <a data-controller="ajax confirm"
-                       data-action="confirm#check ajax#post"
-                       data-confirm-header="{% trans 'Accept' %}"
-                       data-confirm-body="{% trans 'Are you sure you want to accept this request?' %}"
-                       href="{% url 'join_requests:accept' join_request.id %}">{% trans "Accept" %}
+                <div class="dropdown">
+                    <a class="btn btn-default dropdown-toggle"
+                       tabindex="0">
+                        {% trans "Actions" %}
+                        <i class="icon icon-caret"></i>
                     </a>
-                    {% endif %}
-                    {% if is_pending %}
-                    <a data-controller="ajax confirm"
-                       data-action="confirm#check ajax#post"
-                       data-confirm-header="{% trans 'Reject' %}"
-                       data-confirm-body="{% trans 'Are you sure you want to reject this request?' %}"
-                       href="{% url 'join_requests:reject' join_request.id %}">{% trans "Reject" %}</a>
-                    {% endif %}
+                    <ul class="menu">
+                        {% if is_pending or is_rejected %}
+                        <li class="menu-item">
+                            <a data-controller="ajax confirm"
+                               data-action="confirm#check ajax#post"
+                               data-confirm-header="{% trans 'Accept' %}"
+                               data-confirm-body="{% trans 'Are you sure you want to accept this request?' %}"
+                               href="{% url 'join_requests:accept' join_request.id %}">{% trans "Accept" %}
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if is_pending %}
+                        <li class="menu-item">
+                            <a data-controller="ajax confirm"
+                               data-action="confirm#check ajax#post"
+                               data-confirm-header="{% trans 'Reject' %}"
+                               data-confirm-body="{% trans 'Are you sure you want to reject this request?' %}"
+                               href="{% url 'join_requests:reject' join_request.id %}">{% trans "Reject" %}</a>
+                        </li>
+                        {% endif %}
 
-                    <a data-controller="ajax confirm"
-                       data-action="confirm#check ajax#post"
-                       data-confirm-header="{% trans 'Delete' %}"
-                       data-confirm-body="{% trans 'Are you sure you want to delete this request?' %}"
-                       href="{% url 'join_requests:delete' join_request.id %}">{% trans "Delete" %}</a>
+                        <li class="menu-item">
+                            <a data-controller="ajax confirm"
+                               data-action="confirm#check ajax#post"
+                               data-confirm-header="{% trans 'Delete' %}"
+                               data-confirm-body="{% trans 'Are you sure you want to delete this request?' %}"
+                               href="{% url 'join_requests:delete' join_request.id %}">{% trans "Delete" %}</a>
+                        </li>
+                    </ul>
                 </div>
             </td>
         </tr>
