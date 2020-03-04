@@ -186,7 +186,7 @@ class MessageCreateView(BreadcrumbsMixin, CommunityRequiredMixin, BaseMessageFor
 
     def get_breadcrumbs(self):
         return [
-            (reverse("private_messages:recipients"), _("Recipients"),),
+            (reverse("private_messages:recipients"), _("All Members"),),
             (
                 reverse("users:messages", args=[self.recipient.username]),
                 user_display(self.recipient),
