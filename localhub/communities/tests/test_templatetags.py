@@ -6,16 +6,16 @@ import pytest
 from django.contrib.auth.models import AnonymousUser
 
 from ..factories import CommunityFactory, MembershipFactory
-from ..templatetags.communities_tags import get_available_community_count
+from ..templatetags.communities_tags import get_visible_community_count
 
 pytestmark = pytest.mark.django_db
 
 
 class TestGetAvailableCommunityCount:
     def test_anonymous(self, community):
-        assert get_available_community_count(AnonymousUser()) == 0
+        assert get_visible_community_count(AnonymousUser()) == 0
 
     def test_authenticated(self, member):
         CommunityFactory(listed=False)
         MembershipFactory(member=member.member).community
-        assert get_available_community_count(member.member) == 2
+        assert get_visible_community_count(member.member) == 2
