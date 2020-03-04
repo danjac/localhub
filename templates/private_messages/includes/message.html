@@ -63,6 +63,22 @@
     {% endwith %}
     {% endif %}
 
+    {% with num_follow_ups=message.num_follow_ups|default:0 %}
+    {% if num_follow_ups %}
+    <div class="float-left-responsive">
+      <div class="info">
+        This message has <a href="{{ message_url }}">
+          {% blocktrans count counter=num_follow_ups %}
+          one follow up.
+          {% plural %}
+          {{ counter }} follow up.
+          {% endblocktrans %}
+        </a>
+      </div>
+    </div>
+    {% endif %}
+    {% endwith %}
+
     <div class="float-right-responsive">
       <div class="dropdown">
         <a class="btn btn-default dropdown-toggle"

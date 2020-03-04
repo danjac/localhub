@@ -164,40 +164,64 @@ class TestMessageManager:
         assert fourth not in messages
         assert fifth not in messages
 
-    def test_with_num_replies_if_reply_recipient(self, user):
+    def test_with_num_replies_if_recipient(self, user):
         first = MessageFactory(sender=user)
         MessageFactory(recipient=user, parent=first)
 
         message = Message.objects.with_num_replies(user).get(pk=first.id)
         assert message.num_replies == 1
 
-    def test_with_num_replies_if_reply_sender(self, user):
-        first = MessageFactory(recipient=user)
+    def test_with_num_replies_if_sender(self, user):
+        first = MessageFactory(sender=user)
         MessageFactory(sender=user, parent=first)
 
         message = Message.objects.with_num_replies(user).get(pk=first.id)
-        assert message.num_replies == 1
+        assert message.num_replies is None
 
     def test_with_num_replies_if_no_replies(self, user):
 
         first = MessageFactory(sender=user)
 
         message = Message.objects.with_num_replies(user).get(pk=first.id)
-        assert message.num_replies == 0
+        assert message.num_replies is None
 
-    def test_with_num_replies_if_reply_recipient_deleted(self, user):
+    def test_with_num_follow_ups_if_sender(self, user):
+
         first = MessageFactory(sender=user)
-        MessageFactory(recipient=user, parent=first, recipient_deleted=timezone.now())
+        MessageFactory(sender=user, parent=first)
 
-        message = Message.objects.with_num_replies(user).get(pk=first.id)
-        assert message.num_replies == 0
+        message = Message.objects.with_num_follow_ups(user).get(pk=first.id)
+        assert message.num_follow_ups == 1
 
-    def test_with_num_replies_if_reply_sender_deleted(self, user):
+    def test_with_num_follow_ups_if_sender_deleted(self, user):
         first = MessageFactory(sender=user)
         MessageFactory(sender=user, parent=first, sender_deleted=timezone.now())
 
-        message = Message.objects.with_num_replies(user).get(pk=first.id)
-        assert message.num_replies == 0
+        message = Message.objects.with_num_follow_ups(user).get(pk=first.id)
+        assert message.num_follow_ups is None
+
+    def test_with_num_follow_ups_if_recipient(self, user):
+        first = MessageFactory(sender=user)
+        MessageFactory(recipient=user, parent=first)
+
+        message = Message.objects.with_num_follow_ups(user).get(pk=first.id)
+        assert message.num_follow_ups is None
+
+    def test_with_num_follow_ups_if_no_follow_ups(self, user):
+
+        first = MessageFactory(sender=user)
+
+        message = Message.objects.with_num_follow_ups(user).get(pk=first.id)
+        assert message.num_follow_ups is None
+
+    def test_with_common_annotations(self, user):
+        first = MessageFactory(sender=user)
+        MessageFactory(recipient=user, parent=first)
+        MessageFactory(sender=user, parent=first)
+
+        message = Message.objects.with_common_annotations(user).get(pk=first.id)
+        assert message.num_replies == 1
+        assert message.num_follow_ups == 1
 
     def test_between(self):
 

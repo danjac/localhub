@@ -328,7 +328,7 @@ class UserMessageListView(SingleUserMixin, ListView):
             return Message.objects.none()
         qs = (
             Message.objects.for_community(self.request.community)
-            .with_num_replies(self.request.user)
+            .with_common_annotations(self.request.user)
             .select_related(
                 "sender",
                 "recipient",

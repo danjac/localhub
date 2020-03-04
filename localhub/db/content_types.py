@@ -8,7 +8,7 @@ objects with querysets.
 
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Count, Exists, IntegerField, OuterRef, QuerySet, Subquery
+from django.db import models
 
 
 class AbstractGenericRelation:
@@ -47,9 +47,9 @@ def get_generic_related_exists(
     For an example see LikesAnnotationQuerySetMixin in
     localhub/likes/models.py.
     """
-    return Exists(
+    return models.Exists(
         _get_generic_related_by_id_and_content_type(
-            OuterRef("pk"),
+            models.OuterRef("pk"),
             model,
             related,
             related_object_id_field,
@@ -72,18 +72,18 @@ def get_generic_related_count_subquery(
     For an example see LikesAnnotationQuerySetMixin in
     localhub/likes/models.py.
     """
-    return Subquery(
+    return models.Subquery(
         _get_generic_related_by_id_and_content_type(
-            OuterRef("pk"),
+            models.OuterRef("pk"),
             model,
             related,
             related_object_id_field,
             related_content_type_field,
         )
         .values(related_object_id_field)
-        .annotate(count=Count("pk"))
+        .annotate(count=models.Count("pk"))
         .values("count"),
-        output_field=IntegerField(),
+        output_field=models.IntegerField(),
     )
 
 
@@ -121,6 +121,6 @@ def _get_generic_related_by_id_and_content_type(
 def _get_queryset(model_or_queryset):
     return (
         model_or_queryset
-        if isinstance(model_or_queryset, QuerySet)
+        if isinstance(model_or_queryset, models.QuerySet)
         else model_or_queryset._default_manager.all()
     )

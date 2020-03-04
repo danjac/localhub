@@ -87,22 +87,32 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
     def unread(self):
         return self.filter(read__isnull=True)
 
+    def reply_count_subquery(self, replies):
+        return models.Subquery(
+            replies.values("parent").annotate(count=models.Count("pk")).values("count"),
+            output_field=models.IntegerField(),
+        )
+
     def with_num_replies(self, user):
         return self.annotate(
-            num_replies=models.Count(
-                "replies",
-                filter=models.Q(
-                    models.Q(
-                        replies__recipient=user,
-                        replies__recipient_deleted__isnull=True,
-                    )
-                    | models.Q(
-                        replies__sender=user, replies__sender_deleted__isnull=True,
-                    )
-                ),
-                distinct=True,
+            num_replies=self.reply_count_subquery(
+                self.model._default_manager.for_sender_or_recipient(user)
+                .filter(parent=models.OuterRef("pk"))
+                .exclude(sender=models.OuterRef("sender"))
             )
         )
+
+    def with_num_follow_ups(self, user):
+        return self.annotate(
+            num_follow_ups=self.reply_count_subquery(
+                self.model._default_manager.for_sender_or_recipient(user).filter(
+                    parent=models.OuterRef("pk"), sender=models.OuterRef("sender")
+                )
+            )
+        )
+
+    def with_common_annotations(self, user):
+        return self.with_num_follow_ups(user).with_num_replies(user)
 
     def mark_read(self):
         """
