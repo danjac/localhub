@@ -83,21 +83,13 @@ class CommunityQuerySet(models.QuerySet):
             member_role=models.Value(None, output_field=models.CharField()),
         )
 
-    def listed(self, user):
+    def visible(self, user):
         """
-        Returns all communities either listed or where user is a member
+        Returns all communities either listed publicly or where user is a member
         """
         return (
             self.with_is_member(user)
             .filter(models.Q(models.Q(is_member=True) | models.Q(listed=True)))
-            .distinct()
-        )
-
-    def available(self, user):
-        return (
-            self.filter(active=True)
-            .with_is_member(user)
-            .filter(is_member=True)
             .distinct()
         )
 

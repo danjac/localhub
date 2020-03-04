@@ -157,7 +157,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
     template_name = "communities/community_list.html"
 
     def get_queryset(self):
-        qs = Community.objects.listed(self.request.user).order_by("name")
+        qs = Community.objects.visible(self.request.user).order_by("name")
         if self.search_query:
             qs = qs.filter(name__icontains=self.search_query)
         return qs

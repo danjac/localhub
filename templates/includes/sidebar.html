@@ -6,7 +6,7 @@
 {% load communities_tags %}
 {% load flags_tags %}
 
-{% get_available_community_count user as communities_count %}
+{% get_visible_community_count user as communities_count %}
 {% test_rule "communities.is_member" user community as is_member %}
 
 {% if is_member %}

@@ -31,6 +31,9 @@
            {% endif %}
            href="{{ parent_url }}">{{ parent.abbreviate }}</a>
         {% endif %}
+        {% if is_recipient and not message.read %}
+        <div class="chip bg-primary">{% trans "New" %}</div>
+        {% endif %}
       </div>
     </div>
   </div>
