@@ -34,9 +34,7 @@
   </div>
   {% endfor %}
   {% if comment_form %}
-  <div class="divider"
-       id="comment-form"></div>
-  {% include "includes/forms/stimulusjs_form.html" with action=object.get_create_comment_url form=comment_form %}
+  {% include "includes/forms/stimulusjs_form.html" with action=object.get_create_comment_url form=comment_form form_id="comment-form" %}
   {% elif not object.allow_comments %}
   <p class="toast text-center my-2">{% trans "Comments are locked" %}</p>
   {% elif not user.is_authenticated %}
