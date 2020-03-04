@@ -103,9 +103,6 @@
         <ul class="menu"
             data-controller="toggle">
 
-          <li class="menu-item">
-            <a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a>
-          </li>
           {% has_perm "comments.like_comment" user comment as can_like_comment %}
           {% if can_like_comment %}
           <li class="menu-item d-hide"
@@ -172,6 +169,9 @@
             </a>
           </li>
           {% endif %}
+          <li class="menu-item">
+            <a href="{{ comment.get_permalink }}">{% trans "Permalink" %}</a>
+          </li>
 
         </ul>
       </div>
