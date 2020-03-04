@@ -44,6 +44,7 @@ class TestShowMessage:
             "users:messages", args=[message.recipient.username]
         )
         assert not context["can_reply"]
+        assert context["can_follow_up"]
 
     def test_is_recipient(self, auth_request):
         parent = MessageFactory(sender=auth_request.user)
@@ -67,6 +68,7 @@ class TestShowMessage:
             "users:messages", args=[message.sender.username]
         )
         assert context["can_reply"]
+        assert not context["can_follow_up"]
 
     def test_is_recipient_sender_has_blocked(self, auth_request):
         message = MessageFactory(

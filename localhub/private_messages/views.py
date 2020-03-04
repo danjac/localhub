@@ -112,33 +112,22 @@ class BaseMessageFormView(PermissionRequiredMixin, FormView):
         return self.request.community
 
 
-class MessageReplyView(BreadcrumbsMixin, RecipientQuerySetMixin, BaseMessageFormView):
+class BaseReplyFormView(BreadcrumbsMixin, BaseMessageFormView):
     @cached_property
     def parent(self):
-        return get_object_or_404(
-            self.get_queryset().exclude(sender__pk=self.request.user.id),
-            pk=self.kwargs["pk"],
-        )
+        return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
 
     @cached_property
     def recipient(self):
-        return self.parent.sender
+        return self.parent.get_other_user(self.request.user)
 
     def get_breadcrumbs(self):
         return [
-            (
-                reverse("users:messages", args=[self.recipient.username]),
-                user_display(self.recipient),
-            ),
             (self.parent.resolve_url(self.request.user), self.parent.abbreviate()),
-            (None, _("Reply")),
         ]
 
     def get_form(self, data=None, files=None):
         form = self.form_class(data, files)
-        form["message"].label = _("Reply to %(recipient)s") % {
-            "recipient": user_display(self.recipient)
-        }
         form["message"].initial = "\n".join(
             ["> " + line for line in self.parent.message.splitlines()]
         )
@@ -169,7 +158,31 @@ class MessageReplyView(BreadcrumbsMixin, RecipientQuerySetMixin, BaseMessageForm
         return redirect(message.resolve_url(self.request.user))
 
 
+class MessageReplyView(RecipientQuerySetMixin, BaseReplyFormView):
+    def get_breadcrumbs(self):
+        return super().get_breadcrumbs() + [
+            (None, _("Reply")),
+        ]
+
+    def get_form(self, data=None, files=None):
+        form = super().get_form(data, files)
+        form["message"].label = _("Reply to %(recipient)s") % {
+            "recipient": user_display(self.recipient)
+        }
+        return form
+
+
 message_reply_view = MessageReplyView.as_view()
+
+
+class MessageFollowUpView(SenderQuerySetMixin, BaseReplyFormView):
+    def get_breadcrumbs(self):
+        return super().get_breadcrumbs() + [
+            (None, _("Follow-Up")),
+        ]
+
+
+message_follow_up_view = MessageFollowUpView.as_view()
 
 
 class MessageCreateView(BreadcrumbsMixin, CommunityRequiredMixin, BaseMessageFormView):

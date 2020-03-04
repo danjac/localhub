@@ -21,7 +21,11 @@
         {% include "users/includes/chip.html" with profile=message.recipient profile_url=recipient_url %}
         {% endif %}
         {% if parent %}
+        {% if is_follow_up %}
+        {% trans "in follow-up to" %}
+        {% else %}
         {% trans "in reply to" %}
+        {% endif %}
         <a {% if is_thread %}
            data-turbolinks="false"
            {% endif %}
@@ -66,7 +70,15 @@
         <ul class="menu">
           {% if can_reply %}
           <li class="menu-item">
-            <a href="{% url 'private_messages:message_reply' message.id %}">{% trans "Reply" %}</a>
+            <a href="{% url 'private_messages:message_reply' message.id %}">
+              {% trans "Reply" %}
+            </a>
+          </li>
+          {% elif can_follow_up %}
+          <li class="menu-item">
+            <a href="{% url 'private_messages:message_follow_up' message.id %}">
+              {% trans "Follow-Up" %}
+            </a>
           </li>
           {% endif %}
           {% if is_recipient and not message.read %}

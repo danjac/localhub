@@ -30,14 +30,16 @@ def show_message(
     sender_url = reverse("users:messages", args=[message.sender.username])
     recipient_url = reverse("users:messages", args=[message.recipient.username])
 
-    can_reply = is_recipient and user.has_perm(
-        "private_messages.create_message", community
-    )
+    can_send_message = user.has_perm("private_messages.create_message", community)
+
+    can_reply = can_send_message and is_recipient
+    can_follow_up = can_send_message and is_sender
 
     message_url = message.resolve_url(user, is_thread)
 
     parent = message.get_parent(user)
     parent_url = parent.resolve_url(user, is_thread) if parent else None
+    is_follow_up = parent and parent.sender == message.sender
 
     return {
         "request": context["request"],
@@ -45,16 +47,18 @@ def show_message(
         "is_thread": is_thread,
         "is_recipient": is_recipient,
         "is_sender": is_sender,
+        "can_reply": can_reply,
+        "can_follow_up": can_follow_up,
         "message": message,
         "message_url": message_url,
         "parent": parent,
         "parent_url": parent_url,
+        "is_follow_up": is_follow_up,
         "recipient_url": recipient_url,
         "sender_url": sender_url,
         "other_user": message.get_other_user(user),
         "show_recipient_info": show_recipient_info,
         "show_sender_info": show_sender_info,
-        "can_reply": can_reply,
         "post_delete_redirect": outbox_url if is_detail else None,
     }
 
