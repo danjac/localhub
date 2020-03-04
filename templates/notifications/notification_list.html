@@ -71,6 +71,9 @@
             {% endblocktrans %}
           </span>
           {% include "users/includes/chip.html" with profile=notification.actor %}
+          {% if not notification.is_read %}
+          <div class="chip bg-primary">{% trans "New" %}</div>
+          {% endif %}
         </div>
       </td>
       <td>
