@@ -137,7 +137,7 @@ table {
   @extend .my-2;
 }
 
-.form-input[type='file'] {
+.form-input {
   &:not(:placeholder-shown) {
     &:invalid {
       border-color: $border-color-dark;
