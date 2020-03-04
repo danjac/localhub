@@ -64,9 +64,11 @@
           <i class="icon icon-caret"></i>
         </a>
         <ul class="menu">
+          {% if can_reply %}
           <li class="menu-item">
             <a href="{% url 'private_messages:message_reply' message.id %}">{% trans "Reply" %}</a>
           </li>
+          {% endif %}
           {% if is_recipient and not message.read %}
           <li class="menu-item">
             <a href="{% url 'private_messages:message_mark_read' message.id %}"
