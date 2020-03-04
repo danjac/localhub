@@ -1063,7 +1063,7 @@ msgid "Notifications"
 msgstr "Tiedotteet"
 
 #: templates/includes/default_sidebar.html:34
-msgid "Direct Messages"
+msgid "Messages"
 msgstr "Suoraat Viestit"
 
 #: templates/includes/default_sidebar.html:40

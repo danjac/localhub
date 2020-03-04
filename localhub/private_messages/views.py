@@ -186,7 +186,7 @@ class MessageCreateView(BreadcrumbsMixin, CommunityRequiredMixin, BaseMessageFor
 
     def get_breadcrumbs(self):
         return [
-            (reverse("private_messages:recipients"), _("Recipients"),),
+            (reverse("private_messages:recipients"), _("All Members"),),
             (
                 reverse("users:messages", args=[self.recipient.username]),
                 user_display(self.recipient),
@@ -244,7 +244,10 @@ class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data.update(
-            {"children": self.get_children(),}
+            {
+                "children": self.get_children(),
+                "other_user": self.object.get_other_user(self.request.user),
+            }
         )
 
         return data
