@@ -21,9 +21,9 @@ app_name = "private_messages"
 
 urlpatterns = [
     path("", inbox_view, name="inbox"),
-    path("~/mark-read/", message_mark_all_read_view, name="mark_all_read"),
     path("outbox/", outbox_view, name="outbox"),
-    path("recipients/", recipient_list_view, name="recipients"),
+    path("~/mark-read/", message_mark_all_read_view, name="mark_all_read"),
+    path("~send/", recipient_list_view, name="recipients"),
     path("message/<int:pk>/", message_detail_view, name="message_detail"),
     path("message/<int:pk>/~reply/", message_reply_view, name="message_reply"),
     path("message/<int:pk>/~delete/", message_delete_view, name="message_delete"),

@@ -7,16 +7,43 @@
 
 {% block content %}
 
+{% has_perm "private_messages.create_message" user community as can_create_message %}
+
 <h3>{% trans "Messages" %}</h3>
 
-<div class="actions">
-    <a href="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</a>
-    <a href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
-    {% has_perm "private_messages.create_message" user community as can_create_message %}
-    {% if can_create_message %}
-    <a href="{% url 'private_messages:recipients' %}">{% trans "Send Message" %}</a>
-    {% endif %}
+<div class="float-left-responsive">
+    <div class="actions">
+        <a href="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</a>
+        <a href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
+    </div>
 </div>
+
+{% if can_create_message %}
+<div class="float-right-responsive">
+    <div class="dropdown">
+        <a class="btn btn-default dropdown-toggle"
+           tabindex="0">
+            {% trans "Actions" %}
+            <i class="icon icon-caret"></i>
+        </a>
+        <ul class="menu">
+            <li class="menu-item">
+                <a href="{% url 'private_messages:message_create' other_user.username %}">
+                    {% user_display other_user as other_user_name %}
+                    {% blocktrans %}
+                    Send Message to {{ other_user_name }}
+                    {% endblocktrans %}
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'private_messages:recipients' %}">{% trans "Send Message to Anyone" %}</a>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endif %}
+<div class="clearfix"></div>
+
 
 <div class="divider"></div>
 {% show_message user community message is_detail=True %}
