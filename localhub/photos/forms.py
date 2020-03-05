@@ -1,6 +1,6 @@
 from django import forms
 
-from localhub.forms.widgets import ImageInput, TypeaheadInput
+from localhub.forms.widgets import ClearableImageInput, TypeaheadInput
 
 from .models import Photo
 
@@ -20,5 +20,5 @@ class PhotoForm(forms.ModelForm):
         )
         widgets = {
             "title": TypeaheadInput,
-            "image": ImageInput,
+            "image": ClearableImageInput,
         }
