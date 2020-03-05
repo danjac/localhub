@@ -1,6 +1,10 @@
 .darkmode {
   color: $gray-color;
 
+  .chip {
+    background: $dark-color;
+  }
+
   .modal {
     &-container {
       color: $darkmode-text;
@@ -99,10 +103,6 @@
   .card {
     background-color: $darkmode-darker;
     border-color: $gray-color;
-  }
-
-  .chip {
-    background-color: $darkmode-lighter;
   }
 
   .menu {
