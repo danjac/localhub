@@ -18,6 +18,7 @@ from django.views.generic.dates import (
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.notifications.models import Notification
 from localhub.private_messages.models import Message
+from localhub.utils.functools import temp_attribute
 from localhub.views import BaseMultipleQuerySetListView, SearchMixin
 
 from ..models import get_activity_models
@@ -111,6 +112,7 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseStreamView):
     template_name = "activities/timeline.html"
     paginate_by = settings.DEFAULT_PAGE_SIZE * 2
     month_format = "%B"
+    date_filtering = True
 
     @property
     def uses_datetime_field(self):
@@ -175,7 +177,7 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseStreamView):
             .published()
             .exclude_blocked(self.request.user)
         )
-        if self.date_kwargs:
+        if self.date_filtering and self.date_kwargs:
             return qs.filter(**self.date_kwargs)
         return qs
 
@@ -198,29 +200,35 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseStreamView):
     def get_ordering(self):
         return "published" if self.sort_by_ascending else "-published"
 
-    def get_dates(self):
+    def get_dates(self, all_dates=False):
         """
         Calling dates() on a UNION queryset just returns list of PKs
         (Django bug?) so we need to build this separately for each
         queryset.
         """
-        querysets = [
-            qs.only("id", "published").select_related(None).dates("published", "month")
-            for qs in self.get_queryset_dict().values()
-        ]
+        with temp_attribute(self, "date_filtering", not (all_dates)):
+            querysets = [
+                qs.only("id", "published")
+                .select_related(None)
+                .dates("published", "month")
+                for qs in self.get_queryset_dict().values()
+            ]
         return sorted(set(itertools.chain.from_iterable(querysets)))
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         for object in data["object_list"]:
             object["month"] = date_format(object["published"], "F Y")
-        dates = self.get_dates()
+        dates = self.get_dates(False)
+        all_dates = self.get_dates(True)
         data.update(
             {
                 "dates": dates,
                 "current_year": self.current_year,
                 "months": self.get_months(dates),
                 "years": self.get_years(dates),
+                "all_months": self.get_months(all_dates),
+                "all_years": self.get_years(all_dates),
                 "date_filters": self.date_kwargs,
             }
         )
