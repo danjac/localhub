@@ -115,9 +115,10 @@ table {
 }
 
 .form-select {
-  &:not([multiple]):not([size]) {
+  -webkit-appearance: none;
+  /*  &:not([multiple]):not([size]) {
     background: $bg-color-light;
-  }
+  } */
 }
 
 .form-input {
