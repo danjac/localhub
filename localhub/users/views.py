@@ -117,6 +117,7 @@ class BaseUserListView(UserQuerySetMixin, ListView):
         return (
             super()
             .get_queryset()
+            .with_role(self.request.community)
             .order_by("name", "username")
             .exclude(blocked=self.request.user)
         )
@@ -189,6 +190,7 @@ class FollowingUserListView(BaseUserListView):
                 is_following=Value(True, output_field=BooleanField())
             )
             .for_community(self.request.community)
+            .with_role(self.request.community)
             .order_by("name", "username")
         )
 

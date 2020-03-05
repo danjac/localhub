@@ -56,6 +56,9 @@
         <tr>
             <td>
                 {% include "users/includes/chip.html" with profile=object %}
+                {% if object.role == "admin" or object.role == "moderator" %}
+                <div class="chip bg-primary">{{ object.role_display }}</div>
+                {% endif %}
             </td>
             <td>
                 {% if user != object %}

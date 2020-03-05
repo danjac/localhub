@@ -68,6 +68,28 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
             membership__community=community, membership__active=True, is_active=True,
         )
 
+    def with_role(self, community):
+        """
+        Adds annotations "role" and "role_display" for users for this community.
+        Use in conjunction with for_community.
+        """
+        return self.annotate(
+            role=models.Subquery(
+                Membership.objects.filter(
+                    community=community, member=models.OuterRef("pk")
+                ).values("role"),
+                output_field=models.CharField(),
+            ),
+            role_display=models.Case(
+                *[
+                    models.When(role=k, then=models.Value(str(v)))
+                    for k, v in Membership.ROLES
+                ],
+                default=models.Value(""),
+                output_field=models.CharField(),
+            ),
+        )
+
 
 class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
     def create_user(self, username, email, password=None, **kwargs):

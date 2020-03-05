@@ -21,25 +21,49 @@ class TestUserManager:
         )
         assert user.check_password("t3ZtP4s31")
 
-    def test_active(self, community):
+    def test_active_for_community(self, community):
         Membership.objects.create(member=UserFactory(), community=community)
         assert get_user_model().objects.for_community(community).exists()
 
-    def test_active_if_not_member(self, community):
+    def test_active_for_community_if_not_member(self, community):
         UserFactory()
         assert not get_user_model().objects.for_community(community).exists()
 
-    def test_active_if_not_active_member(self, community):
+    def test_active_for_community_if_not_active_member(self, community):
         Membership.objects.create(
             member=UserFactory(), community=community, active=False
         )
         assert not get_user_model().objects.for_community(community).exists()
 
-    def test_active_if_not_active(self, community):
+    def test_inactive_for_community(self, community):
         Membership.objects.create(
             member=UserFactory(is_active=False), community=community
         )
         assert not get_user_model().objects.for_community(community).exists()
+
+    def test_with_role_if_not_member(self, community):
+        UserFactory()
+        first = get_user_model().objects.with_role(community).first()
+        assert first.role is None
+        assert first.role_display == ""
+
+    def test_with_role_if_member(self, community):
+        MembershipFactory(community=community, role="member")
+        first = get_user_model().objects.with_role(community).first()
+        assert first.role == "member"
+        assert first.role_display == "Member"
+
+    def test_with_role_if_moderator(self, community):
+        MembershipFactory(community=community, role="moderator")
+        first = get_user_model().objects.with_role(community).first()
+        assert first.role == "moderator"
+        assert first.role_display == "Moderator"
+
+    def test_with_role_if_admin(self, community):
+        MembershipFactory(community=community, role="admin")
+        first = get_user_model().objects.with_role(community).first()
+        assert first.role == "admin"
+        assert first.role_display == "Admin"
 
     def test_create_superuser(self):
 
