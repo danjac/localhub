@@ -18,6 +18,7 @@
             <i class="icon icon-caret"></i>
         </a>
         <ul class="menu">
+            {% if date_filters %}
             <li class="divider"
                 data-content="{% trans "Show All" %}">
             </li>
@@ -27,23 +28,24 @@
             <li class="menu-item">
                 <a href="{{ request.path }}?order=asc">{% trans "Oldest First" %}</a>
             </li>
+            {% endif %}
 
-            {% if all_years|length > 1 %}
+            {% if years|length > 1 %}
             <li class="divider"
                 data-content="{% trans "Year" %}">
             </li>
-            {% for year in all_years %}
+            {% for year in years %}
             <li class="menu-item">
                 <a href="{{ request.path }}?year={{ year }}">{{ year }}</a>
             </li>
             {% endfor %}
             {% endif %}
 
-            {% if all_months|length > 1 %}
+            {% if months|length > 1 %}
             <li class="divider"
                 data-content="{% trans "Month" %}">
             </li>
-            {% for order, name in all_months %}
+            {% for order, name in months %}
             <li class="menu-item">
                 <a href="{{ request.path }}?month={{ order }}&year={{ current_year }}">{{ name }}</a>
             </li>
