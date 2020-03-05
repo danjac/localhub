@@ -121,7 +121,7 @@ class CommunityUpdateView(
         "terms",
         "google_tracking_id",
         "content_warning_tags",
-        "listed",
+        "public",
         "allow_join_requests",
         "blacklisted_email_domains",
         "blacklisted_email_addresses",

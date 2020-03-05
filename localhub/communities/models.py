@@ -89,7 +89,7 @@ class CommunityQuerySet(models.QuerySet):
         """
         return (
             self.with_is_member(user)
-            .filter(models.Q(models.Q(is_member=True) | models.Q(listed=True)))
+            .filter(models.Q(models.Q(is_member=True) | models.Q(public=True)))
             .distinct()
         )
 
@@ -170,9 +170,9 @@ class Community(TimeStampedModel):
 
     history = HistoricalRecords()
 
-    listed = models.BooleanField(
+    public = models.BooleanField(
         default=True,
-        help_text=_("Community is visible to non-members in Communities index page."),
+        help_text=_("Community is visible to non-members in Community Hub."),
     )
 
     allow_join_requests = models.BooleanField(
