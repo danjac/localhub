@@ -17,6 +17,7 @@ from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
 from localhub.views import SearchMixin
 
+from ..forms import CommunityForm
 from ..models import Community, Membership
 from ..rules import is_member
 from .base import CommunityRequiredMixin
@@ -112,21 +113,7 @@ community_not_found_view = CommunityNotFoundView.as_view()
 class CommunityUpdateView(
     CommunitySingleObjectMixin, PermissionRequiredMixin, UpdateView
 ):
-    fields = (
-        "name",
-        "logo",
-        "tagline",
-        "intro",
-        "description",
-        "terms",
-        "google_tracking_id",
-        "content_warning_tags",
-        "public",
-        "allow_join_requests",
-        "blacklisted_email_domains",
-        "blacklisted_email_addresses",
-    )
-
+    form_class = CommunityForm
     permission_required = "communities.manage_community"
     success_message = _("Community settings have been updated")
 

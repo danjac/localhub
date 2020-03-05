@@ -6,6 +6,27 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 
+class ImageInput(forms.FileInput):
+    template_name = "includes/forms/widgets/image.html"
+
+    def format_value(self, value):
+        """
+        Return the file object if it has a defined url attribute.
+        """
+        if self.is_initial(value):
+            return value
+
+    def is_initial(self, value):
+        """
+        Return whether value is considered to be initial value.
+        """
+        return bool(value and getattr(value, "url", False))
+
+
+class ClearableImageInput(forms.ClearableFileInput):
+    template_name = "includes/forms/widgets/clearable_image.html"
+
+
 class TypeaheadInput(forms.TextInput):
     template_name = "includes/forms/widgets/typeahead.html"
 

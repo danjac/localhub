@@ -7,6 +7,8 @@ from django.contrib.auth.forms import UserChangeForm as BaseUserChangeForm
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
 from django.utils.translation import gettext_lazy as _
 
+from localhub.forms.widgets import ClearableImageInput
+
 User = get_user_model()
 
 
@@ -37,6 +39,7 @@ class UserForm(forms.ModelForm):
         widgets = {
             "notification_preferences": forms.CheckboxSelectMultiple,
             "home_page_filters": forms.CheckboxSelectMultiple,
+            "avatar": ClearableImageInput,
         }
         help_texts = {
             "home_page_filters": _("Blocked users and tags will not be shown."),

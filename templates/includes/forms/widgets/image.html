@@ -1,0 +1,12 @@
+<div data-controller="image-preview">
+    <img src="{{ widget.value.url }}"
+         data-target="image-preview.image"
+         class="img-responsive mb-1{% if not widget.value.url %} d-hide{% endif%}">
+    <input type="{{ widget.type }}"
+           name="{{ widget.name }}"
+           {% if widget.value != None %}
+           value="{{ widget.value|stringformat:'s' }}"
+           {% endif %}
+           data-action="image-preview#change"
+           {% include "django/forms/widgets/attrs.html" %}>
+</div>
