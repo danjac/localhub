@@ -1,9 +1,11 @@
 {% if widget.is_initial %}
 {{ widget.initial_text }}:
 <a href="{{ widget.value.url }}">{{ widget.value }}</a>
+{% if widget.value.url|is_image_url %}
 <img class="img-responsive"
      src="{{ widget.value.url }}"
      alt="" />
+{% endif %}
 {% if not widget.required %}
 <label for="{{ widget.checkbox_id }}"
        class="form-checkbox">

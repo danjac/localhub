@@ -76,3 +76,6 @@ def linkify(url, text=None):
     return mark_safe(
         f'<a href="{url}" rel="{REL_SAFE_VALUES}" target="_blank">{text}</a>'
     )
+
+
+register.filter(is_image_url)
