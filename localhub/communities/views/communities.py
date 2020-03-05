@@ -137,9 +137,7 @@ class CommunityUpdateView(
         return self.success_message
 
     def form_valid(self, form: ModelForm):
-        community = form.save(commit=False)
-        community.admin = self.request.user
-        community.save()
+        form.save()
         messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 

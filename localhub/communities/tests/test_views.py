@@ -117,7 +117,6 @@ class TestCommunityUpdateView:
         assert response.url == url
         admin.community.refresh_from_db()
         assert admin.community.name == "New name"
-        assert admin.community.admin == admin.member
 
 
 class TestCommunityListView:
