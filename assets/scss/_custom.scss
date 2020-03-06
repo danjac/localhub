@@ -206,13 +206,13 @@ table {
 
 
 .float-left-responsive {
-  @media (min-width: $size-xl) {
+  @media (min-width: $size-lg) {
     float: left !important;
   }
 }
 
 .float-right-responsive {
-  @media (min-width: $size-xl) {
+  @media (min-width: $size-lg) {
     float: right !important;
 
     .dropdown {
@@ -225,7 +225,7 @@ table {
 }
 
 .table-responsive {
-  @media (max-width: $size-lg) {
+  @media (max-width: $size-md) {
     td {
       display: flex;
       flex-direction: row;
