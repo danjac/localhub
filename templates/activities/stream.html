@@ -1,0 +1,113 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/base.html" %}
+
+{% load i18n %}
+{% load rules %}
+{% load activities_tags %}
+{% load users_tags %}
+
+{% block subtitle %} | {% trans "Stream" %}{% endblock %}
+{% block content %}
+
+{% if page_obj.number == 1 %}
+
+{% if latest_notification %}
+<div class="toast toast-primary text-center my-2"
+     data-controller="toggle"
+     data-target="toggle.togglable">
+    <button class="btn btn-clear float-right d-hide"
+            data-controller="js-toggle ajax badge"
+            data-ajax-url="{% url 'notifications:mark_read' latest_notification.id %}"
+            data-ajax-redirect="none"
+            data-badge-counters="sidebar-notifications-counter,total-notifications-counter"
+            data-action="ajax#post toggle#toggle badge#decrement"></button>
+    {% include "notifications/includes/notification.html" with notification=latest_notification %}
+</div>
+{% endif %}
+
+{% if latest_message %}
+<div class="toast toast-primary text-center my-2"
+     data-controller="toggle"
+     data-target="toggle.togglable">
+    <button class="btn btn-clear float-right d-hide"
+            data-controller="js-toggle ajax badge"
+            data-ajax-url="{% url 'private_messages:message_mark_read' latest_message.id %}"
+            data-ajax-redirect="none"
+            data-badge-counters="sidebar-messages-counter,total-notifications-counter"
+            data-action="ajax#post toggle#toggle badge#decrement"></button>
+    {% blocktrans with message_sender=latest_message.sender.get_display_name %}
+    {{ message_sender }} has sent you a <a href="{{ latest_message_url }}">message</a>.
+    {% endblocktrans %}
+</div>
+{% endif %}
+
+
+{% get_pinned_activity user community as pinned %}
+{% if pinned %}
+<div class="toast my-2">
+    <a href="{{ pinned.get_absolute_url }}">{{ pinned.title }}</a>
+    <div class="chip bg-primary">{% trans "Pinned" %}</div>
+    <div>
+        <span class="timesince">
+            {% blocktrans with since=pinned.published|timesince %}
+            Posted {{ since }} ago by
+            {% endblocktrans %}
+            {% include "users/includes/chip.html" with profile=pinned.owner %}
+        </span>
+    </div>
+</div>
+{% endif %}
+
+
+{% has_perm "activities.create_activity" user community as can_create_activity %}
+
+{% if can_create_activity %}
+<div class="d-hide"
+     data-controller="js-toggle">
+    <div class="mb-2">
+        <div class="input-group">
+            <span class="input-group-addon">
+                {% avatar user %}
+            </span>
+            <input type="text"
+                   class="form-input conversation-input"
+                   data-controller="linkify"
+                   data-action="focus->linkify#go"
+                   data-linkify-url="{% url 'posts:create' %}"
+                   placeholder="{% trans "What's on your mind?" %}">
+        </div>
+    </div>
+    <div class="actions">
+        <a href="{% url 'events:create' %}">{% trans "New Event" %}</a>
+        <a href="{% url 'photos:create' %}">{% trans "New Photo" %}</a>
+        <a href="{% url 'polls:create' %}">{% trans "New Poll" %}</a>
+    </div>
+    <div class="divider"></div>
+</div>
+{% endif %}
+
+{% if not user.show_embedded_content %}
+<div class="toast text-center my-2 d-hide"
+     data-controller="cookie-notice"
+     data-cookie-notice-name="embedded-content">
+    <button class="btn btn-clear float-right"
+            data-action="cookie-notice#accept"></button>
+    {% url "user_update" as user_update_url %}
+    {% blocktrans %}
+    You can view embedded content by checking the <b>Show embedded content</b> option in your
+    <a href="{{ user_update_url }}">user settings</a>.
+    {% endblocktrans %}
+</div>
+{% endif %}
+
+{% elif page_obj.paginator.num_pages > 1 %}
+
+{% include "includes/pagination.html" %}
+<div class="divider"></div>
+
+{% endif %}
+
+{% include "activities/includes/activity_list.html" %}
+{% endblock content %}
