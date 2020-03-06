@@ -102,7 +102,7 @@ class Base(Configuration):
 
     DEFAULT_PAGE_SIZE = 12
 
-    HOME_PAGE_URL = reverse_lazy("activities:home_page")
+    HOME_PAGE_URL = reverse_lazy("activities:stream")
 
     OPENGRAPH_PROXY_URL = values.Value()
 
@@ -252,6 +252,7 @@ class Base(Configuration):
                         "django.contrib.messages.context_processors.messages",
                         "localhub.communities.context_processors.community",
                         "localhub.template.context_processors.darkmode",
+                        "localhub.template.context_processors.home_page_url",
                     ],
                     "libraries": {
                         "pagination_tags": "localhub.pagination.templatetags",

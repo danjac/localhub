@@ -1,6 +1,7 @@
 import io
 
 import pytest
+from django.conf import settings
 from django.core.files import File
 from django.urls import reverse
 from PIL import Image
@@ -68,7 +69,7 @@ class TestPhotoDeleteView:
 
     def test_post(self, client, photo_for_member):
         response = client.post(reverse("photos:delete", args=[photo_for_member.id]))
-        assert response.url == reverse("activities:home_page")
+        assert response.url == settings.HOME_PAGE_URL
         assert Photo.objects.count() == 0
 
 

@@ -52,8 +52,8 @@ class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
         return [self.get_count_queryset_for_model(model) for model in self.models]
 
 
-class HomePageView(BaseStreamView):
-    template_name = "activities/home.html"
+class StreamView(BaseStreamView):
+    template_name = "activities/stream.html"
 
     def filter_queryset(self, queryset):
         return (
@@ -104,7 +104,7 @@ class HomePageView(BaseStreamView):
         return data
 
 
-home_page_view = HomePageView.as_view()
+stream_view = StreamView.as_view()
 
 
 class TimelineView(YearMixin, MonthMixin, DateMixin, BaseStreamView):

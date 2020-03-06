@@ -190,7 +190,7 @@ class TestPostDeleteView:
 
     def test_post(self, client, post_for_member: Post):
         response = client.post(reverse("posts:delete", args=[post_for_member.id]))
-        assert response.url == reverse("activities:home_page")
+        assert response.url == settings.HOME_PAGE_URL
         assert Post.objects.count() == 0
 
     def test_post_by_moderator(self, client, moderator):
@@ -199,7 +199,7 @@ class TestPostDeleteView:
             owner=MembershipFactory(community=moderator.community).member,
         )
         response = client.post(reverse("posts:delete", args=[post.id]))
-        assert response.url == reverse("activities:home_page")
+        assert response.url == settings.HOME_PAGE_URL
         assert Post.objects.count() == 0
 
 

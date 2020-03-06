@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
+from django.conf import settings
 from django.urls import reverse
 from django.utils.encoding import force_str
 
@@ -86,7 +87,7 @@ class TestEventDeleteView:
 
     def test_post(self, client, event_for_member):
         response = client.post(reverse("events:delete", args=[event_for_member.id]))
-        assert response.url == reverse("activities:home_page")
+        assert response.url == settings.HOME_PAGE_URL
         assert Event.objects.count() == 0
 
 
