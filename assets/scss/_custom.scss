@@ -241,8 +241,14 @@ table {
   color: $gray-color-dark;
 }
 
-.toast a {
-  color: $light-color;
+.toast {
+  .chip {
+    background: $dark-color;
+  }
+
+  a {
+    color: $light-color;
+  }
 }
 
 .wordwrap {

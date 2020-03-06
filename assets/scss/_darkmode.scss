@@ -105,6 +105,17 @@
     border-color: $gray-color;
   }
 
+  .toast {
+    .chip {
+      background: $darkmode-lighter;
+    }
+
+    a {
+      color: $light-color;
+    }
+  }
+
+
   .menu {
     background-color: $darkmode-lighter;
 
