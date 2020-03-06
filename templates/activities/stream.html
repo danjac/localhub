@@ -46,16 +46,18 @@
 
 {% get_pinned_activity user community as pinned %}
 {% if pinned %}
-<div class="toast my-2">
-    <a href="{{ pinned.get_absolute_url }}">{{ pinned.title }}</a>
-    <div class="chip bg-primary">{% trans "Pinned" %}</div>
-    <div>
-        <span class="timesince">
-            {% blocktrans with since=pinned.published|timesince %}
-            Posted {{ since }} ago by
-            {% endblocktrans %}
-            {% include "users/includes/chip.html" with profile=pinned.owner %}
-        </span>
+<div class="card my-2">
+    <div class="card-header activity-title h6">
+        <a href="{{ pinned.get_absolute_url }}">{{ pinned.title }}</a>
+        <div class="chip bg-primary">{% trans "Pinned" %}</div>
+        <div class="card-subtitle h6">
+            <span class="timesince">
+                {% blocktrans with since=pinned.published|timesince %}
+                Posted {{ since }} ago by
+                {% endblocktrans %}
+                {% include "users/includes/chip.html" with profile=pinned.owner %}
+            </span>
+        </div>
     </div>
 </div>
 {% endif %}
