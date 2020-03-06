@@ -167,7 +167,7 @@
   }
 
   .table-responsive {
-    @media (max-width: $size-lg) {
+    @media (max-width: $size-md) {
       td {
         &:first-child {
           background: $dark-color;
