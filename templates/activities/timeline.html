@@ -64,13 +64,11 @@
 {% spaceless %}
 <div class="my-2 toast text-center">
     {% blocktrans count counter=paginator.count %}
-    A total of <strong>1 post</strong> was published
+    <strong>One activity</strong> was posted
     {% plural %}
-    A total of <strong>{{ counter }} posts</strong> were published
+    A total of <strong>{{ counter }} activities</strong> were posted
     {% endblocktrans %}
-
     {% with num_months=months|length num_years=years|length %}
-
     {% if num_months == 1 and num_years == 1 %}
     {% with earliest=dates|first|date:"E Y" %}
     {% blocktrans %}
@@ -139,7 +137,7 @@
 </div>
 {% include "includes/pagination.html" %}
 {% else %}
-{% trans "There are no posts for this period" as t_empty %}
+{% trans "There are no items for this period" as t_empty %}
 {% include "includes/empty.html" with empty_message=t_empty %}
 {% endif %}
 {% endblock content %}

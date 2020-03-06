@@ -90,9 +90,9 @@
 {% if total %}
 <div class="toast text-center my-2">
     {% blocktrans count counter=total %}
-    There is one post with this tag.
+    One activity has been tagged.
     {% plural %}
-    There are {{ total }} posts with this tag.
+    {{ total }} activities have been tagged.
     {% endblocktrans %}
 </div>
 {% endif %}

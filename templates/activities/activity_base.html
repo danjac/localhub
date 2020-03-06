@@ -137,7 +137,7 @@
         {% if is_detail %}
         {% if object.edited and object.published and object.edited > object.published %}
         <div class="info">
-          {% blocktrans with edited=object.edited|timesince %}Updated {{ edited }} ago{% endblocktrans %}
+          {% blocktrans with edited=object.edited|timesince %}Last edited {{ edited }} ago{% endblocktrans %}
           {% if object.editor != object.owner %}
           {% trans "by" %}
           {% include "users/includes/chip.html" with profile=object.editor %}

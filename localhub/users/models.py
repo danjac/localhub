@@ -109,53 +109,46 @@ class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
 class User(AbstractUser):
 
     HOME_PAGE_FILTERS = Choices(
-        ("users", _("Posts, events and photots from people I'm following")),
-        ("tags", _("Posts, events and photos containing tags I'm following")),
+        ("users", _("Limited to just content from people I'm following")),
+        ("tags", _("Limited to just tags I'm following")),
     )
 
     NOTIFICATION_PREFERENCES = Choices(
-        ("new_message", _("I receive a direct message")),
-        ("new_follower", _("Someone starts following me")),
-        ("new_member", _("Someone joins a community I belong to")),
-        ("new_comment", _("Someone comments on my post, event or photo")),
+        ("new_message", _("I have received a direct message")),
+        ("new_follower", _("Someone has started following me")),
+        ("new_member", _("Someone has joined a community I belong to")),
+        ("new_comment", _("Someone has commented on one of my activities")),
+        ("replied_to_comment", _("Someone has replied to one of my comments")),
         (
             "new_sibling_comment",
-            _(
-                "Someone comments on a post, event or photo I've also commented on"  # noqa
-            ),
+            _("Someone has commented on an activity I've also commented on"),  # noqa
         ),
-        ("reshare", _("Someone has reshared my post, event or photo")),
-        ("mention", _("I am @mentioned in a post, event, photo or comment")),
+        ("like", _("Someone has liked one of my activities or comments")),
+        ("reshare", _("Someone has reshared one of my activities")),
+        ("mention", _("I have been @mentioned in an activity or comment")),
         (
             "moderator_delete",
-            _("A moderator deletes my post, event, photo or comment"),
+            _("A moderator has deleted one of my activities or comments"),
         ),
-        ("moderator_edit", _("A moderator edits my post, event, photo or comment"),),
-        ("like", _("Someone likes my post, event, photo or comment")),
         (
-            "new_followed_user_post",
-            _("Someone I'm following submits a post, event or photo"),
+            "moderator_edit",
+            _("A moderator has edited one of my activities or comments"),
         ),
-        ("replied_to_comment", _("Someone replies to my comment")),
-        ("new_followed_user_comment", _("Someone I'm following submits a comment"),),
+        ("new_followed_user_post", _("Someone I'm following has posted an activity")),
+        ("new_followed_user_comment", _("Someone I'm following has posted a comment")),
         (
             "new_followed_tag_post",
-            _(
-                "A post, event or photo is submitted containing tags I'm following"  # noqa
-            ),
+            _("An activity has been posted containing tags I'm following"),  # noqa
         ),
         (
             "flag",
             _(
-                "A user has flagged a comment, post, event or photo (moderators only)"  # noqa
+                "A user has flagged content they are concerned about (community moderators only)"
             ),
-        ),
+        ),  # noqa
         (
             "moderator_review_request",
-            _(
-                "A user has a new comment, post, event or photo for you to "
-                "review (moderators only)"
-            ),
+            _("A user has posted content for me to review (community moderators only)"),
         ),
     )
 
