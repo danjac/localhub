@@ -63,7 +63,8 @@ rules.add_perm(
 )
 
 rules.add_perm(
-    "activities.pin_activity", is_activity_community_moderator & is_published
+    "activities.pin_activity",
+    is_activity_community_moderator & is_published & ~is_reshare,
 )
 
 rules.add_perm(

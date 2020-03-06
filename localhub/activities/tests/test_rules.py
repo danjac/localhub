@@ -57,6 +57,10 @@ class TestPinPermissions:
         post = PostFactory(community=moderator.community)
         assert moderator.member.has_perm("activities.pin_activity", post)
 
+    def test_moderator_can_pin_activity_if_reshare(self, moderator):
+        post = PostFactory(community=moderator.community, is_reshare=True)
+        assert not moderator.member.has_perm("activities.pin_activity", post)
+
     def test_moderator_can_pin_activity_if_not_published(self, moderator):
         post = PostFactory(community=moderator.community, published=None)
         assert not moderator.member.has_perm("activities.pin_activity", post)
