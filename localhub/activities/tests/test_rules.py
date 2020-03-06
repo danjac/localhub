@@ -35,7 +35,7 @@ class TestIsPostCommunityModerator:
         assert not is_editor(user, post)
 
 
-class TestPermissions:
+class TestLikePermissions:
     def test_owner_can_like_activity(self, post):
         assert not post.owner.has_perm("activities.like_activity", post)
 
@@ -47,6 +47,22 @@ class TestPermissions:
         post = PostFactory(community=member.community, published=None)
         assert not member.member.has_perm("activities.like_activity", post)
 
+
+class TestPinPermissions:
+    def test_member_can_pin_activity(self, member):
+        post = PostFactory(community=member.community)
+        assert not member.member.has_perm("activities.pin_activity", post)
+
+    def test_moderator_can_pin_activity(self, moderator):
+        post = PostFactory(community=moderator.community)
+        assert moderator.member.has_perm("activities.pin_activity", post)
+
+    def test_moderator_can_pin_activity_if_not_published(self, moderator):
+        post = PostFactory(community=moderator.community, published=None)
+        assert not moderator.member.has_perm("activities.pin_activity", post)
+
+
+class TestResharePermissions:
     def test_owner_can_reshare_activity(self, post):
         assert not post.owner.has_perm("activities.reshare_activity", post)
 
@@ -62,6 +78,8 @@ class TestPermissions:
         post = PostFactory(community=member.community, published=None)
         assert not member.member.has_perm("activities.reshare_activity", post)
 
+
+class TestCreateCommentPermissions:
     def test_can_create_comment_if_member(self, post, user):
         Membership.objects.create(member=user, community=post.community)
         assert user.has_perm("activities.create_comment", post)
@@ -78,6 +96,8 @@ class TestPermissions:
     def test_can_create_comment_if_not_member(self, post, user):
         assert not user.has_perm("activities.create_comment", post)
 
+
+class TestFlagPermissions:
     def test_owner_can_flag_activity(self, post):
         assert not post.owner.has_perm("activities.flag_activity", post)
 
@@ -85,29 +105,46 @@ class TestPermissions:
         post = PostFactory(community=member.community)
         assert member.member.has_perm("activities.flag_activity", post)
 
+
+class TestCreatePermissions:
     def test_member_can_create_activity(self, member):
         assert member.member.has_perm("activities.create_activity", member.community)
 
     def test_non_member_can_create_activity(self, user, community: Community):
         assert not user.has_perm("activities.create_activity", community)
 
-    def test_owner_can_edit_or_delete_activity(self, user):
+
+class TestChangePermissions:
+    def test_owner_can_change_activity(self, user):
         post = PostFactory(owner=user)
         assert user.has_perm("activities.change_activity", post)
-        assert user.has_perm("activities.delete_activity", post)
 
-    def test_owner_can_edit_or_delete_activity_if_reshare(self, user):
+    def test_owner_can_change_activity_if_reshare(self, user):
         post = PostFactory(owner=user, is_reshare=True)
         assert not user.has_perm("activities.change_activity", post)
-        assert user.has_perm("activities.delete_activity", post)
 
-    def test_non_owner_can_edit_or_delete_activity(self, user):
+    def test_non_owner_can_change_activity(self, user):
         post = PostFactory()
         assert not user.has_perm("activities.change_activity", post)
+
+    def test_moderator_can_change_activity(self, moderator):
+        post = PostFactory(community=moderator.community)
+        assert moderator.member.has_perm("activities.change_activity", post)
+
+
+class TestDeletePermissions:
+    def test_owner_can_delete_activity(self, user):
+        post = PostFactory(owner=user)
+        assert user.has_perm("activities.delete_activity", post)
+
+    def test_owner_can_delete_activity_if_reshare(self, user):
+        post = PostFactory(owner=user, is_reshare=True)
+        assert user.has_perm("activities.delete_activity", post)
+
+    def test_non_owner_can_delete_activity(self, user):
+        post = PostFactory()
         assert not user.has_perm("activities.delete_activity", post)
 
-    def test_moderator_can_edit_or_delete_activity(self, moderator):
+    def test_moderator_can_delete_activity(self, moderator):
         post = PostFactory(community=moderator.community)
-
-        assert moderator.member.has_perm("activities.change_activity", post)
         assert moderator.member.has_perm("activities.delete_activity", post)

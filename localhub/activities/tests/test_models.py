@@ -22,12 +22,24 @@ from ..models import (
     get_activity_models,
     get_combined_activity_queryset,
     get_combined_activity_queryset_count,
+    get_combined_activity_queryset_pk_and_model,
 )
 
 pytestmark = pytest.mark.django_db
 
 
 class TestActivityManager:
+    def test_with_object_type(self, post, photo, event):
+
+        posts = Post.objects.with_object_type()
+        assert posts[0].object_type == "post"
+
+        photos = Photo.objects.with_object_type()
+        assert photos[0].object_type == "photo"
+
+        events = Event.objects.with_object_type()
+        assert events[0].object_type == "event"
+
     def test_published_if_false(self):
         PostFactory(published=None)
         assert Post.objects.published().count() == 0
@@ -380,6 +392,21 @@ class TestGetCombinedActivityQueryset:
         )
 
         assert len(qs) == 2
+
+
+class TestGetCombinedActivityQuerysetPkAndModel:
+    def test_get_combined_activity_queryset_pk_and_model(self):
+        post = PostFactory(title="test post")
+        EventFactory()
+
+        rows = get_combined_activity_queryset_pk_and_model(
+            lambda model: model.objects.filter(title="test post")
+        )
+
+        assert len(rows) == 1
+        pk, model = rows[0]
+        assert pk == post.id
+        assert model == Post
 
 
 class TestGetCombinedActivityQuerysetCount:

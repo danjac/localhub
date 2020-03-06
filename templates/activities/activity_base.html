@@ -220,6 +220,26 @@
             {% if user.is_authenticated %}
             {% block actions %}
 
+            {% has_perm "activities.pin_activity" user object as can_pin %}
+
+            {% if can_pin %}
+            <li class="menu-item d-hide"
+                data-controller="js-toggle">
+              <a href="{{ object.get_pin_url }}"
+                 {% if object.is_pinned %}
+                 class="d-hide"
+                 {% endif %}
+                 data-controller="ajax"
+                 data-action="ajax#post">{% trans "Pin" %}</a>
+              <a href="{{ object.get_unpin_url }}"
+                 {% if not object.is_pinned %}
+                 class="d-hide"
+                 {% endif %}
+                 data-controller="ajax"
+                 data-action="ajax#post">{% trans "Unpin" %}</a>
+            </li>
+            {% endif %}
+
             {% has_perm "activities.like_activity" user object as can_like %}
             {% if can_like %}
             <li class="menu-item d-hide"

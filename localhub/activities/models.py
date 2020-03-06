@@ -99,6 +99,16 @@ class ActivityQuerySet(
             )
         )
 
+    def with_object_type(self):
+        """
+        Adds object_type based on model. Useful for generic activity queries.
+        """
+        return self.annotate(
+            object_type=models.Value(
+                self.model._meta.model_name, output_field=models.CharField()
+            )
+        )
+
     def published(self):
         return self.filter(published__isnull=False)
 
@@ -230,6 +240,8 @@ class Activity(TimeStampedModel):
 
     is_reshare = models.BooleanField(default=False)
 
+    is_pinned = models.BooleanField(default=False)
+
     parent = models.ForeignKey(
         "self",
         null=True,
@@ -290,6 +302,12 @@ class Activity(TimeStampedModel):
 
     def get_create_comment_url(self):
         return self.resolve_url("comment")
+
+    def get_pin_url(self):
+        return self.resolve_url("pin")
+
+    def get_unpin_url(self):
+        return self.resolve_url("unpin")
 
     def get_dislike_url(self):
         return self.resolve_url("dislike")
@@ -551,12 +569,16 @@ def get_activity_models():
     return Activity.__subclasses__()
 
 
+def get_activity_models_dict():
+    return {model._meta.model_name: model for model in get_activity_models()}
+
+
 def get_combined_activity_queryset(fn, all=False):
     """
     Creates a combined UNION queryset of all Activity subclasses.
 
     fn should take a model class and return a QuerySet. QuerySets
-    for all models should have identical columns.
+    for all models should have identical columns i.e. use with only().
 
     Example:
 
@@ -564,6 +586,19 @@ def get_combined_activity_queryset(fn, all=False):
     """
     querysets = [fn(model) for model in get_activity_models()]
     return querysets[0].union(*querysets[1:], all=all)
+
+
+def get_combined_activity_queryset_pk_and_model(fn, all=False):
+    """
+    Returns a list of tuples of (pk, model_class).
+    """
+    rows = get_combined_activity_queryset(
+        lambda model: fn(model).with_object_type().values("pk", "object_type")
+    )
+
+    models_dict = get_activity_models_dict()
+
+    return [(row["pk"], models_dict[row["object_type"]]) for row in rows]
 
 
 def get_combined_activity_queryset_count(fn):

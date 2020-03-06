@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
+from django.conf import settings
 from django.urls import reverse
 
 from localhub.comments.models import Comment
@@ -237,6 +238,43 @@ class TestPostReshareView:
             ).count()
             == 1
         )
+
+
+class TestPostPinView:
+    def test_post(self, client, moderator):
+
+        # any pinned activities should be un-pinned
+        already_pinned = PostFactory(
+            community=moderator.community, owner=moderator.member, is_pinned=True
+        )
+
+        post = PostFactory(
+            community=moderator.community,
+            owner=MembershipFactory(community=moderator.community).member,
+        )
+        response = client.post(reverse("posts:pin", args=[post.id]),)
+        assert response.url == settings.HOME_PAGE_URL
+
+        already_pinned.refresh_from_db()
+        post.refresh_from_db()
+
+        assert post.is_pinned
+        assert not already_pinned.is_pinned
+
+
+class TestPostUnpinView:
+    def test_post(self, client, moderator):
+
+        post = PostFactory(
+            community=moderator.community,
+            owner=MembershipFactory(community=moderator.community).member,
+            is_pinned=True,
+        )
+        response = client.post(reverse("posts:unpin", args=[post.id]),)
+        assert response.url == settings.HOME_PAGE_URL
+
+        post.refresh_from_db()
+        assert not post.is_pinned
 
 
 class TestPostLikeView:

@@ -14,10 +14,12 @@ def create_activity_urls(
     update_view_class=generic.ActivityUpdateView,
     detail_view_class=generic.ActivityDetailView,
     delete_view_class=generic.ActivityDeleteView,
-    dislike_view_class=generic.ActivityDislikeView,
     flag_view_class=generic.ActivityFlagView,
     like_view_class=generic.ActivityLikeView,
+    dislike_view_class=generic.ActivityDislikeView,
     reshare_view_class=generic.ActivityReshareView,
+    pin_view_class=generic.ActivityPinView,
+    unpin_view_class=generic.ActivityUnpinView,
     create_comment_view_class=generic.ActivityCommentCreateView,
 ):
     """
@@ -49,6 +51,8 @@ def create_activity_urls(
         ),
         path("<int:pk>/~flag/", flag_view_class.as_view(model=model), name="flag",),
         path("<int:pk>/~like/", like_view_class.as_view(model=model), name="like",),
+        path("<int:pk>/~pin/", pin_view_class.as_view(model=model), name="pin",),
+        path("<int:pk>/~unpin/", unpin_view_class.as_view(model=model), name="unpin",),
         path(
             "<int:pk>/~reshare/",
             reshare_view_class.as_view(model=model),

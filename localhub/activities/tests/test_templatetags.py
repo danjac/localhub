@@ -4,6 +4,7 @@
 import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
+from django.utils import timezone
 
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.posts.factories import PostFactory
@@ -12,11 +13,36 @@ from localhub.users.factories import UserFactory
 from ..templatetags.activities_tags import (
     get_draft_count,
     get_external_draft_count,
+    get_pinned_activity,
     is_content_sensitive,
     is_oembed_url,
 )
 
 pytestmark = pytest.mark.django_db
+
+
+class TestGetPinnedActivity:
+    def test_get_pinned_activity_if_none(self, member):
+        pinned = get_pinned_activity(member.member, member.community)
+        assert pinned is None
+
+    def test_get_pinned_activity_if_no_pinned_posts(self, member):
+        PostFactory(
+            community=member.community, is_pinned=False, published=timezone.now()
+        )
+        pinned = get_pinned_activity(member.member, member.community)
+        assert pinned is None
+
+    def test_get_pinned_activity_if_is_pinned_post(self, member):
+        post = PostFactory(
+            community=member.community,
+            owner=member.member,
+            is_pinned=True,
+            published=timezone.now(),
+        )
+        pinned = get_pinned_activity(member.member, member.community)
+        assert pinned.id == post.id
+        assert pinned.object_type == "post"
 
 
 class TestIsOembedUrl:

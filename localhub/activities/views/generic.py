@@ -27,6 +27,7 @@ from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
+from ..models import get_activity_models
 from ..notifications import send_activity_deleted_email, send_activity_notifications
 from ..utils import get_breadcrumbs_for_instance, get_breadcrumbs_for_model
 
@@ -267,6 +268,35 @@ class ActivityReshareView(PermissionRequiredMixin, BaseSingleActivityView):
             send_activity_notifications(obj, notification)
 
         return redirect(obj)
+
+
+class ActivityPinView(PermissionRequiredMixin, BaseSingleActivityView):
+    permission_required = "activities.pin_activity"
+
+    def post(self, request, *args, **kwargs):
+        for model in get_activity_models():
+            model.objects.for_community(community=request.community).update(
+                is_pinned=False
+            )
+
+        obj = self.get_object()
+        obj.is_pinned = True
+        obj.save()
+        messages.success(request, _("Post has been pinned to the top of the stream"))
+        return redirect(settings.HOME_PAGE_URL)
+
+
+class ActivityUnpinView(PermissionRequiredMixin, BaseSingleActivityView):
+    permission_required = "activities.pin_activity"
+
+    def post(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.is_pinned = False
+        obj.save()
+        messages.success(
+            request, _("Pinned post has been removed from the top of the stream")
+        )
+        return redirect(settings.HOME_PAGE_URL)
 
 
 class ActivityLikeView(PermissionRequiredMixin, BaseSingleActivityView):
