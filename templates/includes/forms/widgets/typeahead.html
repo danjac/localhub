@@ -9,13 +9,14 @@
      {% if tag_search_url %}
      data-typeahead-tag-search-url="{{ tag_search_url }}"
      {% endif %}>
-  <ul class="menu d-hide p-absolute"
-      data-target="typeahead.selector"></ul>
-  <input data-target="typeahead.input"
-         data-action="keyup->typeahead#keyup keydown->typeahead#keydown"
-         autocomplete="off"
-         {% if widget.value %}value="{{ widget.value }}"
-         {% endif %}
-         name="{{ widget.name }}"
-         {% include "django/forms/widgets/attrs.html" %}>
+    <ul class="menu d-hide p-absolute"
+        data-target="typeahead.selector"></ul>
+    <input data-target="typeahead.input"
+           data-action="keyup->typeahead#keyup keydown->typeahead#keydown"
+           autocomplete="off"
+           class="form-input"
+           {% if widget.value %}value="{{ widget.value }}"
+           {% endif %}
+           name="{{ widget.name }}"
+           {% include "django/forms/widgets/attrs.html" %}>
 </div>
