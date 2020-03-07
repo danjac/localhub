@@ -173,6 +173,13 @@
     border-top: $border-width solid $gray-color-dark;
   }
 
+  table,
+  td,
+  th,
+  tr {
+    border-color: $gray-color-dark;
+  }
+
   .table.table-hover tbody {
     tr:hover {
       background-color: $darkmode-lighter;
