@@ -23,7 +23,7 @@ import {
 export default class extends Controller {
   static targets = ['calendar', 'dateInput', 'currentMonth', 'days'];
 
-  open(event) {
+  toggle(event) {
     event.preventDefault();
     if (!this.calendarTarget.classList.toggle('d-none')) {
       const {

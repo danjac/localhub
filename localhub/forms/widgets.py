@@ -42,7 +42,7 @@ class CalendarWidget(forms.SplitDateTimeWidget):
         date_attrs = kwargs.pop("date_attrs", {})
         date_attrs.update(
             {
-                "data-action": "click->calendar#open",
+                "data-action": "click->calendar#toggle",
                 "data-target": "calendar.dateInput",
                 "placeholder": _("Date"),
             }
@@ -50,7 +50,7 @@ class CalendarWidget(forms.SplitDateTimeWidget):
         time_attrs = kwargs.pop("time_attrs", {})
         time_attrs.update(
             {
-                "data-action": "click->time-selector#open",
+                "data-action": "click->time-selector#toggle",
                 "data-target": "time-selector.timeInput",
                 "placeholder": _("Time"),
             }

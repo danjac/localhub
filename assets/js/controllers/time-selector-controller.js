@@ -6,7 +6,7 @@ import {
 
 export default class extends Controller {
     static targets = ["selector", "hour", "minute", "timeInput"]
-    open(event) {
+    toggle(event) {
         event.preventDefault();
         if (!this.selectorTarget.classList.toggle('d-none')) {
             this.render();
@@ -18,6 +18,7 @@ export default class extends Controller {
         this.timeInputTarget.value = [
             this.hourTarget.value, this.minuteTarget.value
         ].map(value => this.pad(value, 2)).join(":");
+        this.selectorTarget.classList.add('d-none');
     }
 
     render() {
