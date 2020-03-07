@@ -27,7 +27,7 @@
         data-tab="guide">
       <a href="#"
          data-action="tabs#select"
-         data-tab="guide">{% trans "Formatting Help" %}</a>
+         data-tab="guide">{% trans "Markdown Guide" %}</a>
     </li>
   </ul>
   <div class="tab-pane"
@@ -86,6 +86,13 @@
               data-action="keyup->typeahead#keyup keydown->typeahead#keydown"
               name="{{ widget.name }}"
               {% include "django/forms/widgets/attrs.html" %}>{% spaceless %}{% if widget.value %}{{ widget.value }}{% endif %}{% endspaceless %}</textarea>
+    <p>
+      <small>
+        You can use <a target="_blank"
+           rel="nofollow"
+           href="https://www.markdownguide.org/basic-syntax">Markdown</a> to format your content.
+      </small>
+    </p>
   </div>
   <div class="tab-pane d-none markdownx-preview markdown-content"
        data-target="tabs.pane"
