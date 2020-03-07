@@ -97,6 +97,12 @@
       color: $darkmode-text;
     }
 
+    &:not(:placeholder-shown) {
+      &:invalid {
+        border-color: $gray-color-dark;
+      }
+    }
+
     &:not(:placeholder-shown):invalid:focus {
       background-color: $darkmode-darker;
     }
