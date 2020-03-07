@@ -21,7 +21,7 @@
   <div class="actions">
 
     {% if object.active %}
-    <a href="{% url 'users:activities' member.username %}">{% trans "Posts" %}</a>
+    <a href="{% url 'users:activities' member.username %}">{% trans "Activities" %}</a>
     <a href="{% url 'users:comments' member.username %}">{% trans "Comments" %}</a>
     <a href="{% url 'users:messages' member.username %}">{% trans "Messages" %}</a>
     {% endif %}
