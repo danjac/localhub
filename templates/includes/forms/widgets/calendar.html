@@ -6,9 +6,11 @@
     <div class="input-group">
         {% include widget.subwidgets.0.template_name with widget=widget.subwidgets.0 %}
         {% include  widget.subwidgets.1.template_name with widget=widget.subwidgets.1 %}
+        {% comment %}
         <button type="button"
                 class="btn input-group-btn"
                 data-action="calendar#open">{% trans "Calendar" %}</button>
+        {% endcomment %}
     </div>
     <div class="columns d-none pt-1"
          data-target="calendar.calendar">
@@ -24,13 +26,13 @@
                 </div>
                 <div class="calendar-container">
                     <div class="calendar-header">
-                        <div class="calendar-date">Sun</div>
-                        <div class="calendar-date">Mon</div>
-                        <div class="calendar-date">Tue</div>
-                        <div class="calendar-date">Wed</div>
-                        <div class="calendar-date">Thu</div>
-                        <div class="calendar-date">Fri</div>
-                        <div class="calendar-date">Sat</div>
+                        <div class="calendar-date">{% trans "Sun" %}</div>
+                        <div class="calendar-date">{% trans "Mon" %}</div>
+                        <div class="calendar-date">{% trans "Tue" %}</div>
+                        <div class="calendar-date">{% trans "Wed" %}</div>
+                        <div class="calendar-date">{% trans "Thu" %}</div>
+                        <div class="calendar-date">{% trans "Fri" %}</div>
+                        <div class="calendar-date">{% trans "Sat" %}</div>
                     </div>
                     <div class="calendar-body"
                          data-target="calendar.days"></div>
