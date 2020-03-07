@@ -44,6 +44,7 @@ class CalendarWidget(forms.SplitDateTimeWidget):
             {
                 "data-action": "click->calendar#toggle",
                 "data-target": "calendar.dateInput",
+                "autocomplete": "off",
                 "placeholder": _("Date"),
             }
         )
@@ -52,6 +53,7 @@ class CalendarWidget(forms.SplitDateTimeWidget):
             {
                 "data-action": "click->time-selector#toggle",
                 "data-target": "time-selector.timeInput",
+                "autocomplete": "off",
                 "placeholder": _("Time"),
             }
         )
