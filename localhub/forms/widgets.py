@@ -49,7 +49,11 @@ class CalendarWidget(forms.SplitDateTimeWidget):
         )
         time_attrs = kwargs.pop("time_attrs", {})
         time_attrs.update(
-            {"data-target": "calendar.timeInput", "placeholder": _("Time")}
+            {
+                "data-action": "click->time-selector#open",
+                "data-target": "time-selector.timeInput",
+                "placeholder": _("Time"),
+            }
         )
         super().__init__(
             date_attrs=date_attrs,
