@@ -4,11 +4,23 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block subtitle %} | {% trans "Likes" %} | {% block likes_subtitle %}{% endblock %}{% endblock %}
+{% block subtitle %} | {% trans "Favorites" %} | {% block likes_subtitle %}{% endblock %}{% endblock %}
 
 {% block content %}
 
-<h3>{% trans "Likes" %}</h3>
+<h3>{% trans "Favorites" %}</h3>
+
+<div class="toast text-center my-2 d-hide"
+     data-controller="cookie-notice"
+     data-cookie-notice-name="favorites">
+  <button class="btn btn-clear float-right"
+          data-action="cookie-notice#accept"></button>
+  {% blocktrans %}
+  These are all your liked activities and comments. Click the "Like"
+  button next to an activity or comment to add to your Favorites.
+  {% endblocktrans %}
+</div>
+
 <div class="divider"></div>
 
 <ul class="tab tab-block">
