@@ -90,6 +90,7 @@
   .form-select {
     background-color: $darkmode-darker;
     color: $darkmode-text;
+    border-color: $gray-color-dark;
 
     &::placeholder {
       background-color: $darkmode-darker;
