@@ -573,6 +573,13 @@ def get_activity_models_dict():
     return {model._meta.model_name: model for model in get_activity_models()}
 
 
+def get_activity_model(object_type):
+    """
+    Looks up activity Model for object type string e.g. "post".
+    """
+    return get_activity_models_dict()[object_type]
+
+
 def get_combined_activity_queryset(fn, all=False):
     """
     Creates a combined UNION queryset of all Activity subclasses.
@@ -586,19 +593,6 @@ def get_combined_activity_queryset(fn, all=False):
     """
     querysets = [fn(model) for model in get_activity_models()]
     return querysets[0].union(*querysets[1:], all=all)
-
-
-def get_combined_activity_queryset_pk_and_model(fn, all=False):
-    """
-    Returns a list of tuples of (pk, model_class).
-    """
-    rows = get_combined_activity_queryset(
-        lambda model: fn(model).with_object_type().values("pk", "object_type"), all=all,
-    )
-
-    models_dict = get_activity_models_dict()
-
-    return [(row["pk"], models_dict[row["object_type"]]) for row in rows]
 
 
 def get_combined_activity_queryset_count(fn):

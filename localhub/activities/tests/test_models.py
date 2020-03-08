@@ -19,10 +19,11 @@ from localhub.posts.models import Post
 from localhub.users.factories import UserFactory
 
 from ..models import (
+    get_activity_model,
     get_activity_models,
+    get_activity_models_dict,
     get_combined_activity_queryset,
     get_combined_activity_queryset_count,
-    get_combined_activity_queryset_pk_and_model,
 )
 
 pytestmark = pytest.mark.django_db
@@ -381,6 +382,22 @@ class TestGetActivityModels:
         assert Photo in models
         assert Post in models
 
+    def test_get_activity_models_dict(self):
+        d = get_activity_models_dict()
+        assert d == {
+            "event": Event,
+            "poll": Poll,
+            "photo": Photo,
+            "post": Post,
+        }
+
+    def test_get_activity_model(self):
+        assert get_activity_model("post") == Post
+
+    def test_get_activity_model_if_invalid(self):
+        with pytest.raises(KeyError):
+            get_activity_model("something")
+
 
 class TestGetCombinedActivityQueryset:
     def test_get_combined_activity_queryset(self):
@@ -392,21 +409,6 @@ class TestGetCombinedActivityQueryset:
         )
 
         assert len(qs) == 2
-
-
-class TestGetCombinedActivityQuerysetPkAndModel:
-    def test_get_combined_activity_queryset_pk_and_model(self):
-        post = PostFactory(title="test post")
-        EventFactory()
-
-        rows = get_combined_activity_queryset_pk_and_model(
-            lambda model: model.objects.filter(title="test post")
-        )
-
-        assert len(rows) == 1
-        pk, model = rows[0]
-        assert pk == post.id
-        assert model == Post
 
 
 class TestGetCombinedActivityQuerysetCount:

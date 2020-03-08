@@ -9,8 +9,9 @@ from localhub.users.utils import linkify_mentions
 from localhub.utils.urls import is_https
 
 from ..models import (
+    get_activity_model,
+    get_combined_activity_queryset,
     get_combined_activity_queryset_count,
-    get_combined_activity_queryset_pk_and_model,
 )
 from ..oembed import bootstrap_oembed
 from ..utils import linkify_hashtags
@@ -29,21 +30,24 @@ def get_pinned_activity(user, community):
     if user.is_anonymous or not community.active:
         return None
 
-    result = get_combined_activity_queryset_pk_and_model(
-        lambda model: model.objects.for_community(community)
-        .published()
-        .exclude_blocked(user)
-        .filter(is_pinned=True)
-    )
-    print("result", result)
-
-    if not result:
+    try:
+        pk, object_type = get_combined_activity_queryset(
+            lambda model: model.objects.for_community(community)
+            .published()
+            .exclude_blocked(user)
+            .filter(is_pinned=True)
+            .with_object_type()
+            .values_list("pk", "object_type")
+        ).first()
+    except TypeError:
         return None
 
-    pk, model = result[0]
-
     return (
-        model.objects.select_related("owner").with_object_type().filter(pk=pk).first()
+        get_activity_model(object_type)
+        .objects.select_related("owner")
+        .with_object_type()
+        .filter(pk=pk)
+        .first()
     )
 
 
