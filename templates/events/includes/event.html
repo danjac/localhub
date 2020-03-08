@@ -69,12 +69,11 @@
 {% endblock content %}
 
 {% block actions %}
+{{ block.super }}
 <li class="menu-item">
   <a href="{% url 'events:download' object.id %}"
-     title="{% trans 'Download .ics calendar file' %}"
      download>
-    {% trans "Download" %}
+    {% trans 'Download iCalendar File' %}
   </a>
 </li>
-{{ block.super }}
 {% endblock actions %}
