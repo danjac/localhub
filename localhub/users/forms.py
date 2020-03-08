@@ -28,17 +28,17 @@ class UserForm(forms.ModelForm):
         fields = (
             "name",
             "avatar",
-            "language",
+            # "language",
             "show_sensitive_content",
             "show_embedded_content",
-            "home_page_filters",
+            "activity_stream_filters",
             "notification_preferences",
             "default_timezone",
             "bio",
         )
         widgets = {
             "notification_preferences": forms.CheckboxSelectMultiple,
-            "home_page_filters": forms.CheckboxSelectMultiple,
+            "activity_stream_filters": forms.CheckboxSelectMultiple,
             "avatar": ClearableImageInput,
         }
         help_texts = {

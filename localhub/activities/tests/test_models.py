@@ -149,7 +149,7 @@ class TestActivityManager:
 
         assert Post.objects.following_tags(AnonymousUser()).count() == 3
 
-    def test_following_if_no_preferences(self, user):
+    def test_with_activity_stream_filters_if_none_set(self, user):
 
         PostFactory(owner=user)
 
@@ -161,10 +161,10 @@ class TestActivityManager:
 
         PostFactory()
 
-        assert Post.objects.following(user).count() == 4
-        assert Post.objects.following(AnonymousUser()).count() == 4
+        assert Post.objects.with_activity_stream_filters(user).count() == 4
+        assert Post.objects.with_activity_stream_filters(AnonymousUser()).count() == 4
 
-    def test_following_users_only(self, user):
+    def test_with_activity_stream_filters_if_following_users_only(self, user):
 
         my_post = PostFactory(owner=user)
 
@@ -176,17 +176,17 @@ class TestActivityManager:
 
         PostFactory()
 
-        user.home_page_filters = ["users"]
+        user.activity_stream_filters = ["users"]
 
-        posts = Post.objects.following(user)
+        posts = Post.objects.with_activity_stream_filters(user)
 
         assert len(posts) == 2
         assert my_post in posts
         assert first_post in posts
 
-        assert Post.objects.following(AnonymousUser()).count() == 4
+        assert Post.objects.with_activity_stream_filters(AnonymousUser()).count() == 4
 
-    def test_following_tags_only(self, user):
+    def test_with_activity_stream_filters_if_following_tags_only(self, user):
 
         my_post = PostFactory(owner=user)
 
@@ -199,16 +199,16 @@ class TestActivityManager:
 
         PostFactory()
 
-        user.home_page_filters = ["tags"]
+        user.activity_stream_filters = ["tags"]
 
-        posts = Post.objects.following(user)
+        posts = Post.objects.with_activity_stream_filters(user)
         assert len(posts) == 2
         assert my_post in posts
         assert second_post in posts
 
-        assert Post.objects.following(AnonymousUser()).count() == 4
+        assert Post.objects.with_activity_stream_filters(AnonymousUser()).count() == 4
 
-    def test_following_users_and_tags(self, user):
+    def test_with_activity_stream_filters_if_following_users_and_tags(self, user):
 
         first_post = PostFactory()
         user.following.add(first_post.owner)
@@ -219,9 +219,9 @@ class TestActivityManager:
 
         PostFactory()
 
-        user.home_page_filters = ["tags", "users"]
+        user.activity_stream_filters = ["tags", "users"]
 
-        posts = Post.objects.following(user).all()
+        posts = Post.objects.with_activity_stream_filters(user).all()
         assert len(posts) == 2
 
         assert first_post in posts

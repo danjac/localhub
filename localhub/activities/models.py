@@ -156,20 +156,20 @@ class ActivityQuerySet(
             return self
         return self.filter(owner=user) | self.filter(tags__in=user.following_tags.all())
 
-    def following(self, user):
+    def with_activity_stream_filters(self, user):
         """
         Wraps the methods `following_users` and `following tags`.
         """
 
-        if user.is_anonymous or not user.home_page_filters:
+        if user.is_anonymous or not user.activity_stream_filters:
             return self
 
         qs = self.none()
 
-        if "users" in user.home_page_filters:
+        if "users" in user.activity_stream_filters:
             qs = qs | self.following_users(user)
 
-        if "tags" in user.home_page_filters:
+        if "tags" in user.activity_stream_filters:
             qs = qs | self.following_tags(user)
 
         return qs

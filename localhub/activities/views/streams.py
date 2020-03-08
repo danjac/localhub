@@ -59,8 +59,8 @@ class StreamView(BaseStreamView):
         return (
             super()
             .filter_queryset(queryset)
-            .following(self.request.user)
             .published()
+            .with_activity_stream_filters(self.request.user)
             .exclude_blocked(self.request.user)
         )
 

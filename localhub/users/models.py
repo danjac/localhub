@@ -108,9 +108,9 @@ class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
 
 class User(AbstractUser):
 
-    HOME_PAGE_FILTERS = Choices(
-        ("users", _("Limited to just content from people I'm following")),
-        ("tags", _("Limited to just tags I'm following")),
+    ACTIVITY_STREAM_FILTERS = Choices(
+        ("users", _("Limited to only content posted by people I'm following")),
+        ("tags", _("Limited to only content containing tags I'm following")),
     )
 
     NOTIFICATION_PREFERENCES = Choices(
@@ -165,11 +165,11 @@ class User(AbstractUser):
 
     default_timezone = TimeZoneField(default=settings.TIME_ZONE)
 
-    home_page_filters = ChoiceArrayField(
-        models.CharField(max_length=12, choices=HOME_PAGE_FILTERS),
+    activity_stream_filters = ChoiceArrayField(
+        models.CharField(max_length=12, choices=ACTIVITY_STREAM_FILTERS),
         default=list,
         blank=True,
-        verbose_name=_("Stream Filters"),
+        verbose_name=_("Activity Stream Filters"),
     )
 
     show_sensitive_content = models.BooleanField(default=False)
