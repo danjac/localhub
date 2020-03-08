@@ -27,6 +27,9 @@ export default class extends Controller {
             this.timeInputTarget.value || this.data.get('default') || '9:00'
         ).split(':').map(value => parseInt(value, 10));
 
+        this.clearSelect(this.hourTarget);
+        this.clearSelect(this.minuteTarget);
+
         // hours
         for (let hour = 0; hour < 24; ++hour) {
             this.createOption(
@@ -55,6 +58,12 @@ export default class extends Controller {
             option.setAttribute("selected", true);
         }
         select.append(option);
+    }
+
+    clearSelect(select) {
+        while (select.firstChild) {
+            select.removeChild(select.firstChild);
+        }
     }
 
     pad(n, width) {
