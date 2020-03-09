@@ -19,7 +19,7 @@ from localhub.communities.views import CommunityRequiredMixin
 from localhub.views import SearchMixin
 
 from ..models import get_activity_models
-from .streams import BaseStreamView
+from .streams import BaseActivityStreamView
 
 
 class TagQuerySetMixin(CommunityRequiredMixin):
@@ -87,7 +87,7 @@ class TagAutocompleteListView(BaseTagListView):
 tag_autocomplete_list_view = TagAutocompleteListView.as_view()
 
 
-class TagDetailView(BaseStreamView):
+class TagDetailView(BaseActivityStreamView):
     template_name = "activities/tags/tag_detail.html"
 
     @cached_property

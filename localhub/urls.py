@@ -7,6 +7,8 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
 
+from localhub.activities.views.streams import activity_stream_view
+
 from localhub.communities.views import (
     community_list_view,
     community_not_found_view,
@@ -21,6 +23,7 @@ from localhub.users.views import (
 
 urlpatterns = [
     # Local
+    path("", view=activity_stream_view, name="activity_stream"),
     path("", include("localhub.activities.urls")),
     path("comments/", include("localhub.comments.urls")),
     path("events/", include("localhub.events.urls")),

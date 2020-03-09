@@ -17,7 +17,7 @@ from django.views.generic import View
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView, GenericModelView, ListView, UpdateView
 
-from localhub.activities.views.streams import BaseStreamView
+from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.models import Comment
 from localhub.comments.views import BaseCommentListView
 from localhub.communities.models import Membership
@@ -281,7 +281,7 @@ class MemberListView(SearchMixin, BaseUserListView):
 member_list_view = MemberListView.as_view()
 
 
-class UserStreamView(SingleUserMixin, BaseStreamView):
+class UserStreamView(SingleUserMixin, BaseActivityStreamView):
 
     active_tab = "posts"
     template_name = "users/activities.html"

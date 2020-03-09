@@ -26,7 +26,7 @@ from localhub.views import SearchMixin
 from ..models import get_activity_models, unionize_querysets
 
 
-class BaseStreamView(CommunityRequiredMixin, TemplateView):
+class BaseActivityStreamView(CommunityRequiredMixin, TemplateView):
     """
     Pattern adapted from:
     https://simonwillison.net/2018/Mar/25/combined-recent-additions/
@@ -151,7 +151,11 @@ class BaseStreamView(CommunityRequiredMixin, TemplateView):
         return data
 
 
-class StreamView(BaseStreamView):
+class ActivityStreamView(BaseActivityStreamView):
+    """
+    Default "Home Page" of community.
+    """
+
     template_name = "activities/stream.html"
 
     def filter_queryset(self, queryset):
@@ -203,10 +207,10 @@ class StreamView(BaseStreamView):
         return data
 
 
-stream_view = StreamView.as_view()
+activity_stream_view = ActivityStreamView.as_view()
 
 
-class TimelineView(YearMixin, MonthMixin, DateMixin, BaseStreamView):
+class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
     template_name = "activities/timeline.html"
     paginate_by = settings.DEFAULT_PAGE_SIZE * 2
     month_format = "%B"
@@ -329,7 +333,7 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseStreamView):
 timeline_view = TimelineView.as_view()
 
 
-class SearchView(SearchMixin, BaseStreamView):
+class SearchView(SearchMixin, BaseActivityStreamView):
     template_name = "activities/search.html"
     search_optional = False
 
@@ -351,7 +355,7 @@ class SearchView(SearchMixin, BaseStreamView):
 search_view = SearchView.as_view()
 
 
-class DraftsView(BaseStreamView):
+class DraftsView(BaseActivityStreamView):
     """
     Shows draft posts belonging to this user.
     """

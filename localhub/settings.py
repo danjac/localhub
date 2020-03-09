@@ -102,7 +102,7 @@ class Base(Configuration):
 
     DEFAULT_PAGE_SIZE = 12
 
-    HOME_PAGE_URL = reverse_lazy("activities:stream")
+    HOME_PAGE_URL = reverse_lazy("activity_stream")
 
     OPENGRAPH_PROXY_URL = values.Value()
 

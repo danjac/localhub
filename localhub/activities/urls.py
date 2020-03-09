@@ -8,7 +8,6 @@ from .views import streams, tags
 app_name = "activities"
 
 urlpatterns = [
-    path("", streams.stream_view, name="stream"),
     path("drafts/", streams.drafts_view, name="drafts"),
     path("search/", streams.search_view, name="search"),
     path("timeline/", streams.timeline_view, name="timeline"),

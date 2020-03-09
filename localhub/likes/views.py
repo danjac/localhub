@@ -1,11 +1,11 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from localhub.activities.views.streams import BaseStreamView
+from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views import BaseCommentListView
 
 
-class LikedStreamView(BaseStreamView):
+class LikedStreamView(BaseActivityStreamView):
     template_name = "likes/activities.html"
 
     def get_count_queryset_for_model(self, model):
