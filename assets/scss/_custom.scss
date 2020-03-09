@@ -237,6 +237,12 @@ table {
   }
 }
 
+.tab.tab-block {
+  @media (max-width: $size-md) {
+    display: block;
+  }
+}
+
 .timesince {
   color: $gray-color-dark;
 }
