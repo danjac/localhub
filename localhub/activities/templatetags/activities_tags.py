@@ -10,8 +10,8 @@ from localhub.utils.urls import is_https
 
 from ..models import (
     get_activity_model,
-    get_combined_activity_queryset,
-    get_combined_activity_queryset_count,
+    get_unionized_activity_queryset,
+    get_unionized_activity_queryset_count,
 )
 from ..oembed import bootstrap_oembed
 from ..utils import linkify_hashtags
@@ -31,7 +31,7 @@ def get_pinned_activity(user, community):
         return None
 
     try:
-        pk, object_type = get_combined_activity_queryset(
+        pk, object_type = get_unionized_activity_queryset(
             lambda model: model.objects.for_community(community)
             .published()
             .exclude_blocked(user)
@@ -55,7 +55,7 @@ def get_pinned_activity(user, community):
 def get_draft_count(user, community):
     if user.is_anonymous or not community.active:
         return 0
-    return get_combined_activity_queryset_count(
+    return get_unionized_activity_queryset_count(
         lambda model: model.objects.for_community(community).drafts(user).only("pk")
     )
 
@@ -65,7 +65,7 @@ def get_external_draft_count(user, community):
     if user.is_anonymous or not community.active:
         return 0
 
-    return get_combined_activity_queryset_count(
+    return get_unionized_activity_queryset_count(
         lambda model: model.objects.filter(
             community__active=True,
             community__membership__active=True,

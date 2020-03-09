@@ -22,8 +22,8 @@ from ..models import (
     get_activity_model,
     get_activity_models,
     get_activity_models_dict,
-    get_combined_activity_queryset,
-    get_combined_activity_queryset_count,
+    get_unionized_activity_queryset,
+    get_unionized_activity_queryset_count,
 )
 
 pytestmark = pytest.mark.django_db
@@ -399,24 +399,26 @@ class TestGetActivityModels:
             get_activity_model("something")
 
 
-class TestGetCombinedActivityQueryset:
-    def test_get_combined_activity_queryset(self):
+class TestGetUnionizedActivityQueryset:
+    def test_get_unionized_activity_queryset(self):
         PostFactory()
         EventFactory()
 
-        qs = get_combined_activity_queryset(
+        qs = get_unionized_activity_queryset(
             lambda model: model.objects.only("pk", "title")
         )
 
         assert len(qs) == 2
 
 
-class TestGetCombinedActivityQuerysetCount:
-    def test_get_combined_activity_queryset_count(self):
+class TestGetUnionizedActivityQuerysetCount:
+    def test_get_unionized_activity_queryset_count(self):
         PostFactory()
         EventFactory()
 
         assert (
-            get_combined_activity_queryset_count(lambda model: model.objects.only("pk"))
+            get_unionized_activity_queryset_count(
+                lambda model: model.objects.only("pk")
+            )
             == 2
         )

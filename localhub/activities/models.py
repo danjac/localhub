@@ -580,7 +580,11 @@ def get_activity_model(object_type):
     return get_activity_models_dict()[object_type]
 
 
-def get_combined_activity_queryset(fn, all=False):
+def unionize_querysets(querysets, all=False):
+    return querysets[0].union(*querysets[1:], all=all)
+
+
+def get_unionized_activity_queryset(fn, all=False):
     """
     Creates a combined UNION queryset of all Activity subclasses.
 
@@ -589,11 +593,13 @@ def get_combined_activity_queryset(fn, all=False):
 
     Example:
 
-    get_combined_activity_queryset(lambda model: model.objects.only("pk", "title"))
+    get_unionized_activity_queryset(
+        lambda model: model.objects.only("pk", "title")
+    )
     """
     querysets = [fn(model) for model in get_activity_models()]
-    return querysets[0].union(*querysets[1:], all=all)
+    return unionize_querysets(querysets, all)
 
 
-def get_combined_activity_queryset_count(fn):
-    return get_combined_activity_queryset(fn, all=True).count()
+def get_unionized_activity_queryset_count(fn):
+    return get_unionized_activity_queryset(fn, all=True).count()

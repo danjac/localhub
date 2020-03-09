@@ -23,7 +23,7 @@ from localhub.pagination import PresetCountPaginator
 from localhub.private_messages.models import Message
 from localhub.views import SearchMixin
 
-from ..models import get_activity_models
+from ..models import get_activity_models, unionize_querysets
 
 
 class BaseStreamView(CommunityRequiredMixin, TemplateView):
@@ -84,9 +84,6 @@ class BaseStreamView(CommunityRequiredMixin, TemplateView):
             for queryset in self.get_querysets()
         }
 
-    def unionize_querysets(self, querysets, all=False):
-        return querysets[0].union(*querysets[1:], all=all)
-
     def get_unionized_queryset(self, queryset_dict):
         values = ["pk", "object_type"]
 
@@ -96,7 +93,7 @@ class BaseStreamView(CommunityRequiredMixin, TemplateView):
         if ordering:
             values += [field.lstrip("-") for field in ordering]
 
-        qs = self.unionize_querysets(
+        qs = unionize_querysets(
             [qs.with_object_type().values(*values) for key, qs in queryset_dict.items()]
         )
 
@@ -106,7 +103,7 @@ class BaseStreamView(CommunityRequiredMixin, TemplateView):
         return qs
 
     def get_count(self):
-        return self.unionize_querysets(
+        return unionize_querysets(
             [qs.only("pk") for qs in self.get_count_querysets()], all=True
         ).count()
 
