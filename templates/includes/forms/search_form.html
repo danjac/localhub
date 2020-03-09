@@ -37,15 +37,15 @@
             data-action="search#select">
       <option value="">{% trans "Search in..." %}</option>
       <option value="{% url 'activities:search' %}">{% trans "Activity Stream" %}</option>
+      <option value="{% url 'private_messages:inbox' %}">{% trans "Direct Messages - Inbox" %}</option>
+      <option value="{% url 'private_messages:outbox' %}">{% trans "Direct Messages - Outbox" %}</option>
+      <option value="{% url 'comments:list' %}">{% trans "Comments" %}</option>
+      <option value="{% url 'users:member_list' %}">{% trans "Members" %}</option>
       <option value="{% url 'posts:list' %}">{% trans "Posts" %}</option>
       <option value="{% url 'events:list' %}">{% trans "Events" %}</option>
       <option value="{% url 'photos:list' %}">{% trans "Photos" %}</option>
       <option value="{% url 'polls:list' %}">{% trans "Polls" %}</option>
       <option value="{% url 'activities:tag_list' %}">{% trans "Tags" %}</option>
-      <option value="{% url 'comments:list' %}">{% trans "Comments" %}</option>
-      <option value="{% url 'users:member_list' %}">{% trans "Members" %}</option>
-      <option value="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</option>
-      <option value="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</option>
     </select>
   </div>
   {% endif %}

@@ -109,8 +109,8 @@ class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
 class User(AbstractUser):
 
     ACTIVITY_STREAM_FILTERS = Choices(
-        ("users", _("Limited to only content posted by people I'm following")),
-        ("tags", _("Limited to only content containing tags I'm following")),
+        ("users", _("Limited to only content from people I'm following")),
+        ("tags", _("Limited to only tags I'm following")),
     )
 
     NOTIFICATION_PREFERENCES = Choices(
