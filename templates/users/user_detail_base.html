@@ -168,19 +168,19 @@
         data-controller="active-link"
         data-active-link-exact>
         <a data-target="active-link.match"
-           href="{% url 'users:activities' user_obj.username %}">{% trans "Activities" %}</a>
+           href="{% url 'users:activities' user_obj.username %}">{% trans "Activity Stream" %}</a>
+    </li>
+    <li class="tab-item"
+        data-controller="active-link"
+        data-active-link-exact>
+        <a data-target="active-link.match"
+           href="{% url 'users:messages' user_obj.username %}">{% trans "Direct Messages" %}</a>
     </li>
     <li class="tab-item"
         data-controller="active-link"
         data-active-link-exact>
         <a data-target="active-link.match"
            href="{% url 'users:comments' user_obj.username %}">{% trans "Comments" %}</a>
-    </li>
-    <li class="tab-item"
-        data-controller="active-link"
-        data-active-link-exact>
-        <a data-target="active-link.match"
-           href="{% url 'users:messages' user_obj.username %}">{% trans "Messages" %}</a>
     </li>
 </ul>
 {% block user_content %}{% endblock %}
