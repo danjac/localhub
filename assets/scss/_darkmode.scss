@@ -140,7 +140,9 @@
         color: $darkmode-link;
 
         &.active,
+        &:active,
         &:hover,
+        &:focus,
         &:visited {
           background-color: $darkmode-darker;
         }
