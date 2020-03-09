@@ -25,37 +25,37 @@
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
-       href="{% url 'private_messages:inbox' %}">
-      <span {% if unread_messages_count %}class="badge"
-            id="sidebar-messages-counter"
-            data-badge="{{ unread_messages_count }}"
-            {% endif %}>
-        {% trans "Direct Messages" %}
-      </span>
+       href="{% url 'private_messages:inbox' %}"
+       {% if unread_messages_count %}
+       class="badge"
+       id="sidebar-messages-counter"
+       data-badge="{{ unread_messages_count }}"
+       {% endif %}>
+      {% trans "Direct Messages" %}
     </a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
-       href="{% url 'notifications:list' %}">
-      <span {% if unread_notifications_count %}class="badge"
-            id="sidebar-notifications-counter"
-            data-badge="{{ unread_notifications_count }}"
-            {% endif %}>
-        {% trans "Notifications" %}
-      </span>
+       href="{% url 'notifications:list' %}"
+       {% if unread_notifications_count %}
+       class="badge"
+       id="sidebar-notifications-counter"
+       data-badge="{{ unread_notifications_count }}"
+       {% endif %}>
+      {% trans "Notifications" %}
     </a>
   </li>
   {% if communities_count > 1 %}
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
-       href="{% url 'community_list' %}">
-      {% with total_external_notifications=unread_external_notifications_count|add:unread_external_messages_count|add:pending_external_join_requests_count|add:external_drafts_count|add:external_flags_count %}
-      <span {% if total_external_notifications %}class="badge"
-            data-badge="{{ total_external_notifications }}"
-            {% endif %}>
-        {% trans "Community Hub" %}
-      </span>
+       href="{% url 'community_list' %}"
+       {% with total_external_notifications=unread_external_notifications_count|add:unread_external_messages_count|add:pending_external_join_requests_count|add:external_drafts_count|add:external_flags_count %}
+       {% if total_external_notifications %}
+       class="badge"
+       data-badge="{{ total_external_notifications }}"
+       {% endif %}>
+      {% trans "Community Hub" %}
       {% endwith %}
     </a>
   </li>
@@ -69,9 +69,9 @@
   {% if drafts_count %}
   <li class="menu-item">
     <a data-controller="active-link"
-       href="{% url 'activities:drafts' %}">
-      <span class="badge"
-            data-badge="{{ drafts_count }}">{% trans "Drafts" %}</span>
+       href="{% url 'activities:drafts' %}"
+       class="badge"
+       data-badge="{{ drafts_count }}">{% trans "Drafts" %}
     </a>
   </li>
   {% endif %}
@@ -185,11 +185,10 @@
   </li>
   {% if flags_count %}
   <li class="menu-item">
-    <a href="{% url 'flags:list' %}">
-      <span class="badge"
-            data-badge="{{ flags_count }}">
-        {% trans "Flagged" %}
-      </span>
+    <a href="{% url 'flags:list' %}"
+       class="badge"
+       data-badge="{{ flags_count }}">
+      {% trans "Flagged" %}
     </a>
   </li>
   {% endif %}
@@ -242,12 +241,12 @@
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
-       href="{% url 'join_requests:list' %}">
-      <span {% if pending_join_requests_count %}class="badge"
-            data-badge="{{ pending_join_requests_count }}"
-            {% endif %}>
-        {% trans "Join Requests" %}
-      </span>
+       href="{% url 'join_requests:list' %}"
+       {% if pending_join_requests_count %}
+       class="badge"
+       data-badge="{{ pending_join_requests_count }}"
+       {% endif %}>
+      {% trans "Join Requests" %}
     </a>
   </li>
   {% endif %}
@@ -268,13 +267,13 @@
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
-       href="{% url 'community_list' %}">
-      {% with total_external_notifications=unread_external_notifications_count|add:unread_external_messages_count|add:pending_external_join_requests_count|add:external_drafts_count|add:external_flags_count %}
-      <span {% if total_external_notifications %}class="badge"
-            data-badge="{{ total_external_notifications }}"
-            {% endif %}>
-        {% trans "Community Hub" %}
-      </span>
+       href="{% url 'community_list' %}"
+       {% with total_external_notifications=unread_external_notifications_count|add:unread_external_messages_count|add:pending_external_join_requests_count|add:external_drafts_count|add:external_flags_count %}
+       {% if total_external_notifications %}
+       class="badge"
+       data-badge="{{ total_external_notifications }}"
+       {% endif %}>
+      {% trans "Community Hub" %}
       {% endwith %}
     </a>
   </li>

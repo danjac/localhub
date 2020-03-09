@@ -35,6 +35,9 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
     def for_sender_or_recipient(self, user):
         return self.for_sender(user) | self.for_recipient(user)
 
+    def from_sender_to_recipient(self, sender, recipient):
+        return self.for_sender(sender).for_recipient(recipient)
+
     def between(self, current_user, other_user):
         """
         Return all messages exchanged between two users.

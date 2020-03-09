@@ -133,6 +133,13 @@ class TestMessageManager:
         MessageFactory(recipient=user)
         assert Message.objects.for_recipient(user).exists()
 
+    def test_from_sender_to_recipient(self, user):
+        message = MessageFactory(recipient=user)
+        assert Message.objects.from_sender_to_recipient(message.sender, user).exists()
+        assert not Message.objects.from_sender_to_recipient(
+            user, message.recipient
+        ).exists()
+
     def test_for_sender_if_sender_deleted(self, user):
         MessageFactory(sender=user, sender_deleted=timezone.now())
         assert not Message.objects.for_sender(user).exists()

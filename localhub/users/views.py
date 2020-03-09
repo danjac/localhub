@@ -90,6 +90,17 @@ class SingleUserMixin(BaseUserQuerySetMixin):
             return False
         return self.request.user.blocked.filter(pk=self.user_obj.id).exists()
 
+    @cached_property
+    def unread_messages(self):
+        if self.is_current_user:
+            return 0
+
+        return (
+            Message.objects.from_sender_to_recipient(self.user_obj, self.request.user)
+            .unread()
+            .count()
+        )
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data.update(
@@ -100,6 +111,7 @@ class SingleUserMixin(BaseUserQuerySetMixin):
                 "is_blocking": self.is_blocking,
                 "user_obj": self.user_obj,
                 "membership": self.membership,
+                "unread_messages": self.unread_messages,
             }
         )
         return data
