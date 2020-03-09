@@ -146,6 +146,13 @@
         &:visited {
           background-color: $darkmode-darker;
         }
+
+        &.active,
+        &:active,
+        &:hover,
+        &:focus {
+          color: $gray-color;
+        }
       }
     }
   }
