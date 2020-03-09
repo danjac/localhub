@@ -36,6 +36,24 @@
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
+       data-active-link-exact
+       href="{% url 'activities:timeline' %}">{% trans "Timeline" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       data-active-link-exact
+       href="{% url 'comments:list' %}">{% trans "Comments" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'likes:activities' %}">
+      {% trans "Favorites" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
        href="{% url 'notifications:list' %}"
        {% if unread_notifications_count %}
        class="badge"
@@ -143,24 +161,6 @@
 <ul class="menu mt-2">
   <li class="divider"
       data-content="{% trans 'Content' %}"></li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       data-active-link-exact
-       href="{% url 'activities:timeline' %}">{% trans "Timeline" %}
-    </a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       data-active-link-exact
-       href="{% url 'comments:list' %}">{% trans "Comments" %}
-    </a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'likes:activities' %}">
-      {% trans "Favorites" %}
-    </a>
-  </li>
   <li class="menu-item">
     <a data-controller="active-link"
        href="{% url 'activities:tag_list' %}">
