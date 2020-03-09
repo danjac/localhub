@@ -5,9 +5,33 @@
 
 {% load i18n %}
 
+{% block form_fields %}
+{% with tags=community.get_content_warning_tags|safeseq %}
+{% if tags %}
+<div class="toast my-2">
+  {% blocktrans with first_tag=tags|first count counter=tags|length %}
+  If you add the tag <b>#{{ first_tag }}</b>
+  {% plural %}
+  If you add the tags
+  {% endblocktrans %}
+
+  {% if tags|length > 1 %}
+  {% for tag in tags %}
+  {% if forloop.last %}{% trans "or" %}{% elif not forloop.first %}, {% endif %} <b>#{{ tag }}</b> {% endfor %}
+  {% endif %}
+
+  {% blocktrans %}to the title or description, the content will be
+  obscured by default in people's feeds.{% endblocktrans %}
+</div>
+{% endif %}
+{% endwith %}
+{{ block.super }}
+{% endblock form_fields %}
 {% block form_buttons %}
 {% if object.published %}
-<button type="submit" name="submit" class="btn btn-primary">
+<button type="submit"
+        name="submit"
+        class="btn btn-primary">
   {% trans "Update" %}
 </button>
 {% else %}
@@ -18,18 +42,16 @@
         data-controller="confirm"
         data-action="confirm#check form#submit"
         data-confirm-body="{% trans 'Are you sure you want to publish this draft?' %}"
-        {% endif %}
-        >
-        {% trans "Publish" %}
+        {% endif %}>
+  {% trans "Publish" %}
 </button>
-  <button type="submit"
-          name="save_as_draft"
-          value="true"
-          data-action="form#submit"
-          class="btn btn-secondary">
-    {% trans "Save Draft" %}
-  </button>
-  {% endif %}
+<button type="submit"
+        name="save_as_draft"
+        value="true"
+        data-action="form#submit"
+        class="btn btn-secondary">
+  {% trans "Save Draft" %}
+</button>
+{% endif %}
 
-  {% endblock form_buttons %}
-
+{% endblock form_buttons %}

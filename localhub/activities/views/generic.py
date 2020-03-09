@@ -8,6 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from django.utils.functional import cached_property
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import (
