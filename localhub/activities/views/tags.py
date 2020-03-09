@@ -79,7 +79,8 @@ class TagAutocompleteListView(BaseTagListView):
     exclude_unused_tags = True
 
     def get_queryset(self):
-        if not (search_term := self.request.GET.get("q", "").strip()):
+        search_term = self.request.GET.get("q", "").strip()
+        if not search_term:
             return Tag.objects.none()
         return super().get_queryset().filter(name__istartswith=search_term)
 

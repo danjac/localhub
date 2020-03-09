@@ -26,25 +26,27 @@ def send_user_notification(user, notification):
 
 
 def send_user_notification_push(user, notification):
-    with override(notification.recipient.language):
+    if notification.recipient.send_webpush_on_notification:
+        with override(notification.recipient.language):
 
-        send_push_notification(
-            notification.recipient,
-            notification.community,
-            head=NOTIFICATION_HEADERS[notification.verb],
-            body=NOTIFICATION_BODY[notification.verb] % {"user": user_display(user)},
-            url=notification.community.resolve_url(user.get_absolute_url()),
-        )
+            send_push_notification(
+                notification.recipient,
+                notification.community,
+                head=NOTIFICATION_HEADERS[notification.verb],
+                body=NOTIFICATION_BODY[notification.verb]
+                % {"user": user_display(user)},
+                url=notification.community.resolve_url(user.get_absolute_url()),
+            )
 
 
 def send_user_notification_email(user, notification):
-
-    with override(notification.recipient.language):
-        send_notification_email(
-            notification,
-            NOTIFICATION_HEADERS[notification.verb],
-            notification.community.resolve_url(user.get_absolute_url()),
-            "users/emails/notification.txt",
-            "users/emails/notification.html",
-            {"user": user},
-        )
+    if notification.recipient.send_email_on_notification:
+        with override(notification.recipient.language):
+            send_notification_email(
+                notification,
+                NOTIFICATION_HEADERS[notification.verb],
+                notification.community.resolve_url(user.get_absolute_url()),
+                "users/emails/notification.txt",
+                "users/emails/notification.html",
+                {"user": user},
+            )

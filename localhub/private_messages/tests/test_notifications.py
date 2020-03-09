@@ -12,9 +12,15 @@ pytestmark = pytest.mark.django_db
 
 
 class TestSendMessageEmail:
-    def test_send_notification(self, mailoutbox):
-        user = UserFactory(notification_preferences=["new_message"])
+    def test_send_if_enabled(self, mailoutbox):
+        user = UserFactory(send_email_on_message=True)
         message = MessageFactory(recipient=user)
         send_message_email(message)
         assert len(mailoutbox) == 1
         assert mailoutbox[0].to == [user.email]
+
+    def test_send_if_disabled(self, mailoutbox):
+        user = UserFactory(send_email_on_message=False)
+        message = MessageFactory(recipient=user)
+        send_message_email(message)
+        assert len(mailoutbox) == 0

@@ -33,32 +33,38 @@ def send_activity_notifications(activity, notification):
 
 
 def send_activity_notification_push(activity, notification):
-    with override(notification.recipient.language):
+    if notification.recipient.send_webpush_on_notification:
+        with override(notification.recipient.language):
 
-        send_push_notification(
-            notification.recipient,
-            notification.community,
-            head=get_notification_header(activity, notification),
-            body=force_text(activity),
-            url=activity.get_permalink(),
-        )
+            send_push_notification(
+                notification.recipient,
+                notification.community,
+                head=get_notification_header(activity, notification),
+                body=force_text(activity),
+                url=activity.get_permalink(),
+            )
 
 
 def send_activity_notification_email(activity, notification):
-    with override(notification.recipient.language):
-        activity_name = activity._meta.verbose_name
+    if notification.recipient.send_email_on_notification:
+        with override(notification.recipient.language):
+            activity_name = activity._meta.verbose_name
 
-        plain_template_name = f"activities/emails/notifications/{notification.verb}.txt"
-        html_template_name = f"activities/emails/notifications/{notification.verb}.html"
+            plain_template_name = (
+                f"activities/emails/notifications/{notification.verb}.txt"
+            )
+            html_template_name = (
+                f"activities/emails/notifications/{notification.verb}.html"
+            )
 
-        send_notification_email(
-            notification,
-            get_notification_header(activity, notification),
-            activity.get_permalink(),
-            plain_template_name,
-            html_template_name,
-            {"activity_name": activity_name},
-        )
+            send_notification_email(
+                notification,
+                get_notification_header(activity, notification),
+                activity.get_permalink(),
+                plain_template_name,
+                html_template_name,
+                {"activity_name": activity_name},
+            )
 
 
 def get_notification_header(activity, notification):
@@ -70,7 +76,10 @@ def get_notification_header(activity, notification):
 
 def send_activity_deleted_email(activity):
 
-    if activity.owner.has_notification_pref("moderator_delete"):
+    if (
+        activity.owner.has_notification_pref("moderator_delete")
+        and activity.owner.send_email_on_notification
+    ):
         with override(activity.owner.language):
             activity_name = activity._meta.verbose_name
 

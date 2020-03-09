@@ -11,45 +11,46 @@ from localhub.users.utils import user_display
 
 
 def send_message_notifications(message):
-    if message.recipient.has_notification_pref("new_message"):
-        send_message_push(message)
-        send_message_email(message)
+    send_message_push(message)
+    send_message_email(message)
 
 
 def send_message_email(message):
 
-    with override(message.recipient.language):
+    if message.recipient.send_email_on_message:
+        with override(message.recipient.language):
 
-        context = {
-            "recipient": message.recipient,
-            "message": message,
-            "message_url": message.get_permalink(message.recipient),
-        }
+            context = {
+                "recipient": message.recipient,
+                "message": message,
+                "message_url": message.get_permalink(message.recipient),
+            }
 
-        if message.parent:
-            subject = _("Someone has replied to your message")
-        else:
-            subject = _("Someone has sent you a message")
+            if message.parent:
+                subject = _("Someone has replied to your message")
+            else:
+                subject = _("Someone has sent you a message")
 
-        send_mail(
-            f"{message.community.name} | {subject}",
-            render_to_string("private_messages/emails/message.txt", context),
-            message.community.resolve_email("no-reply"),
-            [message.recipient.email],
-            html_message=render_to_string(
-                "private_messages/emails/message.html", context
-            ),
-        )
+            send_mail(
+                f"{message.community.name} | {subject}",
+                render_to_string("private_messages/emails/message.txt", context),
+                message.community.resolve_email("no-reply"),
+                [message.recipient.email],
+                html_message=render_to_string(
+                    "private_messages/emails/message.html", context
+                ),
+            )
 
 
 def send_message_push(message):
-    with override(message.recipient.language):
+    if message.recipient.send_webpush_on_message:
+        with override(message.recipient.language):
 
-        send_push_notification(
-            message.recipient,
-            message.community,
-            head=_("%(sender)s has sent you a message")
-            % {"sender": user_display(message.sender)},
-            body=message.abbreviate(),
-            url=message.get_permalink(message.recipient),
-        )
+            send_push_notification(
+                message.recipient,
+                message.community,
+                head=_("%(sender)s has sent you a message")
+                % {"sender": user_display(message.sender)},
+                body=message.abbreviate(),
+                url=message.get_permalink(message.recipient),
+            )

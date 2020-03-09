@@ -114,7 +114,6 @@ class User(AbstractUser):
     )
 
     NOTIFICATION_PREFERENCES = Choices(
-        ("new_message", _("I have received a direct message")),
         ("new_follower", _("Someone has started following me")),
         ("new_member", _("Someone has joined a community I belong to")),
         ("new_comment", _("Someone has commented on one of my activities")),
@@ -157,10 +156,7 @@ class User(AbstractUser):
     avatar = ImageField(upload_to="avatars", null=True, blank=True)
 
     language = models.CharField(
-        max_length=6,
-        choices=settings.LANGUAGES,
-        default=settings.LANGUAGE_CODE,
-        help_text=_("Preferred language. User content will not be translated."),
+        max_length=6, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE,
     )
 
     default_timezone = TimeZoneField(default=settings.TIME_ZONE)
@@ -169,7 +165,6 @@ class User(AbstractUser):
         models.CharField(max_length=12, choices=ACTIVITY_STREAM_FILTERS),
         default=list,
         blank=True,
-        verbose_name=_("Activity Stream Filters"),
     )
 
     show_sensitive_content = models.BooleanField(default=False)
@@ -180,6 +175,16 @@ class User(AbstractUser):
         default=list,
         blank=True,
     )
+
+    send_email_on_message = models.BooleanField(default=True,)
+
+    send_email_on_notification = models.BooleanField(default=True,)
+
+    send_webpush_on_message = models.BooleanField(default=True,)
+
+    send_email_on_notification = models.BooleanField(default=True,)
+
+    send_webpush_on_notification = models.BooleanField(default=True,)
 
     following = models.ManyToManyField(
         "self", related_name="followers", blank=True, symmetrical=False

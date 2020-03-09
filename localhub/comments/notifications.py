@@ -41,35 +41,42 @@ def get_notification_header(notification: Notification):
 
 
 def send_comment_notification_push(comment, notification):
-    with override(notification.recipient.language):
-
-        send_push_notification(
-            notification.recipient,
-            notification.community,
-            head=get_notification_header(notification),
-            body=force_text(truncatechars(comment.content.plaintext(), 60)),
-            url=comment.get_permalink(),
-        )
+    if notification.recipient.send_webpush_on_notification:
+        with override(notification.recipient.language):
+            send_push_notification(
+                notification.recipient,
+                notification.community,
+                head=get_notification_header(notification),
+                body=force_text(truncatechars(comment.content.plaintext(), 60)),
+                url=comment.get_permalink(),
+            )
 
 
 def send_comment_notification_email(comment, notification):
+    if notification.recipient.send_email_on_notification:
+        with override(notification.recipient.language):
+            plain_template_name = (
+                f"comments/emails/notifications/{notification.verb}.txt"
+            )
+            html_template_name = (
+                f"comments/emails/notifications/{notification.verb}.html"
+            )
 
-    with override(notification.recipient.language):
-        plain_template_name = f"comments/emails/notifications/{notification.verb}.txt"
-        html_template_name = f"comments/emails/notifications/{notification.verb}.html"
-
-        send_notification_email(
-            notification,
-            get_notification_header(notification),
-            comment.get_permalink(),
-            plain_template_name,
-            html_template_name,
-            {"comment": comment},
-        )
+            send_notification_email(
+                notification,
+                get_notification_header(notification),
+                comment.get_permalink(),
+                plain_template_name,
+                html_template_name,
+                {"comment": comment},
+            )
 
 
 def send_comment_deleted_email(comment):
-    if comment.owner.has_notification_pref("moderator_delete"):
+    if (
+        comment.owner.has_notification_pref("moderator_delete")
+        and comment.owner.send_email_on_notification
+    ):
         with override(comment.owner.language):
             context = {"comment": comment}
             send_mail(
