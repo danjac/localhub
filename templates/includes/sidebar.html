@@ -127,6 +127,16 @@
 
 <ul class="menu mt-2">
   <li class="divider"
+      data-content="{% trans 'Settings' %}"></li>
+  <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
+  <li class="menu-item">
+    {% include "includes/mode_toggle.html" %}
+  </li>
+</ul>
+
+
+<ul class="menu mt-2">
+  <li class="divider"
       data-content="{% trans 'People' %}"></li>
   <li class="menu-item">
     <a data-controller="active-link"
@@ -192,15 +202,6 @@
     </a>
   </li>
   {% endif %}
-</ul>
-
-<ul class="menu mt-2">
-  <li class="divider"
-      data-content="{% trans 'Settings' %}"></li>
-  <li class="menu-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
-  <li class="menu-item">
-    {% include "includes/mode_toggle.html" %}
-  </li>
 </ul>
 
 {% if can_manage_community or community.terms or community.description %}
