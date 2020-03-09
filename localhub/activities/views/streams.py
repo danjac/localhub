@@ -1,6 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import collections
 import itertools
 
 from django.conf import settings
@@ -14,42 +15,143 @@ from django.views.generic.dates import (
     YearMixin,
     _date_from_string,
 )
+from vanilla import TemplateView
 
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.notifications.models import Notification
+from localhub.pagination import PresetCountPaginator
 from localhub.private_messages.models import Message
-from localhub.views import BaseMultipleQuerySetListView, SearchMixin
+from localhub.views import SearchMixin
 
 from ..models import get_activity_models
 
 
-class BaseStreamView(CommunityRequiredMixin, BaseMultipleQuerySetListView):
+class BaseStreamView(CommunityRequiredMixin, TemplateView):
+    """
+    Pattern adapted from:
+    https://simonwillison.net/2018/Mar/25/combined-recent-additions/
+    """
 
     allow_empty = True
     ordering = ("-published", "-created")
+
     paginate_by = settings.DEFAULT_PAGE_SIZE
+    paginator_class = PresetCountPaginator
+    page_kwarg = "page"
+
+    def get_ordering(self):
+        return self.ordering
 
     @cached_property
     def models(self):
         return get_activity_models()
 
     def filter_queryset(self, queryset):
+        """
+        Override this method for view-specific filtering
+        """
         return queryset.for_community(community=self.request.community)
 
+    def get_querysets(self):
+        return [
+            self.filter_queryset(self.get_queryset_for_model(model))
+            for model in self.models
+        ]
+
     def get_queryset_for_model(self, model):
-        return self.filter_queryset(
-            model.objects.for_activity_stream(self.request.user, self.request.community)
+        """
+        Include any annotations etc you need
+        """
+        return model.objects.for_activity_stream(
+            self.request.user, self.request.community
         )
 
     def get_count_queryset_for_model(self, model):
-        return self.filter_queryset(model.objects)
-
-    def get_querysets(self):
-        # get_activity_models
-        return [self.get_queryset_for_model(model) for model in self.models]
+        """
+        We do not usually need all the additional annotations etc for the count.
+        """
+        return model.objects
 
     def get_count_querysets(self):
-        return [self.get_count_queryset_for_model(model) for model in self.models]
+        return [
+            self.filter_queryset(self.get_count_queryset_for_model(model))
+            for model in self.models
+        ]
+
+    def get_queryset_dict(self):
+        return {
+            queryset.model._meta.model_name: queryset
+            for queryset in self.get_querysets()
+        }
+
+    def unionize_querysets(self, querysets, all=False):
+        return querysets[0].union(*querysets[1:], all=all)
+
+    def get_unionized_queryset(self, queryset_dict):
+        values = ["pk", "object_type"]
+
+        ordering = self.get_ordering()
+        if isinstance(ordering, str):
+            ordering = (ordering,)
+        if ordering:
+            values += [field.lstrip("-") for field in ordering]
+
+        qs = self.unionize_querysets(
+            [qs.with_object_type().values(*values) for key, qs in queryset_dict.items()]
+        )
+
+        if ordering:
+            qs = qs.order_by(*ordering)
+
+        return qs
+
+    def get_count(self):
+        return self.unionize_querysets(
+            [qs.only("pk") for qs in self.get_count_querysets()], all=True
+        ).count()
+
+    def load_objects(self, items, queryset_dict):
+        bulk_load = collections.defaultdict(set)
+
+        for item in items:
+            bulk_load[item["object_type"]].add(item["pk"])
+
+        fetched = {
+            (object_type, obj.pk): obj
+            for object_type, primary_keys in bulk_load.items()
+            for obj in queryset_dict[object_type].filter(pk__in=primary_keys)
+        }
+
+        for item in items:
+            item["object"] = fetched[(item["object_type"], item["pk"])]
+
+    def get_page(self):
+        queryset_dict = self.get_queryset_dict()
+        union_qs = self.get_unionized_queryset(queryset_dict)
+
+        page = self.paginator_class(
+            object_list=union_qs,
+            count=self.get_count(),
+            per_page=self.paginate_by,
+            allow_empty_first_page=self.allow_empty,
+        ).get_page(self.request.GET.get(self.page_kwarg, 1))
+
+        self.load_objects(page, queryset_dict)
+
+        return page
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        page = self.get_page()
+        data.update(
+            {
+                "page_obj": page,
+                "paginator": page.paginator,
+                "object_list": page.object_list,
+                "is_paginated": page.has_other_pages(),
+            }
+        )
+        return data
 
 
 class StreamView(BaseStreamView):
