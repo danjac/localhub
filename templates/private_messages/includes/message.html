@@ -8,10 +8,12 @@
      id="message-{{ message.id }}">
   <div class="card-header">
     <div class="card-title h6">
-      <div class="timesince">
-        {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url %}
+      {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url %}
+      <span class="timesince">
         {% trans "to" %}
-        {% include "users/includes/chip.html" with profile=message.recipient profile_url=recipient_url %}
+      </span>
+      {% include "users/includes/chip.html" with profile=message.recipient profile_url=recipient_url %}
+      <span class="timesince">
         {% blocktrans with created=message.created|timesince %}
         {{ created }} ago
         {% endblocktrans %}
@@ -26,10 +28,10 @@
            {% endif %}
            href="{{ parent_url }}">#{{ parent.id }}</a>
         {% endif %}
-        {% if is_recipient and not message.read %}
-        <div class="chip bg-primary">{% trans "New" %}</div>
-        {% endif %}
-      </div>
+      </span>
+      {% if is_recipient and not message.read %}
+      <div class="chip bg-primary">{% trans "New" %}</div>
+      {% endif %}
     </div>
   </div>
   <div class="card-body">
