@@ -32,10 +32,10 @@ class UserForm(forms.ModelForm):
             "avatar",
             # "language",
             "bio",
+            "send_email_notifications",
+            "activity_stream_filters",
             "show_sensitive_content",
             "show_embedded_content",
-            "activity_stream_filters",
-            "send_email_notifications",
         )
         widgets = {
             "notification_preferences": forms.CheckboxSelectMultiple,

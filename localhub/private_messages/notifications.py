@@ -19,7 +19,6 @@ def send_message_email(message):
 
     if message.recipient.send_email_notifications:
         with override(message.recipient.language):
-
             context = {
                 "recipient": message.recipient,
                 "message": message,
