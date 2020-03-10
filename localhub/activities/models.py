@@ -46,8 +46,6 @@ def get_activity_models_dict():
 def get_activity_model(object_type):
     """
     Looks up activity Model for object type string e.g. "post".
-
-    object_type can be a string e.g. "post" or QuerySet.
     """
     if isinstance(object_type, models.QuerySet):
         object_type = object_type.model._meta.model_name
