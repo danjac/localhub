@@ -73,7 +73,7 @@
 
       {% if is_detail and comment.edited %}
       <div class="info">
-        {% blocktrans with edited=comment.edited|timesince %}Updated {{ edited }} ago{% endblocktrans %}
+        {% blocktrans with edited=comment.edited|timesince %}Last edited {{ edited }} ago{% endblocktrans %}
         {% if comment.editor != comment.owner %}
         {% trans "by" %}
         {% include "users/includes/chip.html" with profile=comment.editor %}

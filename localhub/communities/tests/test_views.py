@@ -123,7 +123,7 @@ class TestCommunityUpdateView:
 
 class TestCommunityListView:
     def test_get_if_member(self, client, member):
-        batch = CommunityFactory.create_batch(3)
+        CommunityFactory.create_batch(3)
         # add a draft post
         PostFactory(published=None, community=member.community, owner=member.member)
         response = client.get(reverse("community_list"))
