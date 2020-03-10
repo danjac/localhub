@@ -171,7 +171,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
 
         return {
             community.id: len(
-                [draft for draft in drafts if draft.community_id == community.id]
+                [draft for draft in drafts if draft["community"] == community.id]
             )
             for community in communities
         }

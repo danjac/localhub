@@ -9,6 +9,8 @@ from django.http import Http404, HttpResponse
 from django.urls import reverse
 from django.views.generic import View
 
+from localhub.posts.factories import PostFactory
+
 from ..factories import CommunityFactory, MembershipFactory
 from ..models import Membership, RequestCommunity
 from ..views import CommunityRequiredMixin
@@ -121,9 +123,12 @@ class TestCommunityUpdateView:
 
 class TestCommunityListView:
     def test_get_if_member(self, client, member):
-        CommunityFactory.create_batch(3)
+        batch = CommunityFactory.create_batch(3)
+        # add a draft post
+        PostFactory(published=None, community=member.community, owner=member.member)
         response = client.get(reverse("community_list"))
         assert len(response.context["object_list"]) == 4
+        assert response.context["drafts_count"] == 1
 
     def test_get_if_not_member(self, client, login_user, community):
         CommunityFactory.create_batch(3)
