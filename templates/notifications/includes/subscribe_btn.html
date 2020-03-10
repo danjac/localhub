@@ -11,16 +11,14 @@
      data-notifications-unsubscribe-url="{% url 'notifications:unsubscribe' %}"
      {% if vapid_public_key %}
      data-notifications-vapid-public-key="{{ vapid_public_key }}"
-     {% endif %}
-     >
-     <a class="d-hide"
-        href="#"
-        data-target="notifications.subscribeBtn"
-        data-action="notifications#subscribe">{% trans "Enable browser notifications" %}</a>
-     <a class="d-hide"
-        href="#"
-        data-target="notifications.unsubscribeBtn"
-        data-action="notifications#unsubscribe">{% trans "Disable browser notifications" %}</a>
+     {% endif %}>
+   <a class="d-hide"
+      href="#"
+      data-target="notifications.subscribeBtn"
+      data-action="notifications#subscribe">{% trans "Enable browser push notifications" %}</a>
+   <a class="d-hide"
+      href="#"
+      data-target="notifications.unsubscribeBtn"
+      data-action="notifications#unsubscribe">{% trans "Disable browser push notifications" %}</a>
 </div>
 {% endif %}
-

@@ -14,7 +14,7 @@ pytestmark = pytest.mark.django_db
 class TestSendUserNotificationEmail:
     def test_send_notification(self, community, mailoutbox):
         follower = UserFactory()
-        followed = UserFactory(notification_preferences=["new_follower"])
+        followed = UserFactory()
 
         notification = Notification.objects.create(
             content_object=followed,

@@ -79,13 +79,11 @@ class Like(TimeStampedModel):
         indexes = [models.Index(fields=["content_type", "object_id"])]
 
     def notify(self):
-        if self.recipient.has_notification_pref("like"):
-            notification = Notification.objects.create(
-                content_object=self.content_object,
-                recipient=self.recipient,
-                actor=self.user,
-                community=self.community,
-                verb="like",
-            )
-            return [notification]
-        return []
+        notification = Notification.objects.create(
+            content_object=self.content_object,
+            recipient=self.recipient,
+            actor=self.user,
+            community=self.community,
+            verb="like",
+        )
+        return [notification]

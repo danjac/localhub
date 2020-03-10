@@ -210,17 +210,15 @@ class Comment(TimeStampedModel):
     def notify_mentioned(self, recipients):
         return [
             self.make_notification("mention", recipient)
-            for recipient in recipients.with_notification_prefs("mention")
-            .matches_usernames(self.content.extract_mentions())
-            .exclude(pk=self.owner_id)
+            for recipient in recipients.matches_usernames(
+                self.content.extract_mentions()
+            ).exclude(pk=self.owner_id)
         ]
 
     def notify_moderators(self):
         return [
             self.make_notification("moderator_review_request", recipient)
-            for recipient in self.community.get_moderators()
-            .with_notification_prefs("moderator_review_request")
-            .exclude(pk=self.owner_id)
+            for recipient in self.community.get_moderators().exclude(pk=self.owner_id)
         ]
 
     def get_notification_recipients(self):
@@ -233,19 +231,14 @@ class Comment(TimeStampedModel):
         notifications += self.notify_moderators()
 
         # notify the activity owner
-        if (
-            self.owner_id != self.content_object.owner_id
-            and self.content_object.owner.has_notification_pref("new_comment")
-        ):
+        if self.owner_id != self.content_object.owner_id:
             notifications += [
                 self.make_notification("new_comment", self.content_object.owner)
             ]
 
         # notify the person being replied to
 
-        if self.parent and self.parent.owner.has_notification_pref(
-            "replied_to_comment"
-        ):
+        if self.parent:
             notifications += [
                 self.make_notification("replied_to_comment", self.parent.owner)
             ]
@@ -254,7 +247,6 @@ class Comment(TimeStampedModel):
         # this comment owner and parent owner
         other_commentors = (
             recipients.filter(comment__in=self.content_object.get_comments())
-            .with_notification_prefs("new_sibling_comment")
             .exclude(pk__in=(self.owner_id, self.content_object.owner_id))
             .distinct()
         )
@@ -267,10 +259,7 @@ class Comment(TimeStampedModel):
         ]
         notifications += [
             self.make_notification("new_followed_user_comment", follower)
-            for follower in recipients.with_notification_prefs(
-                "new_followed_user_comment"
-            )
-            .filter(following=self.owner)
+            for follower in recipients.filter(following=self.owner)
             .exclude(pk__in=other_commentors)
             .distinct()
         ]
@@ -288,12 +277,7 @@ class Comment(TimeStampedModel):
         notifications += self.notify_mentioned(recipients)
         if self.editor == self.owner:
             notifications += self.notify_moderators()
-        if (
-            self.editor
-            and self.editor != self.owner
-            and self.owner in recipients
-            and self.owner.has_notification_pref("moderator_edit")
-        ):
+        if self.editor and self.editor != self.owner and self.owner in recipients:
             notifications += [
                 self.make_notification("moderator_edit", self.owner, self.editor)
             ]

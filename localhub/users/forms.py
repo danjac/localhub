@@ -35,11 +35,7 @@ class UserForm(forms.ModelForm):
             "show_sensitive_content",
             "show_embedded_content",
             "activity_stream_filters",
-            "send_email_on_message",
-            "send_webpush_on_message",
-            "send_email_on_notification",
-            "send_webpush_on_notification",
-            "notification_preferences",
+            "send_email_notifications",
         )
         widgets = {
             "notification_preferences": forms.CheckboxSelectMultiple,
@@ -48,17 +44,8 @@ class UserForm(forms.ModelForm):
         }
 
         labels = {
-            "send_email_on_message": _(
-                "Send me an email when I receive a new Direct Message"
-            ),
-            "send_email_on_notification": _(
-                "Send me an email when I receive a new Notification"
-            ),
-            "send_webpush_on_message": _(
-                "Display a browser notification when I receive a new Direct Message"
-            ),
-            "send_webpush_on_notification": _(
-                "Display a browser notification when I receive a new Notification"
+            "send_email_notifications": _(
+                "Send me an email when I receive a new Direct Message or Notification"
             ),
         }
         help_texts = {
@@ -78,35 +65,12 @@ class UserForm(forms.ModelForm):
             "show_embedded_content": _(
                 "Show embedded content such as YouTube videos or Instagram or Twitter posts."
             ),
-            "send_email_on_notification": mark_safe(
-                _(
-                    "Select which Notifications you want to receive under <b>Notification preferences</b>."
-                )
-            ),
-            "send_webpush_on_message": _(
-                "Click the 'Enable browser notifications' link "
-                "in the <a href='%(notifications_url)s'>Notifications</a> page "
-                "to grant the required permissions to your browser and device."
-            ),
-            "send_webpush_on_notification": _(
-                "Select which Notifications you receive under <b>Notification preferences</b>.<br>"
-                "Click the 'Enable browser notifications' link "
-                "in the <a href='%(notifications_url)s'>Notifications</a> page "
-                "to grant the required permissions to your browser and device."
-            ),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for field in (
-            "send_webpush_on_message",
-            "send_webpush_on_notification",
-            "show_sensitive_content",
-        ):
-            self.fields[field].help_text = mark_safe(
-                self.fields[field].help_text
-                % {
-                    "notifications_url": reverse("notifications:list"),
-                    "tags_url": reverse("activities:tag_list"),
-                }
-            )
+
+        self.fields["show_sensitive_content"].help_text = mark_safe(
+            self.fields["show_sensitive_content"].help_text
+            % {"tags_url": reverse("activities:tag_list"),}
+        )

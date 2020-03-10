@@ -165,7 +165,7 @@ class TestPostCommentCreateView:
         assert response.status_code == 200
 
     def test_post(self, client, member, send_notification_webpush_mock):
-        owner = UserFactory(notification_preferences=["new_comment"])
+        owner = UserFactory()
         MembershipFactory(member=owner, community=member.community)
         post = PostFactory(community=member.community, owner=owner)
         response = client.post(
@@ -222,8 +222,7 @@ class TestPostReshareView:
         post = PostFactory(
             community=member.community,
             owner=MembershipFactory(
-                community=member.community,
-                member=UserFactory(notification_preferences=["reshare"]),
+                community=member.community, member=UserFactory(),
             ).member,
         )
         response = client.post(
@@ -329,7 +328,7 @@ class TestFlagView:
         moderator = MembershipFactory(
             community=post.community,
             role=Membership.ROLES.moderator,
-            member=UserFactory(notification_preferences=["flag"]),
+            member=UserFactory(),
         )
         response = client.post(
             reverse("posts:flag", args=[post.id]), data={"reason": "spam"}

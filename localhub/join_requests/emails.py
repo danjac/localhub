@@ -17,7 +17,9 @@ def send_join_request_email(join_request):
         "list_url": join_request.community.resolve_url(reverse("join_requests:list")),
     }
 
-    for admin in join_request.community.get_admins():
+    for admin in join_request.community.get_admins().filter(
+        send_email_notifications=True
+    ):
         with override(admin.language):
 
             send_mail(

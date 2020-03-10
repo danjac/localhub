@@ -108,13 +108,11 @@ class TestPostModel:
         ).member
 
         moderator = MembershipFactory(
-            community=community,
-            role=Membership.ROLES.moderator,
-            member=UserFactory(notification_preferences=["moderator_review_request"]),
+            community=community, role=Membership.ROLES.moderator, member=UserFactory(),
         ).member
 
         mentioned = MembershipFactory(
-            member=UserFactory(username="danjac", notification_preferences=["mention"]),
+            member=UserFactory(username="danjac"),
             community=community,
             role=Membership.ROLES.member,
         ).member
@@ -131,8 +129,7 @@ class TestPostModel:
         )
 
         tag_follower = MembershipFactory(
-            community=community,
-            member=UserFactory(notification_preferences=["new_followed_tag_post"]),
+            community=community, member=UserFactory(),
         ).member
         tag_follower.following_tags.add(movies, reviews)
 
@@ -142,8 +139,7 @@ class TestPostModel:
         assert tag_follower.following_tags.count() == 2
 
         user_follower = MembershipFactory(
-            community=community,
-            member=UserFactory(notification_preferences=["new_followed_user_post"]),
+            community=community, member=UserFactory(),
         ).member
         user_follower.following.add(post.owner)
 
@@ -169,15 +165,11 @@ class TestPostModel:
     def test_notify_on_update(self, community):
 
         owner = MembershipFactory(
-            community=community,
-            role=Membership.ROLES.moderator,
-            member=UserFactory(notification_preferences=["moderator_edit"]),
+            community=community, role=Membership.ROLES.moderator, member=UserFactory(),
         ).member
 
         moderator = MembershipFactory(
-            community=community,
-            role=Membership.ROLES.moderator,
-            member=UserFactory(notification_preferences=["moderator_review_request"]),
+            community=community, role=Membership.ROLES.moderator, member=UserFactory(),
         ).member
 
         post = PostFactory(
@@ -211,7 +203,7 @@ class TestPostModel:
     def test_notify_on_create_reshare(self, community):
 
         mentioned = MembershipFactory(
-            member=UserFactory(username="danjac", notification_preferences=["mention"]),
+            member=UserFactory(username="danjac"),
             community=community,
             role=Membership.ROLES.member,
         ).member
@@ -222,23 +214,18 @@ class TestPostModel:
         reviews = Tag.objects.create(name="reviews")
 
         tag_follower = MembershipFactory(
-            community=community,
-            member=UserFactory(notification_preferences=["new_followed_tag_post"]),
+            community=community, member=UserFactory(),
         ).member
         tag_follower.following_tags.add(movies, reviews)
 
         assert tag_follower.following_tags.count() == 2
 
         owner = MembershipFactory(
-            community=community,
-            role=Membership.ROLES.moderator,
-            member=UserFactory(notification_preferences=["reshare"]),
+            community=community, role=Membership.ROLES.moderator, member=UserFactory(),
         ).member
 
         moderator = MembershipFactory(
-            community=community,
-            role=Membership.ROLES.moderator,
-            member=UserFactory(notification_preferences=["moderator_review_request"]),
+            community=community, role=Membership.ROLES.moderator, member=UserFactory(),
         ).member
 
         post = PostFactory(

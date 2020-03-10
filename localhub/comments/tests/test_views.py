@@ -182,7 +182,7 @@ class TestFlagView:
         moderator = MembershipFactory(
             community=post.community,
             role=Membership.ROLES.moderator,
-            member=UserFactory(notification_preferences=["flag"]),
+            member=UserFactory(),
         )
         response = client.post(
             reverse("comments:flag", args=[comment.id]), data={"reason": "spam"},

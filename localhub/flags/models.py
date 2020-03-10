@@ -92,9 +92,7 @@ class Flag(TimeStampedModel):
                 community=self.community,
                 verb="flag",
             )
-            for moderator in self.community.get_moderators().with_notification_prefs(
-                "flag"
-            )
+            for moderator in self.community.get_moderators()
             if moderator != self.user
         ]
 

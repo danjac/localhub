@@ -130,15 +130,6 @@ class TestUserManager:
             else:
                 assert not user.is_blocked
 
-    def test_with_notification_prefs(self):
-
-        user = UserFactory(notification_preferences=["new_message"])
-        UserFactory(notification_preferences=[])
-
-        users = get_user_model().objects.with_notification_prefs("new_message")
-        assert users.count() == 1
-        assert users.first() == user
-
 
 class TestUserModel:
     def test_get_email_addresses(self, user):
@@ -177,14 +168,6 @@ class TestUserModel:
     def test_get_absolute_url(self, user):
         assert user.get_absolute_url() == f"/people/{user.username}/"
 
-    def test_has_notification_pref(self):
-        user = UserFactory(notification_preferences=["new_message"])
-        assert user.has_notification_pref("new_message")
-
-    def test_does_not_have_notification_pref(self):
-        user = UserFactory()
-        assert not user.has_notification_pref("new_message")
-
     def test_has_role(self, moderator):
         assert moderator.member.has_role(
             moderator.community, Membership.ROLES.moderator
@@ -195,8 +178,7 @@ class TestUserModel:
 
     def test_notify_on_join(self, member):
         other_member = MembershipFactory(
-            community=member.community,
-            member=UserFactory(notification_preferences=["new_member"]),
+            community=member.community, member=UserFactory(),
         ).member
         notifications = member.member.notify_on_join(member.community)
         assert len(notifications) == 1
@@ -208,8 +190,7 @@ class TestUserModel:
 
     def test_notify_on_follow(self, member):
         follower = MembershipFactory(
-            community=member.community,
-            member=UserFactory(notification_preferences=["new_follower"]),
+            community=member.community, member=UserFactory(),
         ).member
         notifications = follower.notify_on_follow(member.member, member.community)
         assert len(notifications) == 1

@@ -35,9 +35,6 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
             models.Q(emailaddress__email__iexact=email) | models.Q(email__iexact=email)
         )
 
-    def with_notification_prefs(self, *prefs):
-        return self.filter(notification_preferences__contains=list(prefs))
-
     def with_is_following(self, follower):
         return self.annotate(
             is_following=models.Exists(
@@ -113,44 +110,6 @@ class User(AbstractUser):
         ("tags", _("Limited to only tags I'm following")),
     )
 
-    NOTIFICATION_PREFERENCES = Choices(
-        ("new_follower", _("Someone has started following me")),
-        ("new_member", _("Someone has joined a community I belong to")),
-        ("new_comment", _("Someone has commented on one of my activities")),
-        ("replied_to_comment", _("Someone has replied to one of my comments")),
-        (
-            "new_sibling_comment",
-            _("Someone has commented on an activity I've also commented on"),  # noqa
-        ),
-        ("like", _("Someone has liked one of my activities or comments")),
-        ("reshare", _("Someone has reshared one of my activities")),
-        ("mention", _("I have been @mentioned in an activity or comment")),
-        (
-            "moderator_delete",
-            _("A moderator has deleted one of my activities or comments"),
-        ),
-        (
-            "moderator_edit",
-            _("A moderator has edited one of my activities or comments"),
-        ),
-        ("new_followed_user_post", _("Someone I'm following has posted an activity")),
-        ("new_followed_user_comment", _("Someone I'm following has posted a comment")),
-        (
-            "new_followed_tag_post",
-            _("An activity has been posted containing tags I'm following"),  # noqa
-        ),
-        (
-            "flag",
-            _(
-                "A user has flagged content they are concerned about (community moderators only)"
-            ),
-        ),  # noqa
-        (
-            "moderator_review_request",
-            _("A user has posted content for me to review (community moderators only)"),
-        ),
-    )
-
     name = models.CharField(_("Full name"), blank=True, max_length=255)
     bio = MarkdownField(blank=True)
     avatar = ImageField(upload_to="avatars", null=True, blank=True)
@@ -170,21 +129,7 @@ class User(AbstractUser):
     show_sensitive_content = models.BooleanField(default=False)
     show_embedded_content = models.BooleanField(default=False)
 
-    notification_preferences = ChoiceArrayField(
-        models.CharField(max_length=30, choices=NOTIFICATION_PREFERENCES),
-        default=list,
-        blank=True,
-    )
-
-    send_email_on_message = models.BooleanField(default=True,)
-
-    send_email_on_notification = models.BooleanField(default=True,)
-
-    send_webpush_on_message = models.BooleanField(default=True,)
-
-    send_email_on_notification = models.BooleanField(default=True,)
-
-    send_webpush_on_notification = models.BooleanField(default=True,)
+    send_email_notifications = models.BooleanField(default=True)
 
     following = models.ManyToManyField(
         "self", related_name="followers", blank=True, symmetrical=False
@@ -216,13 +161,6 @@ class User(AbstractUser):
 
     def get_absolute_url(self):
         return reverse("users:activities", args=[self.username])
-
-    def has_notification_pref(self, pref):
-        return (
-            pref in self.notification_preferences
-            if self.notification_preferences
-            else False
-        )
 
     def get_notifications(self):
         """
@@ -270,9 +208,7 @@ class User(AbstractUser):
                 community=community,
                 verb="new_member",
             )
-            for member in community.members.with_notification_prefs(
-                "new_member"
-            ).exclude(pk=self.pk)
+            for member in community.members.exclude(pk=self.pk)
         ]
         return Notification.objects.bulk_create(notifications)
 

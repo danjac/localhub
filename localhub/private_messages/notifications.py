@@ -17,7 +17,7 @@ def send_message_notifications(message):
 
 def send_message_email(message):
 
-    if message.recipient.send_email_on_message:
+    if message.recipient.send_email_notifications:
         with override(message.recipient.language):
 
             context = {
@@ -43,14 +43,13 @@ def send_message_email(message):
 
 
 def send_message_push(message):
-    if message.recipient.send_webpush_on_message:
-        with override(message.recipient.language):
+    with override(message.recipient.language):
 
-            send_push_notification(
-                message.recipient,
-                message.community,
-                head=_("%(sender)s has sent you a message")
-                % {"sender": user_display(message.sender)},
-                body=message.abbreviate(),
-                url=message.get_permalink(message.recipient),
-            )
+        send_push_notification(
+            message.recipient,
+            message.community,
+            head=_("%(sender)s has sent you a message")
+            % {"sender": user_display(message.sender)},
+            body=message.abbreviate(),
+            url=message.get_permalink(message.recipient),
+        )

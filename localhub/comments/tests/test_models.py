@@ -173,26 +173,20 @@ class TestCommentModel:
 
         comment_owner = MembershipFactory(community=community).member
         post_owner = MembershipFactory(
-            community=community,
-            member=UserFactory(notification_preferences=["new_comment"]),
+            community=community, member=UserFactory(),
         ).member
         moderator = MembershipFactory(
-            community=community,
-            role=Membership.ROLES.moderator,
-            member=UserFactory(notification_preferences=["moderator_review_request"]),
+            community=community, role=Membership.ROLES.moderator, member=UserFactory(),
         ).member
 
-        mentioned = UserFactory(username="danjac", notification_preferences=["mention"])
+        mentioned = UserFactory(username="danjac")
 
         MembershipFactory(member=mentioned, community=community)
 
         post = PostFactory(owner=post_owner, community=community)
 
         other_comment = CommentFactory(
-            owner=MembershipFactory(
-                community=community,
-                member=UserFactory(notification_preferences=["new_sibling_comment"]),
-            ).member,
+            owner=MembershipFactory(community=community, member=UserFactory(),).member,
             content_object=post,
         )
 
@@ -203,10 +197,7 @@ class TestCommentModel:
             content="hello @danjac",
         )
 
-        follower = MembershipFactory(
-            community=community,
-            member=UserFactory(notification_preferences=["new_followed_user_comment"]),
-        ).member
+        follower = MembershipFactory(community=community, member=UserFactory(),).member
         follower.following.add(comment.owner)
 
         notifications = comment.notify_on_create()
@@ -238,32 +229,25 @@ class TestCommentModel:
         comment_owner = MembershipFactory(community=community,).member
 
         parent_owner = MembershipFactory(
-            community=community,
-            member=UserFactory(notification_preferences=["replied_to_comment"]),
+            community=community, member=UserFactory(),
         ).member
 
         post_owner = MembershipFactory(
-            community=community,
-            member=UserFactory(notification_preferences=["new_comment"]),
+            community=community, member=UserFactory(),
         ).member
 
         moderator = MembershipFactory(
-            community=community,
-            role=Membership.ROLES.moderator,
-            member=UserFactory(notification_preferences=["moderator_review_request"]),
+            community=community, role=Membership.ROLES.moderator, member=UserFactory(),
         ).member
 
-        mentioned = UserFactory(username="danjac", notification_preferences=["mention"])
+        mentioned = UserFactory(username="danjac")
 
         MembershipFactory(member=mentioned, community=community)
 
         post = PostFactory(owner=post_owner, community=community)
 
         other_comment = CommentFactory(
-            owner=MembershipFactory(
-                community=community,
-                member=UserFactory(notification_preferences=["new_sibling_comment"]),
-            ).member,
+            owner=MembershipFactory(community=community, member=UserFactory(),).member,
             content_object=post,
         )
 
@@ -282,10 +266,7 @@ class TestCommentModel:
             content="hello @danjac",
         )
 
-        follower = MembershipFactory(
-            community=community,
-            member=UserFactory(notification_preferences=["new_followed_user_comment"]),
-        ).member
+        follower = MembershipFactory(community=community, member=UserFactory(),).member
         follower.following.add(comment.owner)
 
         notifications = comment.notify_on_create()
@@ -319,15 +300,12 @@ class TestCommentModel:
     def test_notify_on_update(self, community):
 
         comment_owner = MembershipFactory(
-            community=community,
-            member=UserFactory(notification_preferences=["moderator_edit"]),
+            community=community, member=UserFactory(),
         ).member
 
         post_owner = MembershipFactory(community=community).member
         moderator = MembershipFactory(
-            community=community,
-            role=Membership.ROLES.moderator,
-            member=UserFactory(notification_preferences=["moderator_review_request"]),
+            community=community, role=Membership.ROLES.moderator, member=UserFactory(),
         ).member
 
         post = PostFactory(owner=post_owner, community=community)
