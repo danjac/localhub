@@ -34,11 +34,13 @@
       </div>
       {% endif %}
 
-      <div class="card-title activity-title mb-1">
+      <div class="card-title activity-title mb-1 {{ is_detail|yesno:"h5,h6" }}">
 
         {% if object.is_reshare %}
 
-        <div class="card-subtitle h6">
+        <div class="
+           card-subtitle
+           h6">
           {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner is_reshare=True %}
         </div>
         <div class="divider"></div>
