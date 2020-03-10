@@ -13,6 +13,8 @@
         {% trans "to" %}
       </span>
       {% include "users/includes/chip.html" with profile=message.recipient profile_url=recipient_url %}
+    </div>
+    <div class="card-subtitle">
       <span class="timesince">
         {% blocktrans with created=message.created|timesince %}
         {{ created }} ago
