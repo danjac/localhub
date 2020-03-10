@@ -24,13 +24,16 @@ a {
 }
 
 .actions {
+  font-size: smaller;
+  flex-wrap: wrap;
+
   a {
     &:not(:last-child) {
-      @extend .pr-1;
+      @extend .mr-1;
     }
 
     &:not(:first-child) {
-      @extend .pl-1;
+      @extend .ml-1;
     }
 
     color: $link-color-dark;
@@ -133,9 +136,11 @@ table {
   }
 }
 
+
 .info {
   color: $gray-color-dark;
   @extend .my-2;
+  font-size: smaller;
 }
 
 .form-input {
@@ -246,6 +251,7 @@ table {
 
 .timesince {
   color: $gray-color-dark;
+  font-size: smaller;
 }
 
 .toast {
@@ -261,4 +267,18 @@ table {
 
 .wordwrap {
   word-wrap: break-word;
+}
+
+.card {
+
+  .card-header,
+  .card-body,
+  .card-footer {
+    padding: $layout-spacing;
+    padding-bottom: 0;
+
+    &:last-child {
+      padding-bottom: $layout-spacing;
+    }
+  }
 }

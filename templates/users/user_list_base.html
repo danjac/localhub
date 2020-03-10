@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<h3>{% trans "People" %}</h3>
+<h5>{% trans "People" %}</h5>
 <div class="divider"></div>
 
 {% has_perm "private_messages.create_message" user community as can_create_message %}
@@ -64,7 +64,7 @@
                 {% if user != object %}
                 <div class="float-right-responsive">
                     <div class="dropdown">
-                        <a class="btn btn-default dropdown-toggle"
+                        <a class="btn btn-default btn-sm dropdown-toggle"
                            tabindex="0">
                             {% trans "Actions" %}
                             <i class="icon icon-caret"></i>

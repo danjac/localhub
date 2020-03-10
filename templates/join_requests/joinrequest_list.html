@@ -7,44 +7,29 @@
 
 {% block content %}
 
-<h3>
+<h5>
     {% trans "Join Requests" %}
     {% if status_display %}
     - {{ status_display}}
     {% endif %}
-</h3>
+</h5>
 
-<div class="float-left-responsive">
-    <div class="actions">
-        <a href="{% url 'invites:list' %}">
-            {% trans "Invites" %}
-        </a>
-        <a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
-    </div>
+<div class="actions">
+    <a href="{% url 'invites:list' %}">
+        {% trans "Invites" %}
+    </a>
+    <a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
 </div>
 {% if total_count %}
-<div class="float-right-responsive">
-    <div class="dropdown">
-        <a class="btn btn-default dropdown-toggle"
-           tabindex="0">
-            {% trans "Filter" %}
-            <i class="icon icon-caret"></i>
-        </a>
-        <ul class="menu">
-            {% if status %}
-            <li class="menu-item">
-                <a href="{{ request.path }}">{% trans "Show All" %}</a>
-            </li>
-            {% endif %}
-            {% for value, label in status_choices %}
-            {% if status != value %}
-            <li class="menu-item">
-                <a href="{{ request.path }}?status={{ value }}">{{ label }}</a>
-            </li>
-            {% endif %}
-            {% endfor %}
-        </ul>
-    </div>
+<div class="actions">
+    {% if status %}
+    <a href="{{ request.path }}">{% trans "Show All" %}</a>
+    {% endif %}
+    {% for value, label in status_choices %}
+    {% if status != value %}
+    <a href="{{ request.path }}?status={{ value }}">{{ label }}</a>
+    {% endif %}
+    {% endfor %}
 </div>
 {% endif %}
 <div class="clearfix"></div>
@@ -52,7 +37,7 @@
 <div class="divider"></div>
 
 {% if paginator.count or view.search_query %}
-{% include "includes/forms/search_form.html" %}
+{% include "includes/forms/search_form.html" with selector=True %}
 {% endif %}
 
 {% if not community.allow_join_requests %}
@@ -83,7 +68,7 @@
                 data-controller="js-toggle">
                 <div class="float-right-responsive">
                     <div class="dropdown">
-                        <a class="btn btn-default dropdown-toggle"
+                        <a class="btn btn-sm dropdown-toggle"
                            tabindex="0">
                             {% trans "Actions" %}
                             <i class="icon icon-caret"></i>

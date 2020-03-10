@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<h3>{% trans "Photos" %}</h3>
+<h5>{% trans "Photos" %}</h5>
 <div class="actions">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}

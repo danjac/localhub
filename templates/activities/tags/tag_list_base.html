@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<h3>{% trans "Tags" %}</h3>
+<h5>{% trans "Tags" %}</h5>
 <div class="divider"></div>
 
 {% has_perm "users.follow_tag" user as can_follow_tag %}
@@ -62,7 +62,7 @@
           data-controller="js-toggle">
         <div class="float-right-responsive">
           <div class="dropdown">
-            <a class="btn btn-default dropdown-toggle"
+            <a class="btn btn-sm dropdown-toggle"
                tabindex="0">
               {% trans "Actions" %}
               <i class="icon icon-caret"></i>

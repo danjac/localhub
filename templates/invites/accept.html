@@ -6,18 +6,25 @@
 
 {% block content %}
 
-<h3>{% trans "Accept Invitation" %}</h3>
+<h5>{% trans "Accept Invitation" %}</h5>
 
 <form method="POST">
   {% csrf_token %}
   <p>
     {% blocktrans with community=community.name %}
-    You have been invited to join the community <b>{{ community }}</b>. If you click the option <b>Accept</b> you will be added as a new member.
+    You have been invited to join the community <b>{{ community }}</b>. If you click the option <b>Accept</b> you will
+    be added as a new member.
     {% endblocktrans %}
   </p>
 
-  <button type="submit" class="btn btn-primary" name="accept" value="1">{% trans "Accept" %}</button>
-  <button type="submit" class="btn btn-secondary" name="reject" value="1">{% trans "Reject" %}</button>
+  <button type="submit"
+          class="btn btn-primary"
+          name="accept"
+          value="1">{% trans "Accept" %}</button>
+  <button type="submit"
+          class="btn btn-secondary"
+          name="reject"
+          value="1">{% trans "Reject" %}</button>
 </form>
 
 {% endblock content %}

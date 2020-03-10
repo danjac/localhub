@@ -56,20 +56,17 @@
         {% endif %}
         <span class="chip">{% trans object_type|capfirst %}</span>
         <span class="chip bg-primary">{% trans "Pinned" %}</span>
-        <div class="card-subtitle h6">
-            <span class="timesince">
-                {% blocktrans with since=object.published|timesince %}
-                Posted {{ since }} ago by
-                {% endblocktrans %}
-                {% include "users/includes/chip.html" with profile=object.owner %}
-            </span>
+        <div class="card-subtitle">
+            {% include "activities/includes/timesince.html" with owner=object.owner timestamp=object.published %}
         </div>
-        {% if object.url %}
-        <div class="card-subtitle h6">
+    </div>
+    {% if object.url %}
+    <div class="card-footer">
+        <div class="actions">
             <a href="{{ object.get_absolute_url }}">{% trans "Permalink" %}</a>
         </div>
-        {% endif %}
     </div>
+    {% endif %}
 </div>
 {% endwith %}
 {% endif %}

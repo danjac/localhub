@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<h3>{{ community.name }}</h3>
+<h5>{{ community.name }}</h5>
 
 {% has_perm "communities.manage_community" user community as can_manage %}
 {% if community.terms or can_manage %}

@@ -5,7 +5,7 @@
 {% block subtitle %} | {% trans "Events" %}{% endblock %}
 
 {% block content %}
-<h3>{% trans "Events" %}</h3>
+<h5>{% trans "Events" %}</h5>
 
 <div class="actions">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}

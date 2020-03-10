@@ -10,35 +10,16 @@
 
 {% block content %}
 
-<div class="float-left-responsive">
-    <h3>{% trans "My Settings" %}</h3>
+<h5>{% trans "My Settings" %}</h5>
+<div class="actions">
+    <a href="{% url 'account_email' %}">{% trans "Email Addresses" %}</a>
+    {% get_providers as socialaccount_providers %}
+    {% if socialaccount_providers %}
+    <a href="{% url 'socialaccount_connections' %}">{% trans "Social Logins" %}</a>
+    {% endif %}
+    <a href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a>
+    <a href="{% url 'user_delete' %}">{% trans "Delete Account" %}</a>
 </div>
-<div class="float-right-responsive">
-    <div class="dropdown">
-        <a class="btn btn-default dropdown-toggle"
-           tabindex="0">
-            {% trans "Actions" %}
-            <i class="icon icon-caret"></i>
-        </a>
-        <ul class="menu">
-            <li class="menu-item">
-                <a href="{% url 'account_email' %}">{% trans "Email Addresses" %}</a>
-            </li>
-            {% get_providers as socialaccount_providers %}
-            {% if socialaccount_providers %}
-            <li class="menu-item">
-                <a href="{% url 'socialaccount_connections' %}">{% trans "Social Logins" %}</a>
-            </li>
-            {% endif %}
-            <li class="menu-item">
-                <a href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a>
-            </li>
-            <li class="menu-item">
-                <a href="{% url 'user_delete' %}">{% trans "Delete Account" %}</a>
-            </li>
-    </div>
-</div>
-<div class="clearfix"></div>
 <div class="divider"></div>
 
 <div class="text-center my-2 toast d-hide"

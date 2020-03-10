@@ -7,39 +7,23 @@
 
 {% block content %}
 
-<div class="float-left-responsive">
-  <h3>{% trans "Notifications" %}</h3>
-</div>
+<h5>{% trans "Notifications" %}</h5>
 
 {% if object_list %}
-<div class="float-right-responsive d-hide"
+<div class="actions d-hide"
      data-controller="js-toggle">
-  <div class="dropdown">
-    <a class="btn btn-default dropdown-toggle"
-       tabindex="0">
-      {% trans "Actions" %}
-      <i class="icon icon-caret"></i>
-    </a>
-    <ul class="menu">
-      {% if is_unread_notifications %}
-      <li class="menu-item">
-        <a href="{% url 'notifications:mark_all_read' %}"
-           data-controller="ajax"
-           data-action="ajax#post">{% trans "Mark All As Read" %}</a>
-      </li>
-      {% endif %}
-      <li class="menu-item">
-        <a href="{% url 'notifications:delete_all' %}"
-           data-controller="confirm ajax"
-           data-action="confirm#check ajax#post"
-           data-confirm-header="{% trans 'Delete All' %}"
-           data-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}">{% trans "Delete All" %}</a>
-    </ul>
-    </li>
-  </div>
+  {% if is_unread_notifications %}
+  <a href="{% url 'notifications:mark_all_read' %}"
+     data-controller="ajax"
+     data-action="ajax#post">{% trans "Mark All As Read" %}</a>
+  {% endif %}
+  <a href="{% url 'notifications:delete_all' %}"
+     data-controller="confirm ajax"
+     data-action="confirm#check ajax#post"
+     data-confirm-header="{% trans 'Delete All' %}"
+     data-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}">{% trans "Delete All" %}</a>
 </div>
 {% endif %}
-<div class="clearfix"></div>
 
 <div class="divider"></div>
 

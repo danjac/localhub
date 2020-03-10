@@ -1,13 +1,16 @@
 {% extends "invites/base.html" %}
 {% load i18n %}
 {% block content %}
-<h3>{% trans "Delete Invite" %}</h3>
+<h5>{% trans "Delete Invite" %}</h5>
 
-<form method="POST" action="{{ request.path }}">
+<form method="POST"
+      action="{{ request.path }}">
   {% csrf_token %}
   <p>{% trans "Do you really want to delete this invite?" %}</p>
-  <a class="btn btn-link" href="{% url 'invites:list' %}">{% trans "Cancel" %}</a>
-  <button class="btn btn-primary" type="submit">{% trans "Delete" %}</button>
+  <a class="btn btn-link"
+     href="{% url 'invites:list' %}">{% trans "Cancel" %}</a>
+  <button class="btn btn-primary"
+          type="submit">{% trans "Delete" %}</button>
 </form>
 
 {% endblock content %}

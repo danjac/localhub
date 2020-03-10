@@ -12,7 +12,8 @@
 
 {% include "includes/breadcrumbs.html" %}
 {% with is_pending=object.is_pending is_rejected=object.is_rejectd %}
-<div class="actions d-hide" data-controller="js-toggle">
+<div class="actions d-hide"
+     data-controller="js-toggle">
   {% if is_pending or is_rejected %}
   <a data-controller="ajax confirm"
      data-action="confirm#check ajax#post"
@@ -40,14 +41,14 @@
 
 <div class="divider"></div>
 
-<h3>{% avatar object.sender "avatar-lg" %}{{ display_name }}</h3>
+<h5>{% avatar object.sender "avatar-lg" %}{{ display_name }}</h5>
 
 <dl>
   <dt>{% trans "Status" %}</dt>
   <dd>{{ object.get_status_display }}</dd>
   <dt>{% trans "Requested" %}</dt>
   <dd>
-  {% blocktrans with created=object.created|timesince %}{{ created }} ago{% endblocktrans %}
+    {% blocktrans with created=object.created|timesince %}{{ created }} ago{% endblocktrans %}
   </dd>
 </dl>
 

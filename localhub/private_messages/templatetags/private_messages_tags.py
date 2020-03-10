@@ -13,14 +13,7 @@ register = template.Library()
 
 @register.inclusion_tag("private_messages/includes/message.html", takes_context=True)
 def show_message(
-    context,
-    user,
-    community,
-    message,
-    show_sender_info=True,
-    show_recipient_info=True,
-    is_thread=False,
-    is_detail=False,
+    context, user, community, message, is_thread=False, is_detail=False,
 ):
 
     is_sender = user == message.sender
@@ -57,8 +50,6 @@ def show_message(
         "recipient_url": recipient_url,
         "sender_url": sender_url,
         "other_user": message.get_other_user(user),
-        "show_recipient_info": show_recipient_info,
-        "show_sender_info": show_sender_info,
         "post_delete_redirect": outbox_url if is_detail else None,
     }
 

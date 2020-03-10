@@ -4,6 +4,8 @@
 {# Use this template together with SearchMixin views #}
 
 {% load i18n %}
+{% load rules %}
+
 <form method="GET"
       action="{{ request.path }}"
       data-controller="form{% if selector %} search{% endif %}"
@@ -46,6 +48,12 @@
       <option value="{% url 'photos:list' %}">{% trans "Photos" %}</option>
       <option value="{% url 'polls:list' %}">{% trans "Polls" %}</option>
       <option value="{% url 'activities:tag_list' %}">{% trans "Tags" %}</option>
+      {% has_perm "communities.manage_community" user community as can_manage_community %}
+      {% if can_manage_community %}
+      <option value="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</option>
+      <option value="{% url 'invites:list' %}">{% trans "Invites" %}</option>
+      <option value="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</option>
+      {% endif %}
     </select>
   </div>
   {% endif %}

@@ -19,14 +19,14 @@
 
 {% user_display user_obj as display_name %}
 
-<h3>
+<h5>
     {% avatar user_obj "avatar-lg" %}{{ display_name }}
     {% if membership.is_admin %}
     <span class="chip bg-primary">{% trans "Admin" %}</span>
     {% elif membership.is_moderator %}
     <span class="chip bg-primary">{% trans "Moderator" %}</span>
     {% endif %}
-</h3>
+</h5>
 
 
 <h4>@{{ user_obj.username }}</h4>
@@ -75,91 +75,76 @@
     {% endif %}
 </p>
 {% endif %}
-{% if is_current_user or can_view_membership %}
-<div class="float-left-responsive">
-    <div class="actions">
-        {% if is_current_user %}
-        <a href="{% url 'user_update' %}">
-            {% trans "My Settings" %}
-        </a>
-        {% endif %}
-        {% if can_view_membership %}
-        <a href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
-        {% endif %}
-    </div>
-</div>
-{% endif %}
-{% if not is_current_user %}
-<div class="float-right-responsive">
-    <div class="dropdown">
-        <a class="btn btn-default dropdown-toggle"
-           tabindex="0">
-            {% trans "Actions" %}
-            <i class="icon icon-caret"></i>
-        </a>
-        <ul class="menu">
-            {% if can_create_message and not is_current_user and not is_blocked %}
-            <li class="menu-item">
-                <a href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
-            </li>
-            {% endif %}
 
-            {% if can_follow_user %}
-            <li class="menu-item d-hide"
-                data-controller="js-toggle toggle">
-                {% with following=user.following.all %}
-                <a href="{% url 'users:unfollow' user_obj.username %}"
-                   {% if user_obj not in following %}class="d-hide"
-                   {% endif %}
-                   data-controller="ajax"
-                   data-action="ajax#post toggle#toggle"
-                   data-target="toggle.togglable"
-                   data-toggle-target="follow"
-                   data-ajax-redirect="none">
-                    {% trans "Unfollow" %}
-                </a>
-                <a href="{% url 'users:follow' user_obj.username %}"
-                   {% if user_obj in following %}class="d-hide"
-                   {% endif %}
-                   data-controller="ajax"
-                   data-action="ajax#post toggle#toggle"
-                   data-target="toggle.togglable"
-                   data-toggle-target="follow"
-                   data-ajax-redirect="none">
-                    {% trans "Follow" %}
-                </a>
-            </li>
-            {% endwith %}
-            {% endif %}
+<div class="actions">
 
-            {% if can_block_user %}
-            <li class="menu-item">
-                {% with redirect_url=user_obj.get_absolute_url %}
-                {% if is_blocking %}
-                <a href="{% url 'users:unblock' user_obj.username %}"
-                   class="d-hide"
-                   data-controller="js-toggle ajax"
-                   data-action="ajax#post toggle#toggle"
-                   data-ajax-redirect="{{ redirect_url }}">
-                    {% trans "Unblock" %}
-                </a>
-                {% else %}
-                <a href="{% url 'users:block' user_obj.username %}"
-                   class="d-hide"
-                   data-controller="js-toggle ajax"
-                   data-action="ajax#post toggle#toggle"
-                   data-ajax-redirect="{{ redirect_url }}">
-                    {% trans "Block" %}
-                </a>
-                {% endif %}
-                {% endwith %}
-            </li>
-            {% endif %}
-        </ul>
-    </div>
+    {% if is_current_user %}
+    <a href="{% url 'user_update' %}">
+        {% trans "My Settings" %}
+    </a>
+    {% endif %}
+
+    {% if can_view_membership %}
+    <a href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
+    {% endif %}
+
+    {% if not is_current_user %}
+
+    {% if can_create_message and not is_current_user and not is_blocked %}
+    <a href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
+    {% endif %}
+
+    {% if can_follow_user %}
+    <span class="d-hide"
+          data-controller="js-toggle toggle">
+        {% with following=user.following.all %}
+        <a href="{% url 'users:unfollow' user_obj.username %}"
+           {% if user_obj not in following %}class="d-hide"
+           {% endif %}
+           data-controller="ajax"
+           data-action="ajax#post toggle#toggle"
+           data-target="toggle.togglable"
+           data-toggle-target="follow"
+           data-ajax-redirect="none">
+            {% trans "Unfollow" %}
+        </a>
+        <a href="{% url 'users:follow' user_obj.username %}"
+           {% if user_obj in following %}class="d-hide"
+           {% endif %}
+           data-controller="ajax"
+           data-action="ajax#post toggle#toggle"
+           data-target="toggle.togglable"
+           data-toggle-target="follow"
+           data-ajax-redirect="none">
+            {% trans "Follow" %}
+        </a>
+    </span>
+    {% endwith %}
+    {% endif %}
+
+    {% if can_block_user %}
+    {% with redirect_url=user_obj.get_absolute_url %}
+    {% if is_blocking %}
+    <a href="{% url 'users:unblock' user_obj.username %}"
+       class="d-hide"
+       data-controller="js-toggle ajax"
+       data-action="ajax#post toggle#toggle"
+       data-ajax-redirect="{{ redirect_url }}">
+        {% trans "Unblock" %}
+    </a>
+    {% else %}
+    <a href="{% url 'users:block' user_obj.username %}"
+       class="d-hide"
+       data-controller="js-toggle ajax"
+       data-action="ajax#post toggle#toggle"
+       data-ajax-redirect="{{ redirect_url }}">
+        {% trans "Block" %}
+    </a>
+    {% endif %}
+    {% endwith %}
+    {% endif %}
+    {% endif %}
 </div>
-{% endif %}
-<div class="clearfix"></div>
 
 {% if not is_blocked %}
 <div class="divider"></div>

@@ -4,13 +4,16 @@
 {% block subtitle %} | {% trans "Posts" %} | {% trans "Delete" %}{% endblock %}
 
 {% block content %}
-<h3>{% trans "Delete Post" %}</h3>
+<h5>{% trans "Delete Post" %}</h5>
 
-<form method="POST" action="{{ request.path }}">
+<form method="POST"
+      action="{{ request.path }}">
   {% csrf_token %}
   <p>{% trans "Do you really want to delete this post?" %}</p>
-  <a class="btn btn-link" href="{{ post.get_absolute_url }}">{% trans "Cancel" %}</a>
-  <button class="btn btn-primary" type="submit">{% trans "Delete" %}</button>
+  <a class="btn btn-link"
+     href="{{ post.get_absolute_url }}">{% trans "Cancel" %}</a>
+  <button class="btn btn-primary"
+          type="submit">{% trans "Delete" %}</button>
 </form>
 
 {% endblock content %}

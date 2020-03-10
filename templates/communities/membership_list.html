@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<h3>{% trans "Memberships" %}</h3>
+<h5>{% trans "Memberships" %}</h5>
 
 <div class="actions">
   <a href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
@@ -28,7 +28,7 @@
 </div>
 {% endif %}
 
-{% include "includes/forms/search_form.html" %}
+{% include "includes/forms/search_form.html" with selector=True %}
 
 {% if object_list %}
 <table class="table table-hover table-responsive">
