@@ -30,7 +30,8 @@ def get_pinned_activity(user, community):
         lambda model: model.objects.for_community(community)
         .published()
         .exclude_blocked(user)
-        .select_related("owner")
+        .with_common_annotations(user, community)
+        .select_related("owner", "community")
         .filter(is_pinned=True)
     )
 
