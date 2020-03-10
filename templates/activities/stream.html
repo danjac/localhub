@@ -49,20 +49,17 @@
 {% with object=pinned.object object_type=pinned.object_type %}
 <div class="card my-2">
     <div class="card-header activity-title h6">
-        {% if object.url %}
-        {{ object.url|linkify:object.title }}
-        {% else %}
         <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
-        {% endif %}
         <span class="chip">{% trans object_type|capfirst %}</span>
         <span class="chip bg-primary">{% trans "Pinned" %}</span>
-    </div>
-    <div class="card-footer">
-        <div class="info float-left-responsive">
-            {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
+        <div class="card-subtitle h6">
+            <span class="timesince">
+                {% blocktrans with since=object.published|timesince %}
+                Posted {{ since }} ago by
+                {% endblocktrans %}
+                {% include "users/includes/chip.html" with profile=object.owner %}
+            </span>
         </div>
-        {% include "activities/includes/actions.html" with css_class="float-right-responsive" %}
-        <div class="clearfix"></div>
     </div>
 </div>
 {% endwith %}

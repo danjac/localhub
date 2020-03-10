@@ -15,10 +15,12 @@
       <a href="{{ comment.get_absolute_url }}">{% trans "This comment has been flagged" %}</a>
     </div>
     {% endif %}
-    <div class="card-subtitle h6">
+
+    <div class="card-title h6">
       {% include "activities/includes/timesince.html" with timestamp=comment.created owner=comment.owner %}
       {% with parent=comment.parent %}
       {% if parent and comment.is_parent_owner_member and not is_reply %}
+      {% user_display parent.owner as parent_owner %}
       <a {% spaceless %}
          {% if is_thread %}
          href="#comment-{{ parent.id }}"
@@ -27,15 +29,13 @@
          href="{{ parent.get_absolute_url }}"
          {% endif %}
          {% endspaceless %}>
-        {% blocktrans with parent_id=parent.id %}
-        reply to #{{ parent_id }}
+        {% blocktrans %}
+        in reply to {{ parent_owner }}
         {% endblocktrans %}
       </a>
       {% endif %}
       {% endwith %}
     </div>
-
-
   </div>
   {% if comment.is_blocked %}
   <div class="card-body"
@@ -70,6 +70,7 @@
   </div>
   <div class="card-footer">
     <div class="float-left-responsive">
+
       {% if is_detail and comment.edited %}
       <div class="info">
         {% blocktrans with edited=comment.edited|timesince %}Last edited {{ edited }} ago{% endblocktrans %}
@@ -82,10 +83,11 @@
 
       {% if comment.num_likes and comment.owner == user %}
       <div class="info">
+        {{ comment.num_likes }}
         {% blocktrans count counter=comment.num_likes %}
-        1 Like
+        person liked this comment
         {% plural %}
-        {{ counter }} Likes
+        people liked this comment
         {% endblocktrans %}
       </div>
       {% endif %}
