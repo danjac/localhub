@@ -79,9 +79,7 @@ class BaseActivityStreamView(CommunityRequiredMixin, TemplateView):
             allow_empty_first_page=self.allow_empty,
         ).get_page(self.request.GET.get(self.page_kwarg, 1))
 
-        load_objects(page, querysets)
-
-        return page
+        return load_objects(page, querysets)
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -154,6 +152,28 @@ class ActivityStreamView(BaseActivityStreamView):
 
 
 activity_stream_view = ActivityStreamView.as_view()
+
+
+class ActivitySearchView(SearchMixin, BaseActivityStreamView):
+    template_name = "activities/search.html"
+    search_optional = False
+
+    def get_ordering(self):
+        return ("-rank", "-published") if self.search_query else None
+
+    def filter_queryset(self, queryset):
+        if self.search_query:
+            return (
+                super()
+                .filter_queryset(queryset)
+                .exclude_blocked(self.request.user)
+                .published()
+                .search(self.search_query)
+            )
+        return queryset.none()
+
+
+activity_search_view = ActivitySearchView.as_view()
 
 
 class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
@@ -280,30 +300,6 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
 
 
 timeline_view = TimelineView.as_view()
-
-# ActivitySearchView
-
-
-class SearchView(SearchMixin, BaseActivityStreamView):
-    template_name = "activities/search.html"
-    search_optional = False
-
-    def get_ordering(self):
-        return ("-rank", "-published") if self.search_query else None
-
-    def filter_queryset(self, queryset):
-        if self.search_query:
-            return (
-                super()
-                .filter_queryset(queryset)
-                .exclude_blocked(self.request.user)
-                .published()
-                .search(self.search_query)
-            )
-        return queryset.none()
-
-
-search_view = SearchView.as_view()
 
 
 class DraftsView(BaseActivityStreamView):
