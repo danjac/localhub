@@ -41,8 +41,9 @@ class TestGetPinnedActivity:
             published=timezone.now(),
         )
         pinned = get_pinned_activity(member.member, member.community)
-        assert pinned.id == post.id
-        assert pinned.object_type == "post"
+        assert pinned["pk"] == post.id
+        assert pinned["object_type"] == "post"
+        assert pinned["object"] == post
 
 
 class TestIsOembedUrl:

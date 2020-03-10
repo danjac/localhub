@@ -9,10 +9,11 @@ from localhub.users.utils import linkify_mentions
 from localhub.utils.urls import is_https
 
 from ..models import (
-    get_activity_model,
-    get_unionized_activity_queryset,
-    get_unionized_activity_queryset_count,
+    get_activity_querysets,
+    get_activity_queryset_count,
+    load_objects,
 )
+
 from ..oembed import bootstrap_oembed
 from ..utils import linkify_hashtags
 
@@ -30,33 +31,28 @@ def get_pinned_activity(user, community):
     if user.is_anonymous or not community.active:
         return None
 
-    try:
-        pk, object_type = get_unionized_activity_queryset(
-            lambda model: model.objects.for_community(community)
-            .published()
-            .exclude_blocked(user)
-            .filter(is_pinned=True)
-            .with_object_type()
-            .values_list("pk", "object_type")
-        ).first()
-    except TypeError:
+    qs, querysets = get_activity_querysets(
+        lambda model: model.objects.for_community(community)
+        .published()
+        .exclude_blocked(user)
+        .select_related("owner")
+        .filter(is_pinned=True)
+    )
+
+    result = qs.first()
+
+    if result is None:
         return None
 
-    return (
-        get_activity_model(object_type)
-        .objects.select_related("owner")
-        .with_object_type()
-        .filter(pk=pk)
-        .first()
-    )
+    return load_objects([result], querysets)[0]
 
 
 @register.simple_tag
 def get_draft_count(user, community):
     if user.is_anonymous or not community.active:
         return 0
-    return get_unionized_activity_queryset_count(
-        lambda model: model.objects.for_community(community).drafts(user).only("pk")
+    return get_activity_queryset_count(
+        lambda model: model.objects.for_community(community).drafts(user)
     )
 
 
@@ -65,7 +61,7 @@ def get_external_draft_count(user, community):
     if user.is_anonymous or not community.active:
         return 0
 
-    return get_unionized_activity_queryset_count(
+    return get_activity_queryset_count(
         lambda model: model.objects.filter(
             community__active=True,
             community__membership__active=True,
@@ -73,7 +69,6 @@ def get_external_draft_count(user, community):
         )
         .exclude(community=community)
         .drafts(user)
-        .only("pk")
     )
 
 

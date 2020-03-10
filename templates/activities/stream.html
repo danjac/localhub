@@ -46,23 +46,23 @@
 
 {% get_pinned_activity user community as pinned %}
 {% if pinned %}
+{% with object=pinned.object object_type=pinned.object_type %}
 <div class="card my-2">
     <div class="card-header activity-title h6">
-        <a href="{{ pinned.get_absolute_url }}">{{ pinned.title }}</a>
-        <span class="chip">{% trans pinned.object_type|capfirst %}</span>
+        <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+        <span class="chip">{% trans object_type|capfirst %}</span>
         <span class="chip bg-primary">{% trans "Pinned" %}</span>
-        <div class="
-              card-subtitle
-              h6">
+        <div class="card-subtitle h6">
             <span class="timesince">
-                {% blocktrans with since=pinned.published|timesince %}
+                {% blocktrans with since=object.published|timesince %}
                 Posted {{ since }} ago by
                 {% endblocktrans %}
-                {% include "users/includes/chip.html" with profile=pinned.owner %}
+                {% include "users/includes/chip.html" with profile=object.owner %}
             </span>
         </div>
     </div>
 </div>
+{% endwith %}
 {% endif %}
 
 

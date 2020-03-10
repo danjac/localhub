@@ -12,7 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DetailView, ListView, TemplateView, UpdateView
 
-from localhub.activities.models import get_unionized_activity_queryset
+from localhub.activities.models import get_activity_querysets
 from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
 from localhub.views import SearchMixin
@@ -162,10 +162,11 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
     def get_drafts_count(self):
         communities = self.get_member_communities()
 
-        drafts = get_unionized_activity_queryset(
-            lambda model: model.objects.filter(community__in=communities)
-            .drafts(self.request.user)
-            .only("pk", "community")
+        drafts, _ = get_activity_querysets(
+            lambda model: model.objects.filter(community__in=communities).drafts(
+                self.request.user
+            ),
+            values=("pk", "community"),
         )
 
         return {

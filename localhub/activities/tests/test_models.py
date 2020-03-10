@@ -1,8 +1,11 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from datetime import timedelta
+
 import pytest
 from django.contrib.auth.models import AnonymousUser
+from django.utils import timezone
 from taggit.models import Tag
 
 from localhub.comments.factories import CommentFactory
@@ -12,6 +15,7 @@ from localhub.events.factories import EventFactory
 from localhub.events.models import Event
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
+from localhub.photos.factories import PhotoFactory
 from localhub.photos.models import Photo
 from localhub.polls.models import Poll
 from localhub.posts.factories import PostFactory
@@ -22,8 +26,9 @@ from ..models import (
     get_activity_model,
     get_activity_models,
     get_activity_models_dict,
-    get_unionized_activity_queryset,
-    get_unionized_activity_queryset_count,
+    get_activity_querysets,
+    get_activity_queryset_count,
+    load_objects,
 )
 
 pytestmark = pytest.mark.django_db
@@ -399,26 +404,35 @@ class TestGetActivityModels:
             get_activity_model("something")
 
 
-class TestGetUnionizedActivityQueryset:
-    def test_get_unionized_activity_queryset(self):
-        PostFactory()
-        EventFactory()
+class TestGetActivityQuerysets:
+    def test_get_activity_querysets(self):
+        post = PostFactory(published=timezone.now() - timedelta(days=1))
+        event = EventFactory(published=timezone.now() - timedelta(days=3))
+        PhotoFactory(published=None)
 
-        qs = get_unionized_activity_queryset(
-            lambda model: model.objects.only("pk", "title")
+        qs, querysets = get_activity_querysets(
+            lambda model: model.objects.filter(published__isnull=False),
+            ordering="-published",
         )
 
         assert len(qs) == 2
+        assert len(querysets) == 4
+
+        items = load_objects(qs, querysets)
+        assert len(items) == 2
+
+        assert items[0]["pk"] == post.id
+        assert items[0]["object"] == post
+        assert items[0]["object_type"] == "post"
+
+        assert items[1]["pk"] == event.id
+        assert items[1]["object"] == event
+        assert items[1]["object_type"] == "event"
 
 
-class TestGetUnionizedActivityQuerysetCount:
-    def test_get_unionized_activity_queryset_count(self):
+class TestGetActivityQuerysetCount:
+    def test_get_activity_queryset_count(self):
         PostFactory()
         EventFactory()
 
-        assert (
-            get_unionized_activity_queryset_count(
-                lambda model: model.objects.only("pk")
-            )
-            == 2
-        )
+        assert get_activity_queryset_count(lambda model: model.objects.all()) == 2

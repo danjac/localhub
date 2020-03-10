@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.db.models import BooleanField, Q, QuerySet, Value
+from django.db.models import BooleanField, Q, Value
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.functional import cached_property
@@ -17,6 +17,7 @@ from django.views.generic import View
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView, GenericModelView, ListView, UpdateView
 
+from localhub.activities.models import get_activity_models
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.models import Comment
 from localhub.comments.views import BaseCommentListView
@@ -286,7 +287,7 @@ class UserStreamView(SingleUserMixin, BaseActivityStreamView):
     active_tab = "posts"
     template_name = "users/activities.html"
 
-    def filter_queryset(self, queryset: QuerySet):
+    def filter_queryset(self, queryset):
         return (
             super()
             .filter_queryset(queryset)
@@ -298,7 +299,7 @@ class UserStreamView(SingleUserMixin, BaseActivityStreamView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["num_likes"] = (
-            Like.objects.for_models(*self.models)
+            Like.objects.for_models(*get_activity_models())
             .filter(recipient=self.user_obj, community=self.request.community)
             .count()
         )

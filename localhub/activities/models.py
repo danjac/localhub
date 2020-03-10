@@ -1,6 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import collections
 
 from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
@@ -29,6 +30,102 @@ from localhub.utils.itertools import takefirst
 from localhub.utils.text import slugify_unicode
 
 from .utils import extract_hashtags
+
+
+def get_activity_models():
+    """
+    Returns all Activity subclasses
+    """
+    return Activity.__subclasses__()
+
+
+def get_activity_models_dict():
+    return {model._meta.model_name: model for model in get_activity_models()}
+
+
+def get_activity_model(object_type):
+    """
+    Looks up activity Model for object type string e.g. "post".
+
+    object_type can be a string e.g. "post" or QuerySet.
+    """
+    if isinstance(object_type, models.QuerySet):
+        object_type = object_type.model._meta.model_name
+    return get_activity_models_dict()[object_type]
+
+
+def unionize_querysets(querysets, all=False):
+    """
+    Combines multiple querysets with single UNION statement.
+    Columns must all be identical so remember to use with "only()".
+    """
+    return querysets[0].union(*querysets[1:], all=all)
+
+
+def load_objects(items, querysets):
+    """
+    Loads objects from get_activity_querysets() into list of dict:
+
+    union_qs, querysets = get_activity_querysets()
+    load_objects(union_qs, querysets)
+
+    [
+        {
+
+            "pk": 12345,
+            "object_type": "post",
+            "object": instance,
+        }
+    ...
+    ]
+    """
+
+    bulk_load = collections.defaultdict(set)
+
+    for item in items:
+        bulk_load[item["object_type"]].add(item["pk"])
+
+    queryset_dict = {
+        queryset.model._meta.model_name: queryset for queryset in querysets
+    }
+
+    fetched = {
+        (object_type, obj.pk): obj
+        for object_type, primary_keys in bulk_load.items()
+        for obj in queryset_dict[object_type].filter(pk__in=primary_keys)
+    }
+
+    for item in items:
+        item["object"] = fetched[(item["object_type"], item["pk"])]
+
+    return items
+
+
+def get_activity_querysets(queryset_fn, ordering=None, values=None, all=False):
+    if isinstance(ordering, str):
+        ordering = (ordering,)
+
+    values = list(values) if values else ["pk", "object_type"]
+
+    if ordering:
+        values += [field.lstrip("-") for field in ordering]
+
+    querysets = [queryset_fn(model) for model in get_activity_models()]
+
+    qs = unionize_querysets(
+        [qs.with_object_type().only(*values).values(*values) for qs in querysets],
+        all=all,
+    )
+
+    if ordering:
+        qs = qs.order_by(*ordering)
+
+    return qs, querysets
+
+
+def get_activity_queryset_count(queryset_fn):
+    querysets = [queryset_fn(model).only("pk") for model in get_activity_models()]
+    return unionize_querysets(querysets, all=True).count()
 
 
 class ActivityQuerySet(
@@ -543,47 +640,5 @@ class Activity(TimeStampedModel):
     def save(self, *args, **kwargs):
         is_new = self._state.adding
         super().save(*args, **kwargs)
+
         self.save_tags(is_new)
-
-
-def get_activity_models():
-    """
-    Returns all Activity subclasses
-    """
-    return Activity.__subclasses__()
-
-
-def get_activity_models_dict():
-    return {model._meta.model_name: model for model in get_activity_models()}
-
-
-def get_activity_model(object_type):
-    """
-    Looks up activity Model for object type string e.g. "post".
-    """
-    return get_activity_models_dict()[object_type]
-
-
-def unionize_querysets(querysets, all=False):
-    return querysets[0].union(*querysets[1:], all=all)
-
-
-def get_unionized_activity_queryset(fn, all=False):
-    """
-    Creates a combined UNION queryset of all Activity subclasses.
-
-    fn should take a model class and return a QuerySet. QuerySets
-    for all models should have identical columns i.e. use with only().
-
-    Example:
-
-    get_unionized_activity_queryset(
-        lambda model: model.objects.only("pk", "title")
-    )
-    """
-    querysets = [fn(model) for model in get_activity_models()]
-    return unionize_querysets(querysets, all)
-
-
-def get_unionized_activity_queryset_count(fn):
-    return get_unionized_activity_queryset(fn, all=True).count()

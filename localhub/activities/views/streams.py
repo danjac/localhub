@@ -1,7 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import collections
 import itertools
 
 from django.conf import settings
@@ -23,7 +22,7 @@ from localhub.pagination import PresetCountPaginator
 from localhub.private_messages.models import Message
 from localhub.views import SearchMixin
 
-from ..models import get_activity_models, unionize_querysets
+from ..models import get_activity_queryset_count, get_activity_querysets, load_objects
 
 
 class BaseActivityStreamView(CommunityRequiredMixin, TemplateView):
@@ -42,21 +41,11 @@ class BaseActivityStreamView(CommunityRequiredMixin, TemplateView):
     def get_ordering(self):
         return self.ordering
 
-    @cached_property
-    def models(self):
-        return get_activity_models()
-
     def filter_queryset(self, queryset):
         """
         Override this method for view-specific filtering
         """
         return queryset.for_community(community=self.request.community)
-
-    def get_querysets(self):
-        return [
-            self.filter_queryset(self.get_queryset_for_model(model))
-            for model in self.models
-        ]
 
     def get_queryset_for_model(self, model):
         """
@@ -72,68 +61,25 @@ class BaseActivityStreamView(CommunityRequiredMixin, TemplateView):
         """
         return model.objects
 
-    def get_count_querysets(self):
-        return [
-            self.filter_queryset(self.get_count_queryset_for_model(model))
-            for model in self.models
-        ]
-
-    def get_queryset_dict(self):
-        return {
-            queryset.model._meta.model_name: queryset
-            for queryset in self.get_querysets()
-        }
-
-    def get_unionized_queryset(self, queryset_dict):
-        values = ["pk", "object_type"]
-
-        ordering = self.get_ordering()
-        if isinstance(ordering, str):
-            ordering = (ordering,)
-        if ordering:
-            values += [field.lstrip("-") for field in ordering]
-
-        qs = unionize_querysets(
-            [qs.with_object_type().values(*values) for key, qs in queryset_dict.items()]
+    def get_count(self):
+        return get_activity_queryset_count(
+            lambda model: self.filter_queryset(self.get_count_queryset_for_model(model))
         )
 
-        if ordering:
-            qs = qs.order_by(*ordering)
-
-        return qs
-
-    def get_count(self):
-        return unionize_querysets(
-            [qs.only("pk") for qs in self.get_count_querysets()], all=True
-        ).count()
-
-    def load_objects(self, items, queryset_dict):
-        bulk_load = collections.defaultdict(set)
-
-        for item in items:
-            bulk_load[item["object_type"]].add(item["pk"])
-
-        fetched = {
-            (object_type, obj.pk): obj
-            for object_type, primary_keys in bulk_load.items()
-            for obj in queryset_dict[object_type].filter(pk__in=primary_keys)
-        }
-
-        for item in items:
-            item["object"] = fetched[(item["object_type"], item["pk"])]
-
     def get_page(self):
-        queryset_dict = self.get_queryset_dict()
-        union_qs = self.get_unionized_queryset(queryset_dict)
+        qs, querysets = get_activity_querysets(
+            lambda model: self.filter_queryset(self.get_queryset_for_model(model)),
+            ordering=self.get_ordering(),
+        )
 
         page = self.paginator_class(
-            object_list=union_qs,
+            object_list=qs,
             count=self.get_count(),
             per_page=self.paginate_by,
             allow_empty_first_page=self.allow_empty,
         ).get_page(self.request.GET.get(self.page_kwarg, 1))
 
-        self.load_objects(page, queryset_dict)
+        load_objects(page, querysets)
 
         return page
 
@@ -307,9 +253,12 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
         (Django bug?) so we need to build this separately for each
         queryset.
         """
+        _, querysets = get_activity_querysets(
+            lambda model: self.filter_queryset(self.get_queryset_for_model(model))
+        )
         querysets = [
-            qs.only("id", "published").select_related(None).dates("published", "month")
-            for qs in self.get_queryset_dict().values()
+            qs.only("pk", "published").select_related(None).dates("published", "month")
+            for qs in querysets
         ]
         return sorted(set(itertools.chain.from_iterable(querysets)))
 
@@ -331,6 +280,8 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
 
 
 timeline_view = TimelineView.as_view()
+
+# ActivitySearchView
 
 
 class SearchView(SearchMixin, BaseActivityStreamView):
