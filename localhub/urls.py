@@ -8,7 +8,6 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 from localhub.activities.views.streams import activity_stream_view
-
 from localhub.communities.views import (
     community_list_view,
     community_not_found_view,

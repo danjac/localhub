@@ -8,12 +8,7 @@ from django.utils.safestring import mark_safe
 from localhub.users.utils import linkify_mentions
 from localhub.utils.urls import is_https
 
-from ..models import (
-    get_activity_querysets,
-    get_activity_queryset_count,
-    load_objects,
-)
-
+from ..models import get_activity_queryset_count, get_activity_querysets, load_objects
 from ..oembed import bootstrap_oembed
 from ..utils import linkify_hashtags
 
