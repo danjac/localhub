@@ -133,42 +133,49 @@
       {% endif %}
     </div>
     <div class="card-footer">
+      {% if is_detail and object.edited and object.published and object.edited > object.published %}
       <div class="">
-        {#<div class="float-left-responsive">#}
-        {% if is_detail %}
-        {% if object.edited and object.published and object.edited > object.published %}
-        <div class="info">
+        {% if object.editor != object.owner %}
+        {% include "users/includes/chip.html" with profile=object.editor %}
+        <span class="timesince">
+          {% blocktrans with edited=object.edited|timesince %}last edited {{ edited }} ago{% endblocktrans %}
+        </span>
+        {% else %}
+        <span class="timesince">
           {% blocktrans with edited=object.edited|timesince %}Last edited {{ edited }} ago{% endblocktrans %}
-          {% if object.editor != object.owner %}
-          {% trans "by" %}
-          {% include "users/includes/chip.html" with profile=object.editor %}
+        </span>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <div class="">
+        {% with num_comments=object.num_comments|default:0 object_url=object.get_absolute_url %}
+        {% if num_comments %}
+        <div class="info">
+          {% if not is_detail %}
+          <a href="{{ object_url }}#comments">
+            {% endif %}
+            {{ num_comments }}
+            {% blocktrans count counter=num_comments %}
+            comment
+            {% plural %}
+            comments
+            {% endblocktrans %}
+            {% if not is_detail %}
+          </a>
           {% endif %}
         </div>
         {% endif %}
-
-        {% with num_reshares=reshares.count %}
-        {% if num_reshares %}
-        {% if num_reshares > 20 %}
-        {% blocktrans %}
-        <b>{{ num_reshares }}</b> people have reshared this post.
-        {% endblocktrans %}
-        {% else %}
-        <div class="info">{% trans "Reshared by" %}
-          {% for reshare in reshares %}
-          {% include "users/includes/chip.html" with profile=reshare.owner profile_url=reshare.get_absolute_url %}&nbsp;
-          {% endfor %}
-        </div>
-        {% endif %}
-        {% endif %}
         {% endwith %}
 
+        {% if is_detail %}
         {% elif object.num_reshares %}
         <div class="info">
           {{ object.num_reshares }}
           {% blocktrans count counter=object.num_reshares %}
-          person has reshared this {{ object_type }}
+          reshare
           {% plural %}
-          people have reshared this {{ object_type }}
+          reshares
           {% endblocktrans %}
         </div>
         {% endif %}
@@ -176,25 +183,31 @@
         <div class="info">
           {{ object.num_likes }}
           {% blocktrans count counter=object.num_likes %}
-          person liked this {{ object_type }}
+          like
           {% plural %}
-          people liked this {{ object_type }}
+          likes
           {% endblocktrans %}
         </div>
         {% endif %}
 
-        {% with num_comments=object.num_comments|default:0 object_url=object.get_absolute_url %}
-        {% if num_comments %}
-        <div class="info">
-          {% blocktrans count counter=num_comments %}
-          This {{ object_type }} has <a href="{{ object_url }}#comments">one comment</a>.
-          {% plural %}
-          This {{ object_type }} has <a href="{{ object_url }}#comments">{{ num_comments }} comments</a>.
-          {% endblocktrans %}
-        </div>
-        {% endif %}
-        {% endwith %}
       </div>
+      {% with num_reshares=reshares.count %}
+      {% if num_reshares %}
+      <div class="info">
+        {% if num_reshares > 20 %}
+        {% blocktrans %}
+        {{ num_reshares }} reshares
+        {% endblocktrans %}
+        {% else %}
+        {% trans "Reshared by" %}
+        {% for reshare in reshares %}
+        {% include "users/includes/chip.html" with profile=reshare.owner profile_url=reshare.get_absolute_url %}&nbsp;
+        {% endfor %}
+        {% endif %}
+      </div>
+      {% endif %}
+      {% endwith %}
+
 
       <div class="actions">
         {% has_perm "activities.pin_activity" user object as can_pin %}

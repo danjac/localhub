@@ -68,10 +68,11 @@
 
     {% if is_detail and comment.edited %}
     <div class="info">
-      {% blocktrans with edited=comment.edited|timesince %}Last edited {{ edited }} ago{% endblocktrans %}
       {% if comment.editor != comment.owner %}
-      {% trans "by" %}
       {% include "users/includes/chip.html" with profile=comment.editor %}
+      {% blocktrans with edited=comment.edited|timesince %}last edited {{ edited }} ago{% endblocktrans %}
+      {% else %}
+      {% blocktrans with edited=comment.edited|timesince %}Last edited {{ edited }} ago{% endblocktrans %}
       {% endif %}
     </div>
     {% endif %}
@@ -80,9 +81,9 @@
     <div class="info">
       {{ comment.num_likes }}
       {% blocktrans count counter=comment.num_likes %}
-      person liked this comment
+      like
       {% plural %}
-      people liked this comment
+      likes
       {% endblocktrans %}
     </div>
     {% endif %}

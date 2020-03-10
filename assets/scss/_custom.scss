@@ -139,8 +139,9 @@ table {
 
 .info {
   color: $gray-color-dark;
-  @extend .my-2;
+  @extend .mr-1;
   font-size: smaller;
+  display: inline-block;
 }
 
 .form-input {

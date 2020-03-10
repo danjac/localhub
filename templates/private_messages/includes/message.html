@@ -48,11 +48,12 @@
     {% with num_replies=message.num_replies|default:0 %}
     {% if num_replies %}
     <div class="info">
-      This message has <a href="{{ message_url }}">
+      <a href="{{ message_url }}">
+        {{ num_replies }}
         {% blocktrans count counter=num_replies %}
-        one reply.
+        reply
         {% plural %}
-        {{ counter }} replies.
+        replies
         {% endblocktrans %}
       </a>
     </div>
@@ -63,12 +64,12 @@
     {% with num_follow_ups=message.num_follow_ups|default:0 %}
     {% if num_follow_ups %}
     <div class="info">
-      This message has <a href="{{ message_url }}">
-        {% blocktrans count counter=num_follow_ups %}
-        one follow up.
-        {% plural %}
-        {{ counter }} follow up.
-        {% endblocktrans %}
+      {{ num_follow_ups }}
+      {% blocktrans count counter=num_follow_ups %}
+      follow-up
+      {% plural %}
+      follow-ups
+      {% endblocktrans %}
       </a>
     </div>
     {% endif %}
