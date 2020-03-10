@@ -8,7 +8,7 @@
 {% block form_fields %}
 {% with tags=community.get_content_warning_tags|safeseq %}
 {% if tags %}
-<div class="toast my-2">
+<div class="toast text-center my-2">
   {% blocktrans with first_tag=tags|first count counter=tags|length %}
   If you add the tag <b>#{{ first_tag }}</b>
   {% plural %}
