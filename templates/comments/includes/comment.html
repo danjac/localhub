@@ -56,12 +56,7 @@
 
     {% if is_detail and comment.edited %}
     <div class="info">
-      {% if comment.editor != comment.owner %}
-      {% include "users/includes/chip.html" with profile=comment.editor %}
-      {% blocktrans with edited=comment.edited|timesince %}last edited {{ edited }} ago{% endblocktrans %}
-      {% else %}
-      {% blocktrans with edited=comment.edited|timesince %}Last edited {{ edited }} ago{% endblocktrans %}
-      {% endif %}
+      {% blocktrans with edited=comment.edited|timesince %}Updated {{ edited }} ago{% endblocktrans %}
     </div>
     {% endif %}
 
