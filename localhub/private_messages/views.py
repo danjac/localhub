@@ -76,7 +76,7 @@ class InboxView(RecipientQuerySetMixin, BaseMessageListView):
     template_name = "private_messages/inbox.html"
 
     def get_queryset(self):
-        qs = super().get_queryset().with_common_annotations(self.request.user)
+        qs = super().get_queryset()
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank", "-created")
         return qs.order_by(F("read").desc(nulls_first=True), "-created")
@@ -93,7 +93,7 @@ class OutboxView(SenderQuerySetMixin, BaseMessageListView):
     template_name = "private_messages/outbox.html"
 
     def get_queryset(self):
-        qs = super().get_queryset().with_common_annotations(self.request.user)
+        qs = super().get_queryset()
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank", "-created")
         return qs.order_by("-created")

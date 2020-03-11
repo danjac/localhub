@@ -33,37 +33,6 @@
     {% endcollapsable %}
   </div>
   <div class="card-footer">
-    {% if not is_detail %}
-    {% with num_replies=message.num_replies|default:0 %}
-    {% if num_replies %}
-    <div class="info">
-      <a href="{{ message_url }}">
-        {{ num_replies }}
-        {% blocktrans count counter=num_replies %}
-        reply
-        {% plural %}
-        replies
-        {% endblocktrans %}
-      </a>
-    </div>
-    {% endif %}
-    {% endwith %}
-    {% endif %}
-
-    {% with num_follow_ups=message.num_follow_ups|default:0 %}
-    {% if num_follow_ups %}
-    <div class="info">
-      {{ num_follow_ups }}
-      {% blocktrans count counter=num_follow_ups %}
-      follow-up
-      {% plural %}
-      follow-ups
-      {% endblocktrans %}
-      </a>
-    </div>
-    {% endif %}
-    {% endwith %}
-
     <div class="actions">
       {% if can_reply %}
       <a href="{% url 'private_messages:message_reply' message.id %}">
@@ -90,7 +59,12 @@
 
       <a href="{{ message.get_permalink }}">{% trans "Link" %}</a>
       {% if parent %}
+      {% if is_thread %}
+      <a data-turbolinks="false"
+         href="#message-{{ parent.id }}">{% trans "Parent" %}</a>
+      {% else %}
       <a href="{{ parent.get_permalink }}">{% trans "Parent" %}</a>
+      {% endif %}
       {% endif %}
     </div>
   </div>
