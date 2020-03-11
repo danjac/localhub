@@ -6,7 +6,7 @@ import pytest
 from localhub.communities.models import Community, Membership
 from localhub.posts.factories import PostFactory
 
-from ..rules import is_activity_community_moderator, is_editor, is_owner
+from ..rules import is_activity_community_moderator, is_owner
 
 pytestmark = pytest.mark.django_db
 
@@ -15,24 +15,20 @@ class TestIsOwner:
     def test_is_owner(self, user):
         post = PostFactory(owner=user)
         assert is_owner.test(user, post)
-        assert is_editor.test(user, post)
 
     def test_is_not_owner(self, user):
         post = PostFactory()
         assert not is_owner.test(user, post)
-        assert not is_editor.test(user, post)
 
 
 class TestIsPostCommunityModerator:
     def test_is_moderator(self, moderator):
         post = PostFactory(community=moderator.community)
         assert is_activity_community_moderator.test(moderator.member, post)
-        assert is_editor(moderator.member, post)
 
     def test_is_not_moderator(self, user):
         post = PostFactory()
         assert not is_activity_community_moderator.test(user, post)
-        assert not is_editor(user, post)
 
 
 class TestLikePermissions:
@@ -133,7 +129,7 @@ class TestChangePermissions:
 
     def test_moderator_can_change_activity(self, moderator):
         post = PostFactory(community=moderator.community)
-        assert moderator.member.has_perm("activities.change_activity", post)
+        assert not moderator.member.has_perm("activities.change_activity", post)
 
 
 class TestDeletePermissions:

@@ -47,11 +47,9 @@ def is_reshare(user, activity):
     return activity.is_reshare
 
 
-is_editor = is_owner | is_activity_community_moderator
-
 rules.add_perm("activities.create_activity", is_member)
-rules.add_perm("activities.change_activity", is_editor & ~is_reshare)
-rules.add_perm("activities.delete_activity", is_editor)
+rules.add_perm("activities.change_activity", is_owner & ~is_reshare)
+rules.add_perm("activities.delete_activity", is_owner | is_activity_community_moderator)
 
 rules.add_perm(
     "activities.flag_activity",

@@ -139,21 +139,6 @@ class TestPostUpdateView:
         assert post.title == "UPDATED"
         assert not post.published
 
-    def test_post_moderator(self, client, moderator, send_notification_webpush_mock):
-        post = PostFactory(
-            community=moderator.community,
-            owner=MembershipFactory(community=moderator.community).member,
-        )
-        response = client.post(
-            reverse("posts:update", args=[post.id]),
-            {"title": "UPDATED", "description": post.description},
-        )
-        post.refresh_from_db()
-        assert response.url == post.get_absolute_url()
-        assert post.title == "UPDATED"
-        assert post.editor == moderator.member
-        assert post.edited
-
 
 class TestPostCommentCreateView:
     def test_get(self, client, member):
