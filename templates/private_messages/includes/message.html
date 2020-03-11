@@ -19,17 +19,6 @@
         {% blocktrans with created=message.created|timesince %}
         {{ created }} ago
         {% endblocktrans %}
-        {% if parent %}
-        {% if is_follow_up %}
-        {% trans "in follow-up to" %}
-        {% else %}
-        {% trans "in reply to" %}
-        {% endif %}
-        <a {% if is_thread %}
-           data-turbolinks="false"
-           {% endif %}
-           href="{{ parent_url }}">#{{ parent.id }}</a>
-        {% endif %}
       </span>
       {% if is_recipient and not message.read %}
       <div class="chip bg-primary">{% trans "New" %}</div>
@@ -99,6 +88,10 @@
          data-confirm-header="{% trans 'Delete Message' %}"
          data-confirm-body="{% trans "Are you sure you want to delete this message? Replies to this message will not be deleted. The message may still be available to the other person." %}">{% trans "Delete" %}</a>
 
+      <a href="{{ message.get_permalink }}">{% trans "Link" %}</a>
+      {% if parent %}
+      <a href="{{ parent.get_permalink }}">{% trans "Parent" %}</a>
+      {% endif %}
     </div>
   </div>
 </div>

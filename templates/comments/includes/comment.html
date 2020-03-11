@@ -17,20 +17,8 @@
     {% endif %}
 
     <div class="card-title h6">
-      {% include "activities/includes/timesince.html" with timestamp=comment.created owner=comment.owner %}
-      {% with parent=comment.parent %}
-      {% if parent and comment.is_parent_owner_member and not is_reply %}
-      <span class="timesince">{% trans "in reply to" %}</span>
-      <a {% spaceless %}
-         {% if is_thread %}
-         href="#comment-{{ parent.id }}"
-         data-turbolinks="false"
-         {% else %}
-         href="{{ parent.get_absolute_url }}"
-         {% endif %}
-         {% endspaceless %}>#{{ parent.id }}</a>
-      {% endif %}
-      {% endwith %}
+      {% url 'users:comments' comment.owner.username as owner_url %}
+      {% include "activities/includes/timesince.html" with profile_url=owner_url timestamp=comment.created owner=comment.owner %}
     </div>
   </div>
   {% if comment.is_blocked %}
@@ -144,6 +132,19 @@
         {% trans "Delete" %}
       </a>
       {% endif %}
+      <a href="{{ comment.get_permalink }}">{% trans "Link" %}</a>
+      {% with parent=comment.parent %}
+      {% if parent and comment.is_parent_owner_member and not is_reply %}
+      <a {% spaceless %}
+         {% if is_thread %}
+         href="#comment-{{ parent.id }}"
+         data-turbolinks="false"
+         {% else %}
+         href="{{ parent.get_absolute_url }}"
+         {% endif %}
+         {% endspaceless %}>{% trans "Parent" %}</a>
+      {% endif %}
+      {% endwith %}
     </div>
   </div>
   {% endif %}
