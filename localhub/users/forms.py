@@ -45,7 +45,7 @@ class UserForm(forms.ModelForm):
 
         labels = {
             "send_email_notifications": _(
-                "Send me an email when I receive a new Direct Message or Notification"
+                "Send me an email when I receive a new Message or Notification"
             ),
         }
         help_texts = {
