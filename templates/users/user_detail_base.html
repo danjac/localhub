@@ -156,7 +156,7 @@
         data-controller="active-link"
         data-active-link-exact>
         <a data-target="active-link.match"
-           href="{% url 'users:activities' user_obj.username %}">{% trans "Activity Stream" %}</a>
+           href="{% url 'users:activities' user_obj.username %}">{% trans "Activities" %}</a>
     </li>
     <li class="tab-item"
         data-controller="active-link"
@@ -167,7 +167,7 @@
            class="badge"
            data-badge="{{ unread_messages }}"
            {% endif %}>
-            {% trans "Direct Messages" %}
+            {% trans "Messages" %}
         </a>
     </li>
     <li class="tab-item"
