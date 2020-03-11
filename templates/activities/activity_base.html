@@ -179,9 +179,7 @@
 
         {% if object.edited and object.published and object.edited > object.published %}
         <div class="info">
-          <span class="timesince">
-            {% blocktrans with edited=object.edited|timesince %}Updated {{ edited }} ago{% endblocktrans %}
-          </span>
+          {% blocktrans with edited=object.edited|timesince %}Updated {{ edited }} ago{% endblocktrans %}
         </div>
         {% endif %}
 
