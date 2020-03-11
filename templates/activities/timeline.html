@@ -85,23 +85,18 @@
                 <div class="tile-content">
                     <p class="tile-subtitle">{{ month }}</p>
                     {% for activity in activities %}
+                    {% with object=activity.object object_type=activity.object_type %}
                     <p class="tile-title">
-                        <a href="{{ activity.object.get_absolute_url }}">
-                            {{ activity.object|truncatechars:100 }}
+                        <a href="{{ object.get_absolute_url }}">
+                            {{ object|truncatechars:100 }}
                         </a>
-                        <span class="chip">{% trans activity.object_type|capfirst %}</span>
+                        <span class="chip">{% trans object_type|capfirst %}</span>
                     </p>
                     <p class="tile-title">
-                        <div>
-                            <span class="timesince">
-                                {% blocktrans with since=activity.object.published|timesince %}
-                                {{ since }} ago by
-                                {% endblocktrans %}
-                                {% include "users/includes/chip.html" with profile=activity.object.owner %}
-                            </span>
-                        </div>
+                        {% include "activities/includes/timesince.html" with timestamp=object.published owner=object.owner %}
                     </p>
                     <div class="divider"></div>
+                    {% endwith %}
                     {% endfor %}
                 </div>
             </div>
