@@ -20,20 +20,6 @@
     </a>
     <a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
 </div>
-{% if total_count %}
-<div class="actions">
-    {% if status %}
-    <a href="{{ request.path }}">{% trans "Show All" %}</a>
-    {% endif %}
-    {% for value, label in status_choices %}
-    {% if status != value %}
-    <a href="{{ request.path }}?status={{ value }}">{{ label }}</a>
-    {% endif %}
-    {% endfor %}
-</div>
-{% endif %}
-<div class="clearfix"></div>
-
 <div class="divider"></div>
 
 {% if paginator.count or view.search_query %}
@@ -47,6 +33,20 @@
        href="{{ settings_url }}">in your community settings</a>.{% endblocktrans %}
 </p>
 {% endif %}
+
+{% if total_count %}
+<div class="actions my-1">
+    {% if status %}
+    <a href="{{ request.path }}">{% trans "Show All" %}</a>
+    {% endif %}
+    {% for value, label in status_choices %}
+    {% if status != value %}
+    <a href="{{ request.path }}?status={{ value }}">{{ label }}</a>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
 
 {% if object_list %}
 <table class="table table-hover table-responsive">
