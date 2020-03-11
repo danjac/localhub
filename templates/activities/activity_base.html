@@ -306,7 +306,9 @@
         {% endblock %}
         {% endif %}
 
-        <a href="{{ object.get_permalink }}">{% trans "Permalink" %}</a>
+        {% if object.url %}
+        <a href="{{ object.get_permalink }}">{% trans "Link" %}</a>
+        {% endif %}
 
       </div>
 
