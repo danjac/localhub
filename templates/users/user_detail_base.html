@@ -20,16 +20,19 @@
 {% user_display user_obj as display_name %}
 
 <h5>
-    {% avatar user_obj "avatar-lg" %}{{ display_name }}
+    {% avatar user_obj "avatar-lg" %}
+    {% if user_obj.username == display_name %}
+    @{{ display_name }}
+    {% else %}
+    {{ display_name }}
+    (@{{ user_obj.username }})
+    {% endif %}
     {% if membership.is_admin %}
     <span class="chip bg-primary">{% trans "Admin" %}</span>
     {% elif membership.is_moderator %}
     <span class="chip bg-primary">{% trans "Moderator" %}</span>
     {% endif %}
 </h5>
-
-
-<h4>@{{ user_obj.username }}</h4>
 
 {% if is_blocked %}
 <p>

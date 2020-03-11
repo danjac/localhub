@@ -23,6 +23,12 @@ a {
   }
 }
 
+aside {
+  .menu-item a {
+    font-size: smaller;
+  }
+}
+
 .actions {
   font-size: smaller;
   flex-wrap: wrap;
