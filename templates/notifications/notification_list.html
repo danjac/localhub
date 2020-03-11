@@ -61,8 +61,15 @@
         </div>
       </td>
       <td>
-        <div class="float-right-responsive">
-          {% include "notifications/includes/actions.html" %}
+        <div class="actions float-right-responsive">
+          {% if not notification.is_read %}
+          <a href="{% url 'notifications:mark_read' notification.pk %}"
+             data-controller="ajax"
+             data-action="ajax#post">{% trans "Mark As Read" %}</a>
+          {% endif %}
+          <a href="{% url 'notifications:delete' notification.pk %}"
+             data-controller="ajax"
+             data-action="ajax#post">{% trans "Delete" %}</a>
         </div>
       </td>
     </tr>

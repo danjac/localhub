@@ -36,7 +36,7 @@ class JoinRequestManageMixin(PermissionRequiredMixin, JoinRequestQuerySetMixin):
 
 
 class JoinRequestListView(JoinRequestManageMixin, SearchMixin, ListView):
-    paginate_by = settings.DEFAULT_PAGE_SIZE
+    paginate_by = settings.DEFAULT_PAGE_SIZE * 2
     model = JoinRequest
 
     @cached_property

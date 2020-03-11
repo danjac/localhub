@@ -60,66 +60,55 @@
       {% if can_follow_tag or can_block_tag %}
       <td class="d-hide"
           data-controller="js-toggle">
-        <div class="float-right-responsive">
-          <div class="dropdown">
-            <a class="btn btn-sm dropdown-toggle"
-               tabindex="0">
-              {% trans "Actions" %}
-              <i class="icon icon-caret"></i>
+        <div class="float-right-responsive actions">
+          {% if can_follow_tag %}
+          <span data-controller="toggle">
+            <a href="{% url 'activities:tag_unfollow' tag.id %}"
+               {% if not tag in following %}class="d-hide"
+               {% endif %}
+               data-controller="ajax"
+               data-ajax-redirect="none"
+               data-target="toggle.togglable"
+               data-toggle-target="follow"
+               data-action="ajax#post toggle#toggle">
+              {% trans "Unfollow" %}
             </a>
-            <ul class="menu">
-              {% if can_follow_tag %}
-              <li class="menu-item"
-                  data-controller="toggle">
-                <a href="{% url 'activities:tag_unfollow' tag.id %}"
-                   {% if not tag in following %}class="d-hide"
-                   {% endif %}
-                   data-controller="ajax"
-                   data-ajax-redirect="none"
-                   data-target="toggle.togglable"
-                   data-toggle-target="follow"
-                   data-action="ajax#post toggle#toggle">
-                  {% trans "Unfollow" %}
-                </a>
-                <a href="{% url 'activities:tag_follow' tag.id %}"
-                   {% if tag in following %}class="d-hide"
-                   {% endif %}
-                   data-controller="ajax"
-                   data-ajax-redirect="none"
-                   data-target="toggle.togglable"
-                   data-toggle-target="follow"
-                   data-action="ajax#post toggle#toggle">
-                  {% trans "Follow" %}
-                </a>
-              </li>
-              {% endif %}
-              {% if can_block_tag %}
-              <li class="menu-item"
-                  data-controller="toggle">
-                <a href="{% url 'activities:tag_unblock' tag.id %}"
-                   {% if not tag in blocked %}class="d-hide"
-                   {% endif %}
-                   data-controller="ajax"
-                   data-ajax-redirect="none"
-                   data-target="toggle.togglable"
-                   data-toggle-target="block"
-                   data-action="ajax#post toggle#toggle">
-                  {% trans "Unblock" %}
-                </a>
-                <a href="{% url 'activities:tag_block' tag.id %}"
-                   {% if tag in blocked %}class="d-hide"
-                   {% endif %}
-                   data-controller="ajax"
-                   data-ajax-redirect="none"
-                   data-target="toggle.togglable"
-                   data-toggle-target="block"
-                   data-action="ajax#post toggle#toggle">
-                  {% trans "Block" %}
-                </a>
-              </li>
-              {% endif %}
-            </ul>
-          </div>
+            <a href="{% url 'activities:tag_follow' tag.id %}"
+               {% if tag in following %}class="d-hide"
+               {% endif %}
+               data-controller="ajax"
+               data-ajax-redirect="none"
+               data-target="toggle.togglable"
+               data-toggle-target="follow"
+               data-action="ajax#post toggle#toggle">
+              {% trans "Follow" %}
+            </a>
+          </span>
+          {% endif %}
+          {% if can_block_tag %}
+          <span data-controller="toggle">
+            <a href="{% url 'activities:tag_unblock' tag.id %}"
+               {% if not tag in blocked %}class="d-hide"
+               {% endif %}
+               data-controller="ajax"
+               data-ajax-redirect="none"
+               data-target="toggle.togglable"
+               data-toggle-target="block"
+               data-action="ajax#post toggle#toggle">
+              {% trans "Unblock" %}
+            </a>
+            <a href="{% url 'activities:tag_block' tag.id %}"
+               {% if tag in blocked %}class="d-hide"
+               {% endif %}
+               data-controller="ajax"
+               data-ajax-redirect="none"
+               data-target="toggle.togglable"
+               data-toggle-target="block"
+               data-action="ajax#post toggle#toggle">
+              {% trans "Block" %}
+            </a>
+          </span>
+          {% endif %}
         </div>
       </td>
       {% endif %}

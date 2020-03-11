@@ -87,15 +87,7 @@
     </a>
     {% endif %}
 
-    {% if can_view_membership %}
-    <a href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
-    {% endif %}
-
     {% if not is_current_user %}
-
-    {% if can_create_message and not is_current_user and not is_blocked %}
-    <a href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
-    {% endif %}
 
     {% if can_follow_user %}
     <span class="d-hide"
@@ -125,6 +117,10 @@
     {% endwith %}
     {% endif %}
 
+    {% if can_create_message and not is_current_user and not is_blocked %}
+    <a href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
+    {% endif %}
+
     {% if can_block_user %}
     {% with redirect_url=user_obj.get_absolute_url %}
     {% if is_blocking %}
@@ -147,6 +143,11 @@
     {% endwith %}
     {% endif %}
     {% endif %}
+
+    {% if can_view_membership %}
+    <a href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
+    {% endif %}
+
 </div>
 
 {% if not is_blocked %}

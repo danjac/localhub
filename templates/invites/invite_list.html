@@ -54,31 +54,18 @@
             </td>
             <td>{{ invite.get_status_display }}</td>
             <td>
-                <div class="float-right-responsive">
-                    <div class="dropdown">
-                        <a class="btn btn-sm dropdown-toggle"
-                           tabindex="0">
-                            {% trans "Actions" %}
-                            <i class="icon icon-caret"></i>
-                        </a>
-                        <ul class="menu">
-                            {% if invite.is_pending %}
-                            <li class="menu-item">
-                                <a href="{% url 'invites:resend' invite.id %}"
-                                   class="d-hide"
-                                   data-controller="js-toggle ajax"
-                                   data-action="ajax#post">{% trans "Re-send" %}</a>
-                            </li>
-                            {% endif %}
-                            <li class="menu-item">
-                                <a href="{% url 'invites:delete' invite.id %}"
-                                   data-controller="ajax confirm"
-                                   data-action="confirm#check ajax#post"
-                                   data-confirm-header="{% trans 'Delete invite' %}"
-                                   data-confirm-body="{% trans 'You sure you want to delete this invite?' %}">{% trans "Delete" %}</a>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="actions float-right-responsive">
+                    {% if invite.is_pending %}
+                    <a href="{% url 'invites:resend' invite.id %}"
+                       class="d-hide"
+                       data-controller="js-toggle ajax"
+                       data-action="ajax#post">{% trans "Re-send" %}</a>
+                    {% endif %}
+                    <a href="{% url 'invites:delete' invite.id %}"
+                       data-controller="ajax confirm"
+                       data-action="confirm#check ajax#post"
+                       data-confirm-header="{% trans 'Delete invite' %}"
+                       data-confirm-body="{% trans 'You sure you want to delete this invite?' %}">{% trans "Delete" %}</a>
                 </div>
             </td>
         </tr>

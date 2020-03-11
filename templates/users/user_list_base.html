@@ -62,49 +62,38 @@
             </td>
             <td>
                 {% if user != object %}
-                <div class="float-right-responsive">
-                    <div class="dropdown">
-                        <a class="btn btn-default btn-sm dropdown-toggle"
-                           tabindex="0">
-                            {% trans "Actions" %}
-                            <i class="icon icon-caret"></i>
+                <div class="float-right-responsive actions">
+                    {% has_perm "users.follow_user" user object as can_follow_user %}
+                    {% if can_follow_user %}
+                    <span class="d-hide"
+                          data-controller="js-toggle toggle">
+                        <a href="{% url 'users:unfollow' object.username %}"
+                           {% if not object.is_following %}class="d-hide"
+                           {% endif %}
+                           data-controller="ajax"
+                           data-ajax-redirect="none"
+                           data-target="toggle.togglable"
+                           data-toggle-target="follow"
+                           data-action="ajax#post toggle#toggle">
+                            {% trans "Unfollow" %}
                         </a>
-                        <ul class="menu">
-                            {% if can_create_message and object not in blocked_users %}
-                            <li class="menu-item">
-                                <a href="{% url 'private_messages:message_create' object.username %}">
-                                    {% trans "Send Message" %}
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% has_perm "users.follow_user" user object as can_follow_user %}
-                            {% if can_follow_user %}
-                            <li class="menu-item d-hide"
-                                data-controller="js-toggle toggle">
-                                <a href="{% url 'users:unfollow' object.username %}"
-                                   {% if not object.is_following %}class="d-hide"
-                                   {% endif %}
-                                   data-controller="ajax"
-                                   data-ajax-redirect="none"
-                                   data-target="toggle.togglable"
-                                   data-toggle-target="follow"
-                                   data-action="ajax#post toggle#toggle">
-                                    {% trans "Unfollow" %}
-                                </a>
-                                <a href="{% url 'users:follow' object.username %}"
-                                   {% if object.is_following %}class="d-hide"
-                                   {% endif %}
-                                   data-controller="ajax"
-                                   data-ajax-redirect="none"
-                                   data-target="toggle.togglable"
-                                   data-toggle-target="follow"
-                                   data-action="ajax#post toggle#toggle">
-                                    {% trans "Follow" %}
-                                </a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </div>
+                        <a href="{% url 'users:follow' object.username %}"
+                           {% if object.is_following %}class="d-hide"
+                           {% endif %}
+                           data-controller="ajax"
+                           data-ajax-redirect="none"
+                           data-target="toggle.togglable"
+                           data-toggle-target="follow"
+                           data-action="ajax#post toggle#toggle">
+                            {% trans "Follow" %}
+                        </a>
+                    </span>
+                    {% endif %}
+                    {% if can_create_message and object not in blocked_users %}
+                    <a href="{% url 'private_messages:message_create' object.username %}">
+                        {% trans "Send Message" %}
+                    </a>
+                    {% endif %}
                 </div>
                 {% endif %}
             </td>

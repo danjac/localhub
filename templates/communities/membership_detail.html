@@ -12,27 +12,32 @@
 
 <ul class="breadcrumb">
   <li class="breadcrumb-item"><a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a></li>
-  <li class="breadcrumb-item"><a href="#">{{ display_name }}</a></li>
+  <li class="breadcrumb-item">{{ display_name }}</li>
 </ul>
 
-<h5>{% avatar member "avatar-lg" %}{{ display_name }}</h5>
+{% user_display member as display_name %}
 
-<div class="float-left-responsive">
-  <div class="actions">
+<h5>
+  {% avatar member "avatar-lg" %}
+  {% if member.username == display_name %}
+  @{{ display_name }}
+  {% else %}
+  {{ display_name }}
+  (@{{ member.username }})
+  {% endif %}
+</h5>
 
-    {% if object.active %}
-    <a href="{% url 'users:activities' member.username %}">{% trans "Activities" %}</a>
-    <a href="{% url 'users:comments' member.username %}">{% trans "Comments" %}</a>
-    <a href="{% url 'users:messages' member.username %}">{% trans "Messages" %}</a>
-    {% endif %}
-  </div>
+
+<div class="actions">
+  {% if object.active %}
+  <a href="{% url 'users:activities' member.username %}">{% trans "Activities" %}</a>
+  <a href="{% url 'users:comments' member.username %}">{% trans "Comments" %}</a>
+  <a href="{% url 'users:messages' member.username %}">{% trans "Messages" %}</a>
+  {% endif %}
 </div>
-<div class="float-right-responsive">
-  {% has_perm "communities.change_membership" user object as can_change %}
-  {% has_perm "communities.delete_membership" user object as can_delete %}
-  {% include "communities/includes/membership_actions.html" with member=object %}
-</div>
-<div class="clearfix"></div>
+{% has_perm "communities.change_membership" user object as can_change %}
+{% has_perm "communities.delete_membership" user object as can_delete %}
+{% include "communities/includes/membership_actions.html" with member=object %}
 <div class="divider"></div>
 
 <dl>
@@ -42,7 +47,11 @@
   <dt>{% trans "Role" %}</dt>
   <dd>{{ object.get_role_display }}</dd>
 
-  <dt>{% trans "Joined" %}</dt>
+  <dt>
+    {% blocktrans with community_name=community.name %}
+    Joined {{ community_name }}
+    {% endblocktrans %}
+  </dt>
   <dd>{{ object.created|date:"SHORT_DATE_FORMAT" }}</dd>
 
 </dl>

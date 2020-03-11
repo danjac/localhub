@@ -39,7 +39,7 @@ class InviteAdminMixin(LoginRequiredMixin, PermissionRequiredMixin):
 
 class InviteListView(InviteAdminMixin, InviteQuerySetMixin, SearchMixin, ListView):
     model = Invite
-    paginate_by = settings.DEFAULT_PAGE_SIZE
+    paginate_by = settings.DEFAULT_PAGE_SIZE * 2
 
     def get_permission_object(self):
         return self.request.community

@@ -50,9 +50,7 @@
           class="text-gray"
           {% endif %}>{{ member.get_role_display }}</td>
       <td>
-        <div class="float-right-responsive">
-          {% include "communities/includes/membership_actions.html" %}
-        </div>
+        {% include "communities/includes/membership_actions.html" with css_class="float-right-responsive" %}
       </td>
     </tr>
     {% endfor %}

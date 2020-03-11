@@ -25,18 +25,19 @@ a {
 
 aside {
   .menu-item a {
-    font-size: smaller;
+    font-size: small;
   }
 }
 
+.table,
 .breadcrumb-item,
 .tab-item,
 .pagination {
-  font-size: smaller;
+  font-size: small;
 }
 
 .actions {
-  font-size: smaller;
+  font-size: small;
   flex-wrap: wrap;
 
   a {
@@ -152,7 +153,7 @@ table {
 .info {
   color: $gray-color-dark;
   @extend .mr-1;
-  font-size: smaller;
+  font-size: small;
   display: inline-block;
 }
 
@@ -266,7 +267,7 @@ table {
 
 .timesince {
   color: $gray-color-dark;
-  font-size: smaller;
+  font-size: small;
 }
 
 .toast {

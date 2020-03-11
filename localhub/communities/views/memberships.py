@@ -28,7 +28,7 @@ class MembershipQuerySetMixin(CommunityRequiredMixin):
 class MembershipListView(
     PermissionRequiredMixin, MembershipQuerySetMixin, SearchMixin, ListView,
 ):
-    paginate_by = settings.DEFAULT_PAGE_SIZE
+    paginate_by = settings.DEFAULT_PAGE_SIZE * 2
     permission_required = "communities.manage_community"
     model = Membership
 

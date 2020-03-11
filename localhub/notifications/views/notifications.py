@@ -29,7 +29,7 @@ class NotificationSuccessRedirectMixin:
 
 
 class NotificationListView(NotificationQuerySetMixin, ListView):
-    paginate_by = settings.DEFAULT_PAGE_SIZE
+    paginate_by = settings.DEFAULT_PAGE_SIZE * 2
     template_name = "notifications/notification_list.html"
     model = Notification
 
