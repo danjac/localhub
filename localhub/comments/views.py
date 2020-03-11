@@ -247,7 +247,7 @@ class CommentReplyView(
 
     def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.parent.content_object) + [
-            (self.parent.get_absolute_url(), self.parent.abbreviate()),
+            (self.parent.get_absolute_url(), _("Parent")),
             (None, _("Reply")),
         ]
 

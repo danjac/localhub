@@ -123,7 +123,7 @@ class BaseReplyFormView(BreadcrumbsMixin, BaseMessageFormView):
 
     def get_breadcrumbs(self):
         return [
-            (self.parent.resolve_url(self.request.user), self.parent.abbreviate()),
+            (self.parent.resolve_url(self.request.user), _("Parent")),
         ]
 
     def get_form(self, data=None, files=None):
@@ -199,7 +199,7 @@ class MessageCreateView(BreadcrumbsMixin, CommunityRequiredMixin, BaseMessageFor
 
     def get_breadcrumbs(self):
         return [
-            (reverse("private_messages:recipients"), _("All Members"),),
+            (reverse("private_messages:recipients"), _("All Members")),
             (
                 reverse("users:messages", args=[self.recipient.username]),
                 user_display(self.recipient),
