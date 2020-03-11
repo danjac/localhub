@@ -62,9 +62,7 @@
     </div>
     {% if object.url %}
     <div class="card-footer">
-        <div class="actions">
-            <a href="{{ object.get_absolute_url }}">{% trans "Link" %}</a>
-        </div>
+        {% include "activities/includes/actions.html" %}
     </div>
     {% endif %}
 </div>
