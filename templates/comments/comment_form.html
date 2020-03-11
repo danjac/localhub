@@ -11,13 +11,28 @@
 {% include "includes/breadcrumbs.html" %}
 
 {% if parent %}
-<h6>Original Comment</h6>
-<div class="card-title h6">
-    {% include "activities/includes/timesince.html" with timestamp=parent.created owner=parent.owner %}
-</div>
-<div class="markdown-content">
-    {{ parent.content.markdown }}
-</div>
+
+<article class="card"
+         role="comment"
+         id="comment-{{ parent.id }}">
+    <div class="card-header">
+        <div class="card-title h6">
+            {% trans "Parent" %}
+        </div>
+        <div class="card-subtitle h6">
+            {% url 'users:comments' parent.owner.username as owner_url %}
+            {% include "activities/includes/timesince.html" with profile_url=owner_url timestamp=parent.created owner=parent.owner %}
+        </div>
+    </div>
+    <div class="card-body">
+        {% collapsable is_detail %}
+        <div class="markdown-content">
+            {{ parent.content.markdown }}
+        </div>
+        {% endcollapsable %}
+    </div>
+</article>
+
 <div class="divider"></div>
 {% endif %}
 

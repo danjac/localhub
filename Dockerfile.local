@@ -1,31 +1,10 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-FROM python:3.8.0-alpine3.10
+FROM python:3.7.7-buster
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
-
-RUN apk add --update --virtual \
-      build-deps \
-      gcc \
-      musl-dev \
-      python3-dev \
-      && apk add --update \
-      freetype-dev \
-      gettext \
-      jpeg-dev \
-      lcms2-dev \
-      libffi-dev \
-      openjpeg-dev \
-      postgresql-client \
-      postgresql-dev \
-      py-cffi \
-      tcl-dev \
-      tiff-dev \
-      tk-dev \
-      zlib-dev \
-      && rm -rf /var/cache/apk/*
 
 # Copy requirements to insure caching
 COPY ./requirements.txt /requirements.txt
