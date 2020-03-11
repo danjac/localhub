@@ -245,9 +245,12 @@ table {
 
 // stack tabs in mobile
 .tab.tab-block {
-  @media (max-width: $size-md) {
-    display: block;
-  }
+  font-size: smaller;
+  margin: 0 $unit-1 0 0;
+  padding: $unit-1 $unit-1 $unit-1 - $border-width $unit-1;
+  //  @media (max-width: $size-md) {
+  //   display: block;
+  //}
 }
 
 .timesince {
