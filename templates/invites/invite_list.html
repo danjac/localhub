@@ -7,10 +7,7 @@
 
 {% block content %}
 <h5>
-    {% trans "Invites" %}
-    {% if status_display %}
-    - {{ status_display }}
-    {% endif %}
+    {% trans "Invites" %}{% if status_display %}- {{ status_display }}{% endif %}
 </h5>
 
 <div class="actions">
