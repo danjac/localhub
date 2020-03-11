@@ -54,12 +54,6 @@
   </div>
   <div class="card-footer">
 
-    {% if is_detail and comment.edited %}
-    <div class="info">
-      {% blocktrans with edited=comment.edited|timesince %}Updated {{ edited }} ago{% endblocktrans %}
-    </div>
-    {% endif %}
-
     {% if comment.num_likes and comment.owner == user %}
     <div class="info">
       {{ comment.num_likes }}
@@ -70,6 +64,13 @@
       {% endblocktrans %}
     </div>
     {% endif %}
+
+    {% if comment.edited %}
+    <div class="info">
+      {% blocktrans with edited=comment.edited|timesince %}Updated {{ edited }} ago{% endblocktrans %}
+    </div>
+    {% endif %}
+
     <div class="actions">
       {% has_perm "comments.like_comment" user comment as can_like_comment %}
       {% if can_like_comment %}
