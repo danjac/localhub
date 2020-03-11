@@ -135,21 +135,6 @@
       {% endif %}
     </div>
     <div class="card-footer">
-      {% if is_detail and object.edited and object.published and object.edited > object.published %}
-      <div class="">
-        {% if object.editor != object.owner %}
-        {% include "users/includes/chip.html" with profile=object.editor %}
-        <span class="timesince">
-          {% blocktrans with edited=object.edited|timesince %}last edited {{ edited }} ago{% endblocktrans %}
-        </span>
-        {% else %}
-        <span class="timesince">
-          {% blocktrans with edited=object.edited|timesince %}Last edited {{ edited }} ago{% endblocktrans %}
-        </span>
-        {% endif %}
-      </div>
-      {% endif %}
-
       <div class="">
         {% with num_comments=object.num_comments|default:0 object_url=object.get_absolute_url %}
         {% if num_comments %}
@@ -189,6 +174,14 @@
           {% plural %}
           likes
           {% endblocktrans %}
+        </div>
+        {% endif %}
+
+        {% if object.edited and object.published and object.edited > object.published %}
+        <div class="info">
+          <span class="timesince">
+            {% blocktrans with edited=object.edited|timesince %}Updated {{ edited }} ago{% endblocktrans %}
+          </span>
         </div>
         {% endif %}
 
