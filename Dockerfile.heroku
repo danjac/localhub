@@ -13,5 +13,5 @@ RUN pip install -U pip && pip install -r /requirements.txt
 WORKDIR /app
 COPY . /app
 
-RUN adduser -D user
+RUN useradd -m user 
 USER user
