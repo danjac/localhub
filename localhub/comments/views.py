@@ -115,7 +115,8 @@ class CommentUpdateView(
 
     def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.object.content_object) + [
-            (None, _("Edit Comment"))
+            (self.object.get_absolute_url(), _("Comment")),
+            (None, _("Edit")),
         ]
 
     def form_valid(self, form):
@@ -214,7 +215,8 @@ class CommentFlagView(
 
     def get_breadcrumbs(self):
         return get_breadcrumbs_for_instance(self.comment.content_object) + [
-            (None, _("Flag Comment"))
+            (self.comment.get_absolute_url(), _("Comment")),
+            (None, _("Flag")),
         ]
 
     def form_valid(self, form):
