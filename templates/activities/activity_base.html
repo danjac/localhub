@@ -144,9 +144,9 @@
             {% endif %}
             {{ num_comments }}
             {% blocktrans count counter=num_comments %}
-            comment
+            Comment
             {% plural %}
-            comments
+            Comments
             {% endblocktrans %}
             {% if not is_detail %}
           </a>
@@ -160,9 +160,9 @@
         <div class="info">
           {{ object.num_reshares }}
           {% blocktrans count counter=object.num_reshares %}
-          reshare
+          Reshare
           {% plural %}
-          reshares
+          Reshares
           {% endblocktrans %}
         </div>
         {% endif %}
@@ -170,9 +170,9 @@
         <div class="info">
           {{ object.num_likes }}
           {% blocktrans count counter=object.num_likes %}
-          like
+          Like
           {% plural %}
-          likes
+          Likes
           {% endblocktrans %}
         </div>
         {% endif %}
