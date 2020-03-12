@@ -1,12 +1,22 @@
 {% load i18n %}
 
 {% if flags %}
-<h5 class="mt-2">{% trans "Flags" %}</h5>
+<h6 class="mt-2">{% trans "Flags" %}</h6>
 <table class="table table-hover table-responsive">
+  <thead>
+    <tr>
+      <th>{% trans "Time" %}</th>
+      <th>{% trans "Flagged By" %}</th>
+      <th>{% trans "Reason" %}</th>
+      <th>{% trans "Actions" %}</th>
+    </tr>
+  </thead>
   <tbody>
     {% for flag in flags %}
     <tr>
-      <td>{{ flag.created|date }}</td>
+      <td>
+        <span class="timesince">{{ flag.created|timesince }} {% trans "ago" %}</span>
+      </td>
       <td>
         {% include "users/includes/chip.html" with profile=flag.user %}
       </td>

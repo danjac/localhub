@@ -245,6 +245,10 @@ table {
 
 .table-responsive {
   @media (max-width: $size-md) {
+    thead {
+      display: none;
+    }
+
     td {
       display: flex;
       flex-direction: row;

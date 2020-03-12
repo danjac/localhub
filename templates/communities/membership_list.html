@@ -32,6 +32,14 @@
 
 {% if object_list %}
 <table class="table table-hover table-responsive">
+  <thead>
+    <tr>
+      <th>{% trans "Member" %}</th>
+      <th>{% trans "Status" %}</th>
+      <th>{% trans "Role" %}</th>
+      <th>{% trans "Actions" %}</th>
+    </tr>
+  </thead>
   <tbody>
     {% for member in object_list %}
     {% has_perm "communities.change_membership" user member as can_change %}
@@ -50,7 +58,7 @@
           class="text-gray"
           {% endif %}>{{ member.get_role_display }}</td>
       <td>
-        {% include "communities/includes/membership_actions.html" with css_class="float-right-responsive" %}
+        {% include "communities/includes/membership_actions.html" %}
       </td>
     </tr>
     {% endfor %}

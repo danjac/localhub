@@ -50,6 +50,13 @@
 
 {% if object_list %}
 <table class="table table-hover table-responsive">
+    <thead>
+        <tr>
+            <th>{% trans "User" %}</th>
+            <th>{% trans "Status" %}</th>
+            <th>{% trans "Actions" %}</th>
+        </tr>
+    </thead>
     <tbody>
         {% for join_request in object_list %}
         {% with is_pending=join_request.is_pending is_rejected=join_request.is_rejected detail_url=join_request.get_absolute_url %}
@@ -66,7 +73,7 @@
             </td>
             <td class="d-hide"
                 data-controller="js-toggle">
-                <div class="actions float-right-responsive">
+                <div class="actions">
                     {% if is_pending or is_rejected %}
                     <a data-controller="ajax confirm"
                        data-action="confirm#check ajax#post"

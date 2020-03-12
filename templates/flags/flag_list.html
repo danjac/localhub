@@ -4,13 +4,30 @@
 {% extends "flags/base.html" %}
 {% load i18n %}
 {% block content %}
+<h5>{% trans "Flagged" %}</h5>
+
 {% if object_list %}
 <table class="table table-hover table-responsive">
+    <thead>
+        <tr>
+            <th>{% trans "Item" %}</th>
+            <th>{% trans "Time" %}</th>
+            <th>{% trans "Flagged By" %}</th>
+            <th>{% trans "Reason" %}</th>
+        </tr>
+    </thead>
     <tbody>
         {% for flag in object_list %}
         <tr>
             <td>
-                <a href="{{ flag.content_object.get_absolute_url }}">{{ flag.content_type.name|capfirst }}</a>
+                <a href="{{ flag.content_object.get_absolute_url }}">
+                    {{ flag.content_object }}
+                    <div class="chip">
+                        {{ flag.content_type.name|capfirst }}
+                    </div>
+                </a>
+            </td>
+            <td>
                 <div class="info">
                     {% blocktrans with created=flag.created|timesince %}
                     {{ created }} ago

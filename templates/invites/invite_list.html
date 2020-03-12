@@ -42,6 +42,13 @@
 
 {% if object_list %}
 <table class="table table-hover table-responsive">
+    <thead>
+        <tr>
+            <th>{% trans "Email" %}</th>
+            <th>{% trans "Status" %}</th>
+            <th>{% trans "Actions" %}</th>
+        </tr>
+    </thead>
     <tbody>
         {% for invite in object_list %}
         <tr>
@@ -50,7 +57,7 @@
             </td>
             <td>{{ invite.get_status_display }}</td>
             <td>
-                <div class="actions float-right-responsive">
+                <div class="actions">
                     {% if invite.is_pending %}
                     <a href="{% url 'invites:resend' invite.id %}"
                        class="d-hide"
