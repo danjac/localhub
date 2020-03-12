@@ -59,9 +59,8 @@
 
 </dl>
 {% if object.has_map %}
-<div class="divider"></div>
 <div id="map-for-event-{{ object.id }}"
-     class="event-map event-map-lg"
+     class="event-map event-map-lg mt-1"
      data-controller="map"
      data-map-latitude="{{ object.latitude }}"
      data-map-longitude="{{ object.longitude }}"></div>

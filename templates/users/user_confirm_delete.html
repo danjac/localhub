@@ -7,11 +7,9 @@
 {% block content %}
 <h5>{% trans "Delete Account" %}</h5>
 
-<div class="actions">
+<div class="actions mb-1">
   <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
 </div>
-
-<div class="divider"></div>
 
 <form method="POST"
       action="{% url 'user_delete' %}">

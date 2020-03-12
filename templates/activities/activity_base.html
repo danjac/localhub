@@ -8,7 +8,7 @@
 {% with is_content_sensitive=object|is_content_sensitive:user %}
 <article role="{{ object_type }}"
          id="{{ object_type }}-{{ object.id }}"
-         class="card"
+         class="card {{ object_type }}-card"
          {% if is_content_sensitive %}
          data-controller="content-sensitive"
          {% endif %}>
@@ -38,11 +38,10 @@
 
         {% if object.is_reshare %}
 
-        <div class="
-           card-subtitle
-           h6">
+        <div class="card-subtitle h6">
           {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner is_reshare=True %}
         </div>
+
         <div class="divider"></div>
 
         {% if object.parent %}
@@ -134,6 +133,8 @@
       </blockquote>{% endif %}
       {% endif %}
     </div>
+
+
     <div class="card-footer">
       <div class="">
         {% with num_comments=object.num_comments|default:0 object_url=object.get_absolute_url %}

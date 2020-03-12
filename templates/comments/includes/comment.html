@@ -25,7 +25,6 @@
   <div class="card-body"
        data-controller="toggle">
     <strong>{% trans "You have blocked this user." %}</strong>
-    <div class="divider"></div>
     <div class="markdown-content d-hide"
          data-target="toggle.togglable"
          data-toggle-target="blocked-comment">
@@ -44,7 +43,6 @@
     <div>
       <a href="{{ comment.content_object.get_absolute_url }}">{{ comment.content_object }}</a>
     </div>
-    <div class="divider"></div>
     {% endif %}
     {% collapsable is_detail %}
     <div class="markdown-content">

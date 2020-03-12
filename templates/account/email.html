@@ -10,10 +10,10 @@
 {% block content %}
 <h5>{% trans "Email Addresses" %}</h5>
 
-<div class="actions">
+<div class="actions mb-1">
   <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
 </div>
-<div class="divider"></div>
+
 {% with emailaddresses=user.emailaddress_set.all emailaddress_count=user.emailaddress_set.count %}
 {% if emailaddress_count %}
 <p>{% trans "The following email addresses are associated with your account:" %}</p>
@@ -66,9 +66,7 @@
 
 {% endwith %}
 
-<div class="divider"></div>
-
-<h4>{% trans "Add E-mail Address" %}</h4>
+<h5>{% trans "Add E-mail Address" %}</h5>
 
 <form method="post"
       action="{% url 'account_email' %}"

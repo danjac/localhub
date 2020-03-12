@@ -6,8 +6,8 @@
 {% load activities_tags %}
 
 {% if object.url %}
-<div class="divider"></div>
-<div data-controller="oembed" class="wordwrap">
+<div data-controller="oembed"
+     class="wordwrap">
     {% if is_oembed %}
     {{ object.url|oembed_no_urlize|url_to_img }}
     {% else %}

@@ -10,7 +10,6 @@
 {% block content %}
 
 <h5>{% trans "Login" %}</h5>
-<div class="divider"></div>
 
 {% if community.intro %}
 {{ community.intro.markdown }}
@@ -19,6 +18,5 @@
 {% include "account/includes/signup_link.html" %}
 {% url 'account_login' as login_url %}
 {% include "account/includes/login_form.html" with action=login_url %}
-<div class="divider"></div>
 {% include "account/includes/social_logins.html" %}
 {% endblock content %}
