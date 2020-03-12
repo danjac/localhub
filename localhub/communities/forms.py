@@ -54,8 +54,12 @@ class CommunityForm(forms.ModelForm):
                 "If disabled they will only be able to join if an admin sends "
                 "them an invite."
             ),
+            "blacklisted_email_domains": _(
+                "Join requests from these email domains will be automatically "
+                "rejected. Separate with spaces."
+            ),
             "blacklisted_email_addresses": _(
-                "Join requests from these addresses will be automatically "
+                "Join requests from these email addresses will be automatically "
                 "rejected. Separate with spaces."
             ),
         }
