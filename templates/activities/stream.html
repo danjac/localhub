@@ -48,23 +48,23 @@
 {% if pinned %}
 {% with object=pinned.object object_type=pinned.object_type %}
 <div class="card my-2">
-    <div class="card-header activity-title h6">
-        {% if object.url %}
-        {{ object.url|linkify:object.title }}
-        {% else %}
-        <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
-        {% endif %}
-        <span class="chip">{% trans object_type|capfirst %}</span>
-        <span class="chip bg-primary">{% trans "Pinned" %}</span>
-        <div class="card-subtitle">
+    <div class="card-header h6">
+        <div class="activity-title">
+            {% if object.url %}
+            {{ object.url|linkify:object.title }}
+            {% else %}
+            <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+            {% endif %}
+            <span class="chip">{% trans object_type|capfirst %}</span>
+            <span class="chip bg-primary">{% trans "Pinned" %}</span>
+        </div>
+        <div class="card-subtitle h6">
             {% include "activities/includes/timesince.html" with owner=object.owner timestamp=object.published %}
         </div>
     </div>
-    {% if object.url %}
     <div class="card-footer">
         {% include "activities/includes/actions.html" %}
     </div>
-    {% endif %}
 </div>
 {% endwith %}
 {% endif %}

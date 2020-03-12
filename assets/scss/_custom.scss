@@ -215,12 +215,7 @@ table {
 }
 
 .activity-title {
-  @extend .h5;
-
-  @media (max-width: $size-lg) {
-    // h6
-    font-size: 0.8rem !important;
-  }
+  @extend .h6;
 }
 
 
