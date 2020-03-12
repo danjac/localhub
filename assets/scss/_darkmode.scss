@@ -207,5 +207,10 @@
 
   .tab {
     border-color: $gray-color-dark;
+
+    &-item.active a {
+      color: $gray-color;
+      // border-color: $gray-color;
+    }
   }
 }

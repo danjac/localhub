@@ -258,12 +258,13 @@ table {
 }
 
 // stack tabs in mobile
-.tab.tab-block {
-  margin: 0 $unit-1 0 0;
-  padding: $unit-1 $unit-1 $unit-1 - $border-width $unit-1;
-  //  @media (max-width: $size-md) {
-  //   display: block;
-  //}
+.tab {
+  border-bottom: none;
+
+  &-block {
+    margin: 0 $unit-1 0 0;
+    padding: $unit-1 $unit-1 $unit-1 - $border-width $unit-1;
+  }
 }
 
 .timesince {
