@@ -57,13 +57,13 @@
          data-confirm-header="{% trans 'Delete Message' %}"
          data-confirm-body="{% trans "Are you sure you want to delete this message? Replies to this message will not be deleted. The message may still be available to the other person." %}">{% trans "Delete" %}</a>
 
-      <a href="{{ message.get_permalink }}">{% trans "Link" %}</a>
+      <a href="{{ message_url }}">{% trans "Link" %}</a>
       {% if parent %}
       {% if is_thread %}
       <a data-turbolinks="false"
-         href="#message-{{ parent.id }}">{% trans "Parent" %}</a>
+         href="{{ parent_url }}">{% trans "Parent" %}</a>
       {% else %}
-      <a href="{{ parent.get_permalink }}">{% trans "Parent" %}</a>
+      <a href="{{ parent_url }}">{% trans "Parent" %}</a>
       {% endif %}
       {% endif %}
     </div>
