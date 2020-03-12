@@ -11,7 +11,7 @@
 
 {% has_perm "communities.manage_community" user community as can_manage %}
 {% if can_manage or community.description %}
-<div class="actions">
+<div class="actions mb-1">
   {% if community.description %}
   <a href="{% url 'communities:community_detail' %}">
     {% blocktrans with community_name=community.name %}
@@ -26,8 +26,6 @@
   {% endif %}
 </div>
 {% endif %}
-
-<div class="divider"></div>
 
 <div class="markdown-content">
   {{ community.terms.markdown }}

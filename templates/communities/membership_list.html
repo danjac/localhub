@@ -11,12 +11,11 @@
 
 <h5>{% trans "Memberships" %}</h5>
 
-<div class="actions">
+<div class="actions mb-1">
   <a href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
   <a href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
 </div>
 
-<div class="divider"></div>
 
 {% if not view.search_query %}
 <div class="my-2 toast text-center">

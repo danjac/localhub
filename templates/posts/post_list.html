@@ -12,7 +12,7 @@
 <h5>{% trans "Posts" %}</h5>
 
 
-<div class="actions">
+<div class="actions mb-1">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
   <a href="{% url 'posts:create' %}">
@@ -24,7 +24,6 @@
   <a href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
 </div>
 
-<div class="divider"></div>
 
 {% if paginator.count or view.search_query %}
 {% include "includes/forms/search_form.html" with selector=True %}

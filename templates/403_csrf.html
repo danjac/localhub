@@ -5,10 +5,11 @@
 {% load i18n %}
 {% block content %}
 <p class="mt-2">
-{% trans "Sorry, there's been a problem posting your form. Please reload this page and try again." %}
+  {% trans "Sorry, there's been a problem posting your form. Please reload this page and try again." %}
 </p>
 <div class="divider"></div>
 <p class="">
-  <a class="btn btn-default" href="{{ request.get_full_path }}">{% trans "Reload Page" %}</a>
+  <a class="btn btn-default"
+     href="{{ request.get_full_path }}">{% trans "Reload Page" %}</a>
 </p>
 {% endblock %}

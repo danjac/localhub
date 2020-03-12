@@ -28,17 +28,17 @@
 </h5>
 
 
-<div class="actions">
+<div class="actions mb-1">
   {% if object.active %}
   <a href="{% url 'users:activities' member.username %}">{% trans "Activities" %}</a>
   <a href="{% url 'users:comments' member.username %}">{% trans "Comments" %}</a>
   <a href="{% url 'users:messages' member.username %}">{% trans "Messages" %}</a>
   {% endif %}
 </div>
+
 {% has_perm "communities.change_membership" user object as can_change %}
 {% has_perm "communities.delete_membership" user object as can_delete %}
-{% include "communities/includes/membership_actions.html" with member=object %}
-<div class="divider"></div>
+{% include "communities/includes/membership_actions.html" with member=object css_class="mb-1" %}
 
 <dl>
   <dt>{% trans "Status" %}</dt>

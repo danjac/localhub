@@ -9,13 +9,11 @@
 {% block content %}
 <h5>{% trans "Community Settings" %}</h5>
 
-<div class="actions">
+<div class="actions mb-1">
   <a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
   <a href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
   <a href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
 </div>
-
-<div class="divider"></div>
 
 {% trans "Save Settings" as t_save_settings %}
 

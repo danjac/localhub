@@ -25,14 +25,12 @@
 {% endif %}
 
 {% if months|length > 1 %}
-<div class="actions">
+<div class="actions mb-1">
     {% for order, name in months %}
     <a href="{{ request.path }}?month={{ order }}&year={{ current_year }}">{{ name }}</a>
     {% endfor %}
 </div>
 {% endif %}
-
-<div class="divider"></div>
 
 {% if dates %}
 {% spaceless %}

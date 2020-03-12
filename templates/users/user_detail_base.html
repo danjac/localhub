@@ -79,7 +79,7 @@
 </p>
 {% endif %}
 
-<div class="actions">
+<div class="actions mb-1">
 
     {% if is_current_user %}
     <a href="{% url 'user_update' %}">
@@ -151,7 +151,6 @@
 </div>
 
 {% if not is_blocked %}
-<div class="divider"></div>
 <ul class="tab tab-block">
     <li class="tab-item"
         data-controller="active-link"

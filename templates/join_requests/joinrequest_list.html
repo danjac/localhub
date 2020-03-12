@@ -14,13 +14,12 @@
     {% endif %}
 </h5>
 
-<div class="actions">
+<div class="actions mb-1">
     <a href="{% url 'invites:list' %}">
         {% trans "Invites" %}
     </a>
     <a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
 </div>
-<div class="divider"></div>
 
 {% if paginator.count or view.search_query %}
 {% include "includes/forms/search_form.html" with selector=True %}

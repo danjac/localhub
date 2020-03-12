@@ -7,7 +7,7 @@
 {% block content %}
 <h5>{% trans "Events" %}</h5>
 
-<div class="actions">
+<div class="actions mb-1">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
   <a href="{% url 'events:create' %}">
@@ -20,7 +20,6 @@
 </div>
 
 
-<div class="divider"></div>
 
 {% if paginator.count or view.search_query %}
 {% include "includes/forms/search_form.html" with selector=True %}

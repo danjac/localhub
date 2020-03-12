@@ -11,8 +11,10 @@
 {% user_display object.sender as display_name %}
 
 {% include "includes/breadcrumbs.html" %}
+<h5>{% avatar object.sender "avatar-lg" %}{{ display_name }}</h5>
+
 {% with is_pending=object.is_pending is_rejected=object.is_rejectd %}
-<div class="actions d-hide"
+<div class="actions mb-1 d-hide"
      data-controller="js-toggle">
   {% if is_pending or is_rejected %}
   <a data-controller="ajax confirm"
@@ -39,9 +41,6 @@
 </div>
 {% endwith %}
 
-<div class="divider"></div>
-
-<h5>{% avatar object.sender "avatar-lg" %}{{ display_name }}</h5>
 
 <dl>
   <dt>{% trans "Status" %}</dt>
@@ -61,9 +60,10 @@
 {% endcollapsable %}
 {% endif %}
 
+
 {% if object.intro %}
 <div class="divider"></div>
-<h4>{% trans "Introduction" %}</h4>
+<h5>{% trans "Introduction" %}</h5>
 {{ object.intro|linebreaks }}
 {% endif %}
 

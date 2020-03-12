@@ -10,7 +10,7 @@
 <h5>{% trans "Notifications" %}</h5>
 
 {% if object_list %}
-<div class="actions d-hide"
+<div class="actions d-hide mb-1"
      data-controller="js-toggle">
   {% if is_unread_notifications %}
   <a href="{% url 'notifications:mark_all_read' %}"
@@ -24,8 +24,6 @@
      data-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}">{% trans "Delete All" %}</a>
 </div>
 {% endif %}
-
-<div class="divider"></div>
 
 <p class="toast text-center my-2 d-hide"
    data-controller="cookie-notice"

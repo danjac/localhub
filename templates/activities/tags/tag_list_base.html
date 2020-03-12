@@ -10,7 +10,6 @@
 {% block content %}
 
 <h5>{% trans "Tags" %}</h5>
-<div class="divider"></div>
 
 {% has_perm "users.follow_tag" user as can_follow_tag %}
 {% has_perm "users.block_tag" user as can_block_tag %}
