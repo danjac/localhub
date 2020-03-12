@@ -45,7 +45,7 @@ class CalendarWidget(forms.SplitDateTimeWidget):
                 "data-action": "click->calendar#toggle",
                 "data-target": "calendar.dateInput",
                 "autocomplete": "off",
-                "placeholder": _("Date"),
+                "placeholder": _("DD/MM/YYYY"),
             }
         )
         time_attrs = kwargs.pop("time_attrs", {})
@@ -54,11 +54,12 @@ class CalendarWidget(forms.SplitDateTimeWidget):
                 "data-action": "click->time-selector#toggle",
                 "data-target": "time-selector.timeInput",
                 "autocomplete": "off",
-                "placeholder": _("Time"),
+                "placeholder": _("HH:MM"),
             }
         )
         super().__init__(
             date_attrs=date_attrs,
+            date_format="%d/%m/%Y",
             time_attrs=time_attrs,
             time_format="%H:%M",
             *args,

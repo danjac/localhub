@@ -16,9 +16,9 @@ import {
   subMonths
 } from 'date-fns';
 
-import {
-  Controller
-} from 'stimulus';
+import { Controller } from 'stimulus';
+
+const DATE_FORMAT = 'dd/MM/yyyy';
 
 export default class extends Controller {
   static targets = ['calendar', 'dateInput', 'currentMonth', 'days'];
@@ -26,11 +26,9 @@ export default class extends Controller {
   toggle(event) {
     event.preventDefault();
     if (!this.calendarTarget.classList.toggle('d-none')) {
-      const {
-        value
-      } = this.dateInputTarget;
+      const { value } = this.dateInputTarget;
 
-      this.selectedDate = value ? parse(value) : null;
+      this.selectedDate = value ? parse(value, DATE_FORMAT, new Date()) : null;
       this.firstOfMonthDate = startOfMonth(this.selectedDate || new Date());
 
       this.render();
@@ -51,12 +49,8 @@ export default class extends Controller {
 
   select(event) {
     event.preventDefault();
-    const btn = event.currentTarget;
-    const selectedDate = btn.getAttribute('data-calendar-date');
-    this.dateInputTarget.value = format(
-      selectedDate,
-      this.data.get('date-format')
-    );
+    const selectedDate = event.currentTarget.getAttribute('data-calendar-date');
+    this.dateInputTarget.value = selectedDate;
     this.calendarTarget.classList.add('d-none');
   }
 
@@ -68,7 +62,7 @@ export default class extends Controller {
     // set the current month first (tbd: i18n)
     this.currentMonthTarget.innerText = format(
       this.firstOfMonthDate,
-      'MMMM YYYY'
+      'MMMM yyyy'
     );
     // clear
     while (this.daysTarget.firstChild) {
@@ -81,7 +75,7 @@ export default class extends Controller {
 
       btn.append(date.getDate().toString());
       btn.setAttribute('data-action', 'calendar#select');
-      btn.setAttribute('data-calendar-date', date.toString());
+      btn.setAttribute('data-calendar-date', format(date, DATE_FORMAT));
 
       btn.classList.add('date-item');
 

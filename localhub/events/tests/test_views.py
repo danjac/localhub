@@ -31,9 +31,9 @@ class TestEventCreateView:
             {
                 "title": "test",
                 "description": "test",
-                "starts_0": "2019-2-2",
+                "starts_0": "2/2/2020",
                 "starts_1": "10:00",
-                "ends_0": "2019-2-2",
+                "ends_0": "2/2/2020",
                 "ends_1": "10:00",
                 "timezone": "Europe/Helsinki",
             },
@@ -67,9 +67,9 @@ class TestEventUpdateView:
             {
                 "title": "UPDATED",
                 "description": event_for_member.description,
-                "starts_0": "2019-2-2",
+                "starts_0": "2/2/2020",
                 "starts_1": "10:00",
-                "ends_0": "2019-2-2",
+                "ends_0": "2/2/2020",
                 "ends_1": "10:00",
                 "timezone": "Europe/Helsinki",
             },

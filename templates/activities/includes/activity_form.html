@@ -8,7 +8,11 @@
 {% block form_fields %}
 {% with tags=community.get_content_warning_tags|safeseq %}
 {% if tags %}
-<div class="toast text-center my-2">
+<div class="toast text-center my-2 d-hide"
+     data-controller="cookie-notice"
+     data-cookie-notice-name="content-warning-tags-activity-form">
+  <button class="btn btn-clear float-right"
+          data-action="cookie-notice#accept"></button>
   {% blocktrans with first_tag=tags|first count counter=tags|length %}
   If you add the tag <b>#{{ first_tag }}</b>
   {% plural %}

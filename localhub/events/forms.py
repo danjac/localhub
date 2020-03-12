@@ -12,10 +12,16 @@ from localhub.forms.widgets import TypeaheadInput
 from .models import Event
 
 
+DATE_FORMATS = ["%d/%m/%Y"]
+
+
 class EventForm(forms.ModelForm):
 
-    starts = CalendarField(label=_("Event starts"))
-    ends = CalendarField(label=_("Event ends"), required=False)
+    starts = CalendarField(label=_("Event starts"), input_date_formats=DATE_FORMATS)
+
+    ends = CalendarField(
+        label=_("Event ends"), required=False, input_date_formats=DATE_FORMATS
+    )
 
     class Meta:
         model = Event
