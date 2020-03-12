@@ -88,7 +88,6 @@
    <a class="d-hide"
       data-controller="js-toggle ajax confirm"
       data-action="confirm#check ajax#post"
-      data-ajax-redirect="{{ request.path }}"
       data-confirm-body="{% trans 'Are you sure you want to publish this draft?' %}"
       href="{{ object.get_publish_url }}">{% trans "Publish" %}</a>
    {% endif %}
