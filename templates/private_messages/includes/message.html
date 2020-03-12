@@ -33,6 +33,7 @@
     {% endcollapsable %}
   </div>
   <div class="card-footer">
+    <div class="divider"></div>
     <div class="actions">
       {% if can_reply %}
       <a href="{% url 'private_messages:message_reply' message.id %}">
