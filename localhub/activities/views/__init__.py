@@ -18,6 +18,7 @@ def create_activity_urls(
     like_view_class=generic.ActivityLikeView,
     dislike_view_class=generic.ActivityDislikeView,
     reshare_view_class=generic.ActivityReshareView,
+    publish_view_class=generic.ActivityPublishView,
     pin_view_class=generic.ActivityPinView,
     unpin_view_class=generic.ActivityUnpinView,
     create_comment_view_class=generic.ActivityCommentCreateView,
@@ -57,6 +58,11 @@ def create_activity_urls(
             "<int:pk>/~reshare/",
             reshare_view_class.as_view(model=model),
             name="reshare",
+        ),
+        path(
+            "<int:pk>/~publish/",
+            publish_view_class.as_view(model=model),
+            name="publish",
         ),
         path(
             "<int:pk>/~update/",

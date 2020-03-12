@@ -411,6 +411,9 @@ class Activity(TimeStampedModel):
     def get_flag_url(self):
         return self.resolve_url("flag")
 
+    def get_publish_url(self):
+        return self.resolve_url("publish")
+
     def get_reshare_url(self):
         return self.resolve_url("reshare")
 

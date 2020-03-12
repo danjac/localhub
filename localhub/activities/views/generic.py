@@ -8,7 +8,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from django.utils.functional import cached_property
-from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import (
@@ -117,7 +116,6 @@ class ActivityUpdateView(
     PermissionRequiredMixin, ActivityQuerySetMixin, BreadcrumbsMixin, UpdateView,
 ):
     permission_required = "activities.change_activity"
-    success_message = _("Your changes have been saved")
     page_title = _("Edit")
 
     def get_breadcrumbs(self):
@@ -269,6 +267,26 @@ class ActivityReshareView(PermissionRequiredMixin, BaseSingleActivityView):
             send_activity_notifications(obj, notification)
 
         return redirect(obj)
+
+
+class ActivityPublishView(PermissionRequiredMixin, BaseSingleActivityView):
+    permission_required = "activities.change_activity"
+
+    def get_queryset(self):
+        return super().get_queryset().filter(published__isnull=True)
+
+    def post(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.published = timezone.now()
+        obj.save(update_fields=["published"])
+        message = (_("Your %(activity)s has been published")) % {
+            "activity": obj._meta.verbose_name
+        }
+        messages.success(request, message)
+        return redirect(obj)
+
+
+activity_publish_view = ActivityPublishView.as_view()
 
 
 class ActivityPinView(PermissionRequiredMixin, BaseSingleActivityView):

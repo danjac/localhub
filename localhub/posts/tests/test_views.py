@@ -254,11 +254,22 @@ class TestPostUnpinView:
             owner=MembershipFactory(community=moderator.community).member,
             is_pinned=True,
         )
-        response = client.post(reverse("posts:unpin", args=[post.id]),)
+        response = client.post(reverse("posts:unpin", args=[post.id]))
         assert response.url == settings.HOME_PAGE_URL
 
         post.refresh_from_db()
         assert not post.is_pinned
+
+
+class TestPublishView:
+    def test_post(self, client, member):
+        post = PostFactory(
+            owner=member.member, community=member.community, published=None
+        )
+        response = client.post(reverse("posts:publish", args=[post.id]))
+        assert response.url == post.get_absolute_url()
+        post.refresh_from_db()
+        assert post.published
 
 
 class TestPostLikeView:
