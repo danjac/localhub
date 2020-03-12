@@ -36,8 +36,13 @@
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
-       data-active-link-exact
-       href="{% url 'activities:timeline' %}">{% trans "Timeline" %}
+       href="{% url 'notifications:list' %}"
+       {% if unread_notifications_count %}
+       class="badge"
+       id="sidebar-notifications-counter"
+       data-badge="{{ unread_notifications_count }}"
+       {% endif %}>
+      {% trans "Notifications" %}
     </a>
   </li>
   <li class="menu-item">
@@ -54,13 +59,8 @@
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
-       href="{% url 'notifications:list' %}"
-       {% if unread_notifications_count %}
-       class="badge"
-       id="sidebar-notifications-counter"
-       data-badge="{{ unread_notifications_count }}"
-       {% endif %}>
-      {% trans "Notifications" %}
+       data-active-link-exact
+       href="{% url 'activities:timeline' %}">{% trans "Timeline" %}
     </a>
   </li>
   {% if communities_count > 1 %}
@@ -104,22 +104,22 @@
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
-       href="{% url 'posts:create' %}">{% trans "New Post" %}</a>
+       href="{% url 'posts:create' %}">{% trans "Submit Post" %}</a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
-       href="{% url 'events:create' %}">{% trans "New Event" %}</a>
+       href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
-       href="{% url 'photos:create' %}">{% trans "New Photo" %}</a>
+       href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
-       href="{% url 'polls:create' %}">{% trans "New Poll" %}</a>
+       href="{% url 'polls:create' %}">{% trans "Submit Poll" %}</a>
   </li>
   {% endif %}
 </ul>
