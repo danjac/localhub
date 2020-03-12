@@ -9,6 +9,8 @@ header {
 }
 
 footer {
+  font-size: small;
+
   a {
     @extend .text-light;
     text-decoration: underline;
