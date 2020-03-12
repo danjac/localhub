@@ -215,6 +215,19 @@ class Message(TimeStampedModel):
             self.recipient == user and self.recipient_deleted is None
         )
 
+    def soft_delete(self, user):
+        """
+        If user is recipient, sets recipient_deleted to current time.
+        If user is sender, sets sender_deleted to current time.
+        If both are set then the message itself is permanently deleted.
+        """
+        field = "recipient_deleted" if user == self.recipient else "sender_deleted"
+        setattr(self, field, timezone.now())
+        if self.recipient_deleted and self.sender_deleted:
+            self.delete()
+        else:
+            self.save(update_fields=[field])
+
     def get_thread(self, user):
         """
         Returns thread if exists and is visible to user, otherwise returns None.

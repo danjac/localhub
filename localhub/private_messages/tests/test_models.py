@@ -105,20 +105,17 @@ class TestMessageManager:
         assert Message.objects.exclude_blocked(user).count() == 0
 
     def test_exclude_blocked_if_recipient_blocked(self, user):
-
         message = MessageFactory()
         message.recipient.blocked.add(user)
 
         assert Message.objects.exclude_blocked(user).count() == 0
 
     def test_exclude_blocked_if_neither_blocked(self, user):
-
         MessageFactory()
 
         assert Message.objects.exclude_blocked(user).count() == 1
 
     def test_exclude_blocked_if_both_blocked(self, user):
-
         message = MessageFactory()
         message.recipient.blocked.add(user)
         message.sender.blocked.add(user)
@@ -315,12 +312,10 @@ class TestMessageModel:
         message = MessageFactory(sender=user, thread=thread)
         assert message.get_thread(user) == thread
 
-    def test_is_visible_to_neither_sender_or_recipient(self):
-        message = MessageFactory()
+    def test_is_visible_to_neither_sender_or_recipient(self, message):
         assert not message.is_visible(UserFactory())
 
-    def test_is_visible_to_sender(self):
-        message = MessageFactory()
+    def test_is_visible_to_sender(self, message):
         assert message.is_visible(message.sender)
 
     def test_is_visible_to_sender_if_sender_deleted(self):
@@ -331,8 +326,7 @@ class TestMessageModel:
         message = MessageFactory(recipient_deleted=timezone.now())
         assert message.is_visible(message.sender)
 
-    def test_is_visible_to_recipient(self):
-        message = MessageFactory()
+    def test_is_visible_to_recipient(self, message):
         assert message.is_visible(message.recipient)
 
     def test_is_visible_to_recipient_if_recipient_deleted(self):
@@ -343,8 +337,7 @@ class TestMessageModel:
         message = MessageFactory(sender_deleted=timezone.now())
         assert message.is_visible(message.recipient)
 
-    def test_get_other_user(self):
-        message = MessageFactory()
+    def test_get_other_user(self, message):
         assert message.get_other_user(message.sender) == message.recipient
         assert message.get_other_user(message.recipient) == message.sender
 
@@ -361,3 +354,25 @@ class TestMessageModel:
         message.mark_read()
         message.refresh_from_db()
         assert message.read
+
+    def test_soft_delete_if_recipient(self, message):
+        message.soft_delete(message.recipient)
+        message.refresh_from_db()
+        assert message.sender_deleted is None
+        assert message.recipient_deleted is not None
+
+    def test_soft_delete_if_sender(self, message):
+        message.soft_delete(message.sender)
+        message.refresh_from_db()
+        assert message.sender_deleted is not None
+        assert message.recipient_deleted is None
+
+    def test_soft_delete_if_recipient_and_sender_already_deleted(self):
+        message = MessageFactory(sender_deleted=timezone.now())
+        message.soft_delete(message.recipient)
+        assert not Message.objects.exists()
+
+    def test_soft_delete_if_sender_and_recipient_already_deleted(self):
+        message = MessageFactory(recipient_deleted=timezone.now())
+        message.soft_delete(message.sender)
+        assert not Message.objects.exists()

@@ -11,6 +11,7 @@ from localhub.events.factories import EventFactory
 from localhub.photos.factories import PhotoFactory
 from localhub.polls.factories import PollFactory
 from localhub.posts.factories import PostFactory
+from localhub.private_messages.factories import MessageFactory
 from localhub.users.factories import UserFactory
 
 
@@ -97,6 +98,15 @@ def comment(post):
         content_object=post,
         community=post.community,
         owner=MembershipFactory(community=post.community).member,
+    )
+
+
+@pytest.fixture
+def message(member):
+    return MessageFactory(
+        sender=member.member,
+        recipient=MembershipFactory(community=member.community).member,
+        community=member.community,
     )
 
 

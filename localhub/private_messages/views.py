@@ -282,14 +282,7 @@ class MessageDeleteView(SenderOrRecipientQuerySetMixin, DeleteView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if self.request.user == self.object.recipient:
-            self.object.recipient_deleted = timezone.now()
-        else:
-            self.object.sender_deleted = timezone.now()
-        if self.object.recipient_deleted and self.object.sender_deleted:
-            self.object.delete()
-        else:
-            self.object.save()
+        self.object.soft_delete(self.request.user)
         messages.success(request, _("This message has been deleted"))
         return HttpResponseRedirect(self.get_success_url())
 
