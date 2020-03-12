@@ -111,51 +111,20 @@ class Community(TimeStampedModel):
 
     name = models.CharField(max_length=255)
 
-    logo = ImageField(
-        upload_to="logo",
-        null=True,
-        blank=True,
-        help_text=_("Logo will be rendered in PNG format."),
-    )
+    logo = ImageField(upload_to="logo", null=True, blank=True)
 
-    tagline = models.TextField(
-        blank=True, help_text=_("Summary shown in Communities index page")
-    )
+    tagline = models.TextField(blank=True)
 
-    intro = MarkdownField(
-        blank=True, help_text=_("Text shown in Login and other pages to non-members."),
-    )
+    intro = MarkdownField(blank=True)
 
-    description = MarkdownField(
-        blank=True,
-        help_text=_("Longer description of site shown to members in Description page."),
-    )
+    description = MarkdownField(blank=True)
 
-    terms = MarkdownField(
-        blank=True,
-        help_text=_(
-            "Terms and conditions, code of conduct and other membership terms."
-        ),
-    )
+    terms = MarkdownField(blank=True,)
 
-    content_warning_tags = models.TextField(
-        blank=True,
-        default="#nsfw",
-        help_text=_(
-            "Any posts containing these tags in their description will be automatically hidden by default"  # noqa
-        ),
-    )
+    content_warning_tags = models.TextField(blank=True, default="#nsfw")
 
     email_domain = models.CharField(
-        null=True,
-        blank=True,
-        max_length=100,
-        validators=[DOMAIN_VALIDATOR],
-        help_text=_(
-            "Will add domain to notification emails from this site, e.g. "
-            "notifications@this-domain.com. If left empty will use the site "
-            "domain by default."
-        ),
+        null=True, blank=True, max_length=100, validators=[DOMAIN_VALIDATOR],
     )
 
     google_tracking_id = models.CharField(null=True, blank=True, max_length=30)
@@ -164,41 +133,17 @@ class Community(TimeStampedModel):
         settings.AUTH_USER_MODEL, through="Membership", related_name="communities",
     )
 
-    active = models.BooleanField(
-        default=True, help_text=_("This community is currently live.")
-    )
+    active = models.BooleanField(default=True)
 
     history = HistoricalRecords()
 
-    public = models.BooleanField(
-        default=True,
-        help_text=_("Community is visible to non-members in Community Hub."),
-    )
+    public = models.BooleanField(default=True)
 
-    allow_join_requests = models.BooleanField(
-        default=True,
-        help_text=_(
-            "Users can send requests to join this community. "
-            "If disabled they will only be able to join if an admin sends "
-            "them an invite."
-        ),
-    )
+    allow_join_requests = models.BooleanField(default=True)
 
-    blacklisted_email_domains = models.TextField(
-        blank=True,
-        help_text=_(
-            "Join requests from these domains will be automatically rejected. "
-            "Separate with spaces."
-        ),
-    )
+    blacklisted_email_domains = models.TextField(blank=True)
 
-    blacklisted_email_addresses = models.TextField(
-        blank=True,
-        help_text=_(
-            "Join requests from these addresses will be automatically "
-            "rejected. Separate with spaces."
-        ),
-    )
+    blacklisted_email_addresses = models.TextField(blank=True)
 
     objects = CommunityQuerySet.as_manager()
 
