@@ -42,9 +42,20 @@ def get_opengraph_from_url(url):
 
     Missing items will be None.
 
+    Returns tuple of (url, OpenGraph instance)
+
     """
     if not url:
-        return Opengraph(None, None, None)
+        return url, Opengraph(None, None, None)
+
+    try:
+        # see if redirect in HEAD
+        response = requests.head(url, allow_redirects=True)
+        if response.ok and response.url:
+            url = response.url
+    except (requests.RequestException) as e:
+        logger.error("Error fetching HEAD response for URL %s: %s", url, e)
+        # try and continue...
 
     try:
         response = requests.get(
@@ -56,9 +67,9 @@ def get_opengraph_from_url(url):
             raise ValueError("URL does not return valid HTML response")
     except (requests.RequestException, ValueError) as e:
         logger.error("Error fetching response for URL %s: %s", url, e)
-        return Opengraph(None, None, None)
+        return url, Opengraph(None, None, None)
 
-    return get_opengraph_from_html(response.content)
+    return url, get_opengraph_from_html(response.content)
 
 
 def get_opengraph_from_html(html):

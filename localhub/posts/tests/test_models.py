@@ -256,6 +256,10 @@ class TestPostModel:
         assert notifications[3].verb == "moderator_review_request"
 
     def test_fetch_opengraph_data_from_url_if_ok(self, mocker):
+        class MockHeadResponse:
+            ok = True
+            url = "https://google.com"
+
         class MockResponse:
             ok = True
             headers = {"Content-Type": "text/html; charset=utf-8"}
@@ -271,35 +275,49 @@ class TestPostModel:
 </body>
 </html>"""
 
+        mocker.patch("requests.head", lambda url, **kwargs: MockHeadResponse)
         mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
         post = PostFactory(url="http://google.com", title="", description="")
         post.fetch_opengraph_data_from_url()
 
+        assert post.url == "https://google.com"
         assert post.title == "a test site"
         assert post.opengraph_image == "http://example.com/test.jpg"
         assert post.opengraph_description == "test description"
 
     def test_fetch_opengraph_data_from_url_if_not_ok(self, mocker):
+        class MockHeadResponse:
+            ok = True
+            url = "https://google.com"
+
         class MockResponse:
             ok = False
 
+        mocker.patch("requests.head", lambda url, **kwargs: MockHeadResponse)
         mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
         post = PostFactory(url="http://google.com", title="", description="")
         post.fetch_opengraph_data_from_url()
 
+        assert post.url == "https://google.com"
         assert post.title == "google.com"
         assert post.opengraph_image == ""
         assert post.opengraph_description == ""
 
     def test_if_not_html(self, mocker):
+        class MockHeadResponse:
+            ok = True
+            url = "https://google.com"
+
         class MockResponse:
             ok = True
             headers = {"Content-Type": "image/jpeg"}
 
+        mocker.patch("requests.head", lambda url, **kwargs: MockHeadResponse)
         mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
         post = PostFactory(url="http://google.com/test.jpg", title="", description="")
         post.fetch_opengraph_data_from_url()
 
+        assert post.url == "https://google.com"
         assert post.title == "google.com"
         assert post.opengraph_image == ""
         assert post.opengraph_description == ""

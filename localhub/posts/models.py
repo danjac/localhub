@@ -68,7 +68,10 @@ class Post(Activity):
         not set the title will be set to the domain of the URL.
         """
 
-        og = get_opengraph_from_url(self.url)
+        url, og = get_opengraph_from_url(self.url)
+
+        # URL might change if different from HEAD
+        self.url = url
 
         self.opengraph_image = og.image or ""
         self.opengraph_description = og.description or ""

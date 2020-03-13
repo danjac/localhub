@@ -5,7 +5,11 @@ from ..opengraph import get_opengraph_from_html, get_opengraph_from_url
 
 
 class TestGetOpengraphDataFromUrl:
-    def test_if_good_response(self, mocker):
+    def test_if_good_response_with_head_different_url(self, mocker):
+        class MockHeadResponse:
+            ok = True
+            url = "https://google.com"
+
         class MockResponse:
             ok = True
             headers = {"Content-Type": "text/html; charset=utf-8"}
@@ -21,22 +25,61 @@ class TestGetOpengraphDataFromUrl:
 </body>
 </html>"""
 
+        mocker.patch("requests.head", lambda url, **kwargs: MockHeadResponse)
         mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
-        og = get_opengraph_from_url("https://google.com")
+        url, og = get_opengraph_from_url("http://google.com")
+
+        assert url == "https://google.com"
+        assert og.title == "a test site"
+        assert og.image == "http://example.com/test.jpg"
+        assert og.description == "test description"
+
+    def test_if_good_response_no_header(self, mocker):
+        class MockBadHeadResponse:
+            ok = False
+
+        class MockResponse:
+            ok = True
+            headers = {"Content-Type": "text/html; charset=utf-8"}
+            content = """
+<html>
+<head>
+<title>Hello</title>
+<meta property="og:title" content="a test site">
+<meta property="og:image" content="http://example.com/test.jpg">
+<meta property="og:description" content="test description">
+</head>
+<body>
+</body>
+</html>"""
+
+        mocker.patch("requests.head", lambda url, **kwargs: MockBadHeadResponse)
+        mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
+        url, og = get_opengraph_from_url("https://google.com")
+
+        assert url == "https://google.com"
         assert og.title == "a test site"
         assert og.image == "http://example.com/test.jpg"
         assert og.description == "test description"
 
     def test_if_bad_response(self, mocker):
+        class MockHeadResponse:
+            ok = True
+            url = "https://google.com"
+
         class MockResponse:
             ok = False
 
+        mocker.patch("requests.head", lambda url, **kwargs: MockHeadResponse)
         mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
-        og = get_opengraph_from_url("https://google.com")
+
+        url, og = get_opengraph_from_url("https://google.com")
+        assert url == "https://google.com"
         assert og.is_empty
 
     def test_if_no_url(self):
-        og = get_opengraph_from_url(None)
+        url, og = get_opengraph_from_url(None)
+        assert url is None
         assert og.is_empty
 
 
