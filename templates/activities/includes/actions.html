@@ -5,24 +5,21 @@
 {% load rules %}
 
 <div class="actions">
+
    {% has_perm "activities.pin_activity" user object as can_pin %}
 
    {% if can_pin %}
-   <span class="d-hide"
-         data-controller="js-toggle">
-      <a href="{{ object.get_pin_url }}"
-         {% if object.is_pinned %}
-         class="d-hide"
-         {% endif %}
-         data-controller="ajax"
-         data-action="ajax#post">{% trans "Pin" %}</a>
-      <a href="{{ object.get_unpin_url }}"
-         {% if not object.is_pinned %}
-         class="d-hide"
-         {% endif %}
-         data-controller="ajax"
-         data-action="ajax#post">{% trans "Unpin" %}</a>
-   </span>
+   {% if object.is_pinned %}
+   <a href="{{ object.get_unpin_url }}"
+      class="d-hide"
+      data-controller="ajax js-toggle"
+      data-action="ajax#post">{% trans "Unpin" %}</a>
+   {% else %}
+   <a href="{{ object.get_pin_url }}"
+      class="d-hide"
+      data-controller="ajax js-toggle"
+      data-action="ajax#post">{% trans "Pin" %}</a>
+   {% endif %}
    {% endif %}
 
    {% if not is_detail %}
