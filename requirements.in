@@ -44,5 +44,5 @@ redis==3.3.1
 rules
 sorl-thumbnail
 unidecode
-uvicorn
+# uvicorn
 werkzeug
