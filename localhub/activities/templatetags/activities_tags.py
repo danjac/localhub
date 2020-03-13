@@ -28,6 +28,7 @@ def get_pinned_activity(user, community):
 
     qs, querysets = get_activity_querysets(
         lambda model: model.objects.for_community(community)
+        .with_common_annotations(user, community)
         .published()
         .exclude_blocked(user)
         .select_related("owner")
