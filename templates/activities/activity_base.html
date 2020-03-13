@@ -12,6 +12,7 @@
          {% if is_content_sensitive %}
          data-controller="content-sensitive"
          {% endif %}>
+  {% block header %}
   {% if is_content_sensitive %}
   <div class="card-header"
        data-target="content-sensitive.togglable">
@@ -96,8 +97,10 @@
       {% endif %}
 
     </div>
+    {% endblock header %}
 
-    <div class="card-body mt-2">
+    {% block body %}
+    <div class="card-body">
       {% if object.is_reshare and not object.parent %}
       {% blocktrans %}
       The original {{ object_type }} has been removed.
@@ -135,13 +138,14 @@
       </blockquote>{% endif %}
       {% endif %}
     </div>
+    {% endblock body %}
 
-    <div class="card-footer mt-2">
-      {% block footer %}
-      <div class="divider"></div>
+    {% block footer %}
+
+    <div class="card-footer">
       {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
       {% block actions %}{% include "activities/includes/actions.html" %}{% endblock %}
-      {% endblock footer %}
     </div>
+    {% endblock footer %}
 </article>
 {% endwith %}
