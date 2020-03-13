@@ -97,7 +97,7 @@
 
     </div>
 
-    <div class="card-body">
+    <div class="card-body mt-2">
       {% if object.is_reshare and not object.parent %}
       {% blocktrans %}
       The original {{ object_type }} has been removed.
@@ -136,7 +136,7 @@
       {% endif %}
     </div>
 
-    <div class="card-footer">
+    <div class="card-footer mt-2">
       {% block footer %}
       <div class="divider"></div>
       {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
