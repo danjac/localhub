@@ -1,0 +1,18 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load activities_tags %}
+{% get_pinned_activity user community as pinned %}
+{% if pinned %}
+{% with object=pinned.object object_type=pinned.object_type %}
+{% if object_type == "post" %}
+{% include "posts/includes/pinned.html" with post=object %}
+{% elif object_type == "event" %}
+{% include "events/includes/pinned.html" with event=object %}
+{% elif object_type == "photo" %}
+{% include "photos/includes/pinned.html" with photo=object %}
+{% elif object_type == "poll" %}
+{% include "polls/includes/pinned.html" with poll=object %}
+{% endif %}
+{% endwith %}
+{% endif %}

@@ -1,0 +1,32 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+
+{% with object=pinned.object object_type=pinned.object_type %}
+<div class="card{% if css_class %} {{ css_class }}{% endif %}">
+    <div class="card-header h6">
+        <div class="activity-title">
+            {% block title %}
+            {% if object.url %}
+            {{ object.url|linkify:object.title }}
+            {% else %}
+            <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+            {% endif %}
+            <span class="chip">{% trans object_type|capfirst %}</span>
+            <span class="chip bg-primary">{% trans "Pinned" %}</span>
+        </div>
+        {% endblock title %}
+        <div class="card-subtitle h6">
+            {% block timesince %}
+            {% include "activities/includes/timesince.html" with owner=object.owner timestamp=object.published %}
+            {% endblock timesince %}
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="divider"></div>
+        {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
+        {% block actions %}{% include "activities/includes/actions.html" %}{% endblock %}
+    </div>
+</div>
+{% endwith %}

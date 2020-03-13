@@ -134,69 +134,12 @@
       {% endif %}
     </div>
 
-
     <div class="card-footer">
+      {% block footer %}
       <div class="divider"></div>
-      <div class="">
-        {% with num_comments=object.num_comments|default:0 object_url=object.get_absolute_url %}
-        {% if num_comments %}
-        <div class="info">
-          {{ num_comments }}
-          {% blocktrans count counter=num_comments %}
-          Comment
-          {% plural %}
-          Comments
-          {% endblocktrans %}
-        </div>
-        {% endif %}
-        {% endwith %}
-
-        {% if is_detail %}
-        {% elif object.num_reshares %}
-        <div class="info">
-          {{ object.num_reshares }}
-          {% blocktrans count counter=object.num_reshares %}
-          Reshare
-          {% plural %}
-          Reshares
-          {% endblocktrans %}
-        </div>
-        {% endif %}
-        {% if object.num_likes and object.owner == user %}
-        <div class="info">
-          {{ object.num_likes }}
-          {% blocktrans count counter=object.num_likes %}
-          Like
-          {% plural %}
-          Likes
-          {% endblocktrans %}
-        </div>
-        {% endif %}
-
-        {% if object.edited and object.published and object.edited > object.published %}
-        <div class="info">
-          {% blocktrans with edited=object.edited|timesince %}Updated {{ edited }} ago{% endblocktrans %}
-        </div>
-        {% endif %}
-
-      </div>
-      {% with num_reshares=reshares.count %}
-      {% if num_reshares %}
-      <div class="info">
-        {% if num_reshares > 20 %}
-        {% blocktrans %}
-        {{ num_reshares }} reshares
-        {% endblocktrans %}
-        {% else %}
-        {% trans "Reshared by" %}
-        {% for reshare in reshares %}
-        {% include "users/includes/chip.html" with profile=reshare.owner profile_url=reshare.get_absolute_url %}&nbsp;
-        {% endfor %}
-        {% endif %}
-      </div>
-      {% endif %}
-      {% endwith %}
-      {% include "activities/includes/actions.html" %}
+      {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
+      {% block actions %}{% include "activities/includes/actions.html" %}{% endblock %}
+      {% endblock footer %}
     </div>
 </article>
 {% endwith %}

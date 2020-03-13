@@ -11,7 +11,6 @@ from localhub.forms.widgets import TypeaheadInput
 
 from .models import Event
 
-
 DATE_FORMATS = ["%d/%m/%Y"]
 
 

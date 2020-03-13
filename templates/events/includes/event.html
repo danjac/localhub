@@ -67,10 +67,4 @@
 {% endif %}
 {% endblock content %}
 
-{% block actions %}
-{{ block.super }}
-<a href="{% url 'events:download' object.id %}"
-   download>
-  {% trans 'Download' %}
-</a>
-{% endblock actions %}
+{% block actions %}{% include "events/includes/actions.html" %}{% endblock %}

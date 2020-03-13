@@ -42,10 +42,4 @@
 {% endif %}
 {% endblock content %}
 
-{% block actions %}
-{{ block.super }}
-<a href="{{ object.image.url }}"
-   download>
-  {% trans "Download" %}
-</a>
-{% endblock actions %}
+{% block actions %}{% include "photos/includes/actions.html" %}{% endblock %}

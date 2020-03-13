@@ -1,0 +1,13 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/includes/actions.html" %}
+
+{% load i18n %}
+
+{% block extra_actions %}
+<a href="{% url 'events:download' object.id %}"
+   download>
+    {% trans 'Download' %}
+</a>
+{% endblock %}

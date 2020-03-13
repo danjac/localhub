@@ -88,6 +88,7 @@
    <a class="d-hide"
       data-controller="js-toggle ajax confirm"
       data-action="confirm#check ajax#post"
+      data-confirm-header="{% trans 'Publish' %}"
       data-confirm-body="{% trans 'Are you sure you want to publish this draft?' %}"
       href="{{ object.get_publish_url }}">{% trans "Publish" %}</a>
    {% endif %}
@@ -108,5 +109,6 @@
    {% endif %}
 
    <a href="{{ object.get_permalink }}">{% trans "Link" %}</a>
+   {% block extra_actions %}{% endblock %}
 
 </div>
