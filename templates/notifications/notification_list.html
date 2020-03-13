@@ -47,12 +47,12 @@
         <div class="d-block">
           {% include "notifications/includes/notification.html" %}
           <br />
+          {% include "users/includes/chip.html" with profile=notification.actor %}
           <span class="timesince">
             {% blocktrans with created=notification.created|timesince %}
-            {{ created }} ago from
+            {{ created }} ago
             {% endblocktrans %}
           </span>
-          {% include "users/includes/chip.html" with profile=notification.actor %}
           {% if not notification.is_read %}
           <div class="chip bg-primary">{% trans "New" %}</div>
           {% endif %}
