@@ -115,7 +115,7 @@ class TestGetOpengraphDataFromHtml:
     def test_get_from_header(self):
         html = """
         <html>
-        <head> 
+        <head>
             <title>page title</title>
         </head>
         <body>

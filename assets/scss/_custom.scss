@@ -134,12 +134,15 @@ table {
 
 .form-select {
   -webkit-appearance: none;
-  /*  &:not([multiple]):not([size]) {
-    background: $bg-color-light;
-  } */
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .form-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
   &::placeholder {
     color: $gray-color-dark;
   }
