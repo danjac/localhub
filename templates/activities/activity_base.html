@@ -80,18 +80,20 @@
       </div>
 
       <div class="card-subtitle h6">
-        {% if object.parent %}
-        {% include "activities/includes/timesince.html" with timestamp=object.parent.published owner=object.parent.owner %}
-        {% elif not object.is_reshare %}
-        {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
+        <div class="info">
+          {% if object.parent %}
+          {% include "activities/includes/timesince.html" with timestamp=object.parent.published owner=object.parent.owner %}
+          {% elif not object.is_reshare %}
+          {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
+          {% endif %}
+
+        </div>
+        {% if object.url %}
+        <div class="info">
+          {{ object.url|domain|linkify }}
+        </div>
         {% endif %}
       </div>
-
-      {% if object.url %}
-      <div class="card-subtitle h6">
-        {{ object.url|domain|linkify }}
-      </div>
-      {% endif %}
 
     </div>
 
