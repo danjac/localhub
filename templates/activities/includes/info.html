@@ -44,6 +44,7 @@
         {% blocktrans with edited=object.edited|timesince %}Updated {{ edited }} ago{% endblocktrans %}
     </div>
     {% endif %}
+    {% block extra_info %}{% endblock %}
 
 </div>
 {% with num_reshares=reshares.count %}

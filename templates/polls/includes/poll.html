@@ -27,15 +27,5 @@
     </li>
     {% endfor %}
 </ol>
-
-{% if object.total_num_votes %}
-<p class="pt-1">
-    {% blocktrans count counter=object.total_num_votes %}
-    One person has voted.
-    {% plural %}
-    <b>{{ counter }}</b> people have voted.
-    {% endblocktrans %}
-</p>
-{% endif %}
-
 {% endblock content %}
+{% block info %}{% include "polls/includes/info.html" %}{% endblock %}

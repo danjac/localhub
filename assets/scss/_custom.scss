@@ -294,3 +294,17 @@ table {
 .poll-answers {
   margin: 0;
 }
+
+.card {
+
+  .card-header,
+  .card-body,
+  .card-footer {
+    padding: $layout-spacing;
+    padding-bottom: 0;
+
+    &:last-child {
+      padding-bottom: $layout-spacing-lg;
+    }
+  }
+}

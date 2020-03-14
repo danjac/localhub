@@ -13,7 +13,7 @@
    <a href="{{ object.get_unpin_url }}"
       class="d-hide"
       data-controller="ajax js-toggle"
-      data-action="ajax#post">{% trans "Unpin" %}</a>
+      data-action="ajax#post"><s>{% trans "Pin" %}</s></a>
    {% else %}
    <a href="{{ object.get_pin_url }}"
       class="d-hide"
@@ -56,7 +56,7 @@
          data-target="toggle.togglable"
          data-toggle-target="like"
          data-ajax-redirect="none"
-         data-action="ajax#post toggle#toggle">{% trans "Unlike" %}</a>
+         data-action="ajax#post toggle#toggle"><s>{% trans "Like" %}</s></a>
    </span>
    {% endif %}
 
