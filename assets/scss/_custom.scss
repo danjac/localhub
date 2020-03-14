@@ -38,10 +38,26 @@ aside {
 
 //.table,
 .breadcrumb-item,
-.tab-item,
-.pagination {
+.tab-item {
   font-size: small;
 }
+
+.pagination {
+  margin: 0;
+  padding: 0;
+
+  .page-item {
+    margin: 0;
+    padding: 0;
+
+    a {
+      font-size: small;
+      padding: 0;
+    }
+  }
+
+}
+
 
 .actions {
   font-size: small;
