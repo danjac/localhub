@@ -6,8 +6,10 @@
   <div data-target="collapsable.container">
     {{ collapsable_content }}
   </div>
-  <button class="mt-1 btn btn-block btn-sm d-hide"
-          data-target="collapsable.toggle"
-          data-action="collapsable#toggle"
-          href="#">{% trans "Show More" %}</button>
+  <div class="text-center d-hide"
+       data-target="collapsable.toggle">
+    <button class="mt-1 btn btn-link btn-sm"
+            data-action="collapsable#toggle"
+            href="#">{% trans "Show More" %}</button>
+  </div>
 </div>
