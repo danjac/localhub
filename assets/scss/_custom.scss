@@ -1,5 +1,6 @@
 main {
   min-height: 800px;
+  @extend .text-dark;
 }
 
 header {

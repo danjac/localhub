@@ -1,5 +1,11 @@
 .darkmode {
-  color: $gray-color;
+  main {
+    @extend .text-gray;
+  }
+
+  .text-dark {
+    color: $gray-color;
+  }
 
   .chip {
     background: $dark-color;
@@ -51,16 +57,27 @@
     border: none;
   }
 
+  .input-group {
+    .input-group-addon {
+      background: $darkmode-lighter;
+    }
+  }
+
   .input-group-btn {
     background-color: inherit;
     border-color: $gray-color-dark;
     color: $darkmode-text;
   }
 
-  .calendar-header,
-  .calendar-nav {
-    background-color: $darkmode-lighter;
-    color: $darkmode-text;
+  .calendar {
+    border-color: $gray-color-dark;
+
+    .calendar-header,
+    .calendar-nav {
+      border-color: $gray-color-dark;
+      background-color: $darkmode-lighter;
+      color: $darkmode-text;
+    }
   }
 
   .actions a {
