@@ -22,9 +22,6 @@
        data-action="ajax#post"
        data-ajax-redirect="{{ request.path }}">{% trans "Mark All As Read" %}</a>
     {% endif %}
-    {% if can_create_message %}
-    <a href="{% url 'private_messages:recipients' %}">{% trans "Send Message" %}</a>
-    {% endif %}
 </div>
 {% endif %}
 

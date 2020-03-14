@@ -14,7 +14,6 @@
 {% has_perm "activities.create_activity" user community as can_create_activity %}
 {% has_perm "communities.moderate_community" user community as can_moderate_community %}
 {% has_perm "communities.manage_community" user community as can_manage_community %}
-{% has_perm "private_messages.create_message" user community as can_create_message %}
 
 <ul class="menu">
   <li class="menu-item">
@@ -91,13 +90,6 @@
        class="badge"
        data-badge="{{ drafts_count }}">{% trans "Drafts" %}
     </a>
-  </li>
-  {% endif %}
-  {% if can_create_message %}
-  <li class="menu-item">
-    <a data-controller="active-link"
-       data-active-link-exact
-       href="{% url 'private_messages:recipients' %}">{% trans "Send Message" %}</a>
   </li>
   {% endif %}
   {% if can_create_activity %}

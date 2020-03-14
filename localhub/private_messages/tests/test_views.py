@@ -30,25 +30,6 @@ class TestOutboxView:
         assert len(response.context["object_list"]) == 1
 
 
-class TestRecipientListView:
-    def test_get(self, client, member):
-
-        user = MembershipFactory(community=member.community).member
-        blocked = MembershipFactory(community=member.community).member
-        blocker = MembershipFactory(community=member.community).member
-
-        member.member.blocked.add(blocked)
-        member.member.blockers.add(blocker)
-
-        response = client.get(reverse("private_messages:recipients"))
-        assert response.status_code == 200
-
-        object_list = response.context["object_list"]
-        # exclude current user, blockers, blocked
-        assert len(object_list) == 1
-        assert user in object_list
-
-
 class TestMessageDeleteView:
     def test_post_if_sender(self, client, member):
         recipient = MembershipFactory(community=member.community).member
