@@ -9,6 +9,11 @@
 
   .chip {
     background: $dark-color;
+
+    a,
+    a:visited {
+      color: $darkmode-link;
+    }
   }
 
   .modal {
@@ -34,9 +39,16 @@
     background-color: $darkmode-lighter;
   }
 
-  a,
-  a:visited {
+  a {
     color: $darkmode-link;
+
+    &:visited {
+      color: $darkmode-link;
+    }
+  }
+
+  a[target='_blank']:visited {
+    color: $darkmode-link-visited;
   }
 
   .dropdown-toggle,

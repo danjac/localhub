@@ -24,6 +24,7 @@ a {
   &:visited {
     color: $link-color-dark;
   }
+
 }
 
 aside {
@@ -222,7 +223,13 @@ table {
 
 .activity-title {
   @extend .h6;
+
 }
+
+a[target='_blank']:visited {
+  color: $link-color-visited;
+}
+
 
 
 .float-left-responsive {
