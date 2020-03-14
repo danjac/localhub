@@ -34,12 +34,15 @@ def show_message(
     parent_url = parent.resolve_url(user, is_thread) if parent else None
     is_follow_up = parent and parent.sender == message.sender
 
+    is_unread = is_recipient and not message.read
+
     return {
         "request": context["request"],
         "is_detail": is_detail,
         "is_thread": is_thread,
         "is_recipient": is_recipient,
         "is_sender": is_sender,
+        "is_unread": is_unread,
         "can_reply": can_reply,
         "can_follow_up": can_follow_up,
         "message": message,

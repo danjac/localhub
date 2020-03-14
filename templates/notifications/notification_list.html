@@ -44,18 +44,20 @@
     {% for notification in object_list %}
     <tr>
       <td>
-        <div class="d-block">
-          {% include "notifications/includes/notification.html" %}
-          <br />
+        <div class="notification">
+
+          <div class="notification-header{% if not notification.is_read %} text-bold{% endif %}">
+            {% include "notifications/includes/notification.html" %}
+            {% if not notification.is_read %}
+            <div class="chip bg-primary">{% trans "New" %}</div>
+            {% endif %}
+          </div>
           {% include "users/includes/chip.html" with profile=notification.actor %}
           <span class="timesince">
             {% blocktrans with created=notification.created|timesince %}
             {{ created }} ago
             {% endblocktrans %}
           </span>
-          {% if not notification.is_read %}
-          <div class="chip bg-primary">{% trans "New" %}</div>
-          {% endif %}
         </div>
       </td>
       <td>

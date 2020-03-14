@@ -4,10 +4,10 @@
 {% load i18n %}
 {% load account %}
 
-<div class="card mb-2{% if is_sender %} bg-gray{% endif %}"
+<div class="card mb-2{% if is_sender %} bg-gray{% endif %} message"
      id="message-{{ message.id }}">
   <div class="card-header">
-    <div class="card-title h6">
+    <div class="card-subtitle h6 {% if is_unread %}text-bold{% endif %}">
       {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url %}
       <span class="timesince">
         {% trans "to" %}
@@ -18,7 +18,7 @@
         {{ created }} ago
         {% endblocktrans %}
       </span>
-      {% if is_recipient and not message.read %}
+      {% if is_unread %}
       <div class="chip bg-primary">{% trans "New" %}</div>
       {% endif %}
     </div>

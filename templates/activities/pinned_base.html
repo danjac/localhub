@@ -6,7 +6,7 @@
 {% with object=pinned.object object_type=pinned.object_type %}
 <div class="card{% if css_class %} {{ css_class }}{% endif %}">
     <div class="card-header h6">
-        <div class="activity-title">
+        <div class="card-title activity-title">
             {% block title %}
             {% if object.url %}
             {{ object.url|linkify:object.title }}
