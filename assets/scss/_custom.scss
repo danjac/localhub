@@ -25,6 +25,9 @@ a {
     color: $link-color-dark;
   }
 
+  &[target='_blank']:visited {
+    color: $link-color-visited;
+  }
 }
 
 aside {
@@ -225,12 +228,6 @@ table {
   @extend .h6;
 
 }
-
-a[target='_blank']:visited {
-  color: $link-color-visited;
-}
-
-
 
 .float-left-responsive {
   @media (min-width: $size-lg) {
