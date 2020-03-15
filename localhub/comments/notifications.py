@@ -35,4 +35,3 @@ class CommentNotificationAdapter(BaseNotificationAdapter):
 
     def get_webpush_header(self):
         return self.get_notification_header()
-

@@ -1,13 +1,17 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from celery.utils.log import get_logger
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
 from django.utils.translation import override
 
-from localhub.notifications.webpush import send_webpush_task
 from localhub.users.utils import user_display
+from localhub.notifications.tasks import send_webpush
+
+
+celery_logger = get_logger(__name__)
 
 
 def send_message_notifications(message):
@@ -49,7 +53,9 @@ def send_message_webpush(message):
             "body": message.abbreviate(),
             "url": message.get_permalink(message.recipient),
         }
-
-        send_webpush_task(
-            message.recipient_id, message.community_id, payload,
-        )
+        try:
+            return send_webpush.delay(
+                message.recipient.id, message.community.id, payload
+            )
+        except send_webpush.OperationalError as e:
+            celery_logger.exception(e)

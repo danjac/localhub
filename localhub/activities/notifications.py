@@ -56,4 +56,3 @@ class ActivityNotificationAdapter(BaseNotificationAdapter):
             f"activities/emails/notifications/{self.verb}.html",
             "activities/emails/notifications/notification.html",
         ]
-

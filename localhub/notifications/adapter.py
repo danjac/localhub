@@ -1,13 +1,17 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from celery.utils.log import get_logger
 from django.core.mail import send_mail
 from django.template import loader, Context
 from django.utils.encoding import force_text
 from django.utils.translation import override
 
 
-from .webpush import send_webpush_task
+from . import tasks
+
+
+celery_logger = get_logger(__name__)
 
 
 class BaseNotificationAdapter:
@@ -25,9 +29,12 @@ class BaseNotificationAdapter:
             self.send_email()
 
     def send_webpush(self):
-        return send_webpush_task(
-            self.recipient.id, self.community.id, self.get_webpush_payload(),
-        )
+        try:
+            return tasks.webpush.delay(
+                self.recipient.id, self.community.id, self.get_webpush_payload()
+            )
+        except tasks.send_webpush.OperationalError as e:
+            celery_logger.exception(e)
 
     def send_email(self, **kwargs):
         if self.recipient.send_email_notifications:

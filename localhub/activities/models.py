@@ -30,7 +30,7 @@ from localhub.utils.itertools import takefirst
 from localhub.utils.text import slugify_unicode
 
 from .utils import extract_hashtags
-from .notifications import ActivityNotificationVisitor
+from .notifications import ActivityNotificationAdapter
 
 
 def get_activity_models():
@@ -638,5 +638,5 @@ class Activity(TimeStampedModel):
             else:
                 self.tags.clear()
 
-    def get_notification_visitor(self, notification):
-        return ActivityNotificationVisitor(notification)
+    def get_notification_adapter(self, notification):
+        return ActivityNotificationAdapter(notification)

@@ -20,7 +20,7 @@ from localhub.db.content_types import get_generic_related_queryset
 from localhub.db.fields import ChoiceArrayField
 from localhub.db.search import SearchIndexer, SearchQuerySetMixin
 from localhub.markdown.fields import MarkdownField
-from localhub.notifications.models import Notification, NotificationInterface
+from localhub.notifications.models import Notification
 
 from .notifications import UserNotificationAdapter
 from .utils import user_display
@@ -104,7 +104,6 @@ class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
         )
 
 
-@NotificationInterface.register
 class User(AbstractUser):
 
     ACTIVITY_STREAM_FILTERS = Choices(

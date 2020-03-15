@@ -286,4 +286,3 @@ class Comment(TimeStampedModel):
             ]
 
         return takefirst(notifications, lambda n: n.recipient)
-
