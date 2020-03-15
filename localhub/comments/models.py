@@ -10,6 +10,7 @@ from django.db import models
 from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils.functional import cached_property
+from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 
@@ -23,7 +24,8 @@ from localhub.db.tracker import Tracker
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
-from localhub.notifications.models import Notification
+from localhub.notifications.models import Notification, NotificationInterface
+from localhub.users.utils import user_display
 from localhub.utils.itertools import takefirst
 
 
@@ -112,7 +114,25 @@ class CommentQuerySet(
         return self
 
 
+@NotificationInterface.register
 class Comment(TimeStampedModel):
+
+    NOTIFICATION_HEADERS = {
+        "flag": _("%(actor)s has flagged this comment"),
+        "like": _("%(actor)s has liked your comment"),
+        "mention": _("%(actor)s has mentioned you in their comment"),
+        "moderator_delete": _("A moderator has deleted your comment"),
+        "moderator_edit": _("A moderator has edited your comment"),
+        "moderator_review_request": _(
+            "%(actor)s has submitted a new comment to review"
+        ),
+        "new_comment": _("%(actor)s has submitted a comment on one of your posts"),
+        "new_sibling_comment": _(
+            "%(actor)s has made a comment on a post you've commented on"
+        ),
+        "replied_to_comment": _("%(actor)s has replied to your comment"),
+        "new_followed_user_comment": _("%(actor)s has submitted a new comment"),
+    }
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
@@ -264,9 +284,7 @@ class Comment(TimeStampedModel):
             .distinct()
         ]
 
-        return Notification.objects.bulk_create(
-            takefirst(notifications, lambda n: n.recipient)
-        )
+        return takefirst(notifications, lambda n: n.recipient)
 
     def notify_on_update(self):
         notifications = []
@@ -282,6 +300,35 @@ class Comment(TimeStampedModel):
                 self.make_notification("moderator_edit", self.owner, self.editor)
             ]
 
-        return Notification.objects.bulk_create(
-            takefirst(notifications, lambda n: n.recipient)
-        )
+        return takefirst(notifications, lambda n: n.recipient)
+
+    # NotificationInterface implementation methods
+
+    def get_notification_header(self, notification):
+        return self.NOTIFICATION_HEADERS[notification.verb] % {
+            "actor": user_display(notification.actor),
+        }
+
+    def get_notification_body(self, notification):
+        return str(self)
+
+    def get_notification_url(self, notification):
+        return self.get_absolute_url()
+
+    def get_notification_template(self, notification):
+        return f"comments/includes/notifications/{notification.verb}.html"
+
+    def get_notification_plain_email_template(self, notification):
+        """
+        Tuple of (plain, html) templates.
+        """
+        return f"comments/emails/notifications/{notification.verb}.txt"
+
+    def get_notification_html_email_template(self, notification):
+        return f"comments/emails/notifications/{notification.verb}.html"
+
+    def get_notification_template_context(self, notification):
+        return {"comment": self}
+
+    def get_notification_email_context(self, notification):
+        return self.get_notification_template_context(notification)

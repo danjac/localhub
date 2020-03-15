@@ -10,6 +10,29 @@ from ..models import Notification
 register = template.Library()
 
 
+@register.tag
+def render_notification(parser, token):
+    """
+    Renders notification object with the correct template.
+    """
+    try:
+        _, notification = token.split_contents()
+    except ValueError:
+        raise template.TemplateSyntaxError("Requires notification")
+
+    return RenderNotificationTag(notification)
+
+
+class RenderNotificationTag(template.Node):
+    def __init__(self, notification):
+        self.notification = template.Variable(notification)
+
+    def render(self, context):
+        notification = self.notification.resolve(context)
+        tmpl = context.template.engine.get_template(notification.get_template())
+        return tmpl.render(template.Context(notification.get_template_context()))
+
+
 @register.inclusion_tag("notifications/includes/subscribe_btn.html")
 def notifications_subscribe_btn(user, community):
     return {

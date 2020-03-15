@@ -16,9 +16,9 @@ from localhub.activities.views.generic import (
     ActivityUpdateView,
 )
 from localhub.communities.views import CommunityRequiredMixin
+from localhub.notifications.utils import bulk_create_and_send_notifications
 
 from .models import Answer, Poll
-from .notifications import send_vote_notification
 
 AnswersFormSet = inlineformset_factory(
     Poll,
@@ -111,8 +111,10 @@ class AnswerVoteView(
         ):
             voted.voters.remove(self.request.user)
         self.object.voters.add(self.request.user)
-        for notification in self.object.poll.notify_on_vote(self.request.user):
-            send_vote_notification(self.object.poll, notification)
+
+        bulk_create_and_send_notifications(
+            self.object.poll.notify_on_vote(self.request.user)
+        )
 
         messages.success(self.request, _("Thanks for voting!"))
         return redirect(self.object.poll)

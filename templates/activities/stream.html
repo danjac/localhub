@@ -6,6 +6,7 @@
 {% load i18n %}
 {% load rules %}
 {% load activities_tags %}
+{% load notifications_tags %}
 {% load users_tags %}
 
 {% block subtitle %} | {% trans "Activities" %}{% endblock %}
@@ -23,7 +24,7 @@
             data-ajax-redirect="none"
             data-badge-counters="sidebar-notifications-counter,total-notifications-counter"
             data-action="ajax#post toggle#toggle badge#decrement"></button>
-    {% include "notifications/includes/notification.html" with notification=latest_notification %}
+    {% render_notification latest_notification %}
 </div>
 {% endif %}
 

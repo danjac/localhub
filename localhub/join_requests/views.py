@@ -14,7 +14,7 @@ from vanilla import CreateView, DeleteView, DetailView, GenericModelView, ListVi
 
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.users.notifications import send_user_notification
+from localhub.notifications.utils import bulk_create_and_send_notifications
 from localhub.users.utils import user_display
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
@@ -152,10 +152,9 @@ class JoinRequestAcceptView(JoinRequestActionView):
                 _("Join request for %(sender)s has been accepted")
                 % {"sender": user_display(self.object.sender)},
             )
-            for notification in self.object.sender.notify_on_join(
-                self.object.community
-            ):
-                send_user_notification(self.object.sender, notification)
+            bulk_create_and_send_notifications(
+                self.object.sender.notify_on_join(self.object.community)
+            )
 
         else:
             messages.error(request, _("User already belongs to this community"))

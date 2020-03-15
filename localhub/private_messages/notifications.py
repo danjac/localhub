@@ -6,13 +6,13 @@ from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
 from django.utils.translation import override
 
-from localhub.notifications.utils import send_push_notification
+from localhub.notifications.webpush import send_webpush_task
 from localhub.users.utils import user_display
 
 
 def send_message_notifications(message):
-    send_message_push(message)
     send_message_email(message)
+    send_message_webpush(message)
 
 
 def send_message_email(message):
@@ -41,14 +41,15 @@ def send_message_email(message):
             )
 
 
-def send_message_push(message):
+def send_message_webpush(message):
     with override(message.recipient.language):
-
-        send_push_notification(
-            message.recipient,
-            message.community,
-            head=_("%(sender)s has sent you a message")
+        payload = {
+            "head": _("%(sender)s has sent you a message")
             % {"sender": user_display(message.sender)},
-            body=message.abbreviate(),
-            url=message.get_permalink(message.recipient),
+            "body": message.abbreviate(),
+            "url": message.get_permalink(message.recipient),
+        }
+
+        send_webpush_task(
+            message.recipient_id, message.community_id, payload,
         )

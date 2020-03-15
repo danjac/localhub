@@ -143,7 +143,7 @@ class TestPostModel:
         ).member
         user_follower.following.add(post.owner)
 
-        notifications = post.notify_on_create()
+        notifications = list(post.notify_on_create())
         assert len(notifications) == 4
 
         assert notifications[0].recipient == mentioned
@@ -182,7 +182,7 @@ class TestPostModel:
         post.editor = moderator
         post.save()
 
-        notifications = post.notify_on_update()
+        notifications = list(post.notify_on_update())
         assert len(notifications) == 1
 
         assert notifications[0].recipient == post.owner
@@ -193,7 +193,7 @@ class TestPostModel:
         post.editor = owner
         post.save()
 
-        notifications = post.notify_on_update()
+        notifications = list(post.notify_on_update())
         assert len(notifications) == 1
 
         assert notifications[0].recipient == moderator
@@ -236,7 +236,7 @@ class TestPostModel:
 
         # reshare
         reshare = post.reshare(UserFactory())
-        notifications = reshare.notify_on_create()
+        notifications = list(reshare.notify_on_create())
         assert len(notifications) == 4
 
         assert notifications[0].recipient == mentioned

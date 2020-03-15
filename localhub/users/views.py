@@ -25,10 +25,10 @@ from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.likes.models import Like
 from localhub.private_messages.models import Message
+from localhub.notifications.utils import bulk_create_and_send_notifications
 from localhub.views import SearchMixin
 
 from .forms import UserForm
-from .notifications import send_user_notification
 
 
 class BaseUserQuerySetMixin(CommunityRequiredMixin):
@@ -149,10 +149,9 @@ class UserFollowView(PermissionRequiredMixin, BaseSingleUserView):
 
         self.request.user.following.add(user)
 
-        for notification in self.request.user.notify_on_follow(
-            user, self.request.community
-        ):
-            send_user_notification(self.request.user, notification)
+        bulk_create_and_send_notifications(
+            self.request.user.notify_on_follow(user, self.request.community)
+        )
 
         return redirect(user)
 

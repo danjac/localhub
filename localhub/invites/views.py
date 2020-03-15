@@ -16,7 +16,7 @@ from vanilla import CreateView, DeleteView, DetailView, GenericModelView, ListVi
 
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.users.notifications import send_user_notification
+from localhub.notifications.utils import bulk_create_and_send_notifications
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from .emails import send_invitation_email
@@ -199,8 +199,9 @@ class InviteAcceptView(InviteQuerySetMixin, DetailView):
                 _("Welcome to %(community)s")
                 % {"community": self.object.community.name},
             )
-            for notification in request.user.notify_on_join(self.object.community):
-                send_user_notification(request.user, notification)
+            bulk_create_and_send_notifications(
+                request.user.notify_on_join(self.object.community)
+            )
         except IntegrityError:
             pass
 

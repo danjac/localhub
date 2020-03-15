@@ -21,14 +21,14 @@ from vanilla import (
 )
 
 from localhub.comments.forms import CommentForm
-from localhub.comments.notifications import send_comment_notifications
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
+from localhub.notifications.utils import bulk_create_and_send_notifications
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
+from ..emails import send_activity_deleted_email
 from ..models import get_activity_models
-from ..notifications import send_activity_deleted_email, send_activity_notifications
 from ..utils import get_breadcrumbs_for_instance, get_breadcrumbs_for_model
 
 
@@ -85,8 +85,7 @@ class ActivityCreateView(
         self.object.save()
 
         if publish:
-            for notification in self.object.notify_on_create():
-                send_activity_notifications(self.object, notification)
+            bulk_create_and_send_notifications(self.object.notify_on_create())
 
         messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
@@ -154,8 +153,7 @@ class ActivityUpdateView(
         self.object.update_reshares()
 
         if self.object.published:
-            for notification in self.object.notify_on_update():
-                send_activity_notifications(self.object, notification)
+            bulk_create_and_send_notifications(self.object.notify_on_update())
 
         messages.success(self.request, self.get_success_message(publish))
         return HttpResponseRedirect(self.get_success_url())
@@ -263,8 +261,7 @@ class ActivityReshareView(PermissionRequiredMixin, BaseSingleActivityView):
             self.request, _("You have reshared this %s") % obj._meta.verbose_name,
         )
 
-        for notification in reshare.notify_on_create():
-            send_activity_notifications(obj, notification)
+        bulk_create_and_send_notifications(reshare.notify_on_create())
 
         return redirect(obj)
 
@@ -330,8 +327,7 @@ class ActivityLikeView(PermissionRequiredMixin, BaseSingleActivityView):
                 recipient=obj.owner,
                 content_object=obj,
             )
-            for notification in like.notify():
-                send_activity_notifications(obj, notification)
+            bulk_create_and_send_notifications(like.notify())
 
         except IntegrityError:
             # dupe, ignore
@@ -385,8 +381,7 @@ class ActivityFlagView(
         flag.user = self.request.user
         flag.save()
 
-        for notification in flag.notify():
-            send_activity_notifications(self.activity, notification)
+        bulk_create_and_send_notifications(flag.notify())
 
         messages.success(
             self.request,
@@ -421,7 +416,6 @@ class ActivityCommentCreateView(
         comment.community = self.request.community
         comment.owner = self.request.user
         comment.save()
-        for notification in comment.notify_on_create():
-            send_comment_notifications(comment, notification)
+        bulk_create_and_send_notifications(comment.notify_on_create())
         messages.success(self.request, _("Your comment has been posted"))
         return redirect(self.activity)

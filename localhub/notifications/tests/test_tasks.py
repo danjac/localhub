@@ -4,7 +4,7 @@
 import pytest
 
 from ..models import PushSubscription
-from ..tasks import send_push_notification
+from ..tasks import send_webpush
 
 pytestmark = pytest.mark.django_db
 
@@ -22,5 +22,5 @@ class TestSendPushNotification:
 
         payload = {"head": "hello", "body": "testing"}
 
-        send_push_notification(member.member_id, member.community_id, payload)
+        send_webpush(member.member_id, member.community_id, payload)
         assert send_notification_webpush_mock.called_once()

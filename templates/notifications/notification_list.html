@@ -47,7 +47,7 @@
         <div class="notification">
 
           <div class="notification-header{% if not notification.is_read %} text-bold{% endif %}">
-            {% include "notifications/includes/notification.html" %}
+            {% render_notification notification %}
             {% if not notification.is_read %}
             <div class="chip bg-primary">{% trans "New" %}</div>
             {% endif %}

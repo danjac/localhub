@@ -9,6 +9,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 from taggit.managers import TaggableManager
@@ -25,7 +26,8 @@ from localhub.db.tracker import Tracker
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
-from localhub.notifications.models import Notification
+from localhub.notifications.models import Notification, NotificationInterface
+from localhub.users.utils import user_display
 from localhub.utils.itertools import takefirst
 from localhub.utils.text import slugify_unicode
 
@@ -306,10 +308,26 @@ class ActivityQuerySet(
         )
 
 
+@NotificationInterface.register
 class Activity(TimeStampedModel):
     """
     Base class for all activity-related entities e.g. posts, events, photos.
     """
+
+    NOTIFICATION_HEADERS = {
+        "flag": _("%(actor)s has flagged this %(activity)s"),
+        "like": _("%(actor)s has liked your %(activity)s"),
+        "mention": _("%(actor)s has mentioned you in their %(activity)s"),
+        "moderator_edit": _("A moderator has edited your %(activity)s"),
+        "moderator_review_request": _(
+            "%(actor)s has submitted or updated their %(activity)s for review"
+        ),
+        "new_followed_user_post": _("%(actor)s has submitted a new %(activity)s"),
+        "new_followed_tag_post": _(
+            "Someone has submitted or updated a new %(activity)s containing tags you are following"  # noqa
+        ),
+        "reshare": _("%(actor)s has reshared your %(activity)s"),
+    }
 
     RESHARED_FIELDS = ("title", "description")
 
@@ -369,6 +387,18 @@ class Activity(TimeStampedModel):
         ]
         abstract = True
 
+    def save(self, *args, **kwargs):
+        is_new = self._state.adding
+        super().save(*args, **kwargs)
+
+        self.save_tags(is_new)
+
+    def get_absolute_url(self):
+        slug = self.slugify()
+        if slug:
+            return self.resolve_url("detail", slug)
+        return self.resolve_url("detail_no_slug")
+
     @property
     def _history_user(self):
         # used by simple_history
@@ -386,12 +416,6 @@ class Activity(TimeStampedModel):
         return reverse(
             f"{self._meta.app_label}:{view_name}", args=[self.id] + list(args)
         )
-
-    def get_absolute_url(self):
-        slug = self.slugify()
-        if slug:
-            return self.resolve_url("detail", slug)
-        return self.resolve_url("detail_no_slug")
 
     def get_create_comment_url(self):
         return self.resolve_url("comment")
@@ -565,10 +589,7 @@ class Activity(TimeStampedModel):
             notifications += self.notify_parent_owner(recipients)
 
         notifications += self.notify_moderators()
-
-        return Notification.objects.bulk_create(
-            takefirst(notifications, lambda n: n.recipient)
-        )
+        return takefirst(notifications, lambda n: n.recipient)
 
     def notify_on_update(self):
 
@@ -582,9 +603,7 @@ class Activity(TimeStampedModel):
         notifications += self.notify_owner_of_moderator_edit()
         notifications += self.notify_moderators()
 
-        return Notification.objects.bulk_create(
-            takefirst(notifications, lambda n: n.recipient)
-        )
+        return takefirst(notifications, lambda n: n.recipient)
 
     def reshare(self, owner, commit=True, **kwargs):
         """
@@ -636,8 +655,31 @@ class Activity(TimeStampedModel):
             else:
                 self.tags.clear()
 
-    def save(self, *args, **kwargs):
-        is_new = self._state.adding
-        super().save(*args, **kwargs)
+    # NotificationInterface implementation methods
 
-        self.save_tags(is_new)
+    def get_notification_header(self, notification):
+        return self.NOTIFICATION_HEADERS[notification.verb] % {
+            "actor": user_display(notification.actor),
+            "activity": self._meta.verbose_name,
+        }
+
+    def get_notification_url(self, notification):
+        return self.get_absolute_url()
+
+    def get_notification_template(self, notification):
+        return f"activities/includes/notifications/{notification.verb}.html"
+
+    def get_notification_plain_email_template(self, notification):
+        """
+        Tuple of (plain, html) templates.
+        """
+        return f"activities/emails/notifications/{notification.verb}.txt"
+
+    def get_notification_html_email_template(self, notification):
+        return f"activities/emails/notifications/{notification.verb}.html"
+
+    def get_notification_template_context(self, notification):
+        return {"activity": self}
+
+    def get_notification_email_context(self, notification):
+        return self.get_notification_template_context(notification)

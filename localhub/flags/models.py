@@ -84,7 +84,7 @@ class Flag(TimeStampedModel):
         """
         Sends notification to community moderators.
         """
-        notifications = [
+        return [
             Notification(
                 content_object=self.content_object,
                 recipient=moderator,
@@ -95,5 +95,3 @@ class Flag(TimeStampedModel):
             for moderator in self.community.get_moderators()
             if moderator != self.user
         ]
-
-        return Notification.objects.bulk_create(notifications)
