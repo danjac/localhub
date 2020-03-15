@@ -90,7 +90,7 @@ class TestPollDetailView:
 
 
 class TestAnswerVoteView:
-    def test_post(self, client, poll, member):
+    def test_post(self, client, poll, member, send_notification_webpush_mock):
         answer = AnswerFactory(poll=poll)
         voted = AnswerFactory(poll=poll)
         voted.voters.add(member.member)

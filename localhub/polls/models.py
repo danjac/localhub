@@ -8,6 +8,7 @@ from django.utils.translation import gettext as _
 
 from localhub.activities.models import Activity, ActivityQuerySet
 from localhub.db.search import SearchIndexer
+from localhub.notifications.models import Notification
 
 
 class PollQuerySet(ActivityQuerySet):
@@ -41,6 +42,17 @@ class Poll(Activity):
         method in queryset!
         """
         return sum([a.num_votes for a in self.answers.all()])
+
+    def notify_on_vote(self, voter):
+        """
+        Sends a notification when someone has voted. Ignore if you
+        vote on your own poll.
+        """
+        if voter == self.owner:
+            return []
+        return Notification.objects.bulk_create(
+            [self.make_notification(self.owner, "vote", voter)]
+        )
 
 
 class Answer(models.Model):

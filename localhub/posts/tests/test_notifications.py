@@ -25,7 +25,7 @@ class TestSendPostNotificationEmail:
             verb="moderator_review_request",
         )
 
-        send_activity_notification_email(post, notification)
+        send_activity_notification_email(post, "test header", notification)
         assert len(mailoutbox) == 1
         assert mailoutbox[0].to == [moderator.email]
 

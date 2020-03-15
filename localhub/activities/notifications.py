@@ -28,37 +28,36 @@ NOTIFICATION_HEADERS = {
 
 
 def send_activity_notifications(activity, notification):
-    send_activity_notification_push(activity, notification)
-    send_activity_notification_email(activity, notification)
-
-
-def send_activity_notification_push(activity, notification):
     with override(notification.recipient.language):
-
-        send_push_notification(
-            notification.recipient,
-            notification.community,
-            head=get_notification_header(activity, notification),
-            body=force_text(activity),
-            url=activity.get_permalink(),
-        )
+        header = get_notification_header(activity, notification)
+        send_activity_notification_push(activity, header, notification)
+        send_activity_notification_email(activity, header, notification)
 
 
-def send_activity_notification_email(activity, notification):
-    with override(notification.recipient.language):
-        activity_name = activity._meta.verbose_name
+def send_activity_notification_push(activity, header, notification):
+    send_push_notification(
+        notification.recipient,
+        notification.community,
+        head=header,
+        body=force_text(activity),
+        url=activity.get_permalink(),
+    )
 
-        plain_template_name = f"activities/emails/notifications/{notification.verb}.txt"
-        html_template_name = f"activities/emails/notifications/{notification.verb}.html"
 
-        send_notification_email(
-            notification,
-            get_notification_header(activity, notification),
-            activity.get_permalink(),
-            plain_template_name,
-            html_template_name,
-            {"activity_name": activity_name},
-        )
+def send_activity_notification_email(activity, header, notification):
+    activity_name = activity._meta.verbose_name
+
+    plain_template_name = f"activities/emails/notifications/{notification.verb}.txt"
+    html_template_name = f"activities/emails/notifications/{notification.verb}.html"
+
+    send_notification_email(
+        notification,
+        header,
+        activity.get_permalink(),
+        plain_template_name,
+        html_template_name,
+        {"activity_name": activity_name},
+    )
 
 
 def get_notification_header(activity, notification):
