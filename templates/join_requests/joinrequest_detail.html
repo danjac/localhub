@@ -21,14 +21,14 @@
      data-action="confirm#check ajax#post"
      data-confirm-header="{% trans 'Accept' %}"
      data-confirm-body="{% trans 'Are you sure you want to accept this request?' %}"
-     data-ajax-redirect="{{ request.path }}"
+     data-ajax-redirect="{{ request.get_full_path }}"
      href="{% url 'join_requests:accept' object.id %}">{% trans "Accept" %}
   </a>
   {% endif %}
   {% if is_pending %}
   <a data-controller="ajax confirm"
      data-action="confirm#check ajax#post"
-     data-ajax-redirect="{{ request.path }}"
+     data-ajax-redirect="{{ request.get_full_path }}"
      data-confirm-header="{% trans 'Reject' %}"
      data-confirm-body="{% trans 'Are you sure you want to reject this request?' %}"
      href="{% url 'join_requests:reject' object.id %}">{% trans "Reject" %}</a>

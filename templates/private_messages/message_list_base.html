@@ -20,7 +20,7 @@
        class="d-hide"
        data-controller="ajax js-toggle"
        data-action="ajax#post"
-       data-ajax-redirect="{{ request.path }}">{% trans "Mark All As Read" %}</a>
+       data-ajax-redirect="{{ request.get_full_path }}">{% trans "Mark All As Read" %}</a>
     {% endif %}
 </div>
 {% endif %}

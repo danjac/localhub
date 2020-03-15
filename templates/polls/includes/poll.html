@@ -21,11 +21,13 @@
                max="100"
                data-controller="ajax"
                data-action="click->ajax#post"
+               data-ajax-redirect="{{ request.get_full_path }}"
                data-ajax-url="{{ vote_url }}"></meter>
         <div class="actions d-hide"
              data-controller="js-toggle">
             <a data-controller="ajax"
                data-action="ajax#post"
+               data-ajax-redirect="{{ request.get_full_path }}"
                href="{{ vote_url }}">{% trans "Vote" %}</a>
         </div>
     </li>

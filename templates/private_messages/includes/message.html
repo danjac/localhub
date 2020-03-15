@@ -38,7 +38,7 @@
          class="d-hide"
          data-controller="js-toggle ajax"
          data-action="ajax#post"
-         data-ajax-redirect="{{ request.path }}">{% trans "Mark As Read" %}</a>
+         data-ajax-redirect="{{ request.get_full_path }}">{% trans "Mark As Read" %}</a>
       {% endif %}
       {% if can_reply %}
       <a href="{% url 'private_messages:message_reply' message.id %}">
@@ -52,7 +52,7 @@
       <a href="{% url 'private_messages:message_delete' message.id %}"
          data-controller="ajax confirm"
          data-action="confirm#check ajax#post"
-         data-ajax-redirect="{{ post_delete_redirect|default:request.path }}"
+         data-ajax-redirect="{{ post_delete_redirect|default:request.get_full_path }}"
          data-confirm-header="{% trans 'Delete Message' %}"
          data-confirm-body="{% trans "Are you sure you want to delete this message? Replies to this message will not be deleted. The message may still be available to the other person." %}">{% trans "Delete" %}</a>
 

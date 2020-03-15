@@ -66,7 +66,7 @@
    <a class="d-hide"
       data-controller="js-toggle ajax"
       data-action="ajax#post"
-      data-ajax-redirect="{{ request.path }}"
+      data-ajax-redirect="{{ request.get_full_path }}"
       href="{{ object.get_reshare_url }}">{% trans "Reshare" %}</a>
    {% endif %}
    {% endif %}
