@@ -2,50 +2,16 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import json
-from abc import ABC, abstractmethod
 
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ImproperlyConfigured
 from django.db import models
 from model_utils.models import TimeStampedModel
 from pywebpush import WebPushException, webpush
 
 from localhub.communities.models import Community
-
-
-class NotificationInterface(ABC):
-    """
-    Abstract interface for all Notification content objects.
-    """
-
-    @abstractmethod
-    def get_notification_header(self, notification):
-        ...
-
-    @abstractmethod
-    def get_notification_url(self, notification):
-        ...
-
-    @abstractmethod
-    def get_notification_template(self, notification):
-        ...
-
-    @abstractmethod
-    def get_notification_plain_email_template(self, notification):
-        ...
-
-    @abstractmethod
-    def get_notification_html_email_template(self, notification):
-        ...
-
-    @abstractmethod
-    def get_notification_template_context(self, notification):
-        ...
-
-    @abstractmethod
-    def get_notification_email_context(self, notification):
-        ...
 
 
 class NotificationQuerySet(models.QuerySet):
@@ -65,6 +31,14 @@ class NotificationQuerySet(models.QuerySet):
 
     def unread(self):
         return self.filter(is_read=False)
+
+    def bulk_create_and_send(self, notifications):
+        notifications = list(notifications)
+        if not notifications:
+            return []
+        for notification in self.bulk_create(notifications):
+            notification.get_adapter().send_notification()
+        return notifications
 
 
 class Notification(TimeStampedModel):
@@ -92,26 +66,17 @@ class Notification(TimeStampedModel):
             )
         ]
 
-    def get_header(self):
-        return self.content_object.get_notification_header(self)
+    def get_adapter(self):
+        if hasattr(self.content_object, "get_notification_adapter"):
+            return self.content_object.get_notification_adapter(self)
 
-    def get_object_url(self):
-        return self.content_object.get_notification_url(self)
+        if hasattr(self.content_object.__class__, "notification_adapter_class"):
+            return self.content_object.__class__.notification_adapter_class(self)
 
-    def get_template(self):
-        return self.content_object.get_notification_template(self)
-
-    def get_template_context(self):
-        return self.content_object.get_notification_template_context(self)
-
-    def get_email_context(self):
-        return self.content_object.get_notification_email_context(self)
-
-    def get_plain_email_template(self):
-        return self.content_object.get_notification_plain_email_template(self)
-
-    def get_html_email_template(self):
-        return self.content_object.get_notification_html_email_template(self)
+        raise ImproperlyConfigured(
+            "%r must implement get_notification_adapter method or define notification_adapter class attribute"
+            % self.content_object
+        )
 
 
 class PushSubscription(models.Model):

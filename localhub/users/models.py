@@ -22,6 +22,7 @@ from localhub.db.search import SearchIndexer, SearchQuerySetMixin
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.models import Notification, NotificationInterface
 
+from .notifications import UserNotificationAdapter
 from .utils import user_display
 
 
@@ -111,16 +112,6 @@ class User(AbstractUser):
         ("tags", _("Limited to only tags I'm following")),
     )
 
-    NOTIFICATION_HEADERS = {
-        "new_follower": _("Someone has started following you"),
-        "new_member": _("Someone has just joined this community"),
-    }
-
-    NOTIFICATION_BODY = {
-        "new_follower": _("%(user)s has started following you"),
-        "new_member": _("%(user)s has just joined this community"),
-    }
-
     name = models.CharField(_("Full name"), blank=True, max_length=255)
     bio = MarkdownField(blank=True)
     avatar = ImageField(upload_to="avatars", null=True, blank=True)
@@ -157,6 +148,8 @@ class User(AbstractUser):
     search_document = SearchVectorField(null=True, editable=False)
 
     search_indexer = SearchIndexer(("A", "username"), ("B", "name"))
+
+    notification_adapter_class = UserNotificationAdapter
 
     objects = UserManager()
 
@@ -244,29 +237,3 @@ class User(AbstractUser):
         return set([self.email]) | set(
             self.emailaddress_set.values_list("email", flat=True)
         )
-
-    # NotificationInterface implementation methods
-
-    def get_notification_header(self, notification):
-        return self.NOTIFICATION_HEADERS[notification.verb]
-
-    def get_notification_url(self, notification):
-        return self.get_absolute_url()
-
-    def get_notification_template(self, notification):
-        return "users/includes/notification.html"
-
-    def get_notification_plain_email_template(self, notification):
-        """
-        Tuple of (plain, html) templates.
-        """
-        return "users/emails/notification.txt"
-
-    def get_notification_html_email_template(self, notification):
-        return "users/emails/notification.html"
-
-    def get_notification_template_context(self, notification):
-        return {"user": self}
-
-    def get_notification_email_context(self, notification):
-        return self.get_notification_template_context(notification)

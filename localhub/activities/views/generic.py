@@ -24,7 +24,7 @@ from localhub.comments.forms import CommentForm
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
-from localhub.notifications.utils import bulk_create_and_send_notifications
+from localhub.notifications.models import Notification
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from ..emails import send_activity_deleted_email
@@ -85,7 +85,7 @@ class ActivityCreateView(
         self.object.save()
 
         if publish:
-            bulk_create_and_send_notifications(self.object.notify_on_create())
+            Notification.objects.bulk_create_and_send(self.object.notify_on_create())
 
         messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
@@ -153,7 +153,7 @@ class ActivityUpdateView(
         self.object.update_reshares()
 
         if self.object.published:
-            bulk_create_and_send_notifications(self.object.notify_on_update())
+            Notification.objects.bulk_create_and_send(self.object.notify_on_update())
 
         messages.success(self.request, self.get_success_message(publish))
         return HttpResponseRedirect(self.get_success_url())
@@ -261,7 +261,7 @@ class ActivityReshareView(PermissionRequiredMixin, BaseSingleActivityView):
             self.request, _("You have reshared this %s") % obj._meta.verbose_name,
         )
 
-        bulk_create_and_send_notifications(reshare.notify_on_create())
+        Notification.objects.bulk_create_and_send(reshare.notify_on_create())
 
         return redirect(obj)
 
@@ -327,7 +327,7 @@ class ActivityLikeView(PermissionRequiredMixin, BaseSingleActivityView):
                 recipient=obj.owner,
                 content_object=obj,
             )
-            bulk_create_and_send_notifications(like.notify())
+            Notification.objects.bulk_create_and_send(like.notify())
 
         except IntegrityError:
             # dupe, ignore
@@ -381,7 +381,7 @@ class ActivityFlagView(
         flag.user = self.request.user
         flag.save()
 
-        bulk_create_and_send_notifications(flag.notify())
+        Notification.objects.bulk_create_and_send(flag.notify())
 
         messages.success(
             self.request,
@@ -416,6 +416,6 @@ class ActivityCommentCreateView(
         comment.community = self.request.community
         comment.owner = self.request.user
         comment.save()
-        bulk_create_and_send_notifications(comment.notify_on_create())
+        Notification.objects.bulk_create_and_send(comment.notify_on_create())
         messages.success(self.request, _("Your comment has been posted"))
         return redirect(self.activity)

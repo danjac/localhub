@@ -24,7 +24,7 @@ from localhub.activities.utils import get_breadcrumbs_for_instance
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
-from localhub.notifications.utils import bulk_create_and_send_notifications
+from localhub.notifications.models import Notification
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from .emails import send_comment_deleted_email
@@ -125,7 +125,7 @@ class CommentUpdateView(
         comment.editor = self.request.user
         comment.edited = timezone.now()
         comment.save()
-        bulk_create_and_send_notifications(comment.notify_on_update())
+        Notification.objects.bulk_create_and_send(comment.notify_on_update())
         messages.success(self.request, _("Comment has been updated"))
         return redirect(comment.content_object)
 
@@ -164,7 +164,7 @@ class CommentLikeView(
                 recipient=comment.owner,
                 content_object=comment,
             )
-            bulk_create_and_send_notifications(like.notify())
+            Notification.objects.bulk_create_and_send(like.notify())
         except IntegrityError:
             pass
         if request.is_ajax():
@@ -225,7 +225,7 @@ class CommentFlagView(
         flag.user = self.request.user
         flag.save()
 
-        bulk_create_and_send_notifications(flag.notify())
+        Notification.objects.bulk_create_and_send(flag.notify())
 
         messages.success(
             self.request, _("This comment has been flagged to the moderators")
@@ -268,7 +268,7 @@ class CommentReplyView(
         comment.owner = self.request.user
         comment.community = self.request.community
         comment.save()
-        bulk_create_and_send_notifications(comment.notify_on_create())
+        Notification.objects.bulk_create_and_send(comment.notify_on_create())
         messages.success(self.request, _("Your comment has been posted"))
         return redirect(comment.content_object)
 

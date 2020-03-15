@@ -25,7 +25,7 @@ from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.likes.models import Like
 from localhub.private_messages.models import Message
-from localhub.notifications.utils import bulk_create_and_send_notifications
+from localhub.notifications.models import Notification
 from localhub.views import SearchMixin
 
 from .forms import UserForm
@@ -149,7 +149,7 @@ class UserFollowView(PermissionRequiredMixin, BaseSingleUserView):
 
         self.request.user.following.add(user)
 
-        bulk_create_and_send_notifications(
+        Notification.objects.bulk_create_and_send(
             self.request.user.notify_on_follow(user, self.request.community)
         )
 
