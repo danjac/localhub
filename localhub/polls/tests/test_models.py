@@ -25,11 +25,11 @@ class TestPollManager:
 
 
 class TestPollModel:
-    def test_notify_on_vote(self, poll):
+    def test_notify_on_vote(self, poll, send_webpush_mock):
         voter = MembershipFactory(community=poll.community).member
         notifications = poll.notify_on_vote(voter)
         assert len(notifications) == 1
 
-    def test_notify_on_vote_if_owner(self, poll):
+    def test_notify_on_vote_if_owner(self, poll, send_webpush_mock):
         notifications = poll.notify_on_vote(poll.owner)
         assert len(notifications) == 0

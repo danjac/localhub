@@ -24,7 +24,6 @@ from localhub.comments.views import BaseCommentListView
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.likes.models import Like
-from localhub.notifications.models import Notification
 from localhub.private_messages.models import Message
 from localhub.views import SearchMixin
 
@@ -148,10 +147,7 @@ class UserFollowView(PermissionRequiredMixin, BaseSingleUserView):
         user = self.get_object()
 
         self.request.user.following.add(user)
-
-        Notification.objects.bulk_create_and_send(
-            self.request.user.notify_on_follow(user, self.request.community)
-        )
+        self.request.user.notify_on_follow(user, self.request.community)
 
         return redirect(user)
 

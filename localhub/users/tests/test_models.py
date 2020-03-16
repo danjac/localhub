@@ -176,7 +176,7 @@ class TestUserModel:
     def test_does_not_have_role(self, member):
         assert not member.member.has_role(member.community, Membership.ROLES.moderator)
 
-    def test_notify_on_join(self, member):
+    def test_notify_on_join(self, member, send_webpush_mock):
         other_member = MembershipFactory(
             community=member.community, member=UserFactory(),
         ).member
@@ -188,7 +188,7 @@ class TestUserModel:
         assert notifications[0].community == member.community
         assert notifications[0].verb == "new_member"
 
-    def test_notify_on_follow(self, member):
+    def test_notify_on_follow(self, member, send_webpush_mock):
         follower = MembershipFactory(
             community=member.community, member=UserFactory(),
         ).member

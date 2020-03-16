@@ -16,7 +16,6 @@ from localhub.activities.views.generic import (
     ActivityUpdateView,
 )
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.notifications.models import Notification
 
 from .models import Answer, Poll
 
@@ -110,11 +109,9 @@ class AnswerVoteView(
             voters=self.request.user, poll=self.object.poll
         ):
             voted.voters.remove(self.request.user)
-        self.object.voters.add(self.request.user)
 
-        Notification.objects.bulk_create_and_send(
-            self.object.poll.notify_on_vote(self.request.user)
-        )
+        self.object.voters.add(self.request.user)
+        self.object.poll.notify_on_vote(self.request.user)
 
         messages.success(self.request, _("Thanks for voting!"))
         return redirect(self.object.poll)

@@ -32,14 +32,6 @@ class NotificationQuerySet(models.QuerySet):
     def unread(self):
         return self.filter(is_read=False)
 
-    def bulk_create_and_send(self, notifications):
-        notifications = list(notifications)
-        if not notifications:
-            return []
-        for notification in self.bulk_create(notifications):
-            notification.get_adapter().send_notification()
-        return notifications
-
 
 class Notification(TimeStampedModel):
     actor = models.ForeignKey(

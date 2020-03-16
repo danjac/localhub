@@ -8,6 +8,7 @@ from django.utils.translation import gettext as _
 
 from localhub.activities.models import Activity, ActivityQuerySet
 from localhub.db.search import SearchIndexer
+from localhub.notifications.decorators import dispatch
 
 from .notifications import PollNotificationAdapter
 
@@ -46,6 +47,7 @@ class Poll(Activity):
         """
         return sum([a.num_votes for a in self.answers.all()])
 
+    @dispatch
     def notify_on_vote(self, voter):
         """
         Sends a notification when someone has voted. Ignore if you

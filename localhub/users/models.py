@@ -20,6 +20,7 @@ from localhub.db.content_types import get_generic_related_queryset
 from localhub.db.fields import ChoiceArrayField
 from localhub.db.search import SearchIndexer, SearchQuerySetMixin
 from localhub.markdown.fields import MarkdownField
+from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
 
 from .notifications import UserNotificationAdapter
@@ -202,6 +203,7 @@ class User(AbstractUser):
             )
         )
 
+    @dispatch
     def notify_on_join(self, community):
         return [
             Notification(
@@ -214,6 +216,7 @@ class User(AbstractUser):
             for member in community.members.exclude(pk=self.pk)
         ]
 
+    @dispatch
     def notify_on_follow(self, recipient, community):
         """
         Sends notification to provided recipients

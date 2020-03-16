@@ -17,23 +17,6 @@ pytestmark = pytest.mark.django_db
 
 
 class TestNotificationManager:
-    def test_bulk_create_and_send(self, post, mailoutbox, send_webpush_mock):
-        notification = Notification(
-            community=post.community,
-            verb="mention",
-            actor=post.owner,
-            content_object=post,
-            recipient=MembershipFactory(community=post.community).member,
-        )
-
-        notifications = Notification.objects.bulk_create_and_send([notification])
-        assert len(notifications) == 1
-        assert Notification.objects.count() == 1
-
-        assert send_webpush_mock.called_once
-        assert len(mailoutbox) == 1
-        assert mailoutbox[0].to == [notification.recipient.email]
-
     def test_for_community(self, community: Community):
 
         notification = NotificationFactory(
