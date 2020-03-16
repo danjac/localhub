@@ -7,6 +7,7 @@ from django.template import loader, Context
 from django.utils.encoding import force_text
 from django.utils.translation import override
 
+from localhub.users.utils import user_display
 
 from . import tasks
 
@@ -101,8 +102,10 @@ class BaseNotificationAdapter:
             "object": self.object,
             "object_url": self.get_object_url(),
             "object_name": self.object_name,
-            "recipient": self.recipient,
             "actor": self.actor,
+            "actor_display": user_display(self.actor),
+            "recipient": self.recipient,
+            "recipient_display": user_display(self.recipient),
             "verb": self.verb,
             "absolute_url": self.get_absolute_url(),
             self.object_name: self.object,
