@@ -22,7 +22,7 @@ class TestPollCreateView:
         response = client.get(reverse("polls:create"))
         assert response.status_code == 200
 
-    def test_post(self, client, member, send_notification_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
         response = client.post(
             reverse("polls:create"),
             {
@@ -50,7 +50,7 @@ class TestPollUpdateView:
         response = client.get(reverse("polls:update", args=[poll.id]))
         assert response.status_code == 200
 
-    def test_post(self, client, member, send_notification_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
         poll = PollFactory(community=member.community, owner=member.member)
         first_answer = AnswerFactory(poll=poll, description="answer-one")
         second_answer = AnswerFactory(poll=poll, description="answer-two")
@@ -90,7 +90,7 @@ class TestPollDetailView:
 
 
 class TestAnswerVoteView:
-    def test_post(self, client, member, send_notification_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
         poll = PollFactory(community=member.community)
         answer = AnswerFactory(poll=poll)
         voted = AnswerFactory(poll=poll)

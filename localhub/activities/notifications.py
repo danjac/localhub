@@ -12,14 +12,13 @@ class ActivityNotificationAdapter(BaseNotificationAdapter):
         ("flag", _("%(actor)s has flagged this %(object)s")),
         ("like", _("%(actor)s has liked your %(object)s")),
         ("mention", _("%(actor)s has mentioned you in their %(object)s")),
-        ("moderator_edit", _("A moderator has edited your %(object)s")),
         (
-            "moderator_review_request",
+            "moderator_review",
             _("%(actor)s has submitted or updated their %(object)s for review"),
         ),
-        ("new_followed_user_post", _("%(actor)s has submitted a new %(object)s")),
+        ("followed_user", _("%(actor)s has submitted a new %(object)s")),
         (
-            "new_followed_tag_post",
+            "followed_tag",
             _(
                 "Someone has submitted or updated a new %(object)s containing tags you are following"  # noqa
             ),
@@ -28,7 +27,7 @@ class ActivityNotificationAdapter(BaseNotificationAdapter):
     ]
 
     def get_notification_header(self):
-        return dict(self.NOTIFICATION_HEADERS[self.verb]) % {
+        return dict(self.NOTIFICATION_HEADERS)[self.verb] % {
             "actor": user_display(self.actor),
             "object": self.object,
         }
@@ -40,19 +39,16 @@ class ActivityNotificationAdapter(BaseNotificationAdapter):
         return self.get_notification_header()
 
     def get_template_names(self):
-        return super().get_template_names() + [
-            f"activities/notifications/includes/{self.verb}.html",
-            "activities/notifications/includes/notification.html",
-        ]
+        return super().get_template_names() + self.resolve_template_names(
+            f"activities/includes"
+        )
 
     def get_plain_email_template_names(self):
-        return super().get_plain_email_template_names() + [
-            f"activities/emails/notifications/{self.verb}.txt",
-            "activities/emails/notifications/notification.txt",
-        ]
+        return super().get_plain_email_template_names() + self.resolve_template_names(
+            f"activities/emails", ".txt"
+        )
 
     def get_html_email_template_names(self):
-        return super().get_html_email_template_names() + [
-            f"activities/emails/notifications/{self.verb}.html",
-            "activities/emails/notifications/notification.html",
-        ]
+        return super().get_html_email_template_names() + self.resolve_template_names(
+            f"activities/emails",
+        )

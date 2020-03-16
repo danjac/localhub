@@ -46,7 +46,7 @@ class TestPostCreateView:
         response = client.get(reverse("posts:create"))
         assert response.status_code == 200
 
-    def test_post(self, client, member, send_notification_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
         response = client.post(
             reverse("posts:create"), {"title": "test", "description": "test"}
         )
@@ -58,7 +58,7 @@ class TestPostCreateView:
         assert post.community == member.community
         assert post.published
 
-    def test_post_to_draft(self, client, member, send_notification_webpush_mock):
+    def test_post_to_draft(self, client, member, send_webpush_mock):
 
         MembershipFactory(community=member.community, role=Membership.ROLES.moderator)
 
@@ -78,7 +78,7 @@ class TestPostUpdateView:
         response = client.get(reverse("posts:update", args=[post_for_member.id]))
         assert response.status_code == 200
 
-    def test_post(self, client, post_for_member, send_notification_webpush_mock):
+    def test_post(self, client, post_for_member, send_webpush_mock):
         response = client.post(
             reverse("posts:update", args=[post_for_member.id]),
             {"title": "UPDATED", "description": post_for_member.description},
@@ -89,9 +89,7 @@ class TestPostUpdateView:
         assert post_for_member.editor == post_for_member.owner
         assert post_for_member.edited
 
-    def test_post_with_reshare(
-        self, client, post_for_member, send_notification_webpush_mock
-    ):
+    def test_post_with_reshare(self, client, post_for_member, send_webpush_mock):
 
         reshare = post_for_member.reshare(UserFactory())
 
@@ -105,9 +103,7 @@ class TestPostUpdateView:
         assert post_for_member.title == "UPDATED"
         assert reshare.title == "UPDATED"
 
-    def test_post_unpublished_to_publish(
-        self, client, member, send_notification_webpush_mock
-    ):
+    def test_post_unpublished_to_publish(self, client, member, send_webpush_mock):
         post = PostFactory(
             owner=member.member, community=member.community, published=None
         )
@@ -120,9 +116,7 @@ class TestPostUpdateView:
         assert post.title == "UPDATED"
         assert post.published
 
-    def test_post_unpublished_to_draft(
-        self, client, member, send_notification_webpush_mock
-    ):
+    def test_post_unpublished_to_draft(self, client, member, send_webpush_mock):
         post = PostFactory(
             owner=member.member, community=member.community, published=None
         )
@@ -149,7 +143,7 @@ class TestPostCommentCreateView:
         response = client.get(reverse("posts:comment", args=[post.id]))
         assert response.status_code == 200
 
-    def test_post(self, client, member, send_notification_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
         owner = UserFactory()
         MembershipFactory(member=owner, community=member.community)
         post = PostFactory(community=member.community, owner=owner)
@@ -202,7 +196,7 @@ class TestPostDetailView:
 
 
 class TestPostReshareView:
-    def test_post(self, client, member, send_notification_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
 
         post = PostFactory(
             community=member.community,
@@ -273,7 +267,7 @@ class TestPublishView:
 
 
 class TestPostLikeView:
-    def test_post(self, client, member, send_notification_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
         post = PostFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
@@ -316,7 +310,7 @@ class TestFlagView:
         response = client.get(reverse("posts:flag", args=[post.id]))
         assert response.status_code == 200
 
-    def test_post(self, client, member, send_notification_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
         post = PostFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,

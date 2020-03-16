@@ -81,7 +81,7 @@ class TestInviteAcceptView:
         assert invite.is_pending()
 
     def test_get_current_user_is_not_member(
-        self, client, community, login_user, mailoutbox, send_notification_webpush_mock,
+        self, client, community, login_user, mailoutbox, send_webpush_mock,
     ):
         sender = MembershipFactory(community=community).member
         sender.notification_preferences = ["new_member"]

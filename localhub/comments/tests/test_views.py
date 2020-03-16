@@ -85,7 +85,7 @@ class TestCommentUpdateView:
         response = client.get(reverse("comments:update", args=[comment.id]))
         assert response.status_code == 200
 
-    def test_post(self, client, member, send_notification_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             owner=member.member, content_object=post, community=member.community,
@@ -123,7 +123,7 @@ class TestCommentDeleteView:
 
 
 class TestCommentLikeView:
-    def test_post(self, client, member, send_notification_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             content_object=post,
@@ -172,7 +172,7 @@ class TestFlagView:
         response = client.get(reverse("comments:flag", args=[comment.id]))
         assert response.status_code == 200
 
-    def test_post(self, client, member, send_notification_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
             content_object=post,
@@ -207,7 +207,7 @@ class TestCommentReplyView:
         response = client.get(reverse("comments:reply", args=[parent.id]))
         assert response.status_code == 200
 
-    def test_post(self, client, member, send_notification_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
         post = PostFactory(community=member.community)
         parent = CommentFactory(
             content_object=post,

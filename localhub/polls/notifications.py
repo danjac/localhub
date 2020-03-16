@@ -7,6 +7,6 @@ from localhub.activities.notifications import ActivityNotificationAdapter
 
 
 class PollNotificationAdapter(ActivityNotificationAdapter):
-    NOTIFICATION_HEADERS = ActivityNotificationAdapter + [
+    NOTIFICATION_HEADERS = ActivityNotificationAdapter.NOTIFICATION_HEADERS + [
         ("vote", _("%(actor)s has voted in your poll")),
     ]

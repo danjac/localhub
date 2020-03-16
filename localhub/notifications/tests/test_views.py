@@ -26,7 +26,7 @@ class TestNotificationListView:
             recipient=member.member,
             actor=post.owner,
             community=post.community,
-            verb="new_followed_user_post",
+            verb="followed_user",
         )
         comment = CommentFactory(content_object=post, owner=owner)
         Notification.objects.create(
@@ -42,7 +42,7 @@ class TestNotificationListView:
             recipient=member.member,
             actor=event.owner,
             community=event.community,
-            verb="new_followed_user_post",
+            verb="followed_user",
         )
         photo = PhotoFactory(community=member.community, owner=owner)
         Notification.objects.create(
@@ -50,7 +50,7 @@ class TestNotificationListView:
             recipient=member.member,
             actor=photo.owner,
             community=photo.community,
-            verb="new_followed_user_post",
+            verb="followed_user",
         )
         response = client.get(reverse("notifications:list"))
         assert len(response.context["object_list"]) == 4

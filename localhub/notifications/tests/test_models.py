@@ -61,7 +61,7 @@ class TestNotificationManager:
 
 
 class TestPushSubscriptionModel:
-    def test_push_if_ok(self, member, send_notification_webpush_mock):
+    def test_push_if_ok(self, member, send_webpush_mock):
         sub = PushSubscription.objects.create(
             user=member.member,
             community=member.community,
@@ -73,7 +73,7 @@ class TestPushSubscriptionModel:
         payload = {"head": "hello", "body": "testing"}
 
         assert sub.push(payload)
-        assert send_notification_webpush_mock.called_with(
+        assert send_webpush_mock.called_with(
             {
                 "endpoint": sub.endpoint,
                 "keys": {"auth": sub.auth, "p256dh": sub.p256dh},

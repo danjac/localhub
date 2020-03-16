@@ -9,6 +9,8 @@ from django.utils.translation import gettext as _
 from localhub.activities.models import Activity, ActivityQuerySet
 from localhub.db.search import SearchIndexer
 
+from .notifications import PollNotificationAdapter
+
 
 class PollQuerySet(ActivityQuerySet):
     def with_answers(self):
@@ -28,6 +30,8 @@ class PollQuerySet(ActivityQuerySet):
 class Poll(Activity):
 
     search_indexer = SearchIndexer(("A", "title"), ("B", "description"))
+
+    notification_adapter_class = PollNotificationAdapter
 
     objects = PollQuerySet.as_manager()
 
@@ -50,21 +54,6 @@ class Poll(Activity):
         if voter == self.owner:
             return []
         return [self.make_notification(self.owner, "vote", voter)]
-
-    def get_notification_header(self, notification):
-        if notification.verb == "vote":
-            return "Someone has voted on your poll"
-        return super().get_notification_header(notification)
-
-    def get_notification_plain_email_template(self, notification):
-        if notification.verb == "vote":
-            return "polls/emails/notifications/vote.txt"
-        return super().get_notification_plain_email_template(notification)
-
-    def get_notification_html_email_template(self, notification):
-        if notification.verb == "vote":
-            return "polls/emails/notifications/vote.html"
-        return super().get_notification_html_email_template(notification)
 
 
 class Answer(models.Model):

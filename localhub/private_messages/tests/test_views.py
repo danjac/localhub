@@ -164,7 +164,7 @@ class TestMessageFollowUpView:
         )
         assert response.status_code == 404
 
-    def test_post_if_thread(self, client, member, send_notification_webpush_mock):
+    def test_post_if_thread(self, client, member, send_webpush_mock):
         recipient = MembershipFactory(community=member.community).member
         thread = MessageFactory(recipient=recipient, sender=member.member)
         parent = MessageFactory(
@@ -186,11 +186,9 @@ class TestMessageFollowUpView:
         assert message.sender == member.member
         assert message.community == member.community
 
-        assert send_notification_webpush_mock.called_once()
+        assert send_webpush_mock.called_once()
 
-    def test_post_if_thread_not_visible(
-        self, client, member, send_notification_webpush_mock
-    ):
+    def test_post_if_thread_not_visible(self, client, member, send_webpush_mock):
         recipient = MembershipFactory(community=member.community).member
         thread = MessageFactory(
             recipient=recipient, sender=member.member, sender_deleted=timezone.now()
@@ -214,7 +212,7 @@ class TestMessageFollowUpView:
         assert message.sender == member.member
         assert message.community == member.community
 
-        assert send_notification_webpush_mock.called_once()
+        assert send_webpush_mock.called_once()
 
     def test_get(self, client, member):
         recipient = MembershipFactory(community=member.community).member
@@ -240,7 +238,7 @@ class TestMessageReplyView:
         )
         assert response.status_code == 404
 
-    def test_post_if_thread(self, client, member, send_notification_webpush_mock):
+    def test_post_if_thread(self, client, member, send_webpush_mock):
         sender = MembershipFactory(community=member.community).member
         thread = MessageFactory(recipient=sender, sender=member.member)
         parent = MessageFactory(
@@ -262,11 +260,9 @@ class TestMessageReplyView:
         assert message.sender == member.member
         assert message.community == member.community
 
-        assert send_notification_webpush_mock.called_once()
+        assert send_webpush_mock.called_once()
 
-    def test_post_if_thread_not_visible(
-        self, client, member, send_notification_webpush_mock
-    ):
+    def test_post_if_thread_not_visible(self, client, member, send_webpush_mock):
         sender = MembershipFactory(community=member.community).member
         thread = MessageFactory(
             recipient=sender, sender=member.member, sender_deleted=timezone.now()
@@ -290,7 +286,7 @@ class TestMessageReplyView:
         assert message.sender == member.member
         assert message.community == member.community
 
-        assert send_notification_webpush_mock.called_once()
+        assert send_webpush_mock.called_once()
 
     def test_get(self, client, member):
         sender = MembershipFactory(community=member.community).member
@@ -313,7 +309,7 @@ class TestMessageCreateView:
         )
         assert response.status_code == 404
 
-    def test_post(self, client, member, send_notification_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
         recipient = MembershipFactory(community=member.community).member
         response = client.post(
             reverse("private_messages:message_create", args=[recipient.username]),
@@ -325,7 +321,7 @@ class TestMessageCreateView:
         assert message.sender == member.member
         assert message.community == member.community
 
-        assert send_notification_webpush_mock.called_once()
+        assert send_webpush_mock.called_once()
 
     def test_get(self, client, member):
         recipient = MembershipFactory(community=member.community).member

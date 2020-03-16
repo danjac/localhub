@@ -25,7 +25,7 @@ class TestEventCreateView:
         response = client.get(reverse("events:create"))
         assert response.status_code == 200
 
-    def test_post(self, client, member, send_notification_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
         response = client.post(
             reverse("events:create"),
             {
@@ -61,7 +61,7 @@ class TestEventUpdateView:
         response = client.get(reverse("events:update", args=[event_for_member.id]))
         assert response.status_code == 200
 
-    def test_post(self, client, event_for_member, send_notification_webpush_mock):
+    def test_post(self, client, event_for_member, send_webpush_mock):
         response = client.post(
             reverse("events:update", args=[event_for_member.id]),
             {
@@ -101,7 +101,7 @@ class TestEventDetailView:
 
 
 class TestEventLikeView:
-    def test_post(self, client, member, send_notification_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
         event = EventFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,

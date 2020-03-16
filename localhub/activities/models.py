@@ -362,6 +362,8 @@ class Activity(TimeStampedModel):
 
     objects = ActivityQuerySet.as_manager()
 
+    notification_adapter_class = ActivityNotificationAdapter
+
     class Meta:
         indexes = [
             GinIndex(fields=["search_document"]),
@@ -451,9 +453,6 @@ class Activity(TimeStampedModel):
         """
         return self.extract_tags() & self.community.get_content_warning_tags()
 
-    def is_edited_by_moderator(self):
-        return self.editor and self.editor != self.owner
-
     def make_notification(self, recipient, verb, actor=None):
         return Notification(
             content_object=self,
@@ -483,10 +482,7 @@ class Activity(TimeStampedModel):
         if self.editor:
             qs = qs.exclude(pk=self.editor.id)
 
-        return [
-            self.make_notification(follower, "new_followed_user_post")
-            for follower in qs
-        ]
+        return [self.make_notification(follower, "followed_user") for follower in qs]
 
     def notify_tag_followers(self, recipients):
         hashtags = self.description.extract_hashtags()
@@ -504,29 +500,14 @@ class Activity(TimeStampedModel):
 
             if tags:
                 return [
-                    self.make_notification(follower, "new_followed_tag_post")
-                    for follower in qs
+                    self.make_notification(follower, "followed_tag") for follower in qs
                 ]
-        return []
-
-    def notify_owner_of_moderator_edit(self):
-        """
-        If change made by moderator, then notification sent to owner.
-        """
-
-        if self.is_edited_by_moderator():
-            return [
-                self.make_notification(self.owner, "moderator_edit", actor=self.editor)
-            ]
         return []
 
     def notify_moderators(self):
         """
         Notifies moderators of updates.
         """
-
-        if self.is_edited_by_moderator():
-            return []
 
         qs = self.community.get_moderators().exclude(pk=self.owner_id)
 
@@ -536,8 +517,7 @@ class Activity(TimeStampedModel):
         qs = qs.distinct()
 
         return [
-            self.make_notification(moderator, "moderator_review_request")
-            for moderator in qs
+            self.make_notification(moderator, "moderator_review") for moderator in qs
         ]
 
     def notify_parent_owner(self, recipients):
@@ -583,7 +563,6 @@ class Activity(TimeStampedModel):
             notifications += self.notify_mentioned_users(recipients)
             notifications += self.notify_tag_followers(recipients)
 
-        notifications += self.notify_owner_of_moderator_edit()
         notifications += self.notify_moderators()
 
         return takefirst(notifications, lambda n: n.recipient)
@@ -638,5 +617,3 @@ class Activity(TimeStampedModel):
             else:
                 self.tags.clear()
 
-    def get_notification_adapter(self, notification):
-        return ActivityNotificationAdapter(notification)

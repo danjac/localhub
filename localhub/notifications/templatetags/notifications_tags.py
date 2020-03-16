@@ -29,7 +29,7 @@ class RenderNotificationTag(template.Node):
 
     def render(self, context):
         notification = self.notification.resolve(context)
-        return notification.get_visitor().render_to_template(context.template_engine)
+        return notification.get_adapter().render_to_template(context.template.engine)
 
 
 @register.inclusion_tag("notifications/includes/subscribe_btn.html")

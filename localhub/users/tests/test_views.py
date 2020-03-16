@@ -166,7 +166,7 @@ class TestUserDeleteView:
 
 
 class TestUserFollowView:
-    def test_post(self, client, member, mailoutbox, send_notification_webpush_mock):
+    def test_post(self, client, member, mailoutbox, send_webpush_mock):
         user = MembershipFactory(
             community=member.community, member=UserFactory(),
         ).member
