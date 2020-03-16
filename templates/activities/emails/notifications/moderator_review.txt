@@ -6,6 +6,6 @@
 
 {% block notification_body %}
 {% blocktrans %}
-{{ actor }} has created or updated their {{ object_name }} for you to review.
+{{ actor_display }} has created or updated their {{ object_name }} for you to review.
 {% endblocktrans %}
 {% endblock notification_body %}

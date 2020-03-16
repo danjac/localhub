@@ -6,6 +6,6 @@
 
 {% block notification_body %}
 {% blocktrans %}
-{{ actor }} has liked this comment.
+{{ actor_display }} has liked this comment.
 {% endblocktrans %}
 {% endblock notification_body %}

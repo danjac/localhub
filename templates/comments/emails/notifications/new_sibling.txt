@@ -6,6 +6,6 @@
 {% load i18n %}
 {% block notification_body %}
 {% blocktrans %}
-{{ actor }} has commented on a post you have also commented on.
+{{ actor_display }} has commented on a post you have also commented on.
 {% endblocktrans %}
 {% endblock notification_body %}

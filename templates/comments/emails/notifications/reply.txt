@@ -6,6 +6,6 @@
 {% load i18n %}
 {% block notification_body %}
 {% blocktrans %}
-{{ actor }} has replied to your comment.
+{{ actor_display }} has replied to your comment.
 {% endblocktrans %}
 {% endblock notification_body %}

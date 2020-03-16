@@ -6,6 +6,6 @@
 
 {% block notification_body %}
 {% blocktrans %}
-{{ actor }} has voted in your poll.
+{{ actor_display }} has voted in your poll.
 {% endblocktrans %}
 {% endblock notification_body %}

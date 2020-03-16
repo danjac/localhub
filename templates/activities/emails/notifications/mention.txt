@@ -6,6 +6,6 @@
 
 {% block notification_body %}
 {% blocktrans %}
-{{ actor }} has mentioned you in their {{ object_name }}.
+{{ actor_display }} has mentioned you in their {{ object_name }}.
 {% endblocktrans %}
 {% endblock notification_body %}

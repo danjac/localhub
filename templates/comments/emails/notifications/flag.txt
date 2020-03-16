@@ -6,6 +6,6 @@
 
 {% block notification_body %}
 {% blocktrans %}
-{{ actor }} has flagged this comment.
+{{ actor_display }} has flagged this comment.
 {% endblocktrans %}
 {% endblock notification_body %}
