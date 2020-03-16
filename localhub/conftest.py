@@ -112,4 +112,4 @@ def message(member):
 
 @pytest.fixture
 def send_webpush_mock(mocker):
-    return mocker.patch("localhub.notifications.adapter.tasks.send_webpush")
+    return mocker.patch("localhub.notifications.tasks.send_webpush")

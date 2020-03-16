@@ -1,6 +1,8 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from abc import ABC, abstractmethod
+
 from celery.utils.log import get_logger
 from django.core.mail import send_mail
 from django.template import Context, loader
@@ -9,12 +11,20 @@ from django.utils.translation import override
 
 from localhub.users.utils import user_display
 
-from . import tasks
-
 celery_logger = get_logger(__name__)
 
 
-class BaseNotificationAdapter:
+class NotificationAdapter(ABC):
+    @abstractmethod
+    def send_notification(self):
+        ...
+
+    @abstractmethod
+    def render_to_template(self, template_engine=loader, extra_context=None):
+        ...
+
+
+class BaseNotificationAdapter(NotificationAdapter):
     """
     Base class for handling notifications. All adapters should subclass
     this class.
@@ -53,6 +63,8 @@ class BaseNotificationAdapter:
         """
         Sends a webpush notification to registered browsers through celery.
         """
+        from . import tasks
+
         try:
             return tasks.send_webpush.delay(
                 self.recipient.id, self.community.id, self.get_webpush_payload()

@@ -6,6 +6,7 @@ from django.conf import settings
 from django.db.models import F
 
 from ..models import Notification
+from ..registry import registry
 
 register = template.Library()
 
@@ -29,7 +30,9 @@ class RenderNotificationTag(template.Node):
 
     def render(self, context):
         notification = self.notification.resolve(context)
-        return notification.get_adapter().render_to_template(context.template.engine)
+        return registry.get_adapter(notification).render_to_template(
+            context.template.engine
+        )
 
 
 @register.inclusion_tag("notifications/includes/subscribe_btn.html")

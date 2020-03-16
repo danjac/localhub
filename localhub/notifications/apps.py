@@ -6,3 +6,6 @@ from django.apps import AppConfig
 
 class NotificationsConfig(AppConfig):
     name = "localhub.notifications"
+
+    def ready(self):
+        self.module.autodiscover()

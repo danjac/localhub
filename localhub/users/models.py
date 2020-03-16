@@ -23,7 +23,6 @@ from localhub.markdown.fields import MarkdownField
 from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
 
-from .notifications import UserNotificationAdapter
 from .utils import user_display
 
 
@@ -148,8 +147,6 @@ class User(AbstractUser):
     search_document = SearchVectorField(null=True, editable=False)
 
     search_indexer = SearchIndexer(("A", "username"), ("B", "name"))
-
-    notification_adapter_class = UserNotificationAdapter
 
     objects = UserManager()
 

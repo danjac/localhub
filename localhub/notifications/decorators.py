@@ -3,7 +3,15 @@
 
 import functools
 
-from .models import Notification
+from .registry import registry
+
+
+def register(model):
+    def _adapter_wrapper(adapter_cls):
+        registry.register(adapter_cls, model)
+        return adapter_cls
+
+    return _adapter_wrapper
 
 
 def dispatch(func):
@@ -15,11 +23,13 @@ def dispatch(func):
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        from .models import Notification
+
         notifications = list(func(*args, **kwargs))
         if not notifications:
             return []
         for notification in Notification.objects.bulk_create(notifications):
-            notification.get_adapter().send_notification()
+            registry.get_adapter(notification).send_notification()
         return notifications
 
     return wrapper

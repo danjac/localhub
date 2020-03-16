@@ -1,13 +1,15 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
-from localhub.notifications.adapter import BaseNotificationAdapter
+from localhub.notifications import BaseNotificationAdapter, register
 
 from .utils import user_display
 
 
+@register(get_user_model())
 class UserNotificationAdapter(BaseNotificationAdapter):
     NOTIFICATION_HEADERS = {
         "new_follower": _("Someone has started following you"),

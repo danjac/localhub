@@ -6,7 +6,6 @@ import json
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import ImproperlyConfigured
 from django.db import models
 from model_utils.models import TimeStampedModel
 from pywebpush import WebPushException, webpush
@@ -34,6 +33,12 @@ class NotificationQuerySet(models.QuerySet):
 
 
 class Notification(TimeStampedModel):
+    """
+    If you define a model as a content_object of this class, you must register
+    the model with a NotificationAdapter subclass in a notifications module
+    under the model app.
+    """
+
     actor = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+"
     )
@@ -57,18 +62,6 @@ class Notification(TimeStampedModel):
                 fields=["content_type", "object_id", "created", "-created", "is_read",]
             )
         ]
-
-    def get_adapter(self):
-        if hasattr(self.content_object, "get_notification_adapter"):
-            return self.content_object.get_notification_adapter(self)
-
-        if hasattr(self.content_object.__class__, "notification_adapter_class"):
-            return self.content_object.__class__.notification_adapter_class(self)
-
-        raise ImproperlyConfigured(
-            "%r must implement get_notification_adapter method or define notification_adapter class attribute"
-            % self.content_object
-        )
 
 
 class PushSubscription(models.Model):

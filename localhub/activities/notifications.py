@@ -3,7 +3,7 @@
 
 from django.utils.translation import gettext_lazy as _
 
-from localhub.notifications.adapter import BaseNotificationAdapter
+from localhub.notifications import BaseNotificationAdapter
 from localhub.users.utils import user_display
 
 

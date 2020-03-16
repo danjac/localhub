@@ -3,10 +3,13 @@
 
 from django.utils.translation import gettext_lazy as _
 
-from localhub.notifications.adapter import BaseNotificationAdapter
+from localhub.notifications import BaseNotificationAdapter, register
 from localhub.users.utils import user_display
 
+from .models import Comment
 
+
+@register(Comment)
 class CommentNotificationAdapter(BaseNotificationAdapter):
     NOTIFICATION_HEADERS = {
         "flag": _("%(actor)s has flagged this comment"),

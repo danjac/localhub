@@ -27,8 +27,6 @@ from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
 from localhub.utils.itertools import takefirst
 
-from .notifications import CommentNotificationAdapter
-
 
 class CommentAnnotationsQuerySetMixin:
     """
@@ -150,8 +148,6 @@ class Comment(TimeStampedModel):
     history = HistoricalRecords()
     content_tracker = Tracker(["content"])
     search_indexer = SearchIndexer(("A", "content"))
-
-    notification_adapter_class = CommentNotificationAdapter
 
     objects = CommentQuerySet.as_manager()
 

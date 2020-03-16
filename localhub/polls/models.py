@@ -10,8 +10,6 @@ from localhub.activities.models import Activity, ActivityQuerySet
 from localhub.db.search import SearchIndexer
 from localhub.notifications.decorators import dispatch
 
-from .notifications import PollNotificationAdapter
-
 
 class PollQuerySet(ActivityQuerySet):
     def with_answers(self):
@@ -31,8 +29,6 @@ class PollQuerySet(ActivityQuerySet):
 class Poll(Activity):
 
     search_indexer = SearchIndexer(("A", "title"), ("B", "description"))
-
-    notification_adapter_class = PollNotificationAdapter
 
     objects = PollQuerySet.as_manager()
 
