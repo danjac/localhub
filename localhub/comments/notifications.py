@@ -12,7 +12,7 @@ class CommentNotificationAdapter(BaseNotificationAdapter):
         "flag": _("%(actor)s has flagged this comment"),
         "like": _("%(actor)s has liked your comment"),
         "mention": _("%(actor)s has mentioned you in their comment"),
-        "moderator_review": _("%(actor)s has submitted a new comment to review"),
+        "moderator_review": _("%(actor)s has submitted or updated a comment to review"),
         "new_comment": _("%(actor)s has submitted a comment on one of your posts"),
         "new_sibling": _("%(actor)s has made a comment on a post you've commented on"),
         "reply": _("%(actor)s has replied to your comment"),
@@ -29,3 +29,6 @@ class CommentNotificationAdapter(BaseNotificationAdapter):
 
     def get_webpush_header(self):
         return self.get_notification_header()
+
+    def get_webpush_body(self):
+        return self.object.abbreviate()

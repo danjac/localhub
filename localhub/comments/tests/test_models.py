@@ -169,7 +169,7 @@ class TestCommentModel:
         comment = Comment(content="Hello\nthis is a *test*")
         assert comment.abbreviate() == "Hello this is a test"
 
-    def test_notify_on_create(self, community):
+    def test_notify_on_create(self, community, mailoutbox, send_webpush_mock):
 
         comment_owner = MembershipFactory(community=community).member
         post_owner = MembershipFactory(
@@ -224,7 +224,7 @@ class TestCommentModel:
         assert notifications[4].actor == comment.owner
         assert notifications[4].verb == "followed_user"
 
-    def test_notify_on_create_if_parent(self, community):
+    def test_notify_on_create_if_parent(self, community, mailoutbox, send_webpush_mock):
 
         comment_owner = MembershipFactory(community=community,).member
 
@@ -297,7 +297,7 @@ class TestCommentModel:
         assert notifications[5].actor == comment.owner
         assert notifications[5].verb == "followed_user"
 
-    def test_notify_on_update(self, community):
+    def test_notify_on_update(self, community, mailoutbox, send_webpush_mock):
 
         comment_owner = MembershipFactory(
             community=community, member=UserFactory(),

@@ -7,9 +7,8 @@ from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
 from django.utils.translation import override
 
-from localhub.users.utils import user_display
 from localhub.notifications.tasks import send_webpush
-
+from localhub.users.utils import user_display
 
 celery_logger = get_logger(__name__)
 

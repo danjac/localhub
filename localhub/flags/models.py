@@ -11,6 +11,7 @@ from model_utils.models import TimeStampedModel
 
 from localhub.communities.models import Community
 from localhub.db.content_types import get_generic_related_exists
+from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
 
 
@@ -80,6 +81,7 @@ class Flag(TimeStampedModel):
             models.Index(fields=["content_type", "object_id", "created", "-created"])
         ]
 
+    @dispatch
     def notify(self):
         """
         Sends notification to community moderators.

@@ -24,7 +24,6 @@ from localhub.activities.utils import get_breadcrumbs_for_instance
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
-from localhub.notifications.models import Notification
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from .emails import send_comment_deleted_email
@@ -125,7 +124,9 @@ class CommentUpdateView(
         comment.editor = self.request.user
         comment.edited = timezone.now()
         comment.save()
-        Notification.objects.bulk_create_and_send(comment.notify_on_update())
+
+        comment.notify_on_update()
+
         messages.success(self.request, _("Comment has been updated"))
         return redirect(comment.content_object)
 
@@ -158,13 +159,12 @@ class CommentLikeView(
     def post(self, request, *args, **kwargs):
         comment = self.get_object()
         try:
-            like = Like.objects.create(
+            Like.objects.create(
                 user=request.user,
                 community=request.community,
                 recipient=comment.owner,
                 content_object=comment,
-            )
-            Notification.objects.bulk_create_and_send(like.notify())
+            ).notify()
         except IntegrityError:
             pass
         if request.is_ajax():
@@ -225,7 +225,7 @@ class CommentFlagView(
         flag.user = self.request.user
         flag.save()
 
-        Notification.objects.bulk_create_and_send(flag.notify())
+        flag.notify()
 
         messages.success(
             self.request, _("This comment has been flagged to the moderators")
@@ -268,7 +268,8 @@ class CommentReplyView(
         comment.owner = self.request.user
         comment.community = self.request.community
         comment.save()
-        Notification.objects.bulk_create_and_send(comment.notify_on_create())
+
+        comment.notify_on_create()
         messages.success(self.request, _("Your comment has been posted"))
         return redirect(comment.content_object)
 

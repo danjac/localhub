@@ -25,12 +25,13 @@ from localhub.db.tracker import Tracker
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
+from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
 from localhub.utils.itertools import takefirst
 from localhub.utils.text import slugify_unicode
 
-from .utils import extract_hashtags
 from .notifications import ActivityNotificationAdapter
+from .utils import extract_hashtags
 
 
 def get_activity_models():
@@ -529,6 +530,7 @@ class Activity(TimeStampedModel):
     def get_notification_recipients(self):
         return self.community.members.exclude(blocked=self.owner)
 
+    @dispatch
     def notify_on_create(self):
         """
         Generates Notification instances for users:
@@ -554,6 +556,7 @@ class Activity(TimeStampedModel):
         notifications += self.notify_moderators()
         return takefirst(notifications, lambda n: n.recipient)
 
+    @dispatch
     def notify_on_update(self):
 
         notifications = []
@@ -616,4 +619,3 @@ class Activity(TimeStampedModel):
                 self.tags.set(*hashtags, clear=True)
             else:
                 self.tags.clear()
-

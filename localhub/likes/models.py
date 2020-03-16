@@ -12,6 +12,7 @@ from localhub.db.content_types import (
     get_generic_related_count_subquery,
     get_generic_related_exists,
 )
+from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
 
 
@@ -78,6 +79,7 @@ class Like(TimeStampedModel):
         ]
         indexes = [models.Index(fields=["content_type", "object_id"])]
 
+    @dispatch
     def notify(self):
         return [
             Notification(

@@ -16,7 +16,7 @@ pytestmark = pytest.mark.django_db
 
 class TestFlagModel:
     @factory.django.mute_signals(signals.post_save)
-    def test_notify_comment(self, user, moderator):
+    def test_notify_comment(self, user, moderator, send_webpush_mock):
 
         moderator.member.notification_preferences = ["flag"]
         moderator.member.save()
@@ -35,7 +35,7 @@ class TestFlagModel:
         assert notification.verb == "flag"
 
     @factory.django.mute_signals(signals.post_save)
-    def test_notify_post(self, user, moderator):
+    def test_notify_post(self, user, moderator, send_webpush_mock):
         moderator.member.notification_preferences = ["flag"]
         moderator.member.save()
 

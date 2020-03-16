@@ -2,7 +2,6 @@
 
 from django.db import migrations
 
-
 VERBS = (
     ("moderator_review_request", "moderator_review"),
     ("new_sibling_comment", "new_sibling"),

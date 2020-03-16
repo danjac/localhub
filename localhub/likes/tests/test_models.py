@@ -13,7 +13,7 @@ pytestmark = pytest.mark.django_db
 
 class TestLikeModel:
     @factory.django.mute_signals(signals.post_save)
-    def test_notify(self, user, post):
+    def test_notify(self, user, post, send_webpush_mock):
         post.owner.notification_preferences = ["like"]
         post.owner.save()
         like = Like.objects.create(

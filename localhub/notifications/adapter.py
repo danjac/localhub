@@ -3,7 +3,7 @@
 
 from celery.utils.log import get_logger
 from django.core.mail import send_mail
-from django.template import loader, Context
+from django.template import Context, loader
 from django.utils.encoding import force_text
 from django.utils.translation import override
 
@@ -11,11 +11,24 @@ from localhub.users.utils import user_display
 
 from . import tasks
 
-
 celery_logger = get_logger(__name__)
 
 
 class BaseNotificationAdapter:
+    """
+    Base class for handling notifications. All adapters should subclass
+    this class.
+
+    Supports:
+    1. Rendering notification to html template
+    2. Sending plain/HTML emails
+    3. Webpush support
+
+    All Notification content objects should include either the
+    notification_adapter_class attribute or implement a
+    get_notification_adapter() method.
+    """
+
     def __init__(self, notification):
         self.notification = notification
         self.verb = self.notification.verb
@@ -28,11 +41,18 @@ class BaseNotificationAdapter:
         self.app_label = self.object._meta.app_label
 
     def send_notification(self):
+        """
+        Sends email and webpush notifications localized to
+        recipient language.
+        """
         with override(self.recipient.language):
             self.send_webpush()
             self.send_email()
 
     def send_webpush(self):
+        """
+        Sends a webpush notification to registered browsers through celery.
+        """
         try:
             return tasks.send_webpush.delay(
                 self.recipient.id, self.community.id, self.get_webpush_payload()
@@ -41,6 +61,9 @@ class BaseNotificationAdapter:
             celery_logger.exception(e)
 
     def send_email(self, **kwargs):
+        """
+        Send an HTML and plain text email.
+        """
         if self.recipient.send_email_notifications:
             subject = self.get_email_subject()
             context = self.get_email_context()
@@ -61,7 +84,12 @@ class BaseNotificationAdapter:
                 **kwargs,
             )
 
-    def render_to_template(self, template_engine, extra_context=None):
+    def render_to_template(self, template_engine=loader, extra_context=None):
+        """
+        This is used with the {% render_notification %} template tag in
+        notification_tags. It should render an HTML snippet of the notification
+        in the notifications page and other parts of the site.
+        """
         return template_engine.select_template(self.get_template_names()).render(
             Context(self.get_template_context(extra_context or {}))
         )

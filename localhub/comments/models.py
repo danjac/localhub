@@ -23,9 +23,9 @@ from localhub.db.tracker import Tracker
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
+from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
 from localhub.utils.itertools import takefirst
-
 
 from .notifications import CommentNotificationAdapter
 
@@ -229,6 +229,7 @@ class Comment(TimeStampedModel):
     def get_notification_recipients(self):
         return self.community.members.exclude(blocked=self.owner)
 
+    @dispatch
     def notify_on_create(self):
         notifications = []
         recipients = self.get_notification_recipients()
@@ -269,6 +270,7 @@ class Comment(TimeStampedModel):
 
         return takefirst(notifications, lambda n: n.recipient)
 
+    @dispatch
     def notify_on_update(self):
         notifications = []
         if not self.content_tracker.changed():

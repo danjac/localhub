@@ -3,10 +3,12 @@
 
 import pytest
 from django.contrib.auth.models import AnonymousUser
+from django.template import engines
 
 from localhub.communities.factories import MembershipFactory
 from localhub.posts.factories import PostFactory
 
+from ..factories import NotificationFactory
 from ..models import Notification
 from ..templatetags.notifications_tags import (
     get_unread_external_notification_count,
@@ -15,6 +17,25 @@ from ..templatetags.notifications_tags import (
 )
 
 pytestmark = pytest.mark.django_db
+
+
+class TestRenderNotification:
+    def test_render_notification(self, post):
+        notification = NotificationFactory(
+            content_object=post,
+            verb="mention",
+            actor=post.owner,
+            community=post.community,
+        )
+
+        tmpl = engines["django"].from_string(
+            """
+        {% load notifications_tags %}
+        {% render_notification notification %}
+        """
+        )
+        response = tmpl.render({"notification": notification})
+        assert "has mentioned" in response
 
 
 class TestNotificationsSubscribeBtn:

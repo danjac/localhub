@@ -101,7 +101,7 @@ class TestPostModel:
         post = PostFactory(description="This post is #legit")
         assert post.get_content_warning_tags() == set()
 
-    def test_notify_on_create(self, community):
+    def test_notify_on_create(self, community, send_webpush_mock):
         # owner should not receive any notifications from their own posts
         owner = MembershipFactory(
             community=community, role=Membership.ROLES.moderator
@@ -162,7 +162,7 @@ class TestPostModel:
         assert notifications[3].actor == post.owner
         assert notifications[3].verb == "moderator_review"
 
-    def test_notify_on_update(self, community):
+    def test_notify_on_update(self, community, send_webpush_mock):
 
         owner = MembershipFactory(
             community=community, role=Membership.ROLES.moderator, member=UserFactory(),
