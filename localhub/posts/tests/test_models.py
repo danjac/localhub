@@ -152,15 +152,15 @@ class TestPostModel:
 
         assert notifications[1].recipient == tag_follower
         assert notifications[1].actor == post.owner
-        assert notifications[1].verb == "new_followed_tag_post"
+        assert notifications[1].verb == "followed_tag"
 
         assert notifications[2].recipient == user_follower
         assert notifications[2].actor == post.owner
-        assert notifications[2].verb == "new_followed_user_post"
+        assert notifications[2].verb == "followed_user"
 
         assert notifications[3].recipient == moderator
         assert notifications[3].actor == post.owner
-        assert notifications[3].verb == "moderator_review_request"
+        assert notifications[3].verb == "moderator_review"
 
     def test_notify_on_update(self, community):
 
@@ -178,27 +178,12 @@ class TestPostModel:
             description="hello @danjac from @owner #movies #reviews",
         )
 
-        # edit by moderator
-        post.editor = moderator
-        post.save()
-
-        notifications = list(post.notify_on_update())
-        assert len(notifications) == 1
-
-        assert notifications[0].recipient == post.owner
-        assert notifications[0].actor == moderator
-        assert notifications[0].verb == "moderator_edit"
-
-        # edit by owner
-        post.editor = owner
-        post.save()
-
         notifications = list(post.notify_on_update())
         assert len(notifications) == 1
 
         assert notifications[0].recipient == moderator
         assert notifications[0].actor == post.owner
-        assert notifications[0].verb == "moderator_review_request"
+        assert notifications[0].verb == "moderator_review"
 
     def test_notify_on_create_reshare(self, community):
 
@@ -245,7 +230,7 @@ class TestPostModel:
 
         assert notifications[1].recipient == tag_follower
         assert notifications[1].actor == reshare.owner
-        assert notifications[1].verb == "new_followed_tag_post"
+        assert notifications[1].verb == "followed_tag"
 
         assert notifications[2].recipient == post.owner
         assert notifications[2].actor == reshare.owner
@@ -253,7 +238,7 @@ class TestPostModel:
 
         assert notifications[3].recipient == moderator
         assert notifications[3].actor == reshare.owner
-        assert notifications[3].verb == "moderator_review_request"
+        assert notifications[3].verb == "moderator_review"
 
     def test_fetch_opengraph_data_from_url_if_ok(self, mocker):
         class MockHeadResponse:

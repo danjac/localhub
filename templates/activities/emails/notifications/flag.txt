@@ -6,7 +6,7 @@
 {% load i18n %}
 {% block notification_body %}
 {% blocktrans %}
-{{ actor }} has flagged you in their {{ activity_name }}.
+{{ actor }} has flagged you in their {{ object_name }}.
 {% endblocktrans %}
 {% endblock notification_body %}
 

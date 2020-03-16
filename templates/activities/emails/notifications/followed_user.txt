@@ -5,6 +5,6 @@
 {% load i18n %}
 {% block notification_body %}
 {% blocktrans %}
-{{ actor }} has submitted a new {{ activity_name }}.
+{{ actor }} has submitted a new {{ object_name }}.
 {% endblocktrans %}
 {% endblock notification_body %}

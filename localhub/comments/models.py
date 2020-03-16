@@ -222,7 +222,7 @@ class Comment(TimeStampedModel):
 
     def notify_moderators(self):
         return [
-            self.make_notification("moderator_review_request", recipient)
+            self.make_notification("moderator_review", recipient)
             for recipient in self.community.get_moderators().exclude(pk=self.owner_id)
         ]
 
@@ -244,9 +244,7 @@ class Comment(TimeStampedModel):
         # notify the person being replied to
 
         if self.parent:
-            notifications += [
-                self.make_notification("replied_to_comment", self.parent.owner)
-            ]
+            notifications += [self.make_notification("reply", self.parent.owner)]
 
         # notify anyone who has commented on this post, excluding
         # this comment owner and parent owner
@@ -259,11 +257,11 @@ class Comment(TimeStampedModel):
             other_commentors = other_commentors.exclude(pk=self.parent.owner.id)
 
         notifications += [
-            self.make_notification("new_sibling_comment", commentor)
+            self.make_notification("new_sibling", commentor)
             for commentor in other_commentors
         ]
         notifications += [
-            self.make_notification("new_followed_user_comment", follower)
+            self.make_notification("followed_user", follower)
             for follower in recipients.filter(following=self.owner)
             .exclude(pk__in=other_commentors)
             .distinct()
@@ -280,9 +278,4 @@ class Comment(TimeStampedModel):
         notifications += self.notify_mentioned(recipients)
         if self.editor == self.owner:
             notifications += self.notify_moderators()
-        if self.editor and self.editor != self.owner and self.owner in recipients:
-            notifications += [
-                self.make_notification("moderator_edit", self.owner, self.editor)
-            ]
-
         return takefirst(notifications, lambda n: n.recipient)

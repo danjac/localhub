@@ -6,6 +6,6 @@
 
 {% block notification_body %}
 {% blocktrans %}
-{{ actor }} has reshared your {{ activity_name }}.
+{{ actor }} has reshared your {{ object_name }}.
 {% endblocktrans %}
 {% endblock notification_body %}

@@ -12,17 +12,11 @@ class CommentNotificationAdapter(BaseNotificationAdapter):
         "flag": _("%(actor)s has flagged this comment"),
         "like": _("%(actor)s has liked your comment"),
         "mention": _("%(actor)s has mentioned you in their comment"),
-        "moderator_delete": _("A moderator has deleted your comment"),
-        "moderator_edit": _("A moderator has edited your comment"),
-        "moderator_review_request": _(
-            "%(actor)s has submitted a new comment to review"
-        ),
+        "moderator_review": _("%(actor)s has submitted a new comment to review"),
         "new_comment": _("%(actor)s has submitted a comment on one of your posts"),
-        "new_sibling_comment": _(
-            "%(actor)s has made a comment on a post you've commented on"
-        ),
-        "replied_to_comment": _("%(actor)s has replied to your comment"),
-        "new_followed_user_comment": _("%(actor)s has submitted a new comment"),
+        "new_sibling": _("%(actor)s has made a comment on a post you've commented on"),
+        "reply": _("%(actor)s has replied to your comment"),
+        "followed_user": _("%(actor)s has submitted a new comment"),
     }
 
     def get_notification_header(self):

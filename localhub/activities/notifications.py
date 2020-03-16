@@ -29,7 +29,7 @@ class ActivityNotificationAdapter(BaseNotificationAdapter):
     def get_notification_header(self):
         return dict(self.NOTIFICATION_HEADERS)[self.verb] % {
             "actor": user_display(self.actor),
-            "object": self.object,
+            "object": self.object_name,
         }
 
     def get_email_subject(self):

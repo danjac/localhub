@@ -6,6 +6,6 @@
 
 {% block notification_body %}
 {% blocktrans %}
-{{ actor }} has liked your {{ activity_name }}.
+{{ actor }} has liked your {{ object_name }}.
 {% endblocktrans %}
 {% endblock notification_body %}

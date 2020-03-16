@@ -200,7 +200,7 @@ class TestCommentModel:
         follower = MembershipFactory(community=community, member=UserFactory(),).member
         follower.following.add(comment.owner)
 
-        notifications = comment.notify_on_create()
+        notifications = list(comment.notify_on_create())
 
         assert len(notifications) == 5
 
@@ -210,7 +210,7 @@ class TestCommentModel:
 
         assert notifications[1].recipient == moderator
         assert notifications[1].actor == comment.owner
-        assert notifications[1].verb == "moderator_review_request"
+        assert notifications[1].verb == "moderator_review"
 
         assert notifications[2].recipient == post.owner
         assert notifications[2].actor == comment.owner
@@ -218,11 +218,11 @@ class TestCommentModel:
 
         assert notifications[3].recipient == other_comment.owner
         assert notifications[3].actor == comment.owner
-        assert notifications[3].verb == "new_sibling_comment"
+        assert notifications[3].verb == "new_sibling"
 
         assert notifications[4].recipient == follower
         assert notifications[4].actor == comment.owner
-        assert notifications[4].verb == "new_followed_user_comment"
+        assert notifications[4].verb == "followed_user"
 
     def test_notify_on_create_if_parent(self, community):
 
@@ -269,7 +269,7 @@ class TestCommentModel:
         follower = MembershipFactory(community=community, member=UserFactory(),).member
         follower.following.add(comment.owner)
 
-        notifications = comment.notify_on_create()
+        notifications = list(comment.notify_on_create())
 
         assert len(notifications) == 6
 
@@ -279,7 +279,7 @@ class TestCommentModel:
 
         assert notifications[1].recipient == moderator
         assert notifications[1].actor == comment.owner
-        assert notifications[1].verb == "moderator_review_request"
+        assert notifications[1].verb == "moderator_review"
 
         assert notifications[2].recipient == post.owner
         assert notifications[2].actor == comment.owner
@@ -287,15 +287,15 @@ class TestCommentModel:
 
         assert notifications[3].recipient == parent_owner
         assert notifications[3].actor == comment.owner
-        assert notifications[3].verb == "replied_to_comment"
+        assert notifications[3].verb == "reply"
 
         assert notifications[4].recipient == other_comment.owner
         assert notifications[4].actor == comment.owner
-        assert notifications[4].verb == "new_sibling_comment"
+        assert notifications[4].verb == "new_sibling"
 
         assert notifications[5].recipient == follower
         assert notifications[5].actor == comment.owner
-        assert notifications[5].verb == "new_followed_user_comment"
+        assert notifications[5].verb == "followed_user"
 
     def test_notify_on_update(self, community):
 
@@ -317,26 +317,14 @@ class TestCommentModel:
             content="hello @danjac",
         )
 
-        # edit by moderator
-        comment.editor = moderator
-        comment.content = "edit #1"
-        comment.save()
-
-        notifications = comment.notify_on_update()
-        assert len(notifications) == 1
-
-        assert notifications[0].recipient == comment.owner
-        assert notifications[0].actor == moderator
-        assert notifications[0].verb == "moderator_edit"
-
         # edit by owner
         comment.content = "edit #2"
         comment.editor = comment_owner
         comment.save()
 
-        notifications = comment.notify_on_update()
+        notifications = list(comment.notify_on_update())
         assert len(notifications) == 1
 
         assert notifications[0].recipient == moderator
         assert notifications[0].actor == comment_owner
-        assert notifications[0].verb == "moderator_review_request"
+        assert notifications[0].verb == "moderator_review"

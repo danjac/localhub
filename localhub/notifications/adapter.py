@@ -100,6 +100,7 @@ class BaseNotificationAdapter:
             "notification": self.notification,
             "object": self.object,
             "object_url": self.get_object_url(),
+            "object_name": self.object_name,
             "recipient": self.recipient,
             "actor": self.actor,
             "verb": self.verb,
