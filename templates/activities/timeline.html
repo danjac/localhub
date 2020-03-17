@@ -12,15 +12,17 @@
 {% if date_filters or years or months %}
 <div class="actions">
     {% if date_filters %}
-    <a href="{{ request.path }}?order=desc">{% trans "Newest First" %}</a>
-    <a href="{{ request.path }}?order=asc">{% trans "Oldest First" %}</a>
+    <a href="{{ request.path }}?order={{ order }}">{% trans "All" %}</a>
     {% endif %}
     {% for year in years %}
-    <a href="{{ request.path }}?year={{ year }}">{{ year }}</a>
+    <a href="{{ request.path }}?year={{ year }}&order={{ order }}">{{ year }}</a>
     {% endfor %}
     {% for counter, name in months %}
-    <a href="{{ request.path }}?month={{ counter }}&year={{ current_year }}">{{ name }}</a>
+    <a href="{{ request.path }}?month={{ counter }}&year={{ current_year }}&order={{ order }}">{{ name }}</a>
     {% endfor %}
+    <a href="{{ reverse_sort_url }}">
+      {% if order == "desc" %}{% trans "Ascending" %}{% else %}{% trans "Descending" %}{% endif %}
+    </a>
 </div>
 {% endif %}
 

@@ -166,8 +166,12 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
         return True
 
     @cached_property
+    def sort_order(self):
+        return self.request.GET.get("order", "desc")
+
+    @cached_property
     def sort_by_ascending(self):
-        return self.request.GET.get("order") == "asc"
+        return self.sort_order == "asc"
 
     @cached_property
     def current_year(self):
@@ -258,6 +262,14 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
         ]
         return sorted(set(itertools.chain.from_iterable(querysets)))
 
+    def get_reverse_sort_url(self):
+        """
+        Get all params and switch out the current order.
+        """
+        params = self.request.GET.copy()
+        params["order"] = "desc" if self.sort_by_ascending else "asc"
+        return f"{self.request.path}?{params.urlencode()}"
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         for object in data["object_list"]:
@@ -267,8 +279,10 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
             {
                 "dates": dates,
                 "current_year": self.current_year,
+                "reverse_sort_url": self.get_reverse_sort_url(),
                 "months": self.get_months(dates),
                 "years": self.get_years(dates),
+                "order": self.sort_order,
                 "date_filters": self.date_kwargs,
             }
         )
