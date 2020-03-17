@@ -9,25 +9,17 @@
 {% block content %}
 <h5>{% trans "Timeline" %}</h5>
 
-{% if date_filters %}
+{% if date_filters or years or months %}
 <div class="actions">
+    {% if date_filters %}
     <a href="{{ request.path }}?order=desc">{% trans "Newest First" %}</a>
     <a href="{{ request.path }}?order=asc">{% trans "Oldest First" %}</a>
-</div>
-{% endif %}
-
-{% if years|length > 1 %}
-<div class="actions">
+    {% endif %}
     {% for year in years %}
     <a href="{{ request.path }}?year={{ year }}">{{ year }}</a>
     {% endfor %}
-</div>
-{% endif %}
-
-{% if months|length > 1 %}
-<div class="actions mb-1">
-    {% for order, name in months %}
-    <a href="{{ request.path }}?month={{ order }}&year={{ current_year }}">{{ name }}</a>
+    {% for counter, name in months %}
+    <a href="{{ request.path }}?month={{ counter }}&year={{ current_year }}">{{ name }}</a>
     {% endfor %}
 </div>
 {% endif %}
