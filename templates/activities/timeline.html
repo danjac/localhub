@@ -9,7 +9,8 @@
 {% block content %}
 <h5>{% trans "Timeline" %}</h5>
 
-{% if date_filters or years or months %}
+{% with num_years=years|length num_months=months|length %}
+{% if date_filters or num_years > 1 or num_months > 1 %}
 <div class="actions">
     <a href="{{ reverse_sort_url }}">
       {% if order == "desc" %}{% trans "Ascending" %}{% else %}{% trans "Descending" %}{% endif %}
@@ -17,14 +18,19 @@
     {% if date_filters %}
     <a href="{{ request.path }}?order={{ order }}">{% trans "All" %}</a>
     {% endif %}
+    {% if num_years > 1 %}
     {% for year in years %}
     <a href="{{ request.path }}?year={{ year }}&order={{ order }}">{{ year }}</a>
     {% endfor %}
+    {% endif %}
+    {% if num_months > 1 %}
     {% for counter, name in months %}
     <a href="{{ request.path }}?month={{ counter }}&year={{ current_year }}&order={{ order }}">{{ name }}</a>
     {% endfor %}
+    {% endif %}
 </div>
 {% endif %}
+{% endwith %}
 
 {% if dates %}
 {% spaceless %}
