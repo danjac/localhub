@@ -16,7 +16,7 @@
       {% if order == "desc" %}{% trans "Ascending" %}{% else %}{% trans "Descending" %}{% endif %}
     </a> |
     {% if date_filters %}
-    <a href="{{ request.path }}?order={{ order }}">{% trans "All" %}</a>
+    <a href="{{ request.path }}?order={{ order }}">{% trans "Show All" %}</a> |
     {% endif %}
     {% if num_years > 1 %}
     {% for year in years %}
