@@ -279,21 +279,25 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
             params.pop("page")
         return f"{self.request.path}?{params.urlencode()}"
 
+    def get_selected_dates(self, dates):
+        if not self.date_kwargs:
+            return []
+
+        selected_dates = [date for date in dates if date.year == self.current_year]
+        current_month = self.get_current_month()
+
+        if current_month is None:
+            return selected_dates
+
+        return [date for date in selected_dates if date.month == current_month.month]
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         for object in data["object_list"]:
             object["month"] = date_format(object["published"], "F Y")
 
         dates = self.get_dates()
-
-        if self.date_kwargs:
-            selected_dates = [
-                date
-                for date in dates
-                if date.month == self.current_month and date.year == self.current_year
-            ]
-        else:
-            selected_dates = dates
+        selected_dates = self.get_selected_dates(dates)
 
         data.update(
             {
