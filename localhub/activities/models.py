@@ -625,6 +625,7 @@ class Activity(TimeStampedModel):
         self.published = None
         self.save(update_fields=["deleted", "published"])
 
+        self.get_comments().delete()
         self.get_likes().delete()
         self.get_flags().delete()
         self.get_notifications().delete()

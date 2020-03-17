@@ -333,6 +333,7 @@ class TestPostModel:
         assert post.get_opengraph_image_if_safe() == ""
 
     def test_soft_delete(self, post):
+        CommentFactory(content_object=post)
         NotificationFactory(content_object=post)
         # FlagFactory(content_object=post)
         # LikeFactory(content_object=post)
@@ -346,3 +347,4 @@ class TestPostModel:
         assert post.get_notifications().count() == 0
         assert post.get_likes().count() == 0
         assert post.get_flags().count() == 0
+        assert post.get_comments().count() == 0

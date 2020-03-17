@@ -54,6 +54,18 @@ class TestActivityManager:
         PostFactory()
         assert Post.objects.published().count() == 1
 
+    def test_deleted_if_false(self):
+        PostFactory(deleted=None)
+        assert Post.objects.deleted().count() == 0
+
+    def test_deleted_if_true(self):
+        PostFactory(deleted=timezone.now())
+        assert Post.objects.deleted().count() == 1
+
+    def test_published_if_deleted(self):
+        PostFactory(deleted=timezone.now())
+        assert Post.objects.published().count() == 0
+
     def test_published_or_owner_if_false_and_owner(self, user):
         PostFactory(published=None, owner=user)
         assert Post.objects.published_or_owner(user).count() == 1
@@ -64,6 +76,10 @@ class TestActivityManager:
 
     def test_published_or_owner_if_true_and_owner(self, user):
         PostFactory(owner=user)
+        assert Post.objects.published_or_owner(user).count() == 1
+
+    def test_published_or_owner_if_deleted(self, user):
+        PostFactory(owner=user, deleted=timezone.now())
         assert Post.objects.published_or_owner(user).count() == 1
 
     def test_published_or_owner_if_true_and_not_owner(self, user):
