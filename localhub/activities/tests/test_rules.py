@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
+from django.utils import timezone
 
 from localhub.communities.models import Community, Membership
 from localhub.posts.factories import PostFactory
@@ -119,6 +120,10 @@ class TestChangePermissions:
         post = PostFactory(owner=user)
         assert user.has_perm("activities.change_activity", post)
 
+    def test_owner_can_change_activity_if_deleted(self, user):
+        post = PostFactory(owner=user, deleted=timezone.now())
+        assert not user.has_perm("activities.change_activity", post)
+
     def test_owner_can_change_activity_if_reshare(self, user):
         post = PostFactory(owner=user, is_reshare=True)
         assert not user.has_perm("activities.change_activity", post)
@@ -137,6 +142,10 @@ class TestDeletePermissions:
         post = PostFactory(owner=user)
         assert user.has_perm("activities.delete_activity", post)
 
+    def test_owner_can_delete_activity_if_deleted(self, user):
+        post = PostFactory(owner=user, deleted=timezone.now())
+        assert not user.has_perm("activities.delete_activity", post)
+
     def test_owner_can_delete_activity_if_reshare(self, user):
         post = PostFactory(owner=user, is_reshare=True)
         assert user.has_perm("activities.delete_activity", post)
@@ -148,3 +157,7 @@ class TestDeletePermissions:
     def test_moderator_can_delete_activity(self, moderator):
         post = PostFactory(community=moderator.community)
         assert moderator.member.has_perm("activities.delete_activity", post)
+
+    def test_moderator_can_delete_activity_if_deleted(self, moderator):
+        post = PostFactory(community=moderator.community, deleted=timezone.now())
+        assert not moderator.member.has_perm("activities.delete_activity", post)
