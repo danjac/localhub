@@ -10,13 +10,14 @@
 <h5>{% trans "Timeline" %}</h5>
 
 {% with num_years=years|length num_months=months|length %}
+{% if dates %}
 {% if date_filters or num_years > 1 or num_months > 1 %}
 <div class="actions">
     <a href="{{ reverse_sort_url }}">
-      {% if order == "desc" %}{% trans "Ascending" %}{% else %}{% trans "Descending" %}{% endif %}
+        {% if order == "desc" %}{% trans "Ascending" %}{% else %}{% trans "Descending" %}{% endif %}
     </a> |
     {% if date_filters %}
-    <a href="{{ request.path }}?order={{ order }}">{% trans "Show All" %}</a> |
+    <a href="{{ request.path }}?&order={{ order }}">{% trans "Show All" %}</a> |
     {% endif %}
     {% if num_years > 1 %}
     {% for year in years %}
@@ -25,14 +26,17 @@
     {% endif %}
     {% if num_months > 1 %}
     {% for counter, name in months %}
+    {% if counter != current_month %}
     <a href="{{ request.path }}?month={{ counter }}&year={{ current_year }}&order={{ order }}">{{ name }}</a>
+    {% endif %}
     {% endfor %}
     {% endif %}
 </div>
 {% endif %}
+{% endif %}
 {% endwith %}
 
-{% if dates %}
+{% if selected_dates %}
 {% spaceless %}
 <div class="my-2 toast text-center">
     {% blocktrans count counter=paginator.count %}
@@ -40,23 +44,23 @@
     {% plural %}
     A total of <strong>{{ counter }} activities</strong> were posted
     {% endblocktrans %}
-    {% with num_months=months|length num_years=years|length %}
+    {% with num_months=selected_months|length num_years=selected_years|length %}
     {% if num_months == 1 and num_years == 1 %}
-    {% with earliest=dates|first|date:"E Y" %}
+    {% with earliest=selected_dates|first|date:"E Y" %}
     {% blocktrans %}
     in {{ earliest }}.
     {% endblocktrans %}
     {% endwith %}
 
     {% elif num_years == 1 %}
-    {% with earliest=dates|first|date:"E" latest=dates|last|date:"E Y" %}
+    {% with earliest=selected_dates|first|date:"E" latest=selected_dates|last|date:"E Y" %}
     {% blocktrans %}
     from {{ earliest }} to {{ latest }}.
     {% endblocktrans %}
     {% endwith %}
 
     {% else %}
-    {% with earliest=dates|first|date:"E Y" latest=dates|last|date:"E Y" %}
+    {% with earliest=selected_dates|first|date:"E Y" latest=selected_dates|last|date:"E Y" %}
     {% blocktrans %}
     from {{ earliest }} to {{ latest }}.
     {% endblocktrans %}

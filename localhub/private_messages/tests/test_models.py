@@ -410,4 +410,3 @@ class TestMessageModel:
         notifications = message.get_notifications()
         assert notifications.count() == 1
         assert notifications.first() == notification
-

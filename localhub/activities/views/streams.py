@@ -178,6 +178,10 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
         return (self.get_current_year() or timezone.now()).year
 
     @cached_property
+    def current_month(self):
+        return (self.get_current_month() or timezone.now()).month
+
+    @cached_property
     def date_kwargs(self):
         date = self.get_current_month()
         if date:
@@ -217,14 +221,14 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
     def make_date_lookup_kwargs(self, since, until):
         return {"published__gte": since, "published__lt": until}
 
-    def filter_queryset(self, queryset):
+    def filter_queryset(self, queryset, with_date_kwargs=True):
         qs = (
             super()
             .filter_queryset(queryset)
             .published()
             .exclude_blocked(self.request.user)
         )
-        if self.date_kwargs:
+        if with_date_kwargs and self.date_kwargs:
             return qs.filter(**self.date_kwargs)
         return qs
 
@@ -254,7 +258,9 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
         queryset.
         """
         _, querysets = get_activity_querysets(
-            lambda model: self.filter_queryset(self.get_queryset_for_model(model))
+            lambda model: self.filter_queryset(
+                self.get_queryset_for_model(model), with_date_kwargs=False
+            )
         )
         querysets = [
             qs.only("pk", "published").select_related(None).dates("published", "month")
@@ -277,14 +283,29 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
         data = super().get_context_data(**kwargs)
         for object in data["object_list"]:
             object["month"] = date_format(object["published"], "F Y")
+
         dates = self.get_dates()
+
+        if self.date_kwargs:
+            selected_dates = [
+                date
+                for date in dates
+                if date.month == self.current_month and date.year == self.current_year
+            ]
+        else:
+            selected_dates = dates
+
         data.update(
             {
                 "dates": dates,
+                "selected_dates": selected_dates,
+                "current_month": self.current_month,
                 "current_year": self.current_year,
-                "reverse_sort_url": self.get_reverse_sort_url(),
                 "months": self.get_months(dates),
                 "years": self.get_years(dates),
+                "selected_months": self.get_months(selected_dates),
+                "selected_years": self.get_years(selected_dates),
+                "reverse_sort_url": self.get_reverse_sort_url(),
                 "order": self.sort_order,
                 "date_filters": self.date_kwargs,
             }
