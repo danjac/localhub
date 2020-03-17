@@ -26,7 +26,6 @@ from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
-from ..emails import send_activity_deleted_email
 from ..models import get_activity_models
 from ..utils import get_breadcrumbs_for_instance, get_breadcrumbs_for_model
 
@@ -161,17 +160,19 @@ class ActivityUpdateView(
 class ActivityDeleteView(PermissionRequiredMixin, ActivityQuerySetMixin, DeleteView):
     permission_required = "activities.delete_activity"
     success_url = settings.HOME_PAGE_URL
-    success_message = _("The %s has been deleted")
+    success_message = _("This %s has been deleted")
 
     def get_success_message(self):
         return self.success_message % self.object._meta.verbose_name
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        self.object.delete()
 
         if self.request.user != self.object.owner:
-            send_activity_deleted_email(self.object)
+            self.object.soft_delete()
+            self.object.notify_on_delete(self.request.user)
+        else:
+            self.object.delete()
 
         message = self.get_success_message()
         if message:

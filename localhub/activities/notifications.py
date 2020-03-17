@@ -8,6 +8,7 @@ from localhub.notifications.adapters import DefaultAdapter, Mailer, Webpusher
 from localhub.users.utils import user_display
 
 HEADERS = [
+    ("delete", _("%(actor)s has deleted your %(object)s")),
     ("flag", _("%(actor)s has flagged this %(object)s")),
     ("like", _("%(actor)s has liked your %(object)s")),
     ("mention", _("%(actor)s has mentioned you in their %(object)s")),

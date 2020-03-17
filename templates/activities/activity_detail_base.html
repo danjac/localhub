@@ -10,7 +10,13 @@
 
 {% block content %}
 {% include "includes/breadcrumbs.html" %}
-{% if not object.published %}
+{% if object.deleted %}
+<p class="toast text-center my-2">
+  {% blocktrans %}
+  This post has been deleted by a community moderator.
+  {% endblocktrans %}
+</p>
+{% elif not object.published %}
 <p class="toast text-center my-2">
   {% blocktrans with update_url=object.get_update_url %}
   This post is currently in <b>Draft</b> and is only available to you.

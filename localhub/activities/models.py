@@ -6,7 +6,7 @@ import collections
 from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
-from django.db import models
+from django.db import models, transaction
 from django.urls import reverse
 from django.utils import timezone
 from model_utils.models import TimeStampedModel
@@ -205,7 +205,10 @@ class ActivityQuerySet(
         )
 
     def published(self):
-        return self.filter(published__isnull=False)
+        return self.filter(published__isnull=False, deleted__isnull=True)
+
+    def deleted(self):
+        return self.filter(deleted__isnull=False)
 
     def published_or_owner(self, user):
         qs = self.published()
@@ -216,7 +219,7 @@ class ActivityQuerySet(
     def drafts(self, user):
         if user.is_anonymous:
             return self.none()
-        return self.filter(published__isnull=True, owner=user)
+        return self.filter(published__isnull=True, deleted__isnull=True, owner=user)
 
     def for_community(self, community):
         """
@@ -347,6 +350,7 @@ class Activity(TimeStampedModel):
 
     edited = models.DateTimeField(null=True, blank=True)
     published = models.DateTimeField(null=True, blank=True)
+    deleted = models.DateTimeField(null=True, blank=True)
 
     comments = AbstractGenericRelation(Comment)
     flags = AbstractGenericRelation(Flag)
@@ -569,6 +573,10 @@ class Activity(TimeStampedModel):
         notifications += self.notify_moderators()
         return takefirst(notifications, lambda n: n.recipient)
 
+    @dispatch
+    def notify_on_delete(self, moderator):
+        return [self.make_notification(self.owner, "delete", actor=moderator)]
+
     def reshare(self, owner, commit=True, **kwargs):
         """
         Creates a copy of the model.  The subclass must define
@@ -601,6 +609,25 @@ class Activity(TimeStampedModel):
         Sync latest updates with all reshares.
         """
         self.reshares.update(**self.get_resharable_data())
+
+    @transaction.atomic
+    def soft_delete(self):
+        """
+        Moderators "soft delete" an activity rather than delete it completely.
+        The published field is also set to NULL.
+
+        Comments and reshares are not deleted.
+
+        Notifications, flags and likes should be deleted (there may be subsequent
+        notification i.e. to notify the owner).
+        """
+        self.deleted = timezone.now()
+        self.published = None
+        self.save(update_fields=["deleted", "published"])
+
+        self.get_likes().delete()
+        self.get_flags().delete()
+        self.get_notifications().delete()
 
     def get_resharable_data(self):
         return {k: getattr(self, k) for k in self.RESHARED_FIELDS}

@@ -172,14 +172,17 @@ class TestPostDeleteView:
         assert response.url == settings.HOME_PAGE_URL
         assert Post.objects.count() == 0
 
-    def test_post_by_moderator(self, client, moderator):
+    def test_post_by_moderator(self, client, moderator, mailoutbox, send_webpush_mock):
         post = PostFactory(
             community=moderator.community,
             owner=MembershipFactory(community=moderator.community).member,
         )
         response = client.post(reverse("posts:delete", args=[post.id]))
         assert response.url == settings.HOME_PAGE_URL
-        assert Post.objects.count() == 0
+        assert Post.objects.deleted().count() == 1
+
+        assert send_webpush_mock.is_called
+        assert mailoutbox[0].to == [post.owner.email]
 
 
 class TestPostDetailView:

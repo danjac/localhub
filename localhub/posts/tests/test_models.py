@@ -8,6 +8,7 @@ from localhub.comments.factories import CommentFactory
 from localhub.comments.models import Comment
 from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
+from localhub.notifications.factories import NotificationFactory
 from localhub.users.factories import UserFactory
 
 from ..factories import PostFactory
@@ -143,7 +144,7 @@ class TestPostModel:
         ).member
         user_follower.following.add(post.owner)
 
-        notifications = list(post.notify_on_create())
+        notifications = post.notify_on_create()
         assert len(notifications) == 4
 
         assert notifications[0].recipient == mentioned
@@ -162,6 +163,14 @@ class TestPostModel:
         assert notifications[3].actor == post.owner
         assert notifications[3].verb == "moderator_review"
 
+    def test_notify_on_delete(self, post, moderator, send_webpush_mock):
+        notifications = post.notify_on_delete(moderator.member)
+
+        assert len(notifications) == 1
+        assert notifications[0].recipient == post.owner
+        assert notifications[0].actor == moderator.member
+        assert notifications[0].verb == "delete"
+
     def test_notify_on_update(self, community, send_webpush_mock):
 
         owner = MembershipFactory(
@@ -178,7 +187,7 @@ class TestPostModel:
             description="hello @danjac from @owner #movies #reviews",
         )
 
-        notifications = list(post.notify_on_update())
+        notifications = post.notify_on_update()
         assert len(notifications) == 1
 
         assert notifications[0].recipient == moderator
@@ -322,3 +331,18 @@ class TestPostModel:
     def test_get_opengraph_image_if_safe_if_empty(self):
         post = Post(opengraph_image="")
         assert post.get_opengraph_image_if_safe() == ""
+
+    def test_soft_delete(self, post):
+        NotificationFactory(content_object=post)
+        # FlagFactory(content_object=post)
+        # LikeFactory(content_object=post)
+
+        post.soft_delete()
+        post.refresh_from_db()
+
+        assert post.published is None
+        assert post.deleted is not None
+
+        assert post.get_notifications().count() == 0
+        assert post.get_likes().count() == 0
+        assert post.get_flags().count() == 0
