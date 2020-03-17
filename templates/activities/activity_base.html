@@ -45,7 +45,7 @@
 
         <div class="divider"></div>
 
-        {% if object.parent %}
+        {% if object.parent and not object.parent.deleted %}
         <a href="{{ object.parent.get_absolute_url }}">{{ object.title|truncatechars:130 }}</a>
         {% endif %}
 
@@ -90,7 +90,7 @@
 
       <div class="card-subtitle">
         {% if object.parent %}
-        {% include "activities/includes/timesince.html" with timestamp=object.parent.published owner=object.parent.owner %}
+        {% include "activities/includes/timesince.html" with timestamp=object.parent.published|default:object.created owner=object.parent.owner %}
         {% elif not object.is_reshare %}
         {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
         {% endif %}
