@@ -150,7 +150,9 @@ class Mailer:
                 self.renderer.render(self.get_template_names(".txt"), context),
                 self.get_sender(),
                 [self.recipient.email],
-                self.renderer.render(self.get_template_names(".html"), context),
+                html_message=self.renderer.render(
+                    self.get_template_names(".html"), context
+                ),
                 **kwargs,
             )
 

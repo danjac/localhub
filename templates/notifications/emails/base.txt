@@ -1,10 +1,10 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
+{% spaceless %}
 {% load i18n %}
 {% load account %}
-
 {% block content %}
+{% spaceless %}
 {% user_display notification.recipient as recipient %}
 {% user_display notification.actor as actor %}
 
@@ -22,4 +22,6 @@ Hello from {{ community_name }} !
   {% endblocktrans %}
   {{ community.domain }}
 {% endwith %}
+{% endspaceless %}
 {% endblock content %}
+{% endspaceless %}

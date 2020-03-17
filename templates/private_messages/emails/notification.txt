@@ -1,6 +1,6 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% load i18n %}{% load account %}{% autoescape off %}
+{% spaceless %} {% load i18n %}{% load account %}{% autoescape off %}
 {% user_display message.recipient as recipient_name %}
 {% user_display message.sender as sender %}
 {% with community=message.community %}
@@ -24,3 +24,4 @@ Thank you from {{ community_name }} !
 {{ community.domain }}
 {% endwith %}
 {% endautoescape %}
+{% endspaceless %}
