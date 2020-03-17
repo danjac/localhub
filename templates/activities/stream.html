@@ -15,32 +15,8 @@
 {% if page_obj.number == 1 %}
 
 {% if latest_notification %}
-<div class="toast toast-primary text-center my-2"
-     data-controller="toggle"
-     data-target="toggle.togglable">
-    <button class="btn btn-clear float-right d-hide"
-            data-controller="js-toggle ajax badge"
-            data-ajax-url="{% url 'notifications:mark_read' latest_notification.id %}"
-            data-ajax-redirect="none"
-            data-badge-counters="sidebar-notifications-counter,total-notifications-counter"
-            data-action="ajax#post toggle#toggle badge#decrement"></button>
+<div class="toast toast-primary text-center my-2">
     {% render_notification latest_notification %}
-</div>
-{% endif %}
-
-{% if latest_message %}
-<div class="toast toast-primary text-center my-2"
-     data-controller="toggle"
-     data-target="toggle.togglable">
-    <button class="btn btn-clear float-right d-hide"
-            data-controller="js-toggle ajax badge"
-            data-ajax-url="{% url 'private_messages:message_mark_read' latest_message.id %}"
-            data-ajax-redirect="none"
-            data-badge-counters="sidebar-messages-counter,total-notifications-counter"
-            data-action="ajax#post toggle#toggle badge#decrement"></button>
-    {% blocktrans with message_sender=latest_message.sender.get_display_name %}
-    {{ message_sender }} has sent you a <a href="{{ latest_message_url }}">message</a>.
-    {% endblocktrans %}
 </div>
 {% endif %}
 

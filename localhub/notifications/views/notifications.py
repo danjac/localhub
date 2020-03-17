@@ -8,6 +8,7 @@ from vanilla import DeleteView, GenericModelView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
 
+from ..signals import notification_read
 from ..models import Notification
 
 
@@ -58,7 +59,15 @@ class NotificationMarkAllReadView(
     UnreadNotificationQuerySetMixin, NotificationSuccessRedirectMixin, GenericModelView,
 ):
     def post(self, request, *args, **kwargs):
-        self.get_queryset().update(is_read=True)
+        qs = self.get_queryset()
+        [
+            notification_read.send(
+                sender=notification.content_object.__class__,
+                instance=notification.content_object,
+            )
+            for notification in qs.prefetch_related("content_object")
+        ]
+        qs.update(is_read=True)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -72,6 +81,12 @@ class NotificationMarkReadView(
         notification = self.get_object()
         notification.is_read = True
         notification.save()
+
+        notification_read.send(
+            sender=notification.content_object.__class__,
+            instance=notification.content_object,
+        )
+
         return HttpResponseRedirect(self.get_success_url())
 
 

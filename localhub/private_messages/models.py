@@ -10,8 +10,14 @@ from django.utils import timezone
 from model_utils.models import TimeStampedModel
 
 from localhub.communities.models import Community
+from localhub.db.content_types import (
+    get_generic_related_queryset,
+    get_multiple_generic_related_queryset,
+)
 from localhub.db.search import SearchIndexer, SearchQuerySetMixin
 from localhub.markdown.fields import MarkdownField
+from localhub.notifications.decorators import dispatch
+from localhub.notifications.models import Notification
 
 
 class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
@@ -123,6 +129,9 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
         """
         return self.unread().update(read=timezone.now())
 
+    def notifications(self):
+        return get_multiple_generic_related_queryset(self, Notification)
+
 
 class Message(TimeStampedModel):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
@@ -196,6 +205,9 @@ class Message(TimeStampedModel):
     def get_permalink(self, user=None):
         return self.community.resolve_url(self.resolve_url(user))
 
+    def get_notifications(self):
+        return get_generic_related_queryset(self, Notification)
+
     def abbreviate(self, length=30):
         """
         Returns *final* non-HTML/markdown abbreviated version of message.
@@ -254,3 +266,15 @@ class Message(TimeStampedModel):
         if not self.read:
             self.read = timezone.now()
             self.save(update_fields=["read"])
+
+    @dispatch
+    def notify(self):
+        return [
+            Notification(
+                content_object=self,
+                actor=self.sender,
+                recipient=self.recipient,
+                community=self.community,
+                verb="message",
+            )
+        ]

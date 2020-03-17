@@ -1,0 +1,11 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% if object.parent %}
+{{ actor_display }} has replied to your <a href="{{ object_url }}">message</a>.
+{% else %}
+{% blocktrans %}
+{{ actor_display }} has sent you a <a href="{{ object_url }}">message</a>.
+{% endblocktrans %}
+{% endif %}

@@ -28,6 +28,9 @@ class NotificationQuerySet(models.QuerySet):
     def for_recipient(self, recipient):
         return self.filter(recipient=recipient)
 
+    def mark_read(self):
+        self.update(is_read=True)
+
     def unread(self):
         return self.filter(is_read=False)
 

@@ -102,17 +102,40 @@ def get_generic_related_queryset(
     )
 
 
+def get_multiple_generic_related_queryset(
+    queryset,
+    related,
+    related_object_id_field="object_id__in",
+    related_content_type_field="content_type",
+):
+    """
+    Works as get_generic_related_queryset, used with a QuerySet
+    or Manager to return all related objects matching pks of queryset.
+    """
+    return _get_generic_related_by_id_and_content_type(
+        queryset.values("pk"),
+        queryset,
+        related,
+        related_object_id_field,
+        related_content_type_field,
+    )
+
+
 def _get_generic_related_by_id_and_content_type(
-    pk,
-    model,
+    lookup_value,
+    model_or_queryset,
     related,
     related_object_id_field="object_id",
     related_content_type_field="content_type",
 ):
 
+    if isinstance(model_or_queryset, models.QuerySet):
+        model = model_or_queryset.model
+    else:
+        model = model_or_queryset
     return _get_queryset(related).filter(
         **{
-            related_object_id_field: pk,
+            related_object_id_field: lookup_value,
             related_content_type_field: ContentType.objects.get_for_model(model),
         }
     )

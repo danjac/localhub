@@ -19,7 +19,6 @@ from vanilla import TemplateView
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.notifications.models import Notification
 from localhub.pagination import PresetCountPaginator
-from localhub.private_messages.models import Message
 from localhub.views import SearchMixin
 
 from ..models import get_activity_queryset_count, get_activity_querysets, load_objects
@@ -122,32 +121,9 @@ class ActivityStreamView(BaseActivityStreamView):
             .first()
         )
 
-    def get_latest_message(self):
-        return (
-            Message.objects.for_community(self.request.community)
-            .for_recipient(self.request.user)
-            .exclude_blocked(self.request.user)
-            .unread()
-            .select_related(
-                "sender", "recipient", "thread", "thread__sender", "thread__recipient"
-            )
-            .order_by("-created")
-            .first()
-        )
-
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-
-        message = self.get_latest_message()
-        message_url = message.resolve_url(self.request.user) if message else None
-
-        data.update(
-            {
-                "latest_notification": self.get_latest_notification(),
-                "latest_message": message,
-                "latest_message_url": message_url,
-            }
-        )
+        data.update({"latest_notification": self.get_latest_notification()})
         return data
 
 

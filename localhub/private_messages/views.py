@@ -9,7 +9,6 @@ from django.db.models import F
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
-from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from django.views.generic import View
@@ -22,7 +21,6 @@ from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from .forms import MessageForm
 from .models import Message
-from .notifications import send_message_notifications
 
 
 class MessageQuerySetMixin(CommunityRequiredMixin):
@@ -153,7 +151,7 @@ class BaseReplyFormView(BreadcrumbsMixin, BaseMessageFormView):
             _("Your message has been sent to %(recipient)s")
             % {"recipient": user_display(message.recipient)},
         )
-        send_message_notifications(message)
+        message.notify()
         return redirect(message.resolve_url(self.request.user))
 
 
@@ -228,7 +226,7 @@ class MessageCreateView(BreadcrumbsMixin, CommunityRequiredMixin, BaseMessageFor
             _("Your message has been sent to %(recipient)s")
             % {"recipient": user_display(message.recipient)},
         )
-        send_message_notifications(message)
+        message.notify()
         return redirect(message)
 
 
@@ -243,8 +241,12 @@ class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
         response = super().get(*args, **kwargs)
         if self.object.recipient == self.request.user and not self.object.read:
             self.object.mark_read()
+
         # mark all messages in thread read
-        self.object.children.for_recipient(self.request.user).mark_read()
+        children = self.object.children.for_recipient(self.request.user)
+        children.notifications().mark_read()
+        children.mark_read()
+
         return response
 
     def get_children(self):
@@ -299,8 +301,8 @@ class MessageMarkReadView(RecipientQuerySetMixin, GenericModelView):
 
     def post(self, request, *args, **kwargs):
         message = self.get_object()
-        message.read = timezone.now()
-        message.save()
+        message.mark_read()
+        message.get_notifications().mark_read()
         return redirect(message)
 
 
@@ -312,7 +314,9 @@ class MessageMarkAllReadView(RecipientQuerySetMixin, View):
         return super().get_queryset().unread()
 
     def post(self, request, *args, **kwargs):
-        self.get_queryset().update(read=timezone.now())
+        qs = self.get_queryset()
+        qs.notifications().mark_read()
+        qs.mark_read()
         return redirect("private_messages:inbox")
 
 

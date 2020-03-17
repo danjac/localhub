@@ -8,3 +8,6 @@ from django.utils.translation import gettext_lazy as _
 class PrivateMessagesConfig(AppConfig):
     name = "localhub.private_messages"
     verbose_name = _("Private Messages")
+
+    def ready(self):
+        from . import signals  # noqa

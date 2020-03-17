@@ -4,7 +4,7 @@
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
-from localhub.notifications.adapters import BaseNotificationAdapter, Mailer, Webpusher
+from localhub.notifications.adapters import BaseAdapter, Mailer, Webpusher
 from localhub.notifications.decorators import register
 
 from .utils import user_display
@@ -37,6 +37,6 @@ class UserWebpusher(Webpusher):
 
 
 @register(get_user_model())
-class UserNotificationAdapter(BaseNotificationAdapter):
+class UserNotificationAdapter(BaseAdapter):
     mailer_class = UserMailer
     webpusher_class = UserWebpusher

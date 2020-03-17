@@ -14,7 +14,7 @@ from localhub.users.utils import user_display
 celery_logger = get_logger(__name__)
 
 
-class NotificationAdapter(ABC):
+class Adapter(ABC):
     @abstractmethod
     def send_notification(self):
         ...
@@ -73,7 +73,7 @@ class TemplateRenderer:
     def render(
         self, template_names, context, template_engine=loader,
     ):
-        return template_engine.render_to_string(template_names, context=context,)
+        return template_engine.render_to_string(template_names, context=context)
 
 
 class Webpusher:
@@ -128,6 +128,7 @@ class Mailer:
     def __init__(self, adapter):
         self.adapter = adapter
 
+        self.object = self.adapter.object
         self.community = self.adapter.community
         self.recipient = self.adapter.recipient
         self.app_label = self.adapter.app_label
@@ -160,7 +161,7 @@ class Mailer:
         return self.community.resolve_email("no-reply")
 
 
-class BaseNotificationAdapter(NotificationAdapter):
+class BaseAdapter(Adapter):
     """
     Base class for handling notifications. All adapters should subclass
     this class.

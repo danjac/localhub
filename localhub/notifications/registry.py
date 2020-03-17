@@ -3,7 +3,7 @@
 
 from django.core.exceptions import ImproperlyConfigured
 
-from .adapters import NotificationAdapter
+from .adapters import Adapter
 
 
 class AdapterRegistry:
@@ -20,10 +20,8 @@ class AdapterRegistry:
             )
 
     def register(self, adapter_cls, model):
-        if not issubclass(adapter_cls, NotificationAdapter):
-            raise ImproperlyConfigured(
-                "%r is not a NotificationAdapter subclass" % adapter_cls
-            )
+        if not issubclass(adapter_cls, Adapter):
+            raise ImproperlyConfigured("%r is not an Adapter subclass" % adapter_cls)
         self._registry[model] = adapter_cls
         return adapter_cls
 
