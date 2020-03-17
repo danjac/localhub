@@ -3,7 +3,7 @@
 
 
 from localhub.activities.notifications import ActivityNotificationAdapter
-from localhub.notifications import register
+from localhub.notifications.decorators import register
 
 from .models import Post
 

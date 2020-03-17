@@ -3,12 +3,7 @@
 
 from django.utils.translation import gettext_lazy as _
 
-from localhub.notifications import (
-    BaseNotificationAdapter,
-    Mailer,
-    TemplateResolver,
-    Webpusher,
-)
+from localhub.notifications.adapters import BaseNotificationAdapter, Mailer, Webpusher
 from localhub.users.utils import user_display
 
 HEADERS = [
@@ -30,25 +25,19 @@ HEADERS = [
 ]
 
 
-class ActivityTemplateResolver(TemplateResolver):
-    def resolve(self, prefix, suffix=".html"):
-        return super().resolve(prefix, suffix) + super().resolve(
-            "activities/includes", suffix
-        )
-
-
-class ActivityEmailTemplateResolver(TemplateResolver):
-    def resolve(self, prefix, suffix=".html"):
-        return super().resolve(prefix, suffix) + super().resolve(
-            "activities/emails", suffix
-        )
-
-
 class ActivityMailer(Mailer):
+    HEADERS = HEADERS
+
     def get_subject(self):
         return dict(self.HEADERS)[self.adapter.verb] % {
-            "actor": user_display(self.adapter.actor)
+            "actor": user_display(self.adapter.actor),
+            "object": self.adapter.object_name,
         }
+
+    def get_template_names(self, suffix):
+        return super().get_template_names(suffix) + self.resolver.resolve(
+            "activities/emails", suffix
+        )
 
 
 class ActivityWebpusher(Webpusher):
@@ -56,7 +45,8 @@ class ActivityWebpusher(Webpusher):
 
     def get_header(self):
         return dict(self.HEADERS)[self.adapter.verb] % {
-            "actor": user_display(self.adapter.actor)
+            "actor": user_display(self.adapter.actor),
+            "object": self.adapter.object_name,
         }
 
 
@@ -64,5 +54,8 @@ class ActivityNotificationAdapter(BaseNotificationAdapter):
 
     mailer_class = ActivityMailer
     webpusher_class = ActivityWebpusher
-    resolver_class = ActivityTemplateResolver
-    email_resolver_class = ActivityEmailTemplateResolver
+
+    def get_template_names(self):
+        return super().get_template_names() + self.resolver.resolve(
+            "activities/includes"
+        )

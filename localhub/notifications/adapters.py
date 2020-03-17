@@ -1,7 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import itertools
 from abc import ABC, abstractmethod
 
 from celery.utils.log import get_logger
@@ -34,6 +33,7 @@ class TemplateContext:
             "notification": self.adapter.notification,
             "object": self.adapter.object,
             "object_url": self.adapter.get_object_url(),
+            "absolute_url": self.adapter.get_absolute_url(),
             "object_name": self.adapter.object_name,
             "actor": self.adapter.actor,
             "actor_display": user_display(self.adapter.actor),
@@ -51,9 +51,8 @@ class TemplateResolver:
         self.adapter = adapter
         self.verb = self.adapter.verb
         self.object_name = self.adapter.object_name
-        self.app_label = self.adapter.app_label
 
-    def resolve(self, prefix=None, suffix=".html"):
+    def resolve(self, prefix, suffix=".html"):
         """
         Pattern:
         {prefix}/{verb}_{object_name}{suffix}
@@ -61,7 +60,6 @@ class TemplateResolver:
         {prefix}/{object_name}_notification{suffix}
         {prefix}/notification{suffix}
         """
-        prefix = prefix or self.app_label
 
         return [
             f"{prefix}/notifications/{self.verb}_{self.object_name}{suffix}",
@@ -72,25 +70,10 @@ class TemplateResolver:
 
 
 class TemplateRenderer:
-
-    resolver_class = TemplateResolver
-
-    def __init__(self, adapter, prefixes, resolver=None):
-        self.resolver = resolver or self.resolver_class(adapter)
-
-    def render(self, context, template_engine=loader, request=None, **resolver_kwargs):
-        return template_engine.render_to_string(
-            self.get_template_names(**resolver_kwargs),
-            context=context,
-            request=request,
-        )
-
-    def get_template_names(self, **resolver_kwargs):
-        return list(
-            itertools.chain(
-                *[self.resolver.resolve(**resolver_kwargs) for prefix in self.prefixes]
-            )
-        )
+    def render(
+        self, template_names, context, template_engine=loader,
+    ):
+        return template_engine.render_to_string(template_names, context=context,)
 
 
 class Webpusher:
@@ -132,31 +115,36 @@ class Webpusher:
 
 class Mailer:
 
+    resolver_class = TemplateResolver
     renderer_class = TemplateRenderer
     context_class = TemplateContext
 
-    def __init__(self, adapter, renderer=None, context=None, email_options=None):
+    def __init__(self, adapter):
         self.adapter = adapter
 
         self.community = self.adapter.community
         self.recipient = self.adapter.recipient
+        self.app_label = self.adapter.app_label
 
-        self.renderer = renderer or self.renderer_class(self.adapter)
-        self.context = context or self.context_class(self.adapter)
-        self.email_options = email_options or {}
+        self.renderer = self.renderer_class()
+        self.resolver = self.resolver_class(self.adapter)
+        self.context = self.context_class(self.adapter)
 
-    def send(self):
+    def get_template_names(self, suffix):
+        return self.resolver.resolve(f"{self.app_label}/emails", suffix)
+
+    def send(self, **kwargs):
         if self.recipient.send_email_notifications:
             subject = self.get_subject()
-            context = self.get_context({"subject": subject})
+            context = self.context.get_context({"subject": subject})
 
             return send_mail(
                 f"{self.community.name} | {subject}",
-                self.renderer.render(context, resolver_kwargs={"suffix": ".txt"}),
+                self.renderer.render(self.get_template_names(".txt"), context),
                 self.get_sender(),
                 [self.recipient.email],
-                self.renderer.render(context),
-                **self.email_options,
+                self.renderer.render(self.get_template_names(".html"), context),
+                **kwargs,
             )
 
     def get_subject(self):
@@ -164,9 +152,6 @@ class Mailer:
 
     def get_sender(self):
         return self.community.resolve_email("no-reply")
-
-    def get_context(self):
-        return self.context.get_context()
 
 
 class BaseNotificationAdapter(NotificationAdapter):
@@ -185,11 +170,9 @@ class BaseNotificationAdapter(NotificationAdapter):
     """
 
     webpusher_class = Webpusher
-
     mailer_class = Mailer
-    email_resolver_class = TemplateResolver
-    email_renderer_class = TemplateRenderer
 
+    context_class = TemplateContext
     renderer_class = TemplateRenderer
     resolver_class = TemplateResolver
 
@@ -205,19 +188,12 @@ class BaseNotificationAdapter(NotificationAdapter):
         self.object_name = self.object._meta.object_name.lower()
         self.app_label = self.object._meta.app_label
 
-    def get_mailer(self):
-        return self.mailer_class(
-            self,
-            renderer=self.email_renderer_class(
-                self, resolver=self.email_resolver_class(self),
-            ),
-        )
+        self.renderer = self.renderer_class()
+        self.resolver = self.resolver_class(self)
+        self.context = self.context_class(self)
 
-    def get_renderer(self):
-        return self.renderer_class(self, resolver=self.resolver_class(self))
-
-    def get_webpusher(self):
-        return self.webpusher_class(self)
+        self.mailer = self.mailer_class(self)
+        self.webpusher = self.webpusher_class(self)
 
     def send_notification(self):
         """
@@ -225,20 +201,26 @@ class BaseNotificationAdapter(NotificationAdapter):
         recipient language.
         """
         with override(self.recipient.language):
-            self.get_webpusher().send()
-            self.get_mailer().send()
+            self.mailer.send()
+            self.webpusher.send()
 
-    def render_to_template(
-        self, template_engine=loader, extra_context=None, request=None
-    ):
+    def get_template_names(self):
+        return self.resolver.resolve(f"{self.app_label}/includes")
+
+    def get_object_url(self):
+        return self.object.get_absolute_url()
+
+    def get_absolute_url(self):
+        return self.community.resolve_url(self.get_object_url())
+
+    def render_to_template(self, template_engine=loader, extra_context=None):
         """
         This is used with the {% render_notification %} template tag in
         notification_tags. It should render an HTML snippet of the notification
         in the notifications page and other parts of the site.
         """
-        return self.get_renderer().render(
-            self.context.get_context(),
+        return self.renderer.render(
+            self.get_template_names(),
+            self.context.get_context(extra_context),
             template_engine=template_engine,
-            extra_context=extra_context,
-            request=request,
         )

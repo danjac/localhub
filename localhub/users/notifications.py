@@ -4,33 +4,39 @@
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
-from localhub.notifications import BaseNotificationAdapter, register
+from localhub.notifications.adapters import BaseNotificationAdapter, Mailer, Webpusher
+from localhub.notifications.decorators import register
 
 from .utils import user_display
+
+HEADERS = [
+    ("new_follower", _("Someone has started following you")),
+    ("new_member", _("Someone has just joined this community")),
+]
+
+
+class UserMailer(Mailer):
+    HEADERS = HEADERS
+
+    def get_subject(self):
+        return dict(self.HEADERS)[self.adapter.verb] % {
+            "actor": user_display(self.adapter.actor)
+        }
+
+
+class UserWebpusher(Webpusher):
+    HEADERS = HEADERS
+
+    def get_header(self):
+        return dict(self.HEADERS)[self.adapter.verb] % {
+            "actor": user_display(self.adapter.actor)
+        }
+
+    def get_body(self):
+        return user_display(self.adapter.actor)
 
 
 @register(get_user_model())
 class UserNotificationAdapter(BaseNotificationAdapter):
-    NOTIFICATION_HEADERS = {
-        "new_follower": _("Someone has started following you"),
-        "new_member": _("Someone has just joined this community"),
-    }
-
-    NOTIFICATION_BODY = {
-        "new_follower": _("%(actor)s has started following you"),
-        "new_member": _("%(actor)s has just joined this community"),
-    }
-
-    def get_notification_header(self):
-        return dict(self.NOTIFICATION_HEADERS)[self.verb]
-
-    def get_email_subject(self):
-        return self.get_notification_header()
-
-    def get_webpush_header(self):
-        return self.get_notification_header()
-
-    def get_webpush_body(self):
-        return dict(self.NOTIFICATION_BODY)[self.verb] % {
-            "actor": user_display(self.actor)
-        }
+    mailer_class = UserMailer
+    webpusher_class = UserWebpusher
