@@ -281,7 +281,7 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
 
     def get_selected_dates(self, dates):
         if not self.date_kwargs:
-            return []
+            return dates
 
         selected_dates = [date for date in dates if date.year == self.current_year]
         current_month = self.get_current_month()
