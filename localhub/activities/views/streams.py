@@ -270,7 +270,7 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
 
     def get_reverse_sort_url(self):
         """
-        Get all params and switch out the current order.
+        Get all params and switch the current order parameter.
         """
         params = self.request.GET.copy()
         params["order"] = "desc" if self.sort_by_ascending else "asc"
@@ -280,6 +280,11 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
         return f"{self.request.path}?{params.urlencode()}"
 
     def get_selected_dates(self, dates):
+        """
+        Returns range of dates as selected in the URL.
+
+        If no specific dates selected just returns all dates.
+        """
         if not self.date_kwargs:
             return dates
 

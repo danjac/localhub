@@ -9,6 +9,11 @@
          role="comment"
          id="comment-{{ comment.id }}">
   <div class="card-header">
+    {% if with_activity %}
+    <div class="card-title h6">
+      <a href="{{ comment.content_object.get_absolute_url }}">{{ comment.content_object }}</a>
+    </div>
+    {% endif %}
     {% has_perm "communities.moderate_community" user community as can_moderate_community %}
     {% if comment.is_flagged and can_moderate_community %}
     <div class="toast toast-info text-center mb-2">
@@ -39,11 +44,6 @@
   </div>
   {% else %}
   <div class="card-body">
-    {% if with_activity %}
-    <div>
-      <a href="{{ comment.content_object.get_absolute_url }}">{{ comment.content_object }}</a>
-    </div>
-    {% endif %}
     {% collapsable is_detail %}
     <div class="markdown-content">
       {{ comment.content.markdown }}
