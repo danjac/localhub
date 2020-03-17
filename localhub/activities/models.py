@@ -567,7 +567,6 @@ class Activity(TimeStampedModel):
             notifications += self.notify_tag_followers(recipients)
 
         notifications += self.notify_moderators()
-
         return takefirst(notifications, lambda n: n.recipient)
 
     def reshare(self, owner, commit=True, **kwargs):

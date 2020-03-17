@@ -230,7 +230,6 @@ class Comment(TimeStampedModel):
         notifications = []
         recipients = self.get_notification_recipients()
         notifications += self.notify_mentioned(recipients)
-        notifications += self.notify_moderators()
 
         # notify the activity owner
         if self.owner_id != self.content_object.owner_id:
@@ -263,7 +262,7 @@ class Comment(TimeStampedModel):
             .exclude(pk__in=other_commentors)
             .distinct()
         ]
-
+        notifications += self.notify_moderators()
         return takefirst(notifications, lambda n: n.recipient)
 
     @dispatch
@@ -274,6 +273,5 @@ class Comment(TimeStampedModel):
 
         recipients = self.get_notification_recipients()
         notifications += self.notify_mentioned(recipients)
-        if self.editor == self.owner:
-            notifications += self.notify_moderators()
+        notifications += self.notify_moderators()
         return takefirst(notifications, lambda n: n.recipient)

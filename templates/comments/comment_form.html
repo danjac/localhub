@@ -12,13 +12,9 @@
 
 {% if parent %}
 
-<article class="card"
-         role="comment"
-         id="comment-{{ parent.id }}">
+<article class="card mb-2"
+         role="comment">
     <div class="card-header">
-        <div class="card-title h6">
-            {% trans "Parent" %}
-        </div>
         <div class="card-subtitle h6">
             {% url 'users:comments' parent.owner.username as owner_url %}
             {% include "activities/includes/timesince.html" with profile_url=owner_url timestamp=parent.created owner=parent.owner %}

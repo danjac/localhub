@@ -208,21 +208,21 @@ class TestCommentModel:
         assert notifications[0].actor == comment.owner
         assert notifications[0].verb == "mention"
 
-        assert notifications[1].recipient == moderator
+        assert notifications[1].recipient == post.owner
         assert notifications[1].actor == comment.owner
-        assert notifications[1].verb == "moderator_review"
+        assert notifications[1].verb == "new_comment"
 
-        assert notifications[2].recipient == post.owner
+        assert notifications[2].recipient == other_comment.owner
         assert notifications[2].actor == comment.owner
-        assert notifications[2].verb == "new_comment"
+        assert notifications[2].verb == "new_sibling"
 
-        assert notifications[3].recipient == other_comment.owner
+        assert notifications[3].recipient == follower
         assert notifications[3].actor == comment.owner
-        assert notifications[3].verb == "new_sibling"
+        assert notifications[3].verb == "followed_user"
 
-        assert notifications[4].recipient == follower
+        assert notifications[4].recipient == moderator
         assert notifications[4].actor == comment.owner
-        assert notifications[4].verb == "followed_user"
+        assert notifications[4].verb == "moderator_review"
 
     def test_notify_on_create_if_parent(self, community, mailoutbox, send_webpush_mock):
 
@@ -277,25 +277,25 @@ class TestCommentModel:
         assert notifications[0].actor == comment.owner
         assert notifications[0].verb == "mention"
 
-        assert notifications[1].recipient == moderator
+        assert notifications[1].recipient == post.owner
         assert notifications[1].actor == comment.owner
-        assert notifications[1].verb == "moderator_review"
+        assert notifications[1].verb == "new_comment"
 
-        assert notifications[2].recipient == post.owner
+        assert notifications[2].recipient == parent_owner
         assert notifications[2].actor == comment.owner
-        assert notifications[2].verb == "new_comment"
+        assert notifications[2].verb == "reply"
 
-        assert notifications[3].recipient == parent_owner
+        assert notifications[3].recipient == other_comment.owner
         assert notifications[3].actor == comment.owner
-        assert notifications[3].verb == "reply"
+        assert notifications[3].verb == "new_sibling"
 
-        assert notifications[4].recipient == other_comment.owner
+        assert notifications[4].recipient == follower
         assert notifications[4].actor == comment.owner
-        assert notifications[4].verb == "new_sibling"
+        assert notifications[4].verb == "followed_user"
 
-        assert notifications[5].recipient == follower
+        assert notifications[5].recipient == moderator
         assert notifications[5].actor == comment.owner
-        assert notifications[5].verb == "followed_user"
+        assert notifications[5].verb == "moderator_review"
 
     def test_notify_on_update(self, community, mailoutbox, send_webpush_mock):
 
