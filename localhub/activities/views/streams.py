@@ -268,6 +268,9 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
         """
         params = self.request.GET.copy()
         params["order"] = "desc" if self.sort_by_ascending else "asc"
+        # reset pagination
+        if "page" in params:
+            params.pop("page")
         return f"{self.request.path}?{params.urlencode()}"
 
     def get_context_data(self, **kwargs):
