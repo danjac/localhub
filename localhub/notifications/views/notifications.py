@@ -8,8 +8,8 @@ from vanilla import DeleteView, GenericModelView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
 
-from ..signals import notification_read
 from ..models import Notification
+from ..signals import notification_read
 
 
 class NotificationQuerySetMixin(CommunityRequiredMixin):

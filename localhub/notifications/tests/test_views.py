@@ -12,6 +12,7 @@ from localhub.events.factories import EventFactory
 from localhub.photos.factories import PhotoFactory
 from localhub.posts.factories import PostFactory
 
+from ..factories import NotificationFactory
 from ..models import Notification, PushSubscription
 
 pytestmark = pytest.mark.django_db
@@ -21,7 +22,7 @@ class TestNotificationListView:
     def test_get(self, client, member):
         owner = MembershipFactory(community=member.community).member
         post = PostFactory(community=member.community, owner=owner)
-        Notification.objects.create(
+        NotificationFactory(
             content_object=post,
             recipient=member.member,
             actor=post.owner,
@@ -29,7 +30,7 @@ class TestNotificationListView:
             verb="followed_user",
         )
         comment = CommentFactory(content_object=post, owner=owner)
-        Notification.objects.create(
+        NotificationFactory(
             content_object=comment,
             recipient=member.member,
             actor=comment.owner,
@@ -37,7 +38,7 @@ class TestNotificationListView:
             verb="new_comment",
         )
         event = EventFactory(community=member.community, owner=owner)
-        Notification.objects.create(
+        NotificationFactory(
             content_object=event,
             recipient=member.member,
             actor=event.owner,
@@ -45,7 +46,7 @@ class TestNotificationListView:
             verb="followed_user",
         )
         photo = PhotoFactory(community=member.community, owner=owner)
-        Notification.objects.create(
+        NotificationFactory(
             content_object=photo,
             recipient=member.member,
             actor=photo.owner,
@@ -58,36 +59,46 @@ class TestNotificationListView:
 
 
 class TestNotificationMarkReadView:
-    def test_post(self, client, member):
+    def test_post(self, client, member, mocker):
         owner = MembershipFactory(community=member.community).member
         post = PostFactory(community=member.community, owner=owner)
-        notification = Notification.objects.create(
+        notification = NotificationFactory(
             content_object=post,
             recipient=member.member,
             actor=post.owner,
             community=post.community,
-            verb="created",
         )
-        response = client.post(
-            reverse("notifications:mark_read", args=[notification.id])
-        )
+        with mocker.patch(
+            "localhub.notifications.signals.notification_read"
+        ) as mock_notification_read:
+            response = client.post(
+                reverse("notifications:mark_read", args=[notification.id])
+            )
+            assert mock_notification_read.send.is_called_with(instance=post)
         assert response.url == reverse("notifications:list")
         notification.refresh_from_db()
         assert notification.is_read
 
 
 class TestNotificationMarkAllReadView:
-    def test_post(self, client, member):
+    def test_post(self, client, member, mocker):
         owner = MembershipFactory(community=member.community).member
         post = PostFactory(community=member.community, owner=owner)
-        notification = Notification.objects.create(
+        notification = NotificationFactory(
             content_object=post,
             recipient=member.member,
             actor=post.owner,
             community=post.community,
             verb="created",
         )
-        response = client.post(reverse("notifications:mark_all_read"))
+        with mocker.patch(
+            "localhub.notifications.signals.notification_read"
+        ) as mock_notification_read:
+            response = client.post(
+                reverse("notifications:mark_read", args=[notification.id])
+            )
+            response = client.post(reverse("notifications:mark_all_read"))
+            assert mock_notification_read.send.is_called_with(instance=post)
         assert response.url == reverse("notifications:list")
         notification.refresh_from_db()
         assert notification.is_read
@@ -97,12 +108,11 @@ class TestNotificationDeleteView:
     def test_post(self, client, member):
         owner = MembershipFactory(community=member.community).member
         post = PostFactory(community=member.community, owner=owner)
-        notification = Notification.objects.create(
+        notification = NotificationFactory(
             content_object=post,
             recipient=member.member,
             actor=post.owner,
             community=post.community,
-            verb="created",
         )
         response = client.post(reverse("notifications:delete", args=[notification.id]))
         assert response.url == reverse("notifications:list")
@@ -113,12 +123,11 @@ class TestNotificationDeleteAllView:
     def test_delete(self, client, member):
         owner = MembershipFactory(community=member.community).member
         post = PostFactory(community=member.community, owner=owner)
-        Notification.objects.create(
+        NotificationFactory(
             content_object=post,
             recipient=member.member,
             actor=post.owner,
             community=post.community,
-            verb="created",
         )
         response = client.delete(reverse("notifications:delete_all"))
         assert response.url == reverse("notifications:list")

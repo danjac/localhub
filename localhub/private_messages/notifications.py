@@ -3,11 +3,7 @@
 
 from django.utils.translation import gettext as _
 
-from localhub.notifications.adapters import (
-    BaseAdapter,
-    Mailer,
-    Webpusher,
-)
+from localhub.notifications.adapters import BaseAdapter, Mailer, Webpusher
 from localhub.notifications.decorators import register
 from localhub.users.utils import user_display
 

@@ -146,6 +146,7 @@ class BaseReplyFormView(BreadcrumbsMixin, BaseMessageFormView):
         message.save()
         if self.parent:
             self.parent.mark_read()
+            self.parent.get_notifications().mark_read()
         messages.success(
             self.request,
             _("Your message has been sent to %(recipient)s")
@@ -244,7 +245,6 @@ class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
 
         # mark all messages in thread read
         children = self.object.children.for_recipient(self.request.user)
-        children.notifications().mark_read()
         children.mark_read()
 
         return response
@@ -302,7 +302,6 @@ class MessageMarkReadView(RecipientQuerySetMixin, GenericModelView):
     def post(self, request, *args, **kwargs):
         message = self.get_object()
         message.mark_read()
-        message.get_notifications().mark_read()
         return redirect(message)
 
 
@@ -314,9 +313,7 @@ class MessageMarkAllReadView(RecipientQuerySetMixin, View):
         return super().get_queryset().unread()
 
     def post(self, request, *args, **kwargs):
-        qs = self.get_queryset()
-        qs.notifications().mark_read()
-        qs.mark_read()
+        self.get_queryset().mark_read()
         return redirect("private_messages:inbox")
 
 

@@ -1,7 +1,11 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import pytest
 from django.utils import timezone
 
 from localhub.communities.factories import CommunityFactory, MembershipFactory
+from localhub.notifications.factories import NotificationFactory
 from localhub.users.factories import UserFactory
 
 from ..factories import MessageFactory
@@ -25,8 +29,13 @@ class TestMessageManager:
 
     def test_mark_read(self):
         message = MessageFactory()
+        notification = NotificationFactory(content_object=message)
+
         Message.objects.mark_read()
         message.refresh_from_db()
+        notification.refresh_from_db()
+
+        assert notification.is_read
         assert message.read
 
     def test_unread_if_read(self):
@@ -266,6 +275,16 @@ class TestMessageManager:
         assert tenth in messages
         assert eleventh in messages
 
+    def test_notifications(self, message):
+        notification = NotificationFactory(content_object=message)
+        # check we just include the one
+        NotificationFactory()
+        NotificationFactory(content_object=MessageFactory())
+
+        notifications = Message.objects.filter(pk=message.id).notifications()
+        assert notifications.count() == 1
+        assert notifications.first() == notification
+
 
 class TestMessageModel:
     def test_resolve_url_if_no_thread(self, user):
@@ -351,8 +370,13 @@ class TestMessageModel:
 
     def test_mark_read(self):
         message = MessageFactory()
+        notification = NotificationFactory(content_object=message)
+
         message.mark_read()
         message.refresh_from_db()
+        notification.refresh_from_db()
+
+        assert notification.is_read
         assert message.read
 
     def test_soft_delete_if_recipient(self, message):
@@ -376,3 +400,14 @@ class TestMessageModel:
         message = MessageFactory(recipient_deleted=timezone.now())
         message.soft_delete(message.sender)
         assert not Message.objects.exists()
+
+    def test_get_notifications(self, message):
+        notification = NotificationFactory(content_object=message)
+        # check we just include the one
+        NotificationFactory()
+        NotificationFactory(content_object=MessageFactory())
+
+        notifications = message.get_notifications()
+        assert notifications.count() == 1
+        assert notifications.first() == notification
+

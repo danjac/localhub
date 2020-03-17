@@ -127,6 +127,7 @@ class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
         """
         Mark read any un-read items
         """
+        self.notifications().unread().mark_read()
         return self.unread().update(read=timezone.now())
 
     def notifications(self):
@@ -266,6 +267,7 @@ class Message(TimeStampedModel):
         if not self.read:
             self.read = timezone.now()
             self.save(update_fields=["read"])
+            self.get_notifications().unread().mark_read()
 
     @dispatch
     def notify(self):
