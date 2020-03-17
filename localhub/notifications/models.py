@@ -38,7 +38,7 @@ class NotificationQuerySet(models.QuerySet):
 class Notification(TimeStampedModel):
     """
     If you define a model as a content_object of this class, you must register
-    the model with a NotificationAdapter subclass in a notifications module
+    the model with a Adapter subclass in a notifications module
     under the model app.
     """
 

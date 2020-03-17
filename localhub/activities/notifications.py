@@ -4,7 +4,7 @@
 from django.template.defaultfilters import truncatechars
 from django.utils.translation import gettext_lazy as _
 
-from localhub.notifications.adapters import BaseAdapter, Mailer, Webpusher
+from localhub.notifications.adapters import DefaultAdapter, Mailer, Webpusher
 from localhub.users.utils import user_display
 
 HEADERS = [
@@ -54,7 +54,7 @@ class ActivityWebpusher(Webpusher):
         return truncatechars(self.object.title, 60)
 
 
-class ActivityNotificationAdapter(BaseAdapter):
+class ActivityAdapter(DefaultAdapter):
 
     mailer_class = ActivityMailer
     webpusher_class = ActivityWebpusher

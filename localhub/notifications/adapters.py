@@ -161,7 +161,7 @@ class Mailer:
         return self.community.resolve_email("no-reply")
 
 
-class BaseAdapter(Adapter):
+class DefaultAdapter(Adapter):
     """
     Base class for handling notifications. All adapters should subclass
     this class.

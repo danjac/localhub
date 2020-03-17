@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from localhub.activities.notifications import (
     ActivityMailer,
-    ActivityNotificationAdapter,
+    ActivityAdapter,
     ActivityWebpusher,
 )
 from localhub.notifications.decorators import register
@@ -26,6 +26,6 @@ class PollWebpusher(ActivityWebpusher):
 
 
 @register(Poll)
-class PollNotificationAdapter(ActivityNotificationAdapter):
+class PollAdapter(ActivityAdapter):
     mailer_class = PollMailer
     webpusher_class = PollWebpusher

@@ -30,7 +30,7 @@ from localhub.notifications.models import Notification
 from localhub.utils.itertools import takefirst
 from localhub.utils.text import slugify_unicode
 
-from .notifications import ActivityNotificationAdapter
+from .notifications import ActivityAdapter
 from .utils import extract_hashtags
 
 
@@ -363,7 +363,7 @@ class Activity(TimeStampedModel):
 
     objects = ActivityQuerySet.as_manager()
 
-    notification_adapter_class = ActivityNotificationAdapter
+    notification_adapter_class = ActivityAdapter
 
     class Meta:
         indexes = [

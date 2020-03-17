@@ -3,7 +3,7 @@
 
 from django.utils.translation import gettext_lazy as _
 
-from localhub.notifications.adapters import BaseAdapter, Mailer, Webpusher
+from localhub.notifications.adapters import DefaultAdapter, Mailer, Webpusher
 from localhub.notifications.decorators import register
 from localhub.users.utils import user_display
 
@@ -43,6 +43,6 @@ class CommentWebpusher(Webpusher):
 
 
 @register(Comment)
-class CommentNotificationAdapter(BaseAdapter):
+class CommentAdapter(DefaultAdapter):
     mailer_class = CommentMailer
     webpusher_class = CommentWebpusher

@@ -2,12 +2,12 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from localhub.activities.notifications import ActivityNotificationAdapter
+from localhub.activities.notifications import ActivityAdapter
 from localhub.notifications.decorators import register
 
 from .models import Event
 
 
 @register(Event)
-class EventNotificationAdapter(ActivityNotificationAdapter):
+class EventAdapter(ActivityAdapter):
     ...

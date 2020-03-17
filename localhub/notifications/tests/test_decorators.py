@@ -1,18 +1,12 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from unittest import mock
-
 import pytest
-from pywebpush import WebPushException
 
-from localhub.communities.factories import CommunityFactory, MembershipFactory
-from localhub.communities.models import Community
-from localhub.users.factories import UserFactory
+from localhub.communities.factories import MembershipFactory
 
 from ..decorators import dispatch
-from ..factories import NotificationFactory
-from ..models import Notification, PushSubscription
+from ..models import Notification
 
 pytestmark = pytest.mark.django_db
 

@@ -8,6 +8,7 @@ from localhub.comments.factories import CommentFactory
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Membership
 from localhub.events.factories import EventFactory
+from localhub.notifications.factories import NotificationFactory
 from localhub.photos.factories import PhotoFactory
 from localhub.polls.factories import PollFactory
 from localhub.posts.factories import PostFactory
@@ -107,6 +108,17 @@ def message(member):
         sender=member.member,
         recipient=MembershipFactory(community=member.community).member,
         community=member.community,
+    )
+
+
+@pytest.fixture
+def notification(post):
+    return NotificationFactory(
+        recipient=MembershipFactory(community=post.community).member,
+        community=post.community,
+        actor=post.owner,
+        content_object=post,
+        verb="mention",
     )
 
 
