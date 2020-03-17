@@ -170,10 +170,6 @@ class DefaultAdapter(Adapter):
     1. Rendering notification to html template
     2. Sending plain/HTML emails
     3. Webpush support
-
-    All Notification content objects should include either the
-    notification_adapter_class attribute or implement a
-    get_notification_adapter() method.
     """
 
     webpusher_class = Webpusher
