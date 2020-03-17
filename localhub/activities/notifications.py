@@ -1,6 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from django.template.defaultfilters import truncatechars
 from django.utils.translation import gettext_lazy as _
 
 from localhub.notifications.adapters import BaseNotificationAdapter, Mailer, Webpusher
@@ -48,6 +49,9 @@ class ActivityWebpusher(Webpusher):
             "actor": user_display(self.adapter.actor),
             "object": self.adapter.object_name,
         }
+
+    def get_body(self):
+        return truncatechars(self.object.title, 60)
 
 
 class ActivityNotificationAdapter(BaseNotificationAdapter):

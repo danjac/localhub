@@ -100,17 +100,23 @@ class Webpusher:
         return str(self.object)
 
     def get_body(self):
-        return str(self.object)
+        return None
 
     def get_url(self):
         return self.adapter.get_absolute_url()
 
     def get_payload(self):
-        return {
+
+        payload = {
             "head": self.get_header(),
-            "body": force_text(self.get_body()),
             "url": self.get_url(),
         }
+
+        body = self.get_body()
+        if body:
+            payload["body"] = force_text(body)
+
+        return payload
 
 
 class Mailer:

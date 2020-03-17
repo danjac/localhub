@@ -42,6 +42,9 @@ class CommentWebpusher(Webpusher):
             "actor": user_display(self.adapter.actor)
         }
 
+    def get_body(self):
+        return self.object.abbreviate()
+
 
 @register(Comment)
 class CommentNotificationAdapter(BaseNotificationAdapter):
