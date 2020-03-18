@@ -11,7 +11,7 @@
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
   <a href="{% url 'events:create' %}">
-    {% trans "New Event" %}
+    {% trans "Submit Event" %}
   </a>
   {% endif %}
   <a href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
