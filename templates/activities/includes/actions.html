@@ -99,7 +99,8 @@
       data-controller="ajax confirm"
       data-action="confirm#check ajax#post"
       data-confirm-header="{% trans 'Delete' %}"
-      data-confirm-body="{% trans 'Are you sure you want to delete this activity? All comments will also be deleted.' %}">{% trans "Delete" %}</a>
+      data-confirm-body="{% blocktrans %}Are you sure you want to delete this {{ object_type }}?{% endblocktrans %}">
+      {% trans "Delete" %}</a>
    {% endif %}
 
    {% endblock %}

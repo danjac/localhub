@@ -15,7 +15,14 @@
 {% if page_obj.number == 1 %}
 
 {% if latest_notification %}
+
 <div class="toast toast-primary text-center my-2">
+    <button class="btn btn-clear float-right"
+            data-controller="js-toggle toggle ajax"
+            data-target="toggle.target"
+            data-action="toggle#toggle ajax#post"
+            data-ajax-redirect="{{ request.get_full_path }}"
+            data-ajax-url="{% url 'notifications:mark_all_read' %}"></button>
     {% render_notification latest_notification %}
 </div>
 {% endif %}
