@@ -8,6 +8,7 @@ from localhub.comments.factories import CommentFactory
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Membership
 from localhub.events.factories import EventFactory
+from localhub.likes.factories import LikeFactory
 from localhub.notifications.factories import NotificationFactory
 from localhub.photos.factories import PhotoFactory
 from localhub.polls.factories import PollFactory
@@ -99,6 +100,16 @@ def comment(post):
         content_object=post,
         community=post.community,
         owner=MembershipFactory(community=post.community).member,
+    )
+
+
+@pytest.fixture
+def like(post, member):
+    return LikeFactory(
+        content_object=post,
+        community=post.community,
+        user=member.member,
+        recipient=post.owner,
     )
 
 

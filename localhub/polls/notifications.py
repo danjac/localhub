@@ -4,8 +4,8 @@
 from django.utils.translation import gettext_lazy as _
 
 from localhub.activities.notifications import (
-    ActivityMailer,
     ActivityAdapter,
+    ActivityMailer,
     ActivityWebpusher,
 )
 from localhub.notifications.decorators import register

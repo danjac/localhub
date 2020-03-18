@@ -46,7 +46,8 @@
   <div class="card-body">
     {% if comment.deleted %}
     <p>{% blocktrans %}This comment has been deleted by a community moderator{% endblocktrans %}</p>
-    {% else %}
+    {% endif %}
+    {% if not comment.deleted or comment.owner == user %}
     {% collapsable is_detail %}
     <div class="markdown-content">
       {{ comment.content.markdown }}
@@ -130,7 +131,9 @@
         {% trans "Delete" %}
       </a>
       {% endif %}
+      {% if not comment.deleted %}
       <a href="{{ comment.get_permalink }}">{% trans "Link" %}</a>
+      {% endif %}
       {% with parent=comment.parent %}
       {% if parent and not parent.deleted and comment.is_parent_owner_member and not is_reply %}
       <a {% spaceless %}

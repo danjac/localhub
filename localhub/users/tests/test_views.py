@@ -8,7 +8,7 @@ from django.urls import reverse
 from localhub.comments.factories import CommentFactory
 from localhub.communities.factories import MembershipFactory
 from localhub.events.factories import EventFactory
-from localhub.likes.models import Like
+from localhub.likes.factories import LikeFactory
 from localhub.notifications.factories import NotificationFactory
 from localhub.notifications.models import Notification
 from localhub.posts.factories import PostFactory
@@ -66,9 +66,8 @@ class TestUserCommentsView:
         comment = CommentFactory(
             content_object=post, owner=member.member, community=member.community,
         )
-        Like.objects.create(
+        LikeFactory(
             content_object=comment,
-            user=UserFactory(),
             community=comment.community,
             recipient=comment.owner,
         )
@@ -87,11 +86,8 @@ class TestUserActivitiesView:
         notification = NotificationFactory(
             recipient=member.member, content_object=member.member, is_read=False
         )
-        Like.objects.create(
-            user=UserFactory(),
-            content_object=post,
-            community=post.community,
-            recipient=post.owner,
+        LikeFactory(
+            content_object=post, community=post.community, recipient=post.owner,
         )
 
         response = client.get(
@@ -113,11 +109,8 @@ class TestUserActivitiesView:
         notification = NotificationFactory(
             recipient=member.member, content_object=other.member, is_read=False
         )
-        Like.objects.create(
-            user=UserFactory(),
-            content_object=post,
-            community=post.community,
-            recipient=post.owner,
+        LikeFactory(
+            content_object=post, community=post.community, recipient=post.owner,
         )
 
         response = client.get(reverse("users:activities", args=[other.member.username]))

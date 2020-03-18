@@ -232,6 +232,7 @@ class ActivityDetailView(ActivityQuerySetMixin, BreadcrumbsMixin, DetailView):
             self.object.get_comments()
             .with_common_annotations(self.request.user, self.request.community)
             .for_community(self.request.community)
+            .exclude_deleted()
             .select_related(
                 "owner", "community", "parent", "parent__owner", "parent__community",
             )

@@ -4,14 +4,14 @@
 import pytest
 from django.urls import reverse
 
-from ..models import Like
+from ..factories import LikeFactory
 
 pytestmark = pytest.mark.django_db
 
 
 class TestLikedActivityStreamView:
     def test_get(self, client, event, member):
-        Like.objects.create(
+        LikeFactory(
             content_object=event,
             user=member.member,
             community=event.community,
@@ -27,7 +27,7 @@ class TestLikedActivityStreamView:
 
 class TestLikedCommentListView:
     def test_get(self, client, comment, member):
-        Like.objects.create(
+        LikeFactory(
             content_object=comment,
             user=member.member,
             community=comment.community,

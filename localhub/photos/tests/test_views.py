@@ -7,6 +7,7 @@ from django.urls import reverse
 from PIL import Image
 
 from localhub.communities.factories import MembershipFactory
+from localhub.likes.factories import LikeFactory
 from localhub.likes.models import Like
 
 from ..factories import PhotoFactory
@@ -104,7 +105,7 @@ class TestPhotoDislikeView:
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
         )
-        Like.objects.create(
+        LikeFactory(
             user=member.member,
             content_object=photo,
             community=photo.community,

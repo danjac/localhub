@@ -5,7 +5,6 @@ import pytest
 
 from localhub.posts.notifications import PostAdapter
 
-
 pytestmark = pytest.mark.django_db
 
 

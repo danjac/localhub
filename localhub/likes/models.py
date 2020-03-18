@@ -88,4 +88,3 @@ class Like(TimeStampedModel):
             community=self.community,
             verb="like",
         )
-

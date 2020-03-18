@@ -7,7 +7,7 @@ from django.utils import timezone
 from localhub.communities.models import Community, Membership
 from localhub.posts.factories import PostFactory
 
-from ..rules import is_activity_community_moderator, is_owner
+from ..rules import is_activity_community_moderator, is_deleted, is_owner, is_published
 
 pytestmark = pytest.mark.django_db
 
@@ -20,6 +20,26 @@ class TestIsOwner:
     def test_is_not_owner(self, user):
         post = PostFactory()
         assert not is_owner.test(user, post)
+
+
+class TestIsPublished:
+    def test_is_published(self, user):
+        post = PostFactory(owner=user, published=timezone.now())
+        assert is_published.test(user, post)
+
+    def test_is_not_published(self, user):
+        post = PostFactory(owner=user, published=None)
+        assert not is_published.test(user, post)
+
+
+class TestIsDeleted:
+    def test_is_deleted(self, user):
+        post = PostFactory(owner=user, deleted=timezone.now())
+        assert is_deleted.test(user, post)
+
+    def test_is_not_deleted(self, user):
+        post = PostFactory(owner=user, deleted=None)
+        assert not is_deleted.test(user, post)
 
 
 class TestIsPostCommunityModerator:

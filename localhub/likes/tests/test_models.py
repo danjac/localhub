@@ -6,26 +6,16 @@ import factory
 import pytest
 from django.db.models import signals
 
-from ..models import Like
-
 pytestmark = pytest.mark.django_db
 
 
 class TestLikeModel:
     @factory.django.mute_signals(signals.post_save)
-    def test_notify(self, user, post, send_webpush_mock):
-        post.owner.notification_preferences = ["like"]
-        post.owner.save()
-        like = Like.objects.create(
-            content_object=post,
-            user=user,
-            community=post.community,
-            recipient=post.owner,
-        )
+    def test_notify(self, like, send_webpush_mock):
         notifications = like.notify()
         assert len(notifications) == 1
         notification = notifications[0]
-        assert notification.actor == user
-        assert notification.recipient == post.owner
-        assert notification.content_object == post
+        assert notification.actor == like.user
+        assert notification.recipient == like.recipient
+        assert notification.content_object == like.content_object
         assert notification.verb == "like"

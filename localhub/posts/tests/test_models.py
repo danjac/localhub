@@ -8,6 +8,7 @@ from localhub.comments.factories import CommentFactory
 from localhub.comments.models import Comment
 from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
+from localhub.likes.factories import LikeFactory
 from localhub.notifications.factories import NotificationFactory
 from localhub.users.factories import UserFactory
 
@@ -336,7 +337,7 @@ class TestPostModel:
         CommentFactory(content_object=post)
         NotificationFactory(content_object=post)
         # FlagFactory(content_object=post)
-        # LikeFactory(content_object=post)
+        LikeFactory(content_object=post)
 
         post.soft_delete()
         post.refresh_from_db()

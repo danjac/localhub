@@ -14,7 +14,7 @@ from localhub.communities.models import Community
 from localhub.events.factories import EventFactory
 from localhub.events.models import Event
 from localhub.flags.models import Flag
-from localhub.likes.models import Like
+from localhub.likes.factories import LikeFactory
 from localhub.photos.factories import PhotoFactory
 from localhub.photos.models import Photo
 from localhub.polls.models import Poll
@@ -322,13 +322,9 @@ class TestActivityManager:
 
     def test_with_num_likes(self, post):
         for _ in range(2):
-            Like.objects.create(
-                user=UserFactory(),
-                content_object=post,
-                community=post.community,
-                recipient=post.owner,
+            LikeFactory(
+                content_object=post, community=post.community, recipient=post.owner
             )
-
         assert Post.objects.with_num_likes().get().num_likes == 2
 
     def test_with_has_flagged_if_user_has_not_flagged(self, post, user):
@@ -342,7 +338,7 @@ class TestActivityManager:
         assert activity.has_flagged
 
     def test_with_has_liked_if_user_has_not_liked(self, post, user):
-        Like.objects.create(
+        LikeFactory(
             user=user,
             content_object=post,
             community=post.community,
@@ -352,7 +348,7 @@ class TestActivityManager:
         assert not activity.has_liked
 
     def test_with_has_liked_if_user_has_liked(self, post, user):
-        Like.objects.create(
+        LikeFactory(
             user=user,
             content_object=post,
             community=post.community,

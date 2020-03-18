@@ -8,7 +8,7 @@ from django.utils import timezone
 from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
 from localhub.flags.models import Flag
-from localhub.likes.models import Like
+from localhub.likes.factories import LikeFactory
 from localhub.notifications.factories import NotificationFactory
 from localhub.posts.factories import PostFactory
 from localhub.users.factories import UserFactory
@@ -127,7 +127,7 @@ class TestCommentManager:
         assert Comment.objects.for_community(community).get() == comment
 
     def test_with_num_likes(self, comment, user):
-        Like.objects.create(
+        LikeFactory(
             user=user,
             content_object=comment,
             community=comment.community,
@@ -152,7 +152,7 @@ class TestCommentManager:
         assert comment.has_flagged
 
     def test_with_has_liked_if_user_has_not_liked(self, comment, user):
-        Like.objects.create(
+        LikeFactory(
             user=user,
             content_object=comment,
             community=comment.community,
@@ -162,7 +162,7 @@ class TestCommentManager:
         assert not comment.has_liked
 
     def test_with_has_liked_if_user_has_liked(self, comment, user):
-        Like.objects.create(
+        LikeFactory(
             user=user,
             content_object=comment,
             community=comment.community,
@@ -197,10 +197,11 @@ class TestCommentModel:
 
     def test_soft_delete(self, comment):
         NotificationFactory(content_object=comment)
-        # LikeFactory(content_object=comment)
+        LikeFactory(content_object=comment)
         comment.soft_delete()
         assert comment.deleted is not None
         assert comment.get_notifications().count() == 0
+        assert comment.get_likes().count() == 0
 
     def test_notify_on_create(self, community, mailoutbox, send_webpush_mock):
 

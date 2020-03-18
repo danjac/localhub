@@ -9,6 +9,7 @@ from localhub.comments.models import Comment
 from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
 from localhub.flags.models import Flag
+from localhub.likes.factories import LikeFactory
 from localhub.likes.models import Like
 from localhub.notifications.factories import NotificationFactory
 from localhub.notifications.models import Notification
@@ -290,7 +291,7 @@ class TestPostDislikeView:
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
         )
-        Like.objects.create(
+        LikeFactory(
             user=member.member,
             content_object=post,
             community=post.community,

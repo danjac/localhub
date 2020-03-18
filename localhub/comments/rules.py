@@ -28,7 +28,7 @@ def is_comment_community_moderator(user, comment):
 
 rules.add_perm("comments.change_comment", is_owner & ~is_deleted)
 rules.add_perm(
-    "comments.delete_comment", is_owner | is_comment_community_moderator & ~is_deleted
+    "comments.delete_comment", (is_owner | is_comment_community_moderator) & ~is_deleted
 )
 rules.add_perm(
     "comments.flag_comment", is_comment_community_member & ~is_owner & ~is_deleted
