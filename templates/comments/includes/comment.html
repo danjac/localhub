@@ -11,7 +11,13 @@
   <div class="card-header">
     {% if with_activity %}
     <div class="card-title h6">
+      {% with content_object=comment.content_object %}
+      {% if content_object and not content_object.deleted %}
       <a href="{{ comment.content_object.get_absolute_url }}">{{ comment.content_object }}</a>
+      {% else %}
+      {% trans "[Deleted]" %}
+      {% endif %}
+      {% endwith %}
     </div>
     {% endif %}
     {% has_perm "communities.moderate_community" user community as can_moderate_community %}
@@ -131,7 +137,7 @@
         {% trans "Delete" %}
       </a>
       {% endif %}
-      {% if not comment.deleted %}
+      {% if not is_detail and not comment.deleted %}
       <a href="{{ comment.get_permalink }}">{% trans "Link" %}</a>
       {% endif %}
       {% with parent=comment.parent %}

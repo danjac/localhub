@@ -30,6 +30,7 @@ from localhub.notifications.models import Notification
 from localhub.utils.itertools import takefirst
 from localhub.utils.text import slugify_unicode
 
+from . import signals
 from .notifications import ActivityAdapter
 from .utils import extract_hashtags
 
@@ -352,7 +353,8 @@ class Activity(TimeStampedModel):
     published = models.DateTimeField(null=True, blank=True)
     deleted = models.DateTimeField(null=True, blank=True)
 
-    comments = AbstractGenericRelation(Comment)
+    # NOTE: not adding comments here as we don't want comments
+    # to be soft deleted.
     flags = AbstractGenericRelation(Flag)
     likes = AbstractGenericRelation(Like)
     notification = AbstractGenericRelation(Notification)
@@ -620,15 +622,20 @@ class Activity(TimeStampedModel):
 
         Notifications, flags and likes should be deleted (there may be subsequent
         notification i.e. to notify the owner).
+
+        Fires the "soft_delete" signal.
         """
         self.deleted = timezone.now()
         self.published = None
         self.save(update_fields=["deleted", "published"])
 
-        self.get_comments().delete()
+        self.get_comments().remove_content_objects()
+
         self.get_likes().delete()
         self.get_flags().delete()
         self.get_notifications().delete()
+
+        signals.soft_delete.send(sender=self.__class__, instance=self)
 
     def get_resharable_data(self):
         return {k: getattr(self, k) for k in self.RESHARED_FIELDS}
@@ -646,3 +653,12 @@ class Activity(TimeStampedModel):
                 self.tags.set(*hashtags, clear=True)
             else:
                 self.tags.clear()
+
+    @transaction.atomic
+    def delete(self, *args, **kwargs):
+        """
+        Comment relations should be set to NULL. Django GenericRelation
+        for whatever weird and wonderful reason does not support this.
+        """
+        self.get_comments().remove_content_objects()
+        return super().delete(*args, **kwargs)

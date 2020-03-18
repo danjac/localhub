@@ -85,10 +85,15 @@ class TestPostModel:
         assert reshared.owner == user
         assert reshared.published
 
-    def test_delete_comments_on_delete(self, post):
+    def test_manage_comments_on_delete(self, post):
+        # comment relations should be set to NULL.
         CommentFactory(content_object=post)
         post.delete()
-        assert Comment.objects.count() == 0
+        assert Comment.objects.count() == 1
+        comment = Comment.objects.first()
+        assert comment.object_id is None
+        assert comment.content_type is None
+        assert comment.content_object is None
 
     def test_get_domain_if_no_url(self):
         assert Post().get_domain() == ""
@@ -334,19 +339,27 @@ class TestPostModel:
         post = Post(opengraph_image="")
         assert post.get_opengraph_image_if_safe() == ""
 
-    def test_soft_delete(self, post):
+    def test_soft_delete(self, post, mocker):
         CommentFactory(content_object=post)
         NotificationFactory(content_object=post)
         FlagFactory(content_object=post)
         LikeFactory(content_object=post)
 
-        post.soft_delete()
+        with mocker.patch(
+            "localhub.activities.signals.soft_delete"
+        ) as mock_soft_delete:
+            post.soft_delete()
+            assert mock_soft_delete.called_with(sender=Post, instance=post)
+
         post.refresh_from_db()
 
         assert post.published is None
         assert post.deleted is not None
 
+        # comments should NOT be deleted but refs should be removed
+
+        assert Comment.objects.count() == 1
+        assert post.get_comments().count() == 0
         assert post.get_notifications().count() == 0
         assert post.get_likes().count() == 0
         assert post.get_flags().count() == 0
-        assert post.get_comments().count() == 0

@@ -102,9 +102,7 @@
     {% block body %}
     <div class="card-body">
       {% if object.is_reshare and not object.parent or object.parent.deleted %}
-      {% blocktrans %}
-      The original {{ object_type }} has been removed.
-      {% endblocktrans %}
+      {% trans "[Deleted]" %}
       {% else %}
       {% if object.is_reshare %}<blockquote>{% endif %}
         {% if is_content_sensitive %}

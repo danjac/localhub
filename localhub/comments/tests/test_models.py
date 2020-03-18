@@ -28,6 +28,14 @@ class TestCommentManager:
 
         assert Comment.objects.search("testme").get() == comment
 
+    def test_remove_content_objects(self, comment):
+
+        Comment.objects.remove_content_objects()
+        comment.refresh_from_db()
+        assert comment.object_id is None
+        assert comment.content_type is None
+        assert comment.content_object is None
+
     def test_deleted_if_deleted(self):
 
         CommentFactory(deleted=timezone.now())

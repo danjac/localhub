@@ -105,7 +105,9 @@
    {% endblock %}
    {% endif %}
 
+   {% if not is_detail %}
    <a href="{{ object.get_permalink }}">{% trans "Link" %}</a>
+   {% endif %}
    {% block extra_actions %}{% endblock %}
 
 </div>

@@ -84,9 +84,11 @@ class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
         return response
 
     def get_breadcrumbs(self):
-        return get_breadcrumbs_for_instance(self.object.content_object) + [
-            (None, _("Comment"))
-        ]
+        if self.object.content_object:
+            return get_breadcrumbs_for_instance(self.object.content_object) + [
+                (None, _("Comment"))
+            ]
+        return []
 
     def get_flags(self):
         return self.object.get_flags().select_related("user").order_by("-created")
@@ -117,10 +119,16 @@ class CommentUpdateView(
     permission_required = "comments.change_comment"
 
     def get_breadcrumbs(self):
-        return get_breadcrumbs_for_instance(self.object.content_object) + [
+        breadcrumbs = [
             (self.object.get_absolute_url(), _("Comment")),
             (None, _("Edit")),
         ]
+        if self.object.content_object:
+            breadcrumbs = (
+                get_breadcrumbs_for_instance(self.object.content_object) + breadcrumbs
+            )
+
+        return breadcrumbs
 
     def form_valid(self, form):
         comment = form.save(commit=False)
@@ -218,10 +226,15 @@ class CommentFlagView(
         return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
 
     def get_breadcrumbs(self):
-        return get_breadcrumbs_for_instance(self.comment.content_object) + [
+        breadcrumbs = [
             (self.comment.get_absolute_url(), _("Comment")),
             (None, _("Flag")),
         ]
+        if self.comment.content_object:
+            breadcrumbs = (
+                get_breadcrumbs_for_instance(self.comment.content_object) + breadcrumbs
+            )
+        return breadcrumbs
 
     def form_valid(self, form):
         flag = form.save(commit=False)
@@ -252,10 +265,15 @@ class CommentReplyView(
         return self.parent
 
     def get_breadcrumbs(self):
-        return get_breadcrumbs_for_instance(self.parent.content_object) + [
+        breadcrumbs = [
             (self.parent.get_absolute_url(), _("Parent")),
             (None, _("Reply")),
         ]
+        if self.parent.content_object:
+            breadcrumbs = (
+                get_breadcrumbs_for_instance(self.parent.content_object) + breadcrumbs
+            )
+        return breadcrumbs
 
     @cached_property
     def parent(self):

@@ -122,6 +122,12 @@ class CommentQuerySet(
     def deleted(self):
         return self.filter(deleted__isnull=False)
 
+    def remove_content_objects(self):
+        """
+        Sets content object FKs to NULL.
+        """
+        return self.update(content_type=None, object_id=None)
+
 
 class Comment(TimeStampedModel):
 

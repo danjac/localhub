@@ -76,6 +76,16 @@ class TestCommentDetailView:
         notification.refresh_from_db()
         assert notification.is_read
 
+    def test_get_if_no_content_object(self, client, member):
+        comment = CommentFactory(
+            owner=member.member, community=member.community, content_object=None,
+        )
+        response = client.get(
+            reverse("comments:detail", args=[comment.id]),
+            HTTP_HOST=comment.community.domain,
+        )
+        assert response.status_code == 200
+
 
 class TestCommentUpdateView:
     def test_get(self, client, member):
