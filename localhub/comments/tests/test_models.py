@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
-from localhub.flags.models import Flag
+from localhub.flags.factories import FlagFactory
 from localhub.likes.factories import LikeFactory
 from localhub.notifications.factories import NotificationFactory
 from localhub.posts.factories import PostFactory
@@ -138,16 +138,12 @@ class TestCommentManager:
         assert comment.num_likes == 1
 
     def test_with_has_flagged_if_user_has_not_flagged(self, comment, user):
-        Flag.objects.create(
-            user=user, content_object=comment, community=comment.community
-        )
+        FlagFactory(user=user, content_object=comment, community=comment.community)
         comment = Comment.objects.with_has_flagged(UserFactory()).get()
         assert not comment.has_flagged
 
     def test_with_has_flagged_if_user_has_flagged(self, comment, user):
-        Flag.objects.create(
-            user=user, content_object=comment, community=comment.community
-        )
+        FlagFactory(user=user, content_object=comment, community=comment.community)
         comment = Comment.objects.with_has_flagged(user).get()
         assert comment.has_flagged
 

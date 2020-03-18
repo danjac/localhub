@@ -13,7 +13,7 @@ from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Community
 from localhub.events.factories import EventFactory
 from localhub.events.models import Event
-from localhub.flags.models import Flag
+from localhub.flags.factories import FlagFactory
 from localhub.likes.factories import LikeFactory
 from localhub.photos.factories import PhotoFactory
 from localhub.photos.models import Photo
@@ -328,12 +328,12 @@ class TestActivityManager:
         assert Post.objects.with_num_likes().get().num_likes == 2
 
     def test_with_has_flagged_if_user_has_not_flagged(self, post, user):
-        Flag.objects.create(user=user, content_object=post, community=post.community)
+        FlagFactory(user=user, content_object=post, community=post.community)
         activity = Post.objects.with_has_flagged(UserFactory()).get()
         assert not activity.has_flagged
 
     def test_with_has_flagged_if_user_has_flagged(self, post, user):
-        Flag.objects.create(user=user, content_object=post, community=post.community)
+        FlagFactory(user=user, content_object=post, community=post.community)
         activity = Post.objects.with_has_flagged(user).get()
         assert activity.has_flagged
 

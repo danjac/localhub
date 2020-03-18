@@ -114,6 +114,16 @@ def like(post, member):
 
 
 @pytest.fixture
+def flag(post, member, moderator):
+    return LikeFactory(
+        content_object=post,
+        community=post.community,
+        user=member.member,
+        moderator=moderator.member,
+    )
+
+
+@pytest.fixture
 def message(member):
     return MessageFactory(
         sender=member.member,

@@ -9,7 +9,7 @@ from django.db.models import signals
 from localhub.comments.factories import CommentFactory
 from localhub.posts.factories import PostFactory
 
-from ..models import Flag
+from ..factories import FlagFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -23,9 +23,7 @@ class TestFlagModel:
 
         post = PostFactory(community=moderator.community)
         comment = CommentFactory(content_object=post)
-        flag = Flag.objects.create(
-            content_object=comment, user=user, community=post.community
-        )
+        flag = FlagFactory(content_object=comment, user=user, community=post.community)
         notifications = flag.notify()
         assert len(notifications) == 1
         notification = notifications[0]
@@ -40,9 +38,7 @@ class TestFlagModel:
         moderator.member.save()
 
         post = PostFactory(community=moderator.community)
-        flag = Flag.objects.create(
-            content_object=post, user=user, community=post.community
-        )
+        flag = FlagFactory(content_object=post, user=user, community=post.community)
         notifications = flag.notify()
         assert len(notifications) == 1
         notification = notifications[0]

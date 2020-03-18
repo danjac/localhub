@@ -5,8 +5,8 @@ import pytest
 from django.urls import reverse
 
 from localhub.posts.factories import PostFactory
-from localhub.users.factories import UserFactory
 
+from ..factories import FlagFactory
 from ..models import Flag
 
 pytestmark = pytest.mark.django_db
@@ -15,8 +15,8 @@ pytestmark = pytest.mark.django_db
 class TestFlagListView:
     def test_get(self, client, moderator):
         post = PostFactory(community=moderator.community)
-        Flag.objects.create(
-            content_object=post, community=moderator.community, user=UserFactory(),
+        FlagFactory(
+            content_object=post, community=moderator.community,
         )
         response = client.get(reverse("flags:list"))
         assert response.status_code == 200
@@ -25,9 +25,7 @@ class TestFlagListView:
 class TestFlagDeleteView:
     def test_post(self, client, moderator):
         post = PostFactory(community=moderator.community)
-        flag = Flag.objects.create(
-            content_object=post, community=moderator.community, user=UserFactory(),
-        )
+        flag = FlagFactory(content_object=post, community=moderator.community,)
         response = client.post(reverse("flags:delete", args=[flag.id]))
         assert response.url == post.get_absolute_url()
         assert not Flag.objects.exists()
