@@ -247,4 +247,11 @@
       // border-color: $gray-color;
     }
   }
+
+  .collapsable {
+    -webkit-mask-image: -webkit-gradient(linear, left 90%, left bottom, from(rgba(12, 12, 13, 1)), to(rgba(12, 12, 13, 0.3)));
+    mask-image: gradient(top bottom, from(rgba(12, 12, 13, 1)), to(rgba(12, 12, 13, 0.3)));
+  }
+
+
 }
