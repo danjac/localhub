@@ -10,6 +10,7 @@ from localhub.users.utils import user_display
 from .models import Comment
 
 HEADERS = [
+    ("delete", _("%(actor)s has deleted this comment")),
     ("flag", _("%(actor)s has flagged this comment")),
     ("like", _("%(actor)s has liked your comment")),
     ("mention", _("%(actor)s has mentioned you in their comment")),

@@ -49,9 +49,9 @@ class Poll(Activity):
         Sends a notification when someone has voted. Ignore if you
         vote on your own poll.
         """
-        if voter == self.owner:
-            return []
-        return [self.make_notification(self.owner, "vote", voter)]
+        if voter != self.owner:
+            return self.make_notification(self.owner, "vote", voter)
+        return None
 
 
 class Answer(models.Model):

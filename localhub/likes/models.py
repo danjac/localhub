@@ -81,12 +81,11 @@ class Like(TimeStampedModel):
 
     @dispatch
     def notify(self):
-        return [
-            Notification(
-                content_object=self.content_object,
-                recipient=self.recipient,
-                actor=self.user,
-                community=self.community,
-                verb="like",
-            )
-        ]
+        return Notification(
+            content_object=self.content_object,
+            recipient=self.recipient,
+            actor=self.user,
+            community=self.community,
+            verb="like",
+        )
+

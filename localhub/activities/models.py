@@ -575,7 +575,7 @@ class Activity(TimeStampedModel):
 
     @dispatch
     def notify_on_delete(self, moderator):
-        return [self.make_notification(self.owner, "delete", actor=moderator)]
+        return self.make_notification(self.owner, "delete", actor=moderator)
 
     def reshare(self, owner, commit=True, **kwargs):
         """

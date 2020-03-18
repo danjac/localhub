@@ -26,7 +26,6 @@ from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
-from .emails import send_comment_deleted_email
 from .forms import CommentForm
 from .models import Comment
 
@@ -47,6 +46,7 @@ class BaseCommentListView(CommentQuerySetMixin, ListView):
             .get_queryset()
             .with_common_annotations(self.request.user, self.request.community)
             .exclude_blocked_users(self.request.user)
+            .exclude_deleted()
             .prefetch_related("content_object")
         )
 
@@ -67,6 +67,15 @@ comment_list_view = CommentListView.as_view()
 class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
     model = Comment
 
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .exclude_deleted(self.request.user)
+            .select_related("editor")
+            .with_common_annotations(self.request.user, self.request.community)
+        )
+
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
         self.object.get_notifications().for_recipient(
@@ -81,14 +90,6 @@ class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
 
     def get_flags(self):
         return self.object.get_flags().select_related("user").order_by("-created")
-
-    def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .select_related("editor")
-            .with_common_annotations(self.request.user, self.request.community)
-        )
 
     def get_replies(self):
         return self.get_queryset().filter(parent=self.object).order_by("created")
@@ -140,9 +141,11 @@ class CommentDeleteView(PermissionRequiredMixin, CommentQuerySetMixin, DeleteVie
 
     def post(self, request, *args, **kwargs):
         comment = self.get_object()
-        comment.delete()
         if self.request.user != comment.owner:
-            send_comment_deleted_email(comment)
+            comment.soft_delete()
+            comment.notify_on_delete(self.request.user)
+        else:
+            comment.delete()
 
         messages.success(request, _("Comment has been deleted"))
         return redirect(comment.content_object)

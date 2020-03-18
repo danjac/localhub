@@ -25,9 +25,16 @@ def dispatch(func):
     def wrapper(*args, **kwargs):
         from .models import Notification
 
-        notifications = list(func(*args, **kwargs))
+        notifications = func(*args, **kwargs)
+
         if not notifications:
             return []
+
+        if isinstance(notifications, Notification):
+            notifications = [notifications]
+        else:
+            notifications = list(notifications)
+
         for notification in Notification.objects.bulk_create(notifications):
             registry.get_adapter(notification).send_notification()
         return notifications

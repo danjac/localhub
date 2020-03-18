@@ -9,6 +9,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.template.defaultfilters import truncatechars
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.functional import cached_property
 from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
@@ -81,6 +82,12 @@ class CommentQuerySet(
             return self
         return self.exclude(owner__in=user.blocked.all())
 
+    def exclude_deleted(self, user=None):
+        qs = self.filter(deleted__isnull=True)
+        if user:
+            qs = qs | self.filter(owner=user)
+        return qs
+
     def with_is_blocked(self, user):
         if user.is_anonymous:
             return self.annotate(
@@ -112,6 +119,9 @@ class CommentQuerySet(
             return qs
         return self
 
+    def deleted(self):
+        return self.filter(deleted__isnull=False)
+
 
 class Comment(TimeStampedModel):
 
@@ -128,6 +138,7 @@ class Comment(TimeStampedModel):
     )
 
     edited = models.DateTimeField(null=True, blank=True)
+    deleted = models.DateTimeField(null=True, blank=True)
 
     content_type = models.ForeignKey(
         ContentType, on_delete=models.SET_NULL, null=True, blank=True
@@ -198,6 +209,17 @@ class Comment(TimeStampedModel):
 
     def get_flags(self):
         return Flag.objects.filter(comment=self)
+
+    def get_likes(self):
+        return Like.objects.filter(comment=self)
+
+    def soft_delete(self):
+        self.deleted = timezone.now()
+        self.save(update_fields=["deleted"])
+
+        self.get_likes().delete()
+        self.get_flags().delete()
+        self.get_notifications().delete()
 
     def make_notification(self, verb, recipient, actor=None):
         return Notification(
@@ -275,3 +297,7 @@ class Comment(TimeStampedModel):
         notifications += self.notify_mentioned(recipients)
         notifications += self.notify_moderators()
         return takefirst(notifications, lambda n: n.recipient)
+
+    @dispatch
+    def notify_on_delete(self, moderator):
+        return self.make_notification("delete", self.owner, moderator)

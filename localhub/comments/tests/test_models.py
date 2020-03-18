@@ -3,11 +3,13 @@
 
 import pytest
 from django.contrib.auth.models import AnonymousUser
+from django.utils import timezone
 
 from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
+from localhub.notifications.factories import NotificationFactory
 from localhub.posts.factories import PostFactory
 from localhub.users.factories import UserFactory
 
@@ -25,6 +27,30 @@ class TestCommentManager:
         CommentFactory(content="not found")
 
         assert Comment.objects.search("testme").get() == comment
+
+    def test_deleted_if_deleted(self):
+
+        CommentFactory(deleted=timezone.now())
+        assert Comment.objects.deleted().count() == 1
+
+    def test_deleted_if_not_deleted(self):
+
+        CommentFactory(deleted=None)
+        assert Comment.objects.deleted().count() == 0
+
+    def test_exclude_deleted_if_deleted(self, user):
+
+        comment = CommentFactory(deleted=timezone.now())
+        assert Comment.objects.exclude_deleted().count() == 0
+        assert Comment.objects.exclude_deleted(user).count() == 0
+        assert Comment.objects.exclude_deleted(comment.owner).count() == 1
+
+    def test_exclude_deleted_if_not_deleted(self, user):
+
+        comment = CommentFactory(deleted=None)
+        assert Comment.objects.exclude_deleted().count() == 1
+        assert Comment.objects.exclude_deleted(user).count() == 1
+        assert Comment.objects.exclude_deleted(comment.owner).count() == 1
 
     def test_exclude_blocked_users(self, user):
 
@@ -168,6 +194,13 @@ class TestCommentModel:
     def test_abbreviate(self):
         comment = Comment(content="Hello\nthis is a *test*")
         assert comment.abbreviate() == "Hello this is a test"
+
+    def test_soft_delete(self, comment):
+        NotificationFactory(content_object=comment)
+        # LikeFactory(content_object=comment)
+        comment.soft_delete()
+        assert comment.deleted is not None
+        assert comment.get_notifications().count() == 0
 
     def test_notify_on_create(self, community, mailoutbox, send_webpush_mock):
 
@@ -328,3 +361,11 @@ class TestCommentModel:
         assert notifications[0].recipient == moderator
         assert notifications[0].actor == comment_owner
         assert notifications[0].verb == "moderator_review"
+
+    def test_notify_on_delete(self, comment, moderator, send_webpush_mock):
+        notifications = comment.notify_on_delete(moderator.member)
+        assert len(notifications) == 1
+
+        assert notifications[0].actor == moderator.member
+        assert notifications[0].recipient == comment.owner
+        assert notifications[0].verb == "delete"
