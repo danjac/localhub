@@ -2,6 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
+{% load activities_tags %}
 
 <div class="d-block">
     {% with num_comments=object.num_comments|default:0 object_url=object.get_absolute_url %}
@@ -17,8 +18,7 @@
     {% endif %}
     {% endwith %}
 
-    {% if is_detail %}
-    {% elif object.num_reshares %}
+    {% if not is_detail and object.num_reshares %}
     <div class="info">
         {{ object.num_reshares }}
         {% blocktrans count counter=object.num_reshares %}
@@ -28,6 +28,7 @@
         {% endblocktrans %}
     </div>
     {% endif %}
+
     {% if object.num_likes and object.owner == user %}
     <div class="info">
         {{ object.num_likes }}
@@ -47,6 +48,16 @@
     {% block extra_info %}{% endblock %}
 
 </div>
+{% if is_detail %}
+{% with tags=object.tags.all %}
+{% if tags %}
+<div class="info">
+    {% for tag in tags %}
+    <a href="{% url 'activities:tag_detail' tag.slug %}">#{{ tag.name }}</a>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
 {% with num_reshares=reshares.count %}
 {% if num_reshares %}
 <div class="info">
@@ -63,3 +74,4 @@
 </div>
 {% endif %}
 {% endwith %}
+{% endif %}
