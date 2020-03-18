@@ -12,17 +12,21 @@ from .models import Post
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ("title", "url", "description", "allow_comments")
-        labels = {"title": _("Title"), "url": _("Link")}
+        fields = ("title", "additional_tags", "url", "description", "allow_comments")
+        labels = {"title": _("Title"), "url": _("Link"), "additional_tags": _("Tags")}
         widgets = {
             "title": TypeaheadInput,
+            "additional_tags": TypeaheadInput(search_mentions=False),
         }
         help_texts = {
             "title": _(
                 "If you add a URL in the Link field below and leave the Title "
                 "field empty, we will try to automatically fetch a title and "
                 "description for your post from the web page."
-            )
+            ),
+            "additional_tags": _(
+                "Hashtags can also be added to title and description."
+            ),
         }
 
     def __init__(self, *args, **kwargs):

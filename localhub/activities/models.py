@@ -31,7 +31,6 @@ from localhub.utils.itertools import takefirst
 from localhub.utils.text import slugify_unicode
 
 from . import signals
-from .notifications import ActivityAdapter
 from .utils import extract_hashtags
 
 
@@ -317,7 +316,7 @@ class Activity(TimeStampedModel):
     Base class for all activity-related entities e.g. posts, events, photos.
     """
 
-    RESHARED_FIELDS = ("title", "description")
+    RESHARED_FIELDS = ("title", "description", "additional_tags")
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
@@ -332,6 +331,8 @@ class Activity(TimeStampedModel):
     )
 
     title = models.CharField(max_length=300)
+
+    additional_tags = models.CharField(max_length=300, blank=True)
 
     description = MarkdownField(blank=True)
 
@@ -365,11 +366,9 @@ class Activity(TimeStampedModel):
 
     search_document = SearchVectorField(null=True, editable=False)
 
-    description_tracker = Tracker(["title", "description"])
+    description_tracker = Tracker(["title", "description", "additional_tags"])
 
     objects = ActivityQuerySet.as_manager()
-
-    notification_adapter_class = ActivityAdapter
 
     class Meta:
         indexes = [
@@ -644,7 +643,11 @@ class Activity(TimeStampedModel):
         return is_new or self.description_tracker.changed()
 
     def extract_tags(self):
-        return self.description.extract_hashtags() | extract_hashtags(self.title)
+        return (
+            self.description.extract_hashtags()
+            | extract_hashtags(self.title)
+            | extract_hashtags(self.additional_tags)
+        )
 
     def save_tags(self, is_new):
         if self.should_extract_tags(is_new):

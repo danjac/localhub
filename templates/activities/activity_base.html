@@ -35,7 +35,7 @@
       </div>
       {% endif %}
 
-      <div class="card-title activity-title mb-1 {{ is_detail|yesno:"h5,h6" }}">
+      <div class="card-title activity-title {{ is_detail|yesno:"h5,h6" }}">
 
         {% if object.is_reshare %}
 
@@ -81,14 +81,22 @@
       </div>
 
       {% if object.url %}
-      <div class="card-subtitle">
+      <div class="card-subtitle mt-1">
         <div class="info">
           {{ object.url|domain|linkify }}
         </div>
       </div>
       {% endif %}
 
-      <div class="card-subtitle">
+      {% if object.additional_tags %}
+      <div class="card-subtitle mt-1">
+        <div class="info">
+          {{ object.additional_tags|linkify_hashtags }}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="card-subtitle mt-1">
         {% if object.parent %}
         {% include "activities/includes/timesince.html" with timestamp=object.parent.published|default:object.created owner=object.parent.owner %}
         {% elif not object.is_reshare %}

@@ -26,6 +26,7 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = (
             "title",
+            "additional_tags",
             "starts",
             "ends",
             "timezone",
@@ -44,11 +45,17 @@ class EventForm(forms.ModelForm):
         localized_fields = ("starts", "ends")
 
         help_texts = {
-            "timezone": _("Start and end times will be shown in this timezone")
+            "additional_tags": _(
+                "Hashtags can also be added to title and description."
+            ),
+            "timezone": _("Start and end times will be shown in this timezone"),
         }
+
+        labels = {"additional_tags": _("Tags")}
 
         widgets = {
             "title": TypeaheadInput,
+            "additional_tags": TypeaheadInput(search_mentions=False),
         }
 
     def __init__(self, *args, **kwargs):
