@@ -45,5 +45,15 @@ class CommentWebpusher(Webpusher):
 
 @register(Comment)
 class CommentAdapter(DefaultAdapter):
+    ALLOWED_VERBS = [
+        "delete",
+        "flag",
+        "like",
+        "mention",
+        "new_comment",
+        "new_sibling",
+        "reply",
+    ]
+
     mailer_class = CommentMailer
     webpusher_class = CommentWebpusher

@@ -181,6 +181,10 @@ class DefaultAdapter(Adapter):
     renderer_class = TemplateRenderer
     resolver_class = TemplateResolver
 
+    # provide list of verbs accepted by this adapter.
+
+    ALLOWED_VERBS = []
+
     def __init__(self, notification):
 
         self.notification = notification
@@ -205,9 +209,10 @@ class DefaultAdapter(Adapter):
         Sends email and webpush notifications localized to
         recipient language.
         """
-        with override(self.recipient.language):
-            self.mailer.send()
-            self.webpusher.send()
+        if self.verb in self.ALLOWED_VERBS:
+            with override(self.recipient.language):
+                self.mailer.send()
+                self.webpusher.send()
 
     def get_template_names(self):
         return self.resolver.resolve(f"{self.app_label}/includes")
@@ -223,9 +228,13 @@ class DefaultAdapter(Adapter):
         This is used with the {% render_notification %} template tag in
         notification_tags. It should render an HTML snippet of the notification
         in the notifications page and other parts of the site.
+
+        If not an accepted verb returns empty string.
         """
-        return self.renderer.render(
-            self.get_template_names(),
-            self.context.get_context(extra_context),
-            template_engine=template_engine,
-        )
+        if self.verb in self.ALLOWED_VERBS:
+            return self.renderer.render(
+                self.get_template_names(),
+                self.context.get_context(extra_context),
+                template_engine=template_engine,
+            )
+        return ""

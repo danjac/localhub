@@ -33,6 +33,8 @@ class MessageWebpusher(Webpusher):
 
 @register(Message)
 class MessageAdapter(DefaultAdapter):
+    ALLOWED_VERBS = ["message"]
+
     mailer_class = MessageMailer
     webpusher_class = MessageWebpusher
 

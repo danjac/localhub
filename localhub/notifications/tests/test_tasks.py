@@ -23,4 +23,4 @@ class TestSendPushNotification:
         payload = {"head": "hello", "body": "testing"}
 
         send_webpush(member.member_id, member.community_id, payload)
-        assert send_webpush_mock.called_once()
+        assert send_webpush_mock.delay.called_once()

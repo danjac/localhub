@@ -244,12 +244,6 @@ class Comment(TimeStampedModel):
             ).exclude(pk=self.owner_id)
         ]
 
-    def notify_moderators(self):
-        return [
-            self.make_notification("moderator_review", recipient)
-            for recipient in self.community.get_moderators().exclude(pk=self.owner_id)
-        ]
-
     def get_notification_recipients(self):
         return self.community.members.exclude(blocked=self.owner)
 
@@ -290,7 +284,6 @@ class Comment(TimeStampedModel):
             .exclude(pk__in=other_commentors)
             .distinct()
         ]
-        notifications += self.notify_moderators()
         return takefirst(notifications, lambda n: n.recipient)
 
     @dispatch
@@ -301,7 +294,6 @@ class Comment(TimeStampedModel):
 
         recipients = self.get_notification_recipients()
         notifications += self.notify_mentioned(recipients)
-        notifications += self.notify_moderators()
         return takefirst(notifications, lambda n: n.recipient)
 
     @dispatch

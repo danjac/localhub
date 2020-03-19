@@ -6,7 +6,6 @@ from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
 
 from localhub.communities.factories import MembershipFactory
-from localhub.communities.models import Membership
 from localhub.flags.factories import FlagFactory
 from localhub.likes.factories import LikeFactory
 from localhub.notifications.factories import NotificationFactory
@@ -213,9 +212,6 @@ class TestCommentModel:
         post_owner = MembershipFactory(
             community=community, member=UserFactory(),
         ).member
-        moderator = MembershipFactory(
-            community=community, role=Membership.ROLES.moderator, member=UserFactory(),
-        ).member
 
         mentioned = UserFactory(username="danjac")
 
@@ -240,7 +236,7 @@ class TestCommentModel:
 
         notifications = list(comment.notify_on_create())
 
-        assert len(notifications) == 5
+        assert len(notifications) == 4
 
         assert notifications[0].recipient == mentioned
         assert notifications[0].actor == comment.owner
@@ -258,10 +254,6 @@ class TestCommentModel:
         assert notifications[3].actor == comment.owner
         assert notifications[3].verb == "followed_user"
 
-        assert notifications[4].recipient == moderator
-        assert notifications[4].actor == comment.owner
-        assert notifications[4].verb == "moderator_review"
-
     def test_notify_on_create_if_parent(self, community, mailoutbox, send_webpush_mock):
 
         comment_owner = MembershipFactory(community=community,).member
@@ -272,10 +264,6 @@ class TestCommentModel:
 
         post_owner = MembershipFactory(
             community=community, member=UserFactory(),
-        ).member
-
-        moderator = MembershipFactory(
-            community=community, role=Membership.ROLES.moderator, member=UserFactory(),
         ).member
 
         mentioned = UserFactory(username="danjac")
@@ -309,7 +297,7 @@ class TestCommentModel:
 
         notifications = list(comment.notify_on_create())
 
-        assert len(notifications) == 6
+        assert len(notifications) == 5
 
         assert notifications[0].recipient == mentioned
         assert notifications[0].actor == comment.owner
@@ -331,41 +319,35 @@ class TestCommentModel:
         assert notifications[4].actor == comment.owner
         assert notifications[4].verb == "followed_user"
 
-        assert notifications[5].recipient == moderator
-        assert notifications[5].actor == comment.owner
-        assert notifications[5].verb == "moderator_review"
-
     def test_notify_on_update(self, community, mailoutbox, send_webpush_mock):
 
         comment_owner = MembershipFactory(
             community=community, member=UserFactory(),
         ).member
 
-        post_owner = MembershipFactory(community=community).member
-        moderator = MembershipFactory(
-            community=community, role=Membership.ROLES.moderator, member=UserFactory(),
+        member = MembershipFactory(
+            community=community, member=UserFactory(username="danjac")
         ).member
 
+        post_owner = MembershipFactory(community=community).member
         post = PostFactory(owner=post_owner, community=community)
 
         comment = CommentFactory(
             owner=comment_owner,
             community=community,
             content_object=post,
-            content="hello @danjac",
+            content="hello",
         )
 
-        # edit by owner
-        comment.content = "edit #2"
-        comment.editor = comment_owner
+        comment.content = "hello @danjac"
         comment.save()
 
         notifications = list(comment.notify_on_update())
         assert len(notifications) == 1
 
-        assert notifications[0].recipient == moderator
+        assert notifications[0].recipient == member
         assert notifications[0].actor == comment_owner
-        assert notifications[0].verb == "moderator_review"
+        assert notifications[0].verb == "mention"
 
     def test_notify_on_delete(self, comment, moderator, send_webpush_mock):
         notifications = comment.notify_on_delete(moderator.member)

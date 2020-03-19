@@ -186,7 +186,7 @@ class TestMessageFollowUpView:
         assert message.sender == member.member
         assert message.community == member.community
 
-        assert send_webpush_mock.called_once()
+        assert send_webpush_mock.delay.called_once()
 
     def test_post_if_thread_not_visible(self, client, member, send_webpush_mock):
         recipient = MembershipFactory(community=member.community).member
@@ -212,7 +212,7 @@ class TestMessageFollowUpView:
         assert message.sender == member.member
         assert message.community == member.community
 
-        assert send_webpush_mock.called_once()
+        assert send_webpush_mock.delay.called_once()
 
     def test_get(self, client, member):
         recipient = MembershipFactory(community=member.community).member
@@ -260,7 +260,7 @@ class TestMessageReplyView:
         assert message.sender == member.member
         assert message.community == member.community
 
-        assert send_webpush_mock.called_once()
+        assert send_webpush_mock.delay.called_once()
 
     def test_post_if_thread_not_visible(
         self, client, member, mailoutbox, send_webpush_mock
@@ -291,7 +291,7 @@ class TestMessageReplyView:
         assert len(mailoutbox) == 1
         assert mailoutbox[0].to == [message.recipient.email]
 
-        assert send_webpush_mock.called_once()
+        assert send_webpush_mock.delay.called_once()
 
     def test_get(self, client, member):
         sender = MembershipFactory(community=member.community).member
@@ -326,7 +326,7 @@ class TestMessageCreateView:
         assert message.sender == member.member
         assert message.community == member.community
 
-        assert send_webpush_mock.called_once()
+        assert send_webpush_mock.delay.called_once()
 
         assert len(mailoutbox) == 1
         assert mailoutbox[0].to == [message.recipient.email]

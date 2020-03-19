@@ -57,6 +57,17 @@ class ActivityWebpusher(Webpusher):
 
 class ActivityAdapter(DefaultAdapter):
 
+    ALLOWED_VERBS = [
+        "delete",
+        "flag",
+        "like",
+        "mention",
+        "moderator_review",
+        "followed_user",
+        "followed_tag",
+        "reshare",
+    ]
+
     mailer_class = ActivityMailer
     webpusher_class = ActivityWebpusher
 

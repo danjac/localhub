@@ -182,7 +182,7 @@ class TestPostDeleteView:
         assert response.url == settings.HOME_PAGE_URL
         assert Post.objects.deleted().count() == 1
 
-        assert send_webpush_mock.is_called
+        assert send_webpush_mock.delay.called
         assert mailoutbox[0].to == [post.owner.email]
 
 

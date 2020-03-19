@@ -115,10 +115,6 @@ class TestPostModel:
             community=community, role=Membership.ROLES.moderator
         ).member
 
-        moderator = MembershipFactory(
-            community=community, role=Membership.ROLES.moderator, member=UserFactory(),
-        ).member
-
         mentioned = MembershipFactory(
             member=UserFactory(username="danjac"),
             community=community,
@@ -152,7 +148,7 @@ class TestPostModel:
         user_follower.following.add(post.owner)
 
         notifications = post.notify_on_create()
-        assert len(notifications) == 4
+        assert len(notifications) == 3
 
         assert notifications[0].recipient == mentioned
         assert notifications[0].actor == post.owner
@@ -166,10 +162,6 @@ class TestPostModel:
         assert notifications[2].actor == post.owner
         assert notifications[2].verb == "followed_user"
 
-        assert notifications[3].recipient == moderator
-        assert notifications[3].actor == post.owner
-        assert notifications[3].verb == "moderator_review"
-
     def test_notify_on_delete(self, post, moderator, send_webpush_mock):
         notifications = post.notify_on_delete(moderator.member)
 
@@ -180,26 +172,27 @@ class TestPostModel:
 
     def test_notify_on_update(self, community, send_webpush_mock):
 
-        owner = MembershipFactory(
-            community=community, role=Membership.ROLES.moderator, member=UserFactory(),
-        ).member
+        owner = MembershipFactory(community=community).member
 
-        moderator = MembershipFactory(
-            community=community, role=Membership.ROLES.moderator, member=UserFactory(),
+        member = MembershipFactory(
+            community=community, member=UserFactory(username="danjac"),
         ).member
 
         post = PostFactory(
             owner=owner,
             community=community,
-            description="hello @danjac from @owner #movies #reviews",
+            description="hello from @owner #movies #reviews",
         )
+
+        post.description = "hello @danjac"
+        post.save()
 
         notifications = post.notify_on_update()
         assert len(notifications) == 1
 
-        assert notifications[0].recipient == moderator
+        assert notifications[0].recipient == member
         assert notifications[0].actor == post.owner
-        assert notifications[0].verb == "moderator_review"
+        assert notifications[0].verb == "mention"
 
     def test_notify_on_create_reshare(self, community):
 
@@ -221,13 +214,7 @@ class TestPostModel:
 
         assert tag_follower.following_tags.count() == 2
 
-        owner = MembershipFactory(
-            community=community, role=Membership.ROLES.moderator, member=UserFactory(),
-        ).member
-
-        moderator = MembershipFactory(
-            community=community, role=Membership.ROLES.moderator, member=UserFactory(),
-        ).member
+        owner = MembershipFactory(community=community,).member
 
         post = PostFactory(
             owner=owner,
@@ -238,7 +225,7 @@ class TestPostModel:
         # reshare
         reshare = post.reshare(UserFactory())
         notifications = list(reshare.notify_on_create())
-        assert len(notifications) == 4
+        assert len(notifications) == 3
 
         assert notifications[0].recipient == mentioned
         assert notifications[0].actor == reshare.owner
@@ -251,10 +238,6 @@ class TestPostModel:
         assert notifications[2].recipient == post.owner
         assert notifications[2].actor == reshare.owner
         assert notifications[2].verb == "reshare"
-
-        assert notifications[3].recipient == moderator
-        assert notifications[3].actor == reshare.owner
-        assert notifications[3].verb == "moderator_review"
 
     def test_fetch_opengraph_data_from_url_if_ok(self, mocker):
         class MockHeadResponse:

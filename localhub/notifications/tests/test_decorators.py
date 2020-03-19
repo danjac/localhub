@@ -30,7 +30,7 @@ class TestDispatch:
         assert len(notifications) == 1
         assert Notification.objects.count() == 1
 
-        assert send_webpush_mock.called_once
+        assert send_webpush_mock.delay.called_once
         assert len(mailoutbox) == 1
         assert mailoutbox[0].to == [notification.recipient.email]
 
@@ -52,6 +52,6 @@ class TestDispatch:
         assert len(notifications) == 1
         assert Notification.objects.count() == 1
 
-        assert send_webpush_mock.called_once
+        assert send_webpush_mock.delay.called_once
         assert len(mailoutbox) == 1
         assert mailoutbox[0].to == [notification.recipient.email]

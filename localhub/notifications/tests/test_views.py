@@ -74,7 +74,7 @@ class TestNotificationMarkReadView:
             response = client.post(
                 reverse("notifications:mark_read", args=[notification.id])
             )
-            assert mock_notification_read.send.is_called_with(instance=post)
+            assert mock_notification_read.send.called_with(instance=post)
         assert response.url == reverse("notifications:list")
         notification.refresh_from_db()
         assert notification.is_read
@@ -98,7 +98,7 @@ class TestNotificationMarkAllReadView:
                 reverse("notifications:mark_read", args=[notification.id])
             )
             response = client.post(reverse("notifications:mark_all_read"))
-            assert mock_notification_read.send.is_called_with(instance=post)
+            assert mock_notification_read.send.called_with(instance=post)
         assert response.url == reverse("notifications:list")
         notification.refresh_from_db()
         assert notification.is_read

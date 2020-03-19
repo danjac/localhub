@@ -132,7 +132,7 @@ class TestCommentDeleteView:
         assert response.url == post.get_absolute_url()
         assert Comment.objects.deleted().count() == 1
 
-        assert send_webpush_mock.is_called
+        assert send_webpush_mock.delay.called
         assert len(mailoutbox) == 1
         assert mailoutbox[0].to == [comment.owner.email]
 

@@ -38,5 +38,7 @@ class UserWebpusher(Webpusher):
 
 @register(get_user_model())
 class UserAdapter(DefaultAdapter):
+    ALLOWED_VERBS = ["new_follower", "new_member"]
+
     mailer_class = UserMailer
     webpusher_class = UserWebpusher

@@ -510,22 +510,6 @@ class Activity(TimeStampedModel):
                 ]
         return []
 
-    def notify_moderators(self):
-        """
-        Notifies moderators of updates.
-        """
-
-        qs = self.community.get_moderators().exclude(pk=self.owner_id)
-
-        if self.parent:
-            qs = qs.exclude(pk=self.parent.owner_id)
-
-        qs = qs.distinct()
-
-        return [
-            self.make_notification(moderator, "moderator_review") for moderator in qs
-        ]
-
     def notify_parent_owner(self, recipients):
         owner = recipients.filter(pk=self.parent.owner_id).first()
         if owner:
@@ -558,7 +542,6 @@ class Activity(TimeStampedModel):
         if self.parent:
             notifications += self.notify_parent_owner(recipients)
 
-        notifications += self.notify_moderators()
         return takefirst(notifications, lambda n: n.recipient)
 
     @dispatch
@@ -571,7 +554,6 @@ class Activity(TimeStampedModel):
             notifications += self.notify_mentioned_users(recipients)
             notifications += self.notify_tag_followers(recipients)
 
-        notifications += self.notify_moderators()
         return takefirst(notifications, lambda n: n.recipient)
 
     @dispatch
