@@ -14,7 +14,7 @@
 {% if date_filters or num_years > 1 or num_months > 1 %}
 <div class="actions">
     <a href="{{ reverse_sort_url }}">
-        {% if order == "desc" %}{% trans "Oldest" %}{% else %}{% trans "Latest" %}{% endif %}
+        {% if order == "desc" %}{% trans "Oldest First" %}{% else %}{% trans "Newest First" %}{% endif %}
     </a> |
     {% if date_filters %}
     <a href="{{ request.path }}?&order={{ order }}">{% trans "Show All" %}</a> |
