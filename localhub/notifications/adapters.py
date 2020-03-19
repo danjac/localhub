@@ -238,4 +238,3 @@ class DefaultAdapter(Adapter):
             self.context.get_context(extra_context),
             template_engine=template_engine,
         )
-        return ""
