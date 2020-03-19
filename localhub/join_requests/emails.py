@@ -35,28 +35,30 @@ def send_join_request_email(join_request):
 
 
 def send_acceptance_email(join_request):
-    with override(join_request.sender.language):
-        context = {"join_request": join_request, "user": join_request.sender}
-        send_mail(
-            _("Your request has been approved"),
-            render_to_string("join_requests/emails/accepted.txt", context),
-            join_request.community.resolve_email("no-reply"),
-            [join_request.sender.email],
-            html_message=render_to_string(
-                "join_requests/emails/accepted.html", context
-            ),
-        )
+    send_email_to_sender(
+        join_request,
+        _("Your request has been accepted"),
+        "join_requests/emails/accepted.txt",
+        "join_requests/emails/accepted.html",
+    )
 
 
 def send_rejection_email(join_request):
+    send_email_to_sender(
+        join_request,
+        _("Your request has been rejected"),
+        "join_requests/emails/rejected.txt",
+        "join_requests/emails/rejected.html",
+    )
+
+
+def send_email_to_sender(join_request, subject, plain_template, html_template):
     with override(join_request.sender.language):
-        context = {"join_request": join_request}
+        context = {"join_request": join_request, "user": join_request.sender}
         send_mail(
-            _("Your request has been rejected"),
-            render_to_string("join_requests/emails/rejected.txt", context),
+            subject,
+            render_to_string(plain_template, context),
             join_request.community.resolve_email("no-reply"),
-            [join_request.sender.email if join_request.sender else join_request.email],
-            html_message=render_to_string(
-                "join_requests/emails/rejected.html", context
-            ),
+            [join_request.sender.email],
+            html_message=render_to_string(html_template, context),
         )
