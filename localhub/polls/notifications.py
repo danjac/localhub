@@ -27,5 +27,7 @@ class PollWebpusher(ActivityWebpusher):
 
 @register(Poll)
 class PollAdapter(ActivityAdapter):
+    ALLOWED_VERBS = ActivityAdapter.ALLOWED_VERBS + ["vote"]
+
     mailer_class = PollMailer
     webpusher_class = PollWebpusher

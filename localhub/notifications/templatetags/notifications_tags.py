@@ -30,9 +30,7 @@ class RenderNotificationTag(template.Node):
 
     def render(self, context):
         notification = self.notification.resolve(context)
-        return registry.get_adapter(notification).render_to_template(
-            context.template.engine
-        )
+        return registry.get_adapter(notification).render_to_tag(context.template.engine)
 
 
 @register.inclusion_tag("notifications/includes/subscribe_btn.html")

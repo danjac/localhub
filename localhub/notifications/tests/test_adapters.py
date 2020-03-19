@@ -21,13 +21,13 @@ def empty_adapter(notification):
 
 
 class TestAdapter:
-    def test_render_to_template(self, adapter):
-        response = adapter.render_to_template()
+    def test_render_to_tag(self, adapter):
+        response = adapter.render_to_tag()
         assert "has mentioned you" in response
         assert "post" in response
 
-    def test_render_to_template_if_not_allowed_verb(self, empty_adapter):
-        assert empty_adapter.render_to_template() == ""
+    def test_render_to_tag_if_not_allowed_verb(self, empty_adapter):
+        assert empty_adapter.render_to_tag() == ""
 
     def test_send_notification(self, adapter, mailoutbox, send_webpush_mock):
         adapter.send_notification()

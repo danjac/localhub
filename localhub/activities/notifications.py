@@ -62,7 +62,6 @@ class ActivityAdapter(DefaultAdapter):
         "flag",
         "like",
         "mention",
-        "moderator_review",
         "followed_user",
         "followed_tag",
         "reshare",

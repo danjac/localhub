@@ -48,6 +48,7 @@ class CommentAdapter(DefaultAdapter):
     ALLOWED_VERBS = [
         "delete",
         "flag",
+        "followed_user",
         "like",
         "mention",
         "new_comment",

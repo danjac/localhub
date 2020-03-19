@@ -20,7 +20,7 @@ class Adapter(ABC):
         ...
 
     @abstractmethod
-    def render_to_template(self, template_engine=loader, extra_context=None):
+    def render_to_tag(self, template_engine=loader, extra_context=None):
         ...
 
 
@@ -223,7 +223,7 @@ class DefaultAdapter(Adapter):
     def get_absolute_url(self):
         return self.community.resolve_url(self.get_object_url())
 
-    def render_to_template(self, template_engine=loader, extra_context=None):
+    def render_to_tag(self, template_engine=loader, extra_context=None):
         """
         This is used with the {% render_notification %} template tag in
         notification_tags. It should render an HTML snippet of the notification
