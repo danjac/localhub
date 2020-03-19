@@ -42,12 +42,13 @@
 <table class="table table-hover table-responsive">
   <tbody>
     {% for notification in object_list %}
+    {% notification notification %}
     <tr>
       <td>
         <div class="notification">
 
           <div class="notification-header{% if not notification.is_read %} text-bold{% endif %}">
-            {% render_notification notification %}
+            {{ notification_content }}
             {% if not notification.is_read %}
             <div class="chip bg-primary">{% trans "New" %}</div>
             {% endif %}
@@ -73,6 +74,7 @@
         </div>
       </td>
     </tr>
+    {% endnotification %}
     {% endfor %}
   </tbody>
 </table>

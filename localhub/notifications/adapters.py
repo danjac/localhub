@@ -204,15 +204,17 @@ class DefaultAdapter(Adapter):
         self.mailer = self.mailer_class(self)
         self.webpusher = self.webpusher_class(self)
 
+    def is_allowed(self):
+        return self.verb in self.ALLOWED_VERBS
+
     def send_notification(self):
         """
         Sends email and webpush notifications localized to
         recipient language.
         """
-        if self.verb in self.ALLOWED_VERBS:
-            with override(self.recipient.language):
-                self.mailer.send()
-                self.webpusher.send()
+        with override(self.recipient.language):
+            self.mailer.send()
+            self.webpusher.send()
 
     def get_template_names(self):
         return self.resolver.resolve(f"{self.app_label}/includes")
@@ -231,10 +233,9 @@ class DefaultAdapter(Adapter):
 
         If not an accepted verb returns empty string.
         """
-        if self.verb in self.ALLOWED_VERBS:
-            return self.renderer.render(
-                self.get_template_names(),
-                self.context.get_context(extra_context),
-                template_engine=template_engine,
-            )
+        return self.renderer.render(
+            self.get_template_names(),
+            self.context.get_context(extra_context),
+            template_engine=template_engine,
+        )
         return ""

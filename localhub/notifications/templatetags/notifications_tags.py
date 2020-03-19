@@ -11,26 +11,44 @@ from ..registry import registry
 register = template.Library()
 
 
-@register.tag
+@register.tag(name="notification")
 def render_notification(parser, token):
     """
     Renders notification object with the correct template.
+
+    Example:
+    {% notification notification %}
+    <div class="notification">
+        ...
+        {{ notification_content }}
+    </div>
+    {% endnotification %}
     """
     try:
         _, notification = token.split_contents()
     except ValueError:
         raise template.TemplateSyntaxError("Requires notification")
 
-    return RenderNotificationTag(notification)
+    nodelist = parser.parse(("endnotification",))
+    parser.delete_first_token()
+
+    return RenderNotificationNode(notification, nodelist)
 
 
-class RenderNotificationTag(template.Node):
-    def __init__(self, notification):
+class RenderNotificationNode(template.Node):
+    def __init__(self, notification, nodelist):
         self.notification = template.Variable(notification)
+        self.nodelist = nodelist
 
     def render(self, context):
         notification = self.notification.resolve(context)
-        return registry.get_adapter(notification).render_to_tag(context.template.engine)
+
+        adapter = registry.get_adapter(notification)
+        if adapter.is_allowed():
+            context["notification_content"] = adapter.render_to_tag()
+            content = self.nodelist.render(context)
+            return content
+        return ""
 
 
 @register.inclusion_tag("notifications/includes/subscribe_btn.html")

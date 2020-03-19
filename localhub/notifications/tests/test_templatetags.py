@@ -31,11 +31,37 @@ class TestRenderNotification:
         tmpl = engines["django"].from_string(
             """
         {% load notifications_tags %}
-        {% render_notification notification %}
+        {% notification notification %}
+        <div class="notification">
+        {{ notification_content }}
+        </div>
+        {% endnotification %}
         """
         )
         response = tmpl.render({"notification": notification})
+        assert 'div class="notification"' in response
         assert "has mentioned" in response
+
+    def test_render_notification_if_not_allowed(self, post):
+        notification = NotificationFactory(
+            content_object=post,
+            verb="not_allowed",
+            actor=post.owner,
+            community=post.community,
+        )
+
+        tmpl = engines["django"].from_string(
+            """
+        {% load notifications_tags %}
+        {% notification notification %}
+        <div class="notification">
+        {{ notification_content }}
+        </div>
+        {% endnotification %}
+        """
+        )
+        response = tmpl.render({"notification": notification}).strip()
+        assert response == ""
 
 
 class TestNotificationsSubscribeBtn:

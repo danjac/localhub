@@ -35,8 +35,19 @@ def dispatch(func):
         else:
             notifications = list(notifications)
 
-        for notification in Notification.objects.bulk_create(notifications):
-            registry.get_adapter(notification).send_notification()
+        for_create = []
+        adapters = []
+
+        for notification in notifications:
+            adapter = registry.get_adapter(notification)
+            if adapter.is_allowed():
+                for_create.append(notification)
+                adapters.append(adapter)
+
+        Notification.objects.bulk_create(for_create)
+
+        for adapter in adapters:
+            adapter.send_notification()
         return notifications
 
     return wrapper

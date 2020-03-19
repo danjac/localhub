@@ -15,7 +15,7 @@
 {% if page_obj.number == 1 %}
 
 {% if latest_notification %}
-
+{% notification latest_notification %}
 <div class="toast toast-primary text-center my-2">
     <button class="btn btn-clear float-right"
             data-controller="js-toggle toggle ajax"
@@ -23,8 +23,9 @@
             data-action="toggle#toggle ajax#post"
             data-ajax-redirect="{{ request.get_full_path }}"
             data-ajax-url="{% url 'notifications:mark_all_read' %}"></button>
-    {% render_notification latest_notification %}
+    {{ notification_content }}
 </div>
+{% endnotification %}
 {% endif %}
 
 {% include "activities/includes/pinned.html" with css_class="my-2" %}
