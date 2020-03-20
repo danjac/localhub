@@ -79,7 +79,8 @@
 </p>
 {% endif %}
 
-<div class="actions mb-1">
+<div class="actions mb-1"
+     data-controller="toggle">
 
     {% if is_current_user %}
     <a href="{% url 'user_update' %}">
@@ -90,30 +91,31 @@
     {% if not is_current_user %}
 
     {% if can_follow_user %}
-    <span class="d-hide"
-          data-controller="js-toggle toggle">
-        {% with following=user.following.all %}
-        <a href="{% url 'users:unfollow' user_obj.username %}"
-           {% if user_obj not in following %}class="d-hide"
-           {% endif %}
-           data-controller="ajax"
-           data-action="ajax#post toggle#toggle"
-           data-target="toggle.togglable"
-           data-toggle-target="follow"
-           data-ajax-redirect="none">
-            {% trans "Unfollow" %}
-        </a>
-        <a href="{% url 'users:follow' user_obj.username %}"
-           {% if user_obj in following %}class="d-hide"
-           {% endif %}
-           data-controller="ajax"
-           data-action="ajax#post toggle#toggle"
-           data-target="toggle.togglable"
-           data-toggle-target="follow"
-           data-ajax-redirect="none">
-            {% trans "Follow" %}
-        </a>
-    </span>
+    {% with following=user.following.all %}
+    <a href="{% url 'users:unfollow' user_obj.username %}"
+       {% if user_obj not in following %}
+       class="d-hide"
+       data-js-toggle-ignore
+       {% endif %}
+       data-controller="js-toggle ajax"
+       data-action="ajax#post toggle#toggle"
+       data-target="toggle.togglable"
+       data-toggle-target="follow"
+       data-ajax-redirect="none">
+        {% trans "Unfollow" %}
+    </a>
+    <a href="{% url 'users:follow' user_obj.username %}"
+       {% if user_obj in following %}
+       class="d-hide"
+       data-js-toggle-ignore
+       {% endif %}
+       data-controller="js-toggle ajax"
+       data-action="ajax#post toggle#toggle"
+       data-target="toggle.togglable"
+       data-toggle-target="follow"
+       data-ajax-redirect="none">
+        {% trans "Follow" %}
+    </a>
     {% endwith %}
     {% endif %}
 

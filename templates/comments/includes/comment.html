@@ -80,30 +80,30 @@
     </div>
     {% endif %}
 
-    <div class="actions">
+    <div class="actions"
+         data-controller="toggle">
       {% has_perm "comments.like_comment" user comment as can_like_comment %}
       {% if can_like_comment %}
-      <span class="d-hide"
-            data-controller="toggle js-toggle">
-        <a href="{% url 'comments:like' comment.id %}"
-           {% if comment.has_liked %}
-           class="d-hide"
-           {% endif %}
-           data-controller="ajax"
-           data-target="toggle.togglable"
-           data-toggle-target="like"
-           data-ajax-redirect="none"
-           data-action="ajax#post toggle#toggle">{% trans "Like" %}</a>
-        <a href="{% url 'comments:dislike' comment.id %}"
-           {% if not comment.has_liked %}
-           class="d-hide"
-           {% endif %}
-           data-controller="ajax"
-           data-target="toggle.togglable"
-           data-toggle-target="like"
-           data-ajax-redirect="none"
-           data-action="ajax#post toggle#toggle"><s>{% trans "Like" %}</s></a>
-      </span>
+      <a href="{% url 'comments:like' comment.id %}"
+         {% if comment.has_liked %}
+         class="d-hide"
+         data-js-toggle-ignore
+         {% endif %}
+         data-controller="js-toggle ajax"
+         data-target="toggle.togglable"
+         data-toggle-target="like"
+         data-ajax-redirect="none"
+         data-action="ajax#post toggle#toggle">{% trans "Like" %}</a>
+      <a href="{% url 'comments:dislike' comment.id %}"
+         {% if not comment.has_liked %}
+         class="d-hide"
+         data-js-toggle-ignore
+         {% endif %}
+         data-controller="js-toggle ajax"
+         data-target="toggle.togglable"
+         data-toggle-target="like"
+         data-ajax-redirect="none"
+         data-action="ajax#post toggle#toggle"><s>{% trans "Like" %}</s></a>
       {% endif %}
 
       {% has_perm "comments.reply_to_comment" user comment as can_reply %}

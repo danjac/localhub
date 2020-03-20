@@ -12,7 +12,12 @@ export default class extends Controller {
   // normally available to JS-disabled browsers.
   // ensure element has class d-hide.
 
+  // add data-js-toggle if you want to keep an element hidden 
+  // even if JS present.
+
   connect() {
-    this.element.classList.remove('d-hide');
+    if (!this.data.has('ignore')) {
+      this.element.classList.remove('d-hide');
+    }
   }
 }

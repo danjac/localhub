@@ -63,7 +63,8 @@
           {% if can_follow_tag %}
           <span data-controller="toggle">
             <a href="{% url 'activities:tag_unfollow' tag.id %}"
-               {% if not tag in following %}class="d-hide"
+               {% if not tag in following %}
+               class="d-hide"
                {% endif %}
                data-controller="ajax"
                data-ajax-redirect="none"
@@ -73,7 +74,8 @@
               {% trans "Unfollow" %}
             </a>
             <a href="{% url 'activities:tag_follow' tag.id %}"
-               {% if tag in following %}class="d-hide"
+               {% if tag in following %}
+               class="d-hide"
                {% endif %}
                data-controller="ajax"
                data-ajax-redirect="none"
@@ -87,7 +89,8 @@
           {% if can_block_tag %}
           <span data-controller="toggle">
             <a href="{% url 'activities:tag_unblock' tag.id %}"
-               {% if not tag in blocked %}class="d-hide"
+               {% if not tag in blocked %}
+               class="d-hide"
                {% endif %}
                data-controller="ajax"
                data-ajax-redirect="none"
@@ -97,7 +100,8 @@
               {% trans "Unblock" %}
             </a>
             <a href="{% url 'activities:tag_block' tag.id %}"
-               {% if tag in blocked %}class="d-hide"
+               {% if tag in blocked %}
+               class="d-hide"
                {% endif %}
                data-controller="ajax"
                data-ajax-redirect="none"
