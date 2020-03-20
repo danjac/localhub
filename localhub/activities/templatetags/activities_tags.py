@@ -2,7 +2,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+from bs4 import BeautifulSoup
 from django import template
+from django.conf import settings
 from django.utils.safestring import mark_safe
 
 from localhub.users.utils import linkify_mentions
@@ -95,3 +97,19 @@ def _linkify_mentions(content):
 @register.filter(name="linkify_hashtags")
 def _linkify_hashtags(content):
     return mark_safe(linkify_hashtags(content))
+
+
+@register.filter
+def strip_external_images(content, user):
+    if user.is_authenticated and not user.show_external_images:
+        soup = BeautifulSoup(content, "html.parser")
+        for img in soup.find_all("img"):
+            src = img.attrs.get("src")
+            if (
+                src
+                and not src.startswith(settings.MEDIA_URL)
+                and not src.startswith(settings.STATIC_URL)
+            ):
+                img.decompose()
+        return mark_safe(str(soup))
+    return content

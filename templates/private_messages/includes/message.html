@@ -3,6 +3,7 @@
 
 {% load i18n %}
 {% load account %}
+{% load activities_tags %}
 
 <div class="card mb-2{% if is_sender %} bg-gray{% endif %} message"
      id="message-{{ message.id }}">
@@ -26,7 +27,7 @@
   <div class="card-body">
     {% collapsable is_detail %}
     <div class="markdown-content">
-      {{ message.message.markdown }}
+      {{ message.message.markdown|strip_external_images:user }}
     </div>
     {% endcollapsable %}
   </div>

@@ -2,9 +2,11 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "base.html" %}
+
 {% load i18n %}
 {% load account %}
 {% load rules %}
+{% load activities_tags %}
 {% load users_tags %}
 
 {% block subtitle %} | {% user_display user_obj %}{% endblock %}
@@ -57,7 +59,7 @@
 
 {% collapsable %}
 <div class="markdown-content">
-    {{ user_obj.bio.markdown }}
+    {{ user_obj.bio.markdown|strip_external_images:user }}
 </div>
 {% endcollapsable %}
 

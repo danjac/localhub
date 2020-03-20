@@ -127,6 +127,7 @@ class User(AbstractUser):
         blank=True,
     )
 
+    show_external_images = models.BooleanField(default=True)
     show_sensitive_content = models.BooleanField(default=False)
     show_embedded_content = models.BooleanField(default=False)
 

@@ -2,8 +2,10 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "base.html" %}
+
 {% load i18n %}
 {% load rules %}
+{% load activities_tags %}
 
 {% block content %}
 
@@ -28,7 +30,7 @@
 {% endif %}
 
 <div class="markdown-content">
-  {{ community.terms.markdown }}
+  {{ community.terms.markdown|strip_external_images:user }}
 </div>
 
 {% endblock content %}

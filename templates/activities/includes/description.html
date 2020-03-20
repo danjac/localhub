@@ -2,9 +2,10 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
+{% load activities_tags %}
+
 {% if object.description %}
 <div class="markdown-content">
-  {{ object.description.markdown }}
+  {{ object.description.markdown|strip_external_images:user }}
 </div>
 {% endif %}
-

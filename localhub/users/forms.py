@@ -34,6 +34,7 @@ class UserForm(forms.ModelForm):
             "bio",
             "send_email_notifications",
             "activity_stream_filters",
+            "show_external_images",
             "show_sensitive_content",
             "show_embedded_content",
         )
@@ -54,6 +55,9 @@ class UserForm(forms.ModelForm):
                     "Blocked users and tags will not be shown.<br>"
                     "Content you post yourself will not be filtered."
                 )
+            ),
+            "show_external_images": _(
+                "Show external images in Markdown and OpenGraph content."
             ),
             "show_sensitive_content": _(
                 "Sensitive content (content containing specific tags as defined by the community admins) "

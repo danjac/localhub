@@ -16,6 +16,7 @@ from ..templatetags.activities_tags import (
     get_pinned_activity,
     is_content_sensitive,
     is_oembed_url,
+    strip_external_images,
 )
 
 pytestmark = pytest.mark.django_db
@@ -110,3 +111,37 @@ class TestIsContentSensitive:
         community = CommunityFactory(content_warning_tags="#nsfw")
         post = PostFactory(community=community)
         assert not is_content_sensitive(post, UserFactory(show_sensitive_content=False))
+
+
+class TestStripExternalImages:
+    def test_if_external_image_and_anon_user(self, anonymous_user):
+        content = '<p><img src="https://imgur.com/funny.gif"/></p>'
+        assert strip_external_images(content, anonymous_user) == content
+
+    def test_if_external_image_and_user_show_external_images(self):
+        content = '<p><img src="https://imgur.com/funny.gif"/></p>'
+        user = UserFactory(show_external_images=True)
+        assert strip_external_images(content, user) == content
+
+    def test_if_external_image_and_not_user_show_external_images(self):
+        content = '<p><img src="https://imgur.com/funny.gif"/></p>'
+        user = UserFactory(show_external_images=False)
+        assert strip_external_images(content, user) == "<p></p>"
+
+    def test_if_internal_image_and_anon_user(self, anonymous_user, settings):
+        settings.STATIC_URL = "/static/"
+        content = '<p><img src="/static/funny.gif"/></p>'
+        user = UserFactory(show_external_images=False)
+        assert strip_external_images(content, anonymous_user) == content
+
+    def test_if_internal_image_and_user_show_external_images(self, settings):
+        settings.STATIC_URL = "/static/"
+        content = '<p><img src="/static/funny.gif"/></p>'
+        user = UserFactory(show_external_images=True)
+        assert strip_external_images(content, user) == content
+
+    def test_if_internal_image_and_not_user_show_external_images(self, settings):
+        settings.STATIC_URL = "/static/"
+        content = '<p><img src="/static/funny.gif"/></p>'
+        user = UserFactory(show_external_images=False)
+        assert strip_external_images(content, user) == content

@@ -2,7 +2,9 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "base.html" %}
+
 {% load i18n %}
+{% load activities_tags %}
 
 
 {% block subtitle %}
@@ -26,7 +28,7 @@
     <div class="card-body">
         {% collapsable is_detail %}
         <div class="markdown-content">
-            {{ parent.content.markdown }}
+            {{ parent.content.markdown|strip_external_images:user }}
         </div>
         {% endcollapsable %}
     </div>

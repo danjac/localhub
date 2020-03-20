@@ -13,21 +13,23 @@
 {% if object.opengraph_description and not is_oembed %}
 <div class="columns metadata{% if not is_detail %} metadata-small{% endif %}">
   {% with opengraph_image=object.get_opengraph_image_if_safe %}
-  {% if opengraph_image %}
+  {% if user.show_external_images and opengraph_image %}
   <div class="column col-3 col-md-12">
     <img src="{{ opengraph_image }}"
          alt="{{ object.title }}"
          class="img-responsive">
   </div>
-  {% endif %}
-  <div class="column col-{{ opengraph_image|yesno:"9,12" }} col-md-12">
-    <p>
-      {{ object.opengraph_description|html_unescape|urlize|truncatewords_html:300 }}
-    </p>
+  <div class="column col-9 col-md-12">
+    {% else %}
+    <div class="column col-12 col-md-12">
+      {% endif %}
+      <p>
+        {{ object.opengraph_description|html_unescape|urlize|truncatewords_html:300 }}
+      </p>
+    </div>
+    {% endwith %}
   </div>
+  {% endif %}
+  {% include "activities/includes/description.html" %}
   {% endwith %}
-</div>
-{% endif %}
-{% include "activities/includes/description.html" %}
-{% endwith %}
-{% endblock content %}
+  {% endblock content %}

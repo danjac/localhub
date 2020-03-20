@@ -38,6 +38,7 @@ def show_message(
 
     return {
         "request": context["request"],
+        "user": user,
         "is_detail": is_detail,
         "is_thread": is_thread,
         "is_recipient": is_recipient,

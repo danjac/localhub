@@ -2,7 +2,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
+from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
+
 
 from localhub.comments.factories import CommentFactory
 from localhub.communities.factories import CommunityFactory, MembershipFactory
@@ -28,6 +30,11 @@ def get_response():
 @pytest.fixture
 def user():
     return UserFactory()
+
+
+@pytest.fixture
+def anonymous_user():
+    return AnonymousUser()
 
 
 @pytest.fixture

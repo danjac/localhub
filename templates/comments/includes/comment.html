@@ -4,6 +4,7 @@
 {% load i18n %}
 {% load account %}
 {% load rules %}
+{% load activities_tags %}
 
 <article class="card"
          role="comment"
@@ -39,7 +40,7 @@
     <div class="markdown-content d-hide"
          data-target="toggle.togglable"
          data-toggle-target="blocked-comment">
-      {{ comment.content.markdown }}
+      {{ comment.content.markdown|strip_external_images:user }}
     </div>
     <div class="actions">
       <a href="#"
@@ -56,7 +57,7 @@
     {% if not comment.deleted or comment.owner == user %}
     {% collapsable is_detail %}
     <div class="markdown-content">
-      {{ comment.content.markdown }}
+      {{ comment.content.markdown|strip_external_images:user }}
     </div>
     {% endcollapsable %}
     {% endif %}

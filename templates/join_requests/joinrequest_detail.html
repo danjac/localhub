@@ -2,8 +2,10 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "join_requests/base.html" %}
+
 {% load i18n %}
 {% load account %}
+{% load activities_tags %}
 {% load users_tags %}
 
 {% block content %}
@@ -55,7 +57,7 @@
 <h4>{% trans "About this person" %}</h4>
 {% collapsable %}
 <div class="markdown-content">
-  {{ object.sender.bio.markdown }}
+  {{ object.sender.bio.markdown|strip_external_images:user }}
 </div>
 {% endcollapsable %}
 {% endif %}
