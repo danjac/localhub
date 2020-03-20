@@ -5,8 +5,6 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserChangeForm as BaseUserChangeForm
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
-from django.urls import reverse
-from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from localhub.forms.widgets import ClearableImageInput
@@ -34,8 +32,8 @@ class UserForm(forms.ModelForm):
             "bio",
             "send_email_notifications",
             "activity_stream_filters",
-            "show_external_images",
             "show_sensitive_content",
+            "show_external_images",
             "show_embedded_content",
         )
         widgets = {
@@ -48,32 +46,9 @@ class UserForm(forms.ModelForm):
             "send_email_notifications": _(
                 "Send me an email when I receive a new Message or Notification"
             ),
-        }
-        help_texts = {
-            "activity_stream_filters": mark_safe(
-                _(
-                    "Blocked users and tags will not be shown.<br>"
-                    "Content you post yourself will not be filtered."
-                )
-            ),
-            "show_external_images": _(
-                "Show external images in Markdown and OpenGraph content."
-            ),
-            "show_sensitive_content": _(
-                "Sensitive content (content containing specific tags as defined by the community admins) "
-                "will otherwise be obscured by default but not removed from your feeds. "
-                "If you wish to remove sensitive content completely from your feeds, you can "
-                "block individual tags (e.g. <b>#nsfw</b>) under the <a href='%(tags_url)s'>Tags</a> page."
-            ),
+            "show_external_images": _("Show images in Markdown and OpenGraph content"),
+            "show_sensitive_content": _("Show sensitive content"),
             "show_embedded_content": _(
-                "Show embedded content such as YouTube videos or Instagram or Twitter posts."
+                "Show embedded content such as Youtube videos and tweets"
             ),
         }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields["show_sensitive_content"].help_text = mark_safe(
-            self.fields["show_sensitive_content"].help_text
-            % {"tags_url": reverse("activities:tag_list"),}
-        )
