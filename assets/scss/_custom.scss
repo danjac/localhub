@@ -206,11 +206,17 @@ table {
 }
 
 .collapsable {
+  cursor: pointer;
   overflow: hidden;
   max-height: 300px;
   width: auto;
+  z-index: 20;
   -webkit-mask-image: -webkit-gradient(linear, left 90%, left bottom, from(rgba(0, 0, 0, 1)), to(rgba(0, 0, 0, 0.3)));
   mask-image: gradient(top bottom, from(rgba(0, 0, 0, 1)), to(rgba(0, 0, 0, 0.3)));
+
+  * {
+    pointer-events: none;
+  }
 }
 
 .metadata {

@@ -28,8 +28,11 @@ export default class extends Controller {
   }
 
   toggle(event) {
-    event.preventDefault();
-    this.removeCollapsable();
+    if (this.isCollapsable) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.removeCollapsable();
+    }
   }
 
   removeCollapsable() {
@@ -39,12 +42,15 @@ export default class extends Controller {
   }
 
   makeCollapsable(height) {
-    if (height > MAX_HEIGHT &&
-      !this.containerTarget.classList.contains('collapsable')) {
+    if (height > MAX_HEIGHT && !this.isCollapsable) {
       this.containerTarget.classList.add('collapsable');
       this.toggleTargets.forEach(
         target => target.classList.remove('d-hide')
       );
     }
+  }
+
+  get isCollapsable() {
+    return this.containerTarget.classList.contains("collapsable");
   }
 }
