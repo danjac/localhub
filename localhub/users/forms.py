@@ -61,10 +61,9 @@ class UserForm(forms.ModelForm):
             ),
             "show_sensitive_content": _(
                 "Sensitive content (content containing specific tags as defined by the community admins) "
-                "will otherwise be obscured by default but not removed from your feeds. <br>"
-                "If you wish to remove sensitive content completely "
-                "from your feeds, you can block individual tags (e.g. <b>#nsfw</b>) under the "
-                "<a href='%(tags_url)s'>Tags</a> page."
+                "will otherwise be obscured by default but not removed from your feeds. "
+                "If you wish to remove sensitive content completely from your feeds, you can "
+                "block individual tags (e.g. <b>#nsfw</b>) under the <a href='%(tags_url)s'>Tags</a> page."
             ),
             "show_embedded_content": _(
                 "Show embedded content such as YouTube videos or Instagram or Twitter posts."
