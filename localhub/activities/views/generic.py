@@ -61,13 +61,7 @@ class ActivityCreateView(
         return message % {"activity": self.object._meta.verbose_name}
 
     def get_breadcrumbs(self):
-        return get_breadcrumbs_for_model(self.model) + [
-            (
-                None,
-                _("Submit %(activity_name)s")
-                % {"activity_name": self.model._meta.verbose_name.capitalize()},
-            )
-        ]
+        return get_breadcrumbs_for_model(self.model) + [(None, _("Submit"))]
 
     def form_valid(self, form):
 
