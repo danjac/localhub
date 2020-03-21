@@ -22,7 +22,7 @@ def get_pending_join_request_count(user, community):
         return 0
 
     return JoinRequest.objects.filter(
-        status=JoinRequest.STATUS.pending, community=community
+        status=JoinRequest.Status.PENDING, community=community
     ).count()
 
 
@@ -36,10 +36,10 @@ def get_pending_external_join_request_count(user, community):
         return 0
     return (
         JoinRequest.objects.filter(
-            status=JoinRequest.STATUS.pending,
+            status=JoinRequest.Status.PENDING,
             community__membership__member=user,
             community__membership__active=True,
-            community__membership__role=Membership.ROLES.admin,
+            community__membership__role=Membership.Role.ADMIN,
         )
         .exclude(community=community)
         .distinct()

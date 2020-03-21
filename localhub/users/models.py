@@ -10,7 +10,6 @@ from django.db import models
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from model_utils import Choices
 from sorl.thumbnail import ImageField
 from taggit.models import Tag
 from timezone_field import TimeZoneField
@@ -81,7 +80,7 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
             role_display=models.Case(
                 *[
                     models.When(role=k, then=models.Value(str(v)))
-                    for k, v in Membership.ROLES
+                    for k, v in Membership.Role.choices
                 ],
                 default=models.Value(""),
                 output_field=models.CharField(),
@@ -105,11 +104,9 @@ class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
 
 
 class User(AbstractUser):
-
-    ACTIVITY_STREAM_FILTERS = Choices(
-        ("users", _("Limited to only content from people I'm following")),
-        ("tags", _("Limited to only tags I'm following")),
-    )
+    class ActivityStreamFilters(models.TextChoices):
+        USERS = "users", _("Limited to only content from people I'm following")
+        TAGS = "tags", _("Limited to only tags I'm following")
 
     name = models.CharField(_("Full name"), blank=True, max_length=255)
     bio = MarkdownField(blank=True)
@@ -122,7 +119,7 @@ class User(AbstractUser):
     default_timezone = TimeZoneField(default=settings.TIME_ZONE)
 
     activity_stream_filters = ChoiceArrayField(
-        models.CharField(max_length=12, choices=ACTIVITY_STREAM_FILTERS),
+        models.CharField(max_length=12, choices=ActivityStreamFilters.choices),
         default=list,
         blank=True,
     )

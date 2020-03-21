@@ -10,7 +10,6 @@ from django.core.validators import RegexValidator, URLValidator
 from django.db import models
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
-from model_utils import Choices
 from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 from sorl.thumbnail import ImageField
@@ -191,16 +190,16 @@ class Community(TimeStampedModel):
 
     def get_members(self):
         return self.get_members_by_role(
-            Membership.ROLES.member, Membership.ROLES.moderator, Membership.ROLES.admin,
+            Membership.Role.MEMBER, Membership.Role.MODERATOR, Membership.Role.ADMIN,
         )
 
     def get_moderators(self):
         return self.get_members_by_role(
-            Membership.ROLES.moderator, Membership.ROLES.admin
+            Membership.Role.MODERATOR, Membership.Role.ADMIN
         )
 
     def get_admins(self):
-        return self.get_members_by_role(Membership.ROLES.admin)
+        return self.get_members_by_role(Membership.Role.ADMIN)
 
     def user_has_role(self, user, *roles):
         if user.is_anonymous:
@@ -210,18 +209,18 @@ class Community(TimeStampedModel):
     def is_member(self, user):
         return self.user_has_role(
             user,
-            Membership.ROLES.member,
-            Membership.ROLES.moderator,
-            Membership.ROLES.admin,
+            Membership.Role.MEMBER,
+            Membership.Role.MODERATOR,
+            Membership.Role.ADMIN,
         )
 
     def is_moderator(self, user):
         return self.user_has_role(
-            user, Membership.ROLES.moderator, Membership.ROLES.admin
+            user, Membership.Role.MODERATOR, Membership.Role.ADMIN
         )
 
     def is_admin(self, user):
-        return self.user_has_role(user, Membership.ROLES.admin)
+        return self.user_has_role(user, Membership.Role.ADMIN)
 
     def is_email_blacklisted(self, email):
         """
@@ -244,15 +243,16 @@ class MembershipQuerySet(SearchQuerySetMixin, models.QuerySet):
 
 
 class Membership(TimeStampedModel):
-    ROLES = Choices(
-        ("member", _("Member")), ("moderator", _("Moderator")), ("admin", _("Admin")),
-    )
+    class Role(models.TextChoices):
+        MEMBER = "member", _("Member")
+        MODERATOR = "moderator", _("Moderator")
+        ADMIN = "admin", _("Admin")
 
     member = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
     role = models.CharField(
-        choices=ROLES, max_length=9, default=ROLES.member, db_index=True
+        choices=Role.choices, max_length=9, default=Role.MEMBER, db_index=True
     )
     active = models.BooleanField(default=True)
 
@@ -270,7 +270,10 @@ class Membership(TimeStampedModel):
         return self.get_role_display()
 
     def is_admin(self):
-        return self.role == self.ROLES.admin
+        return self.role == self.Role.ADMIN
 
     def is_moderator(self):
-        return self.role == self.ROLES.moderator
+        return self.role == self.Role.MODERATOR
+
+    def is_member(self):
+        return self.role == self.Role.MEMBER

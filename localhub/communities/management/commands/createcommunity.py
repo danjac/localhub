@@ -39,7 +39,7 @@ class Command(BaseCommand):
         )
         if admin:
             Membership.objects.create(
-                community=community, member=admin, role=Membership.ROLES.admin
+                community=community, member=admin, role=Membership.Role.ADMIN
             )
             self.stdout.write(
                 self.style.SUCCESS(

@@ -51,7 +51,7 @@ class TestPostCreateView:
         response = client.post(
             reverse("posts:create"), {"title": "test", "description": "test"}
         )
-        MembershipFactory(community=member.community, role=Membership.ROLES.moderator)
+        MembershipFactory(community=member.community, role=Membership.Role.MODERATOR)
 
         post = Post.objects.get()
         assert response.url == post.get_absolute_url()
@@ -61,7 +61,7 @@ class TestPostCreateView:
 
     def test_post_to_draft(self, client, member, send_webpush_mock):
 
-        MembershipFactory(community=member.community, role=Membership.ROLES.moderator)
+        MembershipFactory(community=member.community, role=Membership.Role.MODERATOR)
 
         response = client.post(
             reverse("posts:create"),
@@ -321,7 +321,7 @@ class TestFlagView:
         )
         moderator = MembershipFactory(
             community=post.community,
-            role=Membership.ROLES.moderator,
+            role=Membership.Role.MODERATOR,
             member=UserFactory(),
         )
         response = client.post(

@@ -42,4 +42,4 @@ class TestCreateCommunity:
         assert community.domain == "mydomain.localhub.social"
         assert community.active
         membership = Membership.objects.get(community=community, member=user)
-        assert membership.role == Membership.ROLES.admin
+        assert membership.role == Membership.Role.ADMIN

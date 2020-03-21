@@ -41,13 +41,13 @@ class JoinRequestListView(JoinRequestManageMixin, SearchMixin, ListView):
     @cached_property
     def status(self):
         status = self.request.GET.get("status")
-        if status in JoinRequest.STATUS and self.total_count:
+        if status in JoinRequest.Status.values and self.total_count:
             return status
         return None
 
     @cached_property
     def status_display(self):
-        return JoinRequest.STATUS[self.status] if self.status else None
+        return dict(JoinRequest.Status.choices)[self.status] if self.status else None
 
     @cached_property
     def total_count(self):
@@ -63,7 +63,7 @@ class JoinRequestListView(JoinRequestManageMixin, SearchMixin, ListView):
         else:
             qs = qs.annotate(
                 priority=Case(
-                    When(status=JoinRequest.STATUS.pending, then=Value(1)),
+                    When(status=JoinRequest.Status.PENDING, then=Value(1)),
                     default_value=0,
                     output_field=IntegerField(),
                 )
@@ -77,7 +77,7 @@ class JoinRequestListView(JoinRequestManageMixin, SearchMixin, ListView):
                 "total_count": self.total_count,
                 "status": self.status,
                 "status_display": self.status_display,
-                "status_choices": list(JoinRequest.STATUS),
+                "status_choices": list(JoinRequest.Status.choices),
             }
         )
         return data
@@ -132,13 +132,13 @@ class JoinRequestAcceptView(JoinRequestActionView):
             super()
             .get_queryset()
             .filter(
-                status__in=(JoinRequest.STATUS.pending, JoinRequest.STATUS.rejected,)
+                status__in=(JoinRequest.Status.PENDING, JoinRequest.Status.REJECTED)
             )
         )
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        self.object.status = JoinRequest.STATUS.accepted
+        self.object.status = JoinRequest.Status.ACCEPTED
         self.object.save()
 
         _membership, created = Membership.objects.get_or_create(
@@ -164,12 +164,12 @@ join_request_accept_view = JoinRequestAcceptView.as_view()
 
 class JoinRequestRejectView(JoinRequestActionView):
     def get_queryset(self):
-        return super().get_queryset().filter(status=JoinRequest.STATUS.pending)
+        return super().get_queryset().filter(status=JoinRequest.Status.PENDING)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        self.object.status = JoinRequest.STATUS.rejected
+        self.object.status = JoinRequest.Status.REJECTED
         self.object.save()
 
         send_rejection_email(self.object)

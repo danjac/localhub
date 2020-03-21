@@ -199,10 +199,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
         return dict(
             self.get_member_communities()
             .filter(
-                membership__role__in=(
-                    Membership.ROLES.admin,
-                    Membership.ROLES.moderator,
-                )
+                membership__role__in=(Membership.Role.ADMIN, Membership.Role.MODERATOR,)
             )
             .annotate(num_flags=Count("flag", distinct=True))
             .values_list("id", "num_flags")
@@ -230,11 +227,11 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
     def get_join_requests_count(self):
         return dict(
             self.get_member_communities()
-            .filter(membership__role=Membership.ROLES.admin)
+            .filter(membership__role=Membership.Role.ADMIN)
             .annotate(
                 num_join_requests=Count(
                     "joinrequest",
-                    filter=Q(joinrequest__status=JoinRequest.STATUS.pending),
+                    filter=Q(joinrequest__status=JoinRequest.Status.PENDING),
                     distinct=True,
                 )
             )
@@ -252,7 +249,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
                     "messages": self.get_messages_count(),
                     "notifications": self.get_notifications_count(),
                 },
-                "roles": Membership.ROLES,
+                "roles": Membership.Role.choices,
             }
         )
         return data

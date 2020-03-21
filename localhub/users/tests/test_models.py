@@ -169,12 +169,10 @@ class TestUserModel:
         assert user.get_absolute_url() == f"/people/{user.username}/"
 
     def test_has_role(self, moderator):
-        assert moderator.member.has_role(
-            moderator.community, Membership.ROLES.moderator
-        )
+        assert moderator.member.has_role(moderator.community, Membership.Role.MODERATOR)
 
     def test_does_not_have_role(self, member):
-        assert not member.member.has_role(member.community, Membership.ROLES.moderator)
+        assert not member.member.has_role(member.community, Membership.Role.MODERATOR)
 
     def test_notify_on_join(self, member, send_webpush_mock):
         other_member = MembershipFactory(

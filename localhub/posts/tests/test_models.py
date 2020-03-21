@@ -112,13 +112,13 @@ class TestPostModel:
     def test_notify_on_create(self, community, send_webpush_mock):
         # owner should not receive any notifications from their own posts
         owner = MembershipFactory(
-            community=community, role=Membership.ROLES.moderator
+            community=community, role=Membership.Role.MODERATOR
         ).member
 
         mentioned = MembershipFactory(
             member=UserFactory(username="danjac"),
             community=community,
-            role=Membership.ROLES.member,
+            role=Membership.Role.MEMBER,
         ).member
 
         # ensure we just have one notification for multiple tags
@@ -199,7 +199,7 @@ class TestPostModel:
         mentioned = MembershipFactory(
             member=UserFactory(username="danjac"),
             community=community,
-            role=Membership.ROLES.member,
+            role=Membership.Role.MEMBER,
         ).member
 
         # ensure we just have one notification for multiple tags

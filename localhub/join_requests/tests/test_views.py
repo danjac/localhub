@@ -49,7 +49,7 @@ class TestJoinRequestCreateView:
 
         admin = UserFactory()
         Membership.objects.create(
-            community=community, member=admin, role=Membership.ROLES.admin
+            community=community, member=admin, role=Membership.Role.ADMIN
         )
         response = client.post(reverse("join_requests:create"))
         assert response.url == reverse("community_welcome")

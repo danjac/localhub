@@ -6,7 +6,6 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from model_utils import Choices
 from model_utils.models import TimeStampedModel
 
 from localhub.communities.models import Community
@@ -42,14 +41,13 @@ class FlagAnnotationsQuerySetMixin:
 
 
 class Flag(TimeStampedModel):
-    REASONS = Choices(
-        ("spam", _("Spam")),
-        ("abuse", _("Abuse")),
-        ("rules", _("Breach of community rules")),
-        ("illegal_activity", _("Illegal activity")),
-        ("pornography", _("Pornography")),
-        ("copyright", _("Breach of copyright")),
-    )
+    class Reason(models.TextChoices):
+        SPAM = "spam", _("Spam")
+        ABUSE = "abuse", _("Abuse")
+        RULES = "rules", _("Breach of community rules")
+        ILLEGAL = "illegal_activity", _("Illegal activity")
+        PR0N = "pornography", _("Pornography")
+        WAREZ = "copyright", _("Breach of copyright")
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+"
@@ -69,7 +67,9 @@ class Flag(TimeStampedModel):
         blank=True,
     )
 
-    reason = models.CharField(max_length=30, choices=REASONS, default=REASONS.spam)
+    reason = models.CharField(
+        max_length=30, choices=Reason.choices, default=Reason.SPAM
+    )
 
     class Meta:
         constraints = [

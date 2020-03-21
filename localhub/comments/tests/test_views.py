@@ -196,7 +196,7 @@ class TestFlagView:
         )
         moderator = MembershipFactory(
             community=post.community,
-            role=Membership.ROLES.moderator,
+            role=Membership.Role.MODERATOR,
             member=UserFactory(),
         )
         response = client.post(

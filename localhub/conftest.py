@@ -54,21 +54,21 @@ def login_user(client):
 @pytest.fixture
 def member(client, login_user, community):
     return MembershipFactory(
-        member=login_user, community=community, role=Membership.ROLES.member
+        member=login_user, community=community, role=Membership.Role.MEMBER
     )
 
 
 @pytest.fixture
 def moderator(client, login_user, community):
     return MembershipFactory(
-        member=login_user, community=community, role=Membership.ROLES.moderator
+        member=login_user, community=community, role=Membership.Role.MODERATOR
     )
 
 
 @pytest.fixture
 def admin(client, login_user, community):
     return MembershipFactory(
-        member=login_user, community=community, role=Membership.ROLES.admin
+        member=login_user, community=community, role=Membership.Role.ADMIN
     )
 
 

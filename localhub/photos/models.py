@@ -3,7 +3,6 @@
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from model_utils import Choices
 from sorl.thumbnail import ImageField
 
 from localhub.activities.models import Activity
@@ -11,15 +10,19 @@ from localhub.db.search import SearchIndexer
 
 
 class Photo(Activity):
-
-    CC_LICENSES = Choices(
-        ("by", _("Attribution")),
-        ("by-sa", _("Attribution ShareAlike")),
-        ("by-nd", _("Attribution NoDerivs")),
-        ("by-nc", _("Attribution NonCommercial")),
-        ("by-nc-sa", _("Attribution NonCommercial ShareAlike")),
-        ("by-nc-nd", _("Attribution NonCommercial NoDerivs")),
-    )
+    class License(models.TextChoices):
+        ATTRIBUTION = "by", _("Attribution")
+        ATTRIBUTION_SHAREALIKE = "by-sa", _("Attribution ShareAlike")
+        ATTRIBUTION_NODERIVS = "by-nd", _("Attribution NoDerivs")
+        ATTRIBUTION_NONCOMMERCIAL = "by-nc", _("Attribution NonCommercial")
+        ATTRIBUTION_NONCOMMERCIAL_SHAREALIKE = (
+            "by-nc-sa",
+            _("Attribution NonCommercial ShareAlike"),
+        )
+        ATTRIBUTION_NONCOMMERCIAL_NODERIVS = (
+            "by-nc-nd",
+            _("Attribution NonCommercial NoDerivs"),
+        )
 
     RESHARED_FIELDS = Activity.RESHARED_FIELDS + (
         "image",
@@ -46,7 +49,7 @@ class Photo(Activity):
     original_url = models.URLField(max_length=500, null=True, blank=True)
     cc_license = models.CharField(
         max_length=10,
-        choices=CC_LICENSES,
+        choices=License.choices,
         null=True,
         blank=True,
         verbose_name="Creative Commons license",

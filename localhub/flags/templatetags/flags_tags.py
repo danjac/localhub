@@ -30,8 +30,8 @@ def get_external_flag_count(user, community):
             community__membership__member=user,
             community__membership__active=True,
             community__membership__role__in=(
-                Membership.ROLES.moderator,
-                Membership.ROLES.admin,
+                Membership.Role.MODERATOR,
+                Membership.Role.ADMIN,
             ),
         )
         .exclude(community=community)

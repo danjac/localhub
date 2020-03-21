@@ -56,13 +56,13 @@ class InviteListView(InviteAdminMixin, InviteQuerySetMixin, SearchMixin, ListVie
     @cached_property
     def status(self):
         status = self.request.GET.get("status")
-        if status in Invite.STATUS and self.total_count:
+        if status in Invite.Status.values and self.total_count:
             return status
         return None
 
     @cached_property
     def status_display(self):
-        return Invite.STATUS[self.status] if self.status else None
+        return dict(Invite.Status.choices)[self.status] if self.status else None
 
     @cached_property
     def total_count(self):
@@ -75,7 +75,7 @@ class InviteListView(InviteAdminMixin, InviteQuerySetMixin, SearchMixin, ListVie
                 "total_count": self.total_count,
                 "status": self.status,
                 "status_display": self.status_display,
-                "status_choices": list(Invite.STATUS),
+                "status_choices": list(Invite.Status.choices),
             }
         )
         return data
@@ -214,10 +214,10 @@ class InviteAcceptView(InviteQuerySetMixin, DetailView):
         self.object.save()
 
     def accept_invite(self):
-        self.save_new_status(Invite.STATUS.accepted)
+        self.save_new_status(Invite.Status.ACCEPTED)
 
     def reject_invite(self):
-        self.save_new_status(Invite.STATUS.rejected)
+        self.save_new_status(Invite.Status.REJECTED)
 
     def validate_invite(self):
         try:

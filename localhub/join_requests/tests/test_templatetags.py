@@ -32,16 +32,14 @@ class TestGetPendingJoinRequestCount:
 
 class TestGetPendingLocalNetworkJoinRequestCount:
     def test_get_count_if_admin(self, member):
-        membership = MembershipFactory(
-            role=Membership.ROLES.admin, member=member.member
-        )
+        membership = MembershipFactory(role=Membership.Role.ADMIN, member=member.member)
         JoinRequestFactory(community=membership.community)
         count = get_pending_external_join_request_count(member.member, member.community)
         assert count == 1
 
     def test_get_count_if_not_admin(self, member):
         membership = MembershipFactory(
-            role=Membership.ROLES.member, member=member.member
+            role=Membership.Role.MEMBER, member=member.member
         )
         JoinRequestFactory(community=membership.community)
         count = get_pending_external_join_request_count(member.member, member.community)

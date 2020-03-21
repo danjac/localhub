@@ -6,8 +6,7 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from model_utils import Choices
-from model_utils.fields import MonitorField, StatusField
+from model_utils.fields import MonitorField
 from model_utils.models import TimeStampedModel
 
 from localhub.communities.models import Community
@@ -19,17 +18,18 @@ class JoinRequestQuerySet(SearchQuerySetMixin, models.QuerySet):
 
 
 class JoinRequest(TimeStampedModel):
-    STATUS = Choices(
-        ("pending", _("Pending")),
-        ("accepted", _("Accepted")),
-        ("rejected", _("Rejected")),
-    )
+    class Status(models.TextChoices):
+        PENDING = "pending", _("Pending")
+        ACCEPTED = "accepted", _("Accepted")
+        REJECTED = "rejected", _("Rejected")
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
-    status = StatusField(db_index=True)
+    status = models.CharField(
+        max_length=100, choices=Status.choices, default=Status.PENDING, db_index=True
+    )
     status_changed = MonitorField(monitor="status")
 
     sent = models.DateTimeField(null=True, blank=True)
@@ -56,10 +56,10 @@ class JoinRequest(TimeStampedModel):
         return reverse("join_requests:detail", args=[self.id])
 
     def is_pending(self):
-        return self.status == self.STATUS.pending
+        return self.status == self.Status.PENDING
 
     def is_accepted(self):
-        return self.status == self.STATUS.accepted
+        return self.status == self.Status.ACCEPTED
 
     def is_rejected(self):
-        return self.status == self.STATUS.rejected
+        return self.status == self.Status.REJECTED

@@ -30,7 +30,7 @@ class TestGetLocalNetworkFlagsCount:
         post = PostFactory(community=moderator.community)
         FlagFactory(content_object=post, community=post.community)
         other = MembershipFactory(
-            member=moderator.member, role=Membership.ROLES.moderator
+            member=moderator.member, role=Membership.Role.MODERATOR
         )
         post = PostFactory(community=other.community)
         FlagFactory(content_object=post, community=post.community)

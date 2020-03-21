@@ -26,7 +26,7 @@ class TestCommunityManager:
         member = MembershipFactory(community=community).member
         first = Community.objects.with_is_member(member).first()
         assert first.is_member
-        assert first.member_role == Membership.ROLES.member
+        assert first.member_role == Membership.Role.MEMBER
 
     def test_with_is_member_if_not_member(self):
         CommunityFactory()
