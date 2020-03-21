@@ -16,6 +16,18 @@ from localhub.db.search import SearchQuerySetMixin
 class JoinRequestQuerySet(SearchQuerySetMixin, models.QuerySet):
     search_document_field = "sender__search_document"
 
+    def for_community(self, community):
+        return self.filter(community=community)
+
+    def pending(self):
+        return self.filter(status=self.model.Status.PENDING)
+
+    def accepted(self):
+        return self.filter(status=self.model.Status.ACCEPTED)
+
+    def rejected(self):
+        return self.filter(status=self.model.Status.REJECTED)
+
 
 class JoinRequest(TimeStampedModel):
     class Status(models.TextChoices):
@@ -63,3 +75,11 @@ class JoinRequest(TimeStampedModel):
 
     def is_rejected(self):
         return self.status == self.Status.REJECTED
+
+    def accept(self):
+        self.status = JoinRequest.Status.ACCEPTED
+        self.save()
+
+    def reject(self):
+        self.status = JoinRequest.Status.REJECTED
+        self.save()

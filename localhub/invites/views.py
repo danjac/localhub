@@ -25,7 +25,7 @@ from .models import Invite
 
 class InviteQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
-        return Invite.objects.filter(community=self.request.community)
+        return Invite.objects.for_community(self.request.community)
 
 
 class BaseSingleInviteView(InviteQuerySetMixin, GenericModelView):

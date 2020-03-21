@@ -24,7 +24,7 @@ from .models import JoinRequest
 
 class JoinRequestQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
-        return JoinRequest.objects.filter(community=self.request.community)
+        return JoinRequest.objects.for_community(self.request.community)
 
 
 class JoinRequestManageMixin(PermissionRequiredMixin, JoinRequestQuerySetMixin):
@@ -138,8 +138,7 @@ class JoinRequestAcceptView(JoinRequestActionView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        self.object.status = JoinRequest.Status.ACCEPTED
-        self.object.save()
+        self.object.accept()
 
         _membership, created = Membership.objects.get_or_create(
             member=self.object.sender, community=self.object.community
@@ -164,13 +163,11 @@ join_request_accept_view = JoinRequestAcceptView.as_view()
 
 class JoinRequestRejectView(JoinRequestActionView):
     def get_queryset(self):
-        return super().get_queryset().filter(status=JoinRequest.Status.PENDING)
+        return super().get_queryset().pending()
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-
-        self.object.status = JoinRequest.Status.REJECTED
-        self.object.save()
+        self.object.reject()
 
         send_rejection_email(self.object)
 

@@ -13,6 +13,9 @@ from localhub.communities.models import Community
 
 
 class InviteQuerySet(models.QuerySet):
+    def for_community(self, community):
+        return self.filter(community=community)
+
     def for_user(self, user):
         return self.filter(email__in=user.get_email_addresses())
 

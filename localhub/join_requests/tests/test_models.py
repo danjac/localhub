@@ -16,3 +16,29 @@ class TestJoinRequestManager:
         user = UserFactory(name="Tester")
         req = JoinRequestFactory(sender=user)
         assert JoinRequest.objects.search("tester").first() == req
+
+    def test_pending(self):
+        JoinRequestFactory(status=JoinRequest.Status.PENDING)
+        assert JoinRequest.objects.pending().exists()
+
+    def test_accepted(self):
+        JoinRequestFactory(status=JoinRequest.Status.ACCEPTED)
+        assert JoinRequest.objects.accepted().exists()
+
+    def test_rejected(self):
+        JoinRequestFactory(status=JoinRequest.Status.REJECTED)
+        assert JoinRequest.objects.rejected().exists()
+
+    def test_for_community(self, join_request):
+        assert JoinRequest.objects.for_community(join_request.community).exists()
+
+
+class TestJoinRequest:
+    def test_is_pending(self):
+        assert JoinRequest(status=JoinRequest.Status.PENDING).is_pending()
+
+    def test_is_accepted(self):
+        assert JoinRequest(status=JoinRequest.Status.ACCEPTED).is_accepted()
+
+    def test_is_rejected(self):
+        assert JoinRequest(status=JoinRequest.Status.REJECTED).is_rejected()

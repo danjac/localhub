@@ -9,6 +9,8 @@ from localhub.comments.factories import CommentFactory
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Membership
 from localhub.events.factories import EventFactory
+from localhub.invites.factories import InviteFactory
+from localhub.join_requests.factories import JoinRequestFactory
 from localhub.likes.factories import LikeFactory
 from localhub.notifications.factories import NotificationFactory
 from localhub.photos.factories import PhotoFactory
@@ -107,6 +109,16 @@ def comment(post):
         community=post.community,
         owner=MembershipFactory(community=post.community).member,
     )
+
+
+@pytest.fixture
+def invite(community):
+    return InviteFactory(community=community)
+
+
+@pytest.fixture
+def join_request(community):
+    return JoinRequestFactory(community=community)
 
 
 @pytest.fixture
