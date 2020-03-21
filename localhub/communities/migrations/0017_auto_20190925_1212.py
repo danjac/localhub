@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('communities', '0016_auto_20190908_1042'),
+        ("communities", "0016_auto_20190908_1042"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='community',
-            name='google_tracking_id',
+            model_name="community",
+            name="google_tracking_id",
             field=models.CharField(blank=True, max_length=30, null=True),
         ),
         migrations.AddField(
-            model_name='historicalcommunity',
-            name='google_tracking_id',
+            model_name="historicalcommunity",
+            name="google_tracking_id",
             field=models.CharField(blank=True, max_length=30, null=True),
         ),
     ]

@@ -9,23 +9,40 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('notifications', '0006_auto_20190812_0720'),
+        ("notifications", "0006_auto_20190812_0720"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PushSubscription',
+            name="PushSubscription",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('endpoint', models.TextField()),
-                ('browser', models.CharField(max_length=200)),
-                ('auth', models.CharField(max_length=200)),
-                ('p256dh', models.CharField(max_length=200)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("endpoint", models.TextField()),
+                ("browser", models.CharField(max_length=200)),
+                ("auth", models.CharField(max_length=200)),
+                ("p256dh", models.CharField(max_length=200)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.AddConstraint(
-            model_name='pushsubscription',
-            constraint=models.UniqueConstraint(fields=('user', 'browser', 'auth', 'p256dh'), name='unique_push_notification'),
+            model_name="pushsubscription",
+            constraint=models.UniqueConstraint(
+                fields=("user", "browser", "auth", "p256dh"),
+                name="unique_push_notification",
+            ),
         ),
     ]

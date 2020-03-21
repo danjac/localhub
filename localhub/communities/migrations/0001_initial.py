@@ -61,10 +61,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("name", models.CharField(max_length=255)),
-                (
-                    "description",
-                    localhub.markdown.fields.MarkdownField(blank=True),
-                ),
+                ("description", localhub.markdown.fields.MarkdownField(blank=True),),
                 (
                     "public",
                     models.BooleanField(
@@ -75,8 +72,7 @@ class Migration(migrations.Migration):
                 (
                     "active",
                     models.BooleanField(
-                        default=True,
-                        help_text="This community is currently live.",
+                        default=True, help_text="This community is currently live.",
                     ),
                 ),
             ],

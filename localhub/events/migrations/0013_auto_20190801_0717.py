@@ -6,18 +6,14 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0012_auto_20190801_0645'),
+        ("events", "0012_auto_20190801_0645"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='event',
-            old_name='reshared',
-            new_name='is_reshare',
+            model_name="event", old_name="reshared", new_name="is_reshare",
         ),
         migrations.RenameField(
-            model_name='historicalevent',
-            old_name='reshared',
-            new_name='is_reshare',
+            model_name="historicalevent", old_name="reshared", new_name="is_reshare",
         ),
     ]

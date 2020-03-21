@@ -7,28 +7,41 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('photos', '0010_auto_20190729_2118'),
+        ("photos", "0010_auto_20190729_2118"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='historicalphoto',
-            name='parent',
-            field=models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='photos.Photo'),
+            model_name="historicalphoto",
+            name="parent",
+            field=models.ForeignKey(
+                blank=True,
+                db_constraint=False,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="+",
+                to="photos.Photo",
+            ),
         ),
         migrations.AddField(
-            model_name='historicalphoto',
-            name='reshared',
+            model_name="historicalphoto",
+            name="reshared",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='photo',
-            name='parent',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='reshares', to='photos.Photo'),
+            model_name="photo",
+            name="parent",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="reshares",
+                to="photos.Photo",
+            ),
         ),
         migrations.AddField(
-            model_name='photo',
-            name='reshared',
+            model_name="photo",
+            name="reshared",
             field=models.BooleanField(default=False),
         ),
     ]

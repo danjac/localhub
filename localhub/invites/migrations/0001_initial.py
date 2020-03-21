@@ -13,21 +13,67 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('communities', '0001_initial'),
+        ("communities", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Invite',
+            name="Invite",
             fields=[
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('email', models.EmailField(max_length=254)),
-                ('status', model_utils.fields.StatusField(choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected', 'Rejected')], db_index=True, default='pending', max_length=100, no_check_for_status=True)),
-                ('status_changed', model_utils.fields.MonitorField(default=django.utils.timezone.now, monitor='status')),
-                ('sent', models.DateTimeField(blank=True, null=True)),
-                ('community', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='communities.Community')),
+                (
+                    "created",
+                    model_utils.fields.AutoCreatedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="created",
+                    ),
+                ),
+                (
+                    "modified",
+                    model_utils.fields.AutoLastModifiedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="modified",
+                    ),
+                ),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("email", models.EmailField(max_length=254)),
+                (
+                    "status",
+                    model_utils.fields.StatusField(
+                        choices=[
+                            ("pending", "Pending"),
+                            ("accepted", "Accepted"),
+                            ("rejected", "Rejected"),
+                        ],
+                        db_index=True,
+                        default="pending",
+                        max_length=100,
+                        no_check_for_status=True,
+                    ),
+                ),
+                (
+                    "status_changed",
+                    model_utils.fields.MonitorField(
+                        default=django.utils.timezone.now, monitor="status"
+                    ),
+                ),
+                ("sent", models.DateTimeField(blank=True, null=True)),
+                (
+                    "community",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="communities.Community",
+                    ),
+                ),
             ],
         ),
     ]

@@ -6,20 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('comments', '0007_auto_20190804_0837'),
+        ("comments", "0007_auto_20190804_0837"),
     ]
 
     operations = [
         migrations.RemoveIndex(
-            model_name='comment',
-            name='comments_co_content_30feaf_idx',
+            model_name="comment", name="comments_co_content_30feaf_idx",
         ),
         migrations.AddIndex(
-            model_name='comment',
-            index=models.Index(fields=['content_type', 'object_id'], name='comments_co_content_cff8bd_idx'),
+            model_name="comment",
+            index=models.Index(
+                fields=["content_type", "object_id"],
+                name="comments_co_content_cff8bd_idx",
+            ),
         ),
         migrations.AddIndex(
-            model_name='comment',
-            index=models.Index(fields=['created', '-created'], name='comments_co_created_830cda_idx'),
+            model_name="comment",
+            index=models.Index(
+                fields=["created", "-created"], name="comments_co_created_830cda_idx"
+            ),
         ),
     ]

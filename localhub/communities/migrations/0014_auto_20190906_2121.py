@@ -6,28 +6,38 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('communities', '0013_auto_20190906_0526'),
+        ("communities", "0013_auto_20190906_0526"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='community',
-            name='allow_join_requests',
-            field=models.BooleanField(default=True, help_text='Users can send requests to join this community. If disabled they will only be able to join if an admin sends them an invite.'),
+            model_name="community",
+            name="allow_join_requests",
+            field=models.BooleanField(
+                default=True,
+                help_text="Users can send requests to join this community. If disabled they will only be able to join if an admin sends them an invite.",
+            ),
         ),
         migrations.AddField(
-            model_name='historicalcommunity',
-            name='allow_join_requests',
-            field=models.BooleanField(default=True, help_text='Users can send requests to join this community. If disabled they will only be able to join if an admin sends them an invite.'),
+            model_name="historicalcommunity",
+            name="allow_join_requests",
+            field=models.BooleanField(
+                default=True,
+                help_text="Users can send requests to join this community. If disabled they will only be able to join if an admin sends them an invite.",
+            ),
         ),
         migrations.AlterField(
-            model_name='community',
-            name='tagline',
-            field=models.TextField(blank=True, help_text='Summary shown in your Local Network.'),
+            model_name="community",
+            name="tagline",
+            field=models.TextField(
+                blank=True, help_text="Summary shown in your Local Network."
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalcommunity',
-            name='tagline',
-            field=models.TextField(blank=True, help_text='Summary shown in your Local Network.'),
+            model_name="historicalcommunity",
+            name="tagline",
+            field=models.TextField(
+                blank=True, help_text="Summary shown in your Local Network."
+            ),
         ),
     ]

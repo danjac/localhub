@@ -7,18 +7,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('private_messages', '0011_remove_message_is_hidden'),
+        ("private_messages", "0011_remove_message_is_hidden"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='message',
-            name='parent',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='replies', to='private_messages.Message'),
+            model_name="message",
+            name="parent",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="replies",
+                to="private_messages.Message",
+            ),
         ),
         migrations.AlterField(
-            model_name='message',
-            name='thread',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='children', to='private_messages.Message'),
+            model_name="message",
+            name="thread",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="children",
+                to="private_messages.Message",
+            ),
         ),
     ]

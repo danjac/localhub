@@ -6,22 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0015_auto_20191107_1651'),
+        ("events", "0015_auto_20191107_1651"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='event',
-            name='published',
+            model_name="event",
+            name="published",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='historicalevent',
-            name='published',
+            model_name="historicalevent",
+            name="published",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AddIndex(
-            model_name='event',
-            index=models.Index(fields=['published', '-published'], name='events_even_publish_f23ed6_idx'),
+            model_name="event",
+            index=models.Index(
+                fields=["published", "-published"],
+                name="events_even_publish_f23ed6_idx",
+            ),
         ),
     ]

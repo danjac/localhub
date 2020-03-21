@@ -6,18 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('communities', '0020_auto_20200305_1500'),
+        ("communities", "0020_auto_20200305_1500"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='community',
-            name='public',
-            field=models.BooleanField(default=True, help_text='Community is visible to non-members in Community Hub.'),
+            model_name="community",
+            name="public",
+            field=models.BooleanField(
+                default=True,
+                help_text="Community is visible to non-members in Community Hub.",
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalcommunity',
-            name='public',
-            field=models.BooleanField(default=True, help_text='Community is visible to non-members in Community Hub.'),
+            model_name="historicalcommunity",
+            name="public",
+            field=models.BooleanField(
+                default=True,
+                help_text="Community is visible to non-members in Community Hub.",
+            ),
         ),
     ]

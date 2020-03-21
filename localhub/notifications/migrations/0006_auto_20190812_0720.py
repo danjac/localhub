@@ -6,16 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifications', '0005_change_notification_verbs'),
+        ("notifications", "0005_change_notification_verbs"),
     ]
 
     operations = [
         migrations.RemoveIndex(
-            model_name='notification',
-            name='notificatio_content_4d6bd8_idx',
+            model_name="notification", name="notificatio_content_4d6bd8_idx",
         ),
         migrations.AddIndex(
-            model_name='notification',
-            index=models.Index(fields=['content_type', 'object_id', 'created', '-created', 'is_read'], name='notificatio_content_b064c5_idx'),
+            model_name="notification",
+            index=models.Index(
+                fields=["content_type", "object_id", "created", "-created", "is_read"],
+                name="notificatio_content_b064c5_idx",
+            ),
         ),
     ]

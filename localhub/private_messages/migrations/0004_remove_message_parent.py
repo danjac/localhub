@@ -6,12 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('private_messages', '0003_auto_20190825_2222'),
+        ("private_messages", "0003_auto_20190825_2222"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='message',
-            name='parent',
-        ),
+        migrations.RemoveField(model_name="message", name="parent",),
     ]

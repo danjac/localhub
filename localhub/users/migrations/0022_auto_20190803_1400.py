@@ -8,13 +8,46 @@ import localhub.db.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0021_auto_20190801_1157'),
+        ("users", "0021_auto_20190801_1157"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='email_preferences',
-            field=localhub.db.fields.ChoiceArrayField(base_field=models.CharField(choices=[('new_message', 'I receive a direct message'), ('new_follower', 'Someone starts following me'), ('new_comment', 'Someone comments on my post'), ('reshare', 'Someone has reshared my post'), ('mention', 'I am @mentioned in a post or comment'), ('moderator_delete', 'A moderator deletes my post or comment'), ('moderator_edit', 'A moderator edits my post or comment'), ('like', 'Someone likes my post or comment'), ('new_followed_user_post', "Someone I'm following creates a post"), ('new_followed_tag_post', "A post is created containing tags I'm following"), ('flag', 'A user has flagged a comment or post (moderators only)'), ('moderator_review_request', 'A user has a new comment or post for you to review (moderators only)')], max_length=12), blank=True, default=list, size=None),
+            model_name="user",
+            name="email_preferences",
+            field=localhub.db.fields.ChoiceArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        ("new_message", "I receive a direct message"),
+                        ("new_follower", "Someone starts following me"),
+                        ("new_comment", "Someone comments on my post"),
+                        ("reshare", "Someone has reshared my post"),
+                        ("mention", "I am @mentioned in a post or comment"),
+                        ("moderator_delete", "A moderator deletes my post or comment"),
+                        ("moderator_edit", "A moderator edits my post or comment"),
+                        ("like", "Someone likes my post or comment"),
+                        (
+                            "new_followed_user_post",
+                            "Someone I'm following creates a post",
+                        ),
+                        (
+                            "new_followed_tag_post",
+                            "A post is created containing tags I'm following",
+                        ),
+                        (
+                            "flag",
+                            "A user has flagged a comment or post (moderators only)",
+                        ),
+                        (
+                            "moderator_review_request",
+                            "A user has a new comment or post for you to review (moderators only)",
+                        ),
+                    ],
+                    max_length=12,
+                ),
+                blank=True,
+                default=list,
+                size=None,
+            ),
         ),
     ]

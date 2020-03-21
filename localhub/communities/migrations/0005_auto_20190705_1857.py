@@ -6,20 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('communities', '0004_auto_20190602_1838'),
+        ("communities", "0004_auto_20190602_1838"),
     ]
 
     operations = [
-        migrations.AlterUniqueTogether(
-            name='membership',
-            unique_together=set(),
-        ),
+        migrations.AlterUniqueTogether(name="membership", unique_together=set(),),
         migrations.AddIndex(
-            model_name='membership',
-            index=models.Index(fields=['member', 'community', 'active'], name='communities_member__7f5a47_idx'),
+            model_name="membership",
+            index=models.Index(
+                fields=["member", "community", "active"],
+                name="communities_member__7f5a47_idx",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='membership',
-            constraint=models.UniqueConstraint(fields=('member', 'community'), name='unique_membership'),
+            model_name="membership",
+            constraint=models.UniqueConstraint(
+                fields=("member", "community"), name="unique_membership"
+            ),
         ),
     ]

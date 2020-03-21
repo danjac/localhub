@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('private_messages', '0005_message_parent'),
+        ("private_messages", "0005_message_parent"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='message',
-            name='is_hidden',
+            model_name="message",
+            name="is_hidden",
             field=models.BooleanField(default=False),
         ),
     ]

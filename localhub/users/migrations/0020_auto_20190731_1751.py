@@ -8,18 +8,29 @@ import localhub.db.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0019_auto_20190730_2023'),
+        ("users", "0019_auto_20190730_2023"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='home_page_filters',
-            field=localhub.db.fields.ChoiceArrayField(base_field=models.CharField(choices=[('users', "Posts from people I'm following"), ('tags', "Posts containing tags I'm following")], max_length=12), blank=True, default=list, size=None),
+            model_name="user",
+            name="home_page_filters",
+            field=localhub.db.fields.ChoiceArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        ("users", "Posts from people I'm following"),
+                        ("tags", "Posts containing tags I'm following"),
+                    ],
+                    max_length=12,
+                ),
+                blank=True,
+                default=list,
+                size=None,
+            ),
         ),
         migrations.AddField(
-            model_name='user',
-            name='show_sensitive_content',
+            model_name="user",
+            name="show_sensitive_content",
             field=models.BooleanField(default=False),
         ),
     ]

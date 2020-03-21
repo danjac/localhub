@@ -8,13 +8,33 @@ import localhub.db.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0016_auto_20190721_1747'),
+        ("users", "0016_auto_20190721_1747"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='email_preferences',
-            field=localhub.db.fields.ChoiceArrayField(base_field=models.CharField(choices=[('messages', 'I receive a direct message'), ('subscribes', 'Someone starts following me'), ('comments', 'Someone comments on my post'), ('mentions', 'I am @mentioned in a post or comment'), ('deletes', 'A moderator deletes my post or comment'), ('edits', 'A moderator edits my post or comment'), ('follows', "Someone I'm following creates a post"), ('likes', 'Someone likes my post or comment'), ('tags', "A post is created containing tags I'm following"), ('flags', 'Post or comment is flagged (MODERATORS ONLY)'), ('reviews', 'Content to be reviewed (MODERATORS ONLY)')], max_length=12), blank=True, default=list, size=None),
+            model_name="user",
+            name="email_preferences",
+            field=localhub.db.fields.ChoiceArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        ("messages", "I receive a direct message"),
+                        ("subscribes", "Someone starts following me"),
+                        ("comments", "Someone comments on my post"),
+                        ("mentions", "I am @mentioned in a post or comment"),
+                        ("deletes", "A moderator deletes my post or comment"),
+                        ("edits", "A moderator edits my post or comment"),
+                        ("follows", "Someone I'm following creates a post"),
+                        ("likes", "Someone likes my post or comment"),
+                        ("tags", "A post is created containing tags I'm following"),
+                        ("flags", "Post or comment is flagged (MODERATORS ONLY)"),
+                        ("reviews", "Content to be reviewed (MODERATORS ONLY)"),
+                    ],
+                    max_length=12,
+                ),
+                blank=True,
+                default=list,
+                size=None,
+            ),
         ),
     ]

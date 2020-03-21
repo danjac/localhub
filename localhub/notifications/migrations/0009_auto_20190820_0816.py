@@ -6,9 +6,7 @@ from django.db import migrations, models
 
 def delete_all_subscriptions(apps, schema_editor):
     PushSubscription = apps.get_model("notifications", "PushSubscription")
-    PushSubscription.objects.using(
-        schema_editor.connection.alias
-    ).all().delete()
+    PushSubscription.objects.using(schema_editor.connection.alias).all().delete()
 
 
 class Migration(migrations.Migration):
@@ -27,8 +25,7 @@ class Migration(migrations.Migration):
             model_name="pushsubscription",
             name="community",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE,
-                to="communities.Community",
+                on_delete=django.db.models.deletion.CASCADE, to="communities.Community",
             ),
             preserve_default=False,
         ),

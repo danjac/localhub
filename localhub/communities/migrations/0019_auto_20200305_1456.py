@@ -6,16 +6,10 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('communities', '0018_auto_20200216_0930'),
+        ("communities", "0018_auto_20200216_0930"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='community',
-            name='admin',
-        ),
-        migrations.RemoveField(
-            model_name='historicalcommunity',
-            name='admin',
-        ),
+        migrations.RemoveField(model_name="community", name="admin",),
+        migrations.RemoveField(model_name="historicalcommunity", name="admin",),
     ]

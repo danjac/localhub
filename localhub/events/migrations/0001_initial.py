@@ -19,41 +19,98 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('taggit', '0003_taggeditem_add_unique_index'),
-        ('communities', '0004_auto_20190602_1838'),
+        ("taggit", "0003_taggeditem_add_unique_index"),
+        ("communities", "0004_auto_20190602_1838"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Event',
+            name="Event",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
-                ('description', localhub.markdown.fields.MarkdownField(blank=True)),
-                ('search_document', django.contrib.postgres.search.SearchVectorField(editable=False, null=True)),
-                ('title', models.CharField(max_length=200)),
-                ('url', models.URLField(blank=True, null=True, verbose_name='Link')),
-                ('starts', models.DateTimeField()),
-                ('ends', models.DateTimeField(blank=True, null=True)),
-                ('venue', models.CharField(blank=True, max_length=200)),
-                ('street_address', models.CharField(blank=True, max_length=200)),
-                ('locality', models.CharField(blank=True, max_length=200, verbose_name='City or town')),
-                ('postal_code', models.CharField(blank=True, max_length=20)),
-                ('region', models.CharField(blank=True, max_length=200)),
-                ('country', django_countries.fields.CountryField(blank=True, max_length=2, null=True)),
-                ('latitude', models.FloatField(blank=True, null=True)),
-                ('longitude', models.FloatField(blank=True, null=True)),
-                ('community', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='communities.Community')),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('tags', taggit.managers.TaggableManager(help_text='A comma-separated list of tags.', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Tags')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created",
+                    model_utils.fields.AutoCreatedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="created",
+                    ),
+                ),
+                (
+                    "modified",
+                    model_utils.fields.AutoLastModifiedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="modified",
+                    ),
+                ),
+                ("description", localhub.markdown.fields.MarkdownField(blank=True)),
+                (
+                    "search_document",
+                    django.contrib.postgres.search.SearchVectorField(
+                        editable=False, null=True
+                    ),
+                ),
+                ("title", models.CharField(max_length=200)),
+                ("url", models.URLField(blank=True, null=True, verbose_name="Link")),
+                ("starts", models.DateTimeField()),
+                ("ends", models.DateTimeField(blank=True, null=True)),
+                ("venue", models.CharField(blank=True, max_length=200)),
+                ("street_address", models.CharField(blank=True, max_length=200)),
+                (
+                    "locality",
+                    models.CharField(
+                        blank=True, max_length=200, verbose_name="City or town"
+                    ),
+                ),
+                ("postal_code", models.CharField(blank=True, max_length=20)),
+                ("region", models.CharField(blank=True, max_length=200)),
+                (
+                    "country",
+                    django_countries.fields.CountryField(
+                        blank=True, max_length=2, null=True
+                    ),
+                ),
+                ("latitude", models.FloatField(blank=True, null=True)),
+                ("longitude", models.FloatField(blank=True, null=True)),
+                (
+                    "community",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="communities.Community",
+                    ),
+                ),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "tags",
+                    taggit.managers.TaggableManager(
+                        help_text="A comma-separated list of tags.",
+                        through="taggit.TaggedItem",
+                        to="taggit.Tag",
+                        verbose_name="Tags",
+                    ),
+                ),
             ],
-            options={
-                'abstract': False,
-            },
+            options={"abstract": False,},
         ),
         migrations.AddIndex(
-            model_name='event',
-            index=django.contrib.postgres.indexes.GinIndex(fields=['search_document'], name='events_even_search__232c1d_gin'),
+            model_name="event",
+            index=django.contrib.postgres.indexes.GinIndex(
+                fields=["search_document"], name="events_even_search__232c1d_gin"
+            ),
         ),
     ]

@@ -6,29 +6,17 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0041_auto_20200309_2039'),
+        ("users", "0041_auto_20200309_2039"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='user',
-            old_name='send_email_on_message',
-            new_name='send_email_notifications',
+            model_name="user",
+            old_name="send_email_on_message",
+            new_name="send_email_notifications",
         ),
-        migrations.RemoveField(
-            model_name='user',
-            name='notification_preferences',
-        ),
-        migrations.RemoveField(
-            model_name='user',
-            name='send_email_on_notification',
-        ),
-        migrations.RemoveField(
-            model_name='user',
-            name='send_webpush_on_message',
-        ),
-        migrations.RemoveField(
-            model_name='user',
-            name='send_webpush_on_notification',
-        ),
+        migrations.RemoveField(model_name="user", name="notification_preferences",),
+        migrations.RemoveField(model_name="user", name="send_email_on_notification",),
+        migrations.RemoveField(model_name="user", name="send_webpush_on_message",),
+        migrations.RemoveField(model_name="user", name="send_webpush_on_notification",),
     ]

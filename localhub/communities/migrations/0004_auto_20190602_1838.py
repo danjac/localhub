@@ -7,13 +7,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('communities', '0003_community_email_domain'),
+        ("communities", "0003_community_email_domain"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='community',
-            name='email_domain',
-            field=models.CharField(blank=True, help_text='Will add domain to notification emails from this site, e.g. notifications@this-domain.com. If left empty will use the site domain by default.', max_length=100, null=True, validators=[django.core.validators.RegexValidator(message='This is not a valid domain', regex='([a-z¡-\uffff0-9](?:[a-z¡-\uffff0-9-]{0,61}[a-z¡-\uffff0-9])?(?:\\.(?!-)[a-z¡-\uffff0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z¡-\uffff-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost)')]),
+            model_name="community",
+            name="email_domain",
+            field=models.CharField(
+                blank=True,
+                help_text="Will add domain to notification emails from this site, e.g. notifications@this-domain.com. If left empty will use the site domain by default.",
+                max_length=100,
+                null=True,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        message="This is not a valid domain",
+                        regex="([a-z¡-\uffff0-9](?:[a-z¡-\uffff0-9-]{0,61}[a-z¡-\uffff0-9])?(?:\\.(?!-)[a-z¡-\uffff0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z¡-\uffff-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost)",
+                    )
+                ],
+            ),
         ),
     ]

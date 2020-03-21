@@ -7,23 +7,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('comments', '0005_auto_20190720_1821'),
+        ("comments", "0005_auto_20190720_1821"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='comment',
-            name='content_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='contenttypes.ContentType'),
+            model_name="comment",
+            name="content_type",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="contenttypes.ContentType",
+            ),
         ),
         migrations.AlterField(
-            model_name='comment',
-            name='object_id',
+            model_name="comment",
+            name="object_id",
             field=models.PositiveIntegerField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='historicalcomment',
-            name='object_id',
+            model_name="historicalcomment",
+            name="object_id",
             field=models.PositiveIntegerField(blank=True, null=True),
         ),
     ]

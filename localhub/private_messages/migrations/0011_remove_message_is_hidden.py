@@ -6,12 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('private_messages', '0010_set_receipient_deleted'),
+        ("private_messages", "0010_set_receipient_deleted"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='message',
-            name='is_hidden',
-        ),
+        migrations.RemoveField(model_name="message", name="is_hidden",),
     ]

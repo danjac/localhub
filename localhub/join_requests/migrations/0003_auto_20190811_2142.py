@@ -6,12 +6,12 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('join_requests', '0002_auto_20190530_0922'),
+        ("join_requests", "0002_auto_20190530_0922"),
     ]
 
     operations = [
         migrations.AddIndex(
-            model_name='joinrequest',
-            index=models.Index(fields=['status'], name='join_reques_status_703ef1_idx'),
+            model_name="joinrequest",
+            index=models.Index(fields=["status"], name="join_reques_status_703ef1_idx"),
         ),
     ]

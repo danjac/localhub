@@ -8,13 +8,16 @@ import localhub.markdown.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('communities', '0005_auto_20190705_1857'),
+        ("communities", "0005_auto_20190705_1857"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='community',
-            name='terms',
-            field=localhub.markdown.fields.MarkdownField(blank=True, help_text='Terms and conditions, code of conduct and other membership terms.'),
+            model_name="community",
+            name="terms",
+            field=localhub.markdown.fields.MarkdownField(
+                blank=True,
+                help_text="Terms and conditions, code of conduct and other membership terms.",
+            ),
         ),
     ]

@@ -7,13 +7,15 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0002_auto_20190530_1027'),
+        ("users", "0002_auto_20190530_1027"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='avatar',
-            field=sorl.thumbnail.fields.ImageField(blank=True, null=True, upload_to='avatars'),
+            model_name="user",
+            name="avatar",
+            field=sorl.thumbnail.fields.ImageField(
+                blank=True, null=True, upload_to="avatars"
+            ),
         ),
     ]

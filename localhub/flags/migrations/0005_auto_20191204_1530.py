@@ -7,13 +7,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('flags', '0004_auto_20190812_0720'),
+        ("flags", "0004_auto_20190812_0720"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='flag',
-            name='community',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='communities.Community'),
+            model_name="flag",
+            name="community",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="communities.Community"
+            ),
         ),
     ]

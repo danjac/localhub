@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('photos', '0013_auto_20190812_0720'),
+        ("photos", "0013_auto_20190812_0720"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='historicalphoto',
-            name='original_url',
+            model_name="historicalphoto",
+            name="original_url",
             field=models.URLField(blank=True, max_length=500, null=True),
         ),
         migrations.AlterField(
-            model_name='photo',
-            name='original_url',
+            model_name="photo",
+            name="original_url",
             field=models.URLField(blank=True, max_length=500, null=True),
         ),
     ]

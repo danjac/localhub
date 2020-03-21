@@ -10,18 +10,22 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('join_requests', '0001_initial'),
+        ("join_requests", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='joinrequest',
-            name='sender',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="joinrequest",
+            name="sender",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='joinrequest',
-            unique_together={('email', 'community', 'sender')},
+            name="joinrequest", unique_together={("email", "community", "sender")},
         ),
     ]

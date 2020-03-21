@@ -7,7 +7,6 @@ from localhub.posts.notifications import PostAdapter
 
 from ..factories import NotificationFactory
 
-
 pytestmark = pytest.mark.django_db
 
 

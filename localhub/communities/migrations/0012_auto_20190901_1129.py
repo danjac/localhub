@@ -6,28 +6,40 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('communities', '0011_auto_20190814_2109'),
+        ("communities", "0011_auto_20190814_2109"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='community',
-            name='blacklisted_email_addresses',
-            field=models.TextField(blank=True, help_text='Join requests from these addresses will be automatically rejected. Separate with spaces.'),
+            model_name="community",
+            name="blacklisted_email_addresses",
+            field=models.TextField(
+                blank=True,
+                help_text="Join requests from these addresses will be automatically rejected. Separate with spaces.",
+            ),
         ),
         migrations.AddField(
-            model_name='community',
-            name='blacklisted_email_domains',
-            field=models.TextField(blank=True, help_text='Join requests from these domains will be automatically rejected. Separate with spaces.'),
+            model_name="community",
+            name="blacklisted_email_domains",
+            field=models.TextField(
+                blank=True,
+                help_text="Join requests from these domains will be automatically rejected. Separate with spaces.",
+            ),
         ),
         migrations.AddField(
-            model_name='historicalcommunity',
-            name='blacklisted_email_addresses',
-            field=models.TextField(blank=True, help_text='Join requests from these addresses will be automatically rejected. Separate with spaces.'),
+            model_name="historicalcommunity",
+            name="blacklisted_email_addresses",
+            field=models.TextField(
+                blank=True,
+                help_text="Join requests from these addresses will be automatically rejected. Separate with spaces.",
+            ),
         ),
         migrations.AddField(
-            model_name='historicalcommunity',
-            name='blacklisted_email_domains',
-            field=models.TextField(blank=True, help_text='Join requests from these domains will be automatically rejected. Separate with spaces.'),
+            model_name="historicalcommunity",
+            name="blacklisted_email_domains",
+            field=models.TextField(
+                blank=True,
+                help_text="Join requests from these domains will be automatically rejected. Separate with spaces.",
+            ),
         ),
     ]

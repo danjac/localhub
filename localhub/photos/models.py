@@ -26,6 +26,8 @@ class Photo(Activity):
         "artist",
         "original_url",
         "cc_license",
+        "latitude",
+        "longitude",
     )
 
     image = ImageField(
@@ -36,6 +38,9 @@ class Photo(Activity):
             "If the image is too large it will not be accepted."
         ),
     )
+
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     artist = models.CharField(max_length=100, blank=True)
     original_url = models.URLField(max_length=500, null=True, blank=True)
@@ -56,3 +61,6 @@ class Photo(Activity):
 
     def has_attribution(self):
         return any((self.artist, self.original_url, self.cc_license))
+
+    def has_map(self):
+        return self.latitude and self.longitude

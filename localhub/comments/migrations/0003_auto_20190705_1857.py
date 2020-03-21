@@ -6,17 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('comments', '0002_auto_20190626_1253'),
+        ("comments", "0002_auto_20190626_1253"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='comment',
-            name='object_id',
-            field=models.PositiveIntegerField(),
+            model_name="comment", name="object_id", field=models.PositiveIntegerField(),
         ),
         migrations.AddIndex(
-            model_name='comment',
-            index=models.Index(fields=['content_type', 'object_id', 'owner', 'community'], name='comments_co_content_30feaf_idx'),
+            model_name="comment",
+            index=models.Index(
+                fields=["content_type", "object_id", "owner", "community"],
+                name="comments_co_content_30feaf_idx",
+            ),
         ),
     ]

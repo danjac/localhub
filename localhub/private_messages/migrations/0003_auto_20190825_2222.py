@@ -7,13 +7,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('private_messages', '0002_auto_20190825_1712'),
+        ("private_messages", "0002_auto_20190825_1712"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='message',
-            name='parent',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='reply', to='private_messages.Message'),
+            model_name="message",
+            name="parent",
+            field=models.OneToOneField(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="reply",
+                to="private_messages.Message",
+            ),
         ),
     ]

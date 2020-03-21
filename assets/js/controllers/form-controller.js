@@ -84,7 +84,7 @@ export default class extends Controller {
           eval(response.data);
         }
       })
-      .catch(this.handleFormError);
+      .catch(err => this.handleFormError(err));
   }
 
   handleFormError(err) {

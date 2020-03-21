@@ -7,18 +7,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('communities', '0010_auto_20190813_1515'),
+        ("communities", "0010_auto_20190813_1515"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='community',
-            name='logo',
-            field=sorl.thumbnail.fields.ImageField(blank=True, help_text='Logo will be rendered in PNG format.', null=True, upload_to='logo'),
+            model_name="community",
+            name="logo",
+            field=sorl.thumbnail.fields.ImageField(
+                blank=True,
+                help_text="Logo will be rendered in PNG format.",
+                null=True,
+                upload_to="logo",
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalcommunity',
-            name='logo',
-            field=models.TextField(blank=True, help_text='Logo will be rendered in PNG format.', max_length=100, null=True),
+            model_name="historicalcommunity",
+            name="logo",
+            field=models.TextField(
+                blank=True,
+                help_text="Logo will be rendered in PNG format.",
+                max_length=100,
+                null=True,
+            ),
         ),
     ]

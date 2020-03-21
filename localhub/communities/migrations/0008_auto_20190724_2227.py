@@ -15,40 +15,139 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('communities', '0007_community_content_warning_tags'),
+        ("communities", "0007_community_content_warning_tags"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='community',
-            name='admin',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL),
+            model_name="community",
+            name="admin",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.CreateModel(
-            name='HistoricalCommunity',
+            name="HistoricalCommunity",
             fields=[
-                ('id', models.IntegerField(auto_created=True, blank=True, db_index=True, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
-                ('domain', models.CharField(db_index=True, max_length=100, validators=[django.core.validators.RegexValidator(message='This is not a valid domain', regex='([a-z¡-\uffff0-9](?:[a-z¡-\uffff0-9-]{0,61}[a-z¡-\uffff0-9])?(?:\\.(?!-)[a-z¡-\uffff0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z¡-\uffff-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost)')])),
-                ('name', models.CharField(max_length=255)),
-                ('description', localhub.markdown.fields.MarkdownField(blank=True)),
-                ('terms', localhub.markdown.fields.MarkdownField(blank=True, help_text='Terms and conditions, code of conduct and other membership terms.')),
-                ('content_warning_tags', models.TextField(blank=True, default='#nsfw', help_text='Any posts containing these tags in their description will be automatically hidden by default')),
-                ('email_domain', models.CharField(blank=True, help_text='Will add domain to notification emails from this site, e.g. notifications@this-domain.com. If left empty will use the site domain by default.', max_length=100, null=True, validators=[django.core.validators.RegexValidator(message='This is not a valid domain', regex='([a-z¡-\uffff0-9](?:[a-z¡-\uffff0-9-]{0,61}[a-z¡-\uffff0-9])?(?:\\.(?!-)[a-z¡-\uffff0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z¡-\uffff-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost)')])),
-                ('public', models.BooleanField(default=True, help_text='This community is open to the world. Non-members can view all published content.')),
-                ('active', models.BooleanField(default=True, help_text='This community is currently live.')),
-                ('history_id', models.AutoField(primary_key=True, serialize=False)),
-                ('history_date', models.DateTimeField()),
-                ('history_change_reason', models.CharField(max_length=100, null=True)),
-                ('history_type', models.CharField(choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')], max_length=1)),
-                ('admin', models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to=settings.AUTH_USER_MODEL)),
-                ('history_user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.IntegerField(
+                        auto_created=True, blank=True, db_index=True, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "created",
+                    model_utils.fields.AutoCreatedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="created",
+                    ),
+                ),
+                (
+                    "modified",
+                    model_utils.fields.AutoLastModifiedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="modified",
+                    ),
+                ),
+                (
+                    "domain",
+                    models.CharField(
+                        db_index=True,
+                        max_length=100,
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                message="This is not a valid domain",
+                                regex="([a-z¡-\uffff0-9](?:[a-z¡-\uffff0-9-]{0,61}[a-z¡-\uffff0-9])?(?:\\.(?!-)[a-z¡-\uffff0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z¡-\uffff-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost)",
+                            )
+                        ],
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("description", localhub.markdown.fields.MarkdownField(blank=True)),
+                (
+                    "terms",
+                    localhub.markdown.fields.MarkdownField(
+                        blank=True,
+                        help_text="Terms and conditions, code of conduct and other membership terms.",
+                    ),
+                ),
+                (
+                    "content_warning_tags",
+                    models.TextField(
+                        blank=True,
+                        default="#nsfw",
+                        help_text="Any posts containing these tags in their description will be automatically hidden by default",
+                    ),
+                ),
+                (
+                    "email_domain",
+                    models.CharField(
+                        blank=True,
+                        help_text="Will add domain to notification emails from this site, e.g. notifications@this-domain.com. If left empty will use the site domain by default.",
+                        max_length=100,
+                        null=True,
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                message="This is not a valid domain",
+                                regex="([a-z¡-\uffff0-9](?:[a-z¡-\uffff0-9-]{0,61}[a-z¡-\uffff0-9])?(?:\\.(?!-)[a-z¡-\uffff0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z¡-\uffff-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost)",
+                            )
+                        ],
+                    ),
+                ),
+                (
+                    "public",
+                    models.BooleanField(
+                        default=True,
+                        help_text="This community is open to the world. Non-members can view all published content.",
+                    ),
+                ),
+                (
+                    "active",
+                    models.BooleanField(
+                        default=True, help_text="This community is currently live."
+                    ),
+                ),
+                ("history_id", models.AutoField(primary_key=True, serialize=False)),
+                ("history_date", models.DateTimeField()),
+                ("history_change_reason", models.CharField(max_length=100, null=True)),
+                (
+                    "history_type",
+                    models.CharField(
+                        choices=[("+", "Created"), ("~", "Changed"), ("-", "Deleted")],
+                        max_length=1,
+                    ),
+                ),
+                (
+                    "admin",
+                    models.ForeignKey(
+                        blank=True,
+                        db_constraint=False,
+                        null=True,
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "history_user",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'historical community',
-                'ordering': ('-history_date', '-history_id'),
-                'get_latest_by': 'history_date',
+                "verbose_name": "historical community",
+                "ordering": ("-history_date", "-history_id"),
+                "get_latest_by": "history_date",
             },
             bases=(simple_history.models.HistoricalChanges, models.Model),
         ),

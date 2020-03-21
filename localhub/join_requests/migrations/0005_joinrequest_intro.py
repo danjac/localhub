@@ -6,13 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('join_requests', '0004_auto_20190906_1007'),
+        ("join_requests", "0004_auto_20190906_1007"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='joinrequest',
-            name='intro',
-            field=models.TextField(blank=True, help_text='Tell us a little bit about yourself and why you would like to join this community (Optional)'),
+            model_name="joinrequest",
+            name="intro",
+            field=models.TextField(
+                blank=True,
+                help_text="Tell us a little bit about yourself and why you would like to join this community (Optional)",
+            ),
         ),
     ]

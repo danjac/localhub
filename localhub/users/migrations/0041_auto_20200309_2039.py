@@ -8,38 +8,51 @@ import localhub.db.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0040_auto_20200309_1953'),
+        ("users", "0040_auto_20200309_1953"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='activity_stream_filters',
-            field=localhub.db.fields.ChoiceArrayField(base_field=models.CharField(choices=[('users', "Limited to only content from people I'm following"), ('tags', "Limited to only tags I'm following")], max_length=12), blank=True, default=list, size=None),
+            model_name="user",
+            name="activity_stream_filters",
+            field=localhub.db.fields.ChoiceArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        ("users", "Limited to only content from people I'm following"),
+                        ("tags", "Limited to only tags I'm following"),
+                    ],
+                    max_length=12,
+                ),
+                blank=True,
+                default=list,
+                size=None,
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='language',
-            field=models.CharField(choices=[('en', 'English'), ('fi', 'Suomi')], default='en', max_length=6),
+            model_name="user",
+            name="language",
+            field=models.CharField(
+                choices=[("en", "English"), ("fi", "Suomi")], default="en", max_length=6
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='send_email_on_message',
+            model_name="user",
+            name="send_email_on_message",
             field=models.BooleanField(default=True),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='send_email_on_notification',
+            model_name="user",
+            name="send_email_on_notification",
             field=models.BooleanField(default=True),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='send_webpush_on_message',
+            model_name="user",
+            name="send_webpush_on_message",
             field=models.BooleanField(default=True),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='send_webpush_on_notification',
+            model_name="user",
+            name="send_webpush_on_notification",
             field=models.BooleanField(default=True),
         ),
     ]

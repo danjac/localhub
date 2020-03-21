@@ -33,23 +33,17 @@ def change_verbs(apps, schema_editor):
     for old_verb, new_verb in ACTIVITY_VERBS:
         notifications.filter(verb=old_verb).update(verb=new_verb)
 
-    notifications = Notification.objects.filter(
-        content_type__app_label="comments"
-    )
+    notifications = Notification.objects.filter(content_type__app_label="comments")
 
     for old_verb, new_verb in COMMENT_VERBS:
         notifications.filter(verb=old_verb).update(verb=new_verb)
 
-    notifications = Notification.objects.filter(
-        content_type__app_label="users"
-    )
+    notifications = Notification.objects.filter(content_type__app_label="users")
 
     for old_verb, new_verb in USER_VERBS:
         notifications.filter(verb=old_verb).update(verb=new_verb)
 
-    notifications = Notification.objects.filter(
-        content_type__app_label="messageboard"
-    )
+    notifications = Notification.objects.filter(content_type__app_label="messageboard")
 
     for old_verb, new_verb in MESSAGE_VERBS:
         notifications.filter(verb=old_verb).update(verb=new_verb)
@@ -60,7 +54,5 @@ class Migration(migrations.Migration):
     dependencies = [("notifications", "0004_auto_20190803_1409")]
 
     operations = [
-        migrations.RunPython(
-            change_verbs, reverse_code=migrations.RunPython.noop
-        )
+        migrations.RunPython(change_verbs, reverse_code=migrations.RunPython.noop)
     ]

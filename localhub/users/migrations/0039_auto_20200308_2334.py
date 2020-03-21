@@ -8,13 +8,31 @@ import localhub.db.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0038_auto_20200308_2317'),
+        ("users", "0038_auto_20200308_2317"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='activity_stream_filters',
-            field=localhub.db.fields.ChoiceArrayField(base_field=models.CharField(choices=[('users', "Limited to only content posted by people I'm following"), ('tags', "Limited to only content containing tags I'm following")], max_length=12), blank=True, default=list, size=None, verbose_name='Activity Stream Filters'),
+            model_name="user",
+            name="activity_stream_filters",
+            field=localhub.db.fields.ChoiceArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        (
+                            "users",
+                            "Limited to only content posted by people I'm following",
+                        ),
+                        (
+                            "tags",
+                            "Limited to only content containing tags I'm following",
+                        ),
+                    ],
+                    max_length=12,
+                ),
+                blank=True,
+                default=list,
+                size=None,
+                verbose_name="Activity Stream Filters",
+            ),
         ),
     ]

@@ -6,28 +6,38 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('communities', '0017_auto_20190925_1212'),
+        ("communities", "0017_auto_20190925_1212"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='community',
-            name='listed',
-            field=models.BooleanField(default=True, help_text='Community is visible to non-members in Communities index page.'),
+            model_name="community",
+            name="listed",
+            field=models.BooleanField(
+                default=True,
+                help_text="Community is visible to non-members in Communities index page.",
+            ),
         ),
         migrations.AlterField(
-            model_name='community',
-            name='tagline',
-            field=models.TextField(blank=True, help_text='Summary shown in Communities index page'),
+            model_name="community",
+            name="tagline",
+            field=models.TextField(
+                blank=True, help_text="Summary shown in Communities index page"
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalcommunity',
-            name='listed',
-            field=models.BooleanField(default=True, help_text='Community is visible to non-members in Communities index page.'),
+            model_name="historicalcommunity",
+            name="listed",
+            field=models.BooleanField(
+                default=True,
+                help_text="Community is visible to non-members in Communities index page.",
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalcommunity',
-            name='tagline',
-            field=models.TextField(blank=True, help_text='Summary shown in Communities index page'),
+            model_name="historicalcommunity",
+            name="tagline",
+            field=models.TextField(
+                blank=True, help_text="Summary shown in Communities index page"
+            ),
         ),
     ]

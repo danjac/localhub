@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('polls', '0005_auto_20200221_2242'),
+        ("polls", "0005_auto_20200221_2242"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='historicalpoll',
-            name='is_pinned',
+            model_name="historicalpoll",
+            name="is_pinned",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='poll',
-            name='is_pinned',
+            model_name="poll",
+            name="is_pinned",
             field=models.BooleanField(default=False),
         ),
     ]

@@ -6,16 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('likes', '0002_auto_20190705_1841'),
+        ("likes", "0002_auto_20190705_1841"),
     ]
 
     operations = [
         migrations.RemoveIndex(
-            model_name='like',
-            name='likes_like_content_ddf715_idx',
+            model_name="like", name="likes_like_content_ddf715_idx",
         ),
         migrations.AddIndex(
-            model_name='like',
-            index=models.Index(fields=['content_type', 'object_id'], name='likes_like_content_5c134b_idx'),
+            model_name="like",
+            index=models.Index(
+                fields=["content_type", "object_id"],
+                name="likes_like_content_5c134b_idx",
+            ),
         ),
     ]

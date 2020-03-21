@@ -7,13 +7,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('private_messages', '0001_initial'),
+        ("private_messages", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='message',
-            name='community',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='communities.Community'),
+            model_name="message",
+            name="community",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="communities.Community"
+            ),
         ),
     ]

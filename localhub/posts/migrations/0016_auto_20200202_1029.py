@@ -6,28 +6,26 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('posts', '0015_auto_20191121_1747'),
+        ("posts", "0015_auto_20191121_1747"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='historicalpost',
-            old_name='metadata_description',
-            new_name='opengraph_description',
+            model_name="historicalpost",
+            old_name="metadata_description",
+            new_name="opengraph_description",
         ),
         migrations.RenameField(
-            model_name='historicalpost',
-            old_name='metadata_image',
-            new_name='opengraph_image',
+            model_name="historicalpost",
+            old_name="metadata_image",
+            new_name="opengraph_image",
         ),
         migrations.RenameField(
-            model_name='post',
-            old_name='metadata_description',
-            new_name='opengraph_description',
+            model_name="post",
+            old_name="metadata_description",
+            new_name="opengraph_description",
         ),
         migrations.RenameField(
-            model_name='post',
-            old_name='metadata_image',
-            new_name='opengraph_image',
+            model_name="post", old_name="metadata_image", new_name="opengraph_image",
         ),
     ]

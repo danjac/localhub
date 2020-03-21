@@ -6,18 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0014_auto_20190812_0720'),
+        ("events", "0014_auto_20190812_0720"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='event',
-            name='url',
-            field=models.URLField(blank=True, max_length=500, null=True, verbose_name='Link'),
+            model_name="event",
+            name="url",
+            field=models.URLField(
+                blank=True, max_length=500, null=True, verbose_name="Link"
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalevent',
-            name='url',
-            field=models.URLField(blank=True, max_length=500, null=True, verbose_name='Link'),
+            model_name="historicalevent",
+            name="url",
+            field=models.URLField(
+                blank=True, max_length=500, null=True, verbose_name="Link"
+            ),
         ),
     ]

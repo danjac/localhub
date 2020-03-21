@@ -6,30 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifications', '0007_auto_20190818_2132'),
+        ("notifications", "0007_auto_20190818_2132"),
     ]
 
     operations = [
         migrations.RemoveConstraint(
-            model_name='pushsubscription',
-            name='unique_push_notification',
+            model_name="pushsubscription", name="unique_push_notification",
         ),
-        migrations.RemoveField(
-            model_name='pushsubscription',
-            name='browser',
+        migrations.RemoveField(model_name="pushsubscription", name="browser",),
+        migrations.AlterField(
+            model_name="pushsubscription", name="auth", field=models.TextField(),
         ),
         migrations.AlterField(
-            model_name='pushsubscription',
-            name='auth',
-            field=models.TextField(),
-        ),
-        migrations.AlterField(
-            model_name='pushsubscription',
-            name='p256dh',
-            field=models.TextField(),
+            model_name="pushsubscription", name="p256dh", field=models.TextField(),
         ),
         migrations.AddConstraint(
-            model_name='pushsubscription',
-            constraint=models.UniqueConstraint(fields=('user', 'auth', 'p256dh'), name='unique_push_notification'),
+            model_name="pushsubscription",
+            constraint=models.UniqueConstraint(
+                fields=("user", "auth", "p256dh"), name="unique_push_notification"
+            ),
         ),
     ]

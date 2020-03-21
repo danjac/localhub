@@ -6,12 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('photos', '0001_initial'),
+        ("photos", "0001_initial"),
     ]
 
     operations = [
         migrations.AddIndex(
-            model_name='photo',
-            index=models.Index(fields=['owner', 'community'], name='photos_phot_owner_i_23fd94_idx'),
+            model_name="photo",
+            index=models.Index(
+                fields=["owner", "community"], name="photos_phot_owner_i_23fd94_idx"
+            ),
         ),
     ]

@@ -5,9 +5,9 @@ from django.db.models import F
 
 
 def set_default_published(apps, schema_editor):
-    apps.get_model("polls", "Poll").objects.filter(
-        published__isnull=True
-    ).update(published=F("created"))
+    apps.get_model("polls", "Poll").objects.filter(published__isnull=True).update(
+        published=F("created")
+    )
 
 
 class Migration(migrations.Migration):

@@ -6,13 +6,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0032_user_default_timezone'),
+        ("users", "0032_user_default_timezone"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='user',
-            old_name='email_preferences',
-            new_name='notification_preferences',
+            model_name="user",
+            old_name="email_preferences",
+            new_name="notification_preferences",
         ),
     ]

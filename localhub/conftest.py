@@ -5,7 +5,6 @@ import pytest
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
 
-
 from localhub.comments.factories import CommentFactory
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Membership

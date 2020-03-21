@@ -12,9 +12,7 @@ def set_recipient_deleted(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('private_messages', '0009_auto_20200226_1120'),
+        ("private_messages", "0009_auto_20200226_1120"),
     ]
 
-    operations = [
-        migrations.RunPython(set_recipient_deleted)
-    ]
+    operations = [migrations.RunPython(set_recipient_deleted)]

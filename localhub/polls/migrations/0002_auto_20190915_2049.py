@@ -6,18 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('polls', '0001_initial'),
+        ("polls", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='historicalpoll',
-            name='title',
+            model_name="historicalpoll",
+            name="title",
             field=models.CharField(max_length=300),
         ),
         migrations.AlterField(
-            model_name='poll',
-            name='title',
-            field=models.CharField(max_length=300),
+            model_name="poll", name="title", field=models.CharField(max_length=300),
         ),
     ]

@@ -8,13 +8,13 @@ import localhub.markdown.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0004_user_bio'),
+        ("users", "0004_user_bio"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='bio',
+            model_name="user",
+            name="bio",
             field=localhub.markdown.fields.MarkdownField(blank=True),
         ),
     ]

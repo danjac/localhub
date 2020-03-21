@@ -6,12 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('posts', '0003_post_editor'),
+        ("posts", "0003_post_editor"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='post',
-            name='editor',
-        ),
+        migrations.RemoveField(model_name="post", name="editor",),
     ]

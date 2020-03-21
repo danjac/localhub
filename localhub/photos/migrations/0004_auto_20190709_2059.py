@@ -6,13 +6,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('photos', '0003_auto_20190705_2154'),
+        ("photos", "0003_auto_20190705_2154"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='photo',
-            name='cc_license',
-            field=models.CharField(blank=True, choices=[('by', 'Attribution'), ('by-sa', 'Attribution ShareAlike'), ('by-nd', 'Attribution NoDerivs'), ('by-nc', 'Attribution NonCommercial'), ('by-nc-sa', 'Attribution NonCommercial ShareAlike'), ('by-nc-nd', 'Attribution NonCommercial NoDerivs')], max_length=10, null=True, verbose_name='Creative Commons license'),
+            model_name="photo",
+            name="cc_license",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("by", "Attribution"),
+                    ("by-sa", "Attribution ShareAlike"),
+                    ("by-nd", "Attribution NoDerivs"),
+                    ("by-nc", "Attribution NonCommercial"),
+                    ("by-nc-sa", "Attribution NonCommercial ShareAlike"),
+                    ("by-nc-nd", "Attribution NonCommercial NoDerivs"),
+                ],
+                max_length=10,
+                null=True,
+                verbose_name="Creative Commons license",
+            ),
         ),
     ]

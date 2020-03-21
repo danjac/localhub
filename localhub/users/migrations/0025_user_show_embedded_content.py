@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0024_auto_20190804_1324'),
+        ("users", "0024_auto_20190804_1324"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='show_embedded_content',
+            model_name="user",
+            name="show_embedded_content",
             field=models.BooleanField(default=False),
         ),
     ]

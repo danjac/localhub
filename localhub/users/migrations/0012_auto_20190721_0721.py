@@ -8,13 +8,32 @@ import localhub.db.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0011_auto_20190720_2313'),
+        ("users", "0011_auto_20190720_2313"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='email_notifications',
-            field=localhub.db.fields.ChoiceArrayField(base_field=models.CharField(choices=[('comments', 'Someone comments on my post'), ('deletes', 'A moderator deletes my post or comment'), ('edits', 'A moderator edits my post or comment'), ('follows', "Someone I'm following creates a post"), ('likes', 'Someone likes my post or comment'), ('mentions', 'I am @mentioned in a post or comment'), ('messages', 'I receive a direct message'), ('tags', "A post is created containing tags I'm following"), ('flags', 'Post or comment is flagged (MODERATORS ONLY)'), ('reviews', 'Content to be reviewed (MODERATORS ONLY)')], max_length=12), blank=True, default=list, size=None),
+            model_name="user",
+            name="email_notifications",
+            field=localhub.db.fields.ChoiceArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        ("comments", "Someone comments on my post"),
+                        ("deletes", "A moderator deletes my post or comment"),
+                        ("edits", "A moderator edits my post or comment"),
+                        ("follows", "Someone I'm following creates a post"),
+                        ("likes", "Someone likes my post or comment"),
+                        ("mentions", "I am @mentioned in a post or comment"),
+                        ("messages", "I receive a direct message"),
+                        ("tags", "A post is created containing tags I'm following"),
+                        ("flags", "Post or comment is flagged (MODERATORS ONLY)"),
+                        ("reviews", "Content to be reviewed (MODERATORS ONLY)"),
+                    ],
+                    max_length=12,
+                ),
+                blank=True,
+                default=list,
+                size=None,
+            ),
         ),
     ]

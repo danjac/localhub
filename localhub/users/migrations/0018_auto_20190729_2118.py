@@ -7,29 +7,39 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('taggit', '0003_taggeditem_add_unique_index'),
-        ('users', '0017_auto_20190724_2227'),
+        ("taggit", "0003_taggeditem_add_unique_index"),
+        ("users", "0017_auto_20190724_2227"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='blacklisted_tags',
-            field=models.ManyToManyField(blank=True, related_name='_user_blacklisted_tags_+', to='taggit.Tag'),
+            model_name="user",
+            name="blacklisted_tags",
+            field=models.ManyToManyField(
+                blank=True, related_name="_user_blacklisted_tags_+", to="taggit.Tag"
+            ),
         ),
         migrations.AddField(
-            model_name='user',
-            name='blocked',
-            field=models.ManyToManyField(blank=True, related_name='_user_blocked_+', to=settings.AUTH_USER_MODEL),
+            model_name="user",
+            name="blocked",
+            field=models.ManyToManyField(
+                blank=True, related_name="_user_blocked_+", to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AddField(
-            model_name='user',
-            name='following',
-            field=models.ManyToManyField(blank=True, related_name='_user_following_+', to=settings.AUTH_USER_MODEL),
+            model_name="user",
+            name="following",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="_user_following_+",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='user',
-            name='following_tags',
-            field=models.ManyToManyField(blank=True, related_name='_user_following_tags_+', to='taggit.Tag'),
+            model_name="user",
+            name="following_tags",
+            field=models.ManyToManyField(
+                blank=True, related_name="_user_following_tags_+", to="taggit.Tag"
+            ),
         ),
     ]

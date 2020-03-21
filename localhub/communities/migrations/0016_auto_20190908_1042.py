@@ -6,13 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('communities', '0015_auto_20190908_1023'),
+        ("communities", "0015_auto_20190908_1023"),
     ]
 
     operations = [
-        migrations.AlterModelManagers(
-            name='community',
-            managers=[
-            ],
-        ),
+        migrations.AlterModelManagers(name="community", managers=[],),
     ]

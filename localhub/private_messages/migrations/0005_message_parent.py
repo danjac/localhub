@@ -7,13 +7,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('private_messages', '0004_remove_message_parent'),
+        ("private_messages", "0004_remove_message_parent"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='message',
-            name='parent',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='private_messages.Message'),
+            model_name="message",
+            name="parent",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="private_messages.Message",
+            ),
         ),
     ]

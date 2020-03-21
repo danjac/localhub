@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0004_event_timezone'),
+        ("events", "0004_event_timezone"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='event',
-            name='starts',
-            field=models.DateTimeField(verbose_name='Starts on (UTC)'),
+            model_name="event",
+            name="starts",
+            field=models.DateTimeField(verbose_name="Starts on (UTC)"),
         ),
     ]

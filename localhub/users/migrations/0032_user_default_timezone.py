@@ -7,13 +7,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0031_auto_20190830_1223'),
+        ("users", "0031_auto_20190830_1223"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='default_timezone',
-            field=timezone_field.fields.TimeZoneField(default='UTC'),
+            model_name="user",
+            name="default_timezone",
+            field=timezone_field.fields.TimeZoneField(default="UTC"),
         ),
     ]

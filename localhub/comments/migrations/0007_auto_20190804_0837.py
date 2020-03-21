@@ -8,22 +8,28 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('comments', '0006_auto_20190729_2118'),
+        ("comments", "0006_auto_20190729_2118"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='comment',
-            name='search_document',
-            field=django.contrib.postgres.search.SearchVectorField(editable=False, null=True),
+            model_name="comment",
+            name="search_document",
+            field=django.contrib.postgres.search.SearchVectorField(
+                editable=False, null=True
+            ),
         ),
         migrations.AddField(
-            model_name='historicalcomment',
-            name='search_document',
-            field=django.contrib.postgres.search.SearchVectorField(editable=False, null=True),
+            model_name="historicalcomment",
+            name="search_document",
+            field=django.contrib.postgres.search.SearchVectorField(
+                editable=False, null=True
+            ),
         ),
         migrations.AddIndex(
-            model_name='comment',
-            index=django.contrib.postgres.indexes.GinIndex(fields=['search_document'], name='comments_co_search__063272_gin'),
+            model_name="comment",
+            index=django.contrib.postgres.indexes.GinIndex(
+                fields=["search_document"], name="comments_co_search__063272_gin"
+            ),
         ),
     ]

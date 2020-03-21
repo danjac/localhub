@@ -11,17 +11,18 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('invites', '0001_initial'),
+        ("invites", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='invite',
-            name='sender',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="invite",
+            name="sender",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='invite',
-            unique_together={('email', 'community')},
+            name="invite", unique_together={("email", "community")},
         ),
     ]

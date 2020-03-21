@@ -6,16 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0013_auto_20190801_0717'),
+        ("events", "0013_auto_20190801_0717"),
     ]
 
     operations = [
         migrations.RemoveIndex(
-            model_name='event',
-            name='events_even_owner_i_ccb78f_idx',
+            model_name="event", name="events_even_owner_i_ccb78f_idx",
         ),
         migrations.AddIndex(
-            model_name='event',
-            index=models.Index(fields=['created', '-created'], name='events_even_created_39a842_idx'),
+            model_name="event",
+            index=models.Index(
+                fields=["created", "-created"], name="events_even_created_39a842_idx"
+            ),
         ),
     ]

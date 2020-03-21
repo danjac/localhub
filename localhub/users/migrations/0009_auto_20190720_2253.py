@@ -8,13 +8,37 @@ import localhub.db.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0008_auto_20190720_2236'),
+        ("users", "0008_auto_20190720_2236"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='email_notifications',
-            field=localhub.db.fields.ChoiceArrayField(base_field=models.CharField(choices=[('comments', 'Someone comments on my post'), ('deletes', 'A moderator deletes my post or comment'), ('edits', 'A moderator edits my post or comment'), ('follows', "Someone I'm following creates a post"), ('flags', 'Someone flags a post or comment (MODERATORS ONLY)'), ('likes', 'Someone likes my post or comment'), ('mentions', 'I am @mentioned in a post or comment'), ('messages', 'Someone sends me a direct message'), ('tags', "Someone creates a post containing a tag I'm following"), ('updates', 'Someone creates or updates content on site (MODERATORS ONLY)')], max_length=12), default=list, size=None),
+            model_name="user",
+            name="email_notifications",
+            field=localhub.db.fields.ChoiceArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        ("comments", "Someone comments on my post"),
+                        ("deletes", "A moderator deletes my post or comment"),
+                        ("edits", "A moderator edits my post or comment"),
+                        ("follows", "Someone I'm following creates a post"),
+                        ("flags", "Someone flags a post or comment (MODERATORS ONLY)"),
+                        ("likes", "Someone likes my post or comment"),
+                        ("mentions", "I am @mentioned in a post or comment"),
+                        ("messages", "Someone sends me a direct message"),
+                        (
+                            "tags",
+                            "Someone creates a post containing a tag I'm following",
+                        ),
+                        (
+                            "updates",
+                            "Someone creates or updates content on site (MODERATORS ONLY)",
+                        ),
+                    ],
+                    max_length=12,
+                ),
+                default=list,
+                size=None,
+            ),
         ),
     ]

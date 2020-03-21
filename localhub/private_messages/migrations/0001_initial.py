@@ -17,31 +17,93 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('communities', '0011_auto_20190814_2109'),
+        ("communities", "0011_auto_20190814_2109"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Message',
+            name="Message",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
-                ('message', localhub.markdown.fields.MarkdownField()),
-                ('read', models.DateTimeField(blank=True, null=True)),
-                ('search_document', django.contrib.postgres.search.SearchVectorField(editable=False, null=True)),
-                ('community', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='communities.Community')),
-                ('parent', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='replies', to='private_messages.Message')),
-                ('recipient', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to=settings.AUTH_USER_MODEL)),
-                ('sender', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created",
+                    model_utils.fields.AutoCreatedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="created",
+                    ),
+                ),
+                (
+                    "modified",
+                    model_utils.fields.AutoLastModifiedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="modified",
+                    ),
+                ),
+                ("message", localhub.markdown.fields.MarkdownField()),
+                ("read", models.DateTimeField(blank=True, null=True)),
+                (
+                    "search_document",
+                    django.contrib.postgres.search.SearchVectorField(
+                        editable=False, null=True
+                    ),
+                ),
+                (
+                    "community",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="communities.Community",
+                    ),
+                ),
+                (
+                    "parent",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="replies",
+                        to="private_messages.Message",
+                    ),
+                ),
+                (
+                    "recipient",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "sender",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.AddIndex(
-            model_name='message',
-            index=django.contrib.postgres.indexes.GinIndex(fields=['search_document'], name='private_mes_search__c13cc0_gin'),
+            model_name="message",
+            index=django.contrib.postgres.indexes.GinIndex(
+                fields=["search_document"], name="private_mes_search__c13cc0_gin"
+            ),
         ),
         migrations.AddIndex(
-            model_name='message',
-            index=models.Index(fields=['created', '-created', 'read'], name='private_mes_created_d71833_idx'),
+            model_name="message",
+            index=models.Index(
+                fields=["created", "-created", "read"],
+                name="private_mes_created_d71833_idx",
+            ),
         ),
     ]

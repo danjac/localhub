@@ -21,10 +21,7 @@ class Migration(migrations.Migration):
                         ("deletes", "A moderator deletes my post or comment"),
                         ("edits", "A moderator edits my post or comment"),
                         ("follows", "Someone I'm following creates a post"),
-                        (
-                            "flags",
-                            "Someone flags a post or comment (MODERATORS ONLY)",
-                        ),
+                        ("flags", "Someone flags a post or comment (MODERATORS ONLY)",),
                         ("likes", "Someone likes my post or comment"),
                         ("mentions", "I am @mentioned in a post or comment"),
                         ("messages", "Someone sends me a direct message"),

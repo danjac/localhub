@@ -10,31 +10,44 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('communities', '0002_auto_20190530_0922'),
+        ("communities", "0002_auto_20190530_0922"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('contenttypes', '0002_remove_content_type_name'),
-        ('notifications', '0001_initial'),
+        ("contenttypes", "0002_remove_content_type_name"),
+        ("notifications", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='notification',
-            name='actor',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to=settings.AUTH_USER_MODEL),
+            model_name="notification",
+            name="actor",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="+",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='notification',
-            name='community',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='communities.Community'),
+            model_name="notification",
+            name="community",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="communities.Community"
+            ),
         ),
         migrations.AddField(
-            model_name='notification',
-            name='content_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contenttypes.ContentType'),
+            model_name="notification",
+            name="content_type",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="contenttypes.ContentType",
+            ),
         ),
         migrations.AddField(
-            model_name='notification',
-            name='recipient',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to=settings.AUTH_USER_MODEL),
+            model_name="notification",
+            name="recipient",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="+",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

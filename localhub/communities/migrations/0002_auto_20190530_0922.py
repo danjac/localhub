@@ -10,23 +10,28 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('communities', '0001_initial'),
+        ("communities", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='membership',
-            name='member',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="membership",
+            name="member",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AddField(
-            model_name='community',
-            name='members',
-            field=models.ManyToManyField(related_name='communities', through='communities.Membership', to=settings.AUTH_USER_MODEL),
+            model_name="community",
+            name="members",
+            field=models.ManyToManyField(
+                related_name="communities",
+                through="communities.Membership",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='membership',
-            unique_together={('community', 'member')},
+            name="membership", unique_together={("community", "member")},
         ),
     ]

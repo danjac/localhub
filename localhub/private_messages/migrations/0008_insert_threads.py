@@ -27,6 +27,4 @@ class Migration(migrations.Migration):
         ("private_messages", "0007_auto_20200211_2103"),
     ]
 
-    operations = [
-        migrations.RunPython(insert_threads, reverse_code=remove_threads)
-    ]
+    operations = [migrations.RunPython(insert_threads, reverse_code=remove_threads)]

@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('communities', '0006_community_terms'),
+        ("communities", "0006_community_terms"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='community',
-            name='content_warning_tags',
-            field=models.TextField(blank=True, default='#nsfw', help_text='Any posts containing these tags in their description will be automatically hidden by default'),
+            model_name="community",
+            name="content_warning_tags",
+            field=models.TextField(
+                blank=True,
+                default="#nsfw",
+                help_text="Any posts containing these tags in their description will be automatically hidden by default",
+            ),
         ),
     ]

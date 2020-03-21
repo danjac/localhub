@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('private_messages', '0008_insert_threads'),
+        ("private_messages", "0008_insert_threads"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='message',
-            name='recipient_deleted',
+            model_name="message",
+            name="recipient_deleted",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='message',
-            name='sender_deleted',
+            model_name="message",
+            name="sender_deleted",
             field=models.DateTimeField(blank=True, null=True),
         ),
     ]

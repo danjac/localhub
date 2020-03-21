@@ -24,4 +24,3 @@ class PollForm(forms.ModelForm):
             ),
         }
         labels = {"additional_tags": _("Tags")}
-
