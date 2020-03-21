@@ -64,7 +64,7 @@ class ActivityCreateView(
         return get_breadcrumbs_for_model(self.model) + [
             (
                 None,
-                _("New %(activity_name)s")
+                _("Submit %(activity_name)s")
                 % {"activity_name": self.model._meta.verbose_name.capitalize()},
             )
         ]
@@ -116,17 +116,7 @@ class ActivityUpdateView(
     page_title = _("Edit")
 
     def get_breadcrumbs(self):
-        return get_breadcrumbs_for_instance(self.object) + [
-            (
-                None,
-                _(
-                    "Edit %(activity_name)s"
-                    % {
-                        "activity_name": self.object._meta.verbose_name.capitalize()  # noqa
-                    }
-                ),
-            )
-        ]
+        return get_breadcrumbs_for_instance(self.object) + [(None, _("Edit"))]
 
     def get_success_message(self, publish):
         message = (
