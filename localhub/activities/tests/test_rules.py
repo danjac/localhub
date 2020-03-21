@@ -164,7 +164,7 @@ class TestDeletePermissions:
 
     def test_owner_can_delete_activity_if_deleted(self, user):
         post = PostFactory(owner=user, deleted=timezone.now())
-        assert not user.has_perm("activities.delete_activity", post)
+        assert user.has_perm("activities.delete_activity", post)
 
     def test_owner_can_delete_activity_if_reshare(self, user):
         post = PostFactory(owner=user, is_reshare=True)

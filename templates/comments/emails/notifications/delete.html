@@ -5,7 +5,17 @@
 {% load i18n %}
 
 {% block notification_body %}
-{% blocktrans %}
-{{ actor_display }} has deleted your <a href="{{ absolute_url }}">comment</a>.
-{% endblocktrans %}
+<p>
+    {% blocktrans %}
+    {{ actor_display }} has deleted your <a href="{{ absolute_url }}">comment</a>:
+    {% endblocktrans %}
+</p>
+<p>
+    {{ object.content }}
+</p>
+<p>
+    {% blocktrans %}
+    You can still view your comment and delete it completely.
+    {% endblocktrans %}
+</p>
 {% endblock notification_body %}

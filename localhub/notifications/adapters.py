@@ -25,6 +25,10 @@ class Adapter(ABC):
 
 
 class TemplateContext:
+    """
+    Default template context for emails and HTML notifications.
+    """
+
     def __init__(self, adapter):
         self.adapter = adapter
 
@@ -47,6 +51,10 @@ class TemplateContext:
 
 
 class TemplateResolver:
+    """
+    Resolves selection of template paths for a notification. 
+    """
+
     def __init__(self, adapter):
         self.adapter = adapter
         self.verb = self.adapter.verb
@@ -172,6 +180,11 @@ class DefaultAdapter(Adapter):
     1. Rendering notification to html template
     2. Sending plain/HTML emails
     3. Webpush support
+
+    Subclasses must define ALLOWED_VERBS for all notifications they support.
+
+    If a notification verb is not in the list of ALLOWED_VERBS the notification
+    will not be sent or rendered.
     """
 
     webpusher_class = Webpusher
@@ -205,6 +218,10 @@ class DefaultAdapter(Adapter):
         self.webpusher = self.webpusher_class(self)
 
     def is_allowed(self):
+        """
+        Check if notification verb is in list of ALLOWED_VERBS
+        for this adapter.
+        """
         return self.verb in self.ALLOWED_VERBS
 
     def send_notification(self):
@@ -227,11 +244,9 @@ class DefaultAdapter(Adapter):
 
     def render_to_tag(self, template_engine=loader, extra_context=None):
         """
-        This is used with the {% render_notification %} template tag in
+        This is used with the {% notification %} template tag in
         notification_tags. It should render an HTML snippet of the notification
         in the notifications page and other parts of the site.
-
-        If not an accepted verb returns empty string.
         """
         return self.renderer.render(
             self.get_template_names(),

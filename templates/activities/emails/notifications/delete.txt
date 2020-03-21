@@ -6,6 +6,15 @@
 
 {% block notification_body %}
 {% blocktrans %}
-{{ actor_display }} has deleted your {{ object_name }}.
+{{ actor_display }} has deleted your {{ object_name }}: 
 {% endblocktrans %}
+
+{{ object }}
+
+{% blocktrans %}
+You can still view your {{ object_name }} here and delete it completely:
+{% endblocktrans %}
+
+{{ absolute_url }}
+
 {% endblock notification_body %}

@@ -6,6 +6,15 @@
 
 {% block notification_body %}
 {% blocktrans %}
-{{ actor_display }} has deleted your comment.
+{{ actor_display }} has removed your comment:
 {% endblocktrans %}
+
+{{ object.content }}
+
+{% blocktrans %}
+You can still view your comment here and delete it completely:
+{% endblocktrans %}
+
+{{ absolute_url }}
+
 {% endblock notification_body %}

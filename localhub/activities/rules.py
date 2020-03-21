@@ -57,7 +57,7 @@ rules.add_perm("activities.change_activity", is_owner & ~is_reshare & ~is_delete
 
 rules.add_perm(
     "activities.delete_activity",
-    (is_owner | is_activity_community_moderator) & ~is_deleted,
+    is_owner | (is_activity_community_moderator & ~is_deleted),
 )
 
 rules.add_perm(

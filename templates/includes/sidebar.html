@@ -50,6 +50,15 @@
        href="{% url 'comments:list' %}">{% trans "Comments" %}
     </a>
   </li>
+  {% if drafts_count %}
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'activities:drafts' %}"
+       class="badge"
+       data-badge="{{ drafts_count }}">{% trans "Drafts" %}
+    </a>
+  </li>
+  {% endif %}
   <li class="menu-item">
     <a data-controller="active-link"
        href="{% url 'likes:activities' %}">
@@ -94,15 +103,6 @@
 <ul class="menu mt-2">
   <li class="divider"
       data-content="{% trans 'Actions' %}"></li>
-  {% if drafts_count %}
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'activities:drafts' %}"
-       class="badge"
-       data-badge="{{ drafts_count }}">{% trans "Drafts" %}
-    </a>
-  </li>
-  {% endif %}
   {% if can_create_activity %}
   <li class="menu-item">
     <a data-controller="active-link"

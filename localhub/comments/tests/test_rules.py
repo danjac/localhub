@@ -100,7 +100,7 @@ class TestDeletePermissions:
 
     def test_can_delete_comment_if_owner_deleted(self, comment):
         comment.deleted = timezone.now()
-        assert not comment.owner.has_perm("comments.delete_comment", comment)
+        assert comment.owner.has_perm("comments.delete_comment", comment)
 
     def test_can_delete_comment_if_not_owner(self, comment, user):
         assert not user.has_perm("comments.delete_comment", comment)
