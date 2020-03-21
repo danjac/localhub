@@ -1,10 +1,6 @@
-import io
-
 import pytest
 from django.conf import settings
-from django.core.files import File
 from django.urls import reverse
-from PIL import Image
 
 from localhub.communities.factories import MembershipFactory
 from localhub.likes.factories import LikeFactory
@@ -14,20 +10,6 @@ from ..factories import PhotoFactory
 from ..models import Photo
 
 pytestmark = pytest.mark.django_db
-
-
-@pytest.fixture
-def photo_for_member(member):
-    return PhotoFactory(owner=member.member, community=member.community)
-
-
-@pytest.fixture
-def fake_image():
-    file_obj = io.BytesIO()
-    image = Image.new("RGBA", size=(500, 500), color="blue")
-    image.save(file_obj, "png")
-    file_obj.seek(0)
-    return File(file_obj, name="test.jpg")
 
 
 class TestPhotoCreateView:
