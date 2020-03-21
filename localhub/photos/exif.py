@@ -32,7 +32,6 @@ def convert_to_degress(value):
     """
     Convert GPS coordinate to degress in float
     """
-    print(value)
     d0 = value[0][0]
     d1 = value[0][1]
 
