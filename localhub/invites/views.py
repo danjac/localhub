@@ -4,7 +4,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -128,7 +128,7 @@ class InviteCreateView(
             self.request, _("Your invitation has been sent to %s") % invite.email,
         )
 
-        return redirect(self.get_success_url())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 invite_create_view = InviteCreateView.as_view()
@@ -148,7 +148,7 @@ class InviteResendView(InviteAdminMixin, BaseSingleInviteView):
 
         send_invitation_email(invite)
         messages.success(self.request, _("Email has been re-sent to %s") % invite.email)
-        return redirect("invites:list")
+        return HttpResponseRedirect(reverse("invites:list"))
 
 
 invite_resend_view = InviteResendView.as_view()
@@ -178,30 +178,30 @@ class InviteAcceptView(InviteRecipientQuerySetMixin, DetailView):
     template_name = "invites/accept.html"
 
     def get_redirect_url(self):
-        if self.request.community == self.object.community:
-            return redirect(settings.HOME_PAGE_URL)
-        return redirect("invites:received_list")
+        if (
+            self.object.is_accepted()
+            and self.request.community == self.object.community
+        ):
+            return settings.HOME_PAGE_URL
+        return reverse("invites:received_list")
 
     def post(self, request, *args, **kwargs):
 
         self.object = self.get_object()
 
         if "reject" in request.POST:
-            return self.reject()
+            self.object.reject()
+            messages.info(self.request, _("You have rejected the invitation"))
+            return HttpResponseRedirect(self.get_redirect_url())
 
         self.object.accept(self.request.user)
+        request.user.notify_on_join(self.object.community)
+
         messages.success(
             request,
             _("Welcome to %(community)s") % {"community": self.object.community.name},
         )
-        request.user.notify_on_join(self.object.community)
-
-        return redirect(self.get_redirect_url())
-
-    def reject(self):
-        self.object.reject()
-        messages.info(self.request, _("You have rejected the invitation"))
-        return redirect("invites:received_list")
+        return HttpResponseRedirect(self.get_redirect_url())
 
 
 invite_accept_view = InviteAcceptView.as_view()

@@ -112,8 +112,11 @@ def comment(post):
 
 
 @pytest.fixture
-def invite(community):
-    return InviteFactory(community=community)
+def invite(login_user):
+    admin = MembershipFactory(role=Membership.Role.ADMIN)
+    return InviteFactory(
+        community=admin.community, sender=admin.member, email=login_user.email
+    )
 
 
 @pytest.fixture

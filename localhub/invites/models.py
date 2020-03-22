@@ -16,11 +16,13 @@ class InviteQuerySet(models.QuerySet):
     def for_community(self, community):
         return self.filter(community=community)
 
-    def for_user(self, user, exclude_member=True):
-        qs = self.filter(email__in=user.get_email_addresses())
-        if exclude_member:
-            qs = qs.exclude(community__members=user)
-        return qs
+    def for_user(self, user):
+        """
+        Returns invites for this user, excluding any where user is already a member
+        """
+        return self.filter(email__in=user.get_email_addresses()).exclude(
+            community__members=user
+        )
 
     def pending(self):
         return self.filter(status=self.model.Status.PENDING)
