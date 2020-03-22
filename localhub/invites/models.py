@@ -4,7 +4,7 @@
 import uuid
 
 from django.conf import settings
-from django.db import models, transaction, IntegrityError
+from django.db import IntegrityError, models, transaction
 from django.utils.translation import gettext_lazy as _
 from model_utils.fields import MonitorField
 from model_utils.models import TimeStampedModel

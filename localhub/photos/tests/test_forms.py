@@ -6,7 +6,6 @@ import pytest
 from ..factories import PhotoFactory
 from ..forms import PhotoForm
 
-
 pytestmark = pytest.mark.django_db
 
 
