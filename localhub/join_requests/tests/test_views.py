@@ -90,3 +90,10 @@ class TestJoinRequestRejectView:
         ).exists()
         mail = mailoutbox[0]
         assert mail.to == [join_request.sender.email]
+
+
+class TestSentJoinRequestListView:
+    def test_get(self, client, join_request):
+        response = client.get(reverse("join_requests:sent_list"))
+        assert response.status_code == 200
+        assert join_request in response.context["object_list"]

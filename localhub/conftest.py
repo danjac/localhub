@@ -120,8 +120,8 @@ def invite(login_user):
 
 
 @pytest.fixture
-def join_request(community):
-    return JoinRequestFactory(community=community)
+def join_request(login_user):
+    return JoinRequestFactory(sender=login_user)
 
 
 @pytest.fixture
