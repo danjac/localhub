@@ -37,6 +37,11 @@ class InviteAdminMixin(LoginRequiredMixin, PermissionRequiredMixin):
 
 
 class InviteListView(InviteAdminMixin, InviteQuerySetMixin, SearchMixin, ListView):
+    """
+    TBD: list of received pending community invitations
+    + counter template tag
+    """
+
     model = Invite
     paginate_by = settings.DEFAULT_PAGE_SIZE * 2
 
@@ -233,3 +238,17 @@ class InviteAcceptView(InviteQuerySetMixin, DetailView):
 
 
 invite_accept_view = InviteAcceptView.as_view()
+
+
+class ReceivedInviteListView(LoginRequiredMixin, ListView):
+    """
+    List of pending invites sent to this user from different communities.
+    """
+
+    template_name = "received_invite_list.html"
+
+    def get_queryset(self):
+        return Invite.objects.pending().for_user(self.request.user).order_by("-created")
+
+
+received_invite_list_view = ReceivedInviteListView.as_view()

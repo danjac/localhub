@@ -136,6 +136,8 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
     """
     Returns all public communities, or communities the
     current user belongs to.
+
+    TBD: list invites (matching email)
     """
 
     paginate_by = settings.DEFAULT_PAGE_SIZE

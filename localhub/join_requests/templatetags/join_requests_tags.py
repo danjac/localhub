@@ -21,9 +21,7 @@ def get_pending_join_request_count(user, community):
     ):
         return 0
 
-    return JoinRequest.objects.filter(
-        status=JoinRequest.Status.PENDING, community=community
-    ).count()
+    return JoinRequest.objects.for_community(community).pending().count()
 
 
 @register.simple_tag
@@ -35,8 +33,8 @@ def get_pending_external_join_request_count(user, community):
     if user.is_anonymous or not community.active:
         return 0
     return (
-        JoinRequest.objects.filter(
-            status=JoinRequest.Status.PENDING,
+        JoinRequest.objects.pending()
+        .filter(
             community__membership__member=user,
             community__membership__active=True,
             community__membership__role=Membership.Role.ADMIN,
