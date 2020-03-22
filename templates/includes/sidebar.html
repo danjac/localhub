@@ -86,7 +86,16 @@
     </a>
   </li>
   {% endif %}
-  {% if pending_invites_count %}
+  {% if can_manage_community %}
+  <li class="menu-item">
+    <a data-controller="active-link"
+       {% if pending_invites_count %}
+       class="badge"
+       data-badge="{{ pending_invites_count }}"
+       {% endif %}
+       href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
+  </li>
+  {% elif pending_invites_count %}
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
@@ -235,10 +244,6 @@
   <li class="menu-item">
     <a data-controller="active-link"
        href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link"

@@ -4,20 +4,23 @@
 import uuid
 
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction, IntegrityError
 from django.utils.translation import gettext_lazy as _
 from model_utils.fields import MonitorField
 from model_utils.models import TimeStampedModel
 
-from localhub.communities.models import Community
+from localhub.communities.models import Community, Membership
 
 
 class InviteQuerySet(models.QuerySet):
     def for_community(self, community):
         return self.filter(community=community)
 
-    def for_user(self, user):
-        return self.filter(email__in=user.get_email_addresses())
+    def for_user(self, user, exclude_member=True):
+        qs = self.filter(email__in=user.get_email_addresses())
+        if exclude_member:
+            qs = qs.exclude(community__members=user)
+        return qs
 
     def pending(self):
         return self.filter(status=self.model.Status.PENDING)
@@ -36,6 +39,7 @@ class Invite(TimeStampedModel):
         REJECTED = "rejected", _("Rejected")
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
     email = models.EmailField()
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
@@ -65,3 +69,18 @@ class Invite(TimeStampedModel):
 
     def is_rejected(self):
         return self.status == self.Status.REJECTED
+
+    def set_status(self, status):
+        self.status = status
+        self.save()
+
+    @transaction.atomic
+    def accept(self, user):
+        self.set_status(self.Status.ACCEPTED)
+        try:
+            Membership.objects.create(member=user, community=self.community)
+        except IntegrityError:
+            pass
+
+    def reject(self):
+        self.set_status(self.Status.REJECTED)

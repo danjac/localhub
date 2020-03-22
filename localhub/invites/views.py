@@ -4,8 +4,6 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ValidationError
-from django.db import IntegrityError
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -14,7 +12,6 @@ from django.utils.translation import gettext as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import CreateView, DeleteView, DetailView, GenericModelView, ListView
 
-from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.views import BreadcrumbsMixin, SearchMixin
 
@@ -25,7 +22,19 @@ from .models import Invite
 
 class InviteQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
-        return Invite.objects.for_community(self.request.community)
+        return Invite.objects.for_community(self.request.community).select_related(
+            "community"
+        )
+
+
+class InviteRecipientQuerySetMixin(LoginRequiredMixin):
+    def get_queryset(self):
+        return (
+            Invite.objects.get_queryset()
+            .pending()
+            .for_user(self.request.user)
+            .select_related("community")
+        )
 
 
 class BaseSingleInviteView(InviteQuerySetMixin, GenericModelView):
@@ -158,7 +167,7 @@ class InviteDeleteView(
 invite_delete_view = InviteDeleteView.as_view()
 
 
-class InviteAcceptView(InviteQuerySetMixin, DetailView):
+class InviteAcceptView(InviteRecipientQuerySetMixin, DetailView):
     """
     Handles an invite accept action.
 
@@ -166,89 +175,59 @@ class InviteAcceptView(InviteQuerySetMixin, DetailView):
     community and the invite is flagged accordingly.
     """
 
-    allow_non_members = True
     template_name = "invites/accept.html"
 
-    def get_queryset(self):
-        return super().get_queryset().pending().for_user(self.request.user)
-
-    def get(self, request, *args, **kwargs):
-
-        self.object = self.get_object()
-        response = self.validate_invite()
-        if response:
-            return response
-
-        return self.render_to_response(self.get_context_data())
+    def get_redirect_url(self):
+        if self.request.community == self.object.community:
+            return redirect(settings.HOME_PAGE_URL)
+        return redirect("invites:received_list")
 
     def post(self, request, *args, **kwargs):
 
         self.object = self.get_object()
 
-        response = self.validate_invite()
-        if response:
-            return response
-
         if "reject" in request.POST:
-            self.reject_invite()
-            messages.info(request, _("Your invitation has been rejected"))
-            return redirect(self.get_redirect_url())
+            return self.reject()
 
-        try:
-            Membership.objects.create(
-                member=request.user, community=self.object.community
-            )
-            messages.success(
-                request,
-                _("Welcome to %(community)s")
-                % {"community": self.object.community.name},
-            )
-            request.user.notify_on_join(self.object.community)
-        except IntegrityError:
-            pass
-
-        self.accept_invite()
+        self.object.accept(self.request.user)
+        messages.success(
+            request,
+            _("Welcome to %(community)s") % {"community": self.object.community.name},
+        )
+        request.user.notify_on_join(self.object.community)
 
         return redirect(self.get_redirect_url())
 
-    def get_redirect_url(self):
-        return settings.HOME_PAGE_URL
-
-    def save_new_status(self, status):
-        self.object.status = status
-        self.object.save()
-
-    def accept_invite(self):
-        self.save_new_status(Invite.Status.ACCEPTED)
-
-    def reject_invite(self):
-        self.save_new_status(Invite.Status.REJECTED)
-
-    def validate_invite(self):
-        try:
-            if Membership.objects.filter(
-                community=self.request.community, member=self.request.user
-            ).exists():
-                raise ValidationError(_("You are already a member of this community."))
-        except ValidationError as e:
-            self.reject_invite()
-            messages.error(self.request, e.message)  # noqa
-            return redirect(self.get_redirect_url())
-        return None
+    def reject(self):
+        self.object.reject()
+        messages.info(self.request, _("You have rejected the invitation"))
+        return redirect("invites:received_list")
 
 
 invite_accept_view = InviteAcceptView.as_view()
 
 
-class ReceivedInviteListView(LoginRequiredMixin, ListView):
+class InviteRejectView(InviteRecipientQuerySetMixin, GenericModelView):
+    def post(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.reject()
+        messages.info(request, _("You have rejected the invitation"))
+        return redirect("invites:received_list")
+
+
+invite_reject_view = InviteRejectView.as_view()
+
+
+class ReceivedInviteListView(InviteRecipientQuerySetMixin, ListView):
     """
     List of pending invites sent to this user from different communities.
     """
 
-    template_name = "received_invite_list.html"
+    template_name = "invites/received_invite_list.html"
+    paginate_by = settings.DEFAULT_PAGE_SIZE * 2
 
     def get_queryset(self):
-        return Invite.objects.pending().for_user(self.request.user).order_by("-created")
+        return super().get_queryset().order_by("-created")
 
 
 received_invite_list_view = ReceivedInviteListView.as_view()

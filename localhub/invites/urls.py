@@ -8,6 +8,7 @@ from .views import (
     invite_create_view,
     invite_delete_view,
     invite_list_view,
+    invite_reject_view,
     invite_resend_view,
     received_invite_list_view,
 )
@@ -21,5 +22,6 @@ urlpatterns = [
     path("<pk>/~resend/", view=invite_resend_view, name="resend"),
     path("<pk>/~delete/", view=invite_delete_view, name="delete"),
     path("<pk>/~accept/", view=invite_accept_view, name="accept"),
-    path("received/", view=received_invite_list_view, name="received_invite_list"),
+    path("<pk>/~reject/", view=invite_reject_view, name="reject"),
+    path("received/", view=received_invite_list_view, name="received_list"),
 ]
