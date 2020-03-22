@@ -1,0 +1,50 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "join_requests/base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<h5>{% trans "Join Requests" %}</h5>
+
+{% has_perm "communities.manage_community" user community as can_manage_community %}
+{% if can_manage_community %}
+<div class="actions">
+    <a href="{% url 'join_request:list' %}">{% trans "Manage join requests" %}</a>
+</div>
+{% endif %}
+
+
+{% if object_list %}
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr>
+            <th>{% trans "Community" %}</th>
+            <th>{% trans "Status" %}</th>
+            <th>{% trans "Sent" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for join_request in object_list %}
+        <tr>
+            <td>
+                {{ join_request.community.name }}
+            </td>
+            <td>
+                {{ join_request.get_status_display }}
+            </td>
+            <td>
+                {% blocktrans with timestamp=join_request.created|timesince %}
+                {{ timestamp }} ago
+                {% endblocktrans %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% include "includes/pagination.html" %}
+{% else %}
+{% include "includes/empty.html" %}
+{% endif %}
+{% endblock content %}

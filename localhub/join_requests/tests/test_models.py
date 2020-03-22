@@ -3,6 +3,7 @@
 
 import pytest
 
+from localhub.communities.factories import MembershipFactory
 from localhub.users.factories import UserFactory
 
 from ..factories import JoinRequestFactory
@@ -16,6 +17,13 @@ class TestJoinRequestManager:
         user = UserFactory(name="Tester")
         req = JoinRequestFactory(sender=user)
         assert JoinRequest.objects.search("tester").first() == req
+
+    def test_for_sender(self, join_request):
+        assert JoinRequest.objects.for_sender(join_request.sender).exists()
+
+    def test_for_sender_if_member(self, join_request):
+        MembershipFactory(community=join_request.community, member=join_request.sender)
+        assert not JoinRequest.objects.for_sender(join_request.sender).exists()
 
     def test_pending(self):
         JoinRequestFactory(status=JoinRequest.Status.PENDING)

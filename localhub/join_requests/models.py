@@ -16,6 +16,9 @@ from localhub.db.search import SearchQuerySetMixin
 class JoinRequestQuerySet(SearchQuerySetMixin, models.QuerySet):
     search_document_field = "sender__search_document"
 
+    def for_sender(self, user):
+        return self.filter(sender=user).exclude(community__members=user)
+
     def for_community(self, community):
         return self.filter(community=community)
 

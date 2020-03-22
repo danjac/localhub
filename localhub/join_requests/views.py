@@ -3,6 +3,7 @@
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Case, IntegerField, Value, When
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
@@ -214,3 +215,22 @@ class JoinRequestCreateView(
 
 
 join_request_create_view = JoinRequestCreateView.as_view()
+
+
+class SentJoinRequestListView(LoginRequiredMixin, ListView):
+    """
+    List of pending join requests sent by this user
+    """
+
+    paginate_by = settings.DEFAULT_PAGE_SIZE * 2
+    template_name = "join_requests/sent_joinrequest_list.html"
+
+    def get_queryset(self):
+        return (
+            JoinRequest.objects.pending()
+            .for_sender(self.request.user)
+            .order_by("-created")
+        )
+
+
+sent_join_request_list_view = SentJoinRequestListView.as_view()

@@ -1,3 +1,6 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from django.urls import path
 
 from .views import (
@@ -7,12 +10,14 @@ from .views import (
     join_request_detail_view,
     join_request_list_view,
     join_request_reject_view,
+    sent_join_request_list_view,
 )
 
 app_name = "join_requests"
 
 urlpatterns = [
     path("", view=join_request_list_view, name="list"),
+    path("sent/", view=sent_join_request_list_view, name="sent_list"),
     path("~create/", view=join_request_create_view, name="create"),
     path("<int:pk>/", view=join_request_detail_view, name="detail"),
     path("<int:pk>/~accept/", view=join_request_accept_view, name="accept"),
