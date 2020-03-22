@@ -208,11 +208,16 @@ invite_accept_view = InviteAcceptView.as_view()
 
 
 class InviteRejectView(InviteRecipientQuerySetMixin, GenericModelView):
+    def get_success_url(self):
+        if Invite.objects.pending().for_user(self.request.user).exists():
+            return reverse("invites:received_list")
+        return settings.HOME_PAGE_URL
+
     def post(self, request, *args, **kwargs):
         obj = self.get_object()
         obj.reject()
         messages.info(request, _("You have rejected the invitation"))
-        return redirect("invites:received_list")
+        return HttpResponseRedirect(self.get_success_url())
 
 
 invite_reject_view = InviteRejectView.as_view()

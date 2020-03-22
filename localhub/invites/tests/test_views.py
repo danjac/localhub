@@ -72,9 +72,20 @@ class TestReceivedInviteListView:
 
 class TestInviteRejectView:
     def test_post(self, client, invite, login_user, mailoutbox):
-        response = client.post(
-            reverse("invites:accept", args=[invite.id]), {"reject": 1},
-        )
+        response = client.post(reverse("invites:reject", args=[invite.id]))
+
+        assert not Membership.objects.filter(
+            community=invite.community, member=login_user
+        ).exists()
+
+        assert not Invite.objects.pending().for_user(login_user).exists()
+
+        assert response.url == settings.HOME_PAGE_URL
+        assert len(mailoutbox) == 0
+
+    def test_post_if_other_invites(self, client, invite, login_user, mailoutbox):
+        InviteFactory(email=login_user.email)
+        response = client.post(reverse("invites:reject", args=[invite.id]))
 
         assert not Membership.objects.filter(
             community=invite.community, member=login_user

@@ -24,7 +24,7 @@
         <tr>
             <th>{% trans "Community" %}</th>
             <th>{% trans "Status" %}</th>
-            <th>{% trans "Sent" %}</th>
+            <th>{% trans "Actions" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -37,9 +37,11 @@
                 {{ join_request.get_status_display }}
             </td>
             <td>
-                {% blocktrans with timestamp=join_request.created|timesince %}
-                {{ timestamp }} ago
-                {% endblocktrans %}
+                <a href="{% url 'join_requests:delete' join_request.id %}"
+                   data-controller="ajax"
+                   data-action="ajax#post">
+                    {% trans "Delete" %}
+                </a>
             </td>
         </tr>
         {% endfor %}

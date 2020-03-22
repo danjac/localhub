@@ -100,21 +100,39 @@ class JoinRequestDetailView(JoinRequestManageMixin, BreadcrumbsMixin, DetailView
 join_request_detail_view = JoinRequestDetailView.as_view()
 
 
-class JoinRequestDeleteView(JoinRequestManageMixin, DeleteView):
+class JoinRequestDeleteView(PermissionRequiredMixin, DeleteView):
     model = JoinRequest
-    success_url = reverse_lazy("join_requests:list")
+    permission_required = "join_requests.delete"
+
+    def get_queryset(self):
+        return super().get_queryset().select_related("community", "sender")
+
+    @cached_property
+    def is_sender(self):
+        return self.object.sender == self.request.user
+
+    def get_success_url(self):
+        if self.is_sender:
+            if JoinRequest.objects.for_sender(self.request.user).exists():
+                return reverse("join_requests:sent_list")
+            return settings.HOME_PAGE_URL
+        return reverse("join_requests:list")
+
+    def get_success_message(self):
+        if self.is_sender:
+            return _("Your join request for %(community)s has been deleted") % {
+                "community": self.object.community.name
+            }
+        return _("Join request for %(sender)s has been deleted") % {
+            "sender": user_display(self.object.sender)
+        }
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()
 
-        messages.success(
-            request,
-            _("Join request for %(sender)s has been deleted")
-            % {"sender": user_display(self.object.sender)},
-        )
-
-        return redirect(self.get_success_url())
+        messages.success(request, self.get_success_message())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 join_request_delete_view = JoinRequestDeleteView.as_view()
@@ -229,6 +247,7 @@ class SentJoinRequestListView(LoginRequiredMixin, ListView):
         return (
             JoinRequest.objects.pending()
             .for_sender(self.request.user)
+            .select_related("community")
             .order_by("-created")
         )
 

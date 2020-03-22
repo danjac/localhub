@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
+from django.conf import settings
 from django.urls import reverse
 
 from localhub.communities.models import Membership
@@ -34,11 +35,22 @@ class TestJoinRequestDeleteView:
         response = client.get(reverse("join_requests:delete", args=[join_request.id]))
         assert response.status_code == 200
 
-    def test_post(self, client, admin):
+    def test_post_if_admin(self, client, admin):
         join_request = JoinRequestFactory(community=admin.community)
         response = client.post(reverse("join_requests:delete", args=[join_request.id]))
         assert response.url == reverse("join_requests:list")
         assert JoinRequest.objects.count() == 0
+
+    def test_post_if_sender_no_other_requests(self, client, join_request, login_user):
+        response = client.post(reverse("join_requests:delete", args=[join_request.id]))
+        assert response.url == reverse(settings.HOME_PAGE_URL)
+        assert JoinRequest.objects.count() == 0
+
+    def test_post_if_sender_no_other_requests(self, client, join_request, login_user):
+        JoinRequestFactory(sender=login_user)
+        response = client.post(reverse("join_requests:delete", args=[join_request.id]))
+        assert response.url == reverse("join_requests:sent_list")
+        assert JoinRequest.objects.count() == 1
 
 
 class TestJoinRequestCreateView:

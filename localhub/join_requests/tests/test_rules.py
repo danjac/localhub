@@ -4,9 +4,21 @@
 import pytest
 
 from localhub.communities.factories import CommunityFactory, MembershipFactory
+from localhub.communities.models import Membership
 from localhub.users.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
+
+
+class TestJoinRequestDelete:
+    def test_if_sender(self, join_request):
+        assert join_request.sender.has_perm("join_requests.delete", join_request)
+
+    def test_if_admin(self, join_request):
+        admin = MembershipFactory(
+            community=join_request.community, role=Membership.Role.ADMIN
+        ).member
+        assert admin.has_perm("join_requests.delete", join_request)
 
 
 class TestJoinRequestCreate:
