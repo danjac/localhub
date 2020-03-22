@@ -4,8 +4,6 @@
 {% extends "activities/activity_form.html" %}
 {% load i18n %}
 
-{% block subtitle %} | {% trans "Polls" %} | {{ view.page_title }}{% endblock %}
-
 {% block form %}
 {% include "polls/includes/poll_form.html" %}
 {% endblock %}

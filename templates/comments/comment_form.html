@@ -7,11 +7,6 @@
 {% load activities_tags %}
 
 
-{% block subtitle %}
-|
-{% if object.id %}{% trans "Edit Comment" %}{% elif parent %}{% trans "Reply" %}{% else %}{% trans "New Comment" %}{% endif %}
-{% endblock %}
-
 {% block content %}
 {% include "includes/breadcrumbs.html" %}
 

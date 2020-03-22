@@ -2,9 +2,6 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "activities/activity_detail_base.html" %}
-{% load i18n %}
-
-{% block subtitle %} | {% trans "Posts" %}{% if post.title %} | {{ post.title }}{% endif %}{% endblock %}
 
 {% block activities_detail_content %}
 {% include "posts/includes/post.html" with is_detail=True object_type="post" object=post %}

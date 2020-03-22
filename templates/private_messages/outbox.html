@@ -6,8 +6,6 @@
 {% load i18n %}
 {% load private_messages_tags %}
 
-{% block private_messages_subtitle %} | {% trans "Outbox" %}{% endblock %}
-
 {% block message_list %}
 
 {% if paginator.count or view.search_query %}

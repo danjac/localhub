@@ -5,10 +5,6 @@
 
 {% load i18n %}
 
-
-{% block private_messages_subtitle %} |
-{% if message.id %}{% trans "Edit Message" %}{% else %}{% trans "Send Message" %}{% endif %}{% endblock %}
-
 {% block content %}
 
 {% include "includes/breadcrumbs.html" %}
