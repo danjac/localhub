@@ -11,9 +11,15 @@ from ..factories import JoinRequestFactory
 from ..templatetags.join_requests_tags import (
     get_pending_external_join_request_count,
     get_pending_join_request_count,
+    get_sent_join_request_count,
 )
 
 pytestmark = pytest.mark.django_db
+
+
+class TestGetSentJoinRequestCount:
+    def test_get_sent_join_request_count(self, join_request):
+        assert get_sent_join_request_count(join_request.sender) == 1
 
 
 class TestGetPendingJoinRequestCount:

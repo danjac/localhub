@@ -86,6 +86,27 @@
     </a>
   </li>
   {% endif %}
+
+  {% if can_manage_community %}
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'join_requests:list' %}"
+       {% if pending_join_requests_count %}
+       class="badge"
+       data-badge="{{ pending_join_requests_count }}"
+       {% endif %}>
+      {% trans "Join Requests" %}
+    </a>
+  </li>
+  {% elif sent_join_requests_count %}
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'join_requests:sent_list' %}">
+      {% trans "Join Requests" %}
+    </a>
+  </li>
+  {% endif %}
+
   {% if can_manage_community %}
   <li class="menu-item">
     <a data-controller="active-link"
@@ -106,6 +127,7 @@
     </a>
   </li>
   {% endif %}
+
   <li class="menu-item">
     <a data-controller="active-link"
        href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
@@ -245,16 +267,6 @@
     <a data-controller="active-link"
        href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
   </li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'join_requests:list' %}"
-       {% if pending_join_requests_count %}
-       class="badge"
-       data-badge="{{ pending_join_requests_count }}"
-       {% endif %}>
-      {% trans "Join Requests" %}
-    </a>
-  </li>
   {% endif %}
 </ul>
 {% endif %}
@@ -269,6 +281,16 @@
     </a>
   </li>
   {% endif %}
+
+  {% if sent_join_requests_count %}
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'join_requests:sent_list' %}">
+      {% trans "Join Requests" %}
+    </a>
+  </li>
+  {% endif %}
+
   {% if pending_invites_count %}
   <li class="menu-item">
     <a data-controller="active-link"

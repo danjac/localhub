@@ -12,7 +12,7 @@ register = template.Library()
 
 
 @register.simple_tag
-def get_pending_sent_join_request_count(user):
+def get_sent_join_request_count(user):
     """
     Returns total number of pending join requests sent
     by this user for all communities
@@ -20,7 +20,7 @@ def get_pending_sent_join_request_count(user):
     if not user.is_authenticated:
         return 0
 
-    return JoinRequest.objects.pending().for_sender(user).count()
+    return JoinRequest.objects.for_sender(user).count()
 
 
 @register.simple_tag
