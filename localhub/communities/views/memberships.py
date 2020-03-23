@@ -10,7 +10,8 @@ from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView, DetailView, ListView, UpdateView
 
-from localhub.views import SearchMixin
+from localhub.users.utils import user_display
+from localhub.views import SearchMixin, PageTitleMixin
 
 from ..emails import send_membership_deleted_email
 from ..forms import MembershipForm
@@ -26,11 +27,16 @@ class MembershipQuerySetMixin(CommunityRequiredMixin):
 
 
 class MembershipListView(
-    PermissionRequiredMixin, MembershipQuerySetMixin, SearchMixin, ListView,
+    PermissionRequiredMixin,
+    MembershipQuerySetMixin,
+    SearchMixin,
+    PageTitleMixin,
+    ListView,
 ):
     paginate_by = settings.DEFAULT_PAGE_SIZE * 2
     permission_required = "communities.manage_community"
     model = Membership
+    page_title_segments = [_("Memberships")]
 
     def get_permission_object(self):
         return self.request.community
@@ -48,18 +54,25 @@ membership_list_view = MembershipListView.as_view()
 
 
 class MembershipDetailView(
-    PermissionRequiredMixin, MembershipQuerySetMixin, DetailView,
+    PermissionRequiredMixin, MembershipQuerySetMixin, PageTitleMixin, DetailView,
 ):
 
     permission_required = "communities.view_membership"
     model = Membership
+
+    def get_page_title_segments(self):
+        return [_("Memberships"), user_display(self.object.member)]
 
 
 membership_detail_view = MembershipDetailView.as_view()
 
 
 class MembershipUpdateView(
-    PermissionRequiredMixin, MembershipQuerySetMixin, SuccessMessageMixin, UpdateView,
+    PermissionRequiredMixin,
+    MembershipQuerySetMixin,
+    PageTitleMixin,
+    SuccessMessageMixin,
+    UpdateView,
 ):
     model = Membership
     form_class = MembershipForm
@@ -68,6 +81,9 @@ class MembershipUpdateView(
 
     def get_success_url(self):
         return reverse("communities:membership_detail", args=[self.object.id])
+
+    def get_page_title_segments(self):
+        return [_("Memberships"), user_display(self.object.member), _("Edit")]
 
 
 membership_update_view = MembershipUpdateView.as_view()

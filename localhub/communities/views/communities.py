@@ -15,7 +15,7 @@ from vanilla import DetailView, ListView, TemplateView, UpdateView
 from localhub.activities.models import get_activity_querysets
 from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
-from localhub.views import SearchMixin
+from localhub.views import SearchMixin, PageTitleMixin
 
 from ..forms import CommunityForm
 from ..models import Community, Membership
@@ -30,8 +30,10 @@ class CommunitySingleObjectMixin(CommunityRequiredMixin):
         return self.request.community
 
 
-class CommunityDetailView(CommunitySingleObjectMixin, DetailView):
+class CommunityDetailView(CommunitySingleObjectMixin, PageTitleMixin, DetailView):
     ...
+
+    page_title_segments = [_("About")]
 
 
 community_detail_view = CommunityDetailView.as_view()
@@ -46,6 +48,7 @@ class CommunityWelcomeView(CommunityDetailView):
 
     template_name = "communities/welcome.html"
     allow_non_members = True
+    page_title_segments = [_("Welcome")]
 
     def get(self, request):
         if is_member(request.user, request.community):
@@ -81,6 +84,8 @@ class CommunitySidebarView(CommunityDetailView):
     Renders sidebar for non-JS browsers.
     """
 
+    page_title_segments = [_("Menu")]
+
     template_name = "communities/sidebar.html"
 
 
@@ -89,6 +94,7 @@ community_sidebar_view = CommunitySidebarView.as_view()
 
 class CommunityTermsView(CommunityDetailView):
     template_name = "communities/terms.html"
+    page_title_segments = [_("Terms")]
 
 
 community_terms_view = CommunityTermsView.as_view()
@@ -111,11 +117,12 @@ community_not_found_view = CommunityNotFoundView.as_view()
 
 
 class CommunityUpdateView(
-    CommunitySingleObjectMixin, PermissionRequiredMixin, UpdateView
+    CommunitySingleObjectMixin, PermissionRequiredMixin, PageTitleMixin, UpdateView
 ):
     form_class = CommunityForm
     permission_required = "communities.manage_community"
     success_message = _("Community settings have been updated")
+    page_title_segments = [_("Community Settings")]
 
     def get_success_url(self):
         return self.request.path
@@ -132,7 +139,7 @@ class CommunityUpdateView(
 community_update_view = CommunityUpdateView.as_view()
 
 
-class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
+class CommunityListView(LoginRequiredMixin, SearchMixin, PageTitleMixin, ListView):
     """
     Returns all public communities, or communities the
     current user belongs to.
@@ -142,6 +149,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
 
     paginate_by = settings.DEFAULT_PAGE_SIZE
     template_name = "communities/community_list.html"
+    page_title_segments = [_("Communities")]
 
     def get_queryset(self):
         qs = Community.objects.visible(self.request.user).order_by("name")
