@@ -20,8 +20,8 @@ class PhotoForm(forms.ModelForm):
         label=_("Extract geolocation data from image if available"), required=False,
     )
 
-    remove_geolocation_data = forms.BooleanField(
-        label=_("Remove geolocation data from image"), required=False,
+    clear_geolocation_data = forms.BooleanField(
+        label=_("Clear geolocation data from image"), required=False,
     )
 
     class Meta:
@@ -32,7 +32,7 @@ class PhotoForm(forms.ModelForm):
             "additional_tags",
             "image",
             "extract_geolocation_data",
-            "remove_geolocation_data",
+            "clear_geolocation_data",
             "description",
             "allow_comments",
             "artist",
@@ -59,11 +59,11 @@ class PhotoForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if not self.instance.has_map():
-            del self.fields["remove_geolocation_data"]
+            del self.fields["clear_geolocation_data"]
 
     def clean(self):
         cleaned_data = super(PhotoForm, self).clean()
-        if self.cleaned_data.get("remove_geolocation_data"):
+        if self.cleaned_data.get("clear_geolocation_data"):
             cleaned_data["latitude"] = None
             cleaned_data["longitude"] = None
         elif self.cleaned_data["extract_geolocation_data"]:

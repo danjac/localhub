@@ -9,8 +9,6 @@ from localhub.db.search import SearchIndexer
 from localhub.db.tracker import Tracker
 from localhub.utils.urls import get_domain, is_https, is_image_url
 
-from .opengraph import get_opengraph_from_url
-
 
 class Post(Activity):
 
@@ -54,30 +52,3 @@ class Post(Activity):
             if is_https(self.opengraph_image) and is_image_url(self.opengraph_image)
             else ""
         )
-
-    def fetch_opengraph_data_from_url(self, commit=True):
-        """
-        Tries to fetch image/description/title from metadata in the target
-        URL.
-
-        If present will set the `title`, `opengraph_description` and
-        `opengraph_image` fields from values extracted from the HTML.
-
-        If URL is empty or the page does not return valid HTML or tags
-        then opengraph_description and opengraph_image are set to empty. If
-        not set the title will be set to the domain of the URL.
-        """
-
-        url, og = get_opengraph_from_url(self.url)
-
-        # URL might change if different from HEAD
-        self.url = url
-
-        self.opengraph_image = og.image or ""
-        self.opengraph_description = og.description or ""
-
-        if not self.title:
-            self.title = (og.title or self.get_domain())[:300]
-
-        if commit:
-            self.save()
