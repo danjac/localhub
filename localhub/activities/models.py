@@ -399,9 +399,9 @@ class Activity(TimeStampedModel):
         Returns default breadcrumbs for an Activity model class. Use
         this with BreadcrumbMixin views.
         """
-        return [
-            (cls.get_list_url(), cls.get_page_title_for_model()),
-        ] + list(breadcrumbs or [])
+        return [(cls.get_list_url(), cls.get_page_title_for_model()),] + list(
+            breadcrumbs or []
+        )
 
     def save(self, *args, **kwargs):
         is_new = self._state.adding

@@ -13,7 +13,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from vanilla import CreateView, DeleteView, DetailView, GenericModelView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.views import BreadcrumbsMixin, SearchMixin, PageTitleMixin
+from localhub.views import BreadcrumbsMixin, PageTitleMixin, SearchMixin
 
 from .emails import send_invitation_email
 from .forms import InviteForm

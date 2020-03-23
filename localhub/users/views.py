@@ -25,7 +25,7 @@ from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.likes.models import Like
 from localhub.private_messages.models import Message
-from localhub.views import SearchMixin, PageTitleMixin
+from localhub.views import PageTitleMixin, SearchMixin
 
 from .forms import UserForm
 from .utils import user_display

@@ -11,7 +11,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView, DetailView, ListView, UpdateView
 
 from localhub.users.utils import user_display
-from localhub.views import SearchMixin, PageTitleMixin
+from localhub.views import PageTitleMixin, SearchMixin
 
 from ..emails import send_membership_deleted_email
 from ..forms import MembershipForm

@@ -15,7 +15,7 @@ from vanilla import DetailView, ListView, TemplateView, UpdateView
 from localhub.activities.models import get_activity_querysets
 from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
-from localhub.views import SearchMixin, PageTitleMixin
+from localhub.views import PageTitleMixin, SearchMixin
 
 from ..forms import CommunityForm
 from ..models import Community, Membership

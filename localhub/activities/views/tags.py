@@ -17,7 +17,7 @@ from taggit.models import Tag, TaggedItem
 from vanilla import GenericModelView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.views import SearchMixin, PageTitleMixin
+from localhub.views import PageTitleMixin, SearchMixin
 
 from ..models import get_activity_models
 from .streams import BaseActivityStreamView

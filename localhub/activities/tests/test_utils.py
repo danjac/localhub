@@ -1,10 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from ..utils import (
-    extract_hashtags,
-    linkify_hashtags,
-)
+from ..utils import extract_hashtags, linkify_hashtags
 
 
 class TestExtractHashtags:

@@ -16,7 +16,7 @@ from vanilla import CreateView, DeleteView, DetailView, GenericModelView, ListVi
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.utils import user_display
-from localhub.views import BreadcrumbsMixin, SearchMixin, PageTitleMixin
+from localhub.views import BreadcrumbsMixin, PageTitleMixin, SearchMixin
 
 from .emails import send_acceptance_email, send_join_request_email, send_rejection_email
 from .forms import JoinRequestForm
