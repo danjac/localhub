@@ -16,7 +16,7 @@ from vanilla import CreateView, DeleteView, DetailView, GenericModelView, ListVi
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.utils import user_display
-from localhub.views import BreadcrumbsMixin, SearchMixin
+from localhub.views import BreadcrumbsMixin, SearchMixin, PageTitleMixin
 
 from .emails import send_acceptance_email, send_join_request_email, send_rejection_email
 from .forms import JoinRequestForm
@@ -35,7 +35,14 @@ class JoinRequestManageMixin(PermissionRequiredMixin, JoinRequestQuerySetMixin):
         return self.request.community
 
 
-class JoinRequestListView(JoinRequestManageMixin, SearchMixin, ListView):
+class JoinRequestsPageTitleMixin(PageTitleMixin):
+    def get_page_title_segments(self):
+        return [_("Join Requests")]
+
+
+class JoinRequestListView(
+    JoinRequestManageMixin, JoinRequestsPageTitleMixin, SearchMixin, ListView
+):
     paginate_by = settings.DEFAULT_PAGE_SIZE * 2
     model = JoinRequest
 
@@ -87,7 +94,9 @@ class JoinRequestListView(JoinRequestManageMixin, SearchMixin, ListView):
 join_request_list_view = JoinRequestListView.as_view()
 
 
-class JoinRequestDetailView(JoinRequestManageMixin, BreadcrumbsMixin, DetailView):
+class JoinRequestDetailView(
+    JoinRequestManageMixin, JoinRequestsPageTitleMixin, BreadcrumbsMixin, DetailView
+):
     model = JoinRequest
 
     def get_breadcrumbs(self):
@@ -203,7 +212,10 @@ join_request_reject_view = JoinRequestRejectView.as_view()
 
 
 class JoinRequestCreateView(
-    PermissionRequiredMixin, CommunityRequiredMixin, CreateView
+    PermissionRequiredMixin,
+    CommunityRequiredMixin,
+    JoinRequestsPageTitleMixin,
+    CreateView,
 ):
     model = JoinRequest
     form_class = JoinRequestForm
@@ -235,7 +247,7 @@ class JoinRequestCreateView(
 join_request_create_view = JoinRequestCreateView.as_view()
 
 
-class SentJoinRequestListView(LoginRequiredMixin, ListView):
+class SentJoinRequestListView(LoginRequiredMixin, JoinRequestsPageTitleMixin, ListView):
     """
     List of pending join requests sent by this user
     """

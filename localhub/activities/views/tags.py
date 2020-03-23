@@ -11,12 +11,13 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.functional import cached_property
+from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 from taggit.models import Tag, TaggedItem
 from vanilla import GenericModelView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.views import SearchMixin
+from localhub.views import SearchMixin, PageTitleMixin
 
 from ..models import get_activity_models
 from .streams import BaseActivityStreamView
@@ -88,7 +89,7 @@ class TagAutocompleteListView(BaseTagListView):
 tag_autocomplete_list_view = TagAutocompleteListView.as_view()
 
 
-class TagDetailView(BaseActivityStreamView):
+class TagDetailView(PageTitleMixin, BaseActivityStreamView):
     template_name = "activities/tags/tag_detail.html"
 
     @cached_property
@@ -118,6 +119,9 @@ class TagDetailView(BaseActivityStreamView):
         data = super().get_context_data(**kwargs)
         data["tag"] = self.tag
         return data
+
+    def get_page_title_segments(self):
+        return [_("Tags"), "#" + self.tag.name]
 
 
 tag_detail_view = TagDetailView.as_view()
@@ -186,10 +190,11 @@ class TagUnblockView(BaseSingleTagView):
 tag_unblock_view = TagUnblockView.as_view()
 
 
-class TagListView(SearchMixin, BaseTagListView):
+class TagListView(SearchMixin, PageTitleMixin, BaseTagListView):
     template_name = "activities/tags/tag_list.html"
     paginate_by = settings.DEFAULT_PAGE_SIZE * 2
     exclude_unused_tags = True
+    page_title_segments = [_("Tags")]
 
     def get_queryset(self):
 
@@ -220,8 +225,9 @@ class TagListView(SearchMixin, BaseTagListView):
 tag_list_view = TagListView.as_view()
 
 
-class FollowingTagListView(BaseTagListView):
+class FollowingTagListView(PageTitleMixin, BaseTagListView):
     template_name = "activities/tags/following_tag_list.html"
+    page_title_segments = [_("Tags"), _("Following")]
 
     def get_queryset(self):
         return self.request.user.following_tags.order_by("name")
@@ -230,8 +236,9 @@ class FollowingTagListView(BaseTagListView):
 following_tag_list_view = FollowingTagListView.as_view()
 
 
-class BlockedTagListView(BaseTagListView):
+class BlockedTagListView(PageTitleMixin, BaseTagListView):
     template_name = "activities/tags/blocked_tag_list.html"
+    page_title_segments = [_("Tags"), _("Blocked")]
 
     def get_queryset(self):
         return self.request.user.blocked_tags.order_by("name")

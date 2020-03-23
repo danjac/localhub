@@ -24,7 +24,7 @@ from localhub.activities.utils import get_breadcrumbs_for_instance
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
-from localhub.views import BreadcrumbsMixin, SearchMixin, PageTitleMixin
+from localhub.views import BreadcrumbsMixin, PageTitleMixin, SearchMixin
 
 from .forms import CommentForm
 from .models import Comment

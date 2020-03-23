@@ -20,7 +20,7 @@ from vanilla import TemplateView
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.notifications.models import Notification
 from localhub.pagination import PresetCountPaginator
-from localhub.views import SearchMixin, PageTitleMixin
+from localhub.views import PageTitleMixin, SearchMixin
 
 from ..models import get_activity_queryset_count, get_activity_querysets, load_objects
 

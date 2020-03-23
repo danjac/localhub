@@ -11,7 +11,7 @@
 <h5>{% trans "Email Addresses" %}</h5>
 
 <div class="actions mb-1">
-  <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+  <a href="{% url 'user_update' %}">{% trans "Settings" %}</a>
 </div>
 
 {% with emailaddresses=user.emailaddress_set.all emailaddress_count=user.emailaddress_set.count %}

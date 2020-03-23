@@ -63,7 +63,7 @@
 {% endcollapsable %}
 
 {% elif is_current_user %}
-<p>{% trans "Click the 'My Settings' link to add a bio to your profile." %}</p>
+<p>{% trans "Click the 'Settings' link to add a bio to your profile." %}</p>
 {% endif %}
 
 {% if not is_blocked %}
@@ -85,7 +85,7 @@
 
     {% if is_current_user %}
     <a href="{% url 'user_update' %}">
-        {% trans "My Settings" %}
+        {% trans "Settings" %}
     </a>
     {% endif %}
 

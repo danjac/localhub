@@ -13,7 +13,7 @@
 {% has_perm "communities.manage_community" user community as can_manage_community %}
 {% if can_manage_community %}
 <div class="actions">
-    <a href="{% url 'join_request:list' %}">{% trans "Manage join requests" %}</a>
+    <a href="{% url 'join_requests:list' %}">{% trans "Manage join requests" %}</a>
 </div>
 {% endif %}
 

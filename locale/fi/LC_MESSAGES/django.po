@@ -1068,7 +1068,7 @@ msgstr "Suoraat Viestit"
 
 #: templates/includes/default_sidebar.html:40
 #: templates/communities/base.html:22 templates/users/account_base.html:7
-msgid "My Settings"
+msgid "Settings"
 msgstr "Omat Asetukset"
 
 #: templates/includes/default_sidebar.html:43

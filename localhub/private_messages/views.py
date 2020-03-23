@@ -17,7 +17,7 @@ from vanilla import DeleteView, DetailView, FormView, GenericModelView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.utils import user_display
-from localhub.views import BreadcrumbsMixin, SearchMixin, PageTitleMixin
+from localhub.views import BreadcrumbsMixin, PageTitleMixin, SearchMixin
 
 from .forms import MessageForm
 from .models import Message
