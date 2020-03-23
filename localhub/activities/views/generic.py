@@ -27,7 +27,6 @@ from localhub.likes.models import Like
 from localhub.views import BreadcrumbsMixin, PageTitleMixin, SearchMixin
 
 from ..models import get_activity_models
-from ..utils import get_breadcrumbs_for_instance, get_breadcrumbs_for_model
 
 
 class ActivityQuerySetMixin(CommunityRequiredMixin):
@@ -43,26 +42,10 @@ class BaseSingleActivityView(ActivityQuerySetMixin, GenericModelView):
     ...
 
 
-class ActivityPageTitleMixin(PageTitleMixin):
-    def get_page_title_model(self):
-        return self.model or self.object
-
-    def get_page_title_segments(self):
-        return [_(self.get_page_title_model()._meta.verbose_name_plural.capitalize())]
-
-
-class SingleActivityPageTitleMixin(ActivityPageTitleMixin):
-    def get_page_title_model(self):
-        return self.object
-
-    def get_page_title_segments(self):
-        return super().get_page_title_segments() + [self.object.title]
-
-
 class ActivityCreateView(
     CommunityRequiredMixin,
     PermissionRequiredMixin,
-    ActivityPageTitleMixin,
+    PageTitleMixin,
     BreadcrumbsMixin,
     CreateView,
 ):
@@ -80,10 +63,10 @@ class ActivityCreateView(
         return message % {"activity": self.object._meta.verbose_name}
 
     def get_breadcrumbs(self):
-        return get_breadcrumbs_for_model(self.model) + [(None, _("Submit"))]
+        return self.model.get_breadcrumbs_for_model([(None, _("Submit"))])
 
     def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Submit")]
+        return self.model.get_page_title_segments_for_model([_("Submit")])
 
     def form_valid(self, form):
 
@@ -105,15 +88,13 @@ class ActivityCreateView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityListView(
-    ActivityQuerySetMixin, SearchMixin, ActivityPageTitleMixin, ListView
-):
+class ActivityListView(ActivityQuerySetMixin, SearchMixin, PageTitleMixin, ListView):
     allow_empty = True
     paginate_by = settings.DEFAULT_PAGE_SIZE
     order_by = ("-published", "-created")
 
-    def get_page_title_model(self):
-        return self.object_list.model
+    def get_page_title_segments(self):
+        return self.object_list.model.get_page_title_segments_for_model()
 
     def get_queryset(self):
         qs = (
@@ -133,17 +114,17 @@ class ActivityListView(
 class ActivityUpdateView(
     PermissionRequiredMixin,
     ActivityQuerySetMixin,
-    SingleActivityPageTitleMixin,
+    PageTitleMixin,
     BreadcrumbsMixin,
     UpdateView,
 ):
     permission_required = "activities.change_activity"
 
     def get_breadcrumbs(self):
-        return get_breadcrumbs_for_instance(self.object) + [(None, _("Edit"))]
+        return self.object.get_breadcrumbs([(None, _("Edit"))])
 
     def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Edit")]
+        return self.object.get_page_title_segments([_("Edit")])
 
     def get_success_message(self, publish):
         message = (
@@ -177,7 +158,8 @@ class ActivityUpdateView(
 class ActivityDeleteView(
     PermissionRequiredMixin,
     ActivityQuerySetMixin,
-    SingleActivityPageTitleMixin,
+    BreadcrumbsMixin,
+    PageTitleMixin,
     DeleteView,
 ):
     permission_required = "activities.delete_activity"
@@ -188,7 +170,10 @@ class ActivityDeleteView(
         return self.success_message % self.object._meta.verbose_name
 
     def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Edit")]
+        return self.object.get_page_title_segments([_("Delete")])
+
+    def get_breadcrumbs(self):
+        return self.object.get_breadcrumbs([(None, _("Delete"))])
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -207,7 +192,7 @@ class ActivityDeleteView(
 
 
 class ActivityDetailView(
-    ActivityQuerySetMixin, BreadcrumbsMixin, SingleActivityPageTitleMixin, DetailView
+    ActivityQuerySetMixin, BreadcrumbsMixin, PageTitleMixin, DetailView
 ):
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
@@ -241,7 +226,10 @@ class ActivityDetailView(
         )
 
     def get_breadcrumbs(self):
-        return get_breadcrumbs_for_instance(self.object)
+        self.object.get_breadcrumbs()
+
+    def get_page_title_segments(self):
+        return self.object.get_page_title_segments()
 
     def get_flags(self):
         return self.object.get_flags().select_related("user").order_by("-created")
@@ -379,7 +367,7 @@ class ActivityDislikeView(BaseSingleActivityView):
 class ActivityFlagView(
     PermissionRequiredMixin,
     BreadcrumbsMixin,
-    ActivityPageTitleMixin,
+    PageTitleMixin,
     ActivityQuerySetMixin,
     FormView,
 ):
@@ -403,13 +391,10 @@ class ActivityFlagView(
         return self.activity
 
     def get_breadcrumbs(self):
-        return get_breadcrumbs_for_instance(self.activity) + [(None, _("Flag"))]
-
-    def get_page_title_model(self):
-        return self.activity
+        return self.activity.get_breadcrumbs([(None, _("Flag"))])
 
     def get_page_title_segments(self):
-        return super().get_page_title_segments() + [self.activity.title, _("Flag")]
+        return self.activity.get_page_title_segments([_("Flag")])
 
     def form_valid(self, form):
         flag = form.save(commit=False)
@@ -434,7 +419,11 @@ activity_flag_view = ActivityFlagView.as_view()
 
 
 class ActivityCommentCreateView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, ActivityPageTitleMixin, FormView
+    PermissionRequiredMixin,
+    ActivityQuerySetMixin,
+    BreadcrumbsMixin,
+    PageTitleMixin,
+    FormView,
 ):
     form_class = CommentForm
     template_name = "comments/comment_form.html"
@@ -443,6 +432,12 @@ class ActivityCommentCreateView(
     @cached_property
     def activity(self):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+
+    def get_breadcrumbs(self):
+        return self.activity.get_breadcrumbs([(None, _("Comment"))])
+
+    def get_page_title_segments(self):
+        return self.activity.get_page_title_segments([_("Comment")])
 
     def get_permission_object(self):
         return self.activity

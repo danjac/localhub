@@ -11,6 +11,7 @@ from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
+from django.utils.translation import gettext as _
 from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 
@@ -212,6 +213,20 @@ class Comment(TimeStampedModel):
     def abbreviate(self, length=30):
         text = " ".join(self.content.plaintext().splitlines())
         return truncatechars(text, length)
+
+    def get_breadcrumbs(self, breadcrumbs=None):
+        breadcrumbs = [(self.get_absolute_url(), _("Comment"))] + list(
+            breadcrumbs or []
+        )
+        if self.content_object:
+            return self.content_object.get_breadcrumbs(breadcrumbs)
+        return [(reverse("comments:list"), _("Comments")),] + breadcrumbs
+
+    def get_page_title_segments(self, segments=None):
+        segments = [_("Comment")] + list(segments or [])
+        if self.content_object:
+            return self.content_object.get_page_title_segments(segments)
+        return [_("Comments")] + segments
 
     def get_flags(self):
         return Flag.objects.filter(comment=self)

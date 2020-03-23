@@ -20,7 +20,6 @@ from vanilla import (
     UpdateView,
 )
 
-from localhub.activities.utils import get_breadcrumbs_for_instance
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
@@ -37,12 +36,7 @@ class CommentQuerySetMixin(CommunityRequiredMixin):
         )
 
 
-class CommentsPageTitleMixin(PageTitleMixin):
-    def get_page_title_segments(self):
-        return [_("Comments")]
-
-
-class BaseCommentListView(CommentQuerySetMixin, CommentsPageTitleMixin, ListView):
+class BaseCommentListView(CommentQuerySetMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
     def get_queryset(self):
@@ -56,8 +50,12 @@ class BaseCommentListView(CommentQuerySetMixin, CommentsPageTitleMixin, ListView
         )
 
 
-class CommentListView(SearchMixin, BaseCommentListView):
+class CommentListView(SearchMixin, PageTitleMixin, BaseCommentListView):
+
     template_name = "comments/comment_list.html"
+
+    def get_page_title_segments(self):
+        return [_("Comments")]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -70,7 +68,7 @@ comment_list_view = CommentListView.as_view()
 
 
 class CommentDetailView(
-    CommentQuerySetMixin, CommentsPageTitleMixin, BreadcrumbsMixin, DetailView
+    CommentQuerySetMixin, PageTitleMixin, BreadcrumbsMixin, DetailView
 ):
     model = Comment
 
@@ -91,16 +89,10 @@ class CommentDetailView(
         return response
 
     def get_breadcrumbs(self):
-        if self.object.content_object:
-            return get_breadcrumbs_for_instance(self.object.content_object) + [
-                (None, _("Comment"))
-            ]
-        return []
+        return self.object.get_breadcrumbs()
 
     def get_page_title_segments(self):
-        return super().get_page_title_segments() + [
-            self.object.content_object or _("Deleted")
-        ]
+        return self.object.get_page_title_segments()
 
     def get_flags(self):
         return self.object.get_flags().select_related("user").order_by("-created")
@@ -126,7 +118,7 @@ comment_detail_view = CommentDetailView.as_view()
 class CommentUpdateView(
     PermissionRequiredMixin,
     CommentQuerySetMixin,
-    CommentsPageTitleMixin,
+    PageTitleMixin,
     BreadcrumbsMixin,
     UpdateView,
 ):
@@ -135,19 +127,10 @@ class CommentUpdateView(
     permission_required = "comments.change_comment"
 
     def get_breadcrumbs(self):
-        breadcrumbs = [
-            (self.object.get_absolute_url(), _("Comment")),
-            (None, _("Edit")),
-        ]
-        if self.object.content_object:
-            breadcrumbs = (
-                get_breadcrumbs_for_instance(self.object.content_object) + breadcrumbs
-            )
-
-        return breadcrumbs
+        return self.object.get_breadcrumbs([(None, _("Edit"))])
 
     def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Edit")]
+        return self.object.get_page_title_segments([_("Edit")])
 
     def form_valid(self, form):
         comment = form.save(commit=False)
@@ -164,7 +147,13 @@ class CommentUpdateView(
 comment_update_view = CommentUpdateView.as_view()
 
 
-class CommentDeleteView(PermissionRequiredMixin, CommentQuerySetMixin, DeleteView):
+class CommentDeleteView(
+    PermissionRequiredMixin,
+    BreadcrumbsMixin,
+    PageTitleMixin,
+    CommentQuerySetMixin,
+    DeleteView,
+):
     permission_required = "comments.delete_comment"
     template_name = "comments/comment_confirm_delete.html"
 
@@ -178,6 +167,12 @@ class CommentDeleteView(PermissionRequiredMixin, CommentQuerySetMixin, DeleteVie
 
         messages.success(request, _("Comment has been deleted"))
         return redirect(comment.content_object)
+
+    def get_breadcrumbs(self):
+        return self.object.get_breadcrumbs([(None, _("Edit"))])
+
+    def get_page_title_segments(self):
+        return self.object.get_page_title_segments([_("Edit")])
 
 
 comment_delete_view = CommentDeleteView.as_view()
@@ -225,7 +220,7 @@ comment_dislike_view = CommentDislikeView.as_view()
 class CommentFlagView(
     PermissionRequiredMixin,
     BreadcrumbsMixin,
-    CommentsPageTitleMixin,
+    PageTitleMixin,
     CommentQuerySetMixin,
     FormView,
 ):
@@ -249,18 +244,10 @@ class CommentFlagView(
         return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
 
     def get_breadcrumbs(self):
-        breadcrumbs = [
-            (self.comment.get_absolute_url(), _("Comment")),
-            (None, _("Flag")),
-        ]
-        if self.comment.content_object:
-            breadcrumbs = (
-                get_breadcrumbs_for_instance(self.comment.content_object) + breadcrumbs
-            )
-        return breadcrumbs
+        return self.comment.get_breadcrumbs([(None, _("Flag"))])
 
     def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Flag")]
+        return self.comment.get_page_title_segments([_("Flag")])
 
     def form_valid(self, form):
         flag = form.save(commit=False)
@@ -282,7 +269,7 @@ comment_flag_view = CommentFlagView.as_view()
 
 class CommentReplyView(
     CommentQuerySetMixin,
-    CommentsPageTitleMixin,
+    PageTitleMixin,
     BreadcrumbsMixin,
     PermissionRequiredMixin,
     CreateView,
@@ -295,22 +282,14 @@ class CommentReplyView(
         return self.parent
 
     def get_breadcrumbs(self):
-        breadcrumbs = [
-            (self.parent.get_absolute_url(), _("Parent")),
-            (None, _("Reply")),
-        ]
-        if self.parent.content_object:
-            breadcrumbs = (
-                get_breadcrumbs_for_instance(self.parent.content_object) + breadcrumbs
-            )
-        return breadcrumbs
+        return self.parent.get_breadcrumbs([(None, _("Reply"))])
+
+    def get_page_title_segments(self):
+        return self.parent.get_page_title_segments([_("Reply")])
 
     @cached_property
     def parent(self):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
-
-    def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Reply")]
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)

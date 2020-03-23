@@ -3,44 +3,11 @@
 
 import re
 
-from django.template.defaultfilters import truncatechars
 from django.urls import reverse
-from django.utils.encoding import smart_text
-from django.utils.translation import gettext as _
 
 from localhub.utils.text import slugify_unicode
 
 HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")
-
-
-def get_breadcrumbs_for_model(model_cls):
-    """
-    Returns default breadcrumbs for an Activity model class. Use
-    this with BreadcrumbMixin views.
-    """
-    return [
-        (
-            reverse(f"{model_cls._meta.app_label}:list"),
-            _(model_cls._meta.verbose_name_plural.title()),
-        ),
-    ]
-
-
-def get_breadcrumbs_for_instance(instance):
-    """
-    Returns default breadcrumbs for an Activity model instance. Use
-    this with BreadcrumbMixin views.
-    """
-    current = (
-        instance.get_absolute_url(),
-        truncatechars(smart_text(instance), 60),
-    )
-    if instance.published:
-        return get_breadcrumbs_for_model(instance.__class__) + [current]
-    return [
-        (reverse("activities:drafts"), _("Drafts")),
-        current,
-    ]
 
 
 def extract_hashtags(content):

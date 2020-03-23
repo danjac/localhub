@@ -7,8 +7,11 @@ from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models, transaction
+from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.encoding import smart_text
+from django.utils.translation import gettext as _
 from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 from taggit.managers import TaggableManager
@@ -378,6 +381,28 @@ class Activity(TimeStampedModel):
         ]
         abstract = True
 
+    @classmethod
+    def get_page_title_for_model(cls):
+        return smart_text(_(cls._meta.verbose_name_plural.title()))
+
+    @classmethod
+    def get_page_title_segments_for_model(cls, segments=None):
+        return [cls.get_page_title_for_model()] + list(segments or [])
+
+    @classmethod
+    def get_list_url(cls):
+        return reverse(f"{cls._meta.app_label}:list")
+
+    @classmethod
+    def get_breadcrumbs_for_model(cls, breadcrumbs=None):
+        """
+        Returns default breadcrumbs for an Activity model class. Use
+        this with BreadcrumbMixin views.
+        """
+        return [
+            (cls.get_list_url(), cls.get_page_title_for_model()),
+        ] + list(breadcrumbs or [])
+
     def save(self, *args, **kwargs):
         is_new = self._state.adding
         super().save(*args, **kwargs)
@@ -402,6 +427,24 @@ class Activity(TimeStampedModel):
 
     def slugify(self):
         return slugify_unicode(self)
+
+    def get_page_title(self):
+        return truncatechars(smart_text(self), 60)
+
+    def get_page_title_segments(self, segments=None):
+        return self.__class__.get_page_title_segments_for_model(
+            [self.get_page_title()] + list(segments or [])
+        )
+
+    def get_breadcrumbs(self, breadcrumbs=None):
+        breadcrumbs = [(self.get_absolute_url(), self.get_page_title())] + list(
+            breadcrumbs or []
+        )
+
+        if self.published:
+            return self.__class__.get_breadcrumbs_for_model(breadcrumbs)
+
+        return [(reverse("activities:drafts"), _("Drafts"))] + breadcrumbs
 
     def resolve_url(self, view_name, *args):
         return reverse(
