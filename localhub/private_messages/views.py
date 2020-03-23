@@ -217,22 +217,29 @@ class MessageCreateView(
             username=self.kwargs["username"],
         )
 
+    @cached_property
+    def recipient_display(self):
+        return user_display(self.recipient)
+
     def get_breadcrumbs(self):
         return [
             (
                 reverse("users:messages", args=[self.recipient.username]),
-                user_display(self.recipient),
+                self.recipient_display,
             ),
             (None, _("Send Message")),
         ]
 
     def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Send Message")]
+        return super().get_page_title_segments() + [
+            self.recipient_display,
+            _("Send Message"),
+        ]
 
     def get_form(self, data=None, files=None):
         form = self.form_class(data, files)
         form["message"].label = _("Send message to %(recipient)s") % {
-            "recipient": user_display(self.recipient)
+            "recipient": self.recipient_display
         }
         return form
 
