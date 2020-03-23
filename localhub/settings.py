@@ -281,6 +281,10 @@ class Base(Configuration):
     def LOCALE_PATHS(self):
         return [os.path.join(self.BASE_DIR, "locale")]
 
+    @property
+    def LONG_PAGE_SIZE(self):
+        return self.DEFAULT_PAGE_SIZE * 2
+
 
 class DockerConfigMixin:
     @property

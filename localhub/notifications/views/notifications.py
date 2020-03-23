@@ -32,7 +32,7 @@ class NotificationSuccessRedirectMixin:
 
 
 class NotificationListView(NotificationQuerySetMixin, PageTitleMixin, ListView):
-    paginate_by = settings.DEFAULT_PAGE_SIZE * 2
+    paginate_by = settings.LONG_PAGE_SIZE
     template_name = "notifications/notification_list.html"
     model = Notification
     page_title_segments = [_("Notifications")]

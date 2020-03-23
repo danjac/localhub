@@ -59,7 +59,7 @@ class InviteListView(
     """
 
     model = Invite
-    paginate_by = settings.DEFAULT_PAGE_SIZE * 2
+    paginate_by = settings.LONG_PAGE_SIZE
 
     def get_permission_object(self):
         return self.request.community
@@ -242,7 +242,7 @@ class ReceivedInviteListView(
     """
 
     template_name = "invites/received_invite_list.html"
-    paginate_by = settings.DEFAULT_PAGE_SIZE * 2
+    paginate_by = settings.LONG_PAGE_SIZE
 
     def get_queryset(self):
         return super().get_queryset().order_by("-created")

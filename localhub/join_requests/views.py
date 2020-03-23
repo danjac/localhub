@@ -43,7 +43,7 @@ class JoinRequestsPageTitleMixin(PageTitleMixin):
 class JoinRequestListView(
     JoinRequestManageMixin, JoinRequestsPageTitleMixin, SearchMixin, ListView
 ):
-    paginate_by = settings.DEFAULT_PAGE_SIZE * 2
+    paginate_by = settings.LONG_PAGE_SIZE
     model = JoinRequest
 
     @cached_property
@@ -252,7 +252,7 @@ class SentJoinRequestListView(LoginRequiredMixin, JoinRequestsPageTitleMixin, Li
     List of pending join requests sent by this user
     """
 
-    paginate_by = settings.DEFAULT_PAGE_SIZE * 2
+    paginate_by = settings.LONG_PAGE_SIZE
     template_name = "join_requests/sent_joinrequest_list.html"
 
     def get_queryset(self):

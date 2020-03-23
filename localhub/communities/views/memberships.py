@@ -33,7 +33,7 @@ class MembershipListView(
     PageTitleMixin,
     ListView,
 ):
-    paginate_by = settings.DEFAULT_PAGE_SIZE * 2
+    paginate_by = settings.LONG_PAGE_SIZE
     permission_required = "communities.manage_community"
     model = Membership
     page_title_segments = [_("Memberships")]

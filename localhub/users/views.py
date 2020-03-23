@@ -127,7 +127,7 @@ class BaseSingleUserView(UserQuerySetMixin, GenericModelView):
 
 
 class BaseUserListView(UserQuerySetMixin, PageTitleMixin, ListView):
-    paginate_by = settings.DEFAULT_PAGE_SIZE * 2
+    paginate_by = settings.LONG_PAGE_SIZE
 
     def get_queryset(self):
         return (

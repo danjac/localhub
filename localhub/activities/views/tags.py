@@ -192,7 +192,7 @@ tag_unblock_view = TagUnblockView.as_view()
 
 class TagListView(SearchMixin, PageTitleMixin, BaseTagListView):
     template_name = "activities/tags/tag_list.html"
-    paginate_by = settings.DEFAULT_PAGE_SIZE * 2
+    paginate_by = settings.LONG_PAGE_SIZE
     exclude_unused_tags = True
     page_title_segments = [_("Tags")]
 
