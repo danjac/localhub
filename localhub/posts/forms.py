@@ -13,17 +13,13 @@ from .opengraph import Opengraph
 class PostForm(forms.ModelForm):
 
     clear_opengraph_data = forms.BooleanField(
-        required=False, label=_("Clear OpenGraph image and/or description")
+        required=False, label=_("Clear OpenGraph data from post")
     )
 
     fetch_opengraph_data = forms.BooleanField(
         required=False,
         initial=True,
         label=_("Fetch OpenGraph data from URL if available"),
-        help_text=_(
-            "Automatically insert image and/or description from OpenGraph and "
-            "other meta tags in the target page."
-        ),
     )
 
     class Meta:
