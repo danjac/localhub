@@ -43,11 +43,7 @@ class PostForm(forms.ModelForm):
             "opengraph_description": forms.HiddenInput,
         }
         help_texts = {
-            "title": _(
-                "If you add a URL in the Link field below and leave the Title "
-                "field empty, we will try to automatically fetch a title and "
-                "description for your post from the web page."
-            ),
+            "title": _("Optional if URL provided."),
             "additional_tags": _(
                 "Hashtags can also be added to title and description."
             ),
