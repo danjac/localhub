@@ -1,7 +1,7 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-#!/bin/sh
+#!/usr/bin/env
 
 # shortcut to run Django manage commands under docker compose
 
