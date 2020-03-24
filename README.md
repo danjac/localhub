@@ -28,6 +28,10 @@ Development installation requires Docker and Docker-Compose. Assuming both are i
 
 `docker-compose exec django pytest`
 
+Or just use the "runtests" shortcut script:
+
+`./runtests`
+
 ## Deployment
 
 **Please note that LocalHub is in the early development stage and should not be trusted to run in a serious production environment. Breaking changes will happen until a stable release is officially available.**
