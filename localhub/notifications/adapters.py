@@ -52,7 +52,7 @@ class TemplateContext:
 
 class TemplateResolver:
     """
-    Resolves selection of template paths for a notification. 
+    Resolves selection of template paths for a notification.
     """
 
     def __init__(self, adapter):

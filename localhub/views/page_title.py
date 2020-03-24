@@ -1,12 +1,13 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.utils.encoding import smart_text
-
 
 class PageTitleMixin:
     """
-    Applies subtitle to <title> tags
+    Applies subtitle to <title> tags with a globally set divider.
+
+    Should define either a page_title_segments class attribute
+    or get_page_title_segments() method, returning a list.
     """
 
     page_title_segments = []

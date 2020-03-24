@@ -3,8 +3,6 @@
 import django.contrib.postgres.fields
 from django.db import migrations, models
 
-import localhub.users.models
-
 
 class Migration(migrations.Migration):
 

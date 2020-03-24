@@ -3,8 +3,7 @@
 
 version: '3.4'
 
-x-env:
-  &default-env
+x-env: &default-env
   DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
   REDIS_URL: redis://redis:6379/0
   DJANGO_EMAIL_HOST: mailhog
@@ -35,7 +34,7 @@ services:
     image: mailhog/mailhog:v1.0.0
     restart: always
     ports:
-      - "8025:8025"
+      - '8025:8025'
 
   webpack:
     build:
@@ -43,8 +42,8 @@ services:
       dockerfile: Dockerfile.webpack
     command: npm run dev
     volumes:
-        - .:/app
-        - /app/node_modules
+      - .:/app
+      - /app/node_modules
 
   django: &django
     build:
@@ -59,7 +58,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - "8000:8000"
+      - '8000:8000'
     command: /start-django
 
   celeryworker:

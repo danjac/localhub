@@ -131,7 +131,6 @@ class TestStripExternalImages:
     def test_if_internal_image_and_anon_user(self, anonymous_user, settings):
         settings.STATIC_URL = "/static/"
         content = '<p><img src="/static/funny.gif"/></p>'
-        user = UserFactory(show_external_images=False)
         assert strip_external_images(content, anonymous_user) == content
 
     def test_if_internal_image_and_user_show_external_images(self, settings):

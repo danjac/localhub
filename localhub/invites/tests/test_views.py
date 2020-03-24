@@ -2,9 +2,7 @@ import pytest
 from django.conf import settings
 from django.urls import reverse
 
-from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
-from localhub.notifications.models import Notification
 
 from ..factories import InviteFactory
 from ..models import Invite
