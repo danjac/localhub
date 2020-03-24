@@ -77,9 +77,7 @@ class Opengraph:
         return None
 
     def parse_description_from_html(self):
-        return self.parse_meta_tags_from_html(
-            self, "og:description", "twitter:description"
-        )
+        return self.parse_meta_tags_from_html("og:description", "twitter:description")
 
     def parse_meta_tags_from_html(self, *names):
         for name in names:

@@ -43,7 +43,7 @@ class PostForm(forms.ModelForm):
             "opengraph_description": forms.HiddenInput,
         }
         help_texts = {
-            "title": _("Optional if URL provided."),
+            "title": _("Optional if URL provided"),
             "additional_tags": _(
                 "Hashtags can also be added to title and description."
             ),
