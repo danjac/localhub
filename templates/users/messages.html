@@ -53,8 +53,6 @@
 
 {% endif %}
 
-{% include "private_messages/includes/email_settings.html" %}
-
 {% if object_list %}
 {% for message in object_list %}
 {% show_message user community message %}
