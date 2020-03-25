@@ -1,11 +1,23 @@
+# Copyright (c) 2019 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import itertools
 
 
 def takefirst(iterable, key=None):
+    """Returns iterable containing just the first instance of
+    an item in the list matching the key
+
+    Arguments:
+        iterable {Iterable}
+
+    Keyword Arguments:
+        key {any} -- key value or function
+
+    Yields:
+        any
     """
-    Returns iterable containing the first
-    instance of each item matching the key func.
-    """
+
     keys = set()
 
     for key, group in itertools.groupby(iterable, key):

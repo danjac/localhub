@@ -25,6 +25,18 @@ logger = logging.getLogger(__name__)
 class Opengraph:
     @classmethod
     def from_url(cls, url):
+        """Grabs OpenGraph and other HTML data from URL and parses
+        the HTML content.
+
+        Note that the OpenGraph url value may be different from the
+        url in the argument as any redirects are resolved if possible.
+
+        Arguments:
+            url {string} -- URL of HTML source page
+
+        Returns:
+            OpenGraph -- OpenGraph instance with relevant data.
+        """
         try:
             # see if redirect in HEAD
             response = requests.head(url, allow_redirects=True)
@@ -56,6 +68,15 @@ class Opengraph:
         self.soup = None
 
     def parse_html(self, html):
+        """Parses HTML title, image and description from HTML OpenGraph and
+        Twitter meta tags and other HTML content.
+
+        Arguments:
+            html {string} -- HTML content
+
+        Returns:
+            OpenGraph -- OpenGraph instance
+        """
         self.soup = BeautifulSoup(html, "html.parser")
         self.title = self.parse_title_from_html()
         self.image = self.parse_image_from_html()

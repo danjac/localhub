@@ -62,6 +62,7 @@ class PostForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        cleaned_data.update(self.get_opengraph_data(**cleaned_data))
 
         title = cleaned_data.get("title")
         url = cleaned_data.get("url")
@@ -69,18 +70,32 @@ class PostForm(forms.ModelForm):
         if not any((title, url)):
             raise forms.ValidationError(_("Either title or URL must be provided"))
 
-        if cleaned_data.get("clear_opengraph_data"):
-            cleaned_data["opengraph_image"] = ""
-            cleaned_data["opengraph_description"] = ""
-        elif url and (not title or cleaned_data["fetch_opengraph_data"]):
-            og = Opengraph.from_url(url)
-            cleaned_data["url"] = og.url or ""
-
-            if not title:
-                cleaned_data["title"] = og.title[:300]
-
-            if cleaned_data["fetch_opengraph_data"]:
-                cleaned_data["opengraph_image"] = og.image or ""
-                cleaned_data["opengraph_description"] = og.description or ""
-
         return cleaned_data
+
+    def get_opengraph_data(
+        self,
+        *,
+        title="",
+        url="",
+        fetch_opengraph_data=False,
+        clear_opengraph_data=False,
+        **cleaned_data
+    ):
+        if clear_opengraph_data:
+            return {"opengraph_image": "", "opengraph_description": ""}
+
+        if not url:
+            return {}
+
+        if not title or fetch_opengraph_data:
+            og = Opengraph.from_url(url)
+            data = {"title": (title or og.title)[:300], "url": url}
+            if fetch_opengraph_data:
+                data.update(
+                    {
+                        "opengraph_image": og.image or "",
+                        "opengraph_description": og.description or "",
+                    }
+                )
+            return data
+        return {}

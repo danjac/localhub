@@ -71,11 +71,14 @@ def clean_domain(domain):
 
 
 def get_domain(url):
-    """
-    Returns the domain of a URL.
-    Returns None if invalid.
-    """
+    """Returns domain of URL e.g. https://google.com -> google.com
 
+    Arguments:
+        url {string or None}
+
+    Returns:
+        string or None -- original argument if URL not valid, otherwise domain.
+    """
     if not is_url(url):
         return url
 
