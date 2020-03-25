@@ -21,7 +21,7 @@
   You have <strong>1 unread messages</strong>.
   {% endblocktrans %}
 </div>
-{% else %}
+{% elif paginator.count %}
 <div class="my-2 toast text-center">
   {% blocktrans count counter=paginator.count %}
   You have exchanged <strong>1 message</strong>.
@@ -41,7 +41,7 @@
   You have <strong>1 unread messages</strong> from {{ display_name }}.
   {% endblocktrans %}
 </div>
-{% else %}
+{% elif paginator.count %}
 <div class="my-2 toast text-center">
   {% blocktrans count counter=paginator.count %}
   You have exchanged <strong>1 message</strong> with {{ display_name }}.
