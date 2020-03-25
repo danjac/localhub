@@ -17,7 +17,7 @@ def register(model):
         ...
 
     Arguments:
-        model {django.db.Model} -- Model clas
+        model {Model} -- Django Model class
 
     Returns:
         Adapter -- Adapter instance

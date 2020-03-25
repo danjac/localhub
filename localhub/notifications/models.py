@@ -15,6 +15,16 @@ from localhub.communities.models import Community
 
 class NotificationQuerySet(models.QuerySet):
     def for_community(self, community):
+        """Filter notifications for a community, including
+        only those with actors who are active members.
+
+        Arguments:
+            community {Community}
+
+        Returns:
+            QuerySet
+        """
+
         return self.filter(
             community=community,
             actor__membership__community=community,
@@ -23,16 +33,46 @@ class NotificationQuerySet(models.QuerySet):
         )
 
     def exclude_blocked_actors(self, recipient):
+        """Exclude all notifications with actors blocked by the recipient.
+
+        Arguments:
+            recipient {User} -- notification recipient
+
+        Returns:
+            QuerySet
+        """
+
         return self.exclude(actor__in=recipient.blocked.all())
 
     def for_recipient(self, recipient):
+        """Return all notifications for a recipient
+
+        Arguments:
+            recipient {User} -- notification recipient
+
+        Returns:
+            QuerySet
+        """
+
         return self.filter(recipient=recipient)
 
-    def mark_read(self):
-        self.update(is_read=True)
-
     def unread(self):
+        """Return all notifications with is_read=False
+
+        Returns:
+            QuerySet
+        """
+
         return self.filter(is_read=False)
+
+    def mark_read(self):
+        """Marks all notifications read
+
+        Returns:
+            int -- number updated
+        """
+
+        self.update(is_read=True)
 
 
 class Notification(TimeStampedModel):
@@ -83,13 +123,24 @@ class PushSubscription(models.Model):
         ]
 
     def push(self, payload, ttl=0):
-        """
-        Sends push notification.
+        """Sends push notification.
         If sub has expired, will delete the instance.
-        Returns True if sent.
 
-        This should probably be called in a celery task.
+        This should probably be called asynchronously e.g. in celery.
+
+        Arguments:
+            payload {dict} -- webpush payload e.g. "header", "body", "url"
+
+        Keyword Arguments:
+            ttl {int} -- time to live (default: {0})
+
+        Raises:
+            e: WebPushException
+
+        Returns:
+            bool -- if webpush succeeds
         """
+
         subscription_info = {
             "endpoint": self.endpoint,
             "keys": {"auth": self.auth, "p256dh": self.p256dh},
