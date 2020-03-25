@@ -138,11 +138,13 @@ class Message(TimeStampedModel):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
     sender = models.ForeignKey(
-        settings.AUTH_USER_MODEL, related_name="+", on_delete=models.CASCADE
+        settings.AUTH_USER_MODEL, related_name="sent_messages", on_delete=models.CASCADE
     )
 
     recipient = models.ForeignKey(
-        settings.AUTH_USER_MODEL, related_name="+", on_delete=models.CASCADE
+        settings.AUTH_USER_MODEL,
+        related_name="received_messages",
+        on_delete=models.CASCADE,
     )
 
     message = MarkdownField()

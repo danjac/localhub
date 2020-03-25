@@ -21,7 +21,7 @@ This community has {{ counter }} members.
 
 {% block user_list %}
 <div class="mb-1">
-    {% include "includes/forms/search_form.html" with selector=True %}
+  {% include "includes/forms/search_form.html" with selector=True %}
 </div>
 {{ block.super }}
 {% endblock user_list %}

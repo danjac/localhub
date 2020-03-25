@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
 
@@ -26,6 +27,11 @@ def get_response():
         return HttpResponse()
 
     return _get_response
+
+
+@pytest.fixture
+def user_model():
+    return get_user_model()
 
 
 @pytest.fixture

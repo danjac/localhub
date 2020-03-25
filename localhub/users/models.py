@@ -27,48 +27,107 @@ from .utils import user_display
 
 class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
     def for_email(self, email):
-        """
-        Returns all users with primary or additional emails matching
-        this email (case insensitive).
+        """Returns users matching this email address, including both
+        primary and secondary email addresses
+
+        Arguments:
+            email {string} -- email address
+
+        Returns:
+            QuerySet
         """
         return self.filter(
             models.Q(emailaddress__email__iexact=email) | models.Q(email__iexact=email)
         )
 
+    def with_num_unread_messages(self, recipient):
+        """Returns annotation of number of unread private messages sent by this user.
+
+        Annotates "num_unread_messages" to QuerySet.
+
+        Arguments:
+            recipient {User} -- message recipient
+
+        Returns:
+            QuerySet
+        """
+        return self.annotate(
+            num_unread_messages=models.Count(
+                "sent_messages",
+                filter=models.Q(
+                    sent_messages__recipient=recipient,
+                    sent_messages__read__isnull=True,
+                    sent_messages__sender_deleted__isnull=True,
+                    sent_messages__recipient_deleted__isnull=True,
+                ),
+                distinct=True,
+            )
+        )
+
     def with_is_following(self, follower):
+        """Annotates if user is a follower with attribute is_following.
+
+        Arguments:
+            follower {User}
+
+        Returns:
+            QuerySet
+        """
         return self.annotate(
             is_following=models.Exists(
                 follower.following.filter(pk=models.OuterRef("id"))
             )
         )
 
-    def with_is_blocked(self, user):
+    def with_is_blocked(self, blocker):
+        """Adds is_blocked annotation if in user's blocked list.
+
+        Arguments:
+            blocker {User}
+
+        Returns:
+            QuerySet
+        """
         return self.annotate(
-            is_blocked=models.Exists(user.blocked.filter(pk=models.OuterRef("id")))
+            is_blocked=models.Exists(blocker.blocked.filter(pk=models.OuterRef("id")))
         )
 
     def matches_usernames(self, names):
-        """
-        Returns any users matching username (case insensitive).
+        """Returns users matching the (case insensitive) username.
+
+        Arguments:
+            names {List} -- list of usernames
+
+        Returns:
+            QuerySet
         """
         if not names:
             return self.none()
         return self.filter(username__iregex=r"^(%s)+" % "|".join(names))
 
     def for_community(self, community):
-        """
-        Returns only users which are a) active and b) have active
+        """ Returns only users which are a) active and b) have active
         membership with given community.
-        """
 
+        Arguments:
+            community {Community}
+
+        Returns:
+            QuerySet
+        """
         return self.filter(
             membership__community=community, membership__active=True, is_active=True,
         )
 
     def with_role(self, community):
-        """
-        Adds annotations "role" and "role_display" for users for this community.
+        """Adds annotations "role" and "role_display" for users for this community.
         Use in conjunction with for_community.
+
+        Arguments:
+            community {Community}
+
+        Returns:
+            QuerySet
         """
         return self.annotate(
             role=models.Subquery(

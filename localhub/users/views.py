@@ -209,6 +209,7 @@ class FollowingUserListView(BaseUserListView):
             )
             .for_community(self.request.community)
             .with_role(self.request.community)
+            .with_num_unread_messages(self.request.user)
             .order_by("name", "username")
         )
 
@@ -225,7 +226,10 @@ class FollowerUserListView(BaseUserListView):
             super()
             .get_queryset()
             .filter(following=self.request.user)
+            .for_community(self.request.community)
+            .with_role(self.request.community)
             .with_is_following(self.request.user)
+            .with_num_unread_messages(self.request.user)
         )
 
 
@@ -241,11 +245,39 @@ class BlockedUserListView(BaseUserListView):
             super()
             .get_queryset()
             .filter(blockers=self.request.user)
+            .for_community(self.request.community)
+            .with_role(self.request.community)
             .with_is_following(self.request.user)
         )
 
 
 blocked_user_list_view = BlockedUserListView.as_view()
+
+
+class MemberListView(SearchMixin, BaseUserListView):
+    """
+    Shows all members of community
+    """
+
+    page_title_segments = [_("Members")]
+    template_name = "users/member_list.html"
+
+    def get_queryset(self):
+        qs = (
+            super()
+            .get_queryset()
+            .exclude(blocked=self.request.user)
+            .for_community(self.request.community)
+            .with_role(self.request.community)
+            .with_is_following(self.request.user)
+            .with_num_unread_messages(self.request.user)
+        )
+        if self.search_query:
+            qs = qs.search(self.search_query)
+        return qs
+
+
+member_list_view = MemberListView.as_view()
 
 
 class UserAutocompleteListView(BaseUserListView):
@@ -265,29 +297,6 @@ class UserAutocompleteListView(BaseUserListView):
 
 
 user_autocomplete_list_view = UserAutocompleteListView.as_view()
-
-
-class MemberListView(SearchMixin, BaseUserListView):
-    """
-    Shows all members of community
-    """
-
-    page_title_segments = [_("Members")]
-    template_name = "users/member_list.html"
-
-    def get_queryset(self):
-        qs = (
-            super()
-            .get_queryset()
-            .exclude(blocked=self.request.user)
-            .with_is_following(self.request.user)
-        )
-        if self.search_query:
-            qs = qs.search(self.search_query)
-        return qs
-
-
-member_list_view = MemberListView.as_view()
 
 
 class UserStreamView(SingleUserMixin, BaseActivityStreamView):
