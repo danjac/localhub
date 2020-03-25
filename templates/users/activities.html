@@ -8,34 +8,39 @@
 {% if paginator.count %}
 <div class="mt-2 toast text-center">
 
-    {% if is_current_user %}
+  {% if is_current_user %}
 
-    {% blocktrans count counter=paginator.count %}
-    You have posted <strong>1 activity</strong>
-    {% plural %}
-    You have posted <strong>{{ counter }} activities</strong>
-    {% endblocktrans %}
-    {% if num_likes %}
-    {% blocktrans count counter=num_likes %}
-    and have received a total of <strong>1 like</strong> for your activities.
-    {% plural %}
-    and have received a total of <strong>{{ counter }} likes</strong> for your activities.
-    {% endblocktrans %}
-    {% endif %}
+  {% blocktrans count counter=paginator.count %}
+  You have published <strong>1 activity</strong>
+  {% plural %}
+  You have published <strong>{{ counter }} activities</strong>
+  {% endblocktrans %}
+  {% if num_likes %}
+  {% blocktrans count counter=num_likes %}
+  and have received <strong>1 like</strong> for your activities.
+  {% plural %}
+  and have received <strong>{{ counter }} likes</strong> for your activities.
+  {% endblocktrans %}
+  {% else %}
+  and have not received any likes for your activities.
+  {% endif %}
 
-    {% else %}
-    {% blocktrans count counter=paginator.count %}
-    This user has published <strong>1 post</strong>
-    {% plural %}
-    This user has published <strong>{{ counter }} posts</strong>
-    {% endblocktrans %}
-    {% blocktrans count counter=num_likes %}
-    and has a total of <strong>1 like</strong> for their posts.
-    {% plural %}
-    and has a total of <strong>{{ counter }} likes</strong> for their posts.
-    {% endblocktrans %}
-
-    {% endif %}
+  {% else %}
+  {% blocktrans count counter=paginator.count %}
+  {{ display_name }} has published <strong>1 activity</strong>
+  {% plural %}
+  {{ display_name }} has published <strong>{{ counter }} activities</strong>
+  {% endblocktrans %}
+  {% if num_likes %}
+  {% blocktrans count counter=num_likes %}
+  and has received <strong>1 like</strong> for their activities.
+  {% plural %}
+  and has received <strong>{{ counter }} likes</strong> for their activities.
+  {% endblocktrans %}
+  {% else %}
+  and has not received any likes for their activities.
+  {% endif %}
+  {% endif %}
 </div>
 {% endif %}
 

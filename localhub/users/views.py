@@ -60,13 +60,17 @@ class SingleUserMixin(BaseUserQuerySetMixin, PageTitleMixin):
         return response
 
     def get_page_title_segments(self):
-        return [user_display(self.user_obj)]
+        return [self.display_name]
 
     @cached_property
     def user_obj(self):
         return get_object_or_404(
             self.get_user_queryset(), username=self.kwargs["username"]
         )
+
+    @cached_property
+    def display_name(self):
+        return user_display(self.user_obj)
 
     @cached_property
     def membership(self):
@@ -114,6 +118,7 @@ class SingleUserMixin(BaseUserQuerySetMixin, PageTitleMixin):
                 "is_blocker": self.is_blocker,
                 "is_blocking": self.is_blocking,
                 "user_obj": self.user_obj,
+                "display_name": self.display_name,
                 "membership": self.membership,
                 "unread_messages": self.unread_messages,
             }

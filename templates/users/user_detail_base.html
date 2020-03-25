@@ -4,7 +4,6 @@
 {% extends "base.html" %}
 
 {% load i18n %}
-{% load account %}
 {% load rules %}
 {% load activities_tags %}
 {% load users_tags %}
@@ -18,47 +17,45 @@
 {% has_perm "private_messages.create_message" user community as can_create_message %}
 {% has_perm "communities.view_membership" user membership as can_view_membership %}
 
-{% user_display user_obj as display_name %}
-
 <h5>
-    {% avatar user_obj "avatar-lg" %}
-    {% if user_obj.username == display_name %}
-    @{{ display_name }}
-    {% else %}
-    {{ display_name }}
-    (@{{ user_obj.username }})
-    {% endif %}
-    {% if membership.is_admin %}
-    <span class="chip bg-primary">{% trans "Admin" %}</span>
-    {% elif membership.is_moderator %}
-    <span class="chip bg-primary">{% trans "Moderator" %}</span>
-    {% endif %}
+  {% avatar user_obj "avatar-lg" %}
+  {% if user_obj.username == display_name %}
+  @{{ display_name }}
+  {% else %}
+  {{ display_name }}
+  (@{{ user_obj.username }})
+  {% endif %}
+  {% if membership.is_admin %}
+  <span class="chip bg-primary">{% trans "Admin" %}</span>
+  {% elif membership.is_moderator %}
+  <span class="chip bg-primary">{% trans "Moderator" %}</span>
+  {% endif %}
 </h5>
 
 {% if is_blocked %}
 <p>
-    <b>
-        {% if is_blocker %}
-        {% trans "This user has blocked you." %}
-        {% else %}
-        {% trans "You are blocking this user." %}
-        {% endif %}
-    </b>
+  <b>
+    {% if is_blocker %}
+    {% trans "This user has blocked you." %}
+    {% else %}
+    {% trans "You are blocking this user." %}
+    {% endif %}
+  </b>
 </p>
 <p>
-    <b>
-        {% if is_blocker %}
-        {% trans "You cannot send messages to this person." %}
-        {% else %}
-        {% trans "You cannot exchange messages with this person and their content has been removed from your feeds." %}
-        {% endif %}
-    </b>
+  <b>
+    {% if is_blocker %}
+    {% trans "You cannot send messages to this person." %}
+    {% else %}
+    {% trans "You cannot exchange messages with this person and their content has been removed from your feeds." %}
+    {% endif %}
+  </b>
 </p>
 {% elif user_obj.bio %}
 
 {% collapsable %}
 <div class="markdown-content">
-    {{ user_obj.bio.markdown|strip_external_images:user }}
+  {{ user_obj.bio.markdown|strip_external_images:user }}
 </div>
 {% endcollapsable %}
 
@@ -68,117 +65,117 @@
 
 {% if not is_blocked %}
 <p class="py-1">
-    {% if is_current_user %}
-    {% blocktrans with created=membership.created|timesince %}
-    You have been a member for <b>{{ created }}</b>.
-    {% endblocktrans %}
-    {% elif membership %}
-    {% blocktrans with created=membership.created|timesince %}
-    {{ display_name }} has been a member for <b>{{ created }}</b>.
-    {% endblocktrans %}
-    {% endif %}
+  {% if is_current_user %}
+  {% blocktrans with created=membership.created|timesince %}
+  You have been a member for <b>{{ created }}</b>.
+  {% endblocktrans %}
+  {% elif membership %}
+  {% blocktrans with created=membership.created|timesince %}
+  {{ display_name }} has been a member for <b>{{ created }}</b>.
+  {% endblocktrans %}
+  {% endif %}
 </p>
 {% endif %}
 
 <div class="actions mb-1"
      data-controller="toggle">
 
-    {% if is_current_user %}
-    <a href="{% url 'user_update' %}">
-        {% trans "Settings" %}
-    </a>
-    {% endif %}
+  {% if is_current_user %}
+  <a href="{% url 'user_update' %}">
+    {% trans "Settings" %}
+  </a>
+  {% endif %}
 
-    {% if not is_current_user %}
+  {% if not is_current_user %}
 
-    {% if can_follow_user %}
-    {% with following=user.following.all %}
-    <a href="{% url 'users:unfollow' user_obj.username %}"
-       {% if user_obj not in following %}
-       class="d-hide"
-       data-js-toggle-ignore
-       {% endif %}
-       data-controller="js-toggle ajax"
-       data-action="ajax#post toggle#toggle"
-       data-target="toggle.togglable"
-       data-toggle-target="follow"
-       data-ajax-redirect="none">
-        {% trans "Unfollow" %}
-    </a>
-    <a href="{% url 'users:follow' user_obj.username %}"
-       {% if user_obj in following %}
-       class="d-hide"
-       data-js-toggle-ignore
-       {% endif %}
-       data-controller="js-toggle ajax"
-       data-action="ajax#post toggle#toggle"
-       data-target="toggle.togglable"
-       data-toggle-target="follow"
-       data-ajax-redirect="none">
-        {% trans "Follow" %}
-    </a>
-    {% endwith %}
-    {% endif %}
+  {% if can_follow_user %}
+  {% with following=user.following.all %}
+  <a href="{% url 'users:unfollow' user_obj.username %}"
+     {% if user_obj not in following %}
+     class="d-hide"
+     data-js-toggle-ignore
+     {% endif %}
+     data-controller="js-toggle ajax"
+     data-action="ajax#post toggle#toggle"
+     data-target="toggle.togglable"
+     data-toggle-target="follow"
+     data-ajax-redirect="none">
+    {% trans "Unfollow" %}
+  </a>
+  <a href="{% url 'users:follow' user_obj.username %}"
+     {% if user_obj in following %}
+     class="d-hide"
+     data-js-toggle-ignore
+     {% endif %}
+     data-controller="js-toggle ajax"
+     data-action="ajax#post toggle#toggle"
+     data-target="toggle.togglable"
+     data-toggle-target="follow"
+     data-ajax-redirect="none">
+    {% trans "Follow" %}
+  </a>
+  {% endwith %}
+  {% endif %}
 
-    {% if can_create_message and not is_current_user and not is_blocked %}
-    <a href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
-    {% endif %}
+  {% if can_create_message and not is_current_user and not is_blocked %}
+  <a href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
+  {% endif %}
 
-    {% if can_block_user %}
-    {% with redirect_url=user_obj.get_absolute_url %}
-    {% if is_blocking %}
-    <a href="{% url 'users:unblock' user_obj.username %}"
-       class="d-hide"
-       data-controller="js-toggle ajax"
-       data-action="ajax#post toggle#toggle"
-       data-ajax-redirect="{{ redirect_url }}">
-        {% trans "Unblock" %}
-    </a>
-    {% else %}
-    <a href="{% url 'users:block' user_obj.username %}"
-       class="d-hide"
-       data-controller="js-toggle ajax"
-       data-action="ajax#post toggle#toggle"
-       data-ajax-redirect="{{ redirect_url }}">
-        {% trans "Block" %}
-    </a>
-    {% endif %}
-    {% endwith %}
-    {% endif %}
-    {% endif %}
+  {% if can_block_user %}
+  {% with redirect_url=user_obj.get_absolute_url %}
+  {% if is_blocking %}
+  <a href="{% url 'users:unblock' user_obj.username %}"
+     class="d-hide"
+     data-controller="js-toggle ajax"
+     data-action="ajax#post toggle#toggle"
+     data-ajax-redirect="{{ redirect_url }}">
+    {% trans "Unblock" %}
+  </a>
+  {% else %}
+  <a href="{% url 'users:block' user_obj.username %}"
+     class="d-hide"
+     data-controller="js-toggle ajax"
+     data-action="ajax#post toggle#toggle"
+     data-ajax-redirect="{{ redirect_url }}">
+    {% trans "Block" %}
+  </a>
+  {% endif %}
+  {% endwith %}
+  {% endif %}
+  {% endif %}
 
-    {% if can_view_membership %}
-    <a href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
-    {% endif %}
+  {% if can_view_membership %}
+  <a href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
+  {% endif %}
 
 </div>
 
 {% if not is_blocked %}
 <ul class="tab tab-block">
-    <li class="tab-item"
-        data-controller="active-link"
-        data-active-link-exact>
-        <a data-target="active-link.match"
-           href="{% url 'users:activities' user_obj.username %}">{% trans "Activities" %}</a>
-    </li>
-    <li class="tab-item"
-        data-controller="active-link"
-        data-active-link-exact>
-        <a data-target="active-link.match"
-           href="{% url 'users:messages' user_obj.username %}"
-           {% if unread_messages %}
-           class="badge"
-           data-badge="{{ unread_messages }}"
-           {% endif %}>
-            {% trans "Messages" %}
-        </a>
-    </li>
-    <li class="tab-item"
-        data-controller="active-link"
-        data-active-link-exact>
-        <a data-target="active-link.match"
-           href="{% url 'users:comments' user_obj.username %}">{% trans "Comments" %}</a>
-    </li>
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'users:activities' user_obj.username %}">{% trans "Activities" %}</a>
+  </li>
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'users:messages' user_obj.username %}"
+       {% if unread_messages %}
+       class="badge"
+       data-badge="{{ unread_messages }}"
+       {% endif %}>
+      {% trans "Messages" %}
+    </a>
+  </li>
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'users:comments' user_obj.username %}">{% trans "Comments" %}</a>
+  </li>
 </ul>
 {% block user_content %}{% endblock %}
 {% endif %}

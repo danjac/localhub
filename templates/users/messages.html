@@ -11,32 +11,46 @@
 
 {% block user_content %}
 
-{% if paginator.count %}
+{% if is_current_user %}
+
+{% if unread_messages %}
 <div class="my-2 toast text-center">
-  {% spaceless %}
-  {% if unread_messages %}
   {% blocktrans count counter=unread_messages %}
-  You have <strong>1 unread message</strong> from this user.
+  You have <strong>1 unread message</strong>.
   {% plural %}
-  You have <strong>1 unread messages</strong> from this user.
+  You have <strong>1 unread messages</strong>.
   {% endblocktrans %}
-  {% else %}
-  {% blocktrans count counter=num_messages_sent %}
-  You have sent <strong>1 message</strong>
-  {% plural %}
-  You have sent <strong>{{ counter }} messages</strong>
-  {% endblocktrans %}
-  {% blocktrans count counter=num_messages_received %}
-  and have received a total of <strong>1 message</strong>
-  {% plural %}
-  and have received a total of <strong>{{ counter }} messages</strong>
-  {% endblocktrans %}
-  {% if not is_current_user %}
-  {% trans "from this user" %}
-  {% endif %}.
-  {% endif %}
-  {% endspaceless %}
 </div>
+{% else %}
+<div class="my-2 toast text-center">
+  {% blocktrans count counter=paginator.count %}
+  You have exchanged <strong>1 message</strong>.
+  {% plural %}
+  You have exchanged <strong>{{ counter }} messages</strong>.
+  {% endblocktrans %}
+</div>
+{% endif %}
+
+{% else %}
+
+{% if unread_messages %}
+<div class="my-2 toast text-center">
+  {% blocktrans count counter=unread_messages %}
+  You have <strong>1 unread message</strong> from {{ display_name }}.
+  {% plural %}
+  You have <strong>1 unread messages</strong> from {{ display_name }}.
+  {% endblocktrans %}
+</div>
+{% else %}
+<div class="my-2 toast text-center">
+  {% blocktrans count counter=paginator.count %}
+  You have exchanged <strong>1 message</strong> with {{ display_name }}.
+  {% plural %}
+  You have exchanged <strong>{{ counter }} messages</strong> with {{ display_name }}.
+  {% endblocktrans %}
+</div>
+{% endif %}
+
 {% endif %}
 
 {% include "private_messages/includes/email_settings.html" %}
