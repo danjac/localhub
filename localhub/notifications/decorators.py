@@ -7,6 +7,17 @@ from .registry import registry
 
 
 def register(model):
+    """
+    Class decorator that registers a notification Adapter
+    class with this model.
+
+    Example:
+
+    @register(Post)
+    class PostAdapter(DefaultAdapter):
+        ...
+    """
+
     def _adapter_wrapper(adapter_cls):
         registry.register(adapter_cls, model)
         return adapter_cls

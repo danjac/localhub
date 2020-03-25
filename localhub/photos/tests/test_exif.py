@@ -16,7 +16,7 @@ class TestConvertToDegress:
             (61, 1),
             (3, 1),
         )
-        with pytest.raises(IndexError):
+        with pytest.raises(exif.InvalidExifData):
             exif.convert_to_degress(value)
 
 
