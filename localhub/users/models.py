@@ -214,41 +214,6 @@ class User(AbstractUser):
             models.Index(fields=["name", "username", "email"]),
         ]
 
-    def get_display_name(self):
-        return user_display(self)
-
-    def get_absolute_url(self):
-        return reverse("users:activities", args=[self.username])
-
-    def get_notifications(self):
-        """
-        Note: returns notifications triggered by this user, not
-        received by this user.
-        """
-        return get_generic_related_queryset(self, Notification)
-
-    def has_role(self, community, *roles):
-        """
-        Checks if user has given role in the community, if any. Result
-        is cached.
-        """
-        return self.community_roles_cache.get(community.id, None) in roles
-
-    def is_blocked(self, user):
-        """
-        Check if user is blocking this other user, or is blocked by this other
-        user.
-        """
-        if self == user:
-            return False
-        return self.get_blocked_users().filter(pk=user.id)
-
-    def get_blocked_users(self):
-        """
-        Return a) users I'm blocking and b) users blocking me.
-        """
-        return (self.blockers.all() | self.blocked.all()).distinct()
-
     @cached_property
     def community_roles_cache(self):
         return dict(
@@ -257,8 +222,71 @@ class User(AbstractUser):
             )
         )
 
+    def get_absolute_url(self):
+        return reverse("users:activities", args=[self.username])
+
+    def get_display_name(self):
+        """Displays full name or username
+
+        Returns:
+            string -- full display name
+        """
+        return user_display(self)
+
+    def get_notifications(self):
+        """Returns notifications where the user is the target
+        content object, *not* necessarily the actor or recipient.
+
+        Returns:
+            QuerySet
+        """
+        return get_generic_related_queryset(self, Notification)
+
+    def has_role(self, community, *roles):
+        """Checks if user has given role in the community, if any. Result
+        is cached.
+        Arguments:
+            community {Community}
+            roles {*string} -- roles i.e. one or more of "member", "moderator", "admin"
+
+        Returns:
+            bool -- if user has any of these roles
+        """
+        return self.community_roles_cache.get(community.id, None) in roles
+
+    def is_blocked(self, user):
+        """ Check if user is blocking this other user, or is blocked by this other
+        user.
+
+        Arguments:
+            user {User}
+
+        Returns:
+            bool
+        """
+        if self == user:
+            return False
+        return self.get_blocked_users().filter(pk=user.id).exists()
+
+    def get_blocked_users(self):
+        """Return a) users I'm blocking and b) users blocking me.
+
+        Returns:
+            QuerySet
+        """
+        return (self.blockers.all() | self.blocked.all()).distinct()
+
     @dispatch
     def notify_on_join(self, community):
+        """Returns notification to all other current members that
+        this user has just joined the community.
+
+        Arguments:
+            community {Community}
+
+        Returns:
+            List[Notification]
+        """
         return [
             Notification(
                 content_object=self,
@@ -272,23 +300,28 @@ class User(AbstractUser):
 
     @dispatch
     def notify_on_follow(self, recipient, community):
-        """
-        Sends notification to provided recipients
-        """
+        """Sends notification to recipient that they have just been followed.
 
-        return [
-            Notification(
-                content_object=self,
-                actor=self,
-                recipient=recipient,
-                community=community,
-                verb="new_follower",
-            )
-        ]
+        Arguments:
+            recipient {User}
+            community {Community}
+
+        Returns:
+            Notification
+        """
+        return Notification(
+            content_object=self,
+            actor=self,
+            recipient=recipient,
+            community=community,
+            verb="new_follower",
+        )
 
     def get_email_addresses(self):
-        """
-        Get set of emails belonging to user.
+        """Get set of emails belonging to user.
+
+        Returns:
+            Iterable[string]
         """
         return set([self.email]) | set(
             self.emailaddress_set.values_list("email", flat=True)
