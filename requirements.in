@@ -31,8 +31,7 @@ micawber
 psycopg2-binary
 pymdown-extensions
 pyopenssl
-# https://github.com/pytest-dev/pytest/issues/6492
-pytest==5.3.2
+pytest
 pytest-cov
 pytest-django
 pytest-mock
@@ -40,7 +39,8 @@ pytest-xdist
 pytz
 pywebpush
 # https://github.com/andymccurdy/redis-py/issues/1274
-redis==3.3.1
+# redis==3.3.1
+redis
 rules
 sorl-thumbnail
 unidecode
