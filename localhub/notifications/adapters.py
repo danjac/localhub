@@ -168,6 +168,9 @@ class Webpusher:
 
 
 class Mailer:
+    """
+    Manages Notification plain and HTML emails.
+    """
 
     resolver_class = TemplateResolver
     renderer_class = TemplateRenderer
@@ -261,6 +264,9 @@ class DefaultAdapter(Adapter):
         """
         Check if notification verb is in list of ALLOWED_VERBS
         for this adapter.
+
+        Returns:
+            bool -- if verb is permitted
         """
         return self.verb in self.ALLOWED_VERBS
 
@@ -274,20 +280,44 @@ class DefaultAdapter(Adapter):
             self.webpusher.send()
 
     def get_template_names(self):
+        """Returns path of template names using TemplateResolver
+
+        Returns:
+            List -- list of template paths
+        """
         return self.resolver.resolve(f"{self.app_label}/includes")
 
     def get_object_url(self):
+        """Calls content_object.get_absolute_url()
+
+        Returns:
+            string -- object URL
+        """
         return self.object.get_absolute_url()
 
     def get_absolute_url(self):
+        """Prepends the complete community URL to get_object_url(), for
+        example https://demo.localhub.social/posts/path-to-single-post/
+
+        Returns:
+            string -- absolute URL
+        """
         return self.community.resolve_url(self.get_object_url())
 
     def render_to_tag(self, template_engine=loader, extra_context=None):
         """
-        This is used with the {% notification %} template tag in
-        notification_tags. It should render an HTML snippet of the notification
+        Used with the {% notification %} template tag under notification_tags.
+
+        It should render an HTML snippet of the notification
         in the notifications page and other parts of the site.
-        """
+
+       Keyword Arguments:
+           template_engine -- Django template engine (default: {loader})
+           extra_context {dict or None} -- additional context (default: {None})
+
+       Returns:
+           string -- rendered template string
+       """
         return self.renderer.render(
             self.get_template_names(),
             self.context.get_context(extra_context),
