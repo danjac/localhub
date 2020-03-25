@@ -7,8 +7,7 @@ from .registry import registry
 
 
 def register(model):
-    """
-    Class decorator that registers a notification Adapter
+    """Class decorator that registers a notification Adapter
     class with this model.
 
     Example:
@@ -16,6 +15,12 @@ def register(model):
     @register(Post)
     class PostAdapter(DefaultAdapter):
         ...
+
+    Arguments:
+        model {django.db.Model} -- Model clas
+
+    Returns:
+        Adapter -- Adapter instance
     """
 
     def _adapter_wrapper(adapter_cls):
@@ -26,10 +31,18 @@ def register(model):
 
 
 def dispatch(func):
-    """
-    Method should return a list of Notification instances. Runs
-    bulk_create() on the notifications and calls dispatch() on
-    each notification.
+    """Handles email and push messages for all notifications returned. Notifications
+    are automatically saved to the database.
+
+    Check is run on all notifications to ensure only permitted verbs are saved
+    and dispatched.
+
+    Arguments:
+        func {function} -- Method or function returning a single instance
+        or iterable of Notification instances.
+
+    Returns:
+        List -- List of saved Notification instances.
     """
 
     @functools.wraps(func)

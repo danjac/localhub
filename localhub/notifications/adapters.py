@@ -33,6 +33,25 @@ class TemplateContext:
         self.adapter = adapter
 
     def get_context(self, extra_context=None):
+        """Returns context containing useful notification info:
+
+        - notification: the Notification instance
+        - object: content object attached to Notification
+        - object_url: result of content_object.get_absolute_url()
+        - absolute_url: object_url prefixed by complete URL of community
+        - object_name: object verbose name e.g. "post"
+        - actor: actor User instance
+        - actor_display: full name of actor
+        - recipient: recipient User instance
+        - recipient_display: full name of recipient
+        - verb: e.g. "mention"
+
+        Keyword Arguments:
+            extra_context {None or dict} -- additional context (default: {None})
+
+        Returns:
+            dict -- context
+        """
         context = {
             "notification": self.adapter.notification,
             "object": self.adapter.object,
@@ -61,14 +80,22 @@ class TemplateResolver:
         self.object_name = self.adapter.object_name
 
     def resolve(self, prefix, suffix=".html"):
-        """
+        """Generates list of standard Django template paths. Can
+        be passed to loader.select_template() or similar.
+
         Pattern:
         {prefix}/{verb}_{object_name}{suffix}
         {prefix}/{verb}{suffix}
         {prefix}/{object_name}_notification{suffix}
         {prefix}/notification{suffix}
-        """
 
+        Arguments:
+            prefix {string} -- prefix prepended to all the paths e.g. "post"
+            suffix {string} -- suffix appended to all paths e.g. ".txt"
+
+        Returns:
+            List -- list of path strings
+        """
         return [
             f"{prefix}/notifications/{self.verb}_{self.object_name}{suffix}",
             f"{prefix}/notifications/{self.verb}{suffix}",
@@ -81,6 +108,19 @@ class TemplateRenderer:
     def render(
         self, template_names, context, template_engine=loader,
     ):
+        """Renders a list of templates to a string. Use with TemplateResolver
+        and TemplateContext.
+
+        Arguments:
+            template_names {List} -- list of standard Django template paths
+            context {dict} -- template context
+
+        Keyword Arguments:
+            template_engine -- Django template engine (default: {loader})
+
+        Returns:
+            string -- rendered template string
+        """
         return template_engine.render_to_string(template_names, context=context)
 
 
