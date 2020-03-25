@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from localhub.comments.factories import CommentFactory
@@ -17,9 +16,6 @@ from localhub.private_messages.factories import MessageFactory
 from ..factories import UserFactory
 
 pytestmark = pytest.mark.django_db
-
-
-User = get_user_model()
 
 
 class TestMemberListView:
@@ -152,10 +148,10 @@ class TestUserDeleteView:
         response = client.get(reverse("user_delete"))
         assert response.status_code == 200
 
-    def test_post(self, client, login_user):
+    def test_post(self, client, user_model, login_user):
         response = client.post(reverse("user_delete"))
         assert response.url == "/"
-        assert User.objects.filter(username=login_user.username).count() == 0
+        assert user_model.objects.filter(username=login_user.username).count() == 0
 
 
 class TestUserFollowView:

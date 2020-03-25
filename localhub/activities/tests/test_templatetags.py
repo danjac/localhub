@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
 
@@ -48,19 +47,19 @@ class TestGetPinnedActivity:
 
 
 class TestIsOembedUrl:
-    def test_is_oembed_if_oembed_url_and_user_permitted(self):
+    def test_is_oembed_if_oembed_url_and_user_permitted(self, user_model):
         url = "https://www.youtube.com/watch?v=eLeIJtLebZk"
-        user = get_user_model()(show_embedded_content=True)
+        user = user_model(show_embedded_content=True)
         assert is_oembed_url(user, url)
 
-    def test_is_oembed_if_oembed_url_and_user_not_permitted(self):
+    def test_is_oembed_if_oembed_url_and_user_not_permitted(self, user_model):
         url = "https://www.youtube.com/watch?v=eLeIJtLebZk"
-        user = get_user_model()(show_embedded_content=False)
+        user = user_model(show_embedded_content=False)
         assert not is_oembed_url(user, url)
 
-    def test_is_oembed_if_not_oembed_url(self):
+    def test_is_oembed_if_not_oembed_url(self, user_model):
         url = "https://reddit.com"
-        user = get_user_model()(show_embedded_content=True)
+        user = user_model(show_embedded_content=True)
         assert not is_oembed_url(user, url)
 
 
