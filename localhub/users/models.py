@@ -144,7 +144,7 @@ class User(AbstractUser):
 
     search_document = SearchVectorField(null=True, editable=False)
 
-    search_indexer = SearchIndexer(("A", "username"), ("B", "name"))
+    search_indexer = SearchIndexer(("A", "username"), ("B", "name"), ("C", "bio"))
 
     objects = UserManager()
 
