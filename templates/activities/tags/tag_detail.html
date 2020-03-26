@@ -8,8 +8,8 @@
 {% block content %}
 
 <ul class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'activities:tag_list' %}">{% trans "Tags" %}</a></li>
-    <li class="breadcrumb-item">{{ tag.name }}</li>
+  <li class="breadcrumb-item"><a href="{% url 'activities:tag_list' %}">{% trans "Tags" %}</a></li>
+  <li class="breadcrumb-item">{{ tag.name }}</li>
 </ul>
 
 {% has_perm "users.follow_tag" user as can_follow_tag %}
@@ -18,69 +18,69 @@
 {% if can_follow_tag or can_block_tag %}
 <div class="actions d-hide"
      data-controller="js-toggle toggle">
-    {% if can_follow_tag %}
-    {% with following=user.following_tags.all %}
-    <a href="{% url 'activities:tag_unfollow' tag.id %}"
-       {% if not tag in following %}
-       class="d-hide"
-       {% endif %}
-       data-controller="ajax"
-       data-ajax-redirect="none"
-       data-target="toggle.togglable"
-       data-toggle-target="follow"
-       data-action="ajax#post toggle#toggle">
-        {% trans "Unfollow" %}
-    </a>
-    <a href="{% url 'activities:tag_follow' tag.id %}"
-       {% if tag in following %}
-       class="d-hide"
-       {% endif %}
-       data-controller="ajax"
-       data-ajax-redirect="none"
-       data-target="toggle.togglable"
-       data-toggle-target="follow"
-       data-action="ajax#post toggle#toggle">
-        {% trans "Follow" %}
-    </a>
-    {% endwith %}
-    {% endif %}
-    {% if can_block_tag %}
-    {% with blocked=user.blocked_tags.all %}
-    <a href="{% url 'activities:tag_unblock' tag.id %}"
-       {% if tag not in blocked %}
-       class="d-hide"
-       {% endif %}
-       data-controller="ajax"
-       data-ajax-redirect="none"
-       data-target="toggle.togglable"
-       data-toggle-target="block"
-       data-action="ajax#post toggle#toggle">
-        {% trans "Unblock" %}
-    </a>
-    <a href="{% url 'activities:tag_block' tag.id %}"
-       {% if tag in blocked %}
-       class="d-hide"
-       {% endif %}
-       data-controller="ajax"
-       data-ajax-redirect="none"
-       data-target="toggle.togglable"
-       data-toggle-target="block"
-       data-action="ajax#post toggle#toggle">
-        {% trans "Block" %}
-    </a>
-    {% endwith %}
-    {% endif %}
+  {% if can_follow_tag %}
+  {% with following=user.following_tags.all %}
+  <a href="{% url 'activities:tag_unfollow' tag.id %}"
+     {% if not tag in following %}
+     class="d-hide"
+     {% endif %}
+     data-controller="ajax"
+     data-ajax-redirect="none"
+     data-target="toggle.togglable"
+     data-toggle-target="follow"
+     data-action="ajax#post toggle#toggle">
+    {% trans "Unfollow" %}
+  </a>
+  <a href="{% url 'activities:tag_follow' tag.id %}"
+     {% if tag in following %}
+     class="d-hide"
+     {% endif %}
+     data-controller="ajax"
+     data-ajax-redirect="none"
+     data-target="toggle.togglable"
+     data-toggle-target="follow"
+     data-action="ajax#post toggle#toggle">
+    {% trans "Follow" %}
+  </a>
+  {% endwith %}
+  {% endif %}
+  {% if can_block_tag %}
+  {% with blocked=user.blocked_tags.all %}
+  <a href="{% url 'activities:tag_unblock' tag.id %}"
+     {% if tag not in blocked %}
+     class="d-hide"
+     {% endif %}
+     data-controller="ajax"
+     data-ajax-redirect="none"
+     data-target="toggle.togglable"
+     data-toggle-target="block"
+     data-action="ajax#post toggle#toggle">
+    {% trans "Unblock" %}
+  </a>
+  <a href="{% url 'activities:tag_block' tag.id %}"
+     {% if tag in blocked %}
+     class="d-hide"
+     {% endif %}
+     data-controller="ajax"
+     data-ajax-redirect="none"
+     data-target="toggle.togglable"
+     data-toggle-target="block"
+     data-action="ajax#post toggle#toggle">
+    {% trans "Block" %}
+  </a>
+  {% endwith %}
+  {% endif %}
 </div>
 {% endif %}
 
 {% with total=paginator.count %}
 {% if total %}
 <div class="toast text-center my-2">
-    {% blocktrans count counter=total %}
-    One activity has been tagged.
-    {% plural %}
-    {{ total }} activities have been tagged.
-    {% endblocktrans %}
+  {% blocktrans with name=tag.name count counter=total %}
+  <strong>One activity</strong> has been tagged with <strong>#{{ name }}</strong>.
+  {% plural %}
+  <strong>{{ total }} activities</strong> have been tagged with <strong>#{{ name }}</strong>.
+  {% endblocktrans %}
 </div>
 {% endif %}
 {% endwith %}
