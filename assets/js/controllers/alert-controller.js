@@ -1,9 +1,6 @@
 import {
   Controller
 } from 'stimulus';
-import {
-  fadeOut
-} from '../effects';
 
 export default class extends Controller {
   connect() {
@@ -15,6 +12,17 @@ export default class extends Controller {
   }
 
   dismiss() {
-    fadeOut(this.element);
+    this.fadeOut(this.element);
+  }
+
+  fadeOut(el) {
+    el.style.opacity = 1;
+    (function fade() {
+      if ((el.style.opacity -= 0.1) < 0) {
+        el.remove();
+      } else {
+        requestAnimationFrame(fade);
+      }
+    })();
   }
 }
