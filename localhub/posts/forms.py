@@ -55,7 +55,11 @@ class PostForm(ActivityForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        cleaned_data.update(self.get_opengraph_data(**cleaned_data))
+        try:
+            cleaned_data.update(self.get_opengraph_data(**cleaned_data))
+        except Opengraph.Invalid:
+            self.add_error("url", _("This URL appears to be invalid."))
+            return cleaned_data
 
         title = cleaned_data.get("title")
         url = cleaned_data.get("url")
@@ -86,8 +90,8 @@ class PostForm(ActivityForm):
             if fetch_opengraph_data:
                 data.update(
                     {
-                        "opengraph_image": og.image or "",
-                        "opengraph_description": og.description or "",
+                        "opengraph_image": og.image,
+                        "opengraph_description": og.description,
                     }
                 )
             return data

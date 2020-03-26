@@ -23,6 +23,9 @@ logger = logging.getLogger(__name__)
 
 
 class Opengraph:
+    class Invalid(ValueError):
+        ...
+
     @classmethod
     def from_url(cls, url):
         """Grabs OpenGraph and other HTML data from URL and parses
@@ -50,13 +53,13 @@ class Opengraph:
             response = requests.get(
                 url, headers=get_request_headers(url), proxies=get_proxies()
             )
-            if not response.ok or "text/html" not in response.headers.get(
-                "Content-Type", ""
-            ):
-                raise ValueError("URL does not return valid HTML response")
         except (requests.RequestException, ValueError) as e:
-            logger.error("Error fetching response for URL %s: %s", url, e)
-            return cls(url)
+            raise cls.Invalid(e)
+
+        if not response.ok or "text/html" not in response.headers.get(
+            "Content-Type", ""
+        ):
+            raise cls.Invalid("URL does not return valid HTML response")
 
         return cls(url).parse_html(response.content)
 

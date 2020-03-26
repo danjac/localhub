@@ -1,6 +1,8 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import pytest
+
 from ..opengraph import Opengraph
 
 
@@ -74,11 +76,12 @@ class TestOpengraphFromUrl:
         mocker.patch("requests.head", lambda url, **kwargs: MockHeadResponse)
         mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
 
-        og = Opengraph.from_url("https://google.com")
-        assert og.url == "https://google.com"
-        assert og.title is None
-        assert og.image is None
-        assert og.description is None
+        with pytest.raises(Opengraph.Invalid):
+            og = Opengraph.from_url("https://google.com")
+            assert og.url == "https://google.com"
+            assert og.title is None
+            assert og.image is None
+            assert og.description is None
 
     def test_title_from_og(self):
         html = """
