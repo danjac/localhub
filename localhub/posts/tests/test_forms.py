@@ -56,12 +56,13 @@ class TestPostForm:
 
     def test_fetch_opengraph_data_if_url(self, mock_opengraph_from_url):
         form = PostForm(
-            {"url": "https://google.com", "title": "", "fetch_opengraph_data": True}
+            {"url": "http://twitter.com", "title": "", "fetch_opengraph_data": True}
         )
 
         assert form.is_valid()
         cleaned_data = form.clean()
         assert cleaned_data["title"] == "Imgur"
+        assert cleaned_data["url"] == "https://imgur.com"
         assert cleaned_data["opengraph_image"] == "https://imgur.com/cat.gif"
         assert cleaned_data["opengraph_description"] == "cat"
 

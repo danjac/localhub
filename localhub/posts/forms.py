@@ -89,7 +89,7 @@ class PostForm(forms.ModelForm):
 
         if not title or fetch_opengraph_data:
             og = Opengraph.from_url(url)
-            data = {"title": (title or og.title)[:300], "url": url}
+            data = {"title": (title or og.title)[:300], "url": og.url}
             if fetch_opengraph_data:
                 data.update(
                     {
