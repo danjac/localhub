@@ -6,7 +6,8 @@ import logging
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from localhub.forms.widgets import ClearableImageInput, TypeaheadInput
+from localhub.activities.forms import ActivityForm
+from localhub.forms.widgets import ClearableImageInput
 
 from . import exif
 from .models import Photo
@@ -14,7 +15,7 @@ from .models import Photo
 logger = logging.getLogger(__name__)
 
 
-class PhotoForm(forms.ModelForm):
+class PhotoForm(ActivityForm):
 
     extract_geolocation_data = forms.BooleanField(
         label=_("Extract geolocation data from image if available"), required=False,
@@ -24,8 +25,7 @@ class PhotoForm(forms.ModelForm):
         label=_("Clear geolocation data from image"), required=False,
     )
 
-    class Meta:
-
+    class Meta(ActivityForm.Meta):
         model = Photo
         fields = (
             "title",
@@ -41,22 +41,13 @@ class PhotoForm(forms.ModelForm):
             "latitude",
             "longitude",
         )
-        widgets = {
-            "title": TypeaheadInput,
-            "additional_tags": TypeaheadInput(search_mentions=False),
-            "image": ClearableImageInput,
-            "latitude": forms.HiddenInput,
-            "longitude": forms.HiddenInput,
-        }
-        help_texts = {
-            "additional_tags": _(
-                "Hashtags can also be added to title and description."
-            ),
-        }
-        labels = {"additional_tags": _("Tags")}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.fields["image"].widget = ClearableImageInput()
+        self.fields["latitude"].widget = forms.HiddenInput()
+        self.fields["longitude"].widget = forms.HiddenInput()
 
         # we will try and use the photo filename if no title provided
         self.fields["title"].required = False

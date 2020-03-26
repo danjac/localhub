@@ -2,19 +2,18 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytz
-from django import forms
 from django.utils.timezone import localtime, make_aware
 from django.utils.translation import gettext_lazy as _
 
+from localhub.activities.forms import ActivityForm
 from localhub.forms.fields import CalendarField
-from localhub.forms.widgets import TypeaheadInput
 
 from .models import Event
 
 DATE_FORMATS = ["%d/%m/%Y"]
 
 
-class EventForm(forms.ModelForm):
+class EventForm(ActivityForm):
 
     starts = CalendarField(label=_("Event starts"), input_date_formats=DATE_FORMATS)
 
@@ -22,7 +21,7 @@ class EventForm(forms.ModelForm):
         label=_("Event ends"), required=False, input_date_formats=DATE_FORMATS
     )
 
-    class Meta:
+    class Meta(ActivityForm.Meta):
         model = Event
         fields = (
             "title",
@@ -44,23 +43,13 @@ class EventForm(forms.ModelForm):
         )
         localized_fields = ("starts", "ends")
 
-        help_texts = {
-            "additional_tags": _(
-                "Hashtags can also be added to title and description."
-            ),
-            "timezone": _("Start and end times will be shown in this timezone"),
-        }
-
-        labels = {"additional_tags": _("Tags")}
-
-        widgets = {
-            "title": TypeaheadInput,
-            "additional_tags": TypeaheadInput(search_mentions=False),
-        }
-
     def __init__(self, *args, **kwargs):
 
         super().__init__(*args, **kwargs)
+
+        self.fields["timezone"].help_text = _(
+            "Start and end times will be shown in this timezone"
+        )
 
         # convert the UTC stored value into the local time the user
         # originally entered according to their timezone. The final value

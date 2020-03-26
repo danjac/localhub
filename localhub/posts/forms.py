@@ -4,13 +4,13 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from localhub.forms.widgets import TypeaheadInput
+from localhub.activities.forms import ActivityForm
 
 from .models import Post
 from .opengraph import Opengraph
 
 
-class PostForm(forms.ModelForm):
+class PostForm(ActivityForm):
 
     clear_opengraph_data = forms.BooleanField(
         required=False, label=_("Clear OpenGraph data from post")
@@ -22,7 +22,7 @@ class PostForm(forms.ModelForm):
         label=_("Fetch OpenGraph data from URL if available"),
     )
 
-    class Meta:
+    class Meta(ActivityForm.Meta):
         model = Post
         fields = (
             "title",
@@ -35,22 +35,15 @@ class PostForm(forms.ModelForm):
             "opengraph_image",
             "opengraph_description",
         )
-        labels = {"title": _("Title"), "url": _("URL"), "additional_tags": _("Tags")}
-        widgets = {
-            "title": TypeaheadInput,
-            "additional_tags": TypeaheadInput(search_mentions=False),
-            "opengraph_image": forms.HiddenInput,
-            "opengraph_description": forms.HiddenInput,
-        }
-        help_texts = {
-            "title": _("Optional if URL provided"),
-            "additional_tags": _(
-                "Hashtags can also be added to title and description."
-            ),
-        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.fields["url"].label = _("URL")
+        self.fields["title"].help_text = _("Optional if URL provided")
+
+        for field in ("opengraph_image", "opengraph_description"):
+            self.fields[field].widget = forms.HiddenInput()
 
         if self.instance.opengraph_image or self.instance.opengraph_description:
             self.initial["fetch_opengraph_data"] = False
