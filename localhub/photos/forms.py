@@ -58,11 +58,15 @@ class PhotoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        # we will try and use the photo filename if no title provided
+        self.fields["title"].required = False
+
         if not self.instance.has_map():
             del self.fields["clear_geolocation_data"]
 
     def clean(self):
         cleaned_data = super(PhotoForm, self).clean()
+
         if self.cleaned_data.get("clear_geolocation_data"):
             cleaned_data["latitude"] = None
             cleaned_data["longitude"] = None
@@ -75,4 +79,8 @@ class PhotoForm(forms.ModelForm):
                 cleaned_data["longitude"] = lng
             except exif.InvalidExifData as e:
                 logger.error(e)
+
+        # try and get title from photo if missing
+        if not cleaned_data["title"]:
+            cleaned_data["title"] = cleaned_data["image"].name
         return cleaned_data
