@@ -38,11 +38,8 @@ pytest-mock
 pytest-xdist
 pytz
 pywebpush
-# https://github.com/andymccurdy/redis-py/issues/1274
-# redis==3.3.1
 redis
 rules
 sorl-thumbnail
 unidecode
-# uvicorn
 werkzeug
