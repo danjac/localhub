@@ -16,17 +16,21 @@ import {
   subMonths
 } from 'date-fns';
 
-import { Controller } from 'stimulus';
+import {
+  Controller
+} from 'stimulus';
 
 const DATE_FORMAT = 'dd/MM/yyyy';
 
 export default class extends Controller {
-  static targets = ['calendar', 'dateInput', 'currentMonth', 'days'];
+  static targets = ['calendar', 'dateInput', 'currentMonth', 'days', 'template'];
 
   toggle(event) {
     event.preventDefault();
     if (!this.calendarTarget.classList.toggle('d-none')) {
-      const { value } = this.dateInputTarget;
+      const {
+        value
+      } = this.dateInputTarget;
 
       this.selectedDate = value ? parse(value, DATE_FORMAT, new Date()) : null;
       this.firstOfMonthDate = startOfMonth(this.selectedDate || new Date());
@@ -71,13 +75,14 @@ export default class extends Controller {
     // render each day
     let date = startDate;
     while (isBefore(date, endDate)) {
-      const btn = document.createElement('button');
+
+      const clone = this.templateTarget.content.cloneNode(true);
+
+      const div = clone.querySelector("div");
+      const btn = clone.querySelector("button");
 
       btn.append(date.getDate().toString());
-      btn.setAttribute('data-action', 'calendar#select');
       btn.setAttribute('data-calendar-date', format(date, DATE_FORMAT));
-
-      btn.classList.add('date-item');
 
       if (isSameDay(date, today)) {
         btn.classList.add('date-today');
@@ -87,15 +92,12 @@ export default class extends Controller {
         btn.classList.add('badge');
       }
       // insert into DOM
-      const div = document.createElement('div');
-      div.classList.add('calendar-date');
       if (isBefore(date, this.firstOfMonthDate)) {
         div.classList.add('prev-month');
       } else if (isAfter(date, lastOfMonthDate)) {
         div.classList.add('next-month');
       }
-      div.append(btn);
-      this.daysTarget.append(div);
+      this.daysTarget.append(clone);
 
       date = addDays(date, 1);
     }

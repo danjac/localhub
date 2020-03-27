@@ -89,11 +89,19 @@
   .calendar {
     border-color: $gray-color-dark;
 
-    .calendar-header,
-    .calendar-nav {
+    &-header,
+    &-nav {
       border-color: $gray-color-dark;
       background-color: $darkmode-lighter;
       color: $darkmode-text;
+    }
+
+    .calendar-date {
+
+      .date-item:focus,
+      .date-item:hover {
+        background: transparent;
+      }
     }
   }
 
