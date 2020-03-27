@@ -87,7 +87,7 @@
   <div class="container">
     <header class="navbar py-1 col-10 col-lg-12 col-mx-auto">
       <section class="navbar-section">
-        {% thumbnail community.logo "100" format="PNG" as logo %}
+        {% thumbnail community.logo "40" crop="center" format="PNG" as logo %}
         <a class="navbar-brand d-inline-flex align-center"
            href="/">
           <img src="{{ logo.url }}"
