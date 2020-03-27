@@ -92,9 +92,10 @@
            href="/">
           <img src="{{ logo.url }}"
                width="{{ logo.width }}"
+               class="mr-1"
                height="{{ logo.height }}"
                alt="{{ community.name }}">
-        </a>
+          {{ community.name }}</a>
         {% empty %}
         <a class="navbar-brand"
            href="/">{{ community.name }}</a>
