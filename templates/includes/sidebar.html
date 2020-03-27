@@ -98,6 +98,13 @@
   <li class="menu-item">
     {% include "includes/mode_toggle.html" %}
   </li>
+
+  <li class="menu-item show-lg">
+    <a href="{% url 'account_logout' %}"
+       data-controller="ajax"
+       data-action="ajax#post"
+       data-ajax-redirect="{{ home_page_url }}">{% trans "Logout" %}</a>
+  </li>
 </ul>
 
 {% if can_create_activity %}
