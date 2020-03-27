@@ -59,6 +59,15 @@
 {% endfor %}
 {% include "includes/pagination.html" %}
 {% else %}
-{% include "includes/empty.html" %}
+
+{% if is_current_user %}
+{% trans "You have not exchanged any messages." as t_empty_message %}
+{% else %}
+{% blocktrans asvar t_empty_message trimmed %}
+You have not exchanged any messages with {{ display_name }}.
+{% endblocktrans %}
+{% endif %}
+
+{% include "includes/empty.html" with empty_message=t_empty_message %}
 {% endif %}
 {% endblock user_content %}

@@ -44,6 +44,14 @@
 </div>
 {% endif %}
 
-{% include "activities/includes/activity_list.html" %}
+{% if is_current_user %}
+{% trans "You have not published any activities." as t_empty_message %}
+{% else %}
+{% blocktrans asvar t_empty_message trimmed %}
+{{ display_name }} has not published any activities.
+{% endblocktrans %}
+{% endif %}
+
+{% include "activities/includes/activity_list.html" with empty_message=t_empty_message %}
 
 {% endblock user_content %}

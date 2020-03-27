@@ -43,6 +43,14 @@
 </div>
 {% endif %}
 
-{% include "comments/includes/comment_list.html" %}
+{% if is_current_user %}
+{% trans "You have not submitted any comments." as t_empty_message %}
+{% else %}
+{% blocktrans asvar t_empty_message trimmed %}
+{{ display_name }} has not submitted any comments.
+{% endblocktrans %}
+{% endif %}
+
+{% include "comments/includes/comment_list.html" with empty_message=t_empty_message %}
 
 {% endblock user_content %}
