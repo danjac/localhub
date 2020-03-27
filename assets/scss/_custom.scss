@@ -339,3 +339,7 @@ table {
   }
 
 }
+
+.modal-container {
+  @extend .text-dark;
+}

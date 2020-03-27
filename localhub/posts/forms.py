@@ -41,9 +41,8 @@ class PostForm(ActivityForm):
 
         self.fields["url"].label = _("URL")
         self.fields["title"].help_text = _("Optional if URL provided")
-
-        for field in ("opengraph_image", "opengraph_description"):
-            self.fields[field].widget = forms.HiddenInput()
+        self.fields["opengraph_image"].widget = forms.HiddenInput()
+        self.fields["opengraph_description"].widget = forms.HiddenInput()
 
         if self.instance.opengraph_image or self.instance.opengraph_description:
             self.initial["fetch_opengraph_data"] = False

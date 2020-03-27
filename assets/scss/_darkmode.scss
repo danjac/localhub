@@ -27,6 +27,10 @@
       color: $darkmode-text;
     }
 
+    &-body {
+      color: $darkmode-text;
+    }
+
     &.active .modal-overlay {
       background: rgba($darkmode-lighter, 0.85);
     }
