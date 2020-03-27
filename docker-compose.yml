@@ -49,6 +49,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.local
+    env_file: .env
     restart: on-failure
     environment: *default-env
     depends_on:

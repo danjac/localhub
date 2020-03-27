@@ -168,7 +168,7 @@ class Community(TimeStampedModel):
         """
         Returns email domain if available, else the community domain
         """
-        return self.email_domain or self.domain
+        return (self.email_domain or self.domain).split(":")[0]
 
     def get_content_warning_tags(self):
         return extract_hashtags(self.content_warning_tags)
