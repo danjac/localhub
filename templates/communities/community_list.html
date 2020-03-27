@@ -3,7 +3,6 @@
 
 {% extends "base.html" %}
 {% load i18n %}
-{% load thumbnail %}
 
 {% block content %}
 
@@ -14,22 +13,13 @@
 {% for object in object_list %}
 <div class="card mb-2">
   <div class="card-header">
-    <div class="card-title h6 d-inline-flex align-center">
-      {% if object != community %}
-      <a href="{{ object.get_absolute_url }}"
-         class="d-inline-flex align-center mr-1">
-        {% endif %}
-        {% thumbnail object.logo "40" crop="center" format="PNG" as logo %}
-        <img src="{{ logo.url }}"
-             width="{{ logo.width }}"
-             class="mr-1"
-             height="{{ logo.height }}"
-             alt="{{ object.name }}">
-        {% endthumbnail %}
-        {{ object.name }}
-        {% if object != community %}
-      </a>
+    <div class="card-title h6">
+      {% if object == community %}
+      {{ object.name }}
+      {% else %}
+      <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
       {% endif %}
+
       {% if object.is_member %}
       <span class="chip bg-primary">{{ roles|from_dictkey:object.member_role }}</span>
       {% elif not object.allow_join_requests %}
