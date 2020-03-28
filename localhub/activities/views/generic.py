@@ -227,7 +227,7 @@ class ActivityDetailView(
         )
 
     def get_breadcrumbs(self):
-        self.object.get_breadcrumbs()
+        return self.object.get_breadcrumbs()
 
     def get_page_title_segments(self):
         return self.object.get_page_title_segments()
