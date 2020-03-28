@@ -53,13 +53,6 @@
 
 {% endif %}
 
-{% if object_list %}
-{% for message in object_list %}
-{% show_message user community message %}
-{% endfor %}
-{% include "includes/pagination.html" %}
-{% else %}
-
 {% if is_current_user %}
 {% trans "You have not exchanged any messages." as t_empty_message %}
 {% else %}
@@ -68,6 +61,6 @@ You have not exchanged any messages with {{ display_name }}.
 {% endblocktrans %}
 {% endif %}
 
-{% include "includes/empty.html" with empty_message=t_empty_message %}
-{% endif %}
+{% include "private_messages/includes/message_list.html" with empty_message=t_empty_message %}
+
 {% endblock user_content %}

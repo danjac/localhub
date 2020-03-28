@@ -4,7 +4,6 @@
 {% extends "private_messages/message_list_base.html" %}
 
 {% load i18n %}
-{% load private_messages_tags %}
 
 {% block message_list %}
 
@@ -12,13 +11,6 @@
 {% include "includes/forms/search_form.html" with selector=True %}
 {% endif %}
 
-{% if object_list %}
-{% for message in object_list %}
-{% show_message user community message %}
-{% endfor %}
-
-{% include "includes/pagination.html" %}
-{% else %}
-{% include "includes/empty.html" %}
-{% endif %}
+{% trans "You have not sent any messages" as t_empty_message %}
+{% include "private_messages/includes/message_list.html" with empty_message=t_empty_message %}
 {% endblock message_list %}

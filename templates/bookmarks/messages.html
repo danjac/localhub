@@ -3,15 +3,9 @@
 
 {% extends "bookmarks/base.html" %}
 
-{% load private_messages_tags %}
+{% load i18n %}
 
 {% block bookmarks_content %}
-{% if object_list %}
-{% for message in object_list %}
-{% show_message user community message %}
-{% endfor %}
-{% include "includes/pagination.html" %}
-{% else %}
-{% include "includes/empty.html" %}
-{% endif %}
+{% trans "You have not bookmarked any messages." as t_empty_message %}
+{% include "private_messages/includes/message_list.html" with empty_message=t_empty_message%}
 {% endblock bookmarks_content %}
