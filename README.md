@@ -32,6 +32,13 @@ Or just use the "runtests" shortcut script:
 
 `./runtests`
 
+You should be able to access the application on localhost on port 80. Use the following command to set up a default community:
+
+`./manage createcommunity localhost LocalDev`
+
+If you wish to add more communities, you will have to add these domains or subdomains to your _/etc/hosts_ file (or equivalent in your OS) or use a tool
+such as dnsmasq. Consult your OS documentation on how to do this.
+
 ## Deployment
 
 **Please note that LocalHub is in the early development stage and should not be trusted to run in a serious production environment. Breaking changes will happen until a stable release is officially available.**
