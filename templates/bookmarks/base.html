@@ -6,21 +6,27 @@
 
 {% block content %}
 
-<h5>{% trans "Favorites" %}</h5>
+<h5>{% trans "Bookmarks" %}</h5>
 
 <ul class="tab tab-block">
   <li class="tab-item"
       data-controller="active-link"
       data-active-link-exact>
     <a data-target="active-link.match"
-       href="{% url 'likes:activities' %}">{% trans "Activities" %}</a>
+       href="{% url 'bookmarks:activities' %}">{% trans "Activities" %}</a>
   </li>
   <li class="tab-item"
       data-controller="active-link"
       data-active-link-exact>
     <a data-target="active-link.match"
-       href="{% url 'likes:comments' %}">{% trans "Comments" %}</a>
+       href="{% url 'bookmarks:messages' %}">{% trans "Messages" %}</a>
+  </li>
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'bookmarks:comments' %}">{% trans "Comments" %}</a>
   </li>
 </ul>
-{% block likes_content %}{% endblock %}
+{% block bookmarks_content %}{% endblock %}
 {% endblock content %}

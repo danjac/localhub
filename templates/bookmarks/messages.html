@@ -1,0 +1,17 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "bookmarks/base.html" %}
+
+{% load private_messages_tags %}
+
+{% block bookmarks_content %}
+{% if object_list %}
+{% for message in object_list %}
+{% show_message user community message %}
+{% endfor %}
+{% include "includes/pagination.html" %}
+{% else %}
+{% include "includes/empty.html" %}
+{% endif %}
+{% endblock bookmarks_content %}

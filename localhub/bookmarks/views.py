@@ -2,9 +2,11 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.utils.translation import gettext as _
+from vanilla import ListView
 
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views import BaseCommentListView
+from localhub.private_messages.models import Message
 from localhub.views import PageTitleMixin
 
 
@@ -49,3 +51,38 @@ class BookmarksCommentListView(BookmarksPageTitleMixin, BaseCommentListView):
 
 
 bookmarks_comment_list_view = BookmarksCommentListView.as_view()
+
+
+class BookmarksMessageListView(BookmarksPageTitleMixin, ListView):
+
+    template_name = "bookmarks/messages.html"
+
+    def get_page_title_segments(self):
+        return super().get_page_title_segments() + [_("Messages")]
+
+    def get_queryset(self):
+        return (
+            Message.objects.for_community(self.request.community)
+            .for_sender_or_recipient(self.request.user)
+            .with_has_bookmarked(self.request.user)
+            .filter(has_bookmarked=True)
+            .select_related(
+                "sender",
+                "recipient",
+                "community",
+                "thread",
+                "parent",
+                "thread__sender",
+                "thread__recipient",
+                "parent__sender",
+                "parent__recipient",
+                "parent__thread",
+                "parent__thread__recipient",
+                "parent__thread__sender",
+            )
+            .order_by("-created")
+            .distinct()
+        )
+
+
+bookmarks_message_list_view = BookmarksMessageListView.as_view()

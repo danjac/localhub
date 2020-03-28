@@ -8,13 +8,13 @@ from localhub.users.urls import USERNAME_RE
 from .views import (
     inbox_view,
     message_bookmark_view,
-    message_remove_bookmark_view,
     message_create_view,
     message_delete_view,
     message_detail_view,
     message_follow_up_view,
     message_mark_all_read_view,
     message_mark_read_view,
+    message_remove_bookmark_view,
     message_reply_view,
     outbox_view,
 )
