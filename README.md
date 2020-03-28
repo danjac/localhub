@@ -34,7 +34,11 @@ Or just use the "runtests" shortcut script:
 
 You should be able to access the application on localhost on port 80. Use the following command to set up a default community:
 
+## Local development
+
 `./manage createcommunity localhost LocalDev`
+
+You can also set up and update community through the Django admin.
 
 If you wish to add more communities, you will have to add these domains or subdomains to your _/etc/hosts_ file (or equivalent in your OS) or use a tool
 such as dnsmasq. Consult your OS documentation on how to do this.
