@@ -115,6 +115,32 @@
         </li>
         {% endif %}
 
+        {% has_perm "comments.bookmark_comment" user comment as can_bookmark_comment %}
+        {% if can_bookmark_comment %}
+        <li class="menu-item">
+          <a href="{% url 'comments:bookmark' comment.id %}"
+             {% if comment.has_bookmarked %}
+             class="d-hide"
+             data-js-toggle-ignore
+             {% endif %}
+             data-controller="js-toggle ajax"
+             data-target="toggle.togglable"
+             data-toggle-target="bookmark"
+             data-ajax-redirect="none"
+             data-action="ajax#post toggle#toggle">{% trans "Bookmark" %}</a>
+          <a href="{% url 'comments:remove_bookmark' comment.id %}"
+             {% if not comment.has_bookmarked %}
+             class="d-hide"
+             data-js-toggle-ignore
+             {% endif %}
+             data-controller="js-toggle ajax"
+             data-target="toggle.togglable"
+             data-toggle-target="bookmark"
+             data-ajax-redirect="none"
+             data-action="ajax#post toggle#toggle"><s>{% trans "Bookmark" %}</s></a>
+        </li>
+        {% endif %}
+
         {% has_perm "comments.reply_to_comment" user comment as can_reply %}
         {% if can_reply %}
         <li class="menu-item">

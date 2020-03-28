@@ -188,10 +188,7 @@ class CommentBookmarkView(
         comment = self.get_object()
         try:
             Bookmark.objects.create(
-                user=request.user,
-                community=request.community,
-                recipient=comment.owner,
-                content_object=comment,
+                user=request.user, community=request.community, content_object=comment,
             )
         except IntegrityError:
             pass

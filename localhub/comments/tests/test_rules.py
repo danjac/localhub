@@ -40,6 +40,18 @@ class TestIsCommentCommunityModerator:
         )
 
 
+class TestBookmarkPermissions:
+    def test_can_bookmark_comment_if_member(self, comment, member):
+        assert member.member.has_perm("comments.bookmark_comment", comment)
+
+    def test_can_bookmark_comment_if_member_deleted(self, comment, member):
+        comment.deleted = timezone.now()
+        assert not member.member.has_perm("comments.bookmark_comment", comment)
+
+    def test_can_bookmark_comment_if_not_member(self, comment, user):
+        assert not user.has_perm("comments.bookmark_comment", comment)
+
+
 class TestLikePermissions:
     def test_can_like_comment_if_owner(self, comment):
         assert not comment.owner.has_perm("comments.like_comment", comment)

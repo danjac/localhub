@@ -33,6 +33,7 @@ rules.add_perm(
 rules.add_perm(
     "comments.flag_comment", is_comment_community_member & ~is_owner & ~is_deleted
 )
+rules.add_perm("comments.bookmark_comment", is_comment_community_member & ~is_deleted)
 rules.add_perm(
     "comments.like_comment", is_comment_community_member & ~is_owner & ~is_deleted
 )

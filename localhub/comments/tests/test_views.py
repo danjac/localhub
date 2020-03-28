@@ -4,6 +4,8 @@
 import pytest
 from django.urls import reverse
 
+from localhub.bookmarks.factories import BookmarkFactory
+from localhub.bookmarks.models import Bookmark
 from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
 from localhub.flags.models import Flag
@@ -135,6 +137,42 @@ class TestCommentDeleteView:
         assert send_webpush_mock.delay.called
         assert len(mailoutbox) == 1
         assert mailoutbox[0].to == [comment.owner.email]
+
+
+class TestCommentBookmarkView:
+    def test_post(self, client, member):
+        post = PostFactory(community=member.community)
+        comment = CommentFactory(
+            content_object=post,
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
+        response = client.post(
+            reverse("comments:bookmark", args=[comment.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        assert response.status_code == 204
+        bookmark = Bookmark.objects.get()
+        assert bookmark.user == member.member
+
+
+class TestCommentRemoveBookmarkView:
+    def test_post(self, client, member):
+        post = PostFactory(community=member.community)
+        comment = CommentFactory(
+            content_object=post,
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
+        BookmarkFactory(
+            user=member.member, content_object=comment, community=comment.community,
+        )
+        response = client.post(
+            reverse("comments:remove_bookmark", args=[comment.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        assert response.status_code == 204
+        assert Bookmark.objects.count() == 0
 
 
 class TestCommentLikeView:

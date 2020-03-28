@@ -57,6 +57,10 @@ class TestBookmarkPermissions:
         post = PostFactory(community=member.community)
         assert member.member.has_perm("activities.bookmark_activity", post)
 
+    def test_member_can_bookmark_activity_if_deleted(self, member):
+        post = PostFactory(community=member.community, deleted=timezone.now())
+        assert not member.member.has_perm("activities.bookmark_activity", post)
+
     def test_non_member_can_bookmark_activity(self, member):
         post = PostFactory()
         assert not member.member.has_perm("activities.bookmark_activity", post)

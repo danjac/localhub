@@ -273,7 +273,7 @@ class TestPublishView:
 
 
 class TestPostBookmarkView:
-    def test_post(self, client, member, send_webpush_mock):
+    def test_post(self, client, member):
         post = PostFactory(
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
