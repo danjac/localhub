@@ -1,11 +1,15 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "base.html" %}
+{% extends "comments/base.html" %}
 
 {% load i18n %}
 {% load activities_tags %}
 
+{% block subtitle %}{{ block.super }} /
+{% if parent %}{{ parent.content_object }} / {% trans "Reply "%}
+{% elif object %}{{ object.content_object }} / {% trans "Edit" %}
+{% elif activity %}{{ activity }} / {% trans "Comment" %}{% endif %}{% endblock %}
 
 {% block content %}
 {% include "includes/breadcrumbs.html" %}
@@ -14,19 +18,19 @@
 
 <article class="card mb-2"
          role="comment">
-    <div class="card-header">
-        <div class="card-subtitle h6">
-            {% url 'users:comments' parent.owner.username as owner_url %}
-            {% include "activities/includes/timesince.html" with profile_url=owner_url timestamp=parent.created owner=parent.owner %}
-        </div>
+  <div class="card-header">
+    <div class="card-subtitle h6">
+      {% url 'users:comments' parent.owner.username as owner_url %}
+      {% include "activities/includes/timesince.html" with profile_url=owner_url timestamp=parent.created owner=parent.owner %}
     </div>
-    <div class="card-body">
-        {% collapsable is_detail %}
-        <div class="markdown-content">
-            {{ parent.content.markdown|strip_external_images:user }}
-        </div>
-        {% endcollapsable %}
+  </div>
+  <div class="card-body">
+    {% collapsable is_detail %}
+    <div class="markdown-content">
+      {{ parent.content.markdown|strip_external_images:user }}
     </div>
+    {% endcollapsable %}
+  </div>
 </article>
 
 {% endif %}

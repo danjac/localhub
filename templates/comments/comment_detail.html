@@ -4,6 +4,8 @@
 {% extends "comments/base.html" %}
 {% load i18n %}
 
+{% block subtitle %}{{ block.super }} / {{ comment.content_object }}{% endblock %}
+
 {% block content %}
 
 {% include "includes/breadcrumbs.html" %}
