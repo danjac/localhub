@@ -100,7 +100,7 @@
      data-target="toggle.togglable"
      data-toggle-target="follow"
      data-ajax-redirect="none">
-    {% trans "Unfollow" %}
+    <s>{% trans "Follow" %}</s>
   </a>
   <a href="{% url 'users:follow' user_obj.username %}"
      {% if user_obj in following %}
@@ -129,7 +129,7 @@
      data-controller="js-toggle ajax"
      data-action="ajax#post toggle#toggle"
      data-ajax-redirect="{{ redirect_url }}">
-    {% trans "Unblock" %}
+    <s>{% trans "Block" %}</s>
   </a>
   {% else %}
   <a href="{% url 'users:block' user_obj.username %}"

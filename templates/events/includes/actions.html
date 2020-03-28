@@ -6,8 +6,10 @@
 {% load i18n %}
 
 {% block extra_actions %}
-<a href="{% url 'events:download' object.id %}"
-   download>
+<li class="menu-item">
+  <a href="{% url 'events:download' object.id %}"
+     download>
     {% trans 'Download' %}
-</a>
+  </a>
+</li>
 {% endblock %}

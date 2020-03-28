@@ -89,7 +89,7 @@
              data-target="toggle.togglable"
              data-toggle-target="follow"
              data-action="ajax#post toggle#toggle">
-            {% trans "Unfollow" %}
+            <s>{% trans "Follow" %}</s>
           </a>
           <a href="{% url 'users:follow' object.username %}"
              {% if object.is_following %}
