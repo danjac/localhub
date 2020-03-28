@@ -21,36 +21,6 @@ pytestmark = pytest.mark.django_db
 
 
 class TestPostModel:
-    def test_get_breadcrumbs_for_model(self):
-        breadcrumbs = Post.get_breadcrumbs_for_model()
-        assert len(breadcrumbs) == 1
-
-        assert breadcrumbs[0][0] == reverse("posts:list")
-
-    def test_get_breadcrumbs_for_instance(self, post):
-        breadcrumbs = post.get_breadcrumbs()
-        assert len(breadcrumbs) == 2
-
-        assert breadcrumbs[0][0] == reverse("posts:list")
-        assert breadcrumbs[1][0] == post.get_absolute_url()
-
-    def test_get_breadcrumbs_for_instance_with_extra_segments(self, post):
-        breadcrumbs = post.get_breadcrumbs([(None, "Comments")])
-        assert len(breadcrumbs) == 3
-
-        assert breadcrumbs[0][0] == reverse("posts:list")
-        assert breadcrumbs[1][0] == post.get_absolute_url()
-        assert breadcrumbs[2][0] is None
-        assert breadcrumbs[2][1] == "Comments"
-
-    def test_get_breadcrumbs_for_instance_if_draft(self, post):
-        post.published = None
-        breadcrumbs = post.get_breadcrumbs()
-        assert len(breadcrumbs) == 2
-
-        assert breadcrumbs[0][0] == reverse("activities:drafts")
-        assert breadcrumbs[1][0] == post.get_absolute_url()
-
     def test_get_absolute_url(self):
         """
         If non-ASCII slug append to url

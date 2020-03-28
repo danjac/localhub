@@ -25,7 +25,7 @@ from localhub.comments.forms import CommentForm
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
-from localhub.views import BreadcrumbsMixin, SearchMixin
+from localhub.views import SearchMixin
 
 from ..models import get_activity_models
 
@@ -47,9 +47,17 @@ class ActivityContentMixin:
     def get_model_name_plural(self):
         return _(self.model._meta.verbose_name_plural.title())
 
+    def get_model_list_url(self):
+        return self.model.get_list_url()
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data.update({"model_name_plural": self.get_model_name_plural()})
+        data.update(
+            {
+                "model_name_plural": self.get_model_name_plural(),
+                "model_list_url": self.get_model_list_url(),
+            }
+        )
         return data
 
 
@@ -64,11 +72,7 @@ class SingleActivityContentMixin(ActivityContentMixin):
 
 
 class ActivityCreateView(
-    CommunityRequiredMixin,
-    PermissionRequiredMixin,
-    BreadcrumbsMixin,
-    ActivityContentMixin,
-    CreateView,
+    CommunityRequiredMixin, PermissionRequiredMixin, ActivityContentMixin, CreateView,
 ):
     permission_required = "activities.create_activity"
 
@@ -82,9 +86,6 @@ class ActivityCreateView(
             else _("Your %(activity)s has been saved to Drafts")
         )
         return message % {"activity": self.object._meta.verbose_name}
-
-    def get_breadcrumbs(self):
-        return self.model.get_breadcrumbs_for_model([(None, _("Submit"))])
 
     def form_valid(self, form):
 
@@ -131,14 +132,10 @@ class ActivityListView(
 class ActivityUpdateView(
     PermissionRequiredMixin,
     ActivityQuerySetMixin,
-    BreadcrumbsMixin,
     SingleActivityContentMixin,
     UpdateView,
 ):
     permission_required = "activities.change_activity"
-
-    def get_breadcrumbs(self):
-        return self.object.get_breadcrumbs([(None, _("Edit"))])
 
     def get_success_message(self, publish):
         message = (
@@ -172,7 +169,6 @@ class ActivityUpdateView(
 class ActivityDeleteView(
     PermissionRequiredMixin,
     ActivityQuerySetMixin,
-    BreadcrumbsMixin,
     SingleActivityContentMixin,
     DeleteView,
 ):
@@ -182,9 +178,6 @@ class ActivityDeleteView(
 
     def get_success_message(self):
         return self.success_message % self.object._meta.verbose_name
-
-    def get_breadcrumbs(self):
-        return self.object.get_breadcrumbs([(None, _("Delete"))])
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -202,9 +195,7 @@ class ActivityDeleteView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityDetailView(
-    ActivityQuerySetMixin, BreadcrumbsMixin, SingleActivityContentMixin, DetailView
-):
+class ActivityDetailView(ActivityQuerySetMixin, SingleActivityContentMixin, DetailView):
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
         self.object.get_notifications().for_recipient(
@@ -235,9 +226,6 @@ class ActivityDetailView(
             .published_or_owner(self.request.user)
             .with_common_annotations(self.request.user, self.request.community)
         )
-
-    def get_breadcrumbs(self):
-        return self.object.get_breadcrumbs()
 
     def get_flags(self):
         return self.object.get_flags().select_related("user").order_by("-created")
@@ -402,7 +390,7 @@ class ActivityDislikeView(BaseSingleActivityView):
 
 
 class ActivityFlagView(
-    PermissionRequiredMixin, BreadcrumbsMixin, ActivityQuerySetMixin, FormView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, FormView,
 ):
     form_class = FlagForm
     template_name = "flags/flag_form.html"
@@ -422,9 +410,6 @@ class ActivityFlagView(
 
     def get_permission_object(self):
         return self.activity
-
-    def get_breadcrumbs(self):
-        return self.activity.get_breadcrumbs([(None, _("Flag"))])
 
     def form_valid(self, form):
         flag = form.save(commit=False)
@@ -449,7 +434,7 @@ activity_flag_view = ActivityFlagView.as_view()
 
 
 class ActivityCommentCreateView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, BreadcrumbsMixin, FormView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, FormView,
 ):
     form_class = CommentForm
     template_name = "comments/comment_form.html"
@@ -458,9 +443,6 @@ class ActivityCommentCreateView(
     @cached_property
     def activity(self):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
-
-    def get_breadcrumbs(self):
-        return self.activity.get_breadcrumbs([(None, _("Comment"))])
 
     def get_permission_object(self):
         return self.activity

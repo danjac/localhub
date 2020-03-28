@@ -1,11 +1,11 @@
 {# Copyright (c) 2019 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "base.html" %}
+{% extends "flags/base.html" %}
 {% load i18n %}
 
 {% block content %}
-{% include "includes/breadcrumbs.html" %}
+{% block breadcrumbs %}{% endblock %}
 
 <h5>{% trans "Flag" %}</h5>
 

@@ -19,7 +19,7 @@ from vanilla import DeleteView, DetailView, FormView, GenericModelView, ListView
 from localhub.bookmarks.models import Bookmark
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.utils import user_display
-from localhub.views import BreadcrumbsMixin, SearchMixin
+from localhub.views import SearchMixin
 
 from .forms import MessageForm
 from .models import Message
@@ -111,7 +111,7 @@ class BaseMessageFormView(PermissionRequiredMixin, FormView):
         return self.request.community
 
 
-class BaseReplyFormView(BreadcrumbsMixin, BaseMessageFormView):
+class BaseReplyFormView(BaseMessageFormView):
     @cached_property
     def parent(self):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
@@ -119,11 +119,6 @@ class BaseReplyFormView(BreadcrumbsMixin, BaseMessageFormView):
     @cached_property
     def recipient(self):
         return self.parent.get_other_user(self.request.user)
-
-    def get_breadcrumbs(self):
-        return [
-            (self.parent.resolve_url(self.request.user), _("Parent")),
-        ]
 
     def get_form(self, data=None, files=None):
         form = self.form_class(data, files)
@@ -159,11 +154,6 @@ class BaseReplyFormView(BreadcrumbsMixin, BaseMessageFormView):
 
 
 class MessageReplyView(RecipientQuerySetMixin, BaseReplyFormView):
-    def get_breadcrumbs(self):
-        return super().get_breadcrumbs() + [
-            (None, _("Reply")),
-        ]
-
     def get_form(self, data=None, files=None):
         form = super().get_form(data, files)
         form["message"].label = _("Reply to %(recipient)s") % {
@@ -176,17 +166,14 @@ message_reply_view = MessageReplyView.as_view()
 
 
 class MessageFollowUpView(SenderQuerySetMixin, BaseReplyFormView):
-    def get_breadcrumbs(self):
-        return super().get_breadcrumbs() + [
-            (None, _("Follow-Up")),
-        ]
+    ...
 
 
 message_follow_up_view = MessageFollowUpView.as_view()
 
 
 class MessageCreateView(
-    BreadcrumbsMixin, CommunityRequiredMixin, BaseMessageFormView,
+    CommunityRequiredMixin, BaseMessageFormView,
 ):
     @cached_property
     def recipient(self):
@@ -202,15 +189,6 @@ class MessageCreateView(
     @cached_property
     def recipient_display(self):
         return user_display(self.recipient)
-
-    def get_breadcrumbs(self):
-        return [
-            (
-                reverse("users:messages", args=[self.recipient.username]),
-                self.recipient_display,
-            ),
-            (None, _("Send Message")),
-        ]
 
     def get_form(self, data=None, files=None):
         form = self.form_class(data, files)

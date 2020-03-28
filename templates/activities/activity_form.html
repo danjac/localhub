@@ -8,7 +8,20 @@
 {% else %}{% trans "Submit" %}{% endif %}{% endblock %}
 
 {% block content %}
-{% include "includes/breadcrumbs.html" %}
+<ul class="breadcrumb">
+  {% if object %}
+  {% if object.published %}
+  <li class="breadcrumb-item"><a href="{{ model_list_url }}">{{ model_name_plural }}</a></li>
+  {% else %}
+  <li class="breadcrumb-item"><a href="{% url 'activities:drafts' %}">{% trans "Drafts" %}</a></li>
+  {% endif %}
+  <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></li>
+  <li class="breadcrumb-item">{% trans "Edit" %}</li>
+  {% else %}
+  <li class="breadcrumb-item"><a href="{{ model_list_url }}">{{ model_name_plural }}</a></li>
+  <li class="breadcrumb-item">{% trans "Submit" %}</li>
+  {% endif %}
+</ul>
 
 {% block form %}
 {% include "activities/includes/activity_form.html" with multipart=True %}

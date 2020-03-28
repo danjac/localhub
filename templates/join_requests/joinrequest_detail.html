@@ -12,7 +12,6 @@
 
 {% user_display object.sender as display_name %}
 
-{% include "includes/breadcrumbs.html" %}
 <h5>{% avatar object.sender "avatar-lg" %}{{ display_name }}</h5>
 
 {% with is_pending=object.is_pending is_rejected=object.is_rejectd %}

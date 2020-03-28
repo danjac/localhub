@@ -24,7 +24,7 @@ from localhub.bookmarks.models import Bookmark
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
-from localhub.views import BreadcrumbsMixin, SearchMixin
+from localhub.views import SearchMixin
 
 from .forms import CommentForm
 from .models import Comment
@@ -65,7 +65,7 @@ class CommentListView(SearchMixin, BaseCommentListView):
 comment_list_view = CommentListView.as_view()
 
 
-class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
+class CommentDetailView(CommentQuerySetMixin, DetailView):
     model = Comment
 
     def get_queryset(self):
@@ -83,9 +83,6 @@ class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
             self.request.user
         ).unread().update(is_read=True)
         return response
-
-    def get_breadcrumbs(self):
-        return self.object.get_breadcrumbs()
 
     def get_flags(self):
         return self.object.get_flags().select_related("user").order_by("-created")
@@ -109,14 +106,11 @@ comment_detail_view = CommentDetailView.as_view()
 
 
 class CommentUpdateView(
-    PermissionRequiredMixin, CommentQuerySetMixin, BreadcrumbsMixin, UpdateView,
+    PermissionRequiredMixin, CommentQuerySetMixin, UpdateView,
 ):
     form_class = CommentForm
     model = Comment
     permission_required = "comments.change_comment"
-
-    def get_breadcrumbs(self):
-        return self.object.get_breadcrumbs([(None, _("Edit"))])
 
     def form_valid(self, form):
         comment = form.save(commit=False)
@@ -134,7 +128,7 @@ comment_update_view = CommentUpdateView.as_view()
 
 
 class CommentDeleteView(
-    PermissionRequiredMixin, BreadcrumbsMixin, CommentQuerySetMixin, DeleteView,
+    PermissionRequiredMixin, CommentQuerySetMixin, DeleteView,
 ):
     permission_required = "comments.delete_comment"
     template_name = "comments/comment_confirm_delete.html"
@@ -149,9 +143,6 @@ class CommentDeleteView(
 
         messages.success(request, _("Comment has been deleted"))
         return redirect(comment.content_object)
-
-    def get_breadcrumbs(self):
-        return self.object.get_breadcrumbs([(None, _("Edit"))])
 
 
 comment_delete_view = CommentDeleteView.as_view()
@@ -233,7 +224,7 @@ comment_dislike_view = CommentDislikeView.as_view()
 
 
 class CommentFlagView(
-    PermissionRequiredMixin, BreadcrumbsMixin, CommentQuerySetMixin, FormView,
+    PermissionRequiredMixin, CommentQuerySetMixin, FormView,
 ):
     form_class = FlagForm
     template_name = "flags/flag_form.html"
@@ -254,9 +245,6 @@ class CommentFlagView(
     def comment(self):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
 
-    def get_breadcrumbs(self):
-        return self.comment.get_breadcrumbs([(None, _("Flag"))])
-
     def form_valid(self, form):
         flag = form.save(commit=False)
         flag.content_object = self.comment
@@ -276,7 +264,7 @@ comment_flag_view = CommentFlagView.as_view()
 
 
 class CommentReplyView(
-    CommentQuerySetMixin, BreadcrumbsMixin, PermissionRequiredMixin, CreateView,
+    CommentQuerySetMixin, PermissionRequiredMixin, CreateView,
 ):
     permission_required = "comments.reply_to_comment"
     model = Comment
@@ -284,9 +272,6 @@ class CommentReplyView(
 
     def get_permission_object(self):
         return self.parent
-
-    def get_breadcrumbs(self):
-        return self.parent.get_breadcrumbs([(None, _("Reply"))])
 
     @cached_property
     def parent(self):

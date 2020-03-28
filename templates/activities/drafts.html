@@ -4,7 +4,8 @@
 {% extends "activities/base.html" %}
 
 {% load i18n %}
-{% load users_tags %}
+
+{% block subtitle %} / {% trans "Drafts" %}{% endblock %}
 
 {% block content %}
 <h5>{% trans "Drafts" %}</h5>

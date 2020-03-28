@@ -3,7 +3,6 @@
 
 import pytest
 from django.contrib.auth.models import AnonymousUser
-from django.urls import reverse
 from django.utils import timezone
 
 from localhub.bookmarks.factories import BookmarkFactory
@@ -435,21 +434,3 @@ class TestCommentModel:
         assert notifications[0].actor == moderator.member
         assert notifications[0].recipient == comment.owner
         assert notifications[0].verb == "delete"
-
-    def test_get_breadcrumbs(self, comment):
-        breadcrumbs = comment.get_breadcrumbs()
-        assert len(breadcrumbs) == 3
-
-        assert breadcrumbs[0][0] == reverse("posts:list")
-        assert breadcrumbs[1][0] == comment.content_object.get_absolute_url()
-        assert breadcrumbs[2][0] == comment.get_absolute_url()
-
-    def test_get_breadcrumbs_with_extra_segments(self, comment):
-        breadcrumbs = comment.get_breadcrumbs([(None, "Edit")])
-        assert len(breadcrumbs) == 4
-
-        assert breadcrumbs[0][0] == reverse("posts:list")
-        assert breadcrumbs[1][0] == comment.content_object.get_absolute_url()
-        assert breadcrumbs[2][0] == comment.get_absolute_url()
-        assert breadcrumbs[2][1] == "Comment"
-        assert breadcrumbs[3][1] == "Edit"

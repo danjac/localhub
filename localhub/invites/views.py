@@ -13,7 +13,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from vanilla import CreateView, DeleteView, DetailView, GenericModelView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.views import BreadcrumbsMixin, SearchMixin
+from localhub.views import SearchMixin
 
 from .emails import send_invitation_email
 from .forms import InviteForm
@@ -99,7 +99,7 @@ invite_list_view = InviteListView.as_view()
 
 
 class InviteCreateView(
-    InviteAdminMixin, CommunityRequiredMixin, BreadcrumbsMixin, CreateView,
+    InviteAdminMixin, CommunityRequiredMixin, CreateView,
 ):
     model = Invite
     form_class = InviteForm
@@ -107,9 +107,6 @@ class InviteCreateView(
 
     def get_permission_object(self):
         return self.request.community
-
-    def get_breadcrumbs(self):
-        return [(reverse("invites:list"), _("Invites")), (None, _("Send invite"))]
 
     def get_form(self, data=None, files=None):
         return self.form_class(self.request.community, data, files)

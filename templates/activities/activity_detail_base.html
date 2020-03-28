@@ -8,7 +8,16 @@
 {% block subtitle %} / {{ model_name_plural }} / {{ object.title }}{% endblock %}
 
 {% block content %}
-{% include "includes/breadcrumbs.html" %}
+
+<ul class="breadcrumb">
+  {% if object.published %}
+  <li class="breadcrumb-item"><a href="{{ model_list_url }}">{{ model_name_plural }}</a></li>
+  {% else %}
+  <li class="breadcrumb-item"><a href="{% url 'activities:drafts' %}">{% trans "Drafts" %}</a></li>
+  {% endif %}
+  <li class="breadcrumb-item">{{ object.title }}</li>
+</ul>
+
 {% if object.deleted %}
 <p class="toast text-center my-2">
   {% blocktrans %}

@@ -16,7 +16,7 @@ from vanilla import CreateView, DeleteView, DetailView, GenericModelView, ListVi
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.utils import user_display
-from localhub.views import BreadcrumbsMixin, SearchMixin
+from localhub.views import SearchMixin
 
 from .emails import send_acceptance_email, send_join_request_email, send_rejection_email
 from .forms import JoinRequestForm
@@ -87,14 +87,8 @@ class JoinRequestListView(JoinRequestManageMixin, SearchMixin, ListView):
 join_request_list_view = JoinRequestListView.as_view()
 
 
-class JoinRequestDetailView(JoinRequestManageMixin, BreadcrumbsMixin, DetailView):
+class JoinRequestDetailView(JoinRequestManageMixin, DetailView):
     model = JoinRequest
-
-    def get_breadcrumbs(self):
-        return [
-            (reverse("join_requests:list"), _("Join Requests")),
-            (None, user_display(self.object.sender)),
-        ]
 
 
 join_request_detail_view = JoinRequestDetailView.as_view()
