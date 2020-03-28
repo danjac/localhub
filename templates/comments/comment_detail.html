@@ -8,6 +8,13 @@
 
 {% block content %}
 
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{% url 'comments:list' %}">{% trans "Comments" %}</a></li>
+  <li class="breadcrumb-item"><a
+       href="{{ comment.content_object.get_absolute_url }}">{{ object.content_object|truncatechars:60 }}</a></li>
+</ul>
+
+
 {% if comment.parent and comment.parent.deleted %}
 <p class="toast text-center my-2">
   {% blocktrans %}

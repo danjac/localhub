@@ -13,6 +13,20 @@
 
 {% block content %}
 
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{% url 'comments:list' %}">{% trans "Comments" %}</a></li>
+  {% if parent %}
+  <li class="breadcrumb-item"><a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a></li>
+  <li class="breadcrumb-item">{% trans "Reply" %}</li>
+  {% elif object %}
+  <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{% trans "Edit" %}</a></li>
+  <li class="breadcrumb-item">{% trans "Edit" %}</li>
+  {% else %}
+  <li class="breadcrumb-item">{% trans "Submit" %}</li>
+  {% endif %}
+</ul>
+
+
 {% if parent %}
 
 <article class="card mb-2"
