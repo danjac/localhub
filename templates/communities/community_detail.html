@@ -7,6 +7,8 @@
 {% load rules %}
 {% load activities_tags %}
 
+{% block subtitle %} / {% trans "About" %}{% endblock %}
+
 {% block content %}
 
 <h5>{{ community.name }}</h5>
@@ -14,22 +16,22 @@
 {% has_perm "communities.manage_community" user community as can_manage %}
 {% if community.terms or can_manage %}
 <div class="actions mb-1">
-    {% if community.terms %}
-    <a href="{% url 'communities:community_terms' %}">
-        {% trans "Terms" %}
-    </a>
-    {% endif %}
+  {% if community.terms %}
+  <a href="{% url 'communities:community_terms' %}">
+    {% trans "Terms" %}
+  </a>
+  {% endif %}
 
-    {% if can_manage %}
-    <a href="{% url "communities:community_update" %}">
-        {% trans "Community Settings" %}
-    </a>
-    {% endif %}
+  {% if can_manage %}
+  <a href="{% url "communities:community_update" %}">
+    {% trans "Community Settings" %}
+  </a>
+  {% endif %}
 </div>
 {% endif %}
 
 <div class="markdown-content">
-    {{ community.description.markdown|strip_external_images:user }}
+  {{ community.description.markdown|strip_external_images:user }}
 </div>
 
 {% endblock content %}

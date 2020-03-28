@@ -25,7 +25,7 @@ from localhub.comments.forms import CommentForm
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
-from localhub.views import BreadcrumbsMixin, PageTitleMixin, SearchMixin
+from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from ..models import get_activity_models
 
@@ -43,11 +43,31 @@ class BaseSingleActivityView(ActivityQuerySetMixin, GenericModelView):
     ...
 
 
+class ActivityContentMixin:
+    def get_model_name_plural(self):
+        return _(self.model._meta.verbose_name_plural.title())
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data.update({"model_name_plural": self.get_model_name_plural()})
+        return data
+
+
+class SingleActivityContentMixin(ActivityContentMixin):
+    def get_model_name(self):
+        return _(self.model._meta.verbose_name.title())
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data.update({"model_name": self.get_model_name()})
+        return data
+
+
 class ActivityCreateView(
     CommunityRequiredMixin,
     PermissionRequiredMixin,
-    PageTitleMixin,
     BreadcrumbsMixin,
+    ActivityContentMixin,
     CreateView,
 ):
     permission_required = "activities.create_activity"
@@ -65,9 +85,6 @@ class ActivityCreateView(
 
     def get_breadcrumbs(self):
         return self.model.get_breadcrumbs_for_model([(None, _("Submit"))])
-
-    def get_page_title_segments(self):
-        return self.model.get_page_title_segments_for_model([_("Submit")])
 
     def form_valid(self, form):
 
@@ -89,13 +106,12 @@ class ActivityCreateView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityListView(ActivityQuerySetMixin, SearchMixin, PageTitleMixin, ListView):
+class ActivityListView(
+    ActivityQuerySetMixin, SearchMixin, ActivityContentMixin, ListView
+):
     allow_empty = True
     paginate_by = settings.DEFAULT_PAGE_SIZE
     order_by = ("-published", "-created")
-
-    def get_page_title_segments(self):
-        return self.object_list.model.get_page_title_segments_for_model()
 
     def get_queryset(self):
         qs = (
@@ -115,17 +131,14 @@ class ActivityListView(ActivityQuerySetMixin, SearchMixin, PageTitleMixin, ListV
 class ActivityUpdateView(
     PermissionRequiredMixin,
     ActivityQuerySetMixin,
-    PageTitleMixin,
     BreadcrumbsMixin,
+    SingleActivityContentMixin,
     UpdateView,
 ):
     permission_required = "activities.change_activity"
 
     def get_breadcrumbs(self):
         return self.object.get_breadcrumbs([(None, _("Edit"))])
-
-    def get_page_title_segments(self):
-        return self.object.get_page_title_segments([_("Edit")])
 
     def get_success_message(self, publish):
         message = (
@@ -160,7 +173,7 @@ class ActivityDeleteView(
     PermissionRequiredMixin,
     ActivityQuerySetMixin,
     BreadcrumbsMixin,
-    PageTitleMixin,
+    SingleActivityContentMixin,
     DeleteView,
 ):
     permission_required = "activities.delete_activity"
@@ -169,9 +182,6 @@ class ActivityDeleteView(
 
     def get_success_message(self):
         return self.success_message % self.object._meta.verbose_name
-
-    def get_page_title_segments(self):
-        return self.object.get_page_title_segments([_("Delete")])
 
     def get_breadcrumbs(self):
         return self.object.get_breadcrumbs([(None, _("Delete"))])
@@ -193,7 +203,7 @@ class ActivityDeleteView(
 
 
 class ActivityDetailView(
-    ActivityQuerySetMixin, BreadcrumbsMixin, PageTitleMixin, DetailView
+    ActivityQuerySetMixin, BreadcrumbsMixin, SingleActivityContentMixin, DetailView
 ):
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
@@ -228,9 +238,6 @@ class ActivityDetailView(
 
     def get_breadcrumbs(self):
         return self.object.get_breadcrumbs()
-
-    def get_page_title_segments(self):
-        return self.object.get_page_title_segments()
 
     def get_flags(self):
         return self.object.get_flags().select_related("user").order_by("-created")
@@ -395,11 +402,7 @@ class ActivityDislikeView(BaseSingleActivityView):
 
 
 class ActivityFlagView(
-    PermissionRequiredMixin,
-    BreadcrumbsMixin,
-    PageTitleMixin,
-    ActivityQuerySetMixin,
-    FormView,
+    PermissionRequiredMixin, BreadcrumbsMixin, ActivityQuerySetMixin, FormView,
 ):
     form_class = FlagForm
     template_name = "flags/flag_form.html"
@@ -422,9 +425,6 @@ class ActivityFlagView(
 
     def get_breadcrumbs(self):
         return self.activity.get_breadcrumbs([(None, _("Flag"))])
-
-    def get_page_title_segments(self):
-        return self.activity.get_page_title_segments([_("Flag")])
 
     def form_valid(self, form):
         flag = form.save(commit=False)
@@ -449,11 +449,7 @@ activity_flag_view = ActivityFlagView.as_view()
 
 
 class ActivityCommentCreateView(
-    PermissionRequiredMixin,
-    ActivityQuerySetMixin,
-    BreadcrumbsMixin,
-    PageTitleMixin,
-    FormView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, BreadcrumbsMixin, FormView,
 ):
     form_class = CommentForm
     template_name = "comments/comment_form.html"
@@ -465,9 +461,6 @@ class ActivityCommentCreateView(
 
     def get_breadcrumbs(self):
         return self.activity.get_breadcrumbs([(None, _("Comment"))])
-
-    def get_page_title_segments(self):
-        return self.activity.get_page_title_segments([_("Comment")])
 
     def get_permission_object(self):
         return self.activity

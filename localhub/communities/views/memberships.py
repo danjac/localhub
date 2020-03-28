@@ -11,7 +11,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView, DetailView, ListView, UpdateView
 
 from localhub.users.utils import user_display
-from localhub.views import PageTitleMixin, SearchMixin
+from localhub.views import SearchMixin
 
 from ..emails import send_membership_deleted_email
 from ..forms import MembershipForm
@@ -27,16 +27,11 @@ class MembershipQuerySetMixin(CommunityRequiredMixin):
 
 
 class MembershipListView(
-    PermissionRequiredMixin,
-    MembershipQuerySetMixin,
-    SearchMixin,
-    PageTitleMixin,
-    ListView,
+    PermissionRequiredMixin, MembershipQuerySetMixin, SearchMixin, ListView,
 ):
     paginate_by = settings.LONG_PAGE_SIZE
     permission_required = "communities.manage_community"
     model = Membership
-    page_title_segments = [_("Memberships")]
 
     def get_permission_object(self):
         return self.request.community
@@ -54,25 +49,18 @@ membership_list_view = MembershipListView.as_view()
 
 
 class MembershipDetailView(
-    PermissionRequiredMixin, MembershipQuerySetMixin, PageTitleMixin, DetailView,
+    PermissionRequiredMixin, MembershipQuerySetMixin, DetailView,
 ):
 
     permission_required = "communities.view_membership"
     model = Membership
-
-    def get_page_title_segments(self):
-        return [_("Memberships"), user_display(self.object.member)]
 
 
 membership_detail_view = MembershipDetailView.as_view()
 
 
 class MembershipUpdateView(
-    PermissionRequiredMixin,
-    MembershipQuerySetMixin,
-    PageTitleMixin,
-    SuccessMessageMixin,
-    UpdateView,
+    PermissionRequiredMixin, MembershipQuerySetMixin, SuccessMessageMixin, UpdateView,
 ):
     model = Membership
     form_class = MembershipForm
@@ -81,9 +69,6 @@ class MembershipUpdateView(
 
     def get_success_url(self):
         return reverse("communities:membership_detail", args=[self.object.id])
-
-    def get_page_title_segments(self):
-        return [_("Memberships"), user_display(self.object.member), _("Edit")]
 
 
 membership_update_view = MembershipUpdateView.as_view()

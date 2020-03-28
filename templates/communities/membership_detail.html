@@ -5,6 +5,7 @@
 {% load rules %}
 {% load users_tags %}
 
+{% block subtitle %} / {% trans "Memberships" %} / {% user_display membership.member %}{% endblock %}
 {% block content %}
 {% with member=object.member %}
 

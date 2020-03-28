@@ -6,29 +6,29 @@
 {% load i18n %}
 {% load socialaccount %}
 
-{% block subtitle %} / {{ view.page_title }}{% endblock %}
+{% block subtitle %} / {% trans "Settings" %}{% endblock %}
 
 {% block content %}
 
 <h5>{% trans "Settings" %}</h5>
 <div class="actions mb-1">
-    <a href="{% url 'account_email' %}">{% trans "Email Addresses" %}</a>
-    {% get_providers as socialaccount_providers %}
-    {% if socialaccount_providers %}
-    <a href="{% url 'socialaccount_connections' %}">{% trans "Social Logins" %}</a>
-    {% endif %}
-    <a href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a>
-    <a href="{% url 'user_delete' %}">{% trans "Delete Account" %}</a>
+  <a href="{% url 'account_email' %}">{% trans "Email Addresses" %}</a>
+  {% get_providers as socialaccount_providers %}
+  {% if socialaccount_providers %}
+  <a href="{% url 'socialaccount_connections' %}">{% trans "Social Logins" %}</a>
+  {% endif %}
+  <a href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a>
+  <a href="{% url 'user_delete' %}">{% trans "Delete Account" %}</a>
 </div>
 
 <div class="text-center my-2 toast d-hide"
      data-controller="cookie-notice"
      data-cookie-notice-name="profile-settings">
-    <button class="btn btn-clear float-right"
-            data-action="cookie-notice#accept"></button>
-    {% blocktrans %}
-    Your settings apply to all communities you belong to.
-    {% endblocktrans %}
+  <button class="btn btn-clear float-right"
+          data-action="cookie-notice#accept"></button>
+  {% blocktrans %}
+  Your settings apply to all communities you belong to.
+  {% endblocktrans %}
 </div>
 
 

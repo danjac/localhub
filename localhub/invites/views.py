@@ -13,7 +13,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from vanilla import CreateView, DeleteView, DetailView, GenericModelView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.views import BreadcrumbsMixin, PageTitleMixin, SearchMixin
+from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from .emails import send_invitation_email
 from .forms import InviteForm
@@ -25,11 +25,6 @@ class InviteQuerySetMixin(CommunityRequiredMixin):
         return Invite.objects.for_community(self.request.community).select_related(
             "community"
         )
-
-
-class InvitesPageTitleMixin(PageTitleMixin):
-    def get_page_title_segments(self):
-        return [_("Invites")]
 
 
 class InviteRecipientQuerySetMixin(LoginRequiredMixin):
@@ -50,9 +45,7 @@ class InviteAdminMixin(LoginRequiredMixin, PermissionRequiredMixin):
     permission_required = "communities.manage_community"
 
 
-class InviteListView(
-    InviteAdminMixin, InviteQuerySetMixin, InvitesPageTitleMixin, SearchMixin, ListView
-):
+class InviteListView(InviteAdminMixin, InviteQuerySetMixin, SearchMixin, ListView):
     """
     TBD: list of received pending community invitations
     + counter template tag
@@ -106,11 +99,7 @@ invite_list_view = InviteListView.as_view()
 
 
 class InviteCreateView(
-    InviteAdminMixin,
-    InvitesPageTitleMixin,
-    CommunityRequiredMixin,
-    BreadcrumbsMixin,
-    CreateView,
+    InviteAdminMixin, CommunityRequiredMixin, BreadcrumbsMixin, CreateView,
 ):
     model = Invite
     form_class = InviteForm
@@ -178,7 +167,7 @@ class InviteDeleteView(
 invite_delete_view = InviteDeleteView.as_view()
 
 
-class InviteAcceptView(InviteRecipientQuerySetMixin, InvitesPageTitleMixin, DetailView):
+class InviteAcceptView(InviteRecipientQuerySetMixin, DetailView):
     """
     Handles an invite accept action.
 
@@ -234,9 +223,7 @@ class InviteRejectView(InviteRecipientQuerySetMixin, GenericModelView):
 invite_reject_view = InviteRejectView.as_view()
 
 
-class ReceivedInviteListView(
-    InviteRecipientQuerySetMixin, InvitesPageTitleMixin, ListView
-):
+class ReceivedInviteListView(InviteRecipientQuerySetMixin, ListView):
     """
     List of pending invites sent to this user from different communities.
     """

@@ -9,6 +9,8 @@
 {% load notifications_tags %}
 {% load users_tags %}
 
+{% block subtitle %} / {% trans "Activities" %} {% endblock %}
+
 {% block content %}
 
 {% if page_obj.number == 1 %}
@@ -16,13 +18,13 @@
 {% if latest_notification %}
 {% notification latest_notification %}
 <div class="toast toast-primary text-center my-2">
-    <button class="btn btn-clear float-right"
-            data-controller="js-toggle toggle ajax"
-            data-target="toggle.target"
-            data-action="toggle#toggle ajax#post"
-            data-ajax-redirect="{{ request.get_full_path }}"
-            data-ajax-url="{% url 'notifications:mark_all_read' %}"></button>
-    {{ notification_content }}
+  <button class="btn btn-clear float-right"
+          data-controller="js-toggle toggle ajax"
+          data-target="toggle.target"
+          data-action="toggle#toggle ajax#post"
+          data-ajax-redirect="{{ request.get_full_path }}"
+          data-ajax-url="{% url 'notifications:mark_all_read' %}"></button>
+  {{ notification_content }}
 </div>
 {% endnotification %}
 {% endif %}
@@ -34,24 +36,24 @@
 {% if can_create_activity %}
 <div class="d-hide"
      data-controller="js-toggle">
-    <div class="mb-2">
-        <div class="input-group">
-            <span class="input-group-addon">
-                {% avatar user %}
-            </span>
-            <input type="text"
-                   class="form-input conversation-input"
-                   data-controller="linkify"
-                   data-action="focus->linkify#go"
-                   data-linkify-url="{% url 'posts:create' %}"
-                   placeholder="{% trans "What's on your mind?" %}">
-        </div>
+  <div class="mb-2">
+    <div class="input-group">
+      <span class="input-group-addon">
+        {% avatar user %}
+      </span>
+      <input type="text"
+             class="form-input conversation-input"
+             data-controller="linkify"
+             data-action="focus->linkify#go"
+             data-linkify-url="{% url 'posts:create' %}"
+             placeholder="{% trans "What's on your mind?" %}">
     </div>
-    <div class="actions">
-        <a href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
-        <a href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
-        <a href="{% url 'polls:create' %}">{% trans "Submit Poll" %}</a>
-    </div>
+  </div>
+  <div class="actions">
+    <a href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
+    <a href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
+    <a href="{% url 'polls:create' %}">{% trans "Submit Poll" %}</a>
+  </div>
 </div>
 {% endif %}
 
@@ -59,14 +61,14 @@
 <div class="toast text-center my-2 d-hide"
      data-controller="cookie-notice"
      data-cookie-notice-name="embedded-content">
-    <button class="btn btn-clear float-right"
-            data-action="cookie-notice#accept"></button>
-    {% url "user_update" as user_update_url %}
-    {% blocktrans %}
-    You can view embedded content in your feed, for example YouTube videos, by checking the <b>Show embedded content</b>
-    option in your
-    <a href="{{ user_update_url }}">user settings</a>.
-    {% endblocktrans %}
+  <button class="btn btn-clear float-right"
+          data-action="cookie-notice#accept"></button>
+  {% url "user_update" as user_update_url %}
+  {% blocktrans %}
+  You can view embedded content in your feed, for example YouTube videos, by checking the <b>Show embedded content</b>
+  option in your
+  <a href="{{ user_update_url }}">user settings</a>.
+  {% endblocktrans %}
 </div>
 {% endif %}
 

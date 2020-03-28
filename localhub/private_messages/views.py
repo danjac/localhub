@@ -19,7 +19,7 @@ from vanilla import DeleteView, DetailView, FormView, GenericModelView, ListView
 from localhub.bookmarks.models import Bookmark
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.utils import user_display
-from localhub.views import BreadcrumbsMixin, PageTitleMixin, SearchMixin
+from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from .forms import MessageForm
 from .models import Message
@@ -66,12 +66,7 @@ class BaseMessageListView(SearchMixin, ListView):
     paginate_by = settings.DEFAULT_PAGE_SIZE
 
 
-class MessagesPageTitleMixin(PageTitleMixin):
-    def get_page_title_segments(self):
-        return [_("Messages")]
-
-
-class InboxView(RecipientQuerySetMixin, MessagesPageTitleMixin, BaseMessageListView):
+class InboxView(RecipientQuerySetMixin, BaseMessageListView):
     """
     Messages received by current user
     oere we should show the sender, timestamp...
@@ -85,14 +80,11 @@ class InboxView(RecipientQuerySetMixin, MessagesPageTitleMixin, BaseMessageListV
             return qs.search(self.search_query).order_by("-rank", "-created")
         return qs.order_by(F("read").desc(nulls_first=True), "-created")
 
-    def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Inbox")]
-
 
 inbox_view = InboxView.as_view()
 
 
-class OutboxView(SenderQuerySetMixin, MessagesPageTitleMixin, BaseMessageListView):
+class OutboxView(SenderQuerySetMixin, BaseMessageListView):
     """
     Messages sent by current user
     """
@@ -104,9 +96,6 @@ class OutboxView(SenderQuerySetMixin, MessagesPageTitleMixin, BaseMessageListVie
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank", "-created")
         return qs.order_by("-created")
-
-    def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Outbox")]
 
 
 outbox_view = OutboxView.as_view()
@@ -122,7 +111,7 @@ class BaseMessageFormView(PermissionRequiredMixin, FormView):
         return self.request.community
 
 
-class BaseReplyFormView(BreadcrumbsMixin, MessagesPageTitleMixin, BaseMessageFormView):
+class BaseReplyFormView(BreadcrumbsMixin, BaseMessageFormView):
     @cached_property
     def parent(self):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
@@ -175,9 +164,6 @@ class MessageReplyView(RecipientQuerySetMixin, BaseReplyFormView):
             (None, _("Reply")),
         ]
 
-    def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Reply")]
-
     def get_form(self, data=None, files=None):
         form = super().get_form(data, files)
         form["message"].label = _("Reply to %(recipient)s") % {
@@ -195,18 +181,12 @@ class MessageFollowUpView(SenderQuerySetMixin, BaseReplyFormView):
             (None, _("Follow-Up")),
         ]
 
-    def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Follow-Up")]
-
 
 message_follow_up_view = MessageFollowUpView.as_view()
 
 
 class MessageCreateView(
-    BreadcrumbsMixin,
-    CommunityRequiredMixin,
-    MessagesPageTitleMixin,
-    BaseMessageFormView,
+    BreadcrumbsMixin, CommunityRequiredMixin, BaseMessageFormView,
 ):
     @cached_property
     def recipient(self):
@@ -230,12 +210,6 @@ class MessageCreateView(
                 self.recipient_display,
             ),
             (None, _("Send Message")),
-        ]
-
-    def get_page_title_segments(self):
-        return super().get_page_title_segments() + [
-            self.recipient_display,
-            _("Send Message"),
         ]
 
     def get_form(self, data=None, files=None):
@@ -268,9 +242,7 @@ class MessageCreateView(
 message_create_view = MessageCreateView.as_view()
 
 
-class MessageDetailView(
-    SenderOrRecipientQuerySetMixin, MessagesPageTitleMixin, DetailView
-):
+class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
 
     model = Message
 

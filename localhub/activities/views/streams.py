@@ -20,7 +20,7 @@ from vanilla import TemplateView
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.notifications.models import Notification
 from localhub.pagination import PresetCountPaginator
-from localhub.views import PageTitleMixin, SearchMixin
+from localhub.views import SearchMixin
 
 from ..models import get_activity_queryset_count, get_activity_querysets, load_objects
 
@@ -95,13 +95,12 @@ class BaseActivityStreamView(CommunityRequiredMixin, TemplateView):
         return data
 
 
-class ActivityStreamView(PageTitleMixin, BaseActivityStreamView):
+class ActivityStreamView(BaseActivityStreamView):
     """
     Default "Home Page" of community.
     """
 
     template_name = "activities/stream.html"
-    page_title_segments = [_("Activities")]
 
     def filter_queryset(self, queryset):
         return (
@@ -132,10 +131,9 @@ class ActivityStreamView(PageTitleMixin, BaseActivityStreamView):
 activity_stream_view = ActivityStreamView.as_view()
 
 
-class ActivitySearchView(SearchMixin, PageTitleMixin, BaseActivityStreamView):
+class ActivitySearchView(SearchMixin, BaseActivityStreamView):
     template_name = "activities/search.html"
     search_optional = False
-    page_title_segments = [_("Search")]
 
     def get_ordering(self):
         return ("-rank", "-published") if self.search_query else None
@@ -155,14 +153,10 @@ class ActivitySearchView(SearchMixin, PageTitleMixin, BaseActivityStreamView):
 activity_search_view = ActivitySearchView.as_view()
 
 
-class TimelineView(
-    YearMixin, MonthMixin, DateMixin, PageTitleMixin, BaseActivityStreamView
-):
+class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
     template_name = "activities/timeline.html"
     paginate_by = settings.LONG_PAGE_SIZE
     month_format = "%B"
-
-    page_title_segments = [_("Timeline")]
 
     @property
     def uses_datetime_field(self):
@@ -332,14 +326,13 @@ class TimelineView(
 timeline_view = TimelineView.as_view()
 
 
-class DraftsView(PageTitleMixin, BaseActivityStreamView):
+class DraftsView(BaseActivityStreamView):
     """
     Shows draft posts belonging to this user.
     """
 
     ordering = "-created"
     template_name = "activities/drafts.html"
-    page_title_segments = [_("Drafts")]
 
     def filter_queryset(self, queryset):
         return super().filter_queryset(queryset).drafts(self.request.user)

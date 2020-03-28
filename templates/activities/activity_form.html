@@ -3,6 +3,10 @@
 
 {% extends "activities/base.html" %}
 
+{% load i18n %}
+{% block subtitle %} / {{ model_name_plural }} / {% if object %}{{ object.title }} / {% trans "Edit" %}
+{% else %}{% trans "Submit" %}{% endif %}{% endblock %}
+
 {% block content %}
 {% include "includes/breadcrumbs.html" %}
 

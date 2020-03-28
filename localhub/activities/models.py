@@ -295,14 +295,6 @@ class Activity(TimeStampedModel):
         abstract = True
 
     @classmethod
-    def get_page_title_for_model(cls):
-        return smart_text(_(cls._meta.verbose_name_plural.title()))
-
-    @classmethod
-    def get_page_title_segments_for_model(cls, segments=None):
-        return [cls.get_page_title_for_model()] + list(segments or [])
-
-    @classmethod
     def get_list_url(cls):
         return reverse(f"{cls._meta.app_label}:list")
 
@@ -312,7 +304,7 @@ class Activity(TimeStampedModel):
         Returns default breadcrumbs for an Activity model class. Use
         this with BreadcrumbMixin views.
         """
-        return [(cls.get_list_url(), cls.get_page_title_for_model()),] + list(
+        return [(cls.get_list_url(), ""),] + list(
             breadcrumbs or []
         )
 
@@ -337,11 +329,6 @@ class Activity(TimeStampedModel):
 
     def get_page_title(self):
         return truncatechars(smart_text(self), 60)
-
-    def get_page_title_segments(self, segments=None):
-        return self.__class__.get_page_title_segments_for_model(
-            [self.get_page_title()] + list(segments or [])
-        )
 
     def get_breadcrumbs(self, breadcrumbs=None):
         breadcrumbs = [(self.get_absolute_url(), self.get_page_title())] + list(

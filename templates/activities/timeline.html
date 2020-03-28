@@ -4,6 +4,8 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block subtitle %} / {% trans "Timeline" %}{% endblock %}
+
 {% block content %}
 <h5>{% trans "Timeline" %}</h5>
 
@@ -11,24 +13,24 @@
 {% if dates %}
 {% if date_filters or num_years > 1 or num_months > 1 %}
 <div class="actions">
-    <a href="{{ reverse_sort_url }}">
-        {% if order == "desc" %}{% trans "Oldest First" %}{% else %}{% trans "Newest First" %}{% endif %}
-    </a> |
-    {% if date_filters %}
-    <a href="{{ request.path }}?&order={{ order }}">{% trans "Show All" %}</a> |
-    {% endif %}
-    {% if num_years > 1 %}
-    {% for year in years %}
-    <a href="{{ request.path }}?year={{ year }}&order={{ order }}">{{ year }}</a>
-    {% endfor %}
-    {% endif %}
-    {% if num_months > 1 %}
-    {% for counter, name in months %}
-    {% if counter != current_month %}
-    <a href="{{ request.path }}?month={{ counter }}&year={{ current_year }}&order={{ order }}">{{ name }}</a>
-    {% endif %}
-    {% endfor %}
-    {% endif %}
+  <a href="{{ reverse_sort_url }}">
+    {% if order == "desc" %}{% trans "Oldest First" %}{% else %}{% trans "Newest First" %}{% endif %}
+  </a> |
+  {% if date_filters %}
+  <a href="{{ request.path }}?&order={{ order }}">{% trans "Show All" %}</a> |
+  {% endif %}
+  {% if num_years > 1 %}
+  {% for year in years %}
+  <a href="{{ request.path }}?year={{ year }}&order={{ order }}">{{ year }}</a>
+  {% endfor %}
+  {% endif %}
+  {% if num_months > 1 %}
+  {% for counter, name in months %}
+  {% if counter != current_month %}
+  <a href="{{ request.path }}?month={{ counter }}&year={{ current_year }}&order={{ order }}">{{ name }}</a>
+  {% endif %}
+  {% endfor %}
+  {% endif %}
 </div>
 {% endif %}
 {% endif %}
@@ -37,35 +39,35 @@
 {% if selected_dates %}
 {% spaceless %}
 <div class="my-2 toast text-center">
-    {% blocktrans count counter=paginator.count %}
-    <strong>One activity</strong> was posted
-    {% plural %}
-    A total of <strong>{{ counter }} activities</strong> were posted
-    {% endblocktrans %}
-    {% with num_months=selected_months|length num_years=selected_years|length %}
-    {% if num_months == 1 and num_years == 1 %}
-    {% with earliest=selected_dates|first|date:"E Y" %}
-    {% blocktrans %}
-    in <b>{{ earliest }}</b>.
-    {% endblocktrans %}
-    {% endwith %}
+  {% blocktrans count counter=paginator.count %}
+  <strong>One activity</strong> was posted
+  {% plural %}
+  A total of <strong>{{ counter }} activities</strong> were posted
+  {% endblocktrans %}
+  {% with num_months=selected_months|length num_years=selected_years|length %}
+  {% if num_months == 1 and num_years == 1 %}
+  {% with earliest=selected_dates|first|date:"E Y" %}
+  {% blocktrans %}
+  in <b>{{ earliest }}</b>.
+  {% endblocktrans %}
+  {% endwith %}
 
-    {% elif num_years == 1 %}
-    {% with earliest=selected_dates|first|date:"E" latest=selected_dates|last|date:"E Y" %}
-    {% blocktrans %}
-    from <b>{{ earliest }}</b> to <b>{{ latest }}</b>.
-    {% endblocktrans %}
-    {% endwith %}
+  {% elif num_years == 1 %}
+  {% with earliest=selected_dates|first|date:"E" latest=selected_dates|last|date:"E Y" %}
+  {% blocktrans %}
+  from <b>{{ earliest }}</b> to <b>{{ latest }}</b>.
+  {% endblocktrans %}
+  {% endwith %}
 
-    {% else %}
-    {% with earliest=selected_dates|first|date:"E Y" latest=selected_dates|last|date:"E Y" %}
-    {% blocktrans %}
-    from <b>{{ earliest }}</b> to <b>{{ latest }}</b>.
-    {% endblocktrans %}
-    {% endwith %}
-    {% endif %}
+  {% else %}
+  {% with earliest=selected_dates|first|date:"E Y" latest=selected_dates|last|date:"E Y" %}
+  {% blocktrans %}
+  from <b>{{ earliest }}</b> to <b>{{ latest }}</b>.
+  {% endblocktrans %}
+  {% endwith %}
+  {% endif %}
 
-    {% endwith %}
+  {% endwith %}
 </div>
 {% endspaceless %}
 {% endif %}
@@ -73,36 +75,36 @@
 {% if object_list %}
 
 <div class="timeline">
-    {% regroup object_list by month as months %}
-    {% for month, activities in months %}
-    <div class="timeline-item">
-        <div class="timeline-left"><a class="timeline-icon tooltip"
-               href="#"
-               data-tooltip="{{ month }}"></a></div>
+  {% regroup object_list by month as months %}
+  {% for month, activities in months %}
+  <div class="timeline-item">
+    <div class="timeline-left"><a class="timeline-icon tooltip"
+         href="#"
+         data-tooltip="{{ month }}"></a></div>
 
-        <div class="timeline-content">
-            <div class="tile">
-                <div class="tile-content">
-                    <p class="tile-subtitle">{{ month }}</p>
-                    {% for activity in activities %}
-                    {% with object=activity.object object_type=activity.object_type %}
-                    <p class="tile-title">
-                        <a href="{{ object.get_absolute_url }}">
-                            {{ object|truncatechars:100 }}
-                        </a>
-                        <span class="chip">{% trans object_type|capfirst %}</span>
-                    </p>
-                    <p class="tile-title">
-                        {% include "activities/includes/timesince.html" with timestamp=object.published owner=object.owner %}
-                    </p>
-                    <div class="divider"></div>
-                    {% endwith %}
-                    {% endfor %}
-                </div>
-            </div>
+    <div class="timeline-content">
+      <div class="tile">
+        <div class="tile-content">
+          <p class="tile-subtitle">{{ month }}</p>
+          {% for activity in activities %}
+          {% with object=activity.object object_type=activity.object_type %}
+          <p class="tile-title">
+            <a href="{{ object.get_absolute_url }}">
+              {{ object|truncatechars:100 }}
+            </a>
+            <span class="chip">{% trans object_type|capfirst %}</span>
+          </p>
+          <p class="tile-title">
+            {% include "activities/includes/timesince.html" with timestamp=object.published owner=object.owner %}
+          </p>
+          <div class="divider"></div>
+          {% endwith %}
+          {% endfor %}
         </div>
+      </div>
     </div>
-    {% endfor %}
+  </div>
+  {% endfor %}
 </div>
 {% include "includes/pagination.html" %}
 {% else %}

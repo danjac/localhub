@@ -25,7 +25,7 @@ from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.likes.models import Like
 from localhub.private_messages.models import Message
-from localhub.views import PageTitleMixin, SearchMixin
+from localhub.views import SearchMixin
 
 from .forms import UserForm
 from .utils import user_display
@@ -50,7 +50,7 @@ class CurrentUserMixin(LoginRequiredMixin):
         return self.request.user
 
 
-class SingleUserMixin(BaseUserQuerySetMixin, PageTitleMixin):
+class SingleUserMixin(BaseUserQuerySetMixin):
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
         if self.user_obj != self.request.user:
@@ -58,9 +58,6 @@ class SingleUserMixin(BaseUserQuerySetMixin, PageTitleMixin):
                 self.request.user
             ).unread().update(is_read=True)
         return response
-
-    def get_page_title_segments(self):
-        return [self.display_name]
 
     @cached_property
     def user_obj(self):
@@ -131,7 +128,7 @@ class BaseSingleUserView(UserQuerySetMixin, GenericModelView):
     lookup_url_kwarg = "username"
 
 
-class BaseUserListView(UserQuerySetMixin, PageTitleMixin, ListView):
+class BaseUserListView(UserQuerySetMixin, ListView):
     paginate_by = settings.LONG_PAGE_SIZE
 
     def get_queryset(self):
@@ -200,7 +197,6 @@ user_unblock_view = UserUnblockView.as_view()
 
 class FollowingUserListView(BaseUserListView):
     template_name = "users/following_user_list.html"
-    page_title_segments = [_("Members"), _("Following")]
 
     def get_queryset(self):
         return (
@@ -219,7 +215,6 @@ following_user_list_view = FollowingUserListView.as_view()
 
 class FollowerUserListView(BaseUserListView):
     template_name = "users/follower_user_list.html"
-    page_title_segments = [_("Members"), _("Followers")]
 
     def get_queryset(self):
         return (
@@ -238,7 +233,6 @@ follower_user_list_view = FollowerUserListView.as_view()
 
 class BlockedUserListView(BaseUserListView):
     template_name = "users/blocked_user_list.html"
-    page_title_segments = [_("Members"), _("Blocked")]
 
     def get_queryset(self):
         return (
@@ -259,7 +253,6 @@ class MemberListView(SearchMixin, BaseUserListView):
     Shows all members of community
     """
 
-    page_title_segments = [_("Members")]
     template_name = "users/member_list.html"
 
     def get_queryset(self):
@@ -304,9 +297,6 @@ class UserStreamView(SingleUserMixin, BaseActivityStreamView):
     active_tab = "posts"
     template_name = "users/activities.html"
 
-    def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Activities")]
-
     def filter_queryset(self, queryset):
         return (
             super()
@@ -333,9 +323,6 @@ class UserCommentListView(SingleUserMixin, BaseCommentListView):
     active_tab = "comments"
     template_name = "users/comments.html"
 
-    def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Comments")]
-
     def get_queryset(self):
         return super().get_queryset().filter(owner=self.user_obj).order_by("-created")
 
@@ -360,9 +347,6 @@ class UserMessageListView(SingleUserMixin, ListView):
 
     template_name = "users/messages.html"
     paginate_by = settings.DEFAULT_PAGE_SIZE
-
-    def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Messages")]
 
     def get_queryset(self):
         if self.is_blocked:
@@ -398,17 +382,12 @@ user_message_list_view = UserMessageListView.as_view()
 
 
 class UserUpdateView(
-    CurrentUserMixin,
-    SuccessMessageMixin,
-    PermissionRequiredMixin,
-    PageTitleMixin,
-    UpdateView,
+    CurrentUserMixin, SuccessMessageMixin, PermissionRequiredMixin, UpdateView,
 ):
     permission_required = "users.change_user"
     success_message = _("Your details have been updated")
     form_class = UserForm
     template_name = "users/user_form.html"
-    page_title_segments = [_("Settings")]
 
     def get_success_url(self):
         return self.request.path

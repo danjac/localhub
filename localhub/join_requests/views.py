@@ -16,7 +16,7 @@ from vanilla import CreateView, DeleteView, DetailView, GenericModelView, ListVi
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.utils import user_display
-from localhub.views import BreadcrumbsMixin, PageTitleMixin, SearchMixin
+from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from .emails import send_acceptance_email, send_join_request_email, send_rejection_email
 from .forms import JoinRequestForm
@@ -35,14 +35,7 @@ class JoinRequestManageMixin(PermissionRequiredMixin, JoinRequestQuerySetMixin):
         return self.request.community
 
 
-class JoinRequestsPageTitleMixin(PageTitleMixin):
-    def get_page_title_segments(self):
-        return [_("Join Requests")]
-
-
-class JoinRequestListView(
-    JoinRequestManageMixin, JoinRequestsPageTitleMixin, SearchMixin, ListView
-):
+class JoinRequestListView(JoinRequestManageMixin, SearchMixin, ListView):
     paginate_by = settings.LONG_PAGE_SIZE
     model = JoinRequest
 
@@ -94,9 +87,7 @@ class JoinRequestListView(
 join_request_list_view = JoinRequestListView.as_view()
 
 
-class JoinRequestDetailView(
-    JoinRequestManageMixin, JoinRequestsPageTitleMixin, BreadcrumbsMixin, DetailView
-):
+class JoinRequestDetailView(JoinRequestManageMixin, BreadcrumbsMixin, DetailView):
     model = JoinRequest
 
     def get_breadcrumbs(self):
@@ -212,10 +203,7 @@ join_request_reject_view = JoinRequestRejectView.as_view()
 
 
 class JoinRequestCreateView(
-    PermissionRequiredMixin,
-    CommunityRequiredMixin,
-    JoinRequestsPageTitleMixin,
-    CreateView,
+    PermissionRequiredMixin, CommunityRequiredMixin, CreateView,
 ):
     model = JoinRequest
     form_class = JoinRequestForm
@@ -247,7 +235,7 @@ class JoinRequestCreateView(
 join_request_create_view = JoinRequestCreateView.as_view()
 
 
-class SentJoinRequestListView(LoginRequiredMixin, JoinRequestsPageTitleMixin, ListView):
+class SentJoinRequestListView(LoginRequiredMixin, ListView):
     """
     List of pending join requests sent by this user
     """

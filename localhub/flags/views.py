@@ -8,7 +8,6 @@ from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.views import PageTitleMixin
 
 from .models import Flag
 
@@ -23,10 +22,9 @@ class FlagQuerySetMixin(PermissionRequiredMixin, CommunityRequiredMixin):
         return Flag.objects.filter(community=self.request.community)
 
 
-class FlagListView(FlagQuerySetMixin, PageTitleMixin, ListView):
+class FlagListView(FlagQuerySetMixin, ListView):
     paginate_by = settings.LONG_PAGE_SIZE
     model = Flag
-    page_title_segments = [_("Flags")]
 
     def get_queryset(self):
         return (

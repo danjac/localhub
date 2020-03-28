@@ -7,21 +7,12 @@ from vanilla import ListView
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views import BaseCommentListView
 from localhub.private_messages.models import Message
-from localhub.views import PageTitleMixin
 
 
-class BookmarksPageTitleMixin(PageTitleMixin):
-    def get_page_title_segments(self):
-        return [_("Bookmarks")]
-
-
-class BookmarksStreamView(BookmarksPageTitleMixin, BaseActivityStreamView):
+class BookmarksStreamView(BaseActivityStreamView):
     # tbd: make searchable...
     template_name = "bookmarks/activities.html"
     ordering = ("-bookmarked", "-created")
-
-    def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Activities")]
 
     def get_count_queryset_for_model(self, model):
         return self.filter_queryset(model.objects.bookmarked(self.request.user))
@@ -33,11 +24,8 @@ class BookmarksStreamView(BookmarksPageTitleMixin, BaseActivityStreamView):
 bookmarks_stream_view = BookmarksStreamView.as_view()
 
 
-class BookmarksCommentListView(BookmarksPageTitleMixin, BaseCommentListView):
+class BookmarksCommentListView(BaseCommentListView):
     template_name = "bookmarks/comments.html"
-
-    def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Comments")]
 
     def get_queryset(self):
         return (
@@ -52,12 +40,9 @@ class BookmarksCommentListView(BookmarksPageTitleMixin, BaseCommentListView):
 bookmarks_comment_list_view = BookmarksCommentListView.as_view()
 
 
-class BookmarksMessageListView(BookmarksPageTitleMixin, ListView):
+class BookmarksMessageListView(ListView):
 
     template_name = "bookmarks/messages.html"
-
-    def get_page_title_segments(self):
-        return super().get_page_title_segments() + [_("Messages")]
 
     def get_queryset(self):
         return (

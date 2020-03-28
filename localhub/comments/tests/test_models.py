@@ -436,19 +436,6 @@ class TestCommentModel:
         assert notifications[0].recipient == comment.owner
         assert notifications[0].verb == "delete"
 
-    def test_get_page_title_segments(self, comment):
-        segments = comment.get_page_title_segments()
-        assert len(segments) == 3
-        assert segments[0] == "Posts"
-        assert segments[2] == "Comment"
-
-    def test_get_page_title_segments_with_extra_segments(self, comment):
-        segments = comment.get_page_title_segments(["Edit"])
-        assert len(segments) == 4
-        assert segments[0] == "Posts"
-        assert segments[2] == "Comment"
-        assert segments[3] == "Edit"
-
     def test_get_breadcrumbs(self, comment):
         breadcrumbs = comment.get_breadcrumbs()
         assert len(breadcrumbs) == 3

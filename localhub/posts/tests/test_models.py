@@ -21,21 +21,6 @@ pytestmark = pytest.mark.django_db
 
 
 class TestPostModel:
-    def test_get_page_title_segments_for_model(self):
-        segments = Post.get_page_title_segments_for_model()
-        assert segments == ["Posts"]
-
-    def test_get_page_title_segments_for_instance(self, post):
-        segments = post.get_page_title_segments()
-        assert len(segments) == 2
-        assert segments[0] == "Posts"
-
-    def test_get_page_title_segments_for_instance_with_extra_segments(self, post):
-        segments = post.get_page_title_segments(["Edit"])
-        assert len(segments) == 3
-        assert segments[0] == "Posts"
-        assert segments[2] == "Edit"
-
     def test_get_breadcrumbs_for_model(self):
         breadcrumbs = Post.get_breadcrumbs_for_model()
         assert len(breadcrumbs) == 1

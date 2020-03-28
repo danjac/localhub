@@ -17,7 +17,7 @@ from taggit.models import Tag, TaggedItem
 from vanilla import GenericModelView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.views import PageTitleMixin, SearchMixin
+from localhub.views import SearchMixin
 
 from ..models import get_activity_models
 from .streams import BaseActivityStreamView
@@ -89,7 +89,7 @@ class TagAutocompleteListView(BaseTagListView):
 tag_autocomplete_list_view = TagAutocompleteListView.as_view()
 
 
-class TagDetailView(PageTitleMixin, BaseActivityStreamView):
+class TagDetailView(BaseActivityStreamView):
     template_name = "activities/tags/tag_detail.html"
 
     @cached_property
@@ -119,9 +119,6 @@ class TagDetailView(PageTitleMixin, BaseActivityStreamView):
         data = super().get_context_data(**kwargs)
         data["tag"] = self.tag
         return data
-
-    def get_page_title_segments(self):
-        return [_("Tags"), "#" + self.tag.name]
 
 
 tag_detail_view = TagDetailView.as_view()
@@ -190,11 +187,10 @@ class TagUnblockView(BaseSingleTagView):
 tag_unblock_view = TagUnblockView.as_view()
 
 
-class TagListView(SearchMixin, PageTitleMixin, BaseTagListView):
+class TagListView(SearchMixin, BaseTagListView):
     template_name = "activities/tags/tag_list.html"
     paginate_by = settings.LONG_PAGE_SIZE
     exclude_unused_tags = True
-    page_title_segments = [_("Tags")]
 
     def get_queryset(self):
 
@@ -225,9 +221,8 @@ class TagListView(SearchMixin, PageTitleMixin, BaseTagListView):
 tag_list_view = TagListView.as_view()
 
 
-class FollowingTagListView(PageTitleMixin, BaseTagListView):
+class FollowingTagListView(BaseTagListView):
     template_name = "activities/tags/following_tag_list.html"
-    page_title_segments = [_("Tags"), _("Following")]
 
     def get_queryset(self):
         return self.request.user.following_tags.order_by("name")
@@ -236,9 +231,8 @@ class FollowingTagListView(PageTitleMixin, BaseTagListView):
 following_tag_list_view = FollowingTagListView.as_view()
 
 
-class BlockedTagListView(PageTitleMixin, BaseTagListView):
+class BlockedTagListView(BaseTagListView):
     template_name = "activities/tags/blocked_tag_list.html"
-    page_title_segments = [_("Tags"), _("Blocked")]
 
     def get_queryset(self):
         return self.request.user.blocked_tags.order_by("name")

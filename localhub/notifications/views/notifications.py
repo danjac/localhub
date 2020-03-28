@@ -4,11 +4,9 @@
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
 from vanilla import DeleteView, GenericModelView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.views import PageTitleMixin
 
 from ..models import Notification
 from ..signals import notification_read
@@ -31,11 +29,10 @@ class NotificationSuccessRedirectMixin:
         return reverse("notifications:list")
 
 
-class NotificationListView(NotificationQuerySetMixin, PageTitleMixin, ListView):
+class NotificationListView(NotificationQuerySetMixin, ListView):
     paginate_by = settings.LONG_PAGE_SIZE
     template_name = "notifications/notification_list.html"
     model = Notification
-    page_title_segments = [_("Notifications")]
 
     def get_queryset(self):
         return (

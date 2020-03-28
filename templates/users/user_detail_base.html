@@ -4,10 +4,12 @@
 {% extends "base.html" %}
 
 {% load i18n %}
+{% load account %}
 {% load rules %}
 {% load activities_tags %}
 {% load users_tags %}
 
+{% block subtitle %} / {% user_display user_obj%}{% endblock %}
 
 {% block content %}
 
@@ -88,6 +90,10 @@
 
   {% if not is_current_user %}
 
+  {% if can_create_message and not is_blocked %}
+  <a href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
+  {% endif %}
+
   {% if can_follow_user %}
   {% with following=user.following.all %}
   <a href="{% url 'users:unfollow' user_obj.username %}"
@@ -115,10 +121,6 @@
     {% trans "Follow" %}
   </a>
   {% endwith %}
-  {% endif %}
-
-  {% if can_create_message and not is_current_user and not is_blocked %}
-  <a href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
   {% endif %}
 
   {% if can_block_user %}

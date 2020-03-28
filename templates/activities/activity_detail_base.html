@@ -5,6 +5,8 @@
 
 {% load i18n %}
 
+{% block subtitle %} / {{ model_name_plural }} / {{ object.title }}{% endblock %}
+
 {% block content %}
 {% include "includes/breadcrumbs.html" %}
 {% if object.deleted %}

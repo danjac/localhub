@@ -24,7 +24,7 @@ from localhub.bookmarks.models import Bookmark
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
-from localhub.views import BreadcrumbsMixin, PageTitleMixin, SearchMixin
+from localhub.views import BreadcrumbsMixin, SearchMixin
 
 from .forms import CommentForm
 from .models import Comment
@@ -51,12 +51,9 @@ class BaseCommentListView(CommentQuerySetMixin, ListView):
         )
 
 
-class CommentListView(SearchMixin, PageTitleMixin, BaseCommentListView):
+class CommentListView(SearchMixin, BaseCommentListView):
 
     template_name = "comments/comment_list.html"
-
-    def get_page_title_segments(self):
-        return [_("Comments")]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -68,9 +65,7 @@ class CommentListView(SearchMixin, PageTitleMixin, BaseCommentListView):
 comment_list_view = CommentListView.as_view()
 
 
-class CommentDetailView(
-    CommentQuerySetMixin, PageTitleMixin, BreadcrumbsMixin, DetailView
-):
+class CommentDetailView(CommentQuerySetMixin, BreadcrumbsMixin, DetailView):
     model = Comment
 
     def get_queryset(self):
@@ -91,9 +86,6 @@ class CommentDetailView(
 
     def get_breadcrumbs(self):
         return self.object.get_breadcrumbs()
-
-    def get_page_title_segments(self):
-        return self.object.get_page_title_segments()
 
     def get_flags(self):
         return self.object.get_flags().select_related("user").order_by("-created")
@@ -117,11 +109,7 @@ comment_detail_view = CommentDetailView.as_view()
 
 
 class CommentUpdateView(
-    PermissionRequiredMixin,
-    CommentQuerySetMixin,
-    PageTitleMixin,
-    BreadcrumbsMixin,
-    UpdateView,
+    PermissionRequiredMixin, CommentQuerySetMixin, BreadcrumbsMixin, UpdateView,
 ):
     form_class = CommentForm
     model = Comment
@@ -129,9 +117,6 @@ class CommentUpdateView(
 
     def get_breadcrumbs(self):
         return self.object.get_breadcrumbs([(None, _("Edit"))])
-
-    def get_page_title_segments(self):
-        return self.object.get_page_title_segments([_("Edit")])
 
     def form_valid(self, form):
         comment = form.save(commit=False)
@@ -149,11 +134,7 @@ comment_update_view = CommentUpdateView.as_view()
 
 
 class CommentDeleteView(
-    PermissionRequiredMixin,
-    BreadcrumbsMixin,
-    PageTitleMixin,
-    CommentQuerySetMixin,
-    DeleteView,
+    PermissionRequiredMixin, BreadcrumbsMixin, CommentQuerySetMixin, DeleteView,
 ):
     permission_required = "comments.delete_comment"
     template_name = "comments/comment_confirm_delete.html"
@@ -171,9 +152,6 @@ class CommentDeleteView(
 
     def get_breadcrumbs(self):
         return self.object.get_breadcrumbs([(None, _("Edit"))])
-
-    def get_page_title_segments(self):
-        return self.object.get_page_title_segments([_("Edit")])
 
 
 comment_delete_view = CommentDeleteView.as_view()
@@ -255,11 +233,7 @@ comment_dislike_view = CommentDislikeView.as_view()
 
 
 class CommentFlagView(
-    PermissionRequiredMixin,
-    BreadcrumbsMixin,
-    PageTitleMixin,
-    CommentQuerySetMixin,
-    FormView,
+    PermissionRequiredMixin, BreadcrumbsMixin, CommentQuerySetMixin, FormView,
 ):
     form_class = FlagForm
     template_name = "flags/flag_form.html"
@@ -283,9 +257,6 @@ class CommentFlagView(
     def get_breadcrumbs(self):
         return self.comment.get_breadcrumbs([(None, _("Flag"))])
 
-    def get_page_title_segments(self):
-        return self.comment.get_page_title_segments([_("Flag")])
-
     def form_valid(self, form):
         flag = form.save(commit=False)
         flag.content_object = self.comment
@@ -305,11 +276,7 @@ comment_flag_view = CommentFlagView.as_view()
 
 
 class CommentReplyView(
-    CommentQuerySetMixin,
-    PageTitleMixin,
-    BreadcrumbsMixin,
-    PermissionRequiredMixin,
-    CreateView,
+    CommentQuerySetMixin, BreadcrumbsMixin, PermissionRequiredMixin, CreateView,
 ):
     permission_required = "comments.reply_to_comment"
     model = Comment
@@ -320,9 +287,6 @@ class CommentReplyView(
 
     def get_breadcrumbs(self):
         return self.parent.get_breadcrumbs([(None, _("Reply"))])
-
-    def get_page_title_segments(self):
-        return self.parent.get_page_title_segments([_("Reply")])
 
     @cached_property
     def parent(self):

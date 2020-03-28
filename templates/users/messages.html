@@ -9,6 +9,8 @@
 {% load private_messages_tags %}
 {% load users_tags %}
 
+{% block subtitle %}{{ block.super }} / {% trans "Messages" %}{% endblock %}
+
 {% block user_content %}
 
 {% if is_current_user %}

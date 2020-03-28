@@ -4,6 +4,9 @@
 {% extends "private_messages/base.html" %}
 
 {% load i18n %}
+{% load account %}
+
+{% block subtitle %} / {% user_display recipient %} / {{ parent|yesno:_("Reply,Send Message") }} {% endblock %}
 
 {% block content %}
 

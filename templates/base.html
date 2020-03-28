@@ -39,8 +39,7 @@
 
 <head>
   <title>
-    {% spaceless %}{% block title %}{% if total_notifications_count %}*{% endif %}{% if community %}{{ community.name }}{% endif %}{% block subtitle %}{% if view.page_title %}
-    / {{ view.page_title }}{% endif %}{% endblock %}{% endblock %}{% endspaceless %}
+    {% spaceless %}{% block title %}{% if total_notifications_count %}*{% endif %}{% if community %}{{ community.name }}{% endif %}{% block subtitle %}{% endblock %}{% endblock %}{% endspaceless %}
   </title>
   <meta charset="UTF-8">
   <meta name="viewport"

@@ -226,12 +226,6 @@ class Comment(TimeStampedModel):
             return self.content_object.get_breadcrumbs(breadcrumbs)
         return [(reverse("comments:list"), _("Comments")),] + breadcrumbs
 
-    def get_page_title_segments(self, segments=None):
-        segments = [_("Comment")] + list(segments or [])
-        if self.content_object:
-            return self.content_object.get_page_title_segments(segments)
-        return [_("Comments")] + segments
-
     def get_bookmarks(self):
         return Bookmark.objects.filter(comment=self)
 

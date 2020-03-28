@@ -3,4 +3,7 @@
 
 {% extends "activities/tags/tag_list_base.html" %}
 {% load i18n %}
+
+{% block subtitle %}{{ block.super }} / {% trans "Blocked" %}{% endblock %}
+
 {% block empty %}{% trans "You have not blocked any tags." %}{% endblock %}
