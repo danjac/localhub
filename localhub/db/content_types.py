@@ -87,6 +87,28 @@ def get_generic_related_count_subquery(
     )
 
 
+def get_generic_related_value_subquery(
+    model,
+    related,
+    field,
+    output_field,
+    related_object_id_field="object_id",
+    related_content_type_field="content_type",
+):
+    # returns single value from subquery
+    # caution: might cause error with non-unique queries
+    return models.Subquery(
+        _get_generic_related_by_id_and_content_type(
+            models.OuterRef("pk"),
+            model,
+            related,
+            related_object_id_field,
+            related_content_type_field,
+        ).values(field),
+        output_field=output_field,
+    )
+
+
 def get_generic_related_queryset(
     model,
     related,

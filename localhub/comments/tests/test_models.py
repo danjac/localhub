@@ -170,6 +170,36 @@ class TestCommentManager:
         comment = Comment.objects.with_has_bookmarked(user).get()
         assert comment.has_bookmarked
 
+    def test_bookmarked_if_user_has_not_bookmarked(self, comment, user):
+        BookmarkFactory(
+            user=user, content_object=comment, community=comment.community,
+        )
+        assert Comment.objects.bookmarked(UserFactory()).count() == 0
+
+    def test_bookmarked_if_user_has_bookmarked(self, comment, user):
+        BookmarkFactory(
+            user=user, content_object=comment, community=comment.community,
+        )
+        comments = Comment.objects.bookmarked(user)
+        assert comments.count() == 1
+        assert comments.first().has_bookmarked
+
+    def test_with_bookmarked_if_user_has_not_bookmarked(self, comment, user):
+        BookmarkFactory(
+            user=user, content_object=comment, community=comment.community,
+        )
+        assert Comment.objects.with_bookmarked(UserFactory()).count() == 0
+
+    def test_with_bookmarked_if_user_has_bookmarked(self, comment, user):
+        BookmarkFactory(
+            user=user, content_object=comment, community=comment.community,
+        )
+        comments = Comment.objects.with_bookmarked(user)
+        assert comments.count() == 1
+        comment = comments.first()
+        assert comment.has_bookmarked
+        assert comment.bookmarked is not None
+
     def test_with_has_liked_if_user_has_not_liked(self, comment, user):
         LikeFactory(
             user=user,

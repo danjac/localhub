@@ -8,7 +8,10 @@ from django.db import models
 from model_utils.models import TimeStampedModel
 
 from localhub.communities.models import Community
-from localhub.db.content_types import get_generic_related_exists
+from localhub.db.content_types import (
+    get_generic_related_exists,
+    get_generic_related_value_subquery,
+)
 
 
 class BookmarkAnnotationsQuerySetMixin:
@@ -27,6 +30,19 @@ class BookmarkAnnotationsQuerySetMixin:
                     self.model, Bookmark.objects.filter(user=user)
                 )
             }
+        )
+
+    def bookmarked(self, user, annotated_name="has_bookmarked"):
+        return self.with_has_bookmarked(user).filter(**{annotated_name: True})
+
+    def with_bookmarked(self, user):
+        return self.bookmarked(user).annotate(
+            bookmarked=get_generic_related_value_subquery(
+                self.model,
+                Bookmark.objects.filter(user=user),
+                "created",
+                models.DateTimeField(),
+            )
         )
 
 
