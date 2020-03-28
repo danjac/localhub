@@ -227,7 +227,7 @@ class CommentFlagView(
     PermissionRequiredMixin, CommentQuerySetMixin, FormView,
 ):
     form_class = FlagForm
-    template_name = "flags/flag_form.html"
+    template_name = "comments/flag_form.html"
     permission_required = "comments.flag_comment"
 
     def get_queryset(self):
@@ -244,6 +244,11 @@ class CommentFlagView(
     @cached_property
     def comment(self):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["comment"] = self.comment
+        return data
 
     def form_valid(self, form):
         flag = form.save(commit=False)

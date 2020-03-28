@@ -393,7 +393,7 @@ class ActivityFlagView(
     PermissionRequiredMixin, ActivityQuerySetMixin, FormView,
 ):
     form_class = FlagForm
-    template_name = "flags/flag_form.html"
+    template_name = "activities/flag_form.html"
     permission_required = "activities.flag_activity"
 
     @cached_property
@@ -407,6 +407,11 @@ class ActivityFlagView(
             .with_has_flagged(self.request.user)
             .exclude(has_flagged=True)
         )
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["activity"] = self.activity
+        return data
 
     def get_permission_object(self):
         return self.activity
