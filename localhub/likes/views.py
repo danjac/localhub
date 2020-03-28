@@ -15,15 +15,16 @@ class LikedPageTitleMixin(PageTitleMixin):
 
 class LikedStreamView(LikedPageTitleMixin, BaseActivityStreamView):
     template_name = "likes/activities.html"
+    ordering = ("-liked", "-created")
 
     def get_page_title_segments(self):
         return super().get_page_title_segments() + [_("Activities")]
 
     def get_count_queryset_for_model(self, model):
-        return self.filter_queryset(model.objects.with_has_liked(self.request.user))
+        return self.filter_queryset(model.objects.liked(self.request.user))
 
     def filter_queryset(self, queryset):
-        return super().filter_queryset(queryset).filter(has_liked=True)
+        return super().filter_queryset(queryset).with_liked(self.request.user)
 
 
 liked_stream_view = LikedStreamView.as_view()
@@ -40,8 +41,8 @@ class LikedCommentListView(LikedPageTitleMixin, BaseCommentListView):
             super()
             .get_queryset()
             .with_common_annotations(self.request.user, self.request.community)
-            .filter(has_liked=True)
-            .order_by("-created")
+            .with_liked(self.request.user)
+            .order_by("-liked", "-created")
         )
 
 

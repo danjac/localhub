@@ -11,6 +11,7 @@ from localhub.communities.models import Community
 from localhub.db.content_types import (
     get_generic_related_count_subquery,
     get_generic_related_exists,
+    get_generic_related_value_subquery,
 )
 from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
@@ -40,6 +41,28 @@ class LikeAnnotationsQuerySetMixin:
         """
         return self.annotate(
             **{annotated_name: get_generic_related_count_subquery(self.model, Like)}
+        )
+
+    def liked(self, user, annotated_name="has_liked"):
+        return self.with_has_liked(user).filter(**{annotated_name: True})
+
+    def with_liked(self, user):
+        """Filters all items liked by this user and includes annotated
+        "liked" timestamp.
+
+        Arguments:
+            user {User}
+
+        Returns:
+            QuerySet
+        """
+        return self.liked(user).annotate(
+            liked=get_generic_related_value_subquery(
+                self.model,
+                Like.objects.filter(user=user),
+                "created",
+                models.DateTimeField(),
+            )
         )
 
 
