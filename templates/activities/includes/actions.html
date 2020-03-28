@@ -71,9 +71,32 @@
     </li>
     {% endif %}
 
+    {% has_perm "activities.bookmark_activity" user object as can_bookmark %}
+    {% if can_bookmark %}
     <li class="menu-item">
-      <a href="">{% trans "Bookmark" %}</a>
+      <a href="{{ object.get_bookmark_url }}"
+         {% if object.has_bookmarked %}
+         class="d-hide"
+         data-js-toggle-ignore
+         {% endif %}
+         data-controller="js-toggle ajax"
+         data-target="toggle.togglable"
+         data-toggle-target="bookmark"
+         data-ajax-redirect="none"
+         data-action="ajax#post toggle#toggle">{% trans "Bookmark" %}</a>
+      <a href="{{ object.get_remove_bookmark_url }}"
+         {% if not object.has_bookmarked %}
+         class="d-hide"
+         data-js-toggle-ignore
+         {% endif %}
+         data-controller="js-toggle ajax"
+         data-target="toggle.togglable"
+         data-toggle-target="bookmark"
+         data-ajax-redirect="none"
+         data-action="ajax#post toggle#toggle"><s>{% trans "Bookmark" %}</s></a>
     </li>
+    {% endif %}
+
 
     {% if not object.has_reshared %}
     {% has_perm "activities.reshare_activity" user object as can_reshare %}

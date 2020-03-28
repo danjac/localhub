@@ -5,6 +5,8 @@ import pytest
 from django.conf import settings
 from django.urls import reverse
 
+from localhub.bookmarks.factories import BookmarkFactory
+from localhub.bookmarks.models import Bookmark
 from localhub.comments.models import Comment
 from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
@@ -268,6 +270,38 @@ class TestPublishView:
         assert response.url == post.get_absolute_url()
         post.refresh_from_db()
         assert post.published
+
+
+class TestPostBookmarkView:
+    def test_post(self, client, member, send_webpush_mock):
+        post = PostFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
+        response = client.post(
+            reverse("posts:bookmark", args=[post.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        assert response.status_code == 204
+        bookmark = Bookmark.objects.get()
+        assert bookmark.user == member.member
+
+
+class TestPostRemoveBookmarkView:
+    def test_post(self, client, member):
+        post = PostFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+        )
+        BookmarkFactory(
+            user=member.member, content_object=post, community=post.community,
+        )
+        response = client.post(
+            reverse("posts:remove_bookmark", args=[post.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        assert response.status_code == 204
+        assert Bookmark.objects.count() == 0
 
 
 class TestPostLikeView:

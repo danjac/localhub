@@ -52,6 +52,20 @@ class TestIsPostCommunityModerator:
         assert not is_activity_community_moderator.test(user, post)
 
 
+class TestBookmarkPermissions:
+    def test_member_can_bookmark_activity(self, member):
+        post = PostFactory(community=member.community)
+        assert member.member.has_perm("activities.bookmark_activity", post)
+
+    def test_non_member_can_bookmark_activity(self, member):
+        post = PostFactory()
+        assert not member.member.has_perm("activities.bookmark_activity", post)
+
+    def test_member_can_bookmark_activity_if_not_published(self, member):
+        post = PostFactory(community=member.community, published=None)
+        assert not member.member.has_perm("activities.bookmark_activity", post)
+
+
 class TestLikePermissions:
     def test_owner_can_like_activity(self, post):
         assert not post.owner.has_perm("activities.like_activity", post)

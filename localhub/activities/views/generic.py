@@ -339,10 +339,7 @@ class ActivityBookmarkView(PermissionRequiredMixin, BaseSingleActivityView):
         obj = self.get_object()
         try:
             Bookmark.objects.create(
-                user=request.user,
-                community=request.community,
-                recipient=obj.owner,
-                content_object=obj,
+                user=request.user, community=request.community, content_object=obj,
             )
         except IntegrityError:
             # dupe, ignore
