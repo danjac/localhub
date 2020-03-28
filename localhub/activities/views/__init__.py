@@ -21,6 +21,8 @@ def create_activity_urls(
     publish_view_class=generic.ActivityPublishView,
     pin_view_class=generic.ActivityPinView,
     unpin_view_class=generic.ActivityUnpinView,
+    bookmark_view_class=generic.ActivityBookmarkView,
+    remove_bookmark_view_class=generic.ActivityRemoveBookmarkView,
     create_comment_view_class=generic.ActivityCommentCreateView,
 ):
     """
@@ -58,6 +60,16 @@ def create_activity_urls(
             "<int:pk>/~reshare/",
             reshare_view_class.as_view(model=model),
             name="reshare",
+        ),
+        path(
+            "<int:pk>/~bookmark/",
+            bookmark_view_class.as_view(model=model),
+            name="bookmark",
+        ),
+        path(
+            "<int:pk>/~bookmark/remove/",
+            remove_bookmark_view_class.as_view(model=model),
+            name="remove_bookmark",
         ),
         path(
             "<int:pk>/~publish/",

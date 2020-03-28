@@ -17,6 +17,7 @@ from simple_history.models import HistoricalRecords
 from taggit.managers import TaggableManager
 from taggit.models import Tag
 
+from localhub.bookmarks.models import Bookmark
 from localhub.comments.models import Comment, CommentAnnotationsQuerySetMixin
 from localhub.communities.models import Community
 from localhub.db.content_types import (
@@ -267,6 +268,7 @@ class Activity(TimeStampedModel):
 
     # NOTE: not adding comments here as we don't want comments
     # to be soft deleted.
+    bookmarks = AbstractGenericRelation(Bookmark)
     flags = AbstractGenericRelation(Flag)
     likes = AbstractGenericRelation(Like)
     notification = AbstractGenericRelation(Notification)
@@ -362,6 +364,12 @@ class Activity(TimeStampedModel):
     def get_comment_url(self):
         return self.resolve_url("comment")
 
+    def get_bookmark_url(self):
+        return self.resolve_url("bookmark")
+
+    def get_remove_bookmark_url(self):
+        return self.resolve_url("remove_bookmark")
+
     def get_pin_url(self):
         return self.resolve_url("pin")
 
@@ -397,6 +405,9 @@ class Activity(TimeStampedModel):
 
     def get_flags(self):
         return get_generic_related_queryset(self, Flag)
+
+    def get_bookmarks(self):
+        return get_generic_related_queryset(self, Bookmark)
 
     def get_likes(self):
         return get_generic_related_queryset(self, Like)
@@ -560,8 +571,8 @@ class Activity(TimeStampedModel):
 
         Comments and reshares are not deleted.
 
-        Notifications, flags and likes should be deleted (there may be subsequent
-        notification i.e. to notify the owner).
+        Notifications, bookmarks, flags and likes should be deleted
+        (there may be subsequent notification i.e. to notify the owner).
 
         Fires the "soft_delete" signal.
         """
@@ -571,6 +582,7 @@ class Activity(TimeStampedModel):
 
         self.get_comments().remove_content_objects()
 
+        self.get_bookmarks().delete()
         self.get_likes().delete()
         self.get_flags().delete()
         self.get_notifications().delete()

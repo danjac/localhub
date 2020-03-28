@@ -20,6 +20,7 @@ from vanilla import (
     UpdateView,
 )
 
+from localhub.bookmarks.models import Bookmark
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
@@ -176,6 +177,45 @@ class CommentDeleteView(
 
 
 comment_delete_view = CommentDeleteView.as_view()
+
+
+class CommentBookmarkView(
+    PermissionRequiredMixin, CommentQuerySetMixin, GenericModelView,
+):
+    permission_required = "comments.bookmark_comment"
+
+    def post(self, request, *args, **kwargs):
+        comment = self.get_object()
+        try:
+            Bookmark.objects.create(
+                user=request.user,
+                community=request.community,
+                recipient=comment.owner,
+                content_object=comment,
+            )
+        except IntegrityError:
+            pass
+        if request.is_ajax():
+            return HttpResponse(status=204)
+        return redirect(comment)
+
+
+comment_bookmark_view = CommentBookmarkView.as_view()
+
+
+class CommentRemoveBookmarkView(CommentQuerySetMixin, GenericModelView):
+    def post(self, request, *args, **kwargs):
+        comment = self.get_object()
+        Bookmark.objects.filter(user=request.user, comment=comment).delete()
+        if request.is_ajax():
+            return HttpResponse(status=204)
+        return redirect(comment)
+
+    def delete(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+
+comment_remove_bookmark_view = CommentRemoveBookmarkView.as_view()
 
 
 class CommentLikeView(

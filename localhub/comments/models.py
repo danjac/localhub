@@ -15,6 +15,7 @@ from django.utils.translation import gettext as _
 from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 
+from localhub.bookmarks.models import Bookmark
 from localhub.communities.models import Community, Membership
 from localhub.db.content_types import (
     get_generic_related_count_subquery,
@@ -159,6 +160,7 @@ class Comment(TimeStampedModel):
 
     search_document = SearchVectorField(null=True, editable=False)
 
+    bookmarks = GenericRelation(Bookmark, related_query_name="comment")
     flags = GenericRelation(Flag, related_query_name="comment")
     likes = GenericRelation(Like, related_query_name="comment")
     notifications = GenericRelation(Notification, related_query_name="comment")
@@ -227,6 +229,9 @@ class Comment(TimeStampedModel):
         if self.content_object:
             return self.content_object.get_page_title_segments(segments)
         return [_("Comments")] + segments
+
+    def get_bookmarks(self):
+        return Bookmark.objects.filter(comment=self)
 
     def get_flags(self):
         return Flag.objects.filter(comment=self)

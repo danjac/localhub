@@ -20,6 +20,7 @@ from vanilla import (
     UpdateView,
 )
 
+from localhub.bookmarks.models import Bookmark
 from localhub.comments.forms import CommentForm
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
@@ -329,6 +330,38 @@ class ActivityUnpinView(PermissionRequiredMixin, BaseSingleActivityView):
             request, _("Pinned post has been removed from the top of the stream")
         )
         return redirect(settings.HOME_PAGE_URL)
+
+
+class ActivityBookmarkView(PermissionRequiredMixin, BaseSingleActivityView):
+    permission_required = "activities.bookmark_activity"
+
+    def post(self, request, *args, **kwargs):
+        obj = self.get_object()
+        try:
+            Bookmark.objects.create(
+                user=request.user,
+                community=request.community,
+                recipient=obj.owner,
+                content_object=obj,
+            )
+        except IntegrityError:
+            # dupe, ignore
+            pass
+        if request.is_ajax():
+            return HttpResponse(status=204)
+        return redirect(obj)
+
+
+class ActivityRemoveBookmarkView(BaseSingleActivityView):
+    def post(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.get_bookmarks().filter(user=request.user).delete()
+        if request.is_ajax():
+            return HttpResponse(status=204)
+        return redirect(obj)
+
+    def delete(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
 
 
 class ActivityLikeView(PermissionRequiredMixin, BaseSingleActivityView):
