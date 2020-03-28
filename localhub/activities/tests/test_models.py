@@ -8,6 +8,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
 from taggit.models import Tag
 
+from localhub.bookmarks.factories import BookmarkFactory
 from localhub.comments.factories import CommentFactory
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Community
@@ -336,6 +337,20 @@ class TestActivityManager:
         FlagFactory(user=user, content_object=post, community=post.community)
         activity = Post.objects.with_has_flagged(user).get()
         assert activity.has_flagged
+
+    def test_with_has_bookmarked_if_user_has_not_bookmarked(self, post, user):
+        BookmarkFactory(
+            user=user, content_object=post, community=post.community,
+        )
+        activity = Post.objects.with_has_bookmarked(UserFactory()).get()
+        assert not activity.has_bookmarked
+
+    def test_with_has_bookmarked_if_user_has_bookmarked(self, post, user):
+        BookmarkFactory(
+            user=user, content_object=post, community=post.community,
+        )
+        activity = Post.objects.with_has_bookmarked(user).get()
+        assert activity.has_bookmarked
 
     def test_with_has_liked_if_user_has_not_liked(self, post, user):
         LikeFactory(

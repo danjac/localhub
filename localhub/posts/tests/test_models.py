@@ -339,3 +339,11 @@ class TestPostModel:
 
     def test_get_update_url(self, post):
         assert post.get_update_url() == reverse("posts:update", args=[post.id])
+
+    def test_get_bookmark_url(self, post):
+        assert post.get_bookmark_url() == reverse("posts:bookmark", args=[post.id])
+
+    def test_get_remove_bookmark_url(self, post):
+        assert post.get_remove_bookmark_url() == reverse(
+            "posts:remove_bookmark", args=[post.id]
+        )

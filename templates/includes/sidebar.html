@@ -61,6 +61,12 @@
   {% endif %}
   <li class="menu-item">
     <a data-controller="active-link"
+       href="{# url 'bookmarks:activities' #}">
+      {% trans "Bookmarks" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
        href="{% url 'likes:activities' %}">
       {% trans "Favorites" %}
     </a>

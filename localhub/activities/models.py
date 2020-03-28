@@ -17,7 +17,7 @@ from simple_history.models import HistoricalRecords
 from taggit.managers import TaggableManager
 from taggit.models import Tag
 
-from localhub.bookmarks.models import Bookmark
+from localhub.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from localhub.comments.models import Comment, CommentAnnotationsQuerySetMixin
 from localhub.communities.models import Community
 from localhub.db.content_types import (
@@ -39,6 +39,7 @@ from .utils import extract_hashtags
 
 
 class ActivityQuerySet(
+    BookmarkAnnotationsQuerySetMixin,
     CommentAnnotationsQuerySetMixin,
     FlagAnnotationsQuerySetMixin,
     LikeAnnotationsQuerySetMixin,
@@ -51,8 +52,9 @@ class ActivityQuerySet(
         convenience:
             - with_num_reshares
             - with_num_comments
-            - with_num_likes [1]
+            - with_num_likes
             - with_has_liked [1]
+            - with_has_bookmarked [1]
             - with_has_flagged [1]
             - with_has_reshared [1]
             - with_is_flagged [2]
@@ -64,6 +66,7 @@ class ActivityQuerySet(
         if user.is_authenticated:
             qs = (
                 qs.with_num_likes()
+                .with_has_bookmarked(user)
                 .with_has_liked(user)
                 .with_has_flagged(user)
                 .with_has_reshared(user)
