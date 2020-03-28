@@ -2,6 +2,8 @@ import pytest
 from django.urls import reverse
 from django.utils import timezone
 
+from localhub.bookmarks.factories import BookmarkFactory
+from localhub.bookmarks.models import Bookmark
 from localhub.communities.factories import MembershipFactory
 
 from ..factories import MessageFactory
@@ -337,3 +339,35 @@ class TestMessageCreateView:
             reverse("private_messages:message_create", args=[recipient.username])
         )
         assert response.status_code == 200
+
+
+class TestMessageBookmarkView:
+    def test_post(self, client, member):
+        sender = MembershipFactory(community=member.community).member
+        message = MessageFactory(
+            community=member.community, recipient=member.member, sender=sender
+        )
+        response = client.post(
+            reverse("private_messages:message_bookmark", args=[message.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        assert response.status_code == 204
+        bookmark = Bookmark.objects.get()
+        assert bookmark.user == member.member
+
+
+class TestMessageRemoveBookmarkView:
+    def test_post(self, client, member):
+        sender = MembershipFactory(community=member.community).member
+        message = MessageFactory(
+            community=member.community, recipient=member.member, sender=sender
+        )
+        BookmarkFactory(
+            user=member.member, content_object=message, community=message.community,
+        )
+        response = client.post(
+            reverse("private_messages:message_remove_bookmark", args=[message.id]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        assert response.status_code == 204
+        assert Bookmark.objects.count() == 0

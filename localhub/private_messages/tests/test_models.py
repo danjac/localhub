@@ -4,6 +4,7 @@
 import pytest
 from django.utils import timezone
 
+from localhub.bookmarks.factories import BookmarkFactory
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.notifications.factories import NotificationFactory
 from localhub.users.factories import UserFactory
@@ -284,6 +285,20 @@ class TestMessageManager:
         notifications = Message.objects.filter(pk=message.id).notifications()
         assert notifications.count() == 1
         assert notifications.first() == notification
+
+    def test_with_has_bookmarked_if_user_has_not_bookmarked(self, message, user):
+        BookmarkFactory(
+            user=user, content_object=message, community=message.community,
+        )
+        message = Message.objects.with_has_bookmarked(UserFactory()).get()
+        assert not message.has_bookmarked
+
+    def test_with_has_bookmarked_if_user_has_bookmarked(self, message, user):
+        BookmarkFactory(
+            user=user, content_object=message, community=message.community,
+        )
+        message = Message.objects.with_has_bookmarked(user).get()
+        assert message.has_bookmarked
 
 
 class TestMessageModel:

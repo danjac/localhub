@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
@@ -9,6 +10,7 @@ from django.urls import reverse
 from django.utils import timezone
 from model_utils.models import TimeStampedModel
 
+from localhub.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from localhub.communities.models import Community
 from localhub.db.content_types import (
     get_generic_related_queryset,
@@ -20,7 +22,9 @@ from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
 
 
-class MessageQuerySet(SearchQuerySetMixin, models.QuerySet):
+class MessageQuerySet(
+    SearchQuerySetMixin, BookmarkAnnotationsQuerySetMixin, models.QuerySet
+):
     def for_community(self, community):
         return self.filter(
             community=community,
@@ -170,6 +174,8 @@ class Message(TimeStampedModel):
 
     recipient_deleted = models.DateTimeField(null=True, blank=True)
     sender_deleted = models.DateTimeField(null=True, blank=True)
+
+    bookmarks = GenericRelation(Bookmark, related_query_name="message")
 
     search_document = SearchVectorField(null=True, editable=False)
     search_indexer = SearchIndexer(("A", "message"))

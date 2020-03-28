@@ -5,13 +5,13 @@ from django.urls import path
 
 from .views import (
     comment_bookmark_view,
-    comment_remove_bookmark_view,
     comment_delete_view,
     comment_detail_view,
     comment_dislike_view,
     comment_flag_view,
     comment_like_view,
     comment_list_view,
+    comment_remove_bookmark_view,
     comment_reply_view,
     comment_update_view,
 )

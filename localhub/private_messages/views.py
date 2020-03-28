@@ -5,8 +5,9 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.db import IntegrityError
 from django.db.models import F
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils.functional import cached_property
@@ -15,6 +16,7 @@ from django.views.generic import View
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView, DetailView, FormView, GenericModelView, ListView
 
+from localhub.bookmarks.models import Bookmark
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.utils import user_display
 from localhub.views import BreadcrumbsMixin, PageTitleMixin, SearchMixin
@@ -78,7 +80,7 @@ class InboxView(RecipientQuerySetMixin, MessagesPageTitleMixin, BaseMessageListV
     template_name = "private_messages/inbox.html"
 
     def get_queryset(self):
-        qs = super().get_queryset()
+        qs = super().get_queryset().with_has_bookmarked(self.request.user)
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank", "-created")
         return qs.order_by(F("read").desc(nulls_first=True), "-created")
@@ -98,7 +100,7 @@ class OutboxView(SenderQuerySetMixin, MessagesPageTitleMixin, BaseMessageListVie
     template_name = "private_messages/outbox.html"
 
     def get_queryset(self):
-        qs = super().get_queryset()
+        qs = super().get_queryset().with_has_bookmarked(self.request.user)
         if self.search_query:
             return qs.search(self.search_query).order_by("-rank", "-created")
         return qs.order_by("-created")
@@ -272,6 +274,9 @@ class MessageDetailView(
 
     model = Message
 
+    def get_queryset(self):
+        return super().get_queryset().with_has_bookmarked(self.request.user)
+
     def get(self, *args, **kwargs):
         response = super().get(*args, **kwargs)
         if self.object.recipient == self.request.user and not self.object.read:
@@ -352,3 +357,37 @@ class MessageMarkAllReadView(RecipientQuerySetMixin, View):
 
 
 message_mark_all_read_view = MessageMarkAllReadView.as_view()
+
+
+class MessageBookmarkView(
+    SenderOrRecipientQuerySetMixin, GenericModelView,
+):
+    def post(self, request, *args, **kwargs):
+        message = self.get_object()
+        try:
+            Bookmark.objects.create(
+                user=request.user, community=request.community, content_object=message,
+            )
+        except IntegrityError:
+            pass
+        if request.is_ajax():
+            return HttpResponse(status=204)
+        return redirect(message)
+
+
+message_bookmark_view = MessageBookmarkView.as_view()
+
+
+class MessageRemoveBookmarkView(SenderOrRecipientQuerySetMixin, GenericModelView):
+    def post(self, request, *args, **kwargs):
+        message = self.get_object()
+        Bookmark.objects.filter(user=request.user, message=message).delete()
+        if request.is_ajax():
+            return HttpResponse(status=204)
+        return redirect(message)
+
+    def delete(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+
+message_remove_bookmark_view = MessageRemoveBookmarkView.as_view()
