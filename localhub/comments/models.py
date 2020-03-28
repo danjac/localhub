@@ -15,7 +15,7 @@ from django.utils.translation import gettext as _
 from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 
-from localhub.bookmarks.models import Bookmark
+from localhub.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from localhub.communities.models import Community, Membership
 from localhub.db.content_types import (
     get_generic_related_count_subquery,
@@ -51,6 +51,7 @@ class CommentAnnotationsQuerySetMixin:
 
 
 class CommentQuerySet(
+    BookmarkAnnotationsQuerySetMixin,
     FlagAnnotationsQuerySetMixin,
     LikeAnnotationsQuerySetMixin,
     SearchQuerySetMixin,
@@ -110,6 +111,7 @@ class CommentQuerySet(
         if user.is_authenticated:
             qs = (
                 self.with_num_likes()
+                .with_has_bookmarked(user)
                 .with_has_liked(user)
                 .with_has_flagged(user)
                 .with_is_blocked(user)

@@ -6,6 +6,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.urls import reverse
 from django.utils import timezone
 
+from localhub.bookmarks.factories import BookmarkFactory
 from localhub.communities.factories import MembershipFactory
 from localhub.flags.factories import FlagFactory
 from localhub.likes.factories import LikeFactory
@@ -154,6 +155,20 @@ class TestCommentManager:
         FlagFactory(user=user, content_object=comment, community=comment.community)
         comment = Comment.objects.with_has_flagged(user).get()
         assert comment.has_flagged
+
+    def test_with_has_bookmarked_if_user_has_not_bookmarked(self, comment, user):
+        BookmarkFactory(
+            user=user, content_object=comment, community=comment.community,
+        )
+        comment = Comment.objects.with_has_bookmarked(UserFactory()).get()
+        assert not comment.has_bookmarked
+
+    def test_with_has_bookmarked_if_user_has_bookmarked(self, comment, user):
+        BookmarkFactory(
+            user=user, content_object=comment, community=comment.community,
+        )
+        comment = Comment.objects.with_has_bookmarked(user).get()
+        assert comment.has_bookmarked
 
     def test_with_has_liked_if_user_has_not_liked(self, comment, user):
         LikeFactory(
