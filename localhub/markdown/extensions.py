@@ -14,7 +14,7 @@ from markdown.inlinepatterns import (
 )
 from markdown.util import etree
 
-from localhub.utils.urls import REL_SAFE_VALUES, is_https
+from localhub.utils.http import REL_SAFE_VALUES, is_https
 
 
 class SafeImageMixin:

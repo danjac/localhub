@@ -10,7 +10,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 
 from localhub.users.utils import linkify_mentions
-from localhub.utils.urls import is_https
+from localhub.utils.http import is_https
 
 from ..models import (
     get_activity_models,

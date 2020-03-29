@@ -2,21 +2,11 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import logging
-from urllib.parse import urlparse
 
 import requests
 from bs4 import BeautifulSoup
-from django.conf import settings
 
-from localhub.utils.urls import get_domain, is_image_url, is_url
-
-FAKE_BROWSER_USER_AGENT = (
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36"
-)
-
-
-IGNORE_FAKE_BROWSER_HEADERS = ("tumblr.com",)
+from localhub.utils.http import get_domain, is_image_url, is_url, get_response
 
 
 logger = logging.getLogger(__name__)
@@ -41,18 +31,7 @@ class Opengraph:
             OpenGraph -- OpenGraph instance with relevant data.
         """
         try:
-            # see if redirect in HEAD
-            response = requests.head(url, allow_redirects=True)
-            if response.ok and response.url:
-                url = response.url
-        except (requests.RequestException) as e:
-            logger.error("Error fetching HEAD response for URL %s: %s", url, e)
-            # try and continue...
-
-        try:
-            response = requests.get(
-                url, headers=get_request_headers(url), proxies=get_proxies()
-            )
+            url, response = get_response(url)
         except (requests.RequestException, ValueError) as e:
             raise cls.Invalid(e)
 
@@ -111,20 +90,3 @@ class Opengraph:
             if meta and "content" in meta.attrs:
                 return meta.attrs["content"]
         return None
-
-
-def get_request_headers(url):
-    netloc = urlparse(url).netloc
-    for domain in IGNORE_FAKE_BROWSER_HEADERS:
-        if netloc.endswith(domain):
-            return {}
-    return {"User-Agent": FAKE_BROWSER_USER_AGENT}
-
-
-def get_proxies():
-    if settings.OPENGRAPH_PROXY_URL:
-        return {
-            "http": settings.OPENGRAPH_PROXY_URL,
-            "https": settings.OPENGRAPH_PROXY_URL,
-        }
-    return {}

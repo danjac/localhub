@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 from localhub.activities.models import Activity
 from localhub.db.search import SearchIndexer
 from localhub.db.tracker import Tracker
-from localhub.utils.urls import get_domain, is_https, is_image_url
+from localhub.utils.http import get_domain, is_https, is_image_url
 
 
 class Post(Activity):

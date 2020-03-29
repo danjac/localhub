@@ -14,7 +14,7 @@ from markdownx.utils import markdownify as default_markdownify
 
 from localhub.activities.utils import linkify_hashtags
 from localhub.users.utils import linkify_mentions
-from localhub.utils.urls import REL_SAFE_VALUES
+from localhub.utils.http import REL_SAFE_VALUES
 
 ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
     "abbr",

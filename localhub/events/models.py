@@ -15,7 +15,7 @@ from timezone_field import TimeZoneField
 from localhub.activities.models import Activity
 from localhub.db.search import SearchIndexer
 from localhub.db.tracker import Tracker
-from localhub.utils.urls import get_domain
+from localhub.utils.http import get_domain
 
 
 class Event(Activity):

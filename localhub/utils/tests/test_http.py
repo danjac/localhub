@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from ..urls import get_domain, get_domain_url, is_https, is_image_url, is_url
+from ..http import get_domain, get_domain_url, is_https, is_image_url, is_url
 
 
 class TestIsHttps:

@@ -6,7 +6,7 @@ import html
 from django import template
 from django.utils.safestring import mark_safe
 
-from localhub.utils.urls import (
+from localhub.utils.http import (
     REL_SAFE_VALUES,
     get_domain,
     get_domain_url,
