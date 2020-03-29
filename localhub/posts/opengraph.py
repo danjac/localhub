@@ -7,7 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 from django.conf import settings
 
-from localhub.utils.http import get_domain, is_image_url, is_url
+from localhub.utils.http import get_domain, is_image_url, is_url, resolve_url
 
 
 class Opengraph:
@@ -31,23 +31,11 @@ class Opengraph:
 
     @classmethod
     def get_response(cls, url):
-        url = cls.resolve_url(url)
+        url = resolve_url(url)
         response = requests.get(
             url, headers=cls.get_headers(url), proxies=cls.get_proxies()
         )
         return url, response
-
-    @classmethod
-    def resolve_url(cls, url):
-        try:
-            # see if redirect in HEAD
-            response = requests.head(url, allow_redirects=True)
-            if response.ok and response.url:
-                return response.url
-        except (requests.RequestException):
-            # ignore and continue
-            pass
-        return url
 
     @classmethod
     def get_headers(cls, url):

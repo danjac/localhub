@@ -4,6 +4,7 @@
 import os
 from urllib.parse import urlparse
 
+import requests
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 
@@ -84,3 +85,21 @@ def get_domain(url):
         return url
 
     return clean_domain(urlparse(url).netloc)
+
+
+def resolve_url(url):
+    """Resolves URL from HEAD and redirects to get the "true" URL.
+
+    Arguments:
+        url {string}
+
+    Returns:
+        [string] -- URL. If no HEAD found then returns original URL.
+    """
+    try:
+        response = requests.head(url, allow_redirects=True)
+        if response.ok and response.url:
+            return response.url
+    except (requests.RequestException):
+        pass
+    return url
