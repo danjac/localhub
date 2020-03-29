@@ -90,7 +90,7 @@ class TemplateResolver:
         {prefix}/{object_name}_notification{suffix}
         {prefix}/notification{suffix}
 
-        Arguments:
+        Args:
             prefix (str): prefix prepended to all the paths e.g. "post"
             suffix (str): suffix appended to all paths e.g. ".txt"
 
@@ -120,7 +120,7 @@ class TemplateRenderer:
         Returns:
             str: rendered template
         """
-        return template_engine.render_to_str(template_names, context=context)
+        return template_engine.render_to_string(template_names, context=context)
 
 
 class Webpusher:

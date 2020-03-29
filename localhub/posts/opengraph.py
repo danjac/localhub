@@ -87,11 +87,11 @@ class Opengraph:
         """Parses HTML title, image and description from HTML OpenGraph and
         Twitter meta tags and other HTML content.
 
-        Arguments:
-            html {string} -- HTML content
+        Args:
+            html (str): HTML content
 
         Returns:
-            OpenGraph -- OpenGraph instance
+            Opengraph: Opengraph instance
         """
         self.soup = BeautifulSoup(html, "html.parser")
         self.title = self.title_from_html()

@@ -16,11 +16,11 @@ def register(model):
     class PostAdapter(DefaultAdapter):
         ...
 
-    Arguments:
-        model {Model} -- Django Model class
+    Args:
+        model (Model): Django Model class
 
     Returns:
-        Adapter -- Adapter instance
+        Adapter: Adapter class
     """
 
     def _adapter_wrapper(adapter_cls):
@@ -37,12 +37,12 @@ def dispatch(func):
     Check is run on all notifications to ensure only permitted verbs are saved
     and dispatched.
 
-    Arguments:
-        func {function} -- Method or function returning a single instance
+    Args:
+        func (function): Method or function returning a single instance
         or iterable of Notification instances.
 
     Returns:
-        List -- List of saved Notification instances.
+        list: saved Notification instances.
     """
 
     @functools.wraps(func)

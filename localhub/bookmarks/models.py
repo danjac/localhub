@@ -39,8 +39,8 @@ class BookmarkAnnotationsQuerySetMixin:
         """Filters all items bookmarked with this user and includes annotated
         "bookmarked" timestamp.
 
-        Arguments:
-            user {User}
+        Args:
+            user (User)
 
         Returns:
             QuerySet

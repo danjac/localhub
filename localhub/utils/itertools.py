@@ -8,11 +8,9 @@ def takefirst(iterable, key=None):
     """Returns iterable containing just the first instance of
     an item in the list matching the key
 
-    Arguments:
-        iterable {Iterable}
-
-    Keyword Arguments:
-        key {any} -- key value or function
+    Args:
+        iterable
+        key (any, optional): key value or function (default: None)
 
     Yields:
         any

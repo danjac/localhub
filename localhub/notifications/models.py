@@ -18,8 +18,8 @@ class NotificationQuerySet(models.QuerySet):
         """Filter notifications for a community, including
         only those with actors who are active members.
 
-        Arguments:
-            community {Community}
+        Args:
+            community (Community)
 
         Returns:
             QuerySet
@@ -35,8 +35,8 @@ class NotificationQuerySet(models.QuerySet):
     def exclude_blocked_actors(self, recipient):
         """Exclude all notifications with actors blocked by the recipient.
 
-        Arguments:
-            recipient {User} -- notification recipient
+        Args:
+            recipient (User): notification recipient
 
         Returns:
             QuerySet
@@ -47,8 +47,8 @@ class NotificationQuerySet(models.QuerySet):
     def for_recipient(self, recipient):
         """Return all notifications for a recipient
 
-        Arguments:
-            recipient {User} -- notification recipient
+        Args:
+            recipient (User): notification recipient
 
         Returns:
             QuerySet
@@ -128,17 +128,15 @@ class PushSubscription(models.Model):
 
         This should probably be called asynchronously e.g. in celery.
 
-        Arguments:
-            payload {dict} -- webpush payload e.g. "header", "body", "url"
-
-        Keyword Arguments:
-            ttl {int} -- time to live (default: {0})
+        Args:
+            payload (dict): webpush payload e.g. "header", "body", "url"
+            ttl (int, optional): time to live (default: 0)
 
         Raises:
-            e: WebPushException
+            WebPushException
 
         Returns:
-            bool -- if webpush succeeds
+            bool: if webpush succeeds
         """
 
         subscription_info = {

@@ -456,15 +456,12 @@ class Activity(TimeStampedModel):
         Reshares are published immediately, i.e. they do not have a
         "draft mode".
 
-
-        Arguments:
-            owner {User} -- owner creating the reshare
-
-        Keyword Arguments:
-            commit {bool} -- commit new reshare to database
+        Args:
+            owner (User): owner creating the reshare
+            commit (bool, optional): commit new reshare to database (default: True)
 
         Returns:
-            Activity -- reshared copy of the Activity subclass
+            reshared copy of the Activity subclass instance
         """
 
         parent = self.parent or self
@@ -558,11 +555,11 @@ def get_activity_models_dict():
 
 def get_activity_model(object_type):
     """
-    Arguments:
-        object_type {string} -- object model name e.g. "post"
+    Args:
+        object_type (str): object model name e.g. "post"
 
     Returns:
-        Model -- Activity model subclass
+        Activity model subclass
     """
     return get_activity_models_dict()[object_type]
 
@@ -571,11 +568,9 @@ def unionize_querysets(querysets, all=False):
     """Combines multiple querysets with single UNION statement.
     Columns must all be identical so remember to use with "only()".
 
-    Arguments:
-        querysets -- iterable of Activity QuerySets
-
-    Keyword Arguments:
-        all {bool} -- UNION ALL (default: {False})
+    Args:
+        querysets: iterable of Activity QuerySets
+        all (bool, optional): whether to do UNION ALL (default: False)
 
     Returns:
         QuerySet -- combined QuerySet
@@ -625,18 +620,16 @@ def load_objects(items, querysets):
 def get_activity_querysets(queryset_fn, ordering=None, values=None, all=False):
     """Returns combined UNION queryset plus querysets for each Activity subclass.
 
-    Arguments:
-        queryset_fn {function} -- function taking argument of Activity model. Should
-        return a QuerySet.
-
-    Keyword Arguments:
-        ordering {None, iterable or string} -- ordering arguments for combined queryset.
-        values {None or iterable} -- columsn to be returned. By default ("pk", "object_type")
-        all {bool} -- UNION ALL (default: {False})
+    Args:
+        queryset_fn: function taking argument of Activity model. Takes a Model
+            class and returns a QuerySet.
+        ordering (str, list, tuple, optional): ordering arguments for combined queryset.
+        values (list, tuple, optional): columns to be returned. By
+            default ("pk", "object_type")
+        all (bool, optional): UNION ALL (default: False)
 
     Returns:
-        Tuple[QuerySet, List[QuerySet]] -- the UNION combined queryset and individual model
-        querysets.
+        A tuple consisting of union queryset, and list of individual querysets.
     """
     if isinstance(ordering, str):
         ordering = (ordering,)

@@ -50,8 +50,8 @@ class LikeAnnotationsQuerySetMixin:
         """Filters all items liked by this user and includes annotated
         "liked" timestamp.
 
-        Arguments:
-            user {User}
+        Args:
+            user (User)
 
         Returns:
             QuerySet

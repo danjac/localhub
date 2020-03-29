@@ -16,14 +16,14 @@ class AdapterRegistry:
         The content object Model should be registered at initialization
         using the register() method.
 
-        Arguments:
-            notification {Notification} -- Notification instance
+        Args:
+            notification: Notification instance
 
         Raises:
             ImproperlyConfigured: if no Adapter registered for the model
 
         Returns:
-            Adapter -- an Adapter subclass
+            Adapter subclass
         """
         try:
             return self._registry[notification.content_object.__class__](notification)
@@ -36,9 +36,9 @@ class AdapterRegistry:
     def register(self, adapter_cls, model):
         """Registers the Adapter class with a Model class.
 
-        Arguments:
-            adapter_cls {Adapter} -- Adapter subclass
-            model {Model} -- Django Model class
+        Args:
+            adapter_cls: Adapter subclass
+            model: Django Model class
 
         Raises:
             ImproperlyConfigured: if adapter_cls does not subclass Adapter
