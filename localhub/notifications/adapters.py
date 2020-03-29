@@ -164,6 +164,9 @@ class Webpusher:
         if body:
             payload["body"] = force_text(body)
 
+        if self.community.logo:
+            payload["icon"] = self.community.logo.url
+
         return payload
 
 
