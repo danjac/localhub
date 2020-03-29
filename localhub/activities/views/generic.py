@@ -438,4 +438,3 @@ class ActivityCommentCreateView(
         return super().get_context_data(
             activity=self.activity, activity_model=self.activity.__class__, **kwargs
         )
-

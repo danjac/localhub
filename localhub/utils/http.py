@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import os
-import requests
 from urllib.parse import urlparse
 
+import requests
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator

@@ -6,8 +6,7 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 
-from localhub.utils.http import get_domain, is_image_url, is_url, get_response
-
+from localhub.utils.http import get_domain, get_response, is_image_url, is_url
 
 logger = logging.getLogger(__name__)
 
