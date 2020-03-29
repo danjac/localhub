@@ -17,12 +17,12 @@ logger = logging.getLogger(__name__)
 
 class PhotoForm(ActivityForm):
 
-    extract_geolocation_data = forms.BooleanField(
-        label=_("Extract geolocation data from image if available"), required=False,
+    extract_gps_data = forms.BooleanField(
+        label=_("Extract GPS data from image if available"), required=False,
     )
 
-    clear_geolocation_data = forms.BooleanField(
-        label=_("Clear geolocation data from image"), required=False,
+    clear_gps_data = forms.BooleanField(
+        label=_("Clear GPS data from image"), required=False,
     )
 
     class Meta(ActivityForm.Meta):
@@ -31,8 +31,8 @@ class PhotoForm(ActivityForm):
             "title",
             "additional_tags",
             "image",
-            "extract_geolocation_data",
-            "clear_geolocation_data",
+            "extract_gps_data",
+            "clear_gps_data",
             "description",
             "allow_comments",
             "artist",
@@ -52,16 +52,20 @@ class PhotoForm(ActivityForm):
         # we will try and use the photo filename if no title provided
         self.fields["title"].required = False
 
-        if not self.instance.has_map():
-            del self.fields["clear_geolocation_data"]
+        if self.instance.has_map():
+            self.fields["extract_gps_data"].label = _(
+                "Re-extract GPS data from image if available"
+            )
+        else:
+            del self.fields["clear_gps_data"]
 
     def clean(self):
         cleaned_data = super(PhotoForm, self).clean()
 
-        if self.cleaned_data.get("clear_geolocation_data"):
+        if self.cleaned_data.get("clear_gps_data"):
             cleaned_data["latitude"] = None
             cleaned_data["longitude"] = None
-        elif self.cleaned_data["extract_geolocation_data"]:
+        elif self.cleaned_data["extract_gps_data"]:
             try:
                 lat, lng = Exif.from_image(self.cleaned_data["image"]).locate()
                 cleaned_data["latitude"] = lat
