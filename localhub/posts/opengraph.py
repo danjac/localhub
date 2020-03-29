@@ -12,18 +12,62 @@ from localhub.utils.http import get_domain, is_image_url, is_url
 
 logger = logging.getLogger(__name__)
 
-FAKE_BROWSER_USER_AGENT = (
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36"
-)
-
-
-IGNORE_FAKE_BROWSER_HEADERS = ("tumblr.com",)
-
 
 class Opengraph:
+
+    FAKE_BROWSER_USER_AGENT = (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36"
+    )
+
+    IGNORE_FAKE_BROWSER_HEADERS = ("tumblr.com",)
+
     class Invalid(ValueError):
         ...
+
+    def __init__(self, url):
+        self.url = url
+        self.title = None
+        self.image = None
+        self.description = None
+        self.soup = None
+
+    @classmethod
+    def get_response(cls, url):
+        url = cls.resolve_url(url)
+        response = requests.get(
+            url, headers=cls.get_headers(url), proxies=cls.get_proxies()
+        )
+        return url, response
+
+    @classmethod
+    def resolve_url(cls, url):
+        try:
+            # see if redirect in HEAD
+            response = requests.head(url, allow_redirects=True)
+            if response.ok and response.url:
+                return response.url
+        except (requests.RequestException):
+            # ignore and continue
+            pass
+        return url
+
+    @classmethod
+    def get_headers(cls, url):
+        netloc = urlparse(url).netloc
+        for domain in cls.IGNORE_FAKE_BROWSER_HEADERS:
+            if netloc.endswith(domain):
+                return {}
+        return {"User-Agent": cls.FAKE_BROWSER_USER_AGENT}
+
+    @classmethod
+    def get_proxies(cls):
+        if settings.OPENGRAPH_PROXY_URL:
+            return {
+                "http": settings.OPENGRAPH_PROXY_URL,
+                "https": settings.OPENGRAPH_PROXY_URL,
+            }
+        return {}
 
     @classmethod
     def from_url(cls, url):
@@ -40,7 +84,7 @@ class Opengraph:
             OpenGraph -- OpenGraph instance with relevant data.
         """
         try:
-            url, response = get_response(url)
+            url, response = cls.get_response(url)
         except requests.RequestException as e:
             raise cls.Invalid(e)
 
@@ -50,13 +94,6 @@ class Opengraph:
             raise cls.Invalid("URL does not return valid HTML response")
 
         return cls(url).parse_html(response.content)
-
-    def __init__(self, url):
-        self.url = url
-        self.title = None
-        self.image = None
-        self.description = None
-        self.soup = None
 
     def parse_html(self, html):
         """Parses HTML title, image and description from HTML OpenGraph and
@@ -99,47 +136,3 @@ class Opengraph:
             if meta and "content" in meta.attrs:
                 return meta.attrs["content"]
         return None
-
-
-def get_response(url):
-    """Fetches a response handling redirects and proxies using HTTP GET.
-
-    Arguments:
-        url {string} -- valid URL
-
-    Raises:
-        requests.RequestException
-
-    Returns:
-        Tuple[string, requests.Response] -- final redirected URL and response object.
-    """
-    try:
-        # see if redirect in HEAD
-        response = requests.head(url, allow_redirects=True)
-        if response.ok and response.url:
-            url = response.url
-    except (requests.RequestException):
-        # ignore and continue
-        pass
-
-    response = requests.get(
-        url, headers=get_request_headers(url), proxies=get_proxies()
-    )
-    return url, response
-
-
-def get_request_headers(url):
-    netloc = urlparse(url).netloc
-    for domain in IGNORE_FAKE_BROWSER_HEADERS:
-        if netloc.endswith(domain):
-            return {}
-    return {"User-Agent": FAKE_BROWSER_USER_AGENT}
-
-
-def get_proxies():
-    if settings.OPENGRAPH_PROXY_URL:
-        return {
-            "http": settings.OPENGRAPH_PROXY_URL,
-            "https": settings.OPENGRAPH_PROXY_URL,
-        }
-    return {}

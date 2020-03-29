@@ -25,7 +25,7 @@ class TestOpengraphFromUrl:
 </html>"""
 
         mocker.patch(
-            "localhub.posts.opengraph.get_response",
+            "localhub.posts.opengraph.Opengraph.get_response",
             return_value=("https://google.com", MockResponse),
         )
 
@@ -42,7 +42,7 @@ class TestOpengraphFromUrl:
             headers = {"Content-Type": "application/json"}
 
         mocker.patch(
-            "localhub.posts.opengraph.get_response",
+            "localhub.posts.opengraph.Opengraph.get_response",
             return_value=("https://google.com", MockResponse),
         )
 
@@ -58,7 +58,7 @@ class TestOpengraphFromUrl:
             ok = False
 
         mocker.patch(
-            "localhub.posts.opengraph.get_response",
+            "localhub.posts.opengraph.Opengraph.get_response",
             return_value=("https://google.com", MockResponse),
         )
 
@@ -71,7 +71,7 @@ class TestOpengraphFromUrl:
 
     def test_if_error(self, mocker):
         mocker.patch(
-            "localhub.posts.opengraph.get_response",
+            "localhub.posts.opengraph.Opengraph.get_response",
             side_effect=requests.RequestException,
         )
 
