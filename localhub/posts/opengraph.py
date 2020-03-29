@@ -91,29 +91,29 @@ class Opengraph:
             OpenGraph -- OpenGraph instance
         """
         self.soup = BeautifulSoup(html, "html.parser")
-        self.title = self.parse_title_from_html()
-        self.image = self.parse_image_from_html()
-        self.description = self.parse_description_from_html()
+        self.title = self.title_from_html()
+        self.image = self.image_from_html()
+        self.description = self.description_from_html()
         return self
 
-    def parse_title_from_html(self):
-        title = self.parse_meta_tags_from_html("og:title", "twitter:title")
+    def title_from_html(self):
+        title = self.meta_tags_from_html("og:title", "twitter:title")
         if title:
             return title
         elif self.soup.h1 and self.soup.h1.text:
             return self.soup.h1.text
         return self.soup.title.string if self.soup.title else get_domain(self.url)
 
-    def parse_image_from_html(self):
-        image = self.parse_meta_tags_from_html("og:image", "twitter:image")
+    def image_from_html(self):
+        image = self.meta_tags_from_html("og:image", "twitter:image")
         if image and len(image) < 501 and is_url(image) and is_image_url(image):
             return image
         return None
 
-    def parse_description_from_html(self):
-        return self.parse_meta_tags_from_html("og:description", "twitter:description")
+    def description_from_html(self):
+        return self.meta_tags_from_html("og:description", "twitter:description")
 
-    def parse_meta_tags_from_html(self, *names):
+    def meta_tags_from_html(self, *names):
         for name in names:
             meta = self.soup.find("meta", attrs={"property": name}) or self.soup.find(
                 "meta", attrs={"name": name}
