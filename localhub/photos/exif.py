@@ -16,11 +16,11 @@ class Exif:
         Args:
             fp (file): file-like object containing an Image
 
-        Raises:
-            Exif.Invalid: if image does not contain EXIF tags
-
         Returns:
             Exif
+
+        Raises:
+            Exif.Invalid: if image does not contain EXIF tags
         """
         img = Image.open(fp)
 
@@ -36,11 +36,11 @@ class Exif:
     def locate(self):
         """Returns lat, lng pair of coordinates.
 
-        Raises:
-            Exif.Invalid: if EXIF data does not contain valid GPS data.
-
         Returns:
             tuple(float, float): lat, lng coordinates
+
+        Raises:
+            Exif.Invalid: if EXIF data does not contain valid GPS data.
         """
         gps_dict = self.build_gps_dict()
 

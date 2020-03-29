@@ -65,11 +65,11 @@ class Opengraph:
         Args:
             url (string): URL of HTML source page
 
-        Raises:
-            Opengraph.Invalid: if unreachable URL or data returned not HTML
-
         Returns:
             Opengraph: Opengraph instance with relevant data.
+
+        Raises:
+            Opengraph.Invalid: if unreachable URL or data returned not HTML
         """
         try:
             url, response = cls.get_response(url)

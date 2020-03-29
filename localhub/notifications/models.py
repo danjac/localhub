@@ -132,11 +132,11 @@ class PushSubscription(models.Model):
             payload (dict): webpush payload e.g. "header", "body", "url"
             ttl (int, optional): time to live (default: 0)
 
-        Raises:
-            WebPushException
-
         Returns:
             bool: if webpush succeeds
+
+        Raises:
+            WebPushException
         """
 
         subscription_info = {

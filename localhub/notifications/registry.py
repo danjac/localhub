@@ -19,11 +19,11 @@ class AdapterRegistry:
         Args:
             notification: Notification instance
 
-        Raises:
-            ImproperlyConfigured: if no Adapter registered for the model
-
         Returns:
             Adapter subclass
+
+        Raises:
+            ImproperlyConfigured: if no Adapter registered for the model
         """
         try:
             return self._registry[notification.content_object.__class__](notification)
@@ -40,11 +40,11 @@ class AdapterRegistry:
             adapter_cls: Adapter subclass
             model: Django Model class
 
-        Raises:
-            ImproperlyConfigured: if adapter_cls does not subclass Adapter
-
         Returns:
             Adapter subclass
+
+        Raises:
+            ImproperlyConfigured: if adapter_cls does not subclass Adapter
         """
 
         if not issubclass(adapter_cls, Adapter):
