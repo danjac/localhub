@@ -3,6 +3,7 @@
 
 {% load i18n %}
 {% load rules %}
+{% load activities_tags %}
 
 <div class="dropdown mt-2"
      data-controller="toggle">
@@ -17,14 +18,14 @@
     {% if can_pin %}
     {% if object.is_pinned %}
     <li class="menu-item">
-      <a href="{{ object.get_unpin_url }}"
+      <a href="{% resolve_url object "unpin" %}"
          class="d-hide"
          data-controller="ajax js-toggle"
          data-action="ajax#post"><s>{% trans "Pin" %}</s></a>
     </li>
     {% else %}
     <li class="menu-item">
-      <a href="{{ object.get_pin_url }}"
+      <a href="{% resolve_url object "pin" %}"
          class="d-hide"
          data-controller="ajax js-toggle"
          data-action="ajax#post">{% trans "Pin" %}</a>
@@ -47,7 +48,7 @@
     {% has_perm "activities.like_activity" user object as can_like %}
     {% if can_like %}
     <li class="menu-item">
-      <a href="{{ object.get_like_url }}"
+      <a href="{% resolve_url object "like" %}"
          {% if object.has_liked %}
          class="d-hide"
          data-js-toggle-ignore
@@ -57,7 +58,7 @@
          data-toggle-target="like"
          data-ajax-redirect="none"
          data-action="ajax#post toggle#toggle">{% trans "Like" %}</a>
-      <a href="{{ object.get_dislike_url }}"
+      <a href="{% resolve_url object "dislike" %}"
          {% if not object.has_liked %}
          class="d-hide"
          data-js-toggle-ignore
@@ -73,7 +74,7 @@
     {% has_perm "activities.bookmark_activity" user object as can_bookmark %}
     {% if can_bookmark %}
     <li class="menu-item">
-      <a href="{{ object.get_bookmark_url }}"
+      <a href="{% resolve_url object "bookmark" %}"
          {% if object.has_bookmarked %}
          class="d-hide"
          data-js-toggle-ignore
@@ -83,7 +84,7 @@
          data-toggle-target="bookmark"
          data-ajax-redirect="none"
          data-action="ajax#post toggle#toggle">{% trans "Bookmark" %}</a>
-      <a href="{{ object.get_remove_bookmark_url }}"
+      <a href="{% resolve_url object "remove_bookmark" %}"
          {% if not object.has_bookmarked %}
          class="d-hide"
          data-js-toggle-ignore
@@ -105,7 +106,7 @@
          data-controller="js-toggle ajax"
          data-action="ajax#post"
          data-ajax-redirect="{{ request.get_full_path }}"
-         href="{{ object.get_reshare_url }}">{% trans "Reshare" %}</a>
+         href="{% resolve_url object "reshare" %}">{% trans "Reshare" %}</a>
     </li>
     {% endif %}
     {% endif %}
@@ -113,7 +114,7 @@
     {% has_perm "activities.flag_activity" user object as can_flag %}
     {% if can_flag and not object.has_flagged %}
     <li class="menu-item">
-      <a href="{{ object.get_flag_url }}">
+      <a href="{% resolve_url object "flag" %}">
         {% trans "Flag" %}
       </a>
     </li>
@@ -129,10 +130,10 @@
          data-action="confirm#check ajax#post"
          data-confirm-header="{% trans 'Publish' %}"
          data-confirm-body="{% trans 'Are you sure you want to publish this draft?' %}"
-         href="{{ object.get_publish_url }}">{% trans "Publish" %}</a>
+         href="{% resolve_url object "publish" %}">{% trans "Publish" %}</a>
       {% endif %}
     <li class="menu-item">
-      <a href="{{ object.get_update_url }}">{% trans "Edit" %}</a>
+      <a href="{% resolve_url object "update" %}">{% trans "Edit" %}</a>
     </li>
     {% endif %}
 
@@ -140,7 +141,7 @@
     {% has_perm "activities.delete_activity" user object as can_delete %}
     {% if can_delete %}
     <li class="menu-item">
-      <a href="{{ object.get_delete_url }}"
+      <a href="{% resolve_url object "delete" %}"
          data-controller="ajax confirm"
          data-action="confirm#check ajax#post"
          data-confirm-header="{% trans 'Delete' %}"

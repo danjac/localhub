@@ -291,10 +291,6 @@ class Activity(TimeStampedModel):
         ]
         abstract = True
 
-    @classmethod
-    def get_list_url(cls):
-        return reverse(f"{cls._meta.app_label}:list")
-
     def save(self, *args, **kwargs):
         is_new = self._state.adding
         super().save(*args, **kwargs)
@@ -324,42 +320,6 @@ class Activity(TimeStampedModel):
         if slug:
             return self.resolve_url("detail", slug)
         return self.resolve_url("detail_no_slug")
-
-    def get_comment_url(self):
-        return self.resolve_url("comment")
-
-    def get_bookmark_url(self):
-        return self.resolve_url("bookmark")
-
-    def get_remove_bookmark_url(self):
-        return self.resolve_url("remove_bookmark")
-
-    def get_pin_url(self):
-        return self.resolve_url("pin")
-
-    def get_unpin_url(self):
-        return self.resolve_url("unpin")
-
-    def get_dislike_url(self):
-        return self.resolve_url("dislike")
-
-    def get_like_url(self):
-        return self.resolve_url("like")
-
-    def get_flag_url(self):
-        return self.resolve_url("flag")
-
-    def get_publish_url(self):
-        return self.resolve_url("publish")
-
-    def get_reshare_url(self):
-        return self.resolve_url("reshare")
-
-    def get_update_url(self):
-        return self.resolve_url("update")
-
-    def get_delete_url(self):
-        return self.resolve_url("delete")
 
     def get_permalink(self):
         return self.community.resolve_url(self.get_absolute_url())

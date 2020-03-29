@@ -4,14 +4,16 @@
 {% extends "activities/base.html" %}
 
 {% load i18n %}
+{% load activities_tags %}
 
-{% block subtitle %} / {{ model_name_plural }} / {{ object.title }}{% endblock %}
+
+{% block subtitle %} / {% verbose_name_plural model %} / {{ object.title }}{% endblock %}
 
 {% block content %}
 
 <ul class="breadcrumb">
   {% if object.published %}
-  <li class="breadcrumb-item"><a href="{{ model_list_url }}">{{ model_name_plural }}</a></li>
+  <li class="breadcrumb-item"><a href="{% resolve_model_url model "list" %}">{% verbose_name_plural model %}</a></li>
   {% else %}
   <li class="breadcrumb-item"><a href="{% url 'activities:drafts' %}">{% trans "Drafts" %}</a></li>
   {% endif %}
@@ -47,7 +49,8 @@
   </div>
   {% endfor %}
   {% if comment_form %}
-  {% include "includes/forms/stimulusjs_form.html" with action=object.get_comment_url form=comment_form form_id="comment-form" %}
+  {% resolve_url object "comment" as comment_url %}
+  {% include "includes/forms/stimulusjs_form.html" with action=comment_url form=comment_form form_id="comment-form" %}
   {% elif not object.allow_comments %}
   <p class="toast text-center my-2">{% trans "Comments are locked" %}</p>
   {% elif not user.is_authenticated %}

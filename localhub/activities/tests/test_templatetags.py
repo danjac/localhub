@@ -3,10 +3,12 @@
 
 import pytest
 from django.contrib.auth.models import AnonymousUser
+from django.urls import reverse
 from django.utils import timezone
 
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.posts.factories import PostFactory
+from localhub.posts.models import Post
 from localhub.users.factories import UserFactory
 
 from ..templatetags.activities_tags import (
@@ -15,7 +17,11 @@ from ..templatetags.activities_tags import (
     get_pinned_activity,
     is_content_sensitive,
     is_oembed_url,
+    resolve_model_url,
+    resolve_url,
     strip_external_images,
+    verbose_name,
+    verbose_name_plural,
 )
 
 pytestmark = pytest.mark.django_db
@@ -143,3 +149,31 @@ class TestStripExternalImages:
         content = '<p><img src="/static/funny.gif"/></p>'
         user = UserFactory(show_external_images=False)
         assert strip_external_images(content, user) == content
+
+
+class VerboseNameTests:
+    def test_verbose_name_of_instance(self, post):
+        assert verbose_name(post) == "Post"
+
+
+class VerboseNamePluralTests:
+    def test_verbose_name_of_instance(self, post):
+        assert verbose_name_plural(post) == "Posts"
+
+    def test_verbose_name_of_model(self):
+        assert verbose_name_plural(Post) == "Posts"
+
+
+class ResolveUrlTests:
+    def test_resolve_url(self, post):
+        assert resolve_url(post, "bookmark") == reverse(
+            "posts:bookmark", args=[post.id]
+        )
+
+
+class ResolveModelUrlTests:
+    def test_resolve_model_url_with_instance(self, post):
+        assert resolve_model_url(post, "list") == reverse("posts:list")
+
+    def test_resolve_model_url_with_class(self):
+        assert resolve_model_url(Post, "list") == reverse("posts:list")

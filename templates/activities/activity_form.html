@@ -4,21 +4,23 @@
 {% extends "activities/base.html" %}
 
 {% load i18n %}
-{% block subtitle %} / {{ model_name_plural }} / {% if object %}{{ object.title }} / {% trans "Edit" %}
+{% load activities_tags %}
+
+{% block subtitle %} / {% verbose_name_plural model %} / {% if object %}{{ object.title }} / {% trans "Edit" %}
 {% else %}{% trans "Submit" %}{% endif %}{% endblock %}
 
 {% block content %}
 <ul class="breadcrumb">
   {% if object %}
   {% if object.published %}
-  <li class="breadcrumb-item"><a href="{{ model_list_url }}">{{ model_name_plural }}</a></li>
+  <li class="breadcrumb-item"><a href="{% resolve_model_url model "list" %}">{% verbose_name_plural model %}</a></li>
   {% else %}
   <li class="breadcrumb-item"><a href="{% url 'activities:drafts' %}">{% trans "Drafts" %}</a></li>
   {% endif %}
   <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
   <li class="breadcrumb-item">{% trans "Edit" %}</li>
   {% else %}
-  <li class="breadcrumb-item"><a href="{{ model_list_url }}">{{ model_name_plural }}</a></li>
+  <li class="breadcrumb-item"><a href="{% resolve_model_url model "list" %}">{% verbose_name_plural model %}</a></li>
   <li class="breadcrumb-item">{% trans "Submit" %}</li>
   {% endif %}
 </ul>

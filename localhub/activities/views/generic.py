@@ -43,36 +43,13 @@ class BaseSingleActivityView(ActivityQuerySetMixin, GenericModelView):
     ...
 
 
-class ActivityContentMixin:
-    def get_model_name_plural(self):
-        return _(self.model._meta.verbose_name_plural.title())
-
-    def get_model_list_url(self):
-        return self.model.get_list_url()
-
+class ActivityContextMixin:
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data.update(
-            {
-                "model_name_plural": self.get_model_name_plural(),
-                "model_list_url": self.get_model_list_url(),
-            }
-        )
-        return data
-
-
-class SingleActivityContentMixin(ActivityContentMixin):
-    def get_model_name(self):
-        return _(self.model._meta.verbose_name.title())
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data.update({"model_name": self.get_model_name()})
-        return data
+        return super().get_context_data(model=self.model, **kwargs)
 
 
 class ActivityCreateView(
-    CommunityRequiredMixin, PermissionRequiredMixin, ActivityContentMixin, CreateView,
+    CommunityRequiredMixin, PermissionRequiredMixin, ActivityContextMixin, CreateView,
 ):
     permission_required = "activities.create_activity"
 
@@ -81,11 +58,11 @@ class ActivityCreateView(
 
     def get_success_message(self):
         message = (
-            _("Your %(activity)s has been published")
+            _("Your %(object)s has been published")
             if self.object.published
-            else _("Your %(activity)s has been saved to Drafts")
+            else _("Your %(object)s has been saved to Drafts")
         )
-        return message % {"activity": self.object._meta.verbose_name}
+        return message % {"object": self.object._meta.verbose_name}
 
     def form_valid(self, form):
 
@@ -108,7 +85,7 @@ class ActivityCreateView(
 
 
 class ActivityListView(
-    ActivityQuerySetMixin, SearchMixin, ActivityContentMixin, ListView
+    ActivityQuerySetMixin, SearchMixin, ActivityContextMixin, ListView
 ):
     allow_empty = True
     paginate_by = settings.DEFAULT_PAGE_SIZE
@@ -130,10 +107,7 @@ class ActivityListView(
 
 
 class ActivityUpdateView(
-    PermissionRequiredMixin,
-    ActivityQuerySetMixin,
-    SingleActivityContentMixin,
-    UpdateView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, ActivityContextMixin, UpdateView,
 ):
     permission_required = "activities.change_activity"
 
@@ -167,10 +141,7 @@ class ActivityUpdateView(
 
 
 class ActivityDeleteView(
-    PermissionRequiredMixin,
-    ActivityQuerySetMixin,
-    SingleActivityContentMixin,
-    DeleteView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, ActivityContextMixin, DeleteView,
 ):
     permission_required = "activities.delete_activity"
     success_url = settings.HOME_PAGE_URL
@@ -195,7 +166,7 @@ class ActivityDeleteView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityDetailView(ActivityQuerySetMixin, SingleActivityContentMixin, DetailView):
+class ActivityDetailView(ActivityQuerySetMixin, ActivityContextMixin, DetailView):
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
         self.object.get_notifications().for_recipient(
@@ -212,10 +183,9 @@ class ActivityDetailView(ActivityQuerySetMixin, SingleActivityContentMixin, Deta
 
         data["comments"] = self.get_comments()
         if self.request.user.has_perm("activities.create_comment", self.object):
-            data.update({"comment_form": CommentForm()})
+            data["comment_form"] = CommentForm()
 
         data["reshares"] = self.get_reshares()
-
         return data
 
     def get_queryset(self):
@@ -409,9 +379,9 @@ class ActivityFlagView(
         )
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["activity"] = self.activity
-        return data
+        return super().get_context_data(
+            activity=self.activity, activity_model=self.activity.__class__, **kwargs
+        )
 
     def get_permission_object(self):
         return self.activity
@@ -463,3 +433,9 @@ class ActivityCommentCreateView(
 
         messages.success(self.request, _("Your comment has been posted"))
         return redirect(self.activity)
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(
+            activity=self.activity, activity_model=self.activity.__class__, **kwargs
+        )
+

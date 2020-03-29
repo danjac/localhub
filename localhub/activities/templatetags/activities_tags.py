@@ -5,12 +5,19 @@
 from bs4 import BeautifulSoup
 from django import template
 from django.conf import settings
+from django.urls import reverse
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext as _
 
 from localhub.users.utils import linkify_mentions
 from localhub.utils.urls import is_https
 
-from ..models import get_activity_queryset_count, get_activity_querysets, load_objects
+from ..models import (
+    get_activity_models,
+    get_activity_queryset_count,
+    get_activity_querysets,
+    load_objects,
+)
 from ..oembed import bootstrap_oembed
 from ..utils import linkify_hashtags
 
@@ -113,3 +120,23 @@ def strip_external_images(content, user):
                 img.decompose()
         return mark_safe(str(soup))
     return content
+
+
+@register.simple_tag
+def resolve_model_url(model, view_name):
+    return reverse(f"{model._meta.app_label}:{view_name}")
+
+
+@register.simple_tag
+def resolve_url(activity, view_name):
+    return activity.resolve_url(view_name)
+
+
+@register.simple_tag
+def verbose_name(activity):
+    return _(activity._meta.verbose_name.capitalize())
+
+
+@register.simple_tag
+def verbose_name_plural(activity):
+    return _(activity._meta.verbose_name_plural.capitalize())
