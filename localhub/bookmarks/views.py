@@ -1,7 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.utils.translation import gettext as _
 from vanilla import ListView
 
 from localhub.activities.views.streams import BaseActivityStreamView
@@ -10,7 +9,6 @@ from localhub.private_messages.models import Message
 
 
 class BookmarksStreamView(BaseActivityStreamView):
-    # tbd: make searchable...
     template_name = "bookmarks/activities.html"
     ordering = ("-bookmarked", "-created")
 

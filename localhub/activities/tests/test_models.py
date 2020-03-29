@@ -435,7 +435,6 @@ class TestActivityManager:
         assert post.has_liked
         assert post.liked is not None
 
-
     def test_with_common_annotations_if_anonymous(self, post):
         activity = Post.objects.with_common_annotations(
             AnonymousUser(), post.community

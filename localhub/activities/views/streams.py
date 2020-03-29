@@ -8,7 +8,6 @@ from django.http import Http404
 from django.utils import timezone
 from django.utils.formats import date_format
 from django.utils.functional import cached_property
-from django.utils.translation import gettext_lazy as _
 from django.views.generic.dates import (
     DateMixin,
     MonthMixin,

@@ -11,7 +11,6 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.functional import cached_property
-from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 from taggit.models import Tag, TaggedItem
 from vanilla import GenericModelView, ListView
