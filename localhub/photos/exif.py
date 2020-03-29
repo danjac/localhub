@@ -5,78 +5,88 @@ from PIL import Image
 from PIL.ExifTags import GPSTAGS, TAGS
 
 
-class InvalidExifData(ValueError):
-    ...
+class Exif:
+    class Invalid(ValueError):
+        ...
 
+    @classmethod
+    def from_image(cls, fp):
+        img = Image.open(fp)
 
-def get_geolocation_data_from_image(fp):
-    """
-    Extracts lat, lng tuple from image file object.
+        exif = img._getexif()
+        if exif is None:
+            raise cls.Invalid("Image does not contain EXIF tags")
 
-    If invalid raises InvalidExifData exception.
-    """
-    img = Image.open(fp)
+        return cls(exif)
 
-    exif = img._getexif()
-    if exif is None:
-        raise InvalidExifData("Image does not contain EXIF tags")
+    def __init__(self, exif):
+        self.exif = exif
 
-    for tag, value in exif.items():
-        decoded = TAGS.get(tag, tag)
-        if decoded == "GPSInfo":
-            return extract_gps_data(value)
-    raise InvalidExifData("No GPS data found in EXIF tags")
+    def locate(self):
 
+        gps_dict = self.build_gps_dict()
 
-def convert_to_degress(value):
-    """
-    Convert GPS coordinate to degress in float
-    """
-    try:
-        d0 = value[0][0]
-        d1 = value[0][1]
+        lat = self.convert_to_degress(gps_dict["GPSLatitude"])
+        lng = self.convert_to_degress(gps_dict["GPSLongitude"])
 
-        d = float(d0) / float(d1)
+        if gps_dict["GPSLatitudeRef"] != "N":
+            lat = 0 - lat
 
-        m0 = value[1][0]
-        m1 = value[1][1]
+        if gps_dict["GPSLongitudeRef"] != "E":
+            lng = 0 - lng
 
-        m = float(m0) / float(m1)
+        return lat, lng
 
-        s0 = value[2][0]
-        s1 = value[2][1]
+    def convert_to_degress(self, value):
+        """
+        Convert GPS coordinate to degress in float
+        """
+        try:
+            d0 = value[0][0]
+            d1 = value[0][1]
 
-        s = float(s0) / float(s1)
+            d = float(d0) / float(d1)
 
-        return d + (m / 60.0) + (s / 3600.0)
-    except (IndexError, ValueError, ZeroDivisionError):
-        raise InvalidExifData(f"Unable to convert to digress:{value}")
+            m0 = value[1][0]
+            m1 = value[1][1]
 
+            m = float(m0) / float(m1)
 
-def build_gps_data(value):
-    return {GPSTAGS.get(tag, tag): value[tag] for tag in value}
+            s0 = value[2][0]
+            s1 = value[2][1]
 
+            s = float(s0) / float(s1)
 
-def get_gps_data_point(gps_data, key):
-    try:
-        return gps_data[key]
-    except KeyError:
-        raise InvalidExifData(f"{key} missing from GPS EXIF data")
+            return d + (m / 60.0) + (s / 3600.0)
+        except (IndexError, ValueError, ZeroDivisionError):
+            raise self.Invalid(f"Unable to convert to degress:{value}")
 
+    def build_gps_dict(self):
+        raw_values = {}
+        for tag, value in self.exif.items():
+            decoded = TAGS.get(tag, tag)
+            if decoded == "GPSInfo":
+                raw_values = value
 
-def extract_gps_data(value):
-    gps_data = build_gps_data(value)
+        if not raw_values:
+            raise self.Invalid("GPSInfo not found in exif")
 
-    lat_ref = get_gps_data_point(gps_data, "GPSLatitudeRef")
-    lng_ref = get_gps_data_point(gps_data, "GPSLongitudeRef")
+        gps_dict = {GPSTAGS.get(tag, tag): raw_values[tag] for tag in raw_values}
 
-    lat = convert_to_degress(get_gps_data_point(gps_data, "GPSLatitude"))
-    lng = convert_to_degress(get_gps_data_point(gps_data, "GPSLongitude"))
+        # validation
 
-    if lat_ref != "N":
-        lat = 0 - lat
+        missing_keys = [
+            key
+            for key in (
+                "GPSLatitudeRef",
+                "GPSLongitudeRef",
+                "GPSLatitude",
+                "GPSLongitude",
+            )
+            if key not in gps_dict
+        ]
 
-    if lng_ref != "E":
-        lng = 0 - lng
+        if missing_keys:
+            raise self.Invalid(f"{','.join(missing_keys)} missing from GPS dict")
 
-    return lat, lng
+        return gps_dict

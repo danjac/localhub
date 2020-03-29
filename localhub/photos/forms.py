@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from localhub.activities.forms import ActivityForm
 from localhub.forms.widgets import ClearableImageInput
 
-from . import exif
+from .exif import Exif
 from .models import Photo
 
 logger = logging.getLogger(__name__)
@@ -63,13 +63,13 @@ class PhotoForm(ActivityForm):
             cleaned_data["longitude"] = None
         elif self.cleaned_data["extract_geolocation_data"]:
             try:
-                lat, lng = exif.get_geolocation_data_from_image(
-                    self.cleaned_data["image"]
-                )
+                lat, lng = Exif.from_image(self.cleaned_data["image"]).locate()
                 cleaned_data["latitude"] = lat
                 cleaned_data["longitude"] = lng
-            except exif.InvalidExifData as e:
+            except Exif.Invalid as e:
                 logger.error(e)
+                cleaned_data["latitude"] = None
+                cleaned_data["longitude"] = None
 
         # try and get title from photo if missing
         if not cleaned_data["title"]:

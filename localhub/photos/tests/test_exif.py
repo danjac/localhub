@@ -3,24 +3,24 @@
 
 import pytest
 
-from .. import exif
+from ..exif import Exif
 
 
 class TestConvertToDegress:
     def test_valid(self):
         value = ((61, 1), (3, 1), (27, 1))
-        assert exif.convert_to_degress(value) == pytest.approx(61, 0.5)
+        assert Exif(None).convert_to_degress(value) == pytest.approx(61, 0.5)
 
     def test_invalid(self):
         value = (
             (61, 1),
             (3, 1),
         )
-        with pytest.raises(exif.InvalidExifData):
-            exif.convert_to_degress(value)
+        with pytest.raises(Exif.Invalid):
+            Exif(None).convert_to_degress(value)
 
 
-class TestExtractGpsData:
+class TestLocate:
     def test_ok(self, mocker):
         data = {
             "GPSLatitude": ((61, 1), (3, 1), (27, 1)),
@@ -28,8 +28,8 @@ class TestExtractGpsData:
             "GPSLatitudeRef": "N",
             "GPSLongitudeRef": "E",
         }
-        mocker.patch("localhub.photos.exif.build_gps_data", return_value=data)
-        lat, lng = exif.extract_gps_data(data)
+        mocker.patch("localhub.photos.exif.Exif.build_gps_dict", return_value=data)
+        lat, lng = Exif(None).locate()
         assert lat == pytest.approx(61, 0.5)
         assert lng == pytest.approx(61, 0.5)
 
@@ -40,8 +40,8 @@ class TestExtractGpsData:
             "GPSLatitudeRef": "S",
             "GPSLongitudeRef": "E",
         }
-        mocker.patch("localhub.photos.exif.build_gps_data", return_value=data)
-        lat, lng = exif.extract_gps_data(data)
+        mocker.patch("localhub.photos.exif.Exif.build_gps_dict", return_value=data)
+        lat, lng = Exif(None).locate()
         assert lat == pytest.approx(-61, 0.5)
         assert lng == pytest.approx(61, 0.5)
 
@@ -52,15 +52,10 @@ class TestExtractGpsData:
             "GPSLatitudeRef": "N",
             "GPSLongitudeRef": "W",
         }
-        mocker.patch("localhub.photos.exif.build_gps_data", return_value=data)
-        lat, lng = exif.extract_gps_data(data)
+        mocker.patch("localhub.photos.exif.Exif.build_gps_dict", return_value=data)
+        lat, lng = Exif(None).locate()
         assert lat == pytest.approx(61, 0.5)
         assert lng == pytest.approx(-61, 0.5)
-
-    def test_missing_data(self, mocker):
-        mocker.patch("localhub.photos.exif.build_gps_data", return_value={})
-        with pytest.raises(exif.InvalidExifData):
-            exif.extract_gps_data({})
 
     def test_bad_degress(self, mocker):
         data = {
@@ -69,6 +64,6 @@ class TestExtractGpsData:
             "GPSLatitudeRef": "N",
             "GPSLongitudeRef": "E",
         }
-        mocker.patch("localhub.photos.exif.build_gps_data", return_value=data)
-        with pytest.raises(exif.InvalidExifData):
-            exif.extract_gps_data(data)
+        mocker.patch("localhub.photos.exif.Exif.build_gps_dict", return_value=data)
+        with pytest.raises(Exif.Invalid):
+            Exif(None).locate()
