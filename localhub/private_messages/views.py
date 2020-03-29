@@ -154,12 +154,7 @@ class BaseReplyFormView(BaseMessageFormView):
 
 
 class MessageReplyView(RecipientQuerySetMixin, BaseReplyFormView):
-    def get_form(self, data=None, files=None):
-        form = super().get_form(data, files)
-        form["message"].label = _("Reply to %(recipient)s") % {
-            "recipient": user_display(self.recipient)
-        }
-        return form
+    ...
 
 
 message_reply_view = MessageReplyView.as_view()
@@ -189,13 +184,6 @@ class MessageCreateView(
     @cached_property
     def recipient_display(self):
         return user_display(self.recipient)
-
-    def get_form(self, data=None, files=None):
-        form = self.form_class(data, files)
-        form["message"].label = _("Send message to %(recipient)s") % {
-            "recipient": self.recipient_display
-        }
-        return form
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
