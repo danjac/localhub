@@ -89,8 +89,8 @@ class PostForm(ActivityForm):
             if fetch_opengraph_data:
                 data.update(
                     {
-                        "opengraph_image": og.image,
-                        "opengraph_description": og.description,
+                        "opengraph_image": og.image or "",
+                        "opengraph_description": og.description or "",
                     }
                 )
             return data

@@ -12,15 +12,21 @@ pytestmark = pytest.mark.django_db
 
 @pytest.fixture()
 def mock_opengraph_from_url(mocker):
-    def _mock_fetch(url):
-        og = Opengraph("https://imgur.com")
-        og.title = "Imgur"
-        og.image = "https://imgur.com/cat.gif"
-        og.description = "cat"
-        return og
+    og = Opengraph("https://imgur.com")
+    og.title = "Imgur"
+    og.image = "https://imgur.com/cat.gif"
+    og.description = "cat"
 
-    mocker.patch("localhub.posts.opengraph.Opengraph.from_url", _mock_fetch)
-    return _mock_fetch
+    mocker.patch("localhub.posts.opengraph.Opengraph.from_url", return_value=og)
+    yield
+
+
+@pytest.fixture()
+def mock_opengraph_from_invalid_url(mocker):
+    mocker.patch(
+        "localhub.posts.opengraph.Opengraph.from_url", side_effect=Opengraph.Invalid
+    )
+    yield
 
 
 class TestPostForm:
@@ -65,6 +71,21 @@ class TestPostForm:
         assert cleaned_data["url"] == "https://imgur.com"
         assert cleaned_data["opengraph_image"] == "https://imgur.com/cat.gif"
         assert cleaned_data["opengraph_description"] == "cat"
+
+    def test_fetch_opengraph_data_if_invalid_url(self, mock_opengraph_from_invalid_url):
+        form = PostForm(
+            {"url": "http://twitter.com", "title": "", "fetch_opengraph_data": True}
+        )
+
+        assert not form.is_valid()
+
+    def test_fetch_opengraph_data_if_title_and_invalid_url(
+        self, mock_opengraph_from_invalid_url
+    ):
+        form = PostForm(
+            {"url": "http://twitter.com", "title": "test", "fetch_opengraph_data": True}
+        )
+        assert not form.is_valid()
 
     def test_fetch_opengraph_data_if_not_fetch_opengraph_data_from_url(
         self, mock_opengraph_from_url

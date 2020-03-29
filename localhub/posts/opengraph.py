@@ -31,7 +31,7 @@ class Opengraph:
         """
         try:
             url, response = get_response(url)
-        except (requests.RequestException, ValueError) as e:
+        except requests.RequestException as e:
             raise cls.Invalid(e)
 
         if not response.ok or "text/html" not in response.headers.get(

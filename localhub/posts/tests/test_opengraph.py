@@ -2,16 +2,13 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
+import requests
 
 from ..opengraph import Opengraph
 
 
 class TestOpengraphFromUrl:
     def test_if_good_response_with_head_different_url(self, mocker):
-        class MockHeadResponse:
-            ok = True
-            url = "https://google.com"
-
         class MockResponse:
             ok = True
             headers = {"Content-Type": "text/html; charset=utf-8"}
@@ -27,8 +24,10 @@ class TestOpengraphFromUrl:
 </body>
 </html>"""
 
-        mocker.patch("requests.head", lambda url, **kwargs: MockHeadResponse)
-        mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
+        mocker.patch(
+            "localhub.posts.opengraph.get_response",
+            return_value=("https://google.com", MockResponse),
+        )
 
         og = Opengraph.from_url("http://google.com")
 
@@ -37,44 +36,44 @@ class TestOpengraphFromUrl:
         assert og.image == "http://example.com/test.jpg"
         assert og.description == "test description"
 
-    def test_if_good_response_no_header(self, mocker):
-        class MockBadHeadResponse:
-            ok = False
-
+    def test_if_non_html_response(self, mocker):
         class MockResponse:
             ok = True
-            headers = {"Content-Type": "text/html; charset=utf-8"}
-            content = """
-<html>
-<head>
-<title>Hello</title>
-<meta property="og:title" content="a test site">
-<meta property="og:image" content="http://example.com/test.jpg">
-<meta property="og:description" content="test description">
-</head>
-<body>
-</body>
-</html>"""
+            headers = {"Content-Type": "application/json"}
 
-        mocker.patch("requests.head", lambda url, **kwargs: MockBadHeadResponse)
-        mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
-        og = Opengraph.from_url("https://google.com")
+        mocker.patch(
+            "localhub.posts.opengraph.get_response",
+            return_value=("https://google.com", MockResponse),
+        )
 
-        assert og.url == "https://google.com"
-        assert og.title == "a test site"
-        assert og.image == "http://example.com/test.jpg"
-        assert og.description == "test description"
+        with pytest.raises(Opengraph.Invalid):
+            og = Opengraph.from_url("https://google.com")
+            assert og.url == "https://google.com"
+            assert og.title is None
+            assert og.image is None
+            assert og.description is None
 
     def test_if_bad_response(self, mocker):
-        class MockHeadResponse:
-            ok = True
-            url = "https://google.com"
-
         class MockResponse:
             ok = False
 
-        mocker.patch("requests.head", lambda url, **kwargs: MockHeadResponse)
-        mocker.patch("requests.get", lambda url, **kwargs: MockResponse)
+        mocker.patch(
+            "localhub.posts.opengraph.get_response",
+            return_value=("https://google.com", MockResponse),
+        )
+
+        with pytest.raises(Opengraph.Invalid):
+            og = Opengraph.from_url("https://google.com")
+            assert og.url == "https://google.com"
+            assert og.title is None
+            assert og.image is None
+            assert og.description is None
+
+    def test_if_error(self, mocker):
+        mocker.patch(
+            "localhub.posts.opengraph.get_response",
+            side_effect=requests.RequestException,
+        )
 
         with pytest.raises(Opengraph.Invalid):
             og = Opengraph.from_url("https://google.com")
