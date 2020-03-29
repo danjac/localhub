@@ -62,11 +62,14 @@ class Opengraph:
         Note that the OpenGraph url value may be different from the
         url in the argument as any redirects are resolved if possible.
 
-        Arguments:
-            url {string} -- URL of HTML source page
+        Args:
+            url (string): URL of HTML source page
+
+        Raises:
+            Opengraph.Invalid: if unreachable URL or data returned not HTML
 
         Returns:
-            OpenGraph -- OpenGraph instance with relevant data.
+            Opengraph: Opengraph instance with relevant data.
         """
         try:
             url, response = cls.get_response(url)

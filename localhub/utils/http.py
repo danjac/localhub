@@ -29,12 +29,25 @@ IMAGE_EXTENSIONS = (
 
 
 def is_https(url):
+    """Checks if URL is SSL i.e. starts with https://
+
+    Args:
+        url (str)
+
+    Returns:
+        bool
+    """
     return url and urlparse(url).scheme == "https"
 
 
 def is_url(url):
-    """
-    Checks if a value is a valid URL.
+    """Checks if a value is a valid URL.
+
+    Args:
+        url (str)
+
+    Returns:
+        bool
     """
 
     if url is None:
@@ -47,13 +60,27 @@ def is_url(url):
 
 
 def is_image_url(url):
+    """Checks if URL points to an image.
+
+    Args:
+        url (str)
+
+    Returns:
+        bool
+    """
     _, ext = os.path.splitext(urlparse(url).path.lower())
     return ext[1:] in IMAGE_EXTENSIONS
 
 
 def get_domain_url(url):
-    """
-    Returns the root domain URL minus path etc.
+    """Returns the root domain URL minus path etc. For example:
+    http://google.com/abc/ -> http://google.com
+
+    Args:
+        url (str)
+
+    Returns:
+        str: domain url
     """
 
     if not is_url(url):
@@ -64,8 +91,13 @@ def get_domain_url(url):
 
 
 def clean_domain(domain):
-    """
-    Removes www. segment of a domain.
+    """Removes www. segment of a domain.
+
+    Args:
+        domain (str)
+
+    Returns:
+        str: cleaned domain
     """
     if domain and domain.startswith("www."):
         return domain[4:]
@@ -73,13 +105,15 @@ def clean_domain(domain):
 
 
 def get_domain(url):
-    """Returns domain of URL e.g. https://google.com -> google.com
+    """Returns domain of URL e.g. http://google.com -> google.com.
 
-    Arguments:
-        url {string or None}
+    If "www." is present it is removed e.g. www.google.com -> google.com.
+
+    Args:
+        url (str): valid URL
 
     Returns:
-        string or None -- original argument if URL not valid, otherwise domain.
+        str: domain
     """
     if not is_url(url):
         return url
@@ -90,11 +124,11 @@ def get_domain(url):
 def resolve_url(url):
     """Resolves URL from HEAD and redirects to get the "true" URL.
 
-    Arguments:
-        url {string}
+    Args:
+        url (str)
 
     Returns:
-        [string] -- URL. If no HEAD found then returns original URL.
+        str: URL. If no HEAD found then returns original URL.
     """
     try:
         response = requests.head(url, allow_redirects=True)

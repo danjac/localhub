@@ -11,6 +11,17 @@ class Exif:
 
     @classmethod
     def from_image(cls, fp):
+        """Returns Exif instance from file-like object
+
+        Args:
+            fp (file): file-like object containing an Image
+
+        Raises:
+            Exif.Invalid: if image does not contain EXIF tags
+
+        Returns:
+            Exif
+        """
         img = Image.open(fp)
 
         exif = img._getexif()
@@ -23,7 +34,14 @@ class Exif:
         self.exif = exif
 
     def locate(self):
+        """Returns lat, lng pair of coordinates.
 
+        Raises:
+            Exif.Invalid: if EXIF data does not contain valid GPS data.
+
+        Returns:
+            tuple(float, float): lat, lng coordinates
+        """
         gps_dict = self.build_gps_dict()
 
         lat = self.convert_to_degress(gps_dict["GPSLatitude"])

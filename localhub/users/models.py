@@ -30,8 +30,8 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
         """Returns users matching this email address, including both
         primary and secondary email addresses
 
-        Arguments:
-            email {string} -- email address
+        Args:
+            email (str): email address
 
         Returns:
             QuerySet
@@ -45,8 +45,8 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
 
         Annotates "num_unread_messages" to QuerySet.
 
-        Arguments:
-            recipient {User} -- message recipient
+        Args:
+            recipient (User): message recipient
 
         Returns:
             QuerySet
@@ -67,8 +67,8 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
     def with_is_following(self, follower):
         """Annotates if user is a follower with attribute is_following.
 
-        Arguments:
-            follower {User}
+        Args:
+            follower (User)
 
         Returns:
             QuerySet
@@ -82,8 +82,8 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
     def with_is_blocked(self, blocker):
         """Adds is_blocked annotation if in user's blocked list.
 
-        Arguments:
-            blocker {User}
+        Args:
+            blocker (User)
 
         Returns:
             QuerySet
@@ -95,8 +95,8 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
     def matches_usernames(self, names):
         """Returns users matching the (case insensitive) username.
 
-        Arguments:
-            names {List} -- list of usernames
+        Args:
+            names (list): list of usernames
 
         Returns:
             QuerySet
@@ -109,7 +109,7 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
         """ Returns only users which are a) active and b) have active
         membership with given community.
 
-        Arguments:
+        Args:
             community {Community}
 
         Returns:
@@ -123,8 +123,8 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
         """Adds annotations "role" and "role_display" for users for this community.
         Use in conjunction with for_community.
 
-        Arguments:
-            community {Community}
+        Args:
+            community (Community)
 
         Returns:
             QuerySet
@@ -229,7 +229,7 @@ class User(AbstractUser):
         """Displays full name or username
 
         Returns:
-            string -- full display name
+            str:  full display name
         """
         return user_display(self)
 
@@ -245,12 +245,12 @@ class User(AbstractUser):
     def has_role(self, community, *roles):
         """Checks if user has given role in the community, if any. Result
         is cached.
-        Arguments:
-            community {Community}
-            roles {*string} -- roles i.e. one or more of "member", "moderator", "admin"
+        Args:
+            community (Community)
+            *roles: roles i.e. one or more of "member", "moderator", "admin"
 
         Returns:
-            bool -- if user has any of these roles
+            bool: if user has any of these roles
         """
         return self.community_roles_cache.get(community.id, None) in roles
 
@@ -258,8 +258,8 @@ class User(AbstractUser):
         """ Check if user is blocking this other user, or is blocked by this other
         user.
 
-        Arguments:
-            user {User}
+        Args:
+            user (User)
 
         Returns:
             bool
@@ -281,11 +281,11 @@ class User(AbstractUser):
         """Returns notification to all other current members that
         this user has just joined the community.
 
-        Arguments:
-            community {Community}
+        Args:
+            community (Community)
 
         Returns:
-            List[Notification]
+            list: list of Notification instances
         """
         return [
             Notification(
@@ -302,9 +302,9 @@ class User(AbstractUser):
     def notify_on_follow(self, recipient, community):
         """Sends notification to recipient that they have just been followed.
 
-        Arguments:
-            recipient {User}
-            community {Community}
+        Args:
+            recipient (User)
+            community (Community)
 
         Returns:
             Notification
@@ -321,7 +321,7 @@ class User(AbstractUser):
         """Get set of emails belonging to user.
 
         Returns:
-            Iterable[string]
+            set: set of email addresses
         """
         return set([self.email]) | set(
             self.emailaddress_set.values_list("email", flat=True)

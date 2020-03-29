@@ -47,11 +47,11 @@ class TemplateContext:
         - recipient_display: full name of recipient
         - verb: e.g. "mention"
 
-        Keyword Arguments:
-            extra_context {None or dict} -- additional context (default: {None})
+        Args:
+            extra_context (dict): additional context (default: None)
 
         Returns:
-            dict -- context
+            dict: template context
         """
         context = {
             "notification": self.adapter.notification,
@@ -91,11 +91,11 @@ class TemplateResolver:
         {prefix}/notification{suffix}
 
         Arguments:
-            prefix {string} -- prefix prepended to all the paths e.g. "post"
-            suffix {string} -- suffix appended to all paths e.g. ".txt"
+            prefix (str): prefix prepended to all the paths e.g. "post"
+            suffix (str): suffix appended to all paths e.g. ".txt"
 
         Returns:
-            List -- list of path strings
+            list: list of path strs
         """
         return [
             f"{prefix}/notifications/{self.verb}_{self.object_name}{suffix}",
@@ -109,20 +109,18 @@ class TemplateRenderer:
     def render(
         self, template_names, context, template_engine=loader,
     ):
-        """Renders a list of templates to a string. Use with TemplateResolver
+        """Renders a list of templates to a str. Use with TemplateResolver
         and TemplateContext.
 
-        Arguments:
-            template_names {List} -- list of standard Django template paths
-            context {dict} -- template context
-
-        Keyword Arguments:
-            template_engine -- Django template engine (default: {loader})
+        Args:
+            template_names (list): list of standard Django template paths
+            context (dict): template context
+            template_engine (object, optional): Django template engine (default: loader)
 
         Returns:
-            string -- rendered template string
+            str: rendered template
         """
-        return template_engine.render_to_string(template_names, context=context)
+        return template_engine.render_to_str(template_names, context=context)
 
 
 class Webpusher:
@@ -272,7 +270,7 @@ class DefaultAdapter(Adapter):
         for this adapter.
 
         Returns:
-            bool -- if verb is permitted
+            bool
         """
         return self.verb in self.ALLOWED_VERBS
 
@@ -289,7 +287,7 @@ class DefaultAdapter(Adapter):
         """Returns path of template names using TemplateResolver
 
         Returns:
-            List -- list of template paths
+            list: list of template paths
         """
         return self.resolver.resolve(f"{self.app_label}/includes")
 
@@ -297,7 +295,7 @@ class DefaultAdapter(Adapter):
         """Calls content_object.get_absolute_url()
 
         Returns:
-            string -- object URL
+            str: object URL
         """
         return self.object.get_absolute_url()
 
@@ -306,24 +304,23 @@ class DefaultAdapter(Adapter):
         example https://demo.localhub.social/posts/path-to-single-post/
 
         Returns:
-            string -- absolute URL
+            str: absolute URL
         """
         return self.community.resolve_url(self.get_object_url())
 
     def render_to_tag(self, template_engine=loader, extra_context=None):
-        """
-        Used with the {% notification %} template tag under notification_tags.
+        """Used with the {% notification %} template tag under notification_tags.
 
         It should render an HTML snippet of the notification
         in the notifications page and other parts of the site.
 
-       Keyword Arguments:
-           template_engine -- Django template engine (default: {loader})
-           extra_context {dict or None} -- additional context (default: {None})
+        Args:
+           template_engine (optional): Django template engine (default: loader)
+           extra_context (dict, optional): additional context (default: None)
 
-       Returns:
-           string -- rendered template string
-       """
+        Returns:
+           str: rendered template str
+        """
         return self.renderer.render(
             self.get_template_names(),
             self.context.get_context(extra_context),
