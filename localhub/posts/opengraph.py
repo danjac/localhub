@@ -1,7 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import logging
 from urllib.parse import urlparse
 
 import requests
@@ -9,8 +8,6 @@ from bs4 import BeautifulSoup
 from django.conf import settings
 
 from localhub.utils.http import get_domain, is_image_url, is_url
-
-logger = logging.getLogger(__name__)
 
 
 class Opengraph:
