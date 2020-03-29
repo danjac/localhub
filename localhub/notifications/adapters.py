@@ -6,6 +6,7 @@ from abc import ABC, abstractmethod
 from celery.utils.log import get_logger
 from django.core.mail import send_mail
 from django.template import loader
+from django.templatetags.static import static
 from django.utils.encoding import force_text
 from django.utils.translation import override
 
@@ -166,6 +167,8 @@ class Webpusher:
 
         if self.community.logo:
             payload["icon"] = self.community.logo.url
+        else:
+            payload["icon"] = static("favicon.png")
 
         return payload
 
