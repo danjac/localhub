@@ -13,7 +13,6 @@ from localhub.users.utils import linkify_mentions
 from localhub.utils.http import is_https
 
 from ..models import (
-    get_activity_models,
     get_activity_queryset_count,
     get_activity_querysets,
     load_objects,
