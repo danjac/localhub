@@ -13,7 +13,7 @@ def takefirst(iterable, key=None):
         key (any, optional): key value or function (default: None)
 
     Yields:
-        any
+        first instance of iterable
     """
 
     keys = set()
