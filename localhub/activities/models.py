@@ -44,8 +44,7 @@ class ActivityQuerySet(
     models.QuerySet,
 ):
     def with_common_annotations(self, user, community):
-        """
-        Combines commonly used annotations into a single call for
+        """Combines commonly used annotations into a single call for
         convenience:
             - with_num_reshares
             - with_num_comments
@@ -57,6 +56,13 @@ class ActivityQuerySet(
             - with_is_flagged [2]
             [1]: authenticated users only
             [2]: moderators only
+
+        Args:
+            user (User): the current user
+            community (Community)
+
+        Returns:
+            QuerySet
         """
 
         qs = self.with_num_comments(community).with_num_reshares(user, community)
@@ -74,9 +80,15 @@ class ActivityQuerySet(
         return qs
 
     def with_num_reshares(self, user, community):
-        """
-        Annotates int value `num_reshares`, indicating how many times
+        """Annotates int value `num_reshares`, indicating how many times
         this activity has been reshared.
+
+        Args:
+            user (User): the current user
+            community (Community)
+
+        Returns:
+            QuerySet
         """
         return self.annotate(
             num_reshares=models.Subquery(
@@ -91,11 +103,16 @@ class ActivityQuerySet(
         )
 
     def with_has_reshared(self, user):
-        """
-        Annotates boolean value `has_reshared`, indicating if user has
+        """Annotates boolean value `has_reshared`, indicating if user has
         reshared this activity. If user is anonymous this value will
         always be False.
-        """
+
+        Args:
+            user (User): the current user
+
+        Returns:
+            QuerySet
+         """
         if user.is_anonymous:
             return self.annotate(
                 has_reshared=models.Value(False, output_field=models.BooleanField())
@@ -107,8 +124,10 @@ class ActivityQuerySet(
         )
 
     def with_object_type(self):
-        """
-        Adds object_type based on model. Useful for generic activity queries.
+        """Adds object_type based on model. Useful for generic activity queries.
+
+        Returns:
+            QuerySet
         """
         return self.annotate(
             object_type=models.Value(
@@ -117,25 +136,59 @@ class ActivityQuerySet(
         )
 
     def published(self):
+        """Filter activities that have been published i.e. published is NOT NULL.
+
+        Returns:
+            QuerySet
+        """
         return self.filter(published__isnull=False, deleted__isnull=True)
 
     def deleted(self):
+        """Returns activities deleted by moderator vs. "hard-deleted" i.e.
+        deleted is NOT NULL.
+
+        Returns:
+            QuerySet
+        """
         return self.filter(deleted__isnull=False)
 
     def published_or_owner(self, user):
+        """Returns activities either made public (published NOT NULL) or where
+        user is the owner.
+
+        Args:
+            user (User): current user. If anonymous just returns public activities.
+
+        Returns:
+            QuerySet
+        """
         qs = self.published()
         if user.is_anonymous:
             return qs
         return qs | self.filter(owner=user)
 
     def drafts(self, user):
+        """Returns activities not yet made public (published NULL) belonging to this
+        user.
+
+        Args:
+            user (User): current user. If anonymous just returns empty QuerySet.
+
+        Returns:
+            QuerySet
+        """
         if user.is_anonymous:
             return self.none()
         return self.filter(published__isnull=True, deleted__isnull=True, owner=user)
 
     def for_community(self, community):
-        """
-        Must match community, and owner must also be member.
+        """Must match community, and owners must also be active members.
+
+        Args:
+            community (Community)
+
+        Returns:
+            QuerySet
         """
         return self.filter(
             community=community,
@@ -145,21 +198,30 @@ class ActivityQuerySet(
         )
 
     def following_users(self, user):
-        """
-        Returns instances where the owner of each activity is either followed
+        """Returns instances where the owner of each activity is either followed
         by the user, or is the user themselves. If user is anonymous, then
         passes an unfiltered queryset.
-        """
 
+        Args:
+            user (User)
+
+        Returns:
+            QuerySet
+        """
         if user.is_anonymous:
             return self
         return self.filter(owner=user) | self.filter(owner__in=user.following.all())
 
     def following_tags(self, user):
-        """
-        Returns instances where each activity either contains tags followed
+        """Returns instances where each activity either contains tags followed
         by the user, or is owned by user themselves. If user is anonymous, then
         passes an unfiltered queryset.
+
+        Args:
+            user (User)
+
+        Returns:
+            QuerySet
         """
 
         if user.is_anonymous:
@@ -168,7 +230,14 @@ class ActivityQuerySet(
 
     def with_activity_stream_filters(self, user):
         """
-        Wraps the methods `following_users` and `following tags`.
+        Wraps the methods `following_users` and `following tags`. Used in common
+        activity stream views.
+
+        Args:
+            user (User)
+
+        Returns:
+            QuerySet
         """
 
         if user.is_anonymous or not user.activity_stream_filters:
@@ -185,19 +254,28 @@ class ActivityQuerySet(
         return qs
 
     def exclude_blocked_users(self, user):
-        """
-        Excludes any activities of users blocked by this user. If user
+        """Excludes any activities of users blocked by this user. If user
         is anonymous then passes unfiltered queryset.
-        """
 
+        Args:
+            user (User)
+
+        Returns:
+            QuerySet
+        """
         if user.is_anonymous:
             return self
         return self.exclude(owner__in=user.blocked.all())
 
     def exclude_blocked_tags(self, user):
-        """
-        Excludes any activities of tags blocked by this user. If user
+        """Excludes any activities of tags blocked by this user. If user
         is anonymous then passes unfiltered queryset.
+
+        Args:
+            user (User)
+
+        Returns:
+            QuerySet
         """
 
         if user.is_anonymous:
@@ -207,16 +285,27 @@ class ActivityQuerySet(
         )
 
     def exclude_blocked(self, user):
-        """
-        Wraps methods `blocked_users` and `blocked_tags`.
+        """Wraps methods `blocked_users` and `blocked_tags`.
+
+        Args:
+            user (User)
+
+        Returns:
+            QuerySet
         """
         if user.is_anonymous:
             return self
         return self.exclude_blocked_users(user).exclude_blocked_tags(user)
 
     def for_activity_stream(self, user, community):
-        """
-        Common operations when querying in stream
+        """Common operations when querying in stream
+
+        Args:
+            user (User)
+            community (Community)
+
+        Returns:
+            QuerySet
         """
         return self.with_common_annotations(user, community).select_related(
             "owner", "community", "parent", "parent__owner"
@@ -340,8 +429,10 @@ class Activity(TimeStampedModel):
         return get_generic_related_queryset(self, Notification)
 
     def get_content_warning_tags(self):
-        """
-        Checks if any tags matching in title/description
+        """Checks if any tags matching in title/description
+
+        Returns:
+            set: tag strings
         """
         return self.extract_tags() & self.community.get_content_warning_tags()
 
@@ -407,14 +498,16 @@ class Activity(TimeStampedModel):
 
     @dispatch
     def notify_on_create(self):
-        """
-        Generates Notification instances for users:
+        """Generates Notification instances for users:
         - @mentioned users
         - users following any tags
         - users following the owner or owner of reshared activity
         - moderators
 
         Users blocking the owner will not receive notifications.
+
+        Returns:
+            list: Notification instances
         """
         notifications = []
         recipients = self.get_notification_recipients()
@@ -432,7 +525,11 @@ class Activity(TimeStampedModel):
 
     @dispatch
     def notify_on_update(self):
+        """Notifies mentioned users and tag followers if content changed.
 
+        Returns:
+            list: Notification instances
+        """
         notifications = []
         recipients = self.get_notification_recipients()
 
@@ -444,6 +541,14 @@ class Activity(TimeStampedModel):
 
     @dispatch
     def notify_on_delete(self, moderator):
+        """Notifies owner if object has been deleted by moderator.
+
+        Args:
+            moderator (User): moderator who has "soft deleted" the object
+
+        Returns:
+            Notification
+        """
         return self.make_notification(self.owner, "delete", actor=moderator)
 
     def reshare(self, owner, commit=True, **kwargs):
@@ -459,6 +564,7 @@ class Activity(TimeStampedModel):
         Args:
             owner (User): owner creating the reshare
             commit (bool, optional): commit new reshare to database (default: True)
+            **kwargs: keyword args passed to save() method of reshared instance.
 
         Returns:
             reshared copy of the Activity subclass instance
@@ -479,15 +585,13 @@ class Activity(TimeStampedModel):
         return reshared
 
     def update_reshares(self):
-        """
-        Sync latest updates with all reshares.
+        """Sync latest updates with all reshares.
         """
         self.reshares.update(**self.get_resharable_data())
 
     @transaction.atomic
     def soft_delete(self):
-        """
-        Moderators "soft delete" an activity rather than delete it completely.
+        """Moderators "soft delete" an activity rather than delete it completely.
         The published field is also set to NULL.
 
         Comments and reshares are not deleted.
@@ -533,8 +637,7 @@ class Activity(TimeStampedModel):
 
     @transaction.atomic
     def delete(self, *args, **kwargs):
-        """
-        Comment relations should be set to NULL. Django GenericRelation
+        """Comment relations should be set to NULL. Django GenericRelation
         for whatever weird and wonderful reason does not support this.
         """
         self.get_comments().remove_content_objects()
@@ -544,7 +647,7 @@ class Activity(TimeStampedModel):
 def get_activity_models():
     """
     Returns:
-        List -- all Activity subclasses
+        list: all Activity subclasses
     """
     return Activity.__subclasses__()
 
@@ -579,8 +682,7 @@ def unionize_querysets(querysets, all=False):
 
 
 def load_objects(items, querysets):
-    """
-    Loads objects from get_activity_querysets() into list of dict:
+    """Loads objects from get_activity_querysets() into list of dict:
 
     union_qs, querysets = get_activity_querysets()
     load_objects(union_qs, querysets)
@@ -594,6 +696,14 @@ def load_objects(items, querysets):
         }
     ...
     ]
+
+    Args:
+        items (iterable): individual dicts
+        querysets (iterable): QuerySets for each Model class
+
+    Returns:
+        iterable: the original items along with key "object" containing
+            the Model instance.
     """
 
     bulk_load = collections.defaultdict(set)
