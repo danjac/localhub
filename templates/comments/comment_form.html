@@ -17,17 +17,17 @@
   {% if parent %}
   <li class="breadcrumb-item"><a href="{% url 'comments:list' %}">{% trans "Comments" %}</a></li>
   <li class="breadcrumb-item"><a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a></li>
-  <li class="breadcrumb-item">{% trans "Reply" %}</li>
+  <li class="breadcrumb-item"><a href="#">{% trans "Reply" %}</a></li>
   {% elif object %}
   <li class="breadcrumb-item"><a href="{% url 'comments:list' %}">{% trans "Comments" %}</a></li>
   <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{% trans "Edit" %}</a></li>
-  <li class="breadcrumb-item">{% trans "Edit" %}</li>
+  <li class="breadcrumb-item"><a href="#">{% trans "Edit" %}</a></li>
   {% elif activity and activity_model %}
   <li class="breadcrumb-item">
     <a href="{% resolve_model_url activity_model "list" %}">{% verbose_name_plural activity_model %}</a>
   </li>
   <li class="breadcrumb-item"><a href="{{ activity.get_absolute_url }}">{{ activity|truncatechars:60 }}</a></li>
-  <li class="breadcrumb-item">{% trans "Submit" %}</li>
+  <li class="breadcrumb-item"><a href="#">{% trans "Submit" %}</a></li>
   {% endif %}
 </ul>
 

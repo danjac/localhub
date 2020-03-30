@@ -17,7 +17,7 @@
   {% else %}
   <li class="breadcrumb-item"><a href="{% url 'activities:drafts' %}">{% trans "Drafts" %}</a></li>
   {% endif %}
-  <li class="breadcrumb-item">{{ object.title|truncatechars:60 }}</li>
+  <li class="breadcrumb-item"><a href="#">{{ object.title|truncatechars:60 }}</a></li>
 </ul>
 
 {% if object.deleted %}

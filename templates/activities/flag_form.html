@@ -12,7 +12,7 @@
     <a href="{% resolve_model_url activity_model "list" %}">{% verbose_name_plural activity_model %}</a>
   </li>
   <li class="breadcrumb-item"><a href="{{ activity.get_absolute_url }}">{{ activity|truncatechars:60 }}</a></li>
-  <li class="breadcrumb-item">{% trans "Flag" %}</li>
+  <li class="breadcrumb-item"><a href="#">{% trans "Flag" %}</a></li>
 </ul>
 
 {{ block.super }}

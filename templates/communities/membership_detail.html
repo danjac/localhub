@@ -13,7 +13,7 @@
 
 <ul class="breadcrumb">
   <li class="breadcrumb-item"><a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a></li>
-  <li class="breadcrumb-item">{{ display_name }}</li>
+  <li class="breadcrumb-item"><a href="#">{{ display_name }}</a></li>
 </ul>
 
 {% user_display member as display_name %}

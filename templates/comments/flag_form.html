@@ -7,7 +7,7 @@
 {% block content %}
 <ul class="breadcrumb">
   <li class="breadcrumb-item"><a href="{{ comment.get_absolute_url }}">{% trans "Comment" %}</a></li>
-  <li class="breadcrumb-item">{% trans "Flag" %}</li>
+  <li class="breadcrumb-item"><a href="#">{% trans "Flag" %}</a></li>
 </ul>
 
 {{ block.super }}

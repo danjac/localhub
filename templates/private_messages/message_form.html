@@ -14,11 +14,13 @@
   {% if parent %}
   <li class="breadcrumb-item"><a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a></li>
   <li class="breadcrumb-item">
-    {% if parent.sender == user %}{% trans "Follow-Up" %}{% else %}{% trans "Reply" %}{% endif %}
+    <a href="#">
+      {% if parent.sender == user %}{% trans "Follow-Up" %}{% else %}{% trans "Reply" %}{% endif %}
+    </a>
   </li>
   {% else %}
   <li class="breadcrumb-item"><a href="{{ recipient.get_absolute_url }}">{% user_display recipient %}</a></li>
-  <li class="breadcrumb-item">{% trans "Send Message" %}</li>
+  <li class="breadcrumb-item"><a href="#">{% trans "Send Message" %}</a></li>
   {% endif %}
 </ul>
 
