@@ -9,3 +9,10 @@ data-controller="form"
 data-form-unload="{% trans 'Are you sure you want to leave this page? All your changes will be lost.' %}"
 data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload"
 {% endblock form_extra_attrs %}
+
+{% block form_fields %}
+<progress class="progress d-hide"
+          data-target="form.progress"
+          max="100"></progress>
+{{ block.super }}
+{% endblock %}

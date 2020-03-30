@@ -8,7 +8,7 @@ import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
 export default class extends Controller {
-  static targets = ['errorMessage', 'errorDetail'];
+  static targets = ['errorMessage', 'errorDetail', 'progress'];
 
   connect() {
     this.formElements.forEach(element =>
@@ -119,11 +119,17 @@ export default class extends Controller {
   }
 
   disableFormElements() {
+    this.toggleProgressBar();
     this.formElements.forEach(el => el.setAttribute('disabled', true));
   }
 
   enableFormElements() {
+    this.toggleProgressBar();
     this.formElements.forEach(el => el.removeAttribute('disabled'));
+  }
+
+  toggleProgressBar() {
+    this.progressTarget.classList.toggle('d-hide');
   }
 
   serialize(event, multipart) {
