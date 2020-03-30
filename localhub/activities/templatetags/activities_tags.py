@@ -12,11 +12,7 @@ from django.utils.translation import gettext as _
 from localhub.users.utils import linkify_mentions
 from localhub.utils.http import is_https
 
-from ..models import (
-    get_activity_queryset_count,
-    get_activity_querysets,
-    load_objects,
-)
+from ..models import get_activity_queryset_count, get_activity_querysets, load_objects
 from ..oembed import bootstrap_oembed
 from ..utils import linkify_hashtags
 
