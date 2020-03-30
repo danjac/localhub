@@ -1,8 +1,6 @@
 # Copyright (c) 2019 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from urllib.parse import urlparse
-
 import requests
 from bs4 import BeautifulSoup
 
@@ -34,20 +32,6 @@ class HTMLScraper:
         self.soup = None
 
     @classmethod
-    def get_response(cls, url):
-        url = resolve_url(url)
-        response = requests.get(url, headers=cls.get_headers(url))
-        return url, response
-
-    @classmethod
-    def get_headers(cls, url):
-        netloc = urlparse(url).netloc
-        for domain in cls.IGNORE_FAKE_BROWSER_HEADERS:
-            if netloc.endswith(domain):
-                return {}
-        return {"User-Agent": cls.FAKE_BROWSER_USER_AGENT}
-
-    @classmethod
     def from_url(cls, url):
         """Grabs OpenGraph, Twitter and other HTML data from URL and parses
         the HTML content.
@@ -65,7 +49,10 @@ class HTMLScraper:
             HTMLScraper.Invalid: if unreachable URL or data returned not HTML
         """
         try:
-            url, response = cls.get_response(url)
+            url = resolve_url(url)
+            response = requests.get(
+                url, headers={"User-Agent": cls.FAKE_BROWSER_USER_AGENT}
+            )
         except requests.RequestException as e:
             raise cls.Invalid(e)
 

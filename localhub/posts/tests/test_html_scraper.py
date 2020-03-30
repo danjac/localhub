@@ -25,8 +25,12 @@ class TestHTMLScraperFromUrl:
 </html>"""
 
         mocker.patch(
-            "localhub.posts.html_scraper.HTMLScraper.get_response",
-            return_value=("https://google.com", MockResponse),
+            "localhub.posts.html_scraper.resolve_url",
+            return_value="https://google.com",
+        )
+
+        mocker.patch(
+            "requests.get", return_value=MockResponse,
         )
 
         scraper = HTMLScraper.from_url("http://google.com")
@@ -42,8 +46,12 @@ class TestHTMLScraperFromUrl:
             headers = {"Content-Type": "application/json"}
 
         mocker.patch(
-            "localhub.posts.html_scraper.HTMLScraper.get_response",
-            return_value=("https://google.com", MockResponse),
+            "localhub.posts.html_scraper.resolve_url",
+            return_value="https://google.com",
+        )
+
+        mocker.patch(
+            "requests.get", return_value=MockResponse,
         )
 
         with pytest.raises(HTMLScraper.Invalid):
@@ -58,8 +66,12 @@ class TestHTMLScraperFromUrl:
             ok = False
 
         mocker.patch(
-            "localhub.posts.html_scraper.HTMLScraper.get_response",
-            return_value=("https://google.com", MockResponse),
+            "localhub.posts.html_scraper.resolve_url",
+            return_value="https://google.com",
+        )
+
+        mocker.patch(
+            "requests.get", return_value=MockResponse,
         )
 
         with pytest.raises(HTMLScraper.Invalid):
@@ -71,8 +83,12 @@ class TestHTMLScraperFromUrl:
 
     def test_if_error(self, mocker):
         mocker.patch(
-            "localhub.posts.html_scraper.HTMLScraper.get_response",
-            side_effect=requests.RequestException,
+            "localhub.posts.html_scraper.resolve_url",
+            return_value="https://google.com",
+        )
+
+        mocker.patch(
+            "requests.get", side_effect=requests.RequestException,
         )
 
         with pytest.raises(HTMLScraper.Invalid):
