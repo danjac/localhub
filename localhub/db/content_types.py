@@ -39,13 +39,23 @@ def get_generic_related_exists(
     related_object_id_field="object_id",
     related_content_type_field="content_type",
 ):
-    """
-    Used with QuerySet.annotate() to add an EXISTS clause
+    """Used with QuerySet.annotate() to add an EXISTS clause
     to a QuerySet where you want to select based on a ContentType
     relation.
 
     For an example see LikesAnnotationQuerySetMixin in
     localhub/likes/models.py.
+
+    Args:
+        model (Model or Queryset): model class or QuerySet instance
+        related (Model): ContentType-related model
+        related_object_id_field (str, optional): field in content type model used as
+            foreign key (default: "object_id")
+        related_content_type_field (str, optional): field in content type model used
+            as FK to ContentType (default: "content_type")
+
+    Returns:
+        Exists
     """
     return models.Exists(
         _get_generic_related_by_id_and_content_type(
@@ -71,7 +81,18 @@ def get_generic_related_count_subquery(
 
     For an example see LikesAnnotationQuerySetMixin in
     localhub/likes/models.py.
-    """
+
+    Args:
+        model (Model or Queryset): model class or QuerySet instance
+        related (Model): ContentType-related model
+        related_object_id_field (str, optional): field in content type model used as
+            foreign key (default: "object_id")
+        related_content_type_field (str, optional): field in content type model used
+            as FK to ContentType (default: "content_type")
+
+    Returns:
+        Subquery
+     """
     return models.Subquery(
         _get_generic_related_by_id_and_content_type(
             models.OuterRef("pk"),
@@ -95,8 +116,23 @@ def get_generic_related_value_subquery(
     related_object_id_field="object_id",
     related_content_type_field="content_type",
 ):
-    # returns single value from subquery
-    # caution: might cause error with non-unique queries
+    """
+    Returns a selected field in Subquery. Use with caution with non-unique
+    rows!
+
+    Args:
+        model (Model or Queryset): model class or QuerySet instance
+        related (Model): ContentType-related model
+        field (str): field name to map
+        output_field (Field): output field e.g. models.CharField()
+        related_object_id_field (str, optional): field in content type model used as
+            foreign key (default: "object_id")
+        related_content_type_field (str, optional): field in content type model used
+            as FK to ContentType (default: "content_type")
+
+    Returns:
+        Subquery
+    """
     return models.Subquery(
         _get_generic_related_by_id_and_content_type(
             models.OuterRef("pk"),
@@ -118,6 +154,17 @@ def get_generic_related_queryset(
     """
     Used inside a model instance to provide all instances
     of a related content type matching the object's primary key.
+
+    Args:
+        model (Model or Queryset): model class or QuerySet instance
+        related (Model): ContentType-related model
+        related_object_id_field (str, optional): field in content type model used as
+            foreign key (default: "object_id")
+        related_content_type_field (str, optional): field in content type model used
+            as FK to ContentType (default: "content_type")
+
+    Returns:
+        QuerySet
     """
     return _get_generic_related_by_id_and_content_type(
         model.pk, model, related, related_object_id_field, related_content_type_field,
@@ -127,18 +174,30 @@ def get_generic_related_queryset(
 def get_multiple_generic_related_queryset(
     queryset,
     related,
-    related_object_id_field="object_id__in",
+    related_object_id_field="object_id",
     related_content_type_field="content_type",
 ):
     """
-    Works as get_generic_related_queryset, used with a QuerySet
-    or Manager to return all related objects matching pks of queryset.
-    """
+
+    Works as `get_generic_related_queryset` but used inside
+    a QuerySet rather than individual Model instance.
+
+    Args:
+        queryset (Queryset): QuerySet instance
+        related (Model): ContentType-related model
+        related_object_id_field (str, optional): field in content type model used as
+            foreign key (default: "object_id")
+        related_content_type_field (str, optional): field in content type model used
+            as FK to ContentType (default: "content_type")
+
+    Returns:
+        QuerySet
+     """
     return _get_generic_related_by_id_and_content_type(
         queryset.values("pk"),
         queryset,
         related,
-        related_object_id_field,
+        f"{related_object_id_field}__in",
         related_content_type_field,
     )
 
