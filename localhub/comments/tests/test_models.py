@@ -239,18 +239,22 @@ class TestCommentManager:
         assert comments.count() == 1
         assert comments.first().has_liked
 
-    def test_with_liked_if_user_has_liked(self, comment, user):
+    def test_with_liked_timestamp_if_user_has_liked(self, comment, user):
         LikeFactory(
             user=user,
             content_object=comment,
             community=comment.community,
             recipient=comment.owner,
         )
-        comments = Comment.objects.with_liked(user)
+        comments = Comment.objects.with_liked_timestamp(user)
         assert comments.count() == 1
         comment = comments.first()
         assert comment.has_liked
         assert comment.liked is not None
+
+    def test_with_liked_timestamp_if_user_has_not_liked(self, comment, user):
+        comments = Comment.objects.with_liked_timestamp(user)
+        assert comments.count() == 0
 
     def test_with_common_annotations_if_anonymous(self, comment):
         comment = Comment.objects.with_common_annotations(

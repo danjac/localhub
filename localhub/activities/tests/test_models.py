@@ -422,18 +422,22 @@ class TestActivityManager:
         assert posts.count() == 1
         assert posts.first().has_liked
 
-    def test_with_liked_if_user_has_liked(self, post, user):
+    def test_with_liked_timestamp_if_user_has_liked(self, post, user):
         LikeFactory(
             user=user,
             content_object=post,
             community=post.community,
             recipient=post.owner,
         )
-        posts = Post.objects.with_liked(user)
+        posts = Post.objects.with_liked_timestamp(user)
         assert posts.count() == 1
         post = posts.first()
         assert post.has_liked
         assert post.liked is not None
+
+    def test_with_liked_timestamp_if_user_has_not_liked(self, post, user):
+        posts = Post.objects.with_liked_timestamp(user)
+        assert posts.count() == 0
 
     def test_with_common_annotations_if_anonymous(self, post):
         activity = Post.objects.with_common_annotations(
