@@ -3,7 +3,7 @@
 
 from django.urls import path
 
-from . import generic
+from ..views import generic
 
 
 def create_activity_urls(

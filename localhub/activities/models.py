@@ -400,6 +400,23 @@ class Activity(TimeStampedModel):
         return slugify_unicode(self)
 
     def resolve_url(self, view_name, *args):
+        """Resolves URL for a specific action depending on the
+        type of Activity subclass. The PK is prepended in all cases.
+
+        Example:
+
+        post.resolve_url("delete") -> /posts/1234/~delete/
+
+        See localhub/activities/urls/generic.py for list of common
+        activity actions.
+
+        Args:
+            view_name (str): base view name e.g. "delete" or "like"
+            *args: additional arguments for the URL
+
+        Returns:
+            str: specific URL endpoint of action.
+        """
         return reverse(
             f"{self._meta.app_label}:{view_name}", args=[self.id] + list(args)
         )
@@ -411,25 +428,50 @@ class Activity(TimeStampedModel):
         return self.resolve_url("detail_no_slug")
 
     def get_permalink(self):
+        """
+        Returns:
+            str: absolute URL of object including full path of community.
+        """
         return self.community.resolve_url(self.get_absolute_url())
 
     def get_comments(self):
+        """
+        Returns:
+            QuerySet: Comments belonging to Activity instance.
+        """
         return get_generic_related_queryset(self, Comment)
 
     def get_flags(self):
+        """
+        Returns:
+            QuerySet: Flags belonging to Activity instance.
+        """
         return get_generic_related_queryset(self, Flag)
 
     def get_bookmarks(self):
+        """
+        Returns:
+            QuerySet: Bookmarks belonging to Activity instance.
+        """
         return get_generic_related_queryset(self, Bookmark)
 
     def get_likes(self):
+        """
+        Returns:
+            QuerySet: Likes belonging to Activity instance.
+        """
         return get_generic_related_queryset(self, Like)
 
     def get_notifications(self):
+        """
+        Returns:
+            QuerySet: Notifications belonging to Activity instance.
+        """
         return get_generic_related_queryset(self, Notification)
 
     def get_content_warning_tags(self):
-        """Checks if any tags matching in title/description
+        """Checks if any tags matching in title/description/additional
+        tags etc that match the warning tags for this community.
 
         Returns:
             set: tag strings

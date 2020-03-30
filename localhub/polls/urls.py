@@ -3,7 +3,7 @@
 
 from django.urls import path
 
-from localhub.activities.views import create_activity_urls
+from localhub.activities.urls.generic import create_activity_urls
 
 from .forms import PollForm
 from .models import Poll

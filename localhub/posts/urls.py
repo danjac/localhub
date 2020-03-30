@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from localhub.activities.views import create_activity_urls
+from localhub.activities.urls.generic import create_activity_urls
 
 from .forms import PostForm
 from .models import Post
