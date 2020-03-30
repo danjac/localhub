@@ -37,6 +37,3 @@ class MessageAdapter(DefaultAdapter):
 
     mailer_class = MessageMailer
     webpusher_class = MessageWebpusher
-
-    def get_object_url(self):
-        return self.object.resolve_url(self.object.recipient)

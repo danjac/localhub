@@ -12,17 +12,16 @@ class TestHTMLScraperFromUrl:
         class MockResponse:
             ok = True
             headers = {"Content-Type": "text/html; charset=utf-8"}
-            content = """
-<html>
-<head>
-<title>Hello</title>
-<meta property="og:title" content="a test site">
-<meta property="og:image" content="http://example.com/test.jpg">
-<meta property="og:description" content="test description">
-</head>
-<body>
-</body>
-</html>"""
+            content = """<html>
+            <head>
+            <title>Hello</title>
+            <meta property="og:title" content="a test site">
+            <meta property="og:image" content="http://example.com/test.jpg">
+            <meta property="og:description" content="test description">
+            </head>
+            <body>
+            </body>
+            </html>"""
 
         mocker.patch(
             "localhub.posts.html_scraper.resolve_url",
@@ -99,8 +98,7 @@ class TestHTMLScraperFromUrl:
             assert scraper.description is None
 
     def test_title_from_og(self):
-        html = """
-        <html>
+        html = """<html>
         <head>
             <title>page title</title>
             <meta property="og:title" content="meta title">
@@ -113,8 +111,7 @@ class TestHTMLScraperFromUrl:
         assert scraper.title == "meta title"
 
     def test_title_from_twitter(self):
-        html = """
-        <html>
+        html = """<html>
         <head>
             <title>page title</title>
             <meta name="twitter:title" content="meta title">
@@ -127,8 +124,7 @@ class TestHTMLScraperFromUrl:
         assert scraper.title == "meta title"
 
     def test_title_from_h1(self):
-        html = """
-        <html>
+        html = """<html>
         <head>
             <title>page title</title>
         </head>
@@ -141,8 +137,7 @@ class TestHTMLScraperFromUrl:
         assert scraper.title == "PAGE HEADER"
 
     def test_title_from_title_tag(self):
-        html = """
-        <html>
+        html = """<html>
         <head>
             <title>page title</title>
         </head>
@@ -154,8 +149,7 @@ class TestHTMLScraperFromUrl:
         assert scraper.title == "page title"
 
     def test_title_from_domain(self):
-        html = """
-        <html>
+        html = """<html>
         <head>
         </head>
         </body>
@@ -166,8 +160,7 @@ class TestHTMLScraperFromUrl:
         assert scraper.title == "google.com"
 
     def test_image_in_meta_property(self):
-        html = """
-        <html>
+        html = """<html>
         <head>
             <title>page title</title>
             <meta property="og:image" content="http://imgur.com/test.jpg">
@@ -180,8 +173,7 @@ class TestHTMLScraperFromUrl:
         assert scraper.image == "http://imgur.com/test.jpg"
 
     def test_image_in_meta_name(self):
-        html = """
-        <html>
+        html = """<html>
         <head>
             <title>page title</title>
             <meta name="og:image" content="http://imgur.com/test.jpg">
@@ -194,8 +186,7 @@ class TestHTMLScraperFromUrl:
         assert scraper.image == "http://imgur.com/test.jpg"
 
     def test_image_not_in_meta(self):
-        html = """
-        <html>
+        html = """<html>
         <head>
         </head>
         <body>
@@ -206,8 +197,7 @@ class TestHTMLScraperFromUrl:
         assert scraper.image is None
 
     def test_first_image(self):
-        html = """
-        <html>
+        html = """<html>
         <head>
         </head>
         <body>
@@ -219,8 +209,7 @@ class TestHTMLScraperFromUrl:
         assert scraper.image == "https://imgur.com/test.jpg"
 
     def test_description_in_meta_property(self):
-        html = """
-        <html>
+        html = """<html>
         <head>
             <title>page title</title>
             <meta property="og:description" content="test">
@@ -233,8 +222,7 @@ class TestHTMLScraperFromUrl:
         assert scraper.description == "test"
 
     def test_description_in_meta_name(self):
-        html = """
-        <html>
+        html = """<html>
         <head>
             <title>page title</title>
             <meta name="og:description" content="test">
@@ -247,8 +235,7 @@ class TestHTMLScraperFromUrl:
         assert scraper.description == "test"
 
     def test_description_in_first_para(self):
-        html = """
-        <html>
+        html = """<html>
         <head>
             <title>page title</title>
         </head>
@@ -261,8 +248,7 @@ class TestHTMLScraperFromUrl:
         assert scraper.description == "this is content"
 
     def test_description_not_in_meta(self):
-        html = """
-        <html>
+        html = """<html>
         <head>
             <title>page title</title>
         </head>

@@ -28,12 +28,15 @@ def show_message(
     can_reply = can_send_message and is_recipient
     can_follow_up = can_send_message and is_sender
 
-    message_url = message.resolve_url(user, is_thread)
+    message_url = message.get_absolute_url()
 
     parent = message.get_parent(user)
-    parent_url = parent.resolve_url(user, is_thread) if parent else None
-    is_follow_up = parent and parent.sender == message.sender
+    parent_url = parent.get_absolute_url() if parent else None
 
+    thread = message.get_thread(user)
+    thread_url = thread.get_absolute_url() if thread else None
+
+    is_follow_up = parent and parent.sender == message.sender
     is_unread = is_recipient and not message.read
 
     return {
@@ -50,6 +53,8 @@ def show_message(
         "message_url": message_url,
         "parent": parent,
         "parent_url": parent_url,
+        "thread": thread,
+        "thread_url": thread_url,
         "is_follow_up": is_follow_up,
         "recipient_url": recipient_url,
         "sender_url": sender_url,

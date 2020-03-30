@@ -26,6 +26,15 @@ class MessageQuerySet(
     SearchQuerySetMixin, BookmarkAnnotationsQuerySetMixin, models.QuerySet
 ):
     def for_community(self, community):
+        """Returns messages available to this community, where both
+        sender and recipient are active members.
+
+        Args:
+            community (Community)
+
+        Returns:
+            QuerySet
+        """
         return self.filter(
             community=community,
             sender__membership__community=community,
@@ -36,21 +45,63 @@ class MessageQuerySet(
             recipient__is_active=True,
         )
 
-    def for_sender(self, user):
-        return self.filter(sender=user, sender_deleted__isnull=True)
+    def for_sender(self, sender):
+        """Returns messages sent by this user. Does not
+        include any deleted by this user.
 
-    def for_recipient(self, user):
-        return self.filter(recipient=user, recipient_deleted__isnull=True)
+        Args:
+            sender (User)
+
+        Returns:
+            QuerySet
+        """
+        return self.filter(sender=sender, sender_deleted__isnull=True)
+
+    def for_recipient(self, recipient):
+        """Returns messages received by this user. Does not
+        include any deleted by this user.
+
+        Args:
+            recipient (User)
+
+        Returns:
+            QuerySet
+        """
+        return self.filter(recipient=recipient, recipient_deleted__isnull=True)
 
     def for_sender_or_recipient(self, user):
+        """Returns messages either sent or received by this user.
+
+        Args:
+            user (User)
+
+        Returns:
+            QuerySet
+        """
         return self.for_sender(user) | self.for_recipient(user)
 
     def from_sender_to_recipient(self, sender, recipient):
+        """Returns messages from specific sender and recipient
+
+        Args:
+            sender (User)
+            recipient (User)
+
+        Returns:
+            QuerySet
+        """
+
         return self.for_sender(sender).for_recipient(recipient)
 
     def between(self, current_user, other_user):
-        """
-        Return all messages exchanged between two users.
+        """Return all messages exchanged between two users.
+
+        Args:
+            current_user (User)
+            other_user (User)
+
+        Returns:
+            QuerySet
         """
         return self.filter(
             models.Q(
@@ -68,32 +119,47 @@ class MessageQuerySet(
         ).distinct()
 
     def exclude_sender_blocked(self, user):
-        """
-        Exclude:
+        """Exclude:
         1) user is blocked by sender
         2) user is blocking sender
-        """
+
+        Args:
+            user (User): recipient
+
+        Returns:
+            QuerySet
+         """
         return self.exclude(
             models.Q(sender__blockers=user) | models.Q(sender__blocked=user)
         )
 
     def exclude_recipient_blocked(self, user):
-        """
-        Exclude:
+        """Exclude:
         1) user is blocked by recipient
         2) user is blocking recipient
-        """
+
+        Args:
+            user (User): recipient
+
+        Returns:
+            QuerySet
+         """
         return self.exclude(
             models.Q(recipient__blockers=user) | models.Q(recipient__blocked=user)
         )
 
     def exclude_blocked(self, user):
-        """
-        Exclude:
+        """Exclude if:
         1) user is blocked by recipient
         2) user is blocking recipient
         3) user is blocked by sender
         4) user is blocking sender
+
+        Args:
+            user (User): sender or recipient
+
+        Returns:
+            QuerySet
         """
         return self.exclude_sender_blocked(user).exclude_recipient_blocked(user)
 
@@ -107,6 +173,15 @@ class MessageQuerySet(
         )
 
     def with_num_replies(self, user):
+        """
+        Annotated queryset with num_replies (replies to own messages).
+
+        Args:
+            user (User): recipient/sender
+
+        Returns:
+            QuerySet
+        """
         return self.annotate(
             num_replies=self.reply_count_subquery(
                 self.model._default_manager.for_sender_or_recipient(user)
@@ -116,6 +191,15 @@ class MessageQuerySet(
         )
 
     def with_num_follow_ups(self, user):
+        """
+        Annotated queryset with num_follow_ups (replies to own messages).
+
+        Args:
+            user (User): recipient/sender
+
+        Returns:
+            QuerySet
+        """
         return self.annotate(
             num_follow_ups=self.reply_count_subquery(
                 self.model._default_manager.for_sender_or_recipient(user).filter(
@@ -125,16 +209,30 @@ class MessageQuerySet(
         )
 
     def with_common_annotations(self, user):
+        """Wraps  `with_num_follow_ups` and `with_num_replies`.
+
+        Args:
+            user (User): recipient/sender
+
+        Returns:
+            QuerySet
+        """
         return self.with_num_follow_ups(user).with_num_replies(user)
 
     def mark_read(self):
-        """
-        Mark read any un-read items
+        """Mark read any un-read items
+
+        Returns:
+            int: number of messages updated
         """
         self.notifications().unread().mark_read()
         return self.unread().update(read=timezone.now())
 
     def notifications(self):
+        """
+        Returns:
+            QuerySet: Notifications associated with objects in this QuerySet
+        """
         return get_multiple_generic_related_queryset(self, Notification)
 
 
@@ -194,32 +292,25 @@ class Message(TimeStampedModel):
     def get_absolute_url(self):
         return reverse("private_messages:message_detail", args=[self.id])
 
-    def resolve_url(self, user=None, is_thread=False):
-        """
-        Resolves the correct URL for this message:
+    def get_permalink(self):
+        """Returns absolute URL including complete community URL.
 
-        1) if is_thread then just returns the hash.
-        2) if has a *visible* thread returns the thread absolute URL + hash.
-        3) if no thread then returns the absolute URL of this message.
+        Returns:
+            str
         """
-        hash = f"#message-{self.id}"
-        if is_thread:
-            return hash
-        if user:
-            thread = self.get_thread(user)
-            if thread:
-                return f"{thread.get_absolute_url()}{hash}"
-        return self.get_absolute_url()
-
-    def get_permalink(self, user=None):
-        return self.community.resolve_url(self.resolve_url(user))
+        return self.community.resolve_url(self.get_absolute_url())
 
     def get_notifications(self):
         return get_generic_related_queryset(self, Notification)
 
     def abbreviate(self, length=30):
-        """
-        Returns *final* non-HTML/markdown abbreviated version of message.
+        """Returns *final* non-HTML/markdown abbreviated version of message.
+
+        Args:
+            length (int, optional): abbreviated max length (default: 30)
+
+        Returns:
+            str
         """
         text = " ".join(self.message.plaintext().splitlines())
         total_length = len(text)
@@ -231,16 +322,26 @@ class Message(TimeStampedModel):
         """
         Checks if user is a) sender or recipient and b) has not deleted
         the message.
+
+        Args:
+            user (User): sender or recipient
+
+        Returns:
+            bool
         """
         return (self.sender == user and self.sender_deleted is None) or (
             self.recipient == user and self.recipient_deleted is None
         )
 
     def soft_delete(self, user):
-        """
+        """Does a "soft delete":
+
         If user is recipient, sets recipient_deleted to current time.
         If user is sender, sets sender_deleted to current time.
         If both are set then the message itself is permanently deleted.
+
+        Args:
+            user (User): sender or recipient
         """
         field = "recipient_deleted" if user == self.recipient else "sender_deleted"
         setattr(self, field, timezone.now())
@@ -250,28 +351,49 @@ class Message(TimeStampedModel):
             self.save(update_fields=[field])
 
     def get_thread(self, user):
+        """Returns thread (grandfather message)
+        if exists and is visible to user.
+
+        Args:
+            user (User): sender or recipient
+        Returns:
+            Message or None
         """
-        Returns thread if exists and is visible to user, otherwise returns None.
-        """
+
         if self.thread and self.thread.is_visible(user):
             return self.thread
         return None
 
     def get_parent(self, user):
+        """Returns parent if exists and is visible to user.
+
+        Args:
+            user (User): sender or recipient
+        Returns:
+            Message or None
         """
-        Returns parent if exists and is visible to user, otherwise returns None.
-        """
+
         if self.parent and self.parent.is_visible(user):
             return self.parent
         return None
 
     def get_other_user(self, user):
-        """
-        Return either recipient or sender, depending on user match
+        """Return either recipient or sender, depending on user match,
+        i.e. if user is the sender, returns the recipient, and vice
+        versa.
+
+        Args:
+            user (User): sender or recipient
+
+        Returns:
+            User: recipient or sender
         """
         return self.recipient if user == self.sender else self.sender
 
     def mark_read(self):
+        """Marks message read. Any associated Notification instances
+        are marked read.
+        """
         if not self.read:
             self.read = timezone.now()
             self.save(update_fields=["read"])
@@ -279,12 +401,15 @@ class Message(TimeStampedModel):
 
     @dispatch
     def notify(self):
-        return [
-            Notification(
-                content_object=self,
-                actor=self.sender,
-                recipient=self.recipient,
-                community=self.community,
-                verb="message",
-            )
-        ]
+        """Send notification to recipient.
+
+        Returns:
+            Notification
+        """
+        return Notification(
+            content_object=self,
+            actor=self.sender,
+            recipient=self.recipient,
+            community=self.community,
+            verb="message",
+        )

@@ -150,7 +150,7 @@ class BaseReplyFormView(BaseMessageFormView):
             % {"recipient": user_display(message.recipient)},
         )
         message.notify()
-        return redirect(message.resolve_url(self.request.user))
+        return redirect(message)
 
 
 class MessageReplyView(RecipientQuerySetMixin, BaseReplyFormView):
@@ -236,6 +236,8 @@ class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
         data.update(
             {
                 "children": self.get_children(),
+                "parent": self.object.get_parent(self.request.user),
+                "thread": self.object.get_thread(self.request.user),
                 "other_user": self.object.get_other_user(self.request.user),
             }
         )

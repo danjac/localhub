@@ -98,16 +98,14 @@
           <a href="{{ message_url }}">{% trans "Link" %}</a>
         </li>
         {% if parent %}
-        {% if is_thread %}
-        <li class="menu-item">
-          <a data-turbolinks="false"
-             href="{{ parent_url }}">{% trans "Parent" %}</a>
-        </li>
-        {% else %}
         <li class="menu-item">
           <a href="{{ parent_url }}">{% trans "Parent" %}</a>
         </li>
         {% endif %}
+        {% if thread and parent != thread %}
+        <li class="menu-item">
+          <a href="{{ thread_url }}">{% trans "Thread" %}</a>
+        </li>
         {% endif %}
       </ul>
     </div>

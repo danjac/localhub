@@ -53,8 +53,11 @@ export default class extends Controller {
       return;
     }
 
+    window.scrollTo(0, 0);
+
     this.disableFormElements();
     this.clearErrorMessage();
+
     const referrer = location.href;
 
     axios({

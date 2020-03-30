@@ -7,21 +7,35 @@
 
 {% block content %}
 
+{% if parent %}
+<ul class="breadcrumb">
+  {% if thread and parent != thread %}
+  <li class="breadcrumb-item">
+    <a href="{{ thread.get_absolute_url }}">{% trans "Thread" %}</a>
+  </li>
+  {% endif %}
+  <li class="breadcrumb-item">
+    <a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a>
+  </li>
+  <li class="breadcrumb-item"><a href="#">{% trans "Message" %}</a></li>
+</ul>
+{% endif %}
+
 {% has_perm "private_messages.create_message" user community as can_create_message %}
 
 <h5>{% trans "Messages" %}</h5>
 
 <div class="actions mb-1">
-    <a href="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</a>
-    <a href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
-    {% if can_create_message %}
-    <a href="{% url 'private_messages:message_create' other_user.username %}">
-        {% user_display other_user as other_user_name %}
-        {% blocktrans %}
-        Send Message to {{ other_user_name }}
-        {% endblocktrans %}
-    </a>
-    {% endif %}
+  <a href="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</a>
+  <a href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
+  {% if can_create_message %}
+  <a href="{% url 'private_messages:message_create' other_user.username %}">
+    {% user_display other_user as other_user_name %}
+    {% blocktrans %}
+    Send Message to {{ other_user_name }}
+    {% endblocktrans %}
+  </a>
+  {% endif %}
 
 </div>
 

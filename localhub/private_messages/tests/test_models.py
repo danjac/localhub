@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
+from django.urls import reverse
 from django.utils import timezone
 
 from localhub.bookmarks.factories import BookmarkFactory
@@ -331,20 +332,9 @@ class TestMessageManager:
 
 
 class TestMessageModel:
-    def test_resolve_url_if_no_thread(self, user):
-        message = MessageFactory(sender=user)
-        assert message.resolve_url(user) == message.get_absolute_url()
-
-    def test_resolve_url_if_is_thread(self, user):
-        message = MessageFactory(sender=user)
-        assert message.resolve_url(user, is_thread=True) == f"#message-{message.id}"
-
-    def test_resolve_url_if_has_thread(self, user):
-        thread = MessageFactory(recipient=user)
-        message = MessageFactory(sender=user, thread=thread)
-        assert (
-            message.resolve_url(user)
-            == f"{thread.get_absolute_url()}#message-{message.id}"
+    def test_get_absolute_url(self, message):
+        assert message.get_absolute_url() == reverse(
+            "private_messages:message_detail", args=[message.id]
         )
 
     def test_get_parent_if_none(self, user):
