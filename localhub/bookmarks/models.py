@@ -20,9 +20,17 @@ class BookmarkAnnotationsQuerySetMixin:
     """
 
     def with_has_bookmarked(self, user, annotated_name="has_bookmarked"):
-        """
-        Checks if user has liked the object, adding `has_liked`
+        """Checks if user has liked the objects, adding `has_liked`
         annotation.
+
+        Args:
+
+            user (User): user who has bookmarked the items
+            annotated_name (str, optional): annotation name (default: "has_bookmarked")
+
+        Returns:
+
+            QuerySet
         """
         return self.annotate(
             **{
@@ -33,25 +41,43 @@ class BookmarkAnnotationsQuerySetMixin:
         )
 
     def bookmarked(self, user, annotated_name="has_bookmarked"):
+        """Filters queryset and returns only those which have been bookmarked.
+
+        Args:
+
+            user (User): user who has bookmarked the items
+            annotated_name (str, optional): annotation name (default: "has_bookmarked")
+
+        Returns:
+
+            QuerySet
+        """
         return self.with_has_bookmarked(user).filter(**{annotated_name: True})
 
-    def with_bookmarked(self, user):
+    def with_bookmarked_timestamp(
+        self, user, annotated_name="bookmarked", annotated_filter_name="has_bookmarked"
+    ):
         """Filters all items bookmarked with this user and includes annotated
         "bookmarked" timestamp.
 
         Args:
-            user (User)
+            user (User): user who has bookmarked the items
+            annotated_name (str, optional): annotation timestamp name (default: "bookmarked")
+            annotated_filter_name (str, optional): annotation filter name (default: "has_bookmarked")
 
         Returns:
             QuerySet
         """
-        return self.bookmarked(user).annotate(
-            bookmarked=get_generic_related_value_subquery(
-                self.model,
-                Bookmark.objects.filter(user=user),
-                "created",
-                models.DateTimeField(),
-            )
+
+        return self.bookmarked(user, annotated_filter_name).annotate(
+            **{
+                annotated_name: get_generic_related_value_subquery(
+                    self.model,
+                    Bookmark.objects.filter(user=user),
+                    "created",
+                    models.DateTimeField(),
+                )
+            }
         )
 
 

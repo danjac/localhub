@@ -183,17 +183,17 @@ class TestCommentManager:
         assert comments.count() == 1
         assert comments.first().has_bookmarked
 
-    def test_with_bookmarked_if_user_has_not_bookmarked(self, comment, user):
+    def test_with_bookmarked_timestamp_if_user_has_not_bookmarked(self, comment, user):
         BookmarkFactory(
             user=user, content_object=comment, community=comment.community,
         )
-        assert Comment.objects.with_bookmarked(UserFactory()).count() == 0
+        assert Comment.objects.with_bookmarked_timestamp(UserFactory()).count() == 0
 
-    def test_with_bookmarked_if_user_has_bookmarked(self, comment, user):
+    def test_with_bookmarked_timestamp_if_user_has_bookmarked(self, comment, user):
         BookmarkFactory(
             user=user, content_object=comment, community=comment.community,
         )
-        comments = Comment.objects.with_bookmarked(user)
+        comments = Comment.objects.with_bookmarked_timestamp(user)
         assert comments.count() == 1
         comment = comments.first()
         assert comment.has_bookmarked

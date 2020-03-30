@@ -314,17 +314,17 @@ class TestMessageManager:
         assert messages.count() == 1
         assert messages.first().has_bookmarked
 
-    def test_with_bookmarked_if_user_has_not_bookmarked(self, message, user):
+    def test_with_bookmarked_timestamp_if_user_has_not_bookmarked(self, message, user):
         BookmarkFactory(
             user=user, content_object=message, community=message.community,
         )
-        assert Message.objects.with_bookmarked(UserFactory()).count() == 0
+        assert Message.objects.with_bookmarked_timestamp(UserFactory()).count() == 0
 
-    def test_with_bookmarked_if_user_has_bookmarked(self, message, user):
+    def test_with_bookmarked_timestamp_if_user_has_bookmarked(self, message, user):
         BookmarkFactory(
             user=user, content_object=message, community=message.community,
         )
-        messages = Message.objects.with_bookmarked(user)
+        messages = Message.objects.with_bookmarked_timestamp(user)
         assert messages.count() == 1
         message = messages.first()
         assert message.has_bookmarked

@@ -16,7 +16,11 @@ class BookmarksStreamView(BaseActivityStreamView):
         return self.filter_queryset(model.objects.bookmarked(self.request.user))
 
     def filter_queryset(self, queryset):
-        return super().filter_queryset(queryset).with_bookmarked(self.request.user)
+        return (
+            super()
+            .filter_queryset(queryset)
+            .with_bookmarked_timestamp(self.request.user)
+        )
 
 
 bookmarks_stream_view = BookmarksStreamView.as_view()
@@ -30,7 +34,7 @@ class BookmarksCommentListView(BaseCommentListView):
             super()
             .get_queryset()
             .with_common_annotations(self.request.user, self.request.community)
-            .with_bookmarked(self.request.user)
+            .with_bookmarked_timestamp(self.request.user)
             .order_by("-bookmarked", "-created")
         )
 
@@ -46,7 +50,7 @@ class BookmarksMessageListView(ListView):
         return (
             Message.objects.for_community(self.request.community)
             .for_sender_or_recipient(self.request.user)
-            .with_bookmarked(self.request.user)
+            .with_bookmarked_timestamp(self.request.user)
             .select_related(
                 "sender",
                 "recipient",

@@ -366,17 +366,17 @@ class TestActivityManager:
         assert posts.count() == 1
         assert posts.first().has_bookmarked
 
-    def test_with_bookmarked_if_user_has_not_bookmarked(self, post, user):
+    def test_with_bookmarked_timestamp_if_user_has_not_bookmarked(self, post, user):
         BookmarkFactory(
             user=user, content_object=post, community=post.community,
         )
-        assert Post.objects.with_bookmarked(UserFactory()).count() == 0
+        assert Post.objects.with_bookmarked_timestamp(UserFactory()).count() == 0
 
-    def test_with_bookmarked_if_user_has_bookmarked(self, post, user):
+    def test_with_bookmarked_timestamp_if_user_has_bookmarked(self, post, user):
         BookmarkFactory(
             user=user, content_object=post, community=post.community,
         )
-        posts = Post.objects.with_bookmarked(user)
+        posts = Post.objects.with_bookmarked_timestamp(user)
         assert posts.count() == 1
         post = posts.first()
         assert post.has_bookmarked
