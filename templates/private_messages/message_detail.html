@@ -40,7 +40,7 @@
 </div>
 
 {% show_message user community message is_detail=True %}
-{% for child in children %}
-{% show_message user community child is_thread=True %}
+{% for reply in replies %}
+{% show_message user community reply is_thread=True %}
 {% endfor %}
 {% endblock content %}

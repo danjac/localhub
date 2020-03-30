@@ -33,8 +33,11 @@ def show_message(
     parent = message.get_parent(user)
     parent_url = parent.get_absolute_url() if parent else None
 
-    thread = message.get_thread(user)
-    thread_url = thread.get_absolute_url() if thread else None
+    if is_thread:
+        thread, thread_url = None, None
+    else:
+        thread = message.get_thread(user)
+        thread_url = thread.get_absolute_url() if thread else None
 
     is_follow_up = parent and parent.sender == message.sender
     is_unread = is_recipient and not message.read

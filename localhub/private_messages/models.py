@@ -166,6 +166,17 @@ class MessageQuerySet(
     def unread(self):
         return self.filter(read__isnull=True)
 
+    def all_replies_for(self, message):
+        """
+        Return all replies where message is parent or thread grandparent.
+
+        Args:
+            message (Message): parent or grandparent thread
+        Returns:
+            QuerySet
+        """
+        return self.filter(models.Q(parent=message) | models.Q(thread=message))
+
     def reply_count_subquery(self, replies):
         return models.Subquery(
             replies.values("parent").annotate(count=models.Count("pk")).values("count"),

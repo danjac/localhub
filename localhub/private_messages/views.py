@@ -226,16 +226,19 @@ class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
 
         return response
 
-    def get_children(self):
-        return self.object.children.for_sender_or_recipient(self.request.user).order_by(
-            "created"
+    def get_replies(self):
+        return (
+            Message.objects.all_replies_for(self.object)
+            .for_sender_or_recipient(self.request.user)
+            .order_by("created")
+            .distinct()
         )
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data.update(
             {
-                "children": self.get_children(),
+                "replies": self.get_replies(),
                 "parent": self.object.get_parent(self.request.user),
                 "thread": self.object.get_thread(self.request.user),
                 "other_user": self.object.get_other_user(self.request.user),
