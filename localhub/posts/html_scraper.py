@@ -10,6 +10,11 @@ from localhub.utils.http import get_domain, is_image_url, is_url, resolve_url
 
 
 class HTMLScraper:
+    """
+    Scrapes HTML content from a page to extract useful data such as title,
+    description and image. Prioritizes OpenGraph and other meta data provided
+    before parsing actual page body content.
+    """
 
     FAKE_BROWSER_USER_AGENT = (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 "
@@ -114,7 +119,9 @@ class HTMLScraper:
         # priority:
         # OG or twitter content
         # first <p> element
-        text = self.meta_tags_from_html("og:description", "twitter:description")
+        text = self.meta_tags_from_html(
+            "og:description", "twitter:description", "fb:status", "description"
+        )
         if not text and self.soup.p:
             text = self.soup.p.string
         return text or None
