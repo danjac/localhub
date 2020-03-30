@@ -5,12 +5,11 @@ from urllib.parse import urlparse
 
 import requests
 from bs4 import BeautifulSoup
-from django.conf import settings
 
 from localhub.utils.http import get_domain, is_image_url, is_url, resolve_url
 
 
-class Opengraph:
+class HTMLScraper:
 
     FAKE_BROWSER_USER_AGENT = (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 "
@@ -32,9 +31,7 @@ class Opengraph:
     @classmethod
     def get_response(cls, url):
         url = resolve_url(url)
-        response = requests.get(
-            url, headers=cls.get_headers(url), proxies=cls.get_proxies()
-        )
+        response = requests.get(url, headers=cls.get_headers(url))
         return url, response
 
     @classmethod
@@ -46,30 +43,21 @@ class Opengraph:
         return {"User-Agent": cls.FAKE_BROWSER_USER_AGENT}
 
     @classmethod
-    def get_proxies(cls):
-        if settings.OPENGRAPH_PROXY_URL:
-            return {
-                "http": settings.OPENGRAPH_PROXY_URL,
-                "https": settings.OPENGRAPH_PROXY_URL,
-            }
-        return {}
-
-    @classmethod
     def from_url(cls, url):
-        """Grabs OpenGraph and other HTML data from URL and parses
+        """Grabs OpenGraph, Twitter and other HTML data from URL and parses
         the HTML content.
 
-        Note that the OpenGraph url value may be different from the
+        Note that the HTMLScraper url value may be different from the
         url in the argument as any redirects are resolved if possible.
 
         Args:
             url (string): URL of HTML source page
 
         Returns:
-            Opengraph: Opengraph instance with relevant data.
+            HTMLScraper: HTMLScraper instance with relevant data.
 
         Raises:
-            Opengraph.Invalid: if unreachable URL or data returned not HTML
+            HTMLScraper.Invalid: if unreachable URL or data returned not HTML
         """
         try:
             url, response = cls.get_response(url)
@@ -91,7 +79,7 @@ class Opengraph:
             html (str): HTML content
 
         Returns:
-            Opengraph: Opengraph instance
+            HTMLScraper: the instance
         """
         self.soup = BeautifulSoup(html, "html.parser")
         self.title = self.title_from_html()
@@ -100,6 +88,10 @@ class Opengraph:
         return self
 
     def title_from_html(self):
+        # priority:
+        # OG or twitter title content
+        # first <h1> element
+        # <title> element
         title = self.meta_tags_from_html("og:title", "twitter:title")
         if title:
             return title
@@ -108,13 +100,24 @@ class Opengraph:
         return self.soup.title.string if self.soup.title else get_domain(self.url)
 
     def image_from_html(self):
+        # priority:
+        # OG or twitter image content
+        # first <img> element
         image = self.meta_tags_from_html("og:image", "twitter:image")
-        if image and len(image) < 501 and is_url(image) and is_image_url(image):
+        if not image and self.soup.img:
+            image = self.soup.img.attrs.get("src")
+        if self.is_acceptable_image(image):
             return image
         return None
 
     def description_from_html(self):
-        return self.meta_tags_from_html("og:description", "twitter:description")
+        # priority:
+        # OG or twitter content
+        # first <p> element
+        text = self.meta_tags_from_html("og:description", "twitter:description")
+        if not text and self.soup.p:
+            text = self.soup.p.string
+        return text or None
 
     def meta_tags_from_html(self, *names):
         for name in names:
@@ -124,3 +127,6 @@ class Opengraph:
             if meta and "content" in meta.attrs:
                 return meta.attrs["content"]
         return None
+
+    def is_acceptable_image(self, image):
+        return image and len(image) < 501 and is_url(image) and is_image_url(image)

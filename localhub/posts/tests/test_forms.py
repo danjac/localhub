@@ -5,26 +5,29 @@ import pytest
 
 from ..factories import PostFactory
 from ..forms import PostForm
-from ..opengraph import Opengraph
+from ..html_scraper import HTMLScraper
 
 pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture()
-def mock_opengraph_from_url(mocker):
-    og = Opengraph("https://imgur.com")
-    og.title = "Imgur"
-    og.image = "https://imgur.com/cat.gif"
-    og.description = "cat"
+def mock_html_scraper_from_url(mocker):
+    scraper = HTMLScraper("https://imgur.com")
+    scraper.title = "Imgur"
+    scraper.image = "https://imgur.com/cat.gif"
+    scraper.description = "cat"
 
-    mocker.patch("localhub.posts.opengraph.Opengraph.from_url", return_value=og)
+    mocker.patch(
+        "localhub.posts.html_scraper.HTMLScraper.from_url", return_value=scraper
+    )
     yield
 
 
 @pytest.fixture()
-def mock_opengraph_from_invalid_url(mocker):
+def mock_html_scraper_from_invalid_url(mocker):
     mocker.patch(
-        "localhub.posts.opengraph.Opengraph.from_url", side_effect=Opengraph.Invalid
+        "localhub.posts.html_scraper.HTMLScraper.from_url",
+        side_effect=HTMLScraper.Invalid,
     )
     yield
 
@@ -36,7 +39,7 @@ class TestPostForm:
 
         assert form.is_valid()
 
-    def test_title_missing(self, mock_opengraph_from_url):
+    def test_title_missing(self, mock_html_scraper_from_url):
 
         form = PostForm({"title": "", "url": "http://google.com"})
 
@@ -60,7 +63,7 @@ class TestPostForm:
         form = PostForm(instance=post)
         assert "clear_opengraph_data" not in form.fields
 
-    def test_fetch_opengraph_data_if_url(self, mock_opengraph_from_url):
+    def test_fetch_opengraph_data_if_url(self, mock_html_scraper_from_url):
         form = PostForm(
             {"url": "http://twitter.com", "title": "", "fetch_opengraph_data": True}
         )
@@ -72,7 +75,9 @@ class TestPostForm:
         assert cleaned_data["opengraph_image"] == "https://imgur.com/cat.gif"
         assert cleaned_data["opengraph_description"] == "cat"
 
-    def test_fetch_opengraph_data_if_invalid_url(self, mock_opengraph_from_invalid_url):
+    def test_fetch_opengraph_data_if_invalid_url(
+        self, mock_html_scraper_from_invalid_url
+    ):
         form = PostForm(
             {"url": "http://twitter.com", "title": "", "fetch_opengraph_data": True}
         )
@@ -80,7 +85,7 @@ class TestPostForm:
         assert not form.is_valid()
 
     def test_fetch_opengraph_data_if_title_and_invalid_url(
-        self, mock_opengraph_from_invalid_url
+        self, mock_html_scraper_from_invalid_url
     ):
         form = PostForm(
             {"url": "http://twitter.com", "title": "test", "fetch_opengraph_data": True}
@@ -88,7 +93,7 @@ class TestPostForm:
         assert not form.is_valid()
 
     def test_fetch_opengraph_data_if_not_fetch_opengraph_data_from_url(
-        self, mock_opengraph_from_url
+        self, mock_html_scraper_from_url
     ):
         form = PostForm(
             {"url": "https://google.com", "title": "", "fetch_opengraph_data": False}
@@ -100,7 +105,7 @@ class TestPostForm:
         assert cleaned_data["opengraph_image"] == ""
         assert cleaned_data["opengraph_description"] == ""
 
-    def test_clear_opengraph_data(self, mock_opengraph_from_url):
+    def test_clear_opengraph_data(self, mock_html_scraper_from_url):
         post = PostFactory(
             title="Imgur",
             opengraph_image="http://imgur.com/cat.gif",

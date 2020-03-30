@@ -7,19 +7,19 @@ from django.utils.translation import gettext_lazy as _
 from localhub.activities.forms import ActivityForm
 
 from .models import Post
-from .opengraph import Opengraph
+from .html_scraper import HTMLScraper
 
 
 class PostForm(ActivityForm):
 
     clear_opengraph_data = forms.BooleanField(
-        required=False, label=_("Clear OpenGraph data from post")
+        required=False, label=_("Clear OpenGraph content from post")
     )
 
     fetch_opengraph_data = forms.BooleanField(
         required=False,
         initial=True,
-        label=_("Fetch OpenGraph data from URL if available"),
+        label=_("Fetch OpenGraph and other content from URL if available"),
     )
 
     class Meta(ActivityForm.Meta):
@@ -47,7 +47,7 @@ class PostForm(ActivityForm):
         if self.instance.opengraph_image or self.instance.opengraph_description:
             self.initial["fetch_opengraph_data"] = False
             self.fields["fetch_opengraph_data"].label = _(
-                "Re-fetch OpenGraph data from URL if available"
+                "Re-fetch OpenGraph and other content from URL if available"
             )
         else:
             del self.fields["clear_opengraph_data"]
@@ -55,8 +55,8 @@ class PostForm(ActivityForm):
     def clean(self):
         cleaned_data = super().clean()
         try:
-            cleaned_data.update(self.get_opengraph_data(**cleaned_data))
-        except Opengraph.Invalid:
+            cleaned_data.update(self.scrape_html(**cleaned_data))
+        except HTMLScraper.Invalid:
             self.add_error("url", _("This URL appears to be invalid."))
             return cleaned_data
 
@@ -68,7 +68,7 @@ class PostForm(ActivityForm):
 
         return cleaned_data
 
-    def get_opengraph_data(
+    def scrape_html(
         self,
         *,
         title="",
@@ -84,13 +84,13 @@ class PostForm(ActivityForm):
             return {}
 
         if not title or fetch_opengraph_data:
-            og = Opengraph.from_url(url)
-            data = {"title": (title or og.title)[:300], "url": og.url}
+            scraper = HTMLScraper.from_url(url)
+            data = {"title": (title or scraper.title)[:300], "url": scraper.url}
             if fetch_opengraph_data:
                 data.update(
                     {
-                        "opengraph_image": og.image or "",
-                        "opengraph_description": og.description or "",
+                        "opengraph_image": scraper.image or "",
+                        "opengraph_description": scraper.description or "",
                     }
                 )
             return data
