@@ -105,8 +105,6 @@ class Base(Configuration):
 
     HOME_PAGE_URL = reverse_lazy("activity_stream")
 
-    OPENGRAPH_PROXY_URL = values.Value()
-
     # sorl
 
     THUMBNAIL_KVSTORE = "sorl.thumbnail.kvstores.redis_kvstore.KVStore"
