@@ -13,7 +13,12 @@ class LikedStreamView(BaseActivityStreamView):
         return self.filter_queryset(model.objects.liked(self.request.user))
 
     def filter_queryset(self, queryset):
-        return super().filter_queryset(queryset).with_liked_timestamp(self.request.user)
+        return (
+            super()
+            .filter_queryset(queryset)
+            .liked(self.request.user)
+            .with_liked_timestamp(self.request.user)
+        )
 
 
 liked_stream_view = LikedStreamView.as_view()
@@ -26,6 +31,7 @@ class LikedCommentListView(BaseCommentListView):
         return (
             super()
             .get_queryset()
+            .liked(self.request.user)
             .with_common_annotations(self.request.user, self.request.community)
             .with_liked_timestamp(self.request.user)
             .order_by("-liked", "-created")

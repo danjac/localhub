@@ -19,6 +19,7 @@ class BookmarksStreamView(BaseActivityStreamView):
         return (
             super()
             .filter_queryset(queryset)
+            .bookmarked(self.request.user)
             .with_bookmarked_timestamp(self.request.user)
         )
 
@@ -33,6 +34,7 @@ class BookmarksCommentListView(BaseCommentListView):
         return (
             super()
             .get_queryset()
+            .bookmarked(self.request.user)
             .with_common_annotations(self.request.user, self.request.community)
             .with_bookmarked_timestamp(self.request.user)
             .order_by("-bookmarked", "-created")
@@ -50,6 +52,7 @@ class BookmarksMessageListView(ListView):
         return (
             Message.objects.for_community(self.request.community)
             .for_sender_or_recipient(self.request.user)
+            .bookmarked(self.request.user)
             .with_bookmarked_timestamp(self.request.user)
             .select_related(
                 "sender",

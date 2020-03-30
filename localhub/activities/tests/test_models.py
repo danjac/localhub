@@ -370,16 +370,15 @@ class TestActivityManager:
         BookmarkFactory(
             user=user, content_object=post, community=post.community,
         )
-        assert Post.objects.with_bookmarked_timestamp(UserFactory()).count() == 0
+        # test with *another* user
+        post = Post.objects.with_bookmarked_timestamp(UserFactory()).first()
+        assert post.bookmarked is None
 
     def test_with_bookmarked_timestamp_if_user_has_bookmarked(self, post, user):
         BookmarkFactory(
             user=user, content_object=post, community=post.community,
         )
-        posts = Post.objects.with_bookmarked_timestamp(user)
-        assert posts.count() == 1
-        post = posts.first()
-        assert post.has_bookmarked
+        post = Post.objects.with_bookmarked_timestamp(user).first()
         assert post.bookmarked is not None
 
     def test_with_has_liked_if_user_has_not_liked(self, post, user):
@@ -429,15 +428,12 @@ class TestActivityManager:
             community=post.community,
             recipient=post.owner,
         )
-        posts = Post.objects.with_liked_timestamp(user)
-        assert posts.count() == 1
-        post = posts.first()
-        assert post.has_liked
+        post = Post.objects.with_liked_timestamp(user).first()
         assert post.liked is not None
 
     def test_with_liked_timestamp_if_user_has_not_liked(self, post, user):
-        posts = Post.objects.with_liked_timestamp(user)
-        assert posts.count() == 0
+        post = Post.objects.with_liked_timestamp(user).first()
+        assert post.liked is None
 
     def test_with_common_annotations_if_anonymous(self, post):
         activity = Post.objects.with_common_annotations(

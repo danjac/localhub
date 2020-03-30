@@ -54,22 +54,18 @@ class BookmarkAnnotationsQuerySetMixin:
         """
         return self.with_has_bookmarked(user).filter(**{annotated_name: True})
 
-    def with_bookmarked_timestamp(
-        self, user, annotated_name="bookmarked", annotated_filter_name="has_bookmarked"
-    ):
-        """Filters all items bookmarked with this user and includes annotated
-        "bookmarked" timestamp.
+    def with_bookmarked_timestamp(self, user, annotated_name="bookmarked"):
+        """Adds annotated "bookmarked" timestamp to bookmarked items.
 
         Args:
             user (User): user who has bookmarked the items
             annotated_name (str, optional): annotation timestamp name (default: "bookmarked")
-            annotated_filter_name (str, optional): annotation filter name (default: "has_bookmarked")
 
         Returns:
             QuerySet
         """
 
-        return self.bookmarked(user, annotated_filter_name).annotate(
+        return self.annotate(
             **{
                 annotated_name: get_generic_related_value_subquery(
                     self.model,

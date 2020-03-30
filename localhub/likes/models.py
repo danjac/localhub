@@ -63,22 +63,18 @@ class LikeAnnotationsQuerySetMixin:
         """
         return self.with_has_liked(user).filter(**{annotated_name: True})
 
-    def with_liked_timestamp(
-        self, user, annotated_name="liked", annotated_filter_name="has_liked"
-    ):
+    def with_liked_timestamp(self, user, annotated_name="liked"):
         """Filters all items liked by this user and includes annotated
         "liked" timestamp.
 
         Args:
             user (User)
             annotated_name (str, optional): the annotation name (default: "liked")
-            annotated_filter_name (str, optional): the annotation name to the "has liked"
-                filter (default: "has_liked")
 
         Returns:
             QuerySet
         """
-        return self.liked(user, annotated_filter_name).annotate(
+        return self.annotate(
             **{
                 annotated_name: get_generic_related_value_subquery(
                     self.model,
