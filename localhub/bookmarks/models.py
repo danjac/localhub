@@ -52,7 +52,9 @@ class BookmarkAnnotationsQuerySetMixin:
 
             QuerySet
         """
-        return self.with_has_bookmarked(user).filter(**{annotated_name: True})
+        return self.with_has_bookmarked(user, annotated_name).filter(
+            **{annotated_name: True}
+        )
 
     def with_bookmarked_timestamp(self, user, annotated_name="bookmarked"):
         """Adds annotated "bookmarked" timestamp to bookmarked items.

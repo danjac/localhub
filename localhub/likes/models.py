@@ -61,7 +61,9 @@ class LikeAnnotationsQuerySetMixin:
         Returns:
             QuerySet
         """
-        return self.with_has_liked(user).filter(**{annotated_name: True})
+        return self.with_has_liked(user, annotated_name).filter(
+            **{annotated_name: True}
+        )
 
     def with_liked_timestamp(self, user, annotated_name="liked"):
         """Filters all items liked by this user and includes annotated
