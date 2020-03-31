@@ -33,12 +33,23 @@ class TestMessageManager:
         message = MessageFactory()
         notification = NotificationFactory(content_object=message)
 
-        Message.objects.mark_read()
+        Message.objects.mark_read(message.recipient)
         message.refresh_from_db()
         notification.refresh_from_db()
 
         assert notification.is_read
         assert message.read
+
+    def test_mark_read_if_not_recipient(self):
+        message = MessageFactory()
+        notification = NotificationFactory(content_object=message)
+
+        Message.objects.mark_read(message.sender)
+        message.refresh_from_db()
+        notification.refresh_from_db()
+
+        assert not notification.is_read
+        assert not message.read
 
     def test_unread_if_read(self):
         MessageFactory(read=timezone.now())

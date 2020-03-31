@@ -201,10 +201,10 @@ class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
     def get_queryset(self):
         return super().get_queryset().with_has_bookmarked(self.request.user)
 
-    def get(self, *args, **kwargs):
-        response = super().get(*args, **kwargs)
-        self.object.mark_read(self.request.user, mark_replies=True)
-        return response
+    def get_object(self):
+        obj = super().get_object()
+        obj.mark_read(self.request.user, mark_replies=True)
+        return obj
 
     def get_replies(self):
         return (
@@ -275,7 +275,7 @@ class MessageMarkAllReadView(RecipientQuerySetMixin, View):
         return super().get_queryset().unread()
 
     def post(self, request, *args, **kwargs):
-        self.get_queryset().mark_read()
+        self.get_queryset().mark_read(self.request.user)
         return redirect("private_messages:inbox")
 
 

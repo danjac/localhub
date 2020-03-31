@@ -66,13 +66,13 @@ class NotificationQuerySet(models.QuerySet):
         return self.filter(is_read=False)
 
     def mark_read(self):
-        """Marks all notifications read
+        """Marks all notifications read if they are unread.
 
         Returns:
             int -- number updated
         """
 
-        self.update(is_read=True)
+        return self.unread().update(is_read=True)
 
 
 class Notification(TimeStampedModel):
