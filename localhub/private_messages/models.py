@@ -12,10 +12,7 @@ from model_utils.models import TimeStampedModel
 
 from localhub.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from localhub.communities.models import Community
-from localhub.db.content_types import (
-    get_generic_related_queryset,
-    get_multiple_generic_related_queryset,
-)
+from localhub.db.content_types import get_generic_related_queryset
 from localhub.db.search import SearchIndexer, SearchQuerySetMixin
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.decorators import dispatch
@@ -286,7 +283,7 @@ class MessageQuerySet(
         Returns:
             QuerySet: Notifications associated with objects in this QuerySet
         """
-        return get_multiple_generic_related_queryset(self, Notification)
+        return get_generic_related_queryset(self, Notification)
 
 
 class Message(TimeStampedModel):

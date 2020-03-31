@@ -146,7 +146,7 @@ def get_generic_related_value_subquery(
 
 
 def get_generic_related_queryset(
-    model,
+    model_or_queryset,
     related,
     related_object_id_field="object_id",
     related_content_type_field="content_type",
@@ -156,7 +156,7 @@ def get_generic_related_queryset(
     of a related content type matching the object's primary key.
 
     Args:
-        model (Model or Queryset): model class or QuerySet instance
+        model (Model or Queryset): Model or QuerySet instance
         related (Model): ContentType-related model
         related_object_id_field (str, optional): field in content type model used as
             foreign key (default: "object_id")
@@ -166,38 +166,18 @@ def get_generic_related_queryset(
     Returns:
         QuerySet
     """
+
+    if isinstance(model_or_queryset, models.QuerySet):
+        lookup_value = model_or_queryset.values("pk")
+        related_object_id_field = f"{related_object_id_field}__in"
+    else:
+        lookup_value = model_or_queryset.pk
+
     return _get_generic_related_by_id_and_content_type(
-        model.pk, model, related, related_object_id_field, related_content_type_field,
-    )
-
-
-def get_multiple_generic_related_queryset(
-    queryset,
-    related,
-    related_object_id_field="object_id",
-    related_content_type_field="content_type",
-):
-    """
-
-    Works as `get_generic_related_queryset` but used inside
-    a QuerySet rather than individual Model instance.
-
-    Args:
-        queryset (Queryset): QuerySet instance
-        related (Model): ContentType-related model
-        related_object_id_field (str, optional): field in content type model used as
-            foreign key (default: "object_id")
-        related_content_type_field (str, optional): field in content type model used
-            as FK to ContentType (default: "content_type")
-
-    Returns:
-        QuerySet
-     """
-    return _get_generic_related_by_id_and_content_type(
-        queryset.values("pk"),
-        queryset,
+        lookup_value,
+        model_or_queryset,
         related,
-        f"{related_object_id_field}__in",
+        related_object_id_field,
         related_content_type_field,
     )
 
