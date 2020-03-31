@@ -219,10 +219,16 @@ table {
   }
 }
 
-.metadata {
+.opengraph {
   img {
     width: 99%;
     height: auto;
+  }
+
+  &-image-link {
+    &:focus {
+      box-shadow: none;
+    }
   }
 }
 

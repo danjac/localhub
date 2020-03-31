@@ -10,14 +10,18 @@
 
 {% with user|is_oembed_url:object.url as is_oembed %}
 {% include "activities/includes/oembed.html" %}
-{% if object.opengraph_description and not is_oembed %}
-<div class="columns metadata{% if not is_detail %} metadata-small{% endif %}">
+{% if object.url and object.opengraph_description and not is_oembed %}
+<div class="columns opengraph">
   {% with opengraph_image=object.get_opengraph_image_if_safe %}
   {% if user.show_external_images and opengraph_image %}
   <div class="column col-3 col-md-12">
-    <img src="{{ opengraph_image }}"
-         alt="{{ object.title }}"
-         class="img-responsive">
+    <a href="{{ object.url }}"
+       class="opengraph-image-link"
+       target="_blank">
+      <img src="{{ opengraph_image }}"
+           alt="{{ object.title }}"
+           class="img-responsive">
+    </a>
   </div>
   <div class="column col-9 col-md-12">
     {% else %}
