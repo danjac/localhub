@@ -111,6 +111,10 @@ class BaseReplyFormView(BaseMessageFormView):
     def recipient_display(self):
         return user_display(self.recipient)
 
+    def send_notifications(self, message):
+        """Handle any notifications to recipient here"""
+        ...
+
     def get_form(self, data=None, files=None):
         form = self.form_class(data, files)
         form["message"].label = _(
@@ -144,19 +148,23 @@ class BaseReplyFormView(BaseMessageFormView):
             _("Your message has been sent to %(recipient)s")
             % {"recipient": self.recipient_display},
         )
-        message.notify()
+
+        self.send_notifications(message)
+
         return redirect(message)
 
 
 class MessageReplyView(RecipientQuerySetMixin, BaseReplyFormView):
-    ...
+    def send_notifications(self, message):
+        message.notify_on_reply()
 
 
 message_reply_view = MessageReplyView.as_view()
 
 
 class MessageFollowUpView(SenderQuerySetMixin, BaseReplyFormView):
-    ...
+    def send_notifications(self, message):
+        message.notify_on_follow_up()
 
 
 message_follow_up_view = MessageFollowUpView.as_view()
@@ -204,7 +212,7 @@ class MessageCreateView(
             _("Your message has been sent to %(recipient)s")
             % {"recipient": user_display(message.recipient)},
         )
-        message.notify()
+        message.notify_on_send()
         return redirect(message)
 
 

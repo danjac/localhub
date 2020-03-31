@@ -9,13 +9,24 @@
 Hello from {{ community_name }} !
 {% endblocktrans %}
 
-{% blocktrans with message=message.message %}
-Hi {{ recipient_name }},
-{{ sender }} has sent you a message:
-{{ message }}
+{% spaceless %}
+Hi {{ recipient_display }},
+{% if verb == "reply" %}
+{% blocktrans %}
+{{ actor_display }} has replied to your message:
 {% endblocktrans %}
+{% elif verb == "follow_up" %}
+{% blocktrans %}
+{{ actor_display }} has sent you a follow-up to one of their messages:
+{% endblocktrans %}
+{% else %}
+{% blocktrans %}
+{{ actor_display }} has sent you a message:
+{% endblocktrans %}
+{% endif %}
+{% endspaceless %}
 
-{{ message_url }}
+{{ absolute_url }}
 
 {% blocktrans with community_name=community.name %}
 Thank you from {{ community_name }} !

@@ -18,18 +18,24 @@
 
 <div class="section">
   {% blocktrans %}
-  Hi {{ recipient_name }},
+  Hi {{ recipient_display }},
   {% endblocktrans %}
 </div>
 
 <div class="section">
+  {% if verb == "reply" %}
   {% blocktrans %}
-  {{ sender }} has sent you a <a href="{{ message_url }}">message</a>: <br>
+  {{ actor_display }} has replied to your <a href="{{ absolute_url }}">message</a>.
   {% endblocktrans %}
-</div>
-
-<div class="section">
-  {{ message.message.markdown }}
+  {% elif verb == "follow_up" %}
+  {% blocktrans %}
+  {{ actor_display }} has sent you a <a href="{{ absolute_url }}">follow-up</a> to one of their messages.
+  {% endblocktrans %}
+  {% else %}
+  {% blocktrans %}
+  {{ actor_display }} has sent you a <a href="{{ absolute_url }}">message</a>.
+  {% endblocktrans %}
+  {% endif %}
 </div>
 
 <div class="section">

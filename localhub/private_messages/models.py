@@ -453,17 +453,38 @@ class Message(TimeStampedModel):
 
         return self.__class__._default_manager.all_replies(self, include_self)
 
-    @dispatch
-    def notify(self):
-        """Send notification to recipient.
-
-        Returns:
-            Notification
-        """
+    def make_notification(self, verb):
         return Notification(
             content_object=self,
             actor=self.sender,
             recipient=self.recipient,
             community=self.community,
-            verb="message",
+            verb=verb,
         )
+
+    @dispatch
+    def notify_on_send(self):
+        """Send notification to recipient.
+
+        Returns:
+            Notification
+        """
+        return self.make_notification("send")
+
+    @dispatch
+    def notify_on_reply(self):
+        """Send notification to recipient.
+
+        Returns:
+            Notification
+        """
+        return self.make_notification("reply")
+
+    @dispatch
+    def notify_on_follow_up(self):
+        """Send notification to recipient.
+
+        Returns:
+            Notification
+        """
+        return self.make_notification("follow_up")

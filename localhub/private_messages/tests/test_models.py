@@ -337,6 +337,27 @@ class TestMessageModel:
             "private_messages:message_detail", args=[message.id]
         )
 
+    def test_notify_on_send(self, message, send_webpush_mock):
+        notification = message.notify_on_send()[0]
+
+        assert notification.verb == "send"
+        assert notification.recipient == message.recipient
+        assert notification.actor == message.sender
+
+    def test_notify_on_reply(self, message, send_webpush_mock):
+        notification = message.notify_on_reply()[0]
+
+        assert notification.verb == "reply"
+        assert notification.recipient == message.recipient
+        assert notification.actor == message.sender
+
+    def test_notify_on_follow_up(self, message, send_webpush_mock):
+        notification = message.notify_on_follow_up()[0]
+
+        assert notification.verb == "follow_up"
+        assert notification.recipient == message.recipient
+        assert notification.actor == message.sender
+
     def test_get_parent_if_none(self, user):
         message = MessageFactory(sender=user)
         assert message.get_parent(user) is None
