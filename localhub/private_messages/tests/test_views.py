@@ -171,11 +171,8 @@ class TestMessageFollowUpView:
 
     def test_post(self, client, member, send_webpush_mock):
         recipient = MembershipFactory(community=member.community).member
-        thread = MessageFactory(recipient=recipient, sender=member.member)
         parent = MessageFactory(
-            sender=member.member,
-            recipient=recipient,
-            community=member.community,
+            sender=member.member, recipient=recipient, community=member.community,
         )
         response = client.post(
             reverse("private_messages:message_follow_up", args=[parent.id]),

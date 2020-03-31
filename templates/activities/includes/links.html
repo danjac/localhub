@@ -1,0 +1,15 @@
+{# Copyright (c) 2019 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% if object.parent or not is_detail %}
+<div class="actions">
+  {% if not is_detail %}
+  <a href="{{ object.get_absolute_url }}">{% trans "Link" %}</a>
+  {% endif %}
+  {% if object.parent and not object.parent.deleted %}
+  <a href="{{ object.parent.get_absolute_url }}">{% trans "Parent" %}</a>
+  {% endif %}
+  {% block extra_links %}{% endblock %}
+</div>
+{% endif %}

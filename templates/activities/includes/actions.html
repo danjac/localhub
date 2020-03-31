@@ -5,7 +5,7 @@
 {% load rules %}
 {% load activities_tags %}
 
-<div class="dropdown mt-2"
+<div class="dropdown mt-2 mr-2"
      data-controller="toggle">
   <a class="btn btn-sm dropdown-toggle"
      tabindex="0">
@@ -152,18 +152,6 @@
         {% trans "Delete" %}</a>
     </li>
     {% endif %}
-
     {% block extra_actions %}{% endblock %}
-    {% if not is_detail %}
-    <li class="menu-item">
-      <a href="{{ object.get_permalink }}">{% trans "Link" %}</a>
-    </li>
-    {% endif %}
-    {% if object.parent and not object.parent.deleted %}
-    <li class="menu-item">
-      <a href="{{ object.parent.get_absolute_url }}">{% trans "Parent" %}</a>
-    </li>
-    {% endif %}
-    {% block extra_links %}{% endblock %}
   </ul>
 </div>
