@@ -54,9 +54,15 @@
         content="open source,communities,private,local">
   <meta name="robots"
         content="index,follow">
+  {% thumbnail community.logo "20" crop="center" format="PNG" as favicon %}
+  <link rel="icon"
+        type="image/png"
+        href="{{ favicon.url }}">
+  {% empty %}
   <link rel="icon"
         type="image/png"
         href="{% static 'favicon.png' %}">
+  {% endthumbnail %}
   <link rel="apple-touch-icon image_src"
         href="{% static 'apple-touch-icon.png' %}">
   <link rel="stylesheet"
