@@ -30,20 +30,7 @@ class MessageQuerySetMixin(CommunityRequiredMixin):
         return (
             Message.objects.for_community(community=self.request.community)
             .exclude_blocked(self.request.user)
-            .select_related(
-                "sender",
-                "recipient",
-                "community",
-                "parent",
-                "parent__recipient",
-                "parent__sender",
-                "thread",
-                "thread__recipient",
-                "thread__sender",
-                "parent__thread",
-                "parent__thread__recipient",
-                "parent__thread__sender",
-            )
+            .common_select_related()
         )
 
 
@@ -139,11 +126,10 @@ class BaseReplyFormView(BaseMessageFormView):
         message.sender = self.request.user
         message.recipient = self.recipient
         message.parent = self.parent
-        message.thread = self.parent.thread or self.parent
         message.save()
-        if self.parent:
-            self.parent.mark_read()
-            self.parent.get_notifications().mark_read()
+
+        self.parent.mark_read(self.request.user)
+
         messages.success(
             self.request,
             _("Your message has been sent to %(recipient)s")
@@ -217,19 +203,12 @@ class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
 
     def get(self, *args, **kwargs):
         response = super().get(*args, **kwargs)
-        if self.object.recipient == self.request.user and not self.object.read:
-            self.object.mark_read()
-
-        # mark all messages in thread read
-        children = self.object.children.for_recipient(self.request.user)
-        children.mark_read()
-
+        self.object.mark_read(self.request.user, mark_replies=True)
         return response
 
     def get_replies(self):
         return (
-            Message.objects.all_replies_for(self.object)
-            .for_sender_or_recipient(self.request.user)
+            self.object.replies.for_sender_or_recipient(self.request.user)
             .order_by("created")
             .distinct()
         )
@@ -240,7 +219,6 @@ class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
             {
                 "replies": self.get_replies(),
                 "parent": self.object.get_parent(self.request.user),
-                "thread": self.object.get_thread(self.request.user),
                 "other_user": self.object.get_other_user(self.request.user),
             }
         )
@@ -283,7 +261,7 @@ class MessageMarkReadView(RecipientQuerySetMixin, GenericModelView):
 
     def post(self, request, *args, **kwargs):
         message = self.get_object()
-        message.mark_read()
+        message.mark_read(self.request.user)
         return redirect(message)
 
 

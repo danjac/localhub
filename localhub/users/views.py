@@ -353,20 +353,7 @@ class UserMessageListView(SingleUserMixin, ListView):
             return Message.objects.none()
         qs = (
             Message.objects.for_community(self.request.community)
-            .select_related(
-                "sender",
-                "recipient",
-                "community",
-                "thread",
-                "parent",
-                "thread__sender",
-                "thread__recipient",
-                "parent__sender",
-                "parent__recipient",
-                "parent__thread",
-                "parent__thread__recipient",
-                "parent__thread__sender",
-            )
+            .common_select_related()
             .order_by("-created")
             .distinct()
         )

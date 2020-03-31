@@ -29,7 +29,7 @@ class TestShowMessage:
     def test_is_sender(self, auth_request):
         parent = MessageFactory(recipient=auth_request.user)
         message = MessageFactory(
-            sender=auth_request.user, community=auth_request.community, thread=parent
+            sender=auth_request.user, community=auth_request.community, parent=parent
         )
         context = show_message(
             {"request": auth_request},
@@ -52,7 +52,6 @@ class TestShowMessage:
             recipient=auth_request.user,
             community=auth_request.community,
             parent=parent,
-            thread=parent,
         )
         message.sender_has_blocked = False
         context = show_message(

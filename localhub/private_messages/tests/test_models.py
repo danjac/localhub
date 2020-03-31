@@ -351,20 +351,6 @@ class TestMessageModel:
         message = MessageFactory(sender=user, parent=parent)
         assert message.get_parent(user) == parent
 
-    def test_get_thread_if_none(self, user):
-        message = MessageFactory(sender=user)
-        assert message.get_thread(user) is None
-
-    def test_get_thread_if_not_visible(self, user):
-        thread = MessageFactory(recipient=user, recipient_deleted=timezone.now())
-        message = MessageFactory(sender=user, thread=thread)
-        assert message.get_thread(user) is None
-
-    def test_get_thread_if_visible(self, user):
-        thread = MessageFactory(recipient=user)
-        message = MessageFactory(sender=user, thread=thread)
-        assert message.get_thread(user) == thread
-
     def test_is_visible_to_neither_sender_or_recipient(self, message):
         assert not message.is_visible(UserFactory())
 
@@ -402,16 +388,92 @@ class TestMessageModel:
         message = Message(message="this is a test with more content")
         assert message.abbreviate(length=12) == "...more content"
 
+    def test_mark_read_if_not_recipient(self):
+        parent = MessageFactory()
+
+        first_reply = MessageFactory(parent=parent, recipient=parent.recipient)
+        second_reply = MessageFactory(parent=parent, recipient=parent.sender)
+
+        parent_notification = NotificationFactory(content_object=parent)
+        first_notification = NotificationFactory(content_object=first_reply)
+        second_notification = NotificationFactory(content_object=second_reply)
+
+        parent.mark_read(parent.sender, mark_replies=False)
+
+        for obj in (
+            parent,
+            first_reply,
+            second_reply,
+            parent_notification,
+            first_notification,
+            second_notification,
+        ):
+            obj.refresh_from_db()
+
+        assert not parent.read
+        assert not first_reply.read
+        assert not first_reply.read
+        assert not parent_notification.is_read
+        assert not first_notification.is_read
+        assert not second_notification.is_read
+
     def test_mark_read(self):
-        message = MessageFactory()
-        notification = NotificationFactory(content_object=message)
+        parent = MessageFactory()
 
-        message.mark_read()
-        message.refresh_from_db()
-        notification.refresh_from_db()
+        first_reply = MessageFactory(parent=parent, recipient=parent.recipient)
+        second_reply = MessageFactory(parent=parent, recipient=parent.sender)
 
-        assert notification.is_read
-        assert message.read
+        parent_notification = NotificationFactory(content_object=parent)
+        first_notification = NotificationFactory(content_object=first_reply)
+        second_notification = NotificationFactory(content_object=second_reply)
+
+        parent.mark_read(parent.recipient, mark_replies=False)
+
+        for obj in (
+            parent,
+            first_reply,
+            second_reply,
+            parent_notification,
+            first_notification,
+            second_notification,
+        ):
+            obj.refresh_from_db()
+
+        assert parent.read
+        assert not first_reply.read
+        assert not first_reply.read
+        assert parent_notification.is_read
+        assert not first_notification.is_read
+        assert not second_notification.is_read
+
+    def test_mark_read_mark_replies(self):
+        parent = MessageFactory()
+
+        first_reply = MessageFactory(parent=parent, recipient=parent.recipient)
+        second_reply = MessageFactory(parent=parent, recipient=parent.sender)
+
+        parent_notification = NotificationFactory(content_object=parent)
+        first_notification = NotificationFactory(content_object=first_reply)
+        second_notification = NotificationFactory(content_object=second_reply)
+
+        parent.mark_read(parent.recipient, mark_replies=True)
+
+        for obj in (
+            parent,
+            first_reply,
+            second_reply,
+            parent_notification,
+            first_notification,
+            second_notification,
+        ):
+            obj.refresh_from_db()
+
+        assert parent.read
+        assert first_reply.read
+        assert not second_reply.read
+        assert parent_notification.is_read
+        assert first_notification.is_read
+        assert not second_notification.is_read
 
     def test_soft_delete_if_recipient(self, message):
         message.soft_delete(message.recipient)

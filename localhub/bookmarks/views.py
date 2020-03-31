@@ -5,7 +5,7 @@ from vanilla import ListView
 
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views import BaseCommentListView
-from localhub.private_messages.models import Message
+from localhub.private_messages.views import SenderOrRecipientQuerySetMixin
 
 
 class BookmarksStreamView(BaseActivityStreamView):
@@ -44,32 +44,17 @@ class BookmarksCommentListView(BaseCommentListView):
 bookmarks_comment_list_view = BookmarksCommentListView.as_view()
 
 
-class BookmarksMessageListView(ListView):
+class BookmarksMessageListView(SenderOrRecipientQuerySetMixin, ListView):
 
     template_name = "bookmarks/messages.html"
 
     def get_queryset(self):
         return (
-            Message.objects.for_community(self.request.community)
-            .for_sender_or_recipient(self.request.user)
+            super()
+            .get_queryset()
             .bookmarked(self.request.user)
             .with_bookmarked_timestamp(self.request.user)
-            .select_related(
-                "sender",
-                "recipient",
-                "community",
-                "thread",
-                "parent",
-                "thread__sender",
-                "thread__recipient",
-                "parent__sender",
-                "parent__recipient",
-                "parent__thread",
-                "parent__thread__recipient",
-                "parent__thread__sender",
-            )
-            .order_by("-created")
-            .distinct()
+            .order_by("-bookmarked", "-created")
         )
 
 

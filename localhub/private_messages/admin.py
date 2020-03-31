@@ -13,7 +13,6 @@ class MessageAdmin(admin.ModelAdmin):
         "sender",
         "recipient",
         "parent",
-        "thread",
         "message",
         "community",
         "read",

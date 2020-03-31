@@ -45,6 +45,27 @@ class MessageQuerySet(
             recipient__is_active=True,
         )
 
+    def common_select_related(self):
+        """
+        Joins related models for most common operations on views:
+
+            - sender
+            - recipient
+            - community
+            - parent + sender/recipient
+
+        Returns:
+            QuerySet
+        """
+        return self.select_related(
+            "sender",
+            "recipient",
+            "community",
+            "parent",
+            "parent__sender",
+            "parent__recipient",
+        )
+
     def for_sender(self, sender):
         """Returns messages sent by this user. Does not
         include any deleted by this user.
@@ -166,17 +187,6 @@ class MessageQuerySet(
     def unread(self):
         return self.filter(read__isnull=True)
 
-    def all_replies_for(self, message):
-        """
-        Return all replies where message is parent or thread grandparent.
-
-        Args:
-            message (Message): parent or grandparent thread
-        Returns:
-            QuerySet
-        """
-        return self.filter(models.Q(parent=message) | models.Q(thread=message))
-
     def reply_count_subquery(self, replies):
         return models.Subquery(
             replies.values("parent").annotate(count=models.Count("pk")).values("count"),
@@ -262,15 +272,6 @@ class Message(TimeStampedModel):
 
     message = MarkdownField()
 
-    thread = models.ForeignKey(
-        "self",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="children",
-    )
-
-    # immediate parent
     parent = models.ForeignKey(
         "self",
         null=True,
@@ -361,20 +362,6 @@ class Message(TimeStampedModel):
         else:
             self.save(update_fields=[field])
 
-    def get_thread(self, user):
-        """Returns thread (grandfather message)
-        if exists and is visible to user.
-
-        Args:
-            user (User): sender or recipient
-        Returns:
-            Message or None
-        """
-
-        if self.thread and self.thread.is_visible(user):
-            return self.thread
-        return None
-
     def get_parent(self, user):
         """Returns parent if exists and is visible to user.
 
@@ -401,14 +388,27 @@ class Message(TimeStampedModel):
         """
         return self.recipient if user == self.sender else self.sender
 
-    def mark_read(self):
+    def mark_read(self, recipient, mark_replies=False):
         """Marks message read. Any associated Notification instances
-        are marked read.
+        are marked read. Any unread messages or messages where user is
+        not the recipient are ignored.
+
+        Args:
+            recipient (User): recipient of message and any replies
+            mark_replies (bool, optional): mark all replies read if recipient (default: False)
+
+        Returns:
+            int: number of messages marked read
         """
-        if not self.read:
-            self.read = timezone.now()
-            self.save(update_fields=["read"])
-            self.get_notifications().unread().mark_read()
+        message_ids = [self.id]
+        if mark_replies:
+            message_ids += list(self.replies.values_list("id", flat=True))
+        return (
+            self.__class__._default_manager.for_recipient(recipient)
+            .unread()
+            .filter(pk__in=message_ids)
+            .mark_read()
+        )
 
     @dispatch
     def notify(self):

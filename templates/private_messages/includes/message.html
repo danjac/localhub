@@ -32,82 +32,77 @@
     {% endcollapsable %}
   </div>
   <div class="card-footer">
-    <div class="dropdown mt-2"
-         data-controller="toggle">
-      <a class="btn btn-sm dropdown-toggle"
-         tabindex="0">
-        {% trans "Actions" %}<i class="icon icon-caret"></i>
-      </a>
-      <ul class="menu">
-        {% if is_recipient and not message.read %}
-        <li class="menu-item">
-          <a href="{% url 'private_messages:message_mark_read' message.id %}"
-             class="d-hide"
-             data-controller="js-toggle ajax"
-             data-action="ajax#post"
-             data-ajax-redirect="{{ request.get_full_path }}">{% trans "Mark As Read" %}</a>
-        </li>
-        {% endif %}
+    <div class="d-flex align-center">
+      <div class="dropdown mt-2 mr-2"
+           data-controller="toggle">
+        <a class="btn btn-sm dropdown-toggle"
+           tabindex="0">
+          {% trans "Actions" %}<i class="icon icon-caret"></i>
+        </a>
+        <ul class="menu">
+          {% if is_recipient and not message.read %}
+          <li class="menu-item">
+            <a href="{% url 'private_messages:message_mark_read' message.id %}"
+               class="d-hide"
+               data-controller="js-toggle ajax"
+               data-action="ajax#post"
+               data-ajax-redirect="{{ request.get_full_path }}">{% trans "Mark As Read" %}</a>
+          </li>
+          {% endif %}
 
-        <li class="menu-item">
-          <a href="{% url 'private_messages:message_bookmark' message.id %}"
-             {% if message.has_bookmarked %}
-             class="d-hide"
-             data-js-toggle-ignore
-             {% endif %}
-             data-controller="js-toggle ajax"
-             data-target="toggle.togglable"
-             data-toggle-target="bookmark"
-             data-ajax-redirect="none"
-             data-action="ajax#post toggle#toggle">{% trans "Bookmark" %}</a>
-          <a href="{% url 'private_messages:message_remove_bookmark' message.id %}"
-             {% if not message.has_bookmarked %}
-             class="d-hide"
-             data-js-toggle-ignore
-             {% endif %}
-             data-controller="js-toggle ajax"
-             data-target="toggle.togglable"
-             data-toggle-target="bookmark"
-             data-ajax-redirect="none"
-             data-action="ajax#post toggle#toggle"><s>{% trans "Bookmark" %}</s></a>
-        </li>
+          <li class="menu-item">
+            <a href="{% url 'private_messages:message_bookmark' message.id %}"
+               {% if message.has_bookmarked %}
+               class="d-hide"
+               data-js-toggle-ignore
+               {% endif %}
+               data-controller="js-toggle ajax"
+               data-target="toggle.togglable"
+               data-toggle-target="bookmark"
+               data-ajax-redirect="none"
+               data-action="ajax#post toggle#toggle">{% trans "Bookmark" %}</a>
+            <a href="{% url 'private_messages:message_remove_bookmark' message.id %}"
+               {% if not message.has_bookmarked %}
+               class="d-hide"
+               data-js-toggle-ignore
+               {% endif %}
+               data-controller="js-toggle ajax"
+               data-target="toggle.togglable"
+               data-toggle-target="bookmark"
+               data-ajax-redirect="none"
+               data-action="ajax#post toggle#toggle"><s>{% trans "Bookmark" %}</s></a>
+          </li>
 
-        {% if can_reply %}
-        <li class="menu-item">
-          <a href="{% url 'private_messages:message_reply' message.id %}">
-            {% trans "Reply" %}
-          </a>
-        </li>
-        {% elif can_follow_up %}
-        <li class="menu-item">
-          <a href="{% url 'private_messages:message_follow_up' message.id %}">
-            {% trans "Follow-Up" %}
-          </a>
-        </li>
-        {% endif %}
-        <li class="menu-item">
-          <a href="{% url 'private_messages:message_delete' message.id %}"
-             data-controller="ajax confirm"
-             data-action="confirm#check ajax#post"
-             data-ajax-redirect="{{ post_delete_redirect|default:request.get_full_path }}"
-             data-confirm-header="{% trans 'Delete Message' %}"
-             data-confirm-body="{% trans "Are you sure you want to delete this message? Replies to this message will not be deleted. The message may still be available to the other person." %}">{% trans "Delete" %}</a>
+          {% if can_reply %}
+          <li class="menu-item">
+            <a href="{% url 'private_messages:message_reply' message.id %}">
+              {% trans "Reply" %}
+            </a>
+          </li>
+          {% elif can_follow_up %}
+          <li class="menu-item">
+            <a href="{% url 'private_messages:message_follow_up' message.id %}">
+              {% trans "Follow-Up" %}
+            </a>
+          </li>
+          {% endif %}
+          <li class="menu-item">
+            <a href="{% url 'private_messages:message_delete' message.id %}"
+               data-controller="ajax confirm"
+               data-action="confirm#check ajax#post"
+               data-ajax-redirect="{{ post_delete_redirect|default:request.get_full_path }}"
+               data-confirm-header="{% trans 'Delete Message' %}"
+               data-confirm-body="{% trans "Are you sure you want to delete this message? Replies to this message will not be deleted. The message may still be available to the other person." %}">{% trans "Delete" %}</a>
 
-        </li>
-        <li class="menu-item">
-          <a href="{{ message_url }}">{% trans "Link" %}</a>
-        </li>
+          </li>
+        </ul>
+      </div>
+      <div class="actions">
+        <a href="{{ message_url }}">{% trans "Link" %}</a>
         {% if parent %}
-        <li class="menu-item">
-          <a href="{{ parent_url }}">{% trans "Parent" %}</a>
-        </li>
+        <a href="{{ parent_url }}">{% trans "Parent" %}</a>
         {% endif %}
-        {% if thread and parent != thread %}
-        <li class="menu-item">
-          <a href="{{ thread_url }}">{% trans "Thread" %}</a>
-        </li>
-        {% endif %}
-      </ul>
+      </div>
     </div>
   </div>
 </div>

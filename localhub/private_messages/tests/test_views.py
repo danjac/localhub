@@ -169,15 +169,13 @@ class TestMessageFollowUpView:
         )
         assert response.status_code == 404
 
-    def test_post_if_thread(self, client, member, send_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
         recipient = MembershipFactory(community=member.community).member
         thread = MessageFactory(recipient=recipient, sender=member.member)
         parent = MessageFactory(
             sender=member.member,
             recipient=recipient,
             community=member.community,
-            parent=thread,
-            thread=thread,
         )
         response = client.post(
             reverse("private_messages:message_follow_up", args=[parent.id]),
@@ -186,33 +184,6 @@ class TestMessageFollowUpView:
         message = Message.objects.latest("created")
         assert message.get_absolute_url() == response.url
         assert message.parent == parent
-        assert message.thread == thread
-        assert message.recipient == recipient
-        assert message.sender == member.member
-        assert message.community == member.community
-
-        assert send_webpush_mock.delay.called_once()
-
-    def test_post_if_thread_not_visible(self, client, member, send_webpush_mock):
-        recipient = MembershipFactory(community=member.community).member
-        thread = MessageFactory(
-            recipient=recipient, sender=member.member, sender_deleted=timezone.now()
-        )
-        parent = MessageFactory(
-            sender=member.member,
-            recipient=recipient,
-            community=member.community,
-            parent=thread,
-            thread=thread,
-        )
-        response = client.post(
-            reverse("private_messages:message_follow_up", args=[parent.id]),
-            {"message": "test"},
-        )
-        message = Message.objects.latest("created")
-        assert message.get_absolute_url() == response.url
-        assert message.parent == parent
-        assert message.thread == thread
         assert message.recipient == recipient
         assert message.sender == member.member
         assert message.community == member.community
@@ -243,15 +214,10 @@ class TestMessageReplyView:
         )
         assert response.status_code == 404
 
-    def test_post_if_thread(self, client, member, send_webpush_mock):
+    def test_post(self, client, member, send_webpush_mock):
         sender = MembershipFactory(community=member.community).member
-        thread = MessageFactory(recipient=sender, sender=member.member)
         parent = MessageFactory(
-            sender=sender,
-            recipient=member.member,
-            community=member.community,
-            parent=thread,
-            thread=thread,
+            sender=sender, recipient=member.member, community=member.community,
         )
         response = client.post(
             reverse("private_messages:message_reply", args=[parent.id]),
@@ -260,41 +226,9 @@ class TestMessageReplyView:
         message = Message.objects.latest("created")
         assert message.get_absolute_url() == response.url
         assert message.parent == parent
-        assert message.thread == thread
         assert message.recipient == parent.sender
         assert message.sender == member.member
         assert message.community == member.community
-
-        assert send_webpush_mock.delay.called_once()
-
-    def test_post_if_thread_not_visible(
-        self, client, member, mailoutbox, send_webpush_mock
-    ):
-        sender = MembershipFactory(community=member.community).member
-        thread = MessageFactory(
-            recipient=sender, sender=member.member, sender_deleted=timezone.now()
-        )
-        parent = MessageFactory(
-            sender=sender,
-            recipient=member.member,
-            community=member.community,
-            parent=thread,
-            thread=thread,
-        )
-        response = client.post(
-            reverse("private_messages:message_reply", args=[parent.id]),
-            {"message": "test"},
-        )
-        message = Message.objects.latest("created")
-        assert message.get_absolute_url() == response.url
-        assert message.parent == parent
-        assert message.thread == thread
-        assert message.recipient == parent.sender
-        assert message.sender == member.member
-        assert message.community == member.community
-
-        assert len(mailoutbox) == 1
-        assert mailoutbox[0].to == [message.recipient.email]
 
         assert send_webpush_mock.delay.called_once()
 

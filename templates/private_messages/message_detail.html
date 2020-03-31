@@ -9,11 +9,6 @@
 
 {% if parent %}
 <ul class="breadcrumb">
-  {% if thread and parent != thread %}
-  <li class="breadcrumb-item">
-    <a href="{{ thread.get_absolute_url }}">{% trans "Thread" %}</a>
-  </li>
-  {% endif %}
   <li class="breadcrumb-item">
     <a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a>
   </li>
