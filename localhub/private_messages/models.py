@@ -184,12 +184,6 @@ class MessageQuerySet(
     def unread(self):
         return self.filter(read__isnull=True)
 
-    def reply_count_subquery(self, replies):
-        return models.Subquery(
-            replies.values("parent").annotate(count=models.Count("pk")).values("count"),
-            output_field=models.IntegerField(),
-        )
-
     def with_num_replies(self, user):
         """
         Annotated queryset with num_replies (replies to own messages).
@@ -201,7 +195,7 @@ class MessageQuerySet(
             QuerySet
         """
         return self.annotate(
-            num_replies=self.reply_count_subquery(
+            num_replies=self._reply_count_subquery(
                 self.model._default_manager.for_sender_or_recipient(user)
                 .filter(parent=models.OuterRef("pk"))
                 .exclude(sender=models.OuterRef("sender"))
@@ -219,7 +213,7 @@ class MessageQuerySet(
             QuerySet
         """
         return self.annotate(
-            num_follow_ups=self.reply_count_subquery(
+            num_follow_ups=self._reply_count_subquery(
                 self.model._default_manager.for_sender_or_recipient(user).filter(
                     parent=models.OuterRef("pk"), sender=models.OuterRef("sender")
                 )
@@ -237,7 +231,7 @@ class MessageQuerySet(
         """
         return self.with_num_follow_ups(user).with_num_replies(user)
 
-    def all_replies(self, parent, include_self=False):
+    def all_replies(self, parent):
         """
         Does a recursive query, returning all descendants of this message (
             direct replies + all their replies.
@@ -245,7 +239,6 @@ class MessageQuerySet(
 
         Args:
             parent (Message): top-level message parent/grandparent
-            include_self (bool, optional): whether to include parent (default: False)
 
         Returns:
             QuerySet
@@ -261,11 +254,8 @@ class MessageQuerySet(
             f"UNION ALL SELECT {table_name}.id FROM children, {table_name} "
             f"WHERE {table_name}.parent_id=children.id)"
             f"SELECT {table_name}.id FROM {table_name}, children "
-            f"WHERE children.id={table_name}.id"
+            f"WHERE children.id={table_name}.id AND {table_name}.id != {parent.pk}"
         )
-
-        if not include_self:
-            query += f" AND {table_name}.id != {parent.pk}"
 
         return self.filter(pk__in=[obj.id for obj in self.raw(query)])
 
@@ -289,6 +279,12 @@ class MessageQuerySet(
             QuerySet: Notifications associated with objects in this QuerySet
         """
         return get_generic_related_queryset(self, Notification)
+
+    def _reply_count_subquery(self, replies):
+        return models.Subquery(
+            replies.values("parent").annotate(count=models.Count("pk")).values("count"),
+            output_field=models.IntegerField(),
+        )
 
 
 class Message(TimeStampedModel):
@@ -439,19 +435,13 @@ class Message(TimeStampedModel):
             if mark_replies:
                 self.get_all_replies().for_recipient(self.recipient).mark_read()
 
-    def get_all_replies(self, include_self=False):
+    def get_all_replies(self):
         """
-        Returns all replies including deep descendants for this message.
-
-        Args:
-            include_self (bool, optional): whether to include this instance with
-                the replies (default: False)
-
         Returns:
-            QuerySet
+            QuerySet: all replies including replies' descendants (recursive).
         """
 
-        return self.__class__._default_manager.all_replies(self, include_self)
+        return self.__class__._default_manager.all_replies(self)
 
     def make_notification(self, verb):
         return Notification(

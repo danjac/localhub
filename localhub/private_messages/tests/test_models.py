@@ -330,6 +330,18 @@ class TestMessageManager:
         message = Message.objects.with_bookmarked_timestamp(user).first()
         assert message.bookmarked is not None
 
+    def test_all_replies(self):
+
+        parent = MessageFactory()
+        first_child = MessageFactory(parent=parent)
+        second_child = MessageFactory(parent=first_child)
+
+        children = Message.objects.all_replies(parent)
+
+        assert first_child in children
+        assert second_child in children
+        assert parent not in children
+
 
 class TestMessageModel:
     def test_get_absolute_url(self, message):
@@ -415,23 +427,11 @@ class TestMessageModel:
         first_child = MessageFactory(parent=parent)
         second_child = MessageFactory(parent=first_child)
 
-        children = parent.get_all_replies(include_self=False)
+        children = parent.get_all_replies()
 
         assert first_child in children
         assert second_child in children
         assert parent not in children
-
-    def test_get_all_replies_include_self(self):
-
-        parent = MessageFactory()
-        first_child = MessageFactory(parent=parent)
-        second_child = MessageFactory(parent=first_child)
-
-        children = parent.get_all_replies(include_self=True)
-
-        assert first_child in children
-        assert second_child in children
-        assert parent in children
 
     def test_mark_read(self):
         parent = MessageFactory()
