@@ -227,17 +227,17 @@ class TestPostModel:
         notifications = list(reshare.notify_on_create())
         assert len(notifications) == 3
 
-        assert notifications[0].recipient == mentioned
+        assert notifications[0].recipient == post.owner
         assert notifications[0].actor == reshare.owner
-        assert notifications[0].verb == "mention"
+        assert notifications[0].verb == "reshare"
 
-        assert notifications[1].recipient == tag_follower
+        assert notifications[1].recipient == mentioned
         assert notifications[1].actor == reshare.owner
-        assert notifications[1].verb == "followed_tag"
+        assert notifications[1].verb == "mention"
 
-        assert notifications[2].recipient == post.owner
+        assert notifications[2].recipient == tag_follower
         assert notifications[2].actor == reshare.owner
-        assert notifications[2].verb == "reshare"
+        assert notifications[2].verb == "followed_tag"
 
     def test_soft_delete(self, post, mocker):
         CommentFactory(content_object=post)

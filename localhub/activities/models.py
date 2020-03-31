@@ -554,14 +554,14 @@ class Activity(TimeStampedModel):
         notifications = []
         recipients = self.get_notification_recipients()
 
+        if self.parent:
+            notifications += self.notify_parent_owner(recipients)
+
         if self.description:
             notifications += self.notify_mentioned_users(recipients)
             notifications += self.notify_tag_followers(recipients)
 
         notifications += self.notify_followers(recipients)
-
-        if self.parent:
-            notifications += self.notify_parent_owner(recipients)
 
         return takefirst(notifications, lambda n: n.recipient)
 

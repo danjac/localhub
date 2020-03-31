@@ -19,6 +19,11 @@
 {% notification latest_notification %}
 <div class="toast toast-primary text-center my-2">
   {{ notification_content }}
+  <button class="btn btn-clear float-right d-hide"
+          data-controller="ajax js-toggle"
+          data-action="ajax#post"
+          data-ajax-redirect="{{ request.get_full_path }}"
+          data-ajax-url="{% url 'notifications:mark_all_read' %}"></button>
 </div>
 {% endnotification %}
 {% endif %}
