@@ -33,23 +33,12 @@ class TestMessageManager:
         message = MessageFactory()
         notification = NotificationFactory(content_object=message)
 
-        Message.objects.mark_read(message.recipient)
+        Message.objects.mark_read()
         message.refresh_from_db()
         notification.refresh_from_db()
 
         assert notification.is_read
         assert message.read
-
-    def test_mark_read_if_not_recipient(self):
-        message = MessageFactory()
-        notification = NotificationFactory(content_object=message)
-
-        Message.objects.mark_read(message.sender)
-        message.refresh_from_db()
-        notification.refresh_from_db()
-
-        assert not notification.is_read
-        assert not message.read
 
     def test_unread_if_read(self):
         MessageFactory(read=timezone.now())
@@ -423,35 +412,6 @@ class TestMessageModel:
         assert second_child in children
         assert parent in children
 
-    def test_mark_read_if_not_recipient(self):
-        parent = MessageFactory()
-
-        first_reply = MessageFactory(parent=parent, recipient=parent.recipient)
-        second_reply = MessageFactory(parent=parent, recipient=parent.sender)
-
-        parent_notification = NotificationFactory(content_object=parent)
-        first_notification = NotificationFactory(content_object=first_reply)
-        second_notification = NotificationFactory(content_object=second_reply)
-
-        parent.mark_read(parent.sender, mark_replies=False)
-
-        for obj in (
-            parent,
-            first_reply,
-            second_reply,
-            parent_notification,
-            first_notification,
-            second_notification,
-        ):
-            obj.refresh_from_db()
-
-        assert not parent.read
-        assert not first_reply.read
-        assert not first_reply.read
-        assert not parent_notification.is_read
-        assert not first_notification.is_read
-        assert not second_notification.is_read
-
     def test_mark_read(self):
         parent = MessageFactory()
 
@@ -462,7 +422,7 @@ class TestMessageModel:
         first_notification = NotificationFactory(content_object=first_reply)
         second_notification = NotificationFactory(content_object=second_reply)
 
-        parent.mark_read(parent.recipient, mark_replies=False)
+        parent.mark_read(mark_replies=False)
 
         for obj in (
             parent,
@@ -491,7 +451,7 @@ class TestMessageModel:
         first_notification = NotificationFactory(content_object=first_reply)
         second_notification = NotificationFactory(content_object=second_reply)
 
-        parent.mark_read(parent.recipient, mark_replies=True)
+        parent.mark_read(mark_replies=True)
 
         for obj in (
             parent,
@@ -503,11 +463,15 @@ class TestMessageModel:
         ):
             obj.refresh_from_db()
 
+        # recipient
         assert parent.read
         assert first_reply.read
+        # not recipient
         assert not second_reply.read
+        # recipient
         assert parent_notification.is_read
         assert first_notification.is_read
+        # not recipient
         assert not second_notification.is_read
 
     def test_soft_delete_if_recipient(self, message):

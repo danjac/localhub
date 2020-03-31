@@ -107,8 +107,15 @@ class BaseReplyFormView(BaseMessageFormView):
     def recipient(self):
         return self.parent.get_other_user(self.request.user)
 
+    @cached_property
+    def recipient_display(self):
+        return user_display(self.recipient)
+
     def get_form(self, data=None, files=None):
         form = self.form_class(data, files)
+        form["message"].label = _(
+            "Send message to %(recipient)s" % {"recipient": self.recipient_display}
+        )
         form["message"].initial = "\n".join(
             ["> " + line for line in self.parent.message.splitlines()]
         )
@@ -118,6 +125,7 @@ class BaseReplyFormView(BaseMessageFormView):
         data = super().get_context_data(**kwargs)
         data["parent"] = self.parent
         data["recipient"] = self.recipient
+        data["recipient_display"] = self.recipient_display
         return data
 
     def form_valid(self, form):
@@ -128,12 +136,13 @@ class BaseReplyFormView(BaseMessageFormView):
         message.parent = self.parent
         message.save()
 
-        self.parent.mark_read(self.request.user)
+        if self.parent.recipient == self.request.user:
+            self.parent.mark_read()
 
         messages.success(
             self.request,
             _("Your message has been sent to %(recipient)s")
-            % {"recipient": user_display(message.recipient)},
+            % {"recipient": self.recipient_display},
         )
         message.notify()
         return redirect(message)
@@ -171,9 +180,17 @@ class MessageCreateView(
     def recipient_display(self):
         return user_display(self.recipient)
 
+    def get_form(self, data=None, files=None):
+        form = self.form_class(data, files)
+        form["message"].label = _(
+            "Send message to %(recipient)s" % {"recipient": self.recipient_display}
+        )
+        return form
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["recipient"] = self.recipient
+        data["recipient_display"] = self.recipient_display
         return data
 
     def form_valid(self, form):
@@ -203,7 +220,8 @@ class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
 
     def get_object(self):
         obj = super().get_object()
-        obj.mark_read(self.request.user, mark_replies=True)
+        if obj.recipient == self.request.user:
+            obj.mark_read(mark_replies=True)
         return obj
 
     def get_replies(self):
@@ -263,7 +281,7 @@ class MessageMarkReadView(RecipientQuerySetMixin, GenericModelView):
 
     def post(self, request, *args, **kwargs):
         message = self.get_object()
-        message.mark_read(self.request.user)
+        message.mark_read()
         return redirect(message)
 
 
@@ -275,7 +293,7 @@ class MessageMarkAllReadView(RecipientQuerySetMixin, View):
         return super().get_queryset().unread()
 
     def post(self, request, *args, **kwargs):
-        self.get_queryset().mark_read(self.request.user)
+        self.get_queryset().for_recipient(self.request.user).mark_read()
         return redirect("private_messages:inbox")
 
 

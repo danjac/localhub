@@ -269,7 +269,7 @@ class MessageQuerySet(
 
         return self.filter(pk__in=[obj.id for obj in self.raw(query)])
 
-    def mark_read(self, recipient):
+    def mark_read(self):
         """Mark read any un-read items. Associated Notifications
         are also marked read.
 
@@ -279,7 +279,7 @@ class MessageQuerySet(
         Returns:
             int: number of messages updated
         """
-        q = self.for_recipient(recipient).unread()
+        q = self.unread()
         q.notifications().mark_read()
         return q.update(read=timezone.now())
 
@@ -422,23 +422,22 @@ class Message(TimeStampedModel):
         """
         return self.recipient if user == self.sender else self.sender
 
-    def mark_read(self, recipient, mark_replies=False):
+    def mark_read(self, mark_replies=False):
         """Marks message read. Any associated Notification instances
         are marked read. Any unread messages or messages where user is
         not the recipient are ignored.
 
         Args:
-            recipient (User): recipient of message and any replies
             mark_replies (bool, optional): mark all replies read if recipient (default: False)
         """
 
-        if self.recipient == recipient and not self.read:
+        if not self.read:
             self.read = timezone.now()
             self.save(update_fields=["read"])
             self.get_notifications().mark_read()
 
-        if mark_replies:
-            self.get_all_replies().mark_read(recipient)
+            if mark_replies:
+                self.get_all_replies().for_recipient(self.recipient).mark_read()
 
     def get_all_replies(self, include_self=False):
         """
