@@ -13,7 +13,7 @@ register = template.Library()
 
 @register.inclusion_tag("private_messages/includes/message.html", takes_context=True)
 def show_message(
-    context, user, community, message, is_thread=False, is_detail=False,
+    context, user, community, message, top_parent=None, is_detail=False,
 ):
 
     is_sender = user == message.sender
@@ -30,11 +30,10 @@ def show_message(
 
     message_url = message.get_absolute_url()
 
-    # no need to include parent in same page
-    if is_thread:
+    parent = message.get_parent(user)
+
+    if top_parent and top_parent == parent:
         parent = None
-    else:
-        parent = message.get_parent(user)
 
     parent_url = parent.get_absolute_url() if parent else None
 
@@ -45,7 +44,6 @@ def show_message(
         "request": context["request"],
         "user": user,
         "is_detail": is_detail,
-        "is_thread": is_thread,
         "is_recipient": is_recipient,
         "is_sender": is_sender,
         "is_unread": is_unread,

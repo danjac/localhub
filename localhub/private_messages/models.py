@@ -240,6 +240,38 @@ class MessageQuerySet(
         """
         return self.with_num_follow_ups(user).with_num_replies(user)
 
+    def all_replies(self, parent, include_self=False):
+        """
+        Does a recursive query, returning all descendants of this message (
+            direct replies + all their replies.
+        )
+
+        Args:
+            parent (Message): top-level message parent/grandparent
+            include_self (bool, optional): whether to include parent (default: False)
+
+        Returns:
+            QuerySet
+        """
+
+        # does PostgreSQL WITH RECURSIVE
+
+        table_name = self.model._meta.db_table
+
+        query = (
+            "WITH RECURSIVE children (id) AS ("
+            f"SELECT {table_name}.id FROM {table_name} WHERE id={parent.pk} "
+            f"UNION ALL SELECT {table_name}.id FROM children, {table_name} "
+            f"WHERE {table_name}.parent_id=children.id)"
+            f"SELECT {table_name}.id FROM {table_name}, children "
+            f"WHERE children.id={table_name}.id"
+        )
+
+        if not include_self:
+            query += f" AND {table_name}.id != {parent.pk}"
+
+        return self.filter(pk__in=[obj.id for obj in self.raw(query)])
+
     def mark_read(self):
         """Mark read any un-read items
 
@@ -400,15 +432,28 @@ class Message(TimeStampedModel):
         Returns:
             int: number of messages marked read
         """
-        message_ids = [self.id]
+
         if mark_replies:
-            message_ids += list(self.replies.values_list("id", flat=True))
-        return (
-            self.__class__._default_manager.for_recipient(recipient)
-            .unread()
-            .filter(pk__in=message_ids)
-            .mark_read()
-        )
+            q = self.get_all_replies(include_self=True)
+
+        else:
+            q = self.__class__._default_manager.filter(pk=self.pk)
+
+        return q.for_recipient(recipient).unread().mark_read()
+
+    def get_all_replies(self, include_self=False):
+        """
+        Returns all replies including deep descendants for this message.
+
+        Args:
+            include_self (bool, optional): whether to include this instance with
+                the replies (default: False)
+
+        Returns:
+            QuerySet
+        """
+
+        return self.__class__._default_manager.all_replies(self, include_self)
 
     @dispatch
     def notify(self):

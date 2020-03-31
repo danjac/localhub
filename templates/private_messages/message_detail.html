@@ -36,6 +36,6 @@
 
 {% show_message user community message is_detail=True %}
 {% for reply in replies %}
-{% show_message user community reply is_thread=True %}
+{% show_message user community reply top_parent=message %}
 {% endfor %}
 {% endblock content %}

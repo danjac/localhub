@@ -208,7 +208,9 @@ class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
 
     def get_replies(self):
         return (
-            self.object.replies.for_sender_or_recipient(self.request.user)
+            self.object.get_all_replies()
+            .for_sender_or_recipient(self.request.user)
+            .common_select_related()
             .order_by("created")
             .distinct()
         )

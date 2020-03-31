@@ -97,12 +97,14 @@
           </li>
         </ul>
       </div>
+      {% if not is_detail %}
       <div class="actions">
         <a href="{{ message_url }}">{% trans "Link" %}</a>
         {% if parent %}
         <a href="{{ parent_url }}">{% trans "Parent" %}</a>
         {% endif %}
       </div>
+      {% endif %}
     </div>
   </div>
 </div>
