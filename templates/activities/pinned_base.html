@@ -25,8 +25,10 @@
   </div>
   <div class="card-footer">
     {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
-    {% block actions %}{% include "activities/includes/actions.html" %}{% endblock %}
-    {% block links %}{% include "activities/includes/links.html" %}{% endblock %}
+    <div class="d-flex align-center">
+      {% block actions %}{% include "activities/includes/actions.html" %}{% endblock %}
+      {% block links %}{% include "activities/includes/links.html" %}{% endblock %}
+    </div>
   </div>
 </div>
 {% endwith %}

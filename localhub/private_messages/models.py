@@ -330,7 +330,7 @@ class Message(TimeStampedModel):
             return text
         return "..." + text[total_length - length :]
 
-    def is_visible(self, user):
+    def accessible_to(self, user):
         """
         Checks if user is a) sender or recipient and b) has not deleted
         the message.
@@ -371,7 +371,7 @@ class Message(TimeStampedModel):
             Message or None
         """
 
-        if self.parent and self.parent.is_visible(user):
+        if self.parent and self.parent.accessible_to(user):
             return self.parent
         return None
 
