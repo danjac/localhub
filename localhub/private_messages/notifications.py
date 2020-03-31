@@ -9,7 +9,6 @@ from localhub.users.utils import user_display
 
 from .models import Message
 
-
 HEADERS = {
     "send": _("%(sender)s has sent you a message"),
     "reply": _("%(sender)s has replied to your message"),
