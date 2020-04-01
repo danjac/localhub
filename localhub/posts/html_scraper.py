@@ -4,7 +4,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-from localhub.utils.http import get_domain, is_image_url, is_url, resolve_url
+from localhub.utils.http import get_domain, is_image_url, is_url
 
 
 class HTMLScraper:
@@ -49,7 +49,6 @@ class HTMLScraper:
             HTMLScraper.Invalid: if unreachable URL or data returned not HTML
         """
         try:
-            url = resolve_url(url)
             response = requests.get(
                 url, headers={"User-Agent": cls.FAKE_BROWSER_USER_AGENT}
             )

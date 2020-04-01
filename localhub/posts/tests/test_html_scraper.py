@@ -8,46 +8,10 @@ from ..html_scraper import HTMLScraper
 
 
 class TestHTMLScraperFromUrl:
-    def test_if_good_response_with_head_different_url(self, mocker):
-        class MockResponse:
-            ok = True
-            headers = {"Content-Type": "text/html; charset=utf-8"}
-            content = """<html>
-            <head>
-            <title>Hello</title>
-            <meta property="og:title" content="a test site">
-            <meta property="og:image" content="http://example.com/test.jpg">
-            <meta property="og:description" content="test description">
-            </head>
-            <body>
-            </body>
-            </html>"""
-
-        mocker.patch(
-            "localhub.posts.html_scraper.resolve_url",
-            return_value="https://google.com",
-        )
-
-        mocker.patch(
-            "requests.get", return_value=MockResponse,
-        )
-
-        scraper = HTMLScraper.from_url("http://google.com")
-
-        assert scraper.url == "https://google.com"
-        assert scraper.title == "a test site"
-        assert scraper.image == "http://example.com/test.jpg"
-        assert scraper.description == "test description"
-
     def test_if_non_html_response(self, mocker):
         class MockResponse:
             ok = True
             headers = {"Content-Type": "application/json"}
-
-        mocker.patch(
-            "localhub.posts.html_scraper.resolve_url",
-            return_value="https://google.com",
-        )
 
         mocker.patch(
             "requests.get", return_value=MockResponse,
@@ -65,11 +29,6 @@ class TestHTMLScraperFromUrl:
             ok = False
 
         mocker.patch(
-            "localhub.posts.html_scraper.resolve_url",
-            return_value="https://google.com",
-        )
-
-        mocker.patch(
             "requests.get", return_value=MockResponse,
         )
 
@@ -81,10 +40,6 @@ class TestHTMLScraperFromUrl:
             assert scraper.description is None
 
     def test_if_error(self, mocker):
-        mocker.patch(
-            "localhub.posts.html_scraper.resolve_url",
-            return_value="https://google.com",
-        )
 
         mocker.patch(
             "requests.get", side_effect=requests.RequestException,

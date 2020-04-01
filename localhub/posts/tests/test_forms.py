@@ -63,29 +63,32 @@ class TestPostForm:
         form = PostForm(instance=post)
         assert "clear_opengraph_data" not in form.fields
 
-    def test_fetch_opengraph_data_if_url(self, mock_html_scraper_from_url):
+    def test_fetch_opengraph_data_if_url(self, mock_html_scraper_from_url, mocker):
         form = PostForm(
             {"url": "http://twitter.com", "title": "", "fetch_opengraph_data": True}
         )
 
+        mocker.patch("localhub.posts.forms.resolve_url", return_value=form.data["url"])
+
         assert form.is_valid()
         cleaned_data = form.clean()
         assert cleaned_data["title"] == "Imgur"
-        assert cleaned_data["url"] == "https://imgur.com"
+        assert cleaned_data["url"] == "http://twitter.com"
         assert cleaned_data["opengraph_image"] == "https://imgur.com/cat.gif"
         assert cleaned_data["opengraph_description"] == "cat"
 
     def test_fetch_opengraph_data_if_invalid_url(
-        self, mock_html_scraper_from_invalid_url
+        self, mock_html_scraper_from_invalid_url, mocker
     ):
         form = PostForm(
             {"url": "http://twitter.com", "title": "", "fetch_opengraph_data": True}
         )
 
+        mocker.patch("localhub.posts.forms.resolve_url", return_value=form.data["url"])
         assert not form.is_valid()
 
     def test_fetch_opengraph_data_if_image_url_no_title(
-        self, mock_html_scraper_from_invalid_url
+        self, mock_html_scraper_from_invalid_url, mocker
     ):
         form = PostForm(
             {
@@ -95,10 +98,12 @@ class TestPostForm:
             }
         )
 
+        mocker.patch("localhub.posts.forms.resolve_url", return_value=form.data["url"])
+
         assert not form.is_valid()
 
     def test_fetch_opengraph_data_if_image_url(
-        self, mock_html_scraper_from_invalid_url
+        self, mock_html_scraper_from_invalid_url, mocker
     ):
         form = PostForm(
             {
@@ -108,22 +113,44 @@ class TestPostForm:
             }
         )
 
+        mocker.patch("localhub.posts.forms.resolve_url", return_value=form.data["url"])
         assert form.is_valid()
 
+    def test_fetch_opengraph_data_if_image_url_resolves_differently(
+        self, mock_html_scraper_from_invalid_url, mocker
+    ):
+        form = PostForm(
+            {
+                "url": "http://imgur.com/cat.gif",
+                "title": "cat",
+                "fetch_opengraph_data": True,
+            }
+        )
+
+        mocker.patch(
+            "localhub.posts.forms.resolve_url", return_value="https://imgur.com/cat.gif"
+        )
+        assert form.is_valid()
+        cleaned_data = form.clean()
+        assert cleaned_data["url"] == "https://imgur.com/cat.gif"
+
     def test_fetch_opengraph_data_if_title_and_invalid_url(
-        self, mock_html_scraper_from_invalid_url
+        self, mock_html_scraper_from_invalid_url, mocker
     ):
         form = PostForm(
             {"url": "http://twitter.com", "title": "test", "fetch_opengraph_data": True}
         )
+        mocker.patch("localhub.posts.forms.resolve_url", return_value=form.data["url"])
         assert not form.is_valid()
 
     def test_fetch_opengraph_data_if_not_fetch_opengraph_data_from_url(
-        self, mock_html_scraper_from_url
+        self, mock_html_scraper_from_url, mocker
     ):
         form = PostForm(
             {"url": "https://google.com", "title": "", "fetch_opengraph_data": False}
         )
+
+        mocker.patch("localhub.posts.forms.resolve_url", return_value=form.data["url"])
 
         assert form.is_valid()
         cleaned_data = form.clean()
@@ -131,7 +158,7 @@ class TestPostForm:
         assert cleaned_data["opengraph_image"] == ""
         assert cleaned_data["opengraph_description"] == ""
 
-    def test_clear_opengraph_data(self, mock_html_scraper_from_url):
+    def test_clear_opengraph_data(self, mock_html_scraper_from_url, mocker):
         post = PostFactory(
             title="Imgur",
             opengraph_image="http://imgur.com/cat.gif",
@@ -147,6 +174,7 @@ class TestPostForm:
             },
             instance=post,
         )
+        mocker.patch("localhub.posts.forms.resolve_url", return_value=form.data["url"])
 
         assert form.is_valid()
         cleaned_data = form.clean()
