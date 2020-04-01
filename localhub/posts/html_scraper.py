@@ -19,8 +19,6 @@ class HTMLScraper:
         "(KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36"
     )
 
-    IGNORE_FAKE_BROWSER_HEADERS = ("tumblr.com",)
-
     class Invalid(ValueError):
         ...
 
