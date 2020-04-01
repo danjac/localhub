@@ -100,7 +100,7 @@ class PostForm(ActivityForm):
 
         if not title or fetch_opengraph_data:
             scraper = HTMLScraper.from_url(url)
-            data.update({"title": (title or scraper.title or get_filename(url))[:300]})
+            data.update({"title": (title or scraper.title or "")[:300]})
             if fetch_opengraph_data:
                 data.update(
                     {

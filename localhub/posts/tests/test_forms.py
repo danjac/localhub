@@ -148,6 +148,23 @@ class TestPostForm:
         mocker.patch("localhub.posts.forms.resolve_url", return_value=form.data["url"])
         assert not form.is_valid()
 
+    def test_fetch_opengraph_data_if_valid_url_and_no_title(self, mocker):
+        form = PostForm(
+            {"url": "http://twitter.com", "title": "", "fetch_opengraph_data": True}
+        )
+
+        scraper = HTMLScraper()
+        scraper.title = None
+        scraper.image = "https://imgur.com/cat.gif"
+        scraper.description = "cat"
+
+        mocker.patch(
+            "localhub.posts.html_scraper.HTMLScraper.from_url", return_value=scraper
+        )
+
+        mocker.patch("localhub.posts.forms.resolve_url", return_value=form.data["url"])
+        assert not form.is_valid()
+
     def test_fetch_opengraph_data_if_not_fetch_opengraph_data_from_url(
         self, mock_html_scraper_from_url, mocker
     ):
