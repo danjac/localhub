@@ -5,10 +5,10 @@
 from ..http import (
     get_domain,
     get_domain_url,
+    get_filename,
     is_https,
     is_image_url,
     is_url,
-    get_filename,
 )
 
 
