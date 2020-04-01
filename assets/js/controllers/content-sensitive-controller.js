@@ -6,6 +6,16 @@ import {
 } from 'stimulus';
 
 export default class extends Controller {
+  /*
+  Toggles an element hidden behind a content warning.
+
+  actions:
+    toggle: triggers the toggle
+
+  targets:
+    togglable: an element to be shown/hidden
+    warning: the element showing the warning
+  */
   static targets = ['togglable', 'warning'];
 
   toggle(event) {

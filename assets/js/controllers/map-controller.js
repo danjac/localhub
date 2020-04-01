@@ -26,6 +26,15 @@ L.Icon.Default.mergeOptions({
 const DEFAULT_ZOOM = 13;
 
 export default class extends Controller {
+  /*
+  Inserts an OpenStreetMap into the element on page load.
+
+  data:
+    latitude
+    longitude
+    zoom: zoom level (default: 13)
+
+  */
   connect() {
     const coords = [this.latitude, this.longitude];
     const map = L.map(this.element.id).setView(coords, this.defaultZoom);

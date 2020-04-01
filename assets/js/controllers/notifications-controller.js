@@ -10,6 +10,25 @@ import {
 let registration = null;
 
 export default class extends Controller {
+  /*
+  Manages browser notifications using a serviceWorker. If the browser or device does
+  not support browser notifications (e.g. depending on security settings) then
+  the subscription button is removed.
+
+  actions:
+    subscribe: subscribes browser to service
+    unsubscribe: unsubscribes browser from service
+
+  data:
+    service-worker-url: URL pointing to the serviceWorker.
+    subscribe-url: URL to AJAX endpoint subscribing this browser.
+    unsubscribe-url: URL to AJAX endpoint unsubscribing this browser.
+    vapid-public-key: the Vapid service public subscription key
+
+  targets:
+    subscribeBtn: button or other element to subscribe to notifications
+    unsubscribeBtn: button or other element to unsubscribe from notifications
+  */
   static targets = ['subscribeBtn', 'unsubscribeBtn'];
 
   connect() {

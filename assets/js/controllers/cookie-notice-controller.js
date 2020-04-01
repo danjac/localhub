@@ -7,6 +7,17 @@ import {
 } from 'stimulus';
 
 export default class extends Controller {
+  /*
+  Permanently hides a notice element with a cookie. When
+  page is loaded, checks existence of cookie and hides the
+  element.
+
+  actions:
+    accept: removes element and creates the cookie.
+
+  data:
+    name: the cookie name. Should be unique for whole site.
+  */
   connect() {
     if (!Cookies.get(this.data.get('name'))) {
       this.element.classList.remove('d-hide');

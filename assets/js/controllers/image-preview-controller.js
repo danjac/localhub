@@ -2,25 +2,35 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {
-    Controller
+  Controller
 } from 'stimulus';
 
 export default class extends Controller {
-    static targets = ['image'];
+  /*
+  Shows preview of image. Use with an <input> file widget.
 
-    change(event) {
-        if (event.target.files) {
-            const file = event.target.files[0];
-            if (this.isImage(file.name)) {
-                this.imageTarget.src = URL.createObjectURL(file);
-                this.imageTarget.classList.remove('d-hide');
-            } else {
-                this.imageTarget.classList.add('d-hide');
-            }
-        }
-    }
+  actions:
+    change:
+        when image file is selected.
 
-    isImage(url) {
-        return (url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+  targets:
+      image: the <img> element holding the image.
+  */
+  static targets = ['image'];
+
+  change(event) {
+    if (event.target.files) {
+      const file = event.target.files[0];
+      if (this.isImage(file.name)) {
+        this.imageTarget.src = URL.createObjectURL(file);
+        this.imageTarget.classList.remove('d-hide');
+      } else {
+        this.imageTarget.classList.add('d-hide');
+      }
     }
+  }
+
+  isImage(url) {
+    return (url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+  }
 }

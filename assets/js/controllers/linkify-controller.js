@@ -6,8 +6,15 @@ import {
 import Turbolinks from 'turbolinks';
 
 export default class extends Controller {
-  // make a non-URL type element into a turbolinks-enabled link
-  //
+  /*
+  Turns any non-URL element into a turbolinks-enabled link
+
+  actions:
+    go: triggers the link
+
+  data:
+    url: the URL to use for the link
+  */
   go(event) {
     event.preventDefault();
     this.element.disabled = true;
