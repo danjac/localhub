@@ -80,9 +80,9 @@ class HTMLScraper:
         title = self.meta_tags_from_html("og:title", "twitter:title")
         if title:
             return title
-        elif self.soup.h1 and self.soup.h1.text:
-            return self.soup.h1.text
-        elif self.soup.title:
+        if self.soup.h1 and self.soup.h1.string:
+            return self.soup.h1.string
+        if self.soup.title:
             return self.soup.title.string
         return None
 
@@ -104,9 +104,11 @@ class HTMLScraper:
         text = self.meta_tags_from_html(
             "og:description", "twitter:description", "fb:status", "description"
         )
-        if not text and self.soup.p:
-            text = self.soup.p.string
-        return text or None
+        if text:
+            return text
+        if self.soup.p:
+            return self.soup.p.string
+        return None
 
     def meta_tags_from_html(self, *names):
         for name in names:
