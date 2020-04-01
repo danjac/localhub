@@ -8,6 +8,21 @@ import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
 export default class extends Controller {
+  /*
+  AJAX form controller. Also handles multipart forms, redirects and error messages.
+
+  actions:
+    submit: when form is submitted
+
+  data:
+    unload: message to display if user tries to navigate away without saving.
+      Ignored if not present.
+
+  targets:
+    errorMessage: element for handling non-field errors
+    errorDetail: element for handling non-field errors
+    progress: progress bar to show/hide during form processing
+  */
   static targets = ['errorMessage', 'errorDetail', 'progress'];
 
   connect() {
@@ -132,7 +147,9 @@ export default class extends Controller {
   }
 
   toggleProgressBar() {
-    this.progressTarget.classList.toggle('d-hide');
+    if (this.progressTarget) {
+      this.progressTarget.classList.toggle('d-hide');
+    }
   }
 
   serialize(event, multipart) {

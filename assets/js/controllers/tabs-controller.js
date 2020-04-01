@@ -3,6 +3,17 @@ import {
 } from 'stimulus';
 
 export default class extends Controller {
+  /*
+  Handles client-side tab navigation. Toggles tab "active" class
+  and shows/hides tab pane content accordingly.
+
+  actions:
+    select: when a specific tab is selected
+
+  targets:
+    tab: individual tab
+    pane: content of a tab
+  */
   static targets = ['tab', 'pane'];
 
   select(event) {

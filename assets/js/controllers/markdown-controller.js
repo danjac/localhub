@@ -6,6 +6,16 @@ import {
 } from 'stimulus';
 
 export default class extends Controller {
+  /*
+  Markdown shortcut selector for highlighting and inserting
+  markdown syntax.
+
+  actions:
+    select: when markdown syntax selection applied.
+
+  targets:
+    textarea: <textarea> element to apply markdown syntax
+  */
   static targets = ['textarea'];
 
   select(event) {

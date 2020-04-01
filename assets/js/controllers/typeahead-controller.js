@@ -14,6 +14,23 @@ const ARROW_UP = 38;
 const ARROW_DOWN = 40;
 
 export default class extends Controller {
+  /*
+  Adds typeahead functionality to form input for handling tag and user mentions.
+
+  actions:
+    select: when a specific selection is clicked
+    keydown: key trigger to check if a selection character has been entered (# or @)
+
+  data:
+    tag-search-url: AJAX endpoint to fetch tag selections. If not included then
+      tag selections will not be enabled.
+     mention-search-url: AJAX endpoint to fetch mention selections. If not included then
+      mention selections will not be enabled.
+
+  targets:
+    selector: menu element used to contain HTML returned from endpoints.
+    input: <input> or <textarea>
+  */
   static targets = ['selector', 'input'];
 
   connect() {
