@@ -22,8 +22,7 @@ class HTMLScraper:
     class Invalid(ValueError):
         ...
 
-    def __init__(self, url):
-        self.url = url
+    def __init__(self):
         self.title = None
         self.image = None
         self.description = None
@@ -55,9 +54,9 @@ class HTMLScraper:
         ):
             raise cls.Invalid("URL does not return valid HTML response")
 
-        return cls(url).parse_html(response.content)
+        return cls().scrape(response.content)
 
-    def parse_html(self, html):
+    def scrape(self, html):
         """Parses HTML title, image and description from HTML OpenGraph and
         Twitter meta tags and other HTML content.
 
@@ -83,7 +82,9 @@ class HTMLScraper:
             return title
         elif self.soup.h1 and self.soup.h1.text:
             return self.soup.h1.text
-        return self.soup.title.string if self.soup.title else get_domain(self.url)
+        elif self.soup.title:
+            return self.soup.title.string
+        return None
 
     def image_from_html(self):
         # priority:

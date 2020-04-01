@@ -12,7 +12,7 @@ pytestmark = pytest.mark.django_db
 
 @pytest.fixture()
 def mock_html_scraper_from_url(mocker):
-    scraper = HTMLScraper("https://imgur.com")
+    scraper = HTMLScraper()
     scraper.title = "Imgur"
     scraper.image = "https://imgur.com/cat.gif"
     scraper.description = "cat"

@@ -18,8 +18,7 @@ class TestHTMLScraperFromUrl:
         )
 
         with pytest.raises(HTMLScraper.Invalid):
-            scraper = HTMLScraper.from_url("https://google.com")
-            assert scraper.url == "https://google.com"
+            scraper = HTMLScraper.from_url("http://google.com")
             assert scraper.title is None
             assert scraper.image is None
             assert scraper.description is None
@@ -33,21 +32,19 @@ class TestHTMLScraperFromUrl:
         )
 
         with pytest.raises(HTMLScraper.Invalid):
-            scraper = HTMLScraper.from_url("https://google.com")
-            assert scraper.url == "https://google.com"
+            scraper = HTMLScraper.from_url("http://google.com")
             assert scraper.title is None
             assert scraper.image is None
             assert scraper.description is None
 
-    def test_if_error(self, mocker):
+    def test_if_request_exception(self, mocker):
 
         mocker.patch(
             "requests.get", side_effect=requests.RequestException,
         )
 
         with pytest.raises(HTMLScraper.Invalid):
-            scraper = HTMLScraper.from_url("https://google.com")
-            assert scraper.url == "https://google.com"
+            scraper = HTMLScraper.from_url("http://google.com")
             assert scraper.title is None
             assert scraper.image is None
             assert scraper.description is None
@@ -62,7 +59,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper("http://google.com").parse_html(html)
+        scraper = HTMLScraper().scrape(html)
         assert scraper.title == "meta title"
 
     def test_title_from_twitter(self):
@@ -75,7 +72,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper("http://google.com").parse_html(html)
+        scraper = HTMLScraper().scrape(html)
         assert scraper.title == "meta title"
 
     def test_title_from_h1(self):
@@ -88,7 +85,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper("http://google.com").parse_html(html)
+        scraper = HTMLScraper().scrape(html)
         assert scraper.title == "PAGE HEADER"
 
     def test_title_from_title_tag(self):
@@ -100,10 +97,10 @@ class TestHTMLScraperFromUrl:
         <body>
         </html>
         """
-        scraper = HTMLScraper("http://google.com").parse_html(html)
+        scraper = HTMLScraper().scrape(html)
         assert scraper.title == "page title"
 
-    def test_title_from_domain(self):
+    def test_title_not_found(self):
         html = """<html>
         <head>
         </head>
@@ -111,8 +108,8 @@ class TestHTMLScraperFromUrl:
         <body>
         </html>
         """
-        scraper = HTMLScraper("http://google.com").parse_html(html)
-        assert scraper.title == "google.com"
+        scraper = HTMLScraper().scrape(html)
+        assert scraper.title is None
 
     def test_image_in_meta_property(self):
         html = """<html>
@@ -124,7 +121,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper("http://google.com").parse_html(html)
+        scraper = HTMLScraper().scrape(html)
         assert scraper.image == "http://imgur.com/test.jpg"
 
     def test_image_in_meta_name(self):
@@ -137,7 +134,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper("http://google.com").parse_html(html)
+        scraper = HTMLScraper().scrape(html)
         assert scraper.image == "http://imgur.com/test.jpg"
 
     def test_image_not_in_meta(self):
@@ -148,7 +145,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper("http://google.com").parse_html(html)
+        scraper = HTMLScraper().scrape(html)
         assert scraper.image is None
 
     def test_first_image(self):
@@ -160,7 +157,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper("http://google.com").parse_html(html)
+        scraper = HTMLScraper().scrape(html)
         assert scraper.image == "https://imgur.com/test.jpg"
 
     def test_description_in_meta_property(self):
@@ -173,7 +170,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper("http://google.com").parse_html(html)
+        scraper = HTMLScraper().scrape(html)
         assert scraper.description == "test"
 
     def test_description_in_meta_name(self):
@@ -186,7 +183,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper("http://google.com").parse_html(html)
+        scraper = HTMLScraper().scrape(html)
         assert scraper.description == "test"
 
     def test_description_in_first_para(self):
@@ -199,7 +196,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper("http://google.com").parse_html(html)
+        scraper = HTMLScraper().scrape(html)
         assert scraper.description == "this is content"
 
     def test_description_not_in_meta(self):
@@ -211,5 +208,5 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper("http://google.com").parse_html(html)
+        scraper = HTMLScraper().scrape(html)
         assert scraper.description is None
