@@ -2,7 +2,25 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from ..http import get_domain, get_domain_url, is_https, is_image_url, is_url
+from ..http import (
+    get_domain,
+    get_domain_url,
+    is_https,
+    is_image_url,
+    is_url,
+    get_filename,
+)
+
+
+class TestGetFilename:
+    def test_get_filename_if_empty(self):
+        assert get_filename("") == ""
+
+    def test_get_filename_if_no_path(self):
+        assert get_filename("https://reddit.com") == ""
+
+    def test_get_filename_if_path(self):
+        assert get_filename("http://google.com/test.html") == "test.html"
 
 
 class TestIsHttps:

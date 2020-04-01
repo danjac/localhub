@@ -5,7 +5,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from localhub.activities.forms import ActivityForm
-from localhub.utils.http import is_image_url, resolve_url
+from localhub.utils.http import is_image_url, resolve_url, get_filename
 
 from .html_scraper import HTMLScraper
 from .models import Post
@@ -79,9 +79,6 @@ class PostForm(ActivityForm):
         clear_opengraph_data=False,
         **cleaned_data
     ):
-        if clear_opengraph_data:
-            return {"opengraph_image": "", "opengraph_description": ""}
-
         if not url:
             return {}
 
@@ -92,8 +89,13 @@ class PostForm(ActivityForm):
         if is_image_url(url):
             """
             Image URLs are OK, as they are just rendered directly in oembed
-            elements.
+            elements
             """
+            data.update({"title": title or get_filename(url)})
+            return data
+
+        if clear_opengraph_data:
+            data.update({"opengraph_image": "", "opengraph_description": ""})
             return data
 
         if not title or fetch_opengraph_data:

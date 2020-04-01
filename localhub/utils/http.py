@@ -137,3 +137,11 @@ def resolve_url(url):
     except (requests.RequestException):
         pass
     return url
+
+
+def get_filename(url):
+    """
+    Returns last part of a url e.g. "https://imgur.com/some-image.gif" ->
+    "some-image.gif".
+    """
+    return urlparse(url).path.split("/")[-1]

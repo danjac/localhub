@@ -88,7 +88,7 @@ class TestPostForm:
         assert not form.is_valid()
 
     def test_fetch_opengraph_data_if_image_url_no_title(
-        self, mock_html_scraper_from_invalid_url, mocker
+        self, mock_html_scraper_from_url, mocker
     ):
         form = PostForm(
             {
@@ -100,10 +100,13 @@ class TestPostForm:
 
         mocker.patch("localhub.posts.forms.resolve_url", return_value=form.data["url"])
 
-        assert not form.is_valid()
+        assert form.is_valid()
+        cleaned_data = form.clean()
+        assert cleaned_data["url"] == "http://imgur.com/cat.gif"
+        assert cleaned_data["title"] == "cat.gif"
 
     def test_fetch_opengraph_data_if_image_url(
-        self, mock_html_scraper_from_invalid_url, mocker
+        self, mock_html_scraper_from_url, mocker
     ):
         form = PostForm(
             {
@@ -115,9 +118,11 @@ class TestPostForm:
 
         mocker.patch("localhub.posts.forms.resolve_url", return_value=form.data["url"])
         assert form.is_valid()
+        cleaned_data = form.clean()
+        assert cleaned_data["url"] == "http://imgur.com/cat.gif"
 
     def test_fetch_opengraph_data_if_image_url_resolves_differently(
-        self, mock_html_scraper_from_invalid_url, mocker
+        self, mock_html_scraper_from_url, mocker
     ):
         form = PostForm(
             {
