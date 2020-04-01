@@ -36,9 +36,6 @@ class HTMLScraper:
         """Grabs OpenGraph, Twitter and other HTML data from URL and parses
         the HTML content.
 
-        Note that the HTMLScraper url value may be different from the
-        url in the argument as any redirects are resolved if possible.
-
         Args:
             url (string): URL of HTML source page
 
