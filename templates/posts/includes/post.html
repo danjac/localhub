@@ -11,7 +11,7 @@
 {% with user|is_oembed_url:object.url as is_oembed %}
 {% include "activities/includes/oembed.html" %}
 {% if object.url and object.opengraph_description and not is_oembed %}
-<div class="columns opengraph">
+<div class="columns opengraph mt-1">
   {% with opengraph_image=object.get_opengraph_image_if_safe %}
   {% if user.show_external_images and opengraph_image %}
   <div class="column col-3 col-md-12">

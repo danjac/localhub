@@ -26,7 +26,7 @@
   </div>
   <div class="card-body">
     {% collapsable is_detail %}
-    <div class="markdown-content">
+    <div class="markdown-content mt-1">
       {{ message.message.markdown|strip_external_images:user }}
     </div>
     {% endcollapsable %}

@@ -5,7 +5,7 @@
 {% load activities_tags %}
 
 {% if object.description %}
-<div class="markdown-content">
+<div class="markdown-content mt-1">
   {{ object.description.markdown|strip_external_images:user }}
 </div>
 {% endif %}
