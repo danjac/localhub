@@ -84,6 +84,32 @@ class TestPostForm:
 
         assert not form.is_valid()
 
+    def test_fetch_opengraph_data_if_image_url_no_title(
+        self, mock_html_scraper_from_invalid_url
+    ):
+        form = PostForm(
+            {
+                "url": "http://imgur.com/cat.gif",
+                "title": "",
+                "fetch_opengraph_data": True,
+            }
+        )
+
+        assert not form.is_valid()
+
+    def test_fetch_opengraph_data_if_image_url(
+        self, mock_html_scraper_from_invalid_url
+    ):
+        form = PostForm(
+            {
+                "url": "http://imgur.com/cat.gif",
+                "title": "cat",
+                "fetch_opengraph_data": True,
+            }
+        )
+
+        assert form.is_valid()
+
     def test_fetch_opengraph_data_if_title_and_invalid_url(
         self, mock_html_scraper_from_invalid_url
     ):

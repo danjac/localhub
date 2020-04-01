@@ -5,6 +5,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from localhub.activities.forms import ActivityForm
+from localhub.utils.http import is_image_url
 
 from .html_scraper import HTMLScraper
 from .models import Post
@@ -61,10 +62,11 @@ class PostForm(ActivityForm):
             return cleaned_data
 
         title = cleaned_data.get("title")
-        url = cleaned_data.get("url")
 
-        if not any((title, url)):
-            raise forms.ValidationError(_("Either title or URL must be provided"))
+        if not title:
+            self.add_error(
+                "title", _("Title must be provided if not available from URL")
+            )
 
         return cleaned_data
 
@@ -80,7 +82,11 @@ class PostForm(ActivityForm):
         if clear_opengraph_data:
             return {"opengraph_image": "", "opengraph_description": ""}
 
-        if not url:
+        if not url or is_image_url(url):
+            """
+            Image URLs are OK, as they are just rendered directly in oembed
+            elements.
+            """
             return {}
 
         if not title or fetch_opengraph_data:
