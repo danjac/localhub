@@ -10,6 +10,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
+from simple_history.models import HistoricalRecords
 from sorl.thumbnail import ImageField
 from taggit.models import Tag
 from timezone_field import TimeZoneField
@@ -18,9 +19,11 @@ from localhub.communities.models import Membership
 from localhub.db.content_types import get_generic_related_queryset
 from localhub.db.fields import ChoiceArrayField
 from localhub.db.search import SearchIndexer, SearchQuerySetMixin
+from localhub.db.tracker import Tracker
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
+from localhub.utils.itertools import takefirst
 
 from .utils import user_display
 
@@ -205,6 +208,10 @@ class User(AbstractUser):
 
     search_indexer = SearchIndexer(("A", "username"), ("B", "name"), ("C", "bio"))
 
+    history = HistoricalRecords()
+
+    follower_notification_tracker = Tracker(["avatar", "name", "bio"])
+
     objects = UserManager()
 
     class Meta(AbstractUser.Meta):
@@ -316,6 +323,41 @@ class User(AbstractUser):
             community=community,
             verb="new_follower",
         )
+
+    @dispatch
+    def notify_on_update(self):
+        """Sends notification to followers that user has updated their profile.
+
+        This is sent to followers across all communities where the user is
+        an active member.
+
+        If follower belongs to multiple common communities, we just send
+        notification to one community.
+
+        We only send notifications if certain tracked fields are updated
+        e.g. bio or avatar.
+
+        Returns:
+            list: Notifications to followers
+        """
+
+        if self.follower_notification_tracker.changed():
+            return takefirst(
+                [
+                    Notification(
+                        content_object=self,
+                        actor=self,
+                        recipient=follower,
+                        community=membership.community,
+                        verb="update",
+                    )
+                    for membership in self.membership_set.filter(
+                        active=True
+                    ).select_related("community")
+                    for follower in self.followers.for_community(membership.community)
+                ],
+                lambda n: n.recipient,
+            )
 
     def get_email_addresses(self):
         """Get set of emails belonging to user.

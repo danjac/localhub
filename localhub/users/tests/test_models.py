@@ -228,10 +228,48 @@ class TestUserModel:
     def test_does_not_have_role(self, member):
         assert not member.member.has_role(member.community, Membership.Role.MODERATOR)
 
+    def test_notify_on_update(self, member, send_webpush_mock):
+
+        # no change...
+        notifications = member.member.notify_on_update()
+        assert len(notifications) == 0
+
+        follower = MembershipFactory(community=member.community)
+        other_community_follower = MembershipFactory()
+        non_member_follower = UserFactory()
+
+        member.member.followers.add(follower.member)
+        member.member.followers.add(other_community_follower.member)
+        member.member.followers.add(non_member_follower)
+
+        MembershipFactory(
+            member=member.member, community=other_community_follower.community
+        )
+
+        # add first follower to same community: should just be one update !
+
+        MembershipFactory(
+            member=follower.member, community=other_community_follower.community
+        )
+
+        # trigger update by changing bio...
+        member.member.bio = "testme"
+        member.member.save()
+
+        notifications = member.member.notify_on_update()
+
+        assert len(notifications) == 2
+        assert notifications[0].actor == member.member
+        assert notifications[0].verb == "update"
+
+        recipients = [n.recipient for n in notifications]
+        assert follower.member in recipients
+        assert other_community_follower.member in recipients
+
+        assert send_webpush_mock.is_called()
+
     def test_notify_on_join(self, member, send_webpush_mock):
-        other_member = MembershipFactory(
-            community=member.community, member=UserFactory(),
-        ).member
+        other_member = MembershipFactory(community=member.community,).member
         notifications = member.member.notify_on_join(member.community)
         assert len(notifications) == 1
         assert notifications[0].recipient == other_member
@@ -239,6 +277,7 @@ class TestUserModel:
         assert notifications[0].actor == member.member
         assert notifications[0].community == member.community
         assert notifications[0].verb == "new_member"
+        assert send_webpush_mock.is_called()
 
     def test_notify_on_follow(self, member, send_webpush_mock):
         follower = MembershipFactory(
@@ -251,3 +290,4 @@ class TestUserModel:
         assert notifications[0].actor == follower
         assert notifications[0].community == member.community
         assert notifications[0].verb == "new_follower"
+        assert send_webpush_mock.is_called()

@@ -7,7 +7,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import BooleanField, Q, Value
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -369,7 +368,7 @@ user_message_list_view = UserMessageListView.as_view()
 
 
 class UserUpdateView(
-    CurrentUserMixin, SuccessMessageMixin, PermissionRequiredMixin, UpdateView,
+    CurrentUserMixin, PermissionRequiredMixin, UpdateView,
 ):
     permission_required = "users.change_user"
     success_message = _("Your details have been updated")
@@ -378,6 +377,12 @@ class UserUpdateView(
 
     def get_success_url(self):
         return self.request.path
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.notify_on_update()
+        messages.success(self.request, self.success_message)
+        return redirect(self.get_success_url())
 
 
 user_update_view = UserUpdateView.as_view()

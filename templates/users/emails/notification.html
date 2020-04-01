@@ -11,11 +11,15 @@
 {% user_display notification.actor as actor %}
 {% if notification.verb == 'new_follower' %}
 {% blocktrans %}
-<a href="{{ object_url }}">{{ actor }}</a> is now following you.
+<a href="{{ absolute_url }}">{{ actor }}</a> is now following you.
 {% endblocktrans %}
 {% elif notification.verb == 'new_member' %}
 {% blocktrans %}
-<a href="{{ object_url }}">{{ actor }}</a> has joined this community.
+<a href="{{ absolute_url }}">{{ actor }}</a> has joined this community.
+{% endblocktrans %}
+{% elif notification.verb == 'update' %}
+{% blocktrans %}
+<a href="{{ absolute_url }}">{{ actor }}</a> has updated their profile.
 {% endblocktrans %}
 {% endif %}
 {% endblock notification_body %}

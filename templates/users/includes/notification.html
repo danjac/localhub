@@ -14,5 +14,9 @@
 {% blocktrans %}
 <a href="{{ actor_url }}">{{ actor }}</a> has joined this community.
 {% endblocktrans %}
+{% elif notification.verb == 'update' %}
+{% blocktrans %}
+<a href="{{ actor_url }}">{{ actor }}</a> has updated their profile.
+{% endblocktrans %}
 {% endif %}
 {% endwith %}

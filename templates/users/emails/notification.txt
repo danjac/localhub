@@ -5,14 +5,22 @@
 {% load account %}
 {% block notification_body %}
 {% autoescape off %}
-{% user_display notification.recipient as recipient %}
 {% user_display notification.actor as actor %}
-{% blocktrans %}Hi {{ recipient }},{% endblocktrans %}
 {% if notification.verb == 'new_follower' %}
+{% blocktrans %}
 {{ actor }} is now following you.
+{% endblocktrans %}
 {% elif notification.verb == 'new_member' %}
+{% blocktrans %}
 {{ actor }} has joined this community.
+{% endblocktrans %}
+{% elif notification.verb == 'update' %}
+{% blocktrans %}
+{{ actor }} has updated their profile.
+{% endblocktrans %}
 {% endif %}
-Link to user: {{ object_url }}
+{% blocktrans %}
+Link to user: {{ absolute_url }}
+{% endblocktrans %}
 {% endautoescape %}
 {% endblock %}

@@ -10,35 +10,32 @@ from localhub.notifications.decorators import register
 from .utils import user_display
 
 HEADERS = [
-    ("new_follower", _("Someone has started following you")),
-    ("new_member", _("Someone has just joined this community")),
+    ("new_follower", _("%(actor)s has started following you")),
+    ("new_member", _("%(actor)s has just joined this community")),
+    ("update", _("%(actor)s has updated their profile")),
 ]
 
 
 class UserMailer(Mailer):
-    HEADERS = HEADERS
-
     def get_subject(self):
-        return dict(self.HEADERS)[self.adapter.verb] % {
+        return dict(HEADERS)[self.adapter.verb] % {
             "actor": user_display(self.adapter.actor)
         }
 
 
 class UserWebpusher(Webpusher):
-    HEADERS = HEADERS
-
     def get_header(self):
-        return dict(self.HEADERS)[self.adapter.verb] % {
+        return dict(HEADERS)[self.adapter.verb] % {
             "actor": user_display(self.adapter.actor)
         }
 
     def get_body(self):
-        return user_display(self.adapter.actor)
+        return f"@{self.adapter.actor.username} ({user_display(self.adapter.actor)})"
 
 
 @register(get_user_model())
 class UserAdapter(DefaultAdapter):
-    ALLOWED_VERBS = ["new_follower", "new_member"]
+    ALLOWED_VERBS = ["new_follower", "new_member", "update"]
 
     mailer_class = UserMailer
     webpusher_class = UserWebpusher
