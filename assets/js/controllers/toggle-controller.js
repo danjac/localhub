@@ -6,6 +6,18 @@ import {
 } from 'stimulus';
 
 export default class extends Controller {
+  /*
+  Toggles one or more elements using d-hide class.
+
+  actions:
+    toggle: toggles d-hide on all togglable targets. The trigger element
+      should include a data-toggle-target attribute which specifies the
+      element(s) to be toggled.
+
+  targets:
+    togglable: an element to be toggled. Element should also have a
+    data-toggle-target element that identifies target of toggle.
+  */
   static targets = ['togglable'];
 
   toggle(event) {
