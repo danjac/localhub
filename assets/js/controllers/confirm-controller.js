@@ -6,6 +6,17 @@ import {
 } from 'stimulus';
 
 export default class extends Controller {
+  /*
+  Shows modal dialog to confirm an action. Used with ajax and confirm-dialog
+  controllers.
+
+  actions:
+    check: opens modal dialog. If used in conjunction with an ajax action, place
+    before in the data-action attribute e.g. data-action="confirm#check ajax#post".
+
+  data:
+    confirmed: set when the dialog returns confirmed. Do not set this yourself.
+  */
   check(event) {
     // check confirmed flag, just run if set
     if (this.data.has('confirmed')) {
@@ -27,11 +38,6 @@ export default class extends Controller {
     };
 
     const dialog = document.getElementById('confirm-dialog')['confirm-dialog'];
-
-    // const dialog = this.application.getControllerForElementAndIdentifier(
-    // document.getElementById('confirm-dialog'),
-    // 'confirm-dialog'
-    // );
 
     dialog.open({
       body,

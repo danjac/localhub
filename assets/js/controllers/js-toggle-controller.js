@@ -7,14 +7,16 @@ import {
 
 
 export default class extends Controller {
-  // simple controller that shows an element
-  // if JS enabled: we can hide actions not
-  // normally available to JS-disabled browsers.
-  // ensure element has class d-hide.
+  /*
+  simple controller that shows an element
+  if JS enabled: we can hide actions not
+  normally available to JS-disabled browsers.
+  ensure element has class d-hide.
 
-  // add data-js-toggle if you want to keep an element hidden 
-  // even if JS present.
-
+  data:
+    ignore: if set then will not automatically show the element on load
+      (default: false)
+  */
   connect() {
     if (!this.data.has('ignore')) {
       this.element.classList.remove('d-hide');

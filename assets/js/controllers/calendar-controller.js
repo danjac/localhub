@@ -23,6 +23,20 @@ import {
 const DATE_FORMAT = 'dd/MM/yyyy';
 
 export default class extends Controller {
+  /*
+  Renders an HTML calendar. Used with a date <input> widget.
+
+  actions:
+    toggle: re-renders or hides the calendar.
+    select: select a specific date and insert into dateInput.
+
+  targets:
+    calendar: the calendar container element
+    dateInput: <input> tag triggering the input.
+    currentMonth: element rendering the current month.
+    days: elements rendering each day.
+    template: HTML <template> to render the calendar body.
+  */
   static targets = ['calendar', 'dateInput', 'currentMonth', 'days', 'template'];
 
   toggle(event) {

@@ -8,6 +8,16 @@ import {
 const MAX_HEIGHT = 360;
 
 export default class extends Controller {
+  /*
+  Renders a collapsable element that can be expanded with a "Show more" button.
+
+  actions:
+    toggle: switches the collapsable state
+
+  targets:
+    container: element containing the collapsable content
+    toggle: elements to show/hide depending on collapsable state
+  */
   static targets = ['container', 'toggle'];
 
   connect() {

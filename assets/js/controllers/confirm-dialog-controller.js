@@ -6,6 +6,17 @@ import {
 } from 'stimulus';
 
 export default class extends Controller {
+  /*
+  Handles confirmation modal dialog.
+
+  targets:
+    header: header of dialog
+    body: main content of dialog
+
+  actions:
+    cancel: if "cancel" button is clicked
+    confirm: if "confirm" button is clicked
+  */
   static targets = ['header', 'body'];
 
   connect() {

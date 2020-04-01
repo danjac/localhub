@@ -8,7 +8,22 @@ import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
 export default class extends Controller {
-  // handles simple non-form AJAX interactions
+  /*
+  Handles non-form AJAX interactions.
+
+  actions:
+    get: HTTP GET request
+    post: HTTP POST request
+    delete: HTTP DELETE request
+    put: HTTP PUT request
+    patch: HTTP PATCH request
+
+  data:
+    url: location of AJAX endpoint. If element has "href" attribute this can
+      be used instead.
+    redirect: location of redirect on successful completion. This overrides any
+      Location returned from the server. If "none" will not perform any redirect.
+  */
   get(event) {
     this.dispatch('GET', event);
   }
