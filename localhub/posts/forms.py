@@ -91,7 +91,6 @@ class PostForm(ActivityForm):
             elements. No need to check for OpenGraph or other HTML data.
             """
             title = title or url_resolver.filename
-            fetch_opengraph_data = False
             clear_opengraph_data = True
 
         if clear_opengraph_data:
@@ -101,7 +100,7 @@ class PostForm(ActivityForm):
         # run scraper if missing title or explicitly fetching OpenGraph data.
         if fetch_opengraph_data or not title:
             scraper = HTMLScraper.from_url(url_resolver.url)
-            title = (title or scraper.title or "")[:300]
+            title = title or scraper.title or url_resolver.filename or ""
             if fetch_opengraph_data:
                 data.update(
                     {
@@ -110,5 +109,5 @@ class PostForm(ActivityForm):
                     }
                 )
 
-        data.update({"title": title})
+        data.update({"title": title[:300]})
         return data
