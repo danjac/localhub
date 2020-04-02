@@ -304,6 +304,10 @@ table {
     margin: 0 $unit-1 0 0;
     padding: $unit-1 $unit-1 $unit-1 - $border-width $unit-1;
   }
+
+  a:focus {
+    box-shadow: none;
+  }
 }
 
 .timesince {
