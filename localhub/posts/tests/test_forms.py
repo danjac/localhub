@@ -45,6 +45,7 @@ class TestPostForm:
         form = PostForm({"title": "something", "url": "", "description": "test"})
 
         assert form.is_valid()
+        assert form.cleaned_data["title"] == "something"
 
     def test_title_missing(self, mock_html_scraper_from_url, mocker):
 
@@ -53,6 +54,8 @@ class TestPostForm:
         self.mock_resolve_url(mocker, form.data["url"])
 
         assert form.is_valid()
+        assert form.cleaned_data["title"] == "Imgur"
+        assert form.cleaned_data["url"] == "http://google.com"
 
     def test_title_and_url_both_missing(self):
 
