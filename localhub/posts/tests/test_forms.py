@@ -3,6 +3,8 @@
 
 import pytest
 
+from localhub.utils.http import URLResolver
+
 from ..factories import PostFactory
 from ..forms import PostForm
 from ..html_scraper import HTMLScraper
@@ -34,7 +36,9 @@ def mock_html_scraper_from_invalid_url(mocker):
 
 class TestPostForm:
     def mock_resolve_url(self, mocker, url):
-        mocker.patch("localhub.posts.forms.URLResolver.resolve", return_value=url)
+        mocker.patch(
+            "localhub.posts.forms.URLResolver.from_url", return_value=URLResolver(url)
+        )
 
     def test_url_missing(self):
 

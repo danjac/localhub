@@ -82,9 +82,8 @@ class PostForm(ActivityForm):
         if not url:
             return {}
 
-        url_resolver = URLResolver(url)
-        url = url_resolver.resolve()
-        data = {"url": url}
+        url_resolver = URLResolver.from_url(url)
+        data = {"url": url_resolver.url}
 
         if url_resolver.is_image:
             """

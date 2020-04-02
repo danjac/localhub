@@ -4,18 +4,27 @@
 import requests
 
 from ..http import (
+    URLResolver,
     get_domain,
-    get_root_url,
     get_filename,
+    get_root_url,
     is_https,
     is_image_url,
     is_url,
     resolve_url,
-    URLResolver,
 )
 
 
 class TestURLResolver:
+    def test_false_if_none(self):
+        assert not URLResolver(None)
+
+    def test_false_if_not_url(self):
+        assert not URLResolver("xyz")
+
+    def test_true_if_url(self):
+        assert URLResolver("https://reddit.com")
+
     def test_is_valid_if_none(self):
         assert not URLResolver(None).is_valid
 
@@ -70,25 +79,19 @@ class TestURLResolver:
     def test_root_with_no_path(self):
         assert URLResolver("http://google.com/").root == "http://google.com"
 
-    def test_resolve_if_not_url(self):
-        assert URLResolver("").resolve() is None
+    def test_from_url_if_not_url(self):
+        assert URLResolver.from_url("").url == ""
 
     def test_resolve_if_no_head_returned(self, mocker):
         class MockResponse:
             ok = False
 
         mocker.patch("requests.head", return_value=MockResponse)
-        resolver = URLResolver("http://google.com")
-
-        assert resolver.resolve() == "http://google.com"
-        assert resolver.url == "http://google.com"
+        assert URLResolver.from_url("http://google.com").url == "http://google.com"
 
     def test_resolve_if_request_exception(self, mocker):
         mocker.patch("requests.head", side_effect=requests.RequestException)
-        resolver = URLResolver("http://google.com")
-
-        assert resolver.resolve() == "http://google.com"
-        assert resolver.url == "http://google.com"
+        assert URLResolver.from_url("http://google.com").url == "http://google.com"
 
     def test_resolve_if_head_returned(self, mocker):
         class MockResponse:
@@ -96,10 +99,7 @@ class TestURLResolver:
             url = "https://google.com"
 
         mocker.patch("requests.head", return_value=MockResponse)
-        resolver = URLResolver("http://google.com")
-
-        assert resolver.resolve() == "https://google.com"
-        assert resolver.url == "https://google.com"
+        assert URLResolver.from_url("http://google.com").url == "https://google.com"
 
 
 class TestGetFilename:
@@ -164,7 +164,7 @@ class TestGetDomain:
 
 class TestResolveUrl:
     def test_resolve_if_not_url(self):
-        assert resolve_url("") is None
+        assert resolve_url("") == ""
 
     def test_resolve_if_no_head_returned(self, mocker):
         class MockResponse:

@@ -32,8 +32,18 @@ class URLResolver:
     """Handles additional URL functionality
     """
 
+    @classmethod
+    def from_url(cls, url):
+        """Create new instance from a URL. Automatically resolves "true"
+        URL based on HEAD and redirects.
+        """
+        return cls(resolve_url(url))
+
     def __init__(self, url):
         self.url = url
+
+    def __bool__(self):
+        return self.is_valid
 
     @property
     def url(self):
@@ -119,25 +129,6 @@ class URLResolver:
             return None
         return self._parts.path.split("/")[-1]
 
-    def resolve(self):
-        """Resolves URL from HEAD and redirects to get the "true" URL. URL is
-        then set to new URL.
-
-        Returns:
-            str or None: URL. If no HEAD found then returns original URL. None
-                if not a valid URL.
-        """
-        if not self.is_valid:
-            return None
-        try:
-            response = requests.head(self.url, allow_redirects=True)
-            if response.ok and response.url:
-                self.url = response.url
-                return response.url
-        except (requests.RequestException):
-            pass
-        return self.url
-
 
 def is_https(url):
     """Checks if URL is SSL i.e. starts with https://
@@ -211,7 +202,16 @@ def resolve_url(url):
     Returns:
         str: URL. If no HEAD found then returns original URL.
     """
-    return URLResolver(url).resolve()
+    if not url:
+        return url
+
+    try:
+        response = requests.head(url, allow_redirects=True)
+        if response.ok and response.url:
+            return response.url
+    except (requests.RequestException):
+        pass
+    return url
 
 
 def get_filename(url):
