@@ -28,7 +28,7 @@ class MembershipQuerySetMixin(CommunityRequiredMixin):
 class MembershipListView(
     PermissionRequiredMixin, MembershipQuerySetMixin, SearchMixin, ListView,
 ):
-    paginate_by = settings.LONG_PAGE_SIZE
+    paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
     permission_required = "communities.manage_community"
     model = Membership
 
@@ -81,7 +81,7 @@ class MembershipDeleteView(
 
     def get_success_url(self):
         if self.object.member == self.request.user:
-            return settings.HOME_PAGE_URL
+            return settings.LOCALHUB_HOME_PAGE_URL
         return reverse("communities:membership_list")
 
     def post(self, request, *args, **kwargs):
@@ -109,7 +109,7 @@ class MembershipLeaveView(MembershipDeleteView):
         return super().get_queryset().filter(member__pk=self.request.user.id).get()
 
     def get_success_url(self):
-        return settings.HOME_PAGE_URL
+        return settings.LOCALHUB_HOME_PAGE_URL
 
 
 membership_leave_view = MembershipLeaveView.as_view()

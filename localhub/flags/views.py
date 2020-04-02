@@ -22,7 +22,7 @@ class FlagQuerySetMixin(PermissionRequiredMixin, CommunityRequiredMixin):
 
 
 class FlagListView(FlagQuerySetMixin, ListView):
-    paginate_by = settings.LONG_PAGE_SIZE
+    paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
     model = Flag
 
     def get_queryset(self):

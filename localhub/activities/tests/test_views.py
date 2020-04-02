@@ -18,7 +18,7 @@ pytestmark = pytest.mark.django_db
 
 class TestActivityStreamView:
     def test_get_if_non_member(self, client, login_user, community):
-        response = client.get(settings.HOME_PAGE_URL)
+        response = client.get(settings.LOCALHUB_HOME_PAGE_URL)
         assert response.url == reverse("community_welcome")
 
     def test_get_if_member(self, client, member):
@@ -31,7 +31,7 @@ class TestActivityStreamView:
             answer = AnswerFactory(poll=poll)
             answer.voters.add(UserFactory())
 
-        response = client.get(settings.HOME_PAGE_URL)
+        response = client.get(settings.LOCALHUB_HOME_PAGE_URL)
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 4
 

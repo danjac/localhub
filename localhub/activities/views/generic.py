@@ -88,7 +88,7 @@ class ActivityListView(
     ActivityQuerySetMixin, SearchMixin, ActivityContextMixin, ListView
 ):
     allow_empty = True
-    paginate_by = settings.DEFAULT_PAGE_SIZE
+    paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
     order_by = ("-published", "-created")
 
     def get_queryset(self):
@@ -144,7 +144,7 @@ class ActivityDeleteView(
     PermissionRequiredMixin, ActivityQuerySetMixin, ActivityContextMixin, DeleteView,
 ):
     permission_required = "activities.delete_activity"
-    success_url = settings.HOME_PAGE_URL
+    success_url = settings.LOCALHUB_HOME_PAGE_URL
     success_message = _("This %s has been deleted")
 
     def get_success_message(self):
@@ -281,7 +281,7 @@ class ActivityPinView(PermissionRequiredMixin, BaseSingleActivityView):
         obj.is_pinned = True
         obj.save()
         messages.success(request, _("Post has been pinned to the top of the stream"))
-        return redirect(settings.HOME_PAGE_URL)
+        return redirect(settings.LOCALHUB_HOME_PAGE_URL)
 
 
 class ActivityUnpinView(PermissionRequiredMixin, BaseSingleActivityView):
@@ -294,7 +294,7 @@ class ActivityUnpinView(PermissionRequiredMixin, BaseSingleActivityView):
         messages.success(
             request, _("Pinned post has been removed from the top of the stream")
         )
-        return redirect(settings.HOME_PAGE_URL)
+        return redirect(settings.LOCALHUB_HOME_PAGE_URL)
 
 
 class ActivityBookmarkView(PermissionRequiredMixin, BaseSingleActivityView):

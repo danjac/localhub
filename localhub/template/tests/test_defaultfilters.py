@@ -9,9 +9,8 @@ class TestUrlToImg:
     def test_if_image(self):
         url = "https://somedomain.org/test.jpg"
         assert url_to_img(url) == (
-            '<a href="https://somedomain.org/test.jpg" rel="nofollow"'
-            '><img src="https://somedomain.org/test.jpg" '
-            'alt="test.jpg"></a>'
+            '<a href="https://somedomain.org/test.jpg" rel="nofollow noopener noreferrer"'
+            ' target="_blank"><img src="https://somedomain.org/test.jpg" alt="test.jpg"></a>'
         )
 
     def test_if_unsafe_image(self):

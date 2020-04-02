@@ -128,7 +128,7 @@ class BaseSingleUserView(UserQuerySetMixin, GenericModelView):
 
 
 class BaseUserListView(UserQuerySetMixin, ListView):
-    paginate_by = settings.LONG_PAGE_SIZE
+    paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
 
     def get_queryset(self):
         return (
@@ -284,7 +284,7 @@ class UserAutocompleteListView(BaseUserListView):
                     Q(username__istartswith=search_term)
                     | Q(name__istartswith=search_term)
                 )
-            )[: settings.DEFAULT_PAGE_SIZE]
+            )[: settings.LOCALHUB_DEFAULT_PAGE_SIZE]
         return qs.none()
 
 
@@ -345,7 +345,7 @@ class UserMessageListView(SingleUserMixin, ListView):
     """
 
     template_name = "users/messages.html"
-    paginate_by = settings.DEFAULT_PAGE_SIZE
+    paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
 
     def get_queryset(self):
         if self.is_blocked:
@@ -390,7 +390,7 @@ user_update_view = UserUpdateView.as_view()
 
 class UserDeleteView(CurrentUserMixin, PermissionRequiredMixin, DeleteView):
     permission_required = "users.delete_user"
-    success_url = settings.HOME_PAGE_URL
+    success_url = settings.LOCALHUB_HOME_PAGE_URL
     template_name = "users/user_confirm_delete.html"
 
 

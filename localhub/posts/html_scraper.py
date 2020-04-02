@@ -56,7 +56,7 @@ class HTMLScraper:
         ):
             raise cls.Invalid("URL does not return valid HTML response")
 
-        return cls(url_resolver).scrape(response.content)
+        return cls().scrape(response.content)
 
     def scrape(self, html):
         """Parses HTML title, image and description from HTML OpenGraph and

@@ -14,7 +14,7 @@ from markdown.inlinepatterns import (
 )
 from markdown.util import etree
 
-from localhub.utils.http import REL_SAFE_VALUES, is_https
+from localhub.utils.http import is_https
 
 
 class SafeImageMixin:
@@ -31,7 +31,7 @@ class SafeImageMixin:
                 link = etree.Element("a")
                 link.set("href", src)
                 link.set("target", "_blank")
-                link.set("rel", REL_SAFE_VALUES)
+                link.set("rel", "nofollow noopener noreferrer")
                 link.text = src
                 return link, start, end
         return element, start, end
@@ -57,7 +57,7 @@ class NewTabMixin:
         element, start, end = super().handleMatch(match, data)
         if element is not None:
             element.set("target", "_blank")
-            element.set("rel", REL_SAFE_VALUES)
+            element.set("rel", "nofollow noopener noreferrer")
         return element, start, end
 
 

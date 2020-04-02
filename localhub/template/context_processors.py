@@ -9,4 +9,4 @@ def darkmode(request):
 
 
 def home_page_url(request):
-    return {"home_page_url": settings.HOME_PAGE_URL}
+    return {"home_page_url": settings.LOCALHUB_HOME_PAGE_URL}

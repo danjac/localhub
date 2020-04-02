@@ -7,4 +7,4 @@ from django.conf import settings
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
     def get_login_redirect_url(self, request):
-        return settings.HOME_PAGE_URL
+        return settings.LOCALHUB_HOME_PAGE_URL

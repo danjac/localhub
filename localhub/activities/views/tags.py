@@ -188,7 +188,7 @@ tag_unblock_view = TagUnblockView.as_view()
 
 class TagListView(SearchMixin, BaseTagListView):
     template_name = "activities/tags/tag_list.html"
-    paginate_by = settings.LONG_PAGE_SIZE
+    paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
     exclude_unused_tags = True
 
     def get_queryset(self):

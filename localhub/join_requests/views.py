@@ -36,7 +36,7 @@ class JoinRequestManageMixin(PermissionRequiredMixin, JoinRequestQuerySetMixin):
 
 
 class JoinRequestListView(JoinRequestManageMixin, SearchMixin, ListView):
-    paginate_by = settings.LONG_PAGE_SIZE
+    paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
     model = JoinRequest
 
     @cached_property
@@ -109,7 +109,7 @@ class JoinRequestDeleteView(PermissionRequiredMixin, DeleteView):
         if self.is_sender:
             if JoinRequest.objects.for_sender(self.request.user).exists():
                 return reverse("join_requests:sent_list")
-            return settings.HOME_PAGE_URL
+            return settings.LOCALHUB_HOME_PAGE_URL
         return reverse("join_requests:list")
 
     def get_success_message(self):
@@ -238,7 +238,7 @@ class SentJoinRequestListView(LoginRequiredMixin, ListView):
     List of pending join requests sent by this user
     """
 
-    paginate_by = settings.LONG_PAGE_SIZE
+    paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
     template_name = "join_requests/sent_joinrequest_list.html"
 
     def get_queryset(self):

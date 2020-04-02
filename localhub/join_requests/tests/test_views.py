@@ -44,7 +44,7 @@ class TestJoinRequestDeleteView:
 
     def test_post_if_sender_no_other_requests(self, client, join_request, login_user):
         response = client.post(reverse("join_requests:delete", args=[join_request.id]))
-        assert response.url == settings.HOME_PAGE_URL
+        assert response.url == settings.LOCALHUB_HOME_PAGE_URL
         assert JoinRequest.objects.count() == 0
 
     def test_post_if_sender_has_other_requests(self, client, join_request, login_user):

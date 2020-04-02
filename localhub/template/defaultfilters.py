@@ -6,7 +6,7 @@ import html
 from django import template
 from django.utils.safestring import mark_safe
 
-from localhub.utils.http import REL_SAFE_VALUES, URLResolver, get_root_url, is_image_url
+from localhub.utils.http import URLResolver, get_root_url, is_image_url
 
 register = template.Library()
 
@@ -41,7 +41,7 @@ def url_to_img(url, linkify=True):
     if resolver.is_image and resolver.is_https:
         html = f'<img src="{resolver.url}" alt="{resolver.filename}">'
         if linkify:
-            html = f'<a href="{resolver.url}" rel="nofollow">{html}</a>'
+            return _external_link(resolver.url, html)
         return mark_safe(html)
     return ""
 
@@ -68,9 +68,13 @@ def linkify(url, text=None):
     if not text:
         return url
 
-    return mark_safe(
-        f'<a href="{url}" rel="{REL_SAFE_VALUES}" target="_blank">{text}</a>'
-    )
+    return _external_link(url, text)
 
 
 register.filter(is_image_url)
+
+
+def _external_link(url, text):
+    return mark_safe(
+        f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{text}</a>'
+    )

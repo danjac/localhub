@@ -49,7 +49,7 @@ class CommunityWelcomeView(CommunityDetailView):
 
     def get(self, request):
         if is_member(request.user, request.community):
-            return HttpResponseRedirect(settings.HOME_PAGE_URL)
+            return HttpResponseRedirect(settings.LOCALHUB_HOME_PAGE_URL)
         return super().get(request)
 
     def get_context_data(self, **kwargs):
@@ -112,7 +112,7 @@ class CommunityNotFoundView(TemplateView):
 
     def get(self, request):
         if request.community.active:
-            return HttpResponseRedirect(settings.HOME_PAGE_URL)
+            return HttpResponseRedirect(settings.LOCALHUB_HOME_PAGE_URL)
         return super().get(request)
 
 
@@ -149,7 +149,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
     TBD: list invites (matching email)
     """
 
-    paginate_by = settings.DEFAULT_PAGE_SIZE
+    paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
     template_name = "communities/community_list.html"
 
     def get_queryset(self):

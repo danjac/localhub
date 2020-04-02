@@ -52,7 +52,7 @@ class InviteListView(InviteAdminMixin, InviteQuerySetMixin, SearchMixin, ListVie
     """
 
     model = Invite
-    paginate_by = settings.LONG_PAGE_SIZE
+    paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
 
     def get_permission_object(self):
         return self.request.community
@@ -179,7 +179,7 @@ class InviteAcceptView(InviteRecipientQuerySetMixin, DetailView):
             self.object.is_accepted()
             and self.request.community == self.object.community
         ):
-            return settings.HOME_PAGE_URL
+            return settings.LOCALHUB_HOME_PAGE_URL
         return reverse("invites:received_list")
 
     def post(self, request, *args, **kwargs):
@@ -208,7 +208,7 @@ class InviteRejectView(InviteRecipientQuerySetMixin, GenericModelView):
     def get_success_url(self):
         if Invite.objects.pending().for_user(self.request.user).exists():
             return reverse("invites:received_list")
-        return settings.HOME_PAGE_URL
+        return settings.LOCALHUB_HOME_PAGE_URL
 
     def post(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -226,7 +226,7 @@ class ReceivedInviteListView(InviteRecipientQuerySetMixin, ListView):
     """
 
     template_name = "invites/received_invite_list.html"
-    paginate_by = settings.LONG_PAGE_SIZE
+    paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
 
     def get_queryset(self):
         return super().get_queryset().order_by("-created")

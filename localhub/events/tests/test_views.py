@@ -88,7 +88,7 @@ class TestEventDeleteView:
 
     def test_post(self, client, event_for_member):
         response = client.post(reverse("events:delete", args=[event_for_member.id]))
-        assert response.url == settings.HOME_PAGE_URL
+        assert response.url == settings.LOCALHUB_HOME_PAGE_URL
         assert Event.objects.count() == 0
 
 

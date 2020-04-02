@@ -83,7 +83,10 @@ class TestCommunityWelcomeView:
         assert client.get(reverse("community_welcome")).status_code == 200
 
     def test_get_if_member(self, client, member):
-        assert client.get(reverse("community_welcome")).url == settings.HOME_PAGE_URL
+        assert (
+            client.get(reverse("community_welcome")).url
+            == settings.LOCALHUB_HOME_PAGE_URL
+        )
 
 
 class TestCommunityNotFoundView:
@@ -94,7 +97,10 @@ class TestCommunityNotFoundView:
         assert client.get(reverse("community_not_found")).status_code == 200
 
     def test_community_does_exist(self, client, member):
-        assert client.get(reverse("community_not_found")).url == settings.HOME_PAGE_URL
+        assert (
+            client.get(reverse("community_not_found")).url
+            == settings.LOCALHUB_HOME_PAGE_URL
+        )
 
 
 class TestCommunityTermsView:
@@ -215,7 +221,7 @@ class TestMembershipDeleteView:
             reverse("communities:membership_delete", args=[member.id])
         )
 
-        assert response.url == settings.HOME_PAGE_URL
+        assert response.url == settings.LOCALHUB_HOME_PAGE_URL
         assert not Membership.objects.filter(pk=member.id).exists()
 
 
@@ -234,5 +240,5 @@ class TestMembershipLeaveView:
             reverse("communities:membership_delete", args=[member.id])
         )
 
-        assert response.url == settings.HOME_PAGE_URL
+        assert response.url == settings.LOCALHUB_HOME_PAGE_URL
         assert not Membership.objects.filter(pk=member.id).exists()

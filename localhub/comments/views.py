@@ -38,7 +38,7 @@ class CommentQuerySetMixin(CommunityRequiredMixin):
 
 
 class BaseCommentListView(CommentQuerySetMixin, ListView):
-    paginate_by = settings.DEFAULT_PAGE_SIZE
+    paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
 
     def get_queryset(self):
         return (

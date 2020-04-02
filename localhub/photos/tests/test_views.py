@@ -52,7 +52,7 @@ class TestPhotoDeleteView:
 
     def test_post(self, client, photo_for_member):
         response = client.post(reverse("photos:delete", args=[photo_for_member.id]))
-        assert response.url == settings.HOME_PAGE_URL
+        assert response.url == settings.LOCALHUB_HOME_PAGE_URL
         assert Photo.objects.count() == 0
 
 

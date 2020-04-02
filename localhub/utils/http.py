@@ -11,8 +11,6 @@ from django.core.validators import URLValidator
 _urlvalidator = URLValidator()
 
 
-REL_SAFE_VALUES = "nofollow noopener noreferrer"
-
 IMAGE_EXTENSIONS = (
     "bmp",
     "gif",
@@ -36,6 +34,12 @@ class URLResolver:
     def from_url(cls, url):
         """Create new instance from a URL. Automatically resolves "true"
         URL based on HEAD and redirects.
+
+        Args:
+            url (str): a valid URL
+
+        Returns:
+            URLResolver instance
         """
         return cls(resolve_url(url))
 
@@ -193,6 +197,14 @@ def get_domain(url):
     return URLResolver(url).domain
 
 
+def get_filename(url):
+    """
+    Returns last part of a url e.g. "https://imgur.com/some-image.gif" ->
+    "some-image.gif".
+    """
+    return URLResolver(url).filename
+
+
 def resolve_url(url):
     """Resolves URL from HEAD and redirects to get the "true" URL.
 
@@ -212,11 +224,3 @@ def resolve_url(url):
     except (requests.RequestException):
         pass
     return url
-
-
-def get_filename(url):
-    """
-    Returns last part of a url e.g. "https://imgur.com/some-image.gif" ->
-    "some-image.gif".
-    """
-    return URLResolver(url).filename

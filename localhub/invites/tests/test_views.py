@@ -78,7 +78,7 @@ class TestInviteRejectView:
 
         assert not Invite.objects.pending().for_user(login_user).exists()
 
-        assert response.url == settings.HOME_PAGE_URL
+        assert response.url == settings.LOCALHUB_HOME_PAGE_URL
         assert len(mailoutbox) == 0
 
     def test_post_if_other_invites(self, client, invite, login_user, mailoutbox):

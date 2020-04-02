@@ -172,7 +172,7 @@ class TestPostDeleteView:
 
     def test_post(self, client, post_for_member: Post):
         response = client.post(reverse("posts:delete", args=[post_for_member.id]))
-        assert response.url == settings.HOME_PAGE_URL
+        assert response.url == settings.LOCALHUB_HOME_PAGE_URL
         assert Post.objects.count() == 0
 
     def test_post_by_moderator(self, client, moderator, mailoutbox, send_webpush_mock):
@@ -181,7 +181,7 @@ class TestPostDeleteView:
             owner=MembershipFactory(community=moderator.community).member,
         )
         response = client.post(reverse("posts:delete", args=[post.id]))
-        assert response.url == settings.HOME_PAGE_URL
+        assert response.url == settings.LOCALHUB_HOME_PAGE_URL
         assert Post.objects.deleted().count() == 1
 
         assert send_webpush_mock.delay.called
@@ -237,7 +237,7 @@ class TestPostPinView:
             owner=MembershipFactory(community=moderator.community).member,
         )
         response = client.post(reverse("posts:pin", args=[post.id]),)
-        assert response.url == settings.HOME_PAGE_URL
+        assert response.url == settings.LOCALHUB_HOME_PAGE_URL
 
         already_pinned.refresh_from_db()
         post.refresh_from_db()
@@ -255,7 +255,7 @@ class TestPostUnpinView:
             is_pinned=True,
         )
         response = client.post(reverse("posts:unpin", args=[post.id]))
-        assert response.url == settings.HOME_PAGE_URL
+        assert response.url == settings.LOCALHUB_HOME_PAGE_URL
 
         post.refresh_from_db()
         assert not post.is_pinned

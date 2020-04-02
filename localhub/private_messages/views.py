@@ -50,7 +50,7 @@ class SenderOrRecipientQuerySetMixin(MessageQuerySetMixin):
 
 
 class BaseMessageListView(SearchMixin, ListView):
-    paginate_by = settings.DEFAULT_PAGE_SIZE
+    paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
 
 
 class InboxView(RecipientQuerySetMixin, BaseMessageListView):

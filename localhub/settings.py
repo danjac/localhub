@@ -99,12 +99,6 @@ class Base(Configuration):
 
     ADMIN_URL = values.Value("admin/")
 
-    # project-specific
-
-    DEFAULT_PAGE_SIZE = 12
-
-    HOME_PAGE_URL = reverse_lazy("activity_stream")
-
     # sorl
 
     THUMBNAIL_KVSTORE = "sorl.thumbnail.kvstores.redis_kvstore.KVStore"
@@ -132,7 +126,6 @@ class Base(Configuration):
     ]
 
     LOGIN_URL = "account_login"
-    LOGIN_REDIRECT_URL = HOME_PAGE_URL
 
     ACCOUNT_USER_DISPLAY = "localhub.users.utils.user_display"
     ACCOUNT_EMAIL_REQUIRED = True
@@ -195,6 +188,12 @@ class Base(Configuration):
     VAPID_PUBLIC_KEY = values.Value()
     VAPID_PRIVATE_KEY = values.Value()
     VAPID_ADMIN_EMAIL = values.Value()
+
+    # project-specific
+
+    LOCALHUB_DEFAULT_PAGE_SIZE = 12
+
+    LOCALHUB_HOME_PAGE_URL = reverse_lazy("activity_stream")
 
     @property
     def BASE_DIR(self):
@@ -281,8 +280,12 @@ class Base(Configuration):
         return [os.path.join(self.BASE_DIR, "locale")]
 
     @property
-    def LONG_PAGE_SIZE(self):
-        return self.DEFAULT_PAGE_SIZE * 2
+    def LOGIN_REDIRECT_URL(self):
+        return self.LOCALHUB_HOME_PAGE_URL
+
+    @property
+    def LOCALHUB_LONG_PAGE_SIZE(self):
+        return self.LOCALHUB_DEFAULT_PAGE_SIZE * 2
 
 
 class DockerConfigMixin:

@@ -14,7 +14,6 @@ from markdownx.utils import markdownify as default_markdownify
 
 from localhub.activities.utils import linkify_hashtags
 from localhub.users.utils import linkify_mentions
-from localhub.utils.http import REL_SAFE_VALUES
 
 ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
     "abbr",
@@ -47,7 +46,7 @@ def set_link_target(attrs, new=False):
     href = attrs.get((None, "href"))
     if href and href.startswith("http"):
         attrs[(None, "target")] = "_blank"
-        attrs[(None, "rel")] = REL_SAFE_VALUES
+        attrs[(None, "rel")] = "nofollow noopener noreferrer"
     return attrs
 
 
