@@ -82,6 +82,22 @@ class TestPostForm:
         assert cleaned_data["opengraph_image"] == "https://imgur.com/cat.gif"
         assert cleaned_data["opengraph_description"] == "cat"
 
+    def test_fetch_opengraph_data_if_url_resolves_differently(
+        self, mock_html_scraper_from_url, mocker
+    ):
+        form = PostForm(
+            {"url": "http://twitter.com", "title": "", "fetch_opengraph_data": True}
+        )
+
+        self.mock_resolve_url(mocker, "https://twitter.com")
+
+        assert form.is_valid()
+        cleaned_data = form.clean()
+        assert cleaned_data["title"] == "Imgur"
+        assert cleaned_data["url"] == "https://twitter.com"
+        assert cleaned_data["opengraph_image"] == "https://imgur.com/cat.gif"
+        assert cleaned_data["opengraph_description"] == "cat"
+
     def test_fetch_opengraph_data_if_invalid_url(
         self, mock_html_scraper_from_invalid_url, mocker
     ):
@@ -181,12 +197,14 @@ class TestPostForm:
         assert form.is_valid()
         cleaned_data = form.clean()
         assert cleaned_data["title"] == "Imgur"
+        assert cleaned_data["url"] == "https://google.com"
         assert cleaned_data["opengraph_image"] == ""
         assert cleaned_data["opengraph_description"] == ""
 
     def test_clear_opengraph_data(self, mock_html_scraper_from_url, mocker):
         post = PostFactory(
             title="Imgur",
+            url="https://google.com",
             opengraph_image="http://imgur.com/cat.gif",
             opengraph_description="cat",
         )
@@ -205,5 +223,34 @@ class TestPostForm:
         assert form.is_valid()
         cleaned_data = form.clean()
         assert cleaned_data["title"] == "Imgur"
+        assert cleaned_data["url"] == "https://google.com"
+        assert cleaned_data["opengraph_image"] == ""
+        assert cleaned_data["opengraph_description"] == ""
+
+    def test_clear_opengraph_data_if_url_resolves_differently(
+        self, mock_html_scraper_from_url, mocker
+    ):
+        post = PostFactory(
+            title="Imgur",
+            url="http://google.com",
+            opengraph_image="http://imgur.com/cat.gif",
+            opengraph_description="cat",
+        )
+
+        form = PostForm(
+            {
+                "url": "http://google.com",
+                "title": "Imgur",
+                "fetch_opengraph_data": False,
+                "clear_opengraph_data": True,
+            },
+            instance=post,
+        )
+        self.mock_resolve_url(mocker, "https://google.com")
+
+        assert form.is_valid()
+        cleaned_data = form.clean()
+        assert cleaned_data["title"] == "Imgur"
+        assert cleaned_data["url"] == "https://google.com"
         assert cleaned_data["opengraph_image"] == ""
         assert cleaned_data["opengraph_description"] == ""
