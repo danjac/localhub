@@ -23,19 +23,15 @@ HEADERS = [
 
 
 class CommentMailer(Mailer):
-    HEADERS = HEADERS
-
     def get_subject(self):
-        return dict(self.HEADERS)[self.adapter.verb] % {
+        return dict(HEADERS)[self.adapter.verb] % {
             "actor": user_display(self.adapter.actor)
         }
 
 
 class CommentWebpusher(Webpusher):
-    HEADERS = HEADERS
-
     def get_header(self):
-        return dict(self.HEADERS)[self.adapter.verb] % {
+        return dict(HEADERS)[self.adapter.verb] % {
             "actor": user_display(self.adapter.actor)
         }
 
