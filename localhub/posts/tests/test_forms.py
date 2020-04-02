@@ -80,11 +80,10 @@ class TestPostForm:
         self.mock_resolve_url(mocker, form.data["url"])
 
         assert form.is_valid()
-        cleaned_data = form.clean()
-        assert cleaned_data["title"] == "Imgur"
-        assert cleaned_data["url"] == "http://twitter.com"
-        assert cleaned_data["opengraph_image"] == "https://imgur.com/cat.gif"
-        assert cleaned_data["opengraph_description"] == "cat"
+        assert form.cleaned_data["title"] == "Imgur"
+        assert form.cleaned_data["url"] == "http://twitter.com"
+        assert form.cleaned_data["opengraph_image"] == "https://imgur.com/cat.gif"
+        assert form.cleaned_data["opengraph_description"] == "cat"
 
     def test_fetch_opengraph_data_if_url_resolves_differently(
         self, mock_html_scraper_from_url, mocker
@@ -96,11 +95,10 @@ class TestPostForm:
         self.mock_resolve_url(mocker, "https://twitter.com")
 
         assert form.is_valid()
-        cleaned_data = form.clean()
-        assert cleaned_data["title"] == "Imgur"
-        assert cleaned_data["url"] == "https://twitter.com"
-        assert cleaned_data["opengraph_image"] == "https://imgur.com/cat.gif"
-        assert cleaned_data["opengraph_description"] == "cat"
+        assert form.cleaned_data["title"] == "Imgur"
+        assert form.cleaned_data["url"] == "https://twitter.com"
+        assert form.cleaned_data["opengraph_image"] == "https://imgur.com/cat.gif"
+        assert form.cleaned_data["opengraph_description"] == "cat"
 
     def test_fetch_opengraph_data_if_invalid_url(
         self, mock_html_scraper_from_invalid_url, mocker
@@ -126,9 +124,8 @@ class TestPostForm:
         self.mock_resolve_url(mocker, form.data["url"])
 
         assert form.is_valid()
-        cleaned_data = form.clean()
-        assert cleaned_data["url"] == "http://imgur.com/cat.gif"
-        assert cleaned_data["title"] == "cat.gif"
+        assert form.cleaned_data["url"] == "http://imgur.com/cat.gif"
+        assert form.cleaned_data["title"] == "cat.gif"
 
     def test_fetch_opengraph_data_if_image_url(
         self, mock_html_scraper_from_url, mocker
@@ -138,13 +135,17 @@ class TestPostForm:
                 "url": "http://imgur.com/cat.gif",
                 "title": "cat",
                 "fetch_opengraph_data": True,
+                "opengraph_image": "http://imgur.com/test.jpg",
+                "opengraph_description": "test",
             }
         )
 
         self.mock_resolve_url(mocker, form.data["url"])
         assert form.is_valid()
-        cleaned_data = form.clean()
-        assert cleaned_data["url"] == "http://imgur.com/cat.gif"
+        assert form.cleaned_data["url"] == "http://imgur.com/cat.gif"
+        # selecting image will automatically clear OpenGraph data
+        assert form.cleaned_data["opengraph_image"] == ""
+        assert form.cleaned_data["opengraph_description"] == ""
 
     def test_fetch_opengraph_data_if_image_url_resolves_differently(
         self, mock_html_scraper_from_url, mocker
@@ -160,8 +161,7 @@ class TestPostForm:
         self.mock_resolve_url(mocker, "https://imgur.com/cat.gif")
 
         assert form.is_valid()
-        cleaned_data = form.clean()
-        assert cleaned_data["url"] == "https://imgur.com/cat.gif"
+        assert form.cleaned_data["url"] == "https://imgur.com/cat.gif"
 
     def test_fetch_opengraph_data_if_title_and_invalid_url(
         self, mock_html_scraper_from_invalid_url, mocker
@@ -199,11 +199,10 @@ class TestPostForm:
         self.mock_resolve_url(mocker, form.data["url"])
 
         assert form.is_valid()
-        cleaned_data = form.clean()
-        assert cleaned_data["title"] == "Imgur"
-        assert cleaned_data["url"] == "https://google.com"
-        assert cleaned_data["opengraph_image"] == ""
-        assert cleaned_data["opengraph_description"] == ""
+        assert form.cleaned_data["title"] == "Imgur"
+        assert form.cleaned_data["url"] == "https://google.com"
+        assert form.cleaned_data["opengraph_image"] == ""
+        assert form.cleaned_data["opengraph_description"] == ""
 
     def test_clear_opengraph_data(self, mock_html_scraper_from_url, mocker):
         post = PostFactory(
@@ -225,11 +224,10 @@ class TestPostForm:
         self.mock_resolve_url(mocker, form.data["url"])
 
         assert form.is_valid()
-        cleaned_data = form.clean()
-        assert cleaned_data["title"] == "Imgur"
-        assert cleaned_data["url"] == "https://google.com"
-        assert cleaned_data["opengraph_image"] == ""
-        assert cleaned_data["opengraph_description"] == ""
+        assert form.cleaned_data["title"] == "Imgur"
+        assert form.cleaned_data["url"] == "https://google.com"
+        assert form.cleaned_data["opengraph_image"] == ""
+        assert form.cleaned_data["opengraph_description"] == ""
 
     def test_clear_opengraph_data_if_url_resolves_differently(
         self, mock_html_scraper_from_url, mocker
@@ -253,8 +251,7 @@ class TestPostForm:
         self.mock_resolve_url(mocker, "https://google.com")
 
         assert form.is_valid()
-        cleaned_data = form.clean()
-        assert cleaned_data["title"] == "Imgur"
-        assert cleaned_data["url"] == "https://google.com"
-        assert cleaned_data["opengraph_image"] == ""
-        assert cleaned_data["opengraph_description"] == ""
+        assert form.cleaned_data["title"] == "Imgur"
+        assert form.cleaned_data["url"] == "https://google.com"
+        assert form.cleaned_data["opengraph_image"] == ""
+        assert form.cleaned_data["opengraph_description"] == ""

@@ -88,18 +88,20 @@ class PostForm(ActivityForm):
         if url_resolver.is_image:
             """
             Image URLs are OK, as they are just rendered directly in oembed
-            elements
+            elements. No need to check for OpenGraph or other HTML data.
             """
-            data.update({"title": title or url_resolver.filename})
-            return data
+            title = title or url_resolver.filename
+            fetch_opengraph_data = False
+            clear_opengraph_data = True
 
         if clear_opengraph_data:
             data.update({"opengraph_image": "", "opengraph_description": ""})
-            return data
+            fetch_opengraph_data = False
 
-        if not title or fetch_opengraph_data:
+        # run scraper if missing title or explicitly fetching OpenGraph data.
+        if fetch_opengraph_data or not title:
             scraper = HTMLScraper.from_url(url_resolver.url)
-            data.update({"title": (title or scraper.title or "")[:300]})
+            title = (title or scraper.title or "")[:300]
             if fetch_opengraph_data:
                 data.update(
                     {
@@ -107,5 +109,6 @@ class PostForm(ActivityForm):
                         "opengraph_description": scraper.description or "",
                     }
                 )
-            return data
-        return {}
+
+        data.update({"title": title})
+        return data
