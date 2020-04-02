@@ -175,11 +175,17 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
 
     @cached_property
     def current_year(self):
-        return (self.get_current_year() or timezone.now()).year
+        date = self.get_current_year()
+        if date:
+            return date.year
+        return None
 
     @cached_property
     def current_month(self):
-        return (self.get_current_month() or timezone.now()).month
+        date = self.get_current_month()
+        if date:
+            return date.month
+        return None
 
     @cached_property
     def date_kwargs(self):

@@ -27,9 +27,7 @@
     {% else %}
     <div class="column col-12 col-md-12">
       {% endif %}
-      <p>
-        {{ object.opengraph_description|html_unescape|urlize|truncatewords_html:300 }}
-      </p>
+      {{ object.opengraph_description|html_unescape|urlize|truncatewords_html:300 }}
     </div>
     {% endwith %}
   </div>
