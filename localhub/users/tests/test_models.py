@@ -230,10 +230,6 @@ class TestUserModel:
 
     def test_notify_on_update(self, member, send_webpush_mock):
 
-        # no change...
-        notifications = member.member.notify_on_update()
-        assert len(notifications) == 0
-
         follower = MembershipFactory(community=member.community)
         other_community_follower = MembershipFactory()
         non_member_follower = UserFactory()
@@ -251,6 +247,10 @@ class TestUserModel:
         MembershipFactory(
             member=follower.member, community=other_community_follower.community
         )
+
+        # no change to notifiable user settings
+        notifications = member.member.notify_on_update()
+        assert len(notifications) == 0
 
         # trigger update by changing bio...
         member.member.bio = "testme"

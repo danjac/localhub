@@ -39,9 +39,11 @@ class TestPostForm:
 
         assert form.is_valid()
 
-    def test_title_missing(self, mock_html_scraper_from_url):
+    def test_title_missing(self, mock_html_scraper_from_url, mocker):
 
         form = PostForm({"title": "", "url": "http://google.com"})
+
+        mocker.patch("localhub.posts.forms.resolve_url", return_value=form.data["url"])
 
         assert form.is_valid()
 
