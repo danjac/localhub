@@ -5,11 +5,13 @@
 {% load i18n %}
 
 {% block content %}
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{% url 'user_update' %}">{% trans "Settings" %}</a></li>
+  <li class="breadcrumb-item"><a href="#">{% trans "Delete Account" %}</a></li>
+</ul>
+
 <h5>{% trans "Delete Account" %}</h5>
 
-<div class="actions mb-1">
-  <a href="{% url 'user_update' %}">{% trans "Settings" %}</a>
-</div>
 
 <form method="POST"
       action="{% url 'user_delete' %}">
@@ -21,7 +23,7 @@
     {% endblocktrans %}
   </p>
   <a class="btn btn-secondary"
-     href="{{ user.get_absolute_url }}">{% trans "Cancel" %}</a>
+     href="{% url 'user_update' %}">{% trans "Cancel" %}</a>
   <button class="btn btn-primary"
           type="submit">{% trans "Delete account" %}</button>
 </form>

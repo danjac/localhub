@@ -20,6 +20,5 @@
   <li class="breadcrumb-item"><a href="#">Edit</a></li>
 </ul>
 
-{% trans "Save Settings" as t_save_settings %}
-{% include "includes/forms/stimulusjs_form.html" with submit_btn=t_save_settings %}
+{% include "includes/forms/stimulusjs_form.html" with submit_btn=_("Save Settings") %}
 {% endblock content %}

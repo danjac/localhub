@@ -8,11 +8,13 @@
 {% block account_subtitle %}{% trans "Social Logins" %}{% endblock %}
 
 {% block content %}
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{% url 'user_update' %}">{% trans "Settings" %}</a></li>
+  <li class="breadcrumb-item"><a href="#">{% trans "Social Logins" %}</a></li>
+</ul>
+
 <h5>{% trans "Social Logins" %}</h5>
 
-<div class="actions mb-1">
-    <a href="{% url 'user_update' %}">{% trans "Settings" %}</a>
-</div>
 
 {% if form.accounts %}
 <p>{% blocktrans %}You can sign in to your account using any of the following third party accounts:{% endblocktrans %}
@@ -21,36 +23,36 @@
 
 <form method="post"
       action="{% url 'socialaccount_connections' %}">
-    {% csrf_token %}
+  {% csrf_token %}
 
-    <fieldset>
-        {% if form.non_field_errors %}
-        <div id="errorMsg">{{ form.non_field_errors }}</div>
-        {% endif %}
+  <fieldset>
+    {% if form.non_field_errors %}
+    <div id="errorMsg">{{ form.non_field_errors }}</div>
+    {% endif %}
 
-        {% for base_account in form.accounts %}
-        {% with base_account.get_provider_account as account %}
-        <div>
-            <label for="id_account_{{ base_account.id }}"
-                   class="form-label">
-                <input id="id_account_{{ base_account.id }}"
-                       type="radio"
-                       name="account"
-                       value="{{ base_account.id }}" />
-                <span
-                      class="socialaccount_provider {{ base_account.provider }} {{ account.get_brand.id }}">{{account.get_brand.name}}</span>
-                {{ account }}
-            </label>
-        </div>
-        {% endwith %}
-        {% endfor %}
+    {% for base_account in form.accounts %}
+    {% with base_account.get_provider_account as account %}
+    <div>
+      <label for="id_account_{{ base_account.id }}"
+             class="form-label">
+        <input id="id_account_{{ base_account.id }}"
+               type="radio"
+               name="account"
+               value="{{ base_account.id }}" />
+        <span
+              class="socialaccount_provider {{ base_account.provider }} {{ account.get_brand.id }}">{{account.get_brand.name}}</span>
+        {{ account }}
+      </label>
+    </div>
+    {% endwith %}
+    {% endfor %}
 
-        <div class="btn-group">
-            <button type="submit"
-                    class="btn btn-primary">{% trans 'Remove' %}</button>
-        </div>
+    <div class="btn-group">
+      <button type="submit"
+              class="btn btn-primary">{% trans 'Remove' %}</button>
+    </div>
 
-    </fieldset>
+  </fieldset>
 
 </form>
 
@@ -58,7 +60,9 @@
 <p>{% trans 'You currently have no social network accounts connected to this account.' %}</p>
 {% endif %}
 
-<h4>{% trans 'Add a 3rd Party Account' %}</h4>
+<div class="divider"></div>
+
+<h6>{% trans 'Add a 3rd Party Account' %}</h6>
 
 {% include "socialaccount/snippets/provider_list.html" with process="connect" %}
 {% include "socialaccount/snippets/login_extra.html" %}

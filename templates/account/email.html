@@ -8,11 +8,14 @@
 {% block account_subtitle %}{% trans "Email Addresses" %}{% endblock %}
 
 {% block content %}
+
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{% url 'user_update' %}">{% trans "Settings" %}</a></li>
+  <li class="breadcrumb-item"><a href="#">{% trans "Email Addresses" %}</a></li>
+</ul>
+
 <h5>{% trans "Email Addresses" %}</h5>
 
-<div class="actions mb-1">
-  <a href="{% url 'user_update' %}">{% trans "Settings" %}</a>
-</div>
 
 {% with emailaddresses=user.emailaddress_set.all emailaddress_count=user.emailaddress_set.count %}
 {% if emailaddress_count %}
@@ -47,10 +50,10 @@
     <button class="btn btn-primary"
             type="submit"
             name="action_primary">{% trans 'Make Primary' %}</button>
-    <button class="btn"
+    <button class="btn btn-secondary"
             type="submit"
             name="action_send">{% trans 'Re-send Verification' %}</button>
-    <button class="btn"
+    <button class="btn btn-secondary"
             type="submit"
             name="action_remove">{% trans 'Remove' %}</button>
   </div>
@@ -66,7 +69,7 @@
 
 {% endwith %}
 
-<h5>{% trans "Add E-mail Address" %}</h5>
+<h6 class="mt-2">{% trans "Add E-mail Address" %}</h6>
 
 <form method="post"
       action="{% url 'account_email' %}"

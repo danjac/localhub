@@ -16,8 +16,6 @@
   <a href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
 </div>
 
-{% trans "Save Settings" as t_save_settings %}
-
-{% include "includes/forms/stimulusjs_form.html" with multipart=True submit_btn=t_save_settings %}
+{% include "includes/forms/stimulusjs_form.html" with multipart=True submit_btn=_("Save Settings") %}
 
 {% endblock content %}

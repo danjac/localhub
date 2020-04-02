@@ -264,5 +264,8 @@
     mask-image: gradient(top bottom, from(rgba(12, 12, 13, 1)), to(rgba(12, 12, 13, 0.3)));
   }
 
-
+  .form-checkbox .form-icon,
+  .form-radio .form-icon {
+    background: transparent;
+  }
 }
