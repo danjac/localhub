@@ -4,7 +4,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-from localhub.utils.http import get_domain, is_image_url, is_url
+from localhub.utils.http import is_image_url, is_url
 
 
 class HTMLScraper:

@@ -3,7 +3,7 @@
 
 import rules
 
-from localhub.communities.rules import is_admin, is_member
+from localhub.communities.rules import is_admin, is_inactive_member, is_member
 
 
 @rules.predicate
@@ -21,6 +21,8 @@ def is_join_request_allowed(user, community):
     return community.allow_join_requests
 
 
-rules.add_perm("join_requests.create", is_join_request_allowed & ~is_member)
+rules.add_perm(
+    "join_requests.create", is_join_request_allowed & ~is_member & ~is_inactive_member
+)
 
 rules.add_perm("join_requests.delete", is_sender | is_community_admin)

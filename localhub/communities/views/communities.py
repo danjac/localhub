@@ -19,7 +19,7 @@ from localhub.views import SearchMixin
 
 from ..forms import CommunityForm
 from ..models import Community, Membership
-from ..rules import is_member
+from ..rules import is_inactive_member, is_member
 from .base import CommunityRequiredMixin
 
 
@@ -55,13 +55,22 @@ class CommunityWelcomeView(CommunityDetailView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data.update(
-            {"join_request": self.get_join_request(), "invite": self.get_invite()}
+            {
+                "join_request": self.get_join_request(),
+                "invite": self.get_invite(),
+                "is_inactive_member": self.is_inactive_member(),
+            }
         )
         return data
 
+    def is_inactive_member(self):
+        return is_inactive_member(self.request.user, self.request.community)
+
     def get_join_request(self):
         return JoinRequest.objects.filter(
-            sender=self.request.user, community=self.request.community
+            sender=self.request.user,
+            community=self.request.community,
+            status__in=(JoinRequest.Status.PENDING, JoinRequest.Status.REJECTED),
         ).first()
 
     def get_invite(self):

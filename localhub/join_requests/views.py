@@ -151,24 +151,28 @@ class JoinRequestAcceptView(JoinRequestActionView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+
+        if Membership.objects.filter(
+            member=self.object.sender, community=self.object.community
+        ).exists():
+            messages.error(request, _("User already belongs to this community"))
+            return redirect("join_requests:list")
+
         self.object.accept()
 
-        _membership, created = Membership.objects.get_or_create(
+        Membership.objects.create(
             member=self.object.sender, community=self.object.community
         )
-        if created:
-            send_acceptance_email(self.object)
-            messages.success(
-                request,
-                _("Join request for %(sender)s has been accepted")
-                % {"sender": user_display(self.object.sender)},
-            )
-            self.object.sender.notify_on_join(self.object.community)
 
-        else:
-            messages.error(request, _("User already belongs to this community"))
+        send_acceptance_email(self.object)
+        messages.success(
+            request,
+            _("Join request for %(sender)s has been accepted")
+            % {"sender": user_display(self.object.sender)},
+        )
+        self.object.sender.notify_on_join(self.object.community)
 
-        return HttpResponseRedirect(self.get_success_url())
+        return redirect(self.get_success_url())
 
 
 join_request_accept_view = JoinRequestAcceptView.as_view()

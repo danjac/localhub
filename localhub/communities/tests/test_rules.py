@@ -10,6 +10,7 @@ from ..factories import MembershipFactory
 from ..models import Membership
 from ..rules import (
     is_admin,
+    is_inactive_member,
     is_member,
     is_membership_community_admin,
     is_moderator,
@@ -36,18 +37,26 @@ class TestMembershipRoles:
         assert is_member.test(user, community)
         assert not is_moderator.test(user, community)
         assert not is_admin.test(user, community)
+        assert not is_inactive_member.test(user, community)
 
     def test_moderator(self, community):
         user = MembershipFactory(community=community, role="moderator").member
         assert is_member.test(user, community)
         assert is_moderator.test(user, community)
         assert not is_admin.test(user, community)
+        assert not is_inactive_member.test(user, community)
 
     def test_admin(self, community):
         user = MembershipFactory(community=community, role="admin").member
         assert is_member.test(user, community)
         assert is_moderator.test(user, community)
         assert is_admin.test(user, community)
+        assert not is_inactive_member.test(user, community)
+
+    def test_inactive_member(self, community):
+        user = MembershipFactory(community=community, active=False).member
+        assert not is_member.test(user, community)
+        assert is_inactive_member.test(user, community)
 
 
 class TestIsOwnMembership:

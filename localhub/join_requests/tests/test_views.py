@@ -5,6 +5,7 @@ import pytest
 from django.conf import settings
 from django.urls import reverse
 
+from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
 from localhub.users.factories import UserFactory
 
@@ -74,8 +75,6 @@ class TestJoinRequestCreateView:
 
 class TestJoinRequestAcceptView:
     def test_post(self, client, mailoutbox, admin, send_webpush_mock):
-        admin.member.notification_preferences = ["new_member"]
-        admin.member.save()
         join_request = JoinRequestFactory(community=admin.community)
         response = client.post(reverse("join_requests:accept", args=[join_request.id]))
         assert response.url == reverse("join_requests:list")
@@ -88,6 +87,18 @@ class TestJoinRequestAcceptView:
         assert mail.to == [join_request.sender.email]
         other_member_mail = mailoutbox[1]
         assert other_member_mail.to == [admin.member.email]
+
+    def test_post_if_already_member(self, client, mailoutbox, admin, send_webpush_mock):
+        join_request = JoinRequestFactory(community=admin.community)
+        MembershipFactory(member=join_request.sender, community=join_request.community)
+        response = client.post(reverse("join_requests:accept", args=[join_request.id]))
+        assert response.url == reverse("join_requests:list")
+        join_request.refresh_from_db()
+        assert not join_request.is_accepted()
+        assert Membership.objects.filter(
+            member=join_request.sender, community=admin.community
+        ).exists()
+        assert len(mailoutbox) == 0
 
 
 class TestJoinRequestRejectView:

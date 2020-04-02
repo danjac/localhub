@@ -223,6 +223,10 @@ class User(AbstractUser):
 
     @cached_property
     def community_roles_cache(self):
+        """
+        Returns:
+            cached dict of roles as {community_id:role}
+        """
         return dict(
             Membership.objects.filter(active=True, member=self).values_list(
                 "community", "role"
@@ -235,14 +239,14 @@ class User(AbstractUser):
     def get_display_name(self):
         """Displays full name or username
 
-        Returns:
-            str:  full display name
+        Returns: str:  full display name
         """
+
         return user_display(self)
 
     def get_notifications(self):
-        """Returns notifications where the user is the target
-        content object, *not* necessarily the actor or recipient.
+        """Returns notifications where the user is the target content object,
+        *not* necessarily the actor or recipient.
 
         Returns:
             QuerySet
@@ -260,6 +264,13 @@ class User(AbstractUser):
             bool: if user has any of these roles
         """
         return self.community_roles_cache.get(community.id, None) in roles
+
+    def has_inactive_membership(self, community):
+        """Checks if user has an inactive membership for this community.
+        """
+        return Membership.objects.filter(
+            community=community, member=self, active=False,
+        ).exists()
 
     def is_blocked(self, user):
         """ Check if user is blocking this other user, or is blocked by this other
