@@ -4,9 +4,5 @@
 from django.conf import settings
 
 
-def darkmode(request):
-    return {"darkmode": "darkmode" in request.COOKIES}
-
-
 def home_page_url(request):
     return {"home_page_url": settings.LOCALHUB_HOME_PAGE_URL}
