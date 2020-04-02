@@ -34,7 +34,7 @@ class Post(Activity):
         return self.title or self.get_domain() or _("Post")
 
     def get_domain(self):
-        return get_domain(self.url)
+        return get_domain(self.url) or ""
 
     @property
     def indexable_description(self):

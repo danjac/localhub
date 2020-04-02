@@ -28,6 +28,117 @@ IMAGE_EXTENSIONS = (
 )
 
 
+class URLResolver:
+    """Handles additional URL functionality
+    """
+
+    def __init__(self, url):
+        self.url = url
+
+    @property
+    def url(self):
+        return self._url
+
+    @url.setter
+    def url(self, url):
+        self._url = url
+        if self._url is None:
+            self.is_valid = False
+        else:
+            try:
+                _urlvalidator(self._url)
+                self.is_valid = True
+                self._parts = urlparse(self.url)
+            except ValidationError:
+                self.is_valid = False
+
+    @property
+    def is_https(self):
+        """Checks if URL is SSL i.e. starts with https://
+
+        Returns:
+            bool
+        """
+        return self.is_valid and self._parts.scheme == "https"
+
+    @property
+    def is_image(self):
+        """Checks if URL points to an image.
+
+        Args:
+            url (str)
+
+        Returns:
+            bool
+        """
+        if not self.is_valid:
+            return False
+        _, ext = os.path.splitext(self._parts.path.lower())
+        return ext[1:] in IMAGE_EXTENSIONS
+
+    @property
+    def root(self):
+        """Returns the root domain URL minus path etc. For example:
+        http://google.com/abc/ -> http://google.com
+
+        Returns:
+            str or None: domain url or None if not a valid URL
+        """
+
+        if not self.is_valid:
+            return None
+        return self._parts.scheme + "://" + self._parts.netloc
+
+    @property
+    def domain(self):
+        """Returns domain of URL e.g. http://google.com -> google.com.
+
+        If "www." is present it is removed e.g. www.google.com -> google.com.
+
+        Returns:
+            str or None: domain or None if not valid URL.
+        """
+        if not self.is_valid:
+            return None
+
+        domain = self._parts.netloc
+        if domain.startswith("www."):
+            domain = domain[4:]
+        return domain
+
+    @property
+    def filename(self):
+        """Last part of a url e.g. "https://imgur.com/some-image.gif" ->
+        "some-image.gif".
+
+        Returns:
+            str or None: filename or None if not a valid url
+        """
+
+        if not self.is_valid:
+            return None
+        return self._parts.path.split("/")[-1]
+
+    def resolve(self):
+        """Resolves URL from HEAD and redirects to get the "true" URL. URL is
+        then set to new URL.
+
+        Returns:
+            str or None: URL. If no HEAD found then returns original URL. None
+                if not a valid URL.
+        """
+        if not self.is_valid:
+            return None
+        try:
+            response = requests.head(self.url, allow_redirects=True)
+            if response.ok and response.url:
+                self.url = response.url
+                return response.url
+        except (requests.RequestException):
+            pass
+        return self.url
+
+
 def is_https(url):
     """Checks if URL is SSL i.e. starts with https://
 
@@ -37,7 +148,7 @@ def is_https(url):
     Returns:
         bool
     """
-    return url and urlparse(url).scheme == "https"
+    return URLResolver(url).is_https
 
 
 def is_url(url):
@@ -49,14 +160,7 @@ def is_url(url):
     Returns:
         bool
     """
-
-    if url is None:
-        return False
-    try:
-        _urlvalidator(url)
-    except ValidationError:
-        return False
-    return True
+    return URLResolver(url).is_valid
 
 
 def is_image_url(url):
@@ -68,11 +172,10 @@ def is_image_url(url):
     Returns:
         bool
     """
-    _, ext = os.path.splitext(urlparse(url).path.lower())
-    return ext[1:] in IMAGE_EXTENSIONS
+    return URLResolver(url).is_image
 
 
-def get_domain_url(url):
+def get_root_url(url):
     """Returns the root domain URL minus path etc. For example:
     http://google.com/abc/ -> http://google.com
 
@@ -82,26 +185,7 @@ def get_domain_url(url):
     Returns:
         str: domain url
     """
-
-    if not is_url(url):
-        return url
-
-    parts = urlparse(url)
-    return parts.scheme + "://" + parts.netloc
-
-
-def clean_domain(domain):
-    """Removes www. segment of a domain.
-
-    Args:
-        domain (str)
-
-    Returns:
-        str: cleaned domain
-    """
-    if domain and domain.startswith("www."):
-        return domain[4:]
-    return domain
+    return URLResolver(url).root
 
 
 def get_domain(url):
@@ -115,10 +199,7 @@ def get_domain(url):
     Returns:
         str: domain
     """
-    if not is_url(url):
-        return url
-
-    return clean_domain(urlparse(url).netloc)
+    return URLResolver(url).domain
 
 
 def resolve_url(url):
@@ -130,13 +211,7 @@ def resolve_url(url):
     Returns:
         str: URL. If no HEAD found then returns original URL.
     """
-    try:
-        response = requests.head(url, allow_redirects=True)
-        if response.ok and response.url:
-            return response.url
-    except (requests.RequestException):
-        pass
-    return url
+    return URLResolver(url).resolve()
 
 
 def get_filename(url):
@@ -144,4 +219,4 @@ def get_filename(url):
     Returns last part of a url e.g. "https://imgur.com/some-image.gif" ->
     "some-image.gif".
     """
-    return urlparse(url).path.split("/")[-1]
+    return URLResolver(url).filename

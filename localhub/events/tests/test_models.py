@@ -38,7 +38,7 @@ class TestEventModel:
         assert event.get_absolute_url().startswith(f"/events/{event.id}/")
 
     def test_get_domain_if_no_url(self):
-        assert Event().get_domain() is None
+        assert Event().get_domain() == ""
 
     def test_get_domain_if_url(self):
         assert Event(url="http://google.com").get_domain() == "google.com"

@@ -82,7 +82,7 @@ class Event(Activity):
             raise ValidationError(_("End date cannot be before start date"))
 
     def get_domain(self):
-        return get_domain(self.url)
+        return get_domain(self.url) or ""
 
     def get_starts_with_tz(self):
         return self.starts.astimezone(self.timezone)

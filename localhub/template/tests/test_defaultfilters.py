@@ -11,7 +11,7 @@ class TestUrlToImg:
         assert url_to_img(url) == (
             '<a href="https://somedomain.org/test.jpg" rel="nofollow"'
             '><img src="https://somedomain.org/test.jpg" '
-            'alt="somedomain.org"></a>'
+            'alt="test.jpg"></a>'
         )
 
     def test_if_unsafe_image(self):
@@ -21,7 +21,7 @@ class TestUrlToImg:
     def test_if_image_no_link(self):
         url = "https://somedomain.org/test.jpg"
         assert url_to_img(url, False) == (
-            '<img src="https://somedomain.org/test.jpg" alt="somedomain.org">'
+            '<img src="https://somedomain.org/test.jpg" alt="test.jpg">'
         )
 
     def test_if_not_image(self):

@@ -4,7 +4,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-from localhub.utils.http import is_image_url, is_url
+from localhub.utils.http import is_image_url
 
 
 class HTMLScraper:
@@ -13,6 +13,8 @@ class HTMLScraper:
     description and image. Prioritizes OpenGraph and other meta data provided
     before parsing actual page body content.
     """
+
+    MAX_IMAGE_URL_LENGTH = 500
 
     FAKE_BROWSER_USER_AGENT = (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 "
@@ -54,7 +56,7 @@ class HTMLScraper:
         ):
             raise cls.Invalid("URL does not return valid HTML response")
 
-        return cls().scrape(response.content)
+        return cls(url_resolver).scrape(response.content)
 
     def scrape(self, html):
         """Parses HTML title, image and description from HTML OpenGraph and
@@ -120,4 +122,6 @@ class HTMLScraper:
         return None
 
     def is_acceptable_image(self, image):
-        return image and len(image) < 501 and is_url(image) and is_image_url(image)
+        if not is_image_url(image):
+            return False
+        return len(image) <= self.MAX_IMAGE_URL_LENGTH

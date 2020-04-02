@@ -34,7 +34,7 @@ def mock_html_scraper_from_invalid_url(mocker):
 
 class TestPostForm:
     def mock_resolve_url(self, mocker, url):
-        mocker.patch("localhub.posts.forms.resolve_url", return_value=url)
+        mocker.patch("localhub.posts.forms.URLResolver.resolve", return_value=url)
 
     def test_url_missing(self):
 
