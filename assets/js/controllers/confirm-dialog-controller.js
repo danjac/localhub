@@ -1,9 +1,7 @@
-// Copyright (c) 2019 by Dan Jacob
+// Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  Controller
-} from 'stimulus';
+import { Controller } from 'stimulus';
 
 export default class extends Controller {
   /*
@@ -32,11 +30,7 @@ export default class extends Controller {
     });
   }
 
-  open({
-    header,
-    body,
-    onConfirm
-  }) {
+  open({ header, body, onConfirm }) {
     this.headerTarget.innerText = header;
     this.bodyTarget.innerText = body;
     this.onConfirm = onConfirm;

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 by Dan Jacob
+// Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {
@@ -16,9 +16,7 @@ import {
   subMonths
 } from 'date-fns';
 
-import {
-  Controller
-} from 'stimulus';
+import { Controller } from 'stimulus';
 
 const DATE_FORMAT = 'dd/MM/yyyy';
 
@@ -37,14 +35,18 @@ export default class extends Controller {
     days: elements rendering each day.
     template: HTML <template> to render the calendar body.
   */
-  static targets = ['calendar', 'dateInput', 'currentMonth', 'days', 'template'];
+  static targets = [
+    'calendar',
+    'dateInput',
+    'currentMonth',
+    'days',
+    'template'
+  ];
 
   toggle(event) {
     event.preventDefault();
     if (!this.calendarTarget.classList.toggle('d-none')) {
-      const {
-        value
-      } = this.dateInputTarget;
+      const { value } = this.dateInputTarget;
 
       this.selectedDate = value ? parse(value, DATE_FORMAT, new Date()) : null;
       this.firstOfMonthDate = startOfMonth(this.selectedDate || new Date());
@@ -89,11 +91,10 @@ export default class extends Controller {
     // render each day
     let date = startDate;
     while (isBefore(date, endDate)) {
-
       const clone = this.templateTarget.content.cloneNode(true);
 
-      const div = clone.querySelector("div");
-      const btn = clone.querySelector("button");
+      const div = clone.querySelector('div');
+      const btn = clone.querySelector('button');
 
       btn.append(date.getDate().toString());
       btn.setAttribute('data-calendar-date', format(date, DATE_FORMAT));

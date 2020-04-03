@@ -1,16 +1,12 @@
-// Copyright (c) 2019 by Dan Jacob
+// Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 /* global require */
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-import {
-    Application
-} from 'stimulus';
-import {
-    definitionsFromContext
-} from 'stimulus/webpack-helpers';
+import { Application } from 'stimulus';
+import { definitionsFromContext } from 'stimulus/webpack-helpers';
 
 // Axios setup
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';

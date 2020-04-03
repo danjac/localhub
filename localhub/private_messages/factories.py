@@ -1,4 +1,4 @@
-# Copyright (c) 2019 by Dan Jacob
+# Copyright (c) 2020 by Dan Jacob
 
 from factory import DjangoModelFactory, Faker, SubFactory
 

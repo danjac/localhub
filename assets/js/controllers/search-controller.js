@@ -1,9 +1,7 @@
-// Copyright (c) 2019 by Dan Jacob
+// Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  Controller
-} from 'stimulus';
+import { Controller } from 'stimulus';
 
 import Turbolinks from 'turbolinks';
 
@@ -26,9 +24,7 @@ export default class extends Controller {
 
   connect() {
     this.toggleSelector();
-    const {
-      pathname
-    } = window.location;
+    const { pathname } = window.location;
     for (const option of this.selectorTarget.options) {
       if (option.value === pathname) {
         option.setAttribute('selected', true);
@@ -41,9 +37,7 @@ export default class extends Controller {
   }
 
   select() {
-    const {
-      value
-    } = this.selectorTarget;
+    const { value } = this.selectorTarget;
     const param = this.data.get('param') || 'q';
     const search = this.inputTarget.value;
     if (value && search) {

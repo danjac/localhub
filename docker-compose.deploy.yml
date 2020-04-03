@@ -1,10 +1,9 @@
-# Copyright (c) 2019 by Dan Jacob
+# Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 version: '3.4'
 
-x-env:
-  &default-env
+x-env: &default-env
   DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
   REDIS_URL: redis://redis:6379/0
   DJANGO_SECRET_KEY: seekrit
@@ -30,8 +29,8 @@ services:
       context: .
       dockerfile: Dockerfile.webpack
       cache_from:
-        - "${CI_REGISTRY_IMAGE-deploy}/webpack:${CI_COMMIT_SHORT_SHA-deploy}"
-    image: "${CI_REGISTRY_IMAGE-deploy}/webpack:${CI_COMMIT_SHORT_SHA-deploy}"
+        - '${CI_REGISTRY_IMAGE-deploy}/webpack:${CI_COMMIT_SHORT_SHA-deploy}'
+    image: '${CI_REGISTRY_IMAGE-deploy}/webpack:${CI_COMMIT_SHORT_SHA-deploy}'
     volumes:
       - .:/app
       - /app/node_modules
@@ -41,8 +40,8 @@ services:
       context: .
       dockerfile: Dockerfile.deploy
       cache_from:
-        - "${CI_REGISTRY_IMAGE-deploy}/django:${CI_COMMIT_SHORT_SHA-deploy}"
-    image: "${CI_REGISTRY_IMAGE-deploy}/django:${CI_COMMIT_SHORT_SHA-deploy}"
+        - '${CI_REGISTRY_IMAGE-deploy}/django:${CI_COMMIT_SHORT_SHA-deploy}'
+    image: '${CI_REGISTRY_IMAGE-deploy}/django:${CI_COMMIT_SHORT_SHA-deploy}'
     environment: *default-env
     depends_on:
       - postgres

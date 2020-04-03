@@ -1,9 +1,7 @@
-// Copyright (c) 2019 by Dan Jacob
+// Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  Controller
-} from 'stimulus';
+import { Controller } from 'stimulus';
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
@@ -58,12 +56,12 @@ export default class extends Controller {
     const url = this.element.getAttribute('href') || this.data.get('url');
 
     axios({
-        headers: {
-          'Turbolinks-Referrer': referrer
-        },
-        method,
-        url
-      })
+      headers: {
+        'Turbolinks-Referrer': referrer
+      },
+      method,
+      url
+    })
       .then(response => {
         const redirect = this.data.get('redirect');
         if (redirect === 'none') {
