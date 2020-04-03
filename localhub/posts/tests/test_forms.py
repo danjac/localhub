@@ -3,7 +3,7 @@
 
 import pytest
 
-from localhub.utils.html_scraper import HTMLScraper
+from localhub.utils.html import HTMLScraper
 from localhub.utils.http import URLResolver
 
 from ..factories import PostFactory
@@ -19,17 +19,14 @@ def mock_html_scraper_from_url(mocker):
     scraper.image = "https://imgur.com/cat.gif"
     scraper.description = "cat"
 
-    mocker.patch(
-        "localhub.utils.html_scraper.HTMLScraper.from_url", return_value=scraper
-    )
+    mocker.patch("localhub.utils.html.HTMLScraper.from_url", return_value=scraper)
     yield
 
 
 @pytest.fixture()
 def mock_html_scraper_from_invalid_url(mocker):
     mocker.patch(
-        "localhub.utils.html_scraper.HTMLScraper.from_url",
-        side_effect=HTMLScraper.Invalid,
+        "localhub.utils.html.HTMLScraper.from_url", side_effect=HTMLScraper.Invalid,
     )
     yield
 
@@ -37,7 +34,7 @@ def mock_html_scraper_from_invalid_url(mocker):
 class TestPostForm:
     def mock_resolve_url(self, mocker, url):
         mocker.patch(
-            "localhub.posts.forms.URLResolver.from_url", return_value=URLResolver(url)
+            "localhub.utils.http.URLResolver.from_url", return_value=URLResolver(url)
         )
 
     def test_url_missing(self):
@@ -185,9 +182,7 @@ class TestPostForm:
         scraper.image = "https://imgur.com/cat.gif"
         scraper.description = "cat"
 
-        mocker.patch(
-            "localhub.utils.html_scraper.HTMLScraper.from_url", return_value=scraper
-        )
+        mocker.patch("localhub.utils.html.HTMLScraper.from_url", return_value=scraper)
 
         self.mock_resolve_url(mocker, form.data["url"])
         assert not form.is_valid()
