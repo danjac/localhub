@@ -173,11 +173,12 @@ user_unfollow_view = UserUnfollowView.as_view()
 
 class UserBlockView(PermissionRequiredMixin, BaseSingleUserView):
     permission_required = "users.block_user"
+    success_message = _("You are now blocking this user")
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.blocked.add(self.object)
-        messages.success(self.request, _("You are now blocking this user"))
+        messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -185,10 +186,12 @@ user_block_view = UserBlockView.as_view()
 
 
 class UserUnblockView(BaseSingleUserView):
+    success_message = _("You have stopped blocking this user")
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.blocked.remove(self.object)
-        messages.success(self.request, _("You have stopped blocking this user"))
+        messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
 
