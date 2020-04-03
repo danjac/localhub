@@ -1,0 +1,12 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/includes/links.html" %}
+
+{% load i18n %}
+
+{% block extra_links %}
+{% if object.has_map and not is_detail %}
+<a href="{{ object.get_absolute_url }}#map-for-event-{{ object.id }}">{% trans "Map" %}</a>
+{% endif %}
+{% endblock %}
