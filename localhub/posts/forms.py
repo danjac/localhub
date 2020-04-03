@@ -6,8 +6,8 @@ from django.utils.translation import gettext_lazy as _
 
 from localhub.activities.forms import ActivityForm
 from localhub.utils.http import URLResolver
+from localhub.utils.html_scraper import HTMLScraper
 
-from .html_scraper import HTMLScraper
 from .models import Post
 
 

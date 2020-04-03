@@ -3,11 +3,11 @@
 
 import pytest
 
+from localhub.utils.html_scraper import HTMLScraper
 from localhub.utils.http import URLResolver
 
 from ..factories import PostFactory
 from ..forms import PostForm
-from ..html_scraper import HTMLScraper
 
 pytestmark = pytest.mark.django_db
 
@@ -20,7 +20,7 @@ def mock_html_scraper_from_url(mocker):
     scraper.description = "cat"
 
     mocker.patch(
-        "localhub.posts.html_scraper.HTMLScraper.from_url", return_value=scraper
+        "localhub.utils.html_scraper.HTMLScraper.from_url", return_value=scraper
     )
     yield
 
@@ -28,7 +28,7 @@ def mock_html_scraper_from_url(mocker):
 @pytest.fixture()
 def mock_html_scraper_from_invalid_url(mocker):
     mocker.patch(
-        "localhub.posts.html_scraper.HTMLScraper.from_url",
+        "localhub.utils.html_scraper.HTMLScraper.from_url",
         side_effect=HTMLScraper.Invalid,
     )
     yield
@@ -186,7 +186,7 @@ class TestPostForm:
         scraper.description = "cat"
 
         mocker.patch(
-            "localhub.posts.html_scraper.HTMLScraper.from_url", return_value=scraper
+            "localhub.utils.html_scraper.HTMLScraper.from_url", return_value=scraper
         )
 
         self.mock_resolve_url(mocker, form.data["url"])
