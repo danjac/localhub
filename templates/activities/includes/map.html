@@ -2,8 +2,8 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% if object.has_map %}
-<div id="map-for-event-{{ object.id }}"
-     class="osm-map osm-map-lg mt-1"
+<div id="map-for-{{ object_type }}-{{ object.id }}"
+     class="osm-map osm-map-lg mt-1{% if css_class %} {{ css_class }}{% endif %}"
      data-controller="map"
      data-map-latitude="{{ object.latitude }}"
      data-map-longitude="{{ object.longitude }}"></div>

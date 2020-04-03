@@ -58,7 +58,10 @@
   {% endif %}
 
 </dl>
-{% include "activities/includes/map.html" %}
+{% if is_detail %}
+{% include "activities/includes/map.html" with css_class="mt-2" %}
+{% endif %}
 {% endblock content %}
 
 {% block actions %}{% include "events/includes/actions.html" %}{% endblock %}
+{% block links %}{% include "events/includes/links.html" %}{% endblock %}

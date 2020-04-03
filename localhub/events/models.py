@@ -127,7 +127,7 @@ class Event(Activity):
         )
 
     def has_map(self):
-        return self.latitude and self.longitude
+        return all((self.latitude, self.longitude))
 
     def to_ical(self):
         event = CalendarEvent()

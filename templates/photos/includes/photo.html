@@ -40,7 +40,10 @@
   {% endif %}
 </dl>
 {% endif %}
-{% include "activities/includes/map.html" %}
+{% if is_detail %}
+{% include "activities/includes/map.html" with css_class="mt-2" %}
+{% endif %}
 {% endblock content %}
 
 {% block actions %}{% include "photos/includes/actions.html" %}{% endblock %}
+{% block links %}{% include "photos/includes/links.html" %}{% endblock %}

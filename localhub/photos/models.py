@@ -66,4 +66,4 @@ class Photo(Activity):
         return any((self.artist, self.original_url, self.cc_license))
 
     def has_map(self):
-        return self.latitude and self.longitude
+        return all((self.latitude, self.longitude))

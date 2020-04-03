@@ -43,7 +43,12 @@ export default class extends Controller {
         'OpenStreetMap</a> contributors,' +
         '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
     }).addTo(map);
+
+    const marker = L.marker(coords);
+    const group = new L.featureGroup([marker]);
     L.marker(coords).addTo(map);
+    map.fitBounds(group.getBounds());
+    map.scrollWheelZoom.disable();
   }
 
   get tileLayer() {
