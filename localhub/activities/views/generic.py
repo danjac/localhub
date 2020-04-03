@@ -50,7 +50,9 @@ class ActivitySuccessMixin:
             raise ImproperlyConfigured(
                 "You must define success_message for this class or override get_success_message"
             )
-        return self.success_message % {"object": self.object._meta.verbose_name}
+        return self.success_message % {
+            "object": self.object._meta.verbose_name.capitalize()
+        }
 
     def get_success_url(self):
         if hasattr(self, "success_url"):

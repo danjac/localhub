@@ -1,4 +1,4 @@
-{# Copyright (c) 2019 by Dan Jacob #}
+{# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load account %}{% user_display join_request.sender as sender %}{% autoescape off %}Hi,{% if sender %}User {{ sender }} has requested to join this community.{% else %}You have received a request from {{ join_request.email }} to join this community.{% endif %}
 To review this request: {{ detail_url }}

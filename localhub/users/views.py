@@ -55,7 +55,7 @@ class SingleUserMixin(BaseUserQuerySetMixin):
         if self.user_obj != self.request.user:
             self.user_obj.get_notifications().for_recipient(
                 self.request.user
-            ).unread().update(is_read=True)
+            ).mark_read()
         return response
 
     @cached_property
