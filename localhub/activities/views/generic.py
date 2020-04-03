@@ -2,9 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
-from django.contrib import messages
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -44,7 +43,7 @@ class BaseSingleActivityView(ActivityQuerySetMixin, GenericModelView):
 
 
 class ActivityCreateView(
-    CommunityRequiredMixin, PermissionRequiredMixin, CreateView,
+    CommunityRequiredMixin, PermissionRequiredMixin, SuccessMixin, CreateView,
 ):
     permission_required = "activities.create_activity"
 
@@ -57,7 +56,7 @@ class ActivityCreateView(
             if self.object.published
             else _("Your %(object)s has been saved to Drafts")
         )
-        return message % {"object": self.object._meta.verbose_name}
+        return super().get_success_message(success_message=message)
 
     def form_valid(self, form):
 
@@ -75,8 +74,7 @@ class ActivityCreateView(
         if publish:
             self.object.notify_on_create()
 
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
@@ -104,24 +102,23 @@ class ActivityUpdateView(
 ):
     permission_required = "activities.change_activity"
 
-    def get_success_message(self, publish):
-        message = (
+    def get_success_message(self):
+        return (
             _("Your %(model)s has been published")
-            if publish
+            if self.do_publish
             else _("Your %(model)s has been updated")
         )
-        return super().get_success_message(message)
 
     def form_valid(self, form):
 
-        publish = (
+        self.do_publish = (
             not (self.object.published) and "save_as_draft" not in self.request.POST
         )
 
         self.object = form.save(commit=False)
         self.object.editor = self.request.user
         self.object.edited = timezone.now()
-        if publish:
+        if self.do_publish:
             self.object.published = timezone.now()
         self.object.save()
         self.object.update_reshares()
@@ -129,8 +126,7 @@ class ActivityUpdateView(
         if self.object.published:
             self.object.notify_on_update()
 
-        messages.success(self.request, self.get_success_message(publish))
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 class ActivityDeleteView(
@@ -149,11 +145,7 @@ class ActivityDeleteView(
         else:
             self.object.delete()
 
-        message = self.get_success_message()
-        if message:
-            messages.success(self.request, message)
-
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 class ActivityDetailView(ActivityQuerySetMixin, DetailView):
@@ -232,11 +224,9 @@ class ActivityReshareView(
         self.object = self.get_object()
         self.reshare = self.object.reshare(self.request.user)
 
-        messages.success(self.request, self.get_success_message())
-
         self.reshare.notify_on_create()
 
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 class ActivityPublishView(
@@ -252,8 +242,8 @@ class ActivityPublishView(
         self.object = self.get_object()
         self.object.published = timezone.now()
         self.object.save(update_fields=["published"])
-        messages.success(request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+
+        return self.success_response()
 
 
 activity_publish_view = ActivityPublishView.as_view()
@@ -276,8 +266,7 @@ class ActivityPinView(PermissionRequiredMixin, SuccessMixin, BaseSingleActivityV
         self.object.is_pinned = True
         self.object.save()
 
-        messages.success(request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 class ActivityUnpinView(PermissionRequiredMixin, SuccessMixin, BaseSingleActivityView):
@@ -292,8 +281,8 @@ class ActivityUnpinView(PermissionRequiredMixin, SuccessMixin, BaseSingleActivit
         self.object = self.get_object()
         self.object.is_pinned = False
         self.object.save()
-        messages.success(request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+
+        return self.success_response()
 
 
 class ActivityBookmarkView(
@@ -314,7 +303,7 @@ class ActivityBookmarkView(
             pass
         if request.is_ajax():
             return HttpResponse(status=204)
-        return HttpResponse(self.get_success_url())
+        return self.success_response()
 
 
 class ActivityRemoveBookmarkView(SuccessMixin, BaseSingleActivityView):
@@ -323,7 +312,7 @@ class ActivityRemoveBookmarkView(SuccessMixin, BaseSingleActivityView):
         self.object.get_bookmarks().filter(user=request.user).delete()
         if request.is_ajax():
             return HttpResponse(status=204)
-        return HttpResponse(self.get_success_url())
+        return self.success_response()
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -347,7 +336,7 @@ class ActivityLikeView(PermissionRequiredMixin, SuccessMixin, BaseSingleActivity
             pass
         if request.is_ajax():
             return HttpResponse(status=204)
-        return HttpResponse(self.get_success_url())
+        return self.success_response()
 
 
 class ActivityDislikeView(SuccessMixin, BaseSingleActivityView):
@@ -356,7 +345,7 @@ class ActivityDislikeView(SuccessMixin, BaseSingleActivityView):
         self.object.get_likes().filter(user=request.user).delete()
         if request.is_ajax():
             return HttpResponse(status=204)
-        return HttpResponse(self.get_success_url())
+        return self.success_response()
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -405,8 +394,7 @@ class ActivityFlagView(
 
         self.object.notify()
 
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 activity_flag_view = ActivityFlagView.as_view()
@@ -442,8 +430,7 @@ class ActivityCommentCreateView(
 
         self.object.notify_on_create()
 
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(

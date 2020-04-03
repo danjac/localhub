@@ -125,9 +125,7 @@ class InviteCreateView(
 
         # send email to recipient
         send_invitation_email(self.object)
-
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 invite_create_view = InviteCreateView.as_view()
@@ -153,8 +151,7 @@ class InviteResendView(InviteAdminMixin, BaseSingleInviteView):
         self.object.save()
 
         send_invitation_email(self.object)
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 invite_resend_view = InviteResendView.as_view()

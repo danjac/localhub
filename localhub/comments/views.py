@@ -2,9 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
-from django.contrib import messages
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -127,9 +126,7 @@ class CommentUpdateView(
         self.object.save()
 
         self.object.notify_on_update()
-
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 comment_update_view = CommentUpdateView.as_view()
@@ -153,8 +150,7 @@ class CommentDeleteView(
         else:
             self.object.delete()
 
-        messages.success(request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 comment_delete_view = CommentDeleteView.as_view()
@@ -175,7 +171,7 @@ class CommentBookmarkView(PermissionRequiredMixin, BaseCommentActionView):
             pass
         if request.is_ajax():
             return HttpResponse(status=204)
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 comment_bookmark_view = CommentBookmarkView.as_view()
@@ -187,7 +183,7 @@ class CommentRemoveBookmarkView(BaseCommentActionView):
         Bookmark.objects.filter(user=request.user, comment=self.object).delete()
         if request.is_ajax():
             return HttpResponse(status=204)
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -212,7 +208,7 @@ class CommentLikeView(PermissionRequiredMixin, BaseCommentActionView):
             pass
         if request.is_ajax():
             return HttpResponse(status=204)
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 comment_like_view = CommentLikeView.as_view()
@@ -224,7 +220,7 @@ class CommentDislikeView(BaseCommentActionView):
         Like.objects.filter(user=request.user, comment=self.object).delete()
         if request.is_ajax():
             return HttpResponse(status=204)
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -273,8 +269,7 @@ class CommentFlagView(
 
         flag.notify()
 
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 comment_flag_view = CommentFlagView.as_view()
@@ -313,8 +308,7 @@ class CommentReplyView(
 
         self.object.notify_on_create()
 
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 comment_reply_view = CommentReplyView.as_view()

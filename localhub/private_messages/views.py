@@ -3,7 +3,6 @@
 
 
 from django.conf import settings
-from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from django.db.models import F
@@ -166,11 +165,9 @@ class BaseReplyFormView(BaseMessageFormView):
         if self.parent.recipient == self.request.user:
             self.parent.mark_read()
 
-        messages.success(self.request, self.get_success_message())
-
         self.notify()
 
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 class MessageReplyView(RecipientQuerySetMixin, BaseReplyFormView):
@@ -211,8 +208,7 @@ class MessageCreateView(
 
         self.object.notify_on_send()
 
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 message_create_view = MessageCreateView.as_view()
@@ -271,8 +267,7 @@ class MessageDeleteView(SenderOrRecipientQuerySetMixin, SuccessMixin, DeleteView
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.soft_delete(self.request.user)
-        messages.success(request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
     def get_success_url(self):
         if self.request.user == self.object.recipient:
@@ -290,7 +285,7 @@ class MessageMarkReadView(RecipientQuerySetMixin, BaseMessageActionView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.mark_read()
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 message_mark_read_view = MessageMarkReadView.as_view()
@@ -321,7 +316,7 @@ class MessageBookmarkView(SenderOrRecipientQuerySetMixin, BaseMessageActionView)
             pass
         if request.is_ajax():
             return HttpResponse(status=204)
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 message_bookmark_view = MessageBookmarkView.as_view()
@@ -333,7 +328,7 @@ class MessageRemoveBookmarkView(SenderOrRecipientQuerySetMixin, BaseMessageActio
         Bookmark.objects.filter(user=request.user, message=self.object).delete()
         if request.is_ajax():
             return HttpResponse(status=204)
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)

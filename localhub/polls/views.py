@@ -1,9 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.contrib import messages
 from django.forms import inlineformset_factory
-from django.http import HttpResponseRedirect
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
@@ -118,8 +116,7 @@ class AnswerVoteView(
         self.object.voters.add(self.request.user)
         self.object.poll.notify_on_vote(self.request.user)
 
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 answer_vote_view = AnswerVoteView.as_view()

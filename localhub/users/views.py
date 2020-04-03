@@ -4,11 +4,10 @@
 import datetime
 
 from django.conf import settings
-from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import BooleanField, Q, Value
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -154,7 +153,7 @@ class UserFollowView(PermissionRequiredMixin, BaseSingleUserView):
         self.request.user.following.add(self.object)
         self.request.user.notify_on_follow(self.object, self.request.community)
 
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 user_follow_view = UserFollowView.as_view()
@@ -164,8 +163,7 @@ class UserUnfollowView(BaseSingleUserView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.following.remove(self.object)
-
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 user_unfollow_view = UserUnfollowView.as_view()
@@ -178,8 +176,7 @@ class UserBlockView(PermissionRequiredMixin, BaseSingleUserView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.blocked.add(self.object)
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 user_block_view = UserBlockView.as_view()
@@ -191,8 +188,7 @@ class UserUnblockView(BaseSingleUserView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.blocked.remove(self.object)
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 user_unblock_view = UserUnblockView.as_view()
@@ -385,8 +381,7 @@ class UserUpdateView(
     def form_valid(self, form):
         self.object = form.save()
         self.object.notify_on_update()
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 user_update_view = UserUpdateView.as_view()

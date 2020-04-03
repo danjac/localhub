@@ -93,7 +93,7 @@ class JoinRequestDetailView(JoinRequestManageMixin, DetailView):
 join_request_detail_view = JoinRequestDetailView.as_view()
 
 
-class JoinRequestDeleteView(PermissionRequiredMixin, DeleteView):
+class JoinRequestDeleteView(PermissionRequiredMixin, SuccessMixin, DeleteView):
     model = JoinRequest
     permission_required = "join_requests.delete"
 
@@ -123,9 +123,7 @@ class JoinRequestDeleteView(PermissionRequiredMixin, DeleteView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()
-
-        messages.success(request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 join_request_delete_view = JoinRequestDeleteView.as_view()
@@ -169,9 +167,7 @@ class JoinRequestAcceptView(JoinRequestActionView):
 
         self.object.sender.notify_on_join(self.object.community)
 
-        messages.success(request, self.get_success_message())
-
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 join_request_accept_view = JoinRequestAcceptView.as_view()
@@ -193,7 +189,7 @@ class JoinRequestRejectView(JoinRequestActionView):
             % {"sender": user_display(self.object.sender)},
         )
 
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 join_request_reject_view = JoinRequestRejectView.as_view()
@@ -226,9 +222,7 @@ class JoinRequestCreateView(
 
         send_join_request_email(join_request)
 
-        messages.success(self.request, self.get_success_message())
-
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 join_request_create_view = JoinRequestCreateView.as_view()

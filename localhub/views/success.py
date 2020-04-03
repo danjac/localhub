@@ -1,7 +1,9 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
+from django.http import HttpResponseRedirect
 
 
 class SuccessMixin:
@@ -23,7 +25,7 @@ class SuccessMixin:
                 either object (see above) or self.model are assumed. (default: None)
 
         Returns:
-            str
+            str or None if no message defined
 
         Raises:
             ImproperlyConfigured: if no success_message is defined in the class
@@ -72,3 +74,17 @@ class SuccessMixin:
                 "You must either define success_url or object, or pass object as argument"
             )
         return object.get_absolute_url()
+
+    def success_response(self):
+        """Shortcut to add success message, and return redirect to the success URL.
+
+        Returns:
+            HttpResponseRedirect
+        """
+        try:
+            messages.success(self.request, self.get_success_message())
+        except ImproperlyConfigured:
+            # just ignore if no success message defined
+            pass
+
+        return HttpResponseRedirect(self.get_success_url())
