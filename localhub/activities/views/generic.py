@@ -459,13 +459,13 @@ class ActivityCommentCreateView(
         return _("Your comment has been posted")
 
     def form_valid(self, form):
-        comment = form.save(commit=False)
-        comment.content_object = self.activity
-        comment.community = self.request.community
-        comment.owner = self.request.user
-        comment.save()
+        self.object = form.save(commit=False)
+        self.object.content_object = self.activity
+        self.object.community = self.request.community
+        self.object.owner = self.request.user
+        self.object.save()
 
-        comment.notify_on_create()
+        self.object.notify_on_create()
 
         messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
