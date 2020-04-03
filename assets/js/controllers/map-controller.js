@@ -38,12 +38,19 @@ export default class extends Controller {
   connect() {
     const coords = [this.latitude, this.longitude];
     const map = L.map(this.element.id).setView(coords, this.defaultZoom);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer(this.tileLayer, {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">' +
         'OpenStreetMap</a> contributors,' +
         '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
     }).addTo(map);
     L.marker(coords).addTo(map);
+  }
+
+  get tileLayer() {
+    if (this.data.has("darkmode")) {
+      return 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png'
+    }
+    return 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
   }
 
   get defaultZoom() {

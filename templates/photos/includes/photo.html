@@ -40,14 +40,7 @@
   {% endif %}
 </dl>
 {% endif %}
-
-{% if object.has_map %}
-<div id="map-for-event-{{ object.id }}"
-     class="osm-map osm-map-lg my-2"
-     data-controller="map"
-     data-map-latitude="{{ object.latitude }}"
-     data-map-longitude="{{ object.longitude }}"></div>
-{% endif %}
+{% include "activities/includes/map.html" %}
 {% endblock content %}
 
 {% block actions %}{% include "photos/includes/actions.html" %}{% endblock %}
