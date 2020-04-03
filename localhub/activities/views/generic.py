@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
 from django.contrib import messages
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -26,7 +25,7 @@ from localhub.comments.forms import CommentForm
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
-from localhub.views import SearchMixin
+from localhub.views import SearchMixin, SuccessMixin
 
 from ..models import get_activity_models
 
@@ -42,22 +41,6 @@ class ActivityQuerySetMixin(CommunityRequiredMixin):
 
 class BaseSingleActivityView(ActivityQuerySetMixin, GenericModelView):
     ...
-
-
-class ActivitySuccessMixin:
-    def get_success_message(self):
-        if not hasattr(self, "success_message"):
-            raise ImproperlyConfigured(
-                "You must define success_message for this class or override get_success_message"
-            )
-        return self.success_message % {
-            "object": self.object._meta.verbose_name.capitalize()
-        }
-
-    def get_success_url(self):
-        if hasattr(self, "success_url"):
-            return self.success_url
-        return self.object.get_absolute_url()
 
 
 class ActivityCreateView(
@@ -117,17 +100,17 @@ class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
 
 
 class ActivityUpdateView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, UpdateView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, SuccessMixin, UpdateView,
 ):
     permission_required = "activities.change_activity"
 
     def get_success_message(self, publish):
         message = (
-            _("Your %(object)s has been published")
+            _("Your %(model)s has been published")
             if publish
-            else _("Your %(object)s has been updated")
+            else _("Your %(model)s has been updated")
         )
-        return message % {"object": self.object._meta.verbose_name}
+        return super().get_success_message(message)
 
     def form_valid(self, form):
 
@@ -151,11 +134,11 @@ class ActivityUpdateView(
 
 
 class ActivityDeleteView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, ActivitySuccessMixin, DeleteView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, SuccessMixin, DeleteView,
 ):
     permission_required = "activities.delete_activity"
     success_url = settings.LOCALHUB_HOME_PAGE_URL
-    success_message = _("This %(object)s has been deleted")
+    success_message = _("This %(model)s has been deleted")
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -229,10 +212,10 @@ class ActivityDetailView(ActivityQuerySetMixin, DetailView):
 
 
 class ActivityReshareView(
-    PermissionRequiredMixin, ActivitySuccessMixin, BaseSingleActivityView
+    PermissionRequiredMixin, SuccessMixin, BaseSingleActivityView
 ):
     permission_required = "activities.reshare_activity"
-    success_message = _("You have reshared this %(object)s")
+    success_message = _("You have reshared this %(model)s")
 
     def get_queryset(self):
         """
@@ -257,10 +240,10 @@ class ActivityReshareView(
 
 
 class ActivityPublishView(
-    PermissionRequiredMixin, ActivitySuccessMixin, BaseSingleActivityView
+    PermissionRequiredMixin, SuccessMixin, BaseSingleActivityView
 ):
     permission_required = "activities.change_activity"
-    success_message = _("Your %(object)s has been published")
+    success_message = _("Your %(model)s has been published")
 
     def get_queryset(self):
         return super().get_queryset().filter(published__isnull=True)
@@ -276,13 +259,11 @@ class ActivityPublishView(
 activity_publish_view = ActivityPublishView.as_view()
 
 
-class ActivityPinView(
-    PermissionRequiredMixin, ActivitySuccessMixin, BaseSingleActivityView
-):
+class ActivityPinView(PermissionRequiredMixin, SuccessMixin, BaseSingleActivityView):
     permission_required = "activities.pin_activity"
     success_url = settings.LOCALHUB_HOME_PAGE_URL
     success_message = _(
-        "The %(object)s has been pinned to the top of the activity stream"
+        "The %(model)s has been pinned to the top of the activity stream"
     )
 
     def post(self, request, *args, **kwargs):
@@ -299,14 +280,12 @@ class ActivityPinView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityUnpinView(
-    PermissionRequiredMixin, ActivitySuccessMixin, BaseSingleActivityView
-):
+class ActivityUnpinView(PermissionRequiredMixin, SuccessMixin, BaseSingleActivityView):
     permission_required = "activities.pin_activity"
 
     success_url = settings.LOCALHUB_HOME_PAGE_URL
     success_message = _(
-        "The %(object)s has been unpinned from the top of the activity stream"
+        "The %(model)s has been unpinned from the top of the activity stream"
     )
 
     def post(self, request, *args, **kwargs):
@@ -318,7 +297,7 @@ class ActivityUnpinView(
 
 
 class ActivityBookmarkView(
-    PermissionRequiredMixin, ActivitySuccessMixin, BaseSingleActivityView
+    PermissionRequiredMixin, SuccessMixin, BaseSingleActivityView
 ):
     permission_required = "activities.bookmark_activity"
 
@@ -338,7 +317,7 @@ class ActivityBookmarkView(
         return HttpResponse(self.get_success_url())
 
 
-class ActivityRemoveBookmarkView(ActivitySuccessMixin, BaseSingleActivityView):
+class ActivityRemoveBookmarkView(SuccessMixin, BaseSingleActivityView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.get_bookmarks().filter(user=request.user).delete()
@@ -350,9 +329,7 @@ class ActivityRemoveBookmarkView(ActivitySuccessMixin, BaseSingleActivityView):
         return self.post(request, *args, **kwargs)
 
 
-class ActivityLikeView(
-    PermissionRequiredMixin, ActivitySuccessMixin, BaseSingleActivityView
-):
+class ActivityLikeView(PermissionRequiredMixin, SuccessMixin, BaseSingleActivityView):
     permission_required = "activities.like_activity"
 
     def post(self, request, *args, **kwargs):
@@ -373,7 +350,7 @@ class ActivityLikeView(
         return HttpResponse(self.get_success_url())
 
 
-class ActivityDislikeView(ActivitySuccessMixin, BaseSingleActivityView):
+class ActivityDislikeView(SuccessMixin, BaseSingleActivityView):
     def post(self, request, *args, **kwargs):
         obj = self.get_object()
         obj.get_likes().filter(user=request.user).delete()
@@ -386,11 +363,12 @@ class ActivityDislikeView(ActivitySuccessMixin, BaseSingleActivityView):
 
 
 class ActivityFlagView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, FormView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, SuccessMixin, FormView,
 ):
     form_class = FlagForm
     template_name = "activities/flag_form.html"
     permission_required = "activities.flag_activity"
+    success_message = _("This %(model)s has been flagged to the moderators")
 
     @cached_property
     def activity(self):
@@ -413,16 +391,10 @@ class ActivityFlagView(
         return self.activity
 
     def get_success_url(self):
-        return self.activity.get_absolute_url()
+        return super().get_success_url(object=self.activity)
 
     def get_success_message(self):
-
-        return (
-            _(
-                "This %(activity)s has been flagged to the moderators"
-                % {"activity": self.activity._meta.verbose_name}
-            ),
-        )
+        return super().get_success_message(model=self.activity)
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -441,11 +413,12 @@ activity_flag_view = ActivityFlagView.as_view()
 
 
 class ActivityCommentCreateView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, FormView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, SuccessMixin, FormView,
 ):
     form_class = CommentForm
     template_name = "comments/comment_form.html"
     permission_required = "activities.create_comment"
+    success_message = _("Your comment has been posted")
 
     @cached_property
     def activity(self):
@@ -455,10 +428,10 @@ class ActivityCommentCreateView(
         return self.activity
 
     def get_success_url(self):
-        return self.activity.get_absolute_url()
+        return super().get_success_url(object=self.activity)
 
     def get_success_message(self):
-        return _("Your comment has been posted")
+        return super().get_success_message(model=self.activity)
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
