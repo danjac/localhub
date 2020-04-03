@@ -19,7 +19,7 @@ from vanilla import DeleteView, DetailView, FormView, GenericModelView, ListView
 from localhub.bookmarks.models import Bookmark
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.utils import user_display
-from localhub.views import SearchMixin
+from localhub.views import SearchMixin, SuccessMixin
 
 from .forms import MessageForm
 from .models import Message
@@ -51,6 +51,10 @@ class SenderOrRecipientQuerySetMixin(MessageQuerySetMixin):
 
 class BaseMessageListView(SearchMixin, ListView):
     paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
+
+
+class BaseMessageActionView(SuccessMixin, GenericModelView):
+    ...
 
 
 class InboxView(RecipientQuerySetMixin, BaseMessageListView):
@@ -88,7 +92,7 @@ class OutboxView(SenderQuerySetMixin, BaseMessageListView):
 outbox_view = OutboxView.as_view()
 
 
-class BaseMessageFormView(PermissionRequiredMixin, FormView):
+class BaseMessageFormView(PermissionRequiredMixin, SuccessMixin, FormView):
 
     permission_required = "private_messages.create_message"
     template_name = "private_messages/message_form.html"
@@ -97,32 +101,50 @@ class BaseMessageFormView(PermissionRequiredMixin, FormView):
     def get_permission_object(self):
         return self.request.community
 
-
-class BaseReplyFormView(BaseMessageFormView):
-    @cached_property
-    def parent(self):
-        return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+    def get_success_message(self):
+        return _("Your message has been sent to %(recipient)s") % {
+            "recipient": self.recipient_display
+        }
 
     @cached_property
     def recipient(self):
-        return self.parent.get_other_user(self.request.user)
+        return self.get_recipient()
+
+    def get_recipient(self):
+        raise NotImplementedError
 
     @cached_property
     def recipient_display(self):
         return user_display(self.recipient)
-
-    def notify(self):
-        """Handle any notifications to recipient here"""
-        ...
-
-    def get_success_url(self):
-        return self.object.get_absolute_url()
 
     def get_form(self, data=None, files=None):
         form = self.form_class(data, files)
         form["message"].label = _(
             "Send message to %(recipient)s" % {"recipient": self.recipient_display}
         )
+        return form
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["recipient"] = self.recipient
+        data["recipient_display"] = self.recipient_display
+        return data
+
+
+class BaseReplyFormView(BaseMessageFormView):
+    @cached_property
+    def parent(self):
+        return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+
+    def get_recipient(self):
+        return self.parent.get_other_user(self.request.user)
+
+    def notify(self):
+        """Handle any notifications to recipient here"""
+        ...
+
+    def get_form(self, data=None, files=None):
+        form = self.form_class(data, files)
         form["message"].initial = "\n".join(
             ["> " + line for line in self.parent.message.splitlines()]
         )
@@ -131,8 +153,6 @@ class BaseReplyFormView(BaseMessageFormView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["parent"] = self.parent
-        data["recipient"] = self.recipient
-        data["recipient_display"] = self.recipient_display
         return data
 
     def form_valid(self, form):
@@ -146,11 +166,7 @@ class BaseReplyFormView(BaseMessageFormView):
         if self.parent.recipient == self.request.user:
             self.parent.mark_read()
 
-        messages.success(
-            self.request,
-            _("Your message has been sent to %(recipient)s")
-            % {"recipient": self.recipient_display},
-        )
+        messages.success(self.request, self.get_success_message())
 
         self.notify()
 
@@ -176,8 +192,7 @@ message_follow_up_view = MessageFollowUpView.as_view()
 class MessageCreateView(
     CommunityRequiredMixin, BaseMessageFormView,
 ):
-    @cached_property
-    def recipient(self):
+    def get_recipient(self):
         return get_object_or_404(
             get_user_model()
             .objects.exclude(pk=self.request.user.id)
@@ -187,38 +202,16 @@ class MessageCreateView(
             username=self.kwargs["username"],
         )
 
-    @cached_property
-    def recipient_display(self):
-        return user_display(self.recipient)
-
-    def get_form(self, data=None, files=None):
-        form = self.form_class(data, files)
-        form["message"].label = _(
-            "Send message to %(recipient)s" % {"recipient": self.recipient_display}
-        )
-        return form
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["recipient"] = self.recipient
-        data["recipient_display"] = self.recipient_display
-        return data
-
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.community = self.request.community
         self.object.sender = self.request.user
         self.object.recipient = self.recipient
         self.object.save()
-        messages.success(
-            self.request,
-            _("Your message has been sent to %(recipient)s")
-            % {"recipient": user_display(self.object.recipient)},
-        )
+
         self.object.notify_on_send()
+
+        messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -263,7 +256,7 @@ class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
 message_detail_view = MessageDetailView.as_view()
 
 
-class MessageDeleteView(SenderOrRecipientQuerySetMixin, DeleteView):
+class MessageDeleteView(SenderOrRecipientQuerySetMixin, SuccessMixin, DeleteView):
     """
     Does a "soft delete" which sets sender/recipient deleted flag
     accordingly.
@@ -273,11 +266,12 @@ class MessageDeleteView(SenderOrRecipientQuerySetMixin, DeleteView):
     """
 
     model = Message
+    success_message = _("This message has been deleted")
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.soft_delete(self.request.user)
-        messages.success(request, _("This message has been deleted"))
+        messages.success(request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
@@ -289,12 +283,9 @@ class MessageDeleteView(SenderOrRecipientQuerySetMixin, DeleteView):
 message_delete_view = MessageDeleteView.as_view()
 
 
-class MessageMarkReadView(RecipientQuerySetMixin, GenericModelView):
+class MessageMarkReadView(RecipientQuerySetMixin, BaseMessageActionView):
     def get_queryset(self):
         return super().get_queryset().unread()
-
-    def get_success_url(self):
-        return self.object.get_absolute_url()
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -317,12 +308,7 @@ class MessageMarkAllReadView(RecipientQuerySetMixin, View):
 message_mark_all_read_view = MessageMarkAllReadView.as_view()
 
 
-class MessageBookmarkView(
-    SenderOrRecipientQuerySetMixin, GenericModelView,
-):
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
+class MessageBookmarkView(SenderOrRecipientQuerySetMixin, BaseMessageActionView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         try:
@@ -341,10 +327,7 @@ class MessageBookmarkView(
 message_bookmark_view = MessageBookmarkView.as_view()
 
 
-class MessageRemoveBookmarkView(SenderOrRecipientQuerySetMixin, GenericModelView):
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
+class MessageRemoveBookmarkView(SenderOrRecipientQuerySetMixin, BaseMessageActionView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         Bookmark.objects.filter(user=request.user, message=self.object).delete()
