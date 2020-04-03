@@ -4,6 +4,7 @@
 import pytest
 
 from localhub.utils.exif import Exif
+
 from ..factories import PhotoFactory
 from ..forms import PhotoForm
 
