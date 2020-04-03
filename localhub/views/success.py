@@ -26,19 +26,11 @@ class SuccessMixin:
 
         Returns:
             str or None if no message defined
-
-        Raises:
-            ImproperlyConfigured: if no success_message is defined in the class
-                or as argument.
         """
         success_message = success_message or getattr(self, "success_message", None)
 
         if success_message is None:
-            raise ImproperlyConfigured(
-                "You must define success_message for this class, "
-                "pass success_message as argument, or or override "
-                "get_success_message"
-            )
+            return None
 
         object = object or getattr(self, "object", None)
         model = model or object or getattr(self, "model", None)
@@ -81,10 +73,8 @@ class SuccessMixin:
         Returns:
             HttpResponseRedirect
         """
-        try:
-            messages.success(self.request, self.get_success_message())
-        except ImproperlyConfigured:
-            # just ignore if no success message defined
-            pass
+        success_message = self.get_success_message()
+        if success_message:
+            messages.success(self.request, success_message)
 
         return HttpResponseRedirect(self.get_success_url())

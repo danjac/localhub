@@ -2,8 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
-from django.contrib import messages
-from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
@@ -70,7 +68,7 @@ membership_update_view = MembershipUpdateView.as_view()
 
 
 class MembershipDeleteView(
-    PermissionRequiredMixin, MembershipQuerySetMixin, DeleteView,
+    PermissionRequiredMixin, MembershipQuerySetMixin, SuccessMixin, DeleteView,
 ):
     permission_required = "communities.delete_membership"
     model = Membership
@@ -90,8 +88,7 @@ class MembershipDeleteView(
         self.object.delete()
         send_membership_deleted_email(self.object.member, self.object.community)
 
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 membership_delete_view = MembershipDeleteView.as_view()

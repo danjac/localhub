@@ -2,11 +2,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
-from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, F, Q
-from django.forms import ModelForm
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
@@ -129,10 +127,9 @@ class CommunityUpdateView(
     def get_success_url(self):
         return self.request.path
 
-    def form_valid(self, form: ModelForm):
+    def form_valid(self, form):
         form.save()
-        messages.success(self.request, self.get_success_message())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 community_update_view = CommunityUpdateView.as_view()
