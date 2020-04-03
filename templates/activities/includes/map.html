@@ -5,9 +5,6 @@
 <div id="map-for-event-{{ object.id }}"
      class="osm-map osm-map-lg mt-1"
      data-controller="map"
-     {% if darkmode %}
-     data-map-darkmode
-     {% endif %}
      data-map-latitude="{{ object.latitude }}"
      data-map-longitude="{{ object.longitude }}"></div>
 {% endif %}

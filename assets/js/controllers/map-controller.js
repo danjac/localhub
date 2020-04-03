@@ -47,9 +47,6 @@ export default class extends Controller {
   }
 
   get tileLayer() {
-    if (this.data.has("darkmode")) {
-      return 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png'
-    }
     return 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
   }
 
