@@ -147,11 +147,8 @@ class TestCommentBookmarkView:
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
         )
-        response = client.post(
-            reverse("comments:bookmark", args=[comment.id]),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-        )
-        assert response.status_code == 204
+        response = client.post(reverse("comments:bookmark", args=[comment.id]))
+        assert response.url == comment.get_absolute_url()
         bookmark = Bookmark.objects.get()
         assert bookmark.user == member.member
 
@@ -167,11 +164,8 @@ class TestCommentRemoveBookmarkView:
         BookmarkFactory(
             user=member.member, content_object=comment, community=comment.community,
         )
-        response = client.post(
-            reverse("comments:remove_bookmark", args=[comment.id]),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-        )
-        assert response.status_code == 204
+        response = client.post(reverse("comments:remove_bookmark", args=[comment.id]))
+        assert response.url == comment.get_absolute_url()
         assert Bookmark.objects.count() == 0
 
 
@@ -183,11 +177,8 @@ class TestCommentLikeView:
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
         )
-        response = client.post(
-            reverse("comments:like", args=[comment.id]),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-        )
-        assert response.status_code == 204
+        response = client.post(reverse("comments:like", args=[comment.id]))
+        assert response.url == comment.get_absolute_url()
         like = Like.objects.get()
         assert like.user == member.member
 
@@ -206,11 +197,8 @@ class TestCommentDislikeView:
             community=comment.community,
             recipient=comment.owner,
         )
-        response = client.post(
-            reverse("comments:dislike", args=[comment.id]),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-        )
-        assert response.status_code == 204
+        response = client.post(reverse("comments:dislike", args=[comment.id]))
+        assert response.url == comment.get_absolute_url()
         assert Like.objects.count() == 0
 
 

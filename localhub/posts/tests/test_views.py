@@ -278,11 +278,8 @@ class TestPostBookmarkView:
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
         )
-        response = client.post(
-            reverse("posts:bookmark", args=[post.id]),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-        )
-        assert response.status_code == 204
+        response = client.post(reverse("posts:bookmark", args=[post.id]),)
+        assert response.url == post.get_absolute_url()
         bookmark = Bookmark.objects.get()
         assert bookmark.user == member.member
 
@@ -296,11 +293,8 @@ class TestPostRemoveBookmarkView:
         BookmarkFactory(
             user=member.member, content_object=post, community=post.community,
         )
-        response = client.post(
-            reverse("posts:remove_bookmark", args=[post.id]),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-        )
-        assert response.status_code == 204
+        response = client.post(reverse("posts:remove_bookmark", args=[post.id]),)
+        assert response.url == post.get_absolute_url()
         assert Bookmark.objects.count() == 0
 
 
@@ -310,11 +304,8 @@ class TestPostLikeView:
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
         )
-        response = client.post(
-            reverse("posts:like", args=[post.id]),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-        )
-        assert response.status_code == 204
+        response = client.post(reverse("posts:like", args=[post.id]),)
+        assert response.url == post.get_absolute_url()
         like = Like.objects.get()
         assert like.user == member.member
 
@@ -331,11 +322,8 @@ class TestPostDislikeView:
             community=post.community,
             recipient=post.owner,
         )
-        response = client.post(
-            reverse("posts:dislike", args=[post.id]),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-        )
-        assert response.status_code == 204
+        response = client.post(reverse("posts:dislike", args=[post.id]),)
+        assert response.url == post.get_absolute_url()
         assert Like.objects.count() == 0
 
 

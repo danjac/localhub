@@ -107,11 +107,8 @@ class TestEventLikeView:
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
         )
-        response = client.post(
-            reverse("events:like", args=[event.id]),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-        )
-        assert response.status_code == 204
+        response = client.post(reverse("events:like", args=[event.id]))
+        assert response.url == event.get_absolute_url()
         like = Like.objects.get()
         assert like.user == member.member
 
@@ -128,11 +125,8 @@ class TestEventDislikeView:
             community=event.community,
             recipient=event.owner,
         )
-        response = client.post(
-            reverse("events:dislike", args=[event.id]),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-        )
-        assert response.status_code == 204
+        response = client.post(reverse("events:dislike", args=[event.id]))
+        assert response.url == event.get_absolute_url()
         assert Like.objects.count() == 0
 
 

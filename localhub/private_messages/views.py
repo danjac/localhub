@@ -314,8 +314,6 @@ class MessageBookmarkView(SenderOrRecipientQuerySetMixin, BaseMessageActionView)
             )
         except IntegrityError:
             pass
-        if request.is_ajax():
-            return HttpResponse(status=204)
         return self.success_response()
 
 
@@ -326,8 +324,6 @@ class MessageRemoveBookmarkView(SenderOrRecipientQuerySetMixin, BaseMessageActio
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         Bookmark.objects.filter(user=request.user, message=self.object).delete()
-        if request.is_ajax():
-            return HttpResponse(status=204)
         return self.success_response()
 
     def delete(self, request, *args, **kwargs):

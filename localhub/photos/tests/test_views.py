@@ -1,3 +1,6 @@
+# Copyright (c) 2020 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import pytest
 from django.conf import settings
 from django.urls import reverse
@@ -71,11 +74,8 @@ class TestPhotoLikeView:
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
         )
-        response = client.post(
-            reverse("photos:like", args=[photo.id]),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-        )
-        assert response.status_code == 204
+        response = client.post(reverse("photos:like", args=[photo.id]))
+        assert response.url == photo.get_absolute_url()
         like = Like.objects.get()
         assert like.user == member.member
         assert like.recipient == photo.owner
@@ -93,9 +93,6 @@ class TestPhotoDislikeView:
             community=photo.community,
             recipient=photo.owner,
         )
-        response = client.post(
-            reverse("photos:dislike", args=[photo.id]),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-        )
-        assert response.status_code == 204
+        response = client.post(reverse("photos:dislike", args=[photo.id]))
+        assert response.url == photo.get_absolute_url()
         assert Like.objects.count() == 0

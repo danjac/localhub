@@ -169,8 +169,6 @@ class CommentBookmarkView(PermissionRequiredMixin, BaseCommentActionView):
             )
         except IntegrityError:
             pass
-        if request.is_ajax():
-            return HttpResponse(status=204)
         return self.success_response()
 
 
@@ -181,8 +179,6 @@ class CommentRemoveBookmarkView(BaseCommentActionView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         Bookmark.objects.filter(user=request.user, comment=self.object).delete()
-        if request.is_ajax():
-            return HttpResponse(status=204)
         return self.success_response()
 
     def delete(self, request, *args, **kwargs):
@@ -206,8 +202,6 @@ class CommentLikeView(PermissionRequiredMixin, BaseCommentActionView):
             ).notify()
         except IntegrityError:
             pass
-        if request.is_ajax():
-            return HttpResponse(status=204)
         return self.success_response()
 
 
@@ -218,8 +212,6 @@ class CommentDislikeView(BaseCommentActionView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         Like.objects.filter(user=request.user, comment=self.object).delete()
-        if request.is_ajax():
-            return HttpResponse(status=204)
         return self.success_response()
 
     def delete(self, request, *args, **kwargs):

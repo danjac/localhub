@@ -3,7 +3,6 @@
 
 from django.conf import settings
 from django.db import IntegrityError
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -301,8 +300,6 @@ class ActivityBookmarkView(
         except IntegrityError:
             # dupe, ignore
             pass
-        if request.is_ajax():
-            return HttpResponse(status=204)
         return self.success_response()
 
 
@@ -310,8 +307,6 @@ class ActivityRemoveBookmarkView(SuccessMixin, BaseSingleActivityView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.get_bookmarks().filter(user=request.user).delete()
-        if request.is_ajax():
-            return HttpResponse(status=204)
         return self.success_response()
 
     def delete(self, request, *args, **kwargs):
@@ -334,8 +329,6 @@ class ActivityLikeView(PermissionRequiredMixin, SuccessMixin, BaseSingleActivity
         except IntegrityError:
             # dupe, ignore
             pass
-        if request.is_ajax():
-            return HttpResponse(status=204)
         return self.success_response()
 
 
@@ -343,8 +336,6 @@ class ActivityDislikeView(SuccessMixin, BaseSingleActivityView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.get_likes().filter(user=request.user).delete()
-        if request.is_ajax():
-            return HttpResponse(status=204)
         return self.success_response()
 
     def delete(self, request, *args, **kwargs):

@@ -282,10 +282,9 @@ class TestMessageBookmarkView:
             community=member.community, recipient=member.member, sender=sender
         )
         response = client.post(
-            reverse("private_messages:message_bookmark", args=[message.id]),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+            reverse("private_messages:message_bookmark", args=[message.id])
         )
-        assert response.status_code == 204
+        assert response.url == message.get_absolute_url()
         bookmark = Bookmark.objects.get()
         assert bookmark.user == member.member
 
@@ -301,7 +300,6 @@ class TestMessageRemoveBookmarkView:
         )
         response = client.post(
             reverse("private_messages:message_remove_bookmark", args=[message.id]),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
-        assert response.status_code == 204
+        assert response.url == message.get_absolute_url()
         assert Bookmark.objects.count() == 0
