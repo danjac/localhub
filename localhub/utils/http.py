@@ -30,41 +30,35 @@ class URLResolver:
     """Handles additional URL functionality
     """
 
+    class Invalid(ValidationError):
+        ...
+
     @classmethod
-    def from_url(cls, url):
+    def from_url(cls, url, resolve=False):
         """Create new instance from a URL. Automatically resolves "true"
         URL based on HEAD and redirects.
 
         Args:
             url (str): a valid URL
+            resolve (bool, optional): resolves URL from HEAD (default: False)
 
         Returns:
             URLResolver instance
+
+        Raises:
+            Invalid: if URL is invalid
         """
-        return cls(resolve_url(url))
+        if resolve:
+            url = resolve_url(url)
+
+        if not is_url(url):
+            raise cls.Invalid(f"{url} is not a valid URL")
+
+        return cls(url)
 
     def __init__(self, url):
         self.url = url
-
-    def __bool__(self):
-        return self.is_valid
-
-    @property
-    def url(self):
-        return self._url
-
-    @url.setter
-    def url(self, url):
-        self._url = url
-        if self._url is None:
-            self.is_valid = False
-        else:
-            try:
-                _urlvalidator(self._url)
-                self.is_valid = True
-                self._parts = urlparse(self.url)
-            except ValidationError:
-                self.is_valid = False
+        self.parts = urlparse(self.url)
 
     @property
     def is_https(self):
@@ -73,7 +67,7 @@ class URLResolver:
         Returns:
             bool
         """
-        return self.is_valid and self._parts.scheme == "https"
+        return self.parts.scheme == "https"
 
     @property
     def is_image(self):
@@ -85,9 +79,7 @@ class URLResolver:
         Returns:
             bool
         """
-        if not self.is_valid:
-            return False
-        _, ext = os.path.splitext(self._parts.path.lower())
+        _, ext = os.path.splitext(self.parts.path.lower())
         return ext[1:] in IMAGE_EXTENSIONS
 
     @property
@@ -98,10 +90,7 @@ class URLResolver:
         Returns:
             str or None: domain url or None if not a valid URL
         """
-
-        if not self.is_valid:
-            return None
-        return self._parts.scheme + "://" + self._parts.netloc
+        return self.parts.scheme + "://" + self.parts.netloc
 
     @property
     def domain(self):
@@ -112,10 +101,7 @@ class URLResolver:
         Returns:
             str or None: domain or None if not valid URL.
         """
-        if not self.is_valid:
-            return None
-
-        domain = self._parts.netloc
+        domain = self.parts.netloc
         if domain.startswith("www."):
             domain = domain[4:]
         return domain
@@ -128,10 +114,7 @@ class URLResolver:
         Returns:
             str or None: filename or None if not a valid url
         """
-
-        if not self.is_valid:
-            return None
-        return self._parts.path.split("/")[-1]
+        return self.parts.path.split("/")[-1]
 
 
 def is_https(url):
@@ -143,19 +126,10 @@ def is_https(url):
     Returns:
         bool
     """
-    return URLResolver(url).is_https
-
-
-def is_url(url):
-    """Checks if a value is a valid URL.
-
-    Args:
-        url (str)
-
-    Returns:
-        bool
-    """
-    return URLResolver(url).is_valid
+    try:
+        return URLResolver.from_url(url).is_https
+    except URLResolver.Invalid:
+        return False
 
 
 def is_image_url(url):
@@ -167,7 +141,10 @@ def is_image_url(url):
     Returns:
         bool
     """
-    return URLResolver(url).is_image
+    try:
+        return URLResolver(url).from_url(url).is_image
+    except URLResolver.Invalid:
+        return False
 
 
 def get_root_url(url):
@@ -180,7 +157,10 @@ def get_root_url(url):
     Returns:
         str: domain url
     """
-    return URLResolver(url).root
+    try:
+        return URLResolver.from_url(url).root
+    except URLResolver.Invalid:
+        return None
 
 
 def get_domain(url):
@@ -194,15 +174,27 @@ def get_domain(url):
     Returns:
         str: domain
     """
-    return URLResolver(url).domain
+    try:
+        return URLResolver.from_url(url).domain
+    except URLResolver.Invalid:
+        return None
 
 
 def get_filename(url):
     """
     Returns last part of a url e.g. "https://imgur.com/some-image.gif" ->
     "some-image.gif".
+
+    Args:
+        url (str)
+
+    Returns:
+        str or None: filename or None if not a valid URL
     """
-    return URLResolver(url).filename
+    try:
+        return URLResolver.from_url(url).filename
+    except URLResolver.Invalid:
+        return None
 
 
 def resolve_url(url):
@@ -224,3 +216,21 @@ def resolve_url(url):
     except (requests.RequestException):
         pass
     return url
+
+
+def is_url(url):
+    """Checks if a value is a valid URL.
+
+    Args:
+        url (str)
+
+    Returns:
+        bool
+    """
+    if url is None:
+        return False
+    try:
+        _urlvalidator(url)
+        return True
+    except ValidationError:
+        return False

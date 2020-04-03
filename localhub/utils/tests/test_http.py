@@ -1,6 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import pytest
 import requests
 
 from ..http import (
@@ -16,26 +17,17 @@ from ..http import (
 
 
 class TestURLResolver:
-    def test_false_if_none(self):
-        assert not URLResolver(None)
+    def test_from_url_if_none(self):
+        with pytest.raises(URLResolver.Invalid):
+            URLResolver.from_url(None)
 
-    def test_false_if_not_url(self):
-        assert not URLResolver("xyz")
+    def test_from_url_if_not_url(self):
+        with pytest.raises(URLResolver.Invalid):
+            URLResolver.from_url("xyz")
 
-    def test_true_if_url(self):
-        assert URLResolver("https://reddit.com")
-
-    def test_is_valid_if_none(self):
-        assert not URLResolver(None).is_valid
-
-    def test_is_valid_if_not_url(self):
-        assert not URLResolver("xyz").is_valid
-
-    def test_is_valid_if_url(self):
-        assert URLResolver("https://reddit.com").is_valid
-
-    def test_filename_if_not_url(self):
-        assert URLResolver("").filename is None
+    def test_from_url_if_url(self):
+        resolver = URLResolver.from_url("https://reddit.com")
+        assert resolver.url == "https://reddit.com"
 
     def test_filename_if_no_path(self):
         assert URLResolver("https://reddit.com").filename == ""
@@ -43,17 +35,11 @@ class TestURLResolver:
     def test_filename_if_path(self):
         assert URLResolver("http://google.com/test.html").filename == "test.html"
 
-    def test_https_if_not_url(self):
-        assert not URLResolver("reddit").is_https
-
     def test_https_if_false(self):
         assert not URLResolver("http://reddit.com").is_https
 
     def test_https_if_true(self):
         assert URLResolver("https://reddit.com").is_https
-
-    def test_is_image_if_not_url(self):
-        assert not URLResolver("example").is_image
 
     def test_is_image_if_true(self):
         assert URLResolver("https://example.com/test.jpg").is_image
@@ -61,17 +47,11 @@ class TestURLResolver:
     def test_is_image_if_false(self):
         assert not URLResolver("https://example.com/test.txt").is_image
 
-    def test_domain_if_not_url(self):
-        assert URLResolver("").domain is None
-
     def test_domain_with_path(self):
         assert URLResolver("http://google.com/test/").domain == "google.com"
 
     def test_domain_with_www(self):
         assert URLResolver("http://www.google.com/").domain == "google.com"
-
-    def test_root_if_not_url(self):
-        assert URLResolver("").root is None
 
     def test_root_with_path(self):
         assert URLResolver("http://google.com/test/").root == "http://google.com"
@@ -79,19 +59,22 @@ class TestURLResolver:
     def test_root_with_no_path(self):
         assert URLResolver("http://google.com/").root == "http://google.com"
 
-    def test_from_url_if_not_url(self):
-        assert URLResolver.from_url("").url == ""
-
     def test_resolve_if_no_head_returned(self, mocker):
         class MockResponse:
             ok = False
 
         mocker.patch("requests.head", return_value=MockResponse)
-        assert URLResolver.from_url("http://google.com").url == "http://google.com"
+        assert (
+            URLResolver.from_url("http://google.com", resolve=True).url
+            == "http://google.com"
+        )
 
     def test_resolve_if_request_exception(self, mocker):
         mocker.patch("requests.head", side_effect=requests.RequestException)
-        assert URLResolver.from_url("http://google.com").url == "http://google.com"
+        assert (
+            URLResolver.from_url("http://google.com", resolve=True).url
+            == "http://google.com"
+        )
 
     def test_resolve_if_head_returned(self, mocker):
         class MockResponse:
@@ -99,7 +82,10 @@ class TestURLResolver:
             url = "https://google.com"
 
         mocker.patch("requests.head", return_value=MockResponse)
-        assert URLResolver.from_url("http://google.com").url == "https://google.com"
+        assert (
+            URLResolver.from_url("http://google.com", resolve=True).url
+            == "https://google.com"
+        )
 
 
 class TestGetFilename:

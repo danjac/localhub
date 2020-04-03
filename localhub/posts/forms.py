@@ -79,10 +79,11 @@ class PostForm(ActivityForm):
         clear_opengraph_data=False,
         **cleaned_data
     ):
-        if not url:
+        try:
+            url_resolver = URLResolver.from_url(url, resolve=True)
+        except URLResolver.Invalid:
             return {}
 
-        url_resolver = URLResolver.from_url(url)
         data = {"url": url_resolver.url}
 
         if url_resolver.is_image:

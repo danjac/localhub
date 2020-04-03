@@ -35,8 +35,9 @@ def url_to_img(url, linkify=True):
 
     Only https links are permitted.
     """
-    resolver = URLResolver(url)
-    if not resolver.is_valid:
+    try:
+        resolver = URLResolver.from_url(url)
+    except URLResolver.Invalid:
         return url
     if resolver.is_image and resolver.is_https:
         html = f'<img src="{resolver.url}" alt="{resolver.filename}">'
@@ -60,8 +61,9 @@ def linkify(url, text=None):
     Creates a "safe" external link to a new tab.
     If text is falsy, uses the URL domain e.g. reddit.com.
     """
-    resolver = URLResolver(url)
-    if not resolver.is_valid:
+    try:
+        resolver = URLResolver.from_url(url)
+    except URLResolver.Invalid:
         return url
 
     text = text or resolver.domain
