@@ -24,7 +24,7 @@ from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.likes.models import Like
 from localhub.private_messages.models import Message
-from localhub.views import SearchMixin
+from localhub.views import SearchMixin, SuccessMixin
 
 from .forms import UserForm
 from .utils import user_display
@@ -122,7 +122,7 @@ class SingleUserMixin(BaseUserQuerySetMixin):
         return data
 
 
-class BaseSingleUserView(UserQuerySetMixin, GenericModelView):
+class BaseSingleUserView(UserQuerySetMixin, SuccessMixin, GenericModelView):
     lookup_field = "username"
     lookup_url_kwarg = "username"
 
@@ -148,9 +148,6 @@ class BaseUserListView(UserQuerySetMixin, ListView):
 class UserFollowView(PermissionRequiredMixin, BaseSingleUserView):
     permission_required = "users.follow_user"
 
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
@@ -164,9 +161,6 @@ user_follow_view = UserFollowView.as_view()
 
 
 class UserUnfollowView(BaseSingleUserView):
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.following.remove(self.object)
@@ -180,9 +174,6 @@ user_unfollow_view = UserUnfollowView.as_view()
 class UserBlockView(PermissionRequiredMixin, BaseSingleUserView):
     permission_required = "users.block_user"
 
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.blocked.add(self.object)
@@ -194,9 +185,6 @@ user_block_view = UserBlockView.as_view()
 
 
 class UserUnblockView(BaseSingleUserView):
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.blocked.remove(self.object)
@@ -381,7 +369,7 @@ user_message_list_view = UserMessageListView.as_view()
 
 
 class UserUpdateView(
-    CurrentUserMixin, PermissionRequiredMixin, UpdateView,
+    CurrentUserMixin, PermissionRequiredMixin, SuccessMixin, UpdateView,
 ):
     permission_required = "users.change_user"
     success_message = _("Your details have been updated")
@@ -394,7 +382,7 @@ class UserUpdateView(
     def form_valid(self, form):
         self.object = form.save()
         self.object.notify_on_update()
-        messages.success(self.request, self.success_message)
+        messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
 
