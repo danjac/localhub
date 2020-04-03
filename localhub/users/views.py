@@ -8,8 +8,8 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import BooleanField, Q, Value
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import View
@@ -148,23 +148,30 @@ class BaseUserListView(UserQuerySetMixin, ListView):
 class UserFollowView(PermissionRequiredMixin, BaseSingleUserView):
     permission_required = "users.follow_user"
 
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
     def post(self, request, *args, **kwargs):
-        user = self.get_object()
+        self.object = self.get_object()
 
-        self.request.user.following.add(user)
-        self.request.user.notify_on_follow(user, self.request.community)
+        self.request.user.following.add(self.object)
+        self.request.user.notify_on_follow(self.object, self.request.community)
 
-        return redirect(user)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 user_follow_view = UserFollowView.as_view()
 
 
 class UserUnfollowView(BaseSingleUserView):
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
     def post(self, request, *args, **kwargs):
-        user = self.get_object()
-        self.request.user.following.remove(user)
-        return redirect(user)
+        self.object = self.get_object()
+        self.request.user.following.remove(self.object)
+
+        return HttpResponseRedirect(self.get_success_url())
 
 
 user_unfollow_view = UserUnfollowView.as_view()
@@ -173,22 +180,28 @@ user_unfollow_view = UserUnfollowView.as_view()
 class UserBlockView(PermissionRequiredMixin, BaseSingleUserView):
     permission_required = "users.block_user"
 
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
     def post(self, request, *args, **kwargs):
-        user = self.get_object()
-        self.request.user.blocked.add(user)
+        self.object = self.get_object()
+        self.request.user.blocked.add(self.object)
         messages.success(self.request, _("You are now blocking this user"))
-        return redirect(user)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 user_block_view = UserBlockView.as_view()
 
 
 class UserUnblockView(BaseSingleUserView):
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
     def post(self, request, *args, **kwargs):
-        user = self.get_object()
-        self.request.user.blocked.remove(user)
+        self.object = self.get_object()
+        self.request.user.blocked.remove(self.object)
         messages.success(self.request, _("You have stopped blocking this user"))
-        return redirect(user)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 user_unblock_view = UserUnblockView.as_view()
@@ -382,7 +395,7 @@ class UserUpdateView(
         self.object = form.save()
         self.object.notify_on_update()
         messages.success(self.request, self.success_message)
-        return redirect(self.get_success_url())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 user_update_view = UserUpdateView.as_view()

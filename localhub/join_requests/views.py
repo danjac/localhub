@@ -6,7 +6,6 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Case, IntegerField, Value, When
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
@@ -156,7 +155,7 @@ class JoinRequestAcceptView(JoinRequestActionView):
             member=self.object.sender, community=self.object.community
         ).exists():
             messages.error(request, _("User already belongs to this community"))
-            return redirect("join_requests:list")
+            return HttpResponseRedirect(reverse("join_requests:list"))
 
         self.object.accept()
 
@@ -172,7 +171,7 @@ class JoinRequestAcceptView(JoinRequestActionView):
         )
         self.object.sender.notify_on_join(self.object.community)
 
-        return redirect(self.get_success_url())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 join_request_accept_view = JoinRequestAcceptView.as_view()
@@ -217,6 +216,9 @@ class JoinRequestCreateView(
             self.request.user, self.request.community, *args, **kwargs
         )
 
+    def get_success_url(self):
+        return reverse("community_welcome")
+
     def form_valid(self, form):
 
         join_request = form.save()
@@ -227,7 +229,7 @@ class JoinRequestCreateView(
             self.request, _("Your request has been sent to the community admins"),
         )
 
-        return redirect("community_welcome")
+        return HttpResponseRedirect(self.get_success_url())
 
 
 join_request_create_view = JoinRequestCreateView.as_view()

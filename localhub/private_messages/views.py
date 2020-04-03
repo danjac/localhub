@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from django.db.models import F
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
@@ -111,9 +111,12 @@ class BaseReplyFormView(BaseMessageFormView):
     def recipient_display(self):
         return user_display(self.recipient)
 
-    def send_notifications(self, message):
+    def notify(self):
         """Handle any notifications to recipient here"""
         ...
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
 
     def get_form(self, data=None, files=None):
         form = self.form_class(data, files)
@@ -133,12 +136,12 @@ class BaseReplyFormView(BaseMessageFormView):
         return data
 
     def form_valid(self, form):
-        message = form.save(commit=False)
-        message.community = self.request.community
-        message.sender = self.request.user
-        message.recipient = self.recipient
-        message.parent = self.parent
-        message.save()
+        self.object = form.save(commit=False)
+        self.object.community = self.request.community
+        self.object.sender = self.request.user
+        self.object.recipient = self.recipient
+        self.object.parent = self.parent
+        self.object.save()
 
         if self.parent.recipient == self.request.user:
             self.parent.mark_read()
@@ -149,22 +152,22 @@ class BaseReplyFormView(BaseMessageFormView):
             % {"recipient": self.recipient_display},
         )
 
-        self.send_notifications(message)
+        self.notify()
 
-        return redirect(message)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class MessageReplyView(RecipientQuerySetMixin, BaseReplyFormView):
-    def send_notifications(self, message):
-        message.notify_on_reply()
+    def notify(self):
+        self.object.notify_on_reply()
 
 
 message_reply_view = MessageReplyView.as_view()
 
 
 class MessageFollowUpView(SenderQuerySetMixin, BaseReplyFormView):
-    def send_notifications(self, message):
-        message.notify_on_follow_up()
+    def notify(self):
+        self.object.notify_on_follow_up()
 
 
 message_follow_up_view = MessageFollowUpView.as_view()
@@ -201,19 +204,22 @@ class MessageCreateView(
         data["recipient_display"] = self.recipient_display
         return data
 
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
     def form_valid(self, form):
-        message = form.save(commit=False)
-        message.community = self.request.community
-        message.sender = self.request.user
-        message.recipient = self.recipient
-        message.save()
+        self.object = form.save(commit=False)
+        self.object.community = self.request.community
+        self.object.sender = self.request.user
+        self.object.recipient = self.recipient
+        self.object.save()
         messages.success(
             self.request,
             _("Your message has been sent to %(recipient)s")
-            % {"recipient": user_display(message.recipient)},
+            % {"recipient": user_display(self.object.recipient)},
         )
-        message.notify_on_send()
-        return redirect(message)
+        self.object.notify_on_send()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 message_create_view = MessageCreateView.as_view()
@@ -287,10 +293,13 @@ class MessageMarkReadView(RecipientQuerySetMixin, GenericModelView):
     def get_queryset(self):
         return super().get_queryset().unread()
 
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
     def post(self, request, *args, **kwargs):
-        message = self.get_object()
-        message.mark_read()
-        return redirect(message)
+        self.object = self.get_object()
+        self.object.mark_read()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 message_mark_read_view = MessageMarkReadView.as_view()
@@ -302,7 +311,7 @@ class MessageMarkAllReadView(RecipientQuerySetMixin, View):
 
     def post(self, request, *args, **kwargs):
         self.get_queryset().for_recipient(self.request.user).mark_read()
-        return redirect("private_messages:inbox")
+        return HttpResponseRedirect(reverse("private_messages:inbox"))
 
 
 message_mark_all_read_view = MessageMarkAllReadView.as_view()
@@ -311,29 +320,37 @@ message_mark_all_read_view = MessageMarkAllReadView.as_view()
 class MessageBookmarkView(
     SenderOrRecipientQuerySetMixin, GenericModelView,
 ):
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
     def post(self, request, *args, **kwargs):
-        message = self.get_object()
+        self.object = self.get_object()
         try:
             Bookmark.objects.create(
-                user=request.user, community=request.community, content_object=message,
+                user=request.user,
+                community=request.community,
+                content_object=self.object,
             )
         except IntegrityError:
             pass
         if request.is_ajax():
             return HttpResponse(status=204)
-        return redirect(message)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 message_bookmark_view = MessageBookmarkView.as_view()
 
 
 class MessageRemoveBookmarkView(SenderOrRecipientQuerySetMixin, GenericModelView):
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
     def post(self, request, *args, **kwargs):
-        message = self.get_object()
-        Bookmark.objects.filter(user=request.user, message=message).delete()
+        self.object = self.get_object()
+        Bookmark.objects.filter(user=request.user, message=self.object).delete()
         if request.is_ajax():
             return HttpResponse(status=204)
-        return redirect(message)
+        return HttpResponseRedirect(self.get_success_url())
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)

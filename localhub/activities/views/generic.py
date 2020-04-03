@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -235,17 +235,25 @@ class ActivityReshareView(PermissionRequiredMixin, BaseSingleActivityView):
             .filter(has_reshared=False)
         )
 
-    def post(self, request, *args, **kwargs):
-        obj = self.get_object()
-        reshare = obj.reshare(self.request.user)
+    def get_success_url(self):
+        return self.object.get_absolute_url()
 
-        messages.success(
-            self.request, _("You have reshared this %s") % obj._meta.verbose_name,
+    def get_success_message(self):
+
+        return (
+            _("You have reshared this %(object)s")
+            % {"object": self.object._meta.verbose_name},
         )
 
-        reshare.notify_on_create()
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.reshare = self.object.reshare(self.request.user)
 
-        return redirect(obj)
+        messages.success(self.request, self.get_success_message())
+
+        self.reshare.notify_on_create()
+
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class ActivityPublishView(PermissionRequiredMixin, BaseSingleActivityView):
@@ -254,15 +262,18 @@ class ActivityPublishView(PermissionRequiredMixin, BaseSingleActivityView):
     def get_queryset(self):
         return super().get_queryset().filter(published__isnull=True)
 
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
     def post(self, request, *args, **kwargs):
-        obj = self.get_object()
-        obj.published = timezone.now()
-        obj.save(update_fields=["published"])
-        message = (_("Your %(activity)s has been published")) % {
-            "activity": obj._meta.verbose_name
+        self.object = self.get_object()
+        self.object.published = timezone.now()
+        self.object.save(update_fields=["published"])
+        message = (_("Your %(object)s has been published")) % {
+            "object": self.object._meta.verbose_name
         }
         messages.success(request, message)
-        return redirect(obj)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 activity_publish_view = ActivityPublishView.as_view()
@@ -271,56 +282,81 @@ activity_publish_view = ActivityPublishView.as_view()
 class ActivityPinView(PermissionRequiredMixin, BaseSingleActivityView):
     permission_required = "activities.pin_activity"
 
+    def get_success_url(self):
+        return settings.LOCALHUB_HOME_PAGE_URL
+
+    def get_success_message(self):
+        return (
+            _("The %(object)s has been pinned to the top of the activity stream")
+            % {"object": self.object._meta.verbose_name},
+        )
+
     def post(self, request, *args, **kwargs):
         for model in get_activity_models():
             model.objects.for_community(community=request.community).update(
                 is_pinned=False
             )
 
-        obj = self.get_object()
-        obj.is_pinned = True
-        obj.save()
-        messages.success(request, _("Post has been pinned to the top of the stream"))
-        return redirect(settings.LOCALHUB_HOME_PAGE_URL)
+        self.object = self.get_object()
+        self.object.is_pinned = True
+        self.object.save()
+
+        messages.success(request, self.get_success_message())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class ActivityUnpinView(PermissionRequiredMixin, BaseSingleActivityView):
     permission_required = "activities.pin_activity"
 
-    def post(self, request, *args, **kwargs):
-        obj = self.get_object()
-        obj.is_pinned = False
-        obj.save()
-        messages.success(
-            request, _("Pinned post has been removed from the top of the stream")
+    def get_success_url(self):
+        return settings.LOCALHUB_HOME_PAGE_URL
+
+    def get_success_message(self):
+        return (
+            _("The %(object)s has been removed from the top of the activity stream")
+            % {"object": self.object._meta.verbose_name},
         )
-        return redirect(settings.LOCALHUB_HOME_PAGE_URL)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_pinned = False
+        self.object.save()
+        messages.success(request, self.get_success_message())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class ActivityBookmarkView(PermissionRequiredMixin, BaseSingleActivityView):
     permission_required = "activities.bookmark_activity"
 
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
     def post(self, request, *args, **kwargs):
-        obj = self.get_object()
+        self.object = self.get_object()
         try:
             Bookmark.objects.create(
-                user=request.user, community=request.community, content_object=obj,
+                user=request.user,
+                community=request.community,
+                content_object=self.object,
             )
         except IntegrityError:
             # dupe, ignore
             pass
         if request.is_ajax():
             return HttpResponse(status=204)
-        return redirect(obj)
+        return HttpResponse(self.get_success_url())
 
 
 class ActivityRemoveBookmarkView(BaseSingleActivityView):
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
     def post(self, request, *args, **kwargs):
-        obj = self.get_object()
-        obj.get_bookmarks().filter(user=request.user).delete()
+        self.object = self.get_object()
+        self.object.get_bookmarks().filter(user=request.user).delete()
         if request.is_ajax():
             return HttpResponse(status=204)
-        return redirect(obj)
+        return HttpResponse(self.get_success_url())
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -329,14 +365,17 @@ class ActivityRemoveBookmarkView(BaseSingleActivityView):
 class ActivityLikeView(PermissionRequiredMixin, BaseSingleActivityView):
     permission_required = "activities.like_activity"
 
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
     def post(self, request, *args, **kwargs):
-        obj = self.get_object()
+        self.object = self.get_object()
         try:
             Like.objects.create(
                 user=request.user,
                 community=request.community,
-                recipient=obj.owner,
-                content_object=obj,
+                recipient=self.object.owner,
+                content_object=self.object,
             ).notify()
 
         except IntegrityError:
@@ -344,16 +383,19 @@ class ActivityLikeView(PermissionRequiredMixin, BaseSingleActivityView):
             pass
         if request.is_ajax():
             return HttpResponse(status=204)
-        return redirect(obj)
+        return HttpResponse(self.get_success_url())
 
 
 class ActivityDislikeView(BaseSingleActivityView):
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
     def post(self, request, *args, **kwargs):
         obj = self.get_object()
         obj.get_likes().filter(user=request.user).delete()
         if request.is_ajax():
             return HttpResponse(status=204)
-        return redirect(obj)
+        return HttpResponse(self.get_success_url())
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -386,23 +428,29 @@ class ActivityFlagView(
     def get_permission_object(self):
         return self.activity
 
-    def form_valid(self, form):
-        flag = form.save(commit=False)
-        flag.content_object = self.activity
-        flag.community = self.request.community
-        flag.user = self.request.user
-        flag.save()
+    def get_success_url(self):
+        return self.activity.get_absolute_url()
 
-        flag.notify()
+    def get_success_message(self):
 
-        messages.success(
-            self.request,
+        return (
             _(
-                "This %s has been flagged to the moderators"
-                % self.activity._meta.verbose_name
+                "This %(activity)s has been flagged to the moderators"
+                % {"activity": self.activity._meta.verbose_name}
             ),
         )
-        return redirect(self.activity)
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.content_object = self.activity
+        self.object.community = self.request.community
+        self.object.user = self.request.user
+        self.object.save()
+
+        self.object.notify()
+
+        messages.success(self.request, self.get_success_message())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 activity_flag_view = ActivityFlagView.as_view()
@@ -422,6 +470,12 @@ class ActivityCommentCreateView(
     def get_permission_object(self):
         return self.activity
 
+    def get_success_url(self):
+        return self.activity.get_absolute_url()
+
+    def get_success_message(self):
+        return _("Your comment has been posted")
+
     def form_valid(self, form):
         comment = form.save(commit=False)
         comment.content_object = self.activity
@@ -431,8 +485,8 @@ class ActivityCommentCreateView(
 
         comment.notify_on_create()
 
-        messages.success(self.request, _("Your comment has been posted"))
-        return redirect(self.activity)
+        messages.success(self.request, self.get_success_message())
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(

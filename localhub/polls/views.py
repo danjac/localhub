@@ -3,7 +3,7 @@
 
 from django.contrib import messages
 from django.forms import inlineformset_factory
-from django.shortcuts import redirect
+from django.http import HttpResponseRedirect
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from rules.contrib.views import PermissionRequiredMixin
@@ -99,6 +99,9 @@ class AnswerVoteView(
     def get_permission_object(self):
         return self.object.poll
 
+    def get_success_url(self):
+        return self.object.poll.get_absolute_url()
+
     def get_queryset(self):
         return Answer.objects.filter(
             poll__community=self.request.community
@@ -114,7 +117,7 @@ class AnswerVoteView(
         self.object.poll.notify_on_vote(self.request.user)
 
         messages.success(self.request, _("Thanks for voting!"))
-        return redirect(self.object.poll)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 answer_vote_view = AnswerVoteView.as_view()

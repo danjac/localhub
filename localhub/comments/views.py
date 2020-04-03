@@ -4,8 +4,8 @@
 from django.conf import settings
 from django.contrib import messages
 from django.db import IntegrityError
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
@@ -112,16 +112,19 @@ class CommentUpdateView(
     model = Comment
     permission_required = "comments.change_comment"
 
-    def form_valid(self, form):
-        comment = form.save(commit=False)
-        comment.editor = self.request.user
-        comment.edited = timezone.now()
-        comment.save()
+    def get_success_url(self):
+        return self.object.content_object.get_absolute_url()
 
-        comment.notify_on_update()
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.editor = self.request.user
+        self.object.edited = timezone.now()
+        self.object.save()
+
+        self.object.notify_on_update()
 
         messages.success(self.request, _("Comment has been updated"))
-        return redirect(comment.content_object)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 comment_update_view = CommentUpdateView.as_view()
@@ -133,16 +136,19 @@ class CommentDeleteView(
     permission_required = "comments.delete_comment"
     template_name = "comments/comment_confirm_delete.html"
 
+    def get_success_url(self):
+        return self.object.content_object.get_absolute_url()
+
     def post(self, request, *args, **kwargs):
-        comment = self.get_object()
-        if self.request.user != comment.owner:
-            comment.soft_delete()
-            comment.notify_on_delete(self.request.user)
+        self.object = self.get_object()
+        if self.request.user != self.object.owner:
+            self.object.soft_delete()
+            self.object.notify_on_delete(self.request.user)
         else:
-            comment.delete()
+            self.object.delete()
 
         messages.success(request, _("Comment has been deleted"))
-        return redirect(comment.content_object)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 comment_delete_view = CommentDeleteView.as_view()
@@ -153,29 +159,37 @@ class CommentBookmarkView(
 ):
     permission_required = "comments.bookmark_comment"
 
+    def get_success_url(self):
+        return self.object.get_success_url()
+
     def post(self, request, *args, **kwargs):
-        comment = self.get_object()
+        self.object = self.get_object()
         try:
             Bookmark.objects.create(
-                user=request.user, community=request.community, content_object=comment,
+                user=request.user,
+                community=request.community,
+                content_object=self.object,
             )
         except IntegrityError:
             pass
         if request.is_ajax():
             return HttpResponse(status=204)
-        return redirect(comment)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 comment_bookmark_view = CommentBookmarkView.as_view()
 
 
 class CommentRemoveBookmarkView(CommentQuerySetMixin, GenericModelView):
+    def get_success_url(self):
+        return self.object.get_success_url()
+
     def post(self, request, *args, **kwargs):
-        comment = self.get_object()
-        Bookmark.objects.filter(user=request.user, comment=comment).delete()
+        self.object = self.get_object()
+        Bookmark.objects.filter(user=request.user, comment=self.object).delete()
         if request.is_ajax():
             return HttpResponse(status=204)
-        return redirect(comment)
+        return HttpResponseRedirect(self.get_success_url())
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -189,32 +203,38 @@ class CommentLikeView(
 ):
     permission_required = "comments.like_comment"
 
+    def get_success_url(self):
+        return self.object.get_success_url()
+
     def post(self, request, *args, **kwargs):
-        comment = self.get_object()
+        self.object = self.get_object()
         try:
             Like.objects.create(
                 user=request.user,
                 community=request.community,
-                recipient=comment.owner,
-                content_object=comment,
+                recipient=self.object.owner,
+                content_object=self.object,
             ).notify()
         except IntegrityError:
             pass
         if request.is_ajax():
             return HttpResponse(status=204)
-        return redirect(comment)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 comment_like_view = CommentLikeView.as_view()
 
 
 class CommentDislikeView(CommentQuerySetMixin, GenericModelView):
+    def get_success_url(self):
+        return self.object.get_success_url()
+
     def post(self, request, *args, **kwargs):
-        comment = self.get_object()
-        Like.objects.filter(user=request.user, comment=comment).delete()
+        self.object = self.get_object()
+        Like.objects.filter(user=request.user, comment=self.object).delete()
         if request.is_ajax():
             return HttpResponse(status=204)
-        return redirect(comment)
+        return HttpResponseRedirect(self.get_success_url())
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -241,6 +261,9 @@ class CommentFlagView(
     def get_permission_object(self):
         return self.comment
 
+    def get_success_url(self):
+        return self.comment.content_object.get_absolute_url()
+
     @cached_property
     def comment(self):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
@@ -262,7 +285,7 @@ class CommentFlagView(
         messages.success(
             self.request, _("This comment has been flagged to the moderators")
         )
-        return redirect(self.comment.content_object)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 comment_flag_view = CommentFlagView.as_view()
@@ -278,6 +301,9 @@ class CommentReplyView(
     def get_permission_object(self):
         return self.parent
 
+    def get_success_url(self):
+        return self.object.content_object.get_absolute_url()
+
     @cached_property
     def parent(self):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
@@ -288,16 +314,17 @@ class CommentReplyView(
         return data
 
     def form_valid(self, form):
-        comment = form.save(commit=False)
-        comment.parent = self.parent
-        comment.content_object = self.parent.content_object
-        comment.owner = self.request.user
-        comment.community = self.request.community
-        comment.save()
+        self.object = form.save(commit=False)
+        self.object.parent = self.parent
+        self.object.content_object = self.parent.content_object
+        self.object.owner = self.request.user
+        self.object.community = self.request.community
+        self.object.save()
 
-        comment.notify_on_create()
-        messages.success(self.request, _("Your comment has been posted"))
-        return redirect(comment.content_object)
+        self.object.notify_on_create()
+
+        messages.success(self.request, _("Your reply has been posted"))
+        return HttpResponseRedirect(self.get_success_url())
 
 
 comment_reply_view = CommentReplyView.as_view()
