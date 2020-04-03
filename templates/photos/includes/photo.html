@@ -22,6 +22,10 @@
 <em>{% trans "No photo available" %}</em>
 {% endthumbnail %}
 
+{% if is_detail %}
+{% include "activities/includes/map.html" with css_class="my-2" %}
+{% endif %}
+
 {% include "activities/includes/description.html" %}
 
 {% if object.has_attribution %}
@@ -39,9 +43,6 @@
   <dd>{{ object.get_cc_license_display }}</dd>
   {% endif %}
 </dl>
-{% endif %}
-{% if is_detail %}
-{% include "activities/includes/map.html" with css_class="mt-2" %}
 {% endif %}
 {% endblock content %}
 
