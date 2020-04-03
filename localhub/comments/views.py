@@ -8,7 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.functional import cached_property
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import (
     CreateView,
@@ -24,7 +24,7 @@ from localhub.bookmarks.models import Bookmark
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
-from localhub.views import SearchMixin
+from localhub.views import SearchMixin, SuccessMixin
 
 from .forms import CommentForm
 from .models import Comment
@@ -49,6 +49,10 @@ class BaseCommentListView(CommentQuerySetMixin, ListView):
             .exclude_deleted()
             .prefetch_related("content_object")
         )
+
+
+class BaseCommentActionView(CommentQuerySetMixin, SuccessMixin, GenericModelView):
+    ...
 
 
 class CommentListView(SearchMixin, BaseCommentListView):
@@ -106,11 +110,12 @@ comment_detail_view = CommentDetailView.as_view()
 
 
 class CommentUpdateView(
-    PermissionRequiredMixin, CommentQuerySetMixin, UpdateView,
+    PermissionRequiredMixin, CommentQuerySetMixin, SuccessMixin, UpdateView,
 ):
     form_class = CommentForm
     model = Comment
     permission_required = "comments.change_comment"
+    success_message = _("Your comment has been updated")
 
     def get_success_url(self):
         return self.object.content_object.get_absolute_url()
@@ -123,7 +128,7 @@ class CommentUpdateView(
 
         self.object.notify_on_update()
 
-        messages.success(self.request, _("Comment has been updated"))
+        messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -135,9 +140,10 @@ class CommentDeleteView(
 ):
     permission_required = "comments.delete_comment"
     template_name = "comments/comment_confirm_delete.html"
+    success_message = _("This comment has been deleted")
 
     def get_success_url(self):
-        return self.object.content_object.get_absolute_url()
+        return super().get_success_url(object=self.object.content_object)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -147,20 +153,15 @@ class CommentDeleteView(
         else:
             self.object.delete()
 
-        messages.success(request, _("Comment has been deleted"))
+        messages.success(request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
 
 comment_delete_view = CommentDeleteView.as_view()
 
 
-class CommentBookmarkView(
-    PermissionRequiredMixin, CommentQuerySetMixin, GenericModelView,
-):
+class CommentBookmarkView(PermissionRequiredMixin, BaseCommentActionView):
     permission_required = "comments.bookmark_comment"
-
-    def get_success_url(self):
-        return self.object.get_success_url()
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -180,10 +181,7 @@ class CommentBookmarkView(
 comment_bookmark_view = CommentBookmarkView.as_view()
 
 
-class CommentRemoveBookmarkView(CommentQuerySetMixin, GenericModelView):
-    def get_success_url(self):
-        return self.object.get_success_url()
-
+class CommentRemoveBookmarkView(BaseCommentActionView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         Bookmark.objects.filter(user=request.user, comment=self.object).delete()
@@ -198,13 +196,8 @@ class CommentRemoveBookmarkView(CommentQuerySetMixin, GenericModelView):
 comment_remove_bookmark_view = CommentRemoveBookmarkView.as_view()
 
 
-class CommentLikeView(
-    PermissionRequiredMixin, CommentQuerySetMixin, GenericModelView,
-):
+class CommentLikeView(PermissionRequiredMixin, BaseCommentActionView):
     permission_required = "comments.like_comment"
-
-    def get_success_url(self):
-        return self.object.get_success_url()
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -225,10 +218,7 @@ class CommentLikeView(
 comment_like_view = CommentLikeView.as_view()
 
 
-class CommentDislikeView(CommentQuerySetMixin, GenericModelView):
-    def get_success_url(self):
-        return self.object.get_success_url()
-
+class CommentDislikeView(BaseCommentActionView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         Like.objects.filter(user=request.user, comment=self.object).delete()
@@ -244,11 +234,12 @@ comment_dislike_view = CommentDislikeView.as_view()
 
 
 class CommentFlagView(
-    PermissionRequiredMixin, CommentQuerySetMixin, FormView,
+    PermissionRequiredMixin, CommentQuerySetMixin, SuccessMixin, FormView,
 ):
     form_class = FlagForm
     template_name = "comments/flag_form.html"
     permission_required = "comments.flag_comment"
+    success_message = _("This comment has been flagged to the moderators")
 
     def get_queryset(self):
         return (
@@ -262,7 +253,7 @@ class CommentFlagView(
         return self.comment
 
     def get_success_url(self):
-        return self.comment.content_object.get_absolute_url()
+        return super().get_success_url(object=self.comment.content_object)
 
     @cached_property
     def comment(self):
@@ -282,9 +273,7 @@ class CommentFlagView(
 
         flag.notify()
 
-        messages.success(
-            self.request, _("This comment has been flagged to the moderators")
-        )
+        messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -292,17 +281,18 @@ comment_flag_view = CommentFlagView.as_view()
 
 
 class CommentReplyView(
-    CommentQuerySetMixin, PermissionRequiredMixin, CreateView,
+    CommentQuerySetMixin, PermissionRequiredMixin, SuccessMixin, CreateView,
 ):
     permission_required = "comments.reply_to_comment"
     model = Comment
     form_class = CommentForm
+    success_message = _("You have replied to this comment")
 
     def get_permission_object(self):
         return self.parent
 
     def get_success_url(self):
-        return self.object.content_object.get_absolute_url()
+        return super().get_success_url(object=self.object.content_object)
 
     @cached_property
     def parent(self):
@@ -323,7 +313,7 @@ class CommentReplyView(
 
         self.object.notify_on_create()
 
-        messages.success(self.request, _("Your reply has been posted"))
+        messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
 
