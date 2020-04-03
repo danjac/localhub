@@ -7,13 +7,15 @@
 {% load activities_tags %}
 
 
-{% block subtitle %} / {% verbose_name_plural model %} / {{ object.title }}{% endblock %}
+{% block subtitle %} / {% verbose_name_plural view.model %} / {{ object.title }}{% endblock %}
 
 {% block content %}
 
 <ul class="breadcrumb">
   {% if object.published %}
-  <li class="breadcrumb-item"><a href="{% resolve_model_url model "list" %}">{% verbose_name_plural model %}</a></li>
+  <li class="breadcrumb-item"><a
+       href="{% resolve_model_url view.model "list" %}">{% verbose_name_plural view.model %}</a>
+  </li>
   {% else %}
   <li class="breadcrumb-item"><a href="{% url 'activities:drafts' %}">{% trans "Drafts" %}</a></li>
   {% endif %}

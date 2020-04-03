@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.contrib import messages
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -43,13 +44,22 @@ class BaseSingleActivityView(ActivityQuerySetMixin, GenericModelView):
     ...
 
 
-class ActivityContextMixin:
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(model=self.model, **kwargs)
+class ActivitySuccessMixin:
+    def get_success_message(self):
+        if not hasattr(self, "success_message"):
+            raise ImproperlyConfigured(
+                "You must define success_message for this class or override get_success_message"
+            )
+        return self.success_message % {"object": self.object._meta.verbose_name}
+
+    def get_success_url(self):
+        if hasattr(self, "success_url"):
+            return self.success_url
+        return self.object.get_absolute_url()
 
 
 class ActivityCreateView(
-    CommunityRequiredMixin, PermissionRequiredMixin, ActivityContextMixin, CreateView,
+    CommunityRequiredMixin, PermissionRequiredMixin, CreateView,
 ):
     permission_required = "activities.create_activity"
 
@@ -84,9 +94,7 @@ class ActivityCreateView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityListView(
-    ActivityQuerySetMixin, SearchMixin, ActivityContextMixin, ListView
-):
+class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
     allow_empty = True
     paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
     order_by = ("-published", "-created")
@@ -107,17 +115,17 @@ class ActivityListView(
 
 
 class ActivityUpdateView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, ActivityContextMixin, UpdateView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, UpdateView,
 ):
     permission_required = "activities.change_activity"
 
     def get_success_message(self, publish):
         message = (
-            _("Your %(activity)s has been published")
+            _("Your %(object)s has been published")
             if publish
-            else _("Your %(activity)s has been updated")
+            else _("Your %(object)s has been updated")
         )
-        return message % {"activity": self.object._meta.verbose_name}
+        return message % {"object": self.object._meta.verbose_name}
 
     def form_valid(self, form):
 
@@ -141,14 +149,11 @@ class ActivityUpdateView(
 
 
 class ActivityDeleteView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, ActivityContextMixin, DeleteView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, ActivitySuccessMixin, DeleteView,
 ):
     permission_required = "activities.delete_activity"
     success_url = settings.LOCALHUB_HOME_PAGE_URL
-    success_message = _("This %s has been deleted")
-
-    def get_success_message(self):
-        return self.success_message % self.object._meta.verbose_name
+    success_message = _("This %(object)s has been deleted")
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -166,7 +171,7 @@ class ActivityDeleteView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityDetailView(ActivityQuerySetMixin, ActivityContextMixin, DetailView):
+class ActivityDetailView(ActivityQuerySetMixin, DetailView):
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
         self.object.get_notifications().for_recipient(
@@ -221,8 +226,11 @@ class ActivityDetailView(ActivityQuerySetMixin, ActivityContextMixin, DetailView
         )
 
 
-class ActivityReshareView(PermissionRequiredMixin, BaseSingleActivityView):
+class ActivityReshareView(
+    PermissionRequiredMixin, ActivitySuccessMixin, BaseSingleActivityView
+):
     permission_required = "activities.reshare_activity"
+    success_message = _("You have reshared this %(object)s")
 
     def get_queryset(self):
         """
@@ -233,16 +241,6 @@ class ActivityReshareView(PermissionRequiredMixin, BaseSingleActivityView):
             .get_queryset()
             .with_has_reshared(self.request.user)
             .filter(has_reshared=False)
-        )
-
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
-    def get_success_message(self):
-
-        return (
-            _("You have reshared this %(object)s")
-            % {"object": self.object._meta.verbose_name},
         )
 
     def post(self, request, *args, **kwargs):
@@ -256,40 +254,34 @@ class ActivityReshareView(PermissionRequiredMixin, BaseSingleActivityView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityPublishView(PermissionRequiredMixin, BaseSingleActivityView):
+class ActivityPublishView(
+    PermissionRequiredMixin, ActivitySuccessMixin, BaseSingleActivityView
+):
     permission_required = "activities.change_activity"
+    success_message = _("Your %(object)s has been published")
 
     def get_queryset(self):
         return super().get_queryset().filter(published__isnull=True)
-
-    def get_success_url(self):
-        return self.object.get_absolute_url()
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.published = timezone.now()
         self.object.save(update_fields=["published"])
-        message = (_("Your %(object)s has been published")) % {
-            "object": self.object._meta.verbose_name
-        }
-        messages.success(request, message)
+        messages.success(request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
 
 activity_publish_view = ActivityPublishView.as_view()
 
 
-class ActivityPinView(PermissionRequiredMixin, BaseSingleActivityView):
+class ActivityPinView(
+    PermissionRequiredMixin, ActivitySuccessMixin, BaseSingleActivityView
+):
     permission_required = "activities.pin_activity"
-
-    def get_success_url(self):
-        return settings.LOCALHUB_HOME_PAGE_URL
-
-    def get_success_message(self):
-        return (
-            _("The %(object)s has been pinned to the top of the activity stream")
-            % {"object": self.object._meta.verbose_name},
-        )
+    success_url = settings.LOCALHUB_HOME_PAGE_URL
+    success_message = _(
+        "The %(object)s has been pinned to the top of the activity stream"
+    )
 
     def post(self, request, *args, **kwargs):
         for model in get_activity_models():
@@ -305,17 +297,15 @@ class ActivityPinView(PermissionRequiredMixin, BaseSingleActivityView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityUnpinView(PermissionRequiredMixin, BaseSingleActivityView):
+class ActivityUnpinView(
+    PermissionRequiredMixin, ActivitySuccessMixin, BaseSingleActivityView
+):
     permission_required = "activities.pin_activity"
 
-    def get_success_url(self):
-        return settings.LOCALHUB_HOME_PAGE_URL
-
-    def get_success_message(self):
-        return (
-            _("The %(object)s has been removed from the top of the activity stream")
-            % {"object": self.object._meta.verbose_name},
-        )
+    success_url = settings.LOCALHUB_HOME_PAGE_URL
+    success_message = _(
+        "The %(object)s has been unpinned from the top of the activity stream"
+    )
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -325,11 +315,10 @@ class ActivityUnpinView(PermissionRequiredMixin, BaseSingleActivityView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivityBookmarkView(PermissionRequiredMixin, BaseSingleActivityView):
+class ActivityBookmarkView(
+    PermissionRequiredMixin, ActivitySuccessMixin, BaseSingleActivityView
+):
     permission_required = "activities.bookmark_activity"
-
-    def get_success_url(self):
-        return self.object.get_absolute_url()
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -347,10 +336,7 @@ class ActivityBookmarkView(PermissionRequiredMixin, BaseSingleActivityView):
         return HttpResponse(self.get_success_url())
 
 
-class ActivityRemoveBookmarkView(BaseSingleActivityView):
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
+class ActivityRemoveBookmarkView(ActivitySuccessMixin, BaseSingleActivityView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.get_bookmarks().filter(user=request.user).delete()
@@ -362,11 +348,10 @@ class ActivityRemoveBookmarkView(BaseSingleActivityView):
         return self.post(request, *args, **kwargs)
 
 
-class ActivityLikeView(PermissionRequiredMixin, BaseSingleActivityView):
+class ActivityLikeView(
+    PermissionRequiredMixin, ActivitySuccessMixin, BaseSingleActivityView
+):
     permission_required = "activities.like_activity"
-
-    def get_success_url(self):
-        return self.object.get_absolute_url()
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -386,10 +371,7 @@ class ActivityLikeView(PermissionRequiredMixin, BaseSingleActivityView):
         return HttpResponse(self.get_success_url())
 
 
-class ActivityDislikeView(BaseSingleActivityView):
-    def get_success_url(self):
-        return self.object.get_absolute_url()
-
+class ActivityDislikeView(ActivitySuccessMixin, BaseSingleActivityView):
     def post(self, request, *args, **kwargs):
         obj = self.get_object()
         obj.get_likes().filter(user=request.user).delete()
