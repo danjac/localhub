@@ -3,14 +3,13 @@
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView, DetailView, ListView, UpdateView
 
-from localhub.views import SearchMixin
+from localhub.views import SearchMixin, SuccessMixin
 
 from ..emails import send_membership_deleted_email
 from ..forms import MembershipForm
@@ -59,15 +58,12 @@ membership_detail_view = MembershipDetailView.as_view()
 
 
 class MembershipUpdateView(
-    PermissionRequiredMixin, MembershipQuerySetMixin, SuccessMessageMixin, UpdateView,
+    PermissionRequiredMixin, MembershipQuerySetMixin, SuccessMixin, UpdateView,
 ):
     model = Membership
     form_class = MembershipForm
     permission_required = "communities.change_membership"
     success_message = _("Membership has been updated")
-
-    def get_success_url(self):
-        return reverse("communities:membership_detail", args=[self.object.id])
 
 
 membership_update_view = MembershipUpdateView.as_view()
@@ -84,14 +80,17 @@ class MembershipDeleteView(
             return settings.LOCALHUB_HOME_PAGE_URL
         return reverse("communities:membership_list")
 
+    def get_success_message(self):
+        return _("Membership for user %(user)s has been deleted") % {
+            "user": self.object.member.username
+        }
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()
-        messages.success(
-            self.request,
-            _("Membership for user %s has been deleted") % self.object.member.username,
-        )
         send_membership_deleted_email(self.object.member, self.object.community)
+
+        messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -107,6 +106,12 @@ class MembershipLeaveView(MembershipDeleteView):
 
     def get_object(self):
         return super().get_queryset().filter(member__pk=self.request.user.id).get()
+
+    def get_success_message(self):
+        return _(
+            "You have left the community %(community)s"
+            % {"community": self.object.community.name}
+        )
 
     def get_success_url(self):
         return settings.LOCALHUB_HOME_PAGE_URL

@@ -8,14 +8,14 @@ from django.db.models import Case, IntegerField, Value, When
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.functional import cached_property
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import CreateView, DeleteView, DetailView, GenericModelView, ListView
 
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.utils import user_display
-from localhub.views import SearchMixin
+from localhub.views import SearchMixin, SuccessMixin
 
 from .emails import send_acceptance_email, send_join_request_email, send_rejection_email
 from .forms import JoinRequestForm
@@ -131,11 +131,8 @@ class JoinRequestDeleteView(PermissionRequiredMixin, DeleteView):
 join_request_delete_view = JoinRequestDeleteView.as_view()
 
 
-class JoinRequestActionView(JoinRequestManageMixin, GenericModelView):
+class JoinRequestActionView(JoinRequestManageMixin, SuccessMixin, GenericModelView):
     success_url = reverse_lazy("join_requests:list")
-
-    def get_success_url(self):
-        return self.success_url
 
 
 class JoinRequestAcceptView(JoinRequestActionView):
@@ -147,6 +144,11 @@ class JoinRequestAcceptView(JoinRequestActionView):
                 status__in=(JoinRequest.Status.PENDING, JoinRequest.Status.REJECTED)
             )
         )
+
+    def get_success_message(self):
+        return _("Join request for %(sender)s has been accepted") % {
+            "sender": user_display(self.object.sender)
+        }
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -164,12 +166,10 @@ class JoinRequestAcceptView(JoinRequestActionView):
         )
 
         send_acceptance_email(self.object)
-        messages.success(
-            request,
-            _("Join request for %(sender)s has been accepted")
-            % {"sender": user_display(self.object.sender)},
-        )
+
         self.object.sender.notify_on_join(self.object.community)
+
+        messages.success(request, self.get_success_message())
 
         return HttpResponseRedirect(self.get_success_url())
 
@@ -200,13 +200,14 @@ join_request_reject_view = JoinRequestRejectView.as_view()
 
 
 class JoinRequestCreateView(
-    PermissionRequiredMixin, CommunityRequiredMixin, CreateView,
+    PermissionRequiredMixin, CommunityRequiredMixin, SuccessMixin, CreateView,
 ):
     model = JoinRequest
     form_class = JoinRequestForm
     template_name = "join_requests/joinrequest_form.html"
     allow_non_members = True
     permission_required = "join_requests.create"
+    success_message = _("Your request has been sent to the community admins")
 
     def get_permission_object(self):
         return self.request.community
@@ -225,9 +226,7 @@ class JoinRequestCreateView(
 
         send_join_request_email(join_request)
 
-        messages.success(
-            self.request, _("Your request has been sent to the community admins"),
-        )
+        messages.success(self.request, self.get_success_message())
 
         return HttpResponseRedirect(self.get_success_url())
 

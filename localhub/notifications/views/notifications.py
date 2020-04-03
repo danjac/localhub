@@ -3,10 +3,11 @@
 
 from django.conf import settings
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse_lazy
 from vanilla import DeleteView, GenericModelView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
+from localhub.views import SuccessMixin
 
 from ..models import Notification
 from ..signals import notification_read
@@ -24,9 +25,8 @@ class UnreadNotificationQuerySetMixin(NotificationQuerySetMixin):
         return super().get_queryset().unread()
 
 
-class NotificationSuccessRedirectMixin:
-    def get_success_url(self):
-        return reverse("notifications:list")
+class NotificationSuccessMixin(SuccessMixin):
+    success_url = reverse_lazy("notifications:list")
 
 
 class NotificationListView(NotificationQuerySetMixin, ListView):
@@ -56,7 +56,7 @@ notification_list_view = NotificationListView.as_view()
 
 
 class NotificationMarkAllReadView(
-    UnreadNotificationQuerySetMixin, NotificationSuccessRedirectMixin, GenericModelView,
+    UnreadNotificationQuerySetMixin, NotificationSuccessMixin, GenericModelView,
 ):
     def post(self, request, *args, **kwargs):
         qs = self.get_queryset()
@@ -75,7 +75,7 @@ notification_mark_all_read_view = NotificationMarkAllReadView.as_view()
 
 
 class NotificationMarkReadView(
-    UnreadNotificationQuerySetMixin, NotificationSuccessRedirectMixin, GenericModelView,
+    UnreadNotificationQuerySetMixin, NotificationSuccessMixin, GenericModelView,
 ):
     def post(self, request, *args, **kwargs):
         notification = self.get_object()
@@ -94,7 +94,7 @@ notification_mark_read_view = NotificationMarkReadView.as_view()
 
 
 class NotificationDeleteAllView(
-    NotificationQuerySetMixin, NotificationSuccessRedirectMixin, GenericModelView,
+    NotificationQuerySetMixin, NotificationSuccessMixin, GenericModelView,
 ):
     def delete(self, request):
         self.get_queryset().delete()
@@ -108,7 +108,7 @@ notification_delete_all_view = NotificationDeleteAllView.as_view()
 
 
 class NotificationDeleteView(
-    NotificationQuerySetMixin, NotificationSuccessRedirectMixin, DeleteView
+    NotificationQuerySetMixin, NotificationSuccessMixin, DeleteView
 ):
 
     ...

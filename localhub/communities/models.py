@@ -9,6 +9,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.validators import RegexValidator, URLValidator
 from django.db import models
 from django.http import HttpRequest
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
@@ -268,6 +269,9 @@ class Membership(TimeStampedModel):
 
     def __str__(self):
         return self.get_role_display()
+
+    def get_absolute_url(self):
+        return reverse("communities:membership_detail", args=[self.id])
 
     def is_admin(self):
         return self.role == self.Role.ADMIN

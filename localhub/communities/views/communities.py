@@ -15,7 +15,7 @@ from vanilla import DetailView, ListView, TemplateView, UpdateView
 from localhub.activities.models import get_activity_querysets
 from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
-from localhub.views import SearchMixin
+from localhub.views import SearchMixin, SuccessMixin
 
 from ..forms import CommunityForm
 from ..models import Community, Membership
@@ -120,7 +120,7 @@ community_not_found_view = CommunityNotFoundView.as_view()
 
 
 class CommunityUpdateView(
-    CommunitySingleObjectMixin, PermissionRequiredMixin, UpdateView
+    CommunitySingleObjectMixin, PermissionRequiredMixin, SuccessMixin, UpdateView
 ):
     form_class = CommunityForm
     permission_required = "communities.manage_community"
@@ -128,9 +128,6 @@ class CommunityUpdateView(
 
     def get_success_url(self):
         return self.request.path
-
-    def get_success_message(self):
-        return self.success_message
 
     def form_valid(self, form: ModelForm):
         form.save()

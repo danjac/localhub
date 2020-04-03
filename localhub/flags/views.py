@@ -7,6 +7,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
+from localhub.views import SuccessMixin
 
 from .models import Flag
 
@@ -38,11 +39,11 @@ class FlagListView(FlagQuerySetMixin, ListView):
 flag_list_view = FlagListView.as_view()
 
 
-class FlagDeleteView(FlagQuerySetMixin, DeleteView):
+class FlagDeleteView(FlagQuerySetMixin, SuccessMixin, DeleteView):
     model = Flag
 
     def get_success_url(self):
-        return self.object.content_object.get_absolute_url()
+        return super().get_success_url(object=self.object.content_object)
 
 
 flag_delete_view = FlagDeleteView.as_view()

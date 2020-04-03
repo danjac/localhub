@@ -13,7 +13,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from vanilla import CreateView, DeleteView, DetailView, GenericModelView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.views import SearchMixin
+from localhub.views import SearchMixin, SuccessMixin
 
 from .emails import send_invitation_email
 from .forms import InviteForm
@@ -37,7 +37,7 @@ class InviteRecipientQuerySetMixin(LoginRequiredMixin):
         )
 
 
-class BaseSingleInviteView(InviteQuerySetMixin, GenericModelView):
+class BaseSingleInviteView(InviteQuerySetMixin, SuccessMixin, GenericModelView):
     ...
 
 
@@ -99,7 +99,7 @@ invite_list_view = InviteListView.as_view()
 
 
 class InviteCreateView(
-    InviteAdminMixin, CommunityRequiredMixin, CreateView,
+    InviteAdminMixin, CommunityRequiredMixin, SuccessMixin, CreateView,
 ):
     model = Invite
     form_class = InviteForm
@@ -111,20 +111,22 @@ class InviteCreateView(
     def get_form(self, data=None, files=None):
         return self.form_class(self.request.community, data, files)
 
+    def get_success_message(self):
+        return _("Your invitation has been sent to %(email)s") % {
+            "email": self.object.email
+        }
+
     def form_valid(self, form):
-        invite = form.save(commit=False)
-        invite.sender = self.request.user
-        invite.community = self.request.community
-        invite.sent = timezone.now()
-        invite.save()
+        self.object = form.save(commit=False)
+        self.object.sender = self.request.user
+        self.object.community = self.request.community
+        self.object.sent = timezone.now()
+        self.object.save()
 
         # send email to recipient
-        send_invitation_email(invite)
+        send_invitation_email(self.object)
 
-        messages.success(
-            self.request, _("Your invitation has been sent to %s") % invite.email,
-        )
-
+        messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -132,20 +134,27 @@ invite_create_view = InviteCreateView.as_view()
 
 
 class InviteResendView(InviteAdminMixin, BaseSingleInviteView):
+    success_url = reverse_lazy("invites:list")
+
     def get_permission_object(self):
         return self.request.community
 
     def get_queryset(self):
         return super().get_queryset().pending()
 
-    def post(self, request, *args, **kwargs):
-        invite = self.get_object()
-        invite.sent = timezone.now()
-        invite.save()
+    def get_success_message(self):
+        return _("Your invitation has been re-sent to %(email)s") % {
+            "email": self.object.email
+        }
 
-        send_invitation_email(invite)
-        messages.success(self.request, _("Email has been re-sent to %s") % invite.email)
-        return HttpResponseRedirect(reverse("invites:list"))
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.sent = timezone.now()
+        self.object.save()
+
+        send_invitation_email(self.object)
+        messages.success(self.request, self.get_success_message())
+        return HttpResponseRedirect(self.get_success_url())
 
 
 invite_resend_view = InviteResendView.as_view()

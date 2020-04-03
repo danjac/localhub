@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect
 from django.utils.functional import cached_property
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import GenericModelView
 
@@ -16,6 +16,7 @@ from localhub.activities.views.generic import (
     ActivityUpdateView,
 )
 from localhub.communities.views import CommunityRequiredMixin
+from localhub.views import SuccessMixin
 
 from .models import Answer, Poll
 
@@ -87,10 +88,11 @@ class PollListView(PollQuerySetMixin, ActivityListView):
 
 
 class AnswerVoteView(
-    PermissionRequiredMixin, CommunityRequiredMixin, GenericModelView,
+    PermissionRequiredMixin, CommunityRequiredMixin, SuccessMixin, GenericModelView,
 ):
 
     permission_required = "polls.vote"
+    success_message = _("Thanks for voting!")
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
@@ -100,7 +102,7 @@ class AnswerVoteView(
         return self.object.poll
 
     def get_success_url(self):
-        return self.object.poll.get_absolute_url()
+        return super().get_success_url(object=self.object.poll)
 
     def get_queryset(self):
         return Answer.objects.filter(
@@ -116,7 +118,7 @@ class AnswerVoteView(
         self.object.voters.add(self.request.user)
         self.object.poll.notify_on_vote(self.request.user)
 
-        messages.success(self.request, _("Thanks for voting!"))
+        messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
 
