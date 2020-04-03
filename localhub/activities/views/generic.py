@@ -352,8 +352,8 @@ class ActivityLikeView(PermissionRequiredMixin, SuccessMixin, BaseSingleActivity
 
 class ActivityDislikeView(SuccessMixin, BaseSingleActivityView):
     def post(self, request, *args, **kwargs):
-        obj = self.get_object()
-        obj.get_likes().filter(user=request.user).delete()
+        self.object = self.get_object()
+        self.object.get_likes().filter(user=request.user).delete()
         if request.is_ajax():
             return HttpResponse(status=204)
         return HttpResponse(self.get_success_url())

@@ -136,7 +136,7 @@ comment_update_view = CommentUpdateView.as_view()
 
 
 class CommentDeleteView(
-    PermissionRequiredMixin, CommentQuerySetMixin, DeleteView,
+    PermissionRequiredMixin, CommentQuerySetMixin, SuccessMixin, DeleteView,
 ):
     permission_required = "comments.delete_comment"
     template_name = "comments/comment_confirm_delete.html"

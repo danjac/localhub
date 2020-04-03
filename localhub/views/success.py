@@ -39,15 +39,15 @@ class SuccessMixin:
                 "get_success_message"
             )
 
-        object = object or getattr(self, "object")
-        model = model or object or getattr(self, "model")
+        object = object or getattr(self, "object", None)
+        model = model or object or getattr(self, "model", None)
 
         dct = {}
 
         if object:
             dct["object"] = object
         if model:
-            dct["model"] = self.model._meta.verbose_name.title()
+            dct["model"] = model._meta.verbose_name.title()
 
         return success_message % dct
 
