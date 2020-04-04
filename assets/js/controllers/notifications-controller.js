@@ -82,7 +82,9 @@ export default class extends Controller {
     registration.pushManager
       .getSubscription()
       .then((subscription) =>
-        subscription.unsubscribe().then(this.syncWithServer(subscription, this.data.get('unsubscribe-url')))
+        subscription
+          .unsubscribe()
+          .then(this.syncWithServer(subscription, this.data.get('unsubscribe-url')))
       );
   }
 

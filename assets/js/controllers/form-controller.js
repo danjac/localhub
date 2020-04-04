@@ -24,7 +24,9 @@ export default class extends Controller {
   static targets = ['errorMessage', 'errorDetail', 'progress'];
 
   connect() {
-    this.formElements.forEach((element) => element.addEventListener('change', () => this.data.set('changed', true)));
+    this.formElements.forEach((element) =>
+      element.addEventListener('change', () => this.data.set('changed', true))
+    );
   }
 
   unload(event) {
@@ -85,7 +87,10 @@ export default class extends Controller {
         if (contentType.match(/html/)) {
           this.enableFormElements();
           // errors in form, re-render
-          Turbolinks.controller.cache.put(referrer, Turbolinks.Snapshot.wrap(response.data));
+          Turbolinks.controller.cache.put(
+            referrer,
+            Turbolinks.Snapshot.wrap(response.data)
+          );
           Turbolinks.visit(referrer, {
             action: 'restore',
           });

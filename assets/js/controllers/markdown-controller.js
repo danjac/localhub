@@ -36,7 +36,9 @@ export default class extends Controller {
         : markdownStart + selectedText + markdownEnd;
 
     this.textareaTarget.value =
-      value.substring(0, selectionStart) + markdownText + value.substring(selectionEnd, value.length);
+      value.substring(0, selectionStart) +
+      markdownText +
+      value.substring(selectionEnd, value.length);
     this.textareaTarget.dispatchEvent(new Event('input'));
   }
 }

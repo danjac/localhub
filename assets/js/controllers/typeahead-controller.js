@@ -1,9 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  Controller
-} from 'stimulus';
+import { Controller } from 'stimulus';
 import axios from 'axios';
 import getCaretPosition from 'textarea-caret';
 
@@ -34,7 +32,7 @@ export default class extends Controller {
   static targets = ['selector', 'input'];
 
   connect() {
-    document.addEventListener('keydown', event => {
+    document.addEventListener('keydown', (event) => {
       if (event.keyCode === ESC_KEY) {
         this.closeSelector();
       }
@@ -53,7 +51,8 @@ export default class extends Controller {
 
   keydown(event) {
     if (
-      this.selectorOpen && [ARROW_DOWN, ARROW_UP, RETURN_KEY].indexOf(event.which) > -1
+      this.selectorOpen &&
+      [ARROW_DOWN, ARROW_UP, RETURN_KEY].indexOf(event.which) > -1
     ) {
       event.preventDefault();
     }
@@ -85,9 +84,7 @@ export default class extends Controller {
       case TAB_KEY:
       case RETURN_KEY:
         this.handleSelection(
-          this.selectorTarget.querySelector(
-            'li.selected > [data-typeahead-value]'
-          )
+          this.selectorTarget.querySelector('li.selected > [data-typeahead-value]')
         );
         event.preventDefault();
         return false;
@@ -131,10 +128,7 @@ export default class extends Controller {
       return false;
     }
 
-    const {
-      value,
-      selectionStart
-    } = this.inputTarget;
+    const { value, selectionStart } = this.inputTarget;
     const index = value.lastIndexOf(key, selectionStart) + 1;
 
     if (index === 0) {
@@ -151,41 +145,35 @@ export default class extends Controller {
   }
 
   doSearch(text, searchUrl) {
-    axios.get(searchUrl, {
-      params: {
-        q: text
-      }
-    }).then(response => {
-      if (response.data) {
-        this.selectorTarget.innerHTML = response.data;
-        if (
-          this.selectorTarget.querySelectorAll('[data-typeahead-value]').length
-        ) {
-          this.openSelector();
-        } else {
-          this.closeSelector();
+    axios
+      .get(searchUrl, {
+        params: {
+          q: text,
+        },
+      })
+      .then((response) => {
+        if (response.data) {
+          this.selectorTarget.innerHTML = response.data;
+          if (this.selectorTarget.querySelectorAll('[data-typeahead-value]').length) {
+            this.openSelector();
+          } else {
+            this.closeSelector();
+          }
         }
-      }
-    });
+      });
   }
 
   handleSelection(item) {
     const selection = item && item.getAttribute('data-typeahead-value');
     const key = item && item.getAttribute('data-typeahead-key');
     if (selection && key) {
-      const {
-        value,
-        selectionStart
-      } = this.inputTarget;
+      const { value, selectionStart } = this.inputTarget;
       const index = value.lastIndexOf(key, selectionStart);
-      const tokens = value
-        .replace('\t', '')
-        .slice(index)
-        .split(/ /);
+      const tokens = value.replace('\t', '').slice(index).split(/ /);
       const [firstToken] = tokens;
-      const remainder = firstToken.match(/\n/) ?
-        firstToken.slice(firstToken.indexOf('\n')) :
-        '';
+      const remainder = firstToken.match(/\n/)
+        ? firstToken.slice(firstToken.indexOf('\n'))
+        : '';
       this.inputTarget.value =
         value.slice(0, index) +
         key +
@@ -200,20 +188,11 @@ export default class extends Controller {
   }
 
   openSelector() {
-    const {
-      top,
-      left,
-      height
-    } = getCaretPosition(
+    const { top, left, height } = getCaretPosition(
       this.inputTarget,
       this.inputTarget.selectionEnd
     );
-    const {
-      offsetTop,
-      offsetLeft,
-      scrollTop,
-      scrollLeft
-    } = this.inputTarget;
+    const { offsetTop, offsetLeft, scrollTop, scrollLeft } = this.inputTarget;
     this.selectorTarget.style.top = offsetTop - scrollTop + height + top + 'px';
     this.selectorTarget.style.left = offsetLeft - scrollLeft + left + 'px';
     this.selectorTarget.classList.remove('d-hide');

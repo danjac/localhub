@@ -1,9 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  Controller
-} from 'stimulus';
+import { Controller } from 'stimulus';
 
 export default class extends Controller {
   /*
@@ -13,6 +11,7 @@ export default class extends Controller {
     copy: copies text in selected textarea to clipboard
 
   targets:
+    button: clipboard copy action button
     textarea: readonly textarea to copy
   */
   static targets = ['textarea', 'button'];
@@ -22,7 +21,7 @@ export default class extends Controller {
     // remove button elements
     if (!navigator.clipboard) {
       this.buttonTarget.remove();
-      j
+      j;
     }
   }
 
@@ -30,8 +29,7 @@ export default class extends Controller {
     event.preventDefault();
     const value = this.textareaTarget.value;
     if (navigator.clipboard && value) {
-      navigator.clipboard.writeText(value)
-        .then(() => this.confirm());
+      navigator.clipboard.writeText(value).then(() => this.confirm());
     }
   }
 

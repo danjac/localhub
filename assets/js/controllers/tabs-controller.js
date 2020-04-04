@@ -1,6 +1,4 @@
-import {
-  Controller
-} from 'stimulus';
+import { Controller } from 'stimulus';
 
 export default class extends Controller {
   /*
@@ -19,14 +17,14 @@ export default class extends Controller {
   select(event) {
     event.preventDefault();
     const activeTab = event.currentTarget.dataset.tab;
-    this.tabTargets.forEach(tab => {
+    this.tabTargets.forEach((tab) => {
       if (tab.dataset.tab === activeTab) {
         tab.classList.add('active');
       } else {
         tab.classList.remove('active');
       }
     });
-    this.paneTargets.forEach(pane => {
+    this.paneTargets.forEach((pane) => {
       if (pane.dataset.tab === activeTab) {
         pane.classList.remove('d-none');
       } else {
