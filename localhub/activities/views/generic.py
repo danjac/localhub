@@ -50,12 +50,11 @@ class ActivityCreateView(
         return self.request.community
 
     def get_success_message(self):
-        message = (
+        return super().get_success_message(
             _("Your %(model)s has been published")
             if self.object.published
             else _("Your %(model)s has been saved to Drafts")
         )
-        return super().get_success_message(success_message=message)
 
     def form_valid(self, form):
 
@@ -102,7 +101,7 @@ class ActivityUpdateView(
     permission_required = "activities.change_activity"
 
     def get_success_message(self):
-        return (
+        return super().get_success_message(
             _("Your %(model)s has been published")
             if self.do_publish
             else _("Your %(model)s has been updated")
