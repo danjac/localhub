@@ -4,6 +4,12 @@
 
 {% block content %}
 
+<ul class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
+  </li>
+</ul>
+
 <h5>Invite a new member</h5>
 {% include "includes/forms/stimulusjs_form.html" with submit_btn=_("Send Invite") %}
 {% endblock content %}

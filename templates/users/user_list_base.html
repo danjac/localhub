@@ -65,7 +65,7 @@
         {% endif %}
 
         {% if object.role == "admin" or object.role == "moderator" %}
-        <div class="label bg-primary">{{ object.role_display }}</div>
+        <div class="label">{{ object.role_display }}</div>
         {% endif %}
 
         {% if object.num_unread_messages %}

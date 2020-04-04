@@ -83,7 +83,7 @@
        class="badge"
        data-badge="{{ total_external_notifications }}"
        {% endif %}>
-      {% trans "Communities" %}
+      {% trans "Sites" %}
       {% endwith %}
     </a>
   </li>
@@ -206,7 +206,7 @@
 {% if can_manage_community or community.terms or community.description %}
 <ul class="menu mt-2">
   <li class="divider"
-      data-content="{% trans 'Community' %}"></li>
+      data-content="{% trans 'Site' %}"></li>
   </li>
   {% if community.description %}
   <li class="menu-item">
@@ -229,7 +229,7 @@
   {% if can_manage_community %}
   <li class="menu-item">
     <a data-controller="active-link"
-       href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
+       href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
@@ -319,7 +319,7 @@
        class="badge"
        data-badge="{{ total_external_notifications }}"
        {% endif %}>
-      {% trans "Communities" %}
+      {% trans "Sites" %}
       {% endwith %}
     </a>
   </li>
