@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
-from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -25,6 +24,7 @@ from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
 from localhub.views import SearchMixin, SuccessMixin
+from localhub.pagination import PresetCountPaginator
 
 from ..models import get_activity_models
 
@@ -148,7 +148,7 @@ class ActivityDeleteView(
 
 
 class ActivityDetailView(ActivityQuerySetMixin, DetailView):
-    paginator_class = Paginator
+    paginator_class = PresetCountPaginator
     paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
     page_kwarg = "page"
 
@@ -208,6 +208,7 @@ class ActivityDetailView(ActivityQuerySetMixin, DetailView):
     def get_comments_page(self, comments):
         return self.paginator_class(
             object_list=comments,
+            count=self.object.num_comments or 0,
             per_page=self.paginate_by,
             allow_empty_first_page=True,
         ).get_page(self.request.GET.get(self.page_kwarg, 1))
