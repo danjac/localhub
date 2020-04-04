@@ -6,7 +6,6 @@
 {% load i18n %}
 {% load activities_tags %}
 
-
 {% block subtitle %} / {% verbose_name_plural view.model %} / {{ object.title }}{% endblock %}
 
 {% block content %}
@@ -22,6 +21,7 @@
   <li class="breadcrumb-item"><a href="#">{{ object.title|truncatechars:60 }}</a></li>
 </ul>
 
+{% if comments.number == 1 %}
 {% if object.deleted %}
 <p class="toast text-center my-2">
   {% blocktrans %}
@@ -39,18 +39,22 @@
 
 {% block activities_detail_content %}{% endblock %}
 {% include "flags/includes/flags.html" %}
+{% endif %}
+
 <div class="comments mt-2"
      id="comments">
-  {% if comments %}
+  {% if comments.number == 1 %}
   <div class="divider text-center"
        data-content="{% trans 'Comments' %}"></div>
+  {% else %}
+  {% include "includes/pagination.html" with page_obj=comments is_paginated=True %}
   {% endif %}
   {% for comment in comments %}
   <div class="mb-2">
     {% include "comments/includes/comment.html" with is_thread=True %}
   </div>
   {% endfor %}
-  {% if comments.paginator.num_pages > 1 %}
+  {% if comments.number == 1 and comments.paginator.num_pages > 1 %}
   {% include "includes/pagination.html" with page_obj=comments is_paginated=True %}
   {% endif %}
   {% if comment_form %}

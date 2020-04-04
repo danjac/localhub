@@ -149,7 +149,7 @@ class ActivityDeleteView(
 
 class ActivityDetailView(ActivityQuerySetMixin, DetailView):
     paginator_class = PresetCountPaginator
-    paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
+    paginate_by = 3  # settings.LOCALHUB_DEFAULT_PAGE_SIZE
     page_kwarg = "page"
 
     def get(self, request, *args, **kwargs):
