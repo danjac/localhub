@@ -7,7 +7,10 @@
 {% block content %}
 <ul class="breadcrumb">
   <li class="breadcrumb-item"><a href="{% url 'user_update' %}">{% trans "Settings" %}</a></li>
-  <li class="breadcrumb-item"><a href="#">{% trans "Delete Account" %}</a></li>
+  <li class="breadcrumb-item">
+    <a data-turbolinks="false"
+       href="#">{% trans "Delete Account" %}</a>
+  </li>
 </ul>
 
 <h5>{% trans "Delete Account" %}</h5>

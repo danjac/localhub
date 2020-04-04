@@ -11,7 +11,10 @@
 
 <ul class="breadcrumb">
   <li class="breadcrumb-item"><a href="{% url 'user_update' %}">{% trans "Settings" %}</a></li>
-  <li class="breadcrumb-item"><a href="#">{% trans "Email Addresses" %}</a></li>
+  <li class="breadcrumb-item">
+    <a data-turbolinks="false"
+       href="#">{% trans "Email Addresses" %}</a>
+  </li>
 </ul>
 
 <h5>{% trans "Email Addresses" %}</h5>
