@@ -3,7 +3,6 @@
 
 from django.conf import settings
 from django.db import IntegrityError
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.functional import cached_property
