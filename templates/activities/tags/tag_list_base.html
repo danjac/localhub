@@ -52,7 +52,7 @@
           #{{ tag.name }}
         </a>
         {% if tag.name.lower in content_warnings %}
-        <span class="chip bg-primary">{% trans "Sensitive" %}</span>
+        <span class="label">{% trans "Sensitive" %}</span>
         {% endif %}
       </td>
       {% if can_follow_tag or can_block_tag %}

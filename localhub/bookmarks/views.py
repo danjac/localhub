@@ -13,12 +13,17 @@ class BookmarksStreamView(BaseActivityStreamView):
     ordering = ("-bookmarked", "-created")
 
     def get_count_queryset_for_model(self, model):
-        return self.filter_queryset(model.objects.bookmarked(self.request.user))
+        return self.filter_queryset(
+            model.objects.published_or_owner(self.request.user).bookmarked(
+                self.request.user
+            )
+        )
 
     def filter_queryset(self, queryset):
         return (
             super()
             .filter_queryset(queryset)
+            .published_or_owner(self.request.user)
             .bookmarked(self.request.user)
             .with_bookmarked_timestamp(self.request.user)
         )

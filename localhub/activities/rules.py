@@ -42,6 +42,9 @@ def is_published(user, activity):
     return activity.published is not None
 
 
+is_published_or_owner = is_published | is_owner
+
+
 @rules.predicate
 def is_deleted(user, activity):
     return activity.deleted is not None
@@ -57,7 +60,7 @@ rules.add_perm("activities.change_activity", is_owner & ~is_reshare & ~is_delete
 
 rules.add_perm(
     "activities.bookmark_activity",
-    is_published & is_activity_community_member & ~is_deleted,
+    is_published_or_owner & is_activity_community_member & ~is_deleted,
 )
 
 rules.add_perm(

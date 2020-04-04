@@ -40,9 +40,9 @@
              value="{{ emailaddress.email }}" />
       {{ emailaddress.email }}
       {% if emailaddress.verified %}
-      <span class="chip">{% trans "Verified" %}</span>
+      <span class="label">{% trans "Verified" %}</span>
       {% else %}
-      <span class="chip">{% trans "Unverified" %}</span>
+      <span class="label">{% trans "Unverified" %}</span>
       {% endif %}
       {% if emailaddress.primary %}<span class="chip">{% trans "Primary" %}</span>{% endif %}
     </label>

@@ -73,6 +73,10 @@
 
         {% endif %}
 
+        {% if not object.published %}
+        <span class="label">{% trans "Private" %}</span>
+        {% endif %}
+
         {% endblock title %}
         {% endif %}
 
@@ -99,9 +103,6 @@
         {% include "activities/includes/timesince.html" with timestamp=object.parent.published|default:object.created owner=object.parent.owner %}
         {% elif not object.is_reshare %}
         {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
-        {% endif %}
-        {% if not object.published %}
-        <span class="label">{% trans "Private" %}</span>
         {% endif %}
       </div>
 

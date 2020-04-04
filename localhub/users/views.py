@@ -297,13 +297,15 @@ class UserStreamView(SingleUserMixin, BaseActivityStreamView):
     template_name = "users/activities.html"
 
     def filter_queryset(self, queryset):
-        return (
+        qs = (
             super()
             .filter_queryset(queryset)
             .exclude_blocked_tags(self.request.user)
-            .published()
             .filter(owner=self.user_obj)
         )
+        if self.is_current_user:
+            return qs.published_or_owner(self.request.user)
+        return qs.published()
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)

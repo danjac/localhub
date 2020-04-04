@@ -14,8 +14,8 @@
       {% else %}
       <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
       {% endif %}
-      <span class="chip">{% trans object_type|capfirst %}</span>
-      <span class="chip bg-primary">{% trans "Pinned" %}</span>
+      <span class="label">{% trans object_type|capfirst %}</span>
+      <span class="label">{% trans "Pinned" %}</span>
     </div>
     {% endblock title %}
     <div class="card-subtitle h6">

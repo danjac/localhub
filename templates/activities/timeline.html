@@ -105,7 +105,7 @@
             <a href="{{ object.get_absolute_url }}">
               {{ object|truncatechars:100 }}
             </a>
-            <span class="chip">{% trans object_type|capfirst %}</span>
+            <span class="label">{% trans object_type|capfirst %}</span>
           </p>
           <p class="tile-title">
             {% include "activities/includes/timesince.html" with timestamp=object.published owner=object.owner %}
