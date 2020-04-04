@@ -33,24 +33,8 @@
 
 
 {% if parent %}
-
-<article class="card mb-2"
-         role="comment">
-  <div class="card-header">
-    <div class="card-subtitle h6">
-      {% url 'users:comments' parent.owner.username as owner_url %}
-      {% include "activities/includes/timesince.html" with profile_url=owner_url timestamp=parent.created owner=parent.owner %}
-    </div>
-  </div>
-  <div class="card-body">
-    {% collapsable is_detail %}
-    <div class="markdown-content">
-      {{ parent.content.markdown|strip_external_images:user }}
-    </div>
-    {% endcollapsable %}
-  </div>
-</article>
-
+{% include "comments/includes/comment.html" with comment=parent is_detail=True %}
+<div class="my-2"></div>
 {% endif %}
 
 {% include "includes/forms/stimulusjs_form.html" %}

@@ -5,6 +5,7 @@
 
 {% load i18n %}
 {% load account %}
+{% load private_messages_tags %}
 
 {% block subtitle %} / {% user_display recipient %} / {{ parent|yesno:_("Reply,Send Message") }} {% endblock %}
 
@@ -26,6 +27,10 @@
 
 
 <h5>{% trans "Messages" %}</h5>
+
+{% if parent %}
+{% show_message user community parent is_detail=True %}
+{% endif %}
 
 {% include "includes/forms/stimulusjs_form.html" %}
 

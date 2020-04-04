@@ -133,7 +133,10 @@ class BaseMessageFormView(PermissionRequiredMixin, SuccessMixin, FormView):
 class BaseReplyFormView(BaseMessageFormView):
     @cached_property
     def parent(self):
-        return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+        parent = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+        if parent.recipient == self.request.user:
+            parent.mark_read()
+        return parent
 
     def get_recipient(self):
         return self.parent.get_other_user(self.request.user)
@@ -141,13 +144,6 @@ class BaseReplyFormView(BaseMessageFormView):
     def notify(self):
         """Handle any notifications to recipient here"""
         ...
-
-    def get_form(self, data=None, files=None):
-        form = self.form_class(data, files)
-        form["message"].initial = "\n".join(
-            ["> " + line for line in self.parent.message.splitlines()]
-        )
-        return form
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -161,9 +157,6 @@ class BaseReplyFormView(BaseMessageFormView):
         self.object.recipient = self.recipient
         self.object.parent = self.parent
         self.object.save()
-
-        if self.parent.recipient == self.request.user:
-            self.parent.mark_read()
 
         self.notify()
 
