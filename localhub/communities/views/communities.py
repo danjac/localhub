@@ -235,6 +235,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
                     "messages": self.get_messages_count(),
                     "notifications": self.get_notifications_count(),
                 },
+                "roles": dict(Membership.Role.choices),
             }
         )
         return data

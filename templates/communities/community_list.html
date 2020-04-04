@@ -23,8 +23,9 @@
       {% endif %}
 
       {% if object.is_member %}
+      <span class="label">{{ roles|from_dictkey:object.member_role }}</span>
       {% elif not object.allow_join_requests %}
-      <span class="chip bg-primary">{% trans "Invite Only" %}</span>
+      <span class="label">{% trans "Invite Only" %}</span>
       {% endif %}
     </div>
   </div>
