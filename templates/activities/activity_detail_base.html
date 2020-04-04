@@ -16,7 +16,7 @@
 
 <ul class="breadcrumb">
   {% if object.published %}
-  <li class="breadcrumb-item"><a href="{% resolve_model_url view.model "list" %}">{{ object_plural_name|title }}</a>
+  <li class="breadcrumb-item"><a href="{% resolve_model_url view.model "list" %}">{{ object_name_plural|title }}</a>
   </li>
   {% else %}
   <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
