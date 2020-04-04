@@ -43,9 +43,9 @@ export default class extends Controller {
   registerServiceWorker() {
     const url = this.data.get('service-worker-url');
 
-    const onRegister = swRegistration => {
+    const onRegister = (swRegistration) => {
       registration = swRegistration;
-      return registration.pushManager.getSubscription().then(subscription => {
+      return registration.pushManager.getSubscription().then((subscription) => {
         if (subscription) {
           this.showUnsubscribeBtn();
         } else {
@@ -54,7 +54,7 @@ export default class extends Controller {
       });
     };
 
-    return navigator.serviceWorker.getRegistration(url).then(swRegistration => {
+    return navigator.serviceWorker.getRegistration(url).then((swRegistration) => {
       if (swRegistration) {
         console.log('found existing service worker');
         return onRegister(swRegistration);
@@ -67,12 +67,10 @@ export default class extends Controller {
   subscribe(event) {
     event.preventDefault();
     const options = {
-      applicationServerKey: this.urlB64ToUint8Array(
-        this.data.get('vapid-public-key')
-      ),
-      userVisibleOnly: true
+      applicationServerKey: this.urlB64ToUint8Array(this.data.get('vapid-public-key')),
+      userVisibleOnly: true,
     };
-    registration.pushManager.subscribe(options).then(subscription => {
+    registration.pushManager.subscribe(options).then((subscription) => {
       this.showUnsubscribeBtn();
       return this.syncWithServer(subscription, this.data.get('subscribe-url'));
     });
@@ -83,20 +81,16 @@ export default class extends Controller {
     this.showSubscribeBtn();
     registration.pushManager
       .getSubscription()
-      .then(subscription =>
-        subscription
-          .unsubscribe()
-          .then(
-            this.syncWithServer(subscription, this.data.get('unsubscribe-url'))
-          )
+      .then((subscription) =>
+        subscription.unsubscribe().then(this.syncWithServer(subscription, this.data.get('unsubscribe-url')))
       );
   }
 
   syncWithServer(subscription, url) {
     return axios.post(url, JSON.stringify(subscription), {
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
   }
 
@@ -130,9 +124,7 @@ export default class extends Controller {
   urlB64ToUint8Array(base64String) {
     const mod = base64String.length % 4;
     const padding = '='.repeat((4 - mod) % 4);
-    const base64 = (base64String + padding)
-      .replace(/-/g, '+')
-      .replace(/_/g, '/');
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
     const rawData = atob(base64);
     const outputArray = new Uint8Array(rawData.length);
     for (let i = 0; i < rawData.length; i += 1) {

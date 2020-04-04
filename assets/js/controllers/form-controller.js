@@ -24,9 +24,7 @@ export default class extends Controller {
   static targets = ['errorMessage', 'errorDetail', 'progress'];
 
   connect() {
-    this.formElements.forEach(element =>
-      element.addEventListener('change', () => this.data.set('changed', true))
-    );
+    this.formElements.forEach((element) => element.addEventListener('change', () => this.data.set('changed', true)));
   }
 
   unload(event) {
@@ -52,8 +50,7 @@ export default class extends Controller {
 
     const method = this.element.getAttribute('method');
     const url = this.element.getAttribute('action');
-    const multipart =
-      this.element.getAttribute('enctype') === 'multipart/form-data';
+    const multipart = this.element.getAttribute('enctype') === 'multipart/form-data';
 
     this.handleSubmit(method, url, this.serialize(event, multipart));
 
@@ -76,31 +73,28 @@ export default class extends Controller {
     axios({
       data,
       headers: {
-        'Turbolinks-Referrer': referrer
+        'Turbolinks-Referrer': referrer,
       },
       method,
-      url
+      url,
     })
-      .then(response => {
+      .then((response) => {
         window.onbeforeunload = null;
         const contentType = response.headers['content-type'];
 
         if (contentType.match(/html/)) {
           this.enableFormElements();
           // errors in form, re-render
-          Turbolinks.controller.cache.put(
-            referrer,
-            Turbolinks.Snapshot.wrap(response.data)
-          );
+          Turbolinks.controller.cache.put(referrer, Turbolinks.Snapshot.wrap(response.data));
           Turbolinks.visit(referrer, {
-            action: 'restore'
+            action: 'restore',
           });
         } else if (contentType.match(/javascript/)) {
           /* eslint-disable-next-line no-eval */
           eval(response.data);
         }
       })
-      .catch(err => this.handleFormError(err));
+      .catch((err) => this.handleFormError(err));
   }
 
   handleFormError(err) {
@@ -133,12 +127,12 @@ export default class extends Controller {
 
   disableFormElements() {
     this.toggleProgressBar();
-    this.formElements.forEach(el => el.setAttribute('disabled', true));
+    this.formElements.forEach((el) => el.setAttribute('disabled', true));
   }
 
   enableFormElements() {
     this.toggleProgressBar();
-    this.formElements.forEach(el => el.removeAttribute('disabled'));
+    this.formElements.forEach((el) => el.removeAttribute('disabled'));
   }
 
   toggleProgressBar() {
@@ -150,7 +144,7 @@ export default class extends Controller {
   serialize(event, multipart) {
     const data = multipart ? new FormData() : new URLSearchParams();
 
-    this.formElements.forEach(field => {
+    this.formElements.forEach((field) => {
       if (field.name && !field.disabled) {
         switch (field.type) {
           case 'reset':
@@ -176,8 +170,8 @@ export default class extends Controller {
             break;
           case 'select-multiple':
             Array.from(field.options)
-              .filter(option => option.selected)
-              .forEach(option => {
+              .filter((option) => option.selected)
+              .forEach((option) => {
                 data.append(field.name, option.value);
               });
             break;

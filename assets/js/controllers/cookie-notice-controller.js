@@ -25,7 +25,7 @@ export default class extends Controller {
   accept() {
     Cookies.set(this.data.get('name'), true, {
       domain: window.location.hostname,
-      expires: 360
+      expires: 360,
     });
     this.element.remove();
   }

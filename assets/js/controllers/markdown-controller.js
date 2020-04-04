@@ -31,14 +31,12 @@ export default class extends Controller {
       'multiline' in dataset
         ? selectedText
             .split('\n')
-            .map(item => markdownStart + item + markdownEnd)
+            .map((item) => markdownStart + item + markdownEnd)
             .join('\n')
         : markdownStart + selectedText + markdownEnd;
 
     this.textareaTarget.value =
-      value.substring(0, selectionStart) +
-      markdownText +
-      value.substring(selectionEnd, value.length);
+      value.substring(0, selectionStart) + markdownText + value.substring(selectionEnd, value.length);
     this.textareaTarget.dispatchEvent(new Event('input'));
   }
 }

@@ -8,4 +8,7 @@
 <div class="markdown-content mt-1">
   {{ object.description.markdown|strip_external_images:user }}
 </div>
+<textarea data-target="clipboard.textarea"
+          readonly
+          class="d-none">{{ object.description }}</textarea>
 {% endif %}

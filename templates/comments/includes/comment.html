@@ -8,6 +8,7 @@
 
 <article class="card"
          role="comment"
+         data-controller="clipboard"
          id="comment-{{ comment.id }}">
   <div class="card-header">
     {% if with_activity %}
@@ -51,6 +52,9 @@
   </div>
   {% else %}
   <div class="card-body">
+    <textarea data-target="clipboard.textarea"
+              readonly
+              class="d-none">{{ comment.content }}</textarea>
     {% if comment.deleted %}
     <p>{% blocktrans %}This comment has been deleted by a community moderator{% endblocktrans %}</p>
     {% endif %}
@@ -178,7 +182,16 @@
             </a>
           </li>
           {% endif %}
-
+          {% if not comment.is_blocked %}
+          <li class="menu-item"
+              data-controller="js-toggle">
+            <a href="#"
+               data-target="clipboard.button"
+               data-action="clipboard#copy">
+              {% trans "Copy Markdown" %}
+            </a>
+          </li>
+          {% endif %}
         </ul>
       </div>
       <div class="actions">

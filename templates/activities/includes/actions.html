@@ -152,6 +152,16 @@
         {% trans "Delete" %}</a>
     </li>
     {% endif %}
+    {% if object.description %}
+    <li class="menu-item"
+        data-controller="js-toggle">
+      <a href="#"
+         data-target="clipboard.button"
+         data-action="clipboard#copy">
+        {% trans "Copy Markdown" %}
+      </a>
+    </li>
+    {% endif %}
     {% block extra_actions %}{% endblock %}
   </ul>
 </div>

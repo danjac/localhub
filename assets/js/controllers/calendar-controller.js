@@ -13,12 +13,10 @@ import {
   parse,
   startOfMonth,
   startOfWeek,
-  subMonths
+  subMonths,
 } from 'date-fns';
 
-import {
-  Controller
-} from 'stimulus';
+import { Controller } from 'stimulus';
 
 const DATE_FORMAT = 'dd/MM/yyyy';
 
@@ -37,20 +35,12 @@ export default class extends Controller {
     days: elements rendering each day.
     template: HTML <template> to render the calendar body.
   */
-  static targets = [
-    'calendar',
-    'dateInput',
-    'currentMonth',
-    'days',
-    'template'
-  ];
+  static targets = ['calendar', 'dateInput', 'currentMonth', 'days', 'template'];
 
   toggle(event) {
     event.preventDefault();
     if (!this.calendarTarget.classList.toggle('d-none')) {
-      const {
-        value
-      } = this.dateInputTarget;
+      const { value } = this.dateInputTarget;
 
       this.selectedDate = value ? parse(value, DATE_FORMAT, new Date()) : null;
       this.firstOfMonthDate = startOfMonth(this.selectedDate || new Date());
@@ -84,10 +74,7 @@ export default class extends Controller {
     const endDate = endOfWeek(lastOfMonthDate);
     const today = new Date();
     // set the current month first (tbd: i18n)
-    this.currentMonthTarget.innerText = format(
-      this.firstOfMonthDate,
-      'MMMM yyyy'
-    );
+    this.currentMonthTarget.innerText = format(this.firstOfMonthDate, 'MMMM yyyy');
     // clear
     while (this.daysTarget.firstChild) {
       this.daysTarget.removeChild(this.daysTarget.firstChild);

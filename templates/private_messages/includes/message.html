@@ -6,7 +6,8 @@
 {% load activities_tags %}
 
 <div class="card mb-2{% if is_sender %} bg-gray{% endif %} message"
-     id="message-{{ message.id }}">
+     id="message-{{ message.id }}"
+     data-controller="clipboard">
   <div class="card-header">
     <div class="card-subtitle h6 {% if is_unread %}text-bold{% endif %}">
       {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url %}
@@ -30,6 +31,9 @@
       {{ message.message.markdown|strip_external_images:user }}
     </div>
     {% endcollapsable %}
+    <textarea data-target="clipboard.textarea"
+              readonly
+              class="d-none">{{ message.message }}</textarea>
   </div>
   <div class="card-footer">
     <div class="d-flex align-center mt-1">
@@ -94,6 +98,14 @@
                data-confirm-header="{% trans 'Delete Message' %}"
                data-confirm-body="{% trans "Are you sure you want to delete this message? Replies to this message will not be deleted. The message may still be available to the other person." %}">{% trans "Delete" %}</a>
 
+          </li>
+          <li class="menu-item"
+              data-controller="js-toggle">
+            <a href="#"
+               data-target="clipboard.button"
+               data-action="clipboard#copy">
+              {% trans "Copy Markdown" %}
+            </a>
           </li>
         </ul>
       </div>

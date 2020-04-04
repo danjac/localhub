@@ -40,7 +40,7 @@ export default class extends Controller {
     dialog.open({
       body,
       header,
-      onConfirm
+      onConfirm,
     });
 
     return false;

@@ -1,9 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  Controller
-} from 'stimulus';
+import { Controller } from 'stimulus';
 
 export default class extends Controller {
   /*
@@ -15,16 +13,13 @@ export default class extends Controller {
 
   */
   connect() {
-    if (
-      this.element.querySelector('iframe, video, audio') &&
-      !this.element.querySelector('script')
-    ) {
+    if (this.element.querySelector('iframe, video, audio') && !this.element.querySelector('script')) {
       this.element.classList.add('video-responsive');
     } else {
       // if we just have embedded images, make these responsive.
       const images = this.element.querySelectorAll('img');
       if (images.length > 0) {
-        images.forEach(el => {
+        images.forEach((el) => {
           el.classList.add('img-responsive');
         });
       } else {

@@ -22,7 +22,7 @@ export default class extends Controller {
     this.element[this.identifier] = this;
     this.onConfirm = null;
     // TBD: prob. need to remove listener in disconnect
-    document.addEventListener('keydown', event => {
+    document.addEventListener('keydown', (event) => {
       // escape key
       if (event.keyCode === 27) {
         this.close();
