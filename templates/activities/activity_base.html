@@ -73,6 +73,8 @@
 
         {% endif %}
 
+        <span class="label">{{ object_type|title }}</span>
+
         {% if not object.published %}
         <span class="label">{% trans "Private" %}</span>
         {% endif %}
