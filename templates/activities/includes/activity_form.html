@@ -7,6 +7,8 @@
 {% load activities_tags %}
 
 {% block form_fields %}
+{% verbose_name view.model as object_name %}
+
 {% with tags=community.get_content_warning_tags|safeseq %}
 {% if tags %}
 <div class="toast text-center my-2 d-hide"
@@ -33,23 +35,39 @@
 {{ block.super }}
 {% endblock form_fields %}
 {% block form_buttons %}
+
 {% if object.published %}
+
 <button type="submit"
         name="submit"
         class="btn btn-primary">
   {% trans "Update" %}
 </button>
-{% else %}
-{% verbose_name view.model as object_name %}
+
+{% elif object.id %}
+<button type="submit"
+        name="save_private"
+        value="true"
+        data-action="form#submit"
+        class="btn btn-primary">
+  {% trans "Keep Private" %}
+</button>
 <button type="submit"
         name="submit"
-        class="btn btn-primary"
+        class="btn btn-secondary"
         {% if object.id %}
         data-controller="confirm"
         data-action="confirm#check form#submit"
         data-confirm-header="{% trans 'Publish' %}"
         data-confirm-body="{% blocktrans trimmed %}Are you sure you want to publish this {{ object_name }}? You cannot reverse this action.{% endblocktrans %}"
         {% endif %}>
+  {% trans "Publish" %}
+</button>
+
+{% else %}
+<button type="submit"
+        name="submit"
+        class="btn btn-primary">
   {% trans "Publish" %}
 </button>
 <button type="submit"
