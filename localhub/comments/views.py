@@ -113,10 +113,7 @@ class CommentUpdateView(
     form_class = CommentForm
     model = Comment
     permission_required = "comments.change_comment"
-    success_message = _("Your comment has been updated")
-
-    def get_success_url(self):
-        return self.object.content_object.get_absolute_url()
+    success_message = _("Your %(model)s has been updated")
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -272,13 +269,10 @@ class CommentReplyView(
     permission_required = "comments.reply_to_comment"
     model = Comment
     form_class = CommentForm
-    success_message = _("You have replied to this comment")
+    success_message = _("You have replied to this %(model)s")
 
     def get_permission_object(self):
         return self.parent
-
-    def get_success_url(self):
-        return super().get_success_url(object=self.object.content_object)
 
     @cached_property
     def parent(self):

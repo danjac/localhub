@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
+from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -147,6 +148,10 @@ class ActivityDeleteView(
 
 
 class ActivityDetailView(ActivityQuerySetMixin, DetailView):
+    paginator_class = Paginator
+    paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
+    page_kwarg = "page"
+
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
         self.object.get_notifications().for_recipient(
@@ -161,7 +166,7 @@ class ActivityDetailView(ActivityQuerySetMixin, DetailView):
         ):
             data["flags"] = self.get_flags()
 
-        data["comments"] = self.get_comments()
+        data["comments"] = self.get_comments_page(self.get_comments())
         if self.request.user.has_perm("activities.create_comment", self.object):
             data["comment_form"] = CommentForm()
 
@@ -199,6 +204,13 @@ class ActivityDetailView(ActivityQuerySetMixin, DetailView):
             )
             .order_by("created")
         )
+
+    def get_comments_page(self, comments):
+        return self.paginator_class(
+            object_list=comments,
+            per_page=self.paginate_by,
+            allow_empty_first_page=True,
+        ).get_page(self.request.GET.get(self.page_kwarg, 1))
 
 
 class ActivityReshareView(
@@ -396,7 +408,7 @@ class ActivityCommentCreateView(
     form_class = CommentForm
     template_name = "comments/comment_form.html"
     permission_required = "activities.create_comment"
-    success_message = _("Your comment has been posted")
+    success_message = _("Your %(model)s has been posted")
 
     @cached_property
     def activity(self):
@@ -404,12 +416,6 @@ class ActivityCommentCreateView(
 
     def get_permission_object(self):
         return self.activity
-
-    def get_success_url(self):
-        return super().get_success_url(object=self.activity)
-
-    def get_success_message(self):
-        return super().get_success_message(model=self.activity)
 
     def form_valid(self, form):
         self.object = form.save(commit=False)

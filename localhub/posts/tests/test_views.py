@@ -155,8 +155,8 @@ class TestPostCommentCreateView:
             {"content": "test"},
             HTTP_HOST=member.community.domain,
         )
-        assert response.url == post.get_absolute_url()
         comment = Comment.objects.get()
+        assert response.url == comment.get_absolute_url()
         assert comment.owner == member.member
         assert comment.content_object == post
 

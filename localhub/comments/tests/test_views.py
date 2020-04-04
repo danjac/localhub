@@ -106,7 +106,7 @@ class TestCommentUpdateView:
         response = client.post(
             reverse("comments:update", args=[comment.id]), {"content": "new content"},
         )
-        assert response.url == post.get_absolute_url()
+        assert response.url == comment.get_absolute_url()
         comment.refresh_from_db()
         assert comment.content == "new content"
         assert comment.editor == member.member
@@ -258,8 +258,8 @@ class TestCommentReplyView:
         response = client.post(
             reverse("comments:reply", args=[parent.id]), {"content": "test"}
         )
-        assert response.url == parent.content_object.get_absolute_url()
         comment = Comment.objects.get(parent=parent)
+        assert response.url == comment.get_absolute_url()
         assert comment.owner == member.member
         assert comment.content_object == parent.content_object
         assert comment.parent == parent

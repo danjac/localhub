@@ -50,6 +50,9 @@
     {% include "comments/includes/comment.html" with is_thread=True %}
   </div>
   {% endfor %}
+  {% if comments.paginator.num_pages > 1 %}
+  {% include "includes/pagination.html" with page_obj=comments is_paginated=True %}
+  {% endif %}
   {% if comment_form %}
   {% resolve_url object "comment" as comment_url %}
   {% include "includes/forms/stimulusjs_form.html" with action=comment_url form=comment_form form_id="comment-form" %}
