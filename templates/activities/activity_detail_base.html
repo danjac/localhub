@@ -6,17 +6,20 @@
 {% load i18n %}
 {% load activities_tags %}
 
-{% block subtitle %} / {% verbose_name_plural view.model %} / {{ object.title }}{% endblock %}
+
+{% block subtitle %} / {% verbose_name_plural object as object_name %}{{ object_name|title }} /
+{{ object.title }}{% endblock %}
 
 {% block content %}
+{% verbose_name_plural object as object_name %}
+{% verbose_name object as object_name %}
 
 <ul class="breadcrumb">
   {% if object.published %}
-  <li class="breadcrumb-item"><a
-       href="{% resolve_model_url view.model "list" %}">{% verbose_name_plural view.model %}</a>
+  <li class="breadcrumb-item"><a href="{% resolve_model_url view.model "list" %}">{{ object_name|title }}</a>
   </li>
   {% else %}
-  <li class="breadcrumb-item"><a href="{% url 'activities:drafts' %}">{% trans "Drafts" %}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
   {% endif %}
   <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
 </ul>
@@ -25,14 +28,7 @@
 {% if object.deleted %}
 <p class="toast text-center my-2">
   {% blocktrans %}
-  This post has been removed by a community moderator.
-  {% endblocktrans %}
-</p>
-{% elif not object.published %}
-<p class="toast text-center my-2">
-  {% blocktrans with update_url=object.get_update_url %}
-  This post is currently in <b>Draft</b> and is only available to you.
-  Click the <b>Publish</b> button below to make the post public.
+  This {{ object_name }} has been removed by a community moderator.
   {% endblocktrans %}
 </p>
 {% endif %}
@@ -41,6 +37,7 @@
 {% include "flags/includes/flags.html" %}
 {% endif %}
 
+{% if object.published %}
 <div class="comments mt-2"
      id="comments">
   {% if comments.number == 1 %}
@@ -62,16 +59,11 @@
   {% include "includes/forms/stimulusjs_form.html" with action=comment_url form=comment_form form_id="comment-form" %}
   {% elif not object.allow_comments %}
   <p class="toast text-center my-2">{% trans "Comments are locked" %}</p>
-  {% elif not user.is_authenticated %}
-  <p class="toast text-center my-2">
-    {% url 'account_login' as login_url %}
-    {% blocktrans with next_url=request.path %}Please <a href="{{ login_url }}?next={{ next_url }}">sign in</a> to post
-    comments.{% endblocktrans %}
-  </p>
   {% elif object.published %}
   <p class="toast text-center my-2">
     {% trans "You do not have permission to post comments on this site." %}
   </p>
   {% endif %}
 </div>
+{% endif %}
 {% endblock content %}

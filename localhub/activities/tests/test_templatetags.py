@@ -6,14 +6,12 @@ from django.contrib.auth.models import AnonymousUser
 from django.urls import reverse
 from django.utils import timezone
 
-from localhub.communities.factories import CommunityFactory, MembershipFactory
+from localhub.communities.factories import CommunityFactory
 from localhub.posts.factories import PostFactory
 from localhub.posts.models import Post
 from localhub.users.factories import UserFactory
 
 from ..templatetags.activities_tags import (
-    get_draft_count,
-    get_external_draft_count,
     get_pinned_activity,
     is_content_sensitive,
     is_oembed_url,
@@ -67,27 +65,6 @@ class TestIsOembedUrl:
         url = "https://reddit.com"
         user = user_model(show_embedded_content=True)
         assert not is_oembed_url(user, url)
-
-
-class TestGetDraftCount:
-    def test_get_draft_count(self, member):
-        PostFactory(community=member.community, owner=member.member, published=None)
-        assert get_draft_count(member.member, member.community) == 1
-
-    def test_get_draft_count_if_anonymous(self, community):
-        assert get_draft_count(AnonymousUser(), community) == 0
-
-
-class TestGetLocalNetworkDraftCount:
-    def test_get_external_draft_count(self, member):
-        PostFactory(community=member.community, owner=member.member, published=None)
-        other = CommunityFactory()
-        MembershipFactory(member=member.member, community=other)
-        PostFactory(community=other, owner=member.member, published=None)
-        assert get_external_draft_count(member.member, member.community) == 1
-
-    def test_get_external_draft_count_if_anonymous(self, community):
-        assert get_external_draft_count(AnonymousUser(), community) == 0
 
 
 class TestIsContentSensitive:

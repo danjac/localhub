@@ -16,7 +16,7 @@
   <li class="breadcrumb-item"><a
        href="{% resolve_model_url view.model "list" %}">{% verbose_name_plural view.model %}</a></li>
   {% else %}
-  <li class="breadcrumb-item"><a href="{% url 'activities:drafts' %}">{% trans "Drafts" %}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
   {% endif %}
   <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
   <li class="breadcrumb-item"><a href="#">{% trans "Edit" %}</a></li>

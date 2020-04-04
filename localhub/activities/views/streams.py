@@ -142,7 +142,7 @@ class ActivitySearchView(SearchMixin, BaseActivityStreamView):
                 super()
                 .filter_queryset(queryset)
                 .exclude_blocked(self.request.user)
-                .published()
+                .published_or_owner(self.request.user)
                 .search(self.search_query)
             )
         return queryset.none()
@@ -330,16 +330,15 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
 timeline_view = TimelineView.as_view()
 
 
-class DraftsView(BaseActivityStreamView):
-    """
-    Shows draft posts belonging to this user.
+class PrivateView(BaseActivityStreamView):
+    """Activities that are only visible to owner (published NULL).
     """
 
     ordering = "-created"
-    template_name = "activities/drafts.html"
+    template_name = "activities/private.html"
 
     def filter_queryset(self, queryset):
-        return super().filter_queryset(queryset).drafts(self.request.user)
+        return super().filter_queryset(queryset).private(self.request.user)
 
 
-drafts_view = DraftsView.as_view()
+private_view = PrivateView.as_view()

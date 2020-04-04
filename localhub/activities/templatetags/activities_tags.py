@@ -12,7 +12,7 @@ from django.utils.translation import gettext as _
 from localhub.users.utils import linkify_mentions
 from localhub.utils.http import is_https
 
-from ..models import get_activity_queryset_count, get_activity_querysets, load_objects
+from ..models import get_activity_querysets, load_objects
 from ..oembed import bootstrap_oembed
 from ..utils import linkify_hashtags
 
@@ -47,36 +47,11 @@ def get_pinned_activity(user, community):
     return load_objects([result], querysets)[0]
 
 
-@register.simple_tag
-def get_draft_count(user, community):
-    if user.is_anonymous or not community.active:
-        return 0
-    return get_activity_queryset_count(
-        lambda model: model.objects.for_community(community).drafts(user)
-    )
-
-
-@register.simple_tag
-def get_external_draft_count(user, community):
-    if user.is_anonymous or not community.active:
-        return 0
-
-    return get_activity_queryset_count(
-        lambda model: model.objects.filter(
-            community__active=True,
-            community__membership__active=True,
-            community__membership__member=user,
-        )
-        .exclude(community=community)
-        .drafts(user)
-    )
-
-
 @register.filter
 def is_content_sensitive(activity, user):
     if user.is_authenticated and user.show_sensitive_content:
         return False
-    return bool(activity.get_content_warning_tags())
+    return activity.published and bool(activity.get_content_warning_tags())
 
 
 @register.filter
@@ -129,9 +104,9 @@ def resolve_url(activity, view_name):
 
 @register.simple_tag
 def verbose_name(activity):
-    return _(activity._meta.verbose_name.capitalize())
+    return _(activity._meta.verbose_name)
 
 
 @register.simple_tag
 def verbose_name_plural(activity):
-    return _(activity._meta.verbose_name_plural.capitalize())
+    return _(activity._meta.verbose_name_plural)

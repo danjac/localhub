@@ -7,13 +7,18 @@
     color: $gray-color;
   }
 
-  .chip {
+  .chip,
+  .label {
     background: $dark-color;
 
     a,
     a:visited {
       color: $darkmode-link;
     }
+  }
+
+  .label {
+    color: $darkmode-text;
   }
 
   .modal {

@@ -47,7 +47,7 @@ class TestActivityTimelineView:
         assert response.context["object_list"][0]["month"]
 
 
-class TestActivityDraftsView:
+class TestActivityPrivateView:
     def test_get(self, client, member):
         PostFactory(community=member.community, owner=member.member)
         PostFactory(
@@ -58,7 +58,7 @@ class TestActivityDraftsView:
         PostFactory(community=member.community, owner=member.member, published=None)
         EventFactory(community=member.community, owner=member.member, published=None)
 
-        response = client.get(reverse("activities:drafts"))
+        response = client.get(reverse("activities:private"))
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 2
 

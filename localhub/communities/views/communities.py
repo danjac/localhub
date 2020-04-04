@@ -10,7 +10,6 @@ from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DetailView, ListView, TemplateView, UpdateView
 
-from localhub.activities.models import get_activity_querysets
 from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
 from localhub.views import SearchMixin, SuccessMixin
@@ -164,23 +163,6 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
             .exclude(pk__in=self.request.user.blocked.all())
         )
 
-    def get_drafts_count(self):
-        communities = self.get_member_communities()
-
-        drafts, _ = get_activity_querysets(
-            lambda model: model.objects.filter(community__in=communities).drafts(
-                self.request.user
-            ),
-            values=("pk", "community"),
-        )
-
-        return {
-            community.id: len(
-                [draft for draft in drafts if draft["community"] == community.id]
-            )
-            for community in communities
-        }
-
     def get_notifications_count(self):
         return dict(
             self.get_member_communities()
@@ -248,13 +230,11 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
         data.update(
             {
                 "counters": {
-                    "drafts": self.get_drafts_count(),
                     "flags": self.get_flags_count(),
                     "join_requests": self.get_join_requests_count(),
                     "messages": self.get_messages_count(),
                     "notifications": self.get_notifications_count(),
                 },
-                "roles": Membership.Role.choices,
             }
         )
         return data

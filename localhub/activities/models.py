@@ -167,7 +167,7 @@ class ActivityQuerySet(
             return qs
         return qs | self.filter(owner=user)
 
-    def drafts(self, user):
+    def private(self, user):
         """Returns activities not yet made public (published NULL) belonging to this
         user.
 
@@ -601,7 +601,7 @@ class Activity(TimeStampedModel):
         *original* model, not the reshare.
 
         Reshares are published immediately, i.e. they do not have a
-        "draft mode".
+        "private mode".
 
         Args:
             owner (User): owner creating the reshare

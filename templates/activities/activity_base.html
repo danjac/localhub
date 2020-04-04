@@ -100,6 +100,9 @@
         {% elif not object.is_reshare %}
         {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
         {% endif %}
+        {% if not object.published %}
+        <span class="label">{% trans "Private" %}</span>
+        {% endif %}
       </div>
 
     </div>

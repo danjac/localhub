@@ -129,7 +129,7 @@
          data-controller="js-toggle ajax confirm"
          data-action="confirm#check ajax#post"
          data-confirm-header="{% trans 'Publish' %}"
-         data-confirm-body="{% trans 'Are you sure you want to publish this draft?' %}"
+         data-confirm-body="{% blocktrans trimmed %}Are you sure you want to publish this {{ object_type }}? You cannot reverse this action.{% endblocktrans %}"
          href="{% resolve_url object "publish" %}">{% trans "Publish" %}</a>
       {% endif %}
     <li class="menu-item">

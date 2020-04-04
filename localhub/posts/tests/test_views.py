@@ -61,13 +61,13 @@ class TestPostCreateView:
         assert post.community == member.community
         assert post.published
 
-    def test_post_to_draft(self, client, member, send_webpush_mock):
+    def test_post_private(self, client, member, send_webpush_mock):
 
         MembershipFactory(community=member.community, role=Membership.Role.MODERATOR)
 
         response = client.post(
             reverse("posts:create"),
-            {"title": "test", "description": "test", "save_as_draft": "true"},
+            {"title": "test", "description": "test", "save_private": "true"},
         )
         post = Post.objects.get()
         assert response.url == post.get_absolute_url()
@@ -119,7 +119,7 @@ class TestPostUpdateView:
         assert post.title == "UPDATED"
         assert post.published
 
-    def test_post_unpublished_to_draft(self, client, member, send_webpush_mock):
+    def test_post_unpublished_to_private(self, client, member, send_webpush_mock):
         post = PostFactory(
             owner=member.member, community=member.community, published=None
         )
@@ -128,7 +128,7 @@ class TestPostUpdateView:
             {
                 "title": "UPDATED",
                 "description": post.description,
-                "save_as_draft": "true",
+                "save_private": "true",
             },
         )
         post.refresh_from_db()

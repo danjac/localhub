@@ -54,12 +54,12 @@ class ActivityCreateView(
         return super().get_success_message(
             _("Your %(model)s has been published")
             if self.object.published
-            else _("Your %(model)s has been saved to Drafts")
+            else _("Your %(model)s has been saved to your private stash")
         )
 
     def form_valid(self, form):
 
-        publish = "save_as_draft" not in self.request.POST
+        publish = "save_private" not in self.request.POST
 
         self.object = form.save(commit=False)
         self.object.owner = self.request.user
@@ -85,7 +85,7 @@ class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
         qs = (
             super()
             .get_queryset()
-            .published()
+            .published_or_owner(self.request.user)
             .with_common_annotations(self.request.user, self.request.community)
             .exclude_blocked(self.request.user)
             .order_by(*self.order_by)
@@ -111,7 +111,7 @@ class ActivityUpdateView(
     def form_valid(self, form):
 
         self.do_publish = (
-            not (self.object.published) and "save_as_draft" not in self.request.POST
+            not (self.object.published) and "save_private" not in self.request.POST
         )
 
         self.object = form.save(commit=False)

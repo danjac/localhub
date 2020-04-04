@@ -87,21 +87,21 @@ class TestActivityManager:
         PostFactory()
         assert Post.objects.published_or_owner(user).count() == 1
 
-    def test_drafts_if_published_and_owner(self, user):
+    def test_private_if_published_and_owner(self, user):
         PostFactory(owner=user)
-        assert Post.objects.drafts(user).count() == 0
+        assert Post.objects.private(user).count() == 0
 
-    def test_drafts_if_not_published_and_owner(self, user):
+    def test_private_if_not_published_and_owner(self, user):
         PostFactory(published=None, owner=user)
-        assert Post.objects.drafts(user).count() == 1
+        assert Post.objects.private(user).count() == 1
 
-    def test_drafts_if_published_and_not_owner(self, user):
+    def test_private_if_published_and_not_owner(self, user):
         PostFactory()
-        assert Post.objects.drafts(user).count() == 0
+        assert Post.objects.private(user).count() == 0
 
-    def test_drafts_if_not_published_and_not_owner(self, user):
+    def test_private_if_not_published_and_not_owner(self, user):
         PostFactory(published=None)
-        assert Post.objects.drafts(user).count() == 0
+        assert Post.objects.private(user).count() == 0
 
     def test_num_reshares(self, post):
 

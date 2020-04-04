@@ -130,11 +130,8 @@ class TestCommunityUpdateView:
 class TestCommunityListView:
     def test_get_if_member(self, client, member):
         CommunityFactory.create_batch(3)
-        # add a draft post
-        PostFactory(published=None, community=member.community, owner=member.member)
         response = client.get(reverse("community_list"))
         assert len(response.context["object_list"]) == 4
-        assert response.context["drafts_count"] == 1
 
     def test_get_if_not_member(self, client, login_user, community):
         CommunityFactory.create_batch(3)

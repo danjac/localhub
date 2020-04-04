@@ -17,9 +17,7 @@
 {% test_rule "communities.is_member" user community as is_member %}
 {% has_perm "communities.view_community" user community as can_view_community %}
 
-{% get_draft_count user community as drafts_count %}
 {% get_flag_count user community as flags_count %}
-{% get_external_draft_count user community as external_drafts_count %}
 {% get_external_flag_count user community as external_flags_count %}
 {% get_pending_invite_count user as pending_invites_count %}
 {% get_sent_join_request_count user as sent_join_requests_count %}
@@ -32,7 +30,7 @@
 
 {% endspaceless %}
 
-{% with total_notifications_count=unread_notifications_count|add:pending_invites_count|add:unread_messages_count|add:unread_external_notifications_count|add:unread_external_messages_count|add:pending_external_join_requests_count|add:pending_join_requests_count|add:drafts_count|add:external_drafts_count|add:flags_count|add:external_flags_count %}
+{% with total_notifications_count=unread_notifications_count|add:pending_invites_count|add:unread_messages_count|add:unread_external_notifications_count|add:unread_external_messages_count|add:pending_external_join_requests_count|add:pending_join_requests_count|add:flags_count|add:external_flags_count %}
 
 <!DOCTYPE html>
 <html lang="en">

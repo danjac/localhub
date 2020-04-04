@@ -100,7 +100,7 @@ class TagDetailView(BaseActivityStreamView):
             super()
             .filter_queryset(queryset)
             .exclude_blocked_users(self.request.user)
-            .published()
+            .published_or_owner(self.request.user)
             .filter(tags__name__in=[self.tag.name])
             .distinct()
         )
