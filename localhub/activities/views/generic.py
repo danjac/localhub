@@ -51,9 +51,9 @@ class ActivityCreateView(
 
     def get_success_message(self):
         message = (
-            _("Your %(object)s has been published")
+            _("Your %(model)s has been published")
             if self.object.published
-            else _("Your %(object)s has been saved to Drafts")
+            else _("Your %(model)s has been saved to Drafts")
         )
         return super().get_success_message(success_message=message)
 
