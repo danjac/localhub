@@ -40,7 +40,7 @@ class SuccessMixin:
         if object:
             dct["object"] = object
         if model:
-            dct["model"] = model._meta.verbose_name.title()
+            dct["model"] = model._meta.verbose_name
 
         return success_message % dct
 
