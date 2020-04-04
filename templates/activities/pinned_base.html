@@ -4,7 +4,8 @@
 {% load i18n %}
 
 {% with object=pinned.object object_type=pinned.object_type %}
-<div class="card{% if css_class %} {{ css_class }}{% endif %}">
+<div class="card{% if css_class %} {{ css_class }}{% endif %}"
+     data-controller="clipboard">
   <div class="card-header h6">
     <div class="card-title activity-title">
       {% block title %}
@@ -25,6 +26,11 @@
   </div>
   <div class="card-footer">
     {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
+    {% if object.description %}
+    <textarea data-target="clipboard.textarea"
+              readonly
+              class="d-none">{{ object.description }}</textarea>
+    {% endif %}
     <div class="d-flex align-center mt-1">
       {% block actions %}{% include "activities/includes/actions.html" %}{% endblock %}
       {% block links %}{% include "activities/includes/links.html" %}{% endblock %}
