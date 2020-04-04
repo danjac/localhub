@@ -54,7 +54,7 @@ class ActivityCreateView(
         return super().get_success_message(
             _("Your %(model)s has been published")
             if self.object.published
-            else _("Your %(model)s has been saved to your private stash")
+            else _("Your %(model)s has been saved to your Private Stash")
         )
 
     def form_valid(self, form):
