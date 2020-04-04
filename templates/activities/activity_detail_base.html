@@ -18,7 +18,7 @@
   {% else %}
   <li class="breadcrumb-item"><a href="{% url 'activities:drafts' %}">{% trans "Drafts" %}</a></li>
   {% endif %}
-  <li class="breadcrumb-item"><a href="#">{{ object.title|truncatechars:60 }}</a></li>
+  <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
 </ul>
 
 {% if comments.number == 1 %}
