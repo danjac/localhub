@@ -15,7 +15,7 @@ from localhub.communities.views import (
     community_welcome_view,
 )
 from localhub.users.views import (
-    darkmode_toggle_view,
+    switch_theme_view,
     user_delete_view,
     user_update_view,
 )
@@ -41,10 +41,10 @@ urlpatterns = [
     path("sites/", community_list_view, name="community_list"),
     path("account/~update", user_update_view, name="user_update"),
     path("account/~delete", user_delete_view, name="user_delete"),
-    path("~toggle-darkmode/", darkmode_toggle_view, name="darkmode_toggle"),
     path("welcome/", view=community_welcome_view, name="community_welcome"),
     path("sidebar/", view=community_sidebar_view, name="community_sidebar"),
     path("not-found/", view=community_not_found_view, name="community_not_found"),
+    path("~theme/<str:theme>/", switch_theme_view, name="switch_theme"),
     # Third-party
     path("account/", include("allauth.urls")),
     path("markdownx/", include("markdownx.urls")),

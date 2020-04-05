@@ -1,0 +1,10 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+
+<a class="d-hide{{ css_class|default:"" }}"
+   data-controller="js-toggle ajax"
+   data-action="ajax#post"
+   data-ajax-redirect="{{ request.get_full_path }}"
+   href="{% if theme == "light" %}{% url 'switch_theme' 'dark' %}">{% trans "Dark Theme" %}{% else %}{% url 'switch_theme' 'light' %}">{% trans "Light Theme" %}{% endif %}</a>

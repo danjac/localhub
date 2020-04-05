@@ -3,16 +3,16 @@
 
 from django.http import HttpRequest
 
-from ..context_processors import darkmode
+from ..context_processors import theme
 
 
 class TestDarkmode:
-    def test_is_darkmode(self):
-        req = HttpRequest()
-        req.COOKIES = {"darkmode": "1"}
-        assert darkmode(req) == {"darkmode": True}
-
-    def test_is_not_darkmode(self):
+    def test_default(self):
         req = HttpRequest()
         req.COOKIES = {}
-        assert darkmode(req) == {"darkmode": False}
+        assert theme(req) == {"theme": "light"}
+
+    def test_dark_theme(self):
+        req = HttpRequest()
+        req.COOKIES = {"theme": "dark"}
+        assert theme(req) == {"theme": "dark"}

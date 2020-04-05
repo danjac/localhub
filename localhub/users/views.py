@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import BooleanField, Q, Value
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -99,7 +99,9 @@ class SingleUserMixin(BaseUserQuerySetMixin):
             return 0
 
         return (
-            Message.objects.from_sender_to_recipient(self.user_obj, self.request.user)
+            Message.objects.from_sender_to_recipient(
+                self.user_obj, self.request.user
+            )
             .unread()
             .count()
         )
@@ -204,7 +206,9 @@ class FollowingUserListView(BaseUserListView):
             )
             .for_community(self.request.community)
             .with_role(self.request.community)
-            .with_num_unread_messages(self.request.user, self.request.community)
+            .with_num_unread_messages(
+                self.request.user, self.request.community
+            )
             .order_by("name", "username")
         )
 
@@ -223,7 +227,9 @@ class FollowerUserListView(BaseUserListView):
             .for_community(self.request.community)
             .with_role(self.request.community)
             .with_is_following(self.request.user)
-            .with_num_unread_messages(self.request.user, self.request.community)
+            .with_num_unread_messages(
+                self.request.user, self.request.community
+            )
         )
 
 
@@ -262,7 +268,9 @@ class MemberListView(SearchMixin, BaseUserListView):
             .for_community(self.request.community)
             .with_role(self.request.community)
             .with_is_following(self.request.user)
-            .with_num_unread_messages(self.request.user, self.request.community)
+            .with_num_unread_messages(
+                self.request.user, self.request.community
+            )
         )
         if self.search_query:
             qs = qs.search(self.search_query)
@@ -325,7 +333,12 @@ class UserCommentListView(SingleUserMixin, BaseCommentListView):
     template_name = "users/comments.html"
 
     def get_queryset(self):
-        return super().get_queryset().filter(owner=self.user_obj).order_by("-created")
+        return (
+            super()
+            .get_queryset()
+            .filter(owner=self.user_obj)
+            .order_by("-created")
+        )
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -398,21 +411,20 @@ class UserDeleteView(CurrentUserMixin, PermissionRequiredMixin, DeleteView):
 user_delete_view = UserDeleteView.as_view()
 
 
-class DarkmodeToggleView(View):
-    def post(self, request):
-        response = HttpResponse()
+class SwitchThemeView(View):
+    def post(self, request, theme):
+        if theme not in settings.LOCALHUB_INSTALLED_THEMES:
+            raise Http404()
 
-        if "darkmode" in request.COOKIES:
-            response.delete_cookie("darkmode", domain=settings.SESSION_COOKIE_DOMAIN)
-        else:
-            response.set_cookie(
-                "darkmode",
-                "true",
-                expires=datetime.datetime.now() + datetime.timedelta(days=365),
-                domain=settings.SESSION_COOKIE_DOMAIN,
-                httponly=True,
-            )
+        response = HttpResponse()
+        response.set_cookie(
+            "theme",
+            theme,
+            expires=datetime.datetime.now() + datetime.timedelta(days=365),
+            domain=settings.SESSION_COOKIE_DOMAIN,
+            httponly=True,
+        )
         return response
 
 
-darkmode_toggle_view = DarkmodeToggleView.as_view()
+switch_theme_view = SwitchThemeView.as_view()

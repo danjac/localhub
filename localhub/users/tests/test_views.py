@@ -60,14 +60,18 @@ class TestUserCommentsView:
     def test_get(self, client, member):
         post = PostFactory(community=member.community)
         comment = CommentFactory(
-            content_object=post, owner=member.member, community=member.community,
+            content_object=post,
+            owner=member.member,
+            community=member.community,
         )
         LikeFactory(
             content_object=comment,
             community=comment.community,
             recipient=comment.owner,
         )
-        response = client.get(reverse("users:comments", args=[comment.owner.username]))
+        response = client.get(
+            reverse("users:comments", args=[comment.owner.username])
+        )
         assert response.status_code == 200
         assert len(dict(response.context or {})["object_list"]) == 1
         assert dict(response.context or {})["num_likes"] == 1
@@ -80,10 +84,14 @@ class TestUserActivitiesView:
         EventFactory(community=member.community, owner=member.member)
         # unlikely, but just for testing
         notification = NotificationFactory(
-            recipient=member.member, content_object=member.member, is_read=False
+            recipient=member.member,
+            content_object=member.member,
+            is_read=False,
         )
         LikeFactory(
-            content_object=post, community=post.community, recipient=post.owner,
+            content_object=post,
+            community=post.community,
+            recipient=post.owner,
         )
 
         response = client.get(
@@ -106,10 +114,14 @@ class TestUserActivitiesView:
             recipient=member.member, content_object=other.member, is_read=False
         )
         LikeFactory(
-            content_object=post, community=post.community, recipient=post.owner,
+            content_object=post,
+            community=post.community,
+            recipient=post.owner,
         )
 
-        response = client.get(reverse("users:activities", args=[other.member.username]))
+        response = client.get(
+            reverse("users:activities", args=[other.member.username])
+        )
         assert response.status_code == 200
         assert len(dict(response.context or {})["object_list"]) == 2
         assert dict(response.context or {})["num_likes"] == 1
@@ -122,9 +134,12 @@ class TestUserActivitiesView:
         Test for regex
         """
         other = MembershipFactory(
-            community=member.community, member=UserFactory(username="tester@gmail.com")
+            community=member.community,
+            member=UserFactory(username="tester@gmail.com"),
         )
-        response = client.get(reverse("users:activities", args=[other.member.username]))
+        response = client.get(
+            reverse("users:activities", args=[other.member.username])
+        )
         assert response.status_code == 200
 
 
@@ -151,7 +166,10 @@ class TestUserDeleteView:
     def test_post(self, client, user_model, login_user):
         response = client.post(reverse("user_delete"))
         assert response.url == "/"
-        assert user_model.objects.filter(username=login_user.username).count() == 0
+        assert (
+            user_model.objects.filter(username=login_user.username).count()
+            == 0
+        )
 
 
 class TestUserFollowView:
@@ -207,7 +225,9 @@ class TestUserAutocompleteListView:
 
         blocker.blocked.add(member.member)
 
-        response = client.get(reverse("users:autocomplete_list"), {"q": "tester"})
+        response = client.get(
+            reverse("users:autocomplete_list"), {"q": "tester"}
+        )
         object_list = response.context["object_list"]
         assert other in object_list
         assert blocker not in object_list
@@ -217,13 +237,21 @@ class TestUserMessageListView:
     def test_get_if_other(self, client, member):
         other_user = MembershipFactory(community=member.community).member
         from_me = MessageFactory(
-            community=member.community, sender=member.member, recipient=other_user,
+            community=member.community,
+            sender=member.member,
+            recipient=other_user,
         )
         to_me = MessageFactory(
-            community=member.community, sender=other_user, recipient=member.member,
+            community=member.community,
+            sender=other_user,
+            recipient=member.member,
         )
-        to_someone_else = MessageFactory(community=member.community, sender=other_user)
-        response = client.get(reverse("users:messages", args=[other_user.username]))
+        to_someone_else = MessageFactory(
+            community=member.community, sender=other_user
+        )
+        response = client.get(
+            reverse("users:messages", args=[other_user.username])
+        )
         assert response.status_code == 200
 
         object_list = response.context["object_list"]
@@ -234,13 +262,21 @@ class TestUserMessageListView:
     def test_get_if_current_user(self, client, member):
         other_user = MembershipFactory(community=member.community).member
         from_me = MessageFactory(
-            community=member.community, sender=member.member, recipient=other_user,
+            community=member.community,
+            sender=member.member,
+            recipient=other_user,
         )
         to_me = MessageFactory(
-            community=member.community, sender=other_user, recipient=member.member,
+            community=member.community,
+            sender=other_user,
+            recipient=member.member,
         )
-        to_someone_else = MessageFactory(community=member.community, sender=other_user)
-        response = client.get(reverse("users:messages", args=[member.member.username]))
+        to_someone_else = MessageFactory(
+            community=member.community, sender=other_user
+        )
+        response = client.get(
+            reverse("users:messages", args=[member.member.username])
+        )
         assert response.status_code == 200
 
         object_list = response.context["object_list"]
@@ -249,14 +285,18 @@ class TestUserMessageListView:
         assert to_someone_else not in object_list
 
 
-class TestDarkmodeToggleView:
-    def test_post_if_lightmode(self, client):
-        response = client.post(reverse("darkmode_toggle"))
+class TestSwitchThemeView:
+    def test_post_dark_theme(self, client):
+        response = client.post(reverse("switch_theme", args=["dark"]))
         assert response.status_code == 200
-        assert response.cookies["darkmode"].value == "true"
+        assert response.cookies["theme"].value == "dark"
 
-    def test_post_if_darkmode(self, client):
-        client.cookies["darkmode"] = "1"
-        response = client.post(reverse("darkmode_toggle"))
+    def test_post_light_theme(self, client):
+        response = client.post(reverse("switch_theme", args=["light"]))
         assert response.status_code == 200
-        assert response.cookies["darkmode"].value == ""
+        assert response.cookies["theme"].value == "light"
+
+    def test_post_invalid_theme(self, client):
+        response = client.post(reverse("switch_theme", args=["groovy"]))
+        assert response.status_code == 404
+        assert "theme" not in response.cookies

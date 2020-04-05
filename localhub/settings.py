@@ -195,6 +195,8 @@ class Base(Configuration):
 
     LOCALHUB_HOME_PAGE_URL = reverse_lazy("activity_stream")
 
+    LOCALHUB_INSTALLED_THEMES = ["light", "dark"]
+
     @property
     def BASE_DIR(self):
         return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -250,7 +252,7 @@ class Base(Configuration):
                         "django.contrib.messages.context_processors.messages",
                         "localhub.communities.context_processors.community",
                         "localhub.template.context_processors.home_page_url",
-                        "localhub.users.context_processors.darkmode",
+                        "localhub.users.context_processors.theme",
                     ],
                     "libraries": {
                         "pagination_tags": "localhub.pagination.templatetags",

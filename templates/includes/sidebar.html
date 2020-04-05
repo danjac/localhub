@@ -77,14 +77,6 @@
     <a data-controller="active-link"
        href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
   </li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
-  </li>
-  <li class="menu-item">
-    {% include "includes/mode_toggle.html" %}
-  </li>
-
   <li class="menu-item show-lg">
     <a href="{% url 'account_logout' %}"
        data-controller="ajax"
@@ -152,15 +144,25 @@
 </ul>
 
 <ul class="menu mt-2">
-  {% if flags_count %}
+  <li class="divider"
+      data-content="{% trans 'Settings' %}"></li>
   <li class="menu-item">
-    <a href="{% url 'flags:list' %}"
-       class="badge"
-       data-badge="{{ flags_count }}">
-      {% trans "Flagged" %}
-    </a>
+    <a data-controller="active-link"
+       href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+  </li>
+  {% if can_manage_community %}
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
   {% endif %}
+  <li class="menu-item">
+    {% include "users/includes/switch_theme.html" %}
+  </li>
+</ul>
+
+
+<ul class="menu mt-2">
   <li class="divider"
       data-content="{% trans 'Content' %}"></li>
   <li class="menu-item">
@@ -185,6 +187,15 @@
     <a data-controller="active-link"
        href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
   </li>
+  {% if flags_count %}
+  <li class="menu-item">
+    <a href="{% url 'flags:list' %}"
+       class="badge"
+       data-badge="{{ flags_count }}">
+      {% trans "Flagged" %}
+    </a>
+  </li>
+  {% endif %}
 </ul>
 
 {% if can_manage_community or communities_count > 1 or community.description or community.terms %}
@@ -207,12 +218,6 @@
        href="{% url 'communities:community_terms' %}">
       {% trans "Terms" %}
     </a>
-  </li>
-  {% endif %}
-  {% if can_manage_community %}
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
   {% endif %}
   {% if communities_count > 1 %}
@@ -319,7 +324,7 @@
        href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
   </li>
   <li class="menu-item">
-    {% include "includes/mode_toggle.html" %}
+    {% include "users/includes/switch_theme.html" %}
   </li>
 </ul>
 {% endif %}
