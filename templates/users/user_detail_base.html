@@ -28,9 +28,9 @@
   (@{{ user_obj.username }})
   {% endif %}
   {% if membership.is_admin %}
-  <span class="label bg-primary">{% trans "Admin" %}</span>
+  <span class="label">{% trans "Admin" %}</span>
   {% elif membership.is_moderator %}
-  <span class="label bg-primary">{% trans "Moderator" %}</span>
+  <span class="label">{% trans "Moderator" %}</span>
   {% endif %}
 </h5>
 

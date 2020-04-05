@@ -43,7 +43,7 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
             models.Q(emailaddress__email__iexact=email) | models.Q(email__iexact=email)
         )
 
-    def with_num_unread_messages(self, recipient):
+    def with_num_unread_messages(self, recipient, community):
         """Returns annotation of number of unread private messages sent by this user.
 
         Annotates "num_unread_messages" to QuerySet.
@@ -59,6 +59,7 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
                 "sent_messages",
                 filter=models.Q(
                     sent_messages__recipient=recipient,
+                    sent_messages__community=community,
                     sent_messages__read__isnull=True,
                     sent_messages__sender_deleted__isnull=True,
                     sent_messages__recipient_deleted__isnull=True,

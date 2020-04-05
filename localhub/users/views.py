@@ -204,7 +204,7 @@ class FollowingUserListView(BaseUserListView):
             )
             .for_community(self.request.community)
             .with_role(self.request.community)
-            .with_num_unread_messages(self.request.user)
+            .with_num_unread_messages(self.request.user, self.request.community)
             .order_by("name", "username")
         )
 
@@ -223,7 +223,7 @@ class FollowerUserListView(BaseUserListView):
             .for_community(self.request.community)
             .with_role(self.request.community)
             .with_is_following(self.request.user)
-            .with_num_unread_messages(self.request.user)
+            .with_num_unread_messages(self.request.user, self.request.community)
         )
 
 
@@ -262,7 +262,7 @@ class MemberListView(SearchMixin, BaseUserListView):
             .for_community(self.request.community)
             .with_role(self.request.community)
             .with_is_following(self.request.user)
-            .with_num_unread_messages(self.request.user)
+            .with_num_unread_messages(self.request.user, self.request.community)
         )
         if self.search_query:
             qs = qs.search(self.search_query)

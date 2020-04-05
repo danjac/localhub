@@ -132,54 +132,75 @@ class TestUserManager:
                 assert not user.is_blocked
 
     def test_with_num_unread_messages_if_recipient_unread(self, user_model, member):
-        MessageFactory(recipient=member.member)
+        MessageFactory(recipient=member.member, community=member.community)
         user = (
             user_model.objects.exclude(pk=member.member_id)
-            .with_num_unread_messages(member.member)
+            .with_num_unread_messages(member.member, member.community)
             .first()
         )
         assert user.num_unread_messages == 1
 
+    def test_with_num_unread_messages_if_recipient_unread_other_community(
+        self, user_model, member
+    ):
+        MessageFactory(recipient=member.member)
+        user = (
+            user_model.objects.exclude(pk=member.member_id)
+            .with_num_unread_messages(member.member, member.community)
+            .first()
+        )
+        assert user.num_unread_messages == 0
+
     def test_with_num_unread_messages_if_no_messages(self, user_model, member):
         user = (
             user_model.objects.exclude(pk=member.member_id)
-            .with_num_unread_messages(member.member)
+            .with_num_unread_messages(member.member, member.community)
             .first()
         )
         assert not hasattr(user, "num_unread_messages")
 
     def test_with_num_unread_messages_if_sender_unread(self, user_model, member):
-        MessageFactory(sender=member.member)
+        MessageFactory(sender=member.member, community=member.community)
         user = (
             user_model.objects.exclude(pk=member.member_id)
-            .with_num_unread_messages(member.member)
+            .with_num_unread_messages(member.member, member.community)
             .first()
         )
         assert user.num_unread_messages == 0
 
     def test_with_num_unread_messages_if_recipient_read(self, user_model, member):
-        MessageFactory(recipient=member.member, read=timezone.now())
+        MessageFactory(
+            recipient=member.member, community=member.community, read=timezone.now()
+        )
         user = (
             user_model.objects.exclude(pk=member.member_id)
-            .with_num_unread_messages(member.member)
+            .with_num_unread_messages(member.member, member.community)
             .first()
         )
         assert user.num_unread_messages == 0
 
     def test_with_num_unread_messages_if_recipient_deleted(self, user_model, member):
-        MessageFactory(recipient=member.member, recipient_deleted=timezone.now())
+        MessageFactory(
+            recipient=member.member,
+            community=member.community,
+            recipient_deleted=timezone.now(),
+        )
         user = (
             user_model.objects.exclude(pk=member.member_id)
-            .with_num_unread_messages(member.member)
+            .with_num_unread_messages(member.member, member.community)
             .first()
         )
         assert user.num_unread_messages == 0
 
     def test_with_num_unread_messages_if_sender_deleted(self, user_model, member):
-        MessageFactory(recipient=member.member, sender_deleted=timezone.now())
+        MessageFactory(
+            recipient=member.member,
+            community=member.community,
+            sender_deleted=timezone.now(),
+        )
         user = (
             user_model.objects.exclude(pk=member.member_id)
-            .with_num_unread_messages(member.member)
+            .with_num_unread_messages(member.member, member.community)
             .first()
         )
         assert user.num_unread_messages == 0
