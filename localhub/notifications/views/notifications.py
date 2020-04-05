@@ -40,7 +40,7 @@ class NotificationListView(NotificationQuerySetMixin, ListView):
             .get_queryset()
             .exclude_blocked_actors(self.request.user)
             .prefetch_related("content_object")
-            .select_related("actor", "content_type")
+            .select_related("actor", "content_type", "community", "recipient")
             .order_by("is_read", "-created")
         )
 

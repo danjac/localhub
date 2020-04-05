@@ -83,9 +83,15 @@ class CommunityQuerySet(models.QuerySet):
             member_role=models.Value(None, output_field=models.CharField()),
         )
 
-    def visible(self, user):
+    def accessible(self, user):
         """
         Returns all communities either listed publicly or where user is a member
+
+        Args:
+            user (User)
+
+        Returns:
+            QuerySet
         """
         return (
             self.with_is_member(user)

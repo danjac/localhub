@@ -6,7 +6,7 @@
 {% load communities_tags %}
 {% load flags_tags %}
 
-{% get_visible_community_count user as communities_count %}
+{% get_community_count user as communities_count %}
 {% test_rule "communities.is_member" user community as is_member %}
 
 {% if is_member %}
@@ -25,10 +25,10 @@
   <li class="menu-item">
     <a data-controller="active-link"
        href="{% url 'private_messages:inbox' %}"
-       {% if unread_messages_count %}
+       {% if site_counters.unread_messages %}
        class="badge"
        id="sidebar-messages-counter"
-       data-badge="{{ unread_messages_count }}"
+       data-badge="{{ site_counters.unread_messages }}"
        {% endif %}>
       {% trans "Messages" %}
     </a>
@@ -36,10 +36,10 @@
   <li class="menu-item">
     <a data-controller="active-link"
        href="{% url 'notifications:list' %}"
-       {% if unread_notifications_count %}
+       {% if site_counters.unread_notifications %}
        class="badge"
        id="sidebar-notifications-counter"
-       data-badge="{{ unread_notifications_count }}"
+       data-badge="{{ site_counters.unread_notifications }}"
        {% endif %}>
       {% trans "Notifications" %}
     </a>
@@ -221,28 +221,26 @@
     <a data-controller="active-link"
        data-active-link-exact
        href="{% url 'community_list' %}"
-       {% with total_external_notifications=unread_external_notifications_count|add:unread_external_messages_count|add:pending_external_join_requests_count|add:external_flags_count %}
-       {% if total_external_notifications %}
+       {% if external_site_counters.total %}
        class="badge"
-       data-badge="{{ total_external_notifications }}"
+       data-badge="{{ external_site_counters.total }}"
        {% endif %}>
       {% trans "Other Sites" %}
-      {% endwith %}
     </a>
   </li>
   {% endif %}
 
   {% if can_manage_community %}
-  {% if pending_join_requests_count %}
+  {% if site_counters.pending_join_requests %}
   <li class="menu-item">
     <a data-controller="active-link"
        href="{% url 'join_requests:list' %}"
        class="badge"
-       data-badge="{{ pending_join_requests_count }}">
+       data-badge="{{ site_counters.pending_join_requests }}">
       {% trans "Join Requests" %}
     </a>
   </li>
-  {% elif sent_join_requests_count %}
+  {% elif external_site_counters.sent_join_requests %}
   <li class="menu-item">
     <a data-controller="active-link"
        href="{% url 'join_requests:sent_list' %}">
@@ -250,7 +248,7 @@
     </a>
   </li>
   {% endif %}
-  {% elif sent_join_requests_count %}
+  {% elif external_site_counters.sent_join_requests %}
   <li class="menu-item">
     <a data-controller="active-link"
        href="{% url 'join_requests:sent_list' %}">
@@ -259,12 +257,12 @@
   </li>
   {% endif %}
 
-  {% if pending_invites_count %}
+  {% if external_site_counters.pending_invites %}
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
        class="badge"
-       data-badge="{{ pending_invites_count }}"
+       data-badge="{{ external_site_counters.pending_invites }}"
        href="{% url 'invites:received_list' %}">
       {% trans "Invites" %}
     </a>
@@ -284,7 +282,7 @@
   </li>
   {% endif %}
 
-  {% if sent_join_requests_count %}
+  {% if external_site_counters.sent_join_requests %}
   <li class="menu-item">
     <a data-controller="active-link"
        href="{% url 'join_requests:sent_list' %}">
@@ -293,12 +291,12 @@
   </li>
   {% endif %}
 
-  {% if pending_invites_count %}
+  {% if external_site_counters.pending_invites %}
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
        class="badge"
-       data-badge="{{ pending_invites_count }}"
+       data-badge="{{ external_site_counters.pending_invites }}"
        href="{% url 'invites:received_list' %}">
       {% trans "Invites" %}
     </a>
@@ -309,13 +307,11 @@
     <a data-controller="active-link"
        data-active-link-exact
        href="{% url 'community_list' %}"
-       {% with total_external_notifications=unread_external_notifications_count|add:unread_external_messages_count|add:pending_external_join_requests_count|add:external_flags_count %}
-       {% if total_external_notifications %}
+       {% if external_site_counters.total %}
        class="badge"
-       data-badge="{{ total_external_notifications }}"
+       data-badge="{{ external_site_counters.total }}"
        {% endif %}>
       {% trans "Other Sites" %}
-      {% endwith %}
     </a>
   </li>
   {% endif %}

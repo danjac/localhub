@@ -23,8 +23,8 @@ from localhub.comments.forms import CommentForm
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.likes.models import Like
-from localhub.views import SearchMixin, SuccessMixin
 from localhub.pagination import PresetCountPaginator
+from localhub.views import SearchMixin, SuccessMixin
 
 from ..models import get_activity_models
 

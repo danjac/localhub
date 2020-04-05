@@ -7,37 +7,25 @@
 {% load rules %}
 {% load thumbnail %}
 {% load activities_tags %}
-{% load flags_tags %}
-{% load invites_tags %}
-{% load join_requests_tags %}
-{% load notifications_tags %}
-{% load private_messages_tags %}
+{% load communities_tags %}
 {% load users_tags %}
 
 {% test_rule "communities.is_member" user community as is_member %}
 {% has_perm "communities.view_community" user community as can_view_community %}
 
-{% get_flag_count user community as flags_count %}
-{% get_external_flag_count user community as external_flags_count %}
-{% get_pending_invite_count user as pending_invites_count %}
-{% get_sent_join_request_count user as sent_join_requests_count %}
-{% get_pending_join_request_count user community as pending_join_requests_count %}
-{% get_pending_external_join_request_count user community as pending_external_join_requests_count %}
-{% get_unread_external_message_count user community as unread_external_messages_count %}
-{% get_unread_external_notification_count user community as unread_external_notifications_count %}
-{% get_unread_message_count user community as unread_messages_count %}
-{% get_unread_notification_count user community as unread_notifications_count %}
+{% get_site_counters user community as site_counters %}
+{% get_external_site_counters user community as external_site_counters %}
 
 {% endspaceless %}
 
-{% with total_notifications_count=unread_notifications_count|add:pending_invites_count|add:unread_messages_count|add:unread_external_notifications_count|add:unread_external_messages_count|add:pending_external_join_requests_count|add:pending_join_requests_count|add:flags_count|add:external_flags_count %}
+{% with site_counters_total=site_counters.total|add:external_site_counters.total %}
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <title>
-    {% spaceless %}{% block title %}{% if total_notifications_count %}*{% endif %}{% if community %}{{ community.name }}{% endif %}{% block subtitle %}{% endblock %}{% endblock %}{% endspaceless %}
+    {% spaceless %}{% block title %}{% if site_counters_total %}*{% endif %}{% if community %}{{ community.name }}{% endif %}{% block subtitle %}{% endblock %}{% endblock %}{% endspaceless %}
   </title>
   <meta charset="UTF-8">
   <meta name="viewport"
@@ -221,10 +209,8 @@
              class="btn btn-block"
              data-action="sidebar#toggle">
             {% block sidebar_toggle %}
-            <span{% if total_notifications_count %} id="total-notifications-counter"
-                                                    class="badge"
-                                                    data-badge="{{ total_notifications_count }}"
-                                                    {% endif %}>
+            <span{% if site_counters_total %}class="badge" data-badge="{{ site_counters_total }}"
+                                                           {% endif %}>
               {% trans "Menu" %}
               </span>
               {% endblock %}

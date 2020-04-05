@@ -42,18 +42,18 @@ class TestCommunityManager:
         assert not first.is_member
         assert first.member_role is None
 
-    def test_visible_if_public(self, user):
+    def test_accessible_if_public(self, user):
         CommunityFactory(public=True)
-        assert Community.objects.visible(user).exists()
+        assert Community.objects.accessible(user).exists()
 
-    def test_visible_if_not_public_and_member(self):
+    def test_accessible_if_not_public_and_member(self):
         community = CommunityFactory(public=False)
         user = MembershipFactory(community=community).member
-        assert Community.objects.visible(user).exists()
+        assert Community.objects.accessible(user).exists()
 
-    def test_visible_if_not_public_and_not_member(self, user):
+    def test_accessible_if_not_public_and_not_member(self, user):
         CommunityFactory(public=False)
-        assert not Community.objects.visible(user).exists()
+        assert not Community.objects.accessible(user).exists()
 
     def test_get_current_if_community_on_site(self, rf):
 

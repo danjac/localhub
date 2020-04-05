@@ -56,7 +56,7 @@
   {% endif %}
 </p>
 
-{% get_visible_community_count user as communities_count %}
+{% get_community_count user as communities_count %}
 {% if communities_count > 1 %}
 <p>
   {% url 'community_list' as community_list_url %}
