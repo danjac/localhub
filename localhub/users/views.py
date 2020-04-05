@@ -99,9 +99,7 @@ class SingleUserMixin(BaseUserQuerySetMixin):
             return 0
 
         return (
-            Message.objects.from_sender_to_recipient(
-                self.user_obj, self.request.user
-            )
+            Message.objects.from_sender_to_recipient(self.user_obj, self.request.user)
             .unread()
             .count()
         )
@@ -206,9 +204,7 @@ class FollowingUserListView(BaseUserListView):
             )
             .for_community(self.request.community)
             .with_role(self.request.community)
-            .with_num_unread_messages(
-                self.request.user, self.request.community
-            )
+            .with_num_unread_messages(self.request.user, self.request.community)
             .order_by("name", "username")
         )
 
@@ -227,9 +223,7 @@ class FollowerUserListView(BaseUserListView):
             .for_community(self.request.community)
             .with_role(self.request.community)
             .with_is_following(self.request.user)
-            .with_num_unread_messages(
-                self.request.user, self.request.community
-            )
+            .with_num_unread_messages(self.request.user, self.request.community)
         )
 
 
@@ -268,9 +262,7 @@ class MemberListView(SearchMixin, BaseUserListView):
             .for_community(self.request.community)
             .with_role(self.request.community)
             .with_is_following(self.request.user)
-            .with_num_unread_messages(
-                self.request.user, self.request.community
-            )
+            .with_num_unread_messages(self.request.user, self.request.community)
         )
         if self.search_query:
             qs = qs.search(self.search_query)
@@ -333,12 +325,7 @@ class UserCommentListView(SingleUserMixin, BaseCommentListView):
     template_name = "users/comments.html"
 
     def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .filter(owner=self.user_obj)
-            .order_by("-created")
-        )
+        return super().get_queryset().filter(owner=self.user_obj).order_by("-created")
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -409,6 +396,15 @@ class UserDeleteView(CurrentUserMixin, PermissionRequiredMixin, DeleteView):
 
 
 user_delete_view = UserDeleteView.as_view()
+
+
+class DismissNoticeView(CurrentUserMixin, View):
+    def post(self, request, notice):
+        self.request.user.dismiss_notice(notice)
+        return HttpResponse()
+
+
+dismiss_notice_view = DismissNoticeView.as_view()
 
 
 class SwitchThemeView(View):

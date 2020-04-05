@@ -57,18 +57,15 @@
 {% endif %}
 
 {% if not user.show_embedded_content %}
-<div class="toast text-center my-2 d-hide"
-     data-controller="cookie-notice"
-     data-cookie-notice-name="embedded-content">
-  <button class="btn btn-clear float-right"
-          data-action="cookie-notice#accept"></button>
-  {% url "user_update" as user_update_url %}
-  {% blocktrans %}
-  You can view embedded content in your feed, for example YouTube videos, by checking the <b>Show embedded content</b>
-  option in your
-  <a href="{{ user_update_url }}">user settings</a>.
-  {% endblocktrans %}
-</div>
+
+{% blocktrans asvar show_embedded_notice %}
+You can view embedded content in your feed, for example YouTube videos, by checking the <b>Show embedded content</b>
+option in your
+<a href="{{ user_update_url }}">user settings</a>.
+{% endblocktrans %}
+
+{% dismissable_notice user "embedded-content" show_embedded_notice|safe css_class="my-2" %}
+
 {% endif %}
 
 {% elif page_obj.paginator.num_pages > 1 %}

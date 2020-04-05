@@ -5,6 +5,7 @@
 
 {% load i18n %}
 {% load socialaccount %}
+{% load users_tags %}
 
 {% block subtitle %} / {% trans "My Settings" %}{% endblock %}
 
@@ -21,16 +22,7 @@
   <a href="{% url 'user_delete' %}">{% trans "Delete Account" %}</a>
 </div>
 
-<div class="text-center my-2 toast d-hide"
-     data-controller="cookie-notice"
-     data-cookie-notice-name="profile-settings">
-  <button class="btn btn-clear float-right"
-          data-action="cookie-notice#accept"></button>
-  {% blocktrans %}
-  Your settings apply to all communities you belong to.
-  {% endblocktrans %}
-</div>
-
+{% dismissable_notice user "profile-settings" _("Your settings apply to all communities you belong to.") css_class="my-2" %}
 
 {% trans "Save Settings" as t_save_settings %}
 {% include "includes/forms/stimulusjs_form.html" with submit_btn=t_save_settings multipart=True %}

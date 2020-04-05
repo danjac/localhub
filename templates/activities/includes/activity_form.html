@@ -5,31 +5,24 @@
 
 {% load i18n %}
 {% load activities_tags %}
+{% load users_tags %}
 
 {% block form_fields %}
 {% verbose_name view.model as object_name %}
 
 {% with tags=community.get_content_warning_tags|safeseq %}
 {% if tags %}
-<div class="toast text-center my-2 d-hide"
-     data-controller="cookie-notice"
-     data-cookie-notice-name="content-warning-tags-activity-form">
-  <button class="btn btn-clear float-right"
-          data-action="cookie-notice#accept"></button>
-  {% blocktrans with first_tag=tags|first count counter=tags|length %}
-  If you add the tag <b>#{{ first_tag }}</b>
-  {% plural %}
-  If you add the tags
-  {% endblocktrans %}
 
-  {% if tags|length > 1 %}
-  {% for tag in tags %}
-  {% if forloop.last %}{% trans "or" %}{% elif not forloop.first %}, {% endif %} <b>#{{ tag }}</b> {% endfor %}
-  {% endif %}
+{% blocktrans with tags_joined=tags|join:", " count counter=tags|length asvar tags_notice %}
+If you include the tag <b>{{ tags_joined }}</b> in your content, the {{ object_name }}
+will be concealed by users with the appropriate settings.
+{% plural %}
+If you include the tags <b>{{ tags_joined }}</b> in your content, the {{ object_name }}
+will be concealed by users with the appropriate settings.
+{% endblocktrans %}
 
-  {% blocktrans %}to the title or description, the content will be
-  obscured by default in people's feeds.{% endblocktrans %}
-</div>
+{% dismissable_notice user "content-warning-tags" tags_notice|safe css_class="my-2" %}
+
 {% endif %}
 {% endwith %}
 {{ block.super }}

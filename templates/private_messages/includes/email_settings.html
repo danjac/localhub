@@ -2,13 +2,11 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
+{% load users_tags %}
 
-<p class="toast text-center my-2 d-hide"
-   data-controller="cookie-notice"
-   data-cookie-notice-name="direct-message-emails">
-  <button class="btn btn-clear float-right" data-action="cookie-notice#accept"></button>
-  {% url 'user_update' as user_settings_url %}
-  {% blocktrans %}You can enable email notifications for new messages <a href="{{ user_settings_url }}">in your settings</a>.{% endblocktrans %}
-</p>
+{% url 'user_update' as user_settings_url %}
+{% blocktrans asvar email_notice %}You can enable email notifications for new messages <a
+   href="{{ user_settings_url }}">in your
+  settings</a>.{% endblocktrans %}
 
-
+{% dismissable_notice user "messages-emails" email_notice|safe css_class="my-2" %}

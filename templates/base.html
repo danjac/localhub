@@ -158,17 +158,12 @@
           </div>
         </noscript>
 
-        <div class="text-center mb-2 toast toast-primary d-hide"
-             data-controller="cookie-notice"
-             data-cookie-notice-name="accept-cookies">
-          <button class="btn btn-clear float-right"
-                  data-action="cookie-notice#accept"></button>
-          {% blocktrans %}
-          This site uses cookies for authentication purposes only. We do not share your personal
-          information with third parties.
-          {% endblocktrans %}
-        </div>
+        {% blocktrans asvar accept_cookies_notice %}
+        This site uses cookies for authentication purposes only. We do not share your
+        personal information with third parties.
+        {% endblocktrans %}
 
+        {% dismissable_notice user "accept-cookies" accept_cookies_notice css_class="mb-2 toast-primary" %}
 
         {% for message in messages %}
         <div class="text-center my-2 toast toast-{{ message.tags }}"

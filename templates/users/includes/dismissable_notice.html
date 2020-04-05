@@ -1,0 +1,19 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% if show_notice %}
+<div class="text-center toast{% if css_class %} {{ css_class }}{% endif %}"
+     data-controller="toggle"
+     data-toggle-target="notice"
+     data-target="toggle.togglable">
+  {% if user.is_authenticated %}
+  <button class="btn btn-clear float-right d-hide"
+          data-controller="ajax js-toggle"
+          data-toggle-target="notice"
+          data-ajax-url="{% url 'dismiss_notice' notice %}"
+          data-ajax-redirect="none"
+          data-action="ajax#post toggle#toggle"></button>
+  {% endif %}
+  {{ text }}
+</div>
+{% endif %}

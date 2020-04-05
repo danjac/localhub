@@ -4,22 +4,18 @@
 {% extends "activities/base.html" %}
 
 {% load i18n %}
+{% load users_tags %}
 
 {% block subtitle %} / {% trans "Private Stash" %}{% endblock %}
 
 {% block content %}
 <h5>{% trans "Private Stash" %}</h5>
-<p class="toast text-center my-2 d-hide"
-   data-controller="cookie-notice"
-   data-cookie-notice-name="private-stash">
-  <button class="btn btn-clear float-right"
-          data-action="cookie-notice#accept"></button>
-  {% blocktrans %}
-  Activities in your Private Stash are only visible to you. They do not appear in
-  the Activity Stream or Timeline. Comments cannot be submitted to private activities.
-  {% endblocktrans %}
-</p>
 
+{% blocktrans asvar private_stash_notice %}
+Activities in your Private Stash are only visible to you. They do not appear in
+the Activity Stream or Timeline. Comments cannot be submitted to private activities.
+{% endblocktrans %}
+{% dismissable_notice user "private-stash" private_stash_notice css_class="my-2" %}
 
 {% include "activities/includes/activity_list.html" %}
 {% endblock content %}

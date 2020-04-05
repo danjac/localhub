@@ -5,6 +5,7 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.urls import reverse
@@ -193,6 +194,8 @@ class User(AbstractUser):
 
     send_email_notifications = models.BooleanField(default=True)
 
+    dismissed_notices = ArrayField(models.CharField(max_length=30), default=list)
+
     following = models.ManyToManyField(
         "self", related_name="followers", blank=True, symmetrical=False
     )
@@ -380,3 +383,14 @@ class User(AbstractUser):
         return set([self.email]) | set(
             self.emailaddress_set.values_list("email", flat=True)
         )
+
+    def dismiss_notice(self, notice):
+        """
+        Adds notice permanently to list of dismissed notices.
+
+        Args:
+            notice (str): unique notice ID e.g. "private-stash"
+        """
+        if notice not in self.dismissed_notices:
+            self.dismissed_notices.append(notice)
+            self.save(update_fields=["dismissed_notices"])

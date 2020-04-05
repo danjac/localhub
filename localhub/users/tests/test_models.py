@@ -312,3 +312,8 @@ class TestUserModel:
         assert notifications[0].community == member.community
         assert notifications[0].verb == "new_follower"
         assert send_webpush_mock.is_called()
+
+    def test_dismiss_notice(self, user):
+        user.dismiss_notice("private-stash")
+        user.refresh_from_db()
+        assert "private-stash" in user.dismissed_notices
