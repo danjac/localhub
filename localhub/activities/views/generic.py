@@ -4,6 +4,7 @@
 from django.conf import settings
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -132,8 +133,12 @@ class ActivityDeleteView(
     PermissionRequiredMixin, ActivityQuerySetMixin, SuccessMixin, DeleteView,
 ):
     permission_required = "activities.delete_activity"
-    success_url = settings.LOCALHUB_HOME_PAGE_URL
     success_message = _("This %(model)s has been deleted")
+
+    def get_success_url(self):
+        if self.object.deleted or self.object.published:
+            return settings.LOCALHUB_HOME_PAGE_URL
+        return reverse("activities:private")
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()

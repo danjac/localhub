@@ -165,14 +165,22 @@ class TestPostCommentCreateView:
 
 
 class TestPostDeleteView:
-    def test_get(self, client, post_for_member: Post):
+    def test_get(self, client, post_for_member):
         # test confirmation page for non-JS clients
         response = client.get(reverse("posts:delete", args=[post_for_member.id]))
         assert response.status_code == 200
 
-    def test_post(self, client, post_for_member: Post):
+    def test_post(self, client, post_for_member):
         response = client.post(reverse("posts:delete", args=[post_for_member.id]))
         assert response.url == settings.LOCALHUB_HOME_PAGE_URL
+        assert Post.objects.count() == 0
+
+    def test_post_if_private(self, client, member):
+        post = PostFactory(
+            owner=member.member, community=member.community, published=None
+        )
+        response = client.post(reverse("posts:delete", args=[post.id]))
+        assert response.url == reverse("activities:private")
         assert Post.objects.count() == 0
 
     def test_post_by_moderator(self, client, moderator, mailoutbox, send_webpush_mock):
