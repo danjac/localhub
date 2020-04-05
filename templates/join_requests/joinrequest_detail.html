@@ -12,7 +12,28 @@
 
 {% user_display object.sender as display_name %}
 
-<h5>{% avatar object.sender "avatar-lg" %}{{ display_name }}</h5>
+<ul class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a data-turbolinks="false"
+       href="#">{{ display_name }}</a>
+  </li>
+</ul>
+
+<h5>
+  {% avatar object.sender "avatar-lg" %}
+  {% if object.sender.username == display_name %}
+  @{{ display_name }}
+  {% else %}
+  {{ display_name }}
+  (@{{ object.sender.username }})
+  {% endif %}
+</h5>
 
 {% with is_pending=object.is_pending is_rejected=object.is_rejectd %}
 <div class="actions mb-1 d-hide"

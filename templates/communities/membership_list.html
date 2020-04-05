@@ -10,14 +10,17 @@
 
 {% block content %}
 
+<ul class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a data-turbolinks="false"
+       href="#">{% trans "Memberships" %}</a>
+  </li>
+</ul>
+
 <h5>{% trans "Memberships" %}</h5>
-
-<div class="actions mb-1">
-  <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
-  <a href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
-  <a href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
-</div>
-
 
 {% if not view.search_query %}
 <div class="my-2 toast text-center">

@@ -12,7 +12,12 @@
 {% user_display member as display_name %}
 
 <ul class="breadcrumb">
-  <li class="breadcrumb-item"><a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a></li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
+  </li>
   <li class="breadcrumb-item">
     <a data-turbolinks="false"
        href="#">{{ display_name }}</a>
