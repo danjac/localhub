@@ -187,6 +187,7 @@
   </li>
 </ul>
 
+{% if can_manage_community or communities_count > 1 or community.description or community.terms %}
 <ul class="menu mt-2">
   <li class="divider"
       data-content="{% trans 'Site' %}"></li>
@@ -270,6 +271,7 @@
   </li>
   {% endif %}
 </ul>
+{% endif %}
 
 {% else %}
 <ul class="menu">
