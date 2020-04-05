@@ -13,6 +13,7 @@
 <h5>{% trans "Memberships" %}</h5>
 
 <div class="actions mb-1">
+  <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   <a href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
   <a href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
 </div>

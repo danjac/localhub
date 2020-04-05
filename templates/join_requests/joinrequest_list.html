@@ -8,17 +8,16 @@
 {% block content %}
 
 <h5>
-    {% trans "Join Requests" %}
-    {% if status_display %}
-    - {{ status_display}}
-    {% endif %}
+  {% trans "Join Requests" %}
+  {% if status_display %}
+  - {{ status_display}}
+  {% endif %}
 </h5>
 
 <div class="actions mb-1">
-    <a href="{% url 'invites:list' %}">
-        {% trans "Invites" %}
-    </a>
-    <a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
+  <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
+  <a href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
+  <a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
 </div>
 
 {% if paginator.count or view.search_query %}
@@ -27,79 +26,79 @@
 
 {% if not community.allow_join_requests %}
 <p class="toast text-center my-2">
-    {% url 'communities:community_update' as settings_url %}
-    {% blocktrans %}Join requests are currently disabled for this community. You can re-enable them <a
-       href="{{ settings_url }}">in your community settings</a>.{% endblocktrans %}
+  {% url 'communities:community_update' as settings_url %}
+  {% blocktrans %}Join requests are currently disabled for this community. You can re-enable them <a
+     href="{{ settings_url }}">in your community settings</a>.{% endblocktrans %}
 </p>
 {% endif %}
 
 {% if total_count %}
 <div class="actions my-1">
-    {% if status %}
-    <a href="{{ request.path }}">{% trans "Show All" %}</a>
-    {% endif %}
-    {% for value, label in status_choices %}
-    {% if status != value %}
-    <a href="{{ request.path }}?status={{ value }}">{{ label }}</a>
-    {% endif %}
-    {% endfor %}
+  {% if status %}
+  <a href="{{ request.path }}">{% trans "Show All" %}</a>
+  {% endif %}
+  {% for value, label in status_choices %}
+  {% if status != value %}
+  <a href="{{ request.path }}?status={{ value }}">{{ label }}</a>
+  {% endif %}
+  {% endfor %}
 </div>
 {% endif %}
 
 
 {% if object_list %}
 <table class="table table-hover table-responsive">
-    <thead>
-        <tr>
-            <th>{% trans "User" %}</th>
-            <th>{% trans "Status" %}</th>
-            <th>{% trans "Actions" %}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for join_request in object_list %}
-        {% with is_pending=join_request.is_pending is_rejected=join_request.is_rejected detail_url=join_request.get_absolute_url %}
-        <tr>
-            <td>
-                {% if is_pending %}<b>{% endif %}
-                    <a href="{{ detail_url }}">{% user_display join_request.sender %}</a>
-                    {% if is_pending %}</b>{% endif %}
-            </td>
-            <td>
-                {% if is_pending %}<b>{% endif %}
-                    {{ join_request.get_status_display }}
-                    {% if is_pending %}</b>{% endif %}
-            </td>
-            <td class="d-hide"
-                data-controller="js-toggle">
-                <div class="actions">
-                    {% if is_pending or is_rejected %}
-                    <a data-controller="ajax confirm"
-                       data-action="confirm#check ajax#post"
-                       data-confirm-header="{% trans 'Accept' %}"
-                       data-confirm-body="{% trans 'Are you sure you want to accept this request?' %}"
-                       href="{% url 'join_requests:accept' join_request.id %}">{% trans "Accept" %}
-                    </a>
-                    {% endif %}
-                    {% if is_pending %}
-                    <a data-controller="ajax confirm"
-                       data-action="confirm#check ajax#post"
-                       data-confirm-header="{% trans 'Reject' %}"
-                       data-confirm-body="{% trans 'Are you sure you want to reject this request?' %}"
-                       href="{% url 'join_requests:reject' join_request.id %}">{% trans "Reject" %}</a>
-                    {% endif %}
+  <thead>
+    <tr>
+      <th>{% trans "User" %}</th>
+      <th>{% trans "Status" %}</th>
+      <th>{% trans "Actions" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for join_request in object_list %}
+    {% with is_pending=join_request.is_pending is_rejected=join_request.is_rejected detail_url=join_request.get_absolute_url %}
+    <tr>
+      <td>
+        {% if is_pending %}<b>{% endif %}
+          <a href="{{ detail_url }}">{% user_display join_request.sender %}</a>
+          {% if is_pending %}</b>{% endif %}
+      </td>
+      <td>
+        {% if is_pending %}<b>{% endif %}
+          {{ join_request.get_status_display }}
+          {% if is_pending %}</b>{% endif %}
+      </td>
+      <td class="d-hide"
+          data-controller="js-toggle">
+        <div class="actions">
+          {% if is_pending or is_rejected %}
+          <a data-controller="ajax confirm"
+             data-action="confirm#check ajax#post"
+             data-confirm-header="{% trans 'Accept' %}"
+             data-confirm-body="{% trans 'Are you sure you want to accept this request?' %}"
+             href="{% url 'join_requests:accept' join_request.id %}">{% trans "Accept" %}
+          </a>
+          {% endif %}
+          {% if is_pending %}
+          <a data-controller="ajax confirm"
+             data-action="confirm#check ajax#post"
+             data-confirm-header="{% trans 'Reject' %}"
+             data-confirm-body="{% trans 'Are you sure you want to reject this request?' %}"
+             href="{% url 'join_requests:reject' join_request.id %}">{% trans "Reject" %}</a>
+          {% endif %}
 
-                    <a data-controller="ajax confirm"
-                       data-action="confirm#check ajax#post"
-                       data-confirm-header="{% trans 'Delete' %}"
-                       data-confirm-body="{% trans 'Are you sure you want to delete this request?' %}"
-                       href="{% url 'join_requests:delete' join_request.id %}">{% trans "Delete" %}</a>
-                </div>
-            </td>
-        </tr>
-        {% endwith %}
-        {% endfor %}
-    </tbody>
+          <a data-controller="ajax confirm"
+             data-action="confirm#check ajax#post"
+             data-confirm-header="{% trans 'Delete' %}"
+             data-confirm-body="{% trans 'Are you sure you want to delete this request?' %}"
+             href="{% url 'join_requests:delete' join_request.id %}">{% trans "Delete" %}</a>
+        </div>
+      </td>
+    </tr>
+    {% endwith %}
+    {% endfor %}
+  </tbody>
 </table>
 {% include "includes/pagination.html" %}
 {% else %}

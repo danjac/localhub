@@ -98,18 +98,18 @@
     <div class="timeline-content">
       <div class="tile">
         <div class="tile-content">
-          <p class="tile-subtitle">{{ month }}</p>
+          <div class="tile-subtitle">{{ month }}</div>
           {% for activity in activities %}
           {% with object=activity.object object_type=activity.object_type %}
-          <p class="tile-title">
+          <div class="tile-title">
             <a href="{{ object.get_absolute_url }}">
               {{ object|truncatechars:100 }}
             </a>
             <span class="label">{% trans object_type|capfirst %}</span>
-          </p>
-          <p class="tile-title">
+          </div>
+          <div class="tile-title">
             {% include "activities/includes/timesince.html" with timestamp=object.published owner=object.owner %}
-          </p>
+          </div>
           <div class="divider"></div>
           {% endwith %}
           {% endfor %}
