@@ -6,11 +6,11 @@
 {% load i18n %}
 {% load socialaccount %}
 
-{% block subtitle %} / {% trans "Settings" %}{% endblock %}
+{% block subtitle %} / {% trans "My Settings" %}{% endblock %}
 
 {% block content %}
 
-<h5>{% trans "Settings" %}</h5>
+<h5>{% trans "My Settings" %}</h5>
 <div class="actions mb-1">
   <a href="{% url 'account_email' %}">{% trans "Email Addresses" %}</a>
   {% get_providers as socialaccount_providers %}
