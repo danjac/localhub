@@ -58,10 +58,11 @@
 
 {% if not user.show_embedded_content %}
 
+{% url 'user_update' as user_settings_url %}
 {% blocktrans asvar show_embedded_notice %}
 You can view embedded content in your feed, for example YouTube videos, by checking the <b>Show embedded content</b>
 option in your
-<a href="{{ user_update_url }}">user settings</a>.
+<a href="{{ user_settings_url }}">user settings</a>.
 {% endblocktrans %}
 
 {% dismissable_notice user "embedded-content" show_embedded_notice|safe css_class="my-2" %}
