@@ -96,7 +96,7 @@ class TestAnswerVoteView:
         voted = AnswerFactory(poll=poll)
         voted.voters.add(member.member)
         response = client.post(reverse("polls:vote", args=[answer.id]))
-        assert response.url == poll.get_absolute_url()
+        assert response.status_code == 200
         assert answer.voters.first() == member.member
         # original vote should be removed
         assert voted.voters.count() == 0

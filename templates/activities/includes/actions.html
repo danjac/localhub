@@ -5,8 +5,7 @@
 {% load rules %}
 {% load activities_tags %}
 
-<div class="dropdown mr-2"
-     data-controller="toggle">
+<div class="dropdown mr-2">
   <a class="btn btn-sm dropdown-toggle"
      tabindex="0">
     {% trans "Actions" %}<i class="icon icon-caret"></i>
@@ -47,53 +46,15 @@
 
     {% has_perm "activities.like_activity" user object as can_like %}
     {% if can_like %}
-    <li class="menu-item">
-      <a href="{% resolve_url object "like" %}"
-         {% if object.has_liked %}
-         class="d-hide"
-         data-js-toggle-ignore
-         {% endif %}
-         data-controller="js-toggle ajax"
-         data-target="toggle.togglable"
-         data-toggle-target="like"
-         data-ajax-redirect="none"
-         data-action="ajax#post toggle#toggle">{% trans "Like" %}</a>
-      <a href="{% resolve_url object "dislike" %}"
-         {% if not object.has_liked %}
-         class="d-hide"
-         data-js-toggle-ignore
-         {% endif %}
-         data-controller="js-toggle ajax"
-         data-target="toggle.togglable"
-         data-toggle-target="like"
-         data-ajax-redirect="none"
-         data-action="ajax#post toggle#toggle"><s>{% trans "Like" %}</s></a>
+    <li class="menu-item like-action">
+      {% include "activities/includes/like.html" with has_liked=object.has_liked %}
     </li>
     {% endif %}
 
     {% has_perm "activities.bookmark_activity" user object as can_bookmark %}
     {% if can_bookmark %}
-    <li class="menu-item">
-      <a href="{% resolve_url object "bookmark" %}"
-         {% if object.has_bookmarked %}
-         class="d-hide"
-         data-js-toggle-ignore
-         {% endif %}
-         data-controller="js-toggle ajax"
-         data-target="toggle.togglable"
-         data-toggle-target="bookmark"
-         data-ajax-redirect="none"
-         data-action="ajax#post toggle#toggle">{% trans "Bookmark" %}</a>
-      <a href="{% resolve_url object "remove_bookmark" %}"
-         {% if not object.has_bookmarked %}
-         class="d-hide"
-         data-js-toggle-ignore
-         {% endif %}
-         data-controller="js-toggle ajax"
-         data-target="toggle.togglable"
-         data-toggle-target="bookmark"
-         data-ajax-redirect="none"
-         data-action="ajax#post toggle#toggle"><s>{% trans "Bookmark" %}</s></a>
+    <li class="menu-item bookmark-action">
+      {% include "activities/includes/bookmark.html" with has_bookmarked=object.has_bookmarked %}
     </li>
     {% endif %}
 

@@ -1,0 +1,16 @@
+    {# Copyright (c) 2020 by Dan Jacob #}
+    {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+    {% load i18n %}
+
+    {% if has_bookmarked %}
+    <a href="{% url 'comments:remove_bookmark' comment.id %}"
+       data-controller="js-toggle ajax"
+       data-ajax-fragment="#comment-{{ comment.id }} .bookmark-action"
+       data-action="ajax#post"><s>{% trans "Bookmark" %}</s></a>
+    {% else %}
+    <a href="{% url 'comments:bookmark' comment.id %}"
+       data-controller="js-toggle ajax"
+       data-ajax-fragment="#comment-{{ comment.id }} .bookmark-action"
+       data-action="ajax#post">{% trans "Bookmark" %}</a>
+    {% endif %}

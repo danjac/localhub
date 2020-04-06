@@ -301,11 +301,21 @@ class ActivityUnpinView(PermissionRequiredMixin, SuccessMixin, BaseSingleActivit
         return self.success_response()
 
 
-class ActivityBookmarkView(
-    PermissionRequiredMixin, SuccessMixin, BaseSingleActivityView
-):
+class BaseActivityBookmarkView(PermissionRequiredMixin, BaseSingleActivityView):
     permission_required = "activities.bookmark_activity"
+    template_name = "activities/includes/bookmark.html"
 
+    def success_response(self, has_bookmarked):
+        return self.render_to_response(
+            {
+                "object": self.object,
+                "object_type": self.object._meta.model_name,
+                "has_bookmarked": has_bookmarked,
+            }
+        )
+
+
+class ActivityBookmarkView(BaseActivityBookmarkView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         try:
@@ -317,22 +327,34 @@ class ActivityBookmarkView(
         except IntegrityError:
             # dupe, ignore
             pass
-        return self.success_response()
+        return self.success_response(has_bookmarked=True)
 
 
-class ActivityRemoveBookmarkView(SuccessMixin, BaseSingleActivityView):
+class ActivityRemoveBookmarkView(BaseActivityBookmarkView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.get_bookmarks().filter(user=request.user).delete()
-        return self.success_response()
+        return self.success_response(has_bookmarked=False)
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
 
 
-class ActivityLikeView(PermissionRequiredMixin, SuccessMixin, BaseSingleActivityView):
+class BaseActivityLikeView(PermissionRequiredMixin, BaseSingleActivityView):
     permission_required = "activities.like_activity"
+    template_name = "activities/includes/like.html"
 
+    def success_response(self, has_liked):
+        return self.render_to_response(
+            {
+                "object": self.object,
+                "object_type": self.object._meta.model_name,
+                "has_liked": has_liked,
+            }
+        )
+
+
+class ActivityLikeView(BaseActivityLikeView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         try:
@@ -346,14 +368,14 @@ class ActivityLikeView(PermissionRequiredMixin, SuccessMixin, BaseSingleActivity
         except IntegrityError:
             # dupe, ignore
             pass
-        return self.success_response()
+        return self.success_response(has_liked=True)
 
 
-class ActivityDislikeView(SuccessMixin, BaseSingleActivityView):
+class ActivityDislikeView(BaseActivityLikeView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.get_likes().filter(user=request.user).delete()
-        return self.success_response()
+        return self.success_response(has_liked=False)
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)

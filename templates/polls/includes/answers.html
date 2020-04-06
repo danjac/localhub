@@ -1,0 +1,30 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% load rules %}
+
+{% has_perm "polls.vote" user object as can_vote %}
+<ol class="poll-answers">
+  {% for answer in object.answers.all %}
+  {% url 'polls:vote' answer.id as vote_url %}
+  <li>{{ answer }}
+    <meter class="meter"
+           value="{% widthratio answer.num_votes object.total_num_votes 100 %}"
+           title="{% blocktrans count counter=answer.num_votes %}1 vote{% plural %}{{ counter }} votes{% endblocktrans %}"
+           min="0"
+           max="100"
+           data-controller="ajax"
+           data-action="click->ajax#post"
+           data-ajax-fragment="#poll-{{ object.id }} .poll-answers"
+           data-ajax-url="{{ vote_url }}"></meter>
+    <div class="actions d-hide"
+         data-controller="js-toggle">
+      <a data-controller="ajax"
+         data-action="ajax#post"
+         data-ajax-fragment="#poll-{{ object.id }} .poll-answers"
+         href="{{ vote_url }}">{% trans "Vote" %}</a>
+    </div>
+  </li>
+  {% endfor %}
+</ol>

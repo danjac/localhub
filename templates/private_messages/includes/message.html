@@ -54,27 +54,8 @@
           </li>
           {% endif %}
 
-          <li class="menu-item">
-            <a href="{% url 'private_messages:message_bookmark' message.id %}"
-               {% if message.has_bookmarked %}
-               class="d-hide"
-               data-js-toggle-ignore
-               {% endif %}
-               data-controller="js-toggle ajax"
-               data-target="toggle.togglable"
-               data-toggle-target="bookmark"
-               data-ajax-redirect="none"
-               data-action="ajax#post toggle#toggle">{% trans "Bookmark" %}</a>
-            <a href="{% url 'private_messages:message_remove_bookmark' message.id %}"
-               {% if not message.has_bookmarked %}
-               class="d-hide"
-               data-js-toggle-ignore
-               {% endif %}
-               data-controller="js-toggle ajax"
-               data-target="toggle.togglable"
-               data-toggle-target="bookmark"
-               data-ajax-redirect="none"
-               data-action="ajax#post toggle#toggle"><s>{% trans "Bookmark" %}</s></a>
+          <li class="menu-item bookmark-action">
+            {% include "private_messages/includes/bookmark.html" with has_bookmarked=message.has_bookmarked %}
           </li>
 
           {% if can_reply %}

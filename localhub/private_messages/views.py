@@ -52,10 +52,6 @@ class BaseMessageListView(SearchMixin, ListView):
     paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
 
 
-class BaseMessageActionView(SuccessMixin, GenericModelView):
-    ...
-
-
 class InboxView(RecipientQuerySetMixin, BaseMessageListView):
     """
     Messages received by current user
@@ -271,7 +267,7 @@ class MessageDeleteView(SenderOrRecipientQuerySetMixin, SuccessMixin, DeleteView
 message_delete_view = MessageDeleteView.as_view()
 
 
-class MessageMarkReadView(RecipientQuerySetMixin, BaseMessageActionView):
+class MessageMarkReadView(RecipientQuerySetMixin, SuccessMixin, GenericModelView):
     def get_queryset(self):
         return super().get_queryset().unread()
 
@@ -296,7 +292,16 @@ class MessageMarkAllReadView(RecipientQuerySetMixin, View):
 message_mark_all_read_view = MessageMarkAllReadView.as_view()
 
 
-class MessageBookmarkView(SenderOrRecipientQuerySetMixin, BaseMessageActionView):
+class BaseMessageBookmarkView(SenderOrRecipientQuerySetMixin, GenericModelView):
+    template_name = "private_messages/includes/bookmark.html"
+
+    def success_response(self, has_bookmarked):
+        return self.render_to_response(
+            {"message": self.object, "has_bookmarked": has_bookmarked}
+        )
+
+
+class MessageBookmarkView(BaseMessageBookmarkView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         try:
@@ -307,17 +312,17 @@ class MessageBookmarkView(SenderOrRecipientQuerySetMixin, BaseMessageActionView)
             )
         except IntegrityError:
             pass
-        return self.success_response()
+        return self.success_response(has_bookmarked=True)
 
 
 message_bookmark_view = MessageBookmarkView.as_view()
 
 
-class MessageRemoveBookmarkView(SenderOrRecipientQuerySetMixin, BaseMessageActionView):
+class MessageRemoveBookmarkView(BaseMessageBookmarkView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         Bookmark.objects.filter(user=request.user, message=self.object).delete()
-        return self.success_response()
+        return self.success_response(has_bookmarked=False)
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)

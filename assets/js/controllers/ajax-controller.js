@@ -21,6 +21,8 @@ export default class extends Controller {
       be used instead.
     redirect: location of redirect on successful completion. This overrides any
       Location returned from the server. If "none" will not perform any redirect.
+    fragment: DOM query selector to inject HTML returned from endpoint. Usually not
+      required as Turbolinks does this for 99% of cases.
   */
   get(event) {
     this.dispatch('GET', event);
@@ -63,6 +65,13 @@ export default class extends Controller {
       url,
     })
       .then((response) => {
+        const fragment = this.data.get('fragment');
+        if (fragment) {
+          const element = document.querySelector(fragment);
+          if (element && response.data) {
+            element.innerHTML = response.data;
+          }
+        }
         const redirect = this.data.get('redirect');
         if (redirect === 'none') {
           this.element.removeAttribute('disabled');

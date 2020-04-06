@@ -49,7 +49,7 @@ class BaseCommentListView(CommentQuerySetMixin, ListView):
         )
 
 
-class BaseCommentActionView(CommentQuerySetMixin, SuccessMixin, GenericModelView):
+class BaseCommentActionView(CommentQuerySetMixin, GenericModelView):
     ...
 
 
@@ -152,9 +152,17 @@ class CommentDeleteView(
 comment_delete_view = CommentDeleteView.as_view()
 
 
-class CommentBookmarkView(PermissionRequiredMixin, BaseCommentActionView):
+class BaseCommentBookmarkView(PermissionRequiredMixin, BaseCommentActionView):
     permission_required = "comments.bookmark_comment"
+    template_name = "comments/includes/bookmark.html"
 
+    def success_response(self, has_bookmarked):
+        return self.render_to_response(
+            {"comment": self.object, "has_bookmarked": has_bookmarked}
+        )
+
+
+class CommentBookmarkView(BaseCommentBookmarkView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         try:
@@ -165,17 +173,17 @@ class CommentBookmarkView(PermissionRequiredMixin, BaseCommentActionView):
             )
         except IntegrityError:
             pass
-        return self.success_response()
+        return self.success_response(has_bookmarked=True)
 
 
 comment_bookmark_view = CommentBookmarkView.as_view()
 
 
-class CommentRemoveBookmarkView(BaseCommentActionView):
+class CommentRemoveBookmarkView(BaseCommentBookmarkView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         Bookmark.objects.filter(user=request.user, comment=self.object).delete()
-        return self.success_response()
+        return self.success_response(has_bookmarked=False)
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -184,9 +192,15 @@ class CommentRemoveBookmarkView(BaseCommentActionView):
 comment_remove_bookmark_view = CommentRemoveBookmarkView.as_view()
 
 
-class CommentLikeView(PermissionRequiredMixin, BaseCommentActionView):
+class BaseCommentLikeView(PermissionRequiredMixin, BaseCommentActionView):
     permission_required = "comments.like_comment"
+    template_name = "comments/includes/like.html"
 
+    def success_response(self, has_liked):
+        return self.render_to_response({"comment": self.object, "has_liked": has_liked})
+
+
+class CommentLikeView(BaseCommentLikeView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         try:
@@ -198,17 +212,17 @@ class CommentLikeView(PermissionRequiredMixin, BaseCommentActionView):
             ).notify()
         except IntegrityError:
             pass
-        return self.success_response()
+        return self.success_response(has_liked=True)
 
 
 comment_like_view = CommentLikeView.as_view()
 
 
-class CommentDislikeView(BaseCommentActionView):
+class CommentDislikeView(BaseCommentLikeView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         Like.objects.filter(user=request.user, comment=self.object).delete()
-        return self.success_response()
+        return self.success_response(has_liked=False)
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)

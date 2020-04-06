@@ -3,7 +3,6 @@
 
 from django.forms import inlineformset_factory
 from django.utils.functional import cached_property
-from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import GenericModelView
 
@@ -14,7 +13,6 @@ from localhub.activities.views.generic import (
     ActivityUpdateView,
 )
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.views import SuccessMixin
 
 from .models import Answer, Poll
 
@@ -86,11 +84,11 @@ class PollListView(PollQuerySetMixin, ActivityListView):
 
 
 class AnswerVoteView(
-    PermissionRequiredMixin, CommunityRequiredMixin, SuccessMixin, GenericModelView,
+    PermissionRequiredMixin, CommunityRequiredMixin, GenericModelView,
 ):
 
     permission_required = "polls.vote"
-    success_message = _("Thanks for voting!")
+    template_name = "polls/includes/answers.html"
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
@@ -99,24 +97,26 @@ class AnswerVoteView(
     def get_permission_object(self):
         return self.object.poll
 
-    def get_success_url(self):
-        return super().get_success_url(object=self.object.poll)
-
     def get_queryset(self):
         return Answer.objects.filter(
             poll__community=self.request.community
         ).select_related("poll", "poll__community")
 
     def post(self, request, *args, **kwargs):
+        has_voted_before = False
         for voted in Answer.objects.filter(
             voters=self.request.user, poll=self.object.poll
         ):
             voted.voters.remove(self.request.user)
+            has_voted_before = True
 
         self.object.voters.add(self.request.user)
-        self.object.poll.notify_on_vote(self.request.user)
 
-        return self.success_response()
+        if not has_voted_before:
+            self.object.poll.notify_on_vote(self.request.user)
+
+        poll = Poll.objects.with_answers().get(pk=self.object.poll.id)
+        return self.render_to_response({"object": poll, "object_type": "poll"})
 
 
 answer_vote_view = AnswerVoteView.as_view()

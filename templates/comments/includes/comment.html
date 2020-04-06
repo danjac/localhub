@@ -84,8 +84,7 @@
     </div>
     {% endif %}
     <div class="d-flex align-center mt-1">
-      <div class="dropdown mr-2"
-           data-controller="toggle">
+      <div class="dropdown mr-2">
         <a class="btn btn-sm dropdown-toggle"
            tabindex="0">
           {% trans "Actions" %}<i class="icon icon-caret"></i>
@@ -93,53 +92,15 @@
         <ul class="menu">
           {% has_perm "comments.like_comment" user comment as can_like_comment %}
           {% if can_like_comment %}
-          <li class="menu-item">
-            <a href="{% url 'comments:like' comment.id %}"
-               {% if comment.has_liked %}
-               class="d-hide"
-               data-js-toggle-ignore
-               {% endif %}
-               data-controller="js-toggle ajax"
-               data-target="toggle.togglable"
-               data-toggle-target="like"
-               data-ajax-redirect="none"
-               data-action="ajax#post toggle#toggle">{% trans "Like" %}</a>
-            <a href="{% url 'comments:dislike' comment.id %}"
-               {% if not comment.has_liked %}
-               class="d-hide"
-               data-js-toggle-ignore
-               {% endif %}
-               data-controller="js-toggle ajax"
-               data-target="toggle.togglable"
-               data-toggle-target="like"
-               data-ajax-redirect="none"
-               data-action="ajax#post toggle#toggle"><s>{% trans "Like" %}</s></a>
+          <li class="menu-item like-action">
+            {% include "comments/includes/like.html" with has_liked=comment.has_liked %}
           </li>
           {% endif %}
 
           {% has_perm "comments.bookmark_comment" user comment as can_bookmark_comment %}
           {% if can_bookmark_comment %}
-          <li class="menu-item">
-            <a href="{% url 'comments:bookmark' comment.id %}"
-               {% if comment.has_bookmarked %}
-               class="d-hide"
-               data-js-toggle-ignore
-               {% endif %}
-               data-controller="js-toggle ajax"
-               data-target="toggle.togglable"
-               data-toggle-target="bookmark"
-               data-ajax-redirect="none"
-               data-action="ajax#post toggle#toggle">{% trans "Bookmark" %}</a>
-            <a href="{% url 'comments:remove_bookmark' comment.id %}"
-               {% if not comment.has_bookmarked %}
-               class="d-hide"
-               data-js-toggle-ignore
-               {% endif %}
-               data-controller="js-toggle ajax"
-               data-target="toggle.togglable"
-               data-toggle-target="bookmark"
-               data-ajax-redirect="none"
-               data-action="ajax#post toggle#toggle"><s>{% trans "Bookmark" %}</s></a>
+          <li class="menu-item bookmark-action">
+            {% include "comments/includes/bookmark.html" with has_bookmarked=comment.has_bookmarked %}
           </li>
           {% endif %}
 
