@@ -129,7 +129,7 @@ class TestTagBlockView:
         post.tags.set("movies")
         tag = Tag.objects.get()
         response = client.post(reverse("activities:tag_block", args=[tag.id]))
-        assert response.url == reverse("activities:tag_detail", args=[tag.slug])
+        assert response.status_code == 200
         assert tag in member.member.blocked_tags.all()
 
 
@@ -140,7 +140,7 @@ class TestTagUnblockView:
         tag = Tag.objects.get()
         member.member.blocked_tags.add(tag)
         response = client.post(reverse("activities:tag_unblock", args=[tag.id]))
-        assert response.url == reverse("activities:tag_detail", args=[tag.slug])
+        assert response.status_code == 200
         assert tag not in member.member.blocked_tags.all()
 
 

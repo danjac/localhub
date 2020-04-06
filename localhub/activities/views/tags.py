@@ -7,9 +7,7 @@ from functools import reduce
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
-from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.urls import reverse
 from django.utils.functional import cached_property
 from rules.contrib.views import PermissionRequiredMixin
 from taggit.models import Tag, TaggedItem
@@ -156,32 +154,32 @@ class TagUnfollowView(BaseTagFollowView):
 tag_unfollow_view = TagUnfollowView.as_view()
 
 
-class TagBlockView(PermissionRequiredMixin, BaseSingleTagView):
+class BaseTagBlockView(PermissionRequiredMixin, BaseSingleTagView):
     permission_required = "users.block_tag"
+    template_name = "activities/includes/tags/block.html"
 
     def get_permission_object(self):
         return self.request.community
 
-    def get_success_url(self):
-        return reverse("activities:tag_detail", args=[self.object.slug])
+    def success_response(self, is_blocked):
+        return self.render_to_response({"tag": self.object, "is_blocked": is_blocked})
 
+
+class TagBlockView(BaseTagBlockView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.blocked_tags.add(self.object)
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response(is_blocked=True)
 
 
 tag_block_view = TagBlockView.as_view()
 
 
-class TagUnblockView(BaseSingleTagView):
-    def get_success_url(self):
-        return reverse("activities:tag_detail", args=[self.object.slug])
-
+class TagUnblockView(BaseTagBlockView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.blocked_tags.remove(self.object)
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response(is_blocked=False)
 
 
 tag_unblock_view = TagUnblockView.as_view()

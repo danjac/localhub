@@ -70,30 +70,13 @@
           </span>
           {% endif %}
           {% if can_block_tag %}
-          <a href="{% url 'activities:tag_unblock' tag.id %}"
-             {% if not tag in blocked %}
-             class="d-hide"
-             data-js-toggle-ignore
-             {% endif %}
-             data-controller="ajax"
-             data-ajax-redirect="none"
-             data-target="toggle.togglable"
-             data-toggle-target="block"
-             data-action="ajax#post toggle#toggle">
-            <s>{% trans "Block" %}</s>
-          </a>
-          <a href="{% url 'activities:tag_block' tag.id %}"
-             {% if tag in blocked %}
-             class="d-hide"
-             data-js-toggle-ignore
-             {% endif %}
-             data-controller="ajax"
-             data-ajax-redirect="none"
-             data-target="toggle.togglable"
-             data-toggle-target="block"
-             data-action="ajax#post toggle#toggle">
-            {% trans "Block" %}
-          </a>
+          <span id="block-tag-{{ tag.id }}">
+            {% if tag in blocked %}
+            {% include "activities/includes/tags/block.html" with is_blocked=True %}
+            {% else %}
+            {% include "activities/includes/tags/block.html" with is_blocked=False %}
+            {% endif %}
+          </span>
           {% endif %}
         </div>
       </td>
