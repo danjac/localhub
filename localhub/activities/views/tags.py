@@ -123,33 +123,34 @@ class TagDetailView(BaseActivityStreamView):
 tag_detail_view = TagDetailView.as_view()
 
 
-class TagFollowView(PermissionRequiredMixin, BaseSingleTagView):
+class BaseTagFollowView(PermissionRequiredMixin, BaseSingleTagView):
     permission_required = "users.follow_tag"
+    template_name = "activities/includes/tags/follow.html"
 
     def get_permission_object(self):
         return self.request.community
 
-    def get_success_url(self):
-        return reverse("activities:tag_detail", args=[self.object.slug])
+    def success_response(self, is_following):
+        return self.render_to_response(
+            {"tag": self.object, "is_following": is_following}
+        )
 
+
+class TagFollowView(BaseTagFollowView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.following_tags.add(self.object)
-
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response(is_following=True)
 
 
 tag_follow_view = TagFollowView.as_view()
 
 
-class TagUnfollowView(BaseSingleTagView):
-    def get_success_url(self):
-        return reverse("activities:tag_detail", args=[self.object.slug])
-
+class TagUnfollowView(BaseTagFollowView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.following_tags.remove(self.object)
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response(is_following=False)
 
 
 tag_unfollow_view = TagUnfollowView.as_view()

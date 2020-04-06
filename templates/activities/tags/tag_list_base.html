@@ -59,32 +59,15 @@
       <td class="d-hide"
           data-controller="js-toggle">
         <div class="float-right-responsive actions"
-             data-controller="js-toggle toggle">
+             data-controller="js-toggle">
           {% if can_follow_tag %}
-          <a href="{% url 'activities:tag_unfollow' tag.id %}"
-             {% if not tag in following %}
-             class="d-hide"
-             data-js-toggle-ignore
-             {% endif %}
-             data-controller="ajax"
-             data-ajax-redirect="none"
-             data-target="toggle.togglable"
-             data-toggle-target="follow"
-             data-action="ajax#post toggle#toggle">
-            <s>{% trans "Follow" %}</s>
-          </a>
-          <a href="{% url 'activities:tag_follow' tag.id %}"
-             {% if tag in following %}
-             class="d-hide"
-             data-js-toggle-ignore
-             {% endif %}
-             data-controller="ajax"
-             data-ajax-redirect="none"
-             data-target="toggle.togglable"
-             data-toggle-target="follow"
-             data-action="ajax#post toggle#toggle">
-            {% trans "Follow" %}
-          </a>
+          <span id="follow-tag-{{ tag.id }}">
+            {% if tag in following %}
+            {% include "activities/includes/tags/follow.html" with is_following=True %}
+            {% else %}
+            {% include "activities/includes/tags/follow.html"  with is_following=False %}
+            {% endif %}
+          </span>
           {% endif %}
           {% if can_block_tag %}
           <a href="{% url 'activities:tag_unblock' tag.id %}"

@@ -1,0 +1,19 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% if is_following %}
+<a href="{% url 'activities:tag_unfollow' tag.id %}"
+   data-controller="ajax"
+   data-ajax-fragment="#follow-tag-{{ tag.id }}"
+   data-action="ajax#post">
+  <s>{% trans "Follow" %}</s>
+</a>
+{% else %}
+<a href="{% url 'activities:tag_follow' tag.id %}"
+   data-controller="ajax"
+   data-ajax-fragment="#follow-tag-{{ tag.id }}"
+   data-action="ajax#post">
+  {% trans "Follow" %}
+</a>
+{% endif %}

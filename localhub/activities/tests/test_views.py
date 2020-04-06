@@ -108,7 +108,7 @@ class TestTagFollowView:
         post.tags.set("movies")
         tag = Tag.objects.get()
         response = client.post(reverse("activities:tag_follow", args=[tag.id]))
-        assert response.url == reverse("activities:tag_detail", args=[tag.slug])
+        assert response.status_code == 200
         assert tag in member.member.following_tags.all()
 
 
@@ -119,7 +119,7 @@ class TestTagUnfollowView:
         tag = Tag.objects.get()
         member.member.following_tags.add(tag)
         response = client.post(reverse("activities:tag_unfollow", args=[tag.id]))
-        assert response.url == reverse("activities:tag_detail", args=[tag.slug])
+        assert response.status_code == 200
         assert tag not in member.member.following_tags.all()
 
 
