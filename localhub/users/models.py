@@ -4,8 +4,8 @@
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.urls import reverse
@@ -247,6 +247,9 @@ class User(AbstractUser):
         """
 
         return user_display(self)
+
+    def get_initials(self):
+        return "".join([n[0].upper() for n in self.get_display_name().split()][:2])
 
     def get_notifications(self):
         """Returns notifications where the user is the target content object,

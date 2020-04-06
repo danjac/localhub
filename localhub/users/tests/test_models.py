@@ -243,6 +243,18 @@ class TestUserModel:
     def test_get_absolute_url(self, user):
         assert user.get_absolute_url() == f"/people/{user.username}/"
 
+    def test_get_display_name_if_no_name(self, user_model):
+        assert user_model(username="danjac").get_display_name() == "danjac"
+
+    def test_get_display_name_if_name(self, user_model):
+        assert (
+            user_model(username="danjac", name="Dan Jacob").get_display_name()
+            == "Dan Jacob"
+        )
+
+    def test_get_initials(self, user_model):
+        assert user_model(username="danjac", name="Dan Jacob").get_initials() == "DJ"
+
     def test_has_role(self, moderator):
         assert moderator.member.has_role(moderator.community, Membership.Role.MODERATOR)
 
