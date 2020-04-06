@@ -81,30 +81,9 @@
              data-controller="toggle">
           {% has_perm "users.follow_user" user object as can_follow_user %}
           {% if can_follow_user %}
-          <a href="{% url 'users:unfollow' object.username %}"
-             {% if not object.is_following %}
-             class="d-hide"
-             data-js-toggle-ignore
-             {% endif %}
-             data-controller="js-toggle ajax"
-             data-ajax-redirect="none"
-             data-target="toggle.togglable"
-             data-toggle-target="follow"
-             data-action="ajax#post toggle#toggle">
-            <s>{% trans "Follow" %}</s>
-          </a>
-          <a href="{% url 'users:follow' object.username %}"
-             {% if object.is_following %}
-             class="d-hide"
-             data-js-toggle-ignore
-             {% endif %}
-             data-controller="ajax"
-             data-ajax-redirect="none"
-             data-target="toggle.togglable"
-             data-toggle-target="follow"
-             data-action="ajax#post toggle#toggle">
-            {% trans "Follow" %}
-          </a>
+          <span id="follow-user-{{ object.id }}">
+            {% include "users/includes/follow.html" with user_obj=object is_following=object.is_following %}
+          </span>
           {% endif %}
           {% if can_create_message and object not in blocked_users %}
           <a href="{% url 'private_messages:message_create' object.username %}">

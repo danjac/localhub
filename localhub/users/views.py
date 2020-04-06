@@ -82,6 +82,13 @@ class SingleUserMixin(BaseUserQuerySetMixin):
         return self.is_blocker or self.is_blocking
 
     @cached_property
+    def is_following(self):
+        return (
+            not self.is_current_user
+            and self.user_obj in self.request.user.following.all()
+        )
+
+    @cached_property
     def is_blocker(self):
         if self.is_current_user:
             return False
@@ -108,11 +115,12 @@ class SingleUserMixin(BaseUserQuerySetMixin):
         data = super().get_context_data(**kwargs)
         data.update(
             {
+                "user_obj": self.user_obj,
                 "is_current_user": self.is_current_user,
                 "is_blocked": self.is_blocked,
                 "is_blocker": self.is_blocker,
                 "is_blocking": self.is_blocking,
-                "user_obj": self.user_obj,
+                "is_following": self.is_following,
                 "display_name": self.display_name,
                 "membership": self.membership,
                 "unread_messages": self.unread_messages,
@@ -144,26 +152,34 @@ class BaseUserListView(UserQuerySetMixin, ListView):
         return data
 
 
-class UserFollowView(PermissionRequiredMixin, BaseSingleUserView):
+class BaseFollowUserView(PermissionRequiredMixin, BaseSingleUserView):
     permission_required = "users.follow_user"
+    template_name = "users/includes/follow.html"
 
+    def success_response(self, is_following):
+        return self.render_to_response(
+            {"user_obj": self.object, "is_following": is_following}
+        )
+
+
+class UserFollowView(BaseFollowUserView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
         self.request.user.following.add(self.object)
         self.request.user.notify_on_follow(self.object, self.request.community)
 
-        return self.success_response()
+        return self.success_response(is_following=True)
 
 
 user_follow_view = UserFollowView.as_view()
 
 
-class UserUnfollowView(BaseSingleUserView):
+class UserUnfollowView(BaseFollowUserView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.following.remove(self.object)
-        return self.success_response()
+        return self.success_response(is_following=False)
 
 
 user_unfollow_view = UserUnfollowView.as_view()

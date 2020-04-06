@@ -79,8 +79,7 @@
 </p>
 {% endif %}
 
-<div class="actions mb-1"
-     data-controller="toggle">
+<div class="actions mb-1">
 
   {% if is_current_user %}
   <a href="{% url 'user_update' %}">
@@ -95,32 +94,9 @@
   {% endif %}
 
   {% if can_follow_user %}
-  {% with following=user.following.all %}
-  <a href="{% url 'users:unfollow' user_obj.username %}"
-     {% if user_obj not in following %}
-     class="d-hide"
-     data-js-toggle-ignore
-     {% endif %}
-     data-controller="js-toggle ajax"
-     data-action="ajax#post toggle#toggle"
-     data-target="toggle.togglable"
-     data-toggle-target="follow"
-     data-ajax-redirect="none">
-    <s>{% trans "Follow" %}</s>
-  </a>
-  <a href="{% url 'users:follow' user_obj.username %}"
-     {% if user_obj in following %}
-     class="d-hide"
-     data-js-toggle-ignore
-     {% endif %}
-     data-controller="js-toggle ajax"
-     data-action="ajax#post toggle#toggle"
-     data-target="toggle.togglable"
-     data-toggle-target="follow"
-     data-ajax-redirect="none">
-    {% trans "Follow" %}
-  </a>
-  {% endwith %}
+  <span id="follow-user-{{ user_obj.id }}">
+    {% include "users/includes/follow.html" %}
+  </span>
   {% endif %}
 
   {% if can_block_user %}

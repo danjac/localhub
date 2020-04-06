@@ -1,0 +1,20 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+
+{% if is_following %}
+<a href="{% url 'users:unfollow' user_obj.username %}"
+   data-controller="js-toggle ajax"
+   data-ajax-fragment="#follow-user-{{ user_obj.id }}"
+   data-action="ajax#post">
+  <s>{% trans "Follow" %}</s>
+</a>
+{% else %}
+<a href="{% url 'users:follow' user_obj.username %}"
+   data-controller="js-toggle ajax"
+   data-ajax-fragment="#follow-user-{{ user_obj.id }}"
+   data-action="ajax#post">
+  {% trans "Follow" %}
+</a>
+{% endif %}
