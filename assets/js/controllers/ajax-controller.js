@@ -71,6 +71,7 @@ export default class extends Controller {
           if (element && response.data) {
             element.innerHTML = response.data;
           }
+          return;
         }
         const redirect = this.data.get('redirect');
         if (redirect === 'none') {
