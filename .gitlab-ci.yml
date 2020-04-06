@@ -1,4 +1,6 @@
-# image: docker
+# Copyright (c) 2020 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 image:
   name: docker/compose:1.24.1
   entrypoint: ['']
@@ -10,7 +12,6 @@ stages:
 
 services:
   - docker:19.03.5-dind
-  # - docker:stable-dind
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -28,8 +29,6 @@ variables:
 
 .docker_config:
   before_script:
-    # - apk add --update py-pip gcc python-dev build-base libffi-dev openssl-dev libgcc
-    # - pip install docker-compose
     - docker-compose version
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
     - docker info
