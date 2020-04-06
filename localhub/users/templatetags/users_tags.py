@@ -20,18 +20,6 @@ def avatar(user, avatar_class="avatar-sm"):
     return {"user": user, "avatar_class": avatar_class, "initials": initials}
 
 
-@register.inclusion_tag("users/includes/dismissable_notice.html")
-def dismissable_notice(user, notice, text, css_class=None):
-    show_notice = user.is_anonymous or notice not in user.dismissed_notices
-    return {
-        "user": user,
-        "notice": notice,
-        "dismissable_content": text,
-        "css_class": css_class,
-        "show_notice": show_notice,
-    }
-
-
 @register.tag
 def dismissable(parser, token):
     """
@@ -84,12 +72,7 @@ class DismissableNode(template.Node):
                 }
             )
             dismissable_content = mark_safe(self.nodelist.render(context))
-            context.update(
-                {
-                    "dismissable_content": dismissable_content,
-                    "show_notice": True,  # TBD: remove
-                }
-            )
+            context["dismissable_content"] = dismissable_content
             return template.loader.render_to_string(self.template, context.flatten())
 
         return ""

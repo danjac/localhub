@@ -1,7 +1,6 @@
 {# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% if show_notice %}
 <div class="text-center toast{% if css_class %} {{ css_class }}{% endif %}"
      data-controller="toggle"
      data-toggle-target="notice"
@@ -16,4 +15,3 @@
   {% endif %}
   {{ dismissable_content }}
 </div>
-{% endif %}
