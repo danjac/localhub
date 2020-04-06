@@ -28,13 +28,12 @@
 </div>
 {% endif %}
 
+{% dismissable user "notifications-emails" css_class="my-2" %}
 {% url 'user_update' as user_settings_url %}
-
-{% blocktrans asvar emails_notice %}
+{% blocktrans %}
 You can enable emails for your notifications
 <a href="{{ user_settings_url }}">in your settings</a>.{% endblocktrans %}
-
-{% dismissable_notice user "notifications-emails" emails_notice|safe "my-2" %}
+{% enddismissable %}
 
 {% notifications_subscribe_btn user community %}
 

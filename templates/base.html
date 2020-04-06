@@ -158,12 +158,12 @@
           </div>
         </noscript>
 
-        {% blocktrans asvar accept_cookies_notice %}
+        {% dismissable user "accept-cookies" css_class="mb-2 toast-primary" %}
+        {% blocktrans %}
         This site uses cookies for authentication purposes only. We do not share your
         personal information with third parties.
         {% endblocktrans %}
-
-        {% dismissable_notice user "accept-cookies" accept_cookies_notice css_class="mb-2 toast-primary" %}
+        {% enddismissable %}
 
         {% for message in messages %}
         <div class="text-center my-2 toast toast-{{ message.tags }}"

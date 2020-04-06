@@ -11,11 +11,12 @@
 {% block content %}
 <h5>{% trans "Private Stash" %}</h5>
 
-{% blocktrans asvar private_stash_notice %}
+{% dismissable user "private-stash" css_class="my-2" %}
+{% blocktrans %}
 Activities in your Private Stash are only visible to you. They do not appear in
 the Activity Stream or Timeline. Comments cannot be submitted to private activities.
 {% endblocktrans %}
-{% dismissable_notice user "private-stash" private_stash_notice css_class="my-2" %}
+{% enddismissable %}
 
 {% include "activities/includes/activity_list.html" %}
 {% endblock content %}

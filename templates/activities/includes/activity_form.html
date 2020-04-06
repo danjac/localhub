@@ -13,15 +13,15 @@
 {% with tags=community.get_content_warning_tags|safeseq %}
 {% if tags %}
 
-{% blocktrans with tags_joined=tags|join:", " count counter=tags|length asvar tags_notice %}
+{% dismissable user "content-warning-tags" css_class="my-2" %}
+{% blocktrans with tags_joined=tags|join:", " count counter=tags|length %}
 If you include the tag <b>{{ tags_joined }}</b> in your content, the {{ object_name }}
-will be concealed by users with the appropriate settings.
+will be concealed by default.
 {% plural %}
-If you include the tags <b>{{ tags_joined }}</b> in your content, the {{ object_name }}
-will be concealed by users with the appropriate settings.
+If you include the following tags in your content, the {{ object_name }}
+will be concealed by default: <b>{{ tags_joined }}</b>.
 {% endblocktrans %}
-
-{% dismissable_notice user "content-warning-tags" tags_notice|safe css_class="my-2" %}
+{% enddismissable %}
 
 {% endif %}
 {% endwith %}
