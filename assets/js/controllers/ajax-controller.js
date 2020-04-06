@@ -17,8 +17,8 @@ export default class extends Controller {
     patch: HTTP PATCH request
 
   data:
-    url: location of AJAX endpoint. If element has "href" attribute this can
-      be used instead. This may also be placed on the action event target.
+    url: location of AJAX endpoint. If element has "href" attribute this
+      can be used instead. This may also be placed on the action event target.
     redirect: location of redirect on successful completion. This overrides any
       Location returned from the server. If "none" will not perform any redirect.
   targets:
@@ -50,25 +50,22 @@ export default class extends Controller {
   dispatch(method, event) {
     event.preventDefault();
 
-    // anchor doesn't have disabled attr, we'll simulate here
-    if (this.element.hasAttribute('disabled')) {
+    const { currentTarget } = event;
+
+    if (currentTarget.hasAttribute('disabled')) {
       return;
     }
 
-    const { currentTarget } = event;
-
-    const referrer = location.href;
-
     const url =
-      currentTarget.getAttribute('href') ||
+      this.data.get('url') ||
       currentTarget.getAttribute(`data-${this.data.identifier}-url`) ||
-      this.data.get('url');
+      currentTarget.getAttribute('href');
 
     currentTarget.setAttribute('disabled', 'disabled');
 
     axios({
       headers: {
-        'Turbolinks-Referrer': referrer,
+        'Turbolinks-Referrer': location.href,
       },
       method,
       url,
