@@ -5,12 +5,8 @@
 
 {% if has_liked %}
 <a href="{% url 'comments:dislike' comment.id %}"
-   data-controller="js-toggle ajax"
-   data-ajax-fragment="#comment-{{ comment.id }} .like-action"
    data-action="ajax#post"><s>{% trans "Like" %}</s></a>
 {% else %}
 <a href="{% url 'comments:like' comment.id %}"
-   data-controller="js-toggle ajax"
-   data-ajax-fragment="#comment-{{ comment.id }} .like-action"
    data-action="ajax#post">{% trans "Like" %}</a>
 {% endif %}

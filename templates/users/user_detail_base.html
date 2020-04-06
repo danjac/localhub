@@ -94,7 +94,9 @@
   {% endif %}
 
   {% if can_follow_user %}
-  <span id="follow-user-{{ user_obj.id }}">
+  <span class="d-hide"
+        data-controller="ajax js-toggle"
+        data-target="ajax.fragment">
     {% include "users/includes/follow.html" %}
   </span>
   {% endif %}

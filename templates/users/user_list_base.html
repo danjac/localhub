@@ -77,11 +77,12 @@
       <td>
         {% block user_item_actions %}
         {% if user != object %}
-        <div class="float-right-responsive actions"
-             data-controller="toggle">
+        <div class="float-right-responsive actions">
           {% has_perm "users.follow_user" user object as can_follow_user %}
           {% if can_follow_user %}
-          <span id="follow-user-{{ object.id }}">
+          <span class="d-hide"
+                data-controller="ajax js-toggle"
+                data-target="ajax.fragment">
             {% include "users/includes/follow.html" with user_obj=object is_following=object.is_following %}
           </span>
           {% endif %}

@@ -22,7 +22,8 @@
      data-controller="js-toggle">
   {% if can_follow_tag %}
   {% with following=user.following_tags.all %}
-  <span id="follow-tag-{{ tag.id }}">
+  <span data-controller="ajax"
+        data-target="ajax.fragment">
     {% if tag in following %}
     {% include "activities/includes/tags/follow.html" with is_following=True %}
     {% else %}
@@ -33,7 +34,8 @@
   {% endif %}
   {% if can_block_tag %}
   {% with blocked=user.blocked_tags.all %}
-  <span id="block-tag-{{ tag.id }}">
+  <span data-controller="ajax"
+        data-target="ajax.fragment">
     {% if tag in blocked %}
     {% include "activities/includes/tags/block.html" with is_blocked=True %}
     {% else %}

@@ -46,14 +46,18 @@
 
     {% has_perm "activities.like_activity" user object as can_like %}
     {% if can_like %}
-    <li class="menu-item like-action">
+    <li class="menu-item d-hide"
+        data-controller="ajax js-toggle"
+        data-target="ajax.fragment">
       {% include "activities/includes/like.html" with has_liked=object.has_liked %}
     </li>
     {% endif %}
 
     {% has_perm "activities.bookmark_activity" user object as can_bookmark %}
     {% if can_bookmark %}
-    <li class="menu-item bookmark-action">
+    <li class="menu-item d-hide"
+        data-controller="ajax js-toggle"
+        data-target="ajax.fragment">
       {% include "activities/includes/bookmark.html" with has_bookmarked=object.has_bookmarked %}
     </li>
     {% endif %}

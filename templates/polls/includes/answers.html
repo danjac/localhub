@@ -14,15 +14,11 @@
            title="{% blocktrans count counter=answer.num_votes %}1 vote{% plural %}{{ counter }} votes{% endblocktrans %}"
            min="0"
            max="100"
-           data-controller="ajax"
            data-action="click->ajax#post"
-           data-ajax-fragment="#poll-{{ object.id }} .poll-answers"
            data-ajax-url="{{ vote_url }}"></meter>
     <div class="actions d-hide"
          data-controller="js-toggle">
-      <a data-controller="ajax"
-         data-action="ajax#post"
-         data-ajax-fragment="#poll-{{ object.id }} .poll-answers"
+      <a data-action="ajax#post"
          href="{{ vote_url }}">{% trans "Vote" %}</a>
     </div>
   </li>

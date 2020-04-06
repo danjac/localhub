@@ -61,7 +61,8 @@
         <div class="float-right-responsive actions"
              data-controller="js-toggle">
           {% if can_follow_tag %}
-          <span id="follow-tag-{{ tag.id }}">
+          <span data-controller="ajax"
+                data-target="ajax.fragment">
             {% if tag in following %}
             {% include "activities/includes/tags/follow.html" with is_following=True %}
             {% else %}
@@ -70,7 +71,8 @@
           </span>
           {% endif %}
           {% if can_block_tag %}
-          <span id="block-tag-{{ tag.id }}">
+          <span data-controller="ajax"
+                data-target="ajax.fragment">
             {% if tag in blocked %}
             {% include "activities/includes/tags/block.html" with is_blocked=True %}
             {% else %}

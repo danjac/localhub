@@ -18,12 +18,15 @@ export default class extends Controller {
 
   data:
     url: location of AJAX endpoint. If element has "href" attribute this can
-      be used instead.
+      be used instead. This may also be placed on the action event target.
     redirect: location of redirect on successful completion. This overrides any
       Location returned from the server. If "none" will not perform any redirect.
-    fragment: DOM query selector to inject HTML returned from endpoint. Usually not
-      required as Turbolinks does this for 99% of cases.
+  targets:
+    fragment: if present and HTML is returned from endpoint the contents of this
+      target will be replaced with the HTML.
   */
+  static targets = ['fragment'];
+
   get(event) {
     this.dispatch('GET', event);
   }
@@ -52,10 +55,16 @@ export default class extends Controller {
       return;
     }
 
-    this.element.setAttribute('disabled', 'disabled');
+    const { currentTarget } = event;
 
     const referrer = location.href;
-    const url = this.element.getAttribute('href') || this.data.get('url');
+
+    const url =
+      currentTarget.getAttribute('href') ||
+      currentTarget.getAttribute(`data-${this.data.identifier}-url`) ||
+      this.data.get('url');
+
+    currentTarget.setAttribute('disabled', 'disabled');
 
     axios({
       headers: {
@@ -65,17 +74,14 @@ export default class extends Controller {
       url,
     })
       .then((response) => {
-        const fragment = this.data.get('fragment');
-        if (fragment) {
-          const element = document.querySelector(fragment);
-          if (element && response.data) {
-            element.innerHTML = response.data;
-          }
+        if (this.hasFragmentTarget) {
+          this.fragmentTarget.innerHTML = response.data;
+          currentTarget.removeAttribute('disabled');
           return;
         }
         const redirect = this.data.get('redirect');
         if (redirect === 'none') {
-          this.element.removeAttribute('disabled');
+          currentTarget.removeAttribute('disabled');
           return;
         }
 
@@ -87,7 +93,7 @@ export default class extends Controller {
         }
       })
       .catch(() => {
-        this.element.removeAttribute('disabled');
+        currentTarget.removeAttribute('disabled');
       });
   }
 }

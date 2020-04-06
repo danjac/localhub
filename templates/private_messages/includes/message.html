@@ -54,7 +54,9 @@
           </li>
           {% endif %}
 
-          <li class="menu-item bookmark-action">
+          <li class="menu-item d-hide"
+              data-controller="ajax js-toggle"
+              data-target="ajax.fragment">
             {% include "private_messages/includes/bookmark.html" with has_bookmarked=message.has_bookmarked %}
           </li>
 
