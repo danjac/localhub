@@ -58,7 +58,7 @@
 
 {% if not user.show_embedded_content %}
 
-{% dismissable user "embedded-content" css_class="my-2" %}
+{% dismissable user "embedded-content" %}
 {% url 'user_update' as user_settings_url %}
 {% blocktrans %}
 You can view embedded content in your feed, for example YouTube videos, by checking the <b>Show embedded content</b>
