@@ -74,7 +74,8 @@ aside {
   font-size: small;
   flex-wrap: wrap;
 
-  a {
+  a,
+  span {
     &:not(:last-child) {
       @extend .mr-1;
     }
@@ -82,7 +83,9 @@ aside {
     &:not(:first-child) {
       @extend .ml-1;
     }
+  }
 
+  a {
     color: $link-color-dark;
 
     @extend .btn-link;
