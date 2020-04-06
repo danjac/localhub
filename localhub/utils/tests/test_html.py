@@ -111,7 +111,7 @@ class TestHTMLScraperFromUrl:
         scraper = HTMLScraper().scrape(html)
         assert scraper.title is None
 
-    def test_image_in_meta_property(self):
+    def test_image_in_meta_property_not_https(self):
         html = """<html>
         <head>
             <title>page title</title>
@@ -122,20 +122,46 @@ class TestHTMLScraperFromUrl:
         </html>
         """
         scraper = HTMLScraper().scrape(html)
-        assert scraper.image == "http://imgur.com/test.jpg"
+        assert scraper.image is None
 
-    def test_image_in_meta_name(self):
+    def test_image_in_meta_property_is_https(self):
         html = """<html>
         <head>
             <title>page title</title>
-            <meta name="og:image" content="http://imgur.com/test.jpg">
+            <meta property="og:image" content="https://imgur.com/test.jpg">
         </head>
         <body>
         </body>
         </html>
         """
         scraper = HTMLScraper().scrape(html)
-        assert scraper.image == "http://imgur.com/test.jpg"
+        assert scraper.image == "https://imgur.com/test.jpg"
+
+    def test_image_in_meta_name(self):
+        html = """<html>
+        <head>
+            <title>page title</title>
+            <meta name="og:image" content="https://imgur.com/test.jpg">
+        </head>
+        <body>
+        </body>
+        </html>
+        """
+        scraper = HTMLScraper().scrape(html)
+        assert scraper.image == "https://imgur.com/test.jpg"
+
+    def test_image_in_meta_invalid_url(self):
+        html = """<html>
+        <head>
+            <title>page title</title>
+            <meta name="og:image" content="/test.jpg">
+        </head>
+        <body>
+        </body>
+        </html>
+        """
+        scraper = HTMLScraper().scrape(html)
+        assert scraper.image is None
 
     def test_image_not_in_meta(self):
         html = """<html>

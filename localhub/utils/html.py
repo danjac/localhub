@@ -4,7 +4,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-from .http import is_image_url
+from .http import URLResolver
 
 
 class HTMLScraper:
@@ -93,10 +93,13 @@ class HTMLScraper:
         # OG or twitter image content
         # first <img> element
         image = self.meta_tags_from_html("og:image", "twitter:image")
-        if not image and self.soup.img:
-            image = self.soup.img.attrs.get("src")
-        if self.is_acceptable_image(image):
+        if image and self.is_acceptable_image(image):
             return image
+
+        if self.soup.img:
+            image = self.soup.img.attrs.get("src")
+            if self.is_acceptable_image(image):
+                return image
         return None
 
     def description_from_html(self):
@@ -122,6 +125,10 @@ class HTMLScraper:
         return None
 
     def is_acceptable_image(self, image):
-        if not is_image_url(image):
+        try:
+            resolver = URLResolver.from_url(image)
+        except URLResolver.Invalid:
+            return False
+        if not resolver.is_image or not resolver.is_https:
             return False
         return len(image) <= self.MAX_IMAGE_URL_LENGTH
