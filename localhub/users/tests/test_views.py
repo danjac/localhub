@@ -160,7 +160,7 @@ class TestUserFollowView:
             community=member.community, member=UserFactory(),
         ).member
         response = client.post(reverse("users:follow", args=[user.username]))
-        assert response.url == user.get_absolute_url()
+        assert response.status_code == 200
         assert user in member.member.following.all()
         notification = Notification.objects.get()
         assert notification.recipient == user
@@ -169,21 +169,21 @@ class TestUserFollowView:
         assert mailoutbox[0].to == [user.email]
 
 
+class TestUserUnfollowView:
+    def test_post(self, client, member):
+        user = MembershipFactory(community=member.community).member
+        member.member.following.add(user)
+        response = client.post(reverse("users:unfollow", args=[user.username]))
+        assert response.status_code == 200
+        assert user not in member.member.following.all()
+
+
 class TestUserBlockView:
     def test_post(self, client, member):
         user = MembershipFactory(community=member.community).member
         response = client.post(reverse("users:block", args=[user.username]))
         assert response.url == user.get_absolute_url()
         assert user in member.member.blocked.all()
-
-
-class TestUserUnfollowView:
-    def test_post(self, client, member):
-        user = MembershipFactory(community=member.community).member
-        member.member.following.add(user)
-        response = client.post(reverse("users:unfollow", args=[user.username]))
-        assert response.url == user.get_absolute_url()
-        assert user not in member.member.following.all()
 
 
 class TestUserUnblockView:
