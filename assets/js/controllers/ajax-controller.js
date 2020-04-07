@@ -12,13 +12,14 @@ export default class extends Controller {
   actions:
     get: HTTP GET request
     post: HTTP POST request
-    delete: HTTP DELETE request
-    put: HTTP PUT request
-    patch: HTTP PATCH request
 
   data:
     url: location of AJAX endpoint. If element has "href" attribute this
-      can be used instead. This may also be placed on the action event target.
+      can be used instead. This may also be placed on the action event target button.
+    confirm-header: header used in confirm dialog. No confirm dialog will be triggered
+      if not defined.
+    confirm-body: body used in confirm dialog. No confirm dialog will be triggered
+      if not defined.
     redirect: location of redirect on successful completion. This overrides any
       Location returned from the server. If "none" will not perform any redirect.
     replace (bool): contents of element will be replaced by HTML returned by endpoint.
@@ -26,28 +27,47 @@ export default class extends Controller {
   */
 
   get(event) {
-    this.dispatch('GET', event);
+    this.confirm('GET', event);
   }
 
   post(event) {
-    this.dispatch('POST', event);
+    this.confirm('POST', event);
   }
 
-  dispatch(method, event) {
+  confirm(method, event) {
     event.preventDefault();
-
     const { currentTarget } = event;
 
-    if (currentTarget.hasAttribute('disabled')) {
+    const onConfirm = () => {
+      this.dispatch(method, currentTarget);
+    };
+
+    const header = this.data.get('confirm-header');
+    const body = this.data.get('confirm-body');
+
+    if (header && body) {
+      const dialog = document.getElementById('confirm-dialog')['confirm-dialog'];
+      dialog.open({
+        body,
+        header,
+        onConfirm,
+      });
+    } else {
+      onConfirm();
+    }
+  }
+
+  dispatch(method, target) {
+    if (target.hasAttribute('disabled')) {
       return;
     }
 
     const url =
       this.data.get('url') ||
-      currentTarget.getAttribute(`data-${this.data.identifier}-url`) ||
-      currentTarget.getAttribute('href');
+      target.getAttribute(`data-${this.data.identifier}-url`) ||
+      target.getAttribute('href');
 
-    currentTarget.setAttribute('disabled', 'disabled');
+    target.setAttribute('disabled', 'disabled');
 
     axios({
       headers: {
@@ -78,7 +98,7 @@ export default class extends Controller {
         }
       })
       .finally(() => {
-        currentTarget.removeAttribute('disabled');
+        target.removeAttribute('disabled');
       });
   }
 }

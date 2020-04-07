@@ -51,8 +51,8 @@ will be concealed by default: <b>{{ tags_joined }}</b>.
         {% if object.id %}
         data-controller="confirm"
         data-action="confirm#check form#submit"
-        data-confirm-header="{% trans 'Publish' %}"
-        data-confirm-body="{% blocktrans trimmed %}Are you sure you want to publish this {{ object_name }}? You cannot reverse this action.{% endblocktrans %}"
+        data-ajax-confirm-header="{% trans 'Publish' %}"
+        data-ajax-confirm-body="{% blocktrans trimmed %}Are you sure you want to publish this {{ object_name }}? You cannot reverse this action.{% endblocktrans %}"
         {% endif %}>
   {% trans "Publish" %}
 </button>

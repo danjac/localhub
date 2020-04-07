@@ -20,10 +20,10 @@
      data-action="ajax#post">{% trans "Mark All As Read" %}</a>
   {% endif %}
   <a href="{% url 'notifications:delete_all' %}"
-     data-controller="confirm ajax"
-     data-action="confirm#check ajax#post"
-     data-confirm-header="{% trans 'Delete All' %}"
-     data-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}">{% trans "Delete All" %}</a>
+     data-controller="ajax"
+     data-action="ajax#post"
+     data-ajax-confirm-header="{% trans 'Delete All' %}"
+     data-ajax-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}">{% trans "Delete All" %}</a>
 </div>
 {% endif %}
 
