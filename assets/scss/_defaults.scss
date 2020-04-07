@@ -43,23 +43,18 @@ aside {
 }
 
 .pagination {
-  margin-left: 0;
-  padding-left: 0;
-
-  margin-right: 0;
-  padding-right: 0;
+  margin: 0;
+  padding: 0;
 
   .page-item {
-    margin-left: 0;
-    padding-left: 0;
-
-    margin-right: 0;
-    padding-right: 0;
+    margin: 0;
+    padding: 0;
 
     .btn.btn-link {
       font-size: small;
       padding: 0;
       margin: 0;
+      height: $line-height;
 
       &:focus {
         border: none;
