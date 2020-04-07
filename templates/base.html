@@ -168,7 +168,8 @@
         {% for message in messages %}
         <div class="text-center my-2 toast toast-{{ message.tags }}"
              data-controller="alert">
-          <button class="btn btn-clear float-right"
+          <button class="btn btn-clear float-right d-hide"
+                  data-controller="js-toggle"
                   data-action="alert#dismiss"></button>
           {{ message }}
         </div>

@@ -17,13 +17,13 @@
 
 {% if latest_notification %}
 {% notification latest_notification %}
-<div class="toast toast-primary text-center my-2">
+<div class="toast toast-primary text-center my-2"
+     data-controller="ajax"
+     data-ajax-url="{% url 'notifications:mark_read' latest_notification.id %}"
+     data-ajax-remove>
   {{ notification_content }}
   <button class="btn btn-clear float-right"
-          data-controller="ajax"
-          data-action="ajax#post"
-          data-ajax-redirect="{{ request.get_full_path }}"
-          data-ajax-url="{% url 'notifications:mark_all_read' %}"></button>
+          data-action="ajax#post"></button>
 </div>
 {% endnotification %}
 {% endif %}
