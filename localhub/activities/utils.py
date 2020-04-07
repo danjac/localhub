@@ -11,9 +11,14 @@ HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")
 
 
 def extract_hashtags(content):
-    """
-    Extracts tags (prefixed with "#") in string into a set of tags.
+    """Extracts tags (prefixed with "#") in string into a set of tags.
     The extracted tags do not include the hash("#") prefix.
+
+    Args:
+        content (str)
+
+    Returns:
+        set: valid hashtag strings
     """
     return set(
         [
@@ -25,8 +30,13 @@ def extract_hashtags(content):
 
 
 def linkify_hashtags(content):
-    """
-    Replace all #hashtags in text with links to some tag search page.
+    """Replace all #hashtags in text with links to some tag search page.
+
+    Args:
+        content (str)
+
+    Returns:
+        str
     """
     tokens = content.split(" ")
     rv = []

@@ -33,6 +33,7 @@ from localhub.utils.text import slugify_unicode
 
 from . import signals
 from .utils import extract_hashtags
+from .validators import validate_hashtags
 
 
 class ActivityQuerySet(
@@ -333,7 +334,9 @@ class Activity(TimeStampedModel):
 
     title = models.CharField(max_length=300)
 
-    additional_tags = models.CharField(max_length=300, blank=True)
+    additional_tags = models.CharField(
+        max_length=300, blank=True, validators=[validate_hashtags]
+    )
 
     description = MarkdownField(blank=True)
 
