@@ -46,17 +46,15 @@ class HTMLScraper:
         """
         try:
             response = requests.get(
-                url, headers={"User-Agent": cls.FAKE_BROWSER_USER_AGENT}
+                url, headers={"User-Agent": cls.FAKE_BROWSER_USER_AGENT}, stream=True
             )
+            response.raise_for_status()
+            if "text/html" not in response.headers.get("Content-Type", ""):
+                raise cls.Invalid("response is not html")
         except requests.RequestException as e:
             raise cls.Invalid(e)
 
-        if not response.ok or "text/html" not in response.headers.get(
-            "Content-Type", ""
-        ):
-            raise cls.Invalid("URL does not return valid HTML response")
-
-        return cls().scrape(response.content)
+        return cls().scrape(response.text)
 
     def scrape(self, html):
         """Parses HTML title, image and description from HTML OpenGraph and

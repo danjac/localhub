@@ -211,9 +211,10 @@ def resolve_url(url):
 
     try:
         response = requests.head(url, allow_redirects=True)
-        if response.ok and response.url:
+        response.raise_for_status()
+        if response.url:
             return response.url
-    except (requests.RequestException):
+    except requests.RequestException:
         pass
     return url
 

@@ -61,9 +61,10 @@ class TestURLResolver:
 
     def test_resolve_if_no_head_returned(self, mocker):
         class MockResponse:
-            ok = False
+            def raise_for_status(self):
+                raise requests.exceptions.HTTPError()
 
-        mocker.patch("requests.head", return_value=MockResponse)
+        mocker.patch("requests.head", return_value=MockResponse())
         assert (
             URLResolver.from_url("http://google.com", resolve=True).url
             == "http://google.com"
@@ -78,10 +79,12 @@ class TestURLResolver:
 
     def test_resolve_if_head_returned(self, mocker):
         class MockResponse:
-            ok = True
             url = "https://google.com"
 
-        mocker.patch("requests.head", return_value=MockResponse)
+            def raise_for_status(self):
+                pass
+
+        mocker.patch("requests.head", return_value=MockResponse())
         assert (
             URLResolver.from_url("http://google.com", resolve=True).url
             == "https://google.com"
@@ -154,9 +157,10 @@ class TestResolveUrl:
 
     def test_resolve_if_no_head_returned(self, mocker):
         class MockResponse:
-            ok = False
+            def raise_for_status(self):
+                raise requests.exceptions.HTTPError()
 
-        mocker.patch("requests.head", return_value=MockResponse)
+        mocker.patch("requests.head", return_value=MockResponse())
         assert resolve_url("http://google.com") == "http://google.com"
 
     def test_resolve_if_request_exception(self, mocker):
@@ -165,8 +169,10 @@ class TestResolveUrl:
 
     def test_resolve_if_head_returned(self, mocker):
         class MockResponse:
-            ok = True
             url = "https://google.com"
 
-        mocker.patch("requests.head", return_value=MockResponse)
+            def raise_for_status(self):
+                pass
+
+        mocker.patch("requests.head", return_value=MockResponse())
         assert resolve_url("http://google.com") == "https://google.com"

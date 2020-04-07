@@ -10,11 +10,19 @@ from ..html import HTMLScraper
 class TestHTMLScraperFromUrl:
     def test_if_non_html_response(self, mocker):
         class MockResponse:
-            ok = True
             headers = {"Content-Type": "application/json"}
 
+            text = """
+            {
+                "value": "xyz"
+            }
+            """
+
+            def raise_for_status(self):
+                pass
+
         mocker.patch(
-            "requests.get", return_value=MockResponse,
+            "requests.get", return_value=MockResponse(),
         )
 
         with pytest.raises(HTMLScraper.Invalid):
@@ -23,12 +31,41 @@ class TestHTMLScraperFromUrl:
             assert scraper.image is None
             assert scraper.description is None
 
-    def test_if_bad_response(self, mocker):
+    def test_if_html_response(self, mocker):
         class MockResponse:
-            ok = False
+            headers = {"Content-Type": "text/html"}
+
+            text = """<html>
+            <head>
+                <title>page title</title>
+                <meta property="og:title" content="meta title">
+                <meta property="og:description" content="meta desc">
+                <meta property="og:image" content="https://imgur.com/test.jpg">
+            </head>
+            <body>
+            </body>
+            </html>
+            """
+
+            def raise_for_status(self):
+                pass
 
         mocker.patch(
-            "requests.get", return_value=MockResponse,
+            "requests.get", return_value=MockResponse(),
+        )
+
+        scraper = HTMLScraper.from_url("http://google.com")
+        assert scraper.title == "meta title"
+        assert scraper.image == "https://imgur.com/test.jpg"
+        assert scraper.description == "meta desc"
+
+    def test_if_bad_response(self, mocker):
+        class MockResponse:
+            def raise_for_status(self):
+                raise requests.exceptions.HTTPError()
+
+        mocker.patch(
+            "requests.get", return_value=MockResponse(),
         )
 
         with pytest.raises(HTMLScraper.Invalid):
