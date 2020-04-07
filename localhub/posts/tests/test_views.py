@@ -106,7 +106,7 @@ class TestPostUpdateView:
         assert post_for_member.title == "UPDATED"
         assert reshare.title == "UPDATED"
 
-    def test_post_unpublished_to_publish(self, client, member, send_webpush_mock):
+    def test_post_private(self, client, member, send_webpush_mock):
         post = PostFactory(
             owner=member.member, community=member.community, published=None
         )
@@ -117,24 +117,7 @@ class TestPostUpdateView:
         post.refresh_from_db()
         assert response.url == post.get_absolute_url()
         assert post.title == "UPDATED"
-        assert post.published
-
-    def test_post_unpublished_to_private(self, client, member, send_webpush_mock):
-        post = PostFactory(
-            owner=member.member, community=member.community, published=None
-        )
-        response = client.post(
-            reverse("posts:update", args=[post.id]),
-            {
-                "title": "UPDATED",
-                "description": post.description,
-                "save_private": "true",
-            },
-        )
-        post.refresh_from_db()
-        assert response.url == post.get_absolute_url()
-        assert post.title == "UPDATED"
-        assert not post.published
+        assert post.published is None
 
 
 class TestPostCommentCreateView:

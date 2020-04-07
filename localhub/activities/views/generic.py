@@ -101,26 +101,15 @@ class ActivityUpdateView(
     PermissionRequiredMixin, ActivityQuerySetMixin, SuccessMixin, UpdateView,
 ):
     permission_required = "activities.change_activity"
-
-    def get_success_message(self):
-        return super().get_success_message(
-            _("Your %(model)s has been published")
-            if self.do_publish
-            else _("Your %(model)s has been updated")
-        )
+    success_message = _("Your %(model)s has been updated")
 
     def form_valid(self, form):
-
-        self.do_publish = (
-            not (self.object.published) and "save_private" not in self.request.POST
-        )
 
         self.object = form.save(commit=False)
         self.object.editor = self.request.user
         self.object.edited = timezone.now()
-        if self.do_publish:
-            self.object.published = timezone.now()
         self.object.save()
+
         self.object.update_reshares()
 
         if self.object.published:

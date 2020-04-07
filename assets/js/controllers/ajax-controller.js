@@ -26,7 +26,8 @@ export default class extends Controller {
       Location returned from the server. If "none" will not perform any redirect.
     replace (bool): contents of element will be replaced by HTML returned by endpoint.
     remove (bool): element will be removed when ajax action is executed.
-    follow (bool): (GET requests only) : will just redirect directly to that URL.
+    follow (bool): (GET requests only) : will just redirect directly to that URL without
+      calling the endpoint.
   */
 
   get(event) {

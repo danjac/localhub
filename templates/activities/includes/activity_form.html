@@ -28,35 +28,8 @@ will be concealed by default: <b>{{ tags_joined }}</b>.
 {{ block.super }}
 {% endblock form_fields %}
 {% block form_buttons %}
-
-{% if object.published %}
-
-<button type="submit"
-        name="submit"
-        class="btn btn-primary">
-  {% trans "Update" %}
-</button>
-
-{% elif object.id %}
-<button type="submit"
-        name="save_private"
-        value="true"
-        data-action="form#submit"
-        class="btn btn-primary">
-  {% trans "Keep Private" %}
-</button>
-<button type="submit"
-        name="submit"
-        class="btn btn-secondary"
-        {% if object.id %}
-        data-controller="confirm"
-        data-action="confirm#check form#submit"
-        data-ajax-confirm-header="{% trans 'Publish' %}"
-        data-ajax-confirm-body="{% blocktrans trimmed %}Are you sure you want to publish this {{ object_name }}? You cannot reverse this action.{% endblocktrans %}"
-        {% endif %}>
-  {% trans "Publish" %}
-</button>
-
+{% if object.id %}
+{{ block.super }}
 {% else %}
 <button type="submit"
         name="submit"
