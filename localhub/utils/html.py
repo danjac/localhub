@@ -54,7 +54,7 @@ class HTMLScraper:
         except requests.RequestException as e:
             raise cls.Invalid(e)
 
-        return cls().scrape(response.text)
+        return cls().scrape(response.content)
 
     def scrape(self, html):
         """Parses HTML title, image and description from HTML OpenGraph and

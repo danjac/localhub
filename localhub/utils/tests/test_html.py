@@ -11,8 +11,7 @@ class TestHTMLScraperFromUrl:
     def test_if_non_html_response(self, mocker):
         class MockResponse:
             headers = {"Content-Type": "application/json"}
-
-            text = """
+            content = """
             {
                 "value": "xyz"
             }
@@ -34,8 +33,7 @@ class TestHTMLScraperFromUrl:
     def test_if_html_response(self, mocker):
         class MockResponse:
             headers = {"Content-Type": "text/html"}
-
-            text = """<html>
+            content = """<html>
             <head>
                 <title>page title</title>
                 <meta property="og:title" content="meta title">
