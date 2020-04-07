@@ -353,9 +353,15 @@ table {
   margin: 0;
 }
 
+.submit-post {
+  border-color: $gray-color;
+}
+
 .card {
 
   // box-shadow: 0 0.05rem 0.2rem rgba(48, 55, 66, 0.3);
+
+  border-color: $gray-color;
 
   .card-header,
   .card-body,
