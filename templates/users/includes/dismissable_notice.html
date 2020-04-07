@@ -2,16 +2,12 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 <div class="text-center my-2 toast{% if css_class %} {{ css_class }}{% endif %}"
-     data-controller="toggle"
-     data-toggle-target="notice"
-     data-target="toggle.togglable">
+     data-controller="ajax"
+     data-ajax-remove>
   {% if user.is_authenticated %}
-  <button class="btn btn-clear float-right d-hide"
-          data-controller="ajax js-toggle"
-          data-toggle-target="notice"
+  <button class="btn btn-clear float-right"
           data-ajax-url="{% url 'dismiss_notice' notice %}"
-          data-ajax-redirect="none"
-          data-action="ajax#post toggle#toggle"></button>
+          data-action="ajax#post"></button>
   {% endif %}
   {{ dismissable_content }}
 </div>

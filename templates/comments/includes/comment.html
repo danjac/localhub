@@ -39,14 +39,12 @@
        data-controller="toggle">
     <strong>{% trans "You have blocked this user." %}</strong>
     <div class="markdown-content d-hide"
-         data-target="toggle.togglable"
-         data-toggle-target="blocked-comment">
+         data-target="toggle.togglable">
       {{ comment.content.markdown|strip_external_images:user }}
     </div>
     <div class="actions">
       <a href="#"
          data-target="toggle.togglable"
-         data-toggle-target="blocked-comment"
          data-action="toggle#toggle">{% trans "View Comment" %}</a>
     </div>
   </div>

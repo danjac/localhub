@@ -59,17 +59,19 @@ class DismissableNode(template.Node):
         notice = self.notice.resolve(context)
 
         show_notice = user.is_anonymous or notice not in user.dismissed_notices
-
         if show_notice:
-            context.update({"user": user, "notice": notice})
-            context.push(
+            values = {"user": user, "notice": notice}
+            values.update(
                 {
                     key: value.resolve(context)
                     for key, value in self.extra_context.items()
                 }
             )
-            dismissable_content = mark_safe(self.nodelist.render(context))
-            context["dismissable_content"] = dismissable_content
-            return template.loader.render_to_string(self.template, context.flatten())
+            with context.push(**values):
+                dismissable_content = mark_safe(self.nodelist.render(context))
+                context["dismissable_content"] = dismissable_content
+                return template.loader.render_to_string(
+                    self.template, context.flatten()
+                )
 
         return ""

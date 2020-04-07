@@ -13,19 +13,12 @@ export default class extends Controller {
       element(s) to be toggled.
 
   targets:
-    togglable: an element to be toggled. Element should also have a
-    data-toggle-target element that identifies target of toggle.
+    togglable: an element to be toggled.
   */
   static targets = ['togglable'];
 
   toggle(event) {
     event.preventDefault();
-
-    const targetAttr = `data-${this.data.identifier}-target`;
-    const target = event.currentTarget.getAttribute(targetAttr);
-
-    this.togglableTargets
-      .filter((el) => el.getAttribute(targetAttr) === target)
-      .forEach((el) => el.classList.toggle('d-hide'));
+    this.togglableTargets.forEach((el) => el.classList.toggle('d-hide'));
   }
 }
