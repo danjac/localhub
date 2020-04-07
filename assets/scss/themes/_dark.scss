@@ -174,7 +174,6 @@
     }
   }
 
-
   .toast {
     .chip {
       background: $darkmode-lighter;
@@ -188,7 +187,7 @@
 
   .menu {
     background-color: $darkmode-lighter;
-    border: 0.03rem solid $gray-color-dark;
+    border: 0.09rem solid $gray-color-dark;
 
     .menu-item {
       &.selected {
