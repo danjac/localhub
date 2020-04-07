@@ -10,8 +10,6 @@ from django.templatetags.static import static
 from django.utils.encoding import force_text
 from django.utils.translation import override
 
-from localhub.users.utils import user_display
-
 celery_logger = get_logger(__name__)
 
 
@@ -53,6 +51,9 @@ class TemplateContext:
         Returns:
             dict: template context
         """
+        actor_url = self.adapter.actor.get_absolute_url()
+        recipient_url = self.adapter.recipient.get_absolute_url()
+
         context = {
             "notification": self.adapter.notification,
             "object": self.adapter.object,
@@ -60,9 +61,13 @@ class TemplateContext:
             "absolute_url": self.adapter.get_absolute_url(),
             "object_name": self.adapter.object_name,
             "actor": self.adapter.actor,
-            "actor_display": user_display(self.adapter.actor),
+            "actor_display": self.adapter.actor.get_display_name(),
+            "actor_url": actor_url,
+            "actor_absolute_url": self.adapter.community.resolve_url(actor_url),
             "recipient": self.adapter.recipient,
-            "recipient_display": user_display(self.adapter.recipient),
+            "recipient_display": self.adapter.recipient.get_display_name(),
+            "recipient_url": recipient_url,
+            "recipient_absolute_url": self.adapter.community.resolve_url(recipient_url),
             "verb": self.adapter.verb,
             self.adapter.object_name: self.adapter.object,
         }

@@ -14,7 +14,6 @@ from vanilla import CreateView, DeleteView, DetailView, GenericModelView, ListVi
 
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.users.utils import user_display
 from localhub.views import SearchMixin, SuccessMixin
 
 from .emails import send_acceptance_email, send_join_request_email, send_rejection_email
@@ -117,7 +116,7 @@ class JoinRequestDeleteView(PermissionRequiredMixin, SuccessMixin, DeleteView):
                 "community": self.object.community.name
             }
         return _("Join request for %(sender)s has been deleted") % {
-            "sender": user_display(self.object.sender)
+            "sender": self.object.sender.get_display_name()
         }
 
     def post(self, request, *args, **kwargs):
@@ -145,7 +144,7 @@ class JoinRequestAcceptView(JoinRequestActionView):
 
     def get_success_message(self):
         return _("Join request for %(sender)s has been accepted") % {
-            "sender": user_display(self.object.sender)
+            "sender": self.object.sender.get_display_name()
         }
 
     def post(self, request, *args, **kwargs):
@@ -186,7 +185,7 @@ class JoinRequestRejectView(JoinRequestActionView):
         messages.info(
             request,
             _("Join request for %(sender)s has been rejected")
-            % {"sender": user_display(self.object.sender)},
+            % {"sender": self.object.sender.get_display_name()},
         )
 
         return self.success_response()

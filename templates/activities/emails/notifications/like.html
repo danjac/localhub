@@ -7,6 +7,7 @@
 
 {% block notification_body %}
 {% blocktrans %}
-{{ actor_display }} has liked your <a href="{{ absolute_url }}">{{ object_name }}</a>.
+<a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has liked your <a
+   href="{{ absolute_url }}">{{ object_name }}</a>.
 {% endblocktrans %}
 {% endblock notification_body %}

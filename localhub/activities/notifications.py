@@ -5,7 +5,6 @@ from django.template.defaultfilters import truncatechars
 from django.utils.translation import gettext_lazy as _
 
 from localhub.notifications.adapters import DefaultAdapter, Mailer, Webpusher
-from localhub.users.utils import user_display
 
 HEADERS = [
     ("delete", _("%(actor)s has deleted your %(object)s")),
@@ -32,7 +31,7 @@ class ActivityMailer(Mailer):
 
     def get_subject(self):
         return dict(self.HEADERS)[self.adapter.verb] % {
-            "actor": user_display(self.adapter.actor),
+            "actor": self.adapter.actor.get_display_name(),
             "object": self.adapter.object_name,
         }
 
@@ -47,7 +46,7 @@ class ActivityWebpusher(Webpusher):
 
     def get_header(self):
         return dict(self.HEADERS)[self.adapter.verb] % {
-            "actor": user_display(self.adapter.actor),
+            "actor": self.adapter.actor.get_display_name(),
             "object": self.adapter.object_name,
         }
 

@@ -7,8 +7,6 @@ from django.utils.translation import gettext_lazy as _
 from localhub.notifications.adapters import DefaultAdapter, Mailer, Webpusher
 from localhub.notifications.decorators import register
 
-from .utils import user_display
-
 HEADERS = [
     ("new_follower", _("%(actor)s has started following you")),
     ("new_member", _("%(actor)s has just joined this community")),
@@ -19,18 +17,20 @@ HEADERS = [
 class UserMailer(Mailer):
     def get_subject(self):
         return dict(HEADERS)[self.adapter.verb] % {
-            "actor": user_display(self.adapter.actor)
+            "actor": self.adapter.actor.get_display_name()
         }
 
 
 class UserWebpusher(Webpusher):
     def get_header(self):
         return dict(HEADERS)[self.adapter.verb] % {
-            "actor": user_display(self.adapter.actor)
+            "actor": self.adapter.actor.get_display_name()
         }
 
     def get_body(self):
-        return f"@{self.adapter.actor.username} ({user_display(self.adapter.actor)})"
+        return (
+            f"@{self.adapter.actor.username} ({self.adapter.actor.get_display_name()})"
+        )
 
 
 @register(get_user_model())

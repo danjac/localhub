@@ -6,17 +6,18 @@
 
 {% block notification_body %}
 <p>
-    {% blocktrans %}
-    {{ actor_display }} has removed your <a href="{{ absolute_url }}">{{ object_name }}</a>:
-    {% endblocktrans %}
+  {% blocktrans %}
+  <a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has removed your <a
+     href="{{ absolute_url }}">{{ object_name }}</a>:
+  {% endblocktrans %}
 </p>
 <p>
-    {{ object }}
+  {{ object }}
 </p>
 <p>
-    {% blocktrans %}
-    You can still view your {{ object_name }} and delete it completely.
-    {% endblocktrans %}
+  {% blocktrans %}
+  You can still view your {{ object_name }} and delete it completely.
+  {% endblocktrans %}
 </p>
 
 {% endblock notification_body %}

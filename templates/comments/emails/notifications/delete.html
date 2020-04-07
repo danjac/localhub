@@ -6,16 +6,16 @@
 
 {% block notification_body %}
 <p>
-    {% blocktrans %}
-    {{ actor_display }} has deleted your <a href="{{ absolute_url }}">comment</a>:
-    {% endblocktrans %}
+  {% blocktrans %}
+  <a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has deleted your <a href="{{ absolute_url }}">comment</a>:
+  {% endblocktrans %}
 </p>
 <p>
-    {{ object.content }}
+  {{ object.content }}
 </p>
 <p>
-    {% blocktrans %}
-    You can still view your comment and delete it completely.
-    {% endblocktrans %}
+  {% blocktrans %}
+  You can still view your comment and delete it completely.
+  {% endblocktrans %}
 </p>
 {% endblock notification_body %}

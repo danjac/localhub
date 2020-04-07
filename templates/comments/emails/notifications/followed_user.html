@@ -5,6 +5,6 @@
 {% load i18n %}
 {% block notification_body %}
 {% blocktrans %}
-{{ actor_display }} has submitted a new <a href="{{ absolute_url }}">comment</a>.
+<a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has submitted a new <a href="{{ absolute_url }}">comment</a>.
 {% endblocktrans %}
 {% endblock notification_body %}

@@ -6,7 +6,7 @@
 {% load i18n %}
 {% block notification_body %}
 {% blocktrans %}
-{{ actor_display }} has flagged you in their <a href="{{ absolute_url }}">{{ object_name }}</a>.
+<a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has flagged you in their <a
+   href="{{ absolute_url }}">{{ object_name }}</a>.
 {% endblocktrans %}
 {% endblock notification_body %}
-

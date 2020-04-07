@@ -26,8 +26,6 @@ from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
 from localhub.utils.itertools import takefirst
 
-from .utils import user_display
-
 
 class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
     def for_email(self, email):
@@ -245,8 +243,7 @@ class User(AbstractUser):
 
         Returns: str:  full display name
         """
-
-        return user_display(self)
+        return self.name or self.username
 
     def get_initials(self):
         return "".join([n[0].upper() for n in self.get_display_name().split()][:2])

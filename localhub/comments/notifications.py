@@ -5,7 +5,6 @@ from django.utils.translation import gettext_lazy as _
 
 from localhub.notifications.adapters import DefaultAdapter, Mailer, Webpusher
 from localhub.notifications.decorators import register
-from localhub.users.utils import user_display
 
 from .models import Comment
 
@@ -25,14 +24,14 @@ HEADERS = [
 class CommentMailer(Mailer):
     def get_subject(self):
         return dict(HEADERS)[self.adapter.verb] % {
-            "actor": user_display(self.adapter.actor)
+            "actor": self.adapter.actor.get_display_name()
         }
 
 
 class CommentWebpusher(Webpusher):
     def get_header(self):
         return dict(HEADERS)[self.adapter.verb] % {
-            "actor": user_display(self.adapter.actor)
+            "actor": self.adapter.actor.get_display_name()
         }
 
     def get_body(self):

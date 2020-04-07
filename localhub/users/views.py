@@ -26,7 +26,6 @@ from localhub.private_messages.models import Message
 from localhub.views import SearchMixin, SuccessMixin
 
 from .forms import UserForm
-from .utils import user_display
 
 
 class BaseUserQuerySetMixin(CommunityRequiredMixin):
@@ -65,7 +64,7 @@ class SingleUserMixin(BaseUserQuerySetMixin):
 
     @cached_property
     def display_name(self):
-        return user_display(self.user_obj)
+        return self.user_obj.get_display_name()
 
     @cached_property
     def membership(self):

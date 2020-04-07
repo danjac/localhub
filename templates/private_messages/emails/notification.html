@@ -25,15 +25,17 @@
 <div class="section">
   {% if verb == "reply" %}
   {% blocktrans %}
-  {{ actor_display }} has replied to your <a href="{{ absolute_url }}">message</a>.
+  <a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has replied to your <a
+     href="{{ absolute_url }}">message</a>.
   {% endblocktrans %}
   {% elif verb == "follow_up" %}
   {% blocktrans %}
-  {{ actor_display }} has sent you a <a href="{{ absolute_url }}">follow-up</a> to one of their messages.
+  <a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has sent you a <a href="{{ absolute_url }}">follow-up</a>
+  to one of their messages.
   {% endblocktrans %}
   {% else %}
   {% blocktrans %}
-  {{ actor_display }} has sent you a <a href="{{ absolute_url }}">message</a>.
+  <a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has sent you a <a href="{{ absolute_url }}">message</a>.
   {% endblocktrans %}
   {% endif %}
 </div>
