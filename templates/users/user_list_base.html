@@ -82,7 +82,7 @@
           {% if can_follow_user %}
           <span class="d-hide"
                 data-controller="ajax js-toggle"
-                data-target="ajax.fragment">
+                data-ajax-replace>
             {% include "users/includes/follow.html" with user_obj=object is_following=object.is_following %}
           </span>
           {% endif %}

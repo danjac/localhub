@@ -94,7 +94,7 @@
           {% if can_like_comment %}
           <li class="menu-item d-hide"
               data-controller="ajax js-toggle"
-              data-target="ajax.fragment">
+              data-ajax-replace>
             {% include "comments/includes/like.html" with has_liked=comment.has_liked %}
           </li>
           {% endif %}
@@ -103,7 +103,7 @@
           {% if can_bookmark_comment %}
           <li class="menu-item d-hide"
               data-controller="ajax js-toggle"
-              data-target="ajax.fragment">
+              data-ajax-replace>
             {% include "comments/includes/bookmark.html" with has_bookmarked=comment.has_bookmarked %}
           </li>
           {% endif %}

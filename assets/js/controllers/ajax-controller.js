@@ -21,11 +21,9 @@ export default class extends Controller {
       can be used instead. This may also be placed on the action event target.
     redirect: location of redirect on successful completion. This overrides any
       Location returned from the server. If "none" will not perform any redirect.
-  targets:
-    fragment: if present and HTML is returned from endpoint the contents of this
-      target will be replaced with the HTML.
+    replace (bool): contents of element will be replaced by HTML returned by endpoint.
+    remove (bool): element will be removed when ajax action is executed.
   */
-  static targets = ['fragment'];
 
   get(event) {
     this.dispatch('GET', event);
@@ -33,18 +31,6 @@ export default class extends Controller {
 
   post(event) {
     this.dispatch('POST', event);
-  }
-
-  delete(event) {
-    this.dispatch('DELETE', event);
-  }
-
-  put(event) {
-    this.dispatch('PUT', event);
-  }
-
-  patch(event) {
-    this.dispatch('PATCH', event);
   }
 
   dispatch(method, event) {
@@ -71,14 +57,16 @@ export default class extends Controller {
       url,
     })
       .then((response) => {
-        if (this.hasFragmentTarget) {
-          this.fragmentTarget.innerHTML = response.data;
-          currentTarget.removeAttribute('disabled');
+        if (this.data.has('replace')) {
+          this.element.innerHTML = response.data;
+          return;
+        }
+        if (this.data.has('remove')) {
+          this.element.remove();
           return;
         }
         const redirect = this.data.get('redirect');
         if (redirect === 'none') {
-          currentTarget.removeAttribute('disabled');
           return;
         }
 
@@ -89,7 +77,7 @@ export default class extends Controller {
           eval(response.data);
         }
       })
-      .catch(() => {
+      .finally(() => {
         currentTarget.removeAttribute('disabled');
       });
   }

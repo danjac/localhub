@@ -48,7 +48,7 @@
     {% if can_like %}
     <li class="menu-item d-hide"
         data-controller="ajax js-toggle"
-        data-target="ajax.fragment">
+        data-ajax-replace>
       {% include "activities/includes/like.html" with has_liked=object.has_liked %}
     </li>
     {% endif %}
@@ -57,7 +57,7 @@
     {% if can_bookmark %}
     <li class="menu-item d-hide"
         data-controller="ajax js-toggle"
-        data-target="ajax.fragment">
+        data-ajax-replace>
       {% include "activities/includes/bookmark.html" with has_bookmarked=object.has_bookmarked %}
     </li>
     {% endif %}
