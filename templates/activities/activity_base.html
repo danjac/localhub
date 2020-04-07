@@ -9,17 +9,17 @@
 <article role="{{ object_type }}"
          id="{{ object_type }}-{{ object.id }}"
          class="card {{ object_type }}-card"
-         data-controller="clipboard{% if is_content_sensitive %} content-sensitive{% endif %}">
+         data-controller="clipboard{% if is_content_sensitive %} toggle{% endif %}">
   {% block header %}
   {% if is_content_sensitive %}
   <div class="card-header"
-       data-target="content-sensitive.togglable">
+       data-target="toggle.togglable">
     <div class="card-subtitle h6">
       {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
     </div>
   </div>
   <div class="card-header d-hide"
-       data-target="content-sensitive.togglable">
+       data-target="toggle.togglable">
     {% else %}
     <div class="card-header">
       {% endif %}
@@ -119,7 +119,7 @@
       {% if object.is_reshare %}<blockquote>{% endif %}
         {% if is_content_sensitive %}
         <div class="empty bg-dark"
-             data-target="content-sensitive.togglable">
+             data-target="toggle.togglable">
           <p class="empty-title h5">{% trans "Sensitive Content" %}</p>
           <p class="empty-subtitle">
             {% trans "This post has been tagged sensitive. You can view all sensitive content by default in your settings." %}
@@ -131,11 +131,11 @@
           </p>
           <div class="empty-action">
             <button class="btn btn-primary"
-                    data-action="content-sensitive#toggle">{% trans "Show Content" %}</button>
+                    data-action="toggle#toggle">{% trans "Show Content" %}</button>
           </div>
         </div>
         <div class="d-hide"
-             data-target="content-sensitive.togglable">
+             data-target="toggle.togglable">
           {% endif %}
           {% with ignore_collapsable=is_detail|default:is_content_sensitive %}
           {% collapsable ignore_collapsable %}
