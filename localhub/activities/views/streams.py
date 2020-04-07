@@ -134,7 +134,7 @@ class ActivitySearchView(SearchMixin, BaseActivityStreamView):
     search_optional = False
 
     def get_ordering(self):
-        return ("-rank", "-published") if self.search_query else None
+        return ("-rank", "-published", "-created") if self.search_query else None
 
     def filter_queryset(self, queryset):
         if self.search_query:

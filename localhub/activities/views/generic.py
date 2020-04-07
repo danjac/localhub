@@ -86,7 +86,7 @@ class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
         qs = (
             super()
             .get_queryset()
-            .published_or_owner(self.request.user)
+            .published()
             .with_common_annotations(self.request.user, self.request.community)
             .exclude_blocked(self.request.user)
             .order_by(*self.order_by)
