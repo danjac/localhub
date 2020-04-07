@@ -5,6 +5,8 @@ import { Controller } from 'stimulus';
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
+import { openDialog } from './confirm-dialog-controller';
+
 export default class extends Controller {
   /*
   Handles non-form AJAX interactions.
@@ -46,8 +48,7 @@ export default class extends Controller {
     const body = this.data.get('confirm-body');
 
     if (header && body) {
-      const dialog = document.getElementById('confirm-dialog')['confirm-dialog'];
-      dialog.open({
+      openDialog({
         body,
         header,
         onConfirm,
