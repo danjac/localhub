@@ -40,7 +40,7 @@
   {% blocktrans count counter=unread_messages %}
   You have <strong>1 unread message</strong> from {{ display_name }}.
   {% plural %}
-  You have <strong>1 unread messages</strong> from {{ display_name }}.
+  You have <strong>{{ counter }} unread messages</strong> from {{ display_name }}.
   {% endblocktrans %}
 </div>
 {% elif paginator.count %}
