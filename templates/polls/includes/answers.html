@@ -16,8 +16,7 @@
            max="100"
            data-action="click->ajax#post"
            data-ajax-url="{{ vote_url }}"></meter>
-    <div class="actions d-hide"
-         data-controller="js-toggle">
+    <div class="actions">
       <a data-action="ajax#post"
          href="{{ vote_url }}">{% trans "Vote" %}</a>
     </div>

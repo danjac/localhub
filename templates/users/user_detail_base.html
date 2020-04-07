@@ -94,8 +94,7 @@
   {% endif %}
 
   {% if can_follow_user %}
-  <span class="d-hide"
-        data-controller="ajax js-toggle"
+  <span data-controller="ajax"
         data-ajax-replace>
     {% include "users/includes/follow.html" %}
   </span>
@@ -105,16 +104,14 @@
   {% with redirect_url=user_obj.get_absolute_url %}
   {% if is_blocking %}
   <a href="{% url 'users:unblock' user_obj.username %}"
-     class="d-hide"
-     data-controller="js-toggle ajax"
+     data-controller="ajax"
      data-action="ajax#post toggle#toggle"
      data-ajax-redirect="{{ redirect_url }}">
     <s>{% trans "Block" %}</s>
   </a>
   {% else %}
   <a href="{% url 'users:block' user_obj.username %}"
-     class="d-hide"
-     data-controller="js-toggle ajax"
+     data-controller="ajax"
      data-action="ajax#post toggle#toggle"
      data-ajax-redirect="{{ redirect_url }}">
     {% trans "Block" %}

@@ -18,8 +18,7 @@
 {% has_perm "users.block_tag" user as can_block_tag %}
 
 {% if can_follow_tag or can_block_tag %}
-<div class="actions d-hide"
-     data-controller="js-toggle">
+<div class="actions">
   {% if can_follow_tag %}
   {% with following=user.following_tags.all %}
   <span data-controller="ajax"

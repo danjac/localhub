@@ -18,15 +18,13 @@
     {% if object.is_pinned %}
     <li class="menu-item">
       <a href="{% resolve_url object "unpin" %}"
-         class="d-hide"
-         data-controller="ajax js-toggle"
+         data-controller="ajax"
          data-action="ajax#post"><s>{% trans "Pin" %}</s></a>
     </li>
     {% else %}
     <li class="menu-item">
       <a href="{% resolve_url object "pin" %}"
-         class="d-hide"
-         data-controller="ajax js-toggle"
+         data-controller="ajax"
          data-action="ajax#post">{% trans "Pin" %}</a>
     </li>
     {% endif %}
@@ -46,8 +44,8 @@
 
     {% has_perm "activities.like_activity" user object as can_like %}
     {% if can_like %}
-    <li class="menu-item d-hide"
-        data-controller="ajax js-toggle"
+    <li class="menu-item"
+        data-controller="ajax"
         data-ajax-replace>
       {% include "activities/includes/like.html" with has_liked=object.has_liked %}
     </li>
@@ -55,8 +53,8 @@
 
     {% has_perm "activities.bookmark_activity" user object as can_bookmark %}
     {% if can_bookmark %}
-    <li class="menu-item d-hide"
-        data-controller="ajax js-toggle"
+    <li class="menu-item"
+        data-controller="ajax"
         data-ajax-replace>
       {% include "activities/includes/bookmark.html" with has_bookmarked=object.has_bookmarked %}
     </li>
@@ -67,8 +65,7 @@
     {% has_perm "activities.reshare_activity" user object as can_reshare %}
     {% if can_reshare %}
     <li class="menu-item">
-      <a class="d-hide"
-         data-controller="js-toggle ajax"
+      <a data-controller="ajax"
          data-action="ajax#post"
          data-ajax-redirect="{{ request.get_full_path }}"
          href="{% resolve_url object "reshare" %}">{% trans "Reshare" %}</a>
@@ -90,8 +87,7 @@
 
     {% if not object.published %}
     <li class="menu-item">
-      <a class="d-hide"
-         data-controller="js-toggle ajax confirm"
+      <a data-controller="ajax confirm"
          data-action="confirm#check ajax#post"
          data-confirm-header="{% trans 'Publish' %}"
          data-confirm-body="{% blocktrans trimmed %}Are you sure you want to publish this {{ object_type }}? You cannot reverse this action.{% endblocktrans %}"
@@ -118,8 +114,7 @@
     </li>
     {% endif %}
     {% if object.description %}
-    <li class="menu-item"
-        data-controller="js-toggle">
+    <li class="menu-item">
       <a href="#"
          data-target="clipboard.button"
          data-action="clipboard#copy">

@@ -6,8 +6,7 @@
      data-controller="tabs typeahead"
      data-typeahead-mention-search-url="{% url 'users:autocomplete_list' %}"
      data-typeahead-tag-search-url="{% url 'activities:tag_autocomplete_list' %}">
-  <ul class="tab d-hide"
-      data-controller="js-toggle">
+  <ul class="tab">
     <li class="tab-item active"
         data-target="tabs.tab"
         data-tab="editor">
@@ -34,8 +33,7 @@
        data-target="tabs.pane"
        data-tab="editor"
        data-controller="markdown">
-    <div class="actions my-1 d-hide"
-         data-controller="js-toggle">
+    <div class="actions my-1">
 
       <a href="#"
          data-action="markdown#select"

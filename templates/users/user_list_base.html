@@ -80,8 +80,7 @@
         <div class="float-right-responsive actions">
           {% has_perm "users.follow_user" user object as can_follow_user %}
           {% if can_follow_user %}
-          <span class="d-hide"
-                data-controller="ajax js-toggle"
+          <span data-controller="ajax"
                 data-ajax-replace>
             {% include "users/includes/follow.html" with user_obj=object is_following=object.is_following %}
           </span>

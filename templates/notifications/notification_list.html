@@ -13,8 +13,7 @@
 <h5>{% trans "Notifications" %}</h5>
 
 {% if object_list %}
-<div class="actions d-hide mb-1"
-     data-controller="js-toggle">
+<div class="actions mb-1">
   {% if is_unread_notifications %}
   <a href="{% url 'notifications:mark_all_read' %}"
      data-controller="ajax"

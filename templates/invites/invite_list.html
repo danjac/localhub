@@ -76,8 +76,7 @@
         <div class="actions">
           {% if invite.is_pending %}
           <a href="{% url 'invites:resend' invite.id %}"
-             class="d-hide"
-             data-controller="js-toggle ajax"
+             data-controller="ajax"
              data-action="ajax#post">{% trans "Re-send" %}</a>
           {% endif %}
           <a href="{% url 'invites:delete' invite.id %}"

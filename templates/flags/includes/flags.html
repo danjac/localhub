@@ -24,8 +24,7 @@
         {% include "users/includes/chip.html" with profile=flag.user %}
       </td>
       <td>{{ flag.get_reason_display }}</td>
-      <td class="hide"
-          data-controller="js-toggle">
+      <td>
         <div class="actions">
           <a href="{% url 'flags:delete' flag.id %}"
              data-controller="ajax"

@@ -90,8 +90,8 @@
         <ul class="menu">
           {% has_perm "comments.like_comment" user comment as can_like_comment %}
           {% if can_like_comment %}
-          <li class="menu-item d-hide"
-              data-controller="ajax js-toggle"
+          <li class="menu-item"
+              data-controller="ajax"
               data-ajax-replace>
             {% include "comments/includes/like.html" with has_liked=comment.has_liked %}
           </li>
@@ -99,8 +99,8 @@
 
           {% has_perm "comments.bookmark_comment" user comment as can_bookmark_comment %}
           {% if can_bookmark_comment %}
-          <li class="menu-item d-hide"
-              data-controller="ajax js-toggle"
+          <li class="menu-item"
+              data-controller="ajax"
               data-ajax-replace>
             {% include "comments/includes/bookmark.html" with has_bookmarked=comment.has_bookmarked %}
           </li>
@@ -146,8 +146,7 @@
           </li>
           {% endif %}
           {% if not comment.is_blocked %}
-          <li class="menu-item"
-              data-controller="js-toggle">
+          <li class="menu-item">
             <a href="#"
                data-target="clipboard.button"
                data-action="clipboard#copy">

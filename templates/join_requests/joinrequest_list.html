@@ -74,8 +74,7 @@
           {{ join_request.get_status_display }}
           {% if is_pending %}</b>{% endif %}
       </td>
-      <td class="d-hide"
-          data-controller="js-toggle">
+      <td>
         <div class="actions">
           {% if is_pending or is_rejected %}
           <a data-controller="ajax confirm"

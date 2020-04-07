@@ -19,8 +19,8 @@
 {% notification latest_notification %}
 <div class="toast toast-primary text-center my-2">
   {{ notification_content }}
-  <button class="btn btn-clear float-right d-hide"
-          data-controller="ajax js-toggle"
+  <button class="btn btn-clear float-right"
+          data-controller="ajax"
           data-action="ajax#post"
           data-ajax-redirect="{{ request.get_full_path }}"
           data-ajax-url="{% url 'notifications:mark_all_read' %}"></button>
@@ -33,26 +33,23 @@
 {% has_perm "activities.create_activity" user community as can_create_activity %}
 
 {% if can_create_activity %}
-<div class="d-hide"
-     data-controller="js-toggle">
-  <div class="mb-2">
-    <div class="input-group">
-      <span class="input-group-addon">
-        {% avatar user %}
-      </span>
-      <input type="text"
-             class="form-input conversation-input"
-             data-controller="linkify"
-             data-action="focus->linkify#go"
-             data-linkify-url="{% url 'posts:create' %}"
-             placeholder="{% trans "What's on your mind?" %}">
-    </div>
+<div class="mb-2">
+  <div class="input-group">
+    <span class="input-group-addon">
+      {% avatar user %}
+    </span>
+    <input type="text"
+           class="form-input conversation-input"
+           data-controller="linkify"
+           data-action="focus->linkify#go"
+           data-linkify-url="{% url 'posts:create' %}"
+           placeholder="{% trans "What's on your mind?" %}">
   </div>
-  <div class="actions">
-    <a href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
-    <a href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
-    <a href="{% url 'polls:create' %}">{% trans "Submit Poll" %}</a>
-  </div>
+</div>
+<div class="actions">
+  <a href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
+  <a href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
+  <a href="{% url 'polls:create' %}">{% trans "Submit Poll" %}</a>
 </div>
 {% endif %}
 

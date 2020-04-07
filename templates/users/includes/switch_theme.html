@@ -3,8 +3,10 @@
 
 {% load i18n %}
 
-<a class="d-hide{{ css_class|default:"" }}"
-   data-controller="js-toggle ajax"
+<a data-controller="ajax"
    data-action="ajax#post"
    data-ajax-redirect="{{ request.get_full_path }}"
+   {% if css_class %}
+   class="{{ css_class }}"
+   {% endif %}
    href="{% if theme == "light" %}{% url 'switch_theme' 'dark' %}">{% trans "Dark Theme" %}{% else %}{% url 'switch_theme' 'light' %}">{% trans "Light Theme" %}{% endif %}</a>

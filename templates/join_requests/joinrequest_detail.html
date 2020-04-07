@@ -36,8 +36,7 @@
 </h5>
 
 {% with is_pending=object.is_pending is_rejected=object.is_rejectd %}
-<div class="actions mb-1 d-hide"
-     data-controller="js-toggle">
+<div class="actions mb-1">
   {% if is_pending or is_rejected %}
   <a data-controller="ajax confirm"
      data-action="confirm#check ajax#post"

@@ -15,31 +15,30 @@
 {% get_unread_message_count user community as unread_messages %}
 {% if can_create_message or unread_messages %}
 <div class="actions mb-1">
-    {% if unread_messages %}
-    <a href="{% url 'private_messages:mark_all_read' %}"
-       class="d-hide"
-       data-controller="ajax js-toggle"
-       data-action="ajax#post"
-       data-ajax-redirect="{{ request.get_full_path }}">{% trans "Mark All As Read" %}</a>
-    {% endif %}
+  {% if unread_messages %}
+  <a href="{% url 'private_messages:mark_all_read' %}"
+     data-controller="ajax"
+     data-action="ajax#post"
+     data-ajax-redirect="{{ request.get_full_path }}">{% trans "Mark All As Read" %}</a>
+  {% endif %}
 </div>
 {% endif %}
 
 
 {% with search=view.search_query %}
 <ul class="tab tab-block mt-2">
-    <li class="tab-item"
-        data-controller="active-link"
-        data-active-link-exact>
-        <a data-target="active-link.match"
-           href="{% url 'private_messages:inbox' %}{% if search %}?q={{ search }}{% endif %}">{% trans "Inbox" %}</a>
-    </li>
-    <li class="tab-item"
-        data-controller="active-link"
-        data-active-link-exact>
-        <a data-target="active-link.match"
-           href="{% url 'private_messages:outbox' %}{% if search %}?q={{ search }}{% endif %}">{% trans "Outbox" %}</a>
-    </li>
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'private_messages:inbox' %}{% if search %}?q={{ search }}{% endif %}">{% trans "Inbox" %}</a>
+  </li>
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'private_messages:outbox' %}{% if search %}?q={{ search }}{% endif %}">{% trans "Outbox" %}</a>
+  </li>
 </ul>
 {% endwith %}
 
