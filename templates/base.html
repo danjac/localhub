@@ -141,7 +141,7 @@
     {% endif %}
     {% endblock mobile_search_form %}
 
-    <div class="columns p-2 bg-gray">
+    <div class="columns p-1 bg-gray">
       <div class="col-10 col-mx-auto col-lg-12">
         <noscript>
           <div class="text-center mb-2 toast toast-primary">
@@ -187,7 +187,7 @@
       <aside role="sidebar"
              class="column col-2 col-ml-auto col-lg-12 hide-lg mb-2"
              data-target="sidebar.nav">
-        <div class="show-lg hide-xl mb-2">
+        <div class="show-lg hide-xl mb-1">
           <a href="#"
              class="btn btn-block"
              data-action="sidebar#toggle">{% trans "Close Menu" %}</a>
@@ -196,7 +196,7 @@
         {% include "includes/sidebar.html" %}
         {% endblock %}
       </aside>
-      <div class="column col-8 col-mr-auto col-lg-12 bg-gray pt-1"
+      <div class="column col-8 col-mr-auto col-lg-12 bg-gray mt-1"
            data-target="sidebar.main">
         <div class="show-lg hide-xl mb-2">
           <a href="{% url 'community_sidebar' %}"
@@ -210,7 +210,6 @@
               {% endblock %}
           </a>
         </div>
-        <div class="clearfix"></div>
         {% block content %}{% endblock content %}
       </div>
     </main>

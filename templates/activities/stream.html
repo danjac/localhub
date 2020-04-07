@@ -17,7 +17,7 @@
 
 {% if latest_notification %}
 {% notification latest_notification %}
-<div class="toast toast-primary text-center my-2"
+<div class="toast toast-primary text-center mb-2"
      data-controller="ajax"
      data-ajax-url="{% url 'notifications:mark_read' latest_notification.id %}"
      data-ajax-remove>
@@ -28,7 +28,7 @@
 {% endnotification %}
 {% endif %}
 
-{% include "activities/includes/pinned.html" with css_class="my-2" %}
+{% include "activities/includes/pinned.html" with css_class="mb-2" %}
 
 {% has_perm "activities.create_activity" user community as can_create_activity %}
 
