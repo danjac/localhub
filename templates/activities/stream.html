@@ -33,16 +33,17 @@
 {% has_perm "activities.create_activity" user community as can_create_activity %}
 
 {% if can_create_activity %}
-<div class="mb-2">
-  <div class="input-group submit-post">
+<div class="submit-post mb-2">
+  <div class="input-group"
+       data-controller="ajax"
+       data-action="click->ajax#get"
+       data-ajax-url="{% url 'posts:create' %}"
+       data-ajax-follow>
     <span class="input-group-addon">
       {% avatar user %}
     </span>
     <input type="text"
            class="form-input conversation-input"
-           data-controller="linkify"
-           data-action="focus->linkify#go"
-           data-linkify-url="{% url 'posts:create' %}"
            placeholder="{% trans "What's on your mind?" %}">
   </div>
 </div>

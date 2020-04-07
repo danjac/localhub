@@ -26,6 +26,7 @@ export default class extends Controller {
       Location returned from the server. If "none" will not perform any redirect.
     replace (bool): contents of element will be replaced by HTML returned by endpoint.
     remove (bool): element will be removed when ajax action is executed.
+    follow (bool): (GET requests only) : will just redirect directly to that URL.
   */
 
   get(event) {
@@ -69,6 +70,11 @@ export default class extends Controller {
       target.getAttribute('href');
 
     target.setAttribute('disabled', 'disabled');
+
+    if (this.data.has('follow') && method === 'GET') {
+      Turbolinks.visit(url);
+      return;
+    }
 
     axios({
       headers: {
