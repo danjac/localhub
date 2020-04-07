@@ -61,10 +61,6 @@
     color: $darkmode-link-visited;
   }
 
-  .dropdown ul.menu {
-    border: 0.03rem solid $gray-color-dark;
-  }
-
   .dropdown-toggle,
   .btn-block,
   .btn-secondary {
@@ -180,6 +176,7 @@
 
   .menu {
     background-color: $darkmode-lighter;
+    border: 0.03rem solid $gray-color-dark;
 
     .menu-item {
       &.selected {
