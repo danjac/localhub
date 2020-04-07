@@ -163,6 +163,16 @@
     border-color: $gray-color-dark;
   }
 
+  .submit-post {
+
+    .form-input {
+      &:focus {
+        border-color: $gray-color-dark;
+      }
+    }
+  }
+
+
   .toast {
     .chip {
       background: $darkmode-lighter;
