@@ -3,7 +3,6 @@
 
 {% load i18n %}
 
-{% with object=pinned.object object_type=pinned.object_type %}
 <div class="card{% if css_class %} {{ css_class }}{% endif %}"
      data-controller="clipboard">
   <div class="card-header h6">
@@ -37,4 +36,3 @@
     </div>
   </div>
 </div>
-{% endwith %}

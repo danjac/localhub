@@ -106,9 +106,15 @@ def verbose_name_plural(activity):
 
 
 @register.inclusion_tag("activities/includes/activity.html")
-def render_activity(request, user, object, is_detail=False):
+def render_activity(
+    request, user, object, is_detail=False, is_pinned=False, css_class=None
+):
+    app_label = object._meta.app_label
     model_name = object._meta.model_name
-    template = f"{object._meta.app_label}/includes/{model_name}.html"
+    if is_pinned:
+        template = f"{app_label}/includes/{model_name}_pinned.html"
+    else:
+        template = f"{app_label}/includes/{model_name}.html"
     return {
         "request": request,
         "user": user,
@@ -117,5 +123,6 @@ def render_activity(request, user, object, is_detail=False):
         "object_type": model_name,
         "is_detail": is_detail,
         "is_content_sensitive": object.is_content_sensitive(user),
+        "css_class": css_class,
         "template_name": template,
     }

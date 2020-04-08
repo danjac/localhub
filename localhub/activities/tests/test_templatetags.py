@@ -31,6 +31,27 @@ class TestRenderActivity:
         assert context["user"] == member.member
         assert context["community"] == post.community
         assert context["is_content_sensitive"] is False
+        assert context["is_detail"] is False
+        assert context["template_name"] == "posts/includes/post.html"
+
+    def test_render_activity_is_pinned(self, rf, post, member):
+        context = render_activity(rf.get("/"), member.member, post, is_pinned=True)
+        assert context["object"] == post
+        assert context["object_type"] == "post"
+        assert context["user"] == member.member
+        assert context["community"] == post.community
+        assert context["is_content_sensitive"] is False
+        assert context["is_detail"] is False
+        assert context["template_name"] == "posts/includes/post_pinned.html"
+
+    def test_render_activity_is_detail(self, rf, post, member):
+        context = render_activity(rf.get("/"), member.member, post, is_detail=True)
+        assert context["object"] == post
+        assert context["object_type"] == "post"
+        assert context["user"] == member.member
+        assert context["community"] == post.community
+        assert context["is_content_sensitive"] is False
+        assert context["is_detail"] is True
         assert context["template_name"] == "posts/includes/post.html"
 
 
