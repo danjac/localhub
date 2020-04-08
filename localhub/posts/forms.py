@@ -102,6 +102,9 @@ class PostForm(ActivityForm):
         if fetch_opengraph_data or not title:
             scraper = HTMLScraper.from_url(url_resolver.url)
             title = title or scraper.title or url_resolver.filename or ""
+            # ensure we don't have too long image
+            if scraper.image and len(scraper.image) > 500:
+                scraper.image = ""
             if fetch_opengraph_data:
                 data.update(
                     {

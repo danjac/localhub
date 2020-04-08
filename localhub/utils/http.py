@@ -50,15 +50,21 @@ class URLResolver:
         """
         if resolve:
             url = resolve_url(url)
-
-        if not is_url(url):
-            raise cls.Invalid(f"{url} is not a valid URL")
-
         return cls(url)
 
     def __init__(self, url):
         self.url = url
-        self.parts = urlparse(self.url)
+
+    @property
+    def url(self):
+        return self._url
+
+    @url.setter
+    def url(self, value):
+        if not is_url(value):
+            raise self.Invalid(f"{value} is not a valid URL")
+        self._url = value
+        self.parts = urlparse(self._url)
 
     @property
     def is_https(self):
