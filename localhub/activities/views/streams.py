@@ -331,15 +331,22 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
 timeline_view = TimelineView.as_view()
 
 
-class PrivateView(BaseActivityStreamView):
+class PrivateView(SearchMixin, BaseActivityStreamView):
     """Activities that are only visible to owner (published NULL).
     """
 
-    ordering = "-created"
     template_name = "activities/private.html"
 
+    def get_ordering(self):
+        if self.search_query:
+            return ("-rank", "-created")
+        return "-created"
+
     def filter_queryset(self, queryset):
-        return super().filter_queryset(queryset).private(self.request.user)
+        qs = super().filter_queryset(queryset).private(self.request.user)
+        if self.search_query:
+            qs = qs.search(self.search_query)
+        return qs
 
 
 private_view = PrivateView.as_view()

@@ -18,5 +18,9 @@ the Activity Stream or Timeline. Comments cannot be submitted to private activit
 {% endblocktrans %}
 {% enddismissable %}
 
+{% if paginator.count or view.search_query %}
+{% include "includes/forms/search_form.html" with selector=True %}
+{% endif %}
+
 {% include "activities/includes/activity_list.html" %}
 {% endblock content %}
