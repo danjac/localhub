@@ -2,19 +2,17 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-from django.contrib.auth.models import AnonymousUser
 from django.urls import reverse
 from django.utils import timezone
 
-from localhub.communities.factories import CommunityFactory
 from localhub.posts.factories import PostFactory
 from localhub.posts.models import Post
 from localhub.users.factories import UserFactory
 
 from ..templatetags.activities_tags import (
     get_pinned_activity,
-    is_content_sensitive,
     is_oembed_url,
+    render_activity,
     resolve_model_url,
     resolve_url,
     strip_external_images,
@@ -23,6 +21,17 @@ from ..templatetags.activities_tags import (
 )
 
 pytestmark = pytest.mark.django_db
+
+
+class TestRenderActivity:
+    def test_render_activity(self, rf, post, member):
+        context = render_activity(rf.get("/"), member.member, post)
+        assert context["object"] == post
+        assert context["object_type"] == "post"
+        assert context["user"] == member.member
+        assert context["community"] == post.community
+        assert context["is_content_sensitive"] is False
+        assert context["template_name"] == "posts/includes/post.html"
 
 
 class TestGetPinnedActivity:
@@ -65,34 +74,6 @@ class TestIsOembedUrl:
         url = "https://reddit.com"
         user = user_model(show_embedded_content=True)
         assert not is_oembed_url(user, url)
-
-
-class TestIsContentSensitive:
-    def test_is_sensitive_anon(self):
-        community = CommunityFactory(content_warning_tags="#nsfw")
-        post = PostFactory(community=community, description="#nsfw")
-        assert is_content_sensitive(post, AnonymousUser())
-
-    def test_is_sensitive_auth_ok(self):
-        community = CommunityFactory(content_warning_tags="#nsfw")
-        post = PostFactory(community=community, description="#nsfw")
-        assert not is_content_sensitive(post, UserFactory(show_sensitive_content=True))
-
-    def test_is_sensitive_auth_not_ok(self):
-
-        community = CommunityFactory(content_warning_tags="#nsfw")
-        post = PostFactory(community=community, description="#nsfw")
-        assert is_content_sensitive(post, UserFactory(show_sensitive_content=False))
-
-    def test_not_is_sensitive_anon(self):
-        community = CommunityFactory(content_warning_tags="#nsfw")
-        post = PostFactory(community=community)
-        assert not is_content_sensitive(post, AnonymousUser())
-
-    def test_not_is_sensitive_auth(self):
-        community = CommunityFactory(content_warning_tags="#nsfw")
-        post = PostFactory(community=community)
-        assert not is_content_sensitive(post, UserFactory(show_sensitive_content=False))
 
 
 class TestStripExternalImages:

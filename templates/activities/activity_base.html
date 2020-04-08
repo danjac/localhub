@@ -5,7 +5,6 @@
 {% load activities_tags %}
 {% load rules %}
 
-{% with is_content_sensitive=object|is_content_sensitive:user %}
 <article role="{{ object_type }}"
          id="{{ object_type }}-{{ object.id }}"
          class="card {{ object_type }}-card"
@@ -161,4 +160,3 @@
     </div>
     {% endblock footer %}
 </article>
-{% endwith %}

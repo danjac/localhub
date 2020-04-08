@@ -48,13 +48,6 @@ def get_pinned_activity(user, community):
 
 
 @register.filter
-def is_content_sensitive(activity, user):
-    if user.is_authenticated and user.show_sensitive_content:
-        return False
-    return activity.published and bool(activity.get_content_warning_tags())
-
-
-@register.filter
 def is_oembed_url(user, url):
     if (
         not url
@@ -112,6 +105,17 @@ def verbose_name_plural(activity):
     return _(activity._meta.verbose_name_plural)
 
 
-@register.inclusion_tag("activities/includes/activity.html", takes_context=True)
-def render_activity(context, user, activity, is_detail=False):
-    ...
+@register.inclusion_tag("activities/includes/activity.html")
+def render_activity(request, user, object, is_detail=False):
+    model_name = object._meta.model_name
+    template = f"{object._meta.app_label}/includes/{model_name}.html"
+    return {
+        "request": request,
+        "user": user,
+        "community": object.community,
+        "object": object,
+        "object_type": model_name,
+        "is_detail": is_detail,
+        "is_content_sensitive": object.is_content_sensitive(user),
+        "template_name": template,
+    }

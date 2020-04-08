@@ -43,8 +43,22 @@ class BaseSingleActivityView(ActivityQuerySetMixin, GenericModelView):
     ...
 
 
+class ActivityTemplateMixin:
+    """Includes extra template name option of "activities/activity_{suffix}.html"
+    """
+
+    def get_template_names(self):
+        return super().get_template_names() + [
+            f"activities/activity{self.template_name_suffix}.html"
+        ]
+
+
 class ActivityCreateView(
-    CommunityRequiredMixin, PermissionRequiredMixin, SuccessMixin, CreateView,
+    CommunityRequiredMixin,
+    PermissionRequiredMixin,
+    ActivityTemplateMixin,
+    SuccessMixin,
+    CreateView,
 ):
     permission_required = "activities.create_activity"
 
@@ -77,7 +91,9 @@ class ActivityCreateView(
         return self.success_response()
 
 
-class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
+class ActivityListView(
+    ActivityQuerySetMixin, ActivityTemplateMixin, SearchMixin, ListView
+):
     allow_empty = True
     paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
     ordering = "-published"
@@ -108,7 +124,11 @@ class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
 
 
 class ActivityUpdateView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, SuccessMixin, UpdateView,
+    PermissionRequiredMixin,
+    ActivityQuerySetMixin,
+    ActivityTemplateMixin,
+    SuccessMixin,
+    UpdateView,
 ):
     permission_required = "activities.change_activity"
     success_message = _("Your %(model)s has been updated")
@@ -129,7 +149,11 @@ class ActivityUpdateView(
 
 
 class ActivityDeleteView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, SuccessMixin, DeleteView,
+    PermissionRequiredMixin,
+    ActivityQuerySetMixin,
+    ActivityTemplateMixin,
+    SuccessMixin,
+    DeleteView,
 ):
     permission_required = "activities.delete_activity"
     success_message = _("This %(model)s has been deleted")
@@ -151,7 +175,7 @@ class ActivityDeleteView(
         return self.success_response()
 
 
-class ActivityDetailView(ActivityQuerySetMixin, DetailView):
+class ActivityDetailView(ActivityQuerySetMixin, ActivityTemplateMixin, DetailView):
     paginator_class = PresetCountPaginator
     paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
     page_kwarg = "page"

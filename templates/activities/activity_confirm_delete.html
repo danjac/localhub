@@ -1,0 +1,49 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/base.html" %}
+{% load i18n %}
+{% load activities_tags %}
+
+{% block subtitle %} / {% verbose_name_plural object as object_name %}{{ object_name|title }} /
+{{ object.title }} / {% trans "Delete" %}{% endblock %}
+
+{% block content %}
+{% verbose_name_plural object as object_name_plural %}
+{% verbose_name object as object_name %}
+
+<ul class="breadcrumb">
+  {% if object.published %}
+  <li class="breadcrumb-item"><a href="{% resolve_model_url view.model "list" %}">{{ object_name_plural|title }}</a>
+  </li>
+  {% else %}
+  <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
+  {% endif %}
+  <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
+  <li class="breadcrumb-item">
+    <a data-turbolinks="false"
+       href="#">{% trans "Delete" %}</a>
+  </li>
+</ul>
+
+<h5>
+  {% blocktrans with object_name=object_name|title %}
+  Delete {{ object_name }}
+  {% endblocktrans %}
+</h5>
+
+<form method="POST"
+      action="{{ request.path }}">
+  {% csrf_token %}
+  <p>
+    {% blocktrans %}
+    Do you really want to delete this {{ object_name }}?
+    {% endblocktrans %}
+  </p>
+  <a class="btn btn-link"
+     href="{{ post.get_absolute_url }}">{% trans "Cancel" %}</a>
+  <button class="btn btn-primary"
+          type="submit">{% trans "Delete" %}</button>
+</form>
+
+{% endblock content %}

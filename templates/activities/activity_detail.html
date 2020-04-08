@@ -6,7 +6,6 @@
 {% load i18n %}
 {% load activities_tags %}
 
-
 {% block subtitle %} / {% verbose_name_plural object as object_name %}{{ object_name|title }} /
 {{ object.title }}{% endblock %}
 
@@ -33,7 +32,9 @@
 </p>
 {% endif %}
 
-{% block activities_detail_content %}{% endblock %}
+{% block activities_detail_content %}
+{% render_activity request user object is_detail=True %}
+{% endblock %}
 {% include "flags/includes/flags.html" %}
 {% endif %}
 

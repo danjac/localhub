@@ -481,6 +481,24 @@ class Activity(TimeStampedModel):
         """
         return self.extract_tags() & self.community.get_content_warning_tags()
 
+    def is_content_sensitive(self, user):
+        """
+        Returns True if activity content includes any community-defined
+        warning tags, unless:
+            1. User is the owner
+            2. User has selected to show sensitive content
+        Args:
+            user (User)
+
+        Returns:
+            bool
+        """
+        if user.is_authenticated and user.show_sensitive_content:
+            return False
+        if self.owner == user:
+            return False
+        return bool(self.get_content_warning_tags())
+
     def make_notification(self, recipient, verb, actor=None):
         return Notification(
             content_object=self,

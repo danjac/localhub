@@ -1,19 +1,10 @@
 {# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% for activity in object_list %}
+{% load activities_tags %}
+{% for item in object_list %}
 <div class="activity-list-item">
-  {% with object=activity.object object_type=activity.object_type %}
-  {% if activity.object_type == "post" %}
-  {% include "posts/includes/post.html" with post=activity.object %}
-  {% elif activity.object_type == "event" %}
-  {% include "events/includes/event.html" with event=activity.object %}
-  {% elif activity.object_type == "photo" %}
-  {% include "photos/includes/photo.html" with photo=activity.object %}
-  {% elif activity.object_type == "poll" %}
-  {% include "polls/includes/poll.html" with poll=activity.object %}
-  {% endif %}
-  {% endwith %}
+  {% render_activity request user item.object %}
 </div>
 {% empty %}
 {% include "includes/empty.html" %}
