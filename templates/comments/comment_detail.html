@@ -9,20 +9,30 @@
 {% block content %}
 
 <ul class="breadcrumb">
+  {% if comment.content_object %}
   <li class="breadcrumb-item">
     <a href="{{ comment.content_object.get_absolute_url }}">{{ object.content_object|truncatechars:60 }}</a>
   </li>
+  {% else %}
+  <li class="breadcrumb-item">
+    <a href="{% url 'comments:list' %}">{% trans "Comments" %}</a>
+  </li>
+  {% endif %}
   {% if comment.parent and not comment.parent.deleted %}
   <li class="breadcrumb-item">
     <a href="{{ comment.parent.get_absolute_url }}">{% trans "Parent" %}</a>
   </li>
   {% endif %}
-  <li class="breadcrumb-item">
+  <li class="
+       breadcrumb-item">
     <a data-turbolinks="false"
        href="#">{% trans "Comment" %}</a>
   </li>
 </ul>
 
+{% if not comment.content_object or comment.content_object.deleted %}
+<h6>{% trans "[Deleted]" %}</h6>
+{% endif %}
 
 {% if comment.parent and comment.parent.deleted %}
 <p class="toast text-center my-2">
