@@ -9,3 +9,5 @@ from .models import Poll
 class PollForm(ActivityForm):
     class Meta(ActivityForm.Meta):
         model = Poll
+
+        fields = ActivityForm.Meta.fields + ("allow_voting",)

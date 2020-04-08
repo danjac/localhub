@@ -6,10 +6,16 @@
 {% load users_tags %}
 
 {% has_perm "polls.vote" user object as can_vote %}
+{% if not can_vote %}
 {% if not object.published %}
 {% dismissable user "poll-vote-public" %}
 {% trans "You can only vote on a poll when it has been made public." %}
 {% enddismissable %}
+{% elif not object.allow_voting %}
+<p class="toast text-center my-2">
+  {% trans "Voting for this poll has been locked." %}
+</p>
+{% endif %}
 {% endif %}
 <ol class="poll-answers">
   {% for answer in object.answers.all %}
