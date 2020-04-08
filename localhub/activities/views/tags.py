@@ -88,6 +88,7 @@ tag_autocomplete_list_view = TagAutocompleteListView.as_view()
 
 class TagDetailView(BaseActivityStreamView):
     template_name = "activities/tags/tag_detail.html"
+    ordering = "-created"
 
     @cached_property
     def tag(self):

@@ -99,6 +99,7 @@ class ActivityStreamView(BaseActivityStreamView):
     """
 
     template_name = "activities/stream.html"
+    ordering = "-published"
 
     def filter_queryset(self, queryset):
         return (
@@ -134,7 +135,7 @@ class ActivitySearchView(SearchMixin, BaseActivityStreamView):
     search_optional = False
 
     def get_ordering(self):
-        return ("-rank", "-published", "-created") if self.search_query else None
+        return ("-rank", "-created") if self.search_query else None
 
     def filter_queryset(self, queryset):
         if self.search_query:
