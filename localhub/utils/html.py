@@ -105,17 +105,17 @@ class HTMLScraper:
             HTMLScraper: the instance
         """
         self.soup = BeautifulSoup(html, "html.parser")
-        self.title = self.title_from_html()
-        self.image = self.image_from_html()
-        self.description = self.description_from_html()
+        self.title = self.get_title()
+        self.image = self.get_image()
+        self.description = self.get_description()
         return self
 
-    def title_from_html(self):
+    def get_title(self):
         # priority:
         # OG or twitter title content
         # first <h1> element
         # <title> element
-        title = self.meta_tags_from_html("og:title", "twitter:title")
+        title = self.find_meta_tag("og:title", "twitter:title")
         if title:
             return title
         if self.soup.h1 and self.soup.h1.string:
@@ -124,11 +124,11 @@ class HTMLScraper:
             return self.soup.title.string
         return None
 
-    def image_from_html(self):
+    def get_image(self):
         # priority:
         # OG or twitter image content
         # first <img> element
-        image = self.meta_tags_from_html("og:image", "twitter:image")
+        image = self.find_meta_tag("og:image", "twitter:image")
         if image and self.is_acceptable_image(image):
             return image
 
@@ -138,11 +138,11 @@ class HTMLScraper:
                 return image
         return None
 
-    def description_from_html(self):
+    def get_description(self):
         # priority:
         # OG or twitter content
         # first <p> element
-        text = self.meta_tags_from_html(
+        text = self.find_meta_tag(
             "og:description", "twitter:description", "fb:status", "description"
         )
         if text:
@@ -151,7 +151,7 @@ class HTMLScraper:
             return self.soup.p.string
         return None
 
-    def meta_tags_from_html(self, *names):
+    def find_meta_tag(self, *names):
         for name in names:
             meta = self.soup.find("meta", attrs={"property": name}) or self.soup.find(
                 "meta", attrs={"name": name}
