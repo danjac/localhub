@@ -80,7 +80,18 @@ class ActivityCreateView(
 class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
     allow_empty = True
     paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
-    order_by = ("-published", "-created")
+    ordering = "-published"
+
+    def get_ordering(self):
+        if isinstance(self.ordering, str):
+            ordering = [self.ordering]
+        else:
+            ordering = list(self.ordering)
+
+        if self.search_query:
+            ordering = ["-rank"] + ordering
+
+        return ordering
 
     def get_queryset(self):
         qs = (
@@ -89,12 +100,11 @@ class ActivityListView(ActivityQuerySetMixin, SearchMixin, ListView):
             .published()
             .with_common_annotations(self.request.user, self.request.community)
             .exclude_blocked(self.request.user)
-            .order_by(*self.order_by)
         )
 
         if self.search_query:
-            qs = qs.search(self.search_query).order_by("-rank", *self.order_by)
-        return qs
+            qs = qs.search(self.search_query)
+        return qs.order_by(*self.get_ordering())
 
 
 class ActivityUpdateView(
