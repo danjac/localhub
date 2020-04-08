@@ -319,6 +319,11 @@ class UserStreamView(SingleUserMixin, BaseActivityStreamView):
     active_tab = "posts"
     template_name = "users/activities.html"
 
+    def get_ordering(self):
+        if self.is_current_user:
+            return "-created"
+        return "-published"
+
     def filter_queryset(self, queryset):
         qs = (
             super()
