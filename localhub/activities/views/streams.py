@@ -116,7 +116,7 @@ class ActivityStreamView(BaseActivityStreamView):
             .for_recipient(self.request.user)
             .exclude_blocked_actors(self.request.user)
             .unread()
-            .select_related("actor", "content_type")
+            .select_related("actor", "content_type", "community", "recipient")
             .order_by("-created")
             .first()
         )
