@@ -20,7 +20,8 @@
     </a>
   </li>
   {% else %}
-  <li class="breadcrumb-item"><a href="{{ recipient.get_absolute_url }}">{% user_display recipient %}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'users:messages' recipient.username %}">{% user_display recipient %}</a>
+  </li>
   <li class="breadcrumb-item">
     <a data-turbolinks="false"
        href="#">{% trans "Send Message" %}</a>
