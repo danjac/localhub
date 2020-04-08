@@ -110,3 +110,8 @@ def verbose_name(activity):
 @register.simple_tag
 def verbose_name_plural(activity):
     return _(activity._meta.verbose_name_plural)
+
+
+@register.inclusion_tag("activities/includes/activity.html", takes_context=True)
+def render_activity(context, user, activity, is_detail=False):
+    ...

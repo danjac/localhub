@@ -11,7 +11,7 @@ from ..factories import MessageFactory
 from ..templatetags.private_messages_tags import (
     get_unread_external_message_count,
     get_unread_message_count,
-    show_message,
+    render_message,
 )
 
 pytestmark = pytest.mark.django_db
@@ -25,18 +25,13 @@ def auth_request(rf, member):
     return req
 
 
-class TestShowMessage:
+class TestRenderMessage:
     def test_is_sender(self, auth_request):
         parent = MessageFactory(recipient=auth_request.user)
         message = MessageFactory(
             sender=auth_request.user, community=auth_request.community, parent=parent
         )
-        context = show_message(
-            {"request": auth_request},
-            auth_request.user,
-            auth_request.community,
-            message,
-        )
+        context = render_message(auth_request, auth_request.user, message,)
         assert context["sender_url"] == reverse(
             "users:messages", args=[message.sender.username]
         )
@@ -54,12 +49,7 @@ class TestShowMessage:
             parent=parent,
         )
         message.sender_has_blocked = False
-        context = show_message(
-            {"request": auth_request},
-            auth_request.user,
-            auth_request.community,
-            message,
-        )
+        context = render_message(auth_request, auth_request.user, message,)
         assert context["recipient_url"] == reverse(
             "users:messages", args=[message.recipient.username]
         )
@@ -74,12 +64,7 @@ class TestShowMessage:
             recipient=auth_request.user, community=auth_request.community
         )
         message.sender_has_blocked = True
-        context = show_message(
-            {"request": auth_request},
-            auth_request.user,
-            auth_request.community,
-            message,
-        )
+        context = render_message(auth_request, auth_request.user, message,)
         assert context["recipient_url"] == reverse(
             "users:messages", args=[message.recipient.username]
         )

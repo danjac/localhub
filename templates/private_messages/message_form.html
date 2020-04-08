@@ -33,7 +33,7 @@
 <h5>{% trans "Messages" %}</h5>
 
 {% if parent %}
-{% show_message user community parent is_detail=True %}
+{% render_message request user parent is_detail=True %}
 {% endif %}
 
 {% include "includes/forms/stimulusjs_form.html" %}

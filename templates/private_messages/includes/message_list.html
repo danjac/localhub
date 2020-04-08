@@ -5,7 +5,7 @@
 
 {% if object_list %}
 {% for message in object_list %}
-{% show_message user community message %}
+{% render_message request user message %}
 {% endfor %}
 {% include "includes/pagination.html" %}
 {% else %}

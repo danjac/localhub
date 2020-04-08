@@ -34,8 +34,8 @@
 
 </div>
 
-{% show_message user community message is_detail=True %}
+{% render_message request user message is_detail=True %}
 {% for reply in replies %}
-{% show_message user community reply top_parent=message %}
+{% render_message request user reply conversation=message %}
 {% endfor %}
 {% endblock content %}

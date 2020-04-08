@@ -11,9 +11,9 @@ from ..models import Message
 register = template.Library()
 
 
-@register.inclusion_tag("private_messages/includes/message.html", takes_context=True)
-def show_message(
-    context, user, community, message, top_parent=None, is_detail=False,
+@register.inclusion_tag("private_messages/includes/message.html")
+def render_message(
+    request, user, message, conversation=None, is_detail=False,
 ):
 
     is_sender = user == message.sender
@@ -23,7 +23,9 @@ def show_message(
     sender_url = reverse("users:messages", args=[message.sender.username])
     recipient_url = reverse("users:messages", args=[message.recipient.username])
 
-    can_send_message = user.has_perm("private_messages.create_message", community)
+    can_send_message = user.has_perm(
+        "private_messages.create_message", message.community
+    )
 
     can_reply = can_send_message and is_recipient
     can_follow_up = can_send_message and is_sender
@@ -32,7 +34,7 @@ def show_message(
 
     parent = message.get_parent(user)
 
-    if top_parent and top_parent == parent:
+    if conversation and conversation == parent:
         parent = None
 
     parent_url = parent.get_absolute_url() if parent else None
@@ -41,7 +43,7 @@ def show_message(
     is_unread = is_recipient and not message.read
 
     return {
-        "request": context["request"],
+        "request": request,
         "user": user,
         "is_detail": is_detail,
         "is_recipient": is_recipient,
