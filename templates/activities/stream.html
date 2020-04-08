@@ -69,7 +69,7 @@ option in your
 {% endif %}
 
 {% elif page_obj.paginator.num_pages > 1 %}
-{% include "includes/pagination.html" %}
+{% include "includes/pagination.html" with css_class="mb-2" %}
 {% endif %}
 
 {% include "activities/includes/activity_list.html" %}

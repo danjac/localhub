@@ -1,0 +1,24 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+{% block activity_list_header %}{% endblock %}
+
+{% if paginator.count or view.search_query %}
+{% include "includes/forms/search_form.html" with selector=True %}
+{% endif %}
+
+{% for object in object_list %}
+<div class="activity-list-item">
+  {% block activity_list_item %}{% endblock %}
+</div>
+{% empty %}
+{% include "includes/empty.html" %}
+{% endfor %}
+
+{% include "includes/pagination.html" %}
+{% endblock content %}

@@ -1,12 +1,16 @@
-{% extends "activities/base.html" %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/activity_list_base.html" %}
 {% load i18n %}
 {% load rules %}
 
 {% block subtitle %} / {% trans "Photos" %} {% endblock %}
 
-{% block content %}
+{% block activity_list_header %}
 
 <h5>{% trans "Photos" %}</h5>
+
 <div class="actions mb-1">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
@@ -18,17 +22,8 @@
   <a href="{% url 'events:list' %}">{% trans "Events" %}</a>
   <a href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
 </div>
+{% endblock %}
 
-{% if paginator.count or view.search_query %}
-{% include "includes/forms/search_form.html" with selector=True %}
-{% endif %}
-
-{% for object in object_list %}
-<div class="activity-list-item">
-  {% include "photos/includes/photo.html" with object_type="photo" %}
-</div>
-{% empty %}
-{% include "includes/empty.html" %}
-{% endfor %}
-{% include "includes/pagination.html" %}
-{% endblock content %}
+{% block activity_list_item %}
+{% include "photos/includes/photo.html" with object_type="photo" %}
+{% endblock %}

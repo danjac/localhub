@@ -44,7 +44,7 @@
   <div class="divider text-center"
        data-content="{% trans 'Comments' %}"></div>
   {% else %}
-  {% include "includes/pagination.html" with page_obj=comments is_paginated=True %}
+  {% include "includes/pagination.html" with css_class="mb-2" page_obj=comments is_paginated=True %}
   {% endif %}
   {% for comment in comments %}
   <div class="mb-2">
@@ -52,7 +52,7 @@
   </div>
   {% endfor %}
   {% if comments.number == 1 and comments.paginator.num_pages > 1 %}
-  {% include "includes/pagination.html" with page_obj=comments is_paginated=True %}
+  {% include "includes/pagination.html" with css_class="my-2" page_obj=comments is_paginated=True %}
   {% endif %}
   {% if comment_form %}
   {% resolve_url object "comment" as comment_url %}
