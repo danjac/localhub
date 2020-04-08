@@ -88,6 +88,13 @@ class SingleUserMixin(BaseUserQuerySetMixin):
         )
 
     @cached_property
+    def is_follower(self):
+        return (
+            not self.is_current_user
+            and self.request.user in self.user_obj.following.all()
+        )
+
+    @cached_property
     def is_blocker(self):
         if self.is_current_user:
             return False
@@ -120,6 +127,7 @@ class SingleUserMixin(BaseUserQuerySetMixin):
                 "is_blocker": self.is_blocker,
                 "is_blocking": self.is_blocking,
                 "is_following": self.is_following,
+                "is_follower": self.is_follower,
                 "display_name": self.display_name,
                 "membership": self.membership,
                 "unread_messages": self.unread_messages,

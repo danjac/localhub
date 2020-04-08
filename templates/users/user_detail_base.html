@@ -79,6 +79,12 @@
 </p>
 {% endif %}
 
+{% if is_follower %}
+<p class="py-1">
+  {% blocktrans %}{{ display_name }} is following you.{% endblocktrans %}
+</p>
+{% endif %}
+
 <div class="actions mb-1">
 
   {% if is_current_user %}
