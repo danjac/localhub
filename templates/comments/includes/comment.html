@@ -6,20 +6,18 @@
 {% load rules %}
 {% load activities_tags %}
 
-<article class="card"
+<article class="card {% if css_class %} {{ css_class }}{% endif %}"
          role="comment"
          data-controller="clipboard"
          id="comment-{{ comment.id }}">
   <div class="card-header">
-    {% if with_activity %}
+    {% if include_content_object %}
     <div class="card-title h6">
-      {% with content_object=comment.content_object %}
-      {% if content_object and not content_object.deleted %}
-      <a href="{{ comment.content_object.get_absolute_url }}">{{ comment.content_object }}</a>
+      {% if content_object %}
+      <a href="{{ content_object.get_absolute_url }}">{{ content_object }}</a>
       {% else %}
       {% trans "[Deleted]" %}
       {% endif %}
-      {% endwith %}
     </div>
     {% endif %}
     {% has_perm "communities.moderate_community" user community as can_moderate_community %}
@@ -56,7 +54,7 @@
     {% if comment.deleted %}
     <p>{% blocktrans %}This comment has been deleted by a community moderator{% endblocktrans %}</p>
     {% endif %}
-    {% if not comment.deleted or comment.owner == user %}
+    {% if show_content %}
     {% collapsable is_detail %}
     <div class="markdown-content mt-1">
       {{ comment.content.markdown|strip_external_images:user }}
@@ -160,8 +158,7 @@
         {% if not is_detail and not comment.deleted %}
         <a href="{{ comment.get_absolute_url }}">{% trans "Link" %}</a>
         {% endif %}
-        {% with parent=comment.parent %}
-        {% if parent and not parent.deleted and comment.is_parent_owner_member and not is_reply %}
+        {% if parent %}
         <a {% spaceless %}
            {% if is_thread %}
            href="#comment-{{ parent.id }}"
@@ -171,7 +168,6 @@
            {% endif %}
            {% endspaceless %}>{% trans "Parent" %}</a>
         {% endif %}
-        {% endwith %}
       </div>
     </div>
     <div class="clearfix"></div>

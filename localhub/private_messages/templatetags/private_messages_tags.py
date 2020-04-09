@@ -13,8 +13,21 @@ register = template.Library()
 
 @register.inclusion_tag("private_messages/includes/message.html")
 def render_message(
-    request, user, message, conversation=None, is_detail=False,
+    request, user, message, conversation=None, is_detail=False, **extra_context
 ):
+    """Renders a single message.
+
+    Args:
+        request (HttpRequest)
+        user (User)
+        message (Message)
+        conversation (Message, optional): top level message (default: None)
+        is_detail (bool, optional): if message is shown in detail view
+        **extra_context: additional template variables
+
+    Returns:
+        dict: context dict
+    """
 
     is_sender = user == message.sender
     is_recipient = user == message.recipient
@@ -60,6 +73,7 @@ def render_message(
         "sender_url": sender_url,
         "other_user": message.get_other_user(user),
         "post_delete_redirect": outbox_url if is_detail else None,
+        **extra_context,
     }
 
 

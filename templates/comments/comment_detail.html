@@ -3,6 +3,7 @@
 
 {% extends "comments/base.html" %}
 {% load i18n %}
+{% load comments_tags %}
 
 {% block subtitle %}{{ block.super }} / {{ comment.content_object }}{% endblock %}
 
@@ -23,8 +24,7 @@
     <a href="{{ comment.parent.get_absolute_url }}">{% trans "Parent" %}</a>
   </li>
   {% endif %}
-  <li class="
-       breadcrumb-item">
+  <li class="breadcrumb-item">
     <a data-turbolinks="false"
        href="#">{% trans "Comment" %}</a>
   </li>
@@ -41,7 +41,7 @@
   {% endblocktrans %}
 </p>
 {% endif %}
-{% include "comments/includes/comment.html" with is_detail=True %}
+{% render_comment request user comment is_detail=True %}
 {% include "flags/includes/flags.html" %}
 
 {% if replies %}
@@ -49,7 +49,7 @@
      data-content="{% trans 'Replies' %}"></div>
 {% for reply in replies %}
 <div class="mb-2">
-  {% include "comments/includes/comment.html" with comment=reply is_reply=True %}
+  {% render_comment request user reply is_reply=True %}
 </div>
 {% endfor %}
 {% endif %}

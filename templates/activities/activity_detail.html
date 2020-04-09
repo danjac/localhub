@@ -5,6 +5,7 @@
 
 {% load i18n %}
 {% load activities_tags %}
+{% load comments_tags %}
 
 {% block subtitle %} / {% verbose_name_plural object as object_name %}{{ object_name|title }} /
 {{ object.title }}{% endblock %}
@@ -48,9 +49,7 @@
   {% include "includes/pagination.html" with css_class="mb-2" page_obj=comments is_paginated=True %}
   {% endif %}
   {% for comment in comments %}
-  <div class="mb-2">
-    {% include "comments/includes/comment.html" with is_thread=True %}
-  </div>
+  {% render_comment request user comment is_thread=True css_class="mb-2" %}
   {% endfor %}
   {% if comments.number == 1 and comments.paginator.num_pages > 1 %}
   {% include "includes/pagination.html" with css_class="my-2" page_obj=comments is_paginated=True %}

@@ -5,6 +5,7 @@
 
 {% load i18n %}
 {% load activities_tags %}
+{% load comments_tags %}
 
 {% block subtitle %}{{ block.super }} /
 {% if parent %}{{ parent.content_object }} / {% trans "Reply "%}
@@ -36,7 +37,7 @@
 
 
 {% if parent %}
-{% include "comments/includes/comment.html" with comment=parent is_detail=True %}
+{% render_comment request user parent is_detail=True %}
 <div class="my-2"></div>
 {% endif %}
 

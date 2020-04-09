@@ -5,7 +5,12 @@ import pytest
 from django.utils import timezone
 
 from ..factories import CommentFactory
-from ..rules import is_comment_community_moderator, is_deleted, is_owner
+from ..rules import (
+    is_comment_community_moderator,
+    is_deleted,
+    is_owner,
+    is_content_object_deleted,
+)
 
 pytestmark = pytest.mark.django_db
 
@@ -19,12 +24,25 @@ class TestIsOwner:
 
 
 class TestIsDeleted:
-    def test_is_deleted(self, comment):
+    def test_is_not_deleted(self, comment):
         assert not is_deleted.test(comment.owner, comment)
 
-    def test_is_not_owner(self, comment, user):
+    def test_is_deleted(self, comment):
         comment.deleted = timezone.now()
         assert is_deleted.test(comment.owner, comment)
+
+
+class TestIsContentObjectDeleted:
+    def test_is_not_deleted(self, comment):
+        assert not is_content_object_deleted.test(comment.owner, comment)
+
+    def test_is_deleted(self, comment):
+        comment.content_object = None
+        assert is_content_object_deleted.test(comment.owner, comment)
+
+    def test_is_soft_deleted(self, comment):
+        comment.content_object.deleted = timezone.now()
+        assert is_content_object_deleted.test(comment.owner, comment)
 
 
 class TestIsCommentCommunityModerator:
@@ -92,6 +110,10 @@ class TestReplyPermissions:
 
     def test_can_reply_to_comment_if_not_member(self, comment, user):
         assert not user.has_perm("comments.reply_to_comment", comment)
+
+    def test_can_reply_to_comment_if_content_object_deleted(self, comment, member):
+        comment.content_object = None
+        assert not member.member.has_perm("comments.reply_to_comment", comment)
 
 
 class TestChangePermissions:

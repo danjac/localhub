@@ -74,9 +74,9 @@ class CommentDetailView(CommentQuerySetMixin, DetailView):
         return (
             super()
             .get_queryset()
+            .with_common_annotations(self.request.user, self.request.community)
             .exclude_deleted(self.request.user)
             .select_related("editor")
-            .with_common_annotations(self.request.user, self.request.community)
         )
 
     def get(self, request, *args, **kwargs):

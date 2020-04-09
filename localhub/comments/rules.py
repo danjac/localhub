@@ -17,6 +17,11 @@ def is_deleted(user, comment):
 
 
 @rules.predicate
+def is_content_object_deleted(user, comment):
+    return comment.content_object is None or comment.content_object.deleted
+
+
+@rules.predicate
 def is_comment_community_member(user, comment):
     return is_member.test(user, comment.community)
 
@@ -38,5 +43,6 @@ rules.add_perm(
     "comments.like_comment", is_comment_community_member & ~is_owner & ~is_deleted
 )
 rules.add_perm(
-    "comments.reply_to_comment", is_comment_community_member & ~is_owner & ~is_deleted
+    "comments.reply_to_comment",
+    is_comment_community_member & ~is_owner & ~is_deleted & ~is_content_object_deleted,
 )
