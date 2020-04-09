@@ -8,7 +8,7 @@
 {% load activities_tags %}
 
 {% block content %}
-{% thumbnail object.image "900" as image %}
+{% thumbnail object.image "900" upscale=False as image %}
 <div>
   <a href="{{ object.get_absolute_url }}">
     <img class="img-responsive"
