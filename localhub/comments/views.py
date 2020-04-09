@@ -87,12 +87,22 @@ class CommentDetailView(CommentQuerySetMixin, DetailView):
         return response
 
     def get_flags(self):
-        return self.object.get_flags().select_related("user").order_by("-created")
+        return (
+            self.object.get_flags()
+            .select_related("user")
+            .prefetch_related("content_object")
+            .order_by("-created")
+        )
 
     def get_replies(self):
         if self.object.deleted:
             return self.get_queryset().none()
-        return self.get_queryset().filter(parent=self.object).order_by("created")
+        return (
+            self.get_queryset()
+            .filter(parent=self.object)
+            .prefetch_related("content_object")
+            .order_by("created")
+        )
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)

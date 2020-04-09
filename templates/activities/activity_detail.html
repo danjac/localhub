@@ -49,7 +49,7 @@
   {% include "includes/pagination.html" with css_class="mb-2" page_obj=comments is_paginated=True %}
   {% endif %}
   {% for comment in comments %}
-  {% render_comment request user comment is_thread=True css_class="mb-2" %}
+  {% render_comment request user comment css_class="mb-2" %}
   {% endfor %}
   {% if comments.number == 1 and comments.paginator.num_pages > 1 %}
   {% include "includes/pagination.html" with css_class="my-2" page_obj=comments is_paginated=True %}

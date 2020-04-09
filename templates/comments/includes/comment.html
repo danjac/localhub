@@ -159,14 +159,7 @@
         <a href="{{ comment.get_absolute_url }}">{% trans "Link" %}</a>
         {% endif %}
         {% if parent %}
-        <a {% spaceless %}
-           {% if is_thread %}
-           href="#comment-{{ parent.id }}"
-           data-turbolinks="false"
-           {% else %}
-           href="{{ parent.get_absolute_url }}"
-           {% endif %}
-           {% endspaceless %}>{% trans "Parent" %}</a>
+        <a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a>
         {% endif %}
       </div>
     </div>

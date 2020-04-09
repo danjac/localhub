@@ -211,7 +211,12 @@ class ActivityDetailView(ActivityQuerySetMixin, ActivityTemplateMixin, DetailVie
         )
 
     def get_flags(self):
-        return self.object.get_flags().select_related("user").order_by("-created")
+        return (
+            self.object.get_flags()
+            .select_related("user")
+            .prefetch_related("content_object")
+            .order_by("-created")
+        )
 
     def get_reshares(self):
         return (
@@ -230,6 +235,7 @@ class ActivityDetailView(ActivityQuerySetMixin, ActivityTemplateMixin, DetailVie
             .select_related(
                 "owner", "community", "parent", "parent__owner", "parent__community",
             )
+            .prefetch_related("content_object")
             .order_by("created")
         )
 
