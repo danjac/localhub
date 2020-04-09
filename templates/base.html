@@ -21,7 +21,8 @@
 {% with site_counters_total=site_counters.total|add:external_site_counters.total %}
 
 <!DOCTYPE html>
-<html lang="en">
+{% get_current_language as language_code %}
+<html lang="{{ language_code }}">
 
 <head>
   <title>
