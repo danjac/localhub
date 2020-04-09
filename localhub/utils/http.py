@@ -12,17 +12,17 @@ _urlvalidator = URLValidator()
 
 
 IMAGE_EXTENSIONS = (
-    "bmp",
-    "gif",
-    "gifv",
-    "jpeg",
-    "jpg",
-    "pjpeg",
-    "png",
-    "svg",
-    "tif",
-    "tiff",
-    "webp",
+    ".bmp",
+    ".gif",
+    ".gifv",
+    ".jpeg",
+    ".jpg",
+    ".pjpeg",
+    ".png",
+    ".svg",
+    ".tif",
+    ".tiff",
+    ".webp",
 )
 
 
@@ -86,7 +86,7 @@ class URLResolver:
             bool
         """
         _, ext = os.path.splitext(self.filename.lower())
-        return ext[1:] in IMAGE_EXTENSIONS
+        return ext in IMAGE_EXTENSIONS
 
     @property
     def root(self):
