@@ -106,6 +106,9 @@
               {{ object|truncatechars:100 }}
             </a>
             <span class="label">{% trans object_type|capfirst %}</span>
+            {% if object.is_reshare %}
+            <span class="label">{% trans "Reshare" %}</span>
+            {% endif %}
           </div>
           <div class="tile-title">
             {% include "activities/includes/timesince.html" with timestamp=object.published owner=object.owner %}
