@@ -120,6 +120,23 @@ class TestPostUpdateView:
         assert post.published is None
 
 
+class TestPostUpdateTagsView:
+    def test_get(self, client, moderator, post):
+        response = client.get(reverse("posts:update_tags", args=[post.id]))
+        assert response.status_code == 200
+
+    def test_post(self, client, moderator, post, send_webpush_mock):
+        response = client.post(
+            reverse("posts:update_tags", args=[post.id]),
+            {"additional_tags": "#update"},
+        )
+        post.refresh_from_db()
+        assert response.url == post.get_absolute_url()
+        assert post.additional_tags == "#update"
+        assert post.editor == moderator.member
+        assert post.edited
+
+
 class TestPostCommentCreateView:
     def test_get(self, client, member):
         post = PostFactory(

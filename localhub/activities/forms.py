@@ -6,9 +6,12 @@ from django.utils.translation import gettext_lazy as _
 
 from localhub.forms.widgets import TypeaheadInput
 
+from .models import Activity
+
 
 class ActivityForm(forms.ModelForm):
     class Meta:
+        model = Activity
         fields = (
             "title",
             "additional_tags",
@@ -24,4 +27,14 @@ class ActivityForm(forms.ModelForm):
             "additional_tags": _(
                 "Hashtags can also be added to title and description."
             ),
+        }
+
+
+class ActivityTagsForm(forms.ModelForm):
+    class Meta:
+        model = Activity
+        fields = ("additional_tags",)
+        labels = {"additional_tags": _("Tags")}
+        widgets = {
+            "additional_tags": TypeaheadInput(search_mentions=False),
         }

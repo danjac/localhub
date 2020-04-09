@@ -175,6 +175,35 @@ class TestChangePermissions:
         assert not moderator.member.has_perm("activities.change_activity", post)
 
 
+class TestChangeTagsPermissions:
+    def test_owner_can_change_activity(self, user):
+        post = PostFactory(owner=user)
+        assert not user.has_perm("activities.change_activity_tags", post)
+
+    def test_non_owner_can_change_activity(self, user):
+        post = PostFactory()
+        assert not user.has_perm("activities.change_activity_tags", post)
+
+    def test_moderator_can_change_activity(self, moderator, post):
+        assert moderator.member.has_perm("activities.change_activity_tags", post)
+
+    def test_moderator_can_change_own_activity(self, moderator):
+        post = PostFactory(owner=moderator.member, community=moderator.community)
+        assert not moderator.member.has_perm("activities.change_activity_tags", post)
+
+    def test_moderator_can_change_activity_if_reshare(self, moderator):
+        post = PostFactory(community=moderator.community, is_reshare=True)
+        assert not moderator.member.has_perm("activities.change_activity_tags", post)
+
+    def test_moderator_can_change_activity_if_deleted(self, moderator):
+        post = PostFactory(community=moderator.community, deleted=timezone.now())
+        assert not moderator.member.has_perm("activities.change_activity_tags", post)
+
+    def test_moderator_can_change_activity_if_private(self, moderator):
+        post = PostFactory(community=moderator.community, published=None)
+        assert not moderator.member.has_perm("activities.change_activity_tags", post)
+
+
 class TestDeletePermissions:
     def test_owner_can_delete_activity(self, user):
         post = PostFactory(owner=user)

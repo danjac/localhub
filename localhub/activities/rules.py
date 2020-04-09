@@ -91,3 +91,12 @@ rules.add_perm(
     "activities.create_comment",
     is_activity_community_member & allows_comments & is_published,
 )
+
+rules.add_perm(
+    "activities.change_activity_tags",
+    is_activity_community_moderator
+    & is_published
+    & ~is_deleted
+    & ~is_owner
+    & ~is_reshare,
+)

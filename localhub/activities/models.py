@@ -586,6 +586,9 @@ class Activity(TimeStampedModel):
 
         return takefirst(notifications, lambda n: n.recipient)
 
+    def notify_owner_on_edit(self):
+        return self.make_notification(self.owner, "edit", actor=self.editor)
+
     @dispatch
     def notify_on_update(self):
         """Notifies mentioned users and tag followers if content changed.
@@ -599,6 +602,9 @@ class Activity(TimeStampedModel):
         if self.description and self.description_tracker.changed():
             notifications += self.notify_mentioned_users(recipients)
             notifications += self.notify_tag_followers(recipients)
+
+        if self.editor and self.editor != self.owner:
+            notifications.append(self.notify_owner_on_edit())
 
         return takefirst(notifications, lambda n: n.recipient)
 

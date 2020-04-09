@@ -27,6 +27,7 @@ from localhub.likes.models import Like
 from localhub.pagination import PresetCountPaginator
 from localhub.views import SearchMixin, SuccessMixin
 
+from ..forms import ActivityTagsForm
 from ..models import get_activity_models
 
 
@@ -146,6 +147,20 @@ class ActivityUpdateView(
             self.object.notify_on_update()
 
         return self.success_response()
+
+
+class ActivityUpdateTagsView(ActivityUpdateView):
+    """
+    Allows a moderator to update the tags on a view, e.g
+    to add a "content sensitive" tag.
+    """
+
+    form_class = ActivityTagsForm
+    permission_required = "activities.change_activity_tags"
+    success_message = _("Tags have been updated")
+
+    def get_queryset(self):
+        return super().get_queryset().published()
 
 
 class ActivityDeleteView(

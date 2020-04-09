@@ -99,6 +99,13 @@
     {% endif %}
 
 
+    {% has_perm "activities.change_activity_tags" user object as can_change_tags %}
+    {% if can_change_tags %}
+    <li class="menu-item">
+      <a href="{% resolve_url object "update_tags" %}">{% trans "Edit Tags" %}</a>
+    </li>
+    {% endif %}
+
     {% has_perm "activities.delete_activity" user object as can_delete %}
     {% if can_delete %}
     <li class="menu-item">

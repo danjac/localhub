@@ -171,6 +171,37 @@ class TestPostModel:
         assert notifications[0].actor == moderator.member
         assert notifications[0].verb == "delete"
 
+    def test_notify_on_update_moderator_edit(self, community, send_webpush_mock):
+
+        owner = MembershipFactory(community=community).member
+
+        member = MembershipFactory(
+            community=community, member=UserFactory(username="danjac"),
+        ).member
+
+        moderator = MembershipFactory(community=community,).member
+
+        post = PostFactory(
+            owner=owner,
+            community=community,
+            description="hello from @owner #movies #reviews",
+        )
+
+        post.description = "hello @danjac"
+        post.editor = moderator
+        post.save()
+
+        notifications = post.notify_on_update()
+        assert len(notifications) == 2
+
+        assert notifications[0].recipient == member
+        assert notifications[0].actor == post.owner
+        assert notifications[0].verb == "mention"
+
+        assert notifications[1].recipient == post.owner
+        assert notifications[1].actor == moderator
+        assert notifications[1].verb == "edit"
+
     def test_notify_on_update(self, community, send_webpush_mock):
 
         owner = MembershipFactory(community=community).member

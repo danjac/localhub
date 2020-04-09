@@ -23,6 +23,7 @@ def create_activity_urls(
     unpin_view_class=generic.ActivityUnpinView,
     bookmark_view_class=generic.ActivityBookmarkView,
     remove_bookmark_view_class=generic.ActivityRemoveBookmarkView,
+    update_tags_view_class=generic.ActivityUpdateTagsView,
     create_comment_view_class=generic.ActivityCommentCreateView,
 ):
     """
@@ -80,6 +81,11 @@ def create_activity_urls(
             "<int:pk>/~update/",
             update_view_class.as_view(model=model, form_class=form_class),
             name="update",
+        ),
+        path(
+            "<int:pk>/~update-tags/",
+            update_tags_view_class.as_view(model=model),
+            name="update_tags",
         ),
         path(
             "<int:pk>/<slug:slug>/",
