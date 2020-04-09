@@ -118,10 +118,10 @@ class HTMLScraper:
         title = self.find_meta_tag("og:title", "twitter:title")
         if title:
             return title
-        if self.soup.h1 and self.soup.h1.string:
-            return self.soup.h1.string
+        if self.soup.h1 and self.soup.h1.text:
+            return self.soup.h1.text
         if self.soup.title:
-            return self.soup.title.string
+            return self.soup.title.text
         return None
 
     def get_image(self):
@@ -148,7 +148,7 @@ class HTMLScraper:
         if text:
             return text
         if self.soup.p:
-            return self.soup.p.string
+            return self.soup.p.text
         return None
 
     def find_meta_tag(self, *names):
