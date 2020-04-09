@@ -51,6 +51,10 @@
 </div>
 {% endblock counter_container %}
 
+{% if page_obj.number > 1 %}
+{% include "includes/pagination.html" with css_class="mb-2" %}
+{% endif %}
+
 <table class="table table-hover table-responsive">
   <tbody>
     {% for object in object_list %}
