@@ -63,7 +63,7 @@ class URLResolver:
     def url(self, value):
         if not is_url(value):
             raise self.Invalid(f"{value} is not a valid URL")
-        self._url = value
+        self._url = value.lower()
         self.parts = urlparse(self._url)
 
     @property
@@ -85,7 +85,7 @@ class URLResolver:
         Returns:
             bool
         """
-        _, ext = os.path.splitext(self.parts.path.lower())
+        _, ext = os.path.splitext(self.parts.path)
         return ext[1:] in IMAGE_EXTENSIONS
 
     @property
