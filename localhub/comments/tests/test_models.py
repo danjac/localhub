@@ -455,3 +455,17 @@ class TestCommentModel:
         assert notifications[0].actor == moderator.member
         assert notifications[0].recipient == comment.owner
         assert notifications[0].verb == "delete"
+
+    def test_get_content_object(self, comment):
+        assert comment.get_content_object() is not None
+
+    def test_get_content_object_if_none(self):
+        assert CommentFactory(content_object=None).get_content_object() is None
+
+    def test_get_content_object_if_soft_deleted(self):
+        assert (
+            CommentFactory(
+                content_object=PostFactory(deleted=timezone.now())
+            ).get_content_object()
+            is None
+        )

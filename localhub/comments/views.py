@@ -94,12 +94,6 @@ class CommentDetailView(CommentQuerySetMixin, DetailView):
             return self.get_queryset().none()
         return self.get_queryset().filter(parent=self.object).order_by("created")
 
-    def get_content_object(self):
-        obj = self.object.content_object
-        if obj and obj.deleted:
-            obj = None
-        return obj
-
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.user.has_perm(
@@ -107,7 +101,7 @@ class CommentDetailView(CommentQuerySetMixin, DetailView):
         ):
             data["flags"] = self.get_flags()
         data["replies"] = self.get_replies()
-        data["content_object"] = self.get_content_object()
+        data["content_object"] = self.object.get_content_object()
         return data
 
 

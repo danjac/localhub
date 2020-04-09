@@ -254,20 +254,32 @@ class Comment(TimeStampedModel):
     def get_notification_recipients(self):
         return self.community.members.exclude(blocked=self.owner)
 
+    def get_content_object(self):
+        """Returns content object; if object is soft deleted, returns None.
+
+        Returns:
+            Activity or None
+        """
+        obj = self.content_object
+        if obj and obj.deleted:
+            return None
+        return obj
+
     @dispatch
     def notify_on_create(self):
         # should not happen, but just in case
-        if not self.content_object or self.content_object.deleted:
-            return []
+        content_object = self.get_content_object()
+        if content_object is None:
+            return None
 
         notifications = []
         recipients = self.get_notification_recipients()
         notifications += self.notify_mentioned(recipients)
 
         # notify the activity owner
-        if self.owner_id != self.content_object.owner_id:
+        if self.owner_id != content_object.owner_id:
             notifications += [
-                self.make_notification("new_comment", self.content_object.owner)
+                self.make_notification("new_comment", content_object.owner)
             ]
 
         # notify the person being replied to
@@ -278,8 +290,8 @@ class Comment(TimeStampedModel):
         # notify anyone who has commented on this post, excluding
         # this comment owner and parent owner
         other_commentors = (
-            recipients.filter(comment__in=self.content_object.get_comments())
-            .exclude(pk__in=(self.owner_id, self.content_object.owner_id))
+            recipients.filter(comment__in=content_object.get_comments())
+            .exclude(pk__in=(self.owner_id, content_object.owner_id))
             .distinct()
         )
         if self.parent:
@@ -299,6 +311,11 @@ class Comment(TimeStampedModel):
 
     @dispatch
     def notify_on_update(self):
+        # should not happen, but just in case
+        content_object = self.get_content_object()
+        if content_object is None:
+            return None
+
         notifications = []
         if not self.content_tracker.changed():
             return notifications
