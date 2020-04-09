@@ -3,6 +3,7 @@
 
 import pytest
 from django.urls import reverse
+from django.utils import timezone
 
 from localhub.bookmarks.factories import BookmarkFactory
 from localhub.bookmarks.models import Bookmark
@@ -75,6 +76,7 @@ class TestCommentDetailView:
             HTTP_HOST=comment.community.domain,
         )
         assert response.status_code == 200
+        assert response.context["content_object"] == post
         notification.refresh_from_db()
         assert notification.is_read
 
@@ -87,6 +89,19 @@ class TestCommentDetailView:
             HTTP_HOST=comment.community.domain,
         )
         assert response.status_code == 200
+        assert response.context["content_object"] is None
+
+    def test_get_if_content_object_soft_deleted(self, client, member):
+        post = PostFactory(community=member.community, deleted=timezone.now())
+        comment = CommentFactory(
+            owner=member.member, community=member.community, content_object=post,
+        )
+        response = client.get(
+            reverse("comments:detail", args=[comment.id]),
+            HTTP_HOST=comment.community.domain,
+        )
+        assert response.status_code == 200
+        assert response.context["content_object"] is None
 
 
 class TestCommentUpdateView:

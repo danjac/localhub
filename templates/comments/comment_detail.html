@@ -5,14 +5,14 @@
 {% load i18n %}
 {% load comments_tags %}
 
-{% block subtitle %}{{ block.super }} / {{ comment.content_object }}{% endblock %}
+{% block subtitle %}{{ block.super }} {% if content_object %} / {{ content_object }}{% endif %}{% endblock %}
 
 {% block content %}
 
 <ul class="breadcrumb">
-  {% if comment.content_object %}
+  {% if content_object %}
   <li class="breadcrumb-item">
-    <a href="{{ comment.content_object.get_absolute_url }}">{{ object.content_object|truncatechars:60 }}</a>
+    <a href="{{ content_object.get_absolute_url }}">{{ content_object|truncatechars:60 }}</a>
   </li>
   {% else %}
   <li class="breadcrumb-item">
@@ -30,7 +30,7 @@
   </li>
 </ul>
 
-{% if not comment.content_object or comment.content_object.deleted %}
+{% if not content_object %}
 <h6>{% trans "[Deleted]" %}</h6>
 {% endif %}
 

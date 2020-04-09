@@ -284,22 +284,21 @@ class TestCommentModel:
         assert comment.get_notifications().count() == 0
         assert comment.get_likes().count() == 0
 
-    def test_notify_on_create(self, community, mailoutbox, send_webpush_mock):
+    def test_notify_on_create_if_no_content_object(self, community):
 
         comment_owner = MembershipFactory(community=community).member
-        post_owner = MembershipFactory(
-            community=community, member=UserFactory(),
-        ).member
+        post_owner = MembershipFactory(community=community,).member
 
         mentioned = UserFactory(username="danjac")
 
         MembershipFactory(member=mentioned, community=community)
 
-        post = PostFactory(owner=post_owner, community=community)
+        post = PostFactory(
+            owner=post_owner, community=community, deleted=timezone.now()
+        )
 
-        other_comment = CommentFactory(
-            owner=MembershipFactory(community=community, member=UserFactory(),).member,
-            content_object=post,
+        CommentFactory(
+            owner=MembershipFactory(community=community).member, content_object=post,
         )
 
         comment = CommentFactory(
@@ -309,7 +308,36 @@ class TestCommentModel:
             content="hello @danjac",
         )
 
-        follower = MembershipFactory(community=community, member=UserFactory(),).member
+        follower = MembershipFactory(community=community).member
+        follower.following.add(comment.owner)
+
+        notifications = list(comment.notify_on_create())
+
+        assert len(notifications) == 0
+
+    def test_notify_on_create(self, community, mailoutbox, send_webpush_mock):
+
+        comment_owner = MembershipFactory(community=community).member
+        post_owner = MembershipFactory(community=community,).member
+
+        mentioned = UserFactory(username="danjac")
+
+        MembershipFactory(member=mentioned, community=community)
+
+        post = PostFactory(owner=post_owner, community=community)
+
+        other_comment = CommentFactory(
+            owner=MembershipFactory(community=community).member, content_object=post,
+        )
+
+        comment = CommentFactory(
+            owner=comment_owner,
+            community=community,
+            content_object=post,
+            content="hello @danjac",
+        )
+
+        follower = MembershipFactory(community=community).member
         follower.following.add(comment.owner)
 
         notifications = list(comment.notify_on_create())
@@ -336,13 +364,9 @@ class TestCommentModel:
 
         comment_owner = MembershipFactory(community=community,).member
 
-        parent_owner = MembershipFactory(
-            community=community, member=UserFactory(),
-        ).member
+        parent_owner = MembershipFactory(community=community).member
 
-        post_owner = MembershipFactory(
-            community=community, member=UserFactory(),
-        ).member
+        post_owner = MembershipFactory(community=community).member
 
         mentioned = UserFactory(username="danjac")
 
@@ -351,8 +375,7 @@ class TestCommentModel:
         post = PostFactory(owner=post_owner, community=community)
 
         other_comment = CommentFactory(
-            owner=MembershipFactory(community=community, member=UserFactory(),).member,
-            content_object=post,
+            owner=MembershipFactory(community=community).member, content_object=post,
         )
 
         parent = CommentFactory(
@@ -370,7 +393,7 @@ class TestCommentModel:
             content="hello @danjac",
         )
 
-        follower = MembershipFactory(community=community, member=UserFactory(),).member
+        follower = MembershipFactory(community=community).member
         follower.following.add(comment.owner)
 
         notifications = list(comment.notify_on_create())
@@ -399,9 +422,7 @@ class TestCommentModel:
 
     def test_notify_on_update(self, community, mailoutbox, send_webpush_mock):
 
-        comment_owner = MembershipFactory(
-            community=community, member=UserFactory(),
-        ).member
+        comment_owner = MembershipFactory(community=community,).member
 
         member = MembershipFactory(
             community=community, member=UserFactory(username="danjac")

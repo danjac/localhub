@@ -256,6 +256,10 @@ class Comment(TimeStampedModel):
 
     @dispatch
     def notify_on_create(self):
+        # should not happen, but just in case
+        if not self.content_object or self.content_object.deleted:
+            return []
+
         notifications = []
         recipients = self.get_notification_recipients()
         notifications += self.notify_mentioned(recipients)
