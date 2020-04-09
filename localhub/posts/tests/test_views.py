@@ -125,7 +125,7 @@ class TestPostUpdateTagsView:
         response = client.get(reverse("posts:update_tags", args=[post.id]))
         assert response.status_code == 200
 
-    def test_post(self, client, moderator, post, send_webpush_mock):
+    def test_post(self, client, moderator, post, mailoutbox, send_webpush_mock):
         response = client.post(
             reverse("posts:update_tags", args=[post.id]),
             {"additional_tags": "#update"},
@@ -135,6 +135,14 @@ class TestPostUpdateTagsView:
         assert post.additional_tags == "#update"
         assert post.editor == moderator.member
         assert post.edited
+
+        notification = Notification.objects.first()
+        assert notification.recipient == post.owner
+        assert notification.actor == moderator.member
+        assert notification.verb == "edit"
+
+        assert mailoutbox[0].to == [post.owner.email]
+        assert send_webpush_mock.is_called()
 
 
 class TestPostCommentCreateView:

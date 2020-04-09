@@ -59,6 +59,7 @@ class ActivityAdapter(DefaultAdapter):
 
     ALLOWED_VERBS = [
         "delete",
+        "edit",
         "flag",
         "like",
         "mention",
