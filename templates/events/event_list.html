@@ -5,10 +5,7 @@
 {% load i18n %}
 {% load rules %}
 
-{% block subtitle %} / {% trans "Events" %}{% endblock %}
-
 {% block activity_list_header %}
-<h5>{% trans "Events" %}</h5>
 
 <div class="actions mb-1">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
