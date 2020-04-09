@@ -17,8 +17,13 @@
 {% block activity_list_header %}{% endblock %}
 {% endif %}
 
+
 {% if paginator.count or view.search_query %}
 {% include "includes/forms/search_form.html" with selector=True %}
+{% endif %}
+
+{% if page_obj.number > 1 %}
+{% include "includes/pagination.html" with css_class="mb-2" %}
 {% endif %}
 
 {% for object in object_list %}
