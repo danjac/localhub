@@ -200,7 +200,7 @@ def render_activity(request, user, object, is_pinned=False, **extra_context):
     else:
         template = f"{app_label}/includes/{model_name}.html"
 
-    if object.parent and not object.parent.deleted:
+    if object.parent:
         is_content_sensitive = object.parent.is_content_sensitive(user)
     else:
         is_content_sensitive = object.is_content_sensitive(user)
