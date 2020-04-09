@@ -2,6 +2,11 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load activities_tags %}
+
+{% if page_obj.number > 1 %}
+{% include "includes/pagination.html" with css_class="mb-2" %}
+{% endif %}
+
 {% for item in object_list %}
 <div class="activity-list-item">
   {% render_activity request user item.object %}

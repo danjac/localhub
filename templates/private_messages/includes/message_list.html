@@ -3,6 +3,10 @@
 
 {% load private_messages_tags %}
 
+{% if page_obj.number > 1 %}
+{% include "includes/pagination.html" with css_class="mb-2" %}
+{% endif %}
+
 {% if object_list %}
 {% for message in object_list %}
 {% render_message request user message %}
