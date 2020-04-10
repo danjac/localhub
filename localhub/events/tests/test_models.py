@@ -128,63 +128,6 @@ class TestEventModel:
             event.get_location() == "Areenankuja 1, Helsinki, Uusimaa, Finland"
         ), "location property should include all available location fields"
 
-    def test_update_coordinates_ok(self, mocker, event):
-        class MockGoodOSMResult:
-            latitude = 60
-            longitude = 50
-
-        mock_geocode = mocker.patch(
-            "localhub.events.models.geolocator.geocode", return_value=MockGoodOSMResult
-        )
-
-        event.street_address = "Areenankuja 1"
-        event.postal_code = "20040"
-        event.locality = "Helsinki"
-        event.region = "Uusimaa"
-        event.country = "FI"
-
-        assert event.update_coordinates() == (60, 50)
-
-        assert event.latitude == 60
-        assert event.longitude == 50
-
-        mock_geocode.assert_called_once_with(event.get_geocoder_location())
-
-    def test_update_coordinates_not_ok(self, mocker, event):
-
-        mock_geocode = mocker.patch(
-            "localhub.events.models.geolocator.geocode", return_value=None
-        )
-
-        event.street_address = "Areenankuja 1"
-        event.postal_code = "20040"
-        event.locality = "Helsinki"
-        event.region = "Uusimaa"
-        event.country = "FI"
-
-        assert event.update_coordinates() == (None, None)
-
-        assert event.latitude is None
-        assert event.longitude is None
-
-        mock_geocode.assert_called_once_with(event.get_geocoder_location())
-
-    def test_update_coordinates_location_empty(self, mocker, event):
-        class MockGoodOSMResult:
-            latitude = 60
-            longitude = 50
-
-        mock_geocode = mocker.patch(
-            "localhub.events.models.geolocator.geocode", return_value=MockGoodOSMResult
-        )
-
-        assert event.update_coordinates() == (None, None)
-
-        assert event.latitude is None
-        assert event.longitude is None
-
-        assert mock_geocode.call_count == 0
-
     def test_to_ical(self, event):
         result = force_str(event.to_ical())
         assert "DTSTART" in result

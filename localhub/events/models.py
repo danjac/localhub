@@ -121,22 +121,6 @@ class Event(Activity):
         """
         return self.ends.astimezone(self.timezone) if self.ends else None
 
-    def update_coordinates(self):
-        """Fetches the lat/lng coordinates from Open Street Map API.
-
-        Returns:
-            tuple: lat/lng pair. These will be float or None if
-                no location can be found.
-        """
-        location = self.get_geocoder_location()
-        result = geolocator.geocode(location) if location else None
-        if result:
-            self.latitude, self.longitude = result.latitude, result.longitude
-        else:
-            self.latitude, self.longitude = None, None
-        self.save(update_fields=["latitude", "longitude"])
-        return self.latitude, self.longitude
-
     def get_location(self):
         """Returns a concatenated string of location fields.
 

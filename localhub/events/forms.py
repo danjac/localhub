@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytz
+from django import forms
 from django.utils.timezone import localtime, make_aware
 from django.utils.translation import gettext_lazy as _
 
@@ -9,6 +10,7 @@ from localhub.activities.forms import ActivityForm
 from localhub.forms.fields import CalendarField
 
 from .models import Event
+from .utils import geocode
 
 DATE_FORMATS = ["%d/%m/%Y"]
 
@@ -19,6 +21,14 @@ class EventForm(ActivityForm):
 
     ends = CalendarField(
         label=_("Event ends"), required=False, input_date_formats=DATE_FORMATS
+    )
+
+    clear_geolocation = forms.BooleanField(
+        label=_("Remove event from map"), required=False
+    )
+
+    fetch_geolocation = forms.BooleanField(
+        label=_("Add event to map if address provided"), required=False
     )
 
     class Meta(ActivityForm.Meta):
@@ -38,10 +48,18 @@ class EventForm(ActivityForm):
             "postal_code",
             "region",
             "country",
+            "clear_geolocation",
+            "fetch_geolocation",
             "description",
             "allow_comments",
+            "latitude",
+            "longitude",
         )
         localized_fields = ("starts", "ends")
+        widgets = {
+            "latitude": forms.HiddenInput,
+            "longitude": forms.HiddenInput,
+        }
 
     def __init__(self, *args, **kwargs):
 
@@ -65,6 +83,11 @@ class EventForm(ActivityForm):
                     is_dst=True,
                 )
 
+        if self.instance.has_map():
+            self.fields["fetch_geolocation"].label = _("Recalculate position on map")
+        else:
+            del self.fields["clear_geolocation"]
+
     def clean(self):
         cleaned_data = super().clean()
         timezone = cleaned_data["timezone"]
@@ -85,4 +108,20 @@ class EventForm(ActivityForm):
                     make_aware(value.replace(tzinfo=None), timezone, is_dst=True),
                     pytz.UTC,
                 )
+
+        if cleaned_data.get("clear_geolocation"):
+            cleaned_data["latitude"], cleaned_data["longitude"] = None, None
+
+        elif cleaned_data["fetch_geolocation"]:
+            latitude, longitude = geocode(
+                cleaned_data["street_address"],
+                cleaned_data["locality"],
+                cleaned_data["postal_code"],
+                cleaned_data["country"],
+            )
+            if None in (latitude, longitude):
+                raise forms.ValidationError(_("Unable to locate address on map"))
+            cleaned_data["latitude"] = latitude
+            cleaned_data["longitude"] = longitude
+
         return cleaned_data
