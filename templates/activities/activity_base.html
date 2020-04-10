@@ -7,7 +7,7 @@
 
 <article role="{{ object_type }}"
          id="{{ object_type }}-{{ object.id }}"
-         class="card {{ object_type }}-card"
+         class="card {{ object_type }}-card{% if css_class %} {{ css_class }}{% endif %}"
          data-controller="clipboard{% if is_content_sensitive %} toggle{% endif %}">
   {% block header %}
   {% if is_content_sensitive %}

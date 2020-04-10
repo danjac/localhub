@@ -3,6 +3,7 @@
 
 {% extends "comments/base.html" %}
 {% load i18n %}
+{% load activities_tags %}
 {% load comments_tags %}
 
 {% block subtitle %}{{ block.super }} {% if content_object %} / {{ content_object }}{% endif %}{% endblock %}
@@ -30,7 +31,9 @@
   </li>
 </ul>
 
-{% if not content_object %}
+{% if content_object %}
+{% render_activity request user content_object css_class="mb-2" %}
+{% else %}
 <h6>{% trans "[Deleted]" %}</h6>
 {% endif %}
 
