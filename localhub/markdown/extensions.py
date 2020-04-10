@@ -34,6 +34,8 @@ class SafeImageMixin:
                 link.set("rel", "nofollow noopener noreferrer")
                 link.text = src
                 return link, start, end
+            else:
+                element.set("loading", "lazy")
         return element, start, end
 
 

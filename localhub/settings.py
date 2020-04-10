@@ -192,10 +192,9 @@ class Base(Configuration):
     # project-specific
 
     LOCALHUB_DEFAULT_PAGE_SIZE = 12
-
     LOCALHUB_HOME_PAGE_URL = reverse_lazy("activity_stream")
-
     LOCALHUB_INSTALLED_THEMES = ["light", "dark"]
+    LOCALHUB_GEOLOCATOR_USER_AGENT = values.Value("localhub")
 
     @property
     def BASE_DIR(self):

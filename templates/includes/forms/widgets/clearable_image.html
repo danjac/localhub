@@ -1,6 +1,7 @@
 <div data-controller="image-preview">
   <img src="{{ widget.value.url }}"
        data-target="image-preview.image"
+       loading="lazy"
        class="image-preview img-responsive mb-1{% if not widget.value.url %} d-hide{% endif%}">
   {% if widget.is_initial %}
   {% if not widget.required %}

@@ -243,7 +243,7 @@ class TestFlagView:
         response = client.post(
             reverse("comments:flag", args=[comment.id]), data={"reason": "spam"},
         )
-        assert response.url == post.get_absolute_url()
+        assert response.url == comment.get_absolute_url()
 
         flag = Flag.objects.get()
         assert flag.user == member.member

@@ -22,13 +22,10 @@ def render_comment(request, user, comment, is_reply=False, **extra_context):
     """
     show_content = not comment.deleted or comment.owner == user
 
-    if is_reply or not getattr(comment, "is_parent_owner_member", True):
+    if is_reply:
         parent = None
     else:
-        parent = comment.parent
-
-    if parent and parent.deleted:
-        parent = None
+        parent = comment.get_parent()
 
     return {
         "request": request,

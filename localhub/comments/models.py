@@ -265,6 +265,25 @@ class Comment(TimeStampedModel):
             return None
         return obj
 
+    def get_parent(self):
+        """Returns parent; if object is soft deleted, returns None.
+
+        Note: if "is_parent_owner_member" annotated attribute is
+        present and False will also return None. This attribute
+        is annotated with the `with_is_parent_owner_member` QuerySet
+        method.
+
+        Returns:
+            Comment or None
+        """
+        if not getattr(self, "is_parent_owner_member", True):
+            return None
+
+        obj = self.parent
+        if obj and obj.deleted:
+            return None
+        return obj
+
     @dispatch
     def notify_on_create(self):
         # should not happen, but just in case

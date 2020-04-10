@@ -4,7 +4,6 @@
 import datetime
 from datetime import timedelta
 
-import geocoder
 import pytest
 import pytz
 from django.core.exceptions import ValidationError
@@ -52,7 +51,7 @@ class TestEventModel:
         with pytest.raises(ValidationError):
             event.clean()
 
-    def test_location(self):
+    def test_get_location(self):
         event = Event(
             street_address="Areenankuja 1",
             locality="Helsinki",
@@ -61,10 +60,10 @@ class TestEventModel:
             country="FI",
         )
         assert (
-            event.location == "Areenankuja 1, Helsinki, 00240, Uusimaa, Finland"
+            event.get_location() == "Areenankuja 1, 00240 Helsinki, Uusimaa, Finland"
         ), "location property should include all event location fields"
 
-    def test_full_location(self):
+    def test_get_full_location(self):
         event = Event(
             venue="Hartwall Arena",
             street_address="Areenankuja 1",
@@ -73,9 +72,39 @@ class TestEventModel:
             region="Uusimaa",
             country="FI",
         )
-        assert event.full_location == (
-            "Hartwall Arena, Areenankuja 1, " "Helsinki, 00240, Uusimaa, Finland"
-        ), ("location property should include all event " "location fields plus venue")
+        assert event.get_full_location() == (
+            "Hartwall Arena, Areenankuja 1, 00240 Helsinki, Uusimaa, Finland"
+        ), "location should include all event location fields plus venue"
+
+    def test_get_geocoder_location(self):
+        event = Event(
+            venue="Hartwall Arena",
+            street_address="Areenankuja 1",
+            locality="Helsinki",
+            postal_code="00240",
+            region="Uusimaa",
+            country="FI",
+        )
+        assert event.get_geocoder_location() == (
+            {
+                "street": "Areenankuja 1",
+                "city": "Helsinki",
+                "postalcode": "00240",
+                "country": "Finland",
+            }
+        ), "location should include street, postcode, country name and city"
+
+    def test_get_geocoder_location_if_missing_data(self):
+        event = Event(
+            venue="Hartwall Arena",
+            street_address="Areenankuja 1",
+            locality="Helsinki",
+            region="Uusimaa",
+            country="FI",
+        )
+        assert (
+            event.get_geocoder_location() is None
+        ), "location should be None if any missing fields"
 
     def test_location_no_country(self):
         event = Event(
@@ -85,7 +114,7 @@ class TestEventModel:
             region="Uusimaa",
         )
         assert (
-            event.location == "Areenankuja 1, Helsinki, 00240, Uusimaa"
+            event.get_location() == "Areenankuja 1, 00240 Helsinki, Uusimaa"
         ), "location property should include all event location fields except country"  # noqa
 
     def test_partial_location(self):
@@ -96,17 +125,20 @@ class TestEventModel:
             country="FI",
         )
         assert (
-            event.location == "Areenankuja 1, Helsinki, Uusimaa, Finland"
+            event.get_location() == "Areenankuja 1, Helsinki, Uusimaa, Finland"
         ), "location property should include all available location fields"
 
     def test_update_coordinates_ok(self, mocker, event):
         class MockGoodOSMResult:
-            lat = 60
-            lng = 50
+            latitude = 60
+            longitude = 50
 
-        mocker.patch("geocoder.osm", return_value=MockGoodOSMResult)
+        mock_geocode = mocker.patch(
+            "localhub.events.models.geolocator.geocode", return_value=MockGoodOSMResult
+        )
 
         event.street_address = "Areenankuja 1"
+        event.postal_code = "20040"
         event.locality = "Helsinki"
         event.region = "Uusimaa"
         event.country = "FI"
@@ -116,16 +148,16 @@ class TestEventModel:
         assert event.latitude == 60
         assert event.longitude == 50
 
-        geocoder.osm.assert_called_once_with(event.location)
+        mock_geocode.assert_called_once_with(event.get_geocoder_location())
 
     def test_update_coordinates_not_ok(self, mocker, event):
-        class MockBadOSMResult:
-            lat = None
-            lng = None
 
-        mocker.patch("geocoder.osm", return_value=MockBadOSMResult)
+        mock_geocode = mocker.patch(
+            "localhub.events.models.geolocator.geocode", return_value=None
+        )
 
         event.street_address = "Areenankuja 1"
+        event.postal_code = "20040"
         event.locality = "Helsinki"
         event.region = "Uusimaa"
         event.country = "FI"
@@ -135,17 +167,23 @@ class TestEventModel:
         assert event.latitude is None
         assert event.longitude is None
 
-        geocoder.osm.assert_called_once_with(event.location)
+        mock_geocode.assert_called_once_with(event.get_geocoder_location())
 
     def test_update_coordinates_location_empty(self, mocker, event):
-        mocker.patch("geocoder.osm")
+        class MockGoodOSMResult:
+            latitude = 60
+            longitude = 50
+
+        mock_geocode = mocker.patch(
+            "localhub.events.models.geolocator.geocode", return_value=MockGoodOSMResult
+        )
 
         assert event.update_coordinates() == (None, None)
 
         assert event.latitude is None
         assert event.longitude is None
 
-        assert geocoder.osm.call_count == 0
+        assert mock_geocode.call_count == 0
 
     def test_to_ical(self, event):
         result = force_str(event.to_ical())

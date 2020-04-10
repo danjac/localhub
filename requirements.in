@@ -23,7 +23,7 @@ django-vanilla-views
 django-widget-tweaks
 django
 factory-boy
-geocoder
+geopy
 gunicorn
 icalendar
 ipython

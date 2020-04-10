@@ -469,3 +469,15 @@ class TestCommentModel:
             ).get_content_object()
             is None
         )
+
+    def test_get_parent_if_none(self, comment):
+        assert comment.get_parent() is None
+
+    def test_get_parent_if_exists(self, comment):
+        assert CommentFactory(parent=comment).get_parent() == comment
+
+    def test_get_parent_if_soft_deleted(self):
+        assert (
+            CommentFactory(parent=CommentFactory(deleted=timezone.now())).get_parent()
+            is None
+        )

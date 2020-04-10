@@ -30,14 +30,8 @@ from .models import Comment
 
 class CommentQuerySetMixin(CommunityRequiredMixin):
     def get_queryset(self):
-        return Comment.objects.for_community(
-            self.request.community
-        ).select_related(
-            "owner",
-            "community",
-            "parent",
-            "parent__owner",
-            "parent__community",
+        return Comment.objects.for_community(self.request.community).select_related(
+            "owner", "community", "parent", "parent__owner", "parent__community",
         )
 
 
@@ -199,9 +193,7 @@ comment_bookmark_view = CommentBookmarkView.as_view()
 class CommentRemoveBookmarkView(BaseCommentBookmarkView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        Bookmark.objects.filter(
-            user=request.user, comment=self.object
-        ).delete()
+        Bookmark.objects.filter(user=request.user, comment=self.object).delete()
         return self.success_response(has_bookmarked=False)
 
     def delete(self, request, *args, **kwargs):
@@ -216,9 +208,7 @@ class BaseCommentLikeView(PermissionRequiredMixin, BaseCommentActionView):
     template_name = "comments/includes/like.html"
 
     def success_response(self, has_liked):
-        return self.render_to_response(
-            {"comment": self.object, "has_liked": has_liked}
-        )
+        return self.render_to_response({"comment": self.object, "has_liked": has_liked})
 
 
 class CommentLikeView(BaseCommentLikeView):
@@ -272,7 +262,7 @@ class CommentFlagView(
         return self.comment
 
     def get_success_url(self):
-        return super().get_success_url(object=self.comment.content_object)
+        return super().get_success_url(object=self.comment)
 
     @cached_property
     def comment(self):
@@ -321,7 +311,7 @@ class CommentReplyView(
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.parent = self.parent
-        self.object.content_object = self.parent.content_object
+        self.object.content_object = self.parent.get_content_object()
         self.object.owner = self.request.user
         self.object.community = self.request.community
         self.object.save()

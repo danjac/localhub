@@ -38,7 +38,7 @@
 
   <dt>{% trans "Location" %}</dt>
   <dd>
-    {% with location=object.full_location %}
+    {% with location=object.get_full_location %}
     {% if location %}
     {{ location }}
     {% else %}

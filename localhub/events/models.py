@@ -1,7 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import geocoder
+import geopy
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -17,8 +17,29 @@ from localhub.db.search import SearchIndexer
 from localhub.db.tracker import Tracker
 from localhub.utils.http import get_domain
 
+geolocator = geopy.Nominatim(user_agent=settings.LOCALHUB_GEOLOCATOR_USER_AGENT)
+
 
 class Event(Activity):
+
+    # not exhaustive!
+
+    ADDRESS_FORMATS = (
+        (
+            ("GB", "IN", "PK", "ZA", "JP"),
+            "{street_address}, {locality}, {region}, {postcode}, {country}",
+        ),
+        (
+            ("US", "AU", "NZ"),
+            "{street_address} {locality}, {postcode}, {region}, {country}",
+        ),
+        (("RU",), "{street_address} {locality} {postcode}, {region}, {country}"),
+    )
+
+    # default for Europe, S. America, China, S. Korea
+    DEFAULT_ADDRESS_FORMAT = (
+        "{street_address}, {postcode} {locality}, {region}, {country}"
+    )
 
     LOCATION_FIELDS = (
         "street_address",
@@ -71,7 +92,7 @@ class Event(Activity):
     location_tracker = Tracker(LOCATION_FIELDS)
 
     search_indexer = SearchIndexer(
-        ("A", "title"), ("B", "full_location"), ("C", "description")
+        ("A", "title"), ("B", "search_location"), ("C", "description")
     )
 
     def __str__(self):
@@ -85,49 +106,116 @@ class Event(Activity):
         return get_domain(self.url) or ""
 
     def get_starts_with_tz(self):
+        """Returns timezone-adjusted start time.
+
+        Returns:
+            datetime
+        """
         return self.starts.astimezone(self.timezone)
 
     def get_ends_with_tz(self):
+        """Returns timezone-adjusted end time.
+
+        Returns:
+            datetime or None: returns None if ends is None.
+        """
         return self.ends.astimezone(self.timezone) if self.ends else None
 
     def update_coordinates(self):
+        """Fetches the lat/lng coordinates from Open Street Map API.
+
+        Returns:
+            tuple: lat/lng pair. These will be float or None if
+                no location can be found.
         """
-        Fetches the lat/lng coordinates from Open Street Map API.
-        """
-        if self.location:
-            result = geocoder.osm(self.location)
-            self.latitude, self.longitude = result.lat, result.lng
+        location = self.get_geocoder_location()
+        result = geolocator.geocode(location) if location else None
+        if result:
+            self.latitude, self.longitude = result.latitude, result.longitude
         else:
             self.latitude, self.longitude = None, None
         self.save(update_fields=["latitude", "longitude"])
         return self.latitude, self.longitude
 
-    @property
-    def location(self):
-        """
-        Returns a concatenated string of location fields.
-        """
-        rv = [
-            smart_text(value)
-            for value in [getattr(self, field) for field in self.LOCATION_FIELDS[:-1]]
-            if value
-        ]
+    def get_location(self):
+        """Returns a concatenated string of location fields.
 
-        if self.country:
-            rv.append(smart_text(self.country.name))
-        return ", ".join(rv)
+        Will try to guess the correct format based on country.
 
-    @property
-    def full_location(self):
+        If any missing fields, will try to tidy up the string to remove
+        any trailing commas and spaces.
+
+        Returns:
+            str
         """
-        Includes venue if available
+        location = (
+            self.get_address_format()
+            .format(
+                street_address=self.street_address,
+                locality=self.locality,
+                region=self.region,
+                postcode=self.postal_code,
+                country=self.country.name if self.country else "",
+            )
+            .replace("  ", " ")
+            .replace(", ,", ", ")
+            .strip()
+        )
+
+        if location.endswith(","):
+            location = location[:-1]
+        return smart_text(location)
+
+    def get_full_location(self):
+        """Includes venue if available along with location.
+
+        Returns:
+            str
         """
         return ", ".join(
-            [smart_text(value) for value in [self.venue, self.location] if value]
+            [smart_text(value) for value in [self.venue, self.get_location()] if value]
         )
+
+    def get_geocoder_location(self):
+        """Return a standard location for OSM lookup:
+        - street address
+        - locality
+        - postal code
+        - country name
+
+        Returns:
+            dict or None: returns None if any required fields are missing.
+        """
+
+        fields = {
+            "street": self.street_address,
+            "city": self.locality,
+            "postalcode": self.postal_code,
+            "country": self.country.name if self.country else None,
+        }
+        if not all(fields.values()):
+            return None
+
+        return fields
+
+    @property
+    def search_location(self):
+        """Property required for search indexer. Just returns full location.
+        """
+        return self.get_full_location()
 
     def has_map(self):
         return all((self.latitude, self.longitude))
+
+    def get_address_format(self):
+        if not self.country:
+            return self.DEFAULT_ADDRESS_FORMAT
+
+        for codes, address_format in self.ADDRESS_FORMATS:
+            if self.country.code in codes:
+                return address_format
+
+        return self.DEFAULT_ADDRESS_FORMAT
 
     def to_ical(self):
         event = CalendarEvent()
@@ -141,7 +229,7 @@ class Event(Activity):
             event.add("dtend", ends)
         event.add("summary", self.title)
 
-        location = self.full_location
+        location = self.get_full_location()
         if location:
             event.add("location", location)
 

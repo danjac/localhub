@@ -7,9 +7,9 @@ from django.utils import timezone
 from ..factories import CommentFactory
 from ..rules import (
     is_comment_community_moderator,
+    is_content_object_deleted,
     is_deleted,
     is_owner,
-    is_content_object_deleted,
 )
 
 pytestmark = pytest.mark.django_db
