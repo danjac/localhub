@@ -2,7 +2,17 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from ..defaultfilters import from_dictkey, html_unescape, linkify, url_to_img
+from ..defaultfilters import from_dictkey, html_unescape, lazify, linkify, url_to_img
+
+
+class TestLazify:
+    def test_if_image(self):
+        text = """this is an image <img src="test.jpg" />"""
+        assert 'loading="lazy"' in lazify(text)
+
+    def test_if_iframe(self):
+        text = """this is an image <iframe src="test.jpg" />"""
+        assert 'loading="lazy"' in lazify(text)
 
 
 class TestUrlToImg:

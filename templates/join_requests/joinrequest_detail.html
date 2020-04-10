@@ -5,7 +5,6 @@
 
 {% load i18n %}
 {% load account %}
-{% load activities_tags %}
 {% load users_tags %}
 
 {% block content %}
@@ -76,7 +75,7 @@
 <h4>{% trans "About this person" %}</h4>
 {% collapsable %}
 <div class="markdown-content">
-  {{ object.sender.bio.markdown|strip_external_images:user }}
+  {{ object.sender.bio.markdown|strip_external_images:user|lazify }}
 </div>
 {% endcollapsable %}
 {% endif %}

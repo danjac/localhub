@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load account %}
 {% load rules %}
-{% load activities_tags %}
+{% load users_tags %}
 
 <article class="card {% if css_class %} {{ css_class }}{% endif %}"
          role="comment"
@@ -38,7 +38,7 @@
     <strong>{% trans "You have blocked this user." %}</strong>
     <div class="markdown-content d-hide"
          data-target="toggle.togglable">
-      {{ comment.content.markdown|strip_external_images:user }}
+      {{ comment.content.markdown|strip_external_images:user|lazify }}
     </div>
     <div class="actions">
       <a href="#"
@@ -57,7 +57,7 @@
     {% if show_content %}
     {% collapsable is_detail %}
     <div class="markdown-content mt-1">
-      {{ comment.content.markdown|strip_external_images:user }}
+      {{ comment.content.markdown|strip_external_images:user|lazify }}
     </div>
     {% endcollapsable %}
     {% endif %}

@@ -1,9 +1,13 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from bs4 import BeautifulSoup
 from django import template
+from django.conf import settings
 from django.template.base import token_kwargs
 from django.utils.safestring import mark_safe
+
+from ..utils import linkify_mentions
 
 register = template.Library()
 
@@ -75,3 +79,35 @@ class DismissableNode(template.Node):
                 )
 
         return ""
+
+
+@register.filter(name="linkify_mentions")
+def _linkify_mentions(content):
+    return mark_safe(linkify_mentions(content))
+
+
+@register.filter
+def strip_external_images(content, user):
+    """If user has disabled external images then removes
+    any such <img> tags from the content. Images under
+    MEDIA_URL or STATIC_URL should be kept.
+
+    Args:
+        content (str)
+        user (User)
+
+    Returns:
+        str: content minus any external images.
+    """
+    if user.is_authenticated and not user.show_external_images:
+        soup = BeautifulSoup(content, "html.parser")
+        for img in soup.find_all("img"):
+            src = img.attrs.get("src")
+            if (
+                src
+                and not src.startswith(settings.MEDIA_URL)
+                and not src.startswith(settings.STATIC_URL)
+            ):
+                img.decompose()
+        return mark_safe(str(soup))
+    return content

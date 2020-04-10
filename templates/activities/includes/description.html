@@ -3,10 +3,11 @@
 
 {% load i18n %}
 {% load activities_tags %}
+{% load users_tags %}
 
 {% if object.description %}
 <div class="markdown-content mt-1">
-  {{ object.description.markdown|strip_external_images:user }}
+  {{ object.description.markdown|strip_external_images:user|lazify }}
 </div>
 <textarea data-target="clipboard.textarea"
           readonly

@@ -9,9 +9,9 @@
 <div data-controller="oembed"
      class="wordwrap mt-1">
   {% if is_oembed %}
-  {{ object.url|oembed_no_urlize|url_to_img }}
+  {{ object.url|oembed_no_urlize|url_to_img|lazify }}
   {% else %}
-  {{ object.url|url_to_img }}
+  {{ object.url|url_to_img|lazify }}
   {% endif %}
 </div>
 {% endif %}

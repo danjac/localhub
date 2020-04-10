@@ -3,6 +3,7 @@
 
 import html
 
+from bs4 import BeautifulSoup
 from django import template
 from django.utils.safestring import mark_safe
 
@@ -74,6 +75,19 @@ def linkify(url, text=None):
 
 
 register.filter(is_image_url)
+
+
+@register.filter
+def lazify(text):
+    """
+    Adds "loading"="lazy" to any img or iframe tags in the content.
+    """
+    if not text:
+        return text
+    soup = BeautifulSoup(text, "html.parser")
+    for element in soup.find_all(["iframe", "img"]):
+        element["loading"] = "lazy"
+    return mark_safe(str(soup))
 
 
 def _external_link(url, text):

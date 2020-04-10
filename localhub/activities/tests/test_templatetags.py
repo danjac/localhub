@@ -7,7 +7,6 @@ from django.utils import timezone
 
 from localhub.posts.factories import PostFactory
 from localhub.posts.models import Post
-from localhub.users.factories import UserFactory
 
 from ..templatetags.activities_tags import (
     get_pinned_activity,
@@ -15,7 +14,6 @@ from ..templatetags.activities_tags import (
     render_activity,
     resolve_model_url,
     resolve_url,
-    strip_external_images,
     verbose_name,
     verbose_name_plural,
 )
@@ -93,39 +91,6 @@ class TestIsOembedUrl:
         url = "https://reddit.com"
         user = user_model(show_embedded_content=True)
         assert not is_oembed_url(user, url)
-
-
-class TestStripExternalImages:
-    def test_if_external_image_and_anon_user(self, anonymous_user):
-        content = '<p><img src="https://imgur.com/funny.gif"/></p>'
-        assert strip_external_images(content, anonymous_user) == content
-
-    def test_if_external_image_and_user_show_external_images(self):
-        content = '<p><img src="https://imgur.com/funny.gif"/></p>'
-        user = UserFactory(show_external_images=True)
-        assert strip_external_images(content, user) == content
-
-    def test_if_external_image_and_not_user_show_external_images(self):
-        content = '<p><img src="https://imgur.com/funny.gif"/></p>'
-        user = UserFactory(show_external_images=False)
-        assert strip_external_images(content, user) == "<p></p>"
-
-    def test_if_internal_image_and_anon_user(self, anonymous_user, settings):
-        settings.STATIC_URL = "/static/"
-        content = '<p><img src="/static/funny.gif"/></p>'
-        assert strip_external_images(content, anonymous_user) == content
-
-    def test_if_internal_image_and_user_show_external_images(self, settings):
-        settings.STATIC_URL = "/static/"
-        content = '<p><img src="/static/funny.gif"/></p>'
-        user = UserFactory(show_external_images=True)
-        assert strip_external_images(content, user) == content
-
-    def test_if_internal_image_and_not_user_show_external_images(self, settings):
-        settings.STATIC_URL = "/static/"
-        content = '<p><img src="/static/funny.gif"/></p>'
-        user = UserFactory(show_external_images=False)
-        assert strip_external_images(content, user) == content
 
 
 class VerboseNameTests:

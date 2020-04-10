@@ -17,7 +17,7 @@ from markdown.util import etree
 from localhub.utils.http import is_https
 
 
-class SafeImageMixin:
+class SafeImageInlineProcessor(ImageInlineProcessor):
     """
     Only permit images starting with https://. Others
     will be converted to plain links.
@@ -34,13 +34,7 @@ class SafeImageMixin:
                 link.set("rel", "nofollow noopener noreferrer")
                 link.text = src
                 return link, start, end
-            else:
-                element.set("loading", "lazy")
         return element, start, end
-
-
-class SafeImageInlineProcessor(SafeImageMixin, ImageInlineProcessor):
-    ...
 
 
 class SafeImageExtension(Extension):

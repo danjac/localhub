@@ -5,7 +5,7 @@
 
 {% load i18n %}
 {% load rules %}
-{% load activities_tags %}
+{% load users_tags %}
 
 {% block subtitle %} / {% trans "Terms" %}{% endblock %}
 
@@ -32,7 +32,7 @@
 {% endif %}
 
 <div class="markdown-content">
-  {{ community.terms.markdown|strip_external_images:user }}
+  {{ community.terms.markdown|strip_external_images:user|lazify }}
 </div>
 
 {% endblock content %}

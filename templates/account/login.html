@@ -4,19 +4,17 @@
 {% extends "account/base.html" %}
 
 {% load i18n %}
+{% load users_tags %}
 
 {% block account_subtitle %}{% trans "Login" %}{% endblock %}
 
 {% block content %}
 
-<h5>{% trans "Login" %}</h5>
-
-{% if community.intro %}
-{{ community.intro.markdown }}
-{% endif %}
-
-{% include "account/includes/signup_link.html" %}
-{% url 'account_login' as login_url %}
-{% include "account/includes/login_form.html" with action=login_url %}
-{% include "account/includes/social_logins.html" %}
-{% endblock content %}
+<h5>{% trans "Login" %}</h5 {% if community.intro %}
+     {{ community.intro.markdown|strip_external_images:user|lazify }}
+     {% endif %}
+     {% include "account/includes/signup_link.html" %}
+     {% url 'account_login' as login_url %}
+     {% include "account/includes/login_form.html" with action=login_url %}
+     {% include "account/includes/social_logins.html" %}
+     {% endblock content %}
