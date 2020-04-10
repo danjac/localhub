@@ -36,7 +36,8 @@
 </ul>
 
 
-{% if parent %}
+{% if parent and content_object %}
+{% render_activity request user content_object css_class="mb-2" %}
 {% render_comment request user parent is_detail=True %}
 <div class="my-2"></div>
 {% endif %}

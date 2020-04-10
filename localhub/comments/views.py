@@ -303,15 +303,20 @@ class CommentReplyView(
     def parent(self):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
 
+    @cached_property
+    def content_object(self):
+        return self.parent.get_content_object()
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["parent"] = self.parent
+        data["content_object"] = self.content_object
         return data
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.parent = self.parent
-        self.object.content_object = self.parent.get_content_object()
+        self.object.content_object = self.content_object
         self.object.owner = self.request.user
         self.object.community = self.request.community
         self.object.save()
