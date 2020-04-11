@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from localhub.activities.forms import ActivityForm
 from localhub.forms.fields import CalendarField
-from localhub.utils.geocoder import geocode
+from localhub.utils.geocode import geocode
 
 from .models import Event
 
