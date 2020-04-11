@@ -89,7 +89,6 @@
 <ul class="menu mt-2">
   <li class="divider"
       data-content="{% trans 'Actions' %}"></li>
-  {% if can_create_activity %}
   <li class="menu-item">
     <a data-controller="active-link"
        data-active-link-exact
@@ -110,7 +109,6 @@
        data-active-link-exact
        href="{% url 'polls:create' %}">{% trans "Submit Poll" %}</a>
   </li>
-  {% endif %}
 </ul>
 {% endif %}
 
