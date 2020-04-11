@@ -40,7 +40,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.webpack
-    command: npm run dev
+    command: yarn run dev
     volumes:
       - .:/app
       - /app/node_modules
