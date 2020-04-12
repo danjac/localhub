@@ -86,8 +86,9 @@ export default class extends Controller {
       url,
     })
       .then((response) => {
-        if (response.headers['x-success-message']) {
-          createAlert(response.headers['x-success-message'], 'success');
+        const successMessage = response.headers['x-success-message'];
+        if (successMessage) {
+          createAlert(successMessage, 'success');
         }
         if (this.data.has('replace')) {
           this.element.innerHTML = response.data;
