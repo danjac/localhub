@@ -20,3 +20,7 @@ a {
 code {
   background-color: $darkmode-lighter;
 }
+
+blockquote {
+  border-left: $border-width-lg solid $gray-color-dark;
+}

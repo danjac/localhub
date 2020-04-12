@@ -6,7 +6,7 @@
 <div class="card{% if css_class %} {{ css_class }}{% endif %}"
      data-controller="clipboard">
   <div class="card-header h6">
-    <div class="card-title activity-title">
+    <div class="card-title">
       {% block title %}
       {% if object.url %}
       {{ object.url|linkify:object.title }}
