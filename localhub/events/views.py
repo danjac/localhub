@@ -3,8 +3,8 @@
 
 from django.http import HttpResponse
 
-from localhub.activities.views.generic.form import ActivityCreateView
 from localhub.activities.views.generic.actions import BaseActivityActionView
+from localhub.activities.views.generic.form import ActivityCreateView
 
 from .models import Event
 

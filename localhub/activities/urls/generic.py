@@ -3,26 +3,26 @@
 
 from django.urls import path
 
-from ..views.generic.list import ActivityListView
 from ..views.generic.actions import (
-    ActivityLikeView,
     ActivityBookmarkView,
     ActivityDislikeView,
+    ActivityLikeView,
     ActivityPinView,
-    ActivityRemoveBookmarkView,
     ActivityPublishView,
-    ActivityUnpinView,
+    ActivityRemoveBookmarkView,
     ActivityReshareView,
+    ActivityUnpinView,
 )
+from ..views.generic.delete import ActivityDeleteView
+from ..views.generic.detail import ActivityDetailView
 from ..views.generic.form import (
+    ActivityCommentCreateView,
     ActivityCreateView,
+    ActivityFlagView,
     ActivityUpdateTagsView,
     ActivityUpdateView,
-    ActivityCommentCreateView,
-    ActivityFlagView,
 )
-from ..views.generic.detail import ActivityDetailView
-from ..views.generic.delete import ActivityDeleteView
+from ..views.generic.list import ActivityListView
 
 
 def create_activity_urls(

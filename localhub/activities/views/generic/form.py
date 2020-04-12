@@ -6,11 +6,7 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import (
-    CreateView,
-    FormView,
-    UpdateView,
-)
+from vanilla import CreateView, FormView, UpdateView
 
 from localhub.comments.forms import CommentForm
 from localhub.communities.views import CommunityRequiredMixin
@@ -18,7 +14,6 @@ from localhub.flags.forms import FlagForm
 from localhub.views import SuccessMixin
 
 from ...forms import ActivityTagsForm
-
 from .mixins import ActivityQuerySetMixin, ActivityTemplateMixin
 
 

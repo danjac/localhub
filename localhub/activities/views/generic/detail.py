@@ -7,7 +7,7 @@ from vanilla import DetailView
 from localhub.comments.forms import CommentForm
 from localhub.pagination import PresetCountPaginator
 
-from .mixins import ActivityTemplateMixin, ActivityQuerySetMixin
+from .mixins import ActivityQuerySetMixin, ActivityTemplateMixin
 
 
 class ActivityDetailView(ActivityQuerySetMixin, ActivityTemplateMixin, DetailView):

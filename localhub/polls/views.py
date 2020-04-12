@@ -6,11 +6,11 @@ from django.utils.functional import cached_property
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import GenericModelView
 
+from localhub.activities.views.generic.detail import ActivityDetailView
 from localhub.activities.views.generic.form import (
     ActivityCreateView,
     ActivityUpdateView,
 )
-from localhub.activities.views.generic.detail import ActivityDetailView
 from localhub.activities.views.generic.list import ActivityListView
 from localhub.communities.views import CommunityRequiredMixin
 

@@ -9,7 +9,6 @@ from vanilla import DeleteView
 
 from localhub.views import SuccessMixin
 
-
 from .mixins import ActivityQuerySetMixin, ActivityTemplateMixin
 
 
