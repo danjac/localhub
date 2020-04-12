@@ -5,19 +5,16 @@ from django.urls import path, re_path
 
 from localhub.users.urls import USERNAME_RE
 
-from .views import (
-    inbox_view,
+from .views.actions import (
     message_bookmark_view,
-    message_create_view,
-    message_delete_view,
-    message_detail_view,
-    message_follow_up_view,
     message_mark_all_read_view,
     message_mark_read_view,
     message_remove_bookmark_view,
-    message_reply_view,
-    outbox_view,
 )
+from .views.delete import message_delete_view
+from .views.detail import message_detail_view
+from .views.form import message_create_view, message_follow_up_view, message_reply_view
+from .views.list import inbox_view, outbox_view
 
 app_name = "private_messages"
 

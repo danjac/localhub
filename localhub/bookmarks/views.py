@@ -5,7 +5,7 @@ from vanilla import ListView
 
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views import BaseCommentListView
-from localhub.private_messages.views import SenderOrRecipientQuerySetMixin
+from localhub.private_messages.views.mixins import SenderOrRecipientQuerySetMixin
 
 
 class BookmarksStreamView(BaseActivityStreamView):
