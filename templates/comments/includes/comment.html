@@ -29,7 +29,7 @@
 
     <div class="card-title h6">
       {% url 'users:comments' comment.owner.username as owner_url %}
-      {% include "activities/includes/timesince.html" with profile_url=owner_url timestamp=comment.created owner=comment.owner %}
+      {% include "includes/timesince.html" with profile_url=owner_url timestamp=comment.created owner=comment.owner %}
     </div>
   </div>
   {% if comment.is_blocked %}

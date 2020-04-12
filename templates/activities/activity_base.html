@@ -15,7 +15,7 @@
   <div class="card-header"
        data-target="toggle.togglable">
     <div class="card-subtitle h6">
-      {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
+      {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
     </div>
   </div>
   <div class="card-header d-hide"
@@ -38,7 +38,7 @@
         {% if object.is_reshare %}
 
         <div class="card-subtitle h6">
-          {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner is_reshare=True %}
+          {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner verb="reshared" %}
         </div>
 
         <div class="divider"></div>
@@ -102,9 +102,9 @@
 
       <div class="card-subtitle mt-1">
         {% if object.parent %}
-        {% include "activities/includes/timesince.html" with timestamp=object.parent.published|default:object.created owner=object.parent.owner %}
+        {% include "includes/timesince.html" with timestamp=object.parent.published|default:object.created owner=object.parent.owner %}
         {% elif not object.is_reshare %}
-        {% include "activities/includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
+        {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
         {% endif %}
       </div>
 

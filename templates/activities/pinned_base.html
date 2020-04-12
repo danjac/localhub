@@ -19,7 +19,7 @@
     {% endblock title %}
     <div class="card-subtitle h6">
       {% block timesince %}
-      {% include "activities/includes/timesince.html" with owner=object.owner timestamp=object.published %}
+      {% include "includes/timesince.html" with owner=object.owner timestamp=object.published %}
       {% endblock timesince %}
     </div>
   </div>

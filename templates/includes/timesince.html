@@ -2,10 +2,12 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
+{% if owner %}
 {% include "users/includes/chip.html" with profile=owner %}
+{% endif %}
 <span class="timesince">
-  {% if is_reshare %}
-  {% blocktrans with created=timestamp|timesince %}reshared {{ created }} ago{% endblocktrans %}
+  {% if verb %}
+  {% blocktrans with created=timestamp|timesince %}{{ verb }} {{ created }} ago{% endblocktrans %}
   {% else %}
   {% blocktrans with created=timestamp|timesince %}{{ created }} ago{% endblocktrans %}
   {% endif %}
