@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from localhub.activities.views.streams import BaseActivityStreamView
-from localhub.comments.views import BaseCommentListView
+from localhub.comments.views.list import BaseCommentListView
 
 
 class LikedStreamView(BaseActivityStreamView):
