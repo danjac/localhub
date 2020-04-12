@@ -1,0 +1,11 @@
+  .btn-block,
+  .btn-secondary {
+    background-color: $darkmode-lighter;
+    border-color: $gray-color-dark;
+    color: $darkmode-link;
+  }
+
+  .btn-action,
+  .btn-link {
+    color: $darkmode-link;
+  }

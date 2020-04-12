@@ -1,0 +1,12 @@
+.btn {
+  color: $dark-color;
+  border-color: $border-color-dark;
+
+  &.btn-link {
+    color: $dark-color;
+  }
+
+  &:visited {
+    color: $dark-color;
+  }
+}

@@ -1,0 +1,10 @@
+  .submit-post {
+
+    border-color: $gray-color-dark;
+
+    .form-input {
+      &:focus {
+        border-color: $gray-color-dark;
+      }
+    }
+  }

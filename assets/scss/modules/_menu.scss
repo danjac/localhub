@@ -1,0 +1,13 @@
+.menu-item {
+  a {
+    color: $dark-color;
+
+    @media (min-width: $size-lg) {
+      font-size: $font-size-sm;
+    }
+  }
+
+  &.selected {
+    @extend .bg-secondary;
+  }
+}

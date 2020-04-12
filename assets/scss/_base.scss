@@ -1,0 +1,39 @@
+main {
+  min-height: 800px;
+  @extend .text-dark;
+}
+
+header {
+  a {
+    @extend .text-light;
+  }
+}
+
+footer {
+  font-size: small;
+
+  a {
+    @extend .text-light;
+    text-decoration: underline;
+  }
+}
+
+a {
+  color: $darkmode-link;
+
+  &:visited {
+    color: $darkmode-link;
+  }
+
+  &[target='_blank']:visited {
+    color: $darkmode-link-visited;
+  }
+}
+
+blockquote {
+  border-left: $border-width-lg solid $gray-color-dark;
+}
+
+code {
+  background-color: $darkmode-lighter;
+}

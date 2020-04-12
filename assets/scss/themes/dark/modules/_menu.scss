@@ -1,0 +1,29 @@
+  .menu {
+    background-color: $darkmode-lighter;
+    border: 0.03rem solid $gray-color-dark;
+
+    .menu-item {
+      &.selected {
+        background-color: $darkmode-darker !important;
+      }
+
+      a {
+        color: $darkmode-link;
+
+        &.active,
+        &:active,
+        &:hover,
+        &:focus,
+        &:visited {
+          background-color: $darkmode-darker;
+        }
+
+        &.active,
+        &:active,
+        &:hover,
+        &:focus {
+          color: $gray-color;
+        }
+      }
+    }
+  }

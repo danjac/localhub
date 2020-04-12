@@ -1,0 +1,10 @@
+  .label {
+    background: $dark-color;
+
+    color: $darkmode-text;
+
+    a,
+    a:visited {
+      color: $darkmode-link;
+    }
+  }

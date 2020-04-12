@@ -1,0 +1,21 @@
+.pagination {
+  margin: 0;
+  padding: 0;
+
+  .page-item {
+    margin: 0;
+    padding: 0;
+
+    .btn.btn-link {
+      font-size: small;
+      padding: 0;
+      margin: 0;
+      height: $line-height;
+
+      &:focus {
+        border: none;
+        box-shadow: none;
+      }
+    }
+  }
+}

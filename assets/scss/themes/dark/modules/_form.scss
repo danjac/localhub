@@ -1,0 +1,51 @@
+  form:not(.search-form) {
+    border-color: $gray-color-dark;
+  }
+
+  .form-input,
+  .form-select {
+    background-color: $darkmode-darker;
+    color: $darkmode-text;
+    border-color: $gray-color-dark;
+
+    &::placeholder {
+      background-color: $darkmode-darker;
+      color: $darkmode-text;
+    }
+
+    &:not(:placeholder-shown) {
+      &:invalid {
+        border-color: $gray-color-dark;
+      }
+    }
+
+    &:not(:placeholder-shown):invalid:focus {
+      background-color: $darkmode-darker;
+    }
+  }
+
+  .form-checkbox .form-icon,
+  .form-radio .form-icon {
+    background: transparent;
+  }
+
+  .form-select:not([multiple]):not([size]) {
+    background-color: $darkmode-darker;
+  }
+
+  .input-group {
+    .input-group-addon {
+      background: $darkmode-lighter;
+    }
+  }
+
+  .input-group-btn {
+    background-color: inherit;
+    border-color: $gray-color-dark;
+    color: $darkmode-text;
+  }
+
+  .input-group-addon {
+    background-color: $darkmode-lighter;
+    border-color: $gray-color-dark;
+  }

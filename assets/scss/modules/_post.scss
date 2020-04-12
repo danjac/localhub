@@ -1,0 +1,12 @@
+.submit-post {
+  border-color: $gray-color;
+
+  .form-input {
+    &:focus {
+      box-shadow: none;
+      border-color: $gray-color;
+    }
+
+    height: 2rem;
+  }
+}

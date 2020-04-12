@@ -1,6 +1,41 @@
+// Copyright (c) 2020 by Dan Jacob
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 @import "variables";
+
 @import "spectre.css/spectre-icons";
 @import "spectre.css/spectre-exp";
 @import "spectre.css/spectre";
-@import "defaults";
-@import "themes/_dark";
+
+@import "base";
+@import "colors";
+@import "typography";
+@import "utilities";
+
+@import "modules/actions";
+@import "modules/breadcrumb";
+@import "modules/button";
+@import "modules/card";
+@import "modules/chip";
+@import "modules/collapsable";
+@import "modules/divider";
+@import "modules/empty";
+@import "modules/form";
+@import "modules/image-preview";
+@import "modules/info";
+@import "modules/label";
+@import "modules/map";
+@import "modules/markdown";
+@import "modules/modal";
+@import "modules/navbar";
+@import "modules/opengraph";
+@import "modules/page-header";
+@import "modules/pagination";
+@import "modules/poll";
+@import "modules/post";
+@import "modules/sidebar";
+@import "modules/table";
+@import "modules/timesince";
+@import "modules/toast";
+
+@import "themes/dark/theme";

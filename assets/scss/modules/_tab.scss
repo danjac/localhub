@@ -1,0 +1,19 @@
+// stack tabs in mobile
+.tab {
+  border-bottom: none;
+
+  &-block {
+    border-top: 0.05rem solid $gray-color;
+    margin: 0 $unit-1 0 0;
+    padding: $unit-1 $unit-1 $unit-1 - $border-width $unit-1;
+  }
+
+  .tab-item {
+    font-size: small;
+  }
+
+  a:focus {
+    box-shadow: none;
+  }
+
+}

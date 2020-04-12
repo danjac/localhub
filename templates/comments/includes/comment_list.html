@@ -8,9 +8,7 @@
 {% endif %}
 
 {% for comment in object_list %}
-<div class="activity-list-item">
-  {% render_comment request user comment include_content_object=True %}
-</div>
+{% render_comment request user comment include_content_object=True css_class="mt-2" %}
 {% empty %}
 {% include "includes/empty.html" %}
 {% endfor %}

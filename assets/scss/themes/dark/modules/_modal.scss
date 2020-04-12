@@ -1,0 +1,19 @@
+  .modal {
+    &-container {
+      color: $darkmode-text;
+      background-color: $darkmode-darker;
+      border: 0.03rem solid $gray-color-dark;
+    }
+
+    &-title {
+      color: $darkmode-text;
+    }
+
+    &-body {
+      color: $darkmode-text;
+    }
+
+    &.active .modal-overlay {
+      background: rgba($darkmode-lighter, 0.85);
+    }
+  }

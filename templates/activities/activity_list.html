@@ -27,9 +27,7 @@
 {% endif %}
 
 {% for object in object_list %}
-<div class="activity-list-item">
-  {% render_activity request user object %}
-</div>
+{% render_activity request user object css_class="mt-2" %}
 {% empty %}
 {% include "includes/empty.html" %}
 {% endfor %}

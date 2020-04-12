@@ -1,0 +1,12 @@
+.osm-map {
+  height: $map-height;
+
+  &-lg {
+    height: $map-height * 2;
+  }
+
+}
+
+.leaflet-tile-pane {
+  filter: grayscale(100%);
+}

@@ -1,0 +1,18 @@
+  .calendar {
+    border-color: $gray-color-dark;
+
+    &-header,
+    &-nav {
+      border-color: $gray-color-dark;
+      background-color: $darkmode-lighter;
+      color: $darkmode-text;
+    }
+
+    .calendar-date {
+
+      .date-item:focus,
+      .date-item:hover {
+        background: transparent;
+      }
+    }
+  }

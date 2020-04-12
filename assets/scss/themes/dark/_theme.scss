@@ -1,0 +1,27 @@
+.dark-theme {
+
+  @import "base";
+  @import "colors";
+  @import "typography";
+
+  @import "modules/actions";
+  @import "modules/badge";
+  @import "modules/button";
+  @import "modules/calendar";
+  @import "modules/card";
+  @import "modules/chip";
+  @import "modules/collapsable";
+  @import "modules/divider";
+  @import "modules/dropdown";
+  @import "modules/empty";
+  @import "modules/form";
+  @import "modules/label";
+  @import "modules/menu";
+  @import "modules/modal";
+  @import "modules/navbar";
+  @import "modules/post";
+  @import "modules/tab";
+  @import "modules/table";
+  @import "modules/toast";
+
+}

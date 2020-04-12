@@ -1,0 +1,19 @@
+  .badge {
+
+    &[data-badge],
+    &:not([data-badge]) {
+      &::after {
+        background: $link-color-dark;
+      }
+    }
+  }
+
+  .divider,
+  .divider-vert {
+    &[data-content]::after {
+      background: $darkmode-lighter;
+      color: $gray-color;
+    }
+
+    border-top: $border-width solid $gray-color-dark;
+  }
