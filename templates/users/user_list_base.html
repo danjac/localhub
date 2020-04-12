@@ -80,8 +80,10 @@
       </td>
       <td>
         {% block user_item_actions %}
-        {% if user != object %}
         <div class="float-right-responsive actions">
+          {% if user == object %}
+          <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+          {% else %}
           {% has_perm "users.follow_user" user object as can_follow_user %}
           {% if can_follow_user %}
           <span data-controller="ajax"
@@ -94,8 +96,8 @@
             {% trans "Send Message" %}
           </a>
           {% endif %}
+          {% endif %}
         </div>
-        {% endif %}
         {% endblock user_item_actions %}
       </td>
     </tr>

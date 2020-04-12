@@ -3,10 +3,13 @@
 
 .badge {
 
+  color: $darkmode-link;
+
   &[data-badge],
   &:not([data-badge]) {
     &::after {
       background: $link-color-dark;
     }
   }
+
 }
