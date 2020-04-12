@@ -9,12 +9,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
 from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
+from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 from taggit.models import Tag, TaggedItem
 from vanilla import GenericModelView, ListView
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.views import SearchMixin
+from localhub.views import SearchMixin, SuccessMixin
 
 from ..models import get_activity_models
 from .streams import BaseActivityStreamView
@@ -122,7 +123,7 @@ class TagDetailView(BaseActivityStreamView):
 tag_detail_view = TagDetailView.as_view()
 
 
-class BaseTagFollowView(PermissionRequiredMixin, BaseSingleTagView):
+class BaseTagFollowView(PermissionRequiredMixin, SuccessMixin, BaseSingleTagView):
     permission_required = "users.follow_tag"
     template_name = "activities/includes/tags/follow.html"
 
@@ -130,12 +131,14 @@ class BaseTagFollowView(PermissionRequiredMixin, BaseSingleTagView):
         return self.request.community
 
     def success_response(self, is_following):
-        return self.render_to_response(
-            {"tag": self.object, "is_following": is_following}
+        return self.render_success_to_response(
+            {"is_following": is_following, "tag": self.object}
         )
 
 
 class TagFollowView(BaseTagFollowView):
+    success_message = _("You are now following this tag")
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.following_tags.add(self.object)
@@ -146,6 +149,8 @@ tag_follow_view = TagFollowView.as_view()
 
 
 class TagUnfollowView(BaseTagFollowView):
+    success_message = _("You are no longer following this tag")
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.following_tags.remove(self.object)
@@ -155,7 +160,7 @@ class TagUnfollowView(BaseTagFollowView):
 tag_unfollow_view = TagUnfollowView.as_view()
 
 
-class BaseTagBlockView(PermissionRequiredMixin, BaseSingleTagView):
+class BaseTagBlockView(PermissionRequiredMixin, SuccessMixin, BaseSingleTagView):
     permission_required = "users.block_tag"
     template_name = "activities/includes/tags/block.html"
 
@@ -163,10 +168,14 @@ class BaseTagBlockView(PermissionRequiredMixin, BaseSingleTagView):
         return self.request.community
 
     def success_response(self, is_blocked):
-        return self.render_to_response({"tag": self.object, "is_blocked": is_blocked})
+        return self.render_success_to_response(
+            {"tag": self.object, "is_blocked": is_blocked}
+        )
 
 
 class TagBlockView(BaseTagBlockView):
+    success_message = _("You are now blocking this tag")
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.blocked_tags.add(self.object)
@@ -177,6 +186,8 @@ tag_block_view = TagBlockView.as_view()
 
 
 class TagUnblockView(BaseTagBlockView):
+    success_message = _("You no longer blocking this tag")
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.blocked_tags.remove(self.object)

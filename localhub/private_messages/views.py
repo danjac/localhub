@@ -292,16 +292,20 @@ class MessageMarkAllReadView(RecipientQuerySetMixin, View):
 message_mark_all_read_view = MessageMarkAllReadView.as_view()
 
 
-class BaseMessageBookmarkView(SenderOrRecipientQuerySetMixin, GenericModelView):
+class BaseMessageBookmarkView(
+    SenderOrRecipientQuerySetMixin, SuccessMixin, GenericModelView
+):
     template_name = "private_messages/includes/bookmark.html"
 
     def success_response(self, has_bookmarked):
-        return self.render_to_response(
+        return self.render_success_to_response(
             {"message": self.object, "has_bookmarked": has_bookmarked}
         )
 
 
 class MessageBookmarkView(BaseMessageBookmarkView):
+    success_message = _("You have bookmarked this message")
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         try:
@@ -319,6 +323,8 @@ message_bookmark_view = MessageBookmarkView.as_view()
 
 
 class MessageRemoveBookmarkView(BaseMessageBookmarkView):
+    success_message = _("You have removed this message from your bookmarks")
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         Bookmark.objects.filter(user=request.user, message=self.object).delete()

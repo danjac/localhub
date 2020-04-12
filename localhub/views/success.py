@@ -10,6 +10,8 @@ class SuccessMixin:
     """Provides defaults for success message and redirect URL.
     """
 
+    success_message_response_header = "X-Success-Message"
+
     def get_success_message(self, success_message=None, object=None, model=None):
         """Returns success message string. Interpolates
         object and model verbose name as "object" and "model"
@@ -66,6 +68,32 @@ class SuccessMixin:
                 "You must either define success_url or object, or pass object as argument"
             )
         return object.get_absolute_url()
+
+    def render_success_to_response(self, extra_context=None):
+        """Renders to an HTML template fragment instead of doing a redirect. Useful
+        for PJAX-style responses.
+
+        If success message this is rendered to X-Success-Message header instead of session.
+
+        `object` if available is automatically included.
+
+        Args:
+            extra_context (dict, optional): template context kwargs (default: None)
+
+        Returns:
+            TemplateResponse
+        """
+        context = {}
+        object = getattr(self, "object", None)
+        if object:
+            context["object"] = object
+        context.update(extra_context)
+
+        response = self.render_to_response(context)
+        success_message = self.get_success_message()
+        if success_message:
+            response[self.success_message_response_header] = success_message
+        return response
 
     def success_response(self):
         """Shortcut to add success message, and return redirect to the success URL.

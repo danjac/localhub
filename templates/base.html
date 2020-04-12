@@ -166,14 +166,25 @@
         {% endblocktrans %}
         {% enddismissable %}
 
-        {% for message in messages %}
-        <div class="text-center my-2 toast toast-{{ message.tags }}"
-             data-controller="alert">
-          <button class="btn btn-clear float-right"
-                  data-action="alert#dismiss"></button>
-          {{ message }}
+        <div id="alert-container">
+          {% for message in messages %}
+          <div class="alert text-center my-2 toast toast-{{ message.tags }}"
+               data-controller="alert">
+            <button class="btn btn-clear float-right"
+                    data-action="alert#dismiss"></button>
+            {{ message }}
+          </div>
+          {% endfor %}
         </div>
-        {% endfor %}
+        <template type="text/css"
+                  id="alert-template">
+          <div class="alert text-center my-2 toast"
+               data-controller="alert">
+            <button class="btn btn-clear float-right"
+                    data-action="alert#dismiss"></button>
+            <span class="alert-message"></span>
+          </div>
+        </template>
       </div>
     </div>
 

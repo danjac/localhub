@@ -164,12 +164,14 @@ class BaseFollowUserView(PermissionRequiredMixin, BaseSingleUserView):
     template_name = "users/includes/follow.html"
 
     def success_response(self, is_following):
-        return self.render_to_response(
+        return self.render_success_to_response(
             {"user_obj": self.object, "is_following": is_following}
         )
 
 
 class UserFollowView(BaseFollowUserView):
+    success_message = _("You are now following %(object)s")
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
@@ -183,6 +185,8 @@ user_follow_view = UserFollowView.as_view()
 
 
 class UserUnfollowView(BaseFollowUserView):
+    success_message = _("You are no longer following %(object)s")
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.following.remove(self.object)

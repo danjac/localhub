@@ -6,6 +6,7 @@ import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
 import { openDialog } from './confirm-dialog-controller';
+import { createAlert } from './alert-controller';
 
 export default class extends Controller {
   /*
@@ -85,6 +86,9 @@ export default class extends Controller {
       url,
     })
       .then((response) => {
+        if (response.headers['x-success-message']) {
+          createAlert(response.headers['x-success-message'], 'success');
+        }
         if (this.data.has('replace')) {
           this.element.innerHTML = response.data;
           return;

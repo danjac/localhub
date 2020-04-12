@@ -345,12 +345,14 @@ class ActivityUnpinView(PermissionRequiredMixin, SuccessMixin, BaseSingleActivit
         return self.success_response()
 
 
-class BaseActivityBookmarkView(PermissionRequiredMixin, BaseSingleActivityView):
+class BaseActivityBookmarkView(
+    PermissionRequiredMixin, SuccessMixin, BaseSingleActivityView
+):
     permission_required = "activities.bookmark_activity"
     template_name = "activities/includes/bookmark.html"
 
     def success_response(self, has_bookmarked):
-        return self.render_to_response(
+        return self.render_success_to_response(
             {
                 "object": self.object,
                 "object_type": self.object._meta.model_name,
@@ -360,6 +362,8 @@ class BaseActivityBookmarkView(PermissionRequiredMixin, BaseSingleActivityView):
 
 
 class ActivityBookmarkView(BaseActivityBookmarkView):
+    success_message = _("You have added this %(model)s to your bookmarks")
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         try:
@@ -375,6 +379,8 @@ class ActivityBookmarkView(BaseActivityBookmarkView):
 
 
 class ActivityRemoveBookmarkView(BaseActivityBookmarkView):
+    success_message = _("You have removed this %(model)s from your bookmarks")
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.get_bookmarks().filter(user=request.user).delete()
@@ -384,12 +390,14 @@ class ActivityRemoveBookmarkView(BaseActivityBookmarkView):
         return self.post(request, *args, **kwargs)
 
 
-class BaseActivityLikeView(PermissionRequiredMixin, BaseSingleActivityView):
+class BaseActivityLikeView(
+    PermissionRequiredMixin, SuccessMixin, BaseSingleActivityView
+):
     permission_required = "activities.like_activity"
     template_name = "activities/includes/like.html"
 
     def success_response(self, has_liked):
-        return self.render_to_response(
+        return self.render_success_to_response(
             {
                 "object": self.object,
                 "object_type": self.object._meta.model_name,
@@ -399,6 +407,8 @@ class BaseActivityLikeView(PermissionRequiredMixin, BaseSingleActivityView):
 
 
 class ActivityLikeView(BaseActivityLikeView):
+    success_message = _("You have liked this %(model)s")
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         try:
@@ -416,6 +426,8 @@ class ActivityLikeView(BaseActivityLikeView):
 
 
 class ActivityDislikeView(BaseActivityLikeView):
+    success_message = _("You have stopped liking this %(model)s")
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.get_likes().filter(user=request.user).delete()
