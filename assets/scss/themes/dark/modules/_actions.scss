@@ -4,4 +4,9 @@
 .actions a {
   color: $darkmode-link;
   background-color: inherit;
+
+  &:visited {
+    color: $darkmode-link;
+  }
+
 }
