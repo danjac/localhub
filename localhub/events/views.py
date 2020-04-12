@@ -3,7 +3,8 @@
 
 from django.http import HttpResponse
 
-from localhub.activities.views.generic import ActivityCreateView, BaseSingleActivityView
+from localhub.activities.views.generic.form import ActivityCreateView
+from localhub.activities.views.generic.actions import BaseActivityActionView
 
 from .models import Event
 
@@ -15,7 +16,7 @@ class EventCreateView(ActivityCreateView):
         return form
 
 
-class EventDownloadView(BaseSingleActivityView):
+class EventDownloadView(BaseActivityActionView):
     """
     Generates a calendar .ics file.
     """
