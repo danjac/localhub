@@ -3,19 +3,23 @@
 
 from django.urls import path, re_path
 
-from .views import (
+from .views.actions import (
+    user_block_view,
+    user_follow_view,
+    user_unblock_view,
+    user_unfollow_view,
+)
+from .views.detail import (
+    user_comment_list_view,
+    user_message_list_view,
+    user_stream_view,
+)
+from .views.list import (
     blocked_user_list_view,
     follower_user_list_view,
     following_user_list_view,
     member_list_view,
     user_autocomplete_list_view,
-    user_block_view,
-    user_comment_list_view,
-    user_follow_view,
-    user_message_list_view,
-    user_stream_view,
-    user_unblock_view,
-    user_unfollow_view,
 )
 
 app_name = "users"
