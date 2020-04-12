@@ -12,6 +12,17 @@ header {
   }
 }
 
+a {
+  &[target='_blank']:visited {
+    color: $link-color-visited;
+  }
+
+  &:visited {
+    color: $link-color-dark;
+  }
+
+}
+
 footer {
   font-size: small;
 
@@ -21,22 +32,6 @@ footer {
   }
 }
 
-a {
-  color: $darkmode-link;
-
-  &:visited {
-    color: $darkmode-link;
-  }
-
-  &[target='_blank']:visited {
-    color: $darkmode-link-visited;
-  }
-}
-
 blockquote {
   border-left: $border-width-lg solid $gray-color-dark;
-}
-
-code {
-  background-color: $darkmode-lighter;
 }

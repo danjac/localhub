@@ -1,6 +1,22 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-main {
-  @extend .text-gray;
+* {
+  color: $gray-color-dark;
+}
+
+a {
+  color: $darkmode-link;
+
+  &:visited {
+    color: $darkmode-link;
+  }
+
+  &[target='_blank']:visited {
+    color: $darkmode-link-visited;
+  }
+}
+
+code {
+  background-color: $darkmode-lighter;
 }
