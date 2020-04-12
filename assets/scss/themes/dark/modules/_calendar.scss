@@ -1,18 +1,21 @@
-  .calendar {
+// Copyright (c) 2020 by Dan Jacob
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+.calendar {
+  border-color: $gray-color-dark;
+
+  &-header,
+  &-nav {
     border-color: $gray-color-dark;
+    background-color: $darkmode-lighter;
+    color: $darkmode-text;
+  }
 
-    &-header,
-    &-nav {
-      border-color: $gray-color-dark;
-      background-color: $darkmode-lighter;
-      color: $darkmode-text;
-    }
+  .calendar-date {
 
-    .calendar-date {
-
-      .date-item:focus,
-      .date-item:hover {
-        background: transparent;
-      }
+    .date-item:focus,
+    .date-item:hover {
+      background: transparent;
     }
   }
+}

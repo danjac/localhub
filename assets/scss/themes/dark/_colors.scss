@@ -1,3 +1,14 @@
-  .text-dark {
-    color: $gray-color;
-  }
+// Copyright (c) 2020 by Dan Jacob
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+.text-dark {
+  color: $gray-color;
+}
+
+.bg-gray {
+  background-color: $darkmode-darker !important;
+}
+
+.bg-light {
+  background-color: $darkmode-darker;
+}

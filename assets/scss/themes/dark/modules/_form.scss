@@ -1,51 +1,54 @@
-  form:not(.search-form) {
-    border-color: $gray-color-dark;
-  }
+// Copyright (c) 2020 by Dan Jacob
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
-  .form-input,
-  .form-select {
+form:not(.search-form) {
+  border-color: $gray-color-dark;
+}
+
+.form-input,
+.form-select {
+  background-color: $darkmode-darker;
+  color: $darkmode-text;
+  border-color: $gray-color-dark;
+
+  &::placeholder {
     background-color: $darkmode-darker;
     color: $darkmode-text;
-    border-color: $gray-color-dark;
+  }
 
-    &::placeholder {
-      background-color: $darkmode-darker;
-      color: $darkmode-text;
-    }
-
-    &:not(:placeholder-shown) {
-      &:invalid {
-        border-color: $gray-color-dark;
-      }
-    }
-
-    &:not(:placeholder-shown):invalid:focus {
-      background-color: $darkmode-darker;
+  &:not(:placeholder-shown) {
+    &:invalid {
+      border-color: $gray-color-dark;
     }
   }
 
-  .form-checkbox .form-icon,
-  .form-radio .form-icon {
-    background: transparent;
-  }
-
-  .form-select:not([multiple]):not([size]) {
+  &:not(:placeholder-shown):invalid:focus {
     background-color: $darkmode-darker;
   }
+}
 
-  .input-group {
-    .input-group-addon {
-      background: $darkmode-lighter;
-    }
-  }
+.form-checkbox .form-icon,
+.form-radio .form-icon {
+  background: transparent;
+}
 
-  .input-group-btn {
-    background-color: inherit;
-    border-color: $gray-color-dark;
-    color: $darkmode-text;
-  }
+.form-select:not([multiple]):not([size]) {
+  background-color: $darkmode-darker;
+}
 
+.input-group {
   .input-group-addon {
-    background-color: $darkmode-lighter;
-    border-color: $gray-color-dark;
+    background: $darkmode-lighter;
   }
+}
+
+.input-group-btn {
+  background-color: inherit;
+  border-color: $gray-color-dark;
+  color: $darkmode-text;
+}
+
+.input-group-addon {
+  background-color: $darkmode-lighter;
+  border-color: $gray-color-dark;
+}

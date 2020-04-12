@@ -1,9 +1,12 @@
-  .toast {
-    .chip {
-      background: $darkmode-lighter;
-    }
+// Copyright (c) 2020 by Dan Jacob
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
-    a {
-      color: $light-color;
-    }
+.toast {
+  .chip {
+    background: $darkmode-lighter;
   }
+
+  a {
+    color: $light-color;
+  }
+}

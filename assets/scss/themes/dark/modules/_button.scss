@@ -1,11 +1,14 @@
-  .btn-block,
-  .btn-secondary {
-    background-color: $darkmode-lighter;
-    border-color: $gray-color-dark;
-    color: $darkmode-link;
-  }
+// Copyright (c) 2020 by Dan Jacob
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
-  .btn-action,
-  .btn-link {
-    color: $darkmode-link;
-  }
+.btn-block,
+.btn-secondary {
+  background-color: $darkmode-lighter;
+  border-color: $gray-color-dark;
+  color: $darkmode-link;
+}
+
+.btn-action,
+.btn-link {
+  color: $darkmode-link;
+}

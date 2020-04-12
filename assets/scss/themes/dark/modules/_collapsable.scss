@@ -1,4 +1,7 @@
-  .collapsable {
-    -webkit-mask-image: -webkit-gradient(linear, left 90%, left bottom, from(rgba(12, 12, 13, 1)), to(rgba(12, 12, 13, 0.3)));
-    mask-image: gradient(top bottom, from(rgba(12, 12, 13, 1)), to(rgba(12, 12, 13, 0.3)));
-  }
+// Copyright (c) 2020 by Dan Jacob
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+.collapsable {
+  -webkit-mask-image: -webkit-gradient(linear, left 90%, left bottom, from(rgba(12, 12, 13, 1)), to(rgba(12, 12, 13, 0.3)));
+  mask-image: gradient(top bottom, from(rgba(12, 12, 13, 1)), to(rgba(12, 12, 13, 0.3)));
+}

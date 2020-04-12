@@ -1,8 +1,11 @@
-  .chip {
-    background: $dark-color;
+// Copyright (c) 2020 by Dan Jacob
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
-    a,
-    a:visited {
-      color: $darkmode-link;
-    }
+.chip {
+  background: $dark-color;
+
+  a,
+  a:visited {
+    color: $darkmode-link;
   }
+}

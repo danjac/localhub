@@ -1,19 +1,12 @@
-  .badge {
+// Copyright (c) 2020 by Dan Jacob
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
-    &[data-badge],
-    &:not([data-badge]) {
-      &::after {
-        background: $link-color-dark;
-      }
-    }
+.divider,
+.divider-vert {
+  &[data-content]::after {
+    background: $darkmode-lighter;
+    color: $gray-color;
   }
 
-  .divider,
-  .divider-vert {
-    &[data-content]::after {
-      background: $darkmode-lighter;
-      color: $gray-color;
-    }
-
-    border-top: $border-width solid $gray-color-dark;
-  }
+  border-top: $border-width solid $gray-color-dark;
+}
