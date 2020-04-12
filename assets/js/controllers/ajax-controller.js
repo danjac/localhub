@@ -110,8 +110,17 @@ export default class extends Controller {
           eval(response.data);
         }
       })
+      .catch((err) => this.handleServerError(err))
       .finally(() => {
         target.removeAttribute('disabled');
       });
+  }
+
+  handleServerError(err) {
+    if (err.response) {
+      const { status, statusText } = err.response;
+      const errMsg = `${status}: ${statusText}`;
+      createAlert(errMsg, 'error');
+    }
   }
 }

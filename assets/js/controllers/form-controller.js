@@ -5,6 +5,8 @@ import { Controller } from 'stimulus';
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
+import { createAlert } from './alert-controller';
+
 export default class extends Controller {
   /*
   AJAX form controller. Also handles multipart forms, redirects and error messages.
@@ -17,8 +19,6 @@ export default class extends Controller {
       Ignored if not present.
 
   targets:
-    errorMessage: element for handling non-field errors
-    errorDetail: element for handling non-field errors
     progress: progress bar to show/hide during form processing
   */
   static targets = ['errorMessage', 'errorDetail', 'progress'];
@@ -68,7 +68,6 @@ export default class extends Controller {
     window.scrollTo(0, 0);
 
     this.disableFormElements();
-    this.clearErrorMessage();
 
     const referrer = location.href;
 
@@ -99,34 +98,15 @@ export default class extends Controller {
           eval(response.data);
         }
       })
-      .catch((err) => this.handleFormError(err));
+      .catch((err) => this.handleServerError(err));
   }
 
-  handleFormError(err) {
+  handleServerError(err) {
     this.enableFormElements();
-    let errMsg = '';
     if (err.response) {
       const { status, statusText } = err.response;
-      errMsg = `${status}: ${statusText}`;
-    }
-    this.renderErrorMessage(errMsg);
-  }
-
-  clearErrorMessage() {
-    if (this.errorMessageTarget) {
-      this.errorMessageTarget.classList.add('d-hide');
-    }
-    if (this.errorDetailTarget) {
-      this.errorDetailTarget.textContent = '';
-    }
-  }
-
-  renderErrorMessage(msg) {
-    if (this.errorMessageTarget) {
-      this.errorMessageTarget.classList.remove('d-hide');
-    }
-    if (this.errorDetailTarget && msg) {
-      this.errorDetailTarget.textContent = msg;
+      const errMsg = `${status}: ${statusText}`;
+      createAlert(errMsg, 'error');
     }
   }
 
