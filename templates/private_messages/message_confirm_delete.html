@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
-<h5>{% trans "Delete Message" %}</h5>
+<h1 class="page-header">{% trans "Delete Message" %}</h1>
 
 <form method="POST"
       action="{{ request.path }}">

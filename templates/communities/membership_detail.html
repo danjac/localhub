@@ -29,7 +29,7 @@
 
 {% user_display member as display_name %}
 
-<h5>
+<h1 class="page-header">
   {% avatar member "avatar-lg" %}
   {% if member.username == display_name %}
   @{{ display_name }}
@@ -37,7 +37,7 @@
   {{ display_name }}
   (@{{ member.username }})
   {% endif %}
-</h5>
+</h1>
 
 
 <div class="actions mb-1">

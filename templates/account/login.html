@@ -10,7 +10,7 @@
 
 {% block content %}
 
-<h5>{% trans "Login" %}</h5>
+<h1 class="page-header">{% trans "Login" %}</h1>
 {% if community.intro %}
 {{ community.intro.markdown|strip_external_images:user|lazify }}
 {% endif %}

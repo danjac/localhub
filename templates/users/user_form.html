@@ -11,7 +11,8 @@
 
 {% block content %}
 
-<div class="page-header">{% trans "My Settings" %}</div>
+<h1 class="page-header">{% trans "My Settings" %}</h1>
+
 <div class="actions mb-1">
   <a href="{% url 'account_email' %}">{% trans "Email Addresses" %}</a>
   {% get_providers as socialaccount_providers %}

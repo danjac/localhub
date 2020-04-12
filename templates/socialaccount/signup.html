@@ -8,7 +8,7 @@
 {% block subtitle %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
-<div class="page-header">{% trans "Sign Up" %}</div>
+<h1 class="page-header">{% trans "Sign Up" %}</h1>
 
 <p>{% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use your
   {{provider_name}} account to login to

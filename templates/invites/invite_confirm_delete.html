@@ -1,7 +1,7 @@
 {% extends "invites/base.html" %}
 {% load i18n %}
 {% block content %}
-<h5>{% trans "Delete Invite" %}</h5>
+<h1 class="page-header">{% trans "Delete Invite" %}</h1>
 
 <form method="POST"
       action="{{ request.path }}">

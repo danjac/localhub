@@ -5,7 +5,7 @@
 {% load i18n %}
 
 {% block content %}
-<h5>{% trans "Comments" %}</h5>
+<h1 class="page-header">{% trans "Comments" %}</h1>
 
 {% if paginator.count or view.search_query %}
 {% include "includes/forms/search_form.html" with selector=True %}

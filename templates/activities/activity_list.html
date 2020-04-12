@@ -11,7 +11,7 @@
 {% block content %}
 {% verbose_name_plural view.model as object_name_plural %}
 
-<h5>{{ object_name_plural|title }}</h5>
+<h1 class="page-header">{{ object_name_plural|title }}</h1>
 
 {% if page_obj.number == 1 %}
 {% block activity_list_header %}{% endblock %}

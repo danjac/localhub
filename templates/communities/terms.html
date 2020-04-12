@@ -11,7 +11,7 @@
 
 {% block content %}
 
-<h5>{% trans "Terms & Conditions" %}</h5>
+<h1 class="page-header">{% trans "Terms & Conditions" %}</h1>
 
 {% has_perm "communities.manage_community" user community as can_manage %}
 {% if can_manage or community.description %}

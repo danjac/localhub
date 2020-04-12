@@ -26,11 +26,11 @@
   </li>
 </ul>
 
-<h5>
+<h1 class="page-header">
   {% blocktrans with object_name=object_name|title %}
   Delete {{ object_name }}
   {% endblocktrans %}
-</h5>
+</h1>
 
 <form method="POST"
       action="{{ request.path }}">

@@ -18,7 +18,7 @@
 {% has_perm "private_messages.create_message" user community as can_create_message %}
 {% has_perm "communities.view_membership" user membership as can_view_membership %}
 
-<div class="page-header">
+<h1 class="page-header">
   {% avatar user_obj "avatar-lg" %}
   {% if user_obj.username == display_name %}
   @{{ display_name }}
@@ -31,7 +31,7 @@
   {% elif membership.is_moderator %}
   <span class="label">{% trans "Moderator" %}</span>
   {% endif %}
-</div>
+</h1>
 
 {% if is_blocked %}
 <p>

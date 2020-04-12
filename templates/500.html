@@ -4,8 +4,8 @@
 {% extends "error_base.html" %}
 {% load i18n %}
 {% block content %}
-<h1>{% trans "An error has occurred" %}</h1>
+<h1 class="page-header">{% trans "An error has occurred" %}</h1>
 <p>
-{% trans "Sorry, an unexpected error has occurred. The server admins have already been notified." %}
+  {% trans "Sorry, an unexpected error has occurred. The server admins have already been notified." %}
 </p>
 {% endblock %}

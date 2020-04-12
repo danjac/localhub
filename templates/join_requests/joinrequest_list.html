@@ -18,12 +18,12 @@
 </ul>
 
 
-<h5>
+<h1 class="page-header">
   {% trans "Join Requests" %}
   {% if status_display %}
   - {{ status_display}}
   {% endif %}
-</h5>
+</h1>
 
 {% if paginator.count or view.search_query %}
 {% include "includes/forms/search_form.html" with selector=True %}

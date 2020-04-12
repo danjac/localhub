@@ -11,7 +11,7 @@
 
 {% block content %}
 
-<h5>{{ community.name }}</h5>
+<h1 class="page-header">{{ community.name }}</h1>
 
 {% has_perm "communities.manage_community" user community as can_manage %}
 {% if community.terms or can_manage %}

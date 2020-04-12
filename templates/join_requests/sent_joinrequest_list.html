@@ -8,7 +8,7 @@
 
 {% block content %}
 
-<h5>{% trans "Join Requests" %}</h5>
+<h1 class="page-header">{% trans "Join Requests" %}</h1>
 
 {% has_perm "communities.manage_community" user community as can_manage_community %}
 {% if can_manage_community %}

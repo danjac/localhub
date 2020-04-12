@@ -1,7 +1,7 @@
 {% extends "comments/base.html" %}
 {% load i18n %}
 {% block content %}
-<h5>{% trans "Delete Comment" %}</h5>
+<h1 class="page-header">{% trans "Delete Comment" %}</h1>
 
 <form method="POST"
       action="{{ request.path }}">
