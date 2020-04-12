@@ -69,7 +69,7 @@ class SuccessMixin:
             )
         return object.get_absolute_url()
 
-    def render_success_to_response(self, extra_context=None):
+    def render_success_to_response(self, context=None):
         """Renders to an HTML template fragment instead of doing a redirect. Useful
         for PJAX-style responses.
 
@@ -83,13 +83,7 @@ class SuccessMixin:
         Returns:
             TemplateResponse
         """
-        context = {}
-        object = getattr(self, "object", None)
-        if object:
-            context["object"] = object
-        context.update(extra_context)
-
-        response = self.render_to_response(context)
+        response = self.render_to_response(context or {})
         success_message = self.get_success_message()
         if success_message:
             response[self.success_message_response_header] = success_message
