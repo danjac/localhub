@@ -8,6 +8,10 @@
     border-top: 0.05rem solid $gray-color-dark;
   }
 
+  a:visited {
+    color: $gray-color;
+  }
+
 
   &-item.active a {
     color: $gray-color;
