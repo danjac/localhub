@@ -299,6 +299,7 @@ table {
 
 .table-responsive {
   @media (max-width: $size-md) {
+
     thead {
       display: none;
     }
@@ -306,10 +307,12 @@ table {
     td {
       display: flex;
       flex-direction: row;
+      justify-content: flex-start;
 
       &:first-child {
         background: $bg-color-dark;
       }
+
     }
   }
 }
@@ -391,4 +394,8 @@ table {
 
 .image-preview {
   background: $gray-color;
+}
+
+.page-header {
+  @extend .h5;
 }

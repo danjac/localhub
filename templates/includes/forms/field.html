@@ -2,10 +2,8 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load widget_tweaks %}
-{% with label=label|default:field.label help_text=help_text|default:field.help_text %}
-
+{% with label=label|default:field.label help_text=help_text|default:field.help_text widget=field.field.widget %}
 <div class="form-group {% if field.errors %} has-error{% endif %}">
-  {% with widget=field.field.widget %}
   {% if widget.input_type == 'checkbox' %}
   {% if widget.allow_multiple_selected %}
   <label for="{{ field.id_for_label }}"
@@ -43,6 +41,5 @@
   {% if help_text %}
   <p><small>{{ help_text }}</small></p>
   {% endif %}
-  {% endwith %}
 </div>
 {% endwith %}

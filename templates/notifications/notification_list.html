@@ -52,13 +52,14 @@ You can enable emails for your notifications
             <div class="label bg-primary">{% trans "New" %}</div>
             {% endif %}
           </div>
-          {% include "users/includes/chip.html" with profile=notification.actor %}
-          <span class="timesince">
-            {% blocktrans with created=notification.created|timesince %}
-            {{ created }} ago
-            {% endblocktrans %}
-          </span>
         </div>
+      </td>
+      <td>
+        <span class="timesince">
+          {% blocktrans with created=notification.created|timesince %}
+          {{ created }} ago
+          {% endblocktrans %}
+        </span>
       </td>
       <td>
         <div class="actions float-right-responsive">
