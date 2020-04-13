@@ -73,7 +73,7 @@ class BaseTagListView(TagQuerySetMixin, ListView):
 
 
 class TagAutocompleteListView(BaseTagListView):
-    template_name = "activities/tags/tag_autocomplete_list.html"
+    template_name = "hashtags/tag_autocomplete_list.html"
     exclude_unused_tags = True
 
     def get_queryset(self):
@@ -87,7 +87,7 @@ tag_autocomplete_list_view = TagAutocompleteListView.as_view()
 
 
 class TagDetailView(BaseActivityStreamView):
-    template_name = "activities/tags/tag_detail.html"
+    template_name = "hashtags/tag_detail.html"
     ordering = "-created"
 
     @cached_property
@@ -124,7 +124,7 @@ tag_detail_view = TagDetailView.as_view()
 
 class BaseTagFollowView(PermissionRequiredMixin, SuccessMixin, BaseSingleTagView):
     permission_required = "users.follow_tag"
-    template_name = "activities/includes/tags/follow.html"
+    template_name = "hashtags/includes/follow.html"
 
     def get_permission_object(self):
         return self.request.community
@@ -161,7 +161,7 @@ tag_unfollow_view = TagUnfollowView.as_view()
 
 class BaseTagBlockView(PermissionRequiredMixin, SuccessMixin, BaseSingleTagView):
     permission_required = "users.block_tag"
-    template_name = "activities/includes/tags/block.html"
+    template_name = "hashtags/includes/block.html"
 
     def get_permission_object(self):
         return self.request.community
@@ -197,7 +197,7 @@ tag_unblock_view = TagUnblockView.as_view()
 
 
 class TagListView(SearchMixin, BaseTagListView):
-    template_name = "activities/tags/tag_list.html"
+    template_name = "hashtags/tag_list.html"
     paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
     exclude_unused_tags = True
 
@@ -231,7 +231,7 @@ tag_list_view = TagListView.as_view()
 
 
 class FollowingTagListView(BaseTagListView):
-    template_name = "activities/tags/following_tag_list.html"
+    template_name = "hashtags/following_tag_list.html"
 
     def get_queryset(self):
         return self.request.user.following_tags.order_by("name")
@@ -241,7 +241,7 @@ following_tag_list_view = FollowingTagListView.as_view()
 
 
 class BlockedTagListView(BaseTagListView):
-    template_name = "activities/tags/blocked_tag_list.html"
+    template_name = "hashtags/blocked_tag_list.html"
 
     def get_queryset(self):
         return self.request.user.blocked_tags.order_by("name")

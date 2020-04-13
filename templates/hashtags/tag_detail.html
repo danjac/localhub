@@ -1,0 +1,62 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/tags/base.html" %}
+{% load i18n %}
+{% load rules %}
+
+{% block subtitle %}{{ block.super }} / #{{ tag.name }}{% endblock %}
+
+{% block content %}
+
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{% url 'activities:tag_list' %}">{% trans "Tags" %}</a></li>
+  <li class="breadcrumb-item"><a href="#">{{ tag.name }}</a></li>
+</ul>
+
+{% has_perm "users.follow_tag" user as can_follow_tag %}
+{% has_perm "users.block_tag" user as can_block_tag %}
+
+{% if can_follow_tag or can_block_tag %}
+<div class="actions">
+  {% if can_follow_tag %}
+  {% with following=user.following_tags.all %}
+  <span data-controller="ajax"
+        data-ajax-replace>
+    {% if tag in following %}
+    {% include "activities/includes/tags/follow.html" with is_following=True %}
+    {% else %}
+    {% include "activities/includes/tags/follow.html"  with is_following=False %}
+    {% endif %}
+  </span>
+  {% endwith %}
+  {% endif %}
+  {% if can_block_tag %}
+  {% with blocked=user.blocked_tags.all %}
+  <span data-controller="ajax"
+        data-ajax-replace>
+    {% if tag in blocked %}
+    {% include "activities/includes/tags/block.html" with is_blocked=True %}
+    {% else %}
+    {% include "activities/includes/tags/block.html" with is_blocked=False %}
+    {% endif %}
+  </span>
+  {% endwith %}
+  {% endif %}
+</div>
+{% endif %}
+
+{% with total=paginator.count %}
+{% if total %}
+<div class="toast text-center my-2">
+  {% blocktrans with name=tag.name count counter=total %}
+  <strong>One activity</strong> has been tagged with <strong>#{{ name }}</strong>.
+  {% plural %}
+  <strong>{{ total }} activities</strong> have been tagged with <strong>#{{ name }}</strong>.
+  {% endblocktrans %}
+</div>
+{% endif %}
+{% endwith %}
+
+{% include "activities/includes/activity_list.html" %}
+{% endblock content %}

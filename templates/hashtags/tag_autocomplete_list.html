@@ -1,0 +1,17 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% for tag in object_list %}
+<li class="menu-item{% if forloop.first %} selected{% endif %}">
+  <a href="#"
+     data-action="typeahead#select"
+     data-typeahead-value="{{ tag.name }}"
+     data-typeahead-key="#">
+    <div class="tile tile-centered">
+      <div class="tile-content">
+        #{{ tag.name }}
+      </div>
+    </div>
+  </a>
+</li>
+{% endfor %}
