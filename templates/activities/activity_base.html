@@ -2,9 +2,10 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
+{% load rules %}
+{% load hashtags %}
 {% load activities_tags %}
 {% load users_tags %}
-{% load rules %}
 
 <article role="{{ object_type }}"
          id="{{ object_type }}-{{ object.id }}"

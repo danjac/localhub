@@ -11,7 +11,6 @@ from localhub.utils.http import is_https
 
 from ..models import get_activity_querysets, load_objects
 from ..oembed import bootstrap_oembed
-from ..utils import linkify_hashtags
 
 register = template.Library()
 
@@ -73,11 +72,6 @@ def is_oembed_url(user, url):
     ):
         return False
     return _oembed_registry.provider_for_url(url) is not None
-
-
-@register.filter(name="linkify_hashtags")
-def _linkify_hashtags(content):
-    return mark_safe(linkify_hashtags(content))
 
 
 @register.simple_tag

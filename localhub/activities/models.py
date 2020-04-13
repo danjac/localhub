@@ -24,6 +24,8 @@ from localhub.db.content_types import (
 from localhub.db.search import SearchQuerySetMixin
 from localhub.db.tracker import Tracker
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
+from localhub.hashtags.utils import extract_hashtags
+from localhub.hashtags.validators import validate_hashtags
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.decorators import dispatch
@@ -32,8 +34,6 @@ from localhub.utils.itertools import takefirst
 from localhub.utils.text import slugify_unicode
 
 from . import signals
-from .utils import extract_hashtags
-from .validators import validate_hashtags
 
 
 class ActivityQuerySet(

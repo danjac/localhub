@@ -3,12 +3,12 @@
 
 {% load i18n %}
 {% if is_following %}
-<a href="{% url 'activities:tag_unfollow' tag.id %}"
+<a href="{% url 'hashtags:tag_unfollow' tag.id %}"
    data-action="ajax#post">
   <s>{% trans "Follow" %}</s>
 </a>
 {% else %}
-<a href="{% url 'activities:tag_follow' tag.id %}"
+<a href="{% url 'hashtags:tag_follow' tag.id %}"
    data-action="ajax#post">
   {% trans "Follow" %}
 </a>

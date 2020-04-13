@@ -19,7 +19,7 @@
       data-controller="active-link"
       data-active-link-exact>
     <a data-target="active-link.match"
-       href="{% url 'activities:tag_list' %}">{% trans "All" %}</a>
+       href="{% url 'hashtags:tag_list' %}">{% trans "All" %}</a>
   </li>
   {% if can_follow_tag %}
   <li class="tab-item"
@@ -48,7 +48,7 @@
     {% for tag in object_list %}
     <tr>
       <td>
-        <a href="{% url 'activities:tag_detail' tag.slug %}">
+        <a href="{% url 'hashtags:tag_detail' tag.slug %}">
           #{{ tag.name }}
         </a>
         {% if tag.name.lower in content_warnings %}

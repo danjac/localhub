@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 
-import localhub.activities.validators
+import localhub.hashtags.validators
 
 
 class Migration(migrations.Migration):
@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             field=models.CharField(
                 blank=True,
                 max_length=300,
-                validators=[localhub.activities.validators.validate_hashtags],
+                validators=[localhub.hashtags.validators.validate_hashtags],
             ),
         ),
         migrations.AlterField(
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
             field=models.CharField(
                 blank=True,
                 max_length=300,
-                validators=[localhub.activities.validators.validate_hashtags],
+                validators=[localhub.hashtags.validators.validate_hashtags],
             ),
         ),
     ]

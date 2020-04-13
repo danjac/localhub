@@ -12,7 +12,7 @@ from bleach import Cleaner  # type: ignore
 from bleach.linkifier import LinkifyFilter
 from markdownx.utils import markdownify as default_markdownify
 
-from localhub.activities.utils import linkify_hashtags
+from localhub.hashtags.utils import linkify_hashtags
 from localhub.users.utils import linkify_mentions
 
 ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
