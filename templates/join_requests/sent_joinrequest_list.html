@@ -13,39 +13,40 @@
 {% has_perm "communities.manage_community" user community as can_manage_community %}
 {% if can_manage_community %}
 <div class="actions">
-    <a href="{% url 'join_requests:list' %}">{% trans "Manage join requests" %}</a>
+  <a class="action"
+     href="{% url 'join_requests:list' %}">{% trans "Manage join requests" %}</a>
 </div>
 {% endif %}
 
 
 {% if object_list %}
 <table class="table table-hover table-responsive">
-    <thead>
-        <tr>
-            <th>{% trans "Community" %}</th>
-            <th>{% trans "Status" %}</th>
-            <th>{% trans "Actions" %}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for join_request in object_list %}
-        <tr>
-            <td>
-                {{ join_request.community.name }}
-            </td>
-            <td>
-                {{ join_request.get_status_display }}
-            </td>
-            <td>
-                <a href="{% url 'join_requests:delete' join_request.id %}"
-                   data-controller="ajax"
-                   data-action="ajax#post">
-                    {% trans "Delete" %}
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
+  <thead>
+    <tr>
+      <th>{% trans "Community" %}</th>
+      <th>{% trans "Status" %}</th>
+      <th>{% trans "Actions" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for join_request in object_list %}
+    <tr>
+      <td>
+        {{ join_request.community.name }}
+      </td>
+      <td>
+        {{ join_request.get_status_display }}
+      </td>
+      <td>
+        <a href="{% url 'join_requests:delete' join_request.id %}"
+           data-controller="ajax"
+           data-action="ajax#post">
+          {% trans "Delete" %}
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
 {% include "includes/pagination.html" %}
 {% else %}

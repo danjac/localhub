@@ -71,18 +71,32 @@ class SuccessMixin:
         return object.get_absolute_url()
 
     def success_response_header(self, response, success_message):
+        """Adds success message to X-Success-Message header.
+        """
         if success_message:
             response[self.success_message_response_header] = success_message
         return response
 
     def success_ajax_response(self, success_message):
-        return self.success_response_header(HttpResponse(), success_message)
+        """Renders an AJAX response. Includes success message in HTTP header
+        instead of session.
+
+        Args:
+            success_message (str, optional): ignored if None
+
+        Returns:
+            HttpResponse
+        """
+        return self.success_response_header(HttpResponse(status=204), success_message)
 
     def success_response(self):
         """Shortcut to add success message, and return redirect to the success URL.
 
+        If the class attribute is_success_ajax_response is True, returns an empty
+        204 response.
+
         Returns:
-            HttpRespons
+            HttpResponse
         """
         success_message = self.get_success_message()
         if self.is_success_ajax_response:

@@ -31,7 +31,7 @@ class TestTagFollowView:
         post.tags.set("movies")
         tag = Tag.objects.get()
         response = client.post(reverse("hashtags:follow", args=[tag.id]))
-        assert response.status_code == 200
+        assert response.status_code == 204
         assert tag in member.member.following_tags.all()
 
 
@@ -42,7 +42,7 @@ class TestTagUnfollowView:
         tag = Tag.objects.get()
         member.member.following_tags.add(tag)
         response = client.post(reverse("hashtags:unfollow", args=[tag.id]))
-        assert response.status_code == 200
+        assert response.status_code == 204
         assert tag not in member.member.following_tags.all()
 
 
@@ -52,7 +52,7 @@ class TestTagBlockView:
         post.tags.set("movies")
         tag = Tag.objects.get()
         response = client.post(reverse("hashtags:block", args=[tag.id]))
-        assert response.status_code == 200
+        assert response.status_code == 204
         assert tag in member.member.blocked_tags.all()
 
 
@@ -63,7 +63,7 @@ class TestTagUnblockView:
         tag = Tag.objects.get()
         member.member.blocked_tags.add(tag)
         response = client.post(reverse("hashtags:unblock", args=[tag.id]))
-        assert response.status_code == 200
+        assert response.status_code == 204
         assert tag not in member.member.blocked_tags.all()
 
 
