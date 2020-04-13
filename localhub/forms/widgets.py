@@ -23,7 +23,7 @@ class TypeaheadInput(forms.TextInput):
         if self.search_mentions:
             data["mention_search_url"] = reverse("users:autocomplete_list")
         if self.search_hashtags:
-            data["tag_search_url"] = reverse("activities:tag_autocomplete_list")
+            data["tag_search_url"] = reverse("hashtags:autocomplete_list")
         return data
 
 

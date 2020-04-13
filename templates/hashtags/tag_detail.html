@@ -1,7 +1,7 @@
 {# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "activities/tags/base.html" %}
+{% extends "hashtags/base.html" %}
 {% load i18n %}
 {% load rules %}
 
@@ -10,7 +10,7 @@
 {% block content %}
 
 <ul class="breadcrumb">
-  <li class="breadcrumb-item"><a href="{% url 'hashtags:tag_list' %}">{% trans "Tags" %}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'hashtags:list' %}">{% trans "Tags" %}</a></li>
   <li class="breadcrumb-item"><a href="#">{{ tag.name }}</a></li>
 </ul>
 
@@ -24,9 +24,9 @@
   <span data-controller="ajax"
         data-ajax-replace>
     {% if tag in following %}
-    {% include "activities/includes/tags/follow.html" with is_following=True %}
+    {% include "hashtags/includes/follow.html" with is_following=True %}
     {% else %}
-    {% include "activities/includes/tags/follow.html"  with is_following=False %}
+    {% include "hashtags/includes/follow.html"  with is_following=False %}
     {% endif %}
   </span>
   {% endwith %}
@@ -36,9 +36,9 @@
   <span data-controller="ajax"
         data-ajax-replace>
     {% if tag in blocked %}
-    {% include "activities/includes/tags/block.html" with is_blocked=True %}
+    {% include "hashtags/includes/block.html" with is_blocked=True %}
     {% else %}
-    {% include "activities/includes/tags/block.html" with is_blocked=False %}
+    {% include "hashtags/includes/block.html" with is_blocked=False %}
     {% endif %}
   </span>
   {% endwith %}

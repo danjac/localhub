@@ -20,7 +20,7 @@ class TestTagAutocompleteListView:
         EventFactory(community=member.community, owner=member.member).tags.add("movies")
         PhotoFactory(community=member.community, owner=member.member).tags.add("movies")
 
-        response = client.get(reverse("hashtags:tag_autocomplete_list"), {"q": "movie"})
+        response = client.get(reverse("hashtags:autocomplete_list"), {"q": "movie"})
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 1
 
@@ -30,7 +30,7 @@ class TestTagFollowView:
         post = PostFactory(community=member.community, owner=member.member)
         post.tags.set("movies")
         tag = Tag.objects.get()
-        response = client.post(reverse("hashtags:tag_follow", args=[tag.id]))
+        response = client.post(reverse("hashtags:follow", args=[tag.id]))
         assert response.status_code == 200
         assert tag in member.member.following_tags.all()
 
@@ -41,7 +41,7 @@ class TestTagUnfollowView:
         post.tags.set("movies")
         tag = Tag.objects.get()
         member.member.following_tags.add(tag)
-        response = client.post(reverse("hashtags:tag_unfollow", args=[tag.id]))
+        response = client.post(reverse("hashtags:unfollow", args=[tag.id]))
         assert response.status_code == 200
         assert tag not in member.member.following_tags.all()
 
@@ -51,7 +51,7 @@ class TestTagBlockView:
         post = PostFactory(community=member.community, owner=member.member)
         post.tags.set("movies")
         tag = Tag.objects.get()
-        response = client.post(reverse("hashtags:tag_block", args=[tag.id]))
+        response = client.post(reverse("hashtags:block", args=[tag.id]))
         assert response.status_code == 200
         assert tag in member.member.blocked_tags.all()
 
@@ -62,7 +62,7 @@ class TestTagUnblockView:
         post.tags.set("movies")
         tag = Tag.objects.get()
         member.member.blocked_tags.add(tag)
-        response = client.post(reverse("hashtags:tag_unblock", args=[tag.id]))
+        response = client.post(reverse("hashtags:unblock", args=[tag.id]))
         assert response.status_code == 200
         assert tag not in member.member.blocked_tags.all()
 
@@ -75,7 +75,7 @@ class TestTagListView:
 
         PostFactory(community=member.community, owner=member.member).tags.add("movies")
 
-        response = client.get(reverse("hashtags:tag_list"), HTTP_HOST=community.domain)
+        response = client.get(reverse("hashtags:list"), HTTP_HOST=community.domain)
         assert len(response.context["object_list"]) == 1
         assert response.context["content_warnings"] == ["nsfw", "spoilers", "aliens"]
 
@@ -88,7 +88,7 @@ class TestFollowingTagListView:
         ).tags.add("movies")
         member.member.following_tags.add(Tag.objects.get(name="movies"))
 
-        response = client.get(reverse("hashtags:following_tag_list"))
+        response = client.get(reverse("hashtags:following_list"))
         assert len(response.context["object_list"]) == 1
 
 
@@ -100,7 +100,7 @@ class TestBlockedTagListView:
         ).tags.add("movies")
         member.member.blocked_tags.add(Tag.objects.get(name="movies"))
 
-        response = client.get(reverse("hashtags:blocked_tag_list"))
+        response = client.get(reverse("hashtags:blocked_list"))
         assert len(response.context["object_list"]) == 1
 
 
@@ -110,6 +110,6 @@ class TestTagDetailView:
             community=member.community,
             owner=MembershipFactory(community=member.community).member,
         ).tags.add("movies")
-        response = client.get(reverse("hashtags:tag_detail", args=["movies"]))
+        response = client.get(reverse("hashtags:detail", args=["movies"]))
         assert response.context["tag"].name == "movies"
         assert len(response.context["object_list"]) == 1

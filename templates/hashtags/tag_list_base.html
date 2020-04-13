@@ -1,7 +1,7 @@
 {# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "activities/tags/base.html" %}
+{% extends "hashtags/base.html" %}
 {% load i18n %}
 {% load rules %}
 
@@ -19,14 +19,14 @@
       data-controller="active-link"
       data-active-link-exact>
     <a data-target="active-link.match"
-       href="{% url 'hashtags:tag_list' %}">{% trans "All" %}</a>
+       href="{% url 'hashtags:list' %}">{% trans "All" %}</a>
   </li>
   {% if can_follow_tag %}
   <li class="tab-item"
       data-controller="active-link"
       data-active-link-exact>
     <a data-target="active-link.match"
-       href="{% url 'activities:following_tag_list' %}">{% trans "Following" %}</a>
+       href="{% url 'hashtags:following_list' %}">{% trans "Following" %}</a>
   </li>
   {% endif %}
   {% if can_block_tag %}
@@ -34,7 +34,7 @@
       data-controller="active-link"
       data-active-link-exact>
     <a data-target="active-link.match"
-       href="{% url 'activities:blocked_tag_list' %}">{% trans "Blocked" %}</a>
+       href="{% url 'hashtags:blocked_list' %}">{% trans "Blocked" %}</a>
   </li>
   {% endif %}
 </ul>
@@ -48,7 +48,7 @@
     {% for tag in object_list %}
     <tr>
       <td>
-        <a href="{% url 'hashtags:tag_detail' tag.slug %}">
+        <a href="{% url 'hashtags:detail' tag.slug %}">
           #{{ tag.name }}
         </a>
         {% if tag.name.lower in content_warnings %}
@@ -62,9 +62,9 @@
           <span data-controller="ajax"
                 data-ajax-replace>
             {% if tag in following %}
-            {% include "activities/includes/tags/follow.html" with is_following=True %}
+            {% include "hashtags/includes/follow.html" with is_following=True %}
             {% else %}
-            {% include "activities/includes/tags/follow.html"  with is_following=False %}
+            {% include "hashtags/includes/follow.html"  with is_following=False %}
             {% endif %}
           </span>
           {% endif %}
@@ -72,9 +72,9 @@
           <span data-controller="ajax"
                 data-ajax-replace>
             {% if tag in blocked %}
-            {% include "activities/includes/tags/block.html" with is_blocked=True %}
+            {% include "hashtags/includes/block.html" with is_blocked=True %}
             {% else %}
-            {% include "activities/includes/tags/block.html" with is_blocked=False %}
+            {% include "hashtags/includes/block.html" with is_blocked=False %}
             {% endif %}
           </span>
           {% endif %}

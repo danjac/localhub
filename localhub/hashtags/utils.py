@@ -45,7 +45,7 @@ def linkify_hashtags(content):
         for tag in HASHTAGS_RE.findall(token):
             slug = slugify_unicode(tag)
             if slug:
-                url = reverse("activities:tag_detail", args=[slug])
+                url = reverse("hashtags:detail", args=[slug])
                 token = token.replace("#" + tag, f'<a href="{url}">#{tag}</a>')
 
         rv.append(token)
