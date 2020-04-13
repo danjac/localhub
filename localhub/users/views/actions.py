@@ -22,12 +22,7 @@ class BaseUserActionView(UserQuerySetMixin, SuccessMixin, GenericModelView):
 
 class BaseFollowUserView(PermissionRequiredMixin, BaseUserActionView):
     permission_required = "users.follow_user"
-    template_name = "users/includes/follow.html"
-
-    def success_response(self, is_following):
-        return self.render_success_to_response(
-            {"user_obj": self.object, "is_following": is_following}
-        )
+    is_success_ajax_response = True
 
 
 class UserFollowView(BaseFollowUserView):
@@ -39,7 +34,7 @@ class UserFollowView(BaseFollowUserView):
         self.request.user.following.add(self.object)
         self.request.user.notify_on_follow(self.object, self.request.community)
 
-        return self.success_response(is_following=True)
+        return self.success_response()
 
 
 user_follow_view = UserFollowView.as_view()
@@ -51,7 +46,7 @@ class UserUnfollowView(BaseFollowUserView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.following.remove(self.object)
-        return self.success_response(is_following=False)
+        return self.success_response()
 
 
 user_unfollow_view = UserUnfollowView.as_view()

@@ -99,10 +99,7 @@
   {% endif %}
 
   {% if can_follow_user %}
-  <span data-controller="ajax"
-        data-ajax-replace>
-    {% include "users/includes/follow.html" %}
-  </span>
+  {% include "users/includes/follow.html" %}
   {% endif %}
 
   {% if can_block_user %}

@@ -97,15 +97,15 @@ export default class extends Controller {
   }
 
   showSubscribeBtn() {
-    this.element.classList.remove('d-hide');
-    this.subscribeBtnTarget.classList.remove('d-hide');
-    this.unsubscribeBtnTarget.classList.add('d-hide');
+    this.element.classList.remove('d-none');
+    this.subscribeBtnTarget.classList.remove('d-none');
+    this.unsubscribeBtnTarget.classList.add('d-none');
   }
 
   showUnsubscribeBtn() {
-    this.element.classList.remove('d-hide');
-    this.unsubscribeBtnTarget.classList.remove('d-hide');
-    this.subscribeBtnTarget.classList.add('d-hide');
+    this.element.classList.remove('d-none');
+    this.unsubscribeBtnTarget.classList.remove('d-none');
+    this.subscribeBtnTarget.classList.add('d-none');
   }
 
   checkBrowserCompatibility() {

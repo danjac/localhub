@@ -19,12 +19,7 @@ class BaseCommentActionView(CommentQuerySetMixin, SuccessMixin, GenericModelView
 
 class BaseCommentBookmarkView(PermissionRequiredMixin, BaseCommentActionView):
     permission_required = "comments.bookmark_comment"
-    template_name = "comments/includes/bookmark.html"
-
-    def success_response(self, has_bookmarked):
-        return self.render_success_to_response(
-            {"comment": self.object, "has_bookmarked": has_bookmarked}
-        )
+    is_success_ajax_response = True
 
 
 class CommentBookmarkView(BaseCommentBookmarkView):
@@ -40,7 +35,7 @@ class CommentBookmarkView(BaseCommentBookmarkView):
             )
         except IntegrityError:
             pass
-        return self.success_response(has_bookmarked=True)
+        return self.success_response()
 
 
 comment_bookmark_view = CommentBookmarkView.as_view()
@@ -52,7 +47,7 @@ class CommentRemoveBookmarkView(BaseCommentBookmarkView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         Bookmark.objects.filter(user=request.user, comment=self.object).delete()
-        return self.success_response(has_bookmarked=False)
+        return self.success_response()
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -63,12 +58,7 @@ comment_remove_bookmark_view = CommentRemoveBookmarkView.as_view()
 
 class BaseCommentLikeView(PermissionRequiredMixin, BaseCommentActionView):
     permission_required = "comments.like_comment"
-    template_name = "comments/includes/like.html"
-
-    def success_response(self, has_liked):
-        return self.render_success_to_response(
-            {"comment": self.object, "has_liked": has_liked}
-        )
+    is_success_ajax_response = True
 
 
 class CommentLikeView(BaseCommentLikeView):
@@ -85,7 +75,7 @@ class CommentLikeView(BaseCommentLikeView):
             ).notify()
         except IntegrityError:
             pass
-        return self.success_response(has_liked=True)
+        return self.success_response()
 
 
 comment_like_view = CommentLikeView.as_view()
@@ -97,7 +87,7 @@ class CommentDislikeView(BaseCommentLikeView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         Like.objects.filter(user=request.user, comment=self.object).delete()
-        return self.success_response(has_liked=False)
+        return self.success_response()
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)

@@ -21,9 +21,9 @@ export default class extends Controller {
       const file = event.target.files[0];
       if (this.isImage(file.name)) {
         this.imageTarget.src = URL.createObjectURL(file);
-        this.imageTarget.classList.remove('d-hide');
+        this.imageTarget.classList.remove('d-none');
       } else {
-        this.imageTarget.classList.add('d-hide');
+        this.imageTarget.classList.add('d-none');
       }
     }
   }

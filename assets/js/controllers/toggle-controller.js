@@ -5,10 +5,10 @@ import { Controller } from 'stimulus';
 
 export default class extends Controller {
   /*
-  Toggles one or more elements using d-hide class or another class.
+  Toggles one or more elements using d-none class or another class.
 
   actions:
-    toggle: toggles d-hide on all togglable targets.
+    toggle: toggles d-none on all togglable targets.
 
   targets:
     togglable: elements to be toggled.
@@ -17,7 +17,7 @@ export default class extends Controller {
 
   toggle(event) {
     event.preventDefault();
-    const toggleClass = this.data.get('class') || 'd-hide';
+    const toggleClass = this.data.get('class') || 'd-none';
     this.togglableTargets.forEach((el) => el.classList.toggle(toggleClass));
   }
 }

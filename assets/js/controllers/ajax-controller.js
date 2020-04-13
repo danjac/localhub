@@ -25,11 +25,16 @@ export default class extends Controller {
       if not defined.
     redirect: location of redirect on successful completion. This overrides any
       Location returned from the server. If "none" will not perform any redirect.
-    replace (bool): contents of element will be replaced by HTML returned by endpoint.
+    toggle: if any toggle targets, will toggle this class (default: d-none)
     remove (bool): element will be removed when ajax action is executed.
     follow (bool): (GET requests only) : will just redirect directly to that URL without
       calling the endpoint.
+
+  targets:
+    toggle: toggle specific items' class on successful execution.
   */
+
+  static targets = ['toggle'];
 
   get(event) {
     this.confirm('GET', event);
@@ -90,10 +95,12 @@ export default class extends Controller {
         if (successMessage) {
           createAlert(successMessage, 'success');
         }
-        if (this.data.has('replace')) {
-          this.element.innerHTML = response.data;
-          return;
-        }
+        const toggleClass = this.data.get('toggle') || 'd-none';
+
+        this.toggleTargets.forEach((target) => {
+          target.classList.toggle(toggleClass);
+        });
+
         if (this.data.has('remove')) {
           this.element.remove();
           return;

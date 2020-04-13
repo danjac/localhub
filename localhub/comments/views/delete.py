@@ -1,6 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView
@@ -18,7 +19,10 @@ class CommentDeleteView(
     success_message = _("This comment has been deleted")
 
     def get_success_url(self):
-        return super().get_success_url(object=self.object.content_object)
+        obj = self.object.get_content_object()
+        if obj:
+            return obj.get_absolute_url()
+        return reverse("comments:list")
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()

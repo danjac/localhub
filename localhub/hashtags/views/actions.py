@@ -19,14 +19,10 @@ class BaseTagActionView(
 class BaseTagFollowView(BaseTagActionView):
     permission_required = "users.follow_tag"
     template_name = "hashtags/includes/follow.html"
+    is_success_ajax_response = True
 
     def get_permission_object(self):
         return self.request.community
-
-    def success_response(self, is_following):
-        return self.render_success_to_response(
-            {"is_following": is_following, "tag": self.object}
-        )
 
 
 class TagFollowView(BaseTagFollowView):
@@ -35,7 +31,7 @@ class TagFollowView(BaseTagFollowView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.following_tags.add(self.object)
-        return self.success_response(is_following=True)
+        return self.success_response()
 
 
 tag_follow_view = TagFollowView.as_view()
@@ -47,7 +43,7 @@ class TagUnfollowView(BaseTagFollowView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.following_tags.remove(self.object)
-        return self.success_response(is_following=False)
+        return self.success_response()
 
 
 tag_unfollow_view = TagUnfollowView.as_view()
@@ -55,15 +51,10 @@ tag_unfollow_view = TagUnfollowView.as_view()
 
 class BaseTagBlockView(BaseTagActionView):
     permission_required = "users.block_tag"
-    template_name = "hashtags/includes/block.html"
+    is_success_ajax_response = True
 
     def get_permission_object(self):
         return self.request.community
-
-    def success_response(self, is_blocked):
-        return self.render_success_to_response(
-            {"tag": self.object, "is_blocked": is_blocked}
-        )
 
 
 class TagBlockView(BaseTagBlockView):
@@ -72,7 +63,7 @@ class TagBlockView(BaseTagBlockView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.blocked_tags.add(self.object)
-        return self.success_response(is_blocked=True)
+        return self.success_response()
 
 
 tag_block_view = TagBlockView.as_view()
@@ -84,7 +75,7 @@ class TagUnblockView(BaseTagBlockView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.request.user.blocked_tags.remove(self.object)
-        return self.success_response(is_blocked=False)
+        return self.success_response()
 
 
 tag_unblock_view = TagUnblockView.as_view()

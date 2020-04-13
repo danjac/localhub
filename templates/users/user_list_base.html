@@ -86,10 +86,7 @@
           {% else %}
           {% has_perm "users.follow_user" user object as can_follow_user %}
           {% if can_follow_user %}
-          <span data-controller="ajax"
-                data-ajax-replace>
-            {% include "users/includes/follow.html" with user_obj=object is_following=object.is_following %}
-          </span>
+          {% include "users/includes/follow.html" with user_obj=object is_following=object.is_following %}
           {% endif %}
           {% if can_create_message and object not in blocked_users %}
           <a href="{% url 'private_messages:message_create' object.username %}">

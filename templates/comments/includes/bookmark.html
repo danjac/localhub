@@ -1,12 +1,19 @@
-    {# Copyright (c) 2020 by Dan Jacob #}
-    {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-    {% load i18n %}
+{% load i18n %}
 
-    {% if has_bookmarked %}
-    <a href="{% url 'comments:remove_bookmark' comment.id %}"
-       data-action="ajax#post"><s>{% trans "Bookmark" %}</s></a>
-    {% else %}
-    <a href="{% url 'comments:bookmark' comment.id %}"
-       data-action="ajax#post">{% trans "Bookmark" %}</a>
-    {% endif %}
+<span data-controller="ajax">
+  <a href="{% url 'comments:remove_bookmark' comment.id %}"
+     {% if not has_bookmarked %}
+     class="d-none"
+     {% endif %}
+     data-target="ajax.toggle"
+     data-action="ajax#post"><s>{% trans "Bookmark" %}</s></a>
+  <a href="{% url 'comments:bookmark' comment.id %}"
+     {% if has_bookmarked %}
+     class="d-none"
+     {% endif %}
+     data-target="ajax.toggle"
+     data-action="ajax#post">{% trans "Bookmark" %}</a>
+</span>

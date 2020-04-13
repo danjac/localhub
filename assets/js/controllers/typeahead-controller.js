@@ -195,11 +195,11 @@ export default class extends Controller {
     const { offsetTop, offsetLeft, scrollTop, scrollLeft } = this.inputTarget;
     this.selectorTarget.style.top = offsetTop - scrollTop + height + top + 'px';
     this.selectorTarget.style.left = offsetLeft - scrollLeft + left + 'px';
-    this.selectorTarget.classList.remove('d-hide');
+    this.selectorTarget.classList.remove('d-none');
   }
 
   closeSelector() {
-    this.selectorTarget.classList.add('d-hide');
+    this.selectorTarget.classList.add('d-none');
     this.removeChildNodes(this.selectorTarget);
   }
 
@@ -210,6 +210,6 @@ export default class extends Controller {
   }
 
   get selectorOpen() {
-    return !this.selectorTarget.classList.contains('d-hide');
+    return !this.selectorTarget.classList.contains('d-none');
   }
 }

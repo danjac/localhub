@@ -4,7 +4,7 @@
 {% load i18n %}
 
 {% if user.is_authenticated %}
-<div class="text-center my-2 toast d-hide"
+<div class="text-center my-2 toast d-none"
      data-controller="notifications"
      data-notifications-service-worker-url="{% url 'notifications:service_worker' %}"
      data-notifications-subscribe-url="{% url 'notifications:subscribe' %}"
@@ -12,11 +12,11 @@
      {% if vapid_public_key %}
      data-notifications-vapid-public-key="{{ vapid_public_key }}"
      {% endif %}>
-   <a class="d-hide"
+   <a class="d-none"
       href="#"
       data-target="notifications.subscribeBtn"
       data-action="notifications#subscribe">{% trans "Enable browser push notifications" %}</a>
-   <a class="d-hide"
+   <a class="d-none"
       href="#"
       data-target="notifications.unsubscribeBtn"
       data-action="notifications#unsubscribe">{% trans "Disable browser push notifications" %}</a>

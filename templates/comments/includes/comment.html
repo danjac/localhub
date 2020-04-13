@@ -36,7 +36,7 @@
   <div class="card-body"
        data-controller="toggle">
     <strong>{% trans "You have blocked this user." %}</strong>
-    <div class="markdown-content d-hide"
+    <div class="markdown-content d-none"
          data-target="toggle.togglable">
       {{ comment.content.markdown|strip_external_images:user|lazify }}
     </div>
@@ -97,9 +97,7 @@
 
           {% has_perm "comments.bookmark_comment" user comment as can_bookmark_comment %}
           {% if can_bookmark_comment %}
-          <li class="menu-item"
-              data-controller="ajax"
-              data-ajax-replace>
+          <li class="menu-item">
             {% include "comments/includes/bookmark.html" with has_bookmarked=comment.has_bookmarked %}
           </li>
           {% endif %}

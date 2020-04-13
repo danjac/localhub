@@ -19,7 +19,7 @@
       {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
     </div>
   </div>
-  <div class="card-header d-hide"
+  <div class="card-header d-none"
        data-target="toggle.togglable">
     {% else %}
     <div class="card-header">
@@ -135,7 +135,7 @@
                     data-action="toggle#toggle">{% trans "Show Content" %}</button>
           </div>
         </div>
-        <div class="d-hide"
+        <div class="d-none"
              data-target="toggle.togglable">
           {% endif %}
           {% with ignore_collapsable=is_detail|default:is_content_sensitive %}

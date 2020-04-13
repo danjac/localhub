@@ -3,14 +3,21 @@
 
 {% load i18n %}
 
-{% if is_blocked %}
-<a href="{% url 'hashtags:unblock' tag.id %}"
-   data-action="ajax#post">
-  <s>{% trans "Block" %}</s>
-</a>
-{% else %}
-<a href="{% url 'hashtags:block' tag.id %}"
-   data-action="ajax#post">
-  {% trans "Block" %}
-</a>
-{% endif %}
+<span data-controller="ajax">
+  <a href="{% url 'hashtags:unblock' tag.id %}"
+     {% if not is_blocked %}
+     class="d-none"
+     {% endif %}
+     data-target="ajax.toggle"
+     data-action="ajax#post">
+    <s>{% trans "Block" %}</s>
+  </a>
+  <a href="{% url 'hashtags:block' tag.id %}"
+     {% if is_blocked %}
+     class="d-none"
+     {% endif %}
+     data-target="ajax.toggle"
+     data-action="ajax#post">
+    {% trans "Block" %}
+  </a>
+</span>

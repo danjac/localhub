@@ -59,24 +59,18 @@
       <td>
         <div class="float-right-responsive actions">
           {% if can_follow_tag %}
-          <span data-controller="ajax"
-                data-ajax-replace>
-            {% if tag in following %}
-            {% include "hashtags/includes/follow.html" with is_following=True %}
-            {% else %}
-            {% include "hashtags/includes/follow.html"  with is_following=False %}
-            {% endif %}
-          </span>
+          {% if tag in following %}
+          {% include "hashtags/includes/follow.html" with is_following=True %}
+          {% else %}
+          {% include "hashtags/includes/follow.html"  with is_following=False %}
+          {% endif %}
           {% endif %}
           {% if can_block_tag %}
-          <span data-controller="ajax"
-                data-ajax-replace>
-            {% if tag in blocked %}
-            {% include "hashtags/includes/block.html" with is_blocked=True %}
-            {% else %}
-            {% include "hashtags/includes/block.html" with is_blocked=False %}
-            {% endif %}
-          </span>
+          {% if tag in blocked %}
+          {% include "hashtags/includes/block.html" with is_blocked=True %}
+          {% else %}
+          {% include "hashtags/includes/block.html" with is_blocked=False %}
+          {% endif %}
           {% endif %}
         </div>
       </td>

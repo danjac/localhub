@@ -2,15 +2,21 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-
-{% if is_following %}
-<a href="{% url 'users:unfollow' user_obj.username %}"
-   data-action="ajax#post">
-  <s>{% trans "Follow" %}</s>
-</a>
-{% else %}
-<a href="{% url 'users:follow' user_obj.username %}"
-   data-action="ajax#post">
-  {% trans "Follow" %}
-</a>
-{% endif %}
+<span data-controller="ajax">
+  <a href="{% url 'users:unfollow' user_obj.username %}"
+     {% if not is_following %}
+     class="d-none"
+     {% endif %}
+     data-target="ajax.toggle"
+     data-action="ajax#post">
+    <s>{% trans "Follow" %}</s>
+  </a>
+  <a href="{% url 'users:follow' user_obj.username %}"
+     {% if is_following %}
+     class="d-none"
+     {% endif %}
+     data-target="ajax.toggle"
+     data-action="ajax#post">
+    {% trans "Follow" %}
+  </a>
+</span>

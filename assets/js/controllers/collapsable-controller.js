@@ -45,14 +45,14 @@ export default class extends Controller {
 
   removeCollapsable() {
     this.containerTarget.classList.remove('collapsable');
-    this.toggleTargets.forEach((el) => el.classList.add('d-hide'));
+    this.toggleTargets.forEach((el) => el.classList.add('d-none'));
     this.observer.disconnect(this.containerTarget);
   }
 
   makeCollapsable(height) {
     if (height > MAX_HEIGHT && !this.isCollapsable) {
       this.containerTarget.classList.add('collapsable');
-      this.toggleTargets.forEach((target) => target.classList.remove('d-hide'));
+      this.toggleTargets.forEach((target) => target.classList.remove('d-none'));
     }
   }
 

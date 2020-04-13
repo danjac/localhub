@@ -138,6 +138,13 @@ class TestCommentDeleteView:
         assert response.url == post.get_absolute_url()
         assert Comment.objects.count() == 0
 
+    def test_post_if_no_comment_object(self, client, member):
+        comment = CommentFactory(
+            owner=member.member, content_object=None, community=member.community,
+        )
+        response = client.post(reverse("comments:delete", args=[comment.id]))
+        assert response.url == reverse("comments:list")
+
     def test_post_by_moderator(self, client, moderator, mailoutbox, send_webpush_mock):
         member = MembershipFactory(community=moderator.community)
         post = PostFactory(community=moderator.community, owner=member.member)

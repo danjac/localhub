@@ -3,7 +3,7 @@
 
 from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 
 
 class SuccessMixin:
@@ -11,6 +11,7 @@ class SuccessMixin:
     """
 
     success_message_response_header = "X-Success-Message"
+    is_success_ajax_response = False
 
     def get_success_message(self, success_message=None, object=None, model=None):
         """Returns success message string. Interpolates
@@ -69,22 +70,8 @@ class SuccessMixin:
             )
         return object.get_absolute_url()
 
-    def render_success_to_response(self, context=None):
-        """Renders to an HTML template fragment instead of doing a redirect. Useful
-        for PJAX-style responses.
-
-        If success message this is rendered to X-Success-Message header instead of session.
-
-        `object` if available is automatically included.
-
-        Args:
-            extra_context (dict, optional): template context kwargs (default: None)
-
-        Returns:
-            TemplateResponse
-        """
-        response = self.render_to_response(context or {})
-        success_message = self.get_success_message()
+    def success_ajax_response(self, success_message):
+        response = HttpResponse()
         if success_message:
             response[self.success_message_response_header] = success_message
         return response
@@ -93,9 +80,12 @@ class SuccessMixin:
         """Shortcut to add success message, and return redirect to the success URL.
 
         Returns:
-            HttpResponseRedirect
+            HttpRespons
         """
         success_message = self.get_success_message()
+        if self.is_success_ajax_response:
+            return self.success_ajax_response(success_message)
+
         if success_message:
             messages.success(self.request, success_message)
 

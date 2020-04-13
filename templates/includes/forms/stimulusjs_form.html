@@ -11,7 +11,7 @@ data-action="form#submit beforeunload@window->form#unload turbolinks:before-visi
 {% endblock form_extra_attrs %}
 
 {% block form_fields %}
-<progress class="progress d-hide"
+<progress class="progress d-none"
           data-target="form.progress"
           max="100"></progress>
 {{ block.super }}

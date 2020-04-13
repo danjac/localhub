@@ -122,7 +122,7 @@ export default class extends Controller {
 
   toggleProgressBar() {
     if (this.progressTarget) {
-      this.progressTarget.classList.toggle('d-hide');
+      this.progressTarget.classList.toggle('d-none');
     }
   }
 
