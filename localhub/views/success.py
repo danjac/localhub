@@ -70,11 +70,13 @@ class SuccessMixin:
             )
         return object.get_absolute_url()
 
-    def success_ajax_response(self, success_message):
-        response = HttpResponse()
+    def success_response_header(self, response, success_message):
         if success_message:
             response[self.success_message_response_header] = success_message
         return response
+
+    def success_ajax_response(self, success_message):
+        return self.success_response_header(HttpResponse(), success_message)
 
     def success_response(self):
         """Shortcut to add success message, and return redirect to the success URL.
