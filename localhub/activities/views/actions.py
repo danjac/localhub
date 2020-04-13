@@ -102,16 +102,7 @@ class ActivityUnpinView(BaseActivityActionView):
 
 class BaseActivityBookmarkView(BaseActivityActionView):
     permission_required = "activities.bookmark_activity"
-    template_name = "activities/includes/bookmark.html"
-
-    def success_response(self, has_bookmarked):
-        return self.render_success_to_response(
-            {
-                "object": self.object,
-                "object_type": self.object._meta.model_name,
-                "has_bookmarked": has_bookmarked,
-            }
-        )
+    is_success_ajax_response = True
 
 
 class ActivityBookmarkView(BaseActivityBookmarkView):
@@ -128,7 +119,7 @@ class ActivityBookmarkView(BaseActivityBookmarkView):
         except IntegrityError:
             # dupe, ignore
             pass
-        return self.success_response(has_bookmarked=True)
+        return self.success_response()
 
 
 class ActivityRemoveBookmarkView(BaseActivityBookmarkView):
@@ -137,7 +128,7 @@ class ActivityRemoveBookmarkView(BaseActivityBookmarkView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.get_bookmarks().filter(user=request.user).delete()
-        return self.success_response(has_bookmarked=False)
+        return self.success_response()
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -145,16 +136,7 @@ class ActivityRemoveBookmarkView(BaseActivityBookmarkView):
 
 class BaseActivityLikeView(BaseActivityActionView):
     permission_required = "activities.like_activity"
-    template_name = "activities/includes/like.html"
-
-    def success_response(self, has_liked):
-        return self.render_success_to_response(
-            {
-                "object": self.object,
-                "object_type": self.object._meta.model_name,
-                "has_liked": has_liked,
-            }
-        )
+    is_success_ajax_response = True
 
 
 class ActivityLikeView(BaseActivityLikeView):
@@ -173,7 +155,7 @@ class ActivityLikeView(BaseActivityLikeView):
         except IntegrityError:
             # dupe, ignore
             pass
-        return self.success_response(has_liked=True)
+        return self.success_response()
 
 
 class ActivityDislikeView(BaseActivityLikeView):
@@ -182,7 +164,7 @@ class ActivityDislikeView(BaseActivityLikeView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.get_likes().filter(user=request.user).delete()
-        return self.success_response(has_liked=False)
+        return self.success_response()
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)

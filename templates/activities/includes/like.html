@@ -4,10 +4,17 @@
 {% load i18n %}
 {% load activities %}
 
-{% if has_liked %}
-<a href="{% resolve_url object "dislike" %}"
-   data-action="ajax#post"><s>{% trans "Like" %}</s></a>
-{% else %}
-<a href="{% resolve_url object "like" %}"
-   data-action="ajax#post">{% trans "Like" %}</a>
-{% endif %}
+<span data-controller="ajax">
+  <a href="{% resolve_url object "dislike" %}"
+     {% if not has_liked %}
+     class="d-none"
+     {% endif %}
+     data-target="ajax.toggle"
+     data-action="ajax#post"><s>{% trans "Like" %}</s></a>
+  <a href="{% resolve_url object "like" %}"
+     {% if has_liked %}
+     class="d-none"
+     {% endif %}
+     data-target="ajax.toggle"
+     data-action="ajax#post">{% trans "Like" %}</a>
+</span>

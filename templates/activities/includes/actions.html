@@ -44,18 +44,14 @@
 
     {% has_perm "activities.like_activity" user object as can_like %}
     {% if can_like %}
-    <li class="menu-item"
-        data-controller="ajax"
-        data-ajax-replace>
+    <li class="menu-item">
       {% include "activities/includes/like.html" with has_liked=object.has_liked %}
     </li>
     {% endif %}
 
     {% has_perm "activities.bookmark_activity" user object as can_bookmark %}
     {% if can_bookmark %}
-    <li class="menu-item"
-        data-controller="ajax"
-        data-ajax-replace>
+    <li class="menu-item">
       {% include "activities/includes/bookmark.html" with has_bookmarked=object.has_bookmarked %}
     </li>
     {% endif %}

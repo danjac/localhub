@@ -4,10 +4,17 @@
 {% load i18n %}
 {% load activities %}
 
-{% if has_bookmarked %}
-<a href="{% resolve_url object "remove_bookmark" %}"
-   data-action="ajax#post"><s>{% trans "Bookmark" %}</s></a>
-{% else %}
-<a href="{% resolve_url object "bookmark" %}"
-   data-action="ajax#post">{% trans "Bookmark" %}</a>
-{% endif %}
+<span data-controller="ajax">
+  <a href="{% resolve_url object "remove_bookmark" %}"
+     {% if not has_bookmarked %}
+     class="d-none"
+     {% endif %}
+     data-target="ajax.toggle"
+     data-action="ajax#post"><s>{% trans "Bookmark" %}</s></a>
+  <a href="{% resolve_url object "bookmark" %}"
+     {% if has_bookmarked %}
+     class="d-none"
+     {% endif %}
+     data-target="ajax.toggle"
+     data-action="ajax#post">{% trans "Bookmark" %}</a>
+</span>

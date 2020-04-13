@@ -88,9 +88,7 @@
         <ul class="menu">
           {% has_perm "comments.like_comment" user comment as can_like_comment %}
           {% if can_like_comment %}
-          <li class="menu-item"
-              data-controller="ajax"
-              data-ajax-replace>
+          <li class="menu-item">
             {% include "comments/includes/like.html" with has_liked=comment.has_liked %}
           </li>
           {% endif %}
