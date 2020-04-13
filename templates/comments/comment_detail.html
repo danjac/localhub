@@ -3,7 +3,7 @@
 
 {% extends "comments/base.html" %}
 {% load i18n %}
-{% load activities_tags %}
+{% load activities %}
 {% load comments_tags %}
 
 {% block subtitle %}{{ block.super }} {% if content_object %} / {{ content_object }}{% endif %}{% endblock %}

@@ -1,7 +1,7 @@
 {# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% load activities_tags %}
+{% load activities %}
 {% get_pinned_activity user community as pinned %}
 {% if pinned %}
 {% render_activity request user pinned.object is_pinned=True css_class=css_class %}

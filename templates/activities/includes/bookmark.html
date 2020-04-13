@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-{% load activities_tags %}
+{% load activities %}
 
 {% if has_bookmarked %}
 <a href="{% resolve_url object "remove_bookmark" %}"

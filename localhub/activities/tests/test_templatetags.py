@@ -8,7 +8,7 @@ from django.utils import timezone
 from localhub.posts.factories import PostFactory
 from localhub.posts.models import Post
 
-from ..templatetags.activities_tags import (
+from ..templatetags.activities import (
     get_pinned_activity,
     is_oembed_url,
     render_activity,

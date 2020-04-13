@@ -4,7 +4,7 @@
 {% extends "activities/base.html" %}
 
 {% load i18n %}
-{% load activities_tags %}
+{% load activities %}
 
 {% block subtitle %} / {% verbose_name_plural view.model as object_name_plural %}{{ object_name_plural|title }} /
 {% if object %}{{ object.title }} / {% trans "Edit" %}

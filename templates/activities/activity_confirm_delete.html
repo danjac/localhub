@@ -3,7 +3,7 @@
 
 {% extends "activities/base.html" %}
 {% load i18n %}
-{% load activities_tags %}
+{% load activities %}
 
 {% block subtitle %} / {% verbose_name_plural object as object_name %}{{ object_name|title }} /
 {{ object.title }} / {% trans "Delete" %}{% endblock %}
