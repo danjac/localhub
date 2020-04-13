@@ -3,7 +3,7 @@
 
 import pytest
 
-from ..templatetags.invites_tags import get_pending_invite_count
+from ..templatetags.invites import get_pending_invite_count
 
 pytestmark = pytest.mark.django_db
 

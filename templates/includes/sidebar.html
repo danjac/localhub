@@ -3,8 +3,8 @@
 
 {% load i18n %}
 {% load rules %}
-{% load communities_tags %}
-{% load flags_tags %}
+{% load communities %}
+{% load flags %}
 
 {% get_community_count user as communities_count %}
 {% test_rule "communities.is_member" user community as is_member %}

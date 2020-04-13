@@ -3,7 +3,7 @@
 
 {% load i18n %}
 {% load rules %}
-{% load users_tags %}
+{% load users %}
 
 {% has_perm "polls.vote" user object as can_vote %}
 {% if not can_vote %}

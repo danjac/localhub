@@ -12,7 +12,7 @@ from localhub.private_messages.factories import MessageFactory
 
 from ..factories import CommunityFactory, MembershipFactory
 from ..models import Membership
-from ..templatetags.communities_tags import (
+from ..templatetags.communities import (
     get_community_count,
     get_external_site_counters,
     get_site_counters,

@@ -8,7 +8,7 @@ from localhub.communities.models import Membership
 from localhub.posts.factories import PostFactory
 
 from ..factories import FlagFactory
-from ..templatetags.flags_tags import get_external_flag_count, get_flag_count
+from ..templatetags.flags import get_external_flag_count, get_flag_count
 
 pytestmark = pytest.mark.django_db
 

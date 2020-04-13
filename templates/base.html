@@ -7,8 +7,8 @@
 {% load rules %}
 {% load thumbnail %}
 {% load activities %}
-{% load communities_tags %}
-{% load users_tags %}
+{% load communities %}
+{% load users %}
 
 {% test_rule "communities.is_member" user community as is_member %}
 {% has_perm "communities.view_community" user community as can_view_community %}

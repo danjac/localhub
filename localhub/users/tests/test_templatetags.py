@@ -6,7 +6,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.template import engines
 
 from ..factories import UserFactory
-from ..templatetags.users_tags import avatar, strip_external_images
+from ..templatetags.users import avatar, strip_external_images
 
 pytestmark = pytest.mark.django_db
 
@@ -25,7 +25,7 @@ class TestAvatar:
 
 class TestDismissable:
     template = """
-    {% load users_tags %}
+    {% load users %}
     {% dismissable user "private-stash" "toast-primary" %}
     This is your Private Stash
     {% enddismissable %}

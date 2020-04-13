@@ -4,8 +4,8 @@
 
 from django import template
 
-from localhub.flags.templatetags import flags_tags
-from localhub.invites.templatetags import invites_tags
+from localhub.flags.templatetags import flags
+from localhub.invites.templatetags import invites
 from localhub.join_requests.templatetags import join_requests_tags
 from localhub.notifications.templatetags import notifications_tags
 from localhub.private_messages.templatetags import private_messages_tags
@@ -68,7 +68,7 @@ def get_site_counters(user, community):
     )
 
     if is_moderator(user, community):
-        dct.update({"flags": flags_tags.get_flag_count(user, community)})
+        dct.update({"flags": flags.get_flag_count(user, community)})
 
     if is_admin(user, community):
         dct.update(
@@ -115,11 +115,11 @@ def get_external_site_counters(user, community):
 
     dct.update(
         {
-            "flags": flags_tags.get_external_flag_count(user, community),
+            "flags": flags.get_external_flag_count(user, community),
             "pending_join_requests": join_requests_tags.get_pending_external_join_request_count(
                 user, community
             ),
-            "pending_invites": invites_tags.get_pending_invite_count(user),
+            "pending_invites": invites.get_pending_invite_count(user),
             "unread_messages": private_messages_tags.get_unread_external_message_count(
                 user, community
             ),
