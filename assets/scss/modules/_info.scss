@@ -7,7 +7,7 @@
   display: inline-block;
 
   &:not(:last-child) {
-    @extend .mr-1;
+    @extend .mr-2;
   }
 
 }
