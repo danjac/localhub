@@ -8,7 +8,7 @@ from django.urls import reverse
 from localhub.communities.factories import MembershipFactory
 
 from ..factories import MessageFactory
-from ..templatetags.private_messages_tags import (
+from ..templatetags.private_messages import (
     get_unread_external_message_count,
     get_unread_message_count,
     render_message,

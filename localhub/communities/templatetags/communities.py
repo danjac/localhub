@@ -8,7 +8,7 @@ from localhub.flags.templatetags import flags
 from localhub.invites.templatetags import invites
 from localhub.join_requests.templatetags import join_requests
 from localhub.notifications.templatetags import notifications
-from localhub.private_messages.templatetags import private_messages_tags
+from localhub.private_messages.templatetags import private_messages
 
 from ..models import Community
 from ..rules import is_admin, is_member, is_moderator
@@ -58,7 +58,7 @@ def get_site_counters(user, community):
 
     dct.update(
         {
-            "unread_messages": private_messages_tags.get_unread_message_count(
+            "unread_messages": private_messages.get_unread_message_count(
                 user, community
             ),
             "unread_notifications": notifications.get_unread_notification_count(
@@ -120,7 +120,7 @@ def get_external_site_counters(user, community):
                 user, community
             ),
             "pending_invites": invites.get_pending_invite_count(user),
-            "unread_messages": private_messages_tags.get_unread_external_message_count(
+            "unread_messages": private_messages.get_unread_external_message_count(
                 user, community
             ),
             "unread_notifications": notifications.get_unread_external_notification_count(

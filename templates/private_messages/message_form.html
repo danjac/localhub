@@ -5,7 +5,7 @@
 
 {% load i18n %}
 {% load account %}
-{% load private_messages_tags %}
+{% load private_messages %}
 
 {% block subtitle %} / {% user_display recipient %} / {{ parent|yesno:_("Reply,Send Message") }} {% endblock %}
 
