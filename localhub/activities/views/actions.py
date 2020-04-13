@@ -16,11 +16,13 @@ from ..models import get_activity_models
 from .mixins import ActivityQuerySetMixin
 
 
-class BaseActivityActionView(ActivityQuerySetMixin, SuccessMixin, GenericModelView):
+class BaseActivityActionView(
+    ActivityQuerySetMixin, PermissionRequiredMixin, SuccessMixin, GenericModelView
+):
     ...
 
 
-class ActivityReshareView(PermissionRequiredMixin, BaseActivityActionView):
+class ActivityReshareView(BaseActivityActionView):
     permission_required = "activities.reshare_activity"
     success_message = _("You have reshared this %(model)s")
 
@@ -44,7 +46,7 @@ class ActivityReshareView(PermissionRequiredMixin, BaseActivityActionView):
         return self.success_response()
 
 
-class ActivityPublishView(PermissionRequiredMixin, BaseActivityActionView):
+class ActivityPublishView(BaseActivityActionView):
     permission_required = "activities.change_activity"
     success_message = _("Your %(model)s has been published")
 
@@ -62,7 +64,7 @@ class ActivityPublishView(PermissionRequiredMixin, BaseActivityActionView):
 activity_publish_view = ActivityPublishView.as_view()
 
 
-class ActivityPinView(PermissionRequiredMixin, BaseActivityActionView):
+class ActivityPinView(BaseActivityActionView):
     permission_required = "activities.pin_activity"
     success_url = settings.LOCALHUB_HOME_PAGE_URL
     success_message = _(
@@ -82,7 +84,7 @@ class ActivityPinView(PermissionRequiredMixin, BaseActivityActionView):
         return self.success_response()
 
 
-class ActivityUnpinView(PermissionRequiredMixin, BaseActivityActionView):
+class ActivityUnpinView(BaseActivityActionView):
     permission_required = "activities.pin_activity"
 
     success_url = settings.LOCALHUB_HOME_PAGE_URL
@@ -98,7 +100,7 @@ class ActivityUnpinView(PermissionRequiredMixin, BaseActivityActionView):
         return self.success_response()
 
 
-class BaseActivityBookmarkView(PermissionRequiredMixin, BaseActivityActionView):
+class BaseActivityBookmarkView(BaseActivityActionView):
     permission_required = "activities.bookmark_activity"
     template_name = "activities/includes/bookmark.html"
 
@@ -141,7 +143,7 @@ class ActivityRemoveBookmarkView(BaseActivityBookmarkView):
         return self.post(request, *args, **kwargs)
 
 
-class BaseActivityLikeView(PermissionRequiredMixin, BaseActivityActionView):
+class BaseActivityLikeView(BaseActivityActionView):
     permission_required = "activities.like_activity"
     template_name = "activities/includes/like.html"
 

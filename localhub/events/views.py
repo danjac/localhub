@@ -2,9 +2,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.http import HttpResponse
+from vanilla import GenericModelView
 
-from localhub.activities.views.actions import BaseActivityActionView
 from localhub.activities.views.form import ActivityCreateView
+from localhub.activities.views.mixins import ActivityQuerySetMixin
 
 from .models import Event
 
@@ -16,7 +17,7 @@ class EventCreateView(ActivityCreateView):
         return form
 
 
-class EventDownloadView(BaseActivityActionView):
+class EventDownloadView(ActivityQuerySetMixin, GenericModelView):
     """
     Generates a calendar .ics file.
     """
