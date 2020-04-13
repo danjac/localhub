@@ -6,8 +6,8 @@ from django import template
 
 from localhub.flags.templatetags import flags
 from localhub.invites.templatetags import invites
-from localhub.join_requests.templatetags import join_requests_tags
-from localhub.notifications.templatetags import notifications_tags
+from localhub.join_requests.templatetags import join_requests
+from localhub.notifications.templatetags import notifications
 from localhub.private_messages.templatetags import private_messages_tags
 
 from ..models import Community
@@ -61,7 +61,7 @@ def get_site_counters(user, community):
             "unread_messages": private_messages_tags.get_unread_message_count(
                 user, community
             ),
-            "unread_notifications": notifications_tags.get_unread_notification_count(
+            "unread_notifications": notifications.get_unread_notification_count(
                 user, community
             ),
         }
@@ -73,7 +73,7 @@ def get_site_counters(user, community):
     if is_admin(user, community):
         dct.update(
             {
-                "pending_join_requests": join_requests_tags.get_pending_join_request_count(
+                "pending_join_requests": join_requests.get_pending_join_request_count(
                     user, community
                 ),
             }
@@ -116,14 +116,14 @@ def get_external_site_counters(user, community):
     dct.update(
         {
             "flags": flags.get_external_flag_count(user, community),
-            "pending_join_requests": join_requests_tags.get_pending_external_join_request_count(
+            "pending_join_requests": join_requests.get_pending_external_join_request_count(
                 user, community
             ),
             "pending_invites": invites.get_pending_invite_count(user),
             "unread_messages": private_messages_tags.get_unread_external_message_count(
                 user, community
             ),
-            "unread_notifications": notifications_tags.get_unread_external_notification_count(
+            "unread_notifications": notifications.get_unread_external_notification_count(
                 user, community
             ),
         }

@@ -10,7 +10,7 @@ from localhub.posts.factories import PostFactory
 
 from ..factories import NotificationFactory
 from ..models import Notification
-from ..templatetags.notifications_tags import (
+from ..templatetags.notifications import (
     get_unread_external_notification_count,
     get_unread_notification_count,
     notifications_subscribe_btn,
@@ -30,7 +30,7 @@ class TestRenderNotification:
 
         tmpl = engines["django"].from_string(
             """
-        {% load notifications_tags %}
+        {% load notifications %}
         {% notification notification %}
         <div class="notification">
         {{ notification_content }}
@@ -52,7 +52,7 @@ class TestRenderNotification:
 
         tmpl = engines["django"].from_string(
             """
-        {% load notifications_tags %}
+        {% load notifications %}
         {% notification notification %}
         <div class="notification">
         {{ notification_content }}

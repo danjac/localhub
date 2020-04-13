@@ -8,7 +8,7 @@ from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
 
 from ..factories import JoinRequestFactory
-from ..templatetags.join_requests_tags import (
+from ..templatetags.join_requests import (
     get_pending_external_join_request_count,
     get_pending_join_request_count,
     get_sent_join_request_count,
