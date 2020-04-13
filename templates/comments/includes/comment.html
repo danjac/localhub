@@ -88,15 +88,39 @@
         <ul class="menu">
           {% has_perm "comments.like_comment" user comment as can_like_comment %}
           {% if can_like_comment %}
-          <li class="menu-item">
-            {% include "comments/includes/like.html" with has_liked=comment.has_liked %}
+          <li class="menu-item"
+              data-controller="ajax">
+            <a href="{% url 'comments:dislike' comment.id %}"
+               {% if not comment.has_liked %}
+               class="d-none"
+               {% endif %}
+               data-target="ajax.toggle"
+               data-action="ajax#post"><s>{% trans "Like" %}</s></a>
+            <a href="{% url 'comments:like' comment.id %}"
+               {% if comment.has_liked %}
+               class="d-none"
+               {% endif %}
+               data-target="ajax.toggle"
+               data-action="ajax#post">{% trans "Like" %}</a>
           </li>
           {% endif %}
 
           {% has_perm "comments.bookmark_comment" user comment as can_bookmark_comment %}
           {% if can_bookmark_comment %}
-          <li class="menu-item">
-            {% include "comments/includes/bookmark.html" with has_bookmarked=comment.has_bookmarked %}
+          <li class="menu-item"
+              data-controller="ajax">
+            <a href="{% url 'comments:remove_bookmark' comment.id %}"
+               {% if not comment.has_bookmarked %}
+               class="d-none"
+               {% endif %}
+               data-target="ajax.toggle"
+               data-action="ajax#post"><s>{% trans "Bookmark" %}</s></a>
+            <a href="{% url 'comments:bookmark' comment.id %}"
+               {% if comment.has_bookmarked %}
+               class="d-none"
+               {% endif %}
+               data-target="ajax.toggle"
+               data-action="ajax#post">{% trans "Bookmark" %}</a>
           </li>
           {% endif %}
 

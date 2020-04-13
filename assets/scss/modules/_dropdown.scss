@@ -3,8 +3,4 @@
 
 .dropdown ul {
   font-size: small;
-
-  span {
-    @extend .menu-item a;
-  }
 }
