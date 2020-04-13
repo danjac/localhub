@@ -12,7 +12,7 @@ from localhub.bookmarks.models import Bookmark
 from localhub.likes.models import Like
 from localhub.views import SuccessMixin
 
-from ...models import get_activity_models
+from ..models import get_activity_models
 from .mixins import ActivityQuerySetMixin
 
 

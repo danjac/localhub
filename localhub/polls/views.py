@@ -6,12 +6,12 @@ from django.utils.functional import cached_property
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import GenericModelView
 
-from localhub.activities.views.generic.detail import ActivityDetailView
-from localhub.activities.views.generic.form import (
+from localhub.activities.views.detail import ActivityDetailView
+from localhub.activities.views.form import (
     ActivityCreateView,
     ActivityUpdateView,
 )
-from localhub.activities.views.generic.list import ActivityListView
+from localhub.activities.views.list import ActivityListView
 from localhub.communities.views import CommunityRequiredMixin
 
 from .models import Answer, Poll

@@ -13,7 +13,7 @@ from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 from localhub.views import SuccessMixin
 
-from ...forms import ActivityTagsForm
+from ..forms import ActivityTagsForm
 from .mixins import ActivityQuerySetMixin, ActivityTemplateMixin
 
 
