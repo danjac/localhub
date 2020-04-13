@@ -7,10 +7,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from vanilla import GenericModelView
 
 from localhub.activities.views.detail import ActivityDetailView
-from localhub.activities.views.form import (
-    ActivityCreateView,
-    ActivityUpdateView,
-)
+from localhub.activities.views.form import ActivityCreateView, ActivityUpdateView
 from localhub.activities.views.list import ActivityListView
 from localhub.communities.views import CommunityRequiredMixin
 

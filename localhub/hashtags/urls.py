@@ -11,10 +11,10 @@ from .views.actions import (
 )
 from .views.detail import tag_detail_view
 from .views.list import (
+    blocked_tag_list_view,
+    following_tag_list_view,
     tag_autocomplete_list_view,
     tag_list_view,
-    following_tag_list_view,
-    blocked_tag_list_view,
 )
 
 app_name = "hashtags"

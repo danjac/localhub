@@ -9,7 +9,6 @@ from vanilla import ListView
 
 from localhub.views import SearchMixin
 
-
 from .mixins import TagQuerySetMixin
 
 

@@ -3,11 +3,9 @@
 
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
-
 from vanilla import GenericModelView
 
 from localhub.views import SuccessMixin
-
 
 from .mixins import TagQuerySetMixin
 

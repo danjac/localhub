@@ -15,8 +15,8 @@ from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 from sorl.thumbnail import ImageField
 
-from localhub.hashtags.utils import extract_hashtags
 from localhub.db.search import SearchQuerySetMixin
+from localhub.hashtags.utils import extract_hashtags
 from localhub.markdown.fields import MarkdownField
 
 DOMAIN_VALIDATOR = RegexValidator(
