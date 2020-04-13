@@ -3,7 +3,6 @@
 
 .info {
   color: $gray-color-dark;
-  @extend .mr-1;
-  font-size: small;
+  font-size: $font-size-sm;
   display: inline-block;
 }
