@@ -4,11 +4,9 @@
 import pytest
 from django.conf import settings
 from django.urls import reverse
-from taggit.models import Tag
 
-from localhub.communities.factories import CommunityFactory, MembershipFactory
+from localhub.communities.factories import MembershipFactory
 from localhub.events.factories import EventFactory
-from localhub.photos.factories import PhotoFactory
 from localhub.polls.factories import AnswerFactory, PollFactory
 from localhub.posts.factories import PostFactory
 from localhub.users.factories import UserFactory

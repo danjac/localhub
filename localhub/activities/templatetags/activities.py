@@ -4,7 +4,6 @@
 
 from django import template
 from django.urls import reverse
-from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 
 from localhub.utils.http import is_https
