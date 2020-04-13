@@ -48,8 +48,7 @@
 {% include "flags/includes/flags.html" %}
 
 {% if replies %}
-<div class="divider text-center"
-     data-content="{% trans 'Replies' %}"></div>
+<h6 class="text-center text-bold my-2">{% trans 'Replies' %}</h6>
 {% for reply in replies %}
 {% render_comment request user reply is_reply=True css_class="mb-2" %}
 {% endfor %}

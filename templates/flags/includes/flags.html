@@ -4,28 +4,17 @@
 {% load i18n %}
 
 {% if flags %}
-<h6 class="mt-2">{% trans "Flags" %}</h6>
+<h6 class="text-center text-bold mt-2">{% trans "Flags" %}</h6>
 <table class="table table-hover table-responsive">
-  <thead>
-    <tr>
-      <th>{% trans "Time" %}</th>
-      <th>{% trans "Flagged By" %}</th>
-      <th>{% trans "Reason" %}</th>
-      <th>{% trans "Actions" %}</th>
-    </tr>
-  </thead>
   <tbody>
     {% for flag in flags %}
     <tr>
-      <td>
-        <span class="timesince">{{ flag.created|timesince }} {% trans "ago" %}</span>
-      </td>
-      <td>
-        {% include "users/includes/chip.html" with profile=flag.user %}
-      </td>
       <td>{{ flag.get_reason_display }}</td>
       <td>
-        <div class="actions">
+        {% include "includes/timesince.html" with timestamp=flag.created owner=flag.user verb="flagged" %}
+      </td>
+      <td>
+        <div class="float-right-responsive actions">
           <a class="action"
              href="{% url 'flags:delete' flag.id %}"
              data-controller="ajax"

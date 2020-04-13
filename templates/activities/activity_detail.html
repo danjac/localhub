@@ -43,8 +43,7 @@
 <div class="comments mt-2"
      id="comments">
   {% if comments.number == 1 %}
-  <div class="divider text-center"
-       data-content="{% trans 'Comments' %}"></div>
+  <h6 class="text-center text-bold my-2">{% trans 'Comments' %}</h6>
   {% else %}
   {% include "includes/pagination.html" with css_class="mb-2" page_obj=comments is_paginated=True %}
   {% endif %}
