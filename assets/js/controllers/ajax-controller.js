@@ -104,6 +104,7 @@ export default class extends Controller {
 
         if (this.data.has('replace')) {
           this.element.innerHTML = response.data;
+          return;
         }
 
         if (this.data.has('remove')) {
