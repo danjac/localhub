@@ -27,6 +27,7 @@ export default class extends Controller {
       Location returned from the server. If "none" will not perform any redirect.
     toggle: if any toggle targets, will toggle this class (default: d-none)
     remove (bool): element will be removed when ajax action is executed.
+    replace (bool): replaces inner HTML of element with HTML from response.
     follow (bool): (GET requests only) : will just redirect directly to that URL without
       calling the endpoint.
 
@@ -100,6 +101,10 @@ export default class extends Controller {
         this.toggleTargets.forEach((target) => {
           target.classList.toggle(toggleClass);
         });
+
+        if (this.data.has('replace')) {
+          this.element.innerHTML = response.data;
+        }
 
         if (this.data.has('remove')) {
           this.element.remove();
