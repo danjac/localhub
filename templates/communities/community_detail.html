@@ -17,13 +17,15 @@
 {% if community.terms or can_manage %}
 <div class="actions mb-1">
   {% if community.terms %}
-  <a href="{% url 'communities:community_terms' %}">
+  <a class="action"
+     href="{% url 'communities:community_terms' %}">
     {% trans "Terms" %}
   </a>
   {% endif %}
 
   {% if can_manage %}
-  <a href="{% url "communities:community_update" %}">
+  <a class="action"
+     href="{% url "communities:community_update" %}">
     {% trans "Community Settings" %}
   </a>
   {% endif %}

@@ -11,9 +11,12 @@
 <h1 class="page-header">{% trans "Site Settings" %}</h1>
 
 <div class="actions mb-1">
-  <a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
-  <a href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
-  <a href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
+  <a class="action"
+     href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
+  <a class="action"
+     href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
+  <a class="action"
+     href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
 </div>
 
 {% include "includes/forms/stimulusjs_form.html" with multipart=True submit_btn=_("Save Settings") %}

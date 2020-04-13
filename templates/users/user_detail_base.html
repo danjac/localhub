@@ -87,7 +87,8 @@
 <div class="actions mb-1">
 
   {% if is_current_user %}
-  <a href="{% url 'user_update' %}">
+  <a class="action"
+     href="{% url 'user_update' %}">
     {% trans "My Settings" %}
   </a>
   {% endif %}

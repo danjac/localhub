@@ -33,17 +33,20 @@
 
 {% if dates %}
 <div class="actions">
-  <a href="{{ reverse_sort_url }}">
+  <a class="action"
+     href="{{ reverse_sort_url }}">
     {% if order == "desc" %}{% trans "Oldest First" %}{% else %}{% trans "Newest First" %}{% endif %}
   </a>
   {% if not current_year %}
   {% for year in years %}
-  <a href="{{ request.path }}?year={{ year }}&order={{ order }}">{{ year }}</a>
+  <a class="action"
+     href="{{ request.path }}?year={{ year }}&order={{ order }}">{{ year }}</a>
   {% endfor %}
   {% endif %}
   {% if not current_month %}
   {% for counter, name in months %}
-  <a href="{{ request.path }}?month={{ counter }}&year={{ current_year }}&order={{ order }}">{{ name }}</a>
+  <a class="action"
+     href="{{ request.path }}?month={{ counter }}&year={{ current_year }}&order={{ order }}">{{ name }}</a>
   {% endfor %}
   {% endif %}
 </div>

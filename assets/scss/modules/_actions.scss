@@ -2,24 +2,18 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 .actions {
-  font-size: small;
+  font-size: $font-size-sm;
   flex-wrap: wrap;
 
-  a,
-  span {
+  .action {
     &:not(:last-child) {
-      @extend .mr-1;
-    }
-
-    &:not(:first-child) {
-      @extend .ml-1;
+      @extend .mr-2;
     }
   }
 
   a {
-    color: $link-color-dark;
-
     @extend .btn-link;
+    color: $link-color-dark;
 
     &:visited {
       color: $link-color-dark;

@@ -26,7 +26,8 @@
       <td>{{ flag.get_reason_display }}</td>
       <td>
         <div class="actions">
-          <a href="{% url 'flags:delete' flag.id %}"
+          <a class="action"
+             href="{% url 'flags:delete' flag.id %}"
              data-controller="ajax"
              data-action="ajax#post">{% trans "Delete" %}</a>
         </div>

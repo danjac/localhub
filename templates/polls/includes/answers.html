@@ -32,7 +32,8 @@
            max="100"></meter>
     {% if can_vote %}
     <div class="actions">
-      <a data-action="ajax#post"
+      <a class="action"
+         data-action="ajax#post"
          href="{{ vote_url }}">{% trans "Vote" %}</a>
     </div>
     {% endif %}

@@ -42,9 +42,12 @@
 
 <div class="actions mb-1">
   {% if object.active %}
-  <a href="{% url 'users:activities' member.username %}">{% trans "Activities" %}</a>
-  <a href="{% url 'users:comments' member.username %}">{% trans "Comments" %}</a>
-  <a href="{% url 'users:messages' member.username %}">{% trans "Messages" %}</a>
+  <a class="action"
+     href="{% url 'users:activities' member.username %}">{% trans "Activities" %}</a>
+  <a class="action"
+     href="{% url 'users:comments' member.username %}">{% trans "Comments" %}</a>
+  <a class="action"
+     href="{% url 'users:messages' member.username %}">{% trans "Messages" %}</a>
   {% endif %}
 </div>
 

@@ -49,9 +49,12 @@
   </div>
 </div>
 <div class="actions">
-  <a href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
-  <a href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
-  <a href="{% url 'polls:create' %}">{% trans "Submit Poll" %}</a>
+  <a class="action"
+     href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
+  <a class="action"
+     href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
+  <a class="action"
+     href="{% url 'polls:create' %}">{% trans "Submit Poll" %}</a>
 </div>
 {% endif %}
 

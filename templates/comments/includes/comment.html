@@ -41,7 +41,8 @@
       {{ comment.content.markdown|strip_external_images:user|lazify }}
     </div>
     <div class="actions">
-      <a href="#"
+      <a class="action"
+         href="#"
          data-target="toggle.togglable"
          data-action="toggle#toggle">{% trans "View Comment" %}</a>
     </div>
@@ -176,10 +177,12 @@
       </div>
       <div class="actions">
         {% if not is_detail and not comment.deleted %}
-        <a href="{{ comment.get_absolute_url }}">{% trans "Link" %}</a>
+        <a class="action"
+           href="{{ comment.get_absolute_url }}">{% trans "Link" %}</a>
         {% endif %}
         {% if parent %}
-        <a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a>
+        <a class="action"
+           href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a>
         {% endif %}
       </div>
     </div>

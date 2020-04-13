@@ -26,11 +26,13 @@
 {% get_pending_invite_count user as pending_invites_count %}
 
 <div class="actions mb-1">
-  <a href="{% url 'invites:create' %}">
+  <a class="action"
+     href="{% url 'invites:create' %}">
     {% trans "Send an invite" %}
   </a>
   {% if pending_invites_count %}
-  <a href="{% url 'invites:received_list' %}"
+  <a class="action"
+     href="{% url 'invites:received_list' %}"
      class="badge"
      data-badge="{{ pending_invites_count }}">
     {% trans "Invites received" %}
@@ -75,11 +77,13 @@
       <td>
         <div class="actions">
           {% if invite.is_pending %}
-          <a href="{% url 'invites:resend' invite.id %}"
+          <a class="action"
+             href="{% url 'invites:resend' invite.id %}"
              data-controller="ajax"
              data-action="ajax#post">{% trans "Re-send" %}</a>
           {% endif %}
-          <a href="{% url 'invites:delete' invite.id %}"
+          <a class="action"
+             href="{% url 'invites:delete' invite.id %}"
              data-controller="ajax"
              data-action="ajax#post"
              data-ajax-confirm-header="{% trans 'Delete invite' %}"

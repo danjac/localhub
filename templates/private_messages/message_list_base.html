@@ -16,7 +16,8 @@
 {% if can_create_message or unread_messages %}
 <div class="actions mb-1">
   {% if unread_messages %}
-  <a href="{% url 'private_messages:mark_all_read' %}"
+  <a class="action"
+     href="{% url 'private_messages:mark_all_read' %}"
      data-controller="ajax"
      data-action="ajax#post"
      data-ajax-redirect="{{ request.get_full_path }}">{% trans "Mark All As Read" %}</a>

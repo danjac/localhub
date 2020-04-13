@@ -14,13 +14,17 @@
 <h1 class="page-header">{% trans "My Settings" %}</h1>
 
 <div class="actions mb-1">
-  <a href="{% url 'account_email' %}">{% trans "Email Addresses" %}</a>
+  <a class="action"
+     href="{% url 'account_email' %}">{% trans "Email Addresses" %}</a>
   {% get_providers as socialaccount_providers %}
   {% if socialaccount_providers %}
-  <a href="{% url 'socialaccount_connections' %}">{% trans "Social Logins" %}</a>
+  <a class="action"
+     href="{% url 'socialaccount_connections' %}">{% trans "Social Logins" %}</a>
   {% endif %}
-  <a href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a>
-  <a href="{% url 'user_delete' %}">{% trans "Delete Account" %}</a>
+  <a class="action"
+     href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a>
+  <a class="action"
+     href="{% url 'user_delete' %}">{% trans "Delete Account" %}</a>
 </div>
 
 {% dismissable user "profile-settings" %}

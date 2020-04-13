@@ -12,43 +12,46 @@
 
 {% if can_manage_community %}
 <div class="actions">
-    <a href="{% url 'invites:list' %}">{% trans "Manage invites" %}</a>
+  <a class="action"
+     href="{% url 'invites:list' %}">{% trans "Manage invites" %}</a>
 </div>
 {% endif %}
 
 {% if object_list %}
 <table class="table table-hover table-responsive">
-    <thead>
-        <tr>
-            <th>{% trans "Community" %}</th>
-            <th>{% trans "Sent" %}</th>
-            <th>{% trans "Actions" %}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for invite in object_list %}
-        <tr>
-            <td>
-                {{ community.name }}
-            </td>
-            <td>
-                {% blocktrans with timestamp=invite.created|timesince %}
-                {{ timestamp }} ago
-                {% endblocktrans %}
-            </td>
-            <td>
-                <div class="actions">
-                    <a href="{% url 'invites:accept' invite.id %}"
-                       data-controller="ajax"
-                       data-action="ajax#post">{% trans "Accept" %}</a>
-                    <a href="{% url 'invites:reject' invite.id %}"
-                       data-controller="ajax"
-                       data-action="ajax#post">{% trans "Reject" %}</a>
-                </div>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
+  <thead>
+    <tr>
+      <th>{% trans "Community" %}</th>
+      <th>{% trans "Sent" %}</th>
+      <th>{% trans "Actions" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for invite in object_list %}
+    <tr>
+      <td>
+        {{ community.name }}
+      </td>
+      <td>
+        {% blocktrans with timestamp=invite.created|timesince %}
+        {{ timestamp }} ago
+        {% endblocktrans %}
+      </td>
+      <td>
+        <div class="actions">
+          <a class="action"
+             href="{% url 'invites:accept' invite.id %}"
+             data-controller="ajax"
+             data-action="ajax#post">{% trans "Accept" %}</a>
+          <a class="action"
+             href="{% url 'invites:reject' invite.id %}"
+             data-controller="ajax"
+             data-action="ajax#post">{% trans "Reject" %}</a>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
 {% else %}
 {% include "includes/empty.html" %}

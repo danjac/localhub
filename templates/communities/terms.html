@@ -17,14 +17,16 @@
 {% if can_manage or community.description %}
 <div class="actions mb-1">
   {% if community.description %}
-  <a href="{% url 'communities:community_detail' %}">
+  <a class="action"
+     href="{% url 'communities:community_detail' %}">
     {% blocktrans with community_name=community.name %}
     About {{ community.name }}
     {% endblocktrans %}
   </a>
   {% endif %}
   {% if can_manage %}
-  <a href="{% url "communities:community_update" %}">
+  <a class="action"
+     href="{% url "communities:community_update" %}">
     {% trans "Community Settings" %}
   </a>
   {% endif %}

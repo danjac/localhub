@@ -2,7 +2,8 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-<span data-controller="ajax">
+<span data-controller="ajax"
+      class="action">
   <a href="{% url 'users:unfollow' user_obj.username %}"
      {% if not is_following %}
      class="d-none"

@@ -10,12 +10,16 @@
 <div class="actions mb-1">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
-  <a href="{% url 'events:create' %}">
+  <a class="action"
+     href="{% url 'events:create' %}">
     {% trans "Submit Event" %}
   </a>
   {% endif %}
-  <a href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
-  <a href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
-  <a href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
+  <a class="action"
+     href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
+  <a class="action"
+     href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
+  <a class="action"
+     href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
 </div>
 {% endblock %}

@@ -15,11 +15,13 @@
 {% if object_list %}
 <div class="actions mb-1">
   {% if is_unread_notifications %}
-  <a href="{% url 'notifications:mark_all_read' %}"
+  <a class="action"
+     href="{% url 'notifications:mark_all_read' %}"
      data-controller="ajax"
      data-action="ajax#post">{% trans "Mark All As Read" %}</a>
   {% endif %}
-  <a href="{% url 'notifications:delete_all' %}"
+  <a class="action"
+     href="{% url 'notifications:delete_all' %}"
      data-controller="ajax"
      data-action="ajax#post"
      data-ajax-confirm-header="{% trans 'Delete All' %}"

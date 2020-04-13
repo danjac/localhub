@@ -39,7 +39,8 @@
   <div class="card-footer">
     <div class="actions">
       {% if num_flags %}
-      <a href="{{ object_url }}{% url 'flags:list' %}">
+      <a class="action"
+         href="{{ object_url }}{% url 'flags:list' %}">
         <span class="badge"
               data-badge="{{ num_flags }}">
           {% trans "Flags" %}
@@ -47,7 +48,8 @@
       </a>
       {% endif %}
       {% if num_notifications %}
-      <a href="{{ object_url }}{% url 'notifications:list' %}">
+      <a class="action"
+         href="{{ object_url }}{% url 'notifications:list' %}">
         <span class="badge"
               data-badge="{{ num_notifications }}">
           {% trans "Notifications" %}
@@ -55,7 +57,8 @@
       </a>
       {% endif %}
       {% if num_messages %}
-      <a href="{{ object_url }}{% url 'private_messages:inbox' %}">
+      <a class="action"
+         href="{{ object_url }}{% url 'private_messages:inbox' %}">
         <span class="badge"
               data-badge="{{ num_messages }}">
           {% trans "Messages" %}
@@ -63,7 +66,8 @@
       </a>
       {% endif %}
       {% if num_join_requests %}
-      <a href="{{ object_url }}{% url 'join_requests:list' %}">
+      <a class="action"
+         href="{{ object_url }}{% url 'join_requests:list' %}">
         <span class="badge"
               data-badge="{{ num_join_requests }}">
           {% trans "Join Requests" %}
