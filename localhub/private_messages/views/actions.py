@@ -41,12 +41,7 @@ message_mark_all_read_view = MessageMarkAllReadView.as_view()
 class BaseMessageBookmarkView(
     SenderOrRecipientQuerySetMixin, SuccessMixin, GenericModelView
 ):
-    template_name = "private_messages/includes/bookmark.html"
-
-    def success_response(self, has_bookmarked):
-        return self.render_success_to_response(
-            {"message": self.object, "has_bookmarked": has_bookmarked}
-        )
+    is_success_ajax_response = True
 
 
 class MessageBookmarkView(BaseMessageBookmarkView):
@@ -62,7 +57,7 @@ class MessageBookmarkView(BaseMessageBookmarkView):
             )
         except IntegrityError:
             pass
-        return self.success_response(has_bookmarked=True)
+        return self.success_response()
 
 
 message_bookmark_view = MessageBookmarkView.as_view()
@@ -74,7 +69,7 @@ class MessageRemoveBookmarkView(BaseMessageBookmarkView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         Bookmark.objects.filter(user=request.user, message=self.object).delete()
-        return self.success_response(has_bookmarked=False)
+        return self.success_response()
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
