@@ -254,9 +254,7 @@ class Base(Configuration):
                         "localhub.template.context_processors.home_page_url",
                         "localhub.users.context_processors.theme",
                     ],
-                    "libraries": {
-                        "pagination_tags": "localhub.pagination.templatetags",
-                    },
+                    "libraries": {"pagination": "localhub.pagination.templatetags"},
                 },
             }
         ]

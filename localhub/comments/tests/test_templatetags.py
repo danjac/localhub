@@ -4,7 +4,7 @@
 import pytest
 from django.utils import timezone
 
-from ..templatetags.comments_tags import render_comment
+from ..templatetags.comments import render_comment
 
 pytestmark = pytest.mark.django_db
 
