@@ -44,15 +44,39 @@
 
     {% has_perm "activities.like_activity" user object as can_like %}
     {% if can_like %}
-    <li class="menu-item">
-      {% include "activities/includes/like.html" with has_liked=object.has_liked %}
+    <li class="menu-item"
+        data-controller="ajax">
+      <a href="{% resolve_url object "dislike" %}"
+         {% if not object.has_liked %}
+         class="d-none"
+         {% endif %}
+         data-target="ajax.toggle"
+         data-action="ajax#post"><s>{% trans "Like" %}</s></a>
+      <a href="{% resolve_url object "like" %}"
+         {% if object.has_liked %}
+         class="d-none"
+         {% endif %}
+         data-target="ajax.toggle"
+         data-action="ajax#post">{% trans "Like" %}</a>
     </li>
     {% endif %}
 
     {% has_perm "activities.bookmark_activity" user object as can_bookmark %}
     {% if can_bookmark %}
-    <li class="menu-item">
-      {% include "activities/includes/bookmark.html" with has_bookmarked=object.has_bookmarked %}
+    <li class="menu-item"
+        data-controller="ajax">
+      <a href="{% resolve_url object "remove_bookmark" %}"
+         {% if not object.has_bookmarked %}
+         class="d-none"
+         {% endif %}
+         data-target="ajax.toggle"
+         data-action="ajax#post"><s>{% trans "Bookmark" %}</s></a>
+      <a href="{% resolve_url object "bookmark" %}"
+         {% if object.has_bookmarked %}
+         class="d-none"
+         {% endif %}
+         data-target="ajax.toggle"
+         data-action="ajax#post">{% trans "Bookmark" %}</a>
     </li>
     {% endif %}
 
