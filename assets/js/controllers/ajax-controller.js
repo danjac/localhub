@@ -84,6 +84,13 @@ export default class extends Controller {
       return;
     }
 
+    // toggle for immediate feedback
+    const toggleClass = this.data.get('toggle') || 'd-none';
+
+    this.toggleTargets.forEach((target) => {
+      target.classList.toggle(toggleClass);
+    });
+
     axios({
       headers: {
         'Turbolinks-Referrer': location.href,
@@ -96,12 +103,6 @@ export default class extends Controller {
         if (successMessage) {
           createAlert(successMessage, 'success');
         }
-        const toggleClass = this.data.get('toggle') || 'd-none';
-
-        this.toggleTargets.forEach((target) => {
-          target.classList.toggle(toggleClass);
-        });
-
         if (this.data.has('replace')) {
           this.element.innerHTML = response.data;
           return;

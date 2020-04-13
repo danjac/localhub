@@ -96,7 +96,8 @@
   {% if not is_current_user %}
 
   {% if can_create_message and not is_blocked %}
-  <a href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
+  <a class="action"
+     href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
   {% endif %}
 
   {% if can_follow_user %}
@@ -106,14 +107,17 @@
   {% if can_block_user %}
   {% with redirect_url=user_obj.get_absolute_url %}
   {% if is_blocking %}
-  <a href="{% url 'users:unblock' user_obj.username %}"
+  <a class="action"
+     href="{% url 'users:unblock' user_obj.username %}"
+     class="text-strike"
      data-controller="ajax"
      data-action="ajax#post toggle#toggle"
      data-ajax-redirect="{{ redirect_url }}">
-    <s>{% trans "Block" %}</s>
+    {% trans "Block" %}
   </a>
   {% else %}
-  <a href="{% url 'users:block' user_obj.username %}"
+  <a class="action"
+     href="{% url 'users:block' user_obj.username %}"
      data-controller="ajax"
      data-action="ajax#post toggle#toggle"
      data-ajax-redirect="{{ redirect_url }}">
@@ -125,7 +129,8 @@
   {% endif %}
 
   {% if can_view_membership %}
-  <a href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
+  <a class="action"
+     href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
   {% endif %}
 
 </div>

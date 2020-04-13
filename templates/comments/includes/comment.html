@@ -92,11 +92,9 @@
           <li class="menu-item"
               data-controller="ajax">
             <a href="{% url 'comments:dislike' comment.id %}"
-               {% if not comment.has_liked %}
-               class="d-none"
-               {% endif %}
+               class="text-strike{% if not comment.has_liked %} d-none{% endif %}"
                data-target="ajax.toggle"
-               data-action="ajax#post"><s>{% trans "Like" %}</s></a>
+               data-action="ajax#post">{% trans "Like" %}</a>
             <a href="{% url 'comments:like' comment.id %}"
                {% if comment.has_liked %}
                class="d-none"
@@ -111,11 +109,9 @@
           <li class="menu-item"
               data-controller="ajax">
             <a href="{% url 'comments:remove_bookmark' comment.id %}"
-               {% if not comment.has_bookmarked %}
-               class="d-none"
-               {% endif %}
+               class="text-strike{% if not comment.has_bookmarked %} d-none{% endif %}"
                data-target="ajax.toggle"
-               data-action="ajax#post"><s>{% trans "Bookmark" %}</s></a>
+               data-action="ajax#post">{% trans "Bookmark" %}</a>
             <a href="{% url 'comments:bookmark' comment.id %}"
                {% if comment.has_bookmarked %}
                class="d-none"

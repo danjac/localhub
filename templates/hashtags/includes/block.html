@@ -6,12 +6,10 @@
 <span data-controller="ajax"
       class="action">
   <a href="{% url 'hashtags:unblock' tag.id %}"
-     {% if not is_blocked %}
-     class="d-none"
-     {% endif %}
+     class="text-strike{% if not is_blocked %} d-none{% endif %}"
      data-target="ajax.toggle"
      data-action="ajax#post">
-    <s>{% trans "Block" %}</s>
+    {% trans "Block" %}
   </a>
   <a href="{% url 'hashtags:block' tag.id %}"
      {% if is_blocked %}

@@ -54,7 +54,7 @@ user_unfollow_view = UserUnfollowView.as_view()
 
 class UserBlockView(PermissionRequiredMixin, BaseUserActionView):
     permission_required = "users.block_user"
-    success_message = _("You are now blocking this user")
+    success_message = _("You are now blocking %(object)s")
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -66,7 +66,7 @@ user_block_view = UserBlockView.as_view()
 
 
 class UserUnblockView(BaseUserActionView):
-    success_message = _("You have stopped blocking this user")
+    success_message = _("You are no longer blocking %(object)s")
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()

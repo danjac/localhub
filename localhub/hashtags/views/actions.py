@@ -26,7 +26,7 @@ class BaseTagFollowView(BaseTagActionView):
 
 
 class TagFollowView(BaseTagFollowView):
-    success_message = _("You are now following this tag")
+    success_message = _("You are now following #%(object)s")
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -38,7 +38,7 @@ tag_follow_view = TagFollowView.as_view()
 
 
 class TagUnfollowView(BaseTagFollowView):
-    success_message = _("You are no longer following this tag")
+    success_message = _("You are no longer following #%(object)s")
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -58,7 +58,7 @@ class BaseTagBlockView(BaseTagActionView):
 
 
 class TagBlockView(BaseTagBlockView):
-    success_message = _("You are now blocking this tag")
+    success_message = _("You are now blocking #%(object)s")
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -70,7 +70,7 @@ tag_block_view = TagBlockView.as_view()
 
 
 class TagUnblockView(BaseTagBlockView):
-    success_message = _("You no longer blocking this tag")
+    success_message = _("You are no longer blocking #%(object)s")
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()

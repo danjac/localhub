@@ -18,8 +18,9 @@
     {% if object.is_pinned %}
     <li class="menu-item">
       <a href="{% resolve_url object "unpin" %}"
+         class="text-strike"
          data-controller="ajax"
-         data-action="ajax#post"><s>{% trans "Pin" %}</s></a>
+         data-action="ajax#post">{% trans "Pin" %}</a>
     </li>
     {% else %}
     <li class="menu-item">
@@ -47,11 +48,9 @@
     <li class="menu-item"
         data-controller="ajax">
       <a href="{% resolve_url object "dislike" %}"
-         {% if not object.has_liked %}
-         class="d-none"
-         {% endif %}
+         class="text-strike{% if not object.has_liked %} d-none{% endif %}"
          data-target="ajax.toggle"
-         data-action="ajax#post"><s>{% trans "Like" %}</s></a>
+         data-action="ajax#post">{% trans "Like" %}</a>
       <a href="{% resolve_url object "like" %}"
          {% if object.has_liked %}
          class="d-none"
@@ -66,11 +65,9 @@
     <li class="menu-item"
         data-controller="ajax">
       <a href="{% resolve_url object "remove_bookmark" %}"
-         {% if not object.has_bookmarked %}
-         class="d-none"
-         {% endif %}
+         class="text-strike{% if not object.has_bookmarked %} d-none{% endif %}"
          data-target="ajax.toggle"
-         data-action="ajax#post"><s>{% trans "Bookmark" %}</s></a>
+         data-action="ajax#post">{% trans "Bookmark" %}</a>
       <a href="{% resolve_url object "bookmark" %}"
          {% if object.has_bookmarked %}
          class="d-none"
