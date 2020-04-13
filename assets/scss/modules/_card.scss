@@ -5,9 +5,13 @@
 
   border-color: $gray-color;
 
-  .card-header,
-  .card-body,
-  .card-footer {
+  &-header a {
+    color: $link-color-dark;
+  }
+
+  &-header,
+  &-body,
+  &-footer {
     padding: $layout-spacing;
     padding-bottom: 0;
 
