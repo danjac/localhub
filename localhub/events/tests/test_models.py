@@ -10,10 +10,41 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.utils.encoding import force_str
 
+from localhub.communities.factories import MembershipFactory
 from ..factories import EventFactory
 from ..models import Event
 
 pytestmark = pytest.mark.django_db
+
+
+class TestEventManager:
+    def test_event_num_attendees_if_none(self, event):
+        first = Event.objects.with_num_attendees().first()
+        assert first.num_attendees == 0
+
+    def test_event_num_attendees_if_any(self, event, user):
+        event.attendees.add(user)
+        first = Event.objects.with_num_attendees().first()
+        assert first.num_attendees == 1
+
+    def test_is_attending_if_anonymous(self, event, anonymous_user):
+        first = Event.objects.is_attending(anonymous_user).first()
+        assert not first.is_attending
+
+    def test_is_attending_if_true(self, event, user):
+        event.attendees.add(user)
+        first = Event.objects.is_attending(user).first()
+        assert first.is_attending
+
+    def test_is_attending_if_false(self, event, user):
+        first = Event.objects.is_attending(user).first()
+        assert not first.is_attending
+
+    def test_with_common_annotations(self, event):
+        member = MembershipFactory(community=event.community).member
+        first = Event.objects.with_common_annotations(member, event.community).first()
+        assert hasattr(first, "is_attending")
+        assert hasattr(first, "num_attendees")
 
 
 class TestEventModel:

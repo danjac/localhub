@@ -138,3 +138,18 @@ class TestEventDownloadView:
         )
         assert response.status_code == 200
         assert "DTSTART" in force_str(response.content)
+
+
+class TestEventAttendView:
+    def test_post(self, client, event, member):
+        response = client.post(reverse("events:attend", args=[event.id]))
+        assert response.status_code == 204
+        assert member.member in event.attendees.all()
+
+
+class TestEventUnattendView:
+    def test_post(self, client, event, member):
+        event.attendees.add(member.member)
+        response = client.post(reverse("events:unattend", args=[event.id]))
+        assert response.status_code == 204
+        assert member.member not in event.attendees.all()
