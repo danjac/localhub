@@ -28,7 +28,7 @@
     {% else %}
     <div class="column col-12 col-md-12">
       {% endif %}
-      <blockquote class="text-small">
+      <blockquote class="text-small text-muted text-italic">
         {{ object.opengraph_description|html_unescape|urlize|truncatewords_html:300 }}
       </blockquote>
     </div>

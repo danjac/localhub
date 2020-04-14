@@ -35,8 +35,6 @@ footer {
 }
 
 blockquote {
-  @extend .text-italic;
-  @extend .text-muted;
   border-left: $border-width solid $gray-color-dark;
 }
 

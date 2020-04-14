@@ -13,6 +13,11 @@
     margin-bottom: 0;
     padding-bottom: 0;
   }
+
+  blockquote * {
+    @extend .text-italic;
+    @extend .text-muted;
+  }
 }
 
 .markdownx {
