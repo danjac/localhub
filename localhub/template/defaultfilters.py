@@ -17,6 +17,13 @@ def contains(collection, value):
     """
     Resolves "x" in "y". Useful in "with" statements e.g.
     {% with following|contains:tag as is_following %}
+
+    Args:
+        collection (iterable or None)
+        value (any): any single value
+
+    Returns:
+        bool
     """
     if not collection:
         return False
