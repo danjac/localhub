@@ -26,7 +26,7 @@
 </li>
 {% endif %}
 
-{% if not object.canceled and not object.has_started %}
+{% if object.is_attendable %}
 <li class="menu-item">
   <a href="{% url 'events:download' object.id %}"
      download>

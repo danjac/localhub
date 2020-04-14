@@ -237,6 +237,16 @@ class Event(Activity):
     def has_started(self):
         return self.starts < timezone.now()
 
+    def is_attendable(self):
+        return all(
+            (
+                self.published,
+                not (self.deleted),
+                not (self.canceled),
+                not (self.has_started()),
+            )
+        )
+
     @dispatch
     def notify_on_attend(self, attendee):
         """Notifies owner (if not themselves the attendee) of attendance.

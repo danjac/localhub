@@ -6,36 +6,17 @@ import rules
 from localhub.activities.rules import (
     is_activity_community_member,
     is_activity_community_moderator,
-    is_deleted,
     is_owner,
-    is_published,
 )
 
 
 @rules.predicate
-def has_started(user, event):
-    return event.has_started()
+def is_attendable(user, event):
+    return event.is_attendable()
 
 
-@rules.predicate
-def is_canceled(user, event):
-    return event.canceled is not None
-
+rules.add_perm("events.attend", is_activity_community_member & is_attendable)
 
 rules.add_perm(
-    "events.attend",
-    is_activity_community_member
-    & ~is_canceled
-    & is_published
-    & ~is_deleted
-    & ~has_started,
-)
-
-rules.add_perm(
-    "events.cancel",
-    (is_owner | is_activity_community_moderator)
-    & ~is_canceled
-    & is_published
-    & ~is_deleted
-    & ~has_started,
+    "events.cancel", (is_owner | is_activity_community_moderator) & is_attendable
 )

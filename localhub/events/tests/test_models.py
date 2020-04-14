@@ -58,6 +58,26 @@ class TestEventModel:
         event = Event(starts=timezone.now() - timedelta(days=30))
         assert event.has_started()
 
+    def test_is_attendable(self):
+        event = EventFactory()
+        assert event.is_attendable()
+
+    def test_is_attendable_if_has_started(self):
+        event = EventFactory(starts=timezone.now() - timedelta(days=30))
+        assert not event.is_attendable()
+
+    def test_is_attendable_if_not_public(self):
+        event = EventFactory(published=None)
+        assert not event.is_attendable()
+
+    def test_is_attendable_if_deleted(self):
+        event = EventFactory(deleted=timezone.now())
+        assert not event.is_attendable()
+
+    def test_is_attendable_if_canceled(self):
+        event = EventFactory(canceled=timezone.now())
+        assert not event.is_attendable()
+
     def test_get_starts_with_tz(self):
         event = EventFactory(timezone=pytz.timezone("Europe/Helsinki"))
         assert event.get_starts_with_tz().tzinfo.zone == "Europe/Helsinki"

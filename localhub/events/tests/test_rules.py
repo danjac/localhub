@@ -7,29 +7,19 @@ import pytest
 from django.utils import timezone
 
 from ..factories import EventFactory
-from ..rules import has_started, is_canceled
+from ..rules import is_attendable
 
 pytestmark = pytest.mark.django_db
 
 
-class TestHasStarted:
-    def test_has_not_started(self, user_model):
-        event = EventFactory(starts=timezone.now() + timedelta(days=30))
-        assert not has_started(user_model(), event)
-
-    def test_has_started(self, user_model):
-        event = EventFactory(starts=timezone.now() - timedelta(days=30))
-        assert has_started(user_model(), event)
-
-
-class TestIsCanceled:
-    def test_is_not_canceled(self, user_model):
-        event = EventFactory(canceled=None)
-        assert not is_canceled(user_model(), event)
-
-    def test_is_canceled(self, user_model):
+class TestIsAttendable:
+    def test_is_not_attendable(self, user_model):
         event = EventFactory(canceled=timezone.now())
-        assert is_canceled(user_model(), event)
+        assert not is_attendable(user_model(), event)
+
+    def test_is_attendable(self, user_model):
+        event = EventFactory()
+        assert is_attendable(user_model(), event)
 
 
 class TestAttendPermissions:
