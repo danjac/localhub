@@ -372,6 +372,12 @@ class TestActivityManager:
         activity = Post.objects.with_has_bookmarked(user).get()
         assert activity.has_bookmarked
 
+    def test_bookmarked_if_anon_user(self, post, anonymous_user):
+        BookmarkFactory(
+            content_object=post, community=post.community,
+        )
+        assert Post.objects.bookmarked(anonymous_user).count() == 0
+
     def test_bookmarked_if_user_has_not_bookmarked(self, post, user):
         BookmarkFactory(
             user=user, content_object=post, community=post.community,
@@ -400,6 +406,13 @@ class TestActivityManager:
         )
         post = Post.objects.with_bookmarked_timestamp(user).first()
         assert post.bookmarked is not None
+
+    def test_with_has_liked_if_anon_user(self, post, anonymous_user):
+        LikeFactory(
+            content_object=post, community=post.community, recipient=post.owner,
+        )
+        activity = Post.objects.with_has_liked(anonymous_user).get()
+        assert not activity.has_liked
 
     def test_with_has_liked_if_user_has_not_liked(self, post, user):
         LikeFactory(

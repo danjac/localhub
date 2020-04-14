@@ -23,6 +23,7 @@ from localhub.db.content_types import (
 )
 from localhub.db.search import SearchQuerySetMixin
 from localhub.db.tracker import Tracker
+from localhub.db.utils import boolean_value
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.hashtags.utils import extract_hashtags
 from localhub.hashtags.validators import validate_hashtags
@@ -140,11 +141,11 @@ class ActivityQuerySet(
         Returns:
             QuerySet
          """
-        if user.is_anonymous:
-            return self.annotate(
-                has_reshared=models.Value(False, output_field=models.BooleanField())
-            )
-        return self.annotate(has_reshared=self.exists_reshares(user))
+        return self.annotate(
+            has_reshared=boolean_value(False)
+            if user.is_anonymous
+            else self.exists_reshares(user)
+        )
 
     def with_object_type(self):
         """Adds object_type based on model. Useful for generic activity queries.

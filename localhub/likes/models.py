@@ -13,6 +13,7 @@ from localhub.db.content_types import (
     get_generic_related_exists,
     get_generic_related_value_subquery,
 )
+from localhub.db.utils import boolean_value
 from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
 
@@ -32,6 +33,9 @@ class LikeAnnotationsQuerySetMixin:
             **{annotated_name: get_generic_related_count_subquery(self.model, Like)}
         )
 
+    def exists_likes(self, user):
+        return get_generic_related_exists(self.model, Like.objects.filter(user=user))
+
     def with_has_liked(self, user, annotated_name="has_liked"):
         """Checks if user has liked the object, adding `has_liked`
         annotation.
@@ -45,9 +49,9 @@ class LikeAnnotationsQuerySetMixin:
         """
         return self.annotate(
             **{
-                annotated_name: get_generic_related_exists(
-                    self.model, Like.objects.filter(user=user)
-                )
+                annotated_name: boolean_value(False)
+                if user.is_anonymous
+                else self.exists_likes(user)
             }
         )
 
@@ -61,8 +65,11 @@ class LikeAnnotationsQuerySetMixin:
         Returns:
             QuerySet
         """
-        return self.with_has_liked(user, annotated_name).filter(
-            **{annotated_name: True}
+        if user.is_anonymous:
+            return self.none()
+
+        return self.filter(self.exists_likes(user)).annotate(
+            **{annotated_name: boolean_value(True)}
         )
 
     def with_liked_timestamp(self, user, annotated_name="liked"):
@@ -76,6 +83,9 @@ class LikeAnnotationsQuerySetMixin:
         Returns:
             QuerySet
         """
+        if user.is_anonymous:
+            return self.none()
+
         return self.annotate(
             **{
                 annotated_name: get_generic_related_value_subquery(

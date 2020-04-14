@@ -12,12 +12,18 @@ from localhub.db.content_types import (
     get_generic_related_exists,
     get_generic_related_value_subquery,
 )
+from localhub.db.utils import boolean_value
 
 
 class BookmarkAnnotationsQuerySetMixin:
     """
     Annotation methods for related model query sets.
     """
+
+    def exists_bookmarks(self, user):
+        return get_generic_related_exists(
+            self.model, Bookmark.objects.filter(user=user)
+        )
 
     def with_has_bookmarked(self, user, annotated_name="has_bookmarked"):
         """Checks if user has liked the objects, adding `has_liked`
@@ -34,9 +40,9 @@ class BookmarkAnnotationsQuerySetMixin:
         """
         return self.annotate(
             **{
-                annotated_name: get_generic_related_exists(
-                    self.model, Bookmark.objects.filter(user=user)
-                )
+                annotated_name: boolean_value(False)
+                if user.is_anonymous
+                else self.exists_bookmarks(user)
             }
         )
 
@@ -52,8 +58,11 @@ class BookmarkAnnotationsQuerySetMixin:
 
             QuerySet
         """
-        return self.with_has_bookmarked(user, annotated_name).filter(
-            **{annotated_name: True}
+        if user.is_anonymous:
+            return self.none()
+
+        return self.filter(self.exists_bookmarks(user)).annotate(
+            **{annotated_name: boolean_value(True)}
         )
 
     def with_bookmarked_timestamp(self, user, annotated_name="bookmarked"):
@@ -66,6 +75,9 @@ class BookmarkAnnotationsQuerySetMixin:
         Returns:
             QuerySet
         """
+
+        if user.is_anonymous:
+            return self.none()
 
         return self.annotate(
             **{
