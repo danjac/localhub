@@ -6,10 +6,12 @@ $body-bg: #eee;
 
 $size-lg: 1100px;
 
-$font-size-sm: .65rem;
+$font-size-xs: .65rem;
 
 $link-color-header: #0000ff;
 $link-color-visited: #871b81;
+
+$layout-spacing-xs: 0.4rem;
 
 // themes
 @import "themes/dark/variables";
