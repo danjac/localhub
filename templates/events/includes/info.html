@@ -8,11 +8,19 @@
 {% block extra_info %}
 {% if object.num_attendees %}
 <div class="info">
+  {% if object.has_started %}
+  {% blocktrans count counter=object.num_attendees %}
+  1 Attended
+  {% plural %}
+  {{ counter }} Attended
+  {% endblocktrans %}
+  {% else %}
   {% blocktrans count counter=object.num_attendees %}
   1 Attending
   {% plural %}
   {{ counter }} Attending
   {% endblocktrans %}
+  {% endif %}
 </div>
 {% endif %}
 {% endblock %}

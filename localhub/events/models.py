@@ -5,6 +5,7 @@ import geopy
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from django.utils.encoding import smart_text
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
@@ -227,6 +228,9 @@ class Event(Activity):
                 return address_format
 
         return self.DEFAULT_ADDRESS_FORMAT
+
+    def has_started(self):
+        return self.starts < timezone.now()
 
     def to_ical(self):
         event = CalendarEvent()

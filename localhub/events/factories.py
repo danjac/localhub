@@ -1,6 +1,8 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from datetime import timedelta
+
 from django.utils import timezone
 from factory import DjangoModelFactory, Faker, LazyFunction, SubFactory
 from factory.fuzzy import FuzzyDateTime
@@ -18,7 +20,10 @@ class EventFactory(DjangoModelFactory):
     owner = SubFactory(UserFactory)
     published = LazyFunction(timezone.now)
 
-    starts = FuzzyDateTime(timezone.now())
+    starts = FuzzyDateTime(
+        start_dt=timezone.now() + timedelta(days=30),
+        end_dt=timezone.now() + timedelta(days=36),
+    )
 
     class Meta:
         model = Event
