@@ -5,6 +5,7 @@ table {
   @extend .bg-light;
   border: 0.5pt solid;
   border-color: $border-color-dark;
+  font-size: $font-size-sm;
 }
 
 .table-responsive {

@@ -13,6 +13,8 @@ header {
 }
 
 a {
+  color: $link-color-dark;
+
   &[target='_blank']:visited {
     color: $link-color-visited;
   }
