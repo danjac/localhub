@@ -3,6 +3,7 @@
 
 import geopy
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
@@ -17,6 +18,7 @@ from localhub.activities.models import Activity, ActivityQuerySet
 from localhub.db.search import SearchIndexer
 from localhub.db.tracker import Tracker
 from localhub.db.utils import boolean_value
+from localhub.notifications.decorators import dispatch
 from localhub.utils.http import get_domain
 
 geolocator = geopy.Nominatim(user_agent=settings.LOCALHUB_GEOLOCATOR_USER_AGENT)
@@ -234,6 +236,47 @@ class Event(Activity):
 
     def has_started(self):
         return self.starts < timezone.now()
+
+    @dispatch
+    def notify_on_attend(self, attendee):
+        """Notifies owner (if not themselves the attendee) of attendance.
+        Args:
+            actor (User)
+
+        Returns:
+            list (List[Notification])
+        """
+        if attendee == self.owner:
+            return None
+        return self.make_notification(
+            recipient=self.owner, actor=attendee, verb="attend"
+        )
+
+    @dispatch
+    def notify_on_cancel(self, actor):
+        """Notify all attendees of cancellation. Also notify the event
+        owner if the actor is not the owner.
+
+        Args:
+            actor (User)
+
+        Returns:
+            list (List[Notification])
+        """
+        recipients = self.attendees.exclude(pk=actor.pk)
+        if actor == self.owner:
+            recipients = recipients.exclude(pk=self.owner.pk)
+        else:
+            recipients = recipients | get_user_model().objects.filter(pk=self.owner.pk)
+
+        recipients = recipients.filter(
+            membership__active=True, membership__community=self.community
+        )
+
+        return [
+            self.make_notification(recipient=recipient, actor=actor, verb="cancel")
+            for recipient in recipients
+        ]
 
     def to_ical(self):
         event = CalendarEvent()

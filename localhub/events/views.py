@@ -29,7 +29,7 @@ class EventCancelView(BaseActivityActionView):
         self.object = self.get_object()
         self.object.canceled = timezone.now()
         self.object.save()
-        # TBD notify attendees apart from person who canceled
+        self.object.notify_on_cancel(self.request.user)
         return self.success_response()
 
 
@@ -48,7 +48,7 @@ class EventAttendView(BaseEventAttendView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.attendees.add(self.request.user)
-        # notifications TBD
+        self.object.notify_on_attend(self.request.user)
         return self.success_response()
 
 
@@ -61,7 +61,6 @@ class EventUnattendView(BaseEventAttendView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.attendees.remove(self.request.user)
-        # notifications TBD
         return self.success_response()
 
 
