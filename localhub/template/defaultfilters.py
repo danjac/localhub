@@ -13,6 +13,17 @@ register = template.Library()
 
 
 @register.filter
+def contains(collection, value):
+    """
+    Resolves "x" in "y". Useful in "with" statements e.g.
+    {% with following|contains:tag as is_following %}
+    """
+    if not collection:
+        return False
+    return value in collection
+
+
+@register.filter
 def from_dictkey(dct, key, default=None):
     """
     Returns value from a dict.

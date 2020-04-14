@@ -20,21 +20,14 @@
 {% if can_follow_tag or can_block_tag %}
 <div class="actions">
   {% if can_follow_tag %}
-  {% with following=user.following_tags.all %}
-  {% if tag in following %}
-  {% include "hashtags/includes/follow.html" with is_following=True %}
-  {% else %}
-  {% include "hashtags/includes/follow.html"  with is_following=False %}
-  {% endif %}
+  {% with user.following_tags.all|contains:tag as is_following %}
+  {% include "hashtags/includes/follow.html" %}
   {% endwith %}
   {% endif %}
+
   {% if can_block_tag %}
-  {% with blocked=user.blocked_tags.all %}
-  {% if tag in blocked %}
-  {% include "hashtags/includes/block.html" with is_blocked=True %}
-  {% else %}
-  {% include "hashtags/includes/block.html" with is_blocked=False %}
-  {% endif %}
+  {% with user.blocked_tags.all|contains:tag as is_blocked %}
+  {% include "hashtags/includes/block.html" %}
   {% endwith %}
   {% endif %}
 </div>

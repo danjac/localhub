@@ -2,7 +2,25 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from ..defaultfilters import from_dictkey, html_unescape, lazify, linkify, url_to_img
+from ..defaultfilters import (
+    contains,
+    from_dictkey,
+    html_unescape,
+    lazify,
+    linkify,
+    url_to_img,
+)
+
+
+class TestContains:
+    def test_if_collection_is_none(self):
+        assert contains(None, "x") is False
+
+    def test_if_collection_does_contain(self):
+        assert contains(["x"], "x")
+
+    def test_if_collection_does_not_contain(self):
+        assert not contains(["y"], "x")
 
 
 class TestLazify:
