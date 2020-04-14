@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError
 from django.test import override_settings
 
@@ -35,10 +34,9 @@ class TestCommunityManager:
         assert not first.is_member
         assert first.member_role is None
 
-    def test_with_is_member_if_anonymous(self):
+    def test_with_is_member_if_anonymous(self, anonymous_user):
         CommunityFactory()
-        user = AnonymousUser()
-        first = Community.objects.with_is_member(user).first()
+        first = Community.objects.with_is_member(anonymous_user).first()
         assert not first.is_member
         assert first.member_role is None
 

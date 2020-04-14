@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-from django.contrib.auth.models import AnonymousUser
 from taggit.models import Tag
 
 from localhub.comments.factories import CommentFactory
@@ -296,10 +295,10 @@ class TestPostModel:
         assert post.get_likes().count() == 0
         assert post.get_flags().count() == 0
 
-    def test_is_sensitive_anon(self):
+    def test_is_sensitive_anon_user(self, anonymous_user):
         community = CommunityFactory(content_warning_tags="#nsfw")
         post = PostFactory(community=community, description="#nsfw")
-        assert post.is_content_sensitive(AnonymousUser())
+        assert post.is_content_sensitive(anonymous_user)
 
     def test_is_sensitive_auth_ok(self):
         community = CommunityFactory(content_warning_tags="#nsfw")
@@ -312,10 +311,10 @@ class TestPostModel:
         post = PostFactory(community=community, description="#nsfw")
         assert post.is_content_sensitive(UserFactory(show_sensitive_content=False))
 
-    def test_not_is_sensitive_anon(self):
+    def test_not_is_sensitive_anon_user(self, anonymous_user):
         community = CommunityFactory(content_warning_tags="#nsfw")
         post = PostFactory(community=community)
-        assert not post.is_content_sensitive(AnonymousUser())
+        assert not post.is_content_sensitive(anonymous_user)
 
     def test_not_is_sensitive_auth(self):
         community = CommunityFactory(content_warning_tags="#nsfw")

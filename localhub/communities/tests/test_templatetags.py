@@ -3,7 +3,6 @@
 
 
 import pytest
-from django.contrib.auth.models import AnonymousUser
 
 from localhub.flags.factories import FlagFactory
 from localhub.invites.factories import InviteFactory
@@ -22,8 +21,8 @@ pytestmark = pytest.mark.django_db
 
 
 class TestGetCommunityCount:
-    def test_anonymous(self, community):
-        assert get_community_count(AnonymousUser()) == 0
+    def test_anonymous(self, community, anonymous_user):
+        assert get_community_count(anonymous_user) == 0
 
     def test_authenticated(self, member):
         CommunityFactory(public=False)
@@ -32,13 +31,13 @@ class TestGetCommunityCount:
 
 
 class TestGetSiteCounters:
-    def test_anonymous(self, community):
+    def test_anonymous(self, community, anonymous_user):
 
         MessageFactory(community=community)
         JoinRequestFactory(community=community)
         FlagFactory(community=community)
 
-        dct = get_site_counters(AnonymousUser(), community)
+        dct = get_site_counters(anonymous_user, community)
 
         assert dct["total"] == 0
         assert dct["unread_messages"] == 0
@@ -107,7 +106,7 @@ class TestGetSiteCounters:
 
 
 class TestGetExternalSiteCounters:
-    def test_anonymous(self, community):
+    def test_anonymous(self, community, anonymous_user):
 
         MessageFactory(community=community)
         JoinRequestFactory(community=community)
@@ -117,7 +116,7 @@ class TestGetExternalSiteCounters:
         JoinRequestFactory()
         FlagFactory()
 
-        dct = get_external_site_counters(AnonymousUser(), community)
+        dct = get_external_site_counters(anonymous_user, community)
 
         assert dct["total"] == 0
         assert dct["unread_messages"] == 0
@@ -125,7 +124,7 @@ class TestGetExternalSiteCounters:
         assert dct["pending_invites"] == 0
         assert dct["pending_join_requests"] == 0
 
-    def test_authenticated(self, community):
+    def test_authenticated(self, community, anonymous_user):
 
         member = MembershipFactory(community=community,).member
 
@@ -150,7 +149,7 @@ class TestGetExternalSiteCounters:
 
         InviteFactory(email=member.email)
 
-        dct = get_external_site_counters(AnonymousUser(), community)
+        dct = get_external_site_counters(anonymous_user, community)
 
         assert dct["total"] == 0
         assert dct["unread_messages"] == 0

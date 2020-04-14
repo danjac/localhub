@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-from django.contrib.auth.models import AnonymousUser
 from django.urls import reverse
 
 from localhub.communities.factories import MembershipFactory
@@ -74,8 +73,8 @@ class TestRenderMessage:
 
 
 class TestGetUnreadMessageCount:
-    def test_anonymous(self, community):
-        assert get_unread_message_count(AnonymousUser(), community) == 0
+    def test_anonymous(self, community, anonymous_user):
+        assert get_unread_message_count(anonymous_user, community) == 0
 
     def test_authenticated(self, member):
         MessageFactory(
@@ -87,8 +86,8 @@ class TestGetUnreadMessageCount:
 
 
 class TestGetUnreadLocalNetworkMessageCount:
-    def test_anonymous(self, community):
-        assert get_unread_external_message_count(AnonymousUser(), community) == 0
+    def test_anonymous(self, community, anonymous_user):
+        assert get_unread_external_message_count(anonymous_user, community) == 0
 
     def test_authenticated(self, member):
         other = MembershipFactory(member=member.member).community

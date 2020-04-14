@@ -4,7 +4,6 @@
 from datetime import timedelta
 
 import pytest
-from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
 from taggit.models import Tag
 
@@ -120,7 +119,24 @@ class TestActivityManager:
         )
         assert post.num_reshares == 3
 
-    def test_has_reshared(self, post, user):
+    def test_unreshared(self, post, user, anonymous_user):
+
+        first = PostFactory()
+        PostFactory()
+
+        other = UserFactory()
+
+        first.reshare(user)
+
+        assert Post.objects.unreshared(other).count() == 4
+        assert Post.objects.unreshared(anonymous_user).count() == 4
+
+        posts = Post.objects.unreshared(user)
+        # incl. reshared post
+        assert posts.count() == 3
+        assert first not in posts
+
+    def test_has_reshared(self, post, user, anonymous_user):
 
         first = PostFactory()
         PostFactory()
@@ -137,20 +153,20 @@ class TestActivityManager:
             Post.objects.with_has_reshared(other).filter(has_reshared=True).count() == 0
         )
         assert (
-            Post.objects.with_has_reshared(AnonymousUser())
+            Post.objects.with_has_reshared(anonymous_user)
             .filter(has_reshared=True)
             .count()
             == 0
         )
 
-    def test_following_users(self, user):
+    def test_following_users(self, user, anonymous_user):
         first_post = PostFactory()
         PostFactory()
         user.following.add(first_post.owner)
         assert Post.objects.following_users(user).get() == first_post
-        assert Post.objects.following_users(AnonymousUser()).count() == 2
+        assert Post.objects.following_users(anonymous_user).count() == 2
 
-    def test_following_tags(self, user):
+    def test_following_tags(self, user, anonymous_user):
 
         my_post = PostFactory(owner=user)
 
@@ -169,9 +185,9 @@ class TestActivityManager:
         assert my_post in posts
         assert first_post in posts
 
-        assert Post.objects.following_tags(AnonymousUser()).count() == 3
+        assert Post.objects.following_tags(anonymous_user).count() == 3
 
-    def test_with_activity_stream_filters_if_none_set(self, user):
+    def test_with_activity_stream_filters_if_none_set(self, user, anonymous_user):
 
         PostFactory(owner=user)
 
@@ -184,9 +200,11 @@ class TestActivityManager:
         PostFactory()
 
         assert Post.objects.with_activity_stream_filters(user).count() == 4
-        assert Post.objects.with_activity_stream_filters(AnonymousUser()).count() == 4
+        assert Post.objects.with_activity_stream_filters(anonymous_user).count() == 4
 
-    def test_with_activity_stream_filters_if_following_users_only(self, user):
+    def test_with_activity_stream_filters_if_following_users_only(
+        self, user, anonymous_user
+    ):
 
         my_post = PostFactory(owner=user)
 
@@ -206,9 +224,11 @@ class TestActivityManager:
         assert my_post in posts
         assert first_post in posts
 
-        assert Post.objects.with_activity_stream_filters(AnonymousUser()).count() == 4
+        assert Post.objects.with_activity_stream_filters(anonymous_user).count() == 4
 
-    def test_with_activity_stream_filters_if_following_tags_only(self, user):
+    def test_with_activity_stream_filters_if_following_tags_only(
+        self, user, anonymous_user
+    ):
 
         my_post = PostFactory(owner=user)
 
@@ -228,7 +248,7 @@ class TestActivityManager:
         assert my_post in posts
         assert second_post in posts
 
-        assert Post.objects.with_activity_stream_filters(AnonymousUser()).count() == 4
+        assert Post.objects.with_activity_stream_filters(anonymous_user).count() == 4
 
     def test_with_activity_stream_filters_if_following_users_and_tags(self, user):
 
@@ -435,9 +455,9 @@ class TestActivityManager:
         post = Post.objects.with_liked_timestamp(user).first()
         assert post.liked is None
 
-    def test_with_common_annotations_if_anonymous(self, post):
+    def test_with_common_annotations_if_anonymous(self, post, anonymous_user):
         activity = Post.objects.with_common_annotations(
-            AnonymousUser(), post.community
+            anonymous_user, post.community
         ).get()
 
         assert hasattr(activity, "num_comments")

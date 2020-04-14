@@ -103,6 +103,32 @@ class ActivityQuerySet(
             )
         )
 
+    def exists_reshares(self, user):
+        """Returns expression if user exists.
+
+        Args:
+            user (User)
+
+        Returns:
+            Exists
+        """
+        return models.Exists(
+            self.model.objects.filter(parent=models.OuterRef("pk"), owner=user)
+        )
+
+    def unreshared(self, user):
+        """Returns QuerySet of activities not reshared by this user.
+
+        Args:
+            user (User): the current user
+
+        Returns:
+            QuerySet
+        """
+        if user.is_anonymous:
+            return self
+        return self.filter(~self.exists_reshares(user))
+
     def with_has_reshared(self, user):
         """Annotates boolean value `has_reshared`, indicating if user has
         reshared this activity. If user is anonymous this value will
@@ -118,11 +144,7 @@ class ActivityQuerySet(
             return self.annotate(
                 has_reshared=models.Value(False, output_field=models.BooleanField())
             )
-        return self.annotate(
-            has_reshared=models.Exists(
-                self.model.objects.filter(parent=models.OuterRef("pk"), owner=user)
-            )
-        )
+        return self.annotate(has_reshared=self.exists_reshares(user))
 
     def with_object_type(self):
         """Adds object_type based on model. Useful for generic activity queries.

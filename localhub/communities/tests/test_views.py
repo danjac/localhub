@@ -3,7 +3,6 @@
 
 import pytest
 from django.conf import settings
-from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponse
 from django.urls import reverse
@@ -44,10 +43,10 @@ class TestCommunityRequiredMixin:
         with pytest.raises(Http404):
             my_view(req).url
 
-    def test_redirect_to_community_welcome_if_anonymous(self, rf):
+    def test_redirect_to_community_welcome_if_anonymous(self, rf, anonymous_user):
         req = rf.get("/")
         req.community = CommunityFactory()
-        req.user = AnonymousUser()
+        req.user = anonymous_user
         assert my_view(req).url == reverse("account_login") + "?next=/"
 
     def test_redirect_to_community_welcome_if_non_members_allowed(self, rf, user):

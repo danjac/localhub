@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-from django.contrib.auth.models import AnonymousUser
 
 from ..factories import UserFactory
 from ..rules import is_self
@@ -14,8 +13,8 @@ class TestIsSelf:
     def test_is_self(self, user):
         assert is_self(user, user)
 
-    def test_if_anonymous(self, user):
-        assert not is_self(AnonymousUser(), user)
+    def test_if_anonymous(self, user, anonymous_user):
+        assert not is_self(anonymous_user, user)
 
     def test_if_other_user(self, user):
         assert not is_self(UserFactory(), user)

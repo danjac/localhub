@@ -30,12 +30,10 @@ class ActivityReshareView(BaseActivityActionView):
         """
         Make sure user has only reshared once.
         """
-        return (
-            super()
-            .get_queryset()
-            .with_has_reshared(self.request.user)
-            .filter(has_reshared=False)
-        )
+        return super().get_queryset().unreshared(self.request.user)
+
+    def get_success_url(self):
+        return self.reshare.get_absolute_url()
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()

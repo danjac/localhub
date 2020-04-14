@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-from django.contrib.auth.models import AnonymousUser
 
 from localhub.users.factories import UserFactory
 
@@ -21,11 +20,10 @@ pytestmark = pytest.mark.django_db
 
 
 class TestMembershipRoles:
-    def test_anonymous_user(self, community):
-        user = AnonymousUser()
-        assert not is_member.test(user, community)
-        assert not is_moderator.test(user, community)
-        assert not is_admin.test(user, community)
+    def test_anonymous_user(self, community, anonymous_user):
+        assert not is_member.test(anonymous_user, community)
+        assert not is_moderator.test(anonymous_user, community)
+        assert not is_admin.test(anonymous_user, community)
 
     def test_non_member(self, user, community):
         assert not is_member.test(user, community)

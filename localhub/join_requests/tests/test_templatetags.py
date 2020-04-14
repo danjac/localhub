@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-from django.contrib.auth.models import AnonymousUser
 
 from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
@@ -31,9 +30,11 @@ class TestGetPendingJoinRequestCount:
         JoinRequestFactory.create_batch(3, community=member.community)
         assert get_pending_join_request_count(member.member, member.community) == 0
 
-    def test_get_pending_join_request_count_if_anonymous(self, community):
+    def test_get_pending_join_request_count_if_anonymous(
+        self, community, anonymous_user
+    ):
         JoinRequestFactory.create_batch(3, community=community)
-        assert get_pending_join_request_count(AnonymousUser(), community) == 0
+        assert get_pending_join_request_count(anonymous_user, community) == 0
 
 
 class TestGetPendingLocalNetworkJoinRequestCount:
@@ -51,9 +52,9 @@ class TestGetPendingLocalNetworkJoinRequestCount:
         count = get_pending_external_join_request_count(member.member, member.community)
         assert count == 0
 
-    def test_get_count_if_anonymous_user(self, community):
+    def test_get_count_if_anonymous_user(self, community, anonymous_user):
         JoinRequestFactory(community=community)
-        count = get_pending_external_join_request_count(AnonymousUser(), community)
+        count = get_pending_external_join_request_count(anonymous_user, community)
         assert count == 0
 
     def test_get_count_if_current_community(self, admin):

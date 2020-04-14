@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-from django.contrib.auth.models import AnonymousUser
 from django.template import engines
 
 from ..factories import UserFactory
@@ -34,8 +33,8 @@ class TestDismissable:
     def render_template(self, context):
         return engines["django"].from_string(self.template).render(context)
 
-    def test_if_anonymous(self):
-        content = self.render_template({"user": AnonymousUser()})
+    def test_if_anonymous(self, anonymous_user):
+        content = self.render_template({"user": anonymous_user})
         assert "This is your Private Stash" in content
 
     def test_if_not_dismissed(self, user):

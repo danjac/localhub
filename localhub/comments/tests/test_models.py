@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
 
 from localhub.bookmarks.factories import BookmarkFactory
@@ -73,10 +72,10 @@ class TestCommentManager:
         assert my_comment in comments
         assert second_comment in comments
 
-    def test_with_is_blocked_if_anonymous(self):
+    def test_with_is_blocked_if_anonymous(self, anonymous_user):
 
         CommentFactory()
-        assert not Comment.objects.with_is_blocked(AnonymousUser()).get().is_blocked
+        assert not Comment.objects.with_is_blocked(anonymous_user).get().is_blocked
 
     def test_with_is_blocked_if_not_blocked(self, user):
 
@@ -252,9 +251,9 @@ class TestCommentManager:
         comment = Comment.objects.with_liked_timestamp(user).first()
         assert comment.liked is None
 
-    def test_with_common_annotations_if_anonymous(self, comment):
+    def test_with_common_annotations_if_anonymous(self, comment, anonymous_user):
         comment = Comment.objects.with_common_annotations(
-            AnonymousUser(), comment.community
+            anonymous_user, comment.community
         ).get()
 
         assert not hasattr(comment, "num_likes")

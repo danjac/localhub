@@ -230,7 +230,7 @@ class TestPostReshareView:
             reverse("posts:reshare", args=[post.id]),
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
-        assert response.url == post.get_absolute_url()
+        assert response.url == post.reshares.first().get_absolute_url()
         assert post.reshares.filter(owner=member.member).count() == 1
         assert (
             Notification.objects.filter(

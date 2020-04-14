@@ -112,14 +112,16 @@ export default class extends Controller {
           this.element.remove();
           return;
         }
+
         const redirect = this.data.get('redirect');
-        if (redirect === 'none') {
+        if (redirect) {
+          if (redirect !== 'none') {
+            Turbolinks.visit(redirect);
+          }
           return;
         }
 
-        if (redirect) {
-          Turbolinks.visit(redirect);
-        } else if (response.headers['content-type'].match(/javascript/)) {
+        if (response.headers['content-type'].match(/javascript/)) {
           /* eslint-disable-next-line no-eval */
           eval(response.data);
         }

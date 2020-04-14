@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
-from django.contrib.auth.models import AnonymousUser
 from django.template import engines
 
 from localhub.communities.factories import MembershipFactory
@@ -75,8 +74,8 @@ class TestNotificationsSubscribeBtn:
 
 
 class TestGetUnreadNotificationCount:
-    def test_anonymous(self, community):
-        assert get_unread_notification_count(AnonymousUser(), community) == 0
+    def test_anonymous(self, community, anonymous_user):
+        assert get_unread_notification_count(anonymous_user, community) == 0
 
     def test_authenticated(self, member):
         post = PostFactory(
@@ -106,8 +105,8 @@ class TestGetUnreadNotificationCount:
 
 
 class TestGetUnreadLocalNetworkNotificationCount:
-    def test_anonymous(self, community):
-        assert get_unread_external_notification_count(AnonymousUser(), community) == 0
+    def test_anonymous(self, community, anonymous_user):
+        assert get_unread_external_notification_count(anonymous_user, community) == 0
 
     def test_authenticated(self, member):
 
