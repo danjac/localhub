@@ -40,7 +40,6 @@ build:
     - docker-compose -f docker-compose.deploy.yml build
     - docker-compose -f docker-compose.deploy.yml push
   only:
-    - master
     - release
 
 test:django:
@@ -51,7 +50,6 @@ test:django:
     - docker-compose -f docker-compose.deploy.yml run django ./manage.py validate_templates
     - docker-compose -f docker-compose.deploy.yml run django pytest
   only:
-    - master
     - release
 
 deploy:assets:
