@@ -105,6 +105,10 @@ class Event(Activity):
         verbose_name=_("Tickets available from"), blank=True
     )
 
+    contact_name = models.CharField(max_length=200, blank=True)
+    contact_phone = models.CharField(max_length=30, blank=True)
+    contact_email = models.EmailField(blank=True)
+
     street_address = models.CharField(max_length=200, blank=True)
     locality = models.CharField(
         verbose_name=_("City or town"), max_length=200, blank=True
