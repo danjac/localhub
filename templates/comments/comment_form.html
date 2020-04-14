@@ -7,10 +7,11 @@
 {% load activities %}
 {% load comments %}
 
-{% block subtitle %}{{ block.super }} /
-{% if parent %}{{ parent.content_object }} / {% trans "Reply "%}
-{% elif object %}{{ object.content_object }} / {% trans "Edit" %}
-{% elif activity %}{{ activity }} / {% trans "Comment" %}{% endif %}{% endblock %}
+{% block subtitle %}{{ block.super }}
+{% if content_object %} / {{ content_object }}{% endif %}
+{% if parent %} / {% trans "Reply "%}
+{% elif object %} / {% trans "Edit" %}
+{% else %} / {% trans "Comment" %}{% endif %}{% endblock %}
 
 {% block content %}
 
@@ -23,14 +24,12 @@
   <li class="breadcrumb-item"><a href="{% url 'comments:list' %}">{% trans "Comments" %}</a></li>
   <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{% trans "Comment" %}</a></li>
   <li class="breadcrumb-item"><a href="#">{% trans "Edit" %}</a></li>
-  {% elif activity and activity_model %}
-  <li class="breadcrumb-item">
-    <a href="{% resolve_model_url activity_model "list" %}">{% verbose_name_plural activity_model %}</a>
+  {% elif content_object and content_object_model %}
+  <li class="breadcrumb-item"><a href="{{ content_object.get_absolute_url }}">{{ content_object|truncatechars:60 }}</a>
   </li>
-  <li class="breadcrumb-item"><a href="{{ activity.get_absolute_url }}">{{ activity|truncatechars:60 }}</a></li>
   <li class="breadcrumb-item">
     <a data-turbolinks="false"
-       href="#">{% trans "Submit" %}</a>
+       href="#">{% trans "Comment" %}</a>
   </li>
   {% endif %}
 </ul>

@@ -152,15 +152,15 @@ class ActivityCommentCreateView(
     success_message = _("Your %(model)s has been posted")
 
     @cached_property
-    def activity(self):
+    def content_object(self):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
 
     def get_permission_object(self):
-        return self.activity
+        return self.content_object
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        self.object.content_object = self.activity
+        self.object.content_object = self.content_object
         self.object.community = self.request.community
         self.object.owner = self.request.user
         self.object.save()
@@ -170,6 +170,11 @@ class ActivityCommentCreateView(
         return self.success_response()
 
     def get_context_data(self, **kwargs):
-        return super().get_context_data(
-            activity=self.activity, activity_model=self.activity.__class__, **kwargs
+        data = super().get_context_data(**kwargs)
+        data.update(
+            {
+                "content_object": self.content_object,
+                "content_object_model": self.content_object.__class__,
+            }
         )
+        return data

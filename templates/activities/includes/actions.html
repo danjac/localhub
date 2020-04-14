@@ -36,7 +36,7 @@
     {% has_perm "activities.create_comment" user object as can_create_comment %}
     {% if can_create_comment %}
     <li class="menu-item">
-      <a href="{{ object.get_absolute_url }}#comment-form">
+      <a href="{% resolve_url object "comment" %}">
         {% trans "Comment" %}
       </a>
     </li>
