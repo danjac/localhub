@@ -9,63 +9,71 @@
 {% load activities %}
 
 {% block content %}
-{% with user|is_oembed_url:object.url as is_oembed %}
-{% include "activities/includes/oembed.html" %}
-{% endwith %}
-{% include "activities/includes/description.html" %}
+{% if object.canceled %}
+<h6 class="text-bold text-center my-2">{% trans "This event has been canceled." %}</h6>
+{% endif %}
 
 {% if object.canceled %}
-<b>{% trans "This event has been canceled." %}</b>
-{% endif %}
-
-<dl class="text-small">
-
-  {% timezone object.timezone %}
-  {% if object.ends %}
-
-  {% with start_date=object.starts|date:"DATE_FORMAT" end_date=object.ends|date:"DATE_FORMAT" start_time=object.starts|date:"TIME_FORMAT" end_time=object.ends|date:"TIME_FORMAT" %}
-  {% if start_date == end_date %}
-  <dt>{% trans "Date" %} <span class="label">{{ object.timezone }}</span></dt>
-  <dd>{{ start_date }} @ {{ start_time }} - {{ end_time }}</dd>
-  {% else %}
-  <dt>{% trans "Dates" %} <span class="label">{{ object.timezone }}</span></dt>
-  <dd>{{ start_date }} @ {{ start_time }} - {{ end_date }} @ {{ end_time }}</dd>
+<div class="collapsable">
   {% endif %}
+
+  {% with user|is_oembed_url:object.url as is_oembed %}
+  {% include "activities/includes/oembed.html" %}
   {% endwith %}
+  {% include "activities/includes/description.html" %}
 
-  {% else %}
-  <dt>{% trans "Date" %} <span class="label">{{ object.timezone }}</span></dt>
-  <dd>
-    {{ object.starts|date:"DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }}
-  </dd>
-  {% endif %}
-  {% endtimezone %}
+  <dl class="text-small">
 
-  <dt>{% trans "Location" %}</dt>
-  <dd>
-    {% with location=object.get_full_location %}
-    {% if location %}
-    {{ location }}
+    {% timezone object.timezone %}
+    {% if object.ends %}
+
+    {% with start_date=object.starts|date:"DATE_FORMAT" end_date=object.ends|date:"DATE_FORMAT" start_time=object.starts|date:"TIME_FORMAT" end_time=object.ends|date:"TIME_FORMAT" %}
+    {% if start_date == end_date %}
+    <dt>{% trans "Date" %} <span class="label">{{ object.timezone }}</span></dt>
+    <dd>{{ start_date }} @ {{ start_time }} - {{ end_time }}</dd>
     {% else %}
-    {% trans "Online" %}
+    <dt>{% trans "Dates" %} <span class="label">{{ object.timezone }}</span></dt>
+    <dd>{{ start_date }} @ {{ start_time }} - {{ end_date }} @ {{ end_time }}</dd>
     {% endif %}
     {% endwith %}
-  </dd>
 
-  {% if object.ticket_price %}
-  <dt>{% trans "Admission" %}</dt>
-  <dd>{{ object.ticket_price }}</dd>
+    {% else %}
+    <dt>{% trans "Date" %} <span class="label">{{ object.timezone }}</span></dt>
+    <dd>
+      {{ object.starts|date:"DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }}
+    </dd>
+    {% endif %}
+    {% endtimezone %}
+
+    <dt>{% trans "Location" %}</dt>
+    <dd>
+      {% with location=object.get_full_location %}
+      {% if location %}
+      {{ location }}
+      {% else %}
+      {% trans "Online" %}
+      {% endif %}
+      {% endwith %}
+    </dd>
+
+    {% if object.ticket_price %}
+    <dt>{% trans "Admission" %}</dt>
+    <dd>{{ object.ticket_price }}</dd>
+    {% endif %}
+
+    {% if object.ticket_vendor %}
+    <dt>{% trans "Tickets available from" %}</dt>
+    <dd>{{ object.ticket_vendor|linebreaksbr }}</dd>
+    {% endif %}
+
+  </dl>
+  {% if is_detail %}
+  {% include "activities/includes/map.html" with css_class="mt-2" %}
   {% endif %}
-
-  {% if object.ticket_vendor %}
-  <dt>{% trans "Tickets available from" %}</dt>
-  <dd>{{ object.ticket_vendor|linebreaksbr }}</dd>
-  {% endif %}
-
-</dl>
-{% if is_detail %}
-{% include "activities/includes/map.html" with css_class="mt-2" %}
+  {% if object.canceled %}
+</div>
 {% endif %}
+
 {% endblock content %}
 
 {% block actions %}{% include "events/includes/actions.html" %}{% endblock %}

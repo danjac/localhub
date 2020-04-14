@@ -222,7 +222,7 @@ class Event(Activity):
         return self.get_full_location()
 
     def has_map(self):
-        return all((self.latitude, self.longitude))
+        return all((self.latitude, self.longitude)) and not self.canceled
 
     def get_address_format(self):
         if not self.country:
