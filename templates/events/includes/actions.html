@@ -26,11 +26,11 @@
 </li>
 {% endif %}
 
-{% if not object.canceled %}
+{% if not object.canceled and not object.has_started %}
 <li class="menu-item">
   <a href="{% url 'events:download' object.id %}"
      download>
-    {% trans 'Download iCalendar File' %}
+    {% trans 'Download iCalendar' %}
   </a>
 </li>
 {% endif %}
