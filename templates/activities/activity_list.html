@@ -17,7 +17,6 @@
 {% block activity_list_header %}{% endblock %}
 {% endif %}
 
-
 {% if paginator.count or view.search_query %}
 {% include "includes/forms/search_form.html" with selector=True %}
 {% endif %}
@@ -26,11 +25,13 @@
 {% include "includes/pagination.html" with css_class="mb-2" %}
 {% endif %}
 
+{% block object_list %}
 {% for object in object_list %}
 {% render_activity request user object css_class="mt-2" %}
 {% empty %}
 {% include "includes/empty.html" %}
 {% endfor %}
+{% endblock %}
 
 {% include "includes/pagination.html" %}
 {% endblock content %}

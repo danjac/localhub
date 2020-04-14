@@ -5,6 +5,8 @@
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
+import 'masonry-layout';
+
 import { Application } from 'stimulus';
 import { definitionsFromContext } from 'stimulus/webpack-helpers';
 

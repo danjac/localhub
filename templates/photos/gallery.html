@@ -1,0 +1,28 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/base.html" %}
+{% load i18n %}
+{% load thumbnail %}
+
+{% block content %}
+
+<h1 class="page-header">{% trans "Gallery" %}</h1>
+<div class="grid"
+     data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 300 }'>
+  {% for photo in object_list %}
+  <div class="grid-item">
+    <a href="{{ photo.get_absolute_url }}">
+      {% thumbnail photo.image "300" upscale=False as image %}
+      <img class="img-responsive"
+           src="{{ image.url }}"
+           width="{{ image.width }}"
+           height="{{ image.height }}"
+           loading="lazy"
+           alt="{{ object.title }}">
+      {% endthumbnail%}
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
