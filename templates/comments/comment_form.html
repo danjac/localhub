@@ -21,7 +21,7 @@
   <li class="breadcrumb-item"><a href="#">{% trans "Reply" %}</a></li>
   {% elif object %}
   <li class="breadcrumb-item"><a href="{% url 'comments:list' %}">{% trans "Comments" %}</a></li>
-  <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{% trans "Edit" %}</a></li>
+  <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{% trans "Comment" %}</a></li>
   <li class="breadcrumb-item"><a href="#">{% trans "Edit" %}</a></li>
   {% elif activity and activity_model %}
   <li class="breadcrumb-item">
@@ -36,10 +36,12 @@
 </ul>
 
 
-{% if parent and content_object %}
+{% if content_object %}
 {% render_activity request user content_object css_class="mb-2" %}
-{% render_comment request user parent is_detail=True %}
-<div class="my-2"></div>
+{% endif %}
+
+{% if parent %}
+{% render_comment request user parent is_detail=True css_class="mb-2" %}
 {% endif %}
 
 {% include "includes/forms/stimulusjs_form.html" %}

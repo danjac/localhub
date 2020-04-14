@@ -34,7 +34,7 @@
       </div>
       {% endif %}
 
-      <div class="card-title h6">
+      <div class="card-title {{ is_detail|yesno:"h5,h6" }}">
 
         {% if object.is_reshare %}
 

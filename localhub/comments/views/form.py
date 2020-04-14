@@ -24,6 +24,11 @@ class CommentUpdateView(
     permission_required = "comments.change_comment"
     success_message = _("Your %(model)s has been updated")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["content_object"] = self.object.get_content_object()
+        return context
+
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.editor = self.request.user

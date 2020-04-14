@@ -20,7 +20,7 @@
   </a>
 </div>
 {% empty %}
-<em>{% trans "No photo available" %}</em>
+<em class="text-small">{% trans "No photo available" %}</em>
 {% endthumbnail %}
 
 {% if is_detail %}
@@ -30,7 +30,7 @@
 {% include "activities/includes/description.html" %}
 
 {% if object.has_attribution %}
-<dl>
+<dl class="text-small">
   {% if object.artist %}
   <dt>{% trans "Artist" %}</dt>
   <dd>{{ object.artist }}</dd>
