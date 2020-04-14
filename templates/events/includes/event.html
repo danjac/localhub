@@ -43,12 +43,36 @@
     <dd>
       {% with location=object.get_full_location %}
       {% if location %}
+      {% if not is_detail and object.has_map %}
+      <a href="{{ object.get_absolute_url }}#map-for-event-{{ object.id }}">{{ location }}</a>
+      {% else %}
       {{ location }}
+      {% endif %}
       {% else %}
       {% trans "Online" %}
       {% endif %}
       {% endwith %}
     </dd>
+
+    {% if object.url %}
+    <dt>{% trans "URL" %}</dt>
+    <dd class="text-ellipsis">{{ object.url|urlize }}</dd>
+    {% endif %}
+
+    {% if object.contact_name %}
+    <dt>{% trans "Contact" %}</dt>
+    <dd>{{ object.contact_name }}</dd>
+    {% endif %}
+
+    {% if object.contact_email %}
+    <dt>{% trans "Email" %}</dt>
+    <dd>{{ object.contact_email|urlize }}</dd>
+    {% endif %}
+
+    {% if object.contact_phone %}
+    <dt>{% trans "Phone" %}</dt>
+    <dd>{{ object.contact_phone }}</dd>
+    {% endif %}
 
     {% if object.ticket_price %}
     <dt>{% trans "Admission" %}</dt>
