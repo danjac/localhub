@@ -42,17 +42,22 @@
 {% if object.published %}
 <div class="comments mt-2"
      id="comments">
-  {% if comments.number == 1 %}
+  {% if comments.paginator.count %}
+  {% if comments.number == 1  %}
   <h6 class="text-center text-bold my-2">{% trans 'Comments' %}</h6>
   {% else %}
   {% include "includes/pagination.html" with css_class="mb-2" page_obj=comments is_paginated=True %}
   {% endif %}
+  {% endif %}
+
   {% for comment in comments %}
   {% render_comment request user comment css_class="mb-2" %}
   {% endfor %}
+
   {% if comments.number == 1 and comments.paginator.num_pages > 1 %}
   {% include "includes/pagination.html" with css_class="my-2" page_obj=comments is_paginated=True %}
   {% endif %}
+
   {% if comment_form %}
   {% resolve_url object "comment" as comment_url %}
   {% include "includes/forms/stimulusjs_form.html" with action=comment_url form=comment_form form_id="comment-form" %}
@@ -63,6 +68,7 @@
     {% trans "You do not have permission to post comments on this site." %}
   </p>
   {% endif %}
+
 </div>
 {% endif %}
 {% endblock content %}
