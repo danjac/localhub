@@ -17,7 +17,7 @@ from .mixins import ActivityQuerySetMixin
 
 
 class BaseActivityActionView(
-    ActivityQuerySetMixin, PermissionRequiredMixin, SuccessMixin, GenericModelView
+    ActivityQuerySetMixin, PermissionRequiredMixin, SuccessMixin, GenericModelView,
 ):
     ...
 

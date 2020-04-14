@@ -1,7 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from .base import CommunityRequiredMixin
+from .mixins import CommunityRequiredMixin
 from .communities import (
     community_detail_view,
     community_list_view,

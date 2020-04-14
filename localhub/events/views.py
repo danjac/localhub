@@ -2,8 +2,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.http import HttpResponse
+from django.utils.translation import gettext_lazy as _
 from vanilla import GenericModelView
 
+from localhub.activities.views.actions import BaseActivityActionView
 from localhub.activities.views.form import ActivityCreateView
 from localhub.activities.views.mixins import ActivityQuerySetMixin
 
@@ -15,6 +17,38 @@ class EventCreateView(ActivityCreateView):
         form = super().get_form(data, files)
         form.initial["timezone"] = self.request.user.default_timezone
         return form
+
+
+class BaseEventAttendView(BaseActivityActionView):
+    is_success_ajax_response = True
+    permission_required = "events.attend"
+    model = Event
+
+
+class EventAttendView(BaseEventAttendView):
+    success_message = _("You are now attending this event")
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.attendees.add(self.request.user)
+        # notifications TBD
+        return self.success_response()
+
+
+event_attend_view = EventAttendView.as_view()
+
+
+class EventUnattendView(BaseEventAttendView):
+    success_message = _("You are no longer attending this event")
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.attendees.remove(self.request.user)
+        # notifications TBD
+        return self.success_response()
+
+
+event_unattend_view = EventUnattendView.as_view()
 
 
 class EventDownloadView(ActivityQuerySetMixin, GenericModelView):

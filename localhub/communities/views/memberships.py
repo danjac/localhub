@@ -12,7 +12,7 @@ from localhub.views import SearchMixin, SuccessMixin
 from ..emails import send_membership_deleted_email
 from ..forms import MembershipForm
 from ..models import Membership
-from .base import CommunityRequiredMixin
+from .mixins import CommunityRequiredMixin
 
 
 class MembershipQuerySetMixin(CommunityRequiredMixin):

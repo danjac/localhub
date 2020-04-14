@@ -6,12 +6,12 @@
 {% load i18n %}
 
 {% block extra_info %}
-{% if object.total_num_votes %}
+{% if object.num_attendees %}
 <div class="info">
-  {% blocktrans count counter=object.total_num_votes %}
-  1 Vote
+  {% blocktrans count counter=object.num_attendees %}
+  1 Attending
   {% plural %}
-  {{ counter }} Votes
+  {{ counter }} Attending
   {% endblocktrans %}
 </div>
 {% endif %}

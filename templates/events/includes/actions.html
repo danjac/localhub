@@ -4,8 +4,28 @@
 {% extends "activities/includes/actions.html" %}
 
 {% load i18n %}
+{% load rules %}
 
 {% block extra_actions %}
+
+{% has_perm "events.attend" user object as can_attend %}
+
+{% if can_attend %}
+<li class="menu-item"
+    data-controller="ajax">
+  <a href="{% url 'events:unattend' object.id %}"
+     class="text-strike{% if not object.is_attending %} d-none{% endif %}"
+     data-target="ajax.toggle"
+     data-action="ajax#post">{% trans "Attending" %}</a>
+  <a href="{% url 'events:attend' object.id %}"
+     {% if object.is_attending %}
+     class="d-none"
+     {% endif %}
+     data-target="ajax.toggle"
+     data-action="ajax#post">{% trans "Attending" %}</a>
+</li>
+{% endif %}
+
 <li class="menu-item">
   <a href="{% url 'events:download' object.id %}"
      download>

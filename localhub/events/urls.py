@@ -8,11 +8,20 @@ from localhub.activities.urls.generic import create_activity_urls
 
 from .forms import EventForm
 from .models import Event
-from .views import EventCreateView, event_download_view
+from .views import (
+    EventCreateView,
+    event_download_view,
+    event_attend_view,
+    event_unattend_view,
+)
 
 app_name = "events"
 
 
 urlpatterns = create_activity_urls(Event, EventForm, create_view_class=EventCreateView)
 
-urlpatterns += [path("<int:pk>~download/", event_download_view, name="download")]
+urlpatterns += [
+    path("<int:pk>~attend/", event_attend_view, name="attend"),
+    path("<int:pk>~unattend/", event_unattend_view, name="unattend"),
+    path("<int:pk>~download/", event_download_view, name="download"),
+]

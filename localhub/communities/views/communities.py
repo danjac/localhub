@@ -17,7 +17,7 @@ from localhub.views import SearchMixin, SuccessMixin
 from ..forms import CommunityForm
 from ..models import Community, Membership
 from ..rules import is_inactive_member, is_member
-from .base import CommunityRequiredMixin
+from .mixins import CommunityRequiredMixin
 
 
 class CommunitySingleObjectMixin(CommunityRequiredMixin):

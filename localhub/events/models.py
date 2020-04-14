@@ -12,12 +12,33 @@ from icalendar import Calendar
 from icalendar import Event as CalendarEvent
 from timezone_field import TimeZoneField
 
-from localhub.activities.models import Activity
+from localhub.activities.models import Activity, ActivityQuerySet
 from localhub.db.search import SearchIndexer
 from localhub.db.tracker import Tracker
+from localhub.db.utils import boolean_value
 from localhub.utils.http import get_domain
 
 geolocator = geopy.Nominatim(user_agent=settings.LOCALHUB_GEOLOCATOR_USER_AGENT)
+
+
+class EventQuerySet(ActivityQuerySet):
+    def with_num_attendees(self):
+        return self.annotate(num_attendees=models.Count("attendees"))
+
+    def is_attending(self, user):
+        return self.annotate(
+            is_attending=boolean_value(False)
+            if user.is_anonymous
+            else models.Exists(self.model.objects.filter(attendees=user))
+        )
+
+    def with_common_annotations(self, user, community):
+        return (
+            super()
+            .with_common_annotations(user, community)
+            .with_num_attendees()
+            .is_attending(user)
+        )
 
 
 class Event(Activity):
@@ -89,11 +110,17 @@ class Event(Activity):
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
 
+    attendees = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, blank=True, related_name="attending_events"
+    )
+
     location_tracker = Tracker(LOCATION_FIELDS)
 
     search_indexer = SearchIndexer(
-        ("A", "title"), ("B", "search_location"), ("C", "description")
+        ("A", "title"), ("B", "indexable_location"), ("C", "description")
     )
+
+    objects = EventQuerySet.as_manager()
 
     def __str__(self):
         return self.title or self.location
@@ -183,7 +210,7 @@ class Event(Activity):
         return fields
 
     @property
-    def search_location(self):
+    def indexable_location(self):
         """Property required for search indexer. Just returns full location.
         """
         return self.get_full_location()
