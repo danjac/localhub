@@ -37,3 +37,8 @@ blockquote {
   @extend .text-muted;
   border-left: $border-width solid $gray-color-dark;
 }
+
+dd,
+dt {
+  @extend .my-1
+}
