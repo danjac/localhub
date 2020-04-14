@@ -26,10 +26,29 @@
 </li>
 {% endif %}
 
+{% if not object.canceled %}
 <li class="menu-item">
   <a href="{% url 'events:download' object.id %}"
      download>
-    {% trans 'Download' %}
+    {% trans 'Download iCalendar File' %}
   </a>
 </li>
+{% endif %}
+
+{% has_perm "events.cancel" user object as can_cancel %}
+{% if can_cancel %}
+<li class="menu-item">
+  <a href="{% url 'events:cancel' object.id %}"
+     data-controller="ajax"
+     data-action="ajax#post"
+     {% if not is_detail %}
+     data-ajax-redirect="{{ request.get_full_path }}"
+     {% endif %}
+     data-ajax-confirm-header="{% trans 'Cancel' %}"
+     data-ajax-confirm-body="{% trans 'Are you sure you want to cancel this event?' %}">
+    {% trans "Cancel Event" %}</a>
+</li>
+{% endif %}
+
+
 {% endblock %}

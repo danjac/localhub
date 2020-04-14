@@ -140,6 +140,14 @@ class TestEventDownloadView:
         assert "DTSTART" in force_str(response.content)
 
 
+class TestEventCancelView:
+    def test_post(self, client, event_for_member):
+        response = client.post(reverse("events:cancel", args=[event_for_member.id]))
+        assert response.url == event_for_member.get_absolute_url()
+        event_for_member.refresh_from_db()
+        assert event_for_member.canceled
+
+
 class TestEventAttendView:
     def test_post(self, client, event, member):
         response = client.post(reverse("events:attend", args=[event.id]))

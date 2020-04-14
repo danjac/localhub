@@ -11,6 +11,7 @@ from django.utils import timezone
 from django.utils.encoding import force_str
 
 from localhub.communities.factories import MembershipFactory
+
 from ..factories import EventFactory
 from ..models import Event
 

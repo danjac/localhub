@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.http import HttpResponse
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from vanilla import GenericModelView
 
@@ -19,9 +20,25 @@ class EventCreateView(ActivityCreateView):
         return form
 
 
+class EventCancelView(BaseActivityActionView):
+    success_message = _("This event has been canceled")
+    permission_required = "events.cancel"
+    model = Event
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.canceled = timezone.now()
+        self.object.save()
+        # TBD notify attendees apart from person who canceled
+        return self.success_response()
+
+
+event_cancel_view = EventCancelView.as_view()
+
+
 class BaseEventAttendView(BaseActivityActionView):
-    is_success_ajax_response = True
     permission_required = "events.attend"
+    is_success_ajax_response = True
     model = Event
 
 

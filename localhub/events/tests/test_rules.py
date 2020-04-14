@@ -4,12 +4,10 @@
 from datetime import timedelta
 
 import pytest
-
 from django.utils import timezone
 
 from ..factories import EventFactory
-
-from ..rules import has_started
+from ..rules import has_started, is_canceled
 
 pytestmark = pytest.mark.django_db
 
@@ -24,10 +22,24 @@ class TestHasStarted:
         assert has_started(user_model(), event)
 
 
+class TestIsCanceled:
+    def test_is_not_canceled(self, user_model):
+        event = EventFactory(canceled=None)
+        assert not is_canceled(user_model(), event)
+
+    def test_is_canceled(self, user_model):
+        event = EventFactory(canceled=timezone.now())
+        assert is_canceled(user_model(), event)
+
+
 class TestAttendPermissions:
     def test_is_member(self, member):
         event = EventFactory(community=member.community)
         assert member.member.has_perm("events.attend", event)
+
+    def test_is_canceled(self, member):
+        event = EventFactory(community=member.community, canceled=timezone.now())
+        assert not member.member.has_perm("events.attend", event)
 
     def test_is_not_member(self, member):
         event = EventFactory()
@@ -42,3 +54,41 @@ class TestAttendPermissions:
             community=member.community, starts=timezone.now() - timedelta(days=30)
         )
         assert not member.member.has_perm("events.attend", event)
+
+
+class TestCancelPermissions:
+    def test_is_member(self, member):
+        event = EventFactory(community=member.community)
+        assert not member.member.has_perm("events.cancel", event)
+
+    def test_is_owner(self, member):
+        event = EventFactory(community=member.community, owner=member.member)
+        assert member.member.has_perm("events.cancel", event)
+
+    def test_is_moderator(self, moderator):
+        event = EventFactory(community=moderator.community)
+        assert moderator.member.has_perm("events.cancel", event)
+
+    def test_is_canceled(self, member):
+        event = EventFactory(
+            community=member.community, canceled=timezone.now(), owner=member.member
+        )
+        assert not member.member.has_perm("events.cancel", event)
+
+    def test_is_not_member(self, member):
+        event = EventFactory()
+        assert not member.member.has_perm("events.cancel", event)
+
+    def test_is_not_published(self, member):
+        event = EventFactory(
+            community=member.community, published=None, owner=member.member
+        )
+        assert not member.member.has_perm("events.cancel", event)
+
+    def test_is_event_already_started(self, member):
+        event = EventFactory(
+            community=member.community,
+            starts=timezone.now() - timedelta(days=30),
+            owner=member.member,
+        )
+        assert not member.member.has_perm("events.cancel", event)

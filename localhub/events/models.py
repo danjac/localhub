@@ -91,7 +91,10 @@ class Event(Activity):
 
     starts = models.DateTimeField(verbose_name=_("Starts on (UTC)"))
     ends = models.DateTimeField(null=True, blank=True)
+
     timezone = TimeZoneField(default=settings.TIME_ZONE)
+
+    canceled = models.DateTimeField(null=True, blank=True)
 
     venue = models.CharField(max_length=200, blank=True)
 

@@ -1,7 +1,6 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from .mixins import CommunityRequiredMixin
 from .communities import (
     community_detail_view,
     community_list_view,
@@ -18,6 +17,7 @@ from .memberships import (
     membership_list_view,
     membership_update_view,
 )
+from .mixins import CommunityRequiredMixin
 
 __all__ = [
     "CommunityRequiredMixin",

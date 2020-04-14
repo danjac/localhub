@@ -13,6 +13,11 @@
 {% include "activities/includes/oembed.html" %}
 {% endwith %}
 {% include "activities/includes/description.html" %}
+
+{% if object.canceled %}
+<b>{% trans "This event has been canceled." %}</b>
+{% endif %}
+
 <dl class="text-small">
 
   {% timezone object.timezone %}
