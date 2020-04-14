@@ -21,6 +21,10 @@ class BaseActivityActionView(
 ):
     ...
 
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.object = self.get_object()
+
 
 class ActivityReshareView(BaseActivityActionView):
     permission_required = "activities.reshare_activity"
@@ -36,7 +40,6 @@ class ActivityReshareView(BaseActivityActionView):
         return self.reshare.get_absolute_url()
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         self.reshare = self.object.reshare(self.request.user)
 
         self.reshare.notify_on_create()
@@ -52,7 +55,6 @@ class ActivityPublishView(BaseActivityActionView):
         return super().get_queryset().filter(published__isnull=True)
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         self.object.published = timezone.now()
         self.object.save(update_fields=["published"])
 
@@ -75,7 +77,6 @@ class ActivityPinView(BaseActivityActionView):
                 is_pinned=False
             )
 
-        self.object = self.get_object()
         self.object.is_pinned = True
         self.object.save()
 
@@ -91,7 +92,6 @@ class ActivityUnpinView(BaseActivityActionView):
     )
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         self.object.is_pinned = False
         self.object.save()
 
@@ -107,7 +107,6 @@ class ActivityBookmarkView(BaseActivityBookmarkView):
     success_message = _("You have added this %(model)s to your bookmarks")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         try:
             Bookmark.objects.create(
                 user=request.user,
@@ -124,7 +123,6 @@ class ActivityRemoveBookmarkView(BaseActivityBookmarkView):
     success_message = _("You have removed this %(model)s from your bookmarks")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         self.object.get_bookmarks().filter(user=request.user).delete()
         return self.success_response()
 
@@ -141,7 +139,6 @@ class ActivityLikeView(BaseActivityLikeView):
     success_message = _("You have liked this %(model)s")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         try:
             Like.objects.create(
                 user=request.user,
@@ -160,7 +157,6 @@ class ActivityDislikeView(BaseActivityLikeView):
     success_message = _("You have stopped liking this %(model)s")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         self.object.get_likes().filter(user=request.user).delete()
         return self.success_response()
 

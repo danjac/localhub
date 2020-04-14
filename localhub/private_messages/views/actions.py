@@ -13,19 +13,6 @@ from localhub.views import SuccessMixin
 from .mixins import RecipientQuerySetMixin, SenderOrRecipientQuerySetMixin
 
 
-class MessageMarkReadView(RecipientQuerySetMixin, SuccessMixin, GenericModelView):
-    def get_queryset(self):
-        return super().get_queryset().unread()
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.mark_read()
-        return self.success_response()
-
-
-message_mark_read_view = MessageMarkReadView.as_view()
-
-
 class MessageMarkAllReadView(RecipientQuerySetMixin, GenericModelView):
     def get_queryset(self):
         return super().get_queryset().unread()
@@ -38,9 +25,25 @@ class MessageMarkAllReadView(RecipientQuerySetMixin, GenericModelView):
 message_mark_all_read_view = MessageMarkAllReadView.as_view()
 
 
-class BaseMessageBookmarkView(
-    SenderOrRecipientQuerySetMixin, SuccessMixin, GenericModelView
-):
+class BaseMessageActionView(SuccessMixin, GenericModelView):
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.object = self.get_object()
+
+
+class MessageMarkReadView(RecipientQuerySetMixin, BaseMessageActionView):
+    def get_queryset(self):
+        return super().get_queryset().unread()
+
+    def post(self, request, *args, **kwargs):
+        self.object.mark_read()
+        return self.success_response()
+
+
+message_mark_read_view = MessageMarkReadView.as_view()
+
+
+class BaseMessageBookmarkView(SenderOrRecipientQuerySetMixin, BaseMessageActionView):
     is_success_ajax_response = True
 
 
@@ -48,7 +51,6 @@ class MessageBookmarkView(BaseMessageBookmarkView):
     success_message = _("You have bookmarked this message")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         try:
             Bookmark.objects.create(
                 user=request.user,
@@ -67,7 +69,6 @@ class MessageRemoveBookmarkView(BaseMessageBookmarkView):
     success_message = _("You have removed this message from your bookmarks")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         Bookmark.objects.filter(user=request.user, message=self.object).delete()
         return self.success_response()
 

@@ -16,6 +16,10 @@ from .mixins import CommentQuerySetMixin
 class BaseCommentActionView(CommentQuerySetMixin, SuccessMixin, GenericModelView):
     ...
 
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.object = self.get_object()
+
 
 class BaseCommentBookmarkView(PermissionRequiredMixin, BaseCommentActionView):
     permission_required = "comments.bookmark_comment"
@@ -26,7 +30,6 @@ class CommentBookmarkView(BaseCommentBookmarkView):
     success_message = _("You have bookmarked this comment")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         try:
             Bookmark.objects.create(
                 user=request.user,
@@ -45,7 +48,6 @@ class CommentRemoveBookmarkView(BaseCommentBookmarkView):
     success_message = _("You have removed this comment from your bookmarks")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         Bookmark.objects.filter(user=request.user, comment=self.object).delete()
         return self.success_response()
 
@@ -65,7 +67,6 @@ class CommentLikeView(BaseCommentLikeView):
     success_message = _("You have liked this comment")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         try:
             Like.objects.create(
                 user=request.user,
@@ -85,7 +86,6 @@ class CommentDislikeView(BaseCommentLikeView):
     success_message = _("You have stopped liking this comment")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         Like.objects.filter(user=request.user, comment=self.object).delete()
         return self.success_response()
 

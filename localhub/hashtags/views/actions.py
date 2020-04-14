@@ -15,6 +15,10 @@ class BaseTagActionView(
 ):
     ...
 
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.object = self.get_object()
+
 
 class BaseTagFollowView(BaseTagActionView):
     permission_required = "users.follow_tag"
@@ -29,7 +33,6 @@ class TagFollowView(BaseTagFollowView):
     success_message = _("You are now following #%(object)s")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         self.request.user.following_tags.add(self.object)
         return self.success_response()
 
@@ -41,7 +44,6 @@ class TagUnfollowView(BaseTagFollowView):
     success_message = _("You are no longer following #%(object)s")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         self.request.user.following_tags.remove(self.object)
         return self.success_response()
 
@@ -61,7 +63,6 @@ class TagBlockView(BaseTagBlockView):
     success_message = _("You are now blocking #%(object)s")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         self.request.user.blocked_tags.add(self.object)
         return self.success_response()
 
@@ -73,7 +74,6 @@ class TagUnblockView(BaseTagBlockView):
     success_message = _("You are no longer blocking #%(object)s")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         self.request.user.blocked_tags.remove(self.object)
         return self.success_response()
 

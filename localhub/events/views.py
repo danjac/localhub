@@ -31,7 +31,6 @@ class EventCancelView(BaseActivityActionView):
     model = Event
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         self.object.canceled = timezone.now()
         self.object.save()
         self.object.notify_on_cancel(self.request.user)
