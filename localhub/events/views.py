@@ -8,6 +8,7 @@ from vanilla import GenericModelView
 
 from localhub.activities.views.actions import BaseActivityActionView
 from localhub.activities.views.form import ActivityCreateView
+from localhub.activities.views.list import ActivityListView
 from localhub.activities.views.mixins import ActivityQuerySetMixin
 
 from .models import Event
@@ -18,6 +19,10 @@ class EventCreateView(ActivityCreateView):
         form = super().get_form(data, files)
         form.initial["timezone"] = self.request.user.default_timezone
         return form
+
+
+class EventListView(ActivityListView):
+    ordering = ("-starts", "-published")
 
 
 class EventCancelView(BaseActivityActionView):

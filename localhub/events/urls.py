@@ -10,6 +10,7 @@ from .forms import EventForm
 from .models import Event
 from .views import (
     EventCreateView,
+    EventListView,
     event_attend_view,
     event_cancel_view,
     event_download_view,
@@ -19,7 +20,9 @@ from .views import (
 app_name = "events"
 
 
-urlpatterns = create_activity_urls(Event, EventForm, create_view_class=EventCreateView)
+urlpatterns = create_activity_urls(
+    Event, EventForm, create_view_class=EventCreateView, list_view_class=EventListView
+)
 
 urlpatterns += [
     path("<int:pk>~attend/", event_attend_view, name="attend"),
