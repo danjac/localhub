@@ -170,7 +170,10 @@ class Base(Configuration):
     ]
 
     MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {
-        "pymdownx.emoji": {"emoji_generator": pymdownx.emoji.to_alt,}
+        "pymdownx.emoji": {
+            "emoji_generator": pymdownx.emoji.to_alt,
+            "emoji_index": pymdownx.emoji.twemoji,
+        }
     }
 
     # https://micawber.readthedocs.io/en/latest/django.html
