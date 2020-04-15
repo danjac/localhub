@@ -55,7 +55,7 @@
 {% has_perm "communities.delete_membership" user object as can_delete %}
 {% include "communities/includes/membership_actions.html" with member=object css_class="mb-1" %}
 
-<dl>
+<dl class="text-small">
   <dt>{% trans "Status" %}</dt>
   <dd>{{ object.active|yesno:"Active,Inactive" }}</dd>
 
