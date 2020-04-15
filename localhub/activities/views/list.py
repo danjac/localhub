@@ -9,11 +9,12 @@ from localhub.views import SearchMixin
 from .mixins import ActivityQuerySetMixin, ActivityTemplateMixin
 
 
-class ActivityListView(
-    ActivityQuerySetMixin, ActivityTemplateMixin, SearchMixin, ListView
-):
+class BaseActivityListView(ActivityQuerySetMixin, ActivityTemplateMixin, ListView):
     allow_empty = True
     paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
+
+
+class ActivityListView(SearchMixin, BaseActivityListView):
     ordering = "-published"
 
     def get_ordering(self):
