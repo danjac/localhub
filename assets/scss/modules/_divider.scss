@@ -3,7 +3,8 @@
 
 .divider,
 .divider-vert {
-  color: $dark-color;
+  color: $gray-color;
+  border-color: $gray-color;
 
   &[data-content]::after {
     color: $dark-color;
