@@ -35,14 +35,15 @@
     {% for photo in object_list %}
     <div class="column col-sm-12 col-md-6 col-3 mb-2">
       <a href="{{ photo.get_absolute_url }}"
-         title="{{ object.title }}">
+         class="tooltip"
+         data-tooltip="{{ photo.title }}">
         {% thumbnail photo.image "300" upscale=False as image %}
         <img class="img-responsive"
              src="{{ image.url }}"
              width="{{ image.width }}"
              height="{{ image.height }}"
              loading="lazy"
-             alt="{{ object.title }}">
+             alt="{{ photo.title }}">
         {% endthumbnail%}
       </a>
     </div>
