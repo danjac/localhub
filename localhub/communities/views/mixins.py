@@ -7,6 +7,8 @@ from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from ..models import Community
+
 
 class CommunityRequiredMixin(LoginRequiredMixin):
     """
@@ -45,3 +47,10 @@ class CommunityRequiredMixin(LoginRequiredMixin):
         if self.request.is_ajax():
             raise Http404(_("No community is available for this domain"))
         return HttpResponseRedirect(reverse("community_not_found"))
+
+
+class CurrentCommunityMixin(CommunityRequiredMixin):
+    model = Community
+
+    def get_object(self):
+        return self.request.community

@@ -17,17 +17,10 @@ from localhub.views import SearchMixin, SuccessMixin
 from ..forms import CommunityForm
 from ..models import Community, Membership
 from ..rules import is_inactive_member, is_member
-from .mixins import CommunityRequiredMixin
+from .mixins import CurrentCommunityMixin
 
 
-class CommunitySingleObjectMixin(CommunityRequiredMixin):
-    model = Community
-
-    def get_object(self):
-        return self.request.community
-
-
-class CommunityDetailView(CommunitySingleObjectMixin, DetailView):
+class CommunityDetailView(CurrentCommunityMixin, DetailView):
     ...
 
 
@@ -117,7 +110,7 @@ community_not_found_view = CommunityNotFoundView.as_view()
 
 
 class CommunityUpdateView(
-    CommunitySingleObjectMixin, PermissionRequiredMixin, SuccessMixin, UpdateView
+    CurrentCommunityMixin, PermissionRequiredMixin, SuccessMixin, UpdateView
 ):
     form_class = CommunityForm
     permission_required = "communities.manage_community"
