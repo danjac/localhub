@@ -16,8 +16,9 @@ class PhotoGalleryView(ActivityListView):
     def get_queryset(self):
         return (
             Photo.objects.for_community(self.request.community)
-            .published_or_owner(self.request.user)
+            .published()
             .exclude_blocked(self.request.user)
+            .order_by("-published")
         )
 
 
