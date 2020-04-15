@@ -44,14 +44,15 @@
      id="comments">
   {% if comments.paginator.count %}
   {% if comments.number == 1  %}
-  <h6 class="text-center text-bold my-2">{% trans 'Comments' %}</h6>
+  <div class="divider text-center"
+       data-content="{% trans "Comments" %}"></div>
   {% else %}
   {% include "includes/pagination.html" with css_class="mb-2" page_obj=comments is_paginated=True %}
   {% endif %}
   {% endif %}
 
   {% for comment in comments %}
-  {% render_comment request user comment css_class="mb-2" %}
+  {% render_comment request user comment include_content_object=False css_class="mb-2" %}
   {% endfor %}
 
   {% if comments.number == 1 and comments.paginator.num_pages > 1 %}

@@ -50,8 +50,13 @@ class CommentDetailView(CommentQuerySetMixin, DetailView):
             "communities.moderate_community", self.request.community
         ):
             data["flags"] = self.get_flags()
-        data["replies"] = self.get_replies()
-        data["content_object"] = self.object.get_content_object()
+        data.update(
+            {
+                "replies": self.get_replies(),
+                "content_object": self.object.get_content_object(),
+                "parent": self.object.get_parent(),
+            }
+        )
         return data
 
 

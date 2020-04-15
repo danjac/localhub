@@ -4,7 +4,9 @@
 {% load i18n %}
 
 {% if flags %}
-<h6 class="text-center text-bold mt-2">{% trans "Flags" %}</h6>
+
+<div class="divider text-center"
+     data-content="{% trans "Flags" %}"></div>
 <table class="table table-hover table-responsive">
   <tbody>
     {% for flag in flags %}

@@ -7,7 +7,14 @@ register = template.Library()
 
 
 @register.inclusion_tag("comments/includes/comment.html")
-def render_comment(request, user, comment, is_reply=False, **extra_context):
+def render_comment(
+    request,
+    user,
+    comment,
+    include_parent=True,
+    include_content_object=True,
+    **extra_context
+):
     """Renders a single message.
 
     Args:
@@ -22,10 +29,8 @@ def render_comment(request, user, comment, is_reply=False, **extra_context):
     """
     show_content = not comment.deleted or comment.owner == user
 
-    if is_reply:
-        parent = None
-    else:
-        parent = comment.get_parent()
+    parent = comment.get_parent() if include_parent else None
+    content_object = comment.get_content_object() if include_content_object else None
 
     return {
         "request": request,
@@ -34,6 +39,8 @@ def render_comment(request, user, comment, is_reply=False, **extra_context):
         "community": comment.community,
         "show_content": show_content,
         "parent": parent,
-        "content_object": comment.get_content_object(),
+        "content_object": content_object,
+        "include_parent": include_parent,
+        "include_content_object": include_content_object,
         **extra_context,
     }

@@ -37,20 +37,14 @@
 <h6>{% trans "[Deleted]" %}</h6>
 {% endif %}
 
-{% if comment.parent and comment.parent.deleted %}
-<p class="toast text-center my-2">
-  {% blocktrans %}
-  Parent comment has been deleted by a community moderator.
-  {% endblocktrans %}
-</p>
-{% endif %}
-{% render_comment request user comment is_detail=True %}
+{% render_comment request user comment is_detail=True include_content_object=False %}
 {% include "flags/includes/flags.html" %}
 
 {% if replies %}
-<h6 class="text-center text-bold my-2">{% trans 'Replies' %}</h6>
+<div class="divider text-center"
+     data-content="{% trans "Replies" %}"></div>
 {% for reply in replies %}
-{% render_comment request user reply is_reply=True css_class="mb-2" %}
+{% render_comment request user reply include_content_object=False include_parent=False css_class="mb-2" %}
 {% endfor %}
 {% endif %}
 
