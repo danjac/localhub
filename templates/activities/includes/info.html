@@ -62,7 +62,7 @@
   {{ num_reshares }} reshares
   {% endblocktrans %}
   {% else %}
-  {% trans "Reshared by" %}
+  {% trans "Reshare" %}
   {% for reshare in reshares %}
   {% include "users/includes/chip.html" with profile=reshare.owner profile_url=reshare.get_absolute_url %}&nbsp;
   {% endfor %}
