@@ -26,7 +26,7 @@ a {
 }
 
 footer {
-  font-size: small;
+  font-size: $font-size-sm;
 
   a {
     @extend .text-light;
@@ -41,4 +41,8 @@ blockquote {
 dd,
 dt {
   @extend .my-1
+}
+
+label {
+  font-size: $font-size-sm;
 }
