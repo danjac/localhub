@@ -11,12 +11,7 @@
 {% thumbnail object.image "900" upscale=False as image %}
 <div>
   <a href="{{ object.get_absolute_url }}">
-    <img class="img-responsive"
-         src="{{ image.url }}"
-         width="{{ image.width }}"
-         height="{{ image.height }}"
-         loading="lazy"
-         alt="{{ object.title }}">
+    {% include "photos/includes/image.html" with title=object.title %}
   </a>
 </div>
 {% empty %}

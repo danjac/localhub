@@ -37,14 +37,16 @@
       <a href="{{ photo.get_absolute_url }}"
          class="tooltip"
          data-tooltip="{{ photo.title }}">
+
+        {% if photo.image|is_portrait %}
+        {% thumbnail photo.image "300x200" upscale=False crop="top" as image %}
+        {% include "photos/includes/image.html" with title=photo.title %}
+        {% endthumbnail %}
+        {% else %}
         {% thumbnail photo.image "300" upscale=False as image %}
-        <img class="img-responsive"
-             src="{{ image.url }}"
-             width="{{ image.width }}"
-             height="{{ image.height }}"
-             loading="lazy"
-             alt="{{ photo.title }}">
-        {% endthumbnail%}
+        {% include "photos/includes/image.html" with title=photo.title %}
+        {% endthumbnail %}
+        {% endif %}
       </a>
     </div>
     {% empty %}
