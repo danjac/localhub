@@ -5,6 +5,11 @@
   color: $gray-color;
 }
 
+html,
+body {
+  @extend .bg-dark;
+}
+
 a {
   color: $darkmode-link;
 

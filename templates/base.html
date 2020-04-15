@@ -69,8 +69,8 @@
   {% endwith %}
 </head>
 
-<body class="bg-dark {{ theme }}-theme">
-  <div class="container">
+<body class="{{ theme }}-theme">
+  <div class="container bg-dark">
     <header class="navbar py-1 col-10 col-lg-12 col-mx-auto">
       <section class="navbar-section">
         {% thumbnail community.logo "40" crop="center" format="PNG" as logo %}
