@@ -34,7 +34,7 @@
 {% endif %}
 
 {% block activities_detail_content %}
-{% render_activity request user object is_detail=True %}
+{% render_activity request user object is_detail=True reshares=reshares %}
 {% endblock %}
 {% include "flags/includes/flags.html" %}
 {% endif %}
