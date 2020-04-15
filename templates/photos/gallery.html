@@ -8,21 +8,26 @@
 {% block content %}
 
 <h1 class="page-header">{% trans "Gallery" %}</h1>
-<div class="grid"
-     data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 300 }'>
-  {% for photo in object_list %}
-  <div class="grid-item">
-    <a href="{{ photo.get_absolute_url }}">
-      {% thumbnail photo.image "300" upscale=False as image %}
-      <img class="img-responsive"
-           src="{{ image.url }}"
-           width="{{ image.width }}"
-           height="{{ image.height }}"
-           loading="lazy"
-           alt="{{ object.title }}">
-      {% endthumbnail%}
-    </a>
+<div class="container">
+  <div class="columns">
+    {% for photo in object_list %}
+    <div class="column col-sm-12 col-md-6 col-3 mb-2">
+      <a href="{{ photo.get_absolute_url }}"
+         title="{{ object.title }}">
+        {% thumbnail photo.image "300" upscale=False as image %}
+        <img class="img-responsive"
+             src="{{ image.url }}"
+             width="{{ image.width }}"
+             height="{{ image.height }}"
+             loading="lazy"
+             alt="{{ object.title }}">
+        {% endthumbnail%}
+      </a>
+    </div>
+    {% empty %}
+    {% include "includes/empty.html" %}
+    {% endfor %}
   </div>
-  {% endfor %}
 </div>
+{% include "includes/pagination.html" %}
 {% endblock %}

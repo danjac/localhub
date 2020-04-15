@@ -96,3 +96,19 @@ class TestPhotoDislikeView:
         response = client.post(reverse("photos:dislike", args=[photo.id]))
         assert response.status_code == 204
         assert Like.objects.count() == 0
+
+
+class TestPhotoListView:
+    def test_get(self, client, member):
+        PhotoFactory.create_batch(3, community=member.community, owner=member.member)
+        response = client.get(reverse("photos:list"))
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 3
+
+
+class TestGalleryView:
+    def test_get(self, client, member):
+        PhotoFactory.create_batch(3, community=member.community, owner=member.member)
+        response = client.get(reverse("photos:gallery"))
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 3
