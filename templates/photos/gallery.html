@@ -3,11 +3,26 @@
 
 {% extends "activities/base.html" %}
 {% load i18n %}
+{% load rules %}
 {% load thumbnail %}
 
 {% block content %}
 
 <h1 class="page-header">{% trans "Gallery" %}</h1>
+
+<div class="actions mb-1">
+  {% has_perm 'activities.create_activity' user community as can_create_activity %}
+  {% if can_create_activity %}
+  <a class="action"
+     href="{% url 'photos:create' %}">
+    {% trans "Submit Photo" %}
+  </a>
+  {% endif %}
+  <a class="action"
+     href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
+</div>
+
+<div class="divider"></div>
 <div class="container">
   <div class="columns">
     {% for photo in object_list %}
