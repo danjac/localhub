@@ -17,7 +17,7 @@
 </p>
 {% endif %}
 {% endif %}
-<ol class="poll-answers">
+<ol class="poll-answers text-small">
   {% for answer in object.answers.all %}
   {% url 'polls:vote' answer.id as vote_url %}
   <li>{{ answer }}
