@@ -3,7 +3,7 @@
 
 import { Controller } from 'stimulus';
 
-const MAX_HEIGHT = 400;
+const MAX_HEIGHT = 360;
 
 export default class extends Controller {
   /*
