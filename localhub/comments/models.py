@@ -102,9 +102,15 @@ class CommentQuerySet(
         )
 
     def with_common_annotations(self, user, community):
-        """
-        Combines all common annotations into a single call. Applies annotations
+        """Combines all common annotations into a single call. Applies annotations
         conditionally e.g. if user is authenticated or not.
+
+        Args:
+            user (User)
+            community (Community)
+
+        Returns:
+            QuerySet
         """
 
         if user.is_authenticated:
@@ -117,10 +123,20 @@ class CommentQuerySet(
                 .with_is_parent_owner_member(community)
             )
 
-            if user.has_perm("community.moderate_community", community):
+            if user.has_perm("communities.moderate_community", community):
                 qs = qs.with_is_flagged()
             return qs
         return self
+
+    def with_common_related(self):
+        """Include commonly used select_related and prefetch_related fields.
+
+        Returns:
+            QuerySet
+        """
+        return self.select_related(
+            "owner", "parent", "community", "parent__owner", "parent__community"
+        ).prefetch_related("content_object")
 
     def deleted(self):
         return self.filter(deleted__isnull=False)
@@ -178,6 +194,9 @@ class Comment(TimeStampedModel):
             models.Index(fields=["content_type", "object_id"]),
             models.Index(fields=["created", "-created"]),
         ]
+
+    def __str__(self):
+        return self.abbreviate()
 
     def get_absolute_url(self):
         return reverse("comments:detail", args=[self.id])

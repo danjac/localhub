@@ -3,8 +3,10 @@
 
 {% extends "flags/base.html" %}
 {% load i18n %}
+{% block subtitle %} / {% trans "Flags" %}{% endblock %}
+
 {% block content %}
-<h1 class="page-header">{% trans "Flagged" %}</h1>
+<h1 class="page-header">{% trans "Flags" %}</h1>
 
 {% if object_list %}
 <table class="table table-hover table-responsive">
@@ -12,7 +14,7 @@
     <tr>
       <th>{% trans "Item" %}</th>
       <th>{% trans "Time" %}</th>
-      <th>{% trans "Flagged By" %}</th>
+      <th>{% trans "Flagger" %}</th>
       <th>{% trans "Reason" %}</th>
     </tr>
   </thead>

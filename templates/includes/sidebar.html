@@ -191,14 +191,17 @@
     <a data-controller="active-link"
        href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
   </li>
+  {% if can_moderate_community %}
+  {% get_flag_count user community as flags_count %}
   {% if flags_count %}
   <li class="menu-item">
     <a href="{% url 'flags:list' %}"
        class="badge"
        data-badge="{{ flags_count }}">
-      {% trans "Flagged" %}
+      {% trans "Flags" %}
     </a>
   </li>
+  {% endif %}
   {% endif %}
 </ul>
 

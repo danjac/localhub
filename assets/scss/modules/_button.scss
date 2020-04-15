@@ -4,6 +4,11 @@
 .btn {
   color: $dark-color;
   border-color: $border-color-dark;
+  font-size: $font-size-sm;
+
+  &.btn-sm {
+    font-size: $font-size-xs;
+  }
 
   &.btn-link {
     color: $dark-color;

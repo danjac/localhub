@@ -19,7 +19,7 @@ class BaseCommentListView(CommentQuerySetMixin, ListView):
             .with_common_annotations(self.request.user, self.request.community)
             .exclude_blocked_users(self.request.user)
             .exclude_deleted()
-            .prefetch_related("content_object")
+            .with_common_related()
         )
 
 

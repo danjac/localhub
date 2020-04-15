@@ -6,6 +6,8 @@
 {% load rules %}
 {% load users %}
 
+{% has_perm "communities.moderate_community" user community as can_moderate_community %}
+
 <article class="card {% if css_class %} {{ css_class }}{% endif %}"
          role="comment"
          data-controller="clipboard"
@@ -18,18 +20,16 @@
       {% else %}
       {% trans "[Deleted]" %}
       {% endif %}
+      {% if can_moderate_community %}
+      {% endif %}
     </div>
     {% endif %}
-    {% has_perm "communities.moderate_community" user community as can_moderate_community %}
-    {% if comment.is_flagged and can_moderate_community %}
-    <div class="toast toast-info text-center mb-2">
-      <a href="{{ comment.get_absolute_url }}">{% trans "This comment has been flagged" %}</a>
-    </div>
-    {% endif %}
-
     <div class="card-title h6">
       {% url 'users:comments' comment.owner.username as owner_url %}
       {% include "includes/timesince.html" with profile_url=owner_url timestamp=comment.created owner=comment.owner %}
+      {% if can_moderate_community and comment.is_flagged %}
+      <span class="label bg-primary">{% trans "Flagged" %}</span>
+      {% endif %}
     </div>
   </div>
   {% if comment.is_blocked %}

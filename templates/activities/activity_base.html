@@ -7,6 +7,8 @@
 {% load activities %}
 {% load users %}
 
+{% has_perm "communities.moderate_community" user community as can_moderate_community %}
+
 <article role="{{ object_type }}"
          id="{{ object_type }}-{{ object.id }}"
          class="card {{ object_type }}-card{% if css_class %} {{ css_class }}{% endif %}"
@@ -25,14 +27,6 @@
     <div class="card-header">
       {% endif %}
 
-      {% has_perm "communities.moderate_community" user community as can_moderate_community %}
-      {% if object.is_flagged and can_moderate_community %}
-      <div class="toast text-center">
-        <a href="{{ object.get_absolute_url }}">
-          {% blocktrans %}This {{ object_type }} has been flagged{% endblocktrans %}
-        </a>
-      </div>
-      {% endif %}
 
       <div class="card-title h6">
 
@@ -78,6 +72,10 @@
 
         {% if not object.published %}
         <span class="label">{% trans "Private" %}</span>
+        {% endif %}
+
+        {% if can_moderate_community and object.is_flagged %}
+        <span class="label bg-primary">{% trans "Flagged" %}</span>
         {% endif %}
 
         {% endblock title %}

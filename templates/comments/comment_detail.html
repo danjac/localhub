@@ -38,7 +38,6 @@
 {% endif %}
 
 {% render_comment request user comment is_detail=True include_content_object=False %}
-{% include "flags/includes/flags.html" %}
 
 {% if replies %}
 <div class="divider text-center"
@@ -47,5 +46,7 @@
 {% render_comment request user reply include_content_object=False include_parent=False css_class="mb-2" %}
 {% endfor %}
 {% endif %}
+
+{% include "flags/includes/flags.html" %}
 
 {% endblock content %}

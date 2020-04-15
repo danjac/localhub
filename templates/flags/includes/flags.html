@@ -11,10 +11,10 @@
   <tbody>
     {% for flag in flags %}
     <tr>
-      <td>{{ flag.get_reason_display }}</td>
       <td>
         {% include "includes/timesince.html" with timestamp=flag.created owner=flag.user verb="flagged" %}
       </td>
+      <td>{{ flag.get_reason_display }}</td>
       <td>
         <div class="float-right-responsive actions">
           <a class="action"

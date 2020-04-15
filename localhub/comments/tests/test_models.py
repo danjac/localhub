@@ -269,6 +269,16 @@ class TestCommentManager:
         assert hasattr(comment, "has_flagged")
         assert not hasattr(comment, "is_flagged")
 
+    def test_with_common_annotations_if_moderator(self, comment, moderator):
+        comment = Comment.objects.with_common_annotations(
+            moderator.member, comment.community
+        ).get()
+
+        assert hasattr(comment, "num_likes")
+        assert hasattr(comment, "has_liked")
+        assert hasattr(comment, "has_flagged")
+        assert hasattr(comment, "is_flagged")
+
 
 class TestCommentModel:
     def test_abbreviate(self):
