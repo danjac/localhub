@@ -209,18 +209,6 @@ class TestHTMLScraperFromUrl:
         scraper = HTMLScraper().scrape(html)
         assert scraper.image is None
 
-    def test_first_image(self):
-        html = """<html>
-        <head>
-        </head>
-        <body>
-            <img src="https://imgur.com/test.jpg" />
-        </body>
-        </html>
-        """
-        scraper = HTMLScraper().scrape(html)
-        assert scraper.image == "https://imgur.com/test.jpg"
-
     def test_description_in_meta_property(self):
         html = """<html>
         <head>

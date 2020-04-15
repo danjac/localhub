@@ -111,53 +111,49 @@ class HTMLScraper:
         return self
 
     def get_title(self):
-        # priority:
-        # OG or twitter title content
-        # first <h1> element
-        # <title> element
-        title = self.find_meta_tag("og:title", "twitter:title")
-        if title:
-            return title
-        if self.soup.h1 and self.soup.h1.text:
-            return self.soup.h1.text
-        if self.soup.title:
-            return self.soup.title.text
+        for value in self.find_meta_tags("og:title", "twitter:title") + [
+            self.find_text(self.soup.h1),
+            self.find_text(self.soup.title),
+        ]:
+            if value:
+                return value
         return None
 
     def get_image(self):
-        # priority:
-        # OG or twitter image content
-        # first <img> element
-        image = self.find_meta_tag("og:image", "twitter:image")
-        if image and self.is_acceptable_image(image):
-            return image
-
-        if self.soup.img:
-            image = self.soup.img.attrs.get("src")
-            if self.is_acceptable_image(image):
-                return image
+        for value in self.find_meta_tags("og:image", "twitter:image"):
+            if self.is_acceptable_image(value):
+                return value
         return None
 
     def get_description(self):
-        # priority:
-        # OG or twitter content
-        # first <p> element
-        text = self.find_meta_tag(
+        for value in self.find_meta_tags(
             "og:description", "twitter:description", "fb:status", "description"
-        )
-        if text:
-            return text
-        if self.soup.p:
-            return self.soup.p.text
+        ) + [self.find_text(self.soup.p)]:
+            if value:
+                return value
         return None
 
-    def find_meta_tag(self, *names):
-        for name in names:
-            meta = self.soup.find("meta", attrs={"property": name}) or self.soup.find(
-                "meta", attrs={"name": name}
-            )
-            if meta and "content" in meta.attrs:
-                return meta.attrs["content"]
+    def find_text(self, tag):
+        if tag and tag.text:
+            value = tag.text.strip()
+            if value:
+                return value
+        return None
+
+    def find_meta_tags(self, *names):
+        return [
+            value for value in [self.find_meta_tag(name) for name in names] if value
+        ]
+        return None
+
+    def find_meta_tag(self, name):
+        meta = self.soup.find("meta", attrs={"property": name}) or self.soup.find(
+            "meta", attrs={"name": name}
+        )
+        if meta and "content" in meta.attrs:
+            content = meta.attrs["content"].strip()
+            if content:
+                return content
         return None
 
     def is_acceptable_image(self, image):
