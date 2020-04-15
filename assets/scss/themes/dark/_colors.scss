@@ -14,5 +14,9 @@
 }
 
 .text-muted {
-  color: $gray-color-dark;
+  color: $gray-color-dark !important;
+
+  * {
+    color: $gray-color-dark !important;
+  }
 }
