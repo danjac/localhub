@@ -112,8 +112,8 @@ class HTMLScraper:
 
     def get_title(self):
         for value in self.find_meta_tags("og:title", "twitter:title") + [
-            self.find_text(self.soup.h1),
-            self.find_text(self.soup.title),
+            self.find_text("h1"),
+            self.find_text("title"),
         ]:
             if value:
                 return value
@@ -128,12 +128,13 @@ class HTMLScraper:
     def get_description(self):
         for value in self.find_meta_tags(
             "og:description", "twitter:description", "fb:status", "description"
-        ) + [self.find_text(self.soup.p)]:
+        ) + [self.find_text("p")]:
             if value:
                 return value
         return None
 
-    def find_text(self, tag):
+    def find_text(self, name):
+        tag = self.soup.find(name)
         if tag and tag.text:
             value = tag.text.strip()
             if value:
