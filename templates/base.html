@@ -213,8 +213,9 @@
              class="btn btn-block"
              data-action="sidebar#toggle">
             {% block sidebar_toggle %}
-            <span{% if site_counters_total %}class="badge" data-badge="{{ site_counters_total }}"
-                                                           {% endif %}>
+            <span{% if site_counters_total %} class="badge"
+                                              data-badge="{{ site_counters_total }}"
+                                              {% endif %}>
               {% trans "Menu" %}
               </span>
               {% endblock %}
