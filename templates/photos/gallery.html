@@ -6,6 +6,8 @@
 {% load rules %}
 {% load thumbnail %}
 
+{% block subtitle %} / {% trans "Photos" %} / {% trans "Gallery" %}{% endblock %}
+
 {% block content %}
 
 <h1 class="page-header">{% trans "Gallery" %}</h1>
@@ -23,6 +25,11 @@
 </div>
 
 <div class="divider"></div>
+
+{% if page_obj.number > 1 %}
+{% include "includes/pagination.html" with css_class="mt-1 mb-2" %}
+{% endif %}
+
 <div class="container">
   <div class="columns">
     {% for photo in object_list %}
