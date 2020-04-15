@@ -91,22 +91,18 @@
       data-content="{% trans 'Actions' %}"></li>
   <li class="menu-item">
     <a data-controller="active-link"
-       data-active-link-exact
        href="{% url 'posts:create' %}">{% trans "Submit Post" %}</a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
-       data-active-link-exact
        href="{% url 'events:create' %}">{% trans "Submit Event" %}</a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
-       data-active-link-exact
        href="{% url 'photos:create' %}">{% trans "Submit Photo" %}</a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
-       data-active-link-exact
        href="{% url 'polls:create' %}">{% trans "Submit Poll" %}</a>
   </li>
 </ul>
@@ -177,18 +173,22 @@
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
+       data-active-link-exact
        href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
+       data-active-link-exact
        href="{% url 'events:list' %}">{% trans "Events" %}</a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
+       data-active-link-exact
        href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
+       data-active-link-exact
        href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
   </li>
   {% if can_moderate_community %}
