@@ -4,7 +4,7 @@
 {% load i18n %}
 
 {% if user.is_authenticated %}
-<div class="{{ css_class|default:"mb-2" }}"
+<div class="{{ css_class|default:"mb-2" }} d-none"
      data-controller="notifications"
      data-notifications-service-worker-url="{% url 'notifications:service_worker' %}"
      data-notifications-subscribe-url="{% url 'notifications:subscribe' %}"
