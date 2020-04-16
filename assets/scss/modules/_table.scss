@@ -9,21 +9,12 @@ table {
 }
 
 .table-responsive {
-  @media (max-width: $size-md) {
 
-    thead {
-      display: none;
-    }
-
-    td {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-
-      &:first-child {
-        background: $bg-color-dark;
-      }
-
-    }
+  // use scroll with small devices
+  @media (max-width: $size-sm) {
+    display: block;
+    overflow-x: auto;
+    padding-bottom: .75rem;
+    white-space: nowrap;
   }
 }

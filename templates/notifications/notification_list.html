@@ -18,7 +18,7 @@
   <a class="action"
      href="{% url 'notifications:mark_all_read' %}"
      data-controller="ajax"
-     data-action="ajax#post">{% trans "Mark All As Read" %}</a>
+     data-action="ajax#post">{% trans "Mark All Read" %}</a>
   {% endif %}
   <a class="action"
      href="{% url 'notifications:delete_all' %}"
@@ -64,11 +64,11 @@ You can enable emails for your notifications
         </span>
       </td>
       <td>
-        <div class="actions float-right-responsive">
+        <div class="actions float-right">
           {% if not notification.is_read %}
           <a href="{% url 'notifications:mark_read' notification.pk %}"
              data-controller="ajax"
-             data-action="ajax#post">{% trans "Mark As Read" %}</a>
+             data-action="ajax#post">{% trans "Mark Read" %}</a>
           {% endif %}
           <a href="{% url 'notifications:delete' notification.pk %}"
              data-controller="ajax"

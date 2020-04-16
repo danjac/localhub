@@ -42,6 +42,10 @@ class TestUserManager:
         )
         assert not user_model.objects.for_community(community).exists()
 
+    def test_with_joined(self, user_model, member):
+        first = user_model.objects.with_joined(member.community).first()
+        assert first.joined is not None
+
     def test_with_role_if_not_member(self, user_model, community):
         UserFactory()
         first = user_model.objects.with_role(community).first()

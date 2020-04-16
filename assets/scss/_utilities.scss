@@ -1,25 +1,6 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-.float-left-responsive {
-  @media (min-width: $size-lg) {
-    float: left !important;
-  }
-}
-
-.float-right-responsive {
-  @media (min-width: $size-lg) {
-    float: right !important;
-
-    .dropdown {
-      .menu {
-        left: auto;
-        right: 0;
-      }
-    }
-  }
-}
-
 .align-center {
   align-items: center;
 }

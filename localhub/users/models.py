@@ -122,8 +122,26 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
             membership__community=community, membership__active=True, is_active=True,
         )
 
+    def with_joined(self, community):
+        """Adds "joined" datetime annotation.
+
+        Args:
+            community (Community)
+
+        Returns:
+            QuerySet
+        """
+        return self.annotate(
+            joined=models.Subquery(
+                Membership.objects.filter(
+                    community=community, member=models.OuterRef("pk")
+                ).values("created"),
+                output_field=models.DateTimeField(),
+            ),
+        )
+
     def with_role(self, community):
-        """Adds annotations "role" and "role_display" for users for this community.
+        """Adds annotations "role", "joined" and "role_display" for users for this community.
         Use in conjunction with for_community.
 
         Args:

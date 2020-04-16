@@ -79,8 +79,11 @@
         {% endblock user_item_detail %}
       </td>
       <td>
+        {% include "includes/timesince.html" with verb=_("Joined") timestamp=object.joined %}
+      </td>
+      <td>
         {% block user_item_actions %}
-        <div class="float-right-responsive actions">
+        <div class="float-right actions">
           {% if user == object %}
           <a class="action"
              href="{% url 'user_update' %}">{% trans "My Settings" %}</a>

@@ -13,13 +13,3 @@ tr {
     background-color: $darkmode-lighter;
   }
 }
-
-.table-responsive {
-  @media (max-width: $size-md) {
-    td {
-      &:first-child {
-        background: $dark-color;
-      }
-    }
-  }
-}
