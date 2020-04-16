@@ -21,6 +21,32 @@ class UserQuerySetMixin(BaseUserQuerySetMixin):
         return self.get_user_queryset()
 
 
+class ExcludeBlockedUsersQuerySetMixin:
+    """Excludes any users blocked by the current user"""
+
+    def get_queryset(self):
+        return super().get_queryset().exclude(blockers=self.request.user)
+
+
+class ExcludeBlockingUsersQuerySetMixin:
+    """Excludes any users blocking the current user"""
+
+    def get_queryset(self):
+        return super().get_queryset().exclude(blocked=self.request.user)
+
+
+class MemberQuerySetMixin:
+    """Includes membership details such as role and join date"""
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .with_role(self.request.community)
+            .with_joined(self.request.community)
+        )
+
+
 class CurrentUserMixin(LoginRequiredMixin):
     """
     Always returns the current logged in user.

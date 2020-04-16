@@ -12,7 +12,12 @@ from vanilla import GenericModelView
 
 from localhub.views import SuccessMixin
 
-from .mixins import CurrentUserMixin, UserQuerySetMixin
+from .mixins import (
+    CurrentUserMixin,
+    ExcludeBlockedUsersQuerySetMixin,
+    ExcludeBlockingUsersQuerySetMixin,
+    UserQuerySetMixin,
+)
 
 
 class BaseUserActionView(UserQuerySetMixin, SuccessMixin, GenericModelView):
@@ -20,17 +25,14 @@ class BaseUserActionView(UserQuerySetMixin, SuccessMixin, GenericModelView):
     lookup_url_kwarg = "username"
 
 
-class BaseFollowUserView(PermissionRequiredMixin, BaseUserActionView):
+class BaseFollowUserView(
+    PermissionRequiredMixin,
+    ExcludeBlockedUsersQuerySetMixin,
+    ExcludeBlockingUsersQuerySetMixin,
+    BaseUserActionView,
+):
     permission_required = "users.follow_user"
     is_success_ajax_response = True
-
-    def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .exclude(blockers=self.request.user)
-            .exclude(blocked=self.request.user)
-        )
 
 
 class UserFollowView(BaseFollowUserView):

@@ -7,44 +7,34 @@ from vanilla import ListView
 
 from localhub.views import SearchMixin
 
-from .mixins import UserQuerySetMixin
+from .mixins import (
+    ExcludeBlockedUsersQuerySetMixin,
+    ExcludeBlockingUsersQuerySetMixin,
+    MemberQuerySetMixin,
+    UserQuerySetMixin,
+)
 
 
-class BaseUserListView(UserQuerySetMixin, ListView):
+class BaseUserListView(ExcludeBlockingUsersQuerySetMixin, UserQuerySetMixin, ListView):
     paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
 
-    exclude_blocked = True
-
-    include_is_following = True
-    include_membership_details = True
-    include_unread_messages = True
-
     def get_queryset(self):
-        qs = (
+        return super().get_queryset().order_by("name", "username")
+
+
+class BaseMemberListView(
+    MemberQuerySetMixin, ExcludeBlockedUsersQuerySetMixin, BaseUserListView
+):
+    def get_queryset(self):
+        return (
             super()
             .get_queryset()
-            .exclude(blocked=self.request.user)
-            .order_by("name", "username")
+            .with_is_following(self.request.user)
+            .with_num_unread_messages(self.request.user, self.request.community)
         )
 
-        if self.exclude_blocked:
-            qs = qs.exclude(blockers=self.request.user)
 
-        if self.include_is_following:
-            qs = qs.with_is_following(self.request.user)
-
-        if self.include_membership_details:
-            qs = qs.with_role(self.request.community).with_joined(
-                self.request.community
-            )
-
-        if self.include_unread_messages:
-            qs = qs.with_num_unread_messages(self.request.user, self.request.community)
-
-        return qs
-
-
-class MemberListView(SearchMixin, BaseUserListView):
+class MemberListView(SearchMixin, BaseMemberListView):
     """
     Shows all members of community
     """
@@ -61,7 +51,7 @@ class MemberListView(SearchMixin, BaseUserListView):
 member_list_view = MemberListView.as_view()
 
 
-class FollowingUserListView(BaseUserListView):
+class FollowingUserListView(BaseMemberListView):
     template_name = "users/following_user_list.html"
 
     def get_queryset(self):
@@ -71,7 +61,7 @@ class FollowingUserListView(BaseUserListView):
 following_user_list_view = FollowingUserListView.as_view()
 
 
-class FollowerUserListView(BaseUserListView):
+class FollowerUserListView(BaseMemberListView):
     template_name = "users/follower_user_list.html"
 
     def get_queryset(self):
@@ -81,13 +71,8 @@ class FollowerUserListView(BaseUserListView):
 follower_user_list_view = FollowerUserListView.as_view()
 
 
-class BlockedUserListView(BaseUserListView):
+class BlockedUserListView(MemberQuerySetMixin, BaseUserListView):
     template_name = "users/blocked_user_list.html"
-
-    exclude_blocked = False
-
-    include_is_following = False
-    include_unread_messages = False
 
     def get_queryset(self):
         return super().get_queryset().filter(blockers=self.request.user)
@@ -98,10 +83,6 @@ blocked_user_list_view = BlockedUserListView.as_view()
 
 class UserAutocompleteListView(BaseUserListView):
     template_name = "users/user_autocomplete_list.html"
-
-    include_is_following = False
-    include_unread_messages = False
-    include_membership_details = False
 
     def get_queryset(self):
         qs = super().get_queryset()
