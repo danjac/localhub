@@ -31,7 +31,7 @@
          data-tab="guide">{% trans "Markdown Guide" %}</a>
     </li>
   </ul>
-  <div class="tab-pane"
+  <div class="tab-pane mt-2"
        data-target="tabs.pane"
        data-tab="editor"
        data-controller="markdown">
@@ -93,7 +93,7 @@
           <li class="menu-item">
             <a href="#"
                data-action="markdown#select"
-               data-markdown="{{ emoji.markdown }} ">
+               data-markdown="[SELECTION] {{ emoji.markdown }} ">
               <img src="{% static emoji.image %}"
                    height="16"
                    width="16">
@@ -120,10 +120,10 @@
       </small>
     </p>
   </div>
-  <div class="tab-pane d-none markdownx-preview markdown-content"
+  <div class="tab-pane mt-2 d-none markdownx-preview markdown-content"
        data-target="tabs.pane"
        data-tab="preview"></div>
-  <div class="tab-pane d-none"
+  <div class="tab-pane mt-2 d-none"
        data-target="tabs.pane"
        data-tab="guide">
     <table class="table table-hover table-responsive">
