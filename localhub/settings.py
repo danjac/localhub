@@ -130,6 +130,7 @@ class Base(Configuration):
 
     ACCOUNT_USER_DISPLAY = "localhub.users.utils.user_display"
     ACCOUNT_EMAIL_REQUIRED = True
+    ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
     SOCIALACCOUNT_PROVIDERS = {
         "google": {
