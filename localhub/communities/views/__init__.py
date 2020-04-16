@@ -18,9 +18,9 @@ from .memberships import (
     membership_update_view,
 )
 from .mixins import (
-    CommunityRequiredMixin,
-    CommunityModeratorRequiredMixin,
     CommunityAdminRequiredMixin,
+    CommunityModeratorRequiredMixin,
+    CommunityRequiredMixin,
 )
 
 __all__ = [

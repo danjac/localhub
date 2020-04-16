@@ -11,7 +11,6 @@ from vanilla import DeleteView
 from localhub.views import SuccessMixin
 
 from ..models import JoinRequest
-
 from .mixins import JoinRequestQuerySetMixin
 
 
