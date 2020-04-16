@@ -9,7 +9,7 @@ from functools import partial
 
 import bleach
 from bleach import Cleaner  # type: ignore
-from bleach.linkifier import LinkifyFilter, TLDS, build_url_re
+from bleach.linkifier import TLDS, LinkifyFilter, build_url_re
 from markdownx.utils import markdownify as default_markdownify
 
 from localhub.hashtags.utils import linkify_hashtags

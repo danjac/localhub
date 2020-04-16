@@ -1,4 +1,3 @@
-
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -11,8 +10,7 @@ from localhub.views import BaseActionView
 
 from ..emails import send_invitation_email
 from ..models import Invite
-
-from .mixins import InviteQuerySetMixin, InviteAdminMixin, InviteRecipientQuerySetMixin
+from .mixins import InviteAdminMixin, InviteQuerySetMixin, InviteRecipientQuerySetMixin
 
 
 class BaseInviteAdminActionView(InviteAdminMixin, InviteQuerySetMixin, BaseActionView):
@@ -63,7 +61,9 @@ class InviteAcceptView(BaseInviteRecipientActionView):
         return reverse("invites:received_list")
 
     def get_success_message(self):
-        return _("You are now a member of %(community)s") % {"community": self.object.community.name}
+        return _("You are now a member of %(community)s") % {
+            "community": self.object.community.name
+        }
 
     def post(self, request, *args, **kwargs):
 

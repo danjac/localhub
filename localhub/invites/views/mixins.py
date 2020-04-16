@@ -4,7 +4,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rules.contrib.views import PermissionRequiredMixin
 
-
 from localhub.communities.views import CommunityRequiredMixin
 
 from ..models import Invite

@@ -3,24 +3,11 @@
 
 from django.urls import path
 
-from .views.actions import (
-    invite_accept_view,
-    invite_reject_view,
-    invite_resend_view,
-)
-
+from .views.actions import invite_accept_view, invite_reject_view, invite_resend_view
 from .views.delete import invite_delete_view
-
-from .views.list import (
-    received_invite_list_view,
-    invite_list_view,
-)
-
-from .views.form import invite_create_view
-
-
 from .views.detail import invite_detail_view
-
+from .views.form import invite_create_view
+from .views.list import invite_list_view, received_invite_list_view
 
 app_name = "invites"
 

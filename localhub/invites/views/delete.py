@@ -1,4 +1,3 @@
-
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -9,8 +8,7 @@ from vanilla import DeleteView
 from localhub.views import SuccessMixin
 
 from ..models import Invite
-
-from .mixins import InviteQuerySetMixin, InviteAdminMixin
+from .mixins import InviteAdminMixin, InviteQuerySetMixin
 
 
 class InviteDeleteView(

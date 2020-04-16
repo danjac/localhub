@@ -8,7 +8,6 @@ from vanilla import ListView
 from localhub.views import SearchMixin
 
 from ..models import Invite
-
 from .mixins import InviteAdminMixin, InviteQuerySetMixin, InviteRecipientQuerySetMixin
 
 

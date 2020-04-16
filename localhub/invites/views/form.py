@@ -1,4 +1,3 @@
-
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -13,7 +12,6 @@ from localhub.views import SuccessMixin
 from ..emails import send_invitation_email
 from ..forms import InviteForm
 from ..models import Invite
-
 from .mixins import InviteAdminMixin
 
 
