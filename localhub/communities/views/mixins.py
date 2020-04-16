@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 
-from ..models import Community
+from ..models import Community, Membership
 
 
 class CommunityRequiredMixin(LoginRequiredMixin):
@@ -68,3 +68,10 @@ class CommunityModeratorRequiredMixin(CommunityPermissionRequiredMixin):
 
 class CommunityAdminRequiredMixin(CommunityPermissionRequiredMixin):
     permission_required = "communities.manage_community"
+
+
+class MembershipQuerySetMixin(CommunityRequiredMixin):
+    def get_queryset(self):
+        return Membership.objects.filter(
+            community=self.request.community
+        ).select_related("community", "member")

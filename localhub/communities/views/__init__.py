@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from .list import community_list_view
+from .list import community_list_view, membership_list_view
 
 from .detail import (
     community_detail_view,
@@ -10,16 +10,14 @@ from .detail import (
     community_sidebar_view,
     community_terms_view,
     community_welcome_view,
+    membership_detail_view,
 )
 
-from .form import community_update_view
+from .form import community_update_view, membership_update_view
 
-from .memberships import (
+from .delete import (
     membership_delete_view,
-    membership_detail_view,
     membership_leave_view,
-    membership_list_view,
-    membership_update_view,
 )
 from .mixins import (
     CommunityAdminRequiredMixin,

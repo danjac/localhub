@@ -3,13 +3,15 @@
 
 from django.conf import settings
 from django.http import HttpResponseRedirect
+from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DetailView, TemplateView
 
 from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
 
+from ..models import Membership
 from ..rules import is_inactive_member, is_member
-from .mixins import CurrentCommunityMixin
+from .mixins import CurrentCommunityMixin, MembershipQuerySetMixin
 
 
 class BaseCommunityDetailView(CurrentCommunityMixin, DetailView):
@@ -103,3 +105,14 @@ class CommunityNotFoundView(TemplateView):
 
 
 community_not_found_view = CommunityNotFoundView.as_view()
+
+
+class MembershipDetailView(
+    PermissionRequiredMixin, MembershipQuerySetMixin, DetailView,
+):
+
+    permission_required = "communities.view_membership"
+    model = Membership
+
+
+membership_detail_view = MembershipDetailView.as_view()

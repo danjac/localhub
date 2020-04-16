@@ -12,6 +12,8 @@ from localhub.views import SearchMixin
 
 from ..models import Community, Membership
 
+from .mixins import CommunityAdminRequiredMixin, MembershipQuerySetMixin
+
 
 class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
     """
@@ -121,3 +123,20 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
 
 
 community_list_view = CommunityListView.as_view()
+
+
+class MembershipListView(
+    CommunityAdminRequiredMixin, MembershipQuerySetMixin, SearchMixin, ListView,
+):
+    paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
+    model = Membership
+
+    def get_queryset(self):
+        qs = super().get_queryset().order_by("member__name", "member__username")
+
+        if self.search_query:
+            qs = qs.search(self.search_query)
+        return qs
+
+
+membership_list_view = MembershipListView.as_view()
