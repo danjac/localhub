@@ -4,6 +4,8 @@
 
 from django.utils.translation import gettext_lazy as _
 
+# Source: https://gist.github.com/rxaviers/7360908
+
 
 COMMON_EMOJIS = [
     {
