@@ -5,13 +5,16 @@ from django.conf import settings
 from django.utils.functional import cached_property
 from vanilla import ListView
 
+from localhub.communities.views import CommunityAdminRequiredMixin
 from localhub.views import SearchMixin
 
 from ..models import Invite
-from .mixins import InviteAdminMixin, InviteQuerySetMixin, InviteRecipientQuerySetMixin
+from .mixins import InviteQuerySetMixin, InviteRecipientQuerySetMixin
 
 
-class InviteListView(InviteAdminMixin, InviteQuerySetMixin, SearchMixin, ListView):
+class InviteListView(
+    CommunityAdminRequiredMixin, InviteQuerySetMixin, SearchMixin, ListView
+):
     """
     TBD: list of received pending community invitations
     + counter template tag

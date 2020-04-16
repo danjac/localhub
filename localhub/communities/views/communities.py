@@ -7,7 +7,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, F, Q
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
-from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DetailView, ListView, TemplateView, UpdateView
 
 from localhub.invites.models import Invite
@@ -17,7 +16,7 @@ from localhub.views import SearchMixin, SuccessMixin
 from ..forms import CommunityForm
 from ..models import Community, Membership
 from ..rules import is_inactive_member, is_member
-from .mixins import CurrentCommunityMixin
+from .mixins import CommunityAdminRequiredMixin, CurrentCommunityMixin
 
 
 class CommunityDetailView(CurrentCommunityMixin, DetailView):
@@ -110,10 +109,9 @@ community_not_found_view = CommunityNotFoundView.as_view()
 
 
 class CommunityUpdateView(
-    CurrentCommunityMixin, PermissionRequiredMixin, SuccessMixin, UpdateView
+    CurrentCommunityMixin, CommunityAdminRequiredMixin, SuccessMixin, UpdateView
 ):
     form_class = CommunityForm
-    permission_required = "communities.manage_community"
     success_message = _("Community settings have been updated")
 
     def get_success_url(self):

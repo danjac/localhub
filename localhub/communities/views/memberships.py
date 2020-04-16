@@ -12,7 +12,7 @@ from localhub.views import SearchMixin, SuccessMixin
 from ..emails import send_membership_deleted_email
 from ..forms import MembershipForm
 from ..models import Membership
-from .mixins import CommunityRequiredMixin
+from .mixins import CommunityAdminRequiredMixin, CommunityRequiredMixin
 
 
 class MembershipQuerySetMixin(CommunityRequiredMixin):
@@ -23,17 +23,12 @@ class MembershipQuerySetMixin(CommunityRequiredMixin):
 
 
 class MembershipListView(
-    PermissionRequiredMixin, MembershipQuerySetMixin, SearchMixin, ListView,
+    CommunityAdminRequiredMixin, MembershipQuerySetMixin, SearchMixin, ListView,
 ):
     paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
-    permission_required = "communities.manage_community"
     model = Membership
 
-    def get_permission_object(self):
-        return self.request.community
-
     def get_queryset(self):
-
         qs = super().get_queryset().order_by("member__name", "member__username")
 
         if self.search_query:

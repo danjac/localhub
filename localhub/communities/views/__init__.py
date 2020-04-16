@@ -17,10 +17,15 @@ from .memberships import (
     membership_list_view,
     membership_update_view,
 )
-from .mixins import CommunityRequiredMixin
+from .mixins import (
+    CommunityRequiredMixin,
+    CommunityModeratorRequiredMixin,
+    CommunityAdminRequiredMixin,
+)
 
 __all__ = [
-    "CommunityRequiredMixin",
+    "CommunityAdminRequiredMixin",
+    "CommunityModeratorRequiredMixin",
     "CommunityRequiredMixin",
     "community_detail_view",
     "community_list_view",

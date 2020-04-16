@@ -6,6 +6,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from rules.contrib.views import PermissionRequiredMixin
 
 from ..models import Community
 
@@ -54,3 +55,16 @@ class CurrentCommunityMixin(CommunityRequiredMixin):
 
     def get_object(self):
         return self.request.community
+
+
+class CommunityPermissionRequiredMixin(PermissionRequiredMixin):
+    def get_permission_object(self):
+        return self.request.community
+
+
+class CommunityModeratorRequiredMixin(CommunityPermissionRequiredMixin):
+    permission_required = "communities.moderate_community"
+
+
+class CommunityAdminRequiredMixin(CommunityPermissionRequiredMixin):
+    permission_required = "communities.manage_community"

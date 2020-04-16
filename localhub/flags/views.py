@@ -6,18 +6,16 @@ from django.conf import settings
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView, ListView
 
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.views import (
+    CommunityModeratorRequiredMixin,
+    CommunityRequiredMixin,
+)
 from localhub.views import SuccessMixin
 
 from .models import Flag
 
 
-class FlagQuerySetMixin(PermissionRequiredMixin, CommunityRequiredMixin):
-    permission_required = "communities.moderate_community"
-
-    def get_permission_object(self):
-        return self.request.community
-
+class FlagQuerySetMixin(CommunityRequiredMixin, CommunityModeratorRequiredMixin):
     def get_queryset(self):
         return Flag.objects.filter(community=self.request.community)
 

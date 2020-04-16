@@ -3,15 +3,11 @@
 
 from django.urls import path
 
-from .views import (
-    join_request_accept_view,
-    join_request_create_view,
-    join_request_delete_view,
-    join_request_detail_view,
-    join_request_list_view,
-    join_request_reject_view,
-    sent_join_request_list_view,
-)
+from .views.actions import join_request_accept_view, join_request_reject_view
+from .views.delete import join_request_delete_view
+from .views.detail import join_request_detail_view
+from .views.form import join_request_create_view
+from .views.list import join_request_list_view, sent_join_request_list_view
 
 app_name = "join_requests"
 

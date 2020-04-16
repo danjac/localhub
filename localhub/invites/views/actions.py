@@ -6,14 +6,17 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
+from localhub.communities.views import CommunityAdminRequiredMixin
 from localhub.views import BaseActionView
 
 from ..emails import send_invitation_email
 from ..models import Invite
-from .mixins import InviteAdminMixin, InviteQuerySetMixin, InviteRecipientQuerySetMixin
+from .mixins import InviteQuerySetMixin, InviteRecipientQuerySetMixin
 
 
-class BaseInviteAdminActionView(InviteAdminMixin, InviteQuerySetMixin, BaseActionView):
+class BaseInviteAdminActionView(
+    CommunityAdminRequiredMixin, InviteQuerySetMixin, BaseActionView
+):
     ...
 
 

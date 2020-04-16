@@ -6,17 +6,19 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from vanilla import CreateView
 
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.communities.views import (
+    CommunityAdminRequiredMixin,
+    CommunityRequiredMixin,
+)
 from localhub.views import SuccessMixin
 
 from ..emails import send_invitation_email
 from ..forms import InviteForm
 from ..models import Invite
-from .mixins import InviteAdminMixin
 
 
 class InviteCreateView(
-    InviteAdminMixin, CommunityRequiredMixin, SuccessMixin, CreateView,
+    CommunityAdminRequiredMixin, CommunityRequiredMixin, SuccessMixin, CreateView,
 ):
     model = Invite
     form_class = InviteForm
