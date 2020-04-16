@@ -39,6 +39,7 @@
   <thead>
     <tr>
       <th>{% trans "Member" %}</th>
+      <th>{% trans "Joined" %}</th>
       <th>{% trans "Status" %}</th>
       <th>{% trans "Role" %}</th>
       <th>{% trans "Actions" %}</th>
@@ -52,6 +53,9 @@
       <td>
         {% url 'communities:membership_detail' member.id as membership_detail_url %}
         {% include "users/includes/chip.html" with profile=member.member profile_url=membership_detail_url %}
+      </td>
+      <td>
+        {% include "includes/timesince.html" with timestamp=member.created %}
       </td>
       {% if member.active %}
       <td>{% trans "Active" %}</td>

@@ -47,11 +47,13 @@
 {% if total_count %}
 <div class="actions my-1">
   {% if status %}
-  <a href="{{ request.path }}">{% trans "Show All" %}</a>
+  <a class="action"
+     href="{{ request.path }}">{% trans "Show All" %}</a>
   {% endif %}
   {% for value, label in status_choices %}
   {% if status != value %}
-  <a href="{{ request.path }}?status={{ value }}">{{ label }}</a>
+  <a class="action"
+     href="{{ request.path }}?status={{ value }}">{{ label }}</a>
   {% endif %}
   {% endfor %}
 </div>
@@ -63,6 +65,7 @@
   <thead>
     <tr>
       <th>{% trans "Email" %}</th>
+      <th>{% trans "Sent" %}</th>
       <th>{% trans "Status" %}</th>
       <th>{% trans "Actions" %}</th>
     </tr>
@@ -72,6 +75,9 @@
     <tr>
       <td>
         {{ invite.email }}
+      </td>
+      <td>
+        {% include "includes/timesince.html" with timestamp=invite.sent %}
       </td>
       <td>{{ invite.get_status_display }}</td>
       <td>

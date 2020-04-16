@@ -6,16 +6,19 @@
 {% if member.member != user %}
 {% if can_change or can_delete %}
 <div class="actions{% if css_class %} {{ css_class }}{% endif %}">
-  <a href="{% url 'private_messages:message_create' member.member.username %}">
+  <a class="action"
+     href="{% url 'private_messages:message_create' member.member.username %}">
     {% trans "Send Message" %}
   </a>
   {% if can_change %}
-  <a href="{% url 'communities:membership_update' member.id %}">
+  <a class="action"
+     href="{% url 'communities:membership_update' member.id %}">
     {% trans "Edit" %}
   </a>
   {% endif %}
   {% if can_delete %}
-  <a href="{% url 'communities:membership_delete' member.id %}"
+  <a class="action"
+     href="{% url 'communities:membership_delete' member.id %}"
      data-controller="ajax"
      data-action="ajax#post"
      data-ajax-confirm-header="{% trans 'Delete' %}"

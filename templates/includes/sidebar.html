@@ -4,7 +4,6 @@
 {% load i18n %}
 {% load rules %}
 {% load communities %}
-{% load flags %}
 
 {% get_community_count user as communities_count %}
 {% test_rule "communities.is_member" user community as is_member %}
@@ -144,15 +143,31 @@
     <a data-controller="active-link"
        href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
   </li>
+  <li class="menu-item">
+    {% include "users/includes/switch_theme.html" %}
+  </li>
   {% if can_manage_community %}
   <li class="menu-item">
     <a data-controller="active-link"
        href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
-  {% endif %}
   <li class="menu-item">
-    {% include "users/includes/switch_theme.html" %}
+    <a data-controller="active-link"
+       href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
   </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       {% if site_counters.pending_join_requests %}
+       class="badge"
+       data-badge="{{ site_counters.pending_join_requests }}"
+       {% endif %}
+       href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
+  </li>
+  {% endif %}
 </ul>
 
 
@@ -192,12 +207,11 @@
        href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
   </li>
   {% if can_moderate_community %}
-  {% get_flag_count user community as flags_count %}
-  {% if flags_count %}
+  {% if site_counters.flags %}
   <li class="menu-item">
     <a href="{% url 'flags:list' %}"
        class="badge"
-       data-badge="{{ flags_count }}">
+       data-badge="{{ site_counters.flags }}">
       {% trans "Flags" %}
     </a>
   </li>
