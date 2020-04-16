@@ -11,12 +11,9 @@ from vanilla import DeleteView
 from localhub.views import SuccessMixin
 
 from ..models import JoinRequest
-from .mixins import JoinRequestQuerySetMixin
 
 
-class JoinRequestDeleteView(
-    JoinRequestQuerySetMixin, PermissionRequiredMixin, SuccessMixin, DeleteView
-):
+class JoinRequestDeleteView(PermissionRequiredMixin, SuccessMixin, DeleteView):
     model = JoinRequest
     permission_required = "join_requests.delete"
 
