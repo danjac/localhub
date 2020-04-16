@@ -15,25 +15,32 @@ class BaseUserListView(UserQuerySetMixin, ListView):
 
     exclude_blocked = True
 
-    include_unread_messages = True
+    include_is_following = True
     include_membership_details = True
+    include_unread_messages = True
 
     def get_queryset(self):
         qs = (
             super()
             .get_queryset()
-            .with_joined(self.request.community)
             .exclude(blocked=self.request.user)
             .order_by("name", "username")
         )
-        if self.include_membership_details:
-            qs = qs.with_role(self.request.community).with_is_following(
-                self.request.user
-            )
+
         if self.exclude_blocked:
             qs = qs.exclude(blockers=self.request.user)
+
+        if self.include_is_following:
+            qs = qs.with_is_following(self.request.user)
+
+        if self.include_membership_details:
+            qs = qs.with_role(self.request.community).with_joined(
+                self.request.community
+            )
+
         if self.include_unread_messages:
             qs = qs.with_num_unread_messages(self.request.user, self.request.community)
+
         return qs
 
     def get_context_data(self, **kwargs):
@@ -81,6 +88,7 @@ follower_user_list_view = FollowerUserListView.as_view()
 
 class BlockedUserListView(BaseUserListView):
     template_name = "users/blocked_user_list.html"
+
     include_unread_messages = False
     exclude_blocked = False
 
@@ -92,9 +100,11 @@ blocked_user_list_view = BlockedUserListView.as_view()
 
 
 class UserAutocompleteListView(BaseUserListView):
+    template_name = "users/user_autocomplete_list.html"
+
+    include_is_following = False
     include_unread_messages = False
     include_membership_details = False
-    template_name = "users/user_autocomplete_list.html"
 
     def get_queryset(self):
         qs = super().get_queryset()
