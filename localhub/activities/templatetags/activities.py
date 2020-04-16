@@ -171,5 +171,6 @@ def render_activity(request, user, object, is_pinned=False, **extra_context):
         "object_type": model_name,
         "is_content_sensitive": is_content_sensitive,
         "template_name": template,
+        model_name: object,
         **extra_context,
     }

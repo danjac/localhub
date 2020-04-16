@@ -11,9 +11,6 @@
 {% block content %}
 {% if object.canceled %}
 <h6 class="text-bold text-center my-2">{% trans "This event has been canceled." %}</h6>
-{% endif %}
-
-{% if object.canceled %}
 <div class="text-muted">
   {% endif %}
 
@@ -95,7 +92,7 @@
   {% endwith %}
   {% include "activities/includes/description.html" %}
 
-  {% if object.canceled %}
+  {% if object.is_canceled %}
 </div>
 {% endif %}
 
