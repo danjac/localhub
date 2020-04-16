@@ -8,9 +8,8 @@ from django.http import Http404, HttpResponse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import View
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import GenericModelView
 
-from localhub.views import SuccessMixin
+from localhub.views import BaseActionView
 
 from .mixins import (
     CurrentUserMixin,
@@ -20,7 +19,7 @@ from .mixins import (
 )
 
 
-class BaseUserActionView(UserQuerySetMixin, SuccessMixin, GenericModelView):
+class BaseUserActionView(UserQuerySetMixin, BaseActionView):
     lookup_field = "username"
     lookup_url_kwarg = "username"
 
@@ -39,8 +38,6 @@ class UserFollowView(BaseFollowUserView):
     success_message = _("You are now following %(object)s")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-
         self.request.user.following.add(self.object)
         self.request.user.notify_on_follow(self.object, self.request.community)
 
@@ -54,7 +51,6 @@ class UserUnfollowView(BaseFollowUserView):
     success_message = _("You are no longer following %(object)s")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         self.request.user.following.remove(self.object)
         return self.success_response()
 
@@ -67,7 +63,6 @@ class UserBlockView(PermissionRequiredMixin, BaseUserActionView):
     success_message = _("You are now blocking %(object)s")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         self.request.user.block_user(self.object)
         return self.success_response()
 
@@ -79,7 +74,6 @@ class UserUnblockView(BaseUserActionView):
     success_message = _("You are no longer blocking %(object)s")
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         self.request.user.blocked.remove(self.object)
         return self.success_response()
 
