@@ -255,25 +255,7 @@
   </li>
   {% endif %}
 
-  {% if can_manage_community %}
-  {% if site_counters.pending_join_requests %}
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'join_requests:list' %}"
-       class="badge"
-       data-badge="{{ site_counters.pending_join_requests }}">
-      {% trans "Join Requests" %}
-    </a>
-  </li>
-  {% elif external_site_counters.sent_join_requests %}
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'join_requests:sent_list' %}">
-      {% trans "Join Requests" %}
-    </a>
-  </li>
-  {% endif %}
-  {% elif external_site_counters.sent_join_requests %}
+  {% if external_site_counters.sent_join_requests %}
   <li class="menu-item">
     <a data-controller="active-link"
        href="{% url 'join_requests:sent_list' %}">

@@ -85,8 +85,7 @@
 
 
 {% if object.intro %}
-<h5 class="mt-1">{% trans "Introduction" %}</h1>
-  {{ object.intro|linebreaks }}
-  {% endif %}
+{{ object.intro|linebreaks }}
+{% endif %}
 
-  {% endblock content %}
+{% endblock content %}
