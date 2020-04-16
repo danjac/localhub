@@ -6,14 +6,13 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import DeleteView
 
-from localhub.views import SuccessMixin
+from localhub.views import SuccessDeleteView
 
 from ..models import JoinRequest
 
 
-class JoinRequestDeleteView(PermissionRequiredMixin, SuccessMixin, DeleteView):
+class JoinRequestDeleteView(PermissionRequiredMixin, SuccessDeleteView):
     model = JoinRequest
     permission_required = "join_requests.delete"
 

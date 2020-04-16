@@ -9,14 +9,14 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.bookmarks.models import Bookmark
 from localhub.likes.models import Like
-from localhub.views import BaseActionView
+from localhub.views import SuccessActionView
 
 from ..models import get_activity_models
 from .mixins import ActivityQuerySetMixin
 
 
 class BaseActivityActionView(
-    ActivityQuerySetMixin, PermissionRequiredMixin, BaseActionView
+    ActivityQuerySetMixin, PermissionRequiredMixin, SuccessActionView
 ):
     ...
 

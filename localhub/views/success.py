@@ -4,6 +4,7 @@
 from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse, HttpResponseRedirect
+from vanilla import CreateView, DeleteView, FormView, GenericModelView, UpdateView
 
 
 class SuccessMixin:
@@ -106,3 +107,41 @@ class SuccessMixin:
             messages.success(self.request, success_message)
 
         return HttpResponseRedirect(self.get_success_url())
+
+
+class SuccessGenericModelView(SuccessMixin, GenericModelView):
+    ...
+
+
+class SuccessActionView(SuccessGenericModelView):
+    """Base class for simple AJAX action views (usually POST) with
+    standard success response. Automatically loads object at setup.
+    """
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.object = self.get_object()
+
+
+class SuccessFormView(SuccessMixin, FormView):
+    def form_valid(self, form):
+        return self.success_response()
+
+
+class SuccessCreateView(SuccessMixin, CreateView):
+    def form_valid(self, form):
+        self.object = form.save()
+        return self.success_response()
+
+
+class SuccessUpdateView(SuccessMixin, UpdateView):
+    def form_valid(self, form):
+        self.object = form.save()
+        return self.success_response()
+
+
+class SuccessDeleteView(SuccessMixin, DeleteView):
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return self.success_response()

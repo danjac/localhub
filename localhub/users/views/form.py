@@ -3,16 +3,15 @@
 
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import UpdateView
 
-from localhub.views import SuccessMixin
+from localhub.views import SuccessUpdateView
 
 from ..forms import UserForm
 from .mixins import CurrentUserMixin
 
 
 class UserUpdateView(
-    CurrentUserMixin, PermissionRequiredMixin, SuccessMixin, UpdateView,
+    CurrentUserMixin, PermissionRequiredMixin, SuccessUpdateView,
 ):
     permission_required = "users.change_user"
     success_message = _("Your details have been updated")

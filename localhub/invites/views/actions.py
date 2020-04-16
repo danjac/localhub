@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from localhub.communities.views import CommunityAdminRequiredMixin
-from localhub.views import BaseActionView
+from localhub.views import SuccessActionView
 
 from ..emails import send_invitation_email
 from ..models import Invite
@@ -15,12 +15,12 @@ from .mixins import InviteQuerySetMixin, InviteRecipientQuerySetMixin
 
 
 class BaseInviteAdminActionView(
-    CommunityAdminRequiredMixin, InviteQuerySetMixin, BaseActionView
+    CommunityAdminRequiredMixin, InviteQuerySetMixin, SuccessActionView
 ):
     ...
 
 
-class BaseInviteRecipientActionView(InviteRecipientQuerySetMixin, BaseActionView):
+class BaseInviteRecipientActionView(InviteRecipientQuerySetMixin, SuccessActionView):
     ...
 
 

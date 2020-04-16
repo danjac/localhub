@@ -4,13 +4,12 @@
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
-from vanilla import CreateView
 
 from localhub.communities.views import (
     CommunityAdminRequiredMixin,
     CommunityRequiredMixin,
 )
-from localhub.views import SuccessMixin
+from localhub.views import SuccessCreateView
 
 from ..emails import send_invitation_email
 from ..forms import InviteForm
@@ -18,7 +17,7 @@ from ..models import Invite
 
 
 class InviteCreateView(
-    CommunityAdminRequiredMixin, CommunityRequiredMixin, SuccessMixin, CreateView,
+    CommunityAdminRequiredMixin, CommunityRequiredMixin, SuccessCreateView,
 ):
     model = Invite
     form_class = InviteForm

@@ -3,13 +3,13 @@
 
 
 from django.conf import settings
-from vanilla import DeleteView, ListView
+from vanilla import ListView
 
 from localhub.communities.views import (
     CommunityModeratorRequiredMixin,
     CommunityRequiredMixin,
 )
-from localhub.views import SuccessMixin
+from localhub.views import SuccessDeleteView
 
 from .models import Flag
 
@@ -36,7 +36,7 @@ class FlagListView(FlagQuerySetMixin, ListView):
 flag_list_view = FlagListView.as_view()
 
 
-class FlagDeleteView(FlagQuerySetMixin, SuccessMixin, DeleteView):
+class FlagDeleteView(FlagQuerySetMixin, SuccessDeleteView):
     model = Flag
 
     def get_success_url(self):

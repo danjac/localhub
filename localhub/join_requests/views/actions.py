@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityAdminRequiredMixin
-from localhub.views import BaseActionView
+from localhub.views import SuccessActionView
 
 from ..emails import send_acceptance_email, send_rejection_email
 from ..models import JoinRequest
@@ -16,7 +16,7 @@ from .mixins import JoinRequestQuerySetMixin
 
 
 class BaseJoinRequestActionView(
-    CommunityAdminRequiredMixin, JoinRequestQuerySetMixin, BaseActionView
+    CommunityAdminRequiredMixin, JoinRequestQuerySetMixin, SuccessActionView
 ):
     success_url = reverse_lazy("join_requests:list")
 

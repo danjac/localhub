@@ -7,12 +7,12 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.bookmarks.models import Bookmark
 from localhub.likes.models import Like
-from localhub.views import BaseActionView
+from localhub.views import SuccessActionView
 
 from .mixins import CommentQuerySetMixin
 
 
-class BaseCommentActionView(CommentQuerySetMixin, BaseActionView):
+class BaseCommentActionView(CommentQuerySetMixin, SuccessActionView):
     ...
 
 

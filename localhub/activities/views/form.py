@@ -6,12 +6,11 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import CreateView, FormView, UpdateView
 
 from localhub.comments.forms import CommentForm
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
-from localhub.views import SuccessMixin
+from localhub.views import SuccessCreateView, SuccessFormView, SuccessUpdateView
 
 from ..forms import ActivityTagsForm
 from .mixins import ActivityQuerySetMixin, ActivityTemplateMixin
@@ -21,8 +20,7 @@ class ActivityCreateView(
     CommunityRequiredMixin,
     PermissionRequiredMixin,
     ActivityTemplateMixin,
-    SuccessMixin,
-    CreateView,
+    SuccessCreateView,
 ):
     permission_required = "activities.create_activity"
 
@@ -59,8 +57,7 @@ class ActivityUpdateView(
     PermissionRequiredMixin,
     ActivityQuerySetMixin,
     ActivityTemplateMixin,
-    SuccessMixin,
-    UpdateView,
+    SuccessUpdateView,
 ):
     permission_required = "activities.change_activity"
     success_message = _("Your %(model)s has been updated")
@@ -95,7 +92,7 @@ class ActivityUpdateTagsView(ActivityUpdateView):
 
 
 class ActivityFlagView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, SuccessMixin, FormView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, SuccessFormView,
 ):
     form_class = FlagForm
     template_name = "activities/flag_form.html"
@@ -144,7 +141,7 @@ activity_flag_view = ActivityFlagView.as_view()
 
 
 class ActivityCommentCreateView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, SuccessMixin, FormView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, SuccessFormView,
 ):
     form_class = CommentForm
     template_name = "comments/comment_form.html"

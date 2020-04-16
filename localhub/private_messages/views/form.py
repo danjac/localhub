@@ -7,17 +7,16 @@ from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import FormView
 
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.users.utils import user_display
-from localhub.views import SuccessMixin
+from localhub.views import SuccessFormView
 
 from ..forms import MessageForm
 from .mixins import RecipientQuerySetMixin, SenderQuerySetMixin
 
 
-class BaseMessageFormView(PermissionRequiredMixin, SuccessMixin, FormView):
+class BaseMessageFormView(PermissionRequiredMixin, SuccessFormView):
 
     permission_required = "private_messages.create_message"
     template_name = "private_messages/message_form.html"

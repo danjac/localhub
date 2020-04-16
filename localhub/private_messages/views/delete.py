@@ -3,15 +3,14 @@
 
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from vanilla import DeleteView
 
-from localhub.views.success import SuccessMixin
+from localhub.views.success import SuccessDeleteView
 
 from ..models import Message
 from .mixins import SenderOrRecipientQuerySetMixin
 
 
-class MessageDeleteView(SenderOrRecipientQuerySetMixin, SuccessMixin, DeleteView):
+class MessageDeleteView(SenderOrRecipientQuerySetMixin, SuccessDeleteView):
     """
     Does a "soft delete" which sets sender/recipient deleted flag
     accordingly.

@@ -6,10 +6,9 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import CreateView, FormView, UpdateView
 
 from localhub.flags.forms import FlagForm
-from localhub.views import SuccessMixin
+from localhub.views import SuccessCreateView, SuccessFormView, SuccessUpdateView
 
 from ..forms import CommentForm
 from ..models import Comment
@@ -17,7 +16,7 @@ from .mixins import CommentQuerySetMixin
 
 
 class CommentUpdateView(
-    PermissionRequiredMixin, CommentQuerySetMixin, SuccessMixin, UpdateView,
+    PermissionRequiredMixin, CommentQuerySetMixin, SuccessUpdateView,
 ):
     form_class = CommentForm
     model = Comment
@@ -43,7 +42,7 @@ comment_update_view = CommentUpdateView.as_view()
 
 
 class CommentFlagView(
-    PermissionRequiredMixin, CommentQuerySetMixin, SuccessMixin, FormView,
+    PermissionRequiredMixin, CommentQuerySetMixin, SuccessFormView,
 ):
     form_class = FlagForm
     template_name = "comments/flag_form.html"
@@ -89,7 +88,7 @@ comment_flag_view = CommentFlagView.as_view()
 
 
 class CommentReplyView(
-    CommentQuerySetMixin, PermissionRequiredMixin, SuccessMixin, CreateView,
+    CommentQuerySetMixin, PermissionRequiredMixin, SuccessCreateView,
 ):
     permission_required = "comments.reply_to_comment"
     model = Comment

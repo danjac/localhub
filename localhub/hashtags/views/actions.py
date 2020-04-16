@@ -3,21 +3,14 @@
 
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import GenericModelView
 
-from localhub.views import SuccessMixin
+from localhub.views import SuccessActionView
 
 from .mixins import TagQuerySetMixin
 
 
-class BaseTagActionView(
-    TagQuerySetMixin, PermissionRequiredMixin, SuccessMixin, GenericModelView
-):
+class BaseTagActionView(TagQuerySetMixin, PermissionRequiredMixin, SuccessActionView):
     ...
-
-    def setup(self, request, *args, **kwargs):
-        super().setup(request, *args, **kwargs)
-        self.object = self.get_object()
 
 
 class BaseTagFollowView(BaseTagActionView):

@@ -4,10 +4,10 @@
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from vanilla import DeleteView, GenericModelView, ListView
+from vanilla import ListView
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.views import SuccessMixin
+from localhub.views import SuccessActionView, SuccessDeleteView, SuccessGenericModelView
 
 from ..models import Notification
 from ..signals import notification_read
@@ -23,10 +23,6 @@ class NotificationQuerySetMixin(CommunityRequiredMixin):
 class UnreadNotificationQuerySetMixin(NotificationQuerySetMixin):
     def get_queryset(self):
         return super().get_queryset().unread()
-
-
-class NotificationSuccessMixin(SuccessMixin):
-    success_url = reverse_lazy("notifications:list")
 
 
 class NotificationListView(NotificationQuerySetMixin, ListView):
@@ -55,9 +51,17 @@ class NotificationListView(NotificationQuerySetMixin, ListView):
 notification_list_view = NotificationListView.as_view()
 
 
+class NotificationSuccessRedirectMixin:
+    success_url = reverse_lazy("notifications:list")
+
+
 class NotificationMarkAllReadView(
-    UnreadNotificationQuerySetMixin, NotificationSuccessMixin, GenericModelView,
+    UnreadNotificationQuerySetMixin,
+    NotificationSuccessRedirectMixin,
+    SuccessGenericModelView,
 ):
+    success_url = reverse_lazy("notifications:list")
+
     def post(self, request, *args, **kwargs):
         qs = self.get_queryset()
         [
@@ -68,33 +72,33 @@ class NotificationMarkAllReadView(
             for notification in qs.prefetch_related("content_object")
         ]
         qs.update(is_read=True)
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 notification_mark_all_read_view = NotificationMarkAllReadView.as_view()
 
 
 class NotificationMarkReadView(
-    UnreadNotificationQuerySetMixin, NotificationSuccessMixin, GenericModelView,
+    UnreadNotificationQuerySetMixin, NotificationSuccessRedirectMixin, SuccessActionView
 ):
+    success_url = reverse_lazy("notifications:list")
+
     def post(self, request, *args, **kwargs):
-        notification = self.get_object()
-        notification.is_read = True
-        notification.save()
+        self.object.is_read = True
+        self.object.save()
 
         notification_read.send(
-            sender=notification.content_object.__class__,
-            instance=notification.content_object,
+            sender=self.object.content_object.__class__,
+            instance=self.object.content_object,
         )
-
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response()
 
 
 notification_mark_read_view = NotificationMarkReadView.as_view()
 
 
 class NotificationDeleteAllView(
-    NotificationQuerySetMixin, NotificationSuccessMixin, GenericModelView,
+    NotificationQuerySetMixin, NotificationSuccessRedirectMixin, SuccessGenericModelView
 ):
     def delete(self, request):
         self.get_queryset().delete()
@@ -108,7 +112,7 @@ notification_delete_all_view = NotificationDeleteAllView.as_view()
 
 
 class NotificationDeleteView(
-    NotificationQuerySetMixin, NotificationSuccessMixin, DeleteView
+    NotificationQuerySetMixin, NotificationSuccessRedirectMixin, SuccessDeleteView
 ):
 
     ...

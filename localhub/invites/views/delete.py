@@ -3,17 +3,16 @@
 
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
-from vanilla import DeleteView
 
 from localhub.communities.views.mixins import CommunityAdminRequiredMixin
-from localhub.views import SuccessMixin
+from localhub.views import SuccessDeleteView
 
 from ..models import Invite
 from .mixins import InviteQuerySetMixin
 
 
 class InviteDeleteView(
-    CommunityAdminRequiredMixin, InviteQuerySetMixin, SuccessMixin, DeleteView,
+    CommunityAdminRequiredMixin, InviteQuerySetMixin, SuccessDeleteView,
 ):
     success_url = reverse_lazy("invites:list")
     success_message = _("Invite has been deleted")
