@@ -84,8 +84,10 @@ follower_user_list_view = FollowerUserListView.as_view()
 class BlockedUserListView(BaseUserListView):
     template_name = "users/blocked_user_list.html"
 
-    include_unread_messages = False
     exclude_blocked = False
+
+    include_is_following = False
+    include_unread_messages = False
 
     def get_queryset(self):
         return super().get_queryset().filter(blockers=self.request.user)
