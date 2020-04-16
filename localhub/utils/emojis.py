@@ -277,16 +277,16 @@ COMMON_EMOJIS = [
     {
         "name": _("Places"),
         "emojis": [
-            {"label": _("Japan"), "markdown": ":jp:", "image": "images/emojis/jp.png",},
-            {"label": _("UK"), "markdown": ":gb:", "image": "images/emojis/uk.png",},
-            {"label": _("USA"), "markdown": ":us:", "image": "images/emojis/us.png",},
+            {"label": _("Japan"), "markdown": ":jp:", "image": "images/emojis/jp.png"},
+            {"label": _("UK"), "markdown": ":gb:", "image": "images/emojis/uk.png"},
+            {"label": _("USA"), "markdown": ":us:", "image": "images/emojis/us.png"},
         ],
     },
     {
         "name": _("Nature"),
         "emojis": [
-            {"label": _("Cat"), "markdown": ":cat:", "image": "images/emojis/cat.png",},
-            {"label": _("Dog"), "markdown": ":dog:", "image": "images/emojis/dog.png",},
+            {"label": _("Cat"), "markdown": ":cat:", "image": "images/emojis/cat.png"},
+            {"label": _("Dog"), "markdown": ":dog:", "image": "images/emojis/dog.png"},
             {
                 "label": _("Rainbow"),
                 "markdown": ":rainbow:",
