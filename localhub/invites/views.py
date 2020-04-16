@@ -202,7 +202,8 @@ class InviteAcceptView(InviteRecipientQuerySetMixin, DetailView):
 
         messages.success(
             request,
-            _("Welcome to %(community)s") % {"community": self.object.community.name},
+            _("You are now a member of %(community)s")
+            % {"community": self.object.community.name},
         )
         return HttpResponseRedirect(self.get_redirect_url())
 

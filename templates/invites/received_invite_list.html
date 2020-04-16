@@ -30,7 +30,7 @@
     {% for invite in object_list %}
     <tr>
       <td>
-        {{ community.name }}
+        {{ invite.community.name }}
       </td>
       <td>
         {% blocktrans with timestamp=invite.created|timesince %}
