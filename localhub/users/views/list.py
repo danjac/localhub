@@ -45,7 +45,9 @@ class BaseUserListView(UserQuerySetMixin, ListView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data["blocked_users"] = self.request.user.get_blocked_users()
+        data["can_create_message"] = self.request.user.has_perm(
+            "private_messages.create_message", self.request.community
+        )
         return data
 
 
@@ -94,6 +96,12 @@ class BlockedUserListView(BaseUserListView):
 
     def get_queryset(self):
         return super().get_queryset().filter(blockers=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["can_follow"] = False
+        data["can_create_message"] = False
+        return data
 
 
 blocked_user_list_view = BlockedUserListView.as_view()
