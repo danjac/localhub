@@ -1,15 +1,19 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from .communities import (
+
+from .list import community_list_view
+
+from .detail import (
     community_detail_view,
-    community_list_view,
     community_not_found_view,
     community_sidebar_view,
     community_terms_view,
-    community_update_view,
     community_welcome_view,
 )
+
+from .form import community_update_view
+
 from .memberships import (
     membership_delete_view,
     membership_detail_view,

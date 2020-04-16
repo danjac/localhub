@@ -5,124 +5,12 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, F, Q
-from django.http import HttpResponseRedirect
-from django.utils.translation import gettext_lazy as _
-from vanilla import DetailView, ListView, TemplateView, UpdateView
+from vanilla import ListView
 
-from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
-from localhub.views import SearchMixin, SuccessMixin
+from localhub.views import SearchMixin
 
-from ..forms import CommunityForm
 from ..models import Community, Membership
-from ..rules import is_inactive_member, is_member
-from .mixins import CommunityAdminRequiredMixin, CurrentCommunityMixin
-
-
-class CommunityDetailView(CurrentCommunityMixin, DetailView):
-    ...
-
-
-community_detail_view = CommunityDetailView.as_view()
-
-
-class CommunityWelcomeView(CommunityDetailView):
-    """
-    This is shown if the user is not a member (or is not authenticated).
-
-    If user is already a member, redirects to home page.
-    """
-
-    template_name = "communities/welcome.html"
-    allow_non_members = True
-
-    def get(self, request):
-        if is_member(request.user, request.community):
-            return HttpResponseRedirect(settings.LOCALHUB_HOME_PAGE_URL)
-        return super().get(request)
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data.update(
-            {
-                "join_request": self.get_join_request(),
-                "invite": self.get_invite(),
-                "is_inactive_member": self.is_inactive_member(),
-            }
-        )
-        return data
-
-    def is_inactive_member(self):
-        return is_inactive_member(self.request.user, self.request.community)
-
-    def get_join_request(self):
-        return JoinRequest.objects.filter(
-            sender=self.request.user,
-            community=self.request.community,
-            status__in=(JoinRequest.Status.PENDING, JoinRequest.Status.REJECTED),
-        ).first()
-
-    def get_invite(self):
-        return (
-            Invite.objects.pending()
-            .for_user(self.request.user)
-            .filter(community=self.request.community)
-            .first()
-        )
-
-
-community_welcome_view = CommunityWelcomeView.as_view()
-
-
-class CommunitySidebarView(CommunityDetailView):
-    """
-    Renders sidebar for non-JS browsers.
-    """
-
-    template_name = "communities/sidebar.html"
-
-
-community_sidebar_view = CommunitySidebarView.as_view()
-
-
-class CommunityTermsView(CommunityDetailView):
-    template_name = "communities/terms.html"
-
-
-community_terms_view = CommunityTermsView.as_view()
-
-
-class CommunityNotFoundView(TemplateView):
-    """
-    This is shown if no community exists for this domain.
-    """
-
-    template_name = "communities/not_found.html"
-
-    def get(self, request):
-        if request.community.active:
-            return HttpResponseRedirect(settings.LOCALHUB_HOME_PAGE_URL)
-        return super().get(request)
-
-
-community_not_found_view = CommunityNotFoundView.as_view()
-
-
-class CommunityUpdateView(
-    CurrentCommunityMixin, CommunityAdminRequiredMixin, SuccessMixin, UpdateView
-):
-    form_class = CommunityForm
-    success_message = _("Community settings have been updated")
-
-    def get_success_url(self):
-        return self.request.path
-
-    def form_valid(self, form):
-        form.save()
-        return self.success_response()
-
-
-community_update_view = CommunityUpdateView.as_view()
 
 
 class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
