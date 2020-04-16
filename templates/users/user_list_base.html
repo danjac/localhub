@@ -9,6 +9,8 @@
 
 {% block content %}
 
+{% has_perm "private_messages.create_message" user community as can_create_message %}
+
 <h1 class="page-header">{% trans "People" %}</h1>
 
 <ul class="tab tab-block mt-2">
@@ -86,8 +88,10 @@
           <a class="action"
              href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
 
-          {% elif can_follow %}
+          {% else %}
+
           {% has_perm "users.follow_user" user object as can_follow_user %}
+
           {% if can_follow_user %}
           {% include "users/includes/follow.html" with user_obj=object is_following=object.is_following %}
           {% endif %}
@@ -98,6 +102,7 @@
             {% trans "Send Message" %}
           </a>
           {% endif %}
+
           {% endif %}
         </div>
         {% endblock user_item_actions %}
