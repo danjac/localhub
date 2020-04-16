@@ -52,7 +52,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
     {% endif %}
   </b>
 </p>
-<p>
+<p class="text-small">
   <b>
     {% if is_blocker %}
     {% trans "You cannot send messages to this person." %}
@@ -112,9 +112,8 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
   {% if can_block_user %}
   {% with redirect_url=user_obj.get_absolute_url %}
   {% if is_blocking %}
-  <a class="action"
+  <a class="action text-strike"
      href="{% url 'users:unblock' user_obj.username %}"
-     class="text-strike"
      data-controller="ajax"
      data-action="ajax#post toggle#toggle"
      data-ajax-redirect="{{ redirect_url }}">
