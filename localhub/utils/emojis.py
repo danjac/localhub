@@ -221,7 +221,11 @@ COMMON_EMOJIS = [
                 "markdown": ":cake:",
                 "image": "images/emojis/cake.png",
             },
-            {"label": _("Car"), "markdown": ":car:", "image": "images/emojis/car.png",},
+            {
+                "label": _("Car"),
+                "markdown": ":blue_car:",
+                "image": "images/emojis/car.png",
+            },
             {
                 "label": _("Checkered Flag"),
                 "markdown": ":checkered_flag:",
@@ -274,7 +278,7 @@ COMMON_EMOJIS = [
         "name": _("Places"),
         "emojis": [
             {"label": _("Japan"), "markdown": ":jp:", "image": "images/emojis/jp.png",},
-            {"label": _("UK"), "markdown": ":uk:", "image": "images/emojis/uk.png",},
+            {"label": _("UK"), "markdown": ":gb:", "image": "images/emojis/uk.png",},
             {"label": _("USA"), "markdown": ":us:", "image": "images/emojis/us.png",},
         ],
     },
