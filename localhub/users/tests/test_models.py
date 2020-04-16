@@ -333,3 +333,23 @@ class TestUserModel:
         user.dismiss_notice("private-stash")
         user.refresh_from_db()
         assert "private-stash" in user.dismissed_notices
+
+    def test_block_user(self, user):
+        other = UserFactory()
+        user.block_user(other)
+        assert other in user.blocked.all()
+
+    def test_block_user_if_following(self, user):
+        other = UserFactory()
+        user.following.add(other)
+        user.block_user(other)
+        assert other in user.blocked.all()
+        assert other not in user.following.all()
+
+    def test_block_user_if_follower(self, user):
+        other = UserFactory()
+        other.following.add(user)
+        user.block_user(other)
+        assert other in user.blocked.all()
+        assert other not in user.followers.all()
+

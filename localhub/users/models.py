@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
-from django.db import models
+from django.db import models, transaction
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -315,6 +315,17 @@ class User(AbstractUser):
             QuerySet
         """
         return (self.blockers.all() | self.blocked.all()).distinct()
+
+    @transaction.atomic
+    def block_user(self, user):
+        """Blocks this user. Any following relationships are also removed.
+
+        Args:
+            user (User)
+        """
+        self.blocked.add(user)
+        self.following.remove(user)
+        self.followers.remove(user)
 
     @dispatch
     def notify_on_join(self, community):

@@ -24,6 +24,14 @@ class BaseFollowUserView(PermissionRequiredMixin, BaseUserActionView):
     permission_required = "users.follow_user"
     is_success_ajax_response = True
 
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .exclude(blockers=self.request.user)
+            .exclude(blocked=self.request.user)
+        )
+
 
 class UserFollowView(BaseFollowUserView):
     success_message = _("You are now following %(object)s")
@@ -58,7 +66,7 @@ class UserBlockView(PermissionRequiredMixin, BaseUserActionView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        self.request.user.blocked.add(self.object)
+        self.request.user.block_user(self.object)
         return self.success_response()
 
 

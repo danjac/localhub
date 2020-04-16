@@ -45,6 +45,7 @@ class BaseUserListView(UserQuerySetMixin, ListView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        data["can_follow"] = True
         data["can_create_message"] = self.request.user.has_perm(
             "private_messages.create_message", self.request.community
         )

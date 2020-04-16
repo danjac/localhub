@@ -13,3 +13,15 @@ You have blocked one person.
 You have blocked {{ counter }} people.
 {% endblocktrans %}
 {% endblock counter %}
+
+{% block user_item_actions %}
+<div class="float-right actions">
+  <a class="action text-strike"
+     href="{% url 'users:unblock' object.username %}"
+     data-controller="ajax"
+     data-action="ajax#post toggle#toggle"
+     data-ajax-redirect="{{ request.get_full_path }}">
+    {% trans "Block" %}
+  </a>
+</div>
+{% endblock %}

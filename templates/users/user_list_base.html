@@ -85,11 +85,13 @@
           {% if user == object %}
           <a class="action"
              href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
-          {% else %}
+
+          {% elif can_follow %}
           {% has_perm "users.follow_user" user object as can_follow_user %}
           {% if can_follow_user %}
           {% include "users/includes/follow.html" with user_obj=object is_following=object.is_following %}
           {% endif %}
+
           {% if can_create_message %}
           <a class="action"
              href="{% url 'private_messages:message_create' object.username %}">

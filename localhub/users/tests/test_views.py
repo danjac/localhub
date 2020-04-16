@@ -168,6 +168,24 @@ class TestUserFollowView:
         assert notification.actor == member.member
         assert mailoutbox[0].to == [user.email]
 
+    def test_post_user_blocked(self, client, member):
+        user = MembershipFactory(
+            community=member.community, member=UserFactory(),
+        ).member
+        user.blockers.add(member.member)
+        response = client.post(reverse("users:follow", args=[user.username]))
+        assert response.status_code == 404
+        assert user not in member.member.following.all()
+
+    def test_post_user_blocking(self, client, member):
+        user = MembershipFactory(
+            community=member.community, member=UserFactory(),
+        ).member
+        member.member.blockers.add(user)
+        response = client.post(reverse("users:follow", args=[user.username]))
+        assert response.status_code == 404
+        assert user not in member.member.following.all()
+
 
 class TestUserUnfollowView:
     def test_post(self, client, member):
