@@ -11,7 +11,6 @@ from localhub.join_requests.models import JoinRequest
 from localhub.views import SearchMixin
 
 from ..models import Community, Membership
-
 from .mixins import CommunityAdminRequiredMixin, MembershipQuerySetMixin
 
 

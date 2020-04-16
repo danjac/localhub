@@ -2,13 +2,12 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
-from django.utils.translation import gettext as _
 from django.urls import reverse
+from django.utils.translation import gettext as _
 from rules.contrib.views import PermissionRequiredMixin
 from vanilla import DeleteView
 
 from localhub.views import SuccessMixin
-
 
 from ..emails import send_membership_deleted_email
 from ..models import Membership
