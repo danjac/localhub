@@ -2,6 +2,8 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
+{% load static %}
+
 <div class="markdownx tabs"
      data-controller="tabs typeahead"
      data-typeahead-mention-search-url="{% url 'users:autocomplete_list' %}"
@@ -75,6 +77,33 @@
          data-action="markdown#select"
          data-multiline
          data-markdown="1. [SELECTION]">{% trans "List (Numbers)" %}</a>
+
+      <div class="dropdown">
+        <a class="btn btn-sm dropdown-toggle"
+           tabindex="0">
+          {% trans "Emoji" %}<i class="icon icon-caret"></i>
+        </a>
+        <ul class="menu">
+          {% common_emojis as emoji_categories %}
+          {% for category in emoji_categories %}
+          <li class="divider"
+              data-content="{{ category.name }}">
+          </li>
+          {% for emoji in category.emojis %}
+          <li class="menu-item">
+            <a href="#"
+               data-action="markdown#select"
+               data-markdown="{{ emoji.markdown }} ">
+              <img src="{% static emoji.image %}"
+                   height="16"
+                   width="16">
+              {{ emoji.label }}
+            </a>
+          </li>
+          {% endfor %}
+          {% endfor %}
+        </ul>
+      </div>
 
     </div>
     <ul class="menu d-none p-absolute"
@@ -182,18 +211,15 @@
         <tr>
           <td colspan="2">
             {% blocktrans %}
-            A more complete guide can be found <a target="_blank"
+            <a target="_blank"
                rel="nofollow"
-               href="https://www.markdownguide.org/basic-syntax">here</a>.
-            {% endblocktrans %}
-          </td>
+               href="https://www.markdownguide.org/basic-syntax">Markdown Guide</a>
         </tr>
         <tr>
           <td colspan="2">
-            {% blocktrans %}
-            A list of emoji names can be found <a target="_blank"
+            <a target="_blank"
                rel="nofollow"
-               href="https://gist.github.com/rxaviers/7360908">here</a>.
+               href="https://gist.github.com/rxaviers/7360908">Emoji Markdown Symbols</a>
             {% endblocktrans %}
           </td>
         </tr>

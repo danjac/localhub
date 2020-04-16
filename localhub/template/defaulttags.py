@@ -3,7 +3,16 @@
 
 from django import template
 
+from localhub.utils import emojis
+
 register = template.Library()
+
+
+@register.simple_tag
+def common_emojis():
+    """Returns list of commonly used emojis, for use e.g. in markdown widget.
+    """
+    return emojis.COMMON_EMOJIS
 
 
 @register.tag(name="collapsable")

@@ -33,7 +33,7 @@ export default class extends Controller {
             .split('\n')
             .map((item) => markdownStart + item + markdownEnd)
             .join('\n')
-        : markdownStart + selectedText + markdownEnd;
+        : markdownStart + selectedText + (markdownEnd || '');
 
     this.textareaTarget.value =
       value.substring(0, selectionStart) +
