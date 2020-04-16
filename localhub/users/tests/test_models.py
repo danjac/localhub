@@ -352,4 +352,3 @@ class TestUserModel:
         user.block_user(other)
         assert other in user.blocked.all()
         assert other not in user.followers.all()
-
