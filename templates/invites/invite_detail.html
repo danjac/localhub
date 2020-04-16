@@ -8,9 +8,8 @@
 
 <h1 class="page-header">{% trans "Accept Invitation" %}</h1>
 
-<form method="POST">
-  {% csrf_token %}
-  <p>
+<form>
+  <p class="text-smal">
     {% blocktrans with community=community.name %}
     You have been invited to join the community <b>{{ community }}</b>. If you click the option <b>Accept</b> you will
     be added as a new member.
@@ -18,13 +17,16 @@
   </p>
 
   <button type="submit"
-          class="btn btn-primary"
-          name="accept"
-          value="1">{% trans "Accept" %}</button>
+          data-controller="ajax"
+          data-action="ajax#post"
+          data-ajax-url="{% url 'invites:accept' invite.id %}"
+          class="btn btn-primary">{% trans "Accept" %}</button>
+
   <button type="submit"
-          class="btn btn-secondary"
-          name="reject"
-          value="1">{% trans "Reject" %}</button>
+          data-controller="ajax"
+          data-action="ajax#post"
+          data-ajax-url="{% url 'invites:reject' invite.id %}"
+          class="btn btn-secondary">{% trans "Reject" %}</button>
 </form>
 
-{% endblock content %}
+{% endblock %}

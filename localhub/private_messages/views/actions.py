@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from vanilla import GenericModelView
 
 from localhub.bookmarks.models import Bookmark
-from localhub.views import SuccessMixin
+from localhub.views import BaseActionView
 
 from .mixins import RecipientQuerySetMixin, SenderOrRecipientQuerySetMixin
 
@@ -25,13 +25,7 @@ class MessageMarkAllReadView(RecipientQuerySetMixin, GenericModelView):
 message_mark_all_read_view = MessageMarkAllReadView.as_view()
 
 
-class BaseMessageActionView(SuccessMixin, GenericModelView):
-    def setup(self, request, *args, **kwargs):
-        super().setup(request, *args, **kwargs)
-        self.object = self.get_object()
-
-
-class MessageMarkReadView(RecipientQuerySetMixin, BaseMessageActionView):
+class MessageMarkReadView(RecipientQuerySetMixin, BaseActionView):
     def get_queryset(self):
         return super().get_queryset().unread()
 
@@ -43,7 +37,7 @@ class MessageMarkReadView(RecipientQuerySetMixin, BaseMessageActionView):
 message_mark_read_view = MessageMarkReadView.as_view()
 
 
-class BaseMessageBookmarkView(SenderOrRecipientQuerySetMixin, BaseMessageActionView):
+class BaseMessageBookmarkView(SenderOrRecipientQuerySetMixin, BaseActionView):
     is_success_ajax_response = True
 
 

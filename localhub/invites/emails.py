@@ -11,7 +11,7 @@ def send_invitation_email(invite):
     context = {
         "invite": invite,
         "accept_url": invite.community.resolve_url(
-            reverse("invites:accept", args=[invite.id])
+            reverse("invites:detail", args=[invite.id])
         ),
     }
 

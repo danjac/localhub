@@ -6,24 +6,19 @@ from django.db import IntegrityError
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import GenericModelView
 
 from localhub.bookmarks.models import Bookmark
 from localhub.likes.models import Like
-from localhub.views import SuccessMixin
+from localhub.views import BaseActionView
 
 from ..models import get_activity_models
 from .mixins import ActivityQuerySetMixin
 
 
 class BaseActivityActionView(
-    ActivityQuerySetMixin, PermissionRequiredMixin, SuccessMixin, GenericModelView,
+    ActivityQuerySetMixin, PermissionRequiredMixin, BaseActionView
 ):
     ...
-
-    def setup(self, request, *args, **kwargs):
-        super().setup(request, *args, **kwargs)
-        self.object = self.get_object()
 
 
 class ActivityReshareView(BaseActivityActionView):

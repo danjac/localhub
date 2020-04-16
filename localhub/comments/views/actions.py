@@ -4,21 +4,16 @@
 from django.db import IntegrityError
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import GenericModelView
 
 from localhub.bookmarks.models import Bookmark
 from localhub.likes.models import Like
-from localhub.views import SuccessMixin
+from localhub.views import BaseActionView
 
 from .mixins import CommentQuerySetMixin
 
 
-class BaseCommentActionView(CommentQuerySetMixin, SuccessMixin, GenericModelView):
+class BaseCommentActionView(CommentQuerySetMixin, BaseActionView):
     ...
-
-    def setup(self, request, *args, **kwargs):
-        super().setup(request, *args, **kwargs)
-        self.object = self.get_object()
 
 
 class BaseCommentBookmarkView(PermissionRequiredMixin, BaseCommentActionView):
