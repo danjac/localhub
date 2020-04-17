@@ -47,21 +47,21 @@
 
         {% if is_detail %}
 
+        {% block detail_title %}
         {% if object.url %}
         {{ object.url|linkify:object.title }}
         {% else %}
         {{ object.title|linkify_hashtags|linkify_mentions }}
         {% endif %}
+        {% endblock %}
 
         {% else %}
 
         {% with object.title|truncatechars:130 as object_title %}
 
-        {% if object.url %}
-        {{ object.url|linkify:object_title }}
-        {% else %}
+        {% block list_item_title %}
         <a href="{{ object.get_absolute_url }}">{{ object_title }}</a>
-        {% endif %}
+        {% endblock %}
 
         {% endwith %}
 
