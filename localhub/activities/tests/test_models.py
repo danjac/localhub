@@ -19,7 +19,6 @@ from localhub.posts.factories import PostFactory
 from localhub.posts.models import Post
 from localhub.users.factories import UserFactory
 
-
 pytestmark = pytest.mark.django_db
 
 
