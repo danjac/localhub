@@ -10,7 +10,37 @@ from django.db import models
 from model_utils.models import TimeStampedModel
 from pywebpush import WebPushException, webpush
 
+from localhub.db.content_types import get_generic_related_exists
+from localhub.db.utils import boolean_value
 from localhub.communities.models import Community
+
+
+class NotificationAnnotationsQuerySetMixin:
+    """
+    Annotation methods for related model query sets.
+    """
+
+    def with_is_new(self, recipient, annotated_name="is_new"):
+        """Annotates "is_new" to queryset if notification(s) unread for
+        this object.
+
+        Args:
+            recipient (User)
+            annotated_name (str, optional): the annotation name (default: "is_new")
+
+        Returns:
+            QuerySet
+        """
+        return self.annotate(
+            **{
+                annotated_name: boolean_value(False)
+                if recipient.is_anonymous
+                else get_generic_related_exists(
+                    self.model,
+                    Notification.objects.filter(is_read=False, recipient=recipient),
+                )
+            }
+        )
 
 
 class NotificationQuerySet(models.QuerySet):

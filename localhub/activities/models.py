@@ -30,7 +30,10 @@ from localhub.hashtags.validators import validate_hashtags
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.decorators import dispatch
-from localhub.notifications.models import Notification
+from localhub.notifications.models import (
+    Notification,
+    NotificationAnnotationsQuerySetMixin,
+)
 from localhub.utils.itertools import takefirst
 from localhub.utils.text import slugify_unicode
 
@@ -42,6 +45,7 @@ class ActivityQuerySet(
     CommentAnnotationsQuerySetMixin,
     FlagAnnotationsQuerySetMixin,
     LikeAnnotationsQuerySetMixin,
+    NotificationAnnotationsQuerySetMixin,
     SearchQuerySetMixin,
     models.QuerySet,
 ):

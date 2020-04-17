@@ -15,6 +15,7 @@ from localhub.events.factories import EventFactory
 from localhub.events.models import Event
 from localhub.flags.factories import FlagFactory
 from localhub.likes.factories import LikeFactory
+from localhub.notifications.factories import NotificationFactory
 from localhub.photos.factories import PhotoFactory
 from localhub.photos.models import Photo
 from localhub.polls.models import Poll
@@ -499,6 +500,31 @@ class TestActivityManager:
         assert hasattr(activity, "has_liked")
         assert hasattr(activity, "has_flagged")
         assert hasattr(activity, "is_flagged")
+
+    def test_with_is_new_if_notification_is_unread(self, post, member):
+        NotificationFactory(
+            verb="mention", recipient=member.member, content_object=post, is_read=False
+        )
+
+        posts = Post.objects.with_is_new(member.member)
+        first = posts.first()
+        assert first.is_new
+
+    def test_with_is_new_if_notification_is_read(self, post, member):
+        NotificationFactory(
+            verb="mention", recipient=member.member, content_object=post, is_read=True
+        )
+
+        posts = Post.objects.with_is_new(member.member)
+        first = posts.first()
+        assert not first.is_new
+
+    def test_with_is_new_if_notification_is_unread_wrong_recipient(self, post, member):
+        NotificationFactory(verb="mention", content_object=post, is_read=False)
+
+        posts = Post.objects.with_is_new(member.member)
+        first = posts.first()
+        assert not first.is_new
 
 
 class TestGetActivityModels:

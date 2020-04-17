@@ -65,18 +65,16 @@ class JoinRequestRejectView(BaseJoinRequestActionView):
     def get_queryset(self):
         return super().get_queryset().pending()
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.reject()
-
-        send_rejection_email(self.object)
-
-        messages.info(
-            request,
+    def get_success_message(self):
+        return (
             _("Join request for %(sender)s has been rejected")
             % {"sender": self.object.sender.get_display_name()},
         )
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.reject()
+        send_rejection_email(self.object)
         return self.success_response()
 
 
