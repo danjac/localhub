@@ -20,6 +20,51 @@ pytestmark = pytest.mark.django_db
 
 
 class TestEventManager:
+    def test_relevance_if_starts_in_future(self):
+        EventFactory(starts=timezone.now() + timedelta(days=30))
+
+        event = Event.objects.with_relevance().first()
+        assert event.relevance == 1
+
+    def test_relevance_if_starts_in_future_and_canceled(self):
+        now = timezone.now()
+        EventFactory(
+            starts=now + timedelta(days=30), canceled=now,
+        )
+
+        event = Event.objects.with_relevance().first()
+        assert event.relevance == -1
+
+    def test_relevance_if_starts_in_past(self):
+        EventFactory(starts=timezone.now() - timedelta(days=30))
+
+        event = Event.objects.with_relevance().first()
+        assert event.relevance == 0
+
+    def test_relevance_if_starts_in_past_and_canceled(self):
+        now = timezone.now()
+        EventFactory(
+            starts=now - timedelta(days=30), canceled=now,
+        )
+
+        event = Event.objects.with_relevance().first()
+        assert event.relevance == -1
+
+    def test_with_timedelta(self):
+
+        now = timezone.now()
+        first = EventFactory(starts=now + timedelta(days=30))
+        second = EventFactory(starts=now + timedelta(days=15))
+        third = EventFactory(starts=now - timedelta(days=20))
+        fourth = EventFactory(starts=now - timedelta(days=5))
+
+        events = Event.objects.with_timedelta().order_by("timedelta")
+
+        assert events[0] == fourth
+        assert events[1] == second
+        assert events[2] == third
+        assert events[3] == first
+
     def test_event_num_attendees_if_none(self, event):
         first = Event.objects.with_num_attendees().first()
         assert first.num_attendees == 0

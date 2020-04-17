@@ -28,6 +28,55 @@ class EventQuerySet(ActivityQuerySet):
     def with_num_attendees(self):
         return self.annotate(num_attendees=models.Count("attendees"))
 
+    def with_relevance(self):
+        """
+        Annotates "relevance" value based on start date and/or status.
+
+        Relevance:
+        1) if private/canceled: -1
+        2) if event coming up: +1
+        3) if event passed: 0
+
+        Returns:
+            QuerySet
+        """
+        now = timezone.now()
+
+        return self.annotate(
+            relevance=models.Case(
+                models.When(
+                    starts__gte=now,
+                    published__isnull=False,
+                    canceled__isnull=True,
+                    then=models.Value(1),
+                ),
+                models.When(
+                    starts__lt=now,
+                    published__isnull=False,
+                    canceled__isnull=True,
+                    then=models.Value(0),
+                ),
+                default=-1,
+                output_field=models.IntegerField(),
+            )
+        )
+
+    def with_timedelta(self):
+        """
+        Adds a DurationField with distance between now and the start time (future or past).
+
+        Returns:
+            QuerySet
+        """
+        now = timezone.now()
+        return self.annotate(
+            timedelta=models.Case(
+                models.When(starts__gte=now, then=models.F("starts") - now),
+                models.When(starts__lt=now, then=now - models.F("starts")),
+                output_field=models.DurationField(),
+            )
+        )
+
     def is_attending(self, user):
         return self.annotate(
             is_attending=boolean_value(False)

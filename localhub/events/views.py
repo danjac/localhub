@@ -27,7 +27,14 @@ class EventCreateView(ActivityCreateView):
 
 
 class EventListView(ActivityListView):
-    ordering = ("-starts", "-published")
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .with_relevance()
+            .with_timedelta()
+            .order_by("-relevance", "timedelta")
+        )
 
 
 class EventCalendarView(
