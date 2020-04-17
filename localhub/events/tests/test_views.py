@@ -4,6 +4,7 @@
 import pytest
 from django.conf import settings
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.encoding import force_str
 
 from localhub.communities.factories import MembershipFactory
@@ -161,3 +162,49 @@ class TestEventUnattendView:
         response = client.post(reverse("events:unattend", args=[event.id]))
         assert response.status_code == 204
         assert member.member not in event.attendees.all()
+
+
+class TestEventCalendarView:
+    def test_get_calendar_view(self, client, event, member):
+        response = client.get(
+            reverse("events:calendar",),
+            {"month": event.starts.month, "year": event.starts.year},
+        )
+        assert response.status_code == 200
+        assert "current_date" not in response.context
+        assert len(response.context["object_list"]) == 1
+
+    def test_get_calendar_view_this_month(self, client, member):
+        now = timezone.now()
+        response = client.get(
+            reverse("events:calendar",), {"month": now.month, "year": now.year},
+        )
+        assert response.status_code == 200
+        assert "current_date" not in response.context
+        assert response.context["is_today"]
+
+    def test_get_calendar_view_with_invalid_date(self, client, event, member):
+        response = client.get(
+            reverse("events:calendar",), {"month": 13, "year": event.starts.year},
+        )
+        assert response.status_code == 404
+
+    def test_get_date_view(self, client, event, member):
+        response = client.get(
+            reverse("events:calendar",),
+            {
+                "month": event.starts.month,
+                "year": event.starts.year,
+                "day": event.starts.day,
+            },
+        )
+        assert response.status_code == 200
+        assert "current_date" in response.context
+        assert len(response.context["object_list"]) == 1
+
+    def test_get_date_view_with_invalid_date(self, client, event, member):
+        response = client.get(
+            reverse("events:calendar",),
+            {"month": event.starts.month, "year": event.starts.year, "day": 32},
+        )
+        assert response.status_code == 404

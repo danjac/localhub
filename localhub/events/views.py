@@ -4,16 +4,11 @@
 import calendar
 import datetime
 
-from django.http import HttpResponse, Http404
+from django.http import Http404, HttpResponse
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.views.generic.dates import (
-    DateMixin,
-    DayMixin,
-    MonthMixin,
-    YearMixin,
-)
+from django.views.generic.dates import DateMixin, DayMixin, MonthMixin, YearMixin
 from vanilla import GenericModelView
 
 from localhub.activities.views.actions import BaseActivityActionView
