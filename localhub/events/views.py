@@ -13,7 +13,7 @@ from vanilla import GenericModelView
 
 from localhub.activities.views.actions import BaseActivityActionView
 from localhub.activities.views.form import ActivityCreateView
-from localhub.activities.views.list import ActivityListView
+from localhub.activities.views.list import BaseActivityListView, ActivityListView
 from localhub.activities.views.mixins import ActivityQuerySetMixin
 
 from .models import Event
@@ -30,7 +30,9 @@ class EventListView(ActivityListView):
     ordering = ("-starts", "-published")
 
 
-class EventCalendarView(YearMixin, MonthMixin, DayMixin, DateMixin, EventListView):
+class EventCalendarView(
+    YearMixin, MonthMixin, DayMixin, DateMixin, BaseActivityListView
+):
     template_name = "events/calendar.html"
     date_field = "starts"
     paginate_by = None
@@ -65,7 +67,14 @@ class EventCalendarView(YearMixin, MonthMixin, DayMixin, DateMixin, EventListVie
         qs = (
             super()
             .get_queryset()
-            .filter(starts__month=self.current_month, starts__year=self.current_year)
+            .published()
+            .exclude_blocked(self.request.user)
+            .filter(
+                parent__isnull=True,
+                starts__month=self.current_month,
+                starts__year=self.current_year,
+            )
+            .order_by("-starts")
         )
         if self.current_day:
             qs = qs.filter(starts__day=self.current_day)
