@@ -40,6 +40,7 @@
     <dd>
       {% with location=object.get_full_location %}
       {% if location %}
+      LOCATION {{ location }}
       {% if not is_detail and object.has_map %}
       <a href="{{ object.get_absolute_url }}#map-for-event-{{ object.id }}">{{ location }}</a>
       {% else %}
