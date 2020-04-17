@@ -26,7 +26,7 @@ from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.decorators import dispatch
-from localhub.notifications.models import Notification
+from localhub.notifications.models import Notification, NotificationAnnotationsQuerySetMixin
 from localhub.utils.itertools import takefirst
 
 
@@ -53,6 +53,7 @@ class CommentQuerySet(
     BookmarkAnnotationsQuerySetMixin,
     FlagAnnotationsQuerySetMixin,
     LikeAnnotationsQuerySetMixin,
+    NotificationAnnotationsQuerySetMixin,
     SearchQuerySetMixin,
     models.QuerySet,
 ):
@@ -116,6 +117,7 @@ class CommentQuerySet(
         if user.is_authenticated:
             qs = (
                 self.with_num_likes()
+                .with_is_new(user)
                 .with_has_bookmarked(user)
                 .with_has_liked(user)
                 .with_has_flagged(user)

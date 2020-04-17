@@ -27,8 +27,7 @@
     <div class="card-header">
       {% endif %}
 
-
-      <div class="card-title h6">
+      <div class="card-title h6{% if object.is_new %} text-bold{% endif %}">
 
         {% if object.is_reshare %}
 
@@ -76,6 +75,10 @@
 
         {% if can_moderate_community and object.is_flagged %}
         <span class="label bg-primary">{% trans "Flagged" %}</span>
+        {% endif %}
+
+        {% if object.is_new %}
+        <span class="label bg-primary">{% trans "New" %}</span>
         {% endif %}
 
         {% endblock title %}

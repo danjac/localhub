@@ -260,10 +260,12 @@ class TestCommentManager:
         assert not hasattr(comment, "has_liked")
         assert not hasattr(comment, "has_flagged")
         assert not hasattr(comment, "is_flagged")
+        assert not hasattr(comment, "is_new")
 
     def test_with_common_annotations_if_authenticated(self, comment, user):
         comment = Comment.objects.with_common_annotations(user, comment.community).get()
 
+        assert hasattr(comment, "is_new")
         assert hasattr(comment, "num_likes")
         assert hasattr(comment, "has_liked")
         assert hasattr(comment, "has_flagged")
@@ -274,10 +276,47 @@ class TestCommentManager:
             moderator.member, comment.community
         ).get()
 
+        assert hasattr(comment, "is_new")
         assert hasattr(comment, "num_likes")
         assert hasattr(comment, "has_liked")
         assert hasattr(comment, "has_flagged")
         assert hasattr(comment, "is_flagged")
+
+    def test_with_is_new_if_notification_is_unread(self, comment, member):
+        NotificationFactory(
+            verb="mention", recipient=member.member, content_object=comment, is_read=False
+        )
+
+        comments = Comment.objects.with_is_new(member.member)
+        first = comments.first()
+        assert first.is_new
+
+    def test_with_is_new_if_notification_is_unread_anon(
+        self, comment, member, anonymous_user
+    ):
+        NotificationFactory(
+            verb="mention", recipient=member.member, content_object=comment, is_read=False
+        )
+
+        comments = Comment.objects.with_is_new(anonymous_user)
+        first = comments.first()
+        assert not first.is_new
+
+    def test_with_is_new_if_notification_is_read(self, comment, member):
+        NotificationFactory(
+            verb="mention", recipient=member.member, content_object=comment, is_read=True
+        )
+
+        comments = Comment.objects.with_is_new(member.member)
+        first = comments.first()
+        assert not first.is_new
+
+    def test_with_is_new_if_notification_is_unread_wrong_recipient(self, comment, member):
+        NotificationFactory(verb="mention", content_object=comment, is_read=False)
+
+        comments = Comment.objects.with_is_new(member.member)
+        first = comments.first()
+        assert not first.is_new
 
 
 class TestCommentModel:

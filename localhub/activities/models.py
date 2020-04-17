@@ -55,6 +55,7 @@ class ActivityQuerySet(
             - with_num_reshares
             - with_num_comments
             - with_num_likes
+            - with_is_new [1]
             - with_has_liked [1]
             - with_has_bookmarked [1]
             - with_has_flagged [1]
@@ -75,6 +76,7 @@ class ActivityQuerySet(
         if user.is_authenticated:
             qs = (
                 qs.with_num_likes()
+                .with_is_new(user)
                 .with_has_bookmarked(user)
                 .with_has_liked(user)
                 .with_has_flagged(user)

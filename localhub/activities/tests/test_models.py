@@ -479,6 +479,7 @@ class TestActivityManager:
         assert not hasattr(activity, "is_flagged")
         assert not hasattr(activity, "has_liked")
         assert not hasattr(activity, "has_flagged")
+        assert not hasattr(activity, "is_new")
 
     def test_with_common_annotations_if_authenticated(self, post, user):
         activity = Post.objects.with_common_annotations(user, post.community).get()
@@ -487,6 +488,7 @@ class TestActivityManager:
         assert hasattr(activity, "num_likes")
         assert hasattr(activity, "has_liked")
         assert hasattr(activity, "has_flagged")
+        assert hasattr(activity, "is_new")
         assert not hasattr(activity, "is_flagged")
 
     def test_with_common_annotations_if_moderator(self, moderator):
@@ -500,6 +502,7 @@ class TestActivityManager:
         assert hasattr(activity, "has_liked")
         assert hasattr(activity, "has_flagged")
         assert hasattr(activity, "is_flagged")
+        assert hasattr(activity, "is_new")
 
     def test_with_is_new_if_notification_is_unread(self, post, member):
         NotificationFactory(
@@ -509,6 +512,17 @@ class TestActivityManager:
         posts = Post.objects.with_is_new(member.member)
         first = posts.first()
         assert first.is_new
+
+    def test_with_is_new_if_notification_is_unread_anon(
+        self, post, member, anonymous_user
+    ):
+        NotificationFactory(
+            verb="mention", recipient=member.member, content_object=post, is_read=False
+        )
+
+        posts = Post.objects.with_is_new(anonymous_user)
+        first = posts.first()
+        assert not first.is_new
 
     def test_with_is_new_if_notification_is_read(self, post, member):
         NotificationFactory(

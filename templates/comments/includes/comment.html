@@ -24,11 +24,14 @@
       {% endif %}
     </div>
     {% endif %}
-    <div class="card-title h6">
+    <div class="card-title h6{% if comment.is_new %} text-bold{% endif %}">
       {% url 'users:comments' comment.owner.username as owner_url %}
       {% include "includes/timesince.html" with profile_url=owner_url timestamp=comment.created owner=comment.owner %}
       {% if can_moderate_community and comment.is_flagged %}
       <span class="label bg-primary">{% trans "Flagged" %}</span>
+      {% endif %}
+      {% if comment.is_new %}
+      <span class="label bg-primary">{% trans "New" %}</span>
       {% endif %}
     </div>
   </div>
