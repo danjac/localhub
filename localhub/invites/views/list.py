@@ -23,9 +23,6 @@ class InviteListView(
     model = Invite
     paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
 
-    def get_permission_object(self):
-        return self.request.community
-
     def get_queryset(self):
         qs = super().get_queryset()
         if self.search_query:

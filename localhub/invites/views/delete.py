@@ -18,8 +18,5 @@ class InviteDeleteView(
     success_message = _("Invite has been deleted")
     model = Invite
 
-    def get_permission_object(self):
-        return self.request.community
-
 
 invite_delete_view = InviteDeleteView.as_view()
