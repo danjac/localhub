@@ -12,7 +12,7 @@
 
   }
 
-  a {
+  a:not(.dropdown-toggle) {
     @extend .btn-link;
     color: $link-color-dark;
 
@@ -20,4 +20,5 @@
       color: $link-color-dark;
     }
   }
+
 }
