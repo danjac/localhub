@@ -25,13 +25,11 @@
       <div class="calendar-date">{% trans "Sat" %}</div>
     </div>
     <div class="calendar-body">
-      {% for day in current_month_days %}
+      {% for day, events in slots %}
       <div class="calendar-date">
         {% if day %}
-        {% with events_for_day=events|from_dictkey:day %}
-        {% with num_events=events_for_day|length %}
+        {% with num_events=events|length %}
         {% block calendar_date %}{% endblock %}
-        {% endwith %}
         {% endwith %}
         {% endif %}
       </div>

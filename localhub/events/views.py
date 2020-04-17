@@ -71,6 +71,9 @@ class EventCalendarView(
             return timezone.now().year
 
     def get_queryset(self):
+        # simplified queryset: we don't need likes etc.
+        # order by starts with earliest first, so they
+        # appear in the right order in day views/slots.
         qs = (
             super()
             .get_queryset()
@@ -81,7 +84,7 @@ class EventCalendarView(
                 starts__month=self.current_month,
                 starts__year=self.current_year,
             )
-            .order_by("-starts")
+            .order_by("starts")
         )
         if self.current_day:
             qs = qs.filter(starts__day=self.current_day)
@@ -96,7 +99,9 @@ class EventCalendarView(
             )
         except ValueError:
             raise Http404
+
         if self.current_day:
+            # we just need current date, nothing else
             try:
                 data["current_date"] = current_month = datetime.date(
                     day=self.current_day,
@@ -105,26 +110,30 @@ class EventCalendarView(
                 )
             except ValueError:
                 raise Http404
-        data["current_month_days"] = days = self.get_days(current_month)
-        data["today"] = now = timezone.now()
-        data["is_today"] = (
-            now.month == current_month.month and now.year == current_month.year
+            return data
+
+        now = timezone.now()
+
+        data.update(
+            {
+                "next_month": self.get_next_month(current_month),
+                "previous_month": self.get_previous_month(current_month),
+                "slots": self.get_slots(current_month),
+                "today": now,
+                "is_today": now.month == current_month.month
+                and now.year == current_month.year,
+            }
         )
-        data["next_month"] = self.get_next_month(current_month)
-        data["previous_month"] = self.get_previous_month(current_month)
-        data["events"] = self.get_events(days)
 
         return data
 
-    def get_events(self, days):
-        """Group events by day
+    def get_slots(self, date):
+        """Group events by day into tuples of (number, events)
         """
-        return {
-            day: [e for e in self.object_list if e.starts.day == day] for day in days
-        }
-
-    def get_days(self, date):
-        return list(calendar.Calendar().itermonthdays(date.year, date.month))
+        return [
+            (day, [e for e in self.object_list if e.starts.day == day])
+            for day in calendar.Calendar().itermonthdays(date.year, date.month)
+        ]
 
 
 event_calendar_view = EventCalendarView.as_view()
