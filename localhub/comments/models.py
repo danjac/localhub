@@ -26,7 +26,10 @@ from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.decorators import dispatch
-from localhub.notifications.models import Notification, NotificationAnnotationsQuerySetMixin
+from localhub.notifications.models import (
+    Notification,
+    NotificationAnnotationsQuerySetMixin,
+)
 from localhub.utils.itertools import takefirst
 
 

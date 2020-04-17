@@ -284,7 +284,10 @@ class TestCommentManager:
 
     def test_with_is_new_if_notification_is_unread(self, comment, member):
         NotificationFactory(
-            verb="mention", recipient=member.member, content_object=comment, is_read=False
+            verb="mention",
+            recipient=member.member,
+            content_object=comment,
+            is_read=False,
         )
 
         comments = Comment.objects.with_is_new(member.member)
@@ -295,7 +298,10 @@ class TestCommentManager:
         self, comment, member, anonymous_user
     ):
         NotificationFactory(
-            verb="mention", recipient=member.member, content_object=comment, is_read=False
+            verb="mention",
+            recipient=member.member,
+            content_object=comment,
+            is_read=False,
         )
 
         comments = Comment.objects.with_is_new(anonymous_user)
@@ -304,14 +310,19 @@ class TestCommentManager:
 
     def test_with_is_new_if_notification_is_read(self, comment, member):
         NotificationFactory(
-            verb="mention", recipient=member.member, content_object=comment, is_read=True
+            verb="mention",
+            recipient=member.member,
+            content_object=comment,
+            is_read=True,
         )
 
         comments = Comment.objects.with_is_new(member.member)
         first = comments.first()
         assert not first.is_new
 
-    def test_with_is_new_if_notification_is_unread_wrong_recipient(self, comment, member):
+    def test_with_is_new_if_notification_is_unread_wrong_recipient(
+        self, comment, member
+    ):
         NotificationFactory(verb="mention", content_object=comment, is_read=False)
 
         comments = Comment.objects.with_is_new(member.member)
