@@ -46,6 +46,8 @@
 {% render_activity request user event css_class="mt-2" %}
 {% endfor %}
 
+{% include "includes/pagination.html" %}
+
 {% else %}
 {% include "events/includes/calendar_mobile.html" with css_class="show-lg" %}
 {% include "events/includes/calendar_desktop.html" with css_class="calendar-lg hide-md" %}

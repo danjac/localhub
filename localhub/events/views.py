@@ -38,8 +38,7 @@ class EventCalendarView(YearMixin, MonthMixin, DayMixin, DateMixin, EventListVie
     model = Event
 
     def get_allow_empty(self):
-        # mixin requirement
-        return True
+        return not (self.current_day)
 
     @cached_property
     def current_day(self):
