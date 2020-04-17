@@ -1,10 +1,12 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import itertools
 import random
 
 import requests
 from bs4 import BeautifulSoup
+
 
 from .http import URLResolver
 
@@ -111,10 +113,21 @@ class HTMLScraper:
         return self
 
     def get_title(self):
-        for value in self.find_meta_tags("og:title", "twitter:title") + [
-            self.find_text("h1"),
-            self.find_text("title"),
-        ]:
+        for value in itertools.chain(
+            self.find_meta_tags("og:title", "twitter:title"),
+            self.find_text("h1", "title"),
+        ):
+            if value:
+                return value
+        return None
+
+    def get_description(self):
+        for value in itertools.chain(
+            self.find_meta_tags(
+                "og:description", "twitter:description", "fb:status", "description"
+            ),
+            self.find_text("p"),
+        ):
             if value:
                 return value
         return None
@@ -125,27 +138,11 @@ class HTMLScraper:
                 return value
         return None
 
-    def get_description(self):
-        for value in self.find_meta_tags(
-            "og:description", "twitter:description", "fb:status", "description"
-        ) + [self.find_text("p")]:
-            if value:
-                return value
-        return None
-
-    def find_text(self, name):
-        tag = self.soup.find(name)
-        if tag and tag.text:
-            value = tag.text.strip()
-            if value:
-                return value
-        return None
-
     def find_meta_tags(self, *names):
-        return [
-            value for value in [self.find_meta_tag(name) for name in names] if value
-        ]
-        return None
+        for name in names:
+            value = self.find_meta_tag(name)
+            if value:
+                yield value
 
     def find_meta_tag(self, name):
         meta = self.soup.find("meta", attrs={"property": name}) or self.soup.find(
@@ -156,6 +153,14 @@ class HTMLScraper:
             if content:
                 return content
         return None
+
+    def find_text(self, *names):
+        for name in names:
+            tag = self.soup.find(name)
+            if tag and tag.text:
+                value = tag.text.strip()
+                if value:
+                    yield value
 
     def is_acceptable_image(self, image):
         try:
