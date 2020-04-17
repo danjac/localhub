@@ -37,8 +37,6 @@ class JoinRequestAcceptView(BaseJoinRequestActionView):
         }
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-
         if Membership.objects.filter(
             member=self.object.sender, community=self.object.community
         ).exists():
@@ -72,7 +70,6 @@ class JoinRequestRejectView(BaseJoinRequestActionView):
         )
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         self.object.reject()
         send_rejection_email(self.object)
         return self.success_response()
