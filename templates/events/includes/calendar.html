@@ -1,0 +1,41 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+<div class="calendar{% if css_class %} {{ css_class }}{% endif %}">
+  <div class="calendar-nav navbar">
+    <a class="btn btn-action btn-link btn-lg"
+       href="{{ request.path }}?month={{ previous_month.month }}&year={{ next_month.year }}">
+      <i class="icon icon-arrow-left"></i>
+    </a>
+    <div class="navbar-primary">{{ current_month|date:"F, Y" }}</div>
+    <a class="btn btn-action btn-link btn-lg"
+       href="{{ request.path }}?month={{ next_month.month }}&year={{ next_month.year }}">
+      <i class="icon icon-arrow-right"></i>
+    </a>
+  </div>
+  <div class="calendar-container">
+    <div class="calendar-header">
+      <div class="calendar-date">{% trans "Sun" %}</div>
+      <div class="calendar-date">{% trans "Mon" %}</div>
+      <div class="calendar-date">{% trans "Tue" %}</div>
+      <div class="calendar-date">{% trans "Wed" %}</div>
+      <div class="calendar-date">{% trans "Thu" %}</div>
+      <div class="calendar-date">{% trans "Fri" %}</div>
+      <div class="calendar-date">{% trans "Sat" %}</div>
+    </div>
+    <div class="calendar-body">
+      {% for day in current_month_days %}
+      <div class="calendar-date">
+        {% if day %}
+        {% with events_for_day=events|from_dictkey:day %}
+        {% with num_events=events_for_day|length %}
+        {% block calendar_date %}{% endblock %}
+        {% endwith %}
+        {% endwith %}
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

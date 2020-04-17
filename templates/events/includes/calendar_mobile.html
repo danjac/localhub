@@ -1,0 +1,15 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "events/includes/calendar.html" %}
+
+{% load i18n %}
+
+{% block calendar_date %}
+{% if num_events %}
+<a href="{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}"
+   class="date-item badge{% if day == today.day and is_today %} date-today{% endif %}">{{ day }}</a>
+{% else %}
+<button class="date-item{% if day == today.day and is_today %} date-today{% endif %}">{{ day }}</button>
+{% endif %}
+{% endblock %}

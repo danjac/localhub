@@ -14,6 +14,7 @@
 {% verbose_name_plural object as object_name_plural %}
 {% verbose_name object as object_name %}
 
+{% block breadcrumbs %}
 <ul class="breadcrumb">
   {% if object.published %}
   <li class="breadcrumb-item"><a href="{% resolve_model_url view.model "list" %}">{{ object_name_plural|title }}</a>
@@ -23,6 +24,7 @@
   {% endif %}
   <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
 </ul>
+{% endblock breadcrumbs %}
 
 {% if comments.number == 1 %}
 {% if object.deleted %}
