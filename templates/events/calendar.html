@@ -1,0 +1,107 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/base.html" %}
+{% load i18n %}
+{% load rules %}
+{% load activities %}
+
+{% block subtitle %} / {% trans "Events" %} / {% trans "Calendar" %}{% endblock %}
+
+{% block content %}
+{% if current_date %}
+<ul class="breadcrumb">
+  <li class="li breadcrumb-item"><a href="{% url 'events:list' %}">{% trans "Events" %}</a></li>
+  <li class="li breadcrumb-item">
+    <a href="{{ request.path }}?month={{ current_month.month }}&year={{ current_month.year }}">{{ current_month|date:"F, Y" }}</a>
+  </li>
+  <li class="li breadcrumb-item">
+    <a data-turbolinks="false" href="#">{{ current_date|date:"l j" }}</a>
+  </li>
+</ul>
+{% endif %}
+
+<h1 class="page-header">{% trans "Calendar" %}</h1>
+
+{% if not current_date %}
+<div class="actions mb-1">
+  {% has_perm 'activities.create_activity' user community as can_create_activity %}
+  {% if can_create_activity %}
+  <a class="action"
+     href="{% url 'events:create' %}">
+    {% trans "Submit Event" %}
+  </a>
+  {% endif %}
+  <a class="action"
+     href="{% url 'events:list' %}">{% trans "Events" %}</a>
+</div>
+{% endif %}
+
+{% if current_date %}
+
+{% for event in object_list %}
+{% render_activity request user event css_class="mt-2" %}
+{% endfor %}
+
+{% else %}
+<div class="calendar show-lg">
+  {% include "events/includes/calendar_navbar.html" %}
+  <div class="calendar-container">
+    {% include "events/includes/calendar_header.html" %}
+    <div class="calendar-body">
+      {% for day in current_month_days %}
+      <div class="calendar-date">
+        {% if day %}
+        {% with events_for_day=events|from_dictkey:day %}
+        {% if events_for_day %}
+        <a href="{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}"
+           class="date-item badge{% if day == today.day and is_today %} date-today{% endif %}">{{ day }}</a>
+        {% else %}
+        <button class="date-item{% if day == today.day and is_today %} date-today{% endif %}">{{ day }}</a>
+        {% endif %}
+        {% endwith %}
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="calendar calendar-lg hide-md">
+  {% include "events/includes/calendar_navbar.html" %}
+  <div class="calendar-container">
+    {% include "events/includes/calendar_header.html" %}
+    <div class="calendar-body">
+      {% for day in current_month_days %}
+      <div class="calendar-date">
+        {% if day %}
+        {% with events_for_day=events|from_dictkey:day %}
+        {% with num_events=events_for_day|length %}
+        <button class="date-item{% if day == today.day and is_today %} date-today{% endif %}">{{ day }}</button>
+        {% if events_for_day %}
+        <div class="calendar-events">
+          {% for event in events_for_day|slice:"0,3" %}
+
+          <a class="calendar-event{% if not event.is_attendable %} text-strike{% elif event.is_attending %} text-bold{% endif %}" href="{{ event.get_absolute_url }}" title="{{ event.title }}">{{ event.title }}</a>
+          {% endfor %}
+
+          {% if num_events > 0 %}
+          <a class="calendar-event"
+             href="{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}"
+             title="{% blocktrans trimmed %}{{ num_events }} events{% endblocktrans %}"
+             href="">{% trans "More..." %}</a>
+          {% endif %}
+
+        </div>
+        {% endif %}
+        {% endwith %}
+        {% endwith %}
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

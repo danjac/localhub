@@ -1,0 +1,14 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+<div class="calendar-nav navbar">
+  <a class="btn btn-action btn-link btn-lg"
+     href="{{ request.path }}?month={{ previous_month.month }}&year={{ next_month.year }}">
+    <i class="icon icon-arrow-left"></i>
+  </a>
+  <div class="navbar-primary">{{ current_month|date:"F, Y" }}</div>
+  <a class="btn btn-action btn-link btn-lg"
+     href="{{ request.path }}?month={{ next_month.month }}&year={{ next_month.year }}">
+    <i class="icon icon-arrow-right"></i>
+  </a>
+</div>

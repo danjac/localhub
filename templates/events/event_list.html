@@ -16,6 +16,8 @@
   </a>
   {% endif %}
   <a class="action"
+     href="{% url 'events:calendar' %}">{% trans "Calendar" %}</a>
+  <a class="action"
      href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
   <a class="action"
      href="{% url 'photos:list' %}">{% trans "Photos" %}</a>

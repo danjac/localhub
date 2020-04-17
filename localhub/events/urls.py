@@ -12,6 +12,7 @@ from .views import (
     EventCreateView,
     EventListView,
     event_attend_view,
+    event_calendar_view,
     event_cancel_view,
     event_download_view,
     event_unattend_view,
@@ -25,6 +26,7 @@ urlpatterns = create_activity_urls(
 )
 
 urlpatterns += [
+    path("calendar/", event_calendar_view, name="calendar"),
     path("<int:pk>~attend/", event_attend_view, name="attend"),
     path("<int:pk>~unattend/", event_unattend_view, name="unattend"),
     path("<int:pk>~cancel/", event_cancel_view, name="cancel"),

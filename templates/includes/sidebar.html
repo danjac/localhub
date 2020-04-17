@@ -188,6 +188,12 @@
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
+       href="{% url 'events:calendar' %}">
+      {% trans "Calendar" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
        data-active-link-exact
        href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
   </li>
