@@ -39,10 +39,5 @@ class JoinRequestDeleteView(PermissionRequiredMixin, SuccessDeleteView):
             "sender": self.object.sender.get_display_name()
         }
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-        return self.success_response()
-
 
 join_request_delete_view = JoinRequestDeleteView.as_view()

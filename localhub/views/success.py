@@ -110,7 +110,8 @@ class SuccessMixin:
 
 
 class SuccessGenericModelView(SuccessMixin, GenericModelView):
-    ...
+    """Convenient base class for GenericModelView with SuccessMixin.
+    """
 
 
 class SuccessActionView(SuccessGenericModelView):

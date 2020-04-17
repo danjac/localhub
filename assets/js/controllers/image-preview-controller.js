@@ -14,17 +14,29 @@ export default class extends Controller {
   targets:
       image: the <img> element holding the image.
   */
-  static targets = ['image'];
+  static targets = ['image', 'input'];
 
   change(event) {
     if (event.target.files) {
-      const file = event.target.files[0];
-      if (this.isImage(file.name)) {
-        this.imageTarget.src = URL.createObjectURL(file);
-        this.imageTarget.classList.remove('d-none');
-      } else {
-        this.imageTarget.classList.add('d-none');
-      }
+      this.handleFile(event.target.files[0]);
+    }
+  }
+
+  drop(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer && event.dataTransfer.files) {
+      this.handleFile(event.dataTransfer.files[0]);
+      this.inputTarget.files = event.dataTransfer.files;
+    }
+  }
+
+  handleFile(file) {
+    if (this.isImage(file.name)) {
+      this.imageTarget.src = URL.createObjectURL(file);
+      this.imageTarget.classList.remove('d-none');
+    } else {
+      this.imageTarget.classList.add('d-none');
     }
   }
 

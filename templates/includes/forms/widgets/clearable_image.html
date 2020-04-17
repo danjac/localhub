@@ -1,4 +1,5 @@
-<div data-controller="image-preview">
+<div data-controller="image-preview"
+     data-action="drop->image-preview#drop">
   <img src="{{ widget.value.url }}"
        data-target="image-preview.image"
        loading="lazy"
@@ -19,5 +20,6 @@
   <input type="{{ widget.type }}"
          name="{{ widget.name }}"
          data-action="image-preview#change"
+         data-target="image-preview.input"
          {% include "django/forms/widgets/attrs.html" %}>
 </div>

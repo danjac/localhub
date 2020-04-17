@@ -21,10 +21,5 @@ class InviteDeleteView(
     def get_permission_object(self):
         return self.request.community
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-        return self.success_response()
-
 
 invite_delete_view = InviteDeleteView.as_view()
