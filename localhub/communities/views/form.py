@@ -24,10 +24,6 @@ class CommunityUpdateView(
     def get_success_url(self):
         return self.request.path
 
-    def form_valid(self, form):
-        form.save()
-        return self.success_response()
-
 
 community_update_view = CommunityUpdateView.as_view()
 

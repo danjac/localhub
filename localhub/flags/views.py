@@ -39,5 +39,8 @@ flag_list_view = FlagListView.as_view()
 class FlagDeleteView(FlagQuerySetMixin, SuccessDeleteView):
     model = Flag
 
+    def get_success_url(self):
+        return self.object.content_object.get_absolute_url()
+
 
 flag_delete_view = FlagDeleteView.as_view()

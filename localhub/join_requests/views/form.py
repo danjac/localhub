@@ -35,11 +35,8 @@ class JoinRequestCreateView(
         return reverse("community_welcome")
 
     def form_valid(self, form):
-
-        join_request = form.save()
-
-        send_join_request_email(join_request)
-
+        self.object = form.save()
+        send_join_request_email(self.object)
         return self.success_response()
 
 
