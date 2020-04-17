@@ -58,7 +58,12 @@ class PostForm(ActivityForm):
         try:
             cleaned_data.update(self.scrape_html(**cleaned_data))
         except HTMLScraper.Invalid:
-            self.add_error("url", _("This URL appears to be invalid."))
+            self.add_error(
+                "url",
+                _(
+                    "This URL appears to be either inaccessible, or we are unable to find any metadata in the content."
+                ),
+            )
             return cleaned_data
 
         title = cleaned_data.get("title")
