@@ -33,6 +33,14 @@ class TestEventManager:
         first = Event.objects.is_attending(anonymous_user).first()
         assert not first.is_attending
 
+    def test_is_attending_if_another_event(self, event, user):
+        other = EventFactory()
+        other.attendees.add(user)
+        first = Event.objects.is_attending(user).get(pk=event.id)
+        assert not first.is_attending
+        second = Event.objects.is_attending(user).get(pk=other.id)
+        assert second.is_attending
+
     def test_is_attending_if_true(self, event, user):
         event.attendees.add(user)
         first = Event.objects.is_attending(user).first()

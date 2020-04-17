@@ -32,7 +32,9 @@ class EventQuerySet(ActivityQuerySet):
         return self.annotate(
             is_attending=boolean_value(False)
             if user.is_anonymous
-            else models.Exists(self.model.objects.filter(attendees=user))
+            else models.Exists(
+                self.model.objects.filter(attendees=user, pk=models.OuterRef("pk"))
+            )
         )
 
     def with_common_annotations(self, user, community):
