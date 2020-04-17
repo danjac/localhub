@@ -7,8 +7,11 @@
 
 {% block calendar_date %}
 {% if num_events %}
-<a href="{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}"
-   class="date-item badge{% if day == today.day and is_today %} date-today{% endif %}">{{ day }}</a>
+<button data-controller="ajax"
+        data-ajax-follow
+        data-action="ajax#get"
+        data-ajax-url="{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}"
+        class="date-item{% if day == today.day and is_today %} date-today{% endif %}">{{ day }}</button>
 {% else %}
 <button class="date-item{% if day == today.day and is_today %} date-today{% endif %}">{{ day }}</button>
 {% endif %}
