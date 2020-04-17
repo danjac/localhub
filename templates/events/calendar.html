@@ -49,8 +49,8 @@
 {% include "includes/pagination.html" %}
 
 {% else %}
-{% include "events/includes/calendar_mobile.html" with css_class="show-lg" %}
-{% include "events/includes/calendar_desktop.html" with css_class="calendar-lg hide-md" %}
+{% include "events/includes/calendar/mobile.html" with css_class="show-lg" %}
+{% include "events/includes/calendar/desktop.html" with css_class="calendar-lg hide-md" %}
 {% endif %}
 
 {% endblock %}
