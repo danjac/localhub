@@ -4,7 +4,7 @@
 from django.conf import settings
 from vanilla import ListView
 
-from localhub.activities.models import get_activity_models
+from localhub.activities.utils import get_activity_models
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.models import Comment
 from localhub.comments.views.list import BaseCommentListView

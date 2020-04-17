@@ -11,7 +11,7 @@ from localhub.bookmarks.models import Bookmark
 from localhub.likes.models import Like
 from localhub.views import SuccessActionView
 
-from ..models import get_activity_models
+from ..utils import get_activity_models
 from .mixins import ActivityQuerySetMixin
 
 

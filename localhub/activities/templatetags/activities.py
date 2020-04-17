@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 
 from localhub.utils.http import is_https
 
-from ..models import get_activity_querysets, load_objects
+from ..utils import get_activity_querysets, load_objects
 from ..oembed import bootstrap_oembed
 
 register = template.Library()
