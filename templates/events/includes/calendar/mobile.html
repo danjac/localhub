@@ -11,7 +11,8 @@
         data-ajax-follow
         data-action="ajax#get"
         data-ajax-url="{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}"
-        class="date-item{% if day == today.day and is_today %} date-today{% endif %}">{{ day }}</button>
+        title="{% blocktrans trimmed count counter=num_events %}1 event{% plural %}{{ counter }} events{% endblocktrans %}"
+        class="date-item badge{% if day == today.day and is_today %} date-today{% endif %}">{{ day }}</button>
 {% else %}
 <button class="date-item{% if day == today.day and is_today %} date-today{% endif %}">{{ day }}</button>
 {% endif %}
