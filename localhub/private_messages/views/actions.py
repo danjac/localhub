@@ -2,24 +2,24 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.db import IntegrityError
-from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from vanilla import GenericModelView
 
 from localhub.bookmarks.models import Bookmark
-from localhub.views import SuccessActionView
+from localhub.views import SuccessActionView, SuccessGenericModelView
 
 from .mixins import RecipientQuerySetMixin, SenderOrRecipientQuerySetMixin
 
 
-class MessageMarkAllReadView(RecipientQuerySetMixin, GenericModelView):
+class MessageMarkAllReadView(RecipientQuerySetMixin, SuccessGenericModelView):
+    success_url = reverse_lazy("private_messages:inbox")
+
     def get_queryset(self):
         return super().get_queryset().unread()
 
     def post(self, request, *args, **kwargs):
         self.get_queryset().for_recipient(self.request.user).mark_read()
-        return HttpResponseRedirect(reverse("private_messages:inbox"))
+        return self.success_response()
 
 
 message_mark_all_read_view = MessageMarkAllReadView.as_view()

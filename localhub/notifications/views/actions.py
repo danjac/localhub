@@ -1,8 +1,6 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.urls import reverse_lazy
-
 from localhub.views import SuccessActionView, SuccessGenericModelView
 
 from ..signals import notification_read
@@ -33,8 +31,6 @@ notification_mark_all_read_view = NotificationMarkAllReadView.as_view()
 class NotificationMarkReadView(
     UnreadNotificationQuerySetMixin, NotificationSuccessRedirectMixin, SuccessActionView
 ):
-    success_url = reverse_lazy("notifications:list")
-
     def post(self, request, *args, **kwargs):
         self.object.is_read = True
         self.object.save()
