@@ -132,6 +132,9 @@ class TestEventModel:
             event.get_location() == "Areenankuja 1, 00240 Helsinki, Uusimaa, Finland"
         ), "location property should include all event location fields"
 
+    def test_get_location_if_empty(self):
+        assert Event().get_location() == ""
+
     def test_get_full_location(self):
         event = Event(
             venue="Hartwall Arena",

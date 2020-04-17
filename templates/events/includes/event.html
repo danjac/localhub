@@ -36,22 +36,18 @@
       {{ object.starts|date:"DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }}
     </dd{%>
     {% endif %} {% endtimezone %}
+                            {% with location=object.get_full_location %}
+                            {% if location %}
                             <dt>{% trans "Location" %}</dt>
     <dd>
-      {% with location=object.get_full_location %}
-      {% if location %}
-      LOCATION {{ location }}
       {% if not is_detail and object.has_map %}
       <a href="{{ object.get_absolute_url }}#map-for-event-{{ object.id }}">{{ location }}</a>
       {% else %}
       {{ location }}
       {% endif %}
-      {% else %}
-      {% trans "Online" %}
-      {% endif %}
-      {% endwith %}
     </dd>
-
+    {% endif %}
+    {% endwith %}
     {% if object.url %}
     <dt>{% trans "URL" %}</dt>
     <dd class="text-ellipsis">{{ object.url|urlize }}</dd>

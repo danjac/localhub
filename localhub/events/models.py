@@ -184,6 +184,9 @@ class Event(Activity):
             .replace(", ,", ", ")
             .strip()
         )
+        # if location is just commas and spaces, return an empty string
+        if location.replace(",", "").strip() == "":
+            return ""
 
         if location.endswith(","):
             location = location[:-1]
