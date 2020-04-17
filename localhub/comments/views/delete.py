@@ -15,7 +15,7 @@ class CommentDeleteView(
 ):
     permission_required = "comments.delete_comment"
     template_name = "comments/comment_confirm_delete.html"
-    success_message = _("This comment has been deleted")
+    success_message = _("You have deleted this comment")
 
     def get_success_url(self):
         obj = self.object.get_content_object()

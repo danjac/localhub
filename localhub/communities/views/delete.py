@@ -27,7 +27,7 @@ class MembershipDeleteView(BaseMembershipDeleteView):
         return reverse("communities:membership_list")
 
     def get_success_message(self):
-        return _("Membership for user %(user)s has been deleted") % {
+        return _("You have deleted the membership for %(user)s") % {
             "user": self.object.member.username
         }
 

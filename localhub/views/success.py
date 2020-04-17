@@ -49,6 +49,16 @@ class SuccessMixin:
         return success_message % dct
 
     def get_success_response(self):
+        """Returns HTTP response.
+
+        Default behaviour:
+            - if is_success_ajax_response attribute is True,
+                returns an empty (204) response.
+            - otherwise resolves success URL and returns a redirect.
+
+        Returns:
+            HttpResponse
+        """
         return (
             HttpResponse(status=204)
             if self.is_success_ajax_response
@@ -161,6 +171,9 @@ class SuccessUpdateView(SuccessMixin, UpdateView):
 
 
 class SuccessDeleteView(SuccessMixin, DeleteView):
+    """DeleteView returning success response on execution.
+    """
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()

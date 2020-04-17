@@ -18,7 +18,7 @@ class ActivityDeleteView(
     SuccessDeleteView,
 ):
     permission_required = "activities.delete_activity"
-    success_message = _("This %(model)s has been deleted")
+    success_message = _("You have deleted this %(model)s")
 
     def get_success_url(self):
         if self.object.deleted or self.object.published:

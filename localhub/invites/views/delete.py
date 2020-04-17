@@ -15,7 +15,7 @@ class InviteDeleteView(
     CommunityAdminRequiredMixin, InviteQuerySetMixin, SuccessDeleteView,
 ):
     success_url = reverse_lazy("invites:list")
-    success_message = _("Invite has been deleted")
+    success_message = _("You have deleted this invite")
     model = Invite
 
 

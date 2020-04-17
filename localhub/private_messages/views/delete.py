@@ -20,7 +20,7 @@ class MessageDeleteView(SenderOrRecipientQuerySetMixin, SuccessDeleteView):
     """
 
     model = Message
-    success_message = _("This message has been deleted")
+    success_message = _("You have deleted this message")
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
