@@ -4,7 +4,7 @@
 import pytest
 import requests
 
-from ..html import HTMLScraper
+from ..scraper import HTMLScraper
 
 
 class TestHTMLScraperFromUrl:
