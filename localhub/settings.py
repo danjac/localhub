@@ -83,7 +83,7 @@ class Base(Configuration):
         "django.contrib.sites.middleware.CurrentSiteMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
         "django.middleware.locale.LocaleMiddleware",
-        "localhub.middleware.TurbolinksMiddleware",
+        "localhub.middleware.turbolinks.TurbolinksMiddleware",
         "localhub.communities.middleware.CurrentCommunityMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
@@ -388,7 +388,7 @@ class Production(Base):
     MAILGUN_SENDER_DOMAIN = values.Value()
 
     MIDDLEWARE = Base.MIDDLEWARE + [
-        "localhub.middleware.HttpResponseNotAllowedMiddleware",
+        "localhub.middleware.http.HttpResponseNotAllowedMiddleware",
         "silk.middleware.SilkyMiddleware",
     ]
 

@@ -5,7 +5,8 @@ import pytest
 from django.http import HttpResponseNotAllowed, HttpResponseRedirect
 from django.test import override_settings
 
-from .. import HttpResponseNotAllowedMiddleware, TurbolinksMiddleware
+from ..http import HttpResponseNotAllowedMiddleware
+from ..turbolinks import TurbolinksMiddleware
 
 pytestmark = pytest.mark.django_db
 
