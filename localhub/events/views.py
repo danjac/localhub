@@ -141,6 +141,7 @@ event_calendar_view = EventCalendarView.as_view()
 
 class EventCancelView(BaseActivityActionView):
     success_message = _("This event has been canceled")
+
     permission_required = "events.cancel"
     model = Event
 

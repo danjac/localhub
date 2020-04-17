@@ -10,7 +10,7 @@ from localhub.activities.views.detail import ActivityDetailView
 from localhub.activities.views.form import ActivityCreateView, ActivityUpdateView
 from localhub.activities.views.list import ActivityListView
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.views import SuccessGenericModelView
+from localhub.views import SuccessActionView
 
 from .models import Answer, Poll
 
@@ -82,16 +82,13 @@ class PollListView(PollQuerySetMixin, ActivityListView):
 
 
 class AnswerVoteView(
-    PermissionRequiredMixin, CommunityRequiredMixin, SuccessGenericModelView,
+    PermissionRequiredMixin, CommunityRequiredMixin, SuccessActionView,
 ):
 
     permission_required = "polls.vote"
     template_name = "polls/includes/answers.html"
-    success_message = _("Thanks for voting!")
 
-    def setup(self, request, *args, **kwargs):
-        super().setup(request, *args, **kwargs)
-        self.object = self.get_object()
+    success_message = _("Thanks for voting!")
 
     def get_permission_object(self):
         return self.object.poll
@@ -116,9 +113,8 @@ class AnswerVoteView(
 
         poll = Poll.objects.with_answers().get(pk=self.object.poll.id)
 
-        return self.success_response_header(
+        return self.success_response(
             self.render_to_response({"object": poll, "object_type": "poll"}),
-            self.get_success_message(),
         )
 
 

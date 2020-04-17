@@ -48,6 +48,13 @@ class SuccessMixin:
 
         return success_message % dct
 
+    def get_success_response(self):
+        return (
+            HttpResponse(status=204)
+            if self.is_success_ajax_response
+            else HttpResponseRedirect(self.get_success_url())
+        )
+
     def get_success_url(self, object=None):
         """Returns redirect URL.
 
@@ -73,40 +80,43 @@ class SuccessMixin:
 
     def success_response_header(self, response, success_message):
         """Adds success message to X-Success-Message header.
+
+        Args:
+            response (HTTPResponse)
+            success_message (str): if falsy then no success message is added to header
+
+        Returns:
+            HTTPResponse
         """
         if success_message:
             response[self.success_message_response_header] = success_message
         return response
 
-    def success_ajax_response(self, success_message):
-        """Renders an AJAX response. Includes success message in HTTP header
-        instead of session.
-
-        Args:
-            success_message (str, optional): ignored if None
-
-        Returns:
-            HttpResponse
-        """
-        return self.success_response_header(HttpResponse(status=204), success_message)
-
-    def success_response(self):
+    def success_response(self, response=None, success_message=None):
         """Shortcut to add success message, and return redirect to the success URL.
 
-        If the class attribute is_success_ajax_response is True, returns an empty
-        204 response.
+        If the class attribute is_success_ajax_response is True, will add the success
+        header to the response.
+
+        Args:
+            response (HttpResponse, optional): the response you want to return,
+                otherwise returns an HTTP redirect or empty HTTP 204 response.
+            success_message (str, optional): success message. If None will
+                return result of get_success_message.
 
         Returns:
             HttpResponse
         """
-        success_message = self.get_success_message()
-        if self.is_success_ajax_response:
-            return self.success_ajax_response(success_message)
+        success_message = success_message or self.get_success_message()
+        response = response or self.get_success_response()
 
-        if success_message:
-            messages.success(self.request, success_message)
+        # is response a redirect? add success message to session
+        if hasattr(response, "url"):
+            if success_message:
+                messages.success(self.request, success_message)
+            return response
 
-        return HttpResponseRedirect(self.get_success_url())
+        return self.success_response_header(response, success_message)
 
 
 class SuccessGenericModelView(SuccessMixin, GenericModelView):
@@ -125,17 +135,26 @@ class SuccessActionView(SuccessGenericModelView):
 
 
 class SuccessFormView(SuccessMixin, FormView):
+    """FormView returning success response with valid form.
+    """
+
     def form_valid(self, form):
         return self.success_response()
 
 
 class SuccessCreateView(SuccessMixin, CreateView):
+    """CreateView returning success response with valid form.
+    """
+
     def form_valid(self, form):
         self.object = form.save()
         return self.success_response()
 
 
 class SuccessUpdateView(SuccessMixin, UpdateView):
+    """UpdateView returning success response with valid form.
+    """
+
     def form_valid(self, form):
         self.object = form.save()
         return self.success_response()
