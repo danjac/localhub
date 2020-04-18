@@ -1,13 +1,11 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import re
-
 from django.urls import reverse
 
 from localhub.utils.text import slugify_unicode
 
-HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")
+from .constants import HASHTAGS_RE
 
 
 def extract_hashtags(content):
