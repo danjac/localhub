@@ -28,24 +28,27 @@ export default class extends Controller {
     const rect = this.menuTarget.getBoundingClientRect();
     // ensure menu always appears within viewport
     const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    let top, bottom, left, right;
+
     if (rect.bottom + rect.height > viewportHeight) {
-      this.menuTarget.style.top = 'auto';
-      this.menuTarget.style.bottom = 0;
+      top = 'auto';
+      bottom = 0;
     } else {
-      this.menuTarget.style.top = 0;
-      this.menuTarget.style.bottom = 'auto';
+      top = 0;
+      bottom = 'auto';
     }
-    /*
-    // TB: doesn't work in mobile, not needed yet
     const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
-    if (rect.right + rect.width > viewportWidth) {
-      this.menuTarget.style.left = 'auto';
-      this.menuTarget.style.right = 0;
+    if (rect.left + rect.width > viewportWidth) {
+      left = 'auto';
+      right = 0;
     } else {
-      this.menuTarget.style.right = 'auto';
-      this.menuTarget.style.left = 0;
+      right = 'auto';
+      left = 0;
     }
-    */
+    this.menuTarget.style.top = top;
+    this.menuTarget.style.bottom = bottom;
+    this.menuTarget.style.left = left;
+    this.menuTarget.style.right = right;
   }
 
   close() {
