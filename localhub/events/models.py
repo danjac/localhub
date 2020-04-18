@@ -40,7 +40,6 @@ class EventQuerySet(ActivityQuerySet):
         Returns:
             QuerySet
         """
-        now = timezone.now()
 
         return self.annotate(
             relevance=models.Case(
@@ -48,7 +47,7 @@ class EventQuerySet(ActivityQuerySet):
                     models.Q(published__isnull=True) | models.Q(canceled__isnull=False),
                     then=models.Value(-1),
                 ),
-                models.When(starts__gte=now, then=models.Value(1)),
+                models.When(starts__gte=timezone.now(), then=models.Value(1)),
                 default=0,
                 output_field=models.IntegerField(),
             )
