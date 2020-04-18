@@ -35,6 +35,8 @@ export default class extends Controller {
       this.menuTarget.style.top = 0;
       this.menuTarget.style.bottom = 'auto';
     }
+    /*
+    // TB: doesn't work in mobile, not needed yet
     const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
     if (rect.right + rect.width > viewportWidth) {
       this.menuTarget.style.left = 'auto';
@@ -43,6 +45,7 @@ export default class extends Controller {
       this.menuTarget.style.right = 'auto';
       this.menuTarget.style.left = 0;
     }
+    */
   }
 
   close() {
