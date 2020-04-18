@@ -1,7 +1,6 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import geopy
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -21,11 +20,31 @@ from localhub.db.utils import boolean_value
 from localhub.notifications.decorators import dispatch
 from localhub.utils.http import get_domain
 
-geolocator = geopy.Nominatim(user_agent=settings.LOCALHUB_GEOLOCATOR_USER_AGENT)
-
 
 class EventQuerySet(ActivityQuerySet):
+    def is_attending(self, user):
+        """Annotates "is_attending" if user is attending the event.
+
+        Args:
+            user (User)
+
+        Returns:
+            QuerySet
+        """
+        return self.annotate(
+            is_attending=boolean_value(False)
+            if user.is_anonymous
+            else models.Exists(
+                self.model.objects.filter(attendees=user, pk=models.OuterRef("pk"))
+            )
+        )
+
     def with_num_attendees(self):
+        """Annotates "num_attendees" to each event.
+
+        Returns:
+            QuerySet
+        """
         return self.annotate(num_attendees=models.Count("attendees"))
 
     def with_relevance(self):
@@ -66,15 +85,6 @@ class EventQuerySet(ActivityQuerySet):
                 models.When(starts__gte=now, then=models.F("starts") - now),
                 models.When(starts__lt=now, then=now - models.F("starts")),
                 output_field=models.DurationField(),
-            )
-        )
-
-    def is_attending(self, user):
-        return self.annotate(
-            is_attending=boolean_value(False)
-            if user.is_anonymous
-            else models.Exists(
-                self.model.objects.filter(attendees=user, pk=models.OuterRef("pk"))
             )
         )
 
@@ -285,9 +295,21 @@ class Event(Activity):
         return self.DEFAULT_ADDRESS_FORMAT
 
     def has_started(self):
+        """If start date in past.
+
+        Returns:
+            bool
+        """
         return self.starts < timezone.now()
 
     def is_attendable(self):
+        """If event can be attended:
+            - start date in future
+            - not private
+            - not canceled or deleted
+        Returns:
+            bool
+        """
         return all(
             (
                 self.published,
@@ -339,6 +361,11 @@ class Event(Activity):
         ]
 
     def to_ical(self):
+        """Returns iCalendar event object.
+
+        Returns:
+            Calendar
+        """
         event = CalendarEvent()
 
         starts = self.get_starts_with_tz()
