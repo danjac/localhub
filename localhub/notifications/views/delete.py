@@ -3,13 +3,13 @@
 
 from django.http import HttpResponseRedirect
 
-from localhub.views import SuccessDeleteView, SuccessGenericModelView
+from localhub.views import SuccessDeleteView, SuccessView
 
 from .mixins import NotificationQuerySetMixin, NotificationSuccessRedirectMixin
 
 
 class NotificationDeleteAllView(
-    NotificationQuerySetMixin, NotificationSuccessRedirectMixin, SuccessGenericModelView
+    NotificationQuerySetMixin, NotificationSuccessRedirectMixin, SuccessView
 ):
     def delete(self, request):
         self.get_queryset().delete()

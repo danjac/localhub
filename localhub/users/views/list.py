@@ -3,7 +3,7 @@
 
 from django.conf import settings
 from django.db.models import Q
-from vanilla import ListView
+from django.views.generic import ListView
 
 from localhub.views import SearchMixin
 

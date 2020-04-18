@@ -1,16 +1,14 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from localhub.views import SuccessActionView, SuccessGenericModelView
+from localhub.views import SuccessActionView, SuccessView
 
 from ..signals import notification_read
 from .mixins import NotificationSuccessRedirectMixin, UnreadNotificationQuerySetMixin
 
 
 class NotificationMarkAllReadView(
-    UnreadNotificationQuerySetMixin,
-    NotificationSuccessRedirectMixin,
-    SuccessGenericModelView,
+    UnreadNotificationQuerySetMixin, NotificationSuccessRedirectMixin, SuccessView,
 ):
     def post(self, request, *args, **kwargs):
         qs = self.get_queryset()

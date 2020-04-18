@@ -23,8 +23,10 @@ class InviteCreateView(
     form_class = InviteForm
     success_url = reverse_lazy("invites:list")
 
-    def get_form(self, data=None, files=None):
-        return self.form_class(self.request.community, data, files)
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({"community": self.request.community})
+        return kwargs
 
     def get_success_message(self):
         return _("Your invitation has been sent to %(email)s") % {

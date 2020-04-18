@@ -1,7 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from vanilla import ListView
+from django.views.generic import ListView
 
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views.list import BaseCommentListView

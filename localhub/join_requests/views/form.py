@@ -26,10 +26,10 @@ class JoinRequestCreateView(
     def get_permission_object(self):
         return self.request.community
 
-    def get_form(self, *args, **kwargs):
-        return self.get_form_class()(
-            self.request.user, self.request.community, *args, **kwargs
-        )
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({"user": self.request.user, "community": self.request.community})
+        return kwargs
 
     def get_success_url(self):
         return reverse("community_welcome")

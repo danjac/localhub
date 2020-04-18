@@ -4,6 +4,7 @@
 from django.forms import inlineformset_factory
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
+from django.views.generic.base import TemplateResponseMixin
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.activities.views.detail import ActivityDetailView
@@ -82,7 +83,10 @@ class PollListView(PollQuerySetMixin, ActivityListView):
 
 
 class AnswerVoteView(
-    PermissionRequiredMixin, CommunityRequiredMixin, SuccessActionView,
+    TemplateResponseMixin,
+    PermissionRequiredMixin,
+    CommunityRequiredMixin,
+    SuccessActionView,
 ):
 
     permission_required = "polls.vote"

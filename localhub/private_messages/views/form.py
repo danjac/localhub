@@ -41,8 +41,8 @@ class BaseMessageFormView(PermissionRequiredMixin, SuccessFormView):
     def recipient_display(self):
         return user_display(self.recipient)
 
-    def get_form(self, data=None, files=None):
-        form = self.form_class(data, files)
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
         form["message"].label = _(
             "Send message to %(recipient)s" % {"recipient": self.recipient_display}
         )

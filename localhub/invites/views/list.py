@@ -3,7 +3,7 @@
 
 from django.conf import settings
 from django.utils.functional import cached_property
-from vanilla import ListView
+from django.views.generic import ListView
 
 from localhub.communities.views import CommunityAdminRequiredMixin
 from localhub.views import SearchMixin

@@ -19,7 +19,6 @@ django-simple-history
 django-storages
 django-taggit
 django-timezone-field
-django-vanilla-views
 django-widget-tweaks
 django
 factory-boy

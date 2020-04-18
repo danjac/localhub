@@ -3,7 +3,7 @@
 
 
 from django.conf import settings
-from vanilla import ListView
+from django.views.generic import ListView
 
 from localhub.communities.views import (
     CommunityModeratorRequiredMixin,

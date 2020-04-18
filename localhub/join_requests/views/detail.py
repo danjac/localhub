@@ -1,7 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from vanilla import DetailView
+from django.views.generic import DetailView
 
 from localhub.communities.views import CommunityAdminRequiredMixin
 

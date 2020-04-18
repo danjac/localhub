@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
-from vanilla import DetailView
+from django.views.generic import DetailView
 
 from localhub.comments.forms import CommentForm
 from localhub.pagination import PresetCountPaginator

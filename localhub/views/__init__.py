@@ -7,9 +7,9 @@ from .success import (
     SuccessCreateView,
     SuccessDeleteView,
     SuccessFormView,
-    SuccessGenericModelView,
     SuccessMixin,
     SuccessUpdateView,
+    SuccessView,
 )
 
 __all__ = [
@@ -18,7 +18,7 @@ __all__ = [
     "SuccessCreateView",
     "SuccessDeleteView",
     "SuccessFormView",
-    "SuccessGenericModelView",
+    "SuccessView",
     "SuccessMixin",
     "SuccessUpdateView",
 ]

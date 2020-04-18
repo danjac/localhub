@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
-from vanilla import ListView
+from django.views.generic import ListView
 
 from ..models import Notification
 from .mixins import NotificationQuerySetMixin

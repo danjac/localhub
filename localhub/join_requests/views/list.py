@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Case, IntegerField, Value, When
 from django.utils.functional import cached_property
-from vanilla import ListView
+from django.views.generic import ListView
 
 from localhub.views import SearchMixin
 

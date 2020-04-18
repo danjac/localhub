@@ -3,8 +3,8 @@
 
 from django.conf import settings
 from django.http import HttpResponseRedirect
+from django.views.generic import DetailView, TemplateView
 from rules.contrib.views import PermissionRequiredMixin
-from vanilla import DetailView, TemplateView
 
 from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest

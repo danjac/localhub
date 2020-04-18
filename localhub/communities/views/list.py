@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, F, Q
-from vanilla import ListView
+from django.views.generic import ListView
 
 from localhub.join_requests.models import JoinRequest
 from localhub.views import SearchMixin

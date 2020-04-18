@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.conf import settings
-from vanilla import ListView
+from django.views.generic import ListView
 
 from localhub.activities.utils import get_activity_models
 from localhub.activities.views.streams import BaseActivityStreamView

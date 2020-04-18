@@ -4,8 +4,8 @@
 
 from django.conf import settings
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
+from django.views.generic import ListView
 from taggit.models import Tag
-from vanilla import ListView
 
 from localhub.views import SearchMixin
 

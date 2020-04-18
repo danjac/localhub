@@ -6,12 +6,12 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
 from localhub.bookmarks.models import Bookmark
-from localhub.views import SuccessActionView, SuccessGenericModelView
+from localhub.views import SuccessActionView, SuccessView
 
 from .mixins import RecipientQuerySetMixin, SenderOrRecipientQuerySetMixin
 
 
-class MessageMarkAllReadView(RecipientQuerySetMixin, SuccessGenericModelView):
+class MessageMarkAllReadView(RecipientQuerySetMixin, SuccessView):
     success_url = reverse_lazy("private_messages:inbox")
 
     def get_queryset(self):

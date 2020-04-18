@@ -6,8 +6,7 @@ import json
 from django.conf import settings
 from django.db import IntegrityError
 from django.http import HttpResponseBadRequest, JsonResponse
-from django.views.generic import View
-from vanilla import TemplateView
+from django.views.generic import TemplateView, View
 
 from localhub.communities.views import CommunityRequiredMixin
 

@@ -7,13 +7,13 @@ from django.conf import settings
 from django.http import Http404
 from django.utils.formats import date_format
 from django.utils.functional import cached_property
+from django.views.generic import TemplateView
 from django.views.generic.dates import (
     DateMixin,
     MonthMixin,
     YearMixin,
     _date_from_string,
 )
-from vanilla import TemplateView
 
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.notifications.models import Notification

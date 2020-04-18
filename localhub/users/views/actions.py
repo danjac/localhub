@@ -20,8 +20,8 @@ from .mixins import (
 
 
 class BaseUserActionView(UserQuerySetMixin, SuccessActionView):
-    lookup_field = "username"
-    lookup_url_kwarg = "username"
+    slug_field = "username"
+    slug_url_kwarg = "username"
 
 
 class BaseFollowUserView(
