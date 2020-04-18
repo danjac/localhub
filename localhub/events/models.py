@@ -45,18 +45,11 @@ class EventQuerySet(ActivityQuerySet):
         return self.annotate(
             relevance=models.Case(
                 models.When(
-                    starts__gte=now,
-                    published__isnull=False,
-                    canceled__isnull=True,
-                    then=models.Value(1),
+                    models.Q(published__isnull=True) | models.Q(canceled__isnull=False),
+                    then=models.Value(-1),
                 ),
-                models.When(
-                    starts__lt=now,
-                    published__isnull=False,
-                    canceled__isnull=True,
-                    then=models.Value(0),
-                ),
-                default=-1,
+                models.When(starts__gte=now, then=models.Value(1)),
+                default=0,
                 output_field=models.IntegerField(),
             )
         )
