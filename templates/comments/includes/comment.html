@@ -4,6 +4,7 @@
 {% load i18n %}
 {% load account %}
 {% load rules %}
+{% load activities %}
 {% load users %}
 
 {% has_perm "communities.moderate_community" user community as can_moderate_community %}
@@ -17,6 +18,8 @@
     <div class="card-title h6">
       {% if content_object %}
       <a href="{{ content_object.get_absolute_url }}">{{ content_object }}</a>
+      {% verbose_name content_object as object_name %}
+      <span class="label">{{ object_name|title }}</span>
       {% else %}
       {% trans "[Deleted]" %}
       {% endif %}
@@ -129,7 +132,7 @@
           {% has_perm "comments.reply_to_comment" user comment as can_reply %}
           {% if can_reply %}
           <li class="menu-item">
-            <a href="{% url 'comments:reply' comment.id %}#comment-form">{% trans "Reply" %}</a>
+            <a href="{% url 'comments:reply' comment.id %}">{% trans "Reply" %}</a>
           </li>
           {% endif %}
 
@@ -176,18 +179,16 @@
           {% endif %}
         </ul>
       </div>
-      {% if not is_detail %}
       <div class="actions">
-        {% if not comment.deleted %}
+        {% if not is_detail and not comment.deleted %}
         <a class="action"
-           href="{{ comment.get_absolute_url }}#comment-{{ comment.id }}">{% trans "Link" %}</a>
+           href="{{ comment.get_absolute_url }}">{% trans "Link" %}</a>
         {% endif %}
         {% if parent %}
         <a class="action"
-           href="{{ parent.get_absolute_url }}#comment-{{ parent.id }}">{% trans "Parent" %}</a>
+           href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a>
         {% endif %}
       </div>
-      {% endif %}
     </div>
     <div class="clearfix"></div>
   </div>

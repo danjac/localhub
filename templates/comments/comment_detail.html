@@ -3,7 +3,6 @@
 
 {% extends "comments/base.html" %}
 {% load i18n %}
-{% load activities %}
 {% load comments %}
 
 {% block subtitle %}{{ block.super }} {% if content_object %} / {{ content_object }}{% endif %}{% endblock %}
@@ -31,17 +30,7 @@
   </li>
 </ul>
 
-{% if content_object %}
-{% render_activity request user content_object css_class="mb-2" %}
-{% else %}
-<h6>{% trans "[Deleted]" %}</h6>
-{% endif %}
-
-{% if comment.parent %}
-{% render_comment request user comment.parent include_content_object=False css_class="mb-2" %}
-{% endif %}
-
-{% render_comment request user comment is_detail=True include_content_object=False %}
+{% render_comment request user comment is_detail=True include_content_object=True %}
 
 {% if replies %}
 <div class="divider text-center"

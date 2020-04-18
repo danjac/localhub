@@ -4,7 +4,6 @@
 {% extends "comments/base.html" %}
 
 {% load i18n %}
-{% load activities %}
 {% load comments %}
 
 {% block subtitle %}{{ block.super }}
@@ -33,11 +32,6 @@
   </li>
   {% endif %}
 </ul>
-
-
-{% if content_object %}
-{% render_activity request user content_object css_class="mb-2" %}
-{% endif %}
 
 {% if parent %}
 {% render_comment request user parent is_detail=True css_class="mb-2" %}
