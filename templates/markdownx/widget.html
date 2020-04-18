@@ -6,8 +6,7 @@
 
 <div class="markdownx tabs"
      data-controller="tabs typeahead"
-     data-typeahead-mention-search-url="{% url 'users:autocomplete_list' %}"
-     data-typeahead-tag-search-url="{% url 'hashtags:autocomplete_list' %}">
+     data-typeahead-urls="{{ typeahead_urls }}">
   <ul class="tab">
     <li class="tab-item active"
         data-target="tabs.tab"

@@ -3,20 +3,15 @@
 
 {% load i18n %}
 <div data-controller="typeahead"
-     {% if mention_search_url %}
-     data-typeahead-mention-search-url="{{ mention_search_url }}"
-     {% endif %}
-     {% if tag_search_url %}
-     data-typeahead-tag-search-url="{{ tag_search_url }}"
-     {% endif %}>
-    <ul class="menu d-none p-absolute"
-        data-target="typeahead.selector"></ul>
-    <input data-target="typeahead.input"
-           data-action="keyup->typeahead#keyup keydown->typeahead#keydown"
-           autocomplete="off"
-           class="form-input"
-           {% if widget.value %}value="{{ widget.value }}"
-           {% endif %}
-           name="{{ widget.name }}"
-           {% include "django/forms/widgets/attrs.html" %}>
+     data-typeahead-urls="{{ typeahead_urls }}">
+  <ul class="menu d-none p-absolute"
+      data-target="typeahead.selector"></ul>
+  <input data-target="typeahead.input"
+         data-action="keyup->typeahead#keyup keydown->typeahead#keydown"
+         autocomplete="off"
+         class="form-input"
+         {% if widget.value %}value="{{ widget.value }}"
+         {% endif %}
+         name="{{ widget.name }}"
+         {% include "django/forms/widgets/attrs.html" %}>
 </div>

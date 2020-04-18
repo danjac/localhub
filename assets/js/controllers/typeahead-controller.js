@@ -40,6 +40,8 @@ export default class extends Controller {
     document.addEventListener('click', () => {
       this.closeSelector();
     });
+
+    this.urls = JSON.parse(this.data.get('urls'));
   }
 
   select(event) {
@@ -63,7 +65,17 @@ export default class extends Controller {
       return false;
     }
 
-    if (!this.handleMentions() && !this.handleTags()) {
+    let matched = false;
+
+    for (let i = 0; i < this.urls.length; ++i) {
+      const { url, key } = this.urls[i];
+      if (this.handleTypeahead(url, key)) {
+        matched = true;
+        break;
+      }
+    }
+
+    if (!matched) {
       this.closeSelector();
       return true;
     }
@@ -113,14 +125,6 @@ export default class extends Controller {
       default:
         return true;
     }
-  }
-
-  handleMentions() {
-    return this.handleTypeahead(this.data.get('mention-search-url'), '@');
-  }
-
-  handleTags() {
-    return this.handleTypeahead(this.data.get('tag-search-url'), '#');
   }
 
   handleTypeahead(searchUrl, key) {

@@ -21,6 +21,7 @@ from localhub.hashtags.utils import extract_hashtags
 from localhub.users.utils import extract_mentions
 
 from .utils import markdownify
+from .widget import TypeaheadMarkdownWidget
 
 
 class MarkdownProxy(str):
@@ -55,3 +56,6 @@ class MarkdownField(MarkdownxField):
     def contribute_to_class(self, cls, name):
         super(MarkdownField, self).contribute_to_class(cls, name)
         setattr(cls, self.name, MarkdownFieldDescriptor(self.name))
+
+    def formfield(self, **kwargs):
+        return super().formfield(widget=TypeaheadMarkdownWidget)

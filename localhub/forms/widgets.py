@@ -1,8 +1,9 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import json
+
 from django import forms
-from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 
@@ -10,21 +11,33 @@ class ClearableImageInput(forms.ClearableFileInput):
     template_name = "includes/forms/widgets/clearable_image.html"
 
 
-class TypeaheadInput(forms.TextInput):
-    template_name = "includes/forms/widgets/typeahead.html"
+class TypeaheadMixin:
 
-    def __init__(self, attrs=None, search_mentions=True, search_hashtags=True):
+    typeahead_urls = ()
+
+    def __init__(self, attrs=None, typeahead_urls=()):
         super().__init__(attrs)
-        self.search_mentions = search_mentions
-        self.search_hashtags = search_hashtags
+        self.typeahead_urls = typeahead_urls or self.typeahead_urls
 
     def get_context(self, name, value, attrs):
         data = super().get_context(name, value, attrs)
-        if self.search_mentions:
-            data["mention_search_url"] = reverse("users:autocomplete_list")
-        if self.search_hashtags:
-            data["tag_search_url"] = reverse("hashtags:autocomplete_list")
+        # convert to JSON for the JS to handle
+        data["typeahead_urls"] = json.dumps(
+            [{"key": key, "url": str(url)} for (key, url) in self.typeahead_urls]
+        )
         return data
+
+
+class TypeaheadInput(TypeaheadMixin, forms.TextInput):
+    """Provides AJAX typeahead functionality.
+
+    Typeahead urls should be provided as tuple:
+    (charkey, url)
+    e.g.
+    ("@", "/users/autocomplete/")
+    """
+
+    template_name = "includes/forms/widgets/typeahead.html"
 
     def format_value(self, value):
         """Replace any commas with space, remove any extra spaces"""
