@@ -59,12 +59,12 @@ export default class extends Controller {
     const under = (bytes) => Math.abs(bytes) < thresh;
 
     if (under(bytes)) {
-      return bytes + 'B';
+      return bytes + ' bytes';
     }
     for (let i = -1; i < units.length; ++i) {
       if (under(bytes)) {
         console.log(i, bytes);
-        return bytes.toFixed(1) + units[i];
+        return bytes.toFixed(1) + ' ' + units[i];
       }
       bytes /= thresh;
     }

@@ -24,8 +24,11 @@
 
 {% include "activities/includes/description.html" %}
 
-{% if object.has_attribution %}
 <dl class="text-small">
+  <dt>{% trans "Size" %}</dt>
+  <dd>{{ object.image.width }}x{{ object.image.height }}</dd>
+  <dt>{% trans "File Size" %}</dt>
+  <dd>{{ object.image.size|filesizeformat }}</dd>
   {% if object.artist %}
   <dt>{% trans "Artist" %}</dt>
   <dd>{{ object.artist }}</dd>
@@ -39,7 +42,6 @@
   <dd>{{ object.get_cc_license_display }}</dd>
   {% endif %}
 </dl>
-{% endif %}
 {% endblock content %}
 
 {% block actions %}{% include "photos/includes/actions.html" %}{% endblock %}
