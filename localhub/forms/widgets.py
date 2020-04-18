@@ -6,6 +6,9 @@ import json
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from localhub.hashtags.constants import HASHTAGS_TYPEAHEAD_URL
+from localhub.users.constants import MENTIONS_TYPEAHEAD_URL
+
 
 class ClearableImageInput(forms.ClearableFileInput):
     template_name = "includes/forms/widgets/clearable_image.html"
@@ -28,7 +31,7 @@ class TypeaheadMixin:
         return data
 
 
-class TypeaheadInput(TypeaheadMixin, forms.TextInput):
+class BaseTypeaheadInput(TypeaheadMixin, forms.TextInput):
     """Provides AJAX typeahead functionality.
 
     Typeahead urls should be provided as tuple:
@@ -44,6 +47,12 @@ class TypeaheadInput(TypeaheadMixin, forms.TextInput):
         if not value:
             return value
         return " ".join(value.replace(",", " ").strip().split())
+
+
+class TypeaheadInput(BaseTypeaheadInput):
+    """Default typeahead implementation, with all urls enabled"""
+
+    typeahead_urls = (HASHTAGS_TYPEAHEAD_URL, MENTIONS_TYPEAHEAD_URL)
 
 
 class CalendarWidget(forms.SplitDateTimeWidget):

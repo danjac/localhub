@@ -6,7 +6,6 @@ from django.urls import reverse
 
 from localhub.utils.text import slugify_unicode
 
-
 from .constants import MENTIONS_RE
 
 

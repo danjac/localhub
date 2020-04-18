@@ -13,7 +13,7 @@ from vanilla import GenericModelView
 
 from localhub.activities.views.actions import BaseActivityActionView
 from localhub.activities.views.form import ActivityCreateView
-from localhub.activities.views.list import BaseActivityListView, ActivityListView
+from localhub.activities.views.list import ActivityListView, BaseActivityListView
 from localhub.activities.views.mixins import ActivityQuerySetMixin
 
 from .models import Event
