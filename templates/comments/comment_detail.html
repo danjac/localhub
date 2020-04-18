@@ -37,6 +37,10 @@
 <h6>{% trans "[Deleted]" %}</h6>
 {% endif %}
 
+{% if comment.parent %}
+{% render_comment request user comment.parent include_content_object=False css_class="mb-2" %}
+{% endif %}
+
 {% render_comment request user comment is_detail=True include_content_object=False %}
 
 {% if replies %}

@@ -176,16 +176,18 @@
           {% endif %}
         </ul>
       </div>
+      {% if not is_detail %}
       <div class="actions">
-        {% if not is_detail and not comment.deleted %}
+        {% if not comment.deleted %}
         <a class="action"
-           href="{{ comment.get_absolute_url }}">{% trans "Link" %}</a>
+           href="{{ comment.get_absolute_url }}#comment-{{ comment.id }}">{% trans "Link" %}</a>
         {% endif %}
         {% if parent %}
         <a class="action"
-           href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a>
+           href="{{ parent.get_absolute_url }}#comment-{{ parent.id }}">{% trans "Parent" %}</a>
         {% endif %}
       </div>
+      {% endif %}
     </div>
     <div class="clearfix"></div>
   </div>
