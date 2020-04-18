@@ -66,11 +66,13 @@ You can enable emails for your notifications
       <td>
         <div class="actions float-right">
           {% if not notification.is_read %}
-          <a href="{% url 'notifications:mark_read' notification.pk %}"
+          <a class="action"
+             href="{% url 'notifications:mark_read' notification.pk %}"
              data-controller="ajax"
              data-action="ajax#post">{% trans "Mark Read" %}</a>
           {% endif %}
-          <a href="{% url 'notifications:delete' notification.pk %}"
+          <a class="action"
+             href="{% url 'notifications:delete' notification.pk %}"
              data-controller="ajax"
              data-action="ajax#post">{% trans "Delete" %}</a>
         </div>
