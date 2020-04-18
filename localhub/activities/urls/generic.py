@@ -15,7 +15,7 @@ from ..views.actions import (
 )
 from ..views.delete import ActivityDeleteView
 from ..views.detail import ActivityDetailView
-from ..views.form import (
+from ..views.edit import (
     ActivityCommentCreateView,
     ActivityCreateView,
     ActivityFlagView,

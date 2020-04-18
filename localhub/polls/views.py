@@ -8,7 +8,7 @@ from django.views.generic.base import TemplateResponseMixin
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.activities.views.detail import ActivityDetailView
-from localhub.activities.views.form import ActivityCreateView, ActivityUpdateView
+from localhub.activities.views.edit import ActivityCreateView, ActivityUpdateView
 from localhub.activities.views.list import ActivityListView
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.views import SuccessActionView

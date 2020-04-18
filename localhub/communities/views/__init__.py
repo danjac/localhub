@@ -11,7 +11,7 @@ from .detail import (
     community_welcome_view,
     membership_detail_view,
 )
-from .form import community_update_view, membership_update_view
+from .edit import community_update_view, membership_update_view
 from .list import community_list_view, membership_list_view
 from .mixins import (
     CommunityAdminRequiredMixin,

@@ -11,7 +11,7 @@ from .views.actions import (
 )
 from .views.delete import comment_delete_view
 from .views.detail import comment_detail_view
-from .views.form import comment_flag_view, comment_reply_view, comment_update_view
+from .views.edit import comment_flag_view, comment_reply_view, comment_update_view
 from .views.list import comment_list_view
 
 app_name = "comments"

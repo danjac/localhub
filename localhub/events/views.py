@@ -13,7 +13,7 @@ from django.views.generic.dates import DateMixin, DayMixin, MonthMixin, YearMixi
 from django.views.generic.detail import SingleObjectMixin
 
 from localhub.activities.views.actions import BaseActivityActionView
-from localhub.activities.views.form import ActivityCreateView
+from localhub.activities.views.edit import ActivityCreateView
 from localhub.activities.views.list import ActivityListView, BaseActivityListView
 from localhub.activities.views.mixins import ActivityQuerySetMixin
 
