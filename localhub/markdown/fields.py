@@ -58,4 +58,5 @@ class MarkdownField(MarkdownxField):
         setattr(cls, self.name, MarkdownFieldDescriptor(self.name))
 
     def formfield(self, **kwargs):
-        return super().formfield(widget=TypeaheadMarkdownWidget)
+        kwargs.update({"widget": TypeaheadMarkdownWidget})
+        return super().formfield(**kwargs)
