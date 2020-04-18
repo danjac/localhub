@@ -84,12 +84,15 @@
     </div>
     {% endif %}
     <div class="d-flex align-center mt-1">
-      <div class="dropdown mr-2">
-        <a class="btn btn-sm dropdown-toggle"
+      <div class="dropdown mr-2"
+           data-controller="dropdown">
+        <a class="btn btn-sm"
+           data-action="dropdown#toggle"
            tabindex="0">
           {% trans "Actions" %}<i class="icon icon-caret"></i>
         </a>
-        <ul class="menu">
+        <ul class="menu"
+            data-target="dropdown.menu">
           {% has_perm "comments.like_comment" user comment as can_like_comment %}
           {% if can_like_comment %}
           <li class="menu-item"

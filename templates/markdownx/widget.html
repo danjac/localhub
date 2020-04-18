@@ -78,12 +78,15 @@
          data-multiline
          data-markdown="1. [SELECTION]">{% trans "List (Numbers)" %}</a>
 
-      <div class="dropdown">
-        <a class="btn btn-sm dropdown-toggle"
+      <div class="dropdown"
+           data-controller="dropdown">
+        <a class="btn btn-sm"
+           data-action="dropdown#toggle"
            tabindex="0">
           {% trans "Emoji" %}<i class="icon icon-caret"></i>
         </a>
-        <ul class="menu">
+        <ul class="menu"
+            data-target="dropdown.menu">
           {% common_emojis as emoji_categories %}
           {% for category in emoji_categories %}
           <li class="divider"

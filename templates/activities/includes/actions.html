@@ -5,12 +5,15 @@
 {% load rules %}
 {% load activities %}
 
-<div class="dropdown mr-2">
-  <a class="btn btn-sm dropdown-toggle"
+<div class="dropdown mr-2"
+     data-controller="dropdown">
+  <a class="btn btn-sm"
+     data-action="dropdown#toggle"
      tabindex="0">
     {% trans "Actions" %}<i class="icon icon-caret"></i>
   </a>
-  <ul class="menu">
+  <ul class="menu"
+      data-target="dropdown.menu">
 
     {% has_perm "activities.pin_activity" user object as can_pin %}
 

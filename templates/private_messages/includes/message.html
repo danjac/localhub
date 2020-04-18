@@ -38,12 +38,14 @@
   <div class="card-footer">
     <div class="d-flex align-center mt-1">
       <div class="dropdown mr-2"
-           data-controller="toggle">
-        <a class="btn btn-sm dropdown-toggle"
+           data-controller="dropdown">
+        <a class="btn btn-sm"
+           data-action="dropdown#toggle"
            tabindex="0">
           {% trans "Actions" %}<i class="icon icon-caret"></i>
         </a>
-        <ul class="menu">
+        <ul class="menu"
+            data-target="dropdown.menu">
           {% if is_recipient and not message.read %}
           <li class="menu-item">
             <a href="{% url 'private_messages:message_mark_read' message.id %}"
