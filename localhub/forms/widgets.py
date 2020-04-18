@@ -26,6 +26,12 @@ class TypeaheadInput(forms.TextInput):
             data["tag_search_url"] = reverse("hashtags:autocomplete_list")
         return data
 
+    def format_value(self, value):
+        """Replace any commas with space, remove any extra spaces"""
+        if not value:
+            return value
+        return " ".join(value.replace(",", " ").strip().split())
+
 
 class CalendarWidget(forms.SplitDateTimeWidget):
     """
