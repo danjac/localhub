@@ -43,6 +43,6 @@
 {% render_comment request user parent is_detail=True css_class="mb-2" %}
 {% endif %}
 
-{% include "includes/forms/stimulusjs_form.html" %}
+{% include "includes/forms/stimulusjs_form.html" with form_id="comment-form" %}
 
 {% endblock content %}

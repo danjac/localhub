@@ -129,7 +129,7 @@
           {% has_perm "comments.reply_to_comment" user comment as can_reply %}
           {% if can_reply %}
           <li class="menu-item">
-            <a href="{% url 'comments:reply' comment.id %}">{% trans "Reply" %}</a>
+            <a href="{% url 'comments:reply' comment.id %}#comment-form">{% trans "Reply" %}</a>
           </li>
           {% endif %}
 

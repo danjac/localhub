@@ -106,6 +106,11 @@ class CommentReplyView(
     def content_object(self):
         return self.parent.get_content_object()
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["content"].label = _("Reply")
+        return form
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["parent"] = self.parent
