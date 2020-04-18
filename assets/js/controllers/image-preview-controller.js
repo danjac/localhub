@@ -14,7 +14,7 @@ export default class extends Controller {
   targets:
       image: the <img> element holding the image.
   */
-  static targets = ['image', 'input'];
+  static targets = ['image', 'input', 'fileSize'];
 
   change(event) {
     if (event.target.files) {
@@ -38,9 +38,35 @@ export default class extends Controller {
     } else {
       this.imageTarget.classList.add('d-none');
     }
+    if (this.hasFileSizeTarget) {
+      const size = this.readableFileSize(file.size);
+      if (size) {
+        this.fileSizeTarget.innerText = size;
+        this.fileSizeTarget.classList.remove('d-none');
+      } else {
+        this.fileSizeTarget.classList.add('d-none');
+      }
+    }
   }
 
   isImage(url) {
     return url.match(/\.(jpeg|jpg|gif|png)$/) != null;
+  }
+
+  readableFileSize(bytes) {
+    const units = ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    const thresh = 1000;
+    const under = (bytes) => Math.abs(bytes) < thresh;
+
+    if (under(bytes)) {
+      return bytes + 'B';
+    }
+    for (let i = -1; i < units.length; ++i) {
+      if (under(bytes)) {
+        console.log(i, bytes);
+        return bytes.toFixed(1) + units[i];
+      }
+      bytes /= thresh;
+    }
   }
 }
