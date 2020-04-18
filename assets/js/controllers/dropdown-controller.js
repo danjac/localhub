@@ -4,10 +4,19 @@
 import { Controller } from 'stimulus';
 
 export default class extends Controller {
+  /*
+    Manages dropdown and keeps the menu visible within the viewport.
+
+    actions:
+        toggle: toggles the dropdown menu
+
+    targets:
+        menu: the dropdown menu
+  */
   static targets = ['menu'];
 
   connect() {
-    document.addEventListener('click', (event) => {
+    document.addEventListener('click', () => {
       this.close();
     });
   }
