@@ -81,7 +81,7 @@ class BlockedUserListView(MemberQuerySetMixin, BaseUserListView):
 blocked_user_list_view = BlockedUserListView.as_view()
 
 
-class UserAutocompleteListView(BaseUserListView):
+class UserAutocompleteListView(ExcludeBlockedQuerySetMixin, BaseUserListView):
     template_name = "users/user_autocomplete_list.html"
 
     def get_queryset(self):
