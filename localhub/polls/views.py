@@ -36,10 +36,10 @@ class AnswersFormSetMixin:
 
     @cached_property
     def answers_formset(self):
+        instance = getattr(self, "object", None)
         if self.request.method == "POST":
-            return self.AnswersFormSet(
-                self.request.POST, instance=getattr(self, "object", None)
-            )
+            return self.AnswersFormSet(self.request.POST, instance=instance)
+        return self.AnswersFormSet(instance=instance)
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
