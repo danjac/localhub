@@ -85,7 +85,8 @@ class UserAutocompleteListView(BaseUserListView):
     template_name = "users/user_autocomplete_list.html"
 
     def get_queryset(self):
-        qs = super().get_queryset()
+        # exclude current user by default
+        qs = super().get_queryset().exclude(pk=self.request.user.pk)
         search_term = self.request.GET.get("q", "").strip()
         if search_term:
             return qs.filter(
