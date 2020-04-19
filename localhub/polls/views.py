@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.forms import inlineformset_factory
+from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateResponseMixin
@@ -102,24 +103,33 @@ class AnswerVoteView(
             poll__community=self.request.community
         ).select_related("poll", "poll__community")
 
+    def get_success_response(self):
+        # reload poll with revised answers and total count
+        # and return HTML fragment
+        return self.render_to_response(
+            {
+                "object": get_object_or_404(
+                    Poll.objects.with_answers(), pk=self.object.poll_id
+                ),
+                "object_type": "poll",
+            }
+        )
+
     def post(self, request, *args, **kwargs):
-        has_voted_before = False
+        has_voted = False
         for voted in Answer.objects.filter(
             voters=self.request.user, poll=self.object.poll
         ):
             voted.voters.remove(self.request.user)
-            has_voted_before = True
+            has_voted = True
 
         self.object.voters.add(self.request.user)
 
-        if not has_voted_before:
+        # send notification only the first time someone votes
+        if not has_voted:
             self.object.poll.notify_on_vote(self.request.user)
 
-        poll = Poll.objects.with_answers().get(pk=self.object.poll.id)
-
-        return self.success_response(
-            self.render_to_response({"object": poll, "object_type": "poll"}),
-        )
+        return self.success_response()
 
 
 answer_vote_view = AnswerVoteView.as_view()
