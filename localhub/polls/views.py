@@ -101,7 +101,7 @@ class AnswerVoteView(
     success_message = _("Thanks for voting!")
 
     def get_permission_object(self):
-        return self.object.poll1
+        return self.object.poll
 
     def get_queryset(self):
         return Answer.objects.filter(
