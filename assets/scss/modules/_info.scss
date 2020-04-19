@@ -6,6 +6,10 @@
   font-size: $font-size-xs;
   display: inline-block;
 
+  a:visited {
+    color: $link-color-dark;
+  }
+
   &:not(:last-child) {
     @extend .mr-1;
   }

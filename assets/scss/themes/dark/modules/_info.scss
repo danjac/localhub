@@ -3,4 +3,8 @@
 
 .info {
   color: $gray-color-dark;
+
+  a:visited {
+    color: $darkmode-link;
+  }
 }

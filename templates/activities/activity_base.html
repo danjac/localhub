@@ -86,26 +86,18 @@
 
       </div>
 
-      {% if object.url %}
+      {% if object.url or object.additional_tags or object.mentions %}
       <div class="card-subtitle mt-1">
         <div class="info">
+          {% if object.url %}
           {{ object.url|domain|linkify }}
-        </div>
-      </div>
-      {% endif %}
-
-      {% if object.additional_tags %}
-      <div class="card-subtitle mt-1">
-        <div class="hashtags">
+          {% endif %}
+          {% if object.additional_tags %}
           {{ object.additional_tags|linkify_hashtags }}
-        </div>
-      </div>
-      {% endif %}
-
-      {% if object.mentions %}
-      <div class="card-subtitle mt-1">
-        <div class="mentions">
+          {% endif %}
+          {% if object.mentions %}
           {{ object.mentions|linkify_mentions }}
+          {% endif %}
         </div>
       </div>
       {% endif %}
