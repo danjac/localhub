@@ -23,7 +23,7 @@
 {% endif %}
 
 {% include "activities/includes/description.html" %}
-
+{% if is_detail %}
 <dl class="text-small">
   <dt>{% trans "Size" %}</dt>
   <dd>{{ object.image.width }}x{{ object.image.height }}</dd>
@@ -42,6 +42,7 @@
   <dd>{{ object.get_cc_license_display }}</dd>
   {% endif %}
 </dl>
+{% endif %}
 {% endblock content %}
 
 {% block actions %}{% include "photos/includes/actions.html" %}{% endblock %}
