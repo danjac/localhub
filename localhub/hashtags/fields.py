@@ -3,7 +3,7 @@
 
 from django.db import models
 
-from .forms import HashtagsFormField
+from .forms import HashtagsField as HashtagsFormField
 from .utils import extract_hashtags
 from .validators import validate_hashtags
 

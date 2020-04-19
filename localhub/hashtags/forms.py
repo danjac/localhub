@@ -13,5 +13,5 @@ class HashtagsTypeaheadInput(BaseTypeaheadInput):
     typeahead_urls = (HASHTAGS_TYPEAHEAD_URL,)
 
 
-class HashtagsFormField(forms.CharField):
+class HashtagsField(forms.CharField):
     widget = HashtagsTypeaheadInput

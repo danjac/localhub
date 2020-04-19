@@ -7,9 +7,19 @@ from django.contrib.auth.forms import UserChangeForm as BaseUserChangeForm
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
 from django.utils.translation import gettext_lazy as _
 
-from localhub.forms.widgets import ClearableImageInput
+from localhub.forms.widgets import BaseTypeaheadInput, ClearableImageInput
+
+from .constants import MENTIONS_TYPEAHEAD_URL
 
 User = get_user_model()
+
+
+class MentionsTypeaheadInput(BaseTypeaheadInput):
+    typeahead_urls = (MENTIONS_TYPEAHEAD_URL,)
+
+
+class MentionsField(forms.CharField):
+    widget = MentionsTypeaheadInput
 
 
 class UserChangeForm(BaseUserChangeForm):

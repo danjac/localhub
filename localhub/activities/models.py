@@ -33,8 +33,8 @@ from localhub.notifications.models import (
     Notification,
     NotificationAnnotationsQuerySetMixin,
 )
+from localhub.users.fields import MentionsField
 from localhub.users.utils import extract_mentions
-from localhub.users.validators import validate_mentions
 from localhub.utils.itertools import takefirst
 from localhub.utils.text import slugify_unicode
 
@@ -367,9 +367,7 @@ class Activity(TimeStampedModel):
     # using "additional_tags" so not to confuse with "tags" M2M field
     additional_tags = HashtagsField(max_length=300, blank=True)
 
-    mentions = models.CharField(
-        max_length=300, blank=True, validators=[validate_mentions]
-    )
+    mentions = MentionsField(max_length=300, blank=True)
 
     description = MarkdownField(blank=True)
 
@@ -725,8 +723,8 @@ class Activity(TimeStampedModel):
     def extract_mentions(self):
         return (
             self.description.extract_mentions()
+            | self.mentions.extract_mentions()
             | extract_mentions(self.title)
-            | extract_mentions(self.mentions)
         )
 
     def should_extract_hashtags(self, is_new):
