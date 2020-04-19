@@ -11,6 +11,12 @@ geolocator = geopy.Nominatim(user_agent=settings.LOCALHUB_GEOLOCATOR_USER_AGENT)
 def geocode(street_address=None, locality=None, postal_code=None, country=None):
     """Fetches the lat/lng coordinates from Open Street Map API.
 
+    Args:
+        street_address (str, optional) (default: None)
+        locality (str, optional) (default: None)
+        postal_code (str, optional) (default: None)
+        country (str, optional): country code e.g. "FI" (default: None)
+
     Returns:
         tuple: lat/lng pair. These will be float or None if
             no location can be found.
