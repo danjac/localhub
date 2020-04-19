@@ -28,6 +28,7 @@ class PostForm(ActivityForm):
         fields = (
             "title",
             "additional_tags",
+            "mentions",
             "url",
             "clear_opengraph_data",
             "fetch_opengraph_data",

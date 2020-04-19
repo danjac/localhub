@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from localhub.forms.widgets import TypeaheadInput
 from localhub.hashtags.widgets import HashtagsTypeaheadInput
+from localhub.users.widgets import MentionsTypeaheadInput
 
 from .models import Activity
 
@@ -16,18 +17,23 @@ class ActivityForm(forms.ModelForm):
         fields = (
             "title",
             "additional_tags",
+            "mentions",
             "description",
             "allow_comments",
         )
-        labels = {"title": _("Title"), "additional_tags": _("Tags")}
+        labels = {
+            "title": _("Title"),
+            "additional_tags": _("#tags"),
+            "mentions": _("@mentions"),
+        }
         widgets = {
             "title": TypeaheadInput,
             "additional_tags": HashtagsTypeaheadInput,
+            "mentions": MentionsTypeaheadInput,
         }
         help_texts = {
-            "additional_tags": _(
-                "Hashtags can also be added to title and description."
-            ),
+            "additional_tags": _("#tags can also be added to title and description."),
+            "mentions": _("@mentions can also be added to title and description."),
         }
 
 

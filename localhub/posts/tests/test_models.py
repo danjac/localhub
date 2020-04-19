@@ -34,10 +34,22 @@ class TestPostModel:
         post = PostFactory(title="中国研究方法")
         assert post.get_absolute_url() == f"/posts/{post.id}/zhong-guo-yan-jiu-fang-fa/"
 
-    def test_extract_tags(self):
+    def test_extract_mentions(self):
+        post = Post(
+            description="hello @danjac",
+            mentions="@weegill @testuser",
+            title="this is for @someone",
+        )
+        assert post.extract_mentions() == {"danjac", "weegill", "testuser", "someone"}
 
-        post = Post(title="something #movies", description="content #movies and #films")
-        assert post.extract_tags() == {"movies", "films"}
+    def test_extract_hashtags(self):
+
+        post = Post(
+            title="something #movies",
+            description="content #movies and #films",
+            additional_tags="#netflix",
+        )
+        assert post.extract_hashtags() == {"movies", "films", "netflix"}
 
     def test_save_tags(self, post):
 

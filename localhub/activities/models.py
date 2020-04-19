@@ -33,6 +33,8 @@ from localhub.notifications.models import (
     Notification,
     NotificationAnnotationsQuerySetMixin,
 )
+from localhub.users.utils import extract_mentions
+from localhub.users.validators import validate_mentions
 from localhub.utils.itertools import takefirst
 from localhub.utils.text import slugify_unicode
 
@@ -362,8 +364,13 @@ class Activity(TimeStampedModel):
 
     title = models.CharField(max_length=300)
 
+    # using "additional_tags" so not to confuse with "tags" M2M field
     additional_tags = models.CharField(
         max_length=300, blank=True, validators=[validate_hashtags]
+    )
+
+    mentions = models.CharField(
+        max_length=300, blank=True, validators=[validate_mentions]
     )
 
     description = MarkdownField(blank=True)
@@ -399,7 +406,8 @@ class Activity(TimeStampedModel):
 
     search_document = SearchVectorField(null=True, editable=False)
 
-    description_tracker = Tracker(["title", "description", "additional_tags"])
+    hashtags_tracker = Tracker(["title", "description", "additional_tags"])
+    mentions_tracker = Tracker(["title", "description", "mentions"])
 
     objects = ActivityQuerySet.as_manager()
 
@@ -507,7 +515,7 @@ class Activity(TimeStampedModel):
         Returns:
             set: tag strings
         """
-        return self.extract_tags() & self.community.get_content_warning_tags()
+        return self.extract_hashtags() & self.community.get_content_warning_tags()
 
     def is_content_sensitive(self, user):
         """
@@ -627,9 +635,11 @@ class Activity(TimeStampedModel):
         notifications = []
         recipients = self.get_notification_recipients()
 
-        if self.description and self.description_tracker.changed():
-            notifications += self.notify_mentioned_users(recipients)
+        if self.hashtags_tracker.changed():
             notifications += self.notify_tag_followers(recipients)
+
+        if self.mentions_tracker.changed():
+            notifications += self.notify_mentioned_users(recipients)
 
         if self.editor and self.editor != self.owner:
             notifications.append(self.notify_owner_on_edit())
@@ -714,10 +724,17 @@ class Activity(TimeStampedModel):
     def get_resharable_data(self):
         return {k: getattr(self, k) for k in self.RESHARED_FIELDS}
 
-    def should_extract_tags(self, is_new):
-        return is_new or self.description_tracker.changed()
+    def extract_mentions(self):
+        return (
+            self.description.extract_mentions()
+            | extract_mentions(self.title)
+            | extract_mentions(self.mentions)
+        )
 
-    def extract_tags(self):
+    def should_extract_hashtags(self, is_new):
+        return is_new or self.hashtags_tracker.changed()
+
+    def extract_hashtags(self):
         return (
             self.description.extract_hashtags()
             | extract_hashtags(self.title)
@@ -725,8 +742,8 @@ class Activity(TimeStampedModel):
         )
 
     def save_tags(self, is_new):
-        if self.should_extract_tags(is_new):
-            hashtags = self.extract_tags()
+        if self.should_extract_hashtags(is_new):
+            hashtags = self.extract_hashtags()
             if hashtags:
                 self.tags.set(*hashtags, clear=True)
             else:

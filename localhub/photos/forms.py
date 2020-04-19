@@ -30,6 +30,7 @@ class PhotoForm(ActivityForm):
         fields = (
             "title",
             "additional_tags",
+            "mentions",
             "image",
             "extract_gps_data",
             "clear_gps_data",

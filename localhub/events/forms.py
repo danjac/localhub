@@ -37,6 +37,7 @@ class EventForm(ActivityForm):
         fields = (
             "title",
             "additional_tags",
+            "mentions",
             "starts",
             "ends",
             "timezone",
