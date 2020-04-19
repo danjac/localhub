@@ -242,6 +242,24 @@ class TestMessageReplyView:
 
 
 class TestMessageCreateView:
+    def test_post_no_recipient(self, client, member, mailoutbox, send_webpush_mock):
+        recipient = MembershipFactory(community=member.community).member
+        response = client.post(
+            reverse("private_messages:message_create",),
+            {"message": "test", "recipient": f"@{recipient.username}"},
+        )
+
+        message = Message.objects.get()
+        assert message.get_absolute_url() == response.url
+        assert message.recipient == recipient
+        assert message.sender == member.member
+        assert message.community == member.community
+
+        assert send_webpush_mock.delay.called_once()
+
+        assert len(mailoutbox) == 1
+        assert mailoutbox[0].to == [message.recipient.email]
+
     def test_post_if_sender_blocked(self, client, member):
         recipient = MembershipFactory(community=member.community).member
         recipient.blocked.add(member.member)
