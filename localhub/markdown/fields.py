@@ -12,7 +12,6 @@ This provides additional methods on the field:
 - obj.description.extract_hashtags() -> returns set of "#" tag strings
 """
 
-from django.db.models import Field
 from django.template.defaultfilters import striptags
 from django.utils.safestring import mark_safe
 
@@ -40,7 +39,7 @@ class MarkdownProxy(str):
 
 
 class MarkdownFieldDescriptor:
-    def __init__(self, field: Field):
+    def __init__(self, field):
         self.field = field
 
     def __get__(self, instance=None, owner=None):

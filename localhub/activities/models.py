@@ -24,8 +24,8 @@ from localhub.db.search import SearchQuerySetMixin
 from localhub.db.tracker import Tracker
 from localhub.db.utils import boolean_value
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
+from localhub.hashtags.fields import HashtagsField
 from localhub.hashtags.utils import extract_hashtags
-from localhub.hashtags.validators import validate_hashtags
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.decorators import dispatch
@@ -365,9 +365,7 @@ class Activity(TimeStampedModel):
     title = models.CharField(max_length=300)
 
     # using "additional_tags" so not to confuse with "tags" M2M field
-    additional_tags = models.CharField(
-        max_length=300, blank=True, validators=[validate_hashtags]
-    )
+    additional_tags = HashtagsField(max_length=300, blank=True)
 
     mentions = models.CharField(
         max_length=300, blank=True, validators=[validate_mentions]
@@ -567,7 +565,7 @@ class Activity(TimeStampedModel):
         return [self.make_notification(follower, "followed_user") for follower in qs]
 
     def notify_tag_followers(self, recipients):
-        hashtags = self.description.extract_hashtags()
+        hashtags = self.extract_hashtags()
         if hashtags:
             tags = Tag.objects.filter(slug__in=hashtags)
             qs = recipients.filter(following_tags__in=tags).exclude(pk=self.owner.id)
@@ -737,8 +735,8 @@ class Activity(TimeStampedModel):
     def extract_hashtags(self):
         return (
             self.description.extract_hashtags()
+            | self.additional_tags.extract_hashtags()
             | extract_hashtags(self.title)
-            | extract_hashtags(self.additional_tags)
         )
 
     def save_tags(self, is_new):
