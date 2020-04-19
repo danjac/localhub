@@ -90,6 +90,9 @@ class AnswerVoteView(
     CommunityRequiredMixin,
     SuccessActionView,
 ):
+    """
+    Returns HTTP fragment in AJAX response when user has voted.
+    """
 
     permission_required = "polls.vote"
     template_name = "polls/includes/answers.html"
