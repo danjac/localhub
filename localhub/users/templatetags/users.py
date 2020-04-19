@@ -1,11 +1,12 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from bs4 import BeautifulSoup
 from django import template
 from django.conf import settings
 from django.template.base import token_kwargs
 from django.utils.safestring import mark_safe
+
+from bs4 import BeautifulSoup
 
 from ..utils import linkify_mentions
 

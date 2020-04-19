@@ -1,11 +1,12 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import pytest
 from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import force_str
+
+import pytest
 
 from localhub.communities.factories import MembershipFactory
 from localhub.likes.factories import LikeFactory

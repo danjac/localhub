@@ -3,6 +3,7 @@
 
 from django.conf import settings
 from django.core.cache import cache
+
 from micawber.providers import Provider
 from micawber.providers import bootstrap_oembed as _bootstrap_oembed
 

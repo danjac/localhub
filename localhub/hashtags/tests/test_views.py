@@ -1,8 +1,9 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import pytest
 from django.urls import reverse
+
+import pytest
 from taggit.models import Tag
 
 from localhub.communities.factories import CommunityFactory, MembershipFactory

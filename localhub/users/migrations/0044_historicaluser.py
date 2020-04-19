@@ -4,10 +4,11 @@ import django.contrib.auth.validators
 import django.contrib.postgres.search
 import django.db.models.deletion
 import django.utils.timezone
-import simple_history.models
-import timezone_field.fields
 from django.conf import settings
 from django.db import migrations, models
+
+import simple_history.models
+import timezone_field.fields
 
 import localhub.db.fields
 import localhub.markdown.fields

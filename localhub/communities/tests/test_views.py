@@ -1,12 +1,13 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import pytest
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponse
 from django.urls import reverse
 from django.views.generic import View
+
+import pytest
 
 from ..factories import CommunityFactory, MembershipFactory
 from ..models import Membership, RequestCommunity

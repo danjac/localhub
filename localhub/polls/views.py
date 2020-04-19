@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateResponseMixin
+
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.activities.views.detail import ActivityDetailView

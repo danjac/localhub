@@ -3,8 +3,9 @@
 
 import json
 
-import pytest
 from django.urls import reverse
+
+import pytest
 
 from localhub.comments.factories import CommentFactory
 from localhub.communities.factories import MembershipFactory

@@ -8,6 +8,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.encoding import smart_text
 from django.utils.translation import gettext_lazy as _
+
 from django_countries.fields import CountryField
 from icalendar import Calendar
 from icalendar import Event as CalendarEvent

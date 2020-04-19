@@ -1,8 +1,9 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.conf import settings
+
+from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):

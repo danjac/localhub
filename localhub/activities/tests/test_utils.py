@@ -3,8 +3,9 @@
 
 from datetime import timedelta
 
-import pytest
 from django.utils import timezone
+
+import pytest
 
 from localhub.events.factories import EventFactory
 from localhub.events.models import Event

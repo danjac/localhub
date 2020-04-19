@@ -1,9 +1,10 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import pytest
 from django.core.exceptions import ValidationError
 from django.test import override_settings
+
+import pytest
 
 from localhub.join_requests.models import JoinRequest
 from localhub.users.factories import UserFactory

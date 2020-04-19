@@ -11,6 +11,7 @@ from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
+
 from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 

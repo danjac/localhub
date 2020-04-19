@@ -1,9 +1,10 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import pytest
 from django.conf import settings
 from django.urls import reverse
+
+import pytest
 
 from localhub.bookmarks.factories import BookmarkFactory
 from localhub.bookmarks.models import Bookmark

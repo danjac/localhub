@@ -7,6 +7,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.db import models, transaction
 from django.urls import reverse
 from django.utils import timezone
+
 from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 from taggit.managers import TaggableManager

@@ -4,9 +4,10 @@
 import os
 from urllib.parse import urlparse
 
-import requests
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
+
+import requests
 
 _urlvalidator = URLValidator()
 

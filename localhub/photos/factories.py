@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-import factory
 from django.utils import timezone
+
+import factory
 from factory import DjangoModelFactory, Faker, LazyFunction, SubFactory
 
 from localhub.communities.factories import CommunityFactory

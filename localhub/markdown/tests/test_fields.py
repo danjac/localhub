@@ -1,5 +1,6 @@
-import pytest
 from django.utils.encoding import force_str
+
+import pytest
 
 from localhub.posts.factories import PostFactory
 

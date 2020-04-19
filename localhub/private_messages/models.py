@@ -8,6 +8,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+
 from model_utils.models import TimeStampedModel
 
 from localhub.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin

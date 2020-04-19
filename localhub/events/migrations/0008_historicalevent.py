@@ -3,12 +3,13 @@
 import django.contrib.postgres.search
 import django.db.models.deletion
 import django.utils.timezone
+from django.conf import settings
+from django.db import migrations, models
+
 import django_countries.fields
 import model_utils.fields
 import simple_history.models
 import timezone_field.fields
-from django.conf import settings
-from django.db import migrations, models
 
 import localhub.markdown.fields
 

@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
+
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.communities.views import CommunityRequiredMixin

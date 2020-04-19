@@ -1,8 +1,9 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import pytest
 from django.template import engines
+
+import pytest
 
 from ..factories import UserFactory
 from ..templatetags.users import avatar, strip_external_images

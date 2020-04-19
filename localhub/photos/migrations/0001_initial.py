@@ -4,11 +4,12 @@ import django.contrib.postgres.indexes
 import django.contrib.postgres.search
 import django.db.models.deletion
 import django.utils.timezone
+from django.conf import settings
+from django.db import migrations, models
+
 import model_utils.fields
 import sorl.thumbnail.fields
 import taggit.managers
-from django.conf import settings
-from django.db import migrations, models
 
 import localhub.markdown.fields
 

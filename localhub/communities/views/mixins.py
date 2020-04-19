@@ -6,6 +6,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+
 from rules.contrib.views import PermissionRequiredMixin
 
 from ..models import Community, Membership

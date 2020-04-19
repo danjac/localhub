@@ -1,9 +1,10 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from django.utils import timezone
+
 import pytest
 from allauth.account.models import EmailAddress
-from django.utils import timezone
 
 from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership

@@ -4,6 +4,7 @@
 
 from django.conf import settings
 from django.views.generic import DeleteView
+
 from rules.contrib.views import PermissionRequiredMixin
 
 from .mixins import CurrentUserMixin

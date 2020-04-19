@@ -4,6 +4,7 @@
 from django.conf import settings
 from django.urls import reverse
 from django.utils.translation import gettext as _
+
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.views import SuccessDeleteView

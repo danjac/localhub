@@ -3,12 +3,13 @@
 
 from abc import ABC, abstractmethod
 
-from celery.utils.log import get_logger
 from django.core.mail import send_mail
 from django.template import loader
 from django.templatetags.static import static
 from django.utils.encoding import force_text
 from django.utils.translation import override
+
+from celery.utils.log import get_logger
 
 celery_logger = get_logger(__name__)
 

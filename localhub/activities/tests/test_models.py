@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-import pytest
 from django.utils import timezone
+
+import pytest
 from taggit.models import Tag
 
 from localhub.bookmarks.factories import BookmarkFactory

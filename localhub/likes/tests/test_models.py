@@ -2,9 +2,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+from django.db.models import signals
+
 import factory
 import pytest
-from django.db.models import signals
 
 pytestmark = pytest.mark.django_db
 

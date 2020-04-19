@@ -3,6 +3,7 @@
 
 from django.db import IntegrityError
 from django.utils.translation import gettext_lazy as _
+
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.bookmarks.models import Bookmark

@@ -3,8 +3,9 @@
 
 import io
 
-import pytest
 from django.core.files import File
+
+import pytest
 from PIL import Image
 
 from ..factories import PhotoFactory

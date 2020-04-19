@@ -3,10 +3,11 @@
 import django.core.validators
 import django.db.models.deletion
 import django.utils.timezone
-import model_utils.fields
-import simple_history.models
 from django.conf import settings
 from django.db import migrations, models
+
+import model_utils.fields
+import simple_history.models
 
 import localhub.markdown.fields
 

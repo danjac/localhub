@@ -3,9 +3,10 @@
 
 import html
 
-from bs4 import BeautifulSoup
 from django import template
 from django.utils.safestring import mark_safe
+
+from bs4 import BeautifulSoup
 
 from localhub.utils.http import URLResolver, get_root_url, is_image_url
 

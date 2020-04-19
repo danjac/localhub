@@ -1,9 +1,10 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import pytest
 from django.http import HttpResponseNotAllowed, HttpResponseRedirect
 from django.test import override_settings
+
+import pytest
 
 from ..http import HttpResponseNotAllowedMiddleware
 from ..turbolinks import TurbolinksMiddleware

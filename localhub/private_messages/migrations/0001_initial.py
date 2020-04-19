@@ -4,9 +4,10 @@ import django.contrib.postgres.indexes
 import django.contrib.postgres.search
 import django.db.models.deletion
 import django.utils.timezone
-import model_utils.fields
 from django.conf import settings
 from django.db import migrations, models
+
+import model_utils.fields
 
 import localhub.markdown.fields
 

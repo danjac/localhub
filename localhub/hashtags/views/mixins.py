@@ -6,6 +6,7 @@ from functools import reduce
 
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
+
 from taggit.models import Tag, TaggedItem
 
 from localhub.activities.utils import get_activity_models

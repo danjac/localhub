@@ -3,6 +3,7 @@
 
 from django.utils.encoding import smart_text
 from django.utils.text import slugify
+
 from unidecode import unidecode
 
 

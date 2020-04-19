@@ -11,6 +11,7 @@ from django.db import models, transaction
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
+
 from simple_history.models import HistoricalRecords
 from sorl.thumbnail import ImageField
 from taggit.models import Tag

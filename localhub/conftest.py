@@ -1,10 +1,11 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
+
+import pytest
 
 from localhub.comments.factories import CommentFactory
 from localhub.communities.factories import CommunityFactory, MembershipFactory

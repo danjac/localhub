@@ -1,8 +1,9 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import pytest
 from django.utils import timezone
+
+import pytest
 
 from ..templatetags.comments import render_comment
 

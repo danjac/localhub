@@ -3,8 +3,9 @@
 
 from datetime import timedelta
 
-import pytest
 from django.utils import timezone
+
+import pytest
 
 from ..factories import EventFactory
 from ..rules import is_attendable

@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
+
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.flags.forms import FlagForm

@@ -4,6 +4,7 @@
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.views.generic import DetailView, TemplateView
+
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.invites.models import Invite

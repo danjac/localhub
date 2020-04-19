@@ -7,6 +7,7 @@ from django.conf import settings
 from django.http import Http404, HttpResponse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import View
+
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.views import SuccessActionView

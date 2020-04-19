@@ -4,9 +4,10 @@
 import os
 import socket
 
+from django.urls import reverse_lazy
+
 import pymdownx.emoji
 from configurations import Configuration, values
-from django.urls import reverse_lazy
 
 
 class Base(Configuration):
