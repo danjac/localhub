@@ -38,6 +38,7 @@ class PollCreateView(ActivityCreateView):
 
     @cached_property
     def answers_formset(self):
+        # tbd: check if we still need to do this...
         if self.request.method == "POST":
             return AnswersFormSet(self.request.POST)
         return AnswersFormSet()
