@@ -92,7 +92,7 @@ class AnswerVoteView(
     SuccessActionView,
 ):
     """
-    Returns HTTP fragment in AJAX response when user has voted
+    Returns HTTP fragment in AJAX response when user has voted...
     """
 
     permission_required = "polls.vote"
