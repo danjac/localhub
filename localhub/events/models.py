@@ -186,6 +186,11 @@ class Event(Activity):
 
     objects = EventQuerySet.as_manager()
 
+    class Meta(Activity.Meta):
+        indexes = Activity.Meta.indexes + [
+            models.Index(fields=["starts"], name="event_starts_idx")
+        ]
+
     def __str__(self):
         return self.title or self.location
 
