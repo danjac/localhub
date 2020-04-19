@@ -17,31 +17,38 @@ from localhub.views import SuccessActionView
 
 from .models import Answer, Poll
 
-AnswersFormSet = inlineformset_factory(
-    Poll,
-    Answer,
-    fields=("description",),
-    extra=4,
-    max_num=4,
-    min_num=2,
-    labels={"description": ""},
-)
-
 
 class PollQuerySetMixin:
     def get_queryset(self):
         return super().get_queryset().with_answers()
 
 
-class PollCreateView(ActivityCreateView):
-    model = Poll
+class AnswersFormSetMixin:
+    AnswersFormSet = inlineformset_factory(
+        Poll,
+        Answer,
+        fields=("description",),
+        extra=4,
+        max_num=4,
+        min_num=2,
+        labels={"description": ""},
+    )
 
     @cached_property
     def answers_formset(self):
-        # TBD: check if we still need to do this...
         if self.request.method == "POST":
-            return AnswersFormSet(self.request.POST)
-        return AnswersFormSet()
+            return self.AnswersFormSet(
+                self.request.POST, instance=getattr(self, "object", None)
+            )
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["answers_formset"] = self.answers_formset
+        return data
+
+
+class PollCreateView(AnswersFormSetMixin, ActivityCreateView):
+    model = Poll
 
     def form_valid(self, form):
         if not self.answers_formset.is_valid():
@@ -51,30 +58,14 @@ class PollCreateView(ActivityCreateView):
         self.answers_formset.save()
         return response
 
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["answers_formset"] = self.answers_formset
-        return data
 
-
-class PollUpdateView(ActivityUpdateView):
-    @cached_property
-    def answers_formset(self):
-        if self.request.method == "POST":
-            return AnswersFormSet(self.request.POST, instance=self.object)
-        return AnswersFormSet(instance=self.object)
-
+class PollUpdateView(AnswersFormSetMixin, ActivityUpdateView):
     def form_valid(self, form):
         if not self.answers_formset.is_valid():
             return self.form_invalid(form)
         response = super().form_valid(form)
         self.answers_formset.save()
         return response
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["answers_formset"] = self.answers_formset
-        return data
 
 
 class PollDetailView(PollQuerySetMixin, ActivityDetailView):
