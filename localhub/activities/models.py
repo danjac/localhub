@@ -545,7 +545,7 @@ class Activity(TimeStampedModel):
         )
 
     def notify_mentioned_users(self, recipients):
-        qs = recipients.matches_usernames(self.description.extract_mentions()).exclude(
+        qs = recipients.matches_usernames(self.extract_mentions()).exclude(
             pk=self.owner_id
         )
 
@@ -635,11 +635,11 @@ class Activity(TimeStampedModel):
         notifications = []
         recipients = self.get_notification_recipients()
 
-        if self.hashtags_tracker.changed():
-            notifications += self.notify_tag_followers(recipients)
-
         if self.mentions_tracker.changed():
             notifications += self.notify_mentioned_users(recipients)
+
+        if self.hashtags_tracker.changed():
+            notifications += self.notify_tag_followers(recipients)
 
         if self.editor and self.editor != self.owner:
             notifications.append(self.notify_owner_on_edit())
