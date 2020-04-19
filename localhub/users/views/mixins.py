@@ -22,14 +22,14 @@ class UserQuerySetMixin(BaseUserQuerySetMixin):
 
 
 class ExcludeBlockersQuerySetMixin:
-    """Excludes any users blocked by the current user"""
+    """Excludes any users blocking the current user"""
 
     def get_queryset(self):
         return super().get_queryset().exclude_blockers(self.request.user)
 
 
 class ExcludeBlockedQuerySetMixin:
-    """Excludes any users blocking the current user"""
+    """Excludes any users blocked by the current user"""
 
     def get_queryset(self):
         return super().get_queryset().exclude_blocked(self.request.user)

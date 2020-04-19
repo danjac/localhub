@@ -212,13 +212,15 @@ class TestUserManager:
 
     def test_exclude_blocked(self, user_model, user):
         other = UserFactory()
-        user.blockers.add(other)
-        assert user_model.objects.exclude_blocked(user).count() == 0
+        user.blocked.add(other)
+        assert user_model.objects.exclude_blocked(user).exclude(pk=user.pk).count() == 0
 
     def test_exclude_blockers(self, user_model, user):
         other = UserFactory()
-        user.blockers.add(other)
-        assert user_model.objects.exclude_blockers(user).count() == 0
+        other.blocked.add(user)
+        assert (
+            user_model.objects.exclude_blockers(user).exclude(pk=user.pk).count() == 0
+        )
 
     def test_exclude_blocking(self, user_model, user):
         first = UserFactory()
@@ -227,7 +229,7 @@ class TestUserManager:
 
         user.blockers.add(first)
         second.blockers.add(user)
-        users = user_model.objects.exclude_blocking(user)
+        users = user_model.objects.exclude_blocking(user).exclude(pk=user.pk)
         assert users.count() == 1
         assert users.first() == third
 
