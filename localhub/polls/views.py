@@ -1,13 +1,13 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateResponseMixin
 
 from rules.contrib.views import PermissionRequiredMixin
-from django.forms import inlineformset_factory
 
 from localhub.activities.views.detail import ActivityDetailView
 from localhub.activities.views.edit import ActivityCreateView, ActivityUpdateView
@@ -38,7 +38,7 @@ class PollCreateView(ActivityCreateView):
 
     @cached_property
     def answers_formset(self):
-        # tbd: check if we still need to do this...
+        # TBD: check if we still need to do this...
         if self.request.method == "POST":
             return AnswersFormSet(self.request.POST)
         return AnswersFormSet()
