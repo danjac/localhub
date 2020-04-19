@@ -210,6 +210,27 @@ class TestUserManager:
         )
         assert user.num_unread_messages == 0
 
+    def test_exclude_blocked(self, user_model, user):
+        other = UserFactory()
+        user.blockers.add(other)
+        assert user_model.objects.exclude_blocked(user).count() == 0
+
+    def test_exclude_blockers(self, user_model, user):
+        other = UserFactory()
+        user.blockers.add(other)
+        assert user_model.objects.exclude_blockers(user).count() == 0
+
+    def test_exclude_blocking(self, user_model, user):
+        first = UserFactory()
+        second = UserFactory()
+        third = UserFactory()
+
+        user.blockers.add(first)
+        second.blockers.add(user)
+        users = user_model.objects.exclude_blocking(user)
+        assert users.count() == 1
+        assert users.first() == third
+
 
 class TestUserModel:
     def test_get_email_addresses(self, user):

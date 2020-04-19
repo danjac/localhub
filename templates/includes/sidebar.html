@@ -10,6 +10,7 @@
 
 {% if is_member %}
 
+{% has_perm "private_messages.create_message" user community as can_create_message %}
 {% has_perm "activities.create_activity" user community as can_create_activity %}
 {% has_perm "communities.moderate_community" user community as can_moderate_community %}
 {% has_perm "communities.manage_community" user community as can_manage_community %}
@@ -84,10 +85,11 @@
   </li>
 </ul>
 
-{% if can_create_activity %}
+{% if can_create_activity or can_create_message %}
 <ul class="menu mt-2">
   <li class="divider"
       data-content="{% trans 'Actions' %}"></li>
+  {% if can_create_activity %}
   <li class="menu-item">
     <a data-controller="active-link"
        href="{% url 'posts:create' %}">{% trans "Submit Post" %}</a>
@@ -104,6 +106,13 @@
     <a data-controller="active-link"
        href="{% url 'polls:create' %}">{% trans "Submit Poll" %}</a>
   </li>
+  {% endif %}
+  {% if can_create_message %}
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'private_messages:message_create' %}">{% trans "Send Message" %}</a>
+  </li>
+  {% endif %}
 </ul>
 {% endif %}
 

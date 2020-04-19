@@ -102,7 +102,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 
   {% if can_create_message and not is_blocked %}
   <a class="action"
-     href="{% url 'private_messages:message_create' user_obj.username %}">{% trans "Send Message" %}</a>
+     href="{% url 'private_messages:message_create_recipient' user_obj.username %}">{% trans "Send Message" %}</a>
   {% endif %}
 
   {% if not is_blocked and can_follow_user %}

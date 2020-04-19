@@ -193,21 +193,27 @@ class Community(TimeStampedModel):
         """
         return f"{local_part}@{self.get_email_domain()}"
 
-    def get_members_by_role(self, *roles):
-        return self.members.filter(membership__role__in=roles)
+    def get_members_by_role(self, *roles, active=True):
+        qs = self.members.filter(membership__role__in=roles)
+        if active:
+            qs = qs.filter(membership__active=True, is_active=True)
+        return qs
 
-    def get_members(self):
+    def get_members(self, active=True):
         return self.get_members_by_role(
-            Membership.Role.MEMBER, Membership.Role.MODERATOR, Membership.Role.ADMIN,
+            Membership.Role.MEMBER,
+            Membership.Role.MODERATOR,
+            Membership.Role.ADMIN,
+            active=active,
         )
 
-    def get_moderators(self):
+    def get_moderators(self, active=True):
         return self.get_members_by_role(
-            Membership.Role.MODERATOR, Membership.Role.ADMIN
+            Membership.Role.MODERATOR, Membership.Role.ADMIN, active=active,
         )
 
-    def get_admins(self):
-        return self.get_members_by_role(Membership.Role.ADMIN)
+    def get_admins(self, active=True):
+        return self.get_members_by_role(Membership.Role.ADMIN, active=active)
 
     def user_has_role(self, user, *roles):
         if user.is_anonymous:

@@ -7,7 +7,7 @@
 {% if can_change or can_delete %}
 <div class="actions{% if css_class %} {{ css_class }}{% endif %}">
   <a class="action"
-     href="{% url 'private_messages:message_create' member.member.username %}">
+     href="{% url 'private_messages:message_create_recipient' member.member.username %}">
     {% trans "Send Message" %}
   </a>
   {% if can_change %}

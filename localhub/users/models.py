@@ -168,6 +168,39 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
             ),
         )
 
+    def exclude_blockers(self, user):
+        """Exclude users blocking this user.
+
+        Args:
+            user (User)
+
+        Returns:
+            QuerySet
+        """
+        return self.exclude(blocked=user)
+
+    def exclude_blocked(self, user):
+        """Exclude users blocked by this user.
+
+        Args:
+            user (User)
+
+        Returns:
+            QuerySet
+        """
+        return self.exclude(blockers=user)
+
+    def exclude_blocking(self, user):
+        """Exclude users either blocked by this user, or blocking this user.
+
+        Args:
+            user (User)
+
+        Returns:
+            QuerySet
+        """
+        return self.exclude_blockers(user) & self.exclude_blocked(user)
+
 
 class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
     def create_user(self, username, email, password=None, **kwargs):

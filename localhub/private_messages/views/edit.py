@@ -28,7 +28,7 @@ class BaseMessageFormView(PermissionRequiredMixin, SuccessFormView):
 
     def get_success_message(self):
         return _("Your message has been sent to %(recipient)s") % {
-            "recipient": self.recipient_display
+            "recipient": user_display(self.object.recipient)
         }
 
     @cached_property
@@ -36,17 +36,29 @@ class BaseMessageFormView(PermissionRequiredMixin, SuccessFormView):
         return self.get_recipient()
 
     def get_recipient(self):
-        raise NotImplementedError
+        return None
 
     @cached_property
     def recipient_display(self):
-        return user_display(self.recipient)
+        return user_display(self.recipient) if self.recipient else None
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if not self.recipient:
+            kwargs.update(
+                {"community": self.request.community, "sender": self.request.user}
+            )
+
+        return kwargs
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form["message"].label = _(
-            "Send message to %(recipient)s" % {"recipient": self.recipient_display}
-        )
+
+        if self.recipient:
+            del form.fields["recipient"]
+            form["message"].label = _(
+                "Send message to %(recipient)s" % {"recipient": self.recipient_display}
+            )
         return form
 
     def get_context_data(self, **kwargs):
@@ -109,20 +121,22 @@ class MessageCreateView(
     CommunityRequiredMixin, BaseMessageFormView,
 ):
     def get_recipient(self):
-        return get_object_or_404(
-            get_user_model()
-            .objects.exclude(pk=self.request.user.id)
-            .exclude(blockers=self.request.user)
-            .exclude(blocked=self.request.user)
-            .for_community(self.request.community),
-            username=self.kwargs["username"],
-        )
+        if "username" in self.kwargs:
+            return get_object_or_404(
+                get_user_model()
+                .objects.exclude(pk=self.request.user.id)
+                .for_community(self.request.community)
+                .exclude_blocking(self.request.user),
+                username=self.kwargs["username"],
+            )
+        return None
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.community = self.request.community
         self.object.sender = self.request.user
-        self.object.recipient = self.recipient
+        if self.recipient:
+            self.object.recipient = self.recipient
         self.object.save()
 
         self.object.notify_on_send()

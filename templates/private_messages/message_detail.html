@@ -27,7 +27,7 @@
      href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
   {% if can_create_message %}
   <a class="action"
-     href="{% url 'private_messages:message_create' other_user.username %}">
+     href="{% url 'private_messages:message_create_recipient' other_user.username %}">
     {% user_display other_user as other_user_name %}
     {% blocktrans %}
     Send Message to {{ other_user_name }}

@@ -98,7 +98,7 @@
 
           {% if can_create_message %}
           <a class="action"
-             href="{% url 'private_messages:message_create' object.username %}">
+             href="{% url 'private_messages:message_create_recipient' object.username %}">
             {% trans "Send Message" %}
           </a>
           {% endif %}

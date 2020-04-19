@@ -21,6 +21,7 @@ app_name = "private_messages"
 urlpatterns = [
     path("inbox/", inbox_view, name="inbox"),
     path("outbox/", outbox_view, name="outbox"),
+    path("send/", message_create_view, name="message_create"),
     path("~/mark-read/", message_mark_all_read_view, name="mark_all_read"),
     path("message/<int:pk>/", message_detail_view, name="message_detail"),
     path(
@@ -37,5 +38,7 @@ urlpatterns = [
         message_remove_bookmark_view,
         name="message_remove_bookmark",
     ),
-    re_path(USERNAME_RE + r"~send/$", message_create_view, name="message_create"),
+    re_path(
+        USERNAME_RE + r"~send/$", message_create_view, name="message_create_recipient"
+    ),
 ]

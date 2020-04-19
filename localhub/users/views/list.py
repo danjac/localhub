@@ -8,14 +8,14 @@ from django.views.generic import ListView
 from localhub.views import SearchMixin
 
 from .mixins import (
-    ExcludeBlockedUsersQuerySetMixin,
-    ExcludeBlockingUsersQuerySetMixin,
+    ExcludeBlockedQuerySetMixin,
+    ExcludeBlockersQuerySetMixin,
     MemberQuerySetMixin,
     UserQuerySetMixin,
 )
 
 
-class BaseUserListView(ExcludeBlockingUsersQuerySetMixin, UserQuerySetMixin, ListView):
+class BaseUserListView(ExcludeBlockedQuerySetMixin, UserQuerySetMixin, ListView):
     paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
 
     def get_queryset(self):
@@ -23,7 +23,7 @@ class BaseUserListView(ExcludeBlockingUsersQuerySetMixin, UserQuerySetMixin, Lis
 
 
 class BaseMemberListView(
-    MemberQuerySetMixin, ExcludeBlockedUsersQuerySetMixin, BaseUserListView
+    MemberQuerySetMixin, ExcludeBlockersQuerySetMixin, BaseUserListView
 ):
     def get_queryset(self):
         return (

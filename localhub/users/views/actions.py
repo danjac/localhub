@@ -14,8 +14,8 @@ from localhub.views import SuccessActionView
 
 from .mixins import (
     CurrentUserMixin,
-    ExcludeBlockedUsersQuerySetMixin,
-    ExcludeBlockingUsersQuerySetMixin,
+    ExcludeBlockedQuerySetMixin,
+    ExcludeBlockersQuerySetMixin,
     UserQuerySetMixin,
 )
 
@@ -27,8 +27,8 @@ class BaseUserActionView(UserQuerySetMixin, SuccessActionView):
 
 class BaseFollowUserView(
     PermissionRequiredMixin,
-    ExcludeBlockedUsersQuerySetMixin,
-    ExcludeBlockingUsersQuerySetMixin,
+    ExcludeBlockedQuerySetMixin,
+    ExcludeBlockersQuerySetMixin,
     BaseUserActionView,
 ):
     permission_required = "users.follow_user"
