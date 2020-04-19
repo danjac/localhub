@@ -37,4 +37,4 @@ class ActivityTagsForm(forms.ModelForm):
     class Meta:
         model = Activity
         fields = ("additional_tags",)
-        labels = {"additional_tags": _("Tags")}
+        labels = {"additional_tags": _("#tags")}
