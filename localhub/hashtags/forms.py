@@ -7,6 +7,7 @@ from django import forms
 from localhub.forms.widgets import BaseTypeaheadInput
 
 from .constants import HASHTAGS_TYPEAHEAD_URL
+from .validators import validate_hashtags
 
 
 class HashtagsTypeaheadInput(BaseTypeaheadInput):
@@ -15,3 +16,4 @@ class HashtagsTypeaheadInput(BaseTypeaheadInput):
 
 class HashtagsField(forms.CharField):
     widget = HashtagsTypeaheadInput
+    default_validators = [validate_hashtags]

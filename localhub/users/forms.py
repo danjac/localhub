@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from localhub.forms.widgets import BaseTypeaheadInput, ClearableImageInput
 
 from .constants import MENTIONS_TYPEAHEAD_URL
+from .validators import validate_mentions
 
 User = get_user_model()
 
@@ -20,6 +21,7 @@ class MentionsTypeaheadInput(BaseTypeaheadInput):
 
 class MentionsField(forms.CharField):
     widget = MentionsTypeaheadInput
+    default_validators = [validate_mentions]
 
 
 class UserChangeForm(BaseUserChangeForm):

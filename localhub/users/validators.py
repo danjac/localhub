@@ -22,4 +22,4 @@ def validate_mentions(value):
 
     for token in value.split():
         if not MENTIONS_RE.match(token):
-            raise ValidationError(_("All strings must be valid @mentions"))
+            raise ValidationError(_("All tokens must be valid @mentions"))

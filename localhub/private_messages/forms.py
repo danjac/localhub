@@ -4,7 +4,6 @@
 
 from django import forms
 from django.core.exceptions import ImproperlyConfigured, ValidationError
-from django.core.validators import MaxLengthValidator
 from django.utils.translation import gettext_lazy as _
 
 from localhub.users.forms import MentionsField
@@ -16,9 +15,7 @@ from .models import Message
 class MessageForm(forms.ModelForm):
 
     recipient = MentionsField(
-        required=True,
-        help_text=_("Look up recipient with @username"),
-        validators=[MaxLengthValidator(60)],
+        required=True, help_text=_("Use @mentions to find a recipient"),
     )
 
     class Meta:
