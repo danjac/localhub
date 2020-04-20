@@ -62,7 +62,8 @@ class PostForm(ActivityForm):
             self.add_error(
                 "url",
                 _(
-                    "This URL appears to be either inaccessible, or we are unable to find any metadata in the content."
+                    "This URL appears to be either inaccessible, or we are unable to find any metadata in the content. "
+                    "You can uncheck the 'Fetch OpenGraph' box and just add your own title and description to this post."
                 ),
             )
             return cleaned_data
