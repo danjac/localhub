@@ -12,11 +12,15 @@ from localhub.utils.http import get_domain, is_https, is_image_url
 
 class Post(Activity):
 
-    RESHARED_FIELDS = Activity.RESHARED_FIELDS + (
+    RESHARED_FIELDS = Activity.RESHARED_FIELDS + [
         "opengraph_description",
         "opengraph_image",
         "url",
-    )
+    ]
+
+    INDEXABLE_DESCRIPTION_FIELDS = Activity.INDEXABLE_DESCRIPTION_FIELDS + [
+        "opengraph_description",
+    ]
 
     title = models.CharField(max_length=300, blank=True)
     url = models.URLField(max_length=500, blank=True)
@@ -35,12 +39,6 @@ class Post(Activity):
 
     def get_domain(self):
         return get_domain(self.url) or ""
-
-    @property
-    def indexable_description(self):
-        return " ".join(
-            [value for value in (self.description, self.opengraph_description) if value]
-        )
 
     def get_opengraph_image_if_safe(self):
         """

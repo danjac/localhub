@@ -25,14 +25,18 @@ class Photo(Activity):
             _("Attribution NonCommercial NoDerivs"),
         )
 
-    RESHARED_FIELDS = Activity.RESHARED_FIELDS + (
+    RESHARED_FIELDS = Activity.RESHARED_FIELDS + [
         "image",
         "artist",
         "original_url",
         "cc_license",
         "latitude",
         "longitude",
-    )
+    ]
+
+    INDEXABLE_DESCRIPTION_FIELDS = Activity.INDEXABLE_DESCRIPTION_FIELDS + [
+        "artist",
+    ]
 
     image = ImageField(
         upload_to="photos",
@@ -56,9 +60,7 @@ class Photo(Activity):
         verbose_name="Creative Commons license",
     )
 
-    search_indexer = SearchIndexer(
-        ("A", "title"), ("B", "description"), ("C", "artist")
-    )
+    search_indexer = SearchIndexer(("A", "title"), ("B", "indexable_description"))
 
     def __str__(self):
         return self.title or _("Photo")

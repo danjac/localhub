@@ -30,7 +30,7 @@ class Poll(Activity):
 
     allow_voting = models.BooleanField(default=True)
 
-    search_indexer = SearchIndexer(("A", "title"), ("B", "description"))
+    search_indexer = SearchIndexer(("A", "title"), ("B", "indexable_description"))
 
     objects = PollQuerySet.as_manager()
 

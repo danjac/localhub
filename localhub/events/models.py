@@ -102,7 +102,7 @@ class Event(Activity):
 
     # not exhaustive!
 
-    ADDRESS_FORMATS = (
+    ADDRESS_FORMATS = [
         (
             ("GB", "IN", "PK", "ZA", "JP"),
             "{street_address}, {locality}, {region}, {postcode}, {country}",
@@ -112,25 +112,25 @@ class Event(Activity):
             "{street_address} {locality}, {postcode}, {region}, {country}",
         ),
         (("RU",), "{street_address} {locality} {postcode}, {region}, {country}"),
-    )
+    ]
 
     # default for Europe, S. America, China, S. Korea
     DEFAULT_ADDRESS_FORMAT = (
         "{street_address}, {postcode} {locality}, {region}, {country}"
     )
 
-    LOCATION_FIELDS = (
+    LOCATION_FIELDS = [
         "street_address",
         "locality",
         "postal_code",
         "region",
         "country",
-    )
+    ]
 
     RESHARED_FIELDS = (
         Activity.RESHARED_FIELDS
         + LOCATION_FIELDS
-        + (
+        + [
             "url",
             "starts",
             "ends",
@@ -140,7 +140,7 @@ class Event(Activity):
             "ticket_vendor",
             "latitude",
             "longitude",
-        )
+        ]
     )
 
     url = models.URLField(verbose_name=_("Link"), max_length=500, null=True, blank=True)
@@ -181,7 +181,7 @@ class Event(Activity):
     location_tracker = Tracker(LOCATION_FIELDS)
 
     search_indexer = SearchIndexer(
-        ("A", "title"), ("B", "indexable_location"), ("C", "description")
+        ("A", "title"), ("B", "indexable_location"), ("C", "indexable_description")
     )
 
     objects = EventQuerySet.as_manager()

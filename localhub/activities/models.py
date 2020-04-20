@@ -348,7 +348,13 @@ class Activity(TimeStampedModel):
     Base class for all activity-related entities e.g. posts, events, photos.
     """
 
-    RESHARED_FIELDS = ("title", "description", "additional_tags")
+    RESHARED_FIELDS = ["title", "description", "additional_tags", "mentions"]
+
+    INDEXABLE_DESCRIPTION_FIELDS = [
+        "description",
+        "additional_tags",
+        "mentions",
+    ]
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
@@ -530,6 +536,15 @@ class Activity(TimeStampedModel):
         if self.owner == user:
             return False
         return bool(self.get_content_warning_tags())
+
+    @property
+    def indexable_description(self):
+        """Returns default indexable description fields for search trackers.
+        """
+        values = [
+            getattr(self, field, "") for field in self.INDEXABLE_DESCRIPTION_FIELDS
+        ]
+        return " ".join([value for value in values if value])
 
     def make_notification(self, recipient, verb, actor=None):
         return Notification(
