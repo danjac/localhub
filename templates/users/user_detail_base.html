@@ -18,6 +18,15 @@
 {% has_perm "private_messages.create_message" user community as can_create_message %}
 {% has_perm "communities.view_membership" user membership as can_view_membership %}
 
+{% if is_current_user and not user_obj.bio %}
+{% dismissable user "profile-settings" %}
+{% url 'user_update' as user_settings_url %}
+{% blocktrans %}
+You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>.
+{% endblocktrans %}
+{% enddismissable %}
+{% endif %}
+
 <h1 class="page-header">
   {% avatar user_obj "avatar-lg" %}
   {% if user_obj.username == display_name %}
@@ -32,15 +41,6 @@
   <span class="label">{% trans "Moderator" %}</span>
   {% endif %}
 </h1>
-
-{% if is_current_user and not user_obj.bio %}
-{% dismissable user "profile-settings" %}
-{% url 'user_update' as user_settings_url %}
-{% blocktrans %}
-You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>.
-{% endblocktrans %}
-{% enddismissable %}
-{% endif %}
 
 {% if is_blocked %}
 <p class="text-small">
@@ -97,6 +97,10 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
     {% trans "My Settings" %}
   </a>
   {% endif %}
+  <a class="action"
+     href="{% url 'users:activity_mentions' user_obj.username %}">
+    {% trans "Mentions" %}
+  </a>
 
   {% if not is_current_user %}
 

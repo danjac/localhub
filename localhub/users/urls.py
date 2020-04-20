@@ -10,7 +10,9 @@ from .views.actions import (
     user_unfollow_view,
 )
 from .views.detail import (
+    user_activity_mentions_view,
     user_comment_list_view,
+    user_comment_mentions_view,
     user_message_list_view,
     user_stream_view,
 )
@@ -38,5 +40,15 @@ urlpatterns = [
     re_path(USERNAME_RE + r"unblock/$", view=user_unblock_view, name="unblock"),
     re_path(USERNAME_RE + r"comments/$", view=user_comment_list_view, name="comments"),
     re_path(USERNAME_RE + r"messages/$", view=user_message_list_view, name="messages"),
+    re_path(
+        USERNAME_RE + r"mentions/$",
+        view=user_activity_mentions_view,
+        name="activity_mentions",
+    ),
+    re_path(
+        USERNAME_RE + r"mentions/comments/$",
+        view=user_comment_mentions_view,
+        name="comment_mentions",
+    ),
     re_path(USERNAME_RE + r"$", view=user_stream_view, name="activities"),
 ]

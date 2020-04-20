@@ -14,8 +14,17 @@ from localhub.private_messages.models import Message
 from .mixins import SingleUserMixin
 
 
-class UserStreamView(SingleUserMixin, BaseActivityStreamView):
+class BaseUserActivityStreamView(SingleUserMixin, BaseActivityStreamView):
+    ...
 
+
+class BaseUserCommentListView(SingleUserMixin, BaseCommentListView):
+    ...
+
+
+class UserStreamView(BaseUserActivityStreamView):
+
+    # do we need this tab?
     active_tab = "posts"
     template_name = "users/activities.html"
 
@@ -48,7 +57,7 @@ class UserStreamView(SingleUserMixin, BaseActivityStreamView):
 user_stream_view = UserStreamView.as_view()
 
 
-class UserCommentListView(SingleUserMixin, BaseCommentListView):
+class UserCommentListView(BaseUserCommentListView):
     active_tab = "comments"
     template_name = "users/comments.html"
 
@@ -95,3 +104,40 @@ class UserMessageListView(SingleUserMixin, ListView):
 
 
 user_message_list_view = UserMessageListView.as_view()
+
+
+class UserActivityMentionsView(BaseUserActivityStreamView):
+    """Activities where the user has an @mention (only
+    published activities were user is not the owner)
+    """
+
+    template_name = "users/mentions/activities.html"
+
+    def filter_queryset(self, queryset):
+        return (
+            super()
+            .filter_queryset(queryset)
+            .published()
+            .exclude(owner=self.user_obj)
+            .search(f"@{self.user_obj.username}")
+        )
+
+
+user_activity_mentions_view = UserActivityMentionsView.as_view()
+
+
+class UserCommentMentionsView(BaseUserCommentListView):
+
+    template_name = "users/mentions/comments.html"
+
+    def get_queryset(self, queryset):
+        return (
+            super()
+            .get_queryset()
+            .exclude(owner=self.user_obj)
+            .search(f"@{self.user_obj.username}")
+            .order_by("-created")
+        )
+
+
+user_comment_mentions_view = UserCommentMentionsView.as_view()
