@@ -1,7 +1,7 @@
 {# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends "activities/activity_base.html" %}
+{% extends "activities/includes/activity_base.html" %}
 
 {% load i18n %}
 {% load thumbnail %}
@@ -19,7 +19,7 @@
 {% endthumbnail %}
 
 {% if is_detail %}
-{% include "activities/includes/map.html" with css_class="my-2" %}
+{% include "activities/includes/map.html" with css_class="pb-1" %}
 {% endif %}
 
 {% include "activities/includes/description.html" %}

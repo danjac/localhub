@@ -135,7 +135,7 @@ def verbose_name_plural(activity):
     return _(activity._meta.verbose_name_plural)
 
 
-@register.inclusion_tag("activities/includes/activity.html")
+@register.inclusion_tag("activities/includes/activity_tag.html")
 def render_activity(request, user, object, is_pinned=False, **extra_context):
     """Renders a single activity. Determines the correct include template
     based on object type.

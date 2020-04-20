@@ -7,7 +7,7 @@
 
 {% if object.url %}
 <div data-controller="oembed"
-     class="wordwrap mt-1">
+     class="wordwrap pb-1">
   {% if is_oembed %}
   {{ object.url|oembed_no_urlize|url_to_img|lazify }}
   {% else %}
