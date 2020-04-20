@@ -1,0 +1,14 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h1 class="page-header">{% trans "User not found" %}</h1>
+<p>
+  {% blocktrans %}
+  Sorry, there appears to be no active member of this community
+  matching <b>@{{ username }}</b>.
+  {% endblocktrans %}
+</p>
+{% endblock content %}

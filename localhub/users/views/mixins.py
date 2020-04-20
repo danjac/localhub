@@ -3,7 +3,9 @@
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from django.shortcuts import get_object_or_404
+from django.template.response import TemplateResponse
 from django.utils.functional import cached_property
 
 from localhub.communities.models import Membership
@@ -58,11 +60,17 @@ class CurrentUserMixin(LoginRequiredMixin):
 
 class SingleUserMixin(BaseUserQuerySetMixin):
     def get(self, request, *args, **kwargs):
-        response = super().get(request, *args, **kwargs)
-        if self.user_obj != self.request.user:
-            self.user_obj.get_notifications().for_recipient(
-                self.request.user
-            ).mark_read()
+        try:
+            response = super().get(request, *args, **kwargs)
+        except Http404:
+            return TemplateResponse(
+                request,
+                "users/detail/not_found.html",
+                {"username": kwargs["username"]},
+                status=404,
+            )
+        if self.user_obj != request.user:
+            self.user_obj.get_notifications().for_recipient(request.user).mark_read()
         return response
 
     @cached_property

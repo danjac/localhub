@@ -4,6 +4,7 @@
 from django.urls import reverse
 
 import pytest
+from pytest_django.asserts import assertTemplateUsed
 from taggit.models import Tag
 
 from localhub.communities.factories import CommunityFactory, MembershipFactory
@@ -106,6 +107,13 @@ class TestBlockedTagListView:
 
 
 class TestTagDetailView:
+    def test_get_if_not_found(self, client, member):
+
+        response = client.get(reverse("hashtags:detail", args=["movies"]))
+        assert response.status_code == 404
+        assert response.context["tag"] == "movies"
+        assertTemplateUsed(response, "hashtags/not_found.html")
+
     def test_get(self, client, member):
         PostFactory(
             community=member.community,

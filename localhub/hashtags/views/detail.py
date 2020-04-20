@@ -2,7 +2,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.db.models import Q
+from django.http import Http404
 from django.shortcuts import get_object_or_404
+from django.template.response import TemplateResponse
 from django.utils.functional import cached_property
 
 from taggit.models import Tag
@@ -13,6 +15,14 @@ from localhub.activities.views.streams import BaseActivityStreamView
 class TagDetailView(BaseActivityStreamView):
     template_name = "hashtags/tag_detail.html"
     ordering = "-created"
+
+    def get(self, request, *args, **kwargs):
+        try:
+            return super().get(request, *args, **kwargs)
+        except Http404:
+            return TemplateResponse(
+                request, "hashtags/not_found.html", {"tag": kwargs["slug"]}, status=404
+            )
 
     @cached_property
     def tag(self):

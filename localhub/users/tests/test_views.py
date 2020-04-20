@@ -4,6 +4,7 @@
 from django.urls import reverse
 
 import pytest
+from pytest_django.asserts import assertTemplateUsed
 
 from localhub.comments.factories import CommentFactory
 from localhub.communities.factories import MembershipFactory
@@ -125,6 +126,11 @@ class TestUserCommentsView:
 
 
 class TestUserActivitiesView:
+    def test_if_not_found(self, client, member):
+        response = client.get(reverse("users:activities", args=["testuser"]))
+        assert response.status_code == 404
+        assertTemplateUsed(response, "users/detail/not_found.html")
+
     def test_get_if_current_user(self, client, member):
 
         post = PostFactory(community=member.community, owner=member.member)
