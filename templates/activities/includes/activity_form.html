@@ -14,7 +14,7 @@
 {% if tags %}
 
 {% dismissable user "content-warning-tags" %}
-{% blocktrans with tags_joined=tags|join:", " count counter=tags|length %}
+{% blocktrans with tags_joined=tags|join:" " count counter=tags|length %}
 If you include the tag <b>{{ tags_joined }}</b> in your content, the {{ object_name }}
 will be concealed by default.
 {% plural %}
