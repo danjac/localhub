@@ -8,7 +8,7 @@
 {% load rules %}
 {% load users %}
 
-{% block subtitle %} / {% user_display user_obj%}{% endblock %}
+{% block subtitle %} / {% user_display user_obj %}{% endblock %}
 
 {% block content %}
 
@@ -97,10 +97,13 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
     {% trans "My Settings" %}
   </a>
   {% endif %}
+
+  {% if not is_blocked %}
   <a class="action"
      href="{% url 'users:activity_mentions' user_obj.username %}">
     {% trans "Mentions" %}
   </a>
+  {% endif %}
 
   {% if not is_current_user %}
 
