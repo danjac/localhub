@@ -69,13 +69,13 @@
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
-       data-active-link-exact
-       href="{% url 'activities:timeline' %}">{% trans "Timeline" %}
+       href="{% url 'activity_mentions' user.username %}">{% trans "Mentions" %}
     </a>
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
-       href="{% url 'activity_mentions' user.username %}">{% trans "Mentions" %}
+       data-active-link-exact
+       href="{% url 'activities:timeline' %}">{% trans "Timeline" %}
     </a>
   </li>
   <li class="menu-item">
