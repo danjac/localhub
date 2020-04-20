@@ -27,7 +27,7 @@
     <div class="card-header">
       {% endif %}
 
-      <div class="card-title mb-2 h6{% if object.is_new %} text-bold{% endif %}">
+      <div class="card-title pb-2 h6{% if object.is_new %} text-bold{% endif %}">
 
         {% if object.is_reshare %}
 
@@ -86,7 +86,7 @@
 
       </div>
 
-      <div class="card-subtitle my-1">
+      <div class="card-subtitle py-1">
         {% if object.parent %}
         {% include "includes/timesince.html" with timestamp=object.parent.published|default:object.created owner=object.parent.owner %}
         {% elif not object.is_reshare %}
@@ -95,7 +95,7 @@
       </div>
 
       {% if object.url or object.additional_tags or object.mentions %}
-      <div class="card-subtitle my-1">
+      <div class="card-subtitle py-1">
         {% if object.url %}
         <div class="info">
           {{ object.url|domain|linkify }}
@@ -159,7 +159,7 @@
 
     <div class="card-footer">
       {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
-      <div class="d-flex align-center mt-1">
+      <div class="d-flex align-center py-1">
         {% block actions %}{% include "activities/includes/actions.html" %}{% endblock %}
         {% block links %}{% include "activities/includes/links.html" %}{% endblock %}
       </div>

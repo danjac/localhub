@@ -15,7 +15,7 @@
          id="comment-{{ comment.id }}">
   <div class="card-header">
     {% if include_content_object %}
-    <div class="card-title mb-2 h6">
+    <div class="card-title pb-2 h6">
       {% if content_object %}
       <a href="{{ content_object.get_absolute_url }}">{{ content_object }}</a>
       {% verbose_name content_object as object_name %}
@@ -27,7 +27,7 @@
       {% endif %}
     </div>
     {% endif %}
-    <div class="card-title mb-2 h6{% if comment.is_new %} text-bold{% endif %}">
+    <div class="card-title pb-2 h6{% if comment.is_new %} text-bold{% endif %}">
       {% url 'users:comments' comment.owner.username as owner_url %}
       {% include "includes/timesince.html" with profile_url=owner_url timestamp=comment.created owner=comment.owner %}
       {% if can_moderate_community and comment.is_flagged %}
@@ -70,23 +70,25 @@
     {% endif %}
   </div>
   <div class="card-footer">
-    {% if comment.num_likes and comment.owner == user %}
-    <div class="info">
-      {{ comment.num_likes }}
-      {% blocktrans count counter=comment.num_likes %}
-      Like
-      {% plural %}
-      Likes
-      {% endblocktrans %}
-    </div>
-    {% endif %}
+    <div class="py-1">
+      {% if comment.num_likes and comment.owner == user %}
+      <div class="info">
+        {{ comment.num_likes }}
+        {% blocktrans count counter=comment.num_likes %}
+        Like
+        {% plural %}
+        Likes
+        {% endblocktrans %}
+      </div>
+      {% endif %}
 
-    {% if comment.edited %}
-    <div class="info">
-      {% blocktrans with edited=comment.edited|timesince %}Updated {{ edited }} ago{% endblocktrans %}
+      {% if comment.edited %}
+      <div class="info">
+        {% blocktrans with edited=comment.edited|timesince %}Updated {{ edited }} ago{% endblocktrans %}
+      </div>
+      {% endif %}
     </div>
-    {% endif %}
-    <div class="d-flex align-center mt-1">
+    <div class="d-flex align-center py-1">
       <div class="dropdown mr-2"
            data-controller="dropdown">
         <button class="btn btn-sm"

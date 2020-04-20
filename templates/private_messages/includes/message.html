@@ -5,11 +5,11 @@
 {% load account %}
 {% load users %}
 
-<div class="card mb-2{% if is_sender %} bg-gray{% endif %} message"
+<div class="card{% if is_sender %} bg-gray{% endif %} message {{ css_class|default:"mb-2" }}"
      id="message-{{ message.id }}"
      data-controller="clipboard">
   <div class="card-header">
-    <div class="card-subtitle h6 {% if is_unread %}text-bold{% endif %}">
+    <div class="card-subtitle h6 pb-2 {% if is_unread %}text-bold{% endif %}">
       {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url %}
       <span class="timesince">
         {% trans "to" %}
@@ -27,7 +27,7 @@
   </div>
   <div class="card-body">
     {% collapsable is_detail %}
-    <div class="markdown-content mt-1">
+    <div class="markdown-content py-1">
       {{ message.message.markdown|strip_external_images:user|lazify }}
     </div>
     {% endcollapsable %}
@@ -36,7 +36,7 @@
               class="d-none">{{ message.message }}</textarea>
   </div>
   <div class="card-footer">
-    <div class="d-flex align-center mt-1">
+    <div class="d-flex align-center py-1">
       <div class="dropdown mr-2"
            data-controller="dropdown">
         <button class="btn btn-sm"
