@@ -27,7 +27,7 @@
     <div class="card-header">
       {% endif %}
 
-      <div class="card-title h6{% if object.is_new %} text-bold{% endif %}">
+      <div class="card-title mb-2 h6{% if object.is_new %} text-bold{% endif %}">
 
         {% if object.is_reshare %}
 
@@ -86,29 +86,33 @@
 
       </div>
 
-      {% if object.url or object.additional_tags or object.mentions %}
-      <div class="card-subtitle mt-1">
-        <div class="info">
-          {% if object.url %}
-          {{ object.url|domain|linkify }}
-          {% endif %}
-          {% if object.additional_tags %}
-          {{ object.additional_tags|linkify_hashtags }}
-          {% endif %}
-          {% if object.mentions %}
-          {{ object.mentions|linkify_mentions }}
-          {% endif %}
-        </div>
-      </div>
-      {% endif %}
-
-      <div class="card-subtitle mt-1">
+      <div class="card-subtitle my-1">
         {% if object.parent %}
         {% include "includes/timesince.html" with timestamp=object.parent.published|default:object.created owner=object.parent.owner %}
         {% elif not object.is_reshare %}
         {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
         {% endif %}
       </div>
+
+      {% if object.url or object.additional_tags or object.mentions %}
+      <div class="card-subtitle my-1">
+        {% if object.url %}
+        <div class="info">
+          {{ object.url|domain|linkify }}
+        </div>
+        {% endif %}
+        {% if object.additional_tags %}
+        <div class="info">
+          {{ object.additional_tags|linkify_hashtags }}
+        </div>
+        {% endif %}
+        {% if object.mentions %}
+        <div class="info">
+          {{ object.mentions|linkify_mentions }}
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
 
     </div>
     {% endblock header %}

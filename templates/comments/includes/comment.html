@@ -15,7 +15,7 @@
          id="comment-{{ comment.id }}">
   <div class="card-header">
     {% if include_content_object %}
-    <div class="card-title h6">
+    <div class="card-title mb-2 h6">
       {% if content_object %}
       <a href="{{ content_object.get_absolute_url }}">{{ content_object }}</a>
       {% verbose_name content_object as object_name %}
@@ -27,7 +27,7 @@
       {% endif %}
     </div>
     {% endif %}
-    <div class="card-title h6{% if comment.is_new %} text-bold{% endif %}">
+    <div class="card-title mb-2 h6{% if comment.is_new %} text-bold{% endif %}">
       {% url 'users:comments' comment.owner.username as owner_url %}
       {% include "includes/timesince.html" with profile_url=owner_url timestamp=comment.created owner=comment.owner %}
       {% if can_moderate_community and comment.is_flagged %}
