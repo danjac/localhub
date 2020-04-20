@@ -24,8 +24,6 @@ class BaseUserCommentListView(SingleUserMixin, BaseCommentListView):
 
 class UserStreamView(BaseUserActivityStreamView):
 
-    # do we need this tab?
-    active_tab = "posts"
     template_name = "users/activities.html"
 
     def get_ordering(self):
@@ -58,7 +56,6 @@ user_stream_view = UserStreamView.as_view()
 
 
 class UserCommentListView(BaseUserCommentListView):
-    active_tab = "comments"
     template_name = "users/comments.html"
 
     def get_queryset(self):
