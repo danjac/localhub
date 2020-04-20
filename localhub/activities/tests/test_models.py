@@ -24,17 +24,17 @@ pytestmark = pytest.mark.django_db
 
 
 class TestActivityManager:
-    def test_search(self, client, member, transactional_db):
+    def test_search(self, member, transactional_db):
         PostFactory(community=member.community, title="test", owner=member.member)
         results = Post.objects.search("test")
         assert results.count() == 1
 
-    def test_search_negative_result(self, client, member, transactional_db):
+    def test_search_negative_result(self, member, transactional_db):
         PostFactory(community=member.community, title="test", owner=member.member)
         results = Post.objects.search("xyz")
         assert results.count() == 0
 
-    def test_search_mentions(self, client, member, transactional_db):
+    def test_search_mentions(self, member, transactional_db):
         PostFactory(
             community=member.community,
             title="test",

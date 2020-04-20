@@ -30,6 +30,56 @@ class TestMemberListView:
         assert member.member in object_list
 
 
+class TestActivityMentionsView:
+    def test_get_if_own_mention(self, client, member, transactional_db):
+        PostFactory(
+            community=member.community,
+            owner=member.member,
+            mentions=f"@{member.member.username}",
+        )
+        response = client.get(
+            reverse("users:activity_mentions", args=[member.member.username])
+        )
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 0
+
+    def test_get(self, client, member, transactional_db):
+        MembershipFactory(
+            member=UserFactory(username="danjac"), community=member.community
+        )
+        post = PostFactory(
+            community=member.community, owner=member.member, mentions="@danjac @tester",
+        )
+        response = client.get(reverse("users:activity_mentions", args=["danjac"]))
+        assert response.status_code == 200
+        assert response.context["object_list"][0]["object"] == post
+
+
+class TestCommentMentionsView:
+    def test_get_if_own_mention(self, client, member, transactional_db):
+        CommentFactory(
+            community=member.community,
+            owner=member.member,
+            content=f"@{member.member.username}",
+        )
+        response = client.get(
+            reverse("users:activity_mentions", args=[member.member.username])
+        )
+        assert response.status_code == 200
+        assert len(response.context["object_list"]) == 0
+
+    def test_get(self, client, member, transactional_db):
+        MembershipFactory(
+            member=UserFactory(username="danjac"), community=member.community
+        )
+        comment = CommentFactory(
+            community=member.community, owner=member.member, content="@danjac @tester",
+        )
+        response = client.get(reverse("users:comment_mentions", args=["danjac"]))
+        assert response.status_code == 200
+        assert response.context["object_list"][0] == comment
+
+
 class TestFollowingUserListView:
     def test_get(self, client, member):
         user = MembershipFactory(community=member.community).member

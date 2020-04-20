@@ -17,9 +17,11 @@ export default class extends Controller {
 
   connect() {
     const { pathname } = window.location;
+
     const href = (
       this.element.getAttribute('href') || this.matchTarget.getAttribute('href')
     ).split(/[?#]/)[0];
+
     const matches = this.data.has('exact')
       ? pathname === href
       : pathname.startsWith(href);
