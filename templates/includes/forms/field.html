@@ -38,7 +38,7 @@
   <p class="form-input-hint">{{ error }}</p>
   {% endfor %}
 
-  {% if help_text %}
+  {% if not field.errors and help_text %}
   <p><small>{{ help_text }}</small></p>
   {% endif %}
 </div>
