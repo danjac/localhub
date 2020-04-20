@@ -48,10 +48,14 @@
     </dd>
     {% endif %}
     {% endwith %}
+
     {% if object.url %}
     <dt>{% trans "URL" %}</dt>
     <dd class="text-ellipsis">{{ object.url|urlize }}</dd>
     {% endif %}
+
+
+    {% if object.is_detail %}
 
     {% if object.contact_name %}
     <dt>{% trans "Contact" %}</dt>
@@ -76,6 +80,8 @@
     {% if object.ticket_vendor %}
     <dt>{% trans "Tickets available from" %}</dt>
     <dd>{{ object.ticket_vendor|linebreaksbr }}</dd>
+    {% endif %}
+
     {% endif %}
 
   </dl>
