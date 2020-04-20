@@ -5,8 +5,8 @@
 
 <div class="card{% if css_class %} {{ css_class }}{% endif %}"
      data-controller="clipboard">
-  <div class="card-header h6">
-    <div class="card-title">
+  <div class="card-header">
+    <div class="card-title h6 mb-2">
       {% block title %}
       {% if object.url %}
       {{ object.url|linkify:object.title }}
@@ -17,7 +17,7 @@
       <span class="label">{% trans "Pinned" %}</span>
     </div>
     {% endblock title %}
-    <div class="card-subtitle h6">
+    <div class="card-subtitle h6 mb-1">
       {% block timesince %}
       {% include "includes/timesince.html" with owner=object.owner timestamp=object.published %}
       {% endblock timesince %}
