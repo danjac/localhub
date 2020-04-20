@@ -39,7 +39,7 @@ class MemberListView(SearchMixin, BaseMemberListView):
     Shows all members of community
     """
 
-    template_name = "users/member_list.html"
+    template_name = "users/list/members.html"
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -52,7 +52,7 @@ member_list_view = MemberListView.as_view()
 
 
 class FollowingUserListView(BaseMemberListView):
-    template_name = "users/following_user_list.html"
+    template_name = "users/list/following.html"
 
     def get_queryset(self):
         return super().get_queryset().filter(followers=self.request.user)
@@ -62,7 +62,7 @@ following_user_list_view = FollowingUserListView.as_view()
 
 
 class FollowerUserListView(BaseMemberListView):
-    template_name = "users/follower_user_list.html"
+    template_name = "users/list/followers.html"
 
     def get_queryset(self):
         return super().get_queryset().filter(following=self.request.user)
@@ -72,7 +72,7 @@ follower_user_list_view = FollowerUserListView.as_view()
 
 
 class BlockedUserListView(MemberQuerySetMixin, BaseUserListView):
-    template_name = "users/blocked_user_list.html"
+    template_name = "users/list/blocked.html"
 
     def get_queryset(self):
         return super().get_queryset().filter(blockers=self.request.user)
@@ -82,7 +82,7 @@ blocked_user_list_view = BlockedUserListView.as_view()
 
 
 class UserAutocompleteListView(ExcludeBlockedQuerySetMixin, BaseUserListView):
-    template_name = "users/user_autocomplete_list.html"
+    template_name = "users/list/autocomplete.html"
 
     def get_queryset(self):
         # exclude current user by default

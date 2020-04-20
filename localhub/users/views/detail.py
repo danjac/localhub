@@ -24,7 +24,7 @@ class BaseUserCommentListView(SingleUserMixin, BaseCommentListView):
 
 class UserStreamView(BaseUserActivityStreamView):
 
-    template_name = "users/activities.html"
+    template_name = "users/detail/activities.html"
 
     def get_ordering(self):
         if self.is_current_user:
@@ -56,7 +56,7 @@ user_stream_view = UserStreamView.as_view()
 
 
 class UserCommentListView(BaseUserCommentListView):
-    template_name = "users/comments.html"
+    template_name = "users/detail/comments.html"
 
     def get_queryset(self):
         return super().get_queryset().filter(owner=self.user_obj).order_by("-created")
@@ -80,7 +80,7 @@ class UserMessageListView(SingleUserMixin, ListView):
     and the current user.
     """
 
-    template_name = "users/messages.html"
+    template_name = "users/detail/messages.html"
     paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
 
     def get_queryset(self):
