@@ -133,7 +133,7 @@ class UserCommentMentionsView(BaseUserCommentListView):
     def get_user_queryset(self):
         return super().get_user_queryset().exclude_blocking(self.request.user)
 
-    def get_queryset(self, queryset):
+    def get_queryset(self):
         return (
             super()
             .get_queryset()
