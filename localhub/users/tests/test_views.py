@@ -38,7 +38,7 @@ class TestActivityMentionsView:
             mentions=f"@{member.member.username}",
         )
         response = client.get(
-            reverse("users:activity_mentions", args=[member.member.username])
+            reverse("activity_mentions", args=[member.member.username])
         )
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 0
@@ -50,7 +50,7 @@ class TestActivityMentionsView:
         post = PostFactory(
             community=member.community, owner=member.member, mentions="@danjac @tester",
         )
-        response = client.get(reverse("users:activity_mentions", args=["danjac"]))
+        response = client.get(reverse("activity_mentions", args=["danjac"]))
         assert response.status_code == 200
         assert response.context["object_list"][0]["object"] == post
 
@@ -63,7 +63,7 @@ class TestCommentMentionsView:
             content=f"@{member.member.username}",
         )
         response = client.get(
-            reverse("users:activity_mentions", args=[member.member.username])
+            reverse("comment_mentions", args=[member.member.username])
         )
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 0
@@ -75,7 +75,7 @@ class TestCommentMentionsView:
         comment = CommentFactory(
             community=member.community, owner=member.member, content="@danjac @tester",
         )
-        response = client.get(reverse("users:comment_mentions", args=["danjac"]))
+        response = client.get(reverse("comment_mentions", args=["danjac"]))
         assert response.status_code == 200
         assert response.context["object_list"][0] == comment
 

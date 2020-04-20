@@ -14,6 +14,7 @@ from localhub.communities.views import (
     community_sidebar_view,
     community_welcome_view,
 )
+from localhub.users.urls import mentions_urls
 from localhub.users.views.actions import dismiss_notice_view, switch_theme_view
 from localhub.users.views.delete import user_delete_view
 from localhub.users.views.edit import user_update_view
@@ -36,8 +37,9 @@ urlpatterns = [
     path("posts/", include("localhub.posts.urls")),
     path("people/", include("localhub.users.urls")),
     path("site/", include("localhub.communities.urls")),
-    path("sites/", community_list_view, name="community_list"),
     path("tags/", include("localhub.hashtags.urls")),
+    path("mentions/", include(mentions_urls)),
+    path("sites/", community_list_view, name="community_list"),
     path("account/~update", user_update_view, name="user_update"),
     path("account/~delete", user_delete_view, name="user_delete"),
     path("welcome/", view=community_welcome_view, name="community_welcome"),

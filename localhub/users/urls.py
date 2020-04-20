@@ -28,6 +28,17 @@ app_name = "users"
 
 USERNAME_RE = r"^(?P<username>[\w.@+-]+)/"
 
+mentions_urls = [
+    re_path(
+        USERNAME_RE + "$", view=user_activity_mentions_view, name="activity_mentions",
+    ),
+    re_path(
+        USERNAME_RE + "comments/$",
+        view=user_comment_mentions_view,
+        name="comment_mentions",
+    ),
+]
+
 urlpatterns = [
     path("autocomplete/", view=user_autocomplete_list_view, name="autocomplete_list",),
     path("members/", view=member_list_view, name="member_list"),
@@ -40,15 +51,5 @@ urlpatterns = [
     re_path(USERNAME_RE + r"unblock/$", view=user_unblock_view, name="unblock"),
     re_path(USERNAME_RE + r"comments/$", view=user_comment_list_view, name="comments"),
     re_path(USERNAME_RE + r"messages/$", view=user_message_list_view, name="messages"),
-    re_path(
-        USERNAME_RE + r"mentions/$",
-        view=user_activity_mentions_view,
-        name="activity_mentions",
-    ),
-    re_path(
-        USERNAME_RE + r"mentions/comments/$",
-        view=user_comment_mentions_view,
-        name="comment_mentions",
-    ),
     re_path(USERNAME_RE + r"$", view=user_stream_view, name="activities"),
 ]
