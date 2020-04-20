@@ -15,7 +15,7 @@ from .models import Message
 class MessageForm(forms.ModelForm):
 
     recipient = MentionsField(
-        required=True, help_text=_("Use @mentions to find a recipient"),
+        required=True, help_text=_("Use @mention format to find and add a recipient"),
     )
 
     class Meta:
