@@ -17,7 +17,7 @@
   {% if is_content_sensitive %}
   <div class="card-header"
        data-target="toggle.togglable">
-    <div class="card-subtitle h6">
+    <div class="card-subtitle pb-1 h6">
       {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
     </div>
   </div>
@@ -31,7 +31,7 @@
 
         {% if object.is_reshare %}
 
-        <div class="card-subtitle h6">
+        <div class="card-subtitle pb-1 h6">
           {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner verb="reshared" %}
         </div>
 
@@ -86,7 +86,7 @@
 
       </div>
 
-      <div class="card-subtitle py-1">
+      <div class="card-subtitle pb-1">
         {% if object.parent %}
         {% include "includes/timesince.html" with timestamp=object.parent.published|default:object.created owner=object.parent.owner %}
         {% elif not object.is_reshare %}
@@ -95,7 +95,7 @@
       </div>
 
       {% if object.url or object.additional_tags or object.mentions %}
-      <div class="card-subtitle py-1">
+      <div class="card-subtitle pb-1">
         {% if object.url %}
         <div class="info">
           {{ object.url|domain|linkify }}
@@ -158,8 +158,10 @@
     {% block footer %}
 
     <div class="card-footer">
-      {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
-      <div class="d-flex align-center py-1">
+      <div class="pb-1">
+        {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
+      </div>
+      <div class="d-flex align-center pb-1">
         {% block actions %}{% include "activities/includes/actions.html" %}{% endblock %}
         {% block links %}{% include "activities/includes/links.html" %}{% endblock %}
       </div>

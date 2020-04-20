@@ -27,7 +27,7 @@
   </div>
   <div class="card-body">
     {% collapsable is_detail %}
-    <div class="markdown-content py-1">
+    <div class="markdown-content pb-1">
       {{ message.message.markdown|strip_external_images:user|lazify }}
     </div>
     {% endcollapsable %}
@@ -36,7 +36,7 @@
               class="d-none">{{ message.message }}</textarea>
   </div>
   <div class="card-footer">
-    <div class="d-flex align-center py-1">
+    <div class="d-flex align-center pb-1">
       <div class="dropdown mr-2"
            data-controller="dropdown">
         <button class="btn btn-sm"

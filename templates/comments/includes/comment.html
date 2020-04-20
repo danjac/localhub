@@ -63,14 +63,14 @@
     {% endif %}
     {% if show_content %}
     {% collapsable is_detail %}
-    <div class="markdown-content mt-1">
+    <div class="markdown-content pb-1">
       {{ comment.content.markdown|strip_external_images:user|lazify }}
     </div>
     {% endcollapsable %}
     {% endif %}
   </div>
   <div class="card-footer">
-    <div class="py-1">
+    <div class="pb-1">
       {% if comment.num_likes and comment.owner == user %}
       <div class="info">
         {{ comment.num_likes }}
@@ -88,7 +88,7 @@
       </div>
       {% endif %}
     </div>
-    <div class="d-flex align-center py-1">
+    <div class="d-flex align-center pb-1">
       <div class="dropdown mr-2"
            data-controller="dropdown">
         <button class="btn btn-sm"

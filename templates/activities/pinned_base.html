@@ -24,13 +24,15 @@
     </div>
   </div>
   <div class="card-footer">
-    {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
+    <div class="pb-1">
+      {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
+    </div>
     {% if object.description %}
     <textarea data-target="clipboard.textarea"
               readonly
               class="d-none">{{ object.description }}</textarea>
     {% endif %}
-    <div class="d-flex align-center py-1">
+    <div class="d-flex align-center pb-1">
       {% block actions %}{% include "activities/includes/actions.html" %}{% endblock %}
       {% block links %}{% include "activities/includes/links.html" %}{% endblock %}
     </div>
