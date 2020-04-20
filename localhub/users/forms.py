@@ -58,8 +58,12 @@ class UserForm(forms.ModelForm):
             "send_email_notifications": _(
                 "Send me an email when I receive a new Message or Notification"
             ),
-            "show_external_images": _("Show images in Markdown and OpenGraph content"),
-            "show_sensitive_content": _("Show sensitive content"),
+            "show_external_images": _(
+                "Show external images embedded in Markdown and OpenGraph content"
+            ),
+            "show_sensitive_content": _(
+                "Show sensitive content by default in public feeds"
+            ),
             "show_embedded_content": _(
                 "Show embedded content such as Youtube videos and tweets"
             ),
