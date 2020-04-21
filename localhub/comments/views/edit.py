@@ -9,7 +9,12 @@ from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.flags.forms import FlagForm
-from localhub.views import SuccessCreateView, SuccessFormView, SuccessUpdateView
+from localhub.views import (
+    ParentObjectMixin,
+    SuccessCreateView,
+    SuccessFormView,
+    SuccessUpdateView,
+)
 
 from ..forms import CommentForm
 from ..models import Comment
@@ -89,19 +94,16 @@ comment_flag_view = CommentFlagView.as_view()
 
 
 class CommentReplyView(
-    CommentQuerySetMixin, PermissionRequiredMixin, SuccessCreateView,
+    CommentQuerySetMixin, PermissionRequiredMixin, ParentObjectMixin, SuccessCreateView,
 ):
     permission_required = "comments.reply_to_comment"
     model = Comment
+    parent_model = Comment
     form_class = CommentForm
     success_message = _("You have replied to this %(model)s")
 
     def get_permission_object(self):
         return self.parent
-
-    @cached_property
-    def parent(self):
-        return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
 
     @cached_property
     def content_object(self):
@@ -114,7 +116,6 @@ class CommentReplyView(
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data["parent"] = self.parent
         data["content_object"] = self.content_object
         return data
 

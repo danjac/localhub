@@ -4,21 +4,25 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.utils.functional import cached_property
 
 
 class ParentObjectMixin:
     """
-    Works SingleObjectMixin but provides convenient methods
+    Works like SingleObjectMixin but provides convenient methods
     for fetching a "parent" object.
+
+    This is useful when you want e.g. a form or list view with
+    a different "parent" related object to another object
+
     """
 
-    # sets parent to None if not found
-    parent_optional = False
+    # if not required, sets parent to None if not found
+    parent_required = True
 
     parent_model = None
     parent_queryset = None
     parent_context_object_name = None
+    parent_object_name = "parent"
 
     parent_pk_field = "pk"
     parent_slug_field = "slug"
@@ -26,9 +30,9 @@ class ParentObjectMixin:
     parent_pk_kwarg = "pk"
     parent_slug_kwarg = "slug"
 
-    @cached_property
-    def parent(self):
-        return self.get_parent_object()
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
+        setattr(self, self.parent_object_name, self.get_parent_object())
 
     def get_parent_queryset(self):
         if self.parent_model is None and self.parent_queryset is None:
@@ -41,11 +45,9 @@ class ParentObjectMixin:
         return self.parent_model.objects.all()
 
     def get_parent_context_object_name(self):
-        if self.parent_context_object_name is not None:
-            return self.parent_context_object_name
-        return self.parent._meta.model_name
+        return self.parent_context_object_name or self.parent_object_name
 
-    def get_parent_url_kwargs(self):
+    def get_parent_kwargs(self):
 
         kwargs = {}
 
@@ -63,14 +65,16 @@ class ParentObjectMixin:
     def get_parent_object(self, queryset=None):
         try:
             return get_object_or_404(
-                queryset or self.get_parent_queryset(), **self.get_kwargs()
+                queryset or self.get_parent_queryset(), **self.get_parent_kwargs()
             )
         except Http404:
-            if self.parent_optional:
-                return None
-            raise
+            if self.parent_required:
+                raise
+            return None
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data[self.get_parent_context_object_name()] = self.parent
+        data[self.get_parent_context_object_name()] = getattr(
+            self, self.parent_object_name
+        )
         return data

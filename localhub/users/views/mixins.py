@@ -3,14 +3,13 @@
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404
-from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.utils.functional import cached_property
 
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.private_messages.models import Message
+from localhub.views import ParentObjectMixin
 
 
 class BaseUserQuerySetMixin(CommunityRequiredMixin):
@@ -58,26 +57,27 @@ class CurrentUserMixin(LoginRequiredMixin):
         return self.request.user
 
 
-class SingleUserMixin(BaseUserQuerySetMixin):
-    def get(self, request, *args, **kwargs):
-        try:
-            response = super().get(request, *args, **kwargs)
-        except Http404:
+class SingleUserMixin(ParentObjectMixin, BaseUserQuerySetMixin):
+    parent_slug_kwarg = "username"
+    parent_slug_field = "username"
+    parent_object_name = "user_obj"
+    parent_required = False
+
+    def get_parent_queryset(self):
+        return self.get_user_queryset()
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.user_obj is None:
             return TemplateResponse(
                 request,
                 "users/detail/not_found.html",
                 {"username": kwargs["username"]},
                 status=404,
             )
+        response = super().dispatch(request, *args, **kwargs)
         if self.user_obj != request.user:
             self.user_obj.get_notifications().for_recipient(request.user).mark_read()
         return response
-
-    @cached_property
-    def user_obj(self):
-        return get_object_or_404(
-            self.get_user_queryset(), username=self.kwargs["username"]
-        )
 
     @cached_property
     def display_name(self):
@@ -138,7 +138,6 @@ class SingleUserMixin(BaseUserQuerySetMixin):
         data = super().get_context_data(**kwargs)
         data.update(
             {
-                "user_obj": self.user_obj,
                 "is_current_user": self.is_current_user,
                 "is_blocked": self.is_blocked,
                 "is_blocker": self.is_blocker,

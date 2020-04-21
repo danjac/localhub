@@ -110,8 +110,8 @@ class UserActivityMentionsView(BaseUserActivityStreamView):
 
     template_name = "users/mentions/activities.html"
 
-    def get_user_queryset(self):
-        return super().get_user_queryset().exclude_blocking(self.request.user)
+    def get_parent_queryset(self):
+        return super().get_parent_queryset().exclude_blocking(self.request.user)
 
     def filter_queryset(self, queryset):
         return (
@@ -130,8 +130,8 @@ class UserCommentMentionsView(BaseUserCommentListView):
 
     template_name = "users/mentions/comments.html"
 
-    def get_user_queryset(self):
-        return super().get_user_queryset().exclude_blocking(self.request.user)
+    def get_parent_queryset(self):
+        return super().get_parent_queryset().exclude_blocking(self.request.user)
 
     def get_queryset(self):
         return (
