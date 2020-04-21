@@ -25,8 +25,6 @@
 {% include "activities/includes/description.html" %}
 {% if is_detail %}
 <dl class="text-small">
-  <dt>{% trans "Original Filename" %}</dt>
-  <dd>{{ object.image.name }}</dd>
   <dt>{% trans "Original Size" %}</dt>
   <dd>{{ object.image.width }}x{{ object.image.height }}</dd>
   <dt>{% trans "File Size" %}</dt>
