@@ -96,6 +96,9 @@ class DefaultAdapter(Adapter):
             self.mailer.send()
             self.webpusher.send()
 
+    def get_template_prefixes(self):
+        return [f"{self.app_label}/includes"]
+
     def get_template_names(self):
         """Returns path of template names using TemplateResolver
 

@@ -4,6 +4,8 @@
 """Template helper classes for default Adapter base class.
 """
 
+import itertools
+
 from django.template import loader
 
 
@@ -69,7 +71,7 @@ class TemplateResolver:
         self.verb = self.adapter.verb
         self.object_name = self.adapter.object_name
 
-    def resolve(self, prefix, suffix=".html"):
+    def resolve(self, prefixes=None, suffix=".html"):
         """Generates list of standard Django template paths. Can
         be passed to loader.select_template() or similar.
 
@@ -80,33 +82,50 @@ class TemplateResolver:
         {prefix}/notification{suffix}
 
         Args:
-            prefix (str): prefix prepended to all the paths e.g. "post"
+            prefixes (List[str], optional): prefixes prepended to all the paths e.g. "post".
+                (optional: None)
             suffix (str): suffix appended to all paths e.g. ".txt"
 
         Returns:
             list: list of path strs
         """
-        return [
-            f"{prefix}/notifications/{self.verb}_{self.object_name}{suffix}",
-            f"{prefix}/notifications/{self.verb}{suffix}",
-            f"{prefix}/{self.object_name}_notification{suffix}",
-            f"{prefix}/notification{suffix}",
-        ]
+        return itertools.chain(
+            [
+                [
+                    f"{prefix}/notifications/{self.verb}_{self.object_name}{suffix}",
+                    f"{prefix}/notifications/{self.verb}{suffix}",
+                    f"{prefix}/{self.object_name}_notification{suffix}",
+                    f"{prefix}/notification{suffix}",
+                ]
+                for prefix in prefixes or [""]
+            ]
+        )
 
 
 class TemplateRenderer:
+
+    context_class = TemplateContext
+    resolver_class = TemplateResolver
+
+    def __init__(self, adapter, resolver=None, context=None):
+        self.adapter = adapter
+        self.resolver = resolver or self.resolver_class(self.adapter)
+        self.context = context or self.context_class(self.adapter)
+
     def render(
-        self, template_names, context, template_engine=loader,
+        self, prefixes=None, suffix=".html", extra_context=None, template_engine=loader,
     ):
         """Renders a list of templates to a str. Use with TemplateResolver
         and TemplateContext.
 
         Args:
-            template_names (list): list of standard Django template paths
-            context (dict): template context
+            extra_context (dict): template context
             template_engine (object, optional): Django template engine (default: loader)
 
         Returns:
             str: rendered template
         """
-        return template_engine.render_to_string(template_names, context=context)
+        return template_engine.render_to_string(
+            self.resolver.resolve(prefixes, suffix),
+            context=self.get_context(extra_context),
+        )

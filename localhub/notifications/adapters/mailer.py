@@ -30,6 +30,9 @@ class Mailer:
     def get_template_names(self, suffix):
         return self.resolver.resolve(f"{self.app_label}/emails", suffix)
 
+    def get_template_prefixes(self):
+        return [f"{self.app_label}/emails"]
+
     def send(self, **kwargs):
         if self.recipient.send_email_notifications:
             subject = self.get_subject()
