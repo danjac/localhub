@@ -2,31 +2,28 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.db.models import Q
-from django.http import Http404
-from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
-from django.utils.functional import cached_property
 
 from taggit.models import Tag
 
 from localhub.activities.views.streams import BaseActivityStreamView
+from localhub.views import ParentObjectMixin
 
 
-class TagDetailView(BaseActivityStreamView):
+class TagDetailView(ParentObjectMixin, BaseActivityStreamView):
     template_name = "hashtags/tag_detail.html"
     ordering = "-created"
 
+    parent_model = Tag
+    parent_object_name = "tag"
+    parent_required = False
+
     def get(self, request, *args, **kwargs):
-        try:
-            return super().get(request, *args, **kwargs)
-        except Http404:
+        if self.tag is None:
             return TemplateResponse(
                 request, "hashtags/not_found.html", {"tag": kwargs["slug"]}, status=404
             )
-
-    @cached_property
-    def tag(self):
-        return get_object_or_404(Tag, slug=self.kwargs["slug"])
+        return super().get(request, *args, **kwargs)
 
     def filter_queryset(self, queryset):
         qs = (
@@ -46,11 +43,6 @@ class TagDetailView(BaseActivityStreamView):
                 ~Q(owner=self.request.user),
             )
         return qs
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["tag"] = self.tag
-        return data
 
 
 tag_detail_view = TagDetailView.as_view()

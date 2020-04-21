@@ -66,7 +66,7 @@ class SingleUserMixin(ParentObjectMixin, BaseUserQuerySetMixin):
     def get_parent_queryset(self):
         return self.get_user_queryset()
 
-    def dispatch(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         if self.user_obj is None:
             return TemplateResponse(
                 request,
@@ -74,7 +74,7 @@ class SingleUserMixin(ParentObjectMixin, BaseUserQuerySetMixin):
                 {"username": kwargs["username"]},
                 status=404,
             )
-        response = super().dispatch(request, *args, **kwargs)
+        response = super().get(request, *args, **kwargs)
         if self.user_obj != request.user:
             self.user_obj.get_notifications().for_recipient(request.user).mark_read()
         return response
