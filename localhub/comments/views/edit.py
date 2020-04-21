@@ -95,7 +95,6 @@ class CommentReplyView(
 ):
     permission_required = "comments.reply_to_comment"
     model = Comment
-    parent_model = Comment
     form_class = CommentForm
     success_message = _("You have replied to this %(model)s")
 
@@ -103,7 +102,7 @@ class CommentReplyView(
         return self.parent
 
     def get_parent_queryset(self):
-        return super().get_queryset()
+        return self.get_queryset()
 
     @cached_property
     def content_object(self):

@@ -32,12 +32,12 @@ class BaseMessageFormView(PermissionRequiredMixin, SuccessFormView):
 
 
 class BaseReplyFormView(ParentObjectMixin, RecipientContextMixin, BaseMessageFormView):
-    def get_parent_queryset(self):
-        return self.get_queryset()
-
     @cached_property
     def recipient(self):
         return self.parent.get_other_user(self.request.user)
+
+    def get_parent_queryset(self):
+        return self.get_queryset()
 
     def notify(self):
         """Handle any notifications to recipient here"""

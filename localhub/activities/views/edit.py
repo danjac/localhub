@@ -1,9 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from rules.contrib.views import PermissionRequiredMixin
@@ -11,7 +9,12 @@ from rules.contrib.views import PermissionRequiredMixin
 from localhub.comments.forms import CommentForm
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
-from localhub.views import SuccessCreateView, SuccessFormView, SuccessUpdateView
+from localhub.views import (
+    ParentObjectMixin,
+    SuccessCreateView,
+    SuccessFormView,
+    SuccessUpdateView,
+)
 
 from ..forms import ActivityTagsForm
 from .mixins import ActivityQuerySetMixin, ActivityTemplateMixin
@@ -93,18 +96,16 @@ class ActivityUpdateTagsView(ActivityUpdateView):
 
 
 class ActivityFlagView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, SuccessFormView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, ParentObjectMixin, SuccessFormView,
 ):
     form_class = FlagForm
     template_name = "activities/flag_form.html"
     permission_required = "activities.flag_activity"
     success_message = _("This %(model)s has been flagged to the moderators")
 
-    @cached_property
-    def activity(self):
-        return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+    parent_object_name = "activity"
 
-    def get_queryset(self):
+    def get_parent_queryset(self):
         return (
             super()
             .get_queryset()
@@ -142,19 +143,20 @@ activity_flag_view = ActivityFlagView.as_view()
 
 
 class ActivityCommentCreateView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, SuccessFormView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, ParentObjectMixin, SuccessFormView,
 ):
     form_class = CommentForm
     template_name = "comments/comment_form.html"
     permission_required = "activities.create_comment"
     success_message = _("Your %(model)s has been posted")
 
-    @cached_property
-    def content_object(self):
-        return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+    parent_object_name = "content_object"
 
     def get_permission_object(self):
         return self.content_object
+
+    def get_parent_queryset(self):
+        return self.get_queryset()
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -170,9 +172,6 @@ class ActivityCommentCreateView(
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data.update(
-            {
-                "content_object": self.content_object,
-                "content_object_model": self.content_object.__class__,
-            }
+            {"content_object_model": self.content_object.__class__,}
         )
         return data
