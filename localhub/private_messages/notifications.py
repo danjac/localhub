@@ -3,7 +3,7 @@
 
 from django.utils.translation import gettext_lazy as _
 
-from localhub.notifications.adapters import DefaultAdapter, Mailer, Webpusher
+from localhub.notifications.adapters import Adapter, Mailer, Webpusher
 from localhub.notifications.decorators import register
 
 from .models import Message
@@ -33,7 +33,7 @@ class MessageWebpusher(Webpusher):
 
 
 @register(Message)
-class MessageAdapter(DefaultAdapter):
+class MessageAdapter(Adapter):
     ALLOWED_VERBS = ["send", "reply", "follow_up"]
 
     mailer_class = MessageMailer

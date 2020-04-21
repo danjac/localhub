@@ -4,7 +4,7 @@
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
-from localhub.notifications.adapters import DefaultAdapter, Mailer, Webpusher
+from localhub.notifications.adapters import Adapter, Mailer, Webpusher
 from localhub.notifications.decorators import register
 
 HEADERS = [
@@ -34,7 +34,7 @@ class UserWebpusher(Webpusher):
 
 
 @register(get_user_model())
-class UserAdapter(DefaultAdapter):
+class UserAdapter(Adapter):
     ALLOWED_VERBS = ["new_follower", "new_member", "update"]
 
     mailer_class = UserMailer

@@ -13,7 +13,7 @@ def register(model):
     Example:
 
     @register(Post)
-    class PostAdapter(DefaultAdapter):
+    class PostAdapter(Adapter):
         ...
 
     Args:

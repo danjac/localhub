@@ -1,9 +1,6 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from abc import ABC, abstractmethod
-
-from django.template import loader
 from django.utils.translation import override
 
 from .mailer import Mailer
@@ -12,24 +9,13 @@ from .webpusher import Webpusher
 
 __all__ = [
     "Adapter",
-    "DefaultAdapter",
     "Mailer",
     "TemplateRenderer",
     "Webpusher",
 ]
 
 
-class Adapter(ABC):
-    @abstractmethod
-    def send_notification(self):
-        ...
-
-    @abstractmethod
-    def render_to_tag(self, template_engine=loader, extra_context=None):
-        ...
-
-
-class DefaultAdapter(Adapter):
+class Adapter:
     """
     Base class for handling notifications. All adapters should subclass
     this class.

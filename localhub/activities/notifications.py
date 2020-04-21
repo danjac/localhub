@@ -4,7 +4,7 @@
 from django.template.defaultfilters import truncatechars
 from django.utils.translation import gettext_lazy as _
 
-from localhub.notifications.adapters import DefaultAdapter, Mailer, Webpusher
+from localhub.notifications.adapters import Adapter, Mailer, Webpusher
 
 HEADERS = [
     ("delete", _("%(actor)s has deleted your %(object)s")),
@@ -53,7 +53,7 @@ class ActivityWebpusher(Webpusher):
         return truncatechars(self.adapter.object.title, 60)
 
 
-class ActivityAdapter(DefaultAdapter):
+class ActivityAdapter(Adapter):
 
     ALLOWED_VERBS = [
         "delete",

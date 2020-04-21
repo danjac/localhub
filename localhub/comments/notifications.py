@@ -3,7 +3,7 @@
 
 from django.utils.translation import gettext_lazy as _
 
-from localhub.notifications.adapters import DefaultAdapter, Mailer, Webpusher
+from localhub.notifications.adapters import Adapter, Mailer, Webpusher
 from localhub.notifications.decorators import register
 
 from .models import Comment
@@ -39,7 +39,7 @@ class CommentWebpusher(Webpusher):
 
 
 @register(Comment)
-class CommentAdapter(DefaultAdapter):
+class CommentAdapter(Adapter):
     ALLOWED_VERBS = [
         "delete",
         "flag",
