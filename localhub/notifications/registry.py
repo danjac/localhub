@@ -3,7 +3,7 @@
 
 from django.core.exceptions import ImproperlyConfigured
 
-from .adapters import Adapter
+from .adapter import Adapter
 
 
 class AdapterRegistry:

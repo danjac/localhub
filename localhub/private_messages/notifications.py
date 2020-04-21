@@ -3,7 +3,7 @@
 
 from django.utils.translation import gettext_lazy as _
 
-from localhub.notifications.adapters import Adapter, Mailer, Webpusher
+from localhub.notifications.adapter import Adapter, Mailer, Webpusher
 from localhub.notifications.decorators import register
 
 from .models import Message
