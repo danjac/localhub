@@ -76,6 +76,12 @@ class Adapter:
             self.webpusher.send()
 
     def get_template_prefixes(self):
+        """Returns list of default template name prefixes
+        used to render the notification template tag.
+
+        Returns:
+            List[str]
+        """
         return [f"{self.app_label}/includes"]
 
     def get_object_url(self):
@@ -111,6 +117,12 @@ class Adapter:
         return self.renderer.render(**template_kwargs)
 
     def as_dict(self):
+        """Serialize this object as a dict with all
+        required notification and object references.
+
+        Returns:
+            dict
+        """
         actor_url = self.actor.get_absolute_url()
         recipient_url = self.recipient.get_absolute_url()
 
