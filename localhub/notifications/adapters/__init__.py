@@ -7,16 +7,13 @@ from django.template import loader
 from django.utils.translation import override
 
 from .mailer import Mailer
-from .template import TemplateContext, TemplateRenderer, TemplateResolver
+from .template import TemplateRenderer
 from .webpusher import Webpusher
 
 __all__ = [
     "Adapter",
     "DefaultAdapter",
     "Mailer",
-    "TemplateContext",
-    "TemplateRenderer",
-    "TemplateResolver",
     "Webpusher",
 ]
 
@@ -49,10 +46,7 @@ class DefaultAdapter(Adapter):
 
     webpusher_class = Webpusher
     mailer_class = Mailer
-
-    context_class = TemplateContext
     renderer_class = TemplateRenderer
-    resolver_class = TemplateResolver
 
     # provide list of verbs accepted by this adapter.
 
@@ -70,10 +64,7 @@ class DefaultAdapter(Adapter):
         self.object_name = self.object._meta.object_name.lower()
         self.app_label = self.object._meta.app_label
 
-        self.renderer = self.renderer_class()
-        self.resolver = self.resolver_class(self)
-        self.context = self.context_class(self)
-
+        self.renderer = self.renderer_class(self)
         self.mailer = self.mailer_class(self)
         self.webpusher = self.webpusher_class(self)
 
@@ -121,21 +112,18 @@ class DefaultAdapter(Adapter):
         """
         return self.community.resolve_url(self.get_object_url())
 
-    def render_to_tag(self, template_engine=loader, extra_context=None):
+    def render_to_tag(self, **template_kwargs):
         """Used with the {% notification %} template tag under notification_tags.
 
         It should render an HTML snippet of the notification
         in the notifications page and other parts of the site.
 
         Args:
-           template_engine (optional): Django template engine (default: loader)
-           extra_context (dict, optional): additional context (default: None)
+            **template_kwargs: arguments passed to TemplateRenderer.render
 
         Returns:
            str: rendered template str
         """
         return self.renderer.render(
-            self.get_template_names(),
-            self.context.get_context(extra_context),
-            template_engine=template_engine,
+            prefix=f"{self.app_label}/includes", **template_kwargs
         )
