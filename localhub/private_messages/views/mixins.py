@@ -2,29 +2,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from django.utils.functional import cached_property
-
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.users.utils import user_display
 
 from ..models import Message
-
-
-class RecipientContextMixin:
-    """
-    Assumes self.recipient is previously defined in the view.
-    """
-
-    @cached_property
-    def recipient_display(self):
-        return user_display(self.recipient)
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data.update(
-            {"recipient": self.recipient, "recipient_display": self.recipient_display}
-        )
-        return data
 
 
 class MessageQuerySetMixin(CommunityRequiredMixin):

@@ -13,7 +13,7 @@ from localhub.users.utils import user_display
 from localhub.views import ParentObjectMixin, SuccessFormView
 
 from ..forms import MessageForm, MessageRecipientForm
-from .mixins import RecipientContextMixin, RecipientQuerySetMixin, SenderQuerySetMixin
+from .mixins import RecipientQuerySetMixin, SenderQuerySetMixin
 
 
 class BaseMessageFormView(PermissionRequiredMixin, SuccessFormView):
@@ -31,7 +31,7 @@ class BaseMessageFormView(PermissionRequiredMixin, SuccessFormView):
         }
 
 
-class BaseReplyFormView(ParentObjectMixin, RecipientContextMixin, BaseMessageFormView):
+class BaseReplyFormView(ParentObjectMixin, BaseMessageFormView):
     @cached_property
     def recipient(self):
         return self.parent.get_other_user(self.request.user)
@@ -55,6 +55,11 @@ class BaseReplyFormView(ParentObjectMixin, RecipientContextMixin, BaseMessageFor
 
         return self.success_response()
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["recipient"] = self.recipient
+        return data
+
 
 class MessageReplyView(RecipientQuerySetMixin, BaseReplyFormView):
     def notify(self):
@@ -63,7 +68,7 @@ class MessageReplyView(RecipientQuerySetMixin, BaseReplyFormView):
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form["message"].label = _(
-            "Send reply to %(recipient)s" % {"recipient": self.recipient_display}
+            "Send reply to %(recipient)s" % {"recipient": user_display(self.recipient)}
         )
         return form
 
@@ -78,7 +83,8 @@ class MessageFollowUpView(SenderQuerySetMixin, BaseReplyFormView):
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form["message"].label = _(
-            "Send follow-up to %(recipient)s" % {"recipient": self.recipient_display}
+            "Send follow-up to %(recipient)s"
+            % {"recipient": user_display(self.recipient)}
         )
         return form
 
@@ -87,10 +93,7 @@ message_follow_up_view = MessageFollowUpView.as_view()
 
 
 class MessageRecipientCreateView(
-    CommunityRequiredMixin,
-    ParentObjectMixin,
-    RecipientContextMixin,
-    BaseMessageFormView,
+    CommunityRequiredMixin, ParentObjectMixin, BaseMessageFormView,
 ):
     """Send new message to a specific recipient"""
 
@@ -109,7 +112,8 @@ class MessageRecipientCreateView(
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form["message"].label = _(
-            "Send message to %(recipient)s" % {"recipient": self.recipient_display}
+            "Send message to %(recipient)s"
+            % {"recipient": user_display(self.recipient)}
         )
         return form
 
