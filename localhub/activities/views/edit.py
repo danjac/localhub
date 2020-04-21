@@ -113,11 +113,6 @@ class ActivityFlagView(
             .exclude(has_flagged=True)
         )
 
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(
-            activity=self.activity, activity_model=self.activity.__class__, **kwargs
-        )
-
     def get_permission_object(self):
         return self.activity
 
@@ -168,10 +163,3 @@ class ActivityCommentCreateView(
         self.object.notify_on_create()
 
         return self.success_response()
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data.update(
-            {"content_object_model": self.content_object.__class__,}
-        )
-        return data

@@ -23,7 +23,7 @@
   <li class="breadcrumb-item"><a href="{% url 'comments:list' %}">{% trans "Comments" %}</a></li>
   <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{% trans "Comment" %}</a></li>
   <li class="breadcrumb-item"><a href="#">{% trans "Edit" %}</a></li>
-  {% elif content_object and content_object_model %}
+  {% elif content_object %}
   <li class="breadcrumb-item"><a href="{{ content_object.get_absolute_url }}">{{ content_object|truncatechars:60 }}</a>
   </li>
   <li class="breadcrumb-item">

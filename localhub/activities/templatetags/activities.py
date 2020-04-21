@@ -81,7 +81,7 @@ def resolve_model_url(model, view_name):
         {% resolve_model_url Post 'list' %}
 
     Args:
-        model (Activity class): model class
+        model (Activity class): model class or instance
         view_name (str): name of the view
 
     Returns:
