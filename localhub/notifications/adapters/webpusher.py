@@ -21,7 +21,7 @@ class Webpusher:
         """
         Sends a webpush notification to registered browsers through celery.
         """
-        from . import tasks
+        from .. import tasks
 
         try:
             return tasks.send_webpush.delay(
