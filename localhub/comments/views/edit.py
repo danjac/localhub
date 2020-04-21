@@ -1,7 +1,6 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -48,14 +47,16 @@ comment_update_view = CommentUpdateView.as_view()
 
 
 class CommentFlagView(
-    PermissionRequiredMixin, CommentQuerySetMixin, SuccessFormView,
+    PermissionRequiredMixin, CommentQuerySetMixin, ParentObjectMixin, SuccessFormView,
 ):
     form_class = FlagForm
     template_name = "comments/flag_form.html"
     permission_required = "comments.flag_comment"
     success_message = _("This comment has been flagged to the moderators")
 
-    def get_queryset(self):
+    parent_object_name = "comment"
+
+    def get_parent_queryset(self):
         return (
             super()
             .get_queryset()
@@ -68,10 +69,6 @@ class CommentFlagView(
 
     def get_success_url(self):
         return super().get_success_url(object=self.comment)
-
-    @cached_property
-    def comment(self):
-        return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -104,6 +101,9 @@ class CommentReplyView(
 
     def get_permission_object(self):
         return self.parent
+
+    def get_parent_queryset(self):
+        return super().get_queryset()
 
     @cached_property
     def content_object(self):
