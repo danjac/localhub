@@ -29,6 +29,16 @@
   <dd>{{ object.image.width }}x{{ object.image.height }}</dd>
   <dt>{% trans "File Size" %}</dt>
   <dd>{{ object.image.size|filesizeformat }}</dd>
+  {% if object.has_map %}
+  <dt>{% trans "GPS Location" %}</dt>
+  <dd>
+  {% with latitude=object.latitude|floatformat:2 longitude=object.longitude|floatformat:2 %}
+  {% blocktrans %}
+  {{ latitude }}&deg;N {{ longitude }}&deg;W
+  {% endblocktrans %}
+  {% endwith %}
+  </dd>
+  {% endif %}
   {% if object.artist %}
   <dt>{% trans "Artist" %}</dt>
   <dd>{{ object.artist }}</dd>
