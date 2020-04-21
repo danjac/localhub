@@ -541,10 +541,16 @@ class Activity(TimeStampedModel):
     def indexable_description(self):
         """Returns default indexable description fields for search trackers.
         """
-        values = [
-            getattr(self, field, "") for field in self.INDEXABLE_DESCRIPTION_FIELDS
-        ]
-        return " ".join([value for value in values if value])
+        return " ".join(
+            [
+                value
+                for value in [
+                    getattr(self, field, "")
+                    for field in self.INDEXABLE_DESCRIPTION_FIELDS
+                ]
+                if value
+            ]
+        )
 
     def make_notification(self, recipient, verb, actor=None):
         return Notification(
