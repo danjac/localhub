@@ -95,32 +95,18 @@ class TemplateResolver:
 
 
 class TemplateRenderer:
-
-    context_class = TemplateContext
-    resolver_class = TemplateResolver
-
-    def __init__(self, adapter, context=None, resolver=None):
-
-        self.adapter = adapter
-        self.context = context or self.context_class(adapter)
-        self.resolver = resolver or self.resolver_class(adapter)
-
     def render(
-        self, prefix="", suffix=".html", extra_context=None, template_engine=loader,
+        self, template_names, context, template_engine=loader,
     ):
         """Renders a list of templates to a str. Use with TemplateResolver
         and TemplateContext.
 
         Args:
-            prefix (str, optional): suffix passed to resolver for all template names (default: "")
-            suffix (str, optional): prefix passed to resolver for all template names (default: ".html")
-            extra_context (dict, optional): extra template context (default: None)
+            template_names (list): list of standard Django template paths
+            context (dict): template context
             template_engine (object, optional): Django template engine (default: loader)
 
         Returns:
             str: rendered template
         """
-        return template_engine.render_to_string(
-            self.resolver.resolve(prefix, suffix),
-            context=self.context.get_context(extra_context),
-        )
+        return template_engine.render_to_string(template_names, context=context)
