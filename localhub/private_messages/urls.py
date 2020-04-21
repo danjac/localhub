@@ -13,7 +13,12 @@ from .views.actions import (
 )
 from .views.delete import message_delete_view
 from .views.detail import message_detail_view
-from .views.edit import message_create_view, message_follow_up_view, message_reply_view
+from .views.edit import (
+    message_create_view,
+    message_follow_up_view,
+    message_recipient_create_view,
+    message_reply_view,
+)
 from .views.list import inbox_view, outbox_view
 
 app_name = "private_messages"
@@ -39,6 +44,8 @@ urlpatterns = [
         name="message_remove_bookmark",
     ),
     re_path(
-        USERNAME_RE + r"~send/$", message_create_view, name="message_create_recipient"
+        USERNAME_RE + r"~send/$",
+        message_recipient_create_view,
+        name="message_create_recipient",
     ),
 ]

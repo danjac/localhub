@@ -13,18 +13,26 @@ from .models import Message
 
 
 class MessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ("message",)
+        labels = {"message": _("Send Message")}
+
+
+class MessageRecipientForm(MessageForm):
+    """Adds an extra recipient field to allow sender to lookup
+    a recipient for this message.
+    """
 
     recipient = MentionsField(
         required=True, help_text=_("Use @mention format to find and add a recipient"),
     )
 
-    class Meta:
-        model = Message
+    class Meta(MessageForm.Meta):
         fields = (
             "recipient",
             "message",
         )
-        labels = {"message": _("Send Message")}
 
     def __init__(self, *args, **kwargs):
         self.community = kwargs.pop("community", None)
