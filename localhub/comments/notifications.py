@@ -35,7 +35,7 @@ class CommentWebpusher(Webpusher):
         }
 
     def get_body(self):
-        return self.object.abbreviate()
+        return self.adapter.object.abbreviate()
 
 
 @register(Comment)

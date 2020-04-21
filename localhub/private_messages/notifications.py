@@ -18,18 +18,18 @@ HEADERS = {
 class MessageMailer(Mailer):
     def get_subject(self):
         return HEADERS[self.adapter.verb] % {
-            "sender": self.object.sender.get_display_name()
+            "sender": self.adapter.object.sender.get_display_name()
         }
 
 
 class MessageWebpusher(Webpusher):
     def get_header(self):
         return HEADERS[self.adapter.verb] % {
-            "sender": self.object.sender.get_display_name()
+            "sender": self.adapter.object.sender.get_display_name()
         }
 
     def get_body(self):
-        return self.object.abbreviate()
+        return self.adapter.object.abbreviate()
 
 
 @register(Message)

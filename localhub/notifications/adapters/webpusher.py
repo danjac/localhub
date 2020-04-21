@@ -13,9 +13,6 @@ celery_logger = get_logger(__name__)
 class Webpusher:
     def __init__(self, adapter):
         self.adapter = adapter
-        self.object = self.adapter.object
-        self.recipient = self.adapter.recipient
-        self.community = self.adapter.community
 
     def send(self):
         """
@@ -25,13 +22,13 @@ class Webpusher:
 
         try:
             return tasks.send_webpush.delay(
-                self.recipient.id, self.community.id, self.get_payload()
+                self.adapter.recipient.id, self.adapter.community.id, self.get_payload()
             )
         except tasks.send_webpush.OperationalError as e:
             celery_logger.exception(e)
 
     def get_header(self):
-        return str(self.object)
+        return str(self.adapter.object)
 
     def get_body(self):
         return None
@@ -50,8 +47,8 @@ class Webpusher:
         if body:
             payload["body"] = force_text(body)
 
-        if self.community.logo:
-            payload["icon"] = self.community.logo.url
+        if self.adapter.community.logo:
+            payload["icon"] = self.adapter.community.logo.url
         else:
             payload["icon"] = static("favicon.png")
 

@@ -36,10 +36,8 @@ class ActivityMailer(Mailer):
             "object": self.adapter.object_name,
         }
 
-    def get_template_names(self, suffix):
-        return super().get_template_names(suffix) + self.resolver.resolve(
-            "activities/emails", suffix
-        )
+    def get_template_prefixes(self):
+        return super().get_template_prefixes() + ["activities/emails"]
 
 
 class ActivityWebpusher(Webpusher):
@@ -52,7 +50,7 @@ class ActivityWebpusher(Webpusher):
         }
 
     def get_body(self):
-        return truncatechars(self.object.title, 60)
+        return truncatechars(self.adapter.object.title, 60)
 
 
 class ActivityAdapter(DefaultAdapter):
@@ -71,7 +69,5 @@ class ActivityAdapter(DefaultAdapter):
     mailer_class = ActivityMailer
     webpusher_class = ActivityWebpusher
 
-    def get_template_names(self):
-        return super().get_template_names() + self.resolver.resolve(
-            "activities/includes"
-        )
+    def get_template_prefixes(self):
+        return super().get_template_prefixes() + ["activities/includes"]

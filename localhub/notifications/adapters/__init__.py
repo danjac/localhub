@@ -7,16 +7,14 @@ from django.template import loader
 from django.utils.translation import override
 
 from .mailer import Mailer
-from .template import TemplateContext, TemplateRenderer, TemplateResolver
+from .template import TemplateRenderer
 from .webpusher import Webpusher
 
 __all__ = [
     "Adapter",
     "DefaultAdapter",
     "Mailer",
-    "TemplateContext",
     "TemplateRenderer",
-    "TemplateResolver",
     "Webpusher",
 ]
 
@@ -49,10 +47,7 @@ class DefaultAdapter(Adapter):
 
     webpusher_class = Webpusher
     mailer_class = Mailer
-
-    context_class = TemplateContext
     renderer_class = TemplateRenderer
-    resolver_class = TemplateResolver
 
     # provide list of verbs accepted by this adapter.
 
@@ -70,12 +65,10 @@ class DefaultAdapter(Adapter):
         self.object_name = self.object._meta.object_name.lower()
         self.app_label = self.object._meta.app_label
 
-        self.renderer = self.renderer_class()
-        self.resolver = self.resolver_class(self)
-        self.context = self.context_class(self)
-
         self.mailer = self.mailer_class(self)
         self.webpusher = self.webpusher_class(self)
+
+        self.renderer = self.renderer_class(self, self.get_template_prefixes())
 
     def is_allowed(self):
         """
@@ -99,14 +92,6 @@ class DefaultAdapter(Adapter):
     def get_template_prefixes(self):
         return [f"{self.app_label}/includes"]
 
-    def get_template_names(self):
-        """Returns path of template names using TemplateResolver
-
-        Returns:
-            list: list of template paths
-        """
-        return self.resolver.resolve(f"{self.app_label}/includes")
-
     def get_object_url(self):
         """Calls content_object.get_absolute_url()
 
@@ -124,7 +109,7 @@ class DefaultAdapter(Adapter):
         """
         return self.community.resolve_url(self.get_object_url())
 
-    def render_to_tag(self, template_engine=loader, extra_context=None):
+    def render_to_tag(self, **template_kwargs):
         """Used with the {% notification %} template tag under notification_tags.
 
         It should render an HTML snippet of the notification
@@ -137,8 +122,26 @@ class DefaultAdapter(Adapter):
         Returns:
            str: rendered template str
         """
-        return self.renderer.render(
-            self.get_template_names(),
-            self.context.get_context(extra_context),
-            template_engine=template_engine,
-        )
+        return self.renderer.render(**template_kwargs)
+
+    def as_dict(self):
+        actor_url = self.actor.get_absolute_url()
+        recipient_url = self.recipient.get_absolute_url()
+
+        return {
+            "actor_url": actor_url,
+            "recipient_url": recipient_url,
+            "notification": self.notification,
+            "object": self.object,
+            "object_url": self.get_object_url(),
+            "absolute_url": self.get_absolute_url(),
+            "object_name": self.object_name,
+            "actor": self.actor,
+            "actor_display": self.actor.get_display_name(),
+            "actor_absolute_url": self.community.resolve_url(actor_url),
+            "recipient": self.recipient,
+            "recipient_display": self.recipient.get_display_name(),
+            "recipient_absolute_url": self.community.resolve_url(recipient_url),
+            "verb": self.verb,
+            self.object_name: self.object,
+        }
