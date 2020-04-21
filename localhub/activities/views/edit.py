@@ -27,6 +27,7 @@ class ActivityCreateView(
     SuccessCreateView,
 ):
     permission_required = "activities.create_activity"
+    is_private = False
 
     def get_permission_object(self):
         return self.request.community
@@ -40,7 +41,7 @@ class ActivityCreateView(
 
     def form_valid(self, form):
 
-        publish = "save_private" not in self.request.POST
+        publish = self.is_private is False and "save_private" not in self.request.POST
 
         self.object = form.save(commit=False)
         self.object.owner = self.request.user

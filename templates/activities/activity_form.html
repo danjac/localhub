@@ -14,7 +14,9 @@
 {% verbose_name_plural view.model as object_name_plural %}
 {% resolve_model_url view.model "list" as list_url %}
 <ul class="breadcrumb">
+
   {% if object %}
+
   {% if object.published %}
   <li class="breadcrumb-item">
     <a href="{{ list_url }}">{{ object_name_plural|title }}</a>
@@ -22,19 +24,27 @@
   {% else %}
   <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
   {% endif %}
+
   <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
   <li class="breadcrumb-item"><a href="#">{% trans "Edit" %}</a></li>
+
+  {% else %}
+
+  {% if view.is_private %}
+  <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
   {% else %}
   <li class="breadcrumb-item">
     <a href="{{ list_url }}">
       {{ object_name_plural|title }}
     </a>
   </li>
+  {% endif %}
   <li class="breadcrumb-item">
     <a data-turbolinks="false"
        href="#">{% trans "Submit" %}</a>
   </li>
   {% endif %}
+
 </ul>
 
 {% block form %}

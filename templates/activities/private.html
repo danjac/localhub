@@ -4,6 +4,7 @@
 {% extends "activities/base.html" %}
 
 {% load i18n %}
+{% load rules %}
 {% load users %}
 
 {% block subtitle %} / {% trans "Private Stash" %}{% endblock %}
@@ -17,6 +18,29 @@ Activities in your Private Stash are only visible to you. They do not appear in
 the Activity Stream or Timeline. Comments cannot be submitted to private activities.
 {% endblocktrans %}
 {% enddismissable %}
+
+{% has_perm 'activities.create_activity' user community as can_create_activity %}
+
+{% if can_create_activity %}
+<div class="actions mb-1">
+  <a class="action"
+     href="{% url 'posts:create_private' %}">
+    {% trans "Submit Post" %}
+  </a>
+  <a class="action"
+     href="{% url 'events:create_private' %}">
+    {% trans "Submit Event" %}
+  </a>
+  <a class="action"
+     href="{% url 'photos:create_private' %}">
+    {% trans "Submit Photo" %}
+  </a>
+  <a class="action"
+     href="{% url 'polls:create_private' %}">
+    {% trans "Submit Poll" %}
+  </a>
+</div>
+{% endif %}
 
 {% if paginator.count or view.search_query %}
 {% include "includes/forms/search_form.html" with selector=True %}

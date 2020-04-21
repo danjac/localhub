@@ -76,6 +76,19 @@ class TestPostCreateView:
         assert post.community == member.community
         assert not post.published
 
+    def test_post_private_path(self, client, member, send_webpush_mock):
+
+        MembershipFactory(community=member.community, role=Membership.Role.MODERATOR)
+
+        response = client.post(
+            reverse("posts:create_private"), {"title": "test", "description": "test"},
+        )
+        post = Post.objects.get()
+        assert response.url == post.get_absolute_url()
+        assert post.owner == member.member
+        assert post.community == member.community
+        assert not post.published
+
 
 class TestPostUpdateView:
     def test_get(self, client, post_for_member):

@@ -28,7 +28,7 @@ will be concealed by default: <b>{{ tags_joined }}</b>.
 {{ block.super }}
 {% endblock form_fields %}
 {% block form_buttons %}
-{% if object.id %}
+{% if view.is_private or object.id %}
 {{ block.super }}
 {% else %}
 <button type="submit"

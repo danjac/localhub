@@ -60,6 +60,13 @@ def create_activity_urls(
             name="create",
         ),
         path(
+            "~create-private",
+            create_view_class.as_view(
+                model=model, form_class=form_class, is_private=True
+            ),
+            name="create_private",
+        ),
+        path(
             "<int:pk>/~comment/",
             create_comment_view_class.as_view(model=model),
             name="comment",
