@@ -126,12 +126,6 @@
       data-content="{% trans 'Content' %}"></li>
   <li class="menu-item">
     <a data-controller="active-link"
-       href="{% url 'hashtags:list' %}">
-      {% trans "Tags" %}
-    </a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link"
        href="{% url 'photos:gallery' %}">
       {% trans "Gallery" %}
     </a>
@@ -161,6 +155,12 @@
     <a data-controller="active-link"
        data-active-link-exact
        href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'hashtags:list' %}">
+      {% trans "Tags" %}
+    </a>
   </li>
   {% if can_moderate_community %}
   {% if site_counters.flags %}
