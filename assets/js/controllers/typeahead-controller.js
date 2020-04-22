@@ -53,8 +53,7 @@ export default class extends Controller {
 
   keydown(event) {
     if (
-      this.selectorOpen &&
-      [ARROW_DOWN, ARROW_UP, RETURN_KEY].indexOf(event.which) > -1
+      this.selectorOpen && [ARROW_DOWN, ARROW_UP, RETURN_KEY].indexOf(event.which) > -1
     ) {
       event.preventDefault();
     }
@@ -93,37 +92,37 @@ export default class extends Controller {
     let prevItem = null;
 
     switch (event.which) {
-      case TAB_KEY:
-      case RETURN_KEY:
-        this.handleSelection(
-          this.selectorTarget.querySelector('li.selected > [data-typeahead-value]')
-        );
-        event.preventDefault();
-        return false;
-      case ARROW_UP:
-        event.preventDefault();
-        firstItem = this.selectorTarget.querySelector('li.selected');
-        if (firstItem) {
-          prevItem = firstItem.previousElementSibling;
-          if (prevItem) {
-            firstItem.classList.remove('selected');
-            prevItem.classList.add('selected');
-          }
+    case TAB_KEY:
+    case RETURN_KEY:
+      this.handleSelection(
+        this.selectorTarget.querySelector('li.selected > [data-typeahead-value]')
+      );
+      event.preventDefault();
+      return false;
+    case ARROW_UP:
+      event.preventDefault();
+      firstItem = this.selectorTarget.querySelector('li.selected');
+      if (firstItem) {
+        prevItem = firstItem.previousElementSibling;
+        if (prevItem) {
+          firstItem.classList.remove('selected');
+          prevItem.classList.add('selected');
         }
-        return false;
-      case ARROW_DOWN:
-        event.preventDefault();
-        firstItem = this.selectorTarget.querySelector('li.selected');
-        if (firstItem) {
-          nextItem = firstItem.nextElementSibling;
-          if (nextItem) {
-            firstItem.classList.remove('selected');
-            nextItem.classList.add('selected');
-          }
+      }
+      return false;
+    case ARROW_DOWN:
+      event.preventDefault();
+      firstItem = this.selectorTarget.querySelector('li.selected');
+      if (firstItem) {
+        nextItem = firstItem.nextElementSibling;
+        if (nextItem) {
+          firstItem.classList.remove('selected');
+          nextItem.classList.add('selected');
         }
-        return false;
-      default:
-        return true;
+      }
+      return false;
+    default:
+      return true;
     }
   }
 
@@ -175,9 +174,9 @@ export default class extends Controller {
       const index = value.lastIndexOf(key, selectionStart);
       const tokens = value.replace('\t', '').slice(index).split(/ /);
       const [firstToken] = tokens;
-      const remainder = firstToken.match(/\n/)
-        ? firstToken.slice(firstToken.indexOf('\n'))
-        : '';
+      const remainder = firstToken.match(/\n/) ?
+        firstToken.slice(firstToken.indexOf('\n')) :
+        '';
       this.inputTarget.value =
         value.slice(0, index) +
         key +
