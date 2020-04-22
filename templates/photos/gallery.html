@@ -33,7 +33,7 @@
 <div class="container">
   <div class="columns">
     {% for photo in object_list %}
-    <div class="column col-sm-12 col-md-6 col-3 mb-2 pl-0">
+    <div class="photo-gallery {{ forloop.counter|divisibleby:4|yesno:"pr-0,pr-1" }} pl-0 column col-sm-12 col-md-6 col-3 mb-2">
       <a href="{{ photo.get_absolute_url }}"
          title="{{ photo.title }}">
         {% if photo.image|is_portrait %}
