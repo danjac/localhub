@@ -46,7 +46,7 @@ class BaseTypeaheadInput(TypeaheadMixin, forms.TextInput):
         """Replace any commas with space, remove any extra spaces"""
         if not value:
             return value
-        return " ".join(value.replace(",", " ").strip().split())
+        return " ".join(value.replace(",", " ").strip().lower().split())
 
 
 class TypeaheadInput(BaseTypeaheadInput):
