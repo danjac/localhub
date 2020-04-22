@@ -14,7 +14,7 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
   {% if object.published %}
-  <li class="breadcrumb-item"><a href="{% resolve_model_url view.model "list" %}">{{ object|verbose_name_plural|title }}</a>
+  <li class="breadcrumb-item"><a href="{{ object|resolve_url:"list" }}">{{ object|verbose_name_plural|title }}</a>
   </li>
   {% else %}
   <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
@@ -59,8 +59,7 @@
   {% endif %}
 
   {% if comment_form %}
-  {% resolve_url object "comment" as comment_url %}
-  {% include "includes/forms/stimulusjs_form.html" with action=comment_url form=comment_form form_id="comment-form" %}
+  {% include "includes/forms/stimulusjs_form.html" with action=object|resolve_url:"comment" form=comment_form form_id="comment-form" %}
   {% elif not object.allow_comments %}
   <p class="toast text-center my-2">{% trans "Comments are locked" %}</p>
   {% elif object.published %}

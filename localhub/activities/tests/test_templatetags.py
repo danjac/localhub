@@ -1,20 +1,16 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.urls import reverse
 from django.utils import timezone
 
 import pytest
 
 from localhub.posts.factories import PostFactory
-from localhub.posts.models import Post
 
 from ..templatetags.activities import (
     get_pinned_activity,
     is_oembed_url,
     render_activity,
-    resolve_model_url,
-    resolve_url,
 )
 
 pytestmark = pytest.mark.django_db
@@ -90,18 +86,3 @@ class TestIsOembedUrl:
         url = "https://reddit.com"
         user = user_model(show_embedded_content=True)
         assert not is_oembed_url(user, url)
-
-
-class ResolveUrlTests:
-    def test_resolve_url(self, post):
-        assert resolve_url(post, "bookmark") == reverse(
-            "posts:bookmark", args=[post.id]
-        )
-
-
-class ResolveModelUrlTests:
-    def test_resolve_model_url_with_instance(self, post):
-        assert resolve_model_url(post, "list") == reverse("posts:list")
-
-    def test_resolve_model_url_with_class(self):
-        assert resolve_model_url(Post, "list") == reverse("posts:list")

@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+from django.urls import NoReverseMatch, reverse
+
 import pytest
 
 from localhub.posts.models import Post
@@ -12,12 +14,30 @@ from ..defaultfilters import (
     html_unescape,
     lazify,
     linkify,
+    resolve_url,
     url_to_img,
     verbose_name,
     verbose_name_plural,
 )
 
 pytestmark = pytest.mark.django_db
+
+
+class ResolveUrlTests:
+    def test_resolve_url_with_instance(self, post):
+        assert resolve_url(post, "bookmark") == reverse(
+            "posts:bookmark", args=[post.id]
+        )
+
+    def test_resolve_url_with_instance_if_no_args(self, post):
+        assert resolve_url(post, "list") == reverse("posts:list", args=[])
+
+    def test_resolve_url_with_class(self, post):
+        assert resolve_url(Post, "list") == reverse("posts:list", args=[])
+
+    def test_resolve_url_if_no_match(self, post):
+        with pytest.raises(NoReverseMatch):
+            resolve_url(post, "unknown")
 
 
 class VerboseNameTests:

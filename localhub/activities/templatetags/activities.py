@@ -4,7 +4,6 @@
 
 from django import template
 from django.urls import reverse
-from django.utils.translation import gettext as _
 
 from localhub.utils.http import is_https
 
@@ -105,34 +104,6 @@ def resolve_url(activity, view_name):
         str: url
     """
     return activity.resolve_url(view_name)
-
-
-@register.simple_tag
-def verbose_name(activity):
-    """
-    Verbose single name of model.
-
-    Args:
-        activity (Activity or class)
-
-    Returns:
-        str
-    """
-    return _(activity._meta.verbose_name)
-
-
-@register.simple_tag
-def verbose_name_plural(activity):
-    """
-    Verbose plural name of model.
-
-    Args:
-        activity (Activity or class)
-
-    Returns:
-        str
-    """
-    return _(activity._meta.verbose_name_plural)
 
 
 @register.inclusion_tag("activities/includes/activity_tag.html")

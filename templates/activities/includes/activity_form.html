@@ -4,13 +4,11 @@
 {% extends "includes/forms/stimulusjs_form.html" %}
 
 {% load i18n %}
-{% load activities %}
 {% load users %}
 
 {% block form_fields %}
-{% verbose_name view.model as object_name %}
 
-{% with tags=community.get_content_warning_tags|safeseq %}
+{% with tags=community.get_content_warning_tags|safeseq object_name=view.model|verbose_name %}
 {% if tags %}
 
 {% dismissable user "content-warning-tags" %}

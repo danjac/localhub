@@ -4,7 +4,6 @@
 {% extends "activities/base.html" %}
 
 {% load i18n %}
-{% load activities %}
 
 {% block subtitle %} / {{ view.model|verbose_name_plural|title }} /
 {% if object %}{{ object.title }} / {% trans "Edit" %}
@@ -12,15 +11,14 @@
 
 {% block content %}
 
-{% resolve_model_url view.model "list" as list_url %}
-
+{% with list_url=view.model|resolve_url:"list" model_name=view.model|verbose_name_plural|title %}
 <ul class="breadcrumb">
 
   {% if object %}
 
   {% if object.published %}
   <li class="breadcrumb-item">
-    <a href="{{ list_url }}">{{ view.model|verbose_name_plural|title }}</a>
+    <a href="{{ list_url }}">{{ model_name }}</a>
   </li>
   {% else %}
   <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
@@ -35,7 +33,7 @@
   <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
   {% else %}
   <li class="breadcrumb-item">
-    <a href="{{ list_url }}">{{ view.model|verbose_name_plural|title }}</a>
+    <a href="{{ list_url }}">{{ model_name }}</a>
   </li>
   {% endif %}
   <li class="breadcrumb-item">
@@ -45,6 +43,7 @@
   {% endif %}
 
 </ul>
+{% endwith %}
 
 {% block form %}
 {% include "activities/includes/activity_form.html" with multipart=True %}

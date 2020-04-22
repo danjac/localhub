@@ -4,6 +4,8 @@
 import html
 
 from django import template
+from django.db.models import Model
+from django.urls import NoReverseMatch, reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 
@@ -12,6 +14,54 @@ from bs4 import BeautifulSoup
 from localhub.utils.http import URLResolver, get_root_url, is_image_url
 
 register = template.Library()
+
+
+@register.filter
+def resolve_url(model, view_name):
+    """Tries to guess URL of a model. Use this only when you
+    don't know in advance what the model type is (e.g. a subclass)
+    and if the URL pattern is simple i.e no additional arguments
+    other than the primary key field.
+
+    The pattern is:
+
+    If model is a class, not an instance, will just return view
+    as-is.
+
+    If the model is an instance, will automatically add the primary key as
+    argument.
+
+    Examples:
+
+        {% resolve_url Post 'list' %} -> /posts/
+        {% resolve_url post 'update' %} -> /posts/1234/~update/
+
+    Args:
+        model (Model class or instance)
+        view_name (str): name of the view
+        **kwargs: URL kwargs
+
+    Returns:
+        str: url
+    """
+
+    url_patterns = [
+        f"{model._meta.app_label}:{model._meta.model_name}_{view_name}",
+        f"{model._meta.app_label}:{view_name}",
+    ]
+
+    url_args = [[]]
+    if isinstance(model, Model):
+        url_args.append([model.pk])
+
+    for pattern in url_patterns:
+        for args in url_args:
+            try:
+                return reverse(pattern, args=args)
+            except NoReverseMatch:
+                pass
+
+    raise NoReverseMatch(f"No URL pattern found for {model} {view_name}")
 
 
 @register.filter

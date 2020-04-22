@@ -3,16 +3,15 @@
 
 {% extends "activities/base.html" %}
 {% load i18n %}
-{% load activities %}
 
-{% block subtitle %} / {{ view.model|verbose_name_plural|title }} /
+{% block subtitle %} / {{ object|verbose_name_plural|title }} /
 {{ object.title }} / {% trans "Delete" %}{% endblock %}
 
 {% block content %}
 
 <ul class="breadcrumb">
   {% if object.published %}
-  <li class="breadcrumb-item"><a href="{% resolve_model_url view.model "list" %}">{{ view.model|verbose_name_plural|title }} </a>
+  <li class="breadcrumb-item"><a href="{{ object|resolve_url:"list" }}">{{ object|verbose_name_plural|title }} </a>
   </li>
   {% else %}
   <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
@@ -34,7 +33,7 @@
       action="{{ request.path }}">
   {% csrf_token %}
   <p>
-    {% blocktrans %}
+    {% blocktrans with object_name=object|verbose_name %}
     Do you really want to delete this {{ object_name }}?
     {% endblocktrans %}
   </p>
