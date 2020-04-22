@@ -9,9 +9,6 @@
 
 {% block subtitle %} / {% trans "Private Stash" %}{% endblock %}
 
-{% block content %}
-<h1 class="page-header">{% trans "Private Stash" %}</h1>
-
 {% dismissable user "private-stash" %}
 {% blocktrans %}
 Activities in your Private Stash are only visible to you. They do not appear in
@@ -19,26 +16,37 @@ the Activity Stream or Timeline. Comments cannot be submitted to private activit
 {% endblocktrans %}
 {% enddismissable %}
 
+{% block content %}
+<h1 class="page-header">{% trans "Private Stash" %}</h1>
+
 {% has_perm 'activities.create_activity' user community as can_create_activity %}
 
 {% if can_create_activity %}
-<div class="actions mb-1">
-  <a class="action"
-     href="{% url 'posts:create_private' %}">
-    {% trans "Submit Post" %}
-  </a>
-  <a class="action"
-     href="{% url 'events:create_private' %}">
-    {% trans "Submit Event" %}
-  </a>
-  <a class="action"
-     href="{% url 'photos:create_private' %}">
-    {% trans "Submit Photo" %}
-  </a>
-  <a class="action"
-     href="{% url 'polls:create_private' %}">
-    {% trans "Submit Poll" %}
-  </a>
+<div class="dropdown mr-2"
+     data-controller="dropdown">
+  <button class="btn btn-sm"
+          data-action="dropdown#toggle">
+    {% trans "Actions" %}<i class="icon icon-caret"></i>
+  </button>
+  <ul class="menu"
+      data-target="dropdown.menu">
+    <li class="menu-item">
+      <a href="{% url 'posts:create_private' %}">{% trans "Submit Private Post" %}</a>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="{% url 'events:create_private' %}">{% trans "Submit Private Event" %}</a>
+      </a>
+    </li>
+     <li class="menu-item">
+      <a href="{% url 'photos:create_private' %}">{% trans "Submit Private Photo" %}</a>
+      </a>
+    </li>
+   <li class="menu-item">
+      <a href="{% url 'polls:create_private' %}">{% trans "Submit Private Poll" %}</a>
+      </a>
+    </li>
+  </ul>
 </div>
 {% endif %}
 
