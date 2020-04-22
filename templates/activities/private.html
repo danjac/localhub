@@ -12,7 +12,9 @@
 {% dismissable user "private-stash" %}
 {% blocktrans %}
 Activities in your Private Stash are only visible to you. They do not appear in
-the Activity Stream or Timeline. Comments cannot be submitted to private activities.
+dropdownthe Activity Stream or Timeline. Comments cannot be submitted to private activities.
+You can also keep draft posts and other activities in your Private Stash, and publish
+them later by clicking on the "Publish" button in the Actions menu.
 {% endblocktrans %}
 {% enddismissable %}
 
@@ -26,21 +28,21 @@ the Activity Stream or Timeline. Comments cannot be submitted to private activit
      data-controller="dropdown">
   <button class="btn btn-sm"
           data-action="dropdown#toggle">
-    {% trans "Actions" %}<i class="icon icon-caret"></i>
+    {% trans "Submit..." %}<i class="icon icon-caret"></i>
   </button>
   <ul class="menu"
       data-target="dropdown.menu">
     <li class="menu-item">
-      <a href="{% url 'posts:create_private' %}">{% trans "Submit Private Post" %}</a>
+      <a href="{% url 'posts:create_private' %}">{% trans "Private Post" %}</a>
     </li>
     <li class="menu-item">
-      <a href="{% url 'events:create_private' %}">{% trans "Submit Private Event" %}</a>
+      <a href="{% url 'events:create_private' %}">{% trans "Private Event" %}</a>
     </li>
     <li class="menu-item">
-      <a href="{% url 'photos:create_private' %}">{% trans "Submit Private Photo" %}</a>
+      <a href="{% url 'photos:create_private' %}">{% trans "Private Photo" %}</a>
     </li>
     <li class="menu-item">
-      <a href="{% url 'polls:create_private' %}">{% trans "Submit Private Poll" %}</a>
+      <a href="{% url 'polls:create_private' %}">{% trans "Private Poll" %}</a>
     </li>
   </ul>
 </div>
