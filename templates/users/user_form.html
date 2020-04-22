@@ -11,6 +11,12 @@
 
 {% block content %}
 
+{% dismissable user "profile-settings" %}
+{% blocktrans %}
+Your settings apply to all communities you belong to.
+{% endblocktrans %}
+{% enddismissable %}
+
 <h1 class="page-header">{% trans "My Settings" %}</h1>
 
 <div class="actions mb-1">
@@ -26,12 +32,6 @@
   <a class="action"
      href="{% url 'user_delete' %}">{% trans "Delete Account" %}</a>
 </div>
-
-{% dismissable user "profile-settings" %}
-{% blocktrans %}
-Your settings apply to all communities you belong to.
-{% endblocktrans %}
-{% enddismissable %}
 
 {% trans "Save Settings" as t_save_settings %}
 {% include "includes/forms/stimulusjs_form.html" with submit_btn=t_save_settings multipart=True %}

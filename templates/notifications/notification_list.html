@@ -10,6 +10,14 @@
 
 {% block content %}
 
+{% dismissable user "notifications-emails" %}
+{% url 'user_update' as user_settings_url %}
+{% blocktrans %}
+You can enable emails for your notifications
+<a href="{{ user_settings_url }}">in your settings</a>.{% endblocktrans %}
+{% enddismissable %}
+
+
 <h1 class="page-header">{% trans "Notifications" %}</h1>
 
 {% if object_list %}
@@ -28,13 +36,6 @@
      data-ajax-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}">{% trans "Delete All" %}</a>
 </div>
 {% endif %}
-
-{% dismissable user "notifications-emails" %}
-{% url 'user_update' as user_settings_url %}
-{% blocktrans %}
-You can enable emails for your notifications
-<a href="{{ user_settings_url }}">in your settings</a>.{% endblocktrans %}
-{% enddismissable %}
 
 {% notifications_subscribe_btn user community %}
 
