@@ -5,16 +5,14 @@
 {% load i18n %}
 {% load activities %}
 
-{% block subtitle %} / {% verbose_name_plural object as object_name %}{{ object_name|title }} /
+{% block subtitle %} / {{ view.model|verbose_name_plural|title }} /
 {{ object.title }} / {% trans "Delete" %}{% endblock %}
 
 {% block content %}
-{% verbose_name_plural object as object_name_plural %}
-{% verbose_name object as object_name %}
 
 <ul class="breadcrumb">
   {% if object.published %}
-  <li class="breadcrumb-item"><a href="{% resolve_model_url view.model "list" %}">{{ object_name_plural|title }}</a>
+  <li class="breadcrumb-item"><a href="{% resolve_model_url view.model "list" %}">{{ view.model|verbose_name_plural|title }} </a>
   </li>
   {% else %}
   <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
@@ -27,7 +25,7 @@
 </ul>
 
 <h1 class="page-header">
-  {% blocktrans with object_name=object_name|title %}
+  {% blocktrans with object_name=object|verbose_name|title %}
   Delete {{ object_name }}
   {% endblocktrans %}
 </h1>

@@ -15,8 +15,6 @@ from ..templatetags.activities import (
     render_activity,
     resolve_model_url,
     resolve_url,
-    verbose_name,
-    verbose_name_plural,
 )
 
 pytestmark = pytest.mark.django_db
@@ -92,19 +90,6 @@ class TestIsOembedUrl:
         url = "https://reddit.com"
         user = user_model(show_embedded_content=True)
         assert not is_oembed_url(user, url)
-
-
-class VerboseNameTests:
-    def test_verbose_name_of_instance(self, post):
-        assert verbose_name(post) == "Post"
-
-
-class VerboseNamePluralTests:
-    def test_verbose_name_of_instance(self, post):
-        assert verbose_name_plural(post) == "Posts"
-
-    def test_verbose_name_of_model(self):
-        assert verbose_name_plural(Post) == "Posts"
 
 
 class ResolveUrlTests:

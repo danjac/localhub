@@ -7,17 +7,14 @@
 {% load activities %}
 {% load comments %}
 
-{% block subtitle %} / {% verbose_name_plural object as object_name %}{{ object_name|title }} /
-{{ object.title }}{% endblock %}
+{% block subtitle %} / {{ object|verbose_name_plural|title }} / {{ object.title }}{% endblock %}
 
 {% block content %}
-{% verbose_name_plural object as object_name_plural %}
-{% verbose_name object as object_name %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
   {% if object.published %}
-  <li class="breadcrumb-item"><a href="{% resolve_model_url view.model "list" %}">{{ object_name_plural|title }}</a>
+  <li class="breadcrumb-item"><a href="{% resolve_model_url view.model "list" %}">{{ object|verbose_name_plural|title }}</a>
   </li>
   {% else %}
   <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>

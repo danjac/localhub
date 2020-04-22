@@ -4,7 +4,6 @@
 {% load i18n %}
 {% load account %}
 {% load rules %}
-{% load activities %}
 {% load users %}
 
 {% has_perm "communities.moderate_community" user community as can_moderate_community %}
@@ -18,8 +17,7 @@
     <div class="card-title pb-2 h6">
       {% if content_object %}
       <a href="{{ content_object.get_absolute_url }}">{{ content_object }}</a>
-      {% verbose_name content_object as object_name %}
-      <span class="label">{{ object_name|title }}</span>
+      <span class="label">{{ content_object|verbose_name|title }}</span>
       {% else %}
       {% trans "[Deleted]" %}
       {% endif %}

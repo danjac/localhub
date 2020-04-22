@@ -2,6 +2,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+import pytest
+
+from localhub.posts.models import Post
+
 from ..defaultfilters import (
     contains,
     from_dictkey,
@@ -9,7 +13,24 @@ from ..defaultfilters import (
     lazify,
     linkify,
     url_to_img,
+    verbose_name,
+    verbose_name_plural,
 )
+
+pytestmark = pytest.mark.django_db
+
+
+class VerboseNameTests:
+    def test_verbose_name_of_instance(self, post):
+        assert verbose_name(post) == "post"
+
+
+class VerboseNamePluralTests:
+    def test_verbose_name_of_instance(self, post):
+        assert verbose_name_plural(post) == "posts"
+
+    def test_verbose_name_of_model(self):
+        assert verbose_name_plural(Post) == "posts"
 
 
 class TestContains:

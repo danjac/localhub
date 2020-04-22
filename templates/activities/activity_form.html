@@ -6,20 +6,21 @@
 {% load i18n %}
 {% load activities %}
 
-{% block subtitle %} / {% verbose_name_plural view.model as object_name_plural %}{{ object_name_plural|title }} /
+{% block subtitle %} / {{ view.model|verbose_name_plural|title }} /
 {% if object %}{{ object.title }} / {% trans "Edit" %}
 {% else %}{% trans "Submit" %}{% endif %}{% endblock %}
 
 {% block content %}
-{% verbose_name_plural view.model as object_name_plural %}
+
 {% resolve_model_url view.model "list" as list_url %}
+
 <ul class="breadcrumb">
 
   {% if object %}
 
   {% if object.published %}
   <li class="breadcrumb-item">
-    <a href="{{ list_url }}">{{ object_name_plural|title }}</a>
+    <a href="{{ list_url }}">{{ view.model|verbose_name_plural|title }}</a>
   </li>
   {% else %}
   <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
@@ -34,9 +35,7 @@
   <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
   {% else %}
   <li class="breadcrumb-item">
-    <a href="{{ list_url }}">
-      {{ object_name_plural|title }}
-    </a>
+    <a href="{{ list_url }}">{{ view.model|verbose_name_plural|title }}</a>
   </li>
   {% endif %}
   <li class="breadcrumb-item">

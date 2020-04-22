@@ -5,12 +5,41 @@ import html
 
 from django import template
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext as _
 
 from bs4 import BeautifulSoup
 
 from localhub.utils.http import URLResolver, get_root_url, is_image_url
 
 register = template.Library()
+
+
+@register.filter
+def verbose_name(model):
+    """
+    Human-readable, translated single name of model.
+
+    Args:
+        model (Model instance or class)
+
+    Returns:
+        str
+    """
+    return _(model._meta.verbose_name)
+
+
+@register.filter
+def verbose_name_plural(model):
+    """
+    Human-readable, translated single name of model.
+
+    Args:
+        model (Model instance or class)
+
+    Returns:
+        str
+    """
+    return _(model._meta.verbose_name_plural)
 
 
 @register.filter
