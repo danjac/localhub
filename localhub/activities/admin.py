@@ -1,12 +1,13 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from simple_history.admin import SimpleHistoryAdmin
+
+from django.contrib import admin
 
 from localhub.markdown.admin import MarkdownFieldMixin
 
 
-class ActivityAdmin(MarkdownFieldMixin, SimpleHistoryAdmin):
+class ActivityAdmin(MarkdownFieldMixin, admin.ModelAdmin):
 
     autocomplete_fields = ("owner", "editor", "community")
     date_hierarchy = "created"
