@@ -7,24 +7,20 @@ from django.views.generic import ListView
 
 from localhub.views import SearchMixin
 
-from .mixins import (
-    ExcludeBlockedQuerySetMixin,
-    ExcludeBlockersQuerySetMixin,
-    MemberQuerySetMixin,
-    UserQuerySetMixin,
-)
+from .mixins import MemberQuerySetMixin, UserQuerySetMixin
 
 
-class BaseUserListView(ExcludeBlockersQuerySetMixin, UserQuerySetMixin, ListView):
+class BaseUserListView(UserQuerySetMixin, ListView):
     paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
 
     def get_queryset(self):
         return super().get_queryset().order_by("name", "username")
 
 
-class BaseMemberListView(
-    MemberQuerySetMixin, ExcludeBlockedQuerySetMixin, BaseUserListView
-):
+class BaseMemberListView(MemberQuerySetMixin, BaseUserListView):
+
+    exclude_blocking_users = True
+
     def get_queryset(self):
         return (
             super()
@@ -81,8 +77,10 @@ class BlockedUserListView(MemberQuerySetMixin, BaseUserListView):
 blocked_user_list_view = BlockedUserListView.as_view()
 
 
-class UserAutocompleteListView(ExcludeBlockedQuerySetMixin, BaseUserListView):
+class UserAutocompleteListView(BaseUserListView):
     template_name = "users/list/autocomplete.html"
+
+    exclude_blocking_users = True
 
     def get_queryset(self):
         # exclude current user by default

@@ -13,27 +13,34 @@ from localhub.views import ParentObjectMixin
 
 
 class BaseUserQuerySetMixin(CommunityRequiredMixin):
+
+    # users blocking me
+    exclude_blocker_users = True
+
+    # users I am blocking
+    exclude_blocked_users = False
+
+    # users blocking me, or whom I am blocking
+    exclude_blocking_users = False
+
     def get_user_queryset(self):
-        return get_user_model().objects.for_community(self.request.community)
+        qs = get_user_model().objects.for_community(self.request.community)
+
+        if self.exclude_blocking_users:
+            qs = qs.exclude_blocking(self.request.user)
+
+        elif self.exclude_blocked_users:
+            qs = qs.exclude_blocked(self.request.user)
+
+        elif self.exclude_blocker_users:
+            qs = qs.exclude_blockers(self.request.user)
+
+        return qs
 
 
 class UserQuerySetMixin(BaseUserQuerySetMixin):
     def get_queryset(self):
         return self.get_user_queryset()
-
-
-class ExcludeBlockersQuerySetMixin:
-    """Excludes any users blocking the current user"""
-
-    def get_queryset(self):
-        return super().get_queryset().exclude_blockers(self.request.user)
-
-
-class ExcludeBlockedQuerySetMixin:
-    """Excludes any users blocked by the current user"""
-
-    def get_queryset(self):
-        return super().get_queryset().exclude_blocked(self.request.user)
 
 
 class MemberQuerySetMixin:

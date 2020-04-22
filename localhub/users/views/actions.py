@@ -12,12 +12,7 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.views import SuccessActionView
 
-from .mixins import (
-    CurrentUserMixin,
-    ExcludeBlockedQuerySetMixin,
-    ExcludeBlockersQuerySetMixin,
-    UserQuerySetMixin,
-)
+from .mixins import CurrentUserMixin, UserQuerySetMixin
 
 
 class BaseUserActionView(UserQuerySetMixin, SuccessActionView):
@@ -26,13 +21,11 @@ class BaseUserActionView(UserQuerySetMixin, SuccessActionView):
 
 
 class BaseFollowUserView(
-    PermissionRequiredMixin,
-    ExcludeBlockedQuerySetMixin,
-    ExcludeBlockersQuerySetMixin,
-    BaseUserActionView,
+    PermissionRequiredMixin, BaseUserActionView,
 ):
     permission_required = "users.follow_user"
     is_success_ajax_response = True
+    exclude_blocking_users = True
 
 
 class UserFollowView(BaseFollowUserView):

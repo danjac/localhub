@@ -31,6 +31,21 @@ class TestMemberListView:
         assert member.member in object_list
 
 
+class TestActivityLikesView:
+    def test_get(self, client, member, transactional_db):
+        owner = MembershipFactory(
+            member=UserFactory(username="danjac"), community=member.community
+        )
+        post = PostFactory(community=owner.community, owner=owner.member)
+        LikeFactory(
+            content_object=post, community=post.community, recipient=post.owner,
+        )
+        response = client.get(reverse("users:activity_likes", args=["danjac"]))
+        assert response.status_code == 200
+        assert response.context["object_list"][0]["object"] == post
+        assert response.context["num_likes"] == 1
+
+
 class TestActivityMentionsView:
     def test_get_if_own_mention(self, client, member, transactional_db):
         PostFactory(
@@ -39,7 +54,7 @@ class TestActivityMentionsView:
             mentions=f"@{member.member.username}",
         )
         response = client.get(
-            reverse("activity_mentions", args=[member.member.username])
+            reverse("users:activity_mentions", args=[member.member.username])
         )
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 0
@@ -51,9 +66,26 @@ class TestActivityMentionsView:
         post = PostFactory(
             community=member.community, owner=member.member, mentions="@danjac @tester",
         )
-        response = client.get(reverse("activity_mentions", args=["danjac"]))
+        response = client.get(reverse("users:activity_mentions", args=["danjac"]))
         assert response.status_code == 200
         assert response.context["object_list"][0]["object"] == post
+
+
+class TestCommentLikesView:
+    def test_get(self, client, member, transactional_db):
+        owner = MembershipFactory(
+            member=UserFactory(username="danjac"), community=member.community
+        )
+        comment = CommentFactory(community=owner.community, owner=owner.member,)
+        LikeFactory(
+            content_object=comment,
+            community=comment.community,
+            recipient=comment.owner,
+        )
+        response = client.get(reverse("users:comment_likes", args=["danjac"]))
+        assert response.status_code == 200
+        assert response.context["object_list"][0] == comment
+        assert response.context["num_likes"] == 1
 
 
 class TestCommentMentionsView:
@@ -64,7 +96,7 @@ class TestCommentMentionsView:
             content=f"@{member.member.username}",
         )
         response = client.get(
-            reverse("comment_mentions", args=[member.member.username])
+            reverse("users:comment_mentions", args=[member.member.username])
         )
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 0
@@ -76,7 +108,7 @@ class TestCommentMentionsView:
         comment = CommentFactory(
             community=member.community, owner=member.member, content="@danjac @tester",
         )
-        response = client.get(reverse("comment_mentions", args=["danjac"]))
+        response = client.get(reverse("users:comment_mentions", args=["danjac"]))
         assert response.status_code == 200
         assert response.context["object_list"][0] == comment
 

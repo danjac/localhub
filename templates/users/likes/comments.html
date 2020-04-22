@@ -1,0 +1,45 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "users/likes/base.html" %}
+{% load i18n %}
+
+{% block subtitle %}{{ block.super }} / {% trans "Comments" %}{% endblock %}
+
+{% block likes_content %}
+
+{% if paginator.count %}
+<div class="mt-2 toast text-center">
+
+  {% if is_current_user %}
+  You have received
+  {% else %}
+  {{ display_name }} has received
+  {% endif %}
+
+  {% blocktrans count counter=num_likes %}
+  <strong>1 like</strong> for
+  {% plural %}
+  <strong>{{ counter }} likes</strong> for
+  {% endblocktrans %}
+
+  {% blocktrans count counter=paginator.count %}
+  <strong>1 comment</strong>.
+  {% plural %}
+  <strong>{{ counter }} comments</strong>.
+  {% endblocktrans %}
+
+</div>
+{% endif %}
+
+{% if is_current_user %}
+{% trans "You do not have any likes for your comments." as t_empty_message %}
+{% else %}
+{% blocktrans asvar t_empty_message trimmed %}
+{{ display_name }} has not received any likes for their comments.
+{% endblocktrans %}
+{% endif %}
+
+{% include "comments/includes/comment_list.html" with empty_message=t_empty_message %}
+
+{% endblock likes_content %}

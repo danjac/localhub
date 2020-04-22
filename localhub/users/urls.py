@@ -10,7 +10,9 @@ from .views.actions import (
     user_unfollow_view,
 )
 from .views.detail import (
+    user_activity_likes_view,
     user_activity_mentions_view,
+    user_comment_likes_view,
     user_comment_list_view,
     user_comment_mentions_view,
     user_message_list_view,
@@ -28,16 +30,6 @@ app_name = "users"
 
 USERNAME_RE = r"^(?P<username>[\w.@+-]+)/"
 
-mentions_urls = [
-    re_path(
-        USERNAME_RE + "$", view=user_activity_mentions_view, name="activity_mentions",
-    ),
-    re_path(
-        USERNAME_RE + "comments/$",
-        view=user_comment_mentions_view,
-        name="comment_mentions",
-    ),
-]
 
 urlpatterns = [
     path("autocomplete/", view=user_autocomplete_list_view, name="autocomplete_list",),
@@ -49,7 +41,25 @@ urlpatterns = [
     re_path(USERNAME_RE + r"unfollow/$", view=user_unfollow_view, name="unfollow"),
     re_path(USERNAME_RE + r"block/$", view=user_block_view, name="block"),
     re_path(USERNAME_RE + r"unblock/$", view=user_unblock_view, name="unblock"),
-    re_path(USERNAME_RE + r"comments/$", view=user_comment_list_view, name="comments"),
-    re_path(USERNAME_RE + r"messages/$", view=user_message_list_view, name="messages"),
+    re_path(USERNAME_RE + r"comments/$", view=user_comment_list_view, name="comments",),
+    re_path(USERNAME_RE + r"messages/$", view=user_message_list_view, name="messages",),
+    re_path(
+        USERNAME_RE + "likes/$", view=user_activity_likes_view, name="activity_likes",
+    ),
+    re_path(
+        USERNAME_RE + "likes/comments/$",
+        view=user_comment_likes_view,
+        name="comment_likes",
+    ),
+    re_path(
+        USERNAME_RE + "mentions/$",
+        view=user_activity_mentions_view,
+        name="activity_mentions",
+    ),
+    re_path(
+        USERNAME_RE + "mentions/comments/$",
+        view=user_comment_mentions_view,
+        name="comment_mentions",
+    ),
     re_path(USERNAME_RE + r"$", view=user_stream_view, name="activities"),
 ]

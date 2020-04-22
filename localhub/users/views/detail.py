@@ -103,6 +103,64 @@ class UserMessageListView(SingleUserMixin, ListView):
 user_message_list_view = UserMessageListView.as_view()
 
 
+class UserActivityLikesView(BaseUserActivityStreamView):
+    """Liked activities published by this user."""
+
+    template_name = "users/likes/activities.html"
+    ordering = ("-num_likes", "-published")
+
+    exclude_blocking_users = True
+
+    def filter_queryset(self, queryset):
+        return (
+            super()
+            .filter_queryset(queryset)
+            .with_num_likes()
+            .published()
+            .filter(owner=self.user_obj, num_likes__gt=0)
+        )
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["num_likes"] = (
+            Like.objects.for_models(*get_activity_models())
+            .filter(recipient=self.user_obj, community=self.request.community)
+            .count()
+        )
+        return data
+
+
+user_activity_likes_view = UserActivityLikesView.as_view()
+
+
+class UserCommentLikesView(BaseUserCommentListView):
+    """Liked comments submitted by this user."""
+
+    template_name = "users/likes/comments.html"
+
+    exclude_blocking_users = True
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .filter(owner=self.user_obj, num_likes__gt=0)
+            .order_by("-num_likes", "-created")
+        )
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["num_likes"] = (
+            Like.objects.for_models(Comment)
+            .filter(recipient=self.user_obj, community=self.request.community)
+            .count()
+        )
+        return data
+
+
+user_comment_likes_view = UserCommentLikesView.as_view()
+
+
 class UserActivityMentionsView(BaseUserActivityStreamView):
     """Activities where the user has an @mention (only
     published activities were user is not the owner)
@@ -110,8 +168,7 @@ class UserActivityMentionsView(BaseUserActivityStreamView):
 
     template_name = "users/mentions/activities.html"
 
-    def get_parent_queryset(self):
-        return super().get_parent_queryset().exclude_blocking(self.request.user)
+    exclude_blocking_users = True
 
     def filter_queryset(self, queryset):
         return (
@@ -130,8 +187,7 @@ class UserCommentMentionsView(BaseUserCommentListView):
 
     template_name = "users/mentions/comments.html"
 
-    def get_parent_queryset(self):
-        return super().get_parent_queryset().exclude_blocking(self.request.user)
+    exclude_blocking_users = True
 
     def get_queryset(self):
         return (
