@@ -22,7 +22,7 @@ from localhub.db.content_types import (
     get_generic_related_queryset,
 )
 from localhub.db.search import SearchIndexer, SearchQuerySetMixin
-from localhub.db.tracker import Tracker
+from localhub.db.tracker import with_tracker
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
@@ -154,6 +154,7 @@ class CommentQuerySet(
         return self.update(content_type=None, object_id=None)
 
 
+@with_tracker("content")
 class Comment(TimeStampedModel):
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
@@ -189,7 +190,6 @@ class Comment(TimeStampedModel):
     notifications = GenericRelation(Notification, related_query_name="comment")
 
     history = HistoricalRecords()
-    content_tracker = Tracker(["content"])
     search_indexer = SearchIndexer(("A", "content"))
 
     objects = CommentQuerySet.as_manager()
@@ -361,7 +361,7 @@ class Comment(TimeStampedModel):
             return None
 
         notifications = []
-        if not self.content_tracker.changed():
+        if not self.has_tracker_changed():
             return notifications
 
         recipients = self.get_notification_recipients()

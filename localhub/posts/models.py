@@ -6,7 +6,6 @@ from django.utils.translation import gettext as _
 
 from localhub.activities.models import Activity
 from localhub.db.search import SearchIndexer
-from localhub.db.tracker import Tracker
 from localhub.utils.http import get_domain, is_https, is_image_url
 
 
@@ -29,8 +28,6 @@ class Post(Activity):
 
     opengraph_image = models.URLField(max_length=500, blank=True)
     opengraph_description = models.TextField(blank=True)
-
-    url_tracker = Tracker(["url"])
 
     search_indexer = SearchIndexer(("A", "title"), ("B", "indexable_description"))
 

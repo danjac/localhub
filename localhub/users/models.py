@@ -21,7 +21,7 @@ from localhub.communities.models import Membership
 from localhub.db.content_types import get_generic_related_queryset
 from localhub.db.fields import ChoiceArrayField
 from localhub.db.search import SearchIndexer, SearchQuerySetMixin
-from localhub.db.tracker import Tracker
+from localhub.db.tracker import with_tracker
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
@@ -213,10 +213,11 @@ class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
 
     def create_superuser(self, username, email, password, **kwargs):
         return self.create_user(
-            username, email, password, is_staff=True, is_superuser=True, **kwargs
+            username, email, password, is_staff=True, is_superuser=True, **kwargs,
         )
 
 
+@with_tracker("avatar", "name", "bio")
 class User(AbstractUser):
     class ActivityStreamFilters(models.TextChoices):
         USERS = "users", _("Limited to only content from people I'm following")
@@ -263,8 +264,6 @@ class User(AbstractUser):
     search_indexer = SearchIndexer(("A", "username"), ("B", "name"), ("C", "bio"))
 
     history = HistoricalRecords()
-
-    follower_notification_tracker = Tracker(["avatar", "name", "bio"])
 
     objects = UserManager()
 
@@ -419,7 +418,7 @@ class User(AbstractUser):
             list: Notifications to followers
         """
 
-        if self.follower_notification_tracker.changed():
+        if self.has_tracker_changed():
             return takefirst(
                 [
                     Notification(

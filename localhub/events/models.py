@@ -16,7 +16,6 @@ from timezone_field import TimeZoneField
 
 from localhub.activities.models import Activity, ActivityQuerySet
 from localhub.db.search import SearchIndexer
-from localhub.db.tracker import Tracker
 from localhub.db.utils import boolean_value
 from localhub.notifications.decorators import dispatch
 from localhub.utils.http import get_domain
@@ -177,8 +176,6 @@ class Event(Activity):
     attendees = models.ManyToManyField(
         settings.AUTH_USER_MODEL, blank=True, related_name="attending_events"
     )
-
-    location_tracker = Tracker(LOCATION_FIELDS)
 
     search_indexer = SearchIndexer(
         ("A", "title"), ("B", "indexable_location"), ("C", "indexable_description")

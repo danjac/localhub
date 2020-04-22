@@ -20,6 +20,20 @@ pytestmark = pytest.mark.django_db
 
 
 class TestPostModel:
+    def test_mentions_changed(self, post):
+
+        post = Post.objects.get(pk=post.id)
+        assert not post.mentions_changed()
+        post.mentions = "@tester"
+        assert post.mentions_changed()
+
+    def test_hashtags_changed(self, post):
+
+        post = Post.objects.get(pk=post.id)
+        assert not post.hashtags_changed()
+        post.hashtags = "#rust"
+        assert post.hashtags_changed()
+
     def test_get_absolute_url(self):
         """
         If non-ASCII slug append to url

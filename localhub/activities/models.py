@@ -21,7 +21,7 @@ from localhub.db.content_types import (
     get_generic_related_queryset,
 )
 from localhub.db.search import SearchQuerySetMixin
-from localhub.db.tracker import Tracker
+from localhub.db.tracker import with_tracker
 from localhub.db.utils import boolean_value
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.hashtags.fields import HashtagsField
@@ -343,6 +343,7 @@ class ActivityQuerySet(
         )
 
 
+@with_tracker("title", "description", "hashtags", "mentions")
 class Activity(TimeStampedModel):
     """
     Base class for all activity-related entities e.g. posts, events, photos.
@@ -355,6 +356,21 @@ class Activity(TimeStampedModel):
         "hashtags",
         "mentions",
     ]
+
+    """
+    Due this bug in FieldTracker (related to issues with abstract
+    models) we need to implement FieldTrackers for each subclass:
+
+    https://github.com/jazzband/django-model-utils/pull/80
+
+    Remove these in subclasses if/when this is fixed.
+
+    hashtags_tracker = FieldTracker(fields=Activity.HASHTAGS_TRACKER_FIELDS)
+    mentions_tracker = FieldTracker(fields=Activity.MENTIONS_TRACKER_FIELDS)
+    """
+
+    HASHTAGS_FIELDS = ["title", "description", "hashtags"]
+    MENTIONS_FIELDS = ["title", "description", "mentions"]
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
@@ -408,8 +424,10 @@ class Activity(TimeStampedModel):
 
     search_document = SearchVectorField(null=True, editable=False)
 
-    hashtags_tracker = Tracker(["title", "description", "hashtags"])
-    mentions_tracker = Tracker(["title", "description", "mentions"])
+    TRACKED_FIELDS = {
+        "hashtags": HASHTAGS_FIELDS,
+        "mentions": MENTIONS_FIELDS,
+    }
 
     objects = ActivityQuerySet.as_manager()
 
@@ -642,6 +660,12 @@ class Activity(TimeStampedModel):
     def notify_owner_on_edit(self):
         return self.make_notification(self.owner, "edit", actor=self.editor)
 
+    def hashtags_changed(self):
+        return self.has_tracker_changed("title", "description", "hashtags")
+
+    def mentions_changed(self):
+        return self.has_tracker_changed("title", "description", "mentions")
+
     @dispatch
     def notify_on_update(self):
         """Notifies mentioned users and tag followers if content changed.
@@ -652,10 +676,10 @@ class Activity(TimeStampedModel):
         notifications = []
         recipients = self.get_notification_recipients()
 
-        if self.mentions_tracker.changed():
+        if self.mentions_changed():
             notifications += self.notify_mentioned_users(recipients)
 
-        if self.hashtags_tracker.changed():
+        if self.hashtags_changed():
             notifications += self.notify_tag_followers(recipients)
 
         if self.editor and self.editor != self.owner:
@@ -749,7 +773,7 @@ class Activity(TimeStampedModel):
         )
 
     def should_extract_hashtags(self, is_new):
-        return is_new or self.hashtags_tracker.changed()
+        return is_new or self.hashtags_changed()
 
     def extract_hashtags(self):
         return (

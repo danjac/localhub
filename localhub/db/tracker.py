@@ -2,45 +2,31 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-class Tracker:
-    """
-    Uses simple_history HistoricalRecords to track if a set of fields
-    have changed.
+class with_tracker:
+    def __init__(self, *tracked_fields):
+        self.tracked_fields = tracked_fields
 
-    We use this instead of model_utils.FieldTracker due to numerous
-    issues around model inheritance and descriptors e.g.:
+    def __call__(self, cls):
+        def _has_changed(self_, *fields):
+            # if "tracked_fields" attribute is not set, then it
+            # hasn't been loaded from DB yet, hence is new...
+            if not hasattr(self_, "_tracked_values"):
+                return True
+            for field in fields or self.tracked_fields:
+                if getattr(self_, field) != self_._tracked_values[field]:
+                    return True
+            return False
 
-    https://github.com/jazzband/django-model-utils/pull/80
-    """
+        def _from_db(base, db, field_names, values):
+            new = super(cls, base).from_db(db, field_names, values)
+            new._tracked_values = {}
 
-    def __init__(self, fields, history_attr="history"):
-        self.fields = fields
-        self.history_attr = history_attr
+            for field in self.tracked_fields:
+                new._tracked_values[field] = values[field_names.index(field)]
 
-    def __get__(self, instance, owner):
-        return InstanceTracker(instance, self.fields, self.history_attr)
+            return new
 
+        cls.from_db = classmethod(_from_db)
+        cls.has_tracker_changed = _has_changed
 
-class InstanceTracker:
-    def __init__(self, instance, fields, history_attr):
-
-        self.instance = instance
-        self.fields = fields
-        self.history_attr = history_attr
-
-    @property
-    def first_record(self):
-        return getattr(self.instance, self.history_attr).first()
-
-    @property
-    def prev_record(self):
-        return self.first_record.prev_record if self.first_record else None
-
-    @property
-    def changed_fields(self):
-        if self.first_record is None or self.prev_record is None:
-            return []
-        return self.first_record.diff_against(self.prev_record).changed_fields
-
-    def changed(self, *fields):
-        return bool(set(self.changed_fields).intersection(set(fields or self.fields)))
+        return cls
