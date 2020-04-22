@@ -20,6 +20,26 @@ class with_tracker:
     reset_tracker():
 
         resets the tracker to all the current values. Useful e.g. in testing.
+
+    Example:
+
+    @with_tracker("content")
+    class Comment(models.Model):
+        content = models.TextField()
+        ...
+
+    comment = Comment(content="test")
+    comment.has_tracker_changed() -> True: object not saved yet
+    comment.save()
+
+    comment = Comment.objects.get(pk=comment.id)
+    comment.has_tracker_changed() -> False: retrieved object not changed
+    comment.content = "test change!"
+    comment.has_tracker_changed() -> True: retrieved value different from new value
+
+    # comment.refresh_from_db() also has same effect...
+    comment.reset_tracker()
+    comment.has_tracker_changed() -> False
     """
 
     def __init__(self, *tracked_fields):
