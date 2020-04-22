@@ -123,70 +123,6 @@
 
 <ul class="menu mt-2">
   <li class="divider"
-      data-content="{% trans 'People' %}"></li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'users:member_list' %}">
-      {% trans "Members" %}
-    </a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'users:following_list' %}">
-      {% trans "Following" %}
-    </a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'users:follower_list' %}">
-      {% trans "Followers" %}
-    </a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'users:blocked_list' %}">
-      {% trans "Blocked" %}
-    </a>
-  </li>
-</ul>
-
-<ul class="menu mt-2">
-  <li class="divider"
-      data-content="{% trans 'Settings' %}"></li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
-  </li>
-  <li class="menu-item">
-    {% include "users/includes/switch_theme.html" %}
-  </li>
-  {% if can_manage_community %}
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       {% if site_counters.pending_join_requests %}
-       class="badge"
-       data-badge="{{ site_counters.pending_join_requests }}"
-       {% endif %}
-       href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
-  </li>
-  {% endif %}
-</ul>
-
-
-<ul class="menu mt-2">
-  <li class="divider"
       data-content="{% trans 'Content' %}"></li>
   <li class="menu-item">
     <a data-controller="active-link"
@@ -237,6 +173,70 @@
   </li>
   {% endif %}
   {% endif %}
+</ul>
+
+<ul class="menu mt-2">
+  <li class="divider"
+      data-content="{% trans 'Settings' %}"></li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+  </li>
+  <li class="menu-item">
+    {% include "users/includes/switch_theme.html" %}
+  </li>
+  {% if can_manage_community %}
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       {% if site_counters.pending_join_requests %}
+       class="badge"
+       data-badge="{{ site_counters.pending_join_requests }}"
+       {% endif %}
+       href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
+  </li>
+  {% endif %}
+</ul>
+
+
+<ul class="menu mt-2">
+  <li class="divider"
+      data-content="{% trans 'People' %}"></li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'users:member_list' %}">
+      {% trans "Members" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'users:following_list' %}">
+      {% trans "Following" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'users:follower_list' %}">
+      {% trans "Followers" %}
+    </a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'users:blocked_list' %}">
+      {% trans "Blocked" %}
+    </a>
+  </li>
 </ul>
 
 {% if can_manage_community or communities_count > 1 or community.description or community.terms %}
