@@ -22,9 +22,11 @@ export default class extends Controller {
       this.element.getAttribute('href') || this.matchTarget.getAttribute('href')
     ).split(/[?#]/)[0];
 
-    const matches = this.data.has('exact')
-      ? pathname === href
-      : pathname.startsWith(href);
+    const regex = this.data.get('regex');
+
+    const matches = this.data.has('exact') ?
+      pathname === href :
+      (regex ? pathname.match(regex) : pathname.startsWith(href));
     if (matches) {
       this.element.classList.add(this.data.get('active-class') || 'active');
     }

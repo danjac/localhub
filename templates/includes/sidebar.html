@@ -85,6 +85,7 @@
   </li>
   <li class="menu-item">
     <a data-controller="active-link"
+       data-active-link-regex="({{ user.get_absolute_url }}|{% url 'users:comments' user.username %}|{% url 'users:messages' user.username %})$"
        href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
   </li>
   <li class="menu-item show-lg">
