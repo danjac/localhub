@@ -54,7 +54,6 @@ class Base(Configuration):
         "markdownx",
         "micawber.contrib.mcdjango",
         "rules.apps.AutodiscoverRulesConfig",
-        # "simple_history",
         "sorl.thumbnail",
         "taggit",
         "widget_tweaks",
