@@ -3,7 +3,6 @@
 
 
 from django import template
-from django.urls import reverse
 
 from localhub.utils.http import is_https
 
@@ -70,40 +69,6 @@ def is_oembed_url(user, url):
     ):
         return False
     return _oembed_registry.provider_for_url(url) is not None
-
-
-@register.simple_tag
-def resolve_model_url(model, view_name):
-    """Determines Activity url view.
-
-    Example:
-        {% resolve_model_url Post 'list' %}
-
-    Args:
-        model (Activity class): model class or instance
-        view_name (str): name of the view
-
-    Returns:
-        str: url
-    """
-    return reverse(f"{model._meta.app_label}:{view_name}")
-
-
-@register.simple_tag
-def resolve_url(activity, view_name):
-    """Determines Activity url view.
-
-    Example:
-        {% resolve_model_url post 'update' %}
-
-    Args:
-        model (Activity):  instance
-        view_name (str): name of the view
-
-    Returns:
-        str: url
-    """
-    return activity.resolve_url(view_name)
 
 
 @register.inclusion_tag("activities/includes/activity_tag.html")
