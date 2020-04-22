@@ -10,10 +10,8 @@ from django.db import models
 from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.functional import cached_property
 
 from model_utils.models import TimeStampedModel
-from simple_history.models import HistoricalRecords
 
 from localhub.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from localhub.communities.models import Community, Membership
@@ -189,7 +187,6 @@ class Comment(TimeStampedModel):
     likes = GenericRelation(Like, related_query_name="comment")
     notifications = GenericRelation(Notification, related_query_name="comment")
 
-    history = HistoricalRecords()
     search_indexer = SearchIndexer(("A", "content"))
 
     objects = CommentQuerySet.as_manager()
@@ -215,28 +212,6 @@ class Comment(TimeStampedModel):
 
     def get_notifications(self):
         return get_generic_related_queryset(self, Notification)
-
-    @property
-    def _history_user(self):
-        return self.editor
-
-    @_history_user.setter
-    def _history_user(self, value):
-        self.editor = value
-
-    @cached_property
-    def first_record(self):
-        return self.history.first()
-
-    @cached_property
-    def prev_record(self):
-        return self.first_record.prev_record if self.first_record else None
-
-    @cached_property
-    def changed_fields(self):
-        if self.first_record is None or self.prev_record is None:
-            return []
-        return self.first_record.diff_against(self.prev_record).changed_fields
 
     def abbreviate(self, length=30):
         text = " ".join(self.content.plaintext().splitlines())

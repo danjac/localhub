@@ -309,6 +309,8 @@ class TestUserModel:
             member=follower.member, community=other_community_follower.community
         )
 
+        member.member.reset_tracker()
+
         # no change to notifiable user settings
         notifications = member.member.notify_on_update()
         assert len(notifications) == 0

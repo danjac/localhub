@@ -13,7 +13,6 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from model_utils.models import TimeStampedModel
-from simple_history.models import HistoricalRecords
 from sorl.thumbnail import ImageField
 
 from localhub.db.search import SearchQuerySetMixin
@@ -141,8 +140,6 @@ class Community(TimeStampedModel):
     )
 
     active = models.BooleanField(default=True)
-
-    history = HistoricalRecords()
 
     public = models.BooleanField(default=True)
 

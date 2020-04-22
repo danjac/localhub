@@ -9,7 +9,6 @@ from django.urls import reverse
 from django.utils import timezone
 
 from model_utils.models import TimeStampedModel
-from simple_history.models import HistoricalRecords
 from taggit.managers import TaggableManager
 from taggit.models import Tag
 
@@ -418,8 +417,6 @@ class Activity(TimeStampedModel):
     likes = AbstractGenericRelation(Like)
     notification = AbstractGenericRelation(Notification)
 
-    history = HistoricalRecords(inherit=True)
-
     tags = TaggableManager(blank=True)
 
     search_document = SearchVectorField(null=True, editable=False)
@@ -444,16 +441,6 @@ class Activity(TimeStampedModel):
         super().save(*args, **kwargs)
 
         self.save_tags(is_new)
-
-    @property
-    def _history_user(self):
-        # used by simple_history
-        return self.editor
-
-    @_history_user.setter
-    def _history_user(self, value):
-        # used by simple_history
-        self.editor = value
 
     def slugify(self):
         return slugify_unicode(self)

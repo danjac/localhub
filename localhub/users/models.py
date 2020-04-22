@@ -12,7 +12,6 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from simple_history.models import HistoricalRecords
 from sorl.thumbnail import ImageField
 from taggit.models import Tag
 from timezone_field import TimeZoneField
@@ -262,8 +261,6 @@ class User(AbstractUser):
     search_document = SearchVectorField(null=True, editable=False)
 
     search_indexer = SearchIndexer(("A", "username"), ("B", "name"), ("C", "bio"))
-
-    history = HistoricalRecords()
 
     objects = UserManager()
 
