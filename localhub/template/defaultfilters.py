@@ -34,12 +34,12 @@ def resolve_url(model, view_name):
     Examples:
 
         {% resolve_url Post 'list' %} -> /posts/
+        {% resolve_url post 'list' %} -> /posts/
         {% resolve_url post 'update' %} -> /posts/1234/~update/
 
     Args:
         model (Model class or instance)
         view_name (str): name of the view
-        **kwargs: URL kwargs
 
     Returns:
         str: url
