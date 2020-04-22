@@ -3,7 +3,9 @@
 
 {% load i18n %}
 <span data-controller="ajax"
-      class="action">
+      {% if css_class %}
+      class="{{ css_class }}"
+      {% endif %}>
   <a href="{% url 'users:unfollow' user_obj.username %}"
      class="text-strike{% if not is_following %} d-none{% endif %}"
      data-target="ajax.toggle"
