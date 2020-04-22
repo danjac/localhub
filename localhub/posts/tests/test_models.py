@@ -47,7 +47,7 @@ class TestPostModel:
         post = Post(
             title="something #movies",
             description="content #movies and #films",
-            additional_tags="#netflix",
+            hashtags="#netflix",
         )
         assert post.extract_hashtags() == {"movies", "films", "netflix"}
 

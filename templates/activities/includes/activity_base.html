@@ -94,16 +94,16 @@
         {% endif %}
       </div>
 
-      {% if object.url or object.additional_tags or object.mentions %}
+      {% if object.url or object.hashtags or object.mentions %}
       <div class="card-subtitle pb-1">
         {% if object.url %}
         <div class="info">
           {{ object.url|domain|linkify }}
         </div>
         {% endif %}
-        {% if object.additional_tags %}
+        {% if object.hashtags %}
         <div class="info">
-          {{ object.additional_tags|linkify_hashtags }}
+          {{ object.hashtags|linkify_hashtags }}
         </div>
         {% endif %}
         {% if object.mentions %}

@@ -14,21 +14,21 @@ class ActivityForm(forms.ModelForm):
         model = Activity
         fields = (
             "title",
-            "additional_tags",
+            "hashtags",
             "mentions",
             "description",
             "allow_comments",
         )
         labels = {
             "title": _("Title"),
-            "additional_tags": _("#tags"),
+            "hashtags": _("#tags"),
             "mentions": _("@mentions"),
         }
         widgets = {
             "title": TypeaheadInput,
         }
         help_texts = {
-            "additional_tags": _("#tags can also be added to title and description."),
+            "hashtags": _("#tags can also be added to title and description."),
             "mentions": _("@mentions can also be added to title and description."),
         }
 
@@ -36,5 +36,5 @@ class ActivityForm(forms.ModelForm):
 class ActivityTagsForm(forms.ModelForm):
     class Meta:
         model = Activity
-        fields = ("additional_tags",)
-        labels = {"additional_tags": _("#tags")}
+        fields = ("hashtags",)
+        labels = {"hashtags": _("#tags")}

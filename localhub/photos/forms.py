@@ -29,7 +29,7 @@ class PhotoForm(ActivityForm):
         model = Photo
         fields = (
             "title",
-            "additional_tags",
+            "hashtags",
             "mentions",
             "image",
             "extract_gps_data",

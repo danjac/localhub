@@ -141,12 +141,11 @@ class TestPostUpdateTagsView:
 
     def test_post(self, client, moderator, post, mailoutbox, send_webpush_mock):
         response = client.post(
-            reverse("posts:update_tags", args=[post.id]),
-            {"additional_tags": "#update"},
+            reverse("posts:update_tags", args=[post.id]), {"hashtags": "#update"},
         )
         post.refresh_from_db()
         assert response.url == post.get_absolute_url()
-        assert post.additional_tags == "#update"
+        assert post.hashtags == "#update"
         assert post.editor == moderator.member
         assert post.edited
 

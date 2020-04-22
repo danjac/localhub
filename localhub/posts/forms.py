@@ -27,7 +27,7 @@ class PostForm(ActivityForm):
         model = Post
         fields = (
             "title",
-            "additional_tags",
+            "hashtags",
             "mentions",
             "url",
             "clear_opengraph_data",

@@ -348,11 +348,11 @@ class Activity(TimeStampedModel):
     Base class for all activity-related entities e.g. posts, events, photos.
     """
 
-    RESHARED_FIELDS = ["title", "description", "additional_tags", "mentions"]
+    RESHARED_FIELDS = ["title", "description", "hashtags", "mentions"]
 
     INDEXABLE_DESCRIPTION_FIELDS = [
         "description",
-        "additional_tags",
+        "hashtags",
         "mentions",
     ]
 
@@ -370,8 +370,8 @@ class Activity(TimeStampedModel):
 
     title = models.CharField(max_length=300)
 
-    # using "additional_tags" so not to confuse with "tags" M2M field
-    additional_tags = HashtagsField(max_length=300, blank=True)
+    # using "hashtags" so not to confuse with "tags" M2M field
+    hashtags = HashtagsField(max_length=300, blank=True)
 
     mentions = MentionsField(max_length=300, blank=True)
 
@@ -408,7 +408,7 @@ class Activity(TimeStampedModel):
 
     search_document = SearchVectorField(null=True, editable=False)
 
-    hashtags_tracker = Tracker(["title", "description", "additional_tags"])
+    hashtags_tracker = Tracker(["title", "description", "hashtags"])
     mentions_tracker = Tracker(["title", "description", "mentions"])
 
     objects = ActivityQuerySet.as_manager()
@@ -754,7 +754,7 @@ class Activity(TimeStampedModel):
     def extract_hashtags(self):
         return (
             self.description.extract_hashtags()
-            | self.additional_tags.extract_hashtags()
+            | self.hashtags.extract_hashtags()
             | extract_hashtags(self.title)
         )
 

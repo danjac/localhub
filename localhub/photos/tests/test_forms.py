@@ -108,7 +108,7 @@ class TestPhotoForm:
     def get_form_data(self, image, **overrides):
         data = {
             "title": "test image",
-            "additional_tags": "",
+            "hashtags": "",
             "extract_gps_data": False,
             "description": "",
             "allow_comments": True,

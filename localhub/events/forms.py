@@ -36,7 +36,7 @@ class EventForm(ActivityForm):
         model = Event
         fields = (
             "title",
-            "additional_tags",
+            "hashtags",
             "mentions",
             "starts",
             "ends",
