@@ -26,6 +26,8 @@ class TestPostModel:
         assert not post.mentions_changed()
         post.mentions = "@tester"
         assert post.mentions_changed()
+        post.reset_tracker()
+        assert not post.mentions_changed()
 
     def test_hashtags_changed(self, post):
 
@@ -33,6 +35,8 @@ class TestPostModel:
         assert not post.hashtags_changed()
         post.hashtags = "#rust"
         assert post.hashtags_changed()
+        post.reset_tracker()
+        assert not post.hashtags_changed()
 
     def test_get_absolute_url(self):
         """

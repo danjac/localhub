@@ -20,16 +20,16 @@ class with_tracker:
     reset_tracker():
 
         resets the tracker to all the current values. Useful e.g. in testing.
-
     """
 
     def __init__(self, *tracked_fields):
         self.tracked_fields = tracked_fields
 
     def __call__(self, cls):
-        def _reset(self_):
+        def _reset(self_, fields=None):
+            # reset tracked values to current values
             self_._tracked_values = {
-                field: getattr(self_, field) for field in self.tracked_fields
+                field: getattr(self_, field) for field in fields or self.tracked_fields
             }
 
         def _has_changed(self_, *fields):
@@ -51,7 +51,12 @@ class with_tracker:
 
             return new
 
+        def _refresh_from_db(self_, using=None, fields=None):
+            super(cls, self_).refresh_from_db(using, fields)
+            self_.reset_tracker(fields)
+
         cls.from_db = classmethod(_from_db)
+        cls.refresh_from_db = _refresh_from_db
         cls.has_tracker_changed = _has_changed
         cls.reset_tracker = _reset
 

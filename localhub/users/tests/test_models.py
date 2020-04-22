@@ -235,6 +235,19 @@ class TestUserManager:
 
 
 class TestUserModel:
+    def test_has_tracker_changed(self, user):
+
+        user.reset_tracker()
+        assert not user.has_tracker_changed()
+        user.bio = "new bio!"
+        assert user.has_tracker_changed()
+        # ensure it still appears changed after save
+        user.save()
+        assert user.has_tracker_changed()
+        # refresh from db should reset...
+        user.refresh_from_db()
+        assert not user.has_tracker_changed()
+
     def test_get_email_addresses(self, user):
 
         user.emailaddress_set.create(email="test1@gmail.com")
