@@ -3,21 +3,16 @@
 
 import pytest
 
-from localhub.communities.factories import MembershipFactory
+from localhub.communities.factories import CommunityFactory
 
 pytestmark = pytest.mark.django_db
 
 
 class TestCreateMessagePermissions:
-    def test_can_send_if_not_member(self, member):
-        other = MembershipFactory().member
-        assert not member.member.has_perm("private_messages:create_message", other)
+    def test_can_send_if_not_member(self, user):
+        assert not user.has_perm("private_messages.create_message", CommunityFactory())
 
-    def test_can_send_if_anon_user(self, member, anonymous_user):
-        assert not member.member.has_perm(
-            "private_messages:create_message", anonymous_user
+    def test_can_send_if_member(self, member):
+        assert member.member.has_perm(
+            "private_messages.create_message", member.community
         )
-
-    def test_can_send_if__member(self, member):
-        other = MembershipFactory(community=member.community).member
-        assert member.member.has_perm("private_messages:create_message", other)
