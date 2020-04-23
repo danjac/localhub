@@ -6,7 +6,7 @@ import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
 import * as alerts from '@utils/alerts';
-import openDialog from '@utils/dialog';
+import confirmDialog from '@utils/confirmDialog';
 
 
 export default class extends Controller {
@@ -58,7 +58,7 @@ export default class extends Controller {
     const body = this.data.get('confirm-body');
 
     if (header && body) {
-      openDialog({
+      confirmDialog({
         body,
         header,
         onConfirm,
