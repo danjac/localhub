@@ -9,7 +9,6 @@ from django.utils.translation import gettext as _
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.users.utils import user_display
 from localhub.views import ParentObjectMixin, SuccessFormView
 
 from ..forms import MessageForm, MessageRecipientForm
@@ -27,7 +26,7 @@ class BaseMessageFormView(PermissionRequiredMixin, SuccessFormView):
 
     def get_success_message(self):
         return _("Your message has been sent to %(recipient)s") % {
-            "recipient": user_display(self.object.recipient)
+            "recipient": self.object.recipient.get_display_name()
         }
 
 
@@ -68,7 +67,8 @@ class MessageReplyView(RecipientQuerySetMixin, BaseReplyFormView):
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form["message"].label = _(
-            "Send reply to %(recipient)s" % {"recipient": user_display(self.recipient)}
+            "Send reply to %(recipient)s"
+            % {"recipient": self.recipient.get_display_name()}
         )
         return form
 
@@ -84,7 +84,7 @@ class MessageFollowUpView(SenderQuerySetMixin, BaseReplyFormView):
         form = super().get_form(form_class)
         form["message"].label = _(
             "Send follow-up to %(recipient)s"
-            % {"recipient": user_display(self.recipient)}
+            % {"recipient": self.recipient.get_display_name()}
         )
         return form
 
@@ -113,7 +113,7 @@ class MessageRecipientCreateView(
         form = super().get_form(form_class)
         form["message"].label = _(
             "Send message to %(recipient)s"
-            % {"recipient": user_display(self.recipient)}
+            % {"recipient": self.recipient.get_display_name()}
         )
         return form
 
