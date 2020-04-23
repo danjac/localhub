@@ -1,54 +1,55 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "activities/includes/actions.html" %}
-
-{% load i18n %}
-{% load rules %}
-
-{% block extra_actions %}
-
-{% has_perm "events.attend" user object as can_attend %}
-
-{% if can_attend %}
-<li class="menu-item"
-    data-controller="ajax">
-  <a href="{% url 'events:unattend' object.id %}"
-     class="text-strike{% if not object.is_attending %} d-none{% endif %}"
-     data-target="ajax.toggle"
-     data-action="ajax#post">{% trans "Attending" %}</a>
-  <a href="{% url 'events:attend' object.id %}"
-     {% if object.is_attending %}
-     class="d-none"
-     {% endif %}
-     data-target="ajax.toggle"
-     data-action="ajax#post">{% trans "Attending" %}</a>
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "activities/includes/actions.html" %} {% load i18n %} {% load rules %} {%
+block extra_actions %} {% has_perm "events.attend" user object as can_attend %} {% if
+can_attend %}
+<li class="menu-item" data-controller="ajax">
+  <a
+    href="{% url 'events:unattend' object.id %}"
+    class="text-strike{% if not object.is_attending %} d-none{% endif %}"
+    data-target="ajax.toggle"
+    data-action="ajax#post"
+    >{% trans "Attending" %}</a
+  >
+  <a
+    href="{% url 'events:attend' object.id %}"
+    {%
+    if
+    object.is_attending
+    %}
+    class="d-none"
+    {%
+    endif
+    %}
+    data-target="ajax.toggle"
+    data-action="ajax#post"
+    >{% trans "Attending" %}</a
+  >
 </li>
-{% endif %}
-
-{% if object.is_attendable %}
+{% endif %} {% if object.is_attendable %}
 <li class="menu-item">
-  <a href="{% url 'events:download' object.id %}"
-     download>
+  <a href="{% url 'events:download' object.id %}" download>
     {% trans 'Download' %}
   </a>
 </li>
-{% endif %}
-
-{% has_perm "events.cancel" user object as can_cancel %}
-{% if can_cancel %}
+{% endif %} {% has_perm "events.cancel" user object as can_cancel %} {% if can_cancel %}
 <li class="menu-item">
-  <a href="{% url 'events:cancel' object.id %}"
-     data-controller="ajax"
-     data-action="ajax#post"
-     {% if not is_detail %}
-     data-ajax-redirect="{{ request.get_full_path }}"
-     {% endif %}
-     data-ajax-confirm-header="{% trans 'Cancel' %}"
-     data-ajax-confirm-body="{% trans 'Are you sure you want to cancel this event?' %}">
-    {% trans "Cancel Event" %}</a>
+  <a
+    href="{% url 'events:cancel' object.id %}"
+    data-controller="ajax"
+    data-action="ajax#post"
+    {%
+    if
+    not
+    is_detail
+    %}
+    data-ajax-redirect="{{ request.get_full_path }}"
+    {%
+    endif
+    %}
+    data-ajax-confirm-header="{% trans 'Cancel' %}"
+    data-ajax-confirm-body="{% trans 'Are you sure you want to cancel this event?' %}"
+  >
+    {% trans "Cancel Event" %}</a
+  >
 </li>
-{% endif %}
-
-
-{% endblock %}
+{% endif %} {% endblock %}

@@ -1,17 +1,7 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% load i18n %}
-{% load micawber_tags %}
-{% load activities %}
-
-{% if object.url %}
-<div data-controller="oembed"
-     class="wordwrap pb-1">
-  {% if is_oembed %}
-  {{ object.url|oembed_no_urlize|url_to_img|lazify }}
-  {% else %}
-  {{ object.url|url_to_img|lazify }}
-  {% endif %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load i18n %} {% load micawber_tags %} {% load activities %} {% if object.url %}
+<div data-controller="oembed" class="wordwrap pb-1">
+  {% if is_oembed %} {{ object.url|oembed_no_urlize|url_to_img|lazify }} {% else %} {{
+  object.url|url_to_img|lazify }} {% endif %}
 </div>
 {% endif %}

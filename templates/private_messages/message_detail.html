@@ -1,44 +1,30 @@
-{% extends "private_messages/base.html" %}
-
-{% load i18n %}
-{% load account %}
-{% load rules %}
-{% load private_messages %}
-
-{% block content %}
-
-{% if parent %}
+{% extends "private_messages/base.html" %} {% load i18n %} {% load account %} {% load
+rules %} {% load private_messages %} {% block content %} {% if parent %}
 <ul class="breadcrumb">
   <li class="breadcrumb-item">
     <a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a>
   </li>
   <li class="breadcrumb-item"><a href="#">{% trans "Message" %}</a></li>
 </ul>
-{% endif %}
-
-{% has_perm "private_messages.create_message" user community as can_create_message %}
+{% endif %} {% has_perm "private_messages.create_message" user community as
+can_create_message %}
 
 <h1 class="page-header">{% trans "Messages" %}</h1>
 
 <div class="actions mb-1">
-  <a class="action"
-     href="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</a>
-  <a class="action"
-     href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
+  <a class="action" href="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</a>
+  <a class="action" href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
   {% if can_create_message %}
-  <a class="action"
-     href="{% url 'private_messages:message_create_recipient' other_user.username %}">
-    {% user_display other_user as other_user_name %}
-    {% blocktrans %}
-    Send Message to {{ other_user_name }}
-    {% endblocktrans %}
+  <a
+    class="action"
+    href="{% url 'private_messages:message_create_recipient' other_user.username %}"
+  >
+    {% user_display other_user as other_user_name %} {% blocktrans %} Send Message to {{
+    other_user_name }} {% endblocktrans %}
   </a>
   {% endif %}
-
 </div>
 
-{% render_message request user message is_detail=True %}
-{% for reply in replies %}
-{% render_message request user reply conversation=message %}
-{% endfor %}
-{% endblock content %}
+{% render_message request user message is_detail=True %} {% for reply in replies %} {%
+render_message request user reply conversation=message %} {% endfor %} {% endblock
+content %}

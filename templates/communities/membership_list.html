@@ -1,22 +1,13 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "communities/base.html" %}
-
-{% load i18n %}
-{% load rules %}
-
-{% block subtitle %} / {% trans "Memberships" %}{% endblock %}
-
-{% block content %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "communities/base.html" %} {% load i18n %} {% load rules %} {% block subtitle
+%} / {% trans "Memberships" %}{% endblock %} {% block content %}
 
 <ul class="breadcrumb">
   <li class="breadcrumb-item">
     <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
   <li class="breadcrumb-item">
-    <a data-turbolinks="false"
-       href="#">{% trans "Memberships" %}</a>
+    <a data-turbolinks="false" href="#">{% trans "Memberships" %}</a>
   </li>
 </ul>
 
@@ -24,17 +15,11 @@
 
 {% if not view.search_query %}
 <div class="my-2 toast text-center">
-  {% blocktrans count counter=paginator.count %}
-  This site has one member.
-  {% plural %}
-  This site has {{ counter }} members.
-  {% endblocktrans %}
+  {% blocktrans count counter=paginator.count %} This site has one member. {% plural %}
+  This site has {{ counter }} members. {% endblocktrans %}
 </div>
-{% endif %}
-
-{% include "includes/forms/search_form.html" with selector=True %}
-
-{% if object_list %}
+{% endif %} {% include "includes/forms/search_form.html" with selector=True %} {% if
+object_list %}
 <table class="table table-hover table-responsive">
   <thead>
     <tr>
@@ -46,13 +31,14 @@
     </tr>
   </thead>
   <tbody>
-    {% for member in object_list %}
-    {% has_perm "communities.change_membership" user member as can_change %}
-    {% has_perm "communities.delete_membership" user member as can_delete %}
+    {% for member in object_list %} {% has_perm "communities.change_membership" user
+    member as can_change %} {% has_perm "communities.delete_membership" user member as
+    can_delete %}
     <tr>
       <td>
-        {% url 'communities:membership_detail' member.id as membership_detail_url %}
-        {% include "users/includes/chip.html" with profile=member.member profile_url=membership_detail_url %}
+        {% url 'communities:membership_detail' member.id as membership_detail_url %} {%
+        include "users/includes/chip.html" with profile=member.member
+        profile_url=membership_detail_url %}
       </td>
       <td>
         {% include "includes/timesince.html" with timestamp=member.created %}
@@ -62,9 +48,9 @@
       {% else %}
       <td class="text-gray">{% trans "Inactive" %}</td>
       {% endif %}
-      <td {% if not member.active %}
-          class="text-gray"
-          {% endif %}>{{ member.get_role_display }}</td>
+      <td {% if not member.active %} class="text-gray" {% endif %}>
+        {{ member.get_role_display }}
+      </td>
       <td>
         {% include "communities/includes/membership_actions.html" %}
       </td>
@@ -72,8 +58,5 @@
     {% endfor %}
   </tbody>
 </table>
-{% include "includes/pagination.html" %}
-{% else %}
-{% include "includes/empty.html" %}
-{% endif %}
-{% endblock content %}
+{% include "includes/pagination.html" %} {% else %} {% include "includes/empty.html" %}
+{% endif %} {% endblock content %}

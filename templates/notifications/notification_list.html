@@ -1,57 +1,46 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "notifications/base.html" %}
-{% load i18n %}
-{% load notifications %}
-{% load users %}
-
-{% block subtitle %} / {% trans "Notifications" %}{% endblock %}
-
-{% block content %}
-
-{% dismissable user "notifications-emails" %}
-{% url 'user_update' as user_settings_url %}
-{% blocktrans %}
-You can enable emails for your notifications
-<a href="{{ user_settings_url }}">in your settings</a>.{% endblocktrans %}
-{% enddismissable %}
-
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "notifications/base.html" %} {% load i18n %} {% load notifications %} {% load
+users %} {% block subtitle %} / {% trans "Notifications" %}{% endblock %} {% block
+content %} {% dismissable user "notifications-emails" %} {% url 'user_update' as
+user_settings_url %} {% blocktrans %} You can enable emails for your notifications
+<a href="{{ user_settings_url }}">in your settings</a>.{% endblocktrans %} {%
+enddismissable %}
 
 <h1 class="page-header">{% trans "Notifications" %}</h1>
 
 {% if object_list %}
 <div class="actions mb-1">
   {% if is_unread_notifications %}
-  <a class="action"
-     href="{% url 'notifications:mark_all_read' %}"
-     data-controller="ajax"
-     data-action="ajax#post">{% trans "Mark All Read" %}</a>
+  <a
+    class="action"
+    href="{% url 'notifications:mark_all_read' %}"
+    data-controller="ajax"
+    data-action="ajax#post"
+    >{% trans "Mark All Read" %}</a
+  >
   {% endif %}
-  <a class="action"
-     href="{% url 'notifications:delete_all' %}"
-     data-controller="ajax"
-     data-action="ajax#post"
-     data-ajax-confirm-header="{% trans 'Delete All' %}"
-     data-ajax-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}">{% trans "Delete All" %}</a>
+  <a
+    class="action"
+    href="{% url 'notifications:delete_all' %}"
+    data-controller="ajax"
+    data-action="ajax#post"
+    data-ajax-confirm-header="{% trans 'Delete All' %}"
+    data-ajax-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}"
+    >{% trans "Delete All" %}</a
+  >
 </div>
-{% endif %}
-
-{% notifications_subscribe_btn user community %}
-
-{% if object_list %}
+{% endif %} {% notifications_subscribe_btn user community %} {% if object_list %}
 
 <table class="table table-hover table-responsive">
   <tbody>
-    {% for notification in object_list %}
-    {% notification notification %}
+    {% for notification in object_list %} {% notification notification %}
     <tr>
       <td>
         <div class="notification">
-
-          <div class="notification-header{% if not notification.is_read %} text-bold{% endif %}">
-            {{ notification_content }}
-            {% if not notification.is_read %}
+          <div
+            class="notification-header{% if not notification.is_read %} text-bold{% endif %}"
+          >
+            {{ notification_content }} {% if not notification.is_read %}
             <div class="label bg-primary">{% trans "New" %}</div>
             {% endif %}
           </div>
@@ -59,32 +48,33 @@ You can enable emails for your notifications
       </td>
       <td>
         <span class="timesince">
-          {% blocktrans with created=notification.created|timesince %}
-          {{ created }} ago
+          {% blocktrans with created=notification.created|timesince %} {{ created }} ago
           {% endblocktrans %}
         </span>
       </td>
       <td>
         <div class="actions float-right">
           {% if not notification.is_read %}
-          <a class="action"
-             href="{% url 'notifications:mark_read' notification.pk %}"
-             data-controller="ajax"
-             data-action="ajax#post">{% trans "Mark Read" %}</a>
+          <a
+            class="action"
+            href="{% url 'notifications:mark_read' notification.pk %}"
+            data-controller="ajax"
+            data-action="ajax#post"
+            >{% trans "Mark Read" %}</a
+          >
           {% endif %}
-          <a class="action"
-             href="{% url 'notifications:delete' notification.pk %}"
-             data-controller="ajax"
-             data-action="ajax#post">{% trans "Delete" %}</a>
+          <a
+            class="action"
+            href="{% url 'notifications:delete' notification.pk %}"
+            data-controller="ajax"
+            data-action="ajax#post"
+            >{% trans "Delete" %}</a
+          >
         </div>
       </td>
     </tr>
-    {% endnotification %}
-    {% endfor %}
+    {% endnotification %} {% endfor %}
   </tbody>
 </table>
-{% include "includes/pagination.html" %}
-{% else %}
-{% include "includes/empty.html" %}
-{% endif %}
-{% endblock %}
+{% include "includes/pagination.html" %} {% else %} {% include "includes/empty.html" %}
+{% endif %} {% endblock %}

@@ -1,23 +1,15 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "invites/base.html" %}
-{% load i18n %}
-{% load rules %}
-{% load invites %}
-
-{% block content %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "invites/base.html" %} {% load i18n %} {% load rules %} {% load invites %} {%
+block content %}
 
 <ul class="breadcrumb">
   <li class="breadcrumb-item">
     <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
   <li class="breadcrumb-item">
-    <a data-turbolinks="false"
-       href="#">{% trans "Invites" %}</a>
+    <a data-turbolinks="false" href="#">{% trans "Invites" %}</a>
   </li>
 </ul>
-
 
 <h1 class="page-header">
   {% trans "Invites" %}{% if status_display %}- {{ status_display }}{% endif %}
@@ -26,41 +18,31 @@
 {% get_pending_invite_count user as pending_invites_count %}
 
 <div class="actions mb-1">
-  <a class="action"
-     href="{% url 'invites:create' %}">
+  <a class="action" href="{% url 'invites:create' %}">
     {% trans "Send an invite" %}
   </a>
   {% if pending_invites_count %}
-  <a class="action"
-     href="{% url 'invites:received_list' %}"
-     class="badge"
-     data-badge="{{ pending_invites_count }}">
+  <a
+    class="action"
+    href="{% url 'invites:received_list' %}"
+    class="badge"
+    data-badge="{{ pending_invites_count }}"
+  >
     {% trans "Invites received" %}
   </a>
   {% endif %}
 </div>
 
-{% if paginator.count or view.search_query %}
-{% include "includes/forms/search_form.html" with selector=True %}
-{% endif %}
-
-{% if total_count %}
+{% if paginator.count or view.search_query %} {% include
+"includes/forms/search_form.html" with selector=True %} {% endif %} {% if total_count %}
 <div class="actions my-1">
   {% if status %}
-  <a class="action"
-     href="{{ request.path }}">{% trans "Show All" %}</a>
-  {% endif %}
-  {% for value, label in status_choices %}
-  {% if status != value %}
-  <a class="action"
-     href="{{ request.path }}?status={{ value }}">{{ label }}</a>
-  {% endif %}
-  {% endfor %}
+  <a class="action" href="{{ request.path }}">{% trans "Show All" %}</a>
+  {% endif %} {% for value, label in status_choices %} {% if status != value %}
+  <a class="action" href="{{ request.path }}?status={{ value }}">{{ label }}</a>
+  {% endif %} {% endfor %}
 </div>
-{% endif %}
-
-
-{% if object_list %}
+{% endif %} {% if object_list %}
 <table class="table table-hover table-responsive">
   <thead>
     <tr>
@@ -83,26 +65,27 @@
       <td>
         <div class="actions">
           {% if invite.is_pending %}
-          <a class="action"
-             href="{% url 'invites:resend' invite.id %}"
-             data-controller="ajax"
-             data-action="ajax#post">{% trans "Re-send" %}</a>
+          <a
+            class="action"
+            href="{% url 'invites:resend' invite.id %}"
+            data-controller="ajax"
+            data-action="ajax#post"
+            >{% trans "Re-send" %}</a
+          >
           {% endif %}
-          <a class="action"
-             href="{% url 'invites:delete' invite.id %}"
-             data-controller="ajax"
-             data-action="ajax#post"
-             data-ajax-confirm-header="{% trans 'Delete invite' %}"
-             data-ajax-confirm-body="{% trans 'You sure you want to delete this invite?' %}">{% trans "Delete" %}</a>
+          <a
+            class="action"
+            href="{% url 'invites:delete' invite.id %}"
+            data-controller="ajax"
+            data-action="ajax#post"
+            data-ajax-confirm-header="{% trans 'Delete invite' %}"
+            data-ajax-confirm-body="{% trans 'You sure you want to delete this invite?' %}"
+            >{% trans "Delete" %}</a
+          >
         </div>
       </td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
-{% else %}
-{% include "includes/empty.html" %}
-{% endif %}
-
-
-{% endblock content %}
+{% else %} {% include "includes/empty.html" %} {% endif %} {% endblock content %}

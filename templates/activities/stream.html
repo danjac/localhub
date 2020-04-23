@@ -1,64 +1,41 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "activities/base.html" %}
-
-{% load i18n %}
-{% load rules %}
-{% load activities %}
-{% load notifications %}
-{% load users %}
-
-{% block subtitle %} / {% trans "Activities" %} {% endblock %}
-
-{% block content %}
-
-{% if page_obj.number == 1 %}
-
-{% if latest_notification %}
-{% notification latest_notification %}
-<div class="toast toast-primary text-center mb-2"
-     data-controller="ajax"
-     data-ajax-url="{% url 'notifications:mark_read' latest_notification.id %}"
-     data-ajax-remove>
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "activities/base.html" %} {% load i18n %} {% load rules %} {% load activities
+%} {% load notifications %} {% load users %} {% block subtitle %} / {% trans
+"Activities" %} {% endblock %} {% block content %} {% if page_obj.number == 1 %} {% if
+latest_notification %} {% notification latest_notification %}
+<div
+  class="toast toast-primary text-center mb-2"
+  data-controller="ajax"
+  data-ajax-url="{% url 'notifications:mark_read' latest_notification.id %}"
+  data-ajax-remove
+>
   {{ notification_content }}
-  <button class="btn btn-clear float-right"
-          data-action="ajax#post"></button>
+  <button class="btn btn-clear float-right" data-action="ajax#post"></button>
 </div>
-{% endnotification %}
-{% endif %}
-
-{% get_pinned_activity user community as pinned %}
-{% if pinned %}
-{% render_activity request user pinned.object is_pinned=True css_class="mb-2" %}
-{% endif %}
-
-{% has_perm "activities.create_activity" user community as can_create_activity %}
-
-{% if can_create_activity %}
+{% endnotification %} {% endif %} {% get_pinned_activity user community as pinned %} {%
+if pinned %} {% render_activity request user pinned.object is_pinned=True
+css_class="mb-2" %} {% endif %} {% has_perm "activities.create_activity" user community
+as can_create_activity %} {% if can_create_activity %}
 <div class="submit-post mb-2">
-  <div class="input-group"
-       data-controller="ajax"
-       data-action="click->ajax#get"
-       data-ajax-url="{% url 'posts:create' %}"
-       data-ajax-follow>
+  <div
+    class="input-group"
+    data-controller="ajax"
+    data-action="click->ajax#get"
+    data-ajax-url="{% url 'posts:create' %}"
+    data-ajax-follow
+  >
     <span class="input-group-addon">
       {% avatar user %}
     </span>
-    <input type="text"
-   New         class="form-input submit-post-input"
-           data-action="focus->ajax#get"
-           placeholder="{% trans "What's on your mind?" %}">
+    <input type="text" class="form-input submit-post-input"
+    data-action="focus->ajax#get" placeholder="{% trans "What's on your mind?" %}">
   </div>
 </div>
-<div class="dropdown mr-2"
-     data-controller="dropdown">
-  <button class="btn btn-sm"
-          data-action="dropdown#toggle">
+<div class="dropdown mr-2" data-controller="dropdown">
+  <button class="btn btn-sm" data-action="dropdown#toggle">
     {% trans "Submit..." %}<i class="icon icon-caret"></i>
   </button>
-  <ul class="menu"
-      data-target="dropdown.menu">
+  <ul class="menu" data-target="dropdown.menu">
     <li class="menu-item">
       <a href="{% url 'posts:create' %}">{% trans "Post" %}</a>
     </li>
@@ -73,21 +50,11 @@
     </li>
   </ul>
 </div>
-{% endif %}
-
-{% if not user.show_embedded_content %}
-
-{% dismissable user "embedded-content" %}
-{% url 'user_update' as user_settings_url %}
-{% blocktrans %}
-You can view embedded content in your feed, for example YouTube videos, by checking the <b>Show embedded content</b>
+{% endif %} {% if not user.show_embedded_content %} {% dismissable user
+"embedded-content" %} {% url 'user_update' as user_settings_url %} {% blocktrans %} You
+can view embedded content in your feed, for example YouTube videos, by checking the
+<b>Show embedded content</b>
 option in your
-<a href="{{ user_settings_url }}">user settings</a>.
-{% endblocktrans %}
-{% enddismissable %}
-
-{% endif %}
-{% endif %}
-
-{% include "activities/includes/activity_list.html" %}
-{% endblock content %}
+<a href="{{ user_settings_url }}">user settings</a>. {% endblocktrans %} {%
+enddismissable %} {% endif %} {% endif %} {% include
+"activities/includes/activity_list.html" %} {% endblock content %}

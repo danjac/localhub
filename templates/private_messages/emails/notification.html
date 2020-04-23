@@ -1,53 +1,33 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "emails/base.html" %}
-{% load i18n %}
-{% load account %}
-
-{% block content %}
-{% user_display message.recipient as recipient_name %}
-{% user_display message.sender as sender %}
-
-{% with community=message.community %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "emails/base.html" %} {% load i18n %} {% load account %} {% block content %}
+{% user_display message.recipient as recipient_name %} {% user_display message.sender as
+sender %} {% with community=message.community %}
 <div class="intro">
-  {% blocktrans with community_name=community.name %}
-  Hello from {{ community_name }} !
+  {% blocktrans with community_name=community.name %} Hello from {{ community_name }} !
   {% endblocktrans %}
 </div>
 
 <div class="section">
-  {% blocktrans %}
-  Hi {{ recipient_display }},
-  {% endblocktrans %}
+  {% blocktrans %} Hi {{ recipient_display }}, {% endblocktrans %}
 </div>
 
 <div class="section">
-  {% if verb == "reply" %}
-  {% blocktrans %}
-  <a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has replied to your <a
-     href="{{ absolute_url }}">message</a>.
-  {% endblocktrans %}
-  {% elif verb == "follow_up" %}
-  {% blocktrans %}
-  <a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has sent you a <a href="{{ absolute_url }}">follow-up</a>
-  to one of their messages.
-  {% endblocktrans %}
-  {% else %}
-  {% blocktrans %}
-  <a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has sent you a <a href="{{ absolute_url }}">message</a>.
-  {% endblocktrans %}
-  {% endif %}
+  {% if verb == "reply" %} {% blocktrans %}
+  <a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has replied to your
+  <a href="{{ absolute_url }}">message</a>. {% endblocktrans %} {% elif verb ==
+  "follow_up" %} {% blocktrans %}
+  <a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has sent you a
+  <a href="{{ absolute_url }}">follow-up</a>
+  to one of their messages. {% endblocktrans %} {% else %} {% blocktrans %}
+  <a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has sent you a
+  <a href="{{ absolute_url }}">message</a>. {% endblocktrans %} {% endif %}
 </div>
 
 <div class="section">
-  {% blocktrans with community_name=community.name %}
-  Thank you from {{ community_name }} !
-  {% endblocktrans %}
+  {% blocktrans with community_name=community.name %} Thank you from {{ community_name
+  }} ! {% endblocktrans %}
 </div>
 <div class="section">
   {{ community.domain }}
 </div>
-{% endwith %}
-
-{% endblock content %}
+{% endwith %} {% endblock content %}

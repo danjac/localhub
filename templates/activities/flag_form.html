@@ -8,8 +8,7 @@
 {% block content %}
 <ul class="breadcrumb">
   <li class="breadcrumb-item">
-    <a
-      href="{{ activity|resolve_url:"list" }}">{{ activity|verbose_name_plural|title }}</a>
+    <a href="{{ activity|resolve_url:"list" }}">{{ activity|verbose_name_plural|title }}</a>
   </li>
   <li class="breadcrumb-item"><a href="{{ activity.get_absolute_url }}">{{ activity|truncatechars:60 }}</a></li>
   <li class="breadcrumb-item">

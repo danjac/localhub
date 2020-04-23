@@ -1,40 +1,29 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "users/account_base.html" %}
-
-{% load i18n %}
-{% load account %}
-
-{% block account_subtitle %}{% trans "Confirm E-Mail" %}{% endblock %}
-
-{% block content %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "users/account_base.html" %} {% load i18n %} {% load account %} {% block
+account_subtitle %}{% trans "Confirm E-Mail" %}{% endblock %} {% block content %}
 <h1 class="page-header">{% trans "Confirm E-mail Address" %}</h1>
 <div class="divider"></div>
 
-{% if confirmation %}
+{% if confirmation %} {% user_display confirmation.email_address.user as user_display %}
 
-{% user_display confirmation.email_address.user as user_display %}
-
-<form method="POST"
-      action="{% url 'account_confirm_email' confirmation.key %}">
-  <p>{% blocktrans with confirmation.email_address.email as email %}Please confirm that <a
-       href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user {{ user_display }}.{% endblocktrans %}
+<form method="POST" action="{% url 'account_confirm_email' confirmation.key %}">
+  <p>
+    {% blocktrans with confirmation.email_address.email as email %}Please confirm that
+    <a href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user {{
+    user_display }}.{% endblocktrans %}
   </p>
   {% csrf_token %}
-  <button type="submit"
-          class="btn btn-primary">
+  <button type="submit" class="btn btn-primary">
     {% trans 'Confirm' %}
   </button>
 </form>
 
-{% else %}
+{% else %} {% url 'account_email' as email_url %}
 
-{% url 'account_email' as email_url %}
+<p>
+  {% blocktrans %}This e-mail confirmation link expired or is invalid. Please
+  <a href="{{ email_url }}">issue a new e-mail confirmation request</a>.{% endblocktrans
+  %}
+</p>
 
-<p>{% blocktrans %}This e-mail confirmation link expired or is invalid. Please <a href="{{ email_url }}">issue a new
-    e-mail confirmation request</a>.{% endblocktrans %}</p>
-
-{% endif %}
-
-{% endblock content %}
+{% endif %} {% endblock content %}

@@ -1,22 +1,16 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "notifications/emails/base.html" %}
-{% load i18n %}
-
-{% block notification_body %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "notifications/emails/base.html" %} {% load i18n %} {% block
+notification_body %}
 <p>
   {% blocktrans %}
-  <a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has removed your <a
-     href="{{ absolute_url }}">{{ object_name }}</a>:
-  {% endblocktrans %}
+  <a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has removed your
+  <a href="{{ absolute_url }}">{{ object_name }}</a>: {% endblocktrans %}
 </p>
 <p>
   {{ object }}
 </p>
 <p>
-  {% blocktrans %}
-  You can still view your {{ object_name }} and delete it completely.
+  {% blocktrans %} You can still view your {{ object_name }} and delete it completely.
   {% endblocktrans %}
 </p>
 

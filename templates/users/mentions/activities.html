@@ -1,41 +1,18 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "users/mentions/base.html" %}
-{% load i18n %}
-
-{% block subtitle %}{{ block.super }} / {% trans "Activities" %}{% endblock %}
-
-{% block mentions_content %}
-
-{% if paginator.count %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "users/mentions/base.html" %} {% load i18n %} {% block subtitle %}{{
+block.super }} / {% trans "Activities" %}{% endblock %} {% block mentions_content %} {%
+if paginator.count %}
 <div class="mt-2 toast text-center">
-
-  {% if is_current_user %}
-
-  {% blocktrans count counter=paginator.count %}
-  You have been mentioned in <strong>1 activity</strong>
-  {% plural %}
-  You have been mentioned in <strong>{{ counter }} activities</strong>
-  {% endblocktrans %}
-  {% else %}
-  {% blocktrans count counter=paginator.count %}
-  {{ display_name }} has been mentioned in <strong>1 activity</strong>
-  {% plural %}
-  {{ display_name }} has been mentioned in <strong>{{ counter }} activities</strong>
-  {% endblocktrans %}
-  {% endif %}
+  {% if is_current_user %} {% blocktrans count counter=paginator.count %} You have been
+  mentioned in <strong>1 activity</strong> {% plural %} You have been mentioned in
+  <strong>{{ counter }} activities</strong> {% endblocktrans %} {% else %} {% blocktrans
+  count counter=paginator.count %} {{ display_name }} has been mentioned in
+  <strong>1 activity</strong> {% plural %} {{ display_name }} has been mentioned in
+  <strong>{{ counter }} activities</strong>
+  {% endblocktrans %} {% endif %}
 </div>
-{% endif %}
-
-{% if is_current_user %}
-{% trans "You have not been mentioned in any activities." as t_empty_message %}
-{% else %}
-{% blocktrans asvar t_empty_message trimmed %}
-{{ display_name }} has not been mentioned in any activities.
-{% endblocktrans %}
-{% endif %}
-
-{% include "activities/includes/activity_list.html" with empty_message=t_empty_message %}
-
-{% endblock mentions_content %}
+{% endif %} {% if is_current_user %} {% trans "You have not been mentioned in any
+activities." as t_empty_message %} {% else %} {% blocktrans asvar t_empty_message
+trimmed %} {{ display_name }} has not been mentioned in any activities. {% endblocktrans
+%} {% endif %} {% include "activities/includes/activity_list.html" with
+empty_message=t_empty_message %} {% endblock mentions_content %}

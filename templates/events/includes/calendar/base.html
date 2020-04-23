@@ -1,16 +1,18 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
 <div class="calendar{% if css_class %} {{ css_class }}{% endif %}">
   <div class="calendar-nav navbar">
-    <a class="btn btn-action btn-link btn-lg"
-       href="{{ request.path }}?month={{ previous_month.month }}&year={{ previous_month.year }}">
+    <a
+      class="btn btn-action btn-link btn-lg"
+      href="{{ request.path }}?month={{ previous_month.month }}&year={{ previous_month.year }}"
+    >
       <i class="icon icon-arrow-left"></i>
     </a>
     <div class="navbar-primary">{{ current_month|date:"F, Y" }}</div>
-    <a class="btn btn-action btn-link btn-lg"
-       href="{{ request.path }}?month={{ next_month.month }}&year={{ next_month.year }}">
+    <a
+      class="btn btn-action btn-link btn-lg"
+      href="{{ request.path }}?month={{ next_month.month }}&year={{ next_month.year }}"
+    >
       <i class="icon icon-arrow-right"></i>
     </a>
   </div>
@@ -27,11 +29,8 @@
     <div class="calendar-body">
       {% for day, events in slots %}
       <div class="calendar-date">
-        {% if day %}
-        {% with num_events=events|length %}
-        {% block calendar_date %}{% endblock %}
-        {% endwith %}
-        {% endif %}
+        {% if day %} {% with num_events=events|length %} {% block calendar_date %}{%
+        endblock %} {% endwith %} {% endif %}
       </div>
       {% endfor %}
     </div>

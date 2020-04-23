@@ -1,20 +1,16 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "emails/base.html" %}
-
-{% load i18n %}
-{% load account %}
-
-{% block content %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "emails/base.html" %} {% load i18n %} {% load account %} {% block content %}
 <p>
-{% user_display member as member_name %}{% blocktrans %}Hi {{ member_name }},{% endblocktrans %}
+  {% user_display member as member_name %}{% blocktrans %}Hi {{ member_name }},{%
+  endblocktrans %}
 </p>
 {% blocktrans with community=community.name %}
 <p>
-Your membership of the community {{ community }} has been terminated. You will not be able to post new content until your membership has been restored.
+  Your membership of the community {{ community }} has been terminated. You will not be
+  able to post new content until your membership has been restored.
 </p>
 <p>
-Your posts will not be available on the site, however they will not be removed from the database until you delete your own account.
+  Your posts will not be available on the site, however they will not be removed from
+  the database until you delete your own account.
 </p>
-{% endblocktrans %}
-{% endblock %}
+{% endblocktrans %} {% endblock %}

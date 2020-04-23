@@ -1,17 +1,7 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "communities/base.html" %}
-
-{% load i18n %}
-{% load account %}
-{% load rules %}
-{% load users %}
-
-{% block subtitle %} / {% trans "Memberships" %} / {% user_display membership.member %}{% endblock %}
-{% block content %}
-{% with member=object.member %}
-
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "communities/base.html" %} {% load i18n %} {% load account %} {% load rules
+%} {% load users %} {% block subtitle %} / {% trans "Memberships" %} / {% user_display
+membership.member %}{% endblock %} {% block content %} {% with member=object.member %}
 {% user_display member as display_name %}
 
 <ul class="breadcrumb">
@@ -22,38 +12,34 @@
     <a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
   </li>
   <li class="breadcrumb-item">
-    <a data-turbolinks="false"
-       href="#">{{ display_name }}</a>
+    <a data-turbolinks="false" href="#">{{ display_name }}</a>
   </li>
 </ul>
 
 {% user_display member as display_name %}
 
 <h1 class="page-header">
-  {% avatar member "avatar-lg" %}
-  {% if member.username == display_name %}
-  @{{ display_name }}
-  {% else %}
-  {{ display_name }}
-  (@{{ member.username }})
-  {% endif %}
+  {% avatar member "avatar-lg" %} {% if member.username == display_name %} @{{
+  display_name }} {% else %} {{ display_name }} (@{{ member.username }}) {% endif %}
 </h1>
-
 
 <div class="actions mb-1">
   {% if object.active %}
-  <a class="action"
-     href="{% url 'users:activities' member.username %}">{% trans "Activities" %}</a>
-  <a class="action"
-     href="{% url 'users:comments' member.username %}">{% trans "Comments" %}</a>
-  <a class="action"
-     href="{% url 'users:messages' member.username %}">{% trans "Messages" %}</a>
+  <a class="action" href="{% url 'users:activities' member.username %}"
+    >{% trans "Activities" %}</a
+  >
+  <a class="action" href="{% url 'users:comments' member.username %}"
+    >{% trans "Comments" %}</a
+  >
+  <a class="action" href="{% url 'users:messages' member.username %}"
+    >{% trans "Messages" %}</a
+  >
   {% endif %}
 </div>
 
-{% has_perm "communities.change_membership" user object as can_change %}
-{% has_perm "communities.delete_membership" user object as can_delete %}
-{% include "communities/includes/membership_actions.html" with member=object css_class="mb-1" %}
+{% has_perm "communities.change_membership" user object as can_change %} {% has_perm
+"communities.delete_membership" user object as can_delete %} {% include
+"communities/includes/membership_actions.html" with member=object css_class="mb-1" %}
 
 <dl class="text-small">
   <dt>{% trans "Status" %}</dt>
@@ -63,13 +49,10 @@
   <dd>{{ object.get_role_display }}</dd>
 
   <dt>
-    {% blocktrans with community_name=community.name %}
-    Joined {{ community_name }}
-    {% endblocktrans %}
+    {% blocktrans with community_name=community.name %} Joined {{ community_name }} {%
+    endblocktrans %}
   </dt>
   <dd>{{ object.created|date:"SHORT_DATE_FORMAT" }}</dd>
-
 </dl>
 
-{% endwith %}
-{% endblock content %}
+{% endwith %} {% endblock content %}

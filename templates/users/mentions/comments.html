@@ -1,39 +1,18 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "users/mentions/base.html" %}
-{% load i18n %}
-
-{% block subtitle %}{{ block.super }} / {% trans "Comments" %}{% endblock %}
-
-{% block mentions_content %}
-
-{% if paginator.count %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "users/mentions/base.html" %} {% load i18n %} {% block subtitle %}{{
+block.super }} / {% trans "Comments" %}{% endblock %} {% block mentions_content %} {% if
+paginator.count %}
 <div class="mt-2 toast text-center">
-  {% if is_current_user %}
-  {% blocktrans count counter=paginator.count %}
-  You have been mentioned in <strong>1 comment</strong>
-  {% plural %}
-  You have been mentioned in <strong>{{ counter }} comments</strong>
-  {% endblocktrans %}
-  {% else %}
-  {% blocktrans count counter=paginator.count %}
-  {{ display_name }} has been mentioned in <strong>1 comment</strong>
-  {% plural %}
-  {{ display_name }} has been mentioned in <strong>{{ counter }} comments</strong>
-  {% endblocktrans %}
-  {% endif %}
+  {% if is_current_user %} {% blocktrans count counter=paginator.count %} You have been
+  mentioned in <strong>1 comment</strong> {% plural %} You have been mentioned in
+  <strong>{{ counter }} comments</strong> {% endblocktrans %} {% else %} {% blocktrans
+  count counter=paginator.count %} {{ display_name }} has been mentioned in
+  <strong>1 comment</strong> {% plural %} {{ display_name }} has been mentioned in
+  <strong>{{ counter }} comments</strong>
+  {% endblocktrans %} {% endif %}
 </div>
-{% endif %}
-
-{% if is_current_user %}
-{% trans "You have not been mentioned in any comments." as t_empty_message %}
-{% else %}
-{% blocktrans asvar t_empty_message trimmed %}
-{{ display_name }} has not been mentioned in any comments.
-{% endblocktrans %}
-{% endif %}
-
-{% include "comments/includes/comment_list.html" with empty_message=t_empty_message %}
-
-{% endblock mentions_content %}
+{% endif %} {% if is_current_user %} {% trans "You have not been mentioned in any
+comments." as t_empty_message %} {% else %} {% blocktrans asvar t_empty_message trimmed
+%} {{ display_name }} has not been mentioned in any comments. {% endblocktrans %} {%
+endif %} {% include "comments/includes/comment_list.html" with
+empty_message=t_empty_message %} {% endblock mentions_content %}

@@ -1,35 +1,21 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "activities/includes/activity_base.html" %}
-
-{% load i18n %}
-{% load activities %}
-
-{% block list_item_title %}
-{% if object.url %}
-{{ object.url|linkify:object_title }}
-{% else %}
-{{ block.super }}
-{% endif %}
-{% endblock list_item_title %}
-
-{% block content %}
-
-{% with user|is_oembed_url:object.url as is_oembed %}
-{% include "activities/includes/oembed.html" %}
-{% if object.url and object.opengraph_description and not is_oembed %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "activities/includes/activity_base.html" %} {% load i18n %} {% load
+activities %} {% block list_item_title %} {% if object.url %} {{
+object.url|linkify:object_title }} {% else %} {{ block.super }} {% endif %} {% endblock
+list_item_title %} {% block content %} {% with user|is_oembed_url:object.url as
+is_oembed %} {% include "activities/includes/oembed.html" %} {% if object.url and
+object.opengraph_description and not is_oembed %}
 <div class="columns opengraph pb-1">
-  {% with opengraph_image=object.get_opengraph_image_if_safe %}
-  {% if user.show_external_images and opengraph_image %}
+  {% with opengraph_image=object.get_opengraph_image_if_safe %} {% if
+  user.show_external_images and opengraph_image %}
   <div class="column col-3 col-md-12">
-    <a href="{{ object.url }}"
-       class="opengraph-image-link"
-       target="_blank">
-      <img src="{{ opengraph_image }}"
-           alt="{{ object.title }}"
-           loading="lazy"
-           class="img-responsive">
+    <a href="{{ object.url }}" class="opengraph-image-link" target="_blank">
+      <img
+        src="{{ opengraph_image }}"
+        alt="{{ object.title }}"
+        loading="lazy"
+        class="img-responsive"
+      />
     </a>
   </div>
   <div class="column col-9 col-md-12">
@@ -42,7 +28,6 @@
     </div>
     {% endwith %}
   </div>
-  {% endif %}
-  {% include "activities/includes/description.html" %}
-  {% endwith %}
-  {% endblock content %}
+  {% endif %} {% include "activities/includes/description.html" %} {% endwith %} {%
+  endblock content %}
+</div>

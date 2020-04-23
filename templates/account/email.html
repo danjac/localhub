@@ -1,85 +1,68 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "users/account_base.html" %}
-
-{% load i18n %}
-
-{% block account_subtitle %}{% trans "Email Addresses" %}{% endblock %}
-
-{% block content %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "users/account_base.html" %} {% load i18n %} {% block account_subtitle %}{%
+trans "Email Addresses" %}{% endblock %} {% block content %}
 
 <ul class="breadcrumb">
-  <li class="breadcrumb-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
   <li class="breadcrumb-item">
-    <a data-turbolinks="false"
-       href="#">{% trans "Email Addresses" %}</a>
+    <a href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a data-turbolinks="false" href="#">{% trans "Email Addresses" %}</a>
   </li>
 </ul>
 
 <h1 class="page-header">{% trans "Email Addresses" %}</h1>
 
-
-{% with emailaddresses=user.emailaddress_set.all emailaddress_count=user.emailaddress_set.count %}
-{% if emailaddress_count %}
+{% with emailaddresses=user.emailaddress_set.all
+emailaddress_count=user.emailaddress_set.count %} {% if emailaddress_count %}
 <p>{% trans "The following email addresses are associated with your account:" %}</p>
 
-<form action="{% url 'account_email' %}"
-      method="post">
-  {% csrf_token %}
-
-  {% for emailaddress in emailaddresses %}
+<form action="{% url 'account_email' %}" method="post">
+  {% csrf_token %} {% for emailaddress in emailaddresses %}
   <div class="form-group">
-    <label for="email_radio_{{ forloop.counter }}"
-           class="form-label">
-      <input id="email_radio_{{ forloop.counter }}"
-             type="radio"
-             name="email"
-             {% if emailaddress.primary or emiladdress_count == 1 %}checked="checked"
-             {% endif %}
-             value="{{ emailaddress.email }}" />
-      {{ emailaddress.email }}
-      {% if emailaddress.verified %}
+    <label for="email_radio_{{ forloop.counter }}" class="form-label">
+      <input id="email_radio_{{ forloop.counter }}" type="radio" name="email" {% if
+      emailaddress.primary or emiladdress_count == 1 %}checked="checked" {% endif %}
+      value="{{ emailaddress.email }}" /> {{ emailaddress.email }} {% if
+      emailaddress.verified %}
       <span class="label">{% trans "Verified" %}</span>
       {% else %}
       <span class="label">{% trans "Unverified" %}</span>
-      {% endif %}
-      {% if emailaddress.primary %}<span class="chip">{% trans "Primary" %}</span>{% endif %}
+      {% endif %} {% if emailaddress.primary %}<span class="chip"
+        >{% trans "Primary" %}</span
+      >{% endif %}
     </label>
   </div>
   {% endfor %}
 
   <div class="btn-group">
-    <button class="btn btn-primary"
-            type="submit"
-            name="action_primary">{% trans 'Make Primary' %}</button>
-    <button class="btn btn-secondary"
-            type="submit"
-            name="action_send">{% trans 'Re-send Verification' %}</button>
-    <button class="btn btn-secondary"
-            type="submit"
-            name="action_remove">{% trans 'Remove' %}</button>
+    <button class="btn btn-primary" type="submit" name="action_primary">
+      {% trans 'Make Primary' %}
+    </button>
+    <button class="btn btn-secondary" type="submit" name="action_send">
+      {% trans 'Re-send Verification' %}
+    </button>
+    <button class="btn btn-secondary" type="submit" name="action_remove">
+      {% trans 'Remove' %}
+    </button>
   </div>
-
 </form>
 
 {% else %}
-<p><strong>{% trans 'Warning:'%}</strong>
-  {% trans "You currently do not have any e-mail address set up. You should really add an e-mail address so you can receive notifications, reset your password, etc." %}
+<p>
+  <strong>{% trans 'Warning:'%}</strong>
+  {% trans "You currently do not have any e-mail address set up. You should really add
+  an e-mail address so you can receive notifications, reset your password, etc." %}
 </p>
 
-{% endif %}
-
-{% endwith %}
+{% endif %} {% endwith %}
 
 <h6 class="mt-2">{% trans "Add E-mail Address" %}</h6>
 
-<form method="post"
-      action="{% url 'account_email' %}"
-      class="add_email">
+<form method="post" action="{% url 'account_email' %}" class="add_email">
   {% include "includes/forms/fields.html" %}
-  <button name="action_add"
-          class="btn btn-primary"
-          type="submit">{% trans "Add E-mail" %}</button>
+  <button name="action_add" class="btn btn-primary" type="submit">
+    {% trans "Add E-mail" %}
+  </button>
 </form>
 {% endblock content %}

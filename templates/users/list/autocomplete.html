@@ -1,25 +1,19 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% load account %}
-{% load users %}
-
-{% for user_obj in object_list %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load account %} {% load users %} {% for user_obj in object_list %}
 <li class="menu-item{% if forloop.first %} selected{% endif %}">
-  <a href="#"
-     data-action="typeahead#select"
-     data-typeahead-value="{{ user_obj.username }}"
-     data-typeahead-key="@">
+  <a
+    href="#"
+    data-action="typeahead#select"
+    data-typeahead-value="{{ user_obj.username }}"
+    data-typeahead-key="@"
+  >
     <div class="tile tile-centered">
       <div class="tile-icon">
         {% avatar user_obj %}
       </div>
       <div class="tile-content">
-        {% user_display user_obj as display_name %}
-        {{ display_name }}
-        {% if display_name != user_obj.username %}
-        (@{{ user_obj.username }})
-        {% endif %}
+        {% user_display user_obj as display_name %} {{ display_name }} {% if
+        display_name != user_obj.username %} (@{{ user_obj.username }}) {% endif %}
       </div>
     </div>
   </a>

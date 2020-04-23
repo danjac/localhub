@@ -1,15 +1,5 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "users/list/base.html" %}
-{% load i18n %}
-
-{% block subtitle %}{{ block.super }} / {% trans "Followers" %}{% endblock %}
-
-{% block counter %}
-{% blocktrans count counter=paginator.count %}
-You have one follower.
-{% plural %}
-You have {{ counter }} followers.
-{% endblocktrans %}
-{% endblock counter %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "users/list/base.html" %} {% load i18n %} {% block subtitle %}{{ block.super
+}} / {% trans "Followers" %}{% endblock %} {% block counter %} {% blocktrans count
+counter=paginator.count %} You have one follower. {% plural %} You have {{ counter }}
+followers. {% endblocktrans %} {% endblock counter %}

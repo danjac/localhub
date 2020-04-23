@@ -1,11 +1,6 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "notifications/emails/base.html" %}
-{% load i18n %}
-
-{% block notification_body %}
-{% blocktrans %}
-<a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has flagged this <a href="{{ absolute_url }}">comment</a>.
-{% endblocktrans %}
-{% endblock notification_body %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "notifications/emails/base.html" %} {% load i18n %} {% block
+notification_body %} {% blocktrans %}
+<a href="{{ actor_absolute_url }}">{{ actor_display }}</a> has flagged this
+<a href="{{ absolute_url }}">comment</a>. {% endblocktrans %} {% endblock
+notification_body %}

@@ -1,20 +1,16 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "socialaccount/base.html" %}
-
-{% load i18n %}
-
-{% block head_title %}{% trans "Social Network Login Failure" %}{% endblock %}
-
-{% block content %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "socialaccount/base.html" %} {% load i18n %} {% block head_title %}{% trans
+"Social Network Login Failure" %}{% endblock %} {% block content %}
 <h1>{% trans "Social Network Login Failure" %}</h1>
 
 {% if debug %}
 <p>
-Code: {{ auth_error.code }}, Error: {{ auth_error.exception }}
+  Code: {{ auth_error.code }}, Error: {{ auth_error.exception }}
 </p>
 {% endif %}
 
-<p>{% trans "An error occurred while attempting to login via your social network account." %}</p>
+<p>
+  {% trans "An error occurred while attempting to login via your social network
+  account." %}
+</p>
 {% endblock %}

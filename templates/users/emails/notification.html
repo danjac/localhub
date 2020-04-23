@@ -1,25 +1,10 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "notifications/emails/base.html" %}
-
-{% load i18n %}
-{% load account %}
-
-{% block notification_body %}
-{% user_display notification.recipient as recipient %}
-{% user_display notification.actor as actor %}
-{% if notification.verb == 'new_follower' %}
-{% blocktrans %}
-<a href="{{ absolute_url }}">{{ actor }}</a> is now following you.
-{% endblocktrans %}
-{% elif notification.verb == 'new_member' %}
-{% blocktrans %}
-<a href="{{ absolute_url }}">{{ actor }}</a> has joined this community.
-{% endblocktrans %}
-{% elif notification.verb == 'update' %}
-{% blocktrans %}
-<a href="{{ absolute_url }}">{{ actor }}</a> has updated their profile.
-{% endblocktrans %}
-{% endif %}
-{% endblock notification_body %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "notifications/emails/base.html" %} {% load i18n %} {% load account %} {%
+block notification_body %} {% user_display notification.recipient as recipient %} {%
+user_display notification.actor as actor %} {% if notification.verb == 'new_follower' %}
+{% blocktrans %} <a href="{{ absolute_url }}">{{ actor }}</a> is now following you. {%
+endblocktrans %} {% elif notification.verb == 'new_member' %} {% blocktrans %}
+<a href="{{ absolute_url }}">{{ actor }}</a> has joined this community. {% endblocktrans
+%} {% elif notification.verb == 'update' %} {% blocktrans %}
+<a href="{{ absolute_url }}">{{ actor }}</a> has updated their profile. {% endblocktrans
+%} {% endif %} {% endblock notification_body %}

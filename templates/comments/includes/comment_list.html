@@ -1,15 +1,5 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% load comments %}
-
-{% if page_obj.number > 1 %}
-{% include "includes/pagination.html" with css_class="mb-2" %}
-{% endif %}
-
-{% for comment in object_list %}
-{% render_comment request user comment include_content_object=True css_class="mt-2" %}
-{% empty %}
-{% include "includes/empty.html" %}
-{% endfor %}
-{% include "includes/pagination.html" %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load comments %} {% if page_obj.number > 1 %} {% include "includes/pagination.html"
+with css_class="mb-2" %} {% endif %} {% for comment in object_list %} {% render_comment
+request user comment include_content_object=True css_class="mt-2" %} {% empty %} {%
+include "includes/empty.html" %} {% endfor %} {% include "includes/pagination.html" %}

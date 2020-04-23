@@ -1,23 +1,16 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "emails/base.html" %}
-{% load i18n %}
-{% load account %}
-
-{% block content %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "emails/base.html" %} {% load i18n %} {% load account %} {% block content %}
 
 <p>
-    {% user_display user as user_name %}
-    {% blocktrans %}
-    Hi, {{ user_name }}
-    {% endblocktrans %}
+  {% user_display user as user_name %} {% blocktrans %} Hi, {{ user_name }} {%
+  endblocktrans %}
 </p>
 
 <p>
-{% blocktrans with community=join_request.community.name community_url=join_request.community.get_absolute_url %}
-You have been accepted to join <a href="{{ community_url }}">{{ community }}</a>! Welcome on board!
-{% endblocktrans %}
+  {% blocktrans with community=join_request.community.name
+  community_url=join_request.community.get_absolute_url %} You have been accepted to
+  join <a href="{{ community_url }}">{{ community }}</a>! Welcome on board! {%
+  endblocktrans %}
 </p>
 
 {% endblock content %}

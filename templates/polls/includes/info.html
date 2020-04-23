@@ -1,18 +1,8 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "activities/includes/info.html" %}
-
-{% load i18n %}
-
-{% block extra_info %}
-{% if object.total_num_votes %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "activities/includes/info.html" %} {% load i18n %} {% block extra_info %} {%
+if object.total_num_votes %}
 <div class="info">
-  {% blocktrans count counter=object.total_num_votes %}
-  1 Vote
-  {% plural %}
-  {{ counter }} Votes
-  {% endblocktrans %}
+  {% blocktrans count counter=object.total_num_votes %} 1 Vote {% plural %} {{ counter
+  }} Votes {% endblocktrans %}
 </div>
-{% endif %}
-{% endblock %}
+{% endif %} {% endblock %}

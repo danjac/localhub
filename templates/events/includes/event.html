@@ -1,106 +1,66 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "activities/includes/activity_base.html" %}
-
-{% load i18n %}
-
-{% load tz %}
-{% load activities %}
-
-{% block content %}
-{% if object.canceled %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "activities/includes/activity_base.html" %} {% load i18n %} {% load tz %} {%
+load activities %} {% block content %} {% if object.canceled %}
 <p class="text-bold text-center py-2">{% trans "This event has been canceled." %}</p>
 <div class="text-muted">
   {% endif %}
 
   <dl class="text-small">
-
-    {% timezone object.timezone %}
-    {% if object.ends %}
-
-    {% with start_date=object.starts|date:"DATE_FORMAT" end_date=object.ends|date:"DATE_FORMAT" start_time=object.starts|date:"TIME_FORMAT" end_time=object.ends|date:"TIME_FORMAT" %}
-    {% if start_date == end_date %}
+    {% timezone object.timezone %} {% if object.ends %} {% with
+    start_date=object.starts|date:"DATE_FORMAT" end_date=object.ends|date:"DATE_FORMAT"
+    start_time=object.starts|date:"TIME_FORMAT" end_time=object.ends|date:"TIME_FORMAT"
+    %} {% if start_date == end_date %}
     <dt>{% trans "Date" %} <span class="label">{{ object.timezone }}</span></dt>
-    <dd{% if not object.is_attendable %} class="text-strike"
-                                         {% endif %}>{{ start_date }} @ {{ start_time }} - {{ end_time }}</dd{%>
-    {% else %} <dt>{% trans "Dates" %} <span class="label">{{ object.timezone }}</span></dt>
-    <dd{% if not object.is_attendable %} class="text-strike"
-                                         {% endif %}>{{ start_date }} @ {{ start_time }} - {{ end_date }} @
-      {{ end_time }}</dd{%>
-    {% endif %} {% endwith %}
-                            {% else %}
-                            <dt>{% trans "Date" %} <span class="label">{{ object.timezone }}</span></dt>
-    <dd{% if not object.is_attendable %} class="text-strike"
-                                         {% endif %}>
+    <dd{% if not object.is_attendable %} class="text-strike" {% endif %}
+      >{{ start_date }} @ {{ start_time }} - {{ end_time }}</dd{%
+    >
+    {% else %}
+    <dt>{% trans "Dates" %} <span class="label">{{ object.timezone }}</span></dt>
+    <dd{% if not object.is_attendable %} class="text-strike" {% endif %}
+      >{{ start_date }} @ {{ start_time }} - {{ end_date }} @ {{ end_time }}</dd{%
+    >
+    {% endif %} {% endwith %} {% else %}
+    <dt>{% trans "Date" %} <span class="label">{{ object.timezone }}</span></dt>
+    <dd{% if not object.is_attendable %} class="text-strike" {% endif %}>
       {{ object.starts|date:"DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }}
     </dd{%>
-    {% endif %} {% endtimezone %}
-                            {% with location=object.get_full_location %}
-                            {% if location %}
-                            <dt>{% trans "Location" %}</dt>
+    {% endif %} {% endtimezone %} {% with location=object.get_full_location %} {% if
+    location %}
+    <dt>{% trans "Location" %}</dt>
     <dd>
       {% if not is_detail and object.has_map %}
-      <a href="{{ object.get_absolute_url }}#map-for-event-{{ object.id }}">{{ location }}</a>
-      {% else %}
-      {{ location }}
-      {% endif %}
+      <a href="{{ object.get_absolute_url }}#map-for-event-{{ object.id }}"
+        >{{ location }}</a
+      >
+      {% else %} {{ location }} {% endif %}
     </dd>
-    {% endif %}
-    {% endwith %}
-
-    {% if object.url %}
+    {% endif %} {% endwith %} {% if object.url %}
     <dt>{% trans "URL" %}</dt>
     <dd class="text-ellipsis">{{ object.url|urlize }}</dd>
-    {% endif %}
-
-
-    {% if object.is_detail %}
-
-    {% if object.contact_name %}
+    {% endif %} {% if object.is_detail %} {% if object.contact_name %}
     <dt>{% trans "Contact" %}</dt>
     <dd>{{ object.contact_name }}</dd>
-    {% endif %}
-
-    {% if object.contact_email %}
+    {% endif %} {% if object.contact_email %}
     <dt>{% trans "Email" %}</dt>
     <dd>{{ object.contact_email|urlize }}</dd>
-    {% endif %}
-
-    {% if object.contact_phone %}
+    {% endif %} {% if object.contact_phone %}
     <dt>{% trans "Phone" %}</dt>
     <dd>{{ object.contact_phone }}</dd>
-    {% endif %}
-
-    {% if object.ticket_price %}
+    {% endif %} {% if object.ticket_price %}
     <dt>{% trans "Admission" %}</dt>
     <dd>{{ object.ticket_price }}</dd>
-    {% endif %}
-
-    {% if object.ticket_vendor %}
+    {% endif %} {% if object.ticket_vendor %}
     <dt>{% trans "Tickets available from" %}</dt>
     <dd>{{ object.ticket_vendor|linebreaksbr }}</dd>
-    {% endif %}
-
-    {% endif %}
-
+    {% endif %} {% endif %}
   </dl>
 
-  {% if is_detail %}
-  {% include "activities/includes/map.html" with css_class="pb-1" %}
-  {% endif %}
-
-  {% with user|is_oembed_url:object.url as is_oembed %}
-  {% include "activities/includes/oembed.html" %}
-  {% endwith %}
-  {% include "activities/includes/description.html" %}
-
-  {% if object.is_canceled %}
+  {% if is_detail %} {% include "activities/includes/map.html" with css_class="pb-1" %}
+  {% endif %} {% with user|is_oembed_url:object.url as is_oembed %} {% include
+  "activities/includes/oembed.html" %} {% endwith %} {% include
+  "activities/includes/description.html" %} {% if object.is_canceled %}
 </div>
-{% endif %}
-
-{% endblock content %}
-
-{% block actions %}{% include "events/includes/actions.html" %}{% endblock %}
-{% block info %}{% include "events/includes/info.html" %}{% endblock %}
-{% block links %}{% include "events/includes/links.html" %}{% endblock %}
+{% endif %} {% endblock content %} {% block actions %}{% include
+"events/includes/actions.html" %}{% endblock %} {% block info %}{% include
+"events/includes/info.html" %}{% endblock %} {% block links %}{% include
+"events/includes/links.html" %}{% endblock %}

@@ -1,16 +1,14 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
 
-<div class="card{% if css_class %} {{ css_class }}{% endif %}"
-     data-controller="clipboard">
+<div
+  class="card{% if css_class %} {{ css_class }}{% endif %}"
+  data-controller="clipboard"
+>
   <div class="card-header">
     <div class="card-title h6 pb-2">
-      {% block title %}
-      {% if object.url %}
-      {{ object.url|linkify:object.title }}
-      {% else %}
+      {% block title %} {% if object.url %} {{ object.url|linkify:object.title }} {%
+      else %}
       <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
       {% endif %}
       <span class="label">{% trans object_type|capfirst %}</span>
@@ -18,9 +16,8 @@
     </div>
     {% endblock title %}
     <div class="card-subtitle h6 pb-1">
-      {% block timesince %}
-      {% include "includes/timesince.html" with owner=object.owner timestamp=object.published %}
-      {% endblock timesince %}
+      {% block timesince %} {% include "includes/timesince.html" with owner=object.owner
+      timestamp=object.published %} {% endblock timesince %}
     </div>
   </div>
   <div class="card-footer">
@@ -28,9 +25,9 @@
       {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
     </div>
     {% if object.description %}
-    <textarea data-target="clipboard.textarea"
-              readonly
-              class="d-none">{{ object.description }}</textarea>
+    <textarea data-target="clipboard.textarea" readonly class="d-none">
+{{ object.description }}</textarea
+    >
     {% endif %}
     <div class="d-flex align-center pb-1">
       {% block actions %}{% include "activities/includes/actions.html" %}{% endblock %}

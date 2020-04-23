@@ -1,25 +1,18 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "includes/forms/form.html" %}
-
-{% load i18n %}
-
-{% block form_fields %}
-
-{% if redirect_field_value %}
-<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-{% endif %}
-
-{{ block.super }}
-
-{% endblock form_fields %}
-
-{% block form_buttons %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "includes/forms/form.html" %} {% load i18n %} {% block form_fields %} {% if
+redirect_field_value %}
+<input
+  type="hidden"
+  name="{{ redirect_field_name }}"
+  value="{{ redirect_field_value }}"
+/>
+{% endif %} {{ block.super }} {% endblock form_fields %} {% block form_buttons %}
 
 <div class="btn-group">
   <button class="btn btn-primary" type="submit">{% trans "Sign in" %}</button>
-  <a class="btn btn-link" href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a>
+  <a class="btn btn-link" href="{% url 'account_reset_password' %}"
+    >{% trans "Forgot your password?" %}</a
+  >
 </div>
 
 {% endblock form_buttons %}

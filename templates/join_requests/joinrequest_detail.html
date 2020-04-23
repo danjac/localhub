@@ -1,15 +1,6 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "join_requests/base.html" %}
-
-{% load i18n %}
-{% load account %}
-{% load users %}
-
-{% block content %}
-
-{% user_display object.sender as display_name %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "join_requests/base.html" %} {% load i18n %} {% load account %} {% load users
+%} {% block content %} {% user_display object.sender as display_name %}
 
 <ul class="breadcrumb">
   <li class="breadcrumb-item">
@@ -19,58 +10,60 @@
     <a href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
   </li>
   <li class="breadcrumb-item">
-    <a data-turbolinks="false"
-       href="#">{{ display_name }}</a>
+    <a data-turbolinks="false" href="#">{{ display_name }}</a>
   </li>
 </ul>
 
 <h1 class="page-header">
-  {% avatar object.sender "avatar-lg" %}
-  {% if object.sender.username == display_name %}
-  @{{ display_name }}
-  {% else %}
-  {{ display_name }}
-  (@{{ object.sender.username }})
-  {% endif %}
+  {% avatar object.sender "avatar-lg" %} {% if object.sender.username == display_name %}
+  @{{ display_name }} {% else %} {{ display_name }} (@{{ object.sender.username }}) {%
+  endif %}
 </h1>
 
 {% with is_pending=object.is_pending is_rejected=object.is_rejectd %}
 <div class="actions mb-1">
   {% if is_pending or is_rejected %}
-  <a class="action"
-     data-controller="ajax"
-     data-action="ajax#post"
-     data-ajax-confirm-header="{% trans 'Accept' %}"
-     data-ajax-confirm-body="{% trans 'Are you sure you want to accept this request?' %}"
-     data-ajax-redirect="{{ request.get_full_path }}"
-     href="{% url 'join_requests:accept' object.id %}">{% trans "Accept" %}
+  <a
+    class="action"
+    data-controller="ajax"
+    data-action="ajax#post"
+    data-ajax-confirm-header="{% trans 'Accept' %}"
+    data-ajax-confirm-body="{% trans 'Are you sure you want to accept this request?' %}"
+    data-ajax-redirect="{{ request.get_full_path }}"
+    href="{% url 'join_requests:accept' object.id %}"
+    >{% trans "Accept" %}
   </a>
+  {% endif %} {% if is_pending %}
+  <a
+    class="action"
+    data-controller="ajax"
+    data-action="ajax#post"
+    data-ajax-redirect="{{ request.get_full_path }}"
+    data-ajax-confirm-header="{% trans 'Reject' %}"
+    data-ajax-confirm-body="{% trans 'Are you sure you want to reject this request?' %}"
+    href="{% url 'join_requests:reject' object.id %}"
+    >{% trans "Reject" %}</a
+  >
   {% endif %}
-  {% if is_pending %}
-  <a class="action"
-     data-controller="ajax"
-     data-action="ajax#post"
-     data-ajax-redirect="{{ request.get_full_path }}"
-     data-ajax-confirm-header="{% trans 'Reject' %}"
-     data-ajax-confirm-body="{% trans 'Are you sure you want to reject this request?' %}"
-     href="{% url 'join_requests:reject' object.id %}">{% trans "Reject" %}</a>
-  {% endif %}
-  <a class="action"
-     data-controller="ajax"
-     data-action="ajax#post"
-     data-ajax-confirm-header="{% trans 'Delete' %}"
-     data-ajax-confirm-body="{% trans 'Are you sure you want to delete this request?' %}"
-     href="{% url 'join_requests:delete' object.id %}">{% trans "Delete" %}</a>
+  <a
+    class="action"
+    data-controller="ajax"
+    data-action="ajax#post"
+    data-ajax-confirm-header="{% trans 'Delete' %}"
+    data-ajax-confirm-body="{% trans 'Are you sure you want to delete this request?' %}"
+    href="{% url 'join_requests:delete' object.id %}"
+    >{% trans "Delete" %}</a
+  >
 </div>
 {% endwith %}
-
 
 <dl>
   <dt>{% trans "Status" %}</dt>
   <dd>{{ object.get_status_display }}</dd>
   <dt>{% trans "Requested" %}</dt>
   <dd>
-    {% blocktrans with created=object.created|timesince %}{{ created }} ago{% endblocktrans %}
+    {% blocktrans with created=object.created|timesince %}{{ created }} ago{%
+    endblocktrans %}
   </dd>
 </dl>
 
@@ -80,12 +73,5 @@
 <div class="markdown-content">
   {{ object.sender.bio.markdown|strip_external_images:user|lazify }}
 </div>
-{% endcollapsable %}
-{% endif %}
-
-
-{% if object.intro %}
-{{ object.intro|linebreaks }}
-{% endif %}
-
-{% endblock content %}
+{% endcollapsable %} {% endif %} {% if object.intro %} {{ object.intro|linebreaks }} {%
+endif %} {% endblock content %}

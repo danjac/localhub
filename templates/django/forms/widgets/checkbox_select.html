@@ -1,20 +1,23 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% for group, options, index in widget.optgroups %}
-
-{% if group %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% for group, options, index in widget.optgroups %} {% if group %}
 <div>{{ group }}</div>
-{% endif %}
-
-{% for option in options %}
+{% endif %} {% for option in options %}
 <div>
-{% if option.wrap_label %}
-<label class="form-checkbox form-inline"{% if option.attrs.id %} for="{{ option.attrs.id }}"{% endif %}>
-  {% endif %}
-  {% include "django/forms/widgets/input.html" with widget=option %}
-  <i class="form-icon"></i>
-{% if option.wrap_label %} {{ option.label }}</label>{% endif %}
-{% endfor %}
+  {% if option.wrap_label %}
+  <label
+    class="form-checkbox form-inline"
+    {%
+    if
+    option.attrs.id
+    %}
+    for="{{ option.attrs.id }}"
+    {%
+    endif
+    %}
+  >
+    {% endif %} {% include "django/forms/widgets/input.html" with widget=option %}
+    <i class="form-icon"></i>
+    {% if option.wrap_label %} {{ option.label }}</label
+  >{% endif %} {% endfor %}
 </div>
 {% endfor %}

@@ -1,40 +1,23 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "activities/base.html" %}
-
-{% load i18n %}
-{% load rules %}
-{% load users %}
-
-{% block subtitle %} / {% trans "Private Stash" %}{% endblock %}
-
-{% dismissable user "private-stash" %}
-{% blocktrans %}
-Activities in your Private Stash are only visible to you. They do not appear in
-dropdownthe Activity Stream or Timeline. Comments cannot be submitted to private activities.
-You can also keep draft posts and other activities in your Private Stash, and publish
-them later by clicking on the "Publish" button in the Actions menu.
-{% endblocktrans %}
-{% enddismissable %}
-
-{% block content %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "activities/base.html" %} {% load i18n %} {% load rules %} {% load users %}
+{% block subtitle %} / {% trans "Private Stash" %}{% endblock %} {% dismissable user
+"private-stash" %} {% blocktrans %} Activities in your Private Stash are only visible to
+you. They do not appear in dropdownthe Activity Stream or Timeline. Comments cannot be
+submitted to private activities. You can also keep draft posts and other activities in
+your Private Stash, and publish them later by clicking on the "Publish" button in the
+Actions menu. {% endblocktrans %} {% enddismissable %} {% block content %}
 <div class="float-left">
   <h1 class="page-header">{% trans "Private Stash" %}</h1>
 </div>
 
-{% has_perm 'activities.create_activity' user community as can_create_activity %}
-
-{% if can_create_activity %}
+{% has_perm 'activities.create_activity' user community as can_create_activity %} {% if
+can_create_activity %}
 <div class="float-right">
-  <div class="dropdown mr-2"
-       data-controller="dropdown">
-    <button class="btn btn-sm"
-            data-action="dropdown#toggle">
+  <div class="dropdown mr-2" data-controller="dropdown">
+    <button class="btn btn-sm" data-action="dropdown#toggle">
       {% trans "Submit..." %}<i class="icon icon-caret"></i>
     </button>
-    <ul class="menu"
-        data-target="dropdown.menu">
+    <ul class="menu" data-target="dropdown.menu">
       <li class="menu-item">
         <a href="{% url 'posts:create_private' %}">{% trans "Private Post" %}</a>
       </li>
@@ -54,9 +37,6 @@ them later by clicking on the "Publish" button in the Actions menu.
 
 <div class="clearfix"></div>
 
-{% if paginator.count or view.search_query %}
-{% include "includes/forms/search_form.html" with selector=True %}
-{% endif %}
-
-{% include "activities/includes/activity_list.html" %}
-{% endblock content %}
+{% if paginator.count or view.search_query %} {% include
+"includes/forms/search_form.html" with selector=True %} {% endif %} {% include
+"activities/includes/activity_list.html" %} {% endblock content %}

@@ -1,31 +1,50 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
 
-<form {% spaceless %}
-      method="{{ method|default:'POST' }}"
-      action="{{ action|default:request.path }}"
-      {% if multipart %}
-      enctype="multipart/form-data"
-      {% endif %}
-      {% if form_id %}
-      id="{{ form_id }}"
-      {% endif %}
-      {% if css_class %}
-      class="{{ css_class }}"
-      {% endif %}
-      {% block form_extra_attrs %}{% endblock %}
-      {% endspaceless %}>
-    {% block form_fields %}
-    {% include "includes/forms/fields.html" %}
-    {% endblock form_fields %}
-    {% block form_buttons %}
-    {% trans "Submit" as t_submit %}
-    <button type="submit"
-            name="submit"
-            class="btn btn-primary">
-        {{ submit_btn|default:t_submit }}
-    </button>
-    {% endblock %}
+<form
+  {%
+  spaceless
+  %}
+  method="{{ method|default:'POST' }}"
+  action="{{ action|default:request.path }}"
+  {%
+  if
+  multipart
+  %}
+  enctype="multipart/form-data"
+  {%
+  endif
+  %}
+  {%
+  if
+  form_id
+  %}
+  id="{{ form_id }}"
+  {%
+  endif
+  %}
+  {%
+  if
+  css_class
+  %}
+  class="{{ css_class }}"
+  {%
+  endif
+  %}
+  {%
+  block
+  form_extra_attrs
+  %}{%
+  endblock
+  %}
+  {%
+  endspaceless
+  %}
+>
+  {% block form_fields %} {% include "includes/forms/fields.html" %} {% endblock
+  form_fields %} {% block form_buttons %} {% trans "Submit" as t_submit %}
+  <button type="submit" name="submit" class="btn btn-primary">
+    {{ submit_btn|default:t_submit }}
+  </button>
+  {% endblock %}
 </form>

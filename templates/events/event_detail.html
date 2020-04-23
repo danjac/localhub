@@ -1,23 +1,19 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "activities/activity_detail.html" %}
-
-{% load i18n %}
-
-{% block breadcrumbs %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "activities/activity_detail.html" %} {% load i18n %} {% block breadcrumbs %}
 {% if object.published %}
 <ul class="breadcrumb">
-  <li class="breadcrumb-item"><a href="{% url 'events:list' %}">{% trans "Events" %}</a>
+  <li class="breadcrumb-item">
+    <a href="{% url 'events:list' %}">{% trans "Events" %}</a>
   </li>
   <li class="breadcrumb-item">
-    <a href="{% url 'events:calendar' %}?month={{ event.starts.month }}&year={{ event.starts.year }}">
+    <a
+      href="{% url 'events:calendar' %}?month={{ event.starts.month }}&year={{ event.starts.year }}"
+    >
       {{ event.starts|date:"F, Y" }}
     </a>
   </li>
-  <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
+  <li class="breadcrumb-item">
+    <a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a>
+  </li>
 </ul>
-{% else %}
-{{ block.super }}
-{% endif %}
-{% endblock breadcrumbs %}
+{% else %} {{ block.super }} {% endif %} {% endblock breadcrumbs %}

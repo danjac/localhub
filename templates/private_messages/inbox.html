@@ -1,18 +1,8 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "private_messages/message_list_base.html" %}
-
-{% load i18n %}
-
-{% block subtitle %}{{ block.super }} / {% trans "Inbox" %}{% endblock %}
-
-{% block message_list %}
-{% if paginator.count or view.search_query %}
-{% include "includes/forms/search_form.html" with selector=True %}
-{% endif %}
-
-{% include "private_messages/includes/email_settings.html" %}
-{% trans "You have not received any messages" as t_empty_message %}
-{% include "private_messages/includes/message_list.html" with empty_message=t_empty_message %}
-{% endblock message_list %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "private_messages/message_list_base.html" %} {% load i18n %} {% block
+subtitle %}{{ block.super }} / {% trans "Inbox" %}{% endblock %} {% block message_list
+%} {% if paginator.count or view.search_query %} {% include
+"includes/forms/search_form.html" with selector=True %} {% endif %} {% include
+"private_messages/includes/email_settings.html" %} {% trans "You have not received any
+messages" as t_empty_message %} {% include "private_messages/includes/message_list.html"
+with empty_message=t_empty_message %} {% endblock message_list %}

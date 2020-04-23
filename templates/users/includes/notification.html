@@ -1,22 +1,9 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% load i18n %}
-{% load account %}
-
-{% user_display notification.actor as actor %}
-{% with actor_url=notification.actor.get_absolute_url %}
-{% if notification.verb == 'new_follower' %}
-{% blocktrans %}
-<a href="{{ actor_url }}">{{ actor }}</a> is now following you.
-{% endblocktrans %}
-{% elif notification.verb == 'new_member' %}
-{% blocktrans %}
-<a href="{{ actor_url }}">{{ actor }}</a> has joined this community.
-{% endblocktrans %}
-{% elif notification.verb == 'update' %}
-{% blocktrans %}
-<a href="{{ actor_url }}">{{ actor }}</a> has updated their profile.
-{% endblocktrans %}
-{% endif %}
-{% endwith %}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load i18n %} {% load account %} {% user_display notification.actor as actor %} {%
+with actor_url=notification.actor.get_absolute_url %} {% if notification.verb ==
+'new_follower' %} {% blocktrans %} <a href="{{ actor_url }}">{{ actor }}</a> is now
+following you. {% endblocktrans %} {% elif notification.verb == 'new_member' %} {%
+blocktrans %} <a href="{{ actor_url }}">{{ actor }}</a> has joined this community. {%
+endblocktrans %} {% elif notification.verb == 'update' %} {% blocktrans %}
+<a href="{{ actor_url }}">{{ actor }}</a> has updated their profile. {% endblocktrans %}
+{% endif %} {% endwith %}

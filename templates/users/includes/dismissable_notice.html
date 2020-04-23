@@ -1,13 +1,15 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-<div class="text-center my-2 toast{% if css_class %} {{ css_class }}{% endif %}"
-     data-controller="ajax"
-     data-ajax-remove>
+<div
+  class="text-center my-2 toast{% if css_class %} {{ css_class }}{% endif %}"
+  data-controller="ajax"
+  data-ajax-remove
+>
   {% if user.is_authenticated %}
-  <button class="btn btn-clear float-right"
-          data-ajax-url="{% url 'dismiss_notice' notice %}"
-          data-action="ajax#post"></button>
-  {% endif %}
-  {{ dismissable_content }}
+  <button
+    class="btn btn-clear float-right"
+    data-ajax-url="{% url 'dismiss_notice' notice %}"
+    data-action="ajax#post"
+  ></button>
+  {% endif %} {{ dismissable_content }}
 </div>

@@ -1,12 +1,6 @@
-{# Copyright (c) 2020 by Dan Jacob #}
-{# SPDX-License-Identifier: AGPL-3.0-or-later #}
-
-{% extends "likes/base.html" %}
-{% load i18n %}
-
-{% block subtitle %}{{ block.super }} / {% trans "Activities" %}{% endblock %}
-
-{% block likes_content %}
-{% trans "You have not liked any activities." as t_empty_message %}
-{% include "activities/includes/activity_list.html" with empty_message=t_empty_message %}
-{% endblock likes_content %}-
+{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "likes/base.html" %} {% load i18n %} {% block subtitle %}{{ block.super }} /
+{% trans "Activities" %}{% endblock %} {% block likes_content %} {% trans "You have not
+liked any activities." as t_empty_message %} {% include
+"activities/includes/activity_list.html" with empty_message=t_empty_message %} {%
+endblock likes_content %}-
