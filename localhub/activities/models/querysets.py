@@ -9,7 +9,7 @@ from localhub.db.search import SearchQuerySetMixin
 from localhub.db.utils import boolean_value
 from localhub.flags.models import FlagAnnotationsQuerySetMixin
 from localhub.likes.models import LikeAnnotationsQuerySetMixin
-from localhub.notifications.models import NotificationAnnotationsQuerySetMixin
+from localhub.notifications.models.mixins import NotificationAnnotationsQuerySetMixin
 
 
 class ActivityQuerySet(

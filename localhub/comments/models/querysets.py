@@ -8,7 +8,7 @@ from localhub.communities.models import Membership
 from localhub.db.search import SearchQuerySetMixin
 from localhub.flags.models import FlagAnnotationsQuerySetMixin
 from localhub.likes.models import LikeAnnotationsQuerySetMixin
-from localhub.notifications.models import NotificationAnnotationsQuerySetMixin
+from localhub.notifications.models.mixins import NotificationAnnotationsQuerySetMixin
 
 # TBD: break up search into indexer, mixin modules
 
