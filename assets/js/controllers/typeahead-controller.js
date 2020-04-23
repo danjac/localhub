@@ -195,6 +195,7 @@ export default class extends Controller {
       this.inputTarget,
       this.inputTarget.selectionEnd
     );
+    // TBD: see dropdown-controller for ensuring result stays inside viewport
     const { offsetTop, offsetLeft, scrollTop, scrollLeft } = this.inputTarget;
     this.selectorTarget.style.top = offsetTop - scrollTop + height + top + 'px';
     this.selectorTarget.style.left = offsetLeft - scrollLeft + left + 'px';
