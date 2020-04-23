@@ -2,7 +2,21 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --watch",
-    "build": "cross-env NODE_ENV=production webpack --no-progress"
+    "build": "cross-env NODE_ENV=production webpack --no-progress",
+    "pre-commit": "lint-staged"
+  },
+  "pre-commit": [
+    "pre-commit"
+  ],
+  "lint-staged": {
+    "./assets/**/*.js": [
+      "prettier --write",
+      "git add"
+    ],
+    "./assets/**/*.scss": [
+      "prettier --write",
+      "git add"
+    ],
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

@@ -2,30 +2,28 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 .dark-theme {
+  @import 'base';
+  @import 'colors';
 
-  @import "base";
-  @import "colors";
-
-  @import "modules/actions";
-  @import "modules/badge";
-  @import "modules/button";
-  @import "modules/calendar";
-  @import "modules/card";
-  @import "modules/chip";
-  @import "modules/collapsable";
-  @import "modules/divider";
-  @import "modules/dropdown";
-  @import "modules/empty";
-  @import "modules/form";
-  @import "modules/info";
-  @import "modules/label";
-  @import "modules/menu";
-  @import "modules/modal";
-  @import "modules/navbar";
-  @import "modules/page-header";
-  @import "modules/post";
-  @import "modules/tab";
-  @import "modules/table";
-  @import "modules/timesince";
-
+  @import 'modules/actions';
+  @import 'modules/badge';
+  @import 'modules/button';
+  @import 'modules/calendar';
+  @import 'modules/card';
+  @import 'modules/chip';
+  @import 'modules/collapsable';
+  @import 'modules/divider';
+  @import 'modules/dropdown';
+  @import 'modules/empty';
+  @import 'modules/form';
+  @import 'modules/info';
+  @import 'modules/label';
+  @import 'modules/menu';
+  @import 'modules/modal';
+  @import 'modules/navbar';
+  @import 'modules/page-header';
+  @import 'modules/post';
+  @import 'modules/tab';
+  @import 'modules/table';
+  @import 'modules/timesince';
 }
