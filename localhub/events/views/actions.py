@@ -10,7 +10,7 @@ from django.views.generic.detail import SingleObjectMixin
 from localhub.activities.views.actions import BaseActivityActionView
 from localhub.activities.views.mixins import ActivityQuerySetMixin
 
-from .models import Event
+from ..models import Event
 
 
 class EventCancelView(BaseActivityActionView):

@@ -7,13 +7,9 @@ from localhub.activities.urls.generic import create_activity_urls
 
 from .forms import PollForm
 from .models import Poll
-from .views import (
-    PollCreateView,
-    PollDetailView,
-    PollListView,
-    PollUpdateView,
-    answer_vote_view,
-)
+from .views.actions import answer_vote_view
+from .views.create_update import PollCreateView, PollUpdateView
+from .views.list_detail import PollDetailView, PollListView
 
 app_name = "polls"
 
