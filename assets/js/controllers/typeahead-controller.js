@@ -200,6 +200,7 @@ export default class extends Controller {
     );
     const { offsetTop, offsetLeft, scrollTop, scrollLeft } = this.inputTarget;
 
+    this.selectorTarget.style.position = 'absolute';
     this.selectorTarget.style.top = offsetTop - scrollTop + height + top + 'px';
     this.selectorTarget.style.left = offsetLeft - scrollLeft + left + 'px';
     this.selectorTarget.classList.remove('d-none');
@@ -207,10 +208,13 @@ export default class extends Controller {
     const viewport = getViewport()
     const rect = this.selectorTarget.getBoundingClientRect();
 
+    if (rect.height + rect.bottom > viewport.height) {
+      this.selectorTarget.style.top = viewport.height + 'px';
+    }
+
     if ((rect.width + rect.left) > viewport.width || (rect.width + rect.right) > viewport.width) {
       this.selectorTarget.style.left = '25%';
     }
-
     this.selectorTarget.zIndex = maxZIndex() + 1;
   }
 
