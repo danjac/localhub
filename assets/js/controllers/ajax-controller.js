@@ -6,8 +6,7 @@ import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
 import * as alerts from '@utils/alerts';
-import confirmDialog from '@utils/confirmDialog';
-
+import confirmDialog from '@utils/confirm-dialog';
 
 export default class extends Controller {
   /*
@@ -93,12 +92,12 @@ export default class extends Controller {
     });
 
     axios({
-        headers: {
-          'Turbolinks-Referrer': location.href,
-        },
-        method,
-        url,
-      })
+      headers: {
+        'Turbolinks-Referrer': location.href,
+      },
+      method,
+      url,
+    })
       .then((response) => {
         const successMessage = response.headers['x-success-message'];
         if (successMessage) {
