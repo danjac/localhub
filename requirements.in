@@ -16,8 +16,6 @@ django-model-utils
 django-redis
 django-silk
 django-storages
-# DEPRECATED: keeping for migrations
-django-simple-history
 django-taggit
 django-timezone-field
 django-widget-tweaks
