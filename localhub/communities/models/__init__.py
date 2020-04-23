@@ -121,6 +121,11 @@ class Community(TimeStampedModel):
             return False
         return user.has_role(self, *roles)
 
+    def is_inactive_member(self, user):
+        if user.is_anonymous:
+            return False
+        return user.is_inactive_member(self)
+
     def is_member(self, user):
         return self.user_has_role(
             user,

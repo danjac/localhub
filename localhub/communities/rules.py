@@ -31,7 +31,7 @@ is_member = is_member | is_moderator
 
 @rules.predicate
 def is_inactive_member(user, community):
-    return user.has_inactive_membership(community)
+    return community.is_inactive_member(user)
 
 
 @rules.predicate

@@ -6,7 +6,7 @@ from django.utils import timezone
 import pytest
 from allauth.account.models import EmailAddress
 
-from localhub.communities.factories import MembershipFactory
+from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Membership
 from localhub.private_messages.factories import MessageFactory
 
@@ -175,7 +175,7 @@ class TestUserManager:
 
     def test_with_num_unread_messages_if_recipient_read(self, user_model, member):
         MessageFactory(
-            recipient=member.member, community=member.community, read=timezone.now()
+            recipient=member.member, community=member.community, read=timezone.now(),
         )
         user = (
             user_model.objects.exclude(pk=member.member_id)
@@ -255,6 +255,60 @@ class TestUserModel:
         assert user.email in emails
         assert "test1@gmail.com" in emails
 
+    def test_is_inactive_member_if_true(self):
+        member = MembershipFactory(active=False)
+        assert member.member.is_inactive_member(member.community)
+
+    def test_is_inactive_member_if_false(self):
+        member = MembershipFactory(active=True)
+        assert not member.member.is_inactive_member(member.community)
+
+    def test_has_role_if_not_a_member(self, user, community):
+        assert not user.has_role(community, Membership.Role.MEMBER)
+
+    def test_has_role_if_active_member_wrong_role(self):
+        member = MembershipFactory(active=True, role=Membership.Role.MEMBER)
+        assert not member.member.has_role(member.community, Membership.Role.ADMIN)
+
+    def test_has_role_if_inactive_member_right_role(self):
+        member = MembershipFactory(active=False, role=Membership.Role.ADMIN)
+        assert not member.member.has_role(member.community, Membership.Role.ADMIN)
+
+    def test_has_role_if_active_member_right_role(self):
+        member = MembershipFactory(active=True, role=Membership.Role.ADMIN)
+        assert member.member.has_role(member.community, Membership.Role.ADMIN)
+
+    def test_member_cache(self):
+
+        user = UserFactory()
+
+        first = MembershipFactory(
+            member=user, role=Membership.Role.ADMIN, active=True
+        ).community
+        second = MembershipFactory(
+            member=user, role=Membership.Role.MODERATOR, active=True
+        ).community
+        third = MembershipFactory(
+            member=user, role=Membership.Role.MEMBER, active=True
+        ).community
+        fourth = MembershipFactory(
+            member=user, role=Membership.Role.MEMBER, active=False
+        ).community
+        fifth = CommunityFactory()
+
+        assert user.member_cache["active"][first.id] == Membership.Role.ADMIN
+        assert user.member_cache["active"][second.id] == Membership.Role.MODERATOR
+        assert user.member_cache["active"][third.id] == Membership.Role.MEMBER
+
+        assert fourth.id not in user.member_cache["active"]
+        assert fifth.id not in user.member_cache["active"]
+
+        assert first.id not in user.member_cache["inactive"]
+        assert second.id not in user.member_cache["inactive"]
+        assert third.id not in user.member_cache["inactive"]
+        assert fourth.id in user.member_cache["inactive"]
+        assert fifth.id not in user.member_cache["inactive"]
+
     def test_get_blocked_users(self, user):
         blocked = UserFactory()
         blocker = UserFactory()
@@ -319,7 +373,7 @@ class TestUserModel:
         # add first follower to same community: should just be one update !
 
         MembershipFactory(
-            member=follower.member, community=other_community_follower.community
+            member=follower.member, community=other_community_follower.community,
         )
 
         member.member.reset_tracker()

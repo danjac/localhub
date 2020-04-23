@@ -85,18 +85,6 @@ class User(TrackerModelMixin, AbstractUser):
             models.Index(fields=["name", "username", "email"]),
         ]
 
-    @cached_property
-    def community_roles_cache(self):
-        """
-        Returns:
-            cached dict of roles as {community_id:role}
-        """
-        return dict(
-            Membership.objects.filter(active=True, member=self).values_list(
-                "community", "role"
-            )
-        )
-
     def get_absolute_url(self):
         return reverse("users:activities", args=[self.username])
 
@@ -119,6 +107,27 @@ class User(TrackerModelMixin, AbstractUser):
         """
         return get_generic_related_queryset(self, Notification)
 
+    @cached_property
+    def member_cache(self):
+        """
+        Returns:
+            A dict of membership status/roles:
+            {
+                "active": {community_id: "admin"}, ...
+                "inactive": [list of community ids...]
+            }
+        """
+        dct = {"active": {}, "inactive": []}
+
+        for community_id, role, active in Membership.objects.filter(
+            member=self
+        ).values_list("community", "role", "active"):
+            if active:
+                dct["active"][community_id] = role
+            else:
+                dct["inactive"].append(community_id)
+        return dct
+
     def has_role(self, community, *roles):
         """Checks if user has given role in the community, if any. Result
         is cached.
@@ -129,14 +138,15 @@ class User(TrackerModelMixin, AbstractUser):
         Returns:
             bool: if user has any of these roles
         """
-        return self.community_roles_cache.get(community.id, None) in roles
+        try:
+            return self.member_cache["active"][community.id] in roles
+        except KeyError:
+            return False
 
-    def has_inactive_membership(self, community):
+    def is_inactive_member(self, community):
         """Checks if user has an inactive membership for this community.
         """
-        return Membership.objects.filter(
-            community=community, member=self, active=False,
-        ).exists()
+        return community.id in self.member_cache["inactive"]
 
     def is_blocked(self, user):
         """ Check if user is blocking this other user, or is blocked by this other
