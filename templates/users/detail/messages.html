@@ -1,34 +1,68 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "users/detail/base.html" %} {% load i18n %} {% load account %} {% load rules
-%} {% load private_messages %} {% load users %} {% block subtitle %}{{ block.super }} /
-{% trans "Messages" %}{% endblock %} {% block user_content %} {% if is_current_user %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "users/detail/base.html" %}
+
+{% load i18n %}
+{% load account %}
+{% load rules %}
+{% load private_messages %}
+{% load users %}
+
+{% block subtitle %}{{ block.super }} / {% trans "Messages" %}{% endblock %}
+
+{% block user_content %}
+
+{% if is_current_user %}
+
 {% if unread_messages %}
 <div class="my-2 toast text-center">
-  {% blocktrans count counter=unread_messages %} You have
-  <strong>1 unread message</strong>. {% plural %} You have
-  <strong>{{ counter }} unread messages</strong>. {% endblocktrans %}
+  {% blocktrans count counter=unread_messages %}
+  You have <strong>1 unread message</strong>.
+  {% plural %}
+  You have <strong>{{ counter }} unread messages</strong>.
+  {% endblocktrans %}
 </div>
 {% elif paginator.count %}
 <div class="my-2 toast text-center">
-  {% blocktrans count counter=paginator.count %} You have exchanged
-  <strong>1 message</strong> with someone else. {% plural %} You have exchanged
-  <strong>{{ counter }} messages</strong> with other people. {% endblocktrans %}
+  {% blocktrans count counter=paginator.count %}
+  You have exchanged <strong>1 message</strong> with someone else.
+  {% plural %}
+  You have exchanged <strong>{{ counter }} messages</strong> with other people.
+  {% endblocktrans %}
 </div>
-{% endif %} {% else %} {% if unread_messages %}
+{% endif %}
+
+{% else %}
+
+{% if unread_messages %}
 <div class="my-2 toast text-center">
-  {% blocktrans count counter=unread_messages %} You have
-  <strong>1 unread message</strong> from {{ display_name }}. {% plural %} You have
-  <strong>{{ counter }} unread messages</strong> from {{ display_name }}. {%
-  endblocktrans %}
+  {% blocktrans count counter=unread_messages %}
+  You have <strong>1 unread message</strong> from {{ display_name }}.
+  {% plural %}
+  You have <strong>{{ counter }} unread messages</strong> from {{ display_name }}.
+  {% endblocktrans %}
 </div>
 {% elif paginator.count %}
 <div class="my-2 toast text-center">
-  {% blocktrans count counter=paginator.count %} You have exchanged
-  <strong>1 message</strong> with {{ display_name }}. {% plural %} You have exchanged
-  <strong>{{ counter }} messages</strong> with {{ display_name }}. {% endblocktrans %}
+  {% blocktrans count counter=paginator.count %}
+  You have exchanged <strong>1 message</strong> with {{ display_name }}.
+  {% plural %}
+  You have exchanged <strong>{{ counter }} messages</strong> with {{ display_name }}.
+  {% endblocktrans %}
 </div>
-{% endif %} {% endif %} {% if is_current_user %} {% trans "You have not exchanged any
-messages." as t_empty_message %} {% else %} {% blocktrans asvar t_empty_message trimmed
-%} You have not exchanged any messages with {{ display_name }}. {% endblocktrans %} {%
-endif %} {% include "private_messages/includes/message_list.html" with
-empty_message=t_empty_message %} {% endblock user_content %}
+{% endif %}
+
+{% endif %}
+
+{% if is_current_user %}
+{% trans "You have not exchanged any messages." as t_empty_message %}
+{% else %}
+{% blocktrans asvar t_empty_message trimmed %}
+You have not exchanged any messages with {{ display_name }}.
+{% endblocktrans %}
+{% endif %}
+
+{% include "private_messages/includes/message_list.html" with empty_message=t_empty_message %}
+
+{% endblock user_content %}

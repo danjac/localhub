@@ -1,9 +1,19 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "emails/base.html" %} {% load i18n %} {% load account %} {% block content %}
-{% user_display notification.recipient as recipient %} {% user_display
-notification.actor as actor %} {% with community=notification.community %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "emails/base.html" %}
+
+{% load i18n %}
+{% load account %}
+
+{% block content %}
+{% user_display notification.recipient as recipient %}
+{% user_display notification.actor as actor %}
+
+{% with community=notification.community %}
 <div class="intro">
-  {% blocktrans with community_name=community.name %} Hello from {{ community_name }} !
+  {% blocktrans with community_name=community.name %}
+  Hello from {{ community_name }} !
   {% endblocktrans %}
 </div>
 
@@ -16,10 +26,13 @@ notification.actor as actor %} {% with community=notification.community %}
 </div>
 
 <div class="section">
-  {% blocktrans with community_name=community.name %} Thank you from {{ community_name
-  }} ! {% endblocktrans %}
+  {% blocktrans with community_name=community.name %}
+  Thank you from {{ community_name }} !
+  {% endblocktrans %}
 </div>
 <div class="section">
   {{ community.domain }}
 </div>
-{% endwith %} {% endblock content %}
+{% endwith %}
+
+{% endblock content %}

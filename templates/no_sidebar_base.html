@@ -1,8 +1,13 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "base.html" %} {% block main_layout %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "base.html" %}
+{% block main_layout %}
 <main class="columns p-2 bg-gray">
   <div class="col-6 col-mx-auto col-sm-12">
-    {% block content %}{% endblock %}
+  {% block content %}{% endblock %}
   </div>
 </main>
 {% endblock %}
+
+

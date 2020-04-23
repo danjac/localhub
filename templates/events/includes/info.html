@@ -1,10 +1,26 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "activities/includes/info.html" %} {% load i18n %} {% block extra_info %} {%
-if object.num_attendees and not object.canceled %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/includes/info.html" %}
+
+{% load i18n %}
+
+{% block extra_info %}
+{% if object.num_attendees and not object.canceled %}
 <div class="info">
-  {% if object.has_started %} {% blocktrans count counter=object.num_attendees %} 1
-  Attended {% plural %} {{ counter }} Attended {% endblocktrans %} {% else %} {%
-  blocktrans count counter=object.num_attendees %} 1 Attending {% plural %} {{ counter
-  }} Attending {% endblocktrans %} {% endif %}
+  {% if object.has_started %}
+  {% blocktrans count counter=object.num_attendees %}
+  1 Attended
+  {% plural %}
+  {{ counter }} Attended
+  {% endblocktrans %}
+  {% else %}
+  {% blocktrans count counter=object.num_attendees %}
+  1 Attending
+  {% plural %}
+  {{ counter }} Attending
+  {% endblocktrans %}
+  {% endif %}
 </div>
-{% endif %} {% endblock %}
+{% endif %}
+{% endblock %}

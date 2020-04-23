@@ -1,10 +1,10 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% if object.has_map %}
-<div
-  id="map-for-{{ object_type }}-{{ object.id }}"
-  class="osm-map osm-map-lg mt-1{% if css_class %} {{ css_class }}{% endif %}"
-  data-controller="map"
-  data-map-latitude="{{ object.latitude }}"
-  data-map-longitude="{{ object.longitude }}"
-></div>
+<div id="map-for-{{ object_type }}-{{ object.id }}"
+     class="osm-map osm-map-lg mt-1{% if css_class %} {{ css_class }}{% endif %}"
+     data-controller="map"
+     data-map-latitude="{{ object.latitude }}"
+     data-map-longitude="{{ object.longitude }}"></div>
 {% endif %}

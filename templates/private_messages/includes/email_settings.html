@@ -1,5 +1,12 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% load i18n %} {% load users %} {% dismissable user "messages-emails" %} {% url
-'user_update' as user_settings_url %} {% blocktrans %} You can enable email
-notifications for new messages <a href="{{ user_settings_url }}">in your settings</a>.
-{% endblocktrans %} {% enddismissable %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% load users %}
+
+{% dismissable user "messages-emails" %}
+{% url 'user_update' as user_settings_url %}
+{% blocktrans %}
+You can enable email notifications for new messages <a href="{{ user_settings_url }}">in your settings</a>.
+{% endblocktrans %}
+{% enddismissable %}

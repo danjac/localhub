@@ -1,51 +1,50 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{# Use this template together with SearchMixin views #} {% load i18n %} {% load rules %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-<form
-  method="GET"
-  action="{{ request.path }}"
-  data-controller="form{% if selector %} search{% endif %}"
-  data-action="form#submit"
-  data-search-param="{{ view.search_parameter|default:'q' }}"
-  class="my-2 search-form"
->
-  {% for name, value in non_search_params.items %}
-  <input type="hidden" name="{{ name }}" value="{{ value }}" />
-  {% endfor %}
-  <div class="form-group">
-    <input class="form-input" name="{{ view.search_parameter|default:'q' }}"
-    type="search" {% if not view.search_optional %} required {% endif %} {% if selector
-    %} data-target="search.input" {% endif %} data-action="keyup->search#change"
-    placeholder="{% trans "Search" %}" value="{{ view.search_query|default:"" }}">
+{# Use this template together with SearchMixin views #}
+
+{% load i18n %}
+{% load rules %}
+
+<form method="GET"
+    action="{{ request.path }}"
+    data-controller="form{% if selector %} search{% endif %}"
+    data-action="form#submit"
+    data-search-param="{{ view.search_parameter|default:'q' }}"
+    class="my-2 search-form">
+{% for name, value in non_search_params.items %}
+<input type="hidden"
+       name="{{ name }}"
+       value="{{ value }}">
+{% endfor %}
+<div class="form-group">
+  <input class="form-input"
+         name="{{ view.search_parameter|default:'q' }}"
+         type="search"
+         {% if not view.search_optional %}
+         required
+           {% endif %}
+           {% if selector %}
+           data-target="search.input"
+           {% endif %}
+           data-action="keyup->search#change"
+           placeholder="{% trans "Search" %}"
+           value="{{ view.search_query|default:"" }}">
   </div>
   {% if selector %}
   <div class="form-group">
-    <select
-      class="form-select"
-      data-target="search.selector"
-      data-action="search#select"
-    >
+    <select class="form-select"
+            data-target="search.selector"
+            data-action="search#select">
       <option value="">{% trans "Search in..." %}</option>
       <option value="{% url 'activities:search' %}">{% trans "Activities" %}</option>
-      <option value="{% url 'private_messages:inbox' %}"
-        >{% trans "Messages - Inbox" %}</option
-      >
-      <option value="{% url 'private_messages:outbox' %}"
-        >{% trans "Messages - Outbox" %}</option
-      >
+      <option value="{% url 'private_messages:inbox' %}">{% trans "Messages - Inbox" %}</option>
+      <option value="{% url 'private_messages:outbox' %}">{% trans "Messages - Outbox" %}</option>
       <option value="{% url 'comments:list' %}">{% trans "Comments" %}</option>
-      <option value="{% url 'activities:private' %}"
-        >{% trans "Private Stash" %}</option
-      >
-      <option value="{% url 'bookmarks:activities' %}"
-        >{% trans "Bookmarks - Activities" %}</option
-      >
-      <option value="{% url 'bookmarks:messages' %}"
-        >{% trans "Bookmarks - Messages" %}</option
-      >
-      <option value="{% url 'bookmarks:comments' %}"
-        >{% trans "Bookmarks - Comments" %}</option
-      >
+      <option value="{% url 'activities:private' %}">{% trans "Private Stash" %}</option>
+      <option value="{% url 'bookmarks:activities' %}">{% trans "Bookmarks - Activities" %}</option>
+      <option value="{% url 'bookmarks:messages' %}">{% trans "Bookmarks - Messages" %}</option>
+      <option value="{% url 'bookmarks:comments' %}">{% trans "Bookmarks - Comments" %}</option>
       <option value="{% url 'users:member_list' %}">{% trans "Members" %}</option>
       <option value="{% url 'posts:list' %}">{% trans "Posts" %}</option>
       <option value="{% url 'events:list' %}">{% trans "Events" %}</option>
@@ -53,20 +52,19 @@
       <option value="{% url 'polls:list' %}">{% trans "Polls" %}</option>
       <option value="{% url 'hashtags:list' %}">{% trans "Tags" %}</option>
       <option value="{% url 'community_list' %}">{% trans "Sites" %}</option>
-      {% has_perm "communities.manage_community" user community as can_manage_community
-      %} {% if can_manage_community %}
-      <option value="{% url 'communities:membership_list' %}"
-        >{% trans "Memberships" %}</option
-      >
+      {% has_perm "communities.manage_community" user community as can_manage_community %}
+      {% if can_manage_community %}
+      <option value="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</option>
       <option value="{% url 'invites:list' %}">{% trans "Invites" %}</option>
-      <option value="{% url 'join_requests:list' %}"
-        >{% trans "Join Requests" %}</option
-      >
+      <option value="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</option>
       {% endif %}
     </select>
   </div>
-  {% endif %} {% if view.search_query and view.search_optional %}
-  <a class="btn btn-block mt-2" href="{{ non_search_path }}">
+  {% endif %}
+
+  {% if view.search_query and view.search_optional %}
+  <a class="btn btn-block mt-2"
+     href="{{ non_search_path }}">
     {% trans "Clear Search" %}
   </a>
   {% endif %}
@@ -74,7 +72,10 @@
 
 {% if view.search_query and object_list %}
 <div class="toast text-center my-2">
-  {% blocktrans count counter=paginator.count %} 1 result found {% plural %} {{ counter
-  }} results found {% endblocktrans %}
+  {% blocktrans count counter=paginator.count %}
+  1 result found
+  {% plural %}
+  {{ counter }} results found
+  {% endblocktrans %}
 </div>
 {% endif %}

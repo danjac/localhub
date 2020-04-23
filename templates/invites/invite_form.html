@@ -1,4 +1,8 @@
-{% extends "invites/base.html" %} {% load i18n %} {% block content %}
+{% extends "invites/base.html" %}
+{% load i18n %}
+
+
+{% block content %}
 
 <ul class="breadcrumb">
   <li class="breadcrumb-item">
@@ -8,10 +12,12 @@
     <a href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
   </li>
   <li class="breadcrumb-item">
-    <a data-turbolinks="false" href="#">{% trans "Send Invite" %}</a>
+    <a data-turbolinks="false"
+       href="#">{% trans "Send Invite" %}</a>
   </li>
 </ul>
 
+
 <h1 class="page-header">Invite a new member</h1>
-{% include "includes/forms/stimulusjs_form.html" with submit_btn=_("Send Invite") %} {%
-endblock content %}
+{% include "includes/forms/stimulusjs_form.html" with submit_btn=_("Send Invite") %}
+{% endblock content %}

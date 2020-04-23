@@ -1,34 +1,29 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
 <div data-controller="calendar time-selector">
   <template data-target="calendar.template">
     <div class="calendar-date">
-      <button class="date-item" data-action="calendar#select"></button>
+      <button class="date-item"
+              data-action="calendar#select">
+      </button>
     </div>
   </template>
   <div class="input-group">
-    {% include widget.subwidgets.0.template_name with widget=widget.subwidgets.0 %} {%
-    include widget.subwidgets.1.template_name with widget=widget.subwidgets.1 %}
+    {% include widget.subwidgets.0.template_name with widget=widget.subwidgets.0 %}
+    {% include widget.subwidgets.1.template_name with widget=widget.subwidgets.1 %}
   </div>
   <div class="columns pt-1">
     <div class="column col-mr-auto col-4 col-md-12">
-      <div class="calendar d-none" data-target="calendar.calendar">
+      <div class="calendar d-none"
+           data-target="calendar.calendar">
         <div class="calendar-nav navbar">
-          <button
-            class="btn btn-action btn-link btn-lg"
-            data-action="calendar#prevMonth"
-          >
-            <i class="icon icon-arrow-left"></i>
-          </button>
-          <div class="navbar-primary" data-target="calendar.currentMonth">
-            March 2017
-          </div>
-          <button
-            class="btn btn-action btn-link btn-lg"
-            data-action="calendar#nextMonth"
-          >
-            <i class="icon icon-arrow-right"></i>
-          </button>
+          <button class="btn btn-action btn-link btn-lg"
+                  data-action="calendar#prevMonth"><i class="icon icon-arrow-left"></i></button>
+          <div class="navbar-primary"
+               data-target="calendar.currentMonth">March 2017</div>
+          <button class="btn btn-action btn-link btn-lg"
+                  data-action="calendar#nextMonth"><i class="icon icon-arrow-right"></i></button>
         </div>
         <div class="calendar-container">
           <div class="calendar-header">
@@ -40,7 +35,8 @@
             <div class="calendar-date">{% trans "Fri" %}</div>
             <div class="calendar-date">{% trans "Sat" %}</div>
           </div>
-          <div class="calendar-body" data-target="calendar.days"></div>
+          <div class="calendar-body"
+               data-target="calendar.days"></div>
         </div>
       </div>
     </div>

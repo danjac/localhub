@@ -1,30 +1,49 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "hashtags/base.html" %} {% load i18n %} {% load rules %} {% block subtitle
-%}{{ block.super }} / #{{ tag.name }}{% endblock %} {% block content %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "hashtags/base.html" %}
+{% load i18n %}
+{% load rules %}
+
+{% block subtitle %}{{ block.super }} / #{{ tag.name }}{% endblock %}
+
+{% block content %}
 
 <ul class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="{% url 'hashtags:list' %}">{% trans "Tags" %}</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="#" data-turbolinks="false">{{ tag.name }}</a>
-  </li>
+  <li class="breadcrumb-item"><a href="{% url 'hashtags:list' %}">{% trans "Tags" %}</a></li>
+  <li class="breadcrumb-item"><a href="#" data-turbolinks="false">{{ tag.name }}</a></li>
 </ul>
 
-{% has_perm "users.follow_tag" user as can_follow_tag %} {% has_perm "users.block_tag"
-user as can_block_tag %} {% if can_follow_tag or can_block_tag %}
+{% has_perm "users.follow_tag" user as can_follow_tag %}
+{% has_perm "users.block_tag" user as can_block_tag %}
+
+{% if can_follow_tag or can_block_tag %}
 <div class="actions">
-  {% if can_follow_tag %} {% with user.following_tags.all|contains:tag as is_following
-  %} {% include "hashtags/includes/follow.html" %} {% endwith %} {% endif %} {% if
-  can_block_tag %} {% with user.blocked_tags.all|contains:tag as is_blocked %} {%
-  include "hashtags/includes/block.html" %} {% endwith %} {% endif %}
+  {% if can_follow_tag %}
+  {% with user.following_tags.all|contains:tag as is_following %}
+  {% include "hashtags/includes/follow.html" %}
+  {% endwith %}
+  {% endif %}
+
+  {% if can_block_tag %}
+  {% with user.blocked_tags.all|contains:tag as is_blocked %}
+  {% include "hashtags/includes/block.html" %}
+  {% endwith %}
+  {% endif %}
 </div>
-{% endif %} {% with total=paginator.count %} {% if total %}
+{% endif %}
+
+{% with total=paginator.count %}
+{% if total %}
 <div class="toast text-center my-2">
   {% blocktrans with name=tag.name count counter=total %}
-  <strong>One activity</strong> has been tagged with <strong>#{{ name }}</strong>. {%
-  plural %} <strong>{{ total }} activities</strong> have been tagged with
-  <strong>#{{ name }}</strong>. {% endblocktrans %}
+  <strong>One activity</strong> has been tagged with <strong>#{{ name }}</strong>.
+  {% plural %}
+  <strong>{{ total }} activities</strong> have been tagged with <strong>#{{ name }}</strong>.
+  {% endblocktrans %}
 </div>
-{% endif %} {% endwith %} {% include "activities/includes/activity_list.html" %} {%
-endblock content %}
+{% endif %}
+{% endwith %}
+
+{% include "activities/includes/activity_list.html" %}
+{% endblock content %}

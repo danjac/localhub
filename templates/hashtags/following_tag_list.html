@@ -1,4 +1,9 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "hashtags/tag_list_base.html" %} {% load i18n %} {% block subtitle %}{{
-block.super }} / {% trans "Following" %}{% endblock %} {% block empty %}{% trans "You
-are not following any tags at the moment." %}{% endblock %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "hashtags/tag_list_base.html" %}
+{% load i18n %}
+
+{% block subtitle %}{{ block.super }} / {% trans "Following" %}{% endblock %}
+
+{% block empty %}{% trans "You are not following any tags at the moment." %}{% endblock %}

@@ -1,9 +1,21 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "account/base.html" %} {% load i18n %} {% load users %} {% block
-account_subtitle %}{% trans "Login" %}{% endblock %} {% block content %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load users %}
+
+{% block account_subtitle %}{% trans "Login" %}{% endblock %}
+
+{% block content %}
 
 <h1 class="page-header">{% trans "Login" %}</h1>
-{% if community.intro %} {{ community.intro.markdown|strip_external_images:user|lazify
-}} {% endif %} {% include "account/includes/signup_link.html" %} {% url 'account_login'
-as login_url %} {% include "account/includes/login_form.html" with action=login_url %}
-{% include "account/includes/social_logins.html" %} {% endblock content %}
+{% if community.intro %}
+{{ community.intro.markdown|strip_external_images:user|lazify }}
+{% endif %}
+{% include "account/includes/signup_link.html" %}
+{% url 'account_login' as login_url %}
+{% include "account/includes/login_form.html" with action=login_url %}
+{% include "account/includes/social_logins.html" %}
+{% endblock content %}

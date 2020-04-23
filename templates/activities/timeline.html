@@ -1,27 +1,31 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "base.html" %} {% load i18n %} {% block subtitle %} / {% trans "Timeline"
-%}{% endblock %} {% block content %} {% if date_filters or current_year or current_month
-%}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block subtitle %} / {% trans "Timeline" %}{% endblock %}
+
+{% block content %}
+{% if date_filters or current_year or current_month %}
 <ul class="breadcrumb">
   {% if date_filters %}
   <li class="breadcrumb-item">
     <a href="{{ request.path }}?order={{ order }}">{% trans "All" %}</a>
   </li>
-  {% endif %} {% if current_year %}
+  {% endif %}
+  {% if current_year %}
   <li class="breadcrumb-item">
-    <a href="{{ request.path }}?order={{ order }}&year={{ current_year }}"
-      >{{ current_year }}</a
-    >
+    <a href="{{ request.path }}?order={{ order }}&year={{ current_year }}">{{ current_year }}</a>
   </li>
-  {% for counter, name in months %} {% if counter|stringformat:"s" ==
-  current_month|stringformat:"s" %}
+  {% for counter, name in months %}
+  {% if counter|stringformat:"s" == current_month|stringformat:"s" %}
   <li class="breadcrumb-item">
-    <a
-      href="{{ request.path }}?order={{ order }}&month={{ counter }}&year={{ current_year }}"
-      >{{ name }}</a
-    >
+    <a href="{{ request.path }}?order={{ order }}&month={{ counter }}&year={{ current_year }}">{{ name }}</a>
   </li>
-  {% endif %} {% endfor %} {% endif %}
+  {% endif %}
+  {% endfor %}
+  {% endif %}
 </ul>
 {% endif %}
 
@@ -29,53 +33,77 @@
 
 {% if dates %}
 <div class="actions">
-  <a class="action" href="{{ reverse_sort_url }}">
-    {% if order == "desc" %}{% trans "Oldest First" %}{% else %}{% trans "Newest First"
-    %}{% endif %}
+  <a class="action"
+     href="{{ reverse_sort_url }}">
+    {% if order == "desc" %}{% trans "Oldest First" %}{% else %}{% trans "Newest First" %}{% endif %}
   </a>
-  {% if not current_year %} {% for year in years %}
-  <a class="action" href="{{ request.path }}?year={{ year }}&order={{ order }}"
-    >{{ year }}</a
-  >
-  {% endfor %} {% endif %} {% if not current_month %} {% for counter, name in months %}
-  <a
-    class="action"
-    href="{{ request.path }}?month={{ counter }}&year={{ current_year }}&order={{ order }}"
-    >{{ name }}</a
-  >
-  {% endfor %} {% endif %}
+  {% if not current_year %}
+  {% for year in years %}
+  <a class="action"
+     href="{{ request.path }}?year={{ year }}&order={{ order }}">{{ year }}</a>
+  {% endfor %}
+  {% endif %}
+  {% if not current_month %}
+  {% for counter, name in months %}
+  <a class="action"
+     href="{{ request.path }}?month={{ counter }}&year={{ current_year }}&order={{ order }}">{{ name }}</a>
+  {% endfor %}
+  {% endif %}
 </div>
-{% endif %} {% if selected_dates %} {% spaceless %}
+{% endif %}
+
+{% if selected_dates %}
+{% spaceless %}
 <div class="my-2 toast text-center">
   {% blocktrans count counter=paginator.count %}
-  <strong>One activity</strong> was posted {% plural %} A total of
-  <strong>{{ counter }} activities</strong> were posted {% endblocktrans %} {% with
-  num_months=selected_months|length num_years=selected_years|length %} {% if num_months
-  == 1 and num_years == 1 %} {% with earliest=selected_dates|first|date:"E Y" %} {%
-  blocktrans %} in <b>{{ earliest }}</b>. {% endblocktrans %} {% endwith %} {% elif
-  num_years == 1 %} {% with earliest=selected_dates|first|date:"E"
-  latest=selected_dates|last|date:"E Y" %} {% blocktrans %} from
-  <b>{{ earliest }}</b> to <b>{{ latest }}</b>. {% endblocktrans %} {% endwith %} {%
-  else %} {% with earliest=selected_dates|first|date:"E Y"
-  latest=selected_dates|last|date:"E Y" %} {% blocktrans %} from
-  <b>{{ earliest }}</b> to <b>{{ latest }}</b>. {% endblocktrans %} {% endwith %} {%
-  endif %} {% endwith %}
+  <strong>One activity</strong> was posted
+  {% plural %}
+  A total of <strong>{{ counter }} activities</strong> were posted
+  {% endblocktrans %}
+  {% with num_months=selected_months|length num_years=selected_years|length %}
+  {% if num_months == 1 and num_years == 1 %}
+  {% with earliest=selected_dates|first|date:"E Y" %}
+  {% blocktrans %}
+  in <b>{{ earliest }}</b>.
+  {% endblocktrans %}
+  {% endwith %}
+
+  {% elif num_years == 1 %}
+  {% with earliest=selected_dates|first|date:"E" latest=selected_dates|last|date:"E Y" %}
+  {% blocktrans %}
+  from <b>{{ earliest }}</b> to <b>{{ latest }}</b>.
+  {% endblocktrans %}
+  {% endwith %}
+
+  {% else %}
+  {% with earliest=selected_dates|first|date:"E Y" latest=selected_dates|last|date:"E Y" %}
+  {% blocktrans %}
+  from <b>{{ earliest }}</b> to <b>{{ latest }}</b>.
+  {% endblocktrans %}
+  {% endwith %}
+  {% endif %}
+
+  {% endwith %}
 </div>
-{% endspaceless %} {% endif %} {% if object_list %}
+{% endspaceless %}
+{% endif %}
+
+{% if object_list %}
 
 <div class="timeline">
-  {% regroup object_list by month as months %} {% for month, activities in months %}
+  {% regroup object_list by month as months %}
+  {% for month, activities in months %}
   <div class="timeline-item">
-    <div class="timeline-left">
-      <a class="timeline-icon tooltip" href="#" data-tooltip="{{ month }}"></a>
-    </div>
+    <div class="timeline-left"><a class="timeline-icon tooltip"
+         href="#"
+         data-tooltip="{{ month }}"></a></div>
 
     <div class="timeline-content">
       <div class="tile">
         <div class="tile-content">
           <div class="tile-subtitle mb-2">{{ month }}</div>
-          {% for activity in activities %} {% with object=activity.object
-          object_type=activity.object_type %}
+          {% for activity in activities %}
+          {% with object=activity.object object_type=activity.object_type %}
           <div class="tile-title">
             <a href="{{ object.get_absolute_url }}">
               {{ object|truncatechars:100 }}
@@ -86,17 +114,20 @@
             {% endif %}
           </div>
           <div class="tile-title">
-            {% include "includes/timesince.html" with timestamp=object.published
-            owner=object.owner %}
+            {% include "includes/timesince.html" with timestamp=object.published owner=object.owner %}
           </div>
           <div class="divider"></div>
-          {% endwith %} {% endfor %}
+          {% endwith %}
+          {% endfor %}
         </div>
       </div>
     </div>
   </div>
   {% endfor %}
 </div>
-{% include "includes/pagination.html" %} {% else %} {% trans "There are no items for
-this period" as t_empty %} {% include "includes/empty.html" with empty_message=t_empty
-%} {% endif %} {% endblock content %}
+{% include "includes/pagination.html" %}
+{% else %}
+{% trans "There are no items for this period" as t_empty %}
+{% include "includes/empty.html" with empty_message=t_empty %}
+{% endif %}
+{% endblock content %}

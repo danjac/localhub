@@ -1,4 +1,9 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% load account %} {% with activity_url=activity.get_absolute_url %} {% user_display
-notification.actor as actor %} {% include
-"activities/includes/notifications/"|add:notification.verb|add:".html" %} {% endwith %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load account %}
+
+{% with activity_url=activity.get_absolute_url %}
+{% user_display notification.actor as actor %}
+{% include "activities/includes/notifications/"|add:notification.verb|add:".html" %}
+{% endwith %}

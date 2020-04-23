@@ -1,20 +1,25 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "activities/base.html" %} {% load i18n %} {% load rules %} {% load activities
-%} {% block subtitle %} / {% trans "Events" %} / {% trans "Calendar" %}{% endblock %} {%
-block content %} {% if current_date %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/base.html" %}
+{% load i18n %}
+{% load rules %}
+{% load activities %}
+
+{% block subtitle %} / {% trans "Events" %} / {% trans "Calendar" %}{% endblock %}
+
+{% block content %}
+{% if current_date %}
 <ul class="breadcrumb">
+  <li class="li breadcrumb-item"><a href="{% url 'events:list' %}">{% trans "Events" %}</a></li>
   <li class="li breadcrumb-item">
-    <a href="{% url 'events:list' %}">{% trans "Events" %}</a>
-  </li>
-  <li class="li breadcrumb-item">
-    <a
-      href="{{ request.path }}?month={{ current_month.month }}&year={{ current_month.year }}"
-    >
+    <a href="{{ request.path }}?month={{ current_month.month }}&year={{ current_month.year }}">
       {% trans "Calendar" %}
     </a>
   </li>
   <li class="li breadcrumb-item">
-    <a data-turbolinks="false" href="#">{{ current_date|date:"DATE_FORMAT" }}</a>
+    <a data-turbolinks="false"
+       href="#">{{ current_date|date:"DATE_FORMAT" }}</a>
   </li>
 </ul>
 {% endif %}
@@ -23,17 +28,29 @@ block content %} {% if current_date %}
 
 {% if not current_date %}
 <div class="actions mb-1">
-  {% has_perm 'activities.create_activity' user community as can_create_activity %} {%
-  if can_create_activity %}
-  <a class="action" href="{% url 'events:create' %}">
+  {% has_perm 'activities.create_activity' user community as can_create_activity %}
+  {% if can_create_activity %}
+  <a class="action"
+     href="{% url 'events:create' %}">
     {% trans "Submit Event" %}
   </a>
   {% endif %}
-  <a class="action" href="{% url 'events:list' %}">{% trans "Events" %}</a>
+  <a class="action"
+     href="{% url 'events:list' %}">{% trans "Events" %}</a>
 </div>
-{% endif %} {% if current_date %} {% for event in object_list %} {% render_activity
-request user event css_class="mt-2" %} {% endfor %} {% include
-"includes/pagination.html" %} {% else %} {% include
-"events/includes/calendar/mobile.html" with css_class="show-lg" %} {% include
-"events/includes/calendar/desktop.html" with css_class="calendar-lg hide-md" %} {% endif
-%} {% endblock %}
+{% endif %}
+
+{% if current_date %}
+
+{% for event in object_list %}
+{% render_activity request user event css_class="mt-2" %}
+{% endfor %}
+
+{% include "includes/pagination.html" %}
+
+{% else %}
+{% include "events/includes/calendar/mobile.html" with css_class="show-lg" %}
+{% include "events/includes/calendar/desktop.html" with css_class="calendar-lg hide-md" %}
+{% endif %}
+
+{% endblock %}

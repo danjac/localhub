@@ -1,5 +1,10 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "notifications/emails/base.html" %} {% load i18n %} {% block
-notification_body %} {% blocktrans %} {{ actor_display }} has
-<a href="{{ absolute_url }}">commented</a> on a post you have also commented on. {%
-endblocktrans %} {% endblock notification_body %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "notifications/emails/base.html" %}
+{% load i18n %}
+{% block notification_body %}
+{% blocktrans %}
+{{ actor_display }} has <a href="{{ absolute_url }}">commented</a> on a post you have also commented on.
+{% endblocktrans %}
+{% endblock notification_body %}

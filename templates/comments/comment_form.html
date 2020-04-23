@@ -1,38 +1,42 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "comments/base.html" %} {% load i18n %} {% load comments %} {% block subtitle
-%}{{ block.super }} {% if content_object %} / {{ content_object }}{% endif %} {% if
-parent %} / {% trans "Reply "%} {% elif object %} / {% trans "Edit" %} {% else %} / {%
-trans "Comment" %}{% endif %}{% endblock %} {% block content %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "comments/base.html" %}
+
+{% load i18n %}
+{% load comments %}
+
+{% block subtitle %}{{ block.super }}
+{% if content_object %} / {{ content_object }}{% endif %}
+{% if parent %} / {% trans "Reply "%}
+{% elif object %} / {% trans "Edit" %}
+{% else %} / {% trans "Comment" %}{% endif %}{% endblock %}
+
+{% block content %}
 
 <ul class="breadcrumb">
   {% if parent %}
-  <li class="breadcrumb-item">
-    <a href="{% url 'comments:list' %}">{% trans "Comments" %}</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a>
-  </li>
+  <li class="breadcrumb-item"><a href="{% url 'comments:list' %}">{% trans "Comments" %}</a></li>
+  <li class="breadcrumb-item"><a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a></li>
   <li class="breadcrumb-item"><a href="#">{% trans "Reply" %}</a></li>
   {% elif object %}
-  <li class="breadcrumb-item">
-    <a href="{% url 'comments:list' %}">{% trans "Comments" %}</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="{{ object.get_absolute_url }}">{% trans "Comment" %}</a>
-  </li>
+  <li class="breadcrumb-item"><a href="{% url 'comments:list' %}">{% trans "Comments" %}</a></li>
+  <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{% trans "Comment" %}</a></li>
   <li class="breadcrumb-item"><a href="#">{% trans "Edit" %}</a></li>
   {% elif content_object %}
-  <li class="breadcrumb-item">
-    <a href="{{ content_object.get_absolute_url }}"
-      >{{ content_object|truncatechars:60 }}</a
-    >
+  <li class="breadcrumb-item"><a href="{{ content_object.get_absolute_url }}">{{ content_object|truncatechars:60 }}</a>
   </li>
   <li class="breadcrumb-item">
-    <a data-turbolinks="false" href="#">{% trans "Comment" %}</a>
+    <a data-turbolinks="false"
+       href="#">{% trans "Comment" %}</a>
   </li>
   {% endif %}
 </ul>
 
-{% if parent %} {% render_comment request user parent is_detail=True css_class="mb-2" %}
-{% endif %} {% include "includes/forms/stimulusjs_form.html" with form_id="comment-form"
-%} {% endblock content %}
+{% if parent %}
+{% render_comment request user parent is_detail=True css_class="mb-2" %}
+{% endif %}
+
+{% include "includes/forms/stimulusjs_form.html" with form_id="comment-form" %}
+
+{% endblock content %}

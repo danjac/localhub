@@ -1,10 +1,20 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "communities/base.html" %} {% load i18n %} {% load account %} {% block
-subtitle %} / {% trans "Memberships" %} / {% user_display membership.member %} / {%
-trans "Edit" %}{% endblock %} {% block content %} {% user_display membership.member as
-display_name %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "communities/base.html" %}
+
+{% load i18n %}
+{% load account %}
+
+{% block subtitle %} / {% trans "Memberships" %} / {% user_display membership.member %} /
+{% trans "Edit" %}{% endblock %}
+
+{% block content %}
+
+{% user_display membership.member as display_name %}
 
 <ul class="breadcrumb">
+
   <li class="breadcrumb-item">
     <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
@@ -12,12 +22,11 @@ display_name %}
     <a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
   </li>
   <li class="breadcrumb-item">
-    <a href="{% url 'communities:membership_detail' membership.id %}"
-      >{{ display_name }}</a
-    >
+    <a href="{% url 'communities:membership_detail' membership.id %}">{{ display_name }}</a>
   </li>
   <li class="breadcrumb-item">
-    <a data-turbolinks="false" href="#">Edit</a>
+    <a data-turbolinks="false"
+       href="#">Edit</a>
   </li>
 </ul>
 

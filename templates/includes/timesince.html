@@ -1,8 +1,14 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% load i18n %} {% if owner %} {% include "users/includes/chip.html" with profile=owner
-%} {% endif %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% if owner %}
+{% include "users/includes/chip.html" with profile=owner %}
+{% endif %}
 <span class="timesince">
-  {% if verb %} {% blocktrans with created=timestamp|timesince %}{{ verb }} {{ created
-  }} ago{% endblocktrans %} {% else %} {% blocktrans with created=timestamp|timesince
-  %}{{ created }} ago{% endblocktrans %} {% endif %}
+  {% if verb %}
+  {% blocktrans with created=timestamp|timesince %}{{ verb }} {{ created }} ago{% endblocktrans %}
+  {% else %}
+  {% blocktrans with created=timestamp|timesince %}{{ created }} ago{% endblocktrans %}
+  {% endif %}
 </span>

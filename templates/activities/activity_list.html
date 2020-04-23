@@ -1,15 +1,35 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "activities/base.html" %} {% load i18n %} {% load activities %} {% block
-subtitle %} / {{ view.model|verbose_name_plural|title }}{% endblock %} {% block content
-%}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/base.html" %}
+{% load i18n %}
+{% load activities %}
+
+{% block subtitle %} / {{ view.model|verbose_name_plural|title }}{% endblock %}
+
+{% block content %}
 
 <h1 class="page-header">{{ view.model|verbose_name_plural|title }}</h1>
 
-{% if page_obj.number == 1 %} {% block activity_list_header %}{% endblock %} {% endif %}
-{% if paginator.count or view.search_query %} {% include
-"includes/forms/search_form.html" with selector=True %} {% endif %} {% if
-page_obj.number > 1 %} {% include "includes/pagination.html" with css_class="mb-2" %} {%
-endif %} {% block object_list %} {% for object in object_list %} {% render_activity
-request user object css_class="mt-2" %} {% empty %} {% include "includes/empty.html" %}
-{% endfor %} {% endblock %} {% include "includes/pagination.html" %} {% endblock content
-%}
+{% if page_obj.number == 1 %}
+{% block activity_list_header %}{% endblock %}
+{% endif %}
+
+{% if paginator.count or view.search_query %}
+{% include "includes/forms/search_form.html" with selector=True %}
+{% endif %}
+
+{% if page_obj.number > 1 %}
+{% include "includes/pagination.html" with css_class="mb-2" %}
+{% endif %}
+
+{% block object_list %}
+{% for object in object_list %}
+{% render_activity request user object css_class="mt-2" %}
+{% empty %}
+{% include "includes/empty.html" %}
+{% endfor %}
+{% endblock %}
+
+{% include "includes/pagination.html" %}
+{% endblock content %}

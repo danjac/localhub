@@ -1,41 +1,50 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "private_messages/base.html" %} {% load i18n %} {% load private_messages %}
-{% load rules %} {% block content %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "private_messages/base.html" %}
+
+{% load i18n %}
+{% load private_messages %}
+{% load rules %}
+
+
+{% block content %}
 <h1 class="page-header">{% trans "Messages" %}</h1>
 
-{% has_perm "private_messages.create_message" user community as can_create_message %} {%
-get_unread_message_count user community as unread_messages %} {% if can_create_message
-or unread_messages %}
+{% has_perm "private_messages.create_message" user community as can_create_message %}
+{% get_unread_message_count user community as unread_messages %}
+{% if can_create_message or unread_messages %}
 <div class="actions mb-1">
-  <a href="{% url 'private_messages:message_create'%}" class="action"
-    >{% trans "Send Message" %}</a
-  >
+  <a href="{% url 'private_messages:message_create'%}"
+     class="action">{% trans "Send Message" %}</a>
   {% if unread_messages %}
-  <a
-    class="action"
-    href="{% url 'private_messages:mark_all_read' %}"
-    data-controller="ajax"
-    data-action="ajax#post"
-    data-ajax-redirect="{{ request.get_full_path }}"
-    >{% trans "Mark All As Read" %}</a
-  >
+  <a class="action"
+     href="{% url 'private_messages:mark_all_read' %}"
+     data-controller="ajax"
+     data-action="ajax#post"
+     data-ajax-redirect="{{ request.get_full_path }}">{% trans "Mark All As Read" %}</a>
   {% endif %}
 </div>
-{% endif %} {% with search=view.search_query %}
+{% endif %}
+
+
+{% with search=view.search_query %}
 <ul class="tab tab-block mt-2">
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a
-      data-target="active-link.match"
-      href="{% url 'private_messages:inbox' %}{% if search %}?q={{ search }}{% endif %}"
-      >{% trans "Inbox" %}</a
-    >
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'private_messages:inbox' %}{% if search %}?q={{ search }}{% endif %}">{% trans "Inbox" %}</a>
   </li>
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a
-      data-target="active-link.match"
-      href="{% url 'private_messages:outbox' %}{% if search %}?q={{ search }}{% endif %}"
-      >{% trans "Outbox" %}</a
-    >
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'private_messages:outbox' %}{% if search %}?q={{ search }}{% endif %}">{% trans "Outbox" %}</a>
   </li>
 </ul>
-{% endwith %} {% block message_list %}{% endblock %} {% endblock content %}
+{% endwith %}
+
+{% block message_list %}{% endblock %}
+
+{% endblock content %}

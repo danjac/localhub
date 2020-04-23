@@ -1,12 +1,13 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% load socialaccount %} {% get_providers as socialaccount_providers %} {% for provider
-in socialaccount_providers %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load socialaccount %}
+
+{% get_providers as socialaccount_providers %}
+
+{% for provider in socialaccount_providers %}
 <p>
-  <a
-    title="{{provider.name}}"
-    class="socialaccount_provider {{provider.id}}"
-    href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
-    >{{provider.name}}</a
-  >
+  <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}"
+     href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">{{provider.name}}</a>
 </p>
 {% endfor %}

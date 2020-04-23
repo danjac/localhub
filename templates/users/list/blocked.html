@@ -1,17 +1,26 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "users/list/base.html" %} {% load i18n %} {% block subtitle %}{{ block.super
-}} / {% trans "Blocked" %}{% endblock %} {% block counter %} {% blocktrans count
-counter=paginator.count %} You have blocked one person. {% plural %} You have blocked {{
-counter }} people. {% endblocktrans %} {% endblock counter %} {% block user_item_actions
-%}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "users/list/base.html" %}
+{% load i18n %}
+
+{% block subtitle %}{{ block.super }} / {% trans "Blocked" %}{% endblock %}
+
+{% block counter %}
+{% blocktrans count counter=paginator.count %}
+You have blocked one person.
+{% plural %}
+You have blocked {{ counter }} people.
+{% endblocktrans %}
+{% endblock counter %}
+
+{% block user_item_actions %}
 <div class="float-right actions">
-  <a
-    class="action text-strike"
-    href="{% url 'users:unblock' object.username %}"
-    data-controller="ajax"
-    data-action="ajax#post toggle#toggle"
-    data-ajax-redirect="{{ request.get_full_path }}"
-  >
+  <a class="action text-strike"
+     href="{% url 'users:unblock' object.username %}"
+     data-controller="ajax"
+     data-action="ajax#post toggle#toggle"
+     data-ajax-redirect="{{ request.get_full_path }}">
     {% trans "Block" %}
   </a>
 </div>

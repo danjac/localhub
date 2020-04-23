@@ -1,179 +1,178 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% load i18n %} {% load account %} {% load rules %} {% load users %} {% has_perm
-"communities.moderate_community" user community as can_moderate_community %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-<article
-  class="card {% if css_class %} {{ css_class }}{% endif %}"
-  role="comment"
-  data-controller="clipboard"
-  id="comment-{{ comment.id }}"
->
+{% load i18n %}
+{% load account %}
+{% load rules %}
+{% load users %}
+
+{% has_perm "communities.moderate_community" user community as can_moderate_community %}
+
+<article class="card {% if css_class %} {{ css_class }}{% endif %}"
+         role="comment"
+         data-controller="clipboard"
+         id="comment-{{ comment.id }}">
   <div class="card-header">
     {% if include_content_object %}
     <div class="card-title pb-2 h6">
       {% if content_object %}
       <a href="{{ content_object.get_absolute_url }}">{{ content_object }}</a>
       <span class="label">{{ content_object|verbose_name|title }}</span>
-      {% else %} {% trans "[Deleted]" %} {% endif %} {% if can_moderate_community %} {%
-      endif %}
+      {% else %}
+      {% trans "[Deleted]" %}
+      {% endif %}
+      {% if can_moderate_community %}
+      {% endif %}
     </div>
     {% endif %}
     <div class="card-title pb-2 h6{% if comment.is_new %} text-bold{% endif %}">
-      {% url 'users:comments' comment.owner.username as owner_url %} {% include
-      "includes/timesince.html" with profile_url=owner_url timestamp=comment.created
-      owner=comment.owner %} {% if can_moderate_community and comment.is_flagged %}
+      {% url 'users:comments' comment.owner.username as owner_url %}
+      {% include "includes/timesince.html" with profile_url=owner_url timestamp=comment.created owner=comment.owner %}
+      {% if can_moderate_community and comment.is_flagged %}
       <span class="label bg-primary">{% trans "Flagged" %}</span>
-      {% endif %} {% if comment.is_new %}
+      {% endif %}
+      {% if comment.is_new %}
       <span class="label bg-primary">{% trans "New" %}</span>
       {% endif %}
     </div>
   </div>
   {% if comment.is_blocked %}
-  <div class="card-body" data-controller="toggle">
+  <div class="card-body"
+       data-controller="toggle">
     <strong>{% trans "You have blocked this user." %}</strong>
-    <div class="markdown-content d-none" data-target="toggle.togglable">
+    <div class="markdown-content d-none"
+         data-target="toggle.togglable">
       {{ comment.content.markdown|strip_external_images:user|lazify }}
     </div>
     <div class="actions">
-      <a
-        class="action"
-        href="#"
-        data-target="toggle.togglable"
-        data-action="toggle#toggle"
-        >{% trans "View Comment" %}</a
-      >
+      <a class="action"
+         href="#"
+         data-target="toggle.togglable"
+         data-action="toggle#toggle">{% trans "View Comment" %}</a>
     </div>
   </div>
   {% else %}
   <div class="card-body">
-    <textarea data-target="clipboard.textarea" readonly class="d-none">
-{{ comment.content }}</textarea
-    >
+    <textarea data-target="clipboard.textarea"
+              readonly
+              class="d-none">{{ comment.content }}</textarea>
     {% if comment.deleted %}
-    <p>
-      {% blocktrans %}This comment has been deleted by a community moderator{%
-      endblocktrans %}
-    </p>
-    {% endif %} {% if show_content %} {% collapsable is_detail %}
+    <p>{% blocktrans %}This comment has been deleted by a community moderator{% endblocktrans %}</p>
+    {% endif %}
+    {% if show_content %}
+    {% collapsable is_detail %}
     <div class="markdown-content pb-1">
       {{ comment.content.markdown|strip_external_images:user|lazify }}
     </div>
-    {% endcollapsable %} {% endif %}
+    {% endcollapsable %}
+    {% endif %}
   </div>
   <div class="card-footer">
     <div class="pb-1">
       {% if comment.num_likes and comment.owner == user %}
       <div class="info">
-        {{ comment.num_likes }} {% blocktrans count counter=comment.num_likes %} Like {%
-        plural %} Likes {% endblocktrans %}
+        {{ comment.num_likes }}
+        {% blocktrans count counter=comment.num_likes %}
+        Like
+        {% plural %}
+        Likes
+        {% endblocktrans %}
       </div>
-      {% endif %} {% if comment.edited %}
+      {% endif %}
+
+      {% if comment.edited %}
       <div class="info">
-        {% blocktrans with edited=comment.edited|timesince %}Updated {{ edited }} ago{%
-        endblocktrans %}
+        {% blocktrans with edited=comment.edited|timesince %}Updated {{ edited }} ago{% endblocktrans %}
       </div>
       {% endif %}
     </div>
     <div class="d-flex align-center pb-1">
-      <div class="dropdown mr-2" data-controller="dropdown">
-        <button class="btn btn-sm" data-action="dropdown#toggle">
+      <div class="dropdown mr-2"
+           data-controller="dropdown">
+        <button class="btn btn-sm"
+                data-action="dropdown#toggle">
           {% trans "Actions" %}<i class="icon icon-caret"></i>
         </button>
-        <ul class="menu" data-target="dropdown.menu">
-          {% has_perm "comments.like_comment" user comment as can_like_comment %} {% if
-          can_like_comment %}
-          <li class="menu-item" data-controller="ajax">
-            <a
-              href="{% url 'comments:dislike' comment.id %}"
-              class="text-strike{% if not comment.has_liked %} d-none{% endif %}"
-              data-target="ajax.toggle"
-              data-action="ajax#post"
-              >{% trans "Like" %}</a
-            >
-            <a
-              href="{% url 'comments:like' comment.id %}"
-              {%
-              if
-              comment.has_liked
-              %}
-              class="d-none"
-              {%
-              endif
-              %}
-              data-target="ajax.toggle"
-              data-action="ajax#post"
-              >{% trans "Like" %}</a
-            >
+        <ul class="menu"
+            data-target="dropdown.menu">
+          {% has_perm "comments.like_comment" user comment as can_like_comment %}
+          {% if can_like_comment %}
+          <li class="menu-item"
+              data-controller="ajax">
+            <a href="{% url 'comments:dislike' comment.id %}"
+               class="text-strike{% if not comment.has_liked %} d-none{% endif %}"
+               data-target="ajax.toggle"
+               data-action="ajax#post">{% trans "Like" %}</a>
+            <a href="{% url 'comments:like' comment.id %}"
+               {% if comment.has_liked %}
+               class="d-none"
+               {% endif %}
+               data-target="ajax.toggle"
+               data-action="ajax#post">{% trans "Like" %}</a>
           </li>
-          {% endif %} {% has_perm "comments.bookmark_comment" user comment as
-          can_bookmark_comment %} {% if can_bookmark_comment %}
-          <li class="menu-item" data-controller="ajax">
-            <a
-              href="{% url 'comments:remove_bookmark' comment.id %}"
-              class="text-strike{% if not comment.has_bookmarked %} d-none{% endif %}"
-              data-target="ajax.toggle"
-              data-action="ajax#post"
-              >{% trans "Bookmark" %}</a
-            >
-            <a
-              href="{% url 'comments:bookmark' comment.id %}"
-              {%
-              if
-              comment.has_bookmarked
-              %}
-              class="d-none"
-              {%
-              endif
-              %}
-              data-target="ajax.toggle"
-              data-action="ajax#post"
-              >{% trans "Bookmark" %}</a
-            >
+          {% endif %}
+
+          {% has_perm "comments.bookmark_comment" user comment as can_bookmark_comment %}
+          {% if can_bookmark_comment %}
+          <li class="menu-item"
+              data-controller="ajax">
+            <a href="{% url 'comments:remove_bookmark' comment.id %}"
+               class="text-strike{% if not comment.has_bookmarked %} d-none{% endif %}"
+               data-target="ajax.toggle"
+               data-action="ajax#post">{% trans "Bookmark" %}</a>
+            <a href="{% url 'comments:bookmark' comment.id %}"
+               {% if comment.has_bookmarked %}
+               class="d-none"
+               {% endif %}
+               data-target="ajax.toggle"
+               data-action="ajax#post">{% trans "Bookmark" %}</a>
           </li>
-          {% endif %} {% has_perm "comments.reply_to_comment" user comment as can_reply
-          %} {% if can_reply %}
+          {% endif %}
+
+          {% has_perm "comments.reply_to_comment" user comment as can_reply %}
+          {% if can_reply %}
           <li class="menu-item">
             <a href="{% url 'comments:reply' comment.id %}">{% trans "Reply" %}</a>
           </li>
-          {% endif %} {% has_perm "comments.flag_comment" user comment as
-          can_flag_comment %} {% if can_flag_comment and not comment.has_flagged %}
+          {% endif %}
+
+          {% has_perm "comments.flag_comment" user comment as can_flag_comment %}
+          {% if can_flag_comment and not comment.has_flagged %}
           <li class="menu-item">
             <a href="{% url 'comments:flag' comment.id %}">
               {% trans "Flag" %}
             </a>
           </li>
-          {% endif %} {% has_perm "comments.change_comment" user comment as
-          can_change_comment %} {% if can_change_comment %}
+          {% endif %}
+          {% has_perm "comments.change_comment" user comment as can_change_comment %}
+
+          {% if can_change_comment %}
           <li class="menu-item">
             <a href="{% url 'comments:update' comment.id %}">
               {% trans "Edit" %}
             </a>
           </li>
-          {% endif %} {% has_perm "comments.delete_comment" user comment as
-          can_delete_comment %} {% if can_delete_comment %}
+          {% endif %}
+          {% has_perm "comments.delete_comment" user comment as can_delete_comment %}
+          {% if can_delete_comment %}
           <li class="menu-item">
-            <a
-              href="{% url 'comments:delete' comment.id %}"
-              data-controller="ajax"
-              data-action="ajax#post"
-              {%
-              if
-              not
-              is_detail
-              %}
-              data-ajax-redirect="{{ request.get_full_path }}"
-              {%
-              endif
-              %}
-              data-ajax-confirm-header="{% trans 'Delete Comment' %}"
-              data-ajax-confirm-body="{% trans 'Are you sure you want to delete this comment?' %}"
-            >
+            <a href="{% url 'comments:delete' comment.id %}"
+               data-controller="ajax"
+               data-action="ajax#post"
+               {% if not is_detail %}
+               data-ajax-redirect="{{ request.get_full_path }}"
+               {% endif %}
+               data-ajax-confirm-header="{% trans 'Delete Comment' %}"
+               data-ajax-confirm-body="{% trans 'Are you sure you want to delete this comment?' %}">
               {% trans "Delete" %}
             </a>
           </li>
-          {% endif %} {% if not comment.is_blocked %}
+          {% endif %}
+          {% if not comment.is_blocked %}
           <li class="menu-item">
-            <a href="#" data-target="clipboard.button" data-action="clipboard#copy">
+            <a href="#"
+               data-target="clipboard.button"
+               data-action="clipboard#copy">
               {% trans "Copy Markdown" %}
             </a>
           </li>
@@ -182,9 +181,12 @@
       </div>
       <div class="actions">
         {% if not is_detail and not comment.deleted %}
-        <a class="action" href="{{ comment.get_absolute_url }}">{% trans "Link" %}</a>
-        {% endif %} {% if parent %}
-        <a class="action" href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a>
+        <a class="action"
+           href="{{ comment.get_absolute_url }}">{% trans "Link" %}</a>
+        {% endif %}
+        {% if parent %}
+        <a class="action"
+           href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a>
         {% endif %}
       </div>
     </div>

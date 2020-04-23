@@ -1,9 +1,15 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% load i18n %} {% load activities %} {% load users %} {% if object.description %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% load activities %}
+{% load users %}
+
+{% if object.description %}
 <div class="markdown-content pb-1">
   {{ object.description.markdown|strip_external_images:user|lazify }}
 </div>
-<textarea data-target="clipboard.textarea" readonly class="d-none">
-{{ object.description }}</textarea
->
+<textarea data-target="clipboard.textarea"
+          readonly
+          class="d-none">{{ object.description }}</textarea>
 {% endif %}

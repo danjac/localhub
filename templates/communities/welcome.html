@@ -1,29 +1,69 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "base.html" %} {% load i18n %} {% load rules %} {% load communities %} {%
-load users %} {% block content %} {% has_perm 'join_requests.create' user community as
-can_create_join_request %} {% if community.intro %} {{
-community.intro.markdown|strip_external_images:user|lazify }} {% endif %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load rules %}
+{% load communities %}
+{% load users %}
+
+{% block content %}
+
+{% has_perm 'join_requests.create' user community as can_create_join_request %}
+
+{% if community.intro %}
+{{ community.intro.markdown|strip_external_images:user|lazify }}
+{% endif %}
 
 <p>
-  {% if invite %} {% url 'invites:accept' invite.id as invite_url %} {% blocktrans %}
-  You have a pending invite. Please go <a href="{{ invite_url }}">here</a> to accept or
-  reject your invite. {% endblocktrans %} {% elif join_request %} {% if
-  join_request.is_pending %} {% blocktrans %} Your request for an invite has been sent
-  to the community admins. You will receive an email when they have made their decision.
-  {% endblocktrans %} {% else %} {% blocktrans %} Your request for an invite was
-  rejected by the community admins. You cannot join this community at this time. {%
-  endblocktrans %} {% endif %} {% elif can_create_join_request %} {% url
-  'join_requests:create' as join_request_url %} {% blocktrans %} You are not a member of
-  this community. You can request an invite <a href="{{ join_request_url }}">here</a>.
-  {% endblocktrans %} {% elif is_inactive_member %} {% blocktrans %} Your membership is
-  currently suspended. {% endblocktrans %} {% else %} {% blocktrans %} This community is
-  locked and new members are accepted only by private invitation. {% endblocktrans %} {%
-  endif %}
+  {% if invite %}
+
+  {% url 'invites:accept' invite.id as invite_url %}
+  {% blocktrans %}
+  You have a pending invite. Please go <a href="{{ invite_url }}">here</a> to accept or reject your invite.
+  {% endblocktrans %}
+
+  {% elif join_request %}
+
+  {% if join_request.is_pending %}
+  {% blocktrans %}
+  Your request for an invite has been sent to the community admins. You will receive an email when they have made
+  their decision.
+  {% endblocktrans %}
+  {% else %}
+  {% blocktrans %}
+  Your request for an invite was rejected by the community admins. You cannot join this community at this time.
+  {% endblocktrans %}
+  {% endif %}
+
+  {% elif can_create_join_request %}
+
+  {% url 'join_requests:create' as join_request_url %}
+  {% blocktrans %}
+  You are not a member of this community. You can request an invite <a href="{{ join_request_url }}">here</a>.
+  {% endblocktrans %}
+
+  {% elif is_inactive_member %}
+
+  {% blocktrans %}
+  Your membership is currently suspended.
+  {% endblocktrans %}
+
+  {% else %}
+  {% blocktrans %}
+  This community is locked and new members are accepted only by private invitation.
+  {% endblocktrans %}
+  {% endif %}
 </p>
 
-{% get_community_count user as communities_count %} {% if communities_count > 1 %}
+{% get_community_count user as communities_count %}
+{% if communities_count > 1 %}
 <p>
-  {% url 'community_list' as community_list_url %} {% blocktrans %} You can find other
-  communities <a href="{{ community_list_url }}">here</a>. {% endblocktrans %}
+  {% url 'community_list' as community_list_url %}
+  {% blocktrans %}
+  You can find other communities <a href="{{ community_list_url }}">here</a>.
+  {% endblocktrans %}
 </p>
-{% endif %} {% endblock %}
+{% endif %}
+{% endblock %}

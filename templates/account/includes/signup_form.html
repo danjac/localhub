@@ -1,9 +1,16 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "includes/forms/form.html" %} {% load i18n %} {% block form_fields %} {% if
-redirect_field_value %}
-<input
-  type="hidden"
-  name="{{ redirect_field_name }}"
-  value="{{ redirect_field_value }}"
-/>
-{% endif %} {{ block.super }} {% endblock form_fields %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "includes/forms/form.html" %}
+
+{% load i18n %}
+
+{% block form_fields %}
+
+{% if redirect_field_value %}
+<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+{% endif %}
+
+{{ block.super }}
+
+{% endblock form_fields %}

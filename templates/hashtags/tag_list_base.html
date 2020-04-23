@@ -1,32 +1,48 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "hashtags/base.html" %} {% load i18n %} {% load rules %} {% block content %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "hashtags/base.html" %}
+{% load i18n %}
+{% load rules %}
+
+
+{% block content %}
 
 <h1 class="page-header">{% trans "Tags" %}</h1>
 
-{% has_perm "users.follow_tag" user as can_follow_tag %} {% has_perm "users.block_tag"
-user as can_block_tag %} {% if can_follow_tag or can_block_tag %}
+{% has_perm "users.follow_tag" user as can_follow_tag %}
+{% has_perm "users.block_tag" user as can_block_tag %}
+
+{% if can_follow_tag or can_block_tag %}
 <ul class="tab tab-block">
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match" href="{% url 'hashtags:list' %}"
-      >{% trans "All" %}</a
-    >
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'hashtags:list' %}">{% trans "All" %}</a>
   </li>
   {% if can_follow_tag %}
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match" href="{% url 'hashtags:following_list' %}"
-      >{% trans "Following" %}</a
-    >
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'hashtags:following_list' %}">{% trans "Following" %}</a>
   </li>
-  {% endif %} {% if can_block_tag %}
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match" href="{% url 'hashtags:blocked_list' %}"
-      >{% trans "Blocked" %}</a
-    >
+  {% endif %}
+  {% if can_block_tag %}
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'hashtags:blocked_list' %}">{% trans "Blocked" %}</a>
   </li>
   {% endif %}
 </ul>
-{% endif %} {% block tag_list %} {% if object_list %} {% with
-blocked=user.blocked_tags.all following=user.following_tags.all %}
+{% endif %}
+
+{% block tag_list %}
+{% if object_list %}
+{% with blocked=user.blocked_tags.all following=user.following_tags.all %}
 <table class="table table-hover">
   <tbody>
     {% for tag in object_list %}
@@ -42,10 +58,17 @@ blocked=user.blocked_tags.all following=user.following_tags.all %}
       {% if can_follow_tag or can_block_tag %}
       <td>
         <div class="float-right actions">
-          {% if can_follow_tag %} {% with following|contains:tag as is_following %} {%
-          include "hashtags/includes/follow.html" %} {% endwith %} {% endif %} {% if
-          can_block_tag %} {% with blocked|contains:tag as is_blocked %} {% include
-          "hashtags/includes/block.html" %} {% endwith %} {% endif %}
+          {% if can_follow_tag %}
+          {% with following|contains:tag as is_following %}
+          {% include "hashtags/includes/follow.html" %}
+          {% endwith %}
+          {% endif %}
+
+          {% if can_block_tag %}
+          {% with blocked|contains:tag as is_blocked %}
+          {% include "hashtags/includes/block.html" %}
+          {% endwith %}
+          {% endif %}
         </div>
       </td>
       {% endif %}
@@ -53,5 +76,10 @@ blocked=user.blocked_tags.all following=user.following_tags.all %}
     {% endfor %}
   </tbody>
 </table>
-{% endwith %} {% else %} {% include "includes/empty.html" %} {% endif %} {% endblock
-tag_list %} {% endblock content %}
+{% endwith %}
+{% else %}
+{% include "includes/empty.html" %}
+{% endif %}
+{% endblock tag_list %}
+
+{% endblock content %}

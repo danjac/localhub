@@ -1,20 +1,27 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "emails/base.html" %} {% load i18n %} {% block content %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "emails/base.html" %}
+{% load i18n %}
+
+{% block content %}
 <p>
-  {% trans "Hi" %},
+    {% trans "Hi" %},
 </p>
 
 <p>
-  {% blocktrans with community=invite.community.name %} You've been invited to join the
-  community {{ community }}. {% endblocktrans %}
+    {% blocktrans with community=invite.community.name %}
+    You've been invited to join the community {{ community }}.
+    {% endblocktrans %}
 </p>
 
 <p>
-  {% blocktrans %} Click on <a href="{{ accept_url }}">this link</a> or copy and paste
-  the link below into your browser navbar. {% endblocktrans %}
+    {% blocktrans %}
+    Click on <a href="{{ accept_url }}">this link</a> or copy and paste the link below into your browser navbar.
+    {% endblocktrans %}
 </p>
 <p>
-  {{ accept_url }}
+    {{ accept_url }}
 </p>
 
 {% endblock %}

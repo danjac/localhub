@@ -1,24 +1,34 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "users/account_base.html" %} {% load i18n %} {% block content %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "users/account_base.html" %}
+{% load i18n %}
+
+{% block content %}
 <ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{% url 'user_update' %}">{% trans "Settings" %}</a></li>
   <li class="breadcrumb-item">
-    <a href="{% url 'user_update' %}">{% trans "Settings" %}</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a data-turbolinks="false" href="#">{% trans "Delete Account" %}</a>
+    <a data-turbolinks="false"
+       href="#">{% trans "Delete Account" %}</a>
   </li>
 </ul>
 
 <h1 class="page-header">{% trans "Delete Account" %}</h1>
 
-<form method="POST" action="{% url 'user_delete' %}">
+
+<form method="POST"
+      action="{% url 'user_delete' %}">
   {% csrf_token %}
   <p>
-    {% blocktrans %} Please confirm you want to delete your account. This will also
-    <b>permanently</b> remove all your posts and comments. {% endblocktrans %}
+    {% blocktrans %}
+    Please confirm you want to delete your account. This will also <b>permanently</b> remove all your posts and
+    comments.
+    {% endblocktrans %}
   </p>
-  <a class="btn btn-secondary" href="{% url 'user_update' %}">{% trans "Cancel" %}</a>
-  <button class="btn btn-primary" type="submit">{% trans "Delete account" %}</button>
+  <a class="btn btn-secondary"
+     href="{% url 'user_update' %}">{% trans "Cancel" %}</a>
+  <button class="btn btn-primary"
+          type="submit">{% trans "Delete account" %}</button>
 </form>
 
 {% endblock content %}

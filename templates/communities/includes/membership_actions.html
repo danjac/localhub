@@ -1,26 +1,29 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% load i18n %} {% if member.member != user %} {% if can_change or can_delete %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+
+{% if member.member != user %}
+{% if can_change or can_delete %}
 <div class="actions{% if css_class %} {{ css_class }}{% endif %}">
-  <a
-    class="action"
-    href="{% url 'private_messages:message_create_recipient' member.member.username %}"
-  >
+  <a class="action"
+     href="{% url 'private_messages:message_create_recipient' member.member.username %}">
     {% trans "Send Message" %}
   </a>
   {% if can_change %}
-  <a class="action" href="{% url 'communities:membership_update' member.id %}">
+  <a class="action"
+     href="{% url 'communities:membership_update' member.id %}">
     {% trans "Edit" %}
   </a>
-  {% endif %} {% if can_delete %}
-  <a
-    class="action"
-    href="{% url 'communities:membership_delete' member.id %}"
-    data-controller="ajax"
-    data-action="ajax#post"
-    data-ajax-confirm-header="{% trans 'Delete' %}"
-    data-ajax-confirm-body="{% trans 'Are you sure you want to delete this membership?' %}"
-    >{% trans "Delete" %}</a
-  >
+  {% endif %}
+  {% if can_delete %}
+  <a class="action"
+     href="{% url 'communities:membership_delete' member.id %}"
+     data-controller="ajax"
+     data-action="ajax#post"
+     data-ajax-confirm-header="{% trans 'Delete' %}"
+     data-ajax-confirm-body="{% trans 'Are you sure you want to delete this membership?' %}">{% trans "Delete" %}</a>
   {% endif %}
 </div>
-{% endif %} {% endif %}
+{% endif %}
+{% endif %}

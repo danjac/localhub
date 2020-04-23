@@ -1,24 +1,38 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "users/account_base.html" %} {% load i18n %} {% load socialaccount %} {% load
-users %} {% block subtitle %} / {% trans "My Settings" %}{% endblock %} {% block content
-%} {% dismissable user "profile-settings" %} {% blocktrans %} Your settings apply to all
-communities you belong to. {% endblocktrans %} {% enddismissable %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "users/account_base.html" %}
+
+{% load i18n %}
+{% load socialaccount %}
+{% load users %}
+
+{% block subtitle %} / {% trans "My Settings" %}{% endblock %}
+
+{% block content %}
+
+{% dismissable user "profile-settings" %}
+{% blocktrans %}
+Your settings apply to all communities you belong to.
+{% endblocktrans %}
+{% enddismissable %}
 
 <h1 class="page-header">{% trans "My Settings" %}</h1>
 
 <div class="actions mb-1">
-  <a class="action" href="{% url 'account_email' %}">{% trans "Email Addresses" %}</a>
-  {% get_providers as socialaccount_providers %} {% if socialaccount_providers %}
-  <a class="action" href="{% url 'socialaccount_connections' %}"
-    >{% trans "Social Logins" %}</a
-  >
+  <a class="action"
+     href="{% url 'account_email' %}">{% trans "Email Addresses" %}</a>
+  {% get_providers as socialaccount_providers %}
+  {% if socialaccount_providers %}
+  <a class="action"
+     href="{% url 'socialaccount_connections' %}">{% trans "Social Logins" %}</a>
   {% endif %}
-  <a class="action" href="{% url 'account_change_password' %}"
-    >{% trans "Change Password" %}</a
-  >
-  <a class="action" href="{% url 'user_delete' %}">{% trans "Delete Account" %}</a>
+  <a class="action"
+     href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a>
+  <a class="action"
+     href="{% url 'user_delete' %}">{% trans "Delete Account" %}</a>
 </div>
 
-{% trans "Save Settings" as t_save_settings %} {% include
-"includes/forms/stimulusjs_form.html" with submit_btn=t_save_settings multipart=True %}
+{% trans "Save Settings" as t_save_settings %}
+{% include "includes/forms/stimulusjs_form.html" with submit_btn=t_save_settings multipart=True %}
 {% endblock content %}

@@ -1,18 +1,19 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "events/includes/calendar/base.html" %} {% load i18n %} {% block
-calendar_date %} {% if num_events %}
-<button
-  data-controller="ajax"
-  data-ajax-follow
-  data-action="ajax#get"
-  data-ajax-url="{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}"
-  title="{% blocktrans trimmed count counter=num_events %}1 event{% plural %}{{ counter }} events{% endblocktrans %}"
-  class="date-item badge{% if day == today.day and is_today %} date-today{% endif %}"
->
-  {{ day }}
-</button>
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "events/includes/calendar/base.html" %}
+
+{% load i18n %}
+
+{% block calendar_date %}
+{% if num_events %}
+<button data-controller="ajax"
+        data-ajax-follow
+        data-action="ajax#get"
+        data-ajax-url="{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}"
+        title="{% blocktrans trimmed count counter=num_events %}1 event{% plural %}{{ counter }} events{% endblocktrans %}"
+        class="date-item badge{% if day == today.day and is_today %} date-today{% endif %}">{{ day }}</button>
 {% else %}
-<button class="date-item{% if day == today.day and is_today %} date-today{% endif %}">
-  {{ day }}
-</button>
-{% endif %} {% endblock %}
+<button class="date-item{% if day == today.day and is_today %} date-today{% endif %}">{{ day }}</button>
+{% endif %}
+{% endblock %}

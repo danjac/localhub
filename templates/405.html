@@ -1,8 +1,11 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "error_base.html" %} {% load i18n %} {% block content %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "error_base.html" %}
+{% load i18n %}
+{% block content %}
 <h1 class="page-header">{% trans "Not Allowed" %}</h1>
 <p>
-  {% trans "Sorry, you cannot perform this action. You may have disabled JavaScript on
-  your browser or are using an older browser that does not support this action." %}
+  {% trans "Sorry, you cannot perform this action. You may have disabled JavaScript on your browser or are using an older browser that does not support this action." %}
 </p>
 {% endblock %}

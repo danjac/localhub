@@ -1,4 +1,9 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% load i18n %} {% blocktrans %} <a href="{{ actor_url }}">{{ actor_display }}</a> has
-mentioned you in their <a href="{{ object_url }}">{{ object_name }}</a>. {%
-endblocktrans %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+
+{% blocktrans %}
+<a href="{{ actor_url }}">{{ actor_display }}</a> has mentioned you in their <a
+   href="{{ object_url }}">{{ object_name }}</a>.
+{% endblocktrans %}

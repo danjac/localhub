@@ -1,11 +1,29 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "users/list/base.html" %} {% load i18n %} {% block subtitle %}{{ block.super
-}} / {% trans "Members" %}{% endblock %} {% block counter_container %} {% if not
-view.search_query %} {{ block.super }} {% endif %} {% endblock counter_container %} {%
-block counter %} {% blocktrans count counter=paginator.count %} This site has one
-member. {% plural %} This site has {{ counter }} members. {% endblocktrans %} {%
-endblock counter %} {% block user_list %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "users/list/base.html" %}
+{% load i18n %}
+
+{% block subtitle %}{{ block.super }} / {% trans "Members" %}{% endblock %}
+
+{% block counter_container %}
+{% if not view.search_query %}
+{{ block.super }}
+{% endif %}
+{% endblock counter_container %}
+
+
+{% block counter %}
+{% blocktrans count counter=paginator.count %}
+This site has one member.
+{% plural %}
+This site has {{ counter }} members.
+{% endblocktrans %}
+{% endblock counter %}
+
+{% block user_list %}
 <div class="mb-1">
   {% include "includes/forms/search_form.html" with selector=True %}
 </div>
-{{ block.super }} {% endblock user_list %}
+{{ block.super }}
+{% endblock user_list %}

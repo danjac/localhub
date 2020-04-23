@@ -1,16 +1,26 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "activities/activity_list.html" %} {% load i18n %} {% load rules %} {% block
-activity_list_header %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/activity_list.html" %}
+{% load i18n %}
+{% load rules %}
+
+{% block activity_list_header %}
 <div class="actions mb-1">
-  {% has_perm 'activities.create_activity' user community as can_create_activity %} {%
-  if can_create_activity %}
-  <a class="action" href="{% url 'photos:create' %}">
+  {% has_perm 'activities.create_activity' user community as can_create_activity %}
+  {% if can_create_activity %}
+  <a class="action"
+     href="{% url 'photos:create' %}">
     {% trans "Submit Photo" %}
   </a>
   {% endif %}
-  <a class="action" href="{% url 'photos:gallery' %}">{% trans "Gallery" %}</a>
-  <a class="action" href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
-  <a class="action" href="{% url 'events:list' %}">{% trans "Events" %}</a>
-  <a class="action" href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
+  <a class="action"
+     href="{% url 'photos:gallery' %}">{% trans "Gallery" %}</a>
+  <a class="action"
+     href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
+  <a class="action"
+     href="{% url 'events:list' %}">{% trans "Events" %}</a>
+  <a class="action"
+     href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
 </div>
 {% endblock %}

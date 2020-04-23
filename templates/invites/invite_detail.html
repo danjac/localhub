@@ -1,34 +1,32 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "no_sidebar_base.html" %} {% load i18n %} {% block content %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "no_sidebar_base.html" %}
+{% load i18n %}
+
+{% block content %}
 
 <h1 class="page-header">{% trans "Accept Invitation" %}</h1>
 
 <form>
   <p class="text-smal">
-    {% blocktrans with community=community.name %} You have been invited to join the
-    community <b>{{ community }}</b>. If you click the option <b>Accept</b> you will be
-    added as a new member. {% endblocktrans %}
+    {% blocktrans with community=community.name %}
+    You have been invited to join the community <b>{{ community }}</b>. If you click the option <b>Accept</b> you will
+    be added as a new member.
+    {% endblocktrans %}
   </p>
 
-  <button
-    type="submit"
-    data-controller="ajax"
-    data-action="ajax#post"
-    data-ajax-url="{% url 'invites:accept' invite.id %}"
-    class="btn btn-primary"
-  >
-    {% trans "Accept" %}
-  </button>
+  <button type="submit"
+          data-controller="ajax"
+          data-action="ajax#post"
+          data-ajax-url="{% url 'invites:accept' invite.id %}"
+          class="btn btn-primary">{% trans "Accept" %}</button>
 
-  <button
-    type="submit"
-    data-controller="ajax"
-    data-action="ajax#post"
-    data-ajax-url="{% url 'invites:reject' invite.id %}"
-    class="btn btn-secondary"
-  >
-    {% trans "Reject" %}
-  </button>
+  <button type="submit"
+          data-controller="ajax"
+          data-action="ajax#post"
+          data-ajax-url="{% url 'invites:reject' invite.id %}"
+          class="btn btn-secondary">{% trans "Reject" %}</button>
 </form>
 
 {% endblock %}

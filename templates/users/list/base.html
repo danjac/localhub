@@ -1,76 +1,109 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "base.html" %} {% load i18n %} {% load rules %} {% block subtitle %} / {%
-trans "People" %}{% endblock %} {% block content %} {% has_perm
-"private_messages.create_message" user community as can_create_message %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "base.html" %}
+{% load i18n %}
+{% load rules %}
+
+{% block subtitle %} / {% trans "People" %}{% endblock %}
+
+{% block content %}
+
+{% has_perm "private_messages.create_message" user community as can_create_message %}
 
 <h1 class="page-header">{% trans "People" %}</h1>
 
 <ul class="tab tab-block mt-2">
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match" href="{% url 'users:member_list' %}"
-      >{% trans "Members" %}</a
-    >
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'users:member_list' %}">{% trans "Members" %}</a>
   </li>
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match" href="{% url 'users:following_list' %}"
-      >{% trans "Following" %}</a
-    >
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'users:following_list' %}">{% trans "Following" %}</a>
   </li>
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match" href="{% url 'users:follower_list' %}"
-      >{% trans "Followers" %}</a
-    >
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'users:follower_list' %}">{% trans "Followers" %}</a>
   </li>
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a data-target="active-link.match" href="{% url 'users:blocked_list' %}"
-      >{% trans "Blocked" %}</a
-    >
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'users:blocked_list' %}">{% trans "Blocked" %}</a>
   </li>
 </ul>
 
-{% block user_list %} {% if object_list %} {% block counter_container %}
+{% block user_list %}
+
+{% if object_list %}
+
+{% block counter_container %}
 <div class="my-2 toast text-center">
-  {% block counter %} {% endblock counter %}
+  {% block counter %}
+  {% endblock counter %}
 </div>
-{% endblock counter_container %} {% if page_obj.number > 1 %} {% include
-"includes/pagination.html" with css_class="mb-2" %} {% endif %}
+{% endblock counter_container %}
+
+{% if page_obj.number > 1 %}
+{% include "includes/pagination.html" with css_class="mb-2" %}
+{% endif %}
 
 <table class="table table-hover table-responsive">
   <tbody>
     {% for object in object_list %}
     <tr>
       <td>
-        {% block user_item_detail %} {% if object.num_unread_messages %} {% url
-        'users:messages' object.username as messages_url %} {% include
-        "users/includes/chip.html" with profile=object profile_url=messages_url %} {%
-        else %} {% include "users/includes/chip.html" with profile=object %} {% endif %}
+        {% block user_item_detail %}
+        {% if object.num_unread_messages %}
+        {% url 'users:messages' object.username as messages_url %}
+        {% include "users/includes/chip.html" with profile=object profile_url=messages_url %}
+        {% else %}
+        {% include "users/includes/chip.html" with profile=object %}
+        {% endif %}
+
         {% if object.role == "admin" or object.role == "moderator" %}
         <div class="label">{{ object.role_display }}</div>
-        {% endif %} {% if object.num_unread_messages %}
-        <span class="badge" data-badge="{{ object.num_unread_messages }}"></span>
-        {% endif %} {% endblock user_item_detail %}
+        {% endif %}
+
+        {% if object.num_unread_messages %}
+        <span class="badge"
+              data-badge="{{ object.num_unread_messages }}"></span>
+        {% endif %}
+        {% endblock user_item_detail %}
       </td>
       <td>
-        {% include "includes/timesince.html" with verb=_("Joined")
-        timestamp=object.joined %}
+        {% include "includes/timesince.html" with verb=_("Joined") timestamp=object.joined %}
       </td>
       <td>
         {% block user_item_actions %}
         <div class="float-right actions">
           {% if user == object %}
-          <a class="action" href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+          <a class="action"
+             href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
 
-          {% else %} {% has_perm "users.follow_user" user object as can_follow_user %}
-          {% if can_follow_user %} {% include "users/includes/follow.html" with
-          user_obj=object is_following=object.is_following css_class="action" %} {%
-          endif %} {% if can_create_message %}
-          <a
-            class="action"
-            href="{% url 'private_messages:message_create_recipient' object.username %}"
-          >
+          {% else %}
+
+          {% has_perm "users.follow_user" user object as can_follow_user %}
+
+          {% if can_follow_user %}
+          {% include "users/includes/follow.html" with user_obj=object is_following=object.is_following css_class="action" %}
+          {% endif %}
+
+          {% if can_create_message %}
+          <a class="action"
+             href="{% url 'private_messages:message_create_recipient' object.username %}">
             {% trans "Send Message" %}
           </a>
-          {% endif %} {% endif %}
+          {% endif %}
+
+          {% endif %}
         </div>
         {% endblock user_item_actions %}
       </td>
@@ -78,5 +111,9 @@ trans "People" %}{% endblock %} {% block content %} {% has_perm
     {% endfor %}
   </tbody>
 </table>
-{% include "includes/pagination.html" %} {% else %} {% include "includes/empty.html" %}
-{% endif %} {% endblock user_list %} {% endblock content %}
+{% include "includes/pagination.html" %}
+{% else %}
+{% include "includes/empty.html" %}
+{% endif %}
+{% endblock user_list %}
+{% endblock content %}

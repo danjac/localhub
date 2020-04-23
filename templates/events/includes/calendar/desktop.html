@@ -1,26 +1,26 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "events/includes/calendar/base.html" %} {% load i18n %} {% block
-calendar_date %}
-<button class="date-item{% if day == today.day and is_today %} date-today{% endif %}">
-  {{ day }}
-</button>
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "events/includes/calendar/base.html" %}
+{% load i18n %}
+
+{% block calendar_date %}
+<button class="date-item{% if day == today.day and is_today %} date-today{% endif %}">{{ day }}</button>
 {% if events %}
 <div class="calendar-events">
   {% for event in events|slice:":2" %}
 
-  <a
-    class="calendar-event{% if not event.is_attendable %} text-strike{% elif event.is_attending %} text-bold{% endif %}"
-    href="{{ event.get_absolute_url }}"
-    title="{{ event.title }}"
-    >{{ event.title }}</a
-  >
-  {% endfor %} {% if num_events > 2 %}
-  <a
-    class="calendar-event"
-    href="{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}"
-    href=""
-    >{{ num_events|add:"-2" }} {% trans "More..." %}</a
-  >
+  <a class="calendar-event{% if not event.is_attendable %} text-strike{% elif event.is_attending %} text-bold{% endif %}"
+     href="{{ event.get_absolute_url }}"
+     title="{{ event.title }}">{{ event.title }}</a>
+  {% endfor %}
+
+  {% if num_events > 2 %}
+  <a class="calendar-event"
+     href="{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}"
+     href="">{{ num_events|add:"-2" }} {% trans "More..." %}</a>
   {% endif %}
+
 </div>
-{% endif %} {% endblock calendar_date %}
+{% endif %}
+{% endblock calendar_date %}

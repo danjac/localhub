@@ -1,6 +1,13 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "bookmarks/base.html" %} {% load i18n %} {% block subtitle %}{{ block.super
-}} / {% trans "Activities" %}{% endblock %} {% block bookmarks_content %} {% trans "You
-have not bookmarked any activities." as t_empty_message %} {% include
-"activities/includes/activity_list.html" with empty_message=t_empty_message %} {%
-endblock bookmarks_content %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "bookmarks/base.html" %}
+{% load i18n %}
+
+{% block subtitle %}{{ block.super }} / {% trans "Activities" %}{% endblock %}
+
+{% block bookmarks_content %}
+{% trans "You have not bookmarked any activities." as t_empty_message %}
+
+{% include "activities/includes/activity_list.html" with empty_message=t_empty_message %}
+{% endblock bookmarks_content %}

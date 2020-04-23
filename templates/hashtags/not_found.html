@@ -1,17 +1,22 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "hashtags/base.html" %} {% load i18n %} {% block subtitle %}{{ block.super }}
-/ #{{ tag }}{% endblock %} {% block content %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "hashtags/base.html" %}
+{% load i18n %}
+
+{% block subtitle %}{{ block.super }} / #{{ tag }}{% endblock %}
+
+{% block content %}
 
 <ul class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="{% url 'hashtags:list' %}">{% trans "Tags" %}</a>
-  </li>
+  <li class="breadcrumb-item"><a href="{% url 'hashtags:list' %}">{% trans "Tags" %}</a></li>
   <li class="breadcrumb-item"><a href="#" data-turbolinks="false">{{ tag }}</a></li>
 </ul>
 
 <h1 class="page-header">{% trans "Tag not found" %}</h1>
 <p>
-  {% blocktrans %} Sorry, there don't appear to be any activities in this community
-  tagged <b>#{{ tag }}</b>. {% endblocktrans %}
+  {% blocktrans %}
+  Sorry, there don't appear to be any activities in this community tagged <b>#{{ tag }}</b>.
+  {% endblocktrans %}
 </p>
 {% endblock content %}

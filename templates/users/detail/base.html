@@ -1,19 +1,40 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "base.html" %} {% load i18n %} {% load account %} {% load rules %} {% load
-users %} {% block subtitle %} / {% user_display user_obj %}{% endblock %} {% block
-content %} {% has_perm "users.block_user" user user_obj as can_block_user %} {% has_perm
-"users.follow_user" user user_obj as can_follow_user %} {% has_perm "users.change_user"
-user user_obj as can_change_user %} {% has_perm "private_messages.create_message" user
-community as can_create_message %} {% has_perm "communities.view_membership" user
-membership as can_view_membership %} {% if is_current_user and not user_obj.bio %} {%
-dismissable user "profile-settings" %} {% url 'user_update' as user_settings_url %} {%
-blocktrans %} You can edit your profile in
-<a href="{{ user_settings_url }}">your settings</a>. {% endblocktrans %} {%
-enddismissable %} {% endif %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load account %}
+{% load rules %}
+{% load users %}
+
+{% block subtitle %} / {% user_display user_obj %}{% endblock %}
+
+{% block content %}
+
+{% has_perm "users.block_user" user user_obj as can_block_user %}
+{% has_perm "users.follow_user" user user_obj as can_follow_user %}
+{% has_perm "users.change_user" user user_obj as can_change_user %}
+{% has_perm "private_messages.create_message" user community as can_create_message %}
+{% has_perm "communities.view_membership" user membership as can_view_membership %}
+
+{% if is_current_user and not user_obj.bio %}
+{% dismissable user "profile-settings" %}
+{% url 'user_update' as user_settings_url %}
+{% blocktrans %}
+You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>.
+{% endblocktrans %}
+{% enddismissable %}
+{% endif %}
 
 <h1 class="page-header">
-  {% avatar user_obj "avatar-lg" %} {% if user_obj.username == display_name %} @{{
-  display_name }} {% else %} {{ display_name }} (@{{ user_obj.username }}) {% endif %}
+  {% avatar user_obj "avatar-lg" %}
+  {% if user_obj.username == display_name %}
+  @{{ display_name }}
+  {% else %}
+  {{ display_name }}
+  (@{{ user_obj.username }})
+  {% endif %}
   {% if membership.is_admin %}
   <span class="label">{% trans "Admin" %}</span>
   {% elif membership.is_moderator %}
@@ -24,30 +45,45 @@ enddismissable %} {% endif %}
 {% if is_blocked %}
 <p class="text-small">
   <b>
-    {% if is_blocker %} {% trans "This user has blocked you." %} {% else %} {% trans
-    "You are blocking this user." %} {% endif %}
+    {% if is_blocker %}
+    {% trans "This user has blocked you." %}
+    {% else %}
+    {% trans "You are blocking this user." %}
+    {% endif %}
   </b>
 </p>
 <p class="text-small">
   <b>
-    {% if is_blocker %} {% trans "You cannot send messages to this person." %} {% else
-    %} {% trans "You cannot exchange messages with this person and their content has
-    been removed from your feeds." %} {% endif %}
+    {% if is_blocker %}
+    {% trans "You cannot send messages to this person." %}
+    {% else %}
+    {% trans "You cannot exchange messages with this person and their content has been removed from your feeds." %}
+    {% endif %}
   </b>
 </p>
-{% elif user_obj.bio %} {% collapsable %}
+{% elif user_obj.bio %}
+{% collapsable %}
 <div class="markdown-content">
   {{ user_obj.bio.markdown|strip_external_images:user|lazify }}
 </div>
-{% endcollapsable %} {% endif %} {% if not is_blocked %}
+{% endcollapsable %}
+{% endif %}
+
+{% if not is_blocked %}
 <p class="py-1 text-small">
-  {% if is_current_user %} {% blocktrans with created=membership.created|timesince %}
-  You have been a member for <b>{{ created }}</b>. {% endblocktrans %} {% elif
-  membership %} {% blocktrans with created=membership.created|timesince %} {{
-  display_name }} has been a member for <b>{{ created }}</b>. {% endblocktrans %} {%
-  endif %}
+  {% if is_current_user %}
+  {% blocktrans with created=membership.created|timesince %}
+  You have been a member for <b>{{ created }}</b>.
+  {% endblocktrans %}
+  {% elif membership %}
+  {% blocktrans with created=membership.created|timesince %}
+  {{ display_name }} has been a member for <b>{{ created }}</b>.
+  {% endblocktrans %}
+  {% endif %}
 </p>
-{% endif %} {% if is_follower %}
+{% endif %}
+
+{% if is_follower %}
 <p class="py-1 text-small">
   {% blocktrans %}{{ display_name }} is following you.{% endblocktrans %}
 </p>
@@ -55,101 +91,107 @@ enddismissable %} {% endif %}
 
 <div class="d-flex align-center pb-1">
   {% if not is_current_user %}
-  <div class="dropdown mr-2" data-controller="dropdown">
-    <button class="btn btn-sm" data-action="dropdown#toggle">
+  <div class="dropdown mr-2"
+       data-controller="dropdown">
+    <button class="btn btn-sm"
+            data-action="dropdown#toggle">
       {% trans "Actions" %}<i class="icon icon-caret"></i>
     </button>
-    <ul class="menu" data-target="dropdown.menu">
+    <ul class="menu"
+        data-target="dropdown.menu">
+
       {% if can_create_message and not is_blocked %}
       <li class="menu-item">
-        <a
-          href="{% url 'private_messages:message_create_recipient' user_obj.username %}"
-          >{% trans "Send Message" %}</a
-        >
+        <a href="{% url 'private_messages:message_create_recipient' user_obj.username %}">{% trans "Send Message" %}</a>
       </li>
-      {% endif %} {% if not is_blocked and can_follow_user %}
+      {% endif %}
+
+      {% if not is_blocked and can_follow_user %}
       <li class="menu-item">
         {% include "users/includes/follow.html" %}
       </li>
-      {% endif %} {% if can_block_user %}
+      {% endif %}
+
+      {% if can_block_user %}
       <li class="menu-item">
-        {% with redirect_url=user_obj.get_absolute_url %} {% if is_blocking %}
-        <a
-          class="text-strike"
-          href="{% url 'users:unblock' user_obj.username %}"
-          data-controller="ajax"
-          data-action="ajax#post toggle#toggle"
-          data-ajax-redirect="{{ redirect_url }}"
-        >
+        {% with redirect_url=user_obj.get_absolute_url %}
+        {% if is_blocking %}
+        <a class="text-strike"
+           href="{% url 'users:unblock' user_obj.username %}"
+           data-controller="ajax"
+           data-action="ajax#post toggle#toggle"
+           data-ajax-redirect="{{ redirect_url }}">
           {% trans "Block" %}
         </a>
         {% else %}
-        <a
-          href="{% url 'users:block' user_obj.username %}"
-          data-controller="ajax"
-          data-action="ajax#post toggle#toggle"
-          data-ajax-redirect="{{ redirect_url }}"
-        >
+        <a href="{% url 'users:block' user_obj.username %}"
+           data-controller="ajax"
+           data-action="ajax#post toggle#toggle"
+           data-ajax-redirect="{{ redirect_url }}">
           {% trans "Block" %}
         </a>
-        {% endif %} {% endwith %}
+        {% endif %}
+        {% endwith %}
       </li>
       {% endif %}
+
     </ul>
   </div>
   {% endif %}
   <div class="actions">
     {% if is_current_user %}
-    <a class="action" href="{% url 'user_update' %}">
+    <a class="action"
+       href="{% url 'user_update' %}">
       {% trans "My Settings" %}
     </a>
-    {% endif %} {% if not is_blocked %}
-    <a class="action" href="{% url 'users:activity_likes' user_obj.username %}">
+    {% endif %}
+
+    {% if not is_blocked %}
+    <a class="action"
+       href="{% url 'users:activity_likes' user_obj.username %}">
       {% trans "Likes" %}
     </a>
-    <a class="action" href="{% url 'users:activity_mentions' user_obj.username %}">
+    <a class="action"
+       href="{% url 'users:activity_mentions' user_obj.username %}">
       {% trans "Mentions" %}
     </a>
-    {% endif %} {% if can_view_membership %}
-    <a class="action" href="{% url 'communities:membership_detail' membership.id %}"
-      >{% trans "Membership" %}</a
-    >
     {% endif %}
+    {% if can_view_membership %}
+    <a class="action"
+       href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
+    {% endif %}
+
   </div>
 </div>
 
+
 {% if not is_blocked %}
 <ul class="tab tab-block">
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a
-      data-target="active-link.match"
-      href="{% url 'users:activities' user_obj.username %}"
-      >{% trans "Activities" %}</a
-    >
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'users:activities' user_obj.username %}">{% trans "Activities" %}</a>
   </li>
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a
-      data-target="active-link.match"
-      href="{% url 'users:messages' user_obj.username %}"
-      {%
-      if
-      unread_messages
-      %}
-      class="badge"
-      data-badge="{{ unread_messages }}"
-      {%
-      endif
-      %}
-    >
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'users:messages' user_obj.username %}"
+       {% if unread_messages %}
+       class="badge"
+       data-badge="{{ unread_messages }}"
+       {% endif %}>
       {% trans "Messages" %}
     </a>
   </li>
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a
-      data-target="active-link.match"
-      href="{% url 'users:comments' user_obj.username %}"
-      >{% trans "Comments" %}</a
-    >
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'users:comments' user_obj.username %}">{% trans "Comments" %}</a>
   </li>
 </ul>
-{% block user_content %}{% endblock %} {% endif %} {% endblock content %}
+{% block user_content %}{% endblock %}
+{% endif %}
+{% endblock content %}

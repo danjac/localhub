@@ -1,12 +1,9 @@
 <h4><a href="{{ response.url }}">{{ response.title|safe }}</a></h4>
 <h1 class="page-header">{{ response.provider_name }}</h1>
 {% if response.thumbnail_url %}
-<img
-  src="{{ response.thumbnail_url }}"
-  height="{{ response.thumbnail_height }}"
-  width="{{ response.thumbnail_width }}"
-/>
+<img src="{{ response.thumbnail_url }}" height="{{ response.thumbnail_height }}" width="{{ response.thumbnail_width }}">
 {% endif %}
 <blockquote>
-  {{ response.body|linebreaksbr }}
+{{ response.body|linebreaksbr }}
 </blockquote>
+

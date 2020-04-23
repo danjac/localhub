@@ -1,9 +1,17 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
 {% load i18n %}
-<div data-controller="typeahead" data-typeahead-urls="{{ typeahead_urls }}">
-  <ul class="menu typeahead-selector d-none" data-target="typeahead.selector"></ul>
-  <input data-target="typeahead.input" data-action="keyup->typeahead#keyup
-  keydown->typeahead#keydown" autocomplete="off" class="form-input" {% if widget.value
-  %}value="{{ widget.value }}" {% endif %} name="{{ widget.name }}" {% include
-  "django/forms/widgets/attrs.html" %}>
+<div data-controller="typeahead"
+     data-typeahead-urls="{{ typeahead_urls }}">
+  <ul class="menu typeahead-selector d-none"
+      data-target="typeahead.selector"></ul>
+  <input data-target="typeahead.input"
+         data-action="keyup->typeahead#keyup keydown->typeahead#keydown"
+         autocomplete="off"
+         class="form-input"
+         {% if widget.value %}value="{{ widget.value }}"
+         {% endif %}
+         name="{{ widget.name }}"
+         {% include "django/forms/widgets/attrs.html" %}>
 </div>

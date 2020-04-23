@@ -1,17 +1,28 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "base.html" %} {% load i18n %} {% block subtitle %} / {% trans "Sites" %}{%
-endblock %} {% block content %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block subtitle %} / {% trans "Sites" %}{% endblock %}
+
+{% block content %}
 
 <h1 class="page-header">{% trans "Sites" %}</h1>
 
-{% include "includes/forms/search_form.html" with selector=False %} {% for object in
-object_list %}
+{% include "includes/forms/search_form.html" with selector=False %}
+
+{% for object in object_list %}
 <div class="card mb-2">
   <div class="card-header">
     <div class="card-title h6">
-      {% if object == community %} {{ object.name }} {% else %}
+      {% if object == community %}
+      {{ object.name }}
+      {% else %}
       <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
-      {% endif %} {% if object.is_member %}
+      {% endif %}
+
+      {% if object.is_member %}
       <span class="label">{{ roles|from_dictkey:object.member_role }}</span>
       {% elif not object.allow_join_requests %}
       <span class="label">{% trans "Invite Only" %}</span>
@@ -22,41 +33,54 @@ object_list %}
   <div class="card-body text-small">
     {{ object.tagline|linebreaksbr }}
   </div>
-  {% if community != object and object.is_member %} {% with
-  num_notifications=counters.notifications|from_dictkey:object.id
-  num_messages=counters.messages|from_dictkey:object.id
-  num_join_requests=counters.join_requests|from_dictkey:object.id
-  num_flags=counters.flags|from_dictkey:object.id object_url=object.get_absolute_url %}
+  {% if community != object and object.is_member %}
+  {% with num_notifications=counters.notifications|from_dictkey:object.id num_messages=counters.messages|from_dictkey:object.id num_join_requests=counters.join_requests|from_dictkey:object.id num_flags=counters.flags|from_dictkey:object.id object_url=object.get_absolute_url %}
   {% if num_notifications or num_messages or num_join_requests or num_flags %}
   <div class="card-footer">
     <div class="actions">
       {% if num_flags %}
-      <a class="action" href="{{ object_url }}{% url 'flags:list' %}">
-        <span class="badge" data-badge="{{ num_flags }}">
+      <a class="action"
+         href="{{ object_url }}{% url 'flags:list' %}">
+        <span class="badge"
+              data-badge="{{ num_flags }}">
           {% trans "Flags" %}
         </span>
       </a>
-      {% endif %} {% if num_notifications %}
-      <a class="action" href="{{ object_url }}{% url 'notifications:list' %}">
-        <span class="badge" data-badge="{{ num_notifications }}">
+      {% endif %}
+      {% if num_notifications %}
+      <a class="action"
+         href="{{ object_url }}{% url 'notifications:list' %}">
+        <span class="badge"
+              data-badge="{{ num_notifications }}">
           {% trans "Notifications" %}
         </span>
       </a>
-      {% endif %} {% if num_messages %}
-      <a class="action" href="{{ object_url }}{% url 'private_messages:inbox' %}">
-        <span class="badge" data-badge="{{ num_messages }}">
+      {% endif %}
+      {% if num_messages %}
+      <a class="action"
+         href="{{ object_url }}{% url 'private_messages:inbox' %}">
+        <span class="badge"
+              data-badge="{{ num_messages }}">
           {% trans "Messages" %}
         </span>
       </a>
-      {% endif %} {% if num_join_requests %}
-      <a class="action" href="{{ object_url }}{% url 'join_requests:list' %}">
-        <span class="badge" data-badge="{{ num_join_requests }}">
+      {% endif %}
+      {% if num_join_requests %}
+      <a class="action"
+         href="{{ object_url }}{% url 'join_requests:list' %}">
+        <span class="badge"
+              data-badge="{{ num_join_requests }}">
           {% trans "Join Requests" %}
         </span>
       </a>
       {% endif %}
     </div>
   </div>
-  {% endif %} {% endwith %} {% endif %}
+  {% endif %}
+  {% endwith %}
+  {% endif %}
 </div>
-{% endfor %} {% include "includes/pagination.html" %} {% endblock %}
+{% endfor %}
+
+{% include "includes/pagination.html" %}
+{% endblock %}

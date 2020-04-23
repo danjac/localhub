@@ -1,6 +1,13 @@
-{% extends "base.html" %} {% load i18n %} {% load account %} {% load rules %} {% load
-users %} {% block subtitle %} / {% user_display user_obj %} / {% trans "Mentions" %}{%
-endblock %} {% block content %}
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load account %}
+{% load rules %}
+{% load users %}
+
+{% block subtitle %} / {% user_display user_obj %} / {% trans "Mentions" %}{% endblock %}
+
+{% block content %}
 
 <ul class="breadcrumb">
   <li class="breadcrumb-item">
@@ -9,7 +16,8 @@ endblock %} {% block content %}
     </a>
   </li>
   <li class="breadcrumb-item">
-    <a href="#" data-turbolinks="false">{% trans "Mentions" %}</a>
+    <a href="#"
+       data-turbolinks="false">{% trans "Mentions" %}</a>
   </li>
 </ul>
 
@@ -18,19 +26,18 @@ endblock %} {% block content %}
 </h1>
 
 <ul class="tab tab-block">
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a
-      data-target="active-link.match"
-      href="{% url 'users:activity_mentions' user_obj.username %}"
-      >{% trans "Activities" %}</a
-    >
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'users:activity_mentions' user_obj.username %}">{% trans "Activities" %}</a>
   </li>
-  <li class="tab-item" data-controller="active-link" data-active-link-exact>
-    <a
-      data-target="active-link.match"
-      href="{% url 'users:comment_mentions' user_obj.username %}"
-      >{% trans "Comments" %}</a
-    >
+  <li class="tab-item"
+      data-controller="active-link"
+      data-active-link-exact>
+    <a data-target="active-link.match"
+       href="{% url 'users:comment_mentions' user_obj.username %}">{% trans "Comments" %}</a>
   </li>
 </ul>
-{% block mentions_content %}{% endblock %} {% endblock %}
+{% block mentions_content %}{% endblock %}
+{% endblock %}

@@ -1,5 +1,12 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "emails/base.html" %} {% load i18n %} {% load account %} {% block content %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "emails/base.html" %}
+
+{% load i18n %}
+{% load account %}
+
+{% block content %}
+
 {% user_display join_request.sender as sender %}
 
 <p>
@@ -8,10 +15,15 @@
 
 <p>
   <a href="{{ detail_url }}">
-    {% if sender %} {% blocktrans %} {{ sender }} has requested to join this community.
-    {% endblocktrans %} {% else %} {% blocktrans with email=join_request.email %} You
-    have received a request from {{ email }} to join this community. {% endblocktrans %}
-    {% endif %}
+  {% if sender %}
+  {% blocktrans %}
+  {{ sender }} has requested to join this community.
+  {% endblocktrans %}
+  {% else %}
+  {% blocktrans with email=join_request.email %}
+  You have received a request from {{ email }} to join this community.
+  {% endblocktrans %}
+  {% endif %}
   </a>
 </p>
 

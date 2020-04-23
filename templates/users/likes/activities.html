@@ -1,17 +1,47 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "users/likes/base.html" %} {% load i18n %} {% block subtitle %}{{ block.super
-}} / {% trans "Activities" %}{% endblock %} {% block likes_content %} {% if
-paginator.count %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "users/likes/base.html" %}
+{% load i18n %}
+
+{% block subtitle %}{{ block.super }} / {% trans "Activities" %}{% endblock %}
+
+{% block likes_content %}
+
+
+{% if paginator.count %}
 <div class="mt-2 toast text-center">
-  {% if is_current_user %} You have received {% else %} {{ display_name }} has received
-  {% endif %} {% blocktrans count counter=num_likes %}
-  <strong>1 like</strong> for {% plural %} <strong>{{ counter }} likes</strong> for {%
-  endblocktrans %} {% blocktrans count counter=paginator.count %}
-  <strong>1 activity</strong>. {% plural %} <strong>{{ counter }} activities</strong>.
+
+  {% if is_current_user %}
+  You have received
+  {% else %}
+  {{ display_name }} has received
+  {% endif %}
+
+  {% blocktrans count counter=num_likes %}
+  <strong>1 like</strong> for
+  {% plural %}
+  <strong>{{ counter }} likes</strong> for
   {% endblocktrans %}
+
+  {% blocktrans count counter=paginator.count %}
+  <strong>1 activity</strong>.
+  {% plural %}
+  <strong>{{ counter }} activities</strong>.
+  {% endblocktrans %}
+
 </div>
-{% endif %} {% if is_current_user %} {% trans "You do not have any likes for your
-activities." as t_empty_message %} {% else %} {% blocktrans asvar t_empty_message
-trimmed %} {{ display_name }} has not received any likes for their activities. {%
-endblocktrans %} {% endif %} {% include "activities/includes/activity_list.html" with
-empty_message=t_empty_message %} {% endblock likes_content %}
+{% endif %}
+
+{% if is_current_user %}
+{% trans "You do not have any likes for your activities." as t_empty_message %}
+{% else %}
+{% blocktrans asvar t_empty_message trimmed %}
+{{ display_name }} has not received any likes for their activities.
+{% endblocktrans %}
+{% endif %}
+
+
+{% include "activities/includes/activity_list.html" with empty_message=t_empty_message %}
+
+{% endblock likes_content %}

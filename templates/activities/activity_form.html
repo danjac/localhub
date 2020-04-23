@@ -1,43 +1,52 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "activities/base.html" %} {% load i18n %} {% block subtitle %} / {{
-view.model|verbose_name_plural|title }} / {% if object %}{{ object.title }} / {% trans
-"Edit" %} {% else %}{% trans "Submit" %}{% endif %}{% endblock %} {% block content %} {%
-with list_url=view.model|resolve_url:"list"
-model_name_plural=view.model|verbose_name_plural|title
-model_name=view.model|verbose_name|title %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/base.html" %}
+
+{% load i18n %}
+
+{% block subtitle %} / {{ view.model|verbose_name_plural|title }} /
+{% if object %}{{ object.title }} / {% trans "Edit" %}
+{% else %}{% trans "Submit" %}{% endif %}{% endblock %}
+
+{% block content %}
+
+{% with list_url=view.model|resolve_url:"list" model_name_plural=view.model|verbose_name_plural|title model_name=view.model|verbose_name|title %}
 <ul class="breadcrumb">
-  {% if object %} {% if object.published %}
+
+  {% if object %}
+
+  {% if object.published %}
   <li class="breadcrumb-item">
     <a href="{{ list_url }}">{{ model_name_plural }}</a>
   </li>
   {% else %}
-  <li class="breadcrumb-item">
-    <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
-  </li>
+  <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
   {% endif %}
 
-  <li class="breadcrumb-item">
-    <a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="#">{% blocktrans %}Edit {{ model_name }}{% endblocktrans %}</a>
-  </li>
+  <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
+  <li class="breadcrumb-item"><a href="#">{% blocktrans %}Edit {{ model_name }}{% endblocktrans %}</a></li>
 
-  {% else %} {% if view.is_private %}
-  <li class="breadcrumb-item">
-    <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
-  </li>
+  {% else %}
+
+  {% if view.is_private %}
+  <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
   {% else %}
   <li class="breadcrumb-item">
     <a href="{{ list_url }}">{{ model_name_plural }}</a>
   </li>
   {% endif %}
   <li class="breadcrumb-item">
-    <a data-turbolinks="false" href="#"
-      >{% blocktrans %}Submit {{ model_name }}{% endblocktrans %}</a
-    >
+    <a data-turbolinks="false"
+       href="#">{% blocktrans %}Submit {{ model_name }}{% endblocktrans %}</a>
   </li>
   {% endif %}
+
 </ul>
-{% endwith %} {% block form %} {% include "activities/includes/activity_form.html" with
-multipart=True %} {% endblock %} {% endblock content %}
+{% endwith %}
+
+{% block form %}
+{% include "activities/includes/activity_form.html" with multipart=True %}
+{% endblock %}
+
+{% endblock content %}

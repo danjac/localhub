@@ -1,7 +1,14 @@
-{# Copyright (c) 2020 by Dan Jacob #} {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "activities/includes/activity_base.html" %} {% load i18n %} {% load thumbnail
-%} {% load activities %} {% block content %} {% thumbnail object.image "900"
-upscale=False as image %}
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/includes/activity_base.html" %}
+
+{% load i18n %}
+{% load thumbnail %}
+{% load activities %}
+
+{% block content %}
+{% thumbnail object.image "900" upscale=False as image %}
 <div>
   <a href="{{ object.get_absolute_url }}">
     {% include "photos/includes/image.html" with title=object.title %}
@@ -9,9 +16,14 @@ upscale=False as image %}
 </div>
 {% empty %}
 <em class="text-small">{% trans "No photo available" %}</em>
-{% endthumbnail %} {% if is_detail %} {% include "activities/includes/map.html" with
-css_class="pb-1" %} {% endif %} {% include "activities/includes/description.html" %} {%
-if is_detail %}
+{% endthumbnail %}
+
+{% if is_detail %}
+{% include "activities/includes/map.html" with css_class="pb-1" %}
+{% endif %}
+
+{% include "activities/includes/description.html" %}
+{% if is_detail %}
 <dl class="text-small">
   <dt>{% trans "Original Size" %}</dt>
   <dd>{{ object.image.width }}x{{ object.image.height }}</dd>
@@ -20,21 +32,28 @@ if is_detail %}
   {% if object.has_map %}
   <dt>{% trans "GPS Location" %}</dt>
   <dd>
-    {% with latitude=object.latitude|floatformat:2
-    longitude=object.longitude|floatformat:2 %} {% blocktrans %} {{ latitude }}&deg;N {{
-    longitude }}&deg;W {% endblocktrans %} {% endwith %}
+  {% with latitude=object.latitude|floatformat:2 longitude=object.longitude|floatformat:2 %}
+  {% blocktrans %}
+  {{ latitude }}&deg;N {{ longitude }}&deg;W
+  {% endblocktrans %}
+  {% endwith %}
   </dd>
-  {% endif %} {% if object.artist %}
+  {% endif %}
+  {% if object.artist %}
   <dt>{% trans "Artist" %}</dt>
   <dd>{{ object.artist }}</dd>
-  {% endif %} {% if object.original_url %}
+  {% endif %}
+  {% if object.original_url %}
   <dt>{% trans "Original URL" %}</dt>
   <dd>{{ object.original_url|linkify }}</dd>
-  {% endif %} {% if object.cc_license %}
+  {% endif %}
+  {% if object.cc_license %}
   <dt>{% trans "Creative Commons License" %}</dt>
   <dd>{{ object.get_cc_license_display }}</dd>
   {% endif %}
 </dl>
-{% endif %} {% endblock content %} {% block actions %}{% include
-"photos/includes/actions.html" %}{% endblock %} {% block links %}{% include
-"photos/includes/links.html" %}{% endblock %}
+{% endif %}
+{% endblock content %}
+
+{% block actions %}{% include "photos/includes/actions.html" %}{% endblock %}
+{% block links %}{% include "photos/includes/links.html" %}{% endblock %}
