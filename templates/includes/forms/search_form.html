@@ -7,22 +7,22 @@
 {% load rules %}
 
 <form method="GET"
-      action="{{ request.path }}"
-      data-controller="form{% if selector %} search{% endif %}"
-      data-action="form#submit"
-      data-search-param="{{ view.search_parameter|default:'q' }}"
-      class="my-2 search-form">
-  {% for name, value in non_search_params.items %}
-  <input type="hidden"
-         name="{{ name }}"
-         value="{{ value }}">
-  {% endfor %}
-  <div class="form-group">
-    <input class="form-input"
-           name="{{ view.search_parameter|default:'q' }}"
-           type="search"
-           {% if not view.search_optional %}
-           required
+    action="{{ request.path }}"
+    data-controller="form{% if selector %} search{% endif %}"
+    data-action="form#submit"
+    data-search-param="{{ view.search_parameter|default:'q' }}"
+    class="my-2 search-form">
+{% for name, value in non_search_params.items %}
+<input type="hidden"
+       name="{{ name }}"
+       value="{{ value }}">
+{% endfor %}
+<div class="form-group">
+  <input class="form-input"
+         name="{{ view.search_parameter|default:'q' }}"
+         type="search"
+         {% if not view.search_optional %}
+         required
            {% endif %}
            {% if selector %}
            data-target="search.input"
@@ -42,6 +42,9 @@
       <option value="{% url 'private_messages:outbox' %}">{% trans "Messages - Outbox" %}</option>
       <option value="{% url 'comments:list' %}">{% trans "Comments" %}</option>
       <option value="{% url 'activities:private' %}">{% trans "Private Stash" %}</option>
+      <option value="{% url 'bookmarks:activities' %}">{% trans "Bookmarks - Activities" %}</option>
+      <option value="{% url 'bookmarks:messages' %}">{% trans "Bookmarks - Messages" %}</option>
+      <option value="{% url 'bookmarks:comments' %}">{% trans "Bookmarks - Comments" %}</option>
       <option value="{% url 'users:member_list' %}">{% trans "Members" %}</option>
       <option value="{% url 'posts:list' %}">{% trans "Posts" %}</option>
       <option value="{% url 'events:list' %}">{% trans "Events" %}</option>

@@ -8,5 +8,6 @@
 
 {% block bookmarks_content %}
 {% trans "You have not bookmarked any activities." as t_empty_message %}
+
 {% include "activities/includes/activity_list.html" with empty_message=t_empty_message %}
 {% endblock bookmarks_content %}

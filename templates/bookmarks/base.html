@@ -30,5 +30,10 @@
        href="{% url 'bookmarks:comments' %}">{% trans "Comments" %}</a>
   </li>
 </ul>
+
+{% if paginator.count or view.search_query %}
+{% include "includes/forms/search_form.html" with selector=True %}
+{% endif %}
+
 {% block bookmarks_content %}{% endblock %}
 {% endblock content %}
