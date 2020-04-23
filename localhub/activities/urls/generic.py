@@ -13,16 +13,15 @@ from ..views.actions import (
     ActivityReshareView,
     ActivityUnpinView,
 )
-from ..views.create_update import (
+from ..views.create import (
     ActivityCommentCreateView,
     ActivityCreateView,
     ActivityFlagView,
-    ActivityUpdateTagsView,
-    ActivityUpdateView,
 )
 from ..views.delete import ActivityDeleteView
 from ..views.detail import ActivityDetailView
 from ..views.list import ActivityListView
+from ..views.update import ActivityUpdateTagsView, ActivityUpdateView
 
 
 def create_activity_urls(
