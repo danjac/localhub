@@ -10,7 +10,8 @@ from django.views.generic import View
 import pytest
 
 from ..factories import CommunityFactory, MembershipFactory
-from ..models import Membership, RequestCommunity
+from ..models import Membership
+from ..models.requests import RequestCommunity
 from ..views import CommunityRequiredMixin
 
 pytestmark = pytest.mark.django_db
