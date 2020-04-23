@@ -36,7 +36,7 @@
 {% has_perm "activities.create_activity" user community as can_create_activity %}
 
 {% if can_create_activity %}
-<div class="submit-post container mb-2 p-0">
+<div class="homepage-cta container mb-2 p-0">
   <div class="columns">
     <div class="column col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xl-11 mb-1">
       <div class="input-group"
@@ -49,14 +49,14 @@
         </span>
         <input type="text"
                New
-               class="form-input submit-post-input"
+               class="form-input homepage-cta-input"
                data-action="focus->ajax#get"
                placeholder="{% trans "What's on your mind?" %}">
       </div>
     </div>
     <div class="column col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-1 mb-1">
 
-      <div class="submit-options">
+      <div class="homepage-cta-options">
         <div class="dropdown"
              data-controller="dropdown">
           <button class="btn btn-lg"
