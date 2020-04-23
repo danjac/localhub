@@ -3,7 +3,7 @@
 
 from django.db import models
 
-from localhub.bookmarks.models import BookmarkAnnotationsQuerySetMixin
+from localhub.bookmarks.models.mixins import BookmarkAnnotationsQuerySetMixin
 from localhub.comments.models.mixins import CommentAnnotationsQuerySetMixin
 from localhub.db.search import SearchQuerySetMixin
 from localhub.db.utils import boolean_value
