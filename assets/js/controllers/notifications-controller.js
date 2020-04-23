@@ -4,6 +4,7 @@
 import axios from 'axios';
 
 import { Controller } from 'stimulus';
+import urlB64ToUint8Array from '@utils/urlB64ToUint8Array';
 
 let registration = null;
 
@@ -67,7 +68,7 @@ export default class extends Controller {
   subscribe(event) {
     event.preventDefault();
     const options = {
-      applicationServerKey: this.urlB64ToUint8Array(this.data.get('vapid-public-key')),
+      applicationServerKey: urlB64ToUint8Array(this.data.get('vapid-public-key')),
       userVisibleOnly: true,
     };
     registration.pushManager.subscribe(options).then((subscription) => {
@@ -83,8 +84,8 @@ export default class extends Controller {
       .getSubscription()
       .then((subscription) =>
         subscription
-          .unsubscribe()
-          .then(this.syncWithServer(subscription, this.data.get('unsubscribe-url')))
+        .unsubscribe()
+        .then(this.syncWithServer(subscription, this.data.get('unsubscribe-url')))
       );
   }
 
@@ -123,15 +124,4 @@ export default class extends Controller {
     }
   }
 
-  urlB64ToUint8Array(base64String) {
-    const mod = base64String.length % 4;
-    const padding = '='.repeat((4 - mod) % 4);
-    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-    const rawData = atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; i += 1) {
-      outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-  }
 }

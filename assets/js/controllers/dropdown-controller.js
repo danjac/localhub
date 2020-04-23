@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Controller } from 'stimulus';
+import maxZIndex from '@utils/maxZIndex';
 
 export default class extends Controller {
   /*
@@ -50,22 +51,10 @@ export default class extends Controller {
     this.menuTarget.style.left = left;
     this.menuTarget.style.right = right;
     // ensure menu not hidden under another element
-    this.menuTarget.style.zIndex = this.maxZIndex() + 1;
+    this.menuTarget.style.zIndex = maxZIndex() + 1;
   }
 
   close() {
     this.element.classList.remove('active');
-  }
-
-  maxZIndex() {
-    // returns highest z-index on the page
-    // https://stackoverflow.com/questions/1118198/how-can-you-figure-out-the-highest-z-index-in-your-document
-    return (
-      Array.from(document.querySelectorAll('body *'))
-        .map((el) => parseFloat(getComputedStyle(el).zIndex))
-        .filter((index) => !isNaN(index))
-        .sort()
-        .pop() || 0
-    );
   }
 }

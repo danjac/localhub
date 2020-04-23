@@ -5,8 +5,9 @@ import { Controller } from 'stimulus';
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-import { openDialog } from './confirm-dialog-controller';
-import { createAlert } from './alert-controller';
+import * as alerts from '@utils/alerts';
+import openDialog from '@utils/dialog';
+
 
 export default class extends Controller {
   /*
@@ -92,16 +93,16 @@ export default class extends Controller {
     });
 
     axios({
-      headers: {
-        'Turbolinks-Referrer': location.href,
-      },
-      method,
-      url,
-    })
+        headers: {
+          'Turbolinks-Referrer': location.href,
+        },
+        method,
+        url,
+      })
       .then((response) => {
         const successMessage = response.headers['x-success-message'];
         if (successMessage) {
-          createAlert(successMessage, 'success');
+          alerts.success(successMessage);
         }
         if (this.data.has('replace')) {
           this.element.innerHTML = response.data;
@@ -135,8 +136,7 @@ export default class extends Controller {
   handleServerError(err) {
     if (err.response) {
       const { status, statusText } = err.response;
-      const errMsg = `${status}: ${statusText}`;
-      createAlert(errMsg, 'error');
+      alerts.error(`${status}: ${statusText}`);
     }
   }
 }

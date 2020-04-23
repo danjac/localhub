@@ -42,8 +42,14 @@ module.exports = {
       }
     ]
   },
+  resolve: {
+    alias: {
+      '@controllers': path.resolve(__dirname, './assets/js/controllers'),
+      '@utils': path.resolve(__dirname, './assets/js/utils')
+    }
+  },
   output: {
-    path: path.resolve('./assets/dist/')
+    path: path.resolve(__dirname, './assets/dist/')
   },
   plugins: [
     new MiniCssExtractPlugin({
