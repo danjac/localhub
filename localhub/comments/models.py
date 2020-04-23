@@ -15,7 +15,7 @@ from model_utils.models import TimeStampedModel
 
 from localhub.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from localhub.communities.models import Community, Membership
-from localhub.db.content_types import (
+from localhub.db.generic import (
     get_generic_related_count_subquery,
     get_generic_related_queryset,
 )

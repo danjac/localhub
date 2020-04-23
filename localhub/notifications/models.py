@@ -12,7 +12,7 @@ from model_utils.models import TimeStampedModel
 from pywebpush import WebPushException, webpush
 
 from localhub.communities.models import Community
-from localhub.db.content_types import get_generic_related_exists
+from localhub.db.generic import get_generic_related_exists
 from localhub.db.utils import boolean_value
 
 

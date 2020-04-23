@@ -15,10 +15,7 @@ from taggit.models import Tag
 from localhub.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from localhub.comments.models import Comment, CommentAnnotationsQuerySetMixin
 from localhub.communities.models import Community
-from localhub.db.content_types import (
-    AbstractGenericRelation,
-    get_generic_related_queryset,
-)
+from localhub.db.generic import AbstractGenericRelation, get_generic_related_queryset
 from localhub.db.search import SearchQuerySetMixin
 from localhub.db.tracker import TrackerModelMixin
 from localhub.db.utils import boolean_value

@@ -17,8 +17,8 @@ from taggit.models import Tag
 from timezone_field import TimeZoneField
 
 from localhub.communities.models import Membership
-from localhub.db.content_types import get_generic_related_queryset
 from localhub.db.fields import ChoiceArrayField
+from localhub.db.generic import get_generic_related_queryset
 from localhub.db.search import SearchIndexer, SearchQuerySetMixin
 from localhub.db.tracker import TrackerModelMixin
 from localhub.markdown.fields import MarkdownField

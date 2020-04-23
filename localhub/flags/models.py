@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 
 from localhub.communities.models import Community
-from localhub.db.content_types import get_generic_related_exists
+from localhub.db.generic import get_generic_related_exists
 from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
 
