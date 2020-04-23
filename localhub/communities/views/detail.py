@@ -5,13 +5,13 @@ from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.views.generic import DetailView, TemplateView
 
+import rules
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.invites.models import Invite
 from localhub.join_requests.models import JoinRequest
 
 from ..models import Membership
-from ..rules import is_inactive_member, is_member
 from .mixins import CurrentCommunityMixin, MembershipQuerySetMixin
 
 
@@ -37,7 +37,7 @@ class CommunityWelcomeView(BaseCommunityDetailView):
     allow_non_members = True
 
     def get(self, request):
-        if is_member(request.user, request.community):
+        if rules.test_rule("communities.is_member", request.user, request.community):
             return HttpResponseRedirect(settings.LOCALHUB_HOME_PAGE_URL)
         return super().get(request)
 
@@ -53,13 +53,15 @@ class CommunityWelcomeView(BaseCommunityDetailView):
         return data
 
     def is_inactive_member(self):
-        return is_inactive_member(self.request.user, self.request.community)
+        return rules.test_rule(
+            "communities.is_inactive_member", self.request.user, self.request.community,
+        )
 
     def get_join_request(self):
         return JoinRequest.objects.filter(
             sender=self.request.user,
             community=self.request.community,
-            status__in=(JoinRequest.Status.PENDING, JoinRequest.Status.REJECTED),
+            status__in=(JoinRequest.Status.PENDING, JoinRequest.Status.REJECTED,),
         ).first()
 
     def get_invite(self):

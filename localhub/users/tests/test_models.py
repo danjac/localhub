@@ -255,6 +255,14 @@ class TestUserModel:
         assert user.email in emails
         assert "test1@gmail.com" in emails
 
+    def test_is_active_member_if_true(self):
+        member = MembershipFactory(active=True)
+        assert member.member.is_active_member(member.community)
+
+    def test_is_active_member_if_false(self):
+        member = MembershipFactory(active=False)
+        assert not member.member.is_active_member(member.community)
+
     def test_is_inactive_member_if_true(self):
         member = MembershipFactory(active=False)
         assert member.member.is_inactive_member(member.community)
@@ -277,6 +285,48 @@ class TestUserModel:
     def test_has_role_if_active_member_right_role(self):
         member = MembershipFactory(active=True, role=Membership.Role.ADMIN)
         assert member.member.has_role(member.community, Membership.Role.ADMIN)
+
+    def test_is_member_if_not_a_member(self, user, community):
+        assert not user.is_member(community)
+
+    def test_is_member_if_active_member_wrong_role(self):
+        member = MembershipFactory(active=True, role=Membership.Role.ADMIN)
+        assert not member.member.is_member(member.community)
+
+    def test_is_member_if_inactive_member_right_role(self):
+        member = MembershipFactory(active=False, role=Membership.Role.MEMBER)
+        assert not member.member.is_member(member.community)
+
+    def test_is_member_if_active_member_right_role(self):
+        member = MembershipFactory(active=True, role=Membership.Role.MEMBER)
+        assert member.member.is_member(member.community)
+
+    def test_is_moderator_if_not_a_member(self, user, community):
+        assert not user.is_moderator(community)
+
+    def test_is_moderator_if_active_member_wrong_role(self):
+        member = MembershipFactory(active=True, role=Membership.Role.ADMIN)
+        assert not member.member.is_moderator(member.community)
+
+    def test_is_moderator_if_inactive_member_right_role(self):
+        member = MembershipFactory(active=False, role=Membership.Role.MODERATOR)
+        assert not member.member.is_moderator(member.community)
+
+    def test_is_moderator_if_active_member_right_role(self):
+        member = MembershipFactory(active=True, role=Membership.Role.MODERATOR)
+        assert member.member.is_moderator(member.community)
+
+    def test_is_admin_if_active_member_wrong_role(self):
+        member = MembershipFactory(active=True, role=Membership.Role.MEMBER)
+        assert not member.member.is_admin(member.community)
+
+    def test_is_admin_if_inactive_member_right_role(self):
+        member = MembershipFactory(active=False, role=Membership.Role.ADMIN)
+        assert not member.member.is_admin(member.community)
+
+    def test_is_admin_if_active_member_right_role(self):
+        member = MembershipFactory(active=True, role=Membership.Role.ADMIN)
+        assert member.member.is_admin(member.community)
 
     def test_member_cache(self):
 

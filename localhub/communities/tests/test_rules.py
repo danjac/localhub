@@ -9,18 +9,18 @@ from ..factories import MembershipFactory
 from ..models import Membership
 from ..rules import (
     is_admin,
+    is_admin_member,
     is_inactive_member,
     is_member,
-    is_membership_community_admin,
     is_moderator,
-    is_own_membership,
+    is_self,
 )
 
 pytestmark = pytest.mark.django_db
 
 
 class TestMembershipRoles:
-    def test_anonymous_user(self, community, anonymous_user):
+    def test_anonymous(self, anonymous_user, community):
         assert not is_member.test(anonymous_user, community)
         assert not is_moderator.test(anonymous_user, community)
         assert not is_admin.test(anonymous_user, community)
@@ -58,17 +58,17 @@ class TestMembershipRoles:
 
 
 class TestIsOwnMembership:
-    def test_is_own_membership_if_true(self, user, community):
+    def test_is_self_if_true(self, user, community):
         membership = Membership.objects.create(
             community=community, member=user, role="admin"
         )
-        assert is_own_membership.test(user, membership)
+        assert is_self.test(user, membership)
 
-    def test_is_own_membership_if_false(self, user, community):
+    def test_is_self_if_false(self, user, community):
         membership = Membership.objects.create(
             community=community, member=UserFactory(), role="admin"
         )
-        assert not is_own_membership.test(user, membership)
+        assert not is_self.test(user, membership)
 
 
 class TestIsMembershipCommunityAdmin:
@@ -76,13 +76,13 @@ class TestIsMembershipCommunityAdmin:
         membership = Membership.objects.create(
             community=community, member=user, role="admin"
         )
-        assert is_membership_community_admin.test(user, membership)
+        assert is_admin_member.test(user, membership)
 
     def test_is_not_admin(self, user, community):
         membership = Membership.objects.create(
             community=community, member=user, role="member"
         )
-        assert not is_membership_community_admin.test(user, membership)
+        assert not is_admin_member.test(user, membership)
 
 
 class TestCommunityPermissions:
@@ -104,9 +104,7 @@ class TestMembershipPermissions:
         )
         assert user.has_perm("communities.change_membership", membership)
 
-    def test_can_change_membership_if_is_admin_and_is_own_membership(
-        self, user, community
-    ):
+    def test_can_change_membership_if_is_admin_and_is_self(self, user, community):
         membership = Membership.objects.create(
             member=user, community=community, role="admin"
         )
@@ -130,17 +128,13 @@ class TestMembershipPermissions:
         )
         assert not user.has_perm("communities.delete_membership", membership)
 
-    def test_can_delete_membership_if_not_is_admin_and_is_own_membership(
-        self, user, community
-    ):
+    def test_can_delete_membership_if_not_is_admin_and_is_self(self, user, community):
         membership = Membership.objects.create(
             member=user, community=community, role="member"
         )
         assert user.has_perm("communities.delete_membership", membership)
 
-    def test_can_delete_membership_if_is_admin_and_is_own_membership(
-        self, user, community
-    ):
+    def test_can_delete_membership_if_is_admin_and_is_self(self, user, community):
         membership = Membership.objects.create(
             member=user, community=community, role="admin"
         )

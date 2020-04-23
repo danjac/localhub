@@ -116,32 +116,6 @@ class Community(TimeStampedModel):
     def get_admins(self, active=True):
         return self.get_members_by_role(Membership.Role.ADMIN, active=active)
 
-    def user_has_role(self, user, *roles):
-        if user.is_anonymous:
-            return False
-        return user.has_role(self, *roles)
-
-    def is_inactive_member(self, user):
-        if user.is_anonymous:
-            return False
-        return user.is_inactive_member(self)
-
-    def is_member(self, user):
-        return self.user_has_role(
-            user,
-            Membership.Role.MEMBER,
-            Membership.Role.MODERATOR,
-            Membership.Role.ADMIN,
-        )
-
-    def is_moderator(self, user):
-        return self.user_has_role(
-            user, Membership.Role.MODERATOR, Membership.Role.ADMIN
-        )
-
-    def is_admin(self, user):
-        return self.user_has_role(user, Membership.Role.ADMIN)
-
     def is_email_blacklisted(self, email):
         """
         Checks if email address or domain is blacklisted by this community.

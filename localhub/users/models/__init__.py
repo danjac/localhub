@@ -111,7 +111,9 @@ class User(TrackerModelMixin, AbstractUser):
     def member_cache(self):
         """
         Returns:
-            A dict of membership status/roles:
+            A dict of membership status/roles across all communities
+            the user belongs to:
+
             {
                 "active": {community_id: "admin"}, ...
                 "inactive": [list of community ids...]
@@ -133,18 +135,43 @@ class User(TrackerModelMixin, AbstractUser):
         is cached.
         Args:
             community (Community)
-            *roles: roles i.e. one or more of "member", "moderator", "admin"
+            *roles: roles i.e. one or more of "member", "moderator", "admin". If
+                empty assumes any role.
 
         Returns:
             bool: if user has any of these roles
         """
-        try:
-            return self.member_cache["active"][community.id] in roles
-        except KeyError:
-            return False
+
+        if roles:
+            try:
+                return self.member_cache["active"][community.id] in roles
+            except KeyError:
+                return False
+
+        return community.id in self.member_cache["active"]
+
+    def is_admin(self, community):
+        return self.has_role(community, Membership.Role.ADMIN)
+
+    def is_moderator(self, community):
+        return self.has_role(community, Membership.Role.MODERATOR)
+
+    def is_member(self, community):
+        return self.has_role(community, Membership.Role.MEMBER)
+
+    def is_active_member(self, community):
+        """Checks if user an active member of any role.
+
+        Returns:
+            bool
+        """
+        return self.has_role(community)
 
     def is_inactive_member(self, community):
         """Checks if user has an inactive membership for this community.
+
+        Returns:
+            bool
         """
         return community.id in self.member_cache["inactive"]
 
