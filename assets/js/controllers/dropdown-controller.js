@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Controller } from 'stimulus';
+
 import maxZIndex from '@utils/maxZIndex';
+import getViewport from '@utils/getViewport';
 
 export default class extends Controller {
   /*
@@ -26,20 +28,21 @@ export default class extends Controller {
     event.preventDefault();
     event.stopPropagation();
     this.element.classList.toggle('active');
-    const rect = this.menuTarget.getBoundingClientRect();
+
     // ensure menu always appears within viewport
-    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    const viewport = getViewport()
+    const rect = this.menuTarget.getBoundingClientRect();
+
     let top, bottom, left, right;
 
-    if (rect.bottom + rect.height > viewportHeight) {
+    if (rect.bottom + rect.height > viewport.height) {
       top = 'auto';
       bottom = 0;
     } else {
       top = 0;
       bottom = 'auto';
     }
-    const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
-    if (rect.left + rect.width > viewportWidth) {
+    if (rect.left + rect.width > viewport.width) {
       left = 'auto';
       right = 0;
     } else {

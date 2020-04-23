@@ -4,8 +4,9 @@
 .menu-item {
   a {
     color: $dark-color;
+    font-size: $font-size-sm;
 
-    @media (min-width: $size-lg) {
+    @media (max-width: $size-lg) {
       font-size: $font-size-xs;
     }
   }
