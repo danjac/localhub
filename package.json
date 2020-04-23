@@ -10,10 +10,10 @@
   ],
   "lint-staged": {
     "./assets/**/*.js": [
-      "prettier --write",
+      "prettier --write"
     ],
     "./assets/**/*.scss": [
-      "prettier --write",
+      "prettier --write"
     ]
   },
   "devDependencies": {
