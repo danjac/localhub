@@ -53,7 +53,7 @@ class ActivityCreateView(
         self.object.save()
 
         if publish:
-            self.object.notify_on_create()
+            self.object.notify_on_publish()
 
         return self.success_response()
 

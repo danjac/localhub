@@ -290,7 +290,7 @@ class Activity(TrackerModelMixin, TimeStampedModel):
         return self.community.members.exclude(blocked=self.owner)
 
     @dispatch
-    def notify_on_create(self):
+    def notify_on_publish(self):
         """Generates Notification instances for users:
         - @mentioned users
         - users following any tags

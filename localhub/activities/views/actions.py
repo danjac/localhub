@@ -38,7 +38,7 @@ class ActivityReshareView(BaseActivityActionView):
     def post(self, request, *args, **kwargs):
         self.reshare = self.object.reshare(self.request.user)
 
-        self.reshare.notify_on_create()
+        self.reshare.notify_on_publish()
 
         return self.success_response()
 
@@ -53,6 +53,7 @@ class ActivityPublishView(BaseActivityActionView):
     def post(self, request, *args, **kwargs):
         self.object.published = timezone.now()
         self.object.save(update_fields=["published"])
+        self.object.notify_on_publish()
 
         return self.success_response()
 

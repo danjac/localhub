@@ -291,7 +291,7 @@ class TestPostUnpinView:
 
 
 class TestPublishView:
-    def test_post(self, client, member):
+    def test_post(self, client, member, mailoutbox, send_webpush_mock):
         post = PostFactory(
             owner=member.member, community=member.community, published=None
         )

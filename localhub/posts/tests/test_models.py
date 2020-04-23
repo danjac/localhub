@@ -139,7 +139,7 @@ class TestPostModel:
         post = PostFactory(description="This post is #legit")
         assert post.get_content_warning_tags() == set()
 
-    def test_notify_on_create(self, community, send_webpush_mock):
+    def test_notify_on_publish(self, community, send_webpush_mock):
         # owner should not receive any notifications from their own posts
         owner = MembershipFactory(
             community=community, role=Membership.Role.MODERATOR
@@ -177,7 +177,7 @@ class TestPostModel:
         ).member
         user_follower.following.add(post.owner)
 
-        notifications = post.notify_on_create()
+        notifications = post.notify_on_publish()
         assert len(notifications) == 3
 
         assert notifications[0].recipient == mentioned
@@ -255,7 +255,7 @@ class TestPostModel:
         assert notifications[0].actor == post.owner
         assert notifications[0].verb == "mention"
 
-    def test_notify_on_create_reshare(self, community):
+    def test_notify_on_publish_reshare(self, community):
 
         mentioned = MembershipFactory(
             member=UserFactory(username="danjac"),
@@ -285,7 +285,7 @@ class TestPostModel:
 
         # reshare
         reshare = post.reshare(UserFactory())
-        notifications = list(reshare.notify_on_create())
+        notifications = list(reshare.notify_on_publish())
         assert len(notifications) == 3
 
         assert notifications[0].recipient == post.owner
