@@ -7,9 +7,9 @@ build:
 
 release:
   command:
-    # - python manage.py migrate
+    - python manage.py migrate
     # run this after reset migrations
-    - python manage.py migrate --fake-initial
+    # - python manage.py migrate --fake-initial
   image: web
 
 run:
