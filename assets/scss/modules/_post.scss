@@ -5,8 +5,6 @@
   border-color: $gray-color;
 
   .form-input {
-
-
     &:focus {
       box-shadow: none;
       border-color: $gray-color;
@@ -15,5 +13,10 @@
 
   .submit-post-input {
     height: 2rem;
+  }
+  .submit-options {
+    @media (min-width: $size-md) {
+      float: right;
+    }
   }
 }
