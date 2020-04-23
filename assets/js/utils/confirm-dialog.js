@@ -11,5 +11,3 @@ export default function (options) {
   */
   document.getElementById('confirm-dialog')['confirm-dialog'].open(options);
 }
-
-

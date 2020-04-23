@@ -3,8 +3,7 @@
 
 import { Controller } from 'stimulus';
 
-import maxZIndex from '@utils/maxZIndex';
-import getViewport from '@utils/getViewport';
+import { maxZIndex, getViewport } from '@utils/dom-helpers';
 
 // test comment
 export default class extends Controller {

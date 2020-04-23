@@ -5,8 +5,7 @@ import { Controller } from 'stimulus';
 import axios from 'axios';
 import getCaretPosition from 'textarea-caret';
 
-import getViewport from '@utils/getViewport';
-import maxZIndex from '@utils/maxZIndex';
+import { maxZIndex, getViewport } from '@utils/dom-helpers';
 
 const ESC_KEY = 27;
 const TAB_KEY = 9;

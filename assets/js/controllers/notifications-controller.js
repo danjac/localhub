@@ -4,7 +4,7 @@
 import axios from 'axios';
 
 import { Controller } from 'stimulus';
-import urlB64ToUint8Array from '@utils/urlB64ToUint8Array';
+import { urlB64ToUint8Array } from '@utils/encoders';
 
 let registration = null;
 
@@ -84,8 +84,8 @@ export default class extends Controller {
       .getSubscription()
       .then((subscription) =>
         subscription
-        .unsubscribe()
-        .then(this.syncWithServer(subscription, this.data.get('unsubscribe-url')))
+          .unsubscribe()
+          .then(this.syncWithServer(subscription, this.data.get('unsubscribe-url')))
       );
   }
 
@@ -123,5 +123,4 @@ export default class extends Controller {
       throw new Error('Permission denied');
     }
   }
-
 }

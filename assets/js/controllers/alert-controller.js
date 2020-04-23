@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Controller } from 'stimulus';
-import fadeOut from '@utils/fadeOut';
+import { fadeOut } from '@utils/dom-helpers';
 
 const TIMEOUT = 3000;
 
