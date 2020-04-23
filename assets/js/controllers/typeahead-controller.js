@@ -5,7 +5,7 @@ import { Controller } from 'stimulus';
 import axios from 'axios';
 import getCaretPosition from 'textarea-caret';
 
-import getViewport from '@utils/getViewport';
+//import getViewport from '@utils/getViewport';
 import maxZIndex from '@utils/maxZIndex';
 
 const ESC_KEY = 27;
@@ -198,13 +198,13 @@ export default class extends Controller {
       this.inputTarget,
       this.inputTarget.selectionEnd
     );
-    // TBD: see dropdown-controller for ensuring result stays inside viewport
     const { offsetTop, offsetLeft, scrollTop, scrollLeft } = this.inputTarget;
 
     this.selectorTarget.style.top = offsetTop - scrollTop + height + top + 'px';
     this.selectorTarget.style.left = offsetLeft - scrollLeft + left + 'px';
     this.selectorTarget.classList.remove('d-none');
 
+    /*
     const viewport = getViewport()
     const rect = this.selectorTarget.getBoundingClientRect();
 
@@ -215,6 +215,7 @@ export default class extends Controller {
     if (viewport.width - (rect.width + rect.right) < rect.width) {
       this.selectorTarget.style.left = 0;
     }
+    */
 
     this.selectorTarget.zIndex = maxZIndex() + 1;
  }
