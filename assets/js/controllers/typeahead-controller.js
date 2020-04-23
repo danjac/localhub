@@ -5,7 +5,7 @@ import { Controller } from 'stimulus';
 import axios from 'axios';
 import getCaretPosition from 'textarea-caret';
 
-//import getViewport from '@utils/getViewport';
+import getViewport from '@utils/getViewport';
 import maxZIndex from '@utils/maxZIndex';
 
 const ESC_KEY = 27;
@@ -204,21 +204,15 @@ export default class extends Controller {
     this.selectorTarget.style.left = offsetLeft - scrollLeft + left + 'px';
     this.selectorTarget.classList.remove('d-none');
 
-    /*
     const viewport = getViewport()
     const rect = this.selectorTarget.getBoundingClientRect();
 
-    if (viewport.height - ((rect.height * 2) + rect.bottom) < rect.height) {
-      this.selectorTarget.style.top = (rect.top - rect.height) + 'px';
+    if ((rect.width + rect.left) > viewport.width || (rect.width + rect.right) > viewport.width) {
+      this.selectorTarget.style.left = '25%';
     }
-
-    if (viewport.width - (rect.width + rect.right) < rect.width) {
-      this.selectorTarget.style.left = 0;
-    }
-    */
 
     this.selectorTarget.zIndex = maxZIndex() + 1;
- }
+  }
 
   closeSelector() {
     this.selectorTarget.classList.add('d-none');
