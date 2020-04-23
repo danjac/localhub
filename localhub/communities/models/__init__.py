@@ -69,14 +69,6 @@ class Community(TimeStampedModel):
     def __str__(self):
         return self.name
 
-    @property
-    def _history_user(self):
-        return self.admin
-
-    @_history_user.setter
-    def _history_user(self, value):
-        self.admin = value
-
     def get_absolute_url(self):
         protocol = "https" if settings.SECURE_SSL_REDIRECT else "http"
         return f"{protocol}://{self.domain}"
