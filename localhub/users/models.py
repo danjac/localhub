@@ -20,7 +20,7 @@ from localhub.communities.models import Membership
 from localhub.db.content_types import get_generic_related_queryset
 from localhub.db.fields import ChoiceArrayField
 from localhub.db.search import SearchIndexer, SearchQuerySetMixin
-from localhub.db.tracker import with_tracker
+from localhub.db.tracker import TrackerModelMixin
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
@@ -216,8 +216,7 @@ class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
         )
 
 
-@with_tracker("avatar", "name", "bio")
-class User(AbstractUser):
+class User(TrackerModelMixin, AbstractUser):
     class ActivityStreamFilters(models.TextChoices):
         USERS = "users", _("Limited to only content from people I'm following")
         TAGS = "tags", _("Limited to only tags I'm following")
@@ -261,6 +260,8 @@ class User(AbstractUser):
     search_document = SearchVectorField(null=True, editable=False)
 
     search_indexer = SearchIndexer(("A", "username"), ("B", "name"), ("C", "bio"))
+
+    tracked_fields = ["avatar", "name", "bio"]
 
     objects = UserManager()
 

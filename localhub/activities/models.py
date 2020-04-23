@@ -20,7 +20,7 @@ from localhub.db.content_types import (
     get_generic_related_queryset,
 )
 from localhub.db.search import SearchQuerySetMixin
-from localhub.db.tracker import with_tracker
+from localhub.db.tracker import TrackerModelMixin
 from localhub.db.utils import boolean_value
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.hashtags.fields import HashtagsField
@@ -342,8 +342,7 @@ class ActivityQuerySet(
         )
 
 
-@with_tracker("title", "description", "hashtags", "mentions")
-class Activity(TimeStampedModel):
+class Activity(TrackerModelMixin, TimeStampedModel):
     """
     Base class for all activity-related entities e.g. posts, events, photos.
     """
@@ -355,21 +354,6 @@ class Activity(TimeStampedModel):
         "hashtags",
         "mentions",
     ]
-
-    """
-    Due this bug in FieldTracker (related to issues with abstract
-    models) we need to implement FieldTrackers for each subclass:
-
-    https://github.com/jazzband/django-model-utils/pull/80
-
-    Remove these in subclasses if/when this is fixed.
-
-    hashtags_tracker = FieldTracker(fields=Activity.HASHTAGS_TRACKER_FIELDS)
-    mentions_tracker = FieldTracker(fields=Activity.MENTIONS_TRACKER_FIELDS)
-    """
-
-    HASHTAGS_FIELDS = ["title", "description", "hashtags"]
-    MENTIONS_FIELDS = ["title", "description", "mentions"]
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
@@ -421,10 +405,7 @@ class Activity(TimeStampedModel):
 
     search_document = SearchVectorField(null=True, editable=False)
 
-    TRACKED_FIELDS = {
-        "hashtags": HASHTAGS_FIELDS,
-        "mentions": MENTIONS_FIELDS,
-    }
+    tracked_fields = ["title", "description", "hashtags", "mentions"]
 
     objects = ActivityQuerySet.as_manager()
 

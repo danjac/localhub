@@ -20,7 +20,7 @@ from localhub.db.content_types import (
     get_generic_related_queryset,
 )
 from localhub.db.search import SearchIndexer, SearchQuerySetMixin
-from localhub.db.tracker import with_tracker
+from localhub.db.tracker import TrackerModelMixin
 from localhub.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.markdown.fields import MarkdownField
@@ -139,7 +139,7 @@ class CommentQuerySet(
             QuerySet
         """
         return self.select_related(
-            "owner", "parent", "community", "parent__owner", "parent__community"
+            "owner", "parent", "community", "parent__owner", "parent__community",
         ).prefetch_related("content_object")
 
     def deleted(self):
@@ -152,8 +152,7 @@ class CommentQuerySet(
         return self.update(content_type=None, object_id=None)
 
 
-@with_tracker("content")
-class Comment(TimeStampedModel):
+class Comment(TrackerModelMixin, TimeStampedModel):
 
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
@@ -188,6 +187,8 @@ class Comment(TimeStampedModel):
     notifications = GenericRelation(Notification, related_query_name="comment")
 
     search_indexer = SearchIndexer(("A", "content"))
+
+    tracked_fields = ["content"]
 
     objects = CommentQuerySet.as_manager()
 
