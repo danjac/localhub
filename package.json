@@ -11,11 +11,9 @@
   "lint-staged": {
     "./assets/**/*.js": [
       "prettier --write",
-      "git add"
     ],
     "./assets/**/*.scss": [
       "prettier --write",
-      "git add"
     ]
   },
   "devDependencies": {
