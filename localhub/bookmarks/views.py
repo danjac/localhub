@@ -1,11 +1,9 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.conf import settings
-from django.views.generic import ListView
-
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views.list import BaseCommentListView
+from localhub.private_messages.views.list import BaseMessageListView
 from localhub.private_messages.views.mixins import SenderOrRecipientQuerySetMixin
 from localhub.views import SearchMixin
 
@@ -13,7 +11,6 @@ from localhub.views import SearchMixin
 class BookmarksStreamView(SearchMixin, BaseActivityStreamView):
     template_name = "bookmarks/activities.html"
     ordering = ("-bookmarked", "-created")
-    paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
 
     def filter_queryset(self, queryset):
         qs = (
@@ -31,9 +28,8 @@ class BookmarksStreamView(SearchMixin, BaseActivityStreamView):
 bookmarks_stream_view = BookmarksStreamView.as_view()
 
 
-class BookmarksMessageListView(SenderOrRecipientQuerySetMixin, SearchMixin, ListView):
+class BookmarksMessageListView(SenderOrRecipientQuerySetMixin, BaseMessageListView):
     template_name = "bookmarks/messages.html"
-    paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
 
     def get_queryset(self):
         qs = (
@@ -53,7 +49,6 @@ bookmarks_message_list_view = BookmarksMessageListView.as_view()
 
 class BookmarksCommentListView(SearchMixin, BaseCommentListView):
     template_name = "bookmarks/comments.html"
-    paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
 
     def get_queryset(self):
         qs = (
