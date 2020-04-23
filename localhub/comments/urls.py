@@ -9,14 +9,11 @@ from .views.actions import (
     comment_like_view,
     comment_remove_bookmark_view,
 )
-from .views.create_update import (
-    comment_flag_view,
-    comment_reply_view,
-    comment_update_view,
-)
+from .views.create import comment_flag_view, comment_reply_view
 from .views.delete import comment_delete_view
 from .views.detail import comment_detail_view
 from .views.list import comment_list_view
+from .views.update import comment_update_view
 
 app_name = "comments"
 
