@@ -7,7 +7,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 
 from localhub.activities.models import Activity, ActivityQuerySet
-from localhub.db.search import SearchIndexer
+from localhub.db.search.indexer import SearchIndexer
 from localhub.notifications.decorators import dispatch
 
 

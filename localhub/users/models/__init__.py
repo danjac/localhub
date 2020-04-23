@@ -19,7 +19,7 @@ from timezone_field import TimeZoneField
 from localhub.communities.models import Membership
 from localhub.db.fields import ChoiceArrayField
 from localhub.db.generic import get_generic_related_queryset
-from localhub.db.search import SearchIndexer
+from localhub.db.search.indexer import SearchIndexer
 from localhub.db.tracker import TrackerModelMixin
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.decorators import dispatch

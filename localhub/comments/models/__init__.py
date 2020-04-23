@@ -16,7 +16,7 @@ from model_utils.models import TimeStampedModel
 from localhub.bookmarks.models import Bookmark
 from localhub.communities.models import Community
 from localhub.db.generic import get_generic_related_queryset
-from localhub.db.search import SearchIndexer
+from localhub.db.search.indexer import SearchIndexer
 from localhub.db.tracker import TrackerModelMixin
 from localhub.flags.models import Flag
 from localhub.likes.models import Like

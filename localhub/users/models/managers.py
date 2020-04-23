@@ -6,7 +6,7 @@ from django.contrib.auth.models import BaseUserManager
 from django.db import models
 
 from localhub.communities.models import Membership
-from localhub.db.search import SearchQuerySetMixin
+from localhub.db.search.mixins import SearchQuerySetMixin
 
 
 class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
