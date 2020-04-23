@@ -6,7 +6,7 @@ from django.db import models
 from localhub.bookmarks.models.mixins import BookmarkAnnotationsQuerySetMixin
 from localhub.communities.models import Membership
 from localhub.db.search import SearchQuerySetMixin
-from localhub.flags.models import FlagAnnotationsQuerySetMixin
+from localhub.flags.models.mixins import FlagAnnotationsQuerySetMixin
 from localhub.likes.models import LikeAnnotationsQuerySetMixin
 from localhub.notifications.models.mixins import NotificationAnnotationsQuerySetMixin
 
