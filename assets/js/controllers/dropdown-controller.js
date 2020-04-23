@@ -6,6 +6,7 @@ import { Controller } from 'stimulus';
 import maxZIndex from '@utils/maxZIndex';
 import getViewport from '@utils/getViewport';
 
+// test comment
 export default class extends Controller {
   /*
     Manages dropdown and keeps the menu visible within the viewport.
@@ -30,7 +31,7 @@ export default class extends Controller {
     this.element.classList.toggle('active');
 
     // ensure menu always appears within viewport
-    const viewport = getViewport()
+    const viewport = getViewport();
     const rect = this.menuTarget.getBoundingClientRect();
 
     let top, bottom, left, right;
