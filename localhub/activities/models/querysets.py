@@ -4,7 +4,7 @@
 from django.db import models
 
 from localhub.bookmarks.models import BookmarkAnnotationsQuerySetMixin
-from localhub.comments.models import CommentAnnotationsQuerySetMixin
+from localhub.comments.models.mixins import CommentAnnotationsQuerySetMixin
 from localhub.db.search import SearchQuerySetMixin
 from localhub.db.utils import boolean_value
 from localhub.flags.models import FlagAnnotationsQuerySetMixin
