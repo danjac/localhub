@@ -36,7 +36,7 @@ def get_pinned_activity(user, community):
         .with_common_annotations(user, community)
         .published()
         .exclude_blocked(user)
-        .select_related("owner")
+        .select_related("owner", "community")
         .filter(is_pinned=True)
     )
 
