@@ -13,15 +13,15 @@ from ..views.actions import (
     ActivityReshareView,
     ActivityUnpinView,
 )
-from ..views.delete import ActivityDeleteView
-from ..views.detail import ActivityDetailView
-from ..views.edit import (
+from ..views.create_update import (
     ActivityCommentCreateView,
     ActivityCreateView,
     ActivityFlagView,
     ActivityUpdateTagsView,
     ActivityUpdateView,
 )
+from ..views.delete import ActivityDeleteView
+from ..views.detail import ActivityDetailView
 from ..views.list import ActivityListView
 
 
