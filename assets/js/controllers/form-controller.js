@@ -5,7 +5,7 @@ import { Controller } from 'stimulus';
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-import * as alerts from '@utils/alerts';
+import { alerts } from '@utils/ui-helpers';
 
 export default class extends Controller {
   /*
@@ -105,7 +105,7 @@ export default class extends Controller {
     this.enableFormElements();
     if (err.response) {
       const { status, statusText } = err.response;
-      alerts.error(`${status}: ${statusText}`)
+      alerts.error(`${status}: ${statusText}`);
     }
   }
 

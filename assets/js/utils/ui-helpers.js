@@ -12,17 +12,19 @@ export function confirmDialog(options) {
   document.getElementById('confirm-dialog')['confirm-dialog'].open(options);
 }
 
-function makeAlert(message, level) {
-  const tmpl = document.getElementById('alert-template');
-  const clone = tmpl.content.cloneNode(true);
-  clone.querySelector('div').classList.add(`toast-${level}`);
-  clone.querySelector('span').appendChild(document.createTextNode(message));
-  document.getElementById('alert-container').appendChild(clone);
+function makeAlert(level) {
+  return (message) => {
+    const tmpl = document.getElementById('alert-template');
+    const clone = tmpl.content.cloneNode(true);
+    clone.querySelector('div').classList.add(`toast-${level}`);
+    clone.querySelector('span').appendChild(document.createTextNode(message));
+    document.getElementById('alert-container').appendChild(clone);
+  };
 }
 
 export const alerts = {
-  success: (message) => makeAlert('success'),
-  error: (message) => makeAlert('error'),
-  warning: (message) => makeAlert('warning'),
-  info: (message) => makeAlert('info'),
+  success: makeAlert('success'),
+  error: makeAlert('error'),
+  warning: makeAlert('warning'),
+  info: makeAlert('info'),
 };

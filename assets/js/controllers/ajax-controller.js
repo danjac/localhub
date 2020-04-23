@@ -5,8 +5,7 @@ import { Controller } from 'stimulus';
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-import * as alerts from '@utils/alerts';
-import confirmDialog from '@utils/confirm-dialog';
+import { alerts, confirmDialog } from '@utils/ui-helpers';
 
 export default class extends Controller {
   /*
