@@ -7,6 +7,7 @@ from localhub.users.urls import USERNAME_RE
 
 from .views.actions import (
     message_bookmark_view,
+    message_delete_view,
     message_mark_all_read_view,
     message_mark_read_view,
     message_remove_bookmark_view,
@@ -17,9 +18,7 @@ from .views.create import (
     message_recipient_create_view,
     message_reply_view,
 )
-from .views.delete import message_delete_view
-from .views.detail import message_detail_view
-from .views.list import inbox_view, outbox_view
+from .views.list_detail import inbox_view, message_detail_view, outbox_view
 
 app_name = "private_messages"
 

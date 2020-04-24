@@ -3,7 +3,7 @@
 
 from localhub.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views.list import BaseCommentListView
-from localhub.private_messages.views.list import BaseMessageListView
+from localhub.private_messages.views.list_detail import BaseMessageListView
 from localhub.private_messages.views.mixins import SenderOrRecipientQuerySetMixin
 from localhub.views import SearchMixin
 
