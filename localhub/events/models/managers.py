@@ -12,24 +12,76 @@ from localhub.db.utils import boolean_value
 
 
 class DateAdd(models.Func):
+    period = None
     arg_joiner = " + CAST("
-    template = "%(expressions)s || 'days' AS INTERVAL)"
     output_field = models.DateTimeField()
+
+    @property
+    def template(self):
+        return "%(expressions)s || '" + self.period + "' AS INTERVAL)"
+
+
+class DayAdd(DateAdd):
+    period = "days"
+
+
+class MonthAdd(models.Func):
+    period = "months"
+
+
+class YearAdd(models.Func):
+    period = "years"
 
 
 class EventQuerySet(ActivityQuerySet):
     def with_next_date(self):
-        """Annotates "next_date" accordingly:
+        """
 
-        1) if repeating, next day/matching weekday/day of month/annual date
-        2) if not repeating, start date.
+        If not repeating, just get the start date. Nothing more needed.
 
-        # note: we can do exact daily match in python on a smaller range, so doesn't need to
-        be super exact, just enough to make ordering work.
+        We begin with base_date:
 
-        for month to month views: start date, repeats within repeats until date:
-        if repeat every day or weekday, or if repeat every month within 30 days,
-        or repeat every year within 360 days.
+        1) for every day, return NOW().
+        2) for weekdays:
+
+        # get day of week (notice Cast to ensure int)
+        # this is indexed from 1=Sunday through 7=Saturday.
+
+        annotate(dow=Cast(ExtractWeekDay(F("starts")), IntegerField()))
+
+        # get start of week: this will be MONDAY.
+
+        annotate(sow=TruncWeek(Now()))
+
+        # add dow MINUS 2 to sow (minus one b/c starting from Monday, minus 1 b/c of start index of 1)
+
+        annotate(base_date=DayAdd(sow, F("dow") - 2))
+
+        3) monthly: this assumes the 1st of every month:
+
+        # get start of month:
+
+        annotate(base_date=TruncMonth(Now()))
+
+        4) annually: this assumes the same date as the start date.
+
+        # we can just go with date.
+
+        annotate(base_date=F("starts"))
+
+        Now we have the base date, determine if it is in future. If in future, use that. If in past,
+        we need to add the correct period.
+
+        annotate(next_date=Case(
+            When(Q(repeats__isnull=True), then=F("starts"))
+            When(Q(base_date__gte=Now()), then=F("base_date"))
+            When(Q(repeats="daily", then=DateAdd(F("base_date"), 1))),
+            When(Q(repeats="weekly", then=DateAdd(F("base_date", 7)))),
+            When(Q(repeats="monthly", then=MonthAdd(F("base_date", 1))))
+            When(Q(repeats="yearly", then=YearAdd(F("base_date", 1)))),
+            output_field=DateTimeField()
+            )
+        )
         """
         now = timezone.now()
 
