@@ -30,7 +30,7 @@ from localhub.utils.itertools import takefirst
 from localhub.utils.text import slugify_unicode
 
 from .. import signals
-from .querysets import ActivityQuerySet
+from .managers import ActivityManager
 
 
 class Activity(TrackerModelMixin, TimeStampedModel):
@@ -98,7 +98,7 @@ class Activity(TrackerModelMixin, TimeStampedModel):
 
     tracked_fields = ["title", "description", "hashtags", "mentions"]
 
-    objects = ActivityQuerySet.as_manager()
+    objects = ActivityManager()
 
     class Meta:
         indexes = [

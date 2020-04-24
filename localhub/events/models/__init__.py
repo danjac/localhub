@@ -19,7 +19,7 @@ from localhub.db.search.indexer import SearchIndexer
 from localhub.notifications.decorators import dispatch
 from localhub.utils.http import get_domain
 
-from .querysets import EventQuerySet
+from .managers import EventManager
 
 
 class Event(Activity):
@@ -106,7 +106,7 @@ class Event(Activity):
         ("A", "title"), ("B", "indexable_location"), ("C", "indexable_description")
     )
 
-    objects = EventQuerySet.as_manager()
+    objects = EventManager()
 
     class Meta(Activity.Meta):
         indexes = Activity.Meta.indexes + [

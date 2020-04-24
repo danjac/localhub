@@ -4,7 +4,7 @@
 from django.db import models
 from django.utils import timezone
 
-from localhub.activities.models.querysets import ActivityQuerySet
+from localhub.activities.models.managers import ActivityManager, ActivityQuerySet
 from localhub.db.utils import boolean_value
 
 
@@ -82,3 +82,7 @@ class EventQuerySet(ActivityQuerySet):
             .with_num_attendees()
             .is_attending(user)
         )
+
+
+class EventManager(ActivityManager.from_queryset(EventQuerySet)):
+    ...

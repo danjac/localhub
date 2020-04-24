@@ -19,7 +19,7 @@ from localhub.markdown.fields import MarkdownField
 from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
 
-from .querysets import MessageQuerySet
+from .managers import MessageManager
 
 
 class Message(TimeStampedModel):
@@ -55,7 +55,7 @@ class Message(TimeStampedModel):
     search_document = SearchVectorField(null=True, editable=False)
     search_indexer = SearchIndexer(("A", "message"))
 
-    objects = MessageQuerySet.as_manager()
+    objects = MessageManager()
 
     class Meta:
         indexes = [

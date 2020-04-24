@@ -65,3 +65,7 @@ class NotificationQuerySet(models.QuerySet):
         """
 
         return self.unread().update(is_read=True)
+
+
+class NotificationManager(models.Manager.from_queryset(NotificationQuerySet)):
+    ...

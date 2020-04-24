@@ -6,7 +6,8 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 
-from localhub.activities.models import Activity, ActivityQuerySet
+from localhub.activities.models import Activity
+from localhub.activities.models.managers import ActivityManager, ActivityQuerySet
 from localhub.db.search.indexer import SearchIndexer
 from localhub.notifications.decorators import dispatch
 
@@ -26,13 +27,17 @@ class PollQuerySet(ActivityQuerySet):
         return super().for_activity_stream(user, community).with_answers()
 
 
+class PollManager(ActivityManager.from_queryset(PollQuerySet)):
+    ...
+
+
 class Poll(Activity):
 
     allow_voting = models.BooleanField(default=True)
 
     search_indexer = SearchIndexer(("A", "title"), ("B", "indexable_description"))
 
-    objects = PollQuerySet.as_manager()
+    objects = PollManager()
 
     def __str__(self):
         return self.title or _("Poll")

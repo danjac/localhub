@@ -15,6 +15,10 @@ class MembershipQuerySet(SearchQuerySetMixin, models.QuerySet):
     search_document_field = "member__search_document"
 
 
+class MembershipManager(models.Manager.from_queryset(MembershipQuerySet)):
+    ...
+
+
 class CommunityQuerySet(models.QuerySet):
     def with_num_members(self):
         return self.annotate(num_members=models.Count("membership"))
@@ -67,3 +71,7 @@ class CommunityQuerySet(models.QuerySet):
         except self.model.DoesNotExist:
             site = get_current_site(request)
             return RequestCommunity(request, site.name, site.domain)
+
+
+class CommunityManager(models.Manager.from_queryset(CommunityQuerySet)):
+    ...

@@ -25,7 +25,7 @@ from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
 from localhub.utils.itertools import takefirst
 
-from .querysets import CommentQuerySet
+from .managers import CommentManager
 
 
 class Comment(TrackerModelMixin, TimeStampedModel):
@@ -66,7 +66,7 @@ class Comment(TrackerModelMixin, TimeStampedModel):
 
     tracked_fields = ["content"]
 
-    objects = CommentQuerySet.as_manager()
+    objects = CommentManager()
 
     class Meta:
         indexes = [

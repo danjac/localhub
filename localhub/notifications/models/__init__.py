@@ -13,7 +13,7 @@ from pywebpush import WebPushException, webpush
 
 from localhub.communities.models import Community
 
-from .querysets import NotificationQuerySet
+from .managers import NotificationManager
 
 
 class Notification(TimeStampedModel):
@@ -38,7 +38,7 @@ class Notification(TimeStampedModel):
     verb = models.CharField(max_length=30)
     is_read = models.BooleanField(default=False)
 
-    objects = NotificationQuerySet.as_manager()
+    objects = NotificationManager()
 
     class Meta:
         indexes = [

@@ -15,7 +15,7 @@ from sorl.thumbnail import ImageField
 from localhub.hashtags.utils import extract_hashtags
 from localhub.markdown.fields import MarkdownField
 
-from .querysets import CommunityQuerySet, MembershipQuerySet
+from .managers import CommunityManager, MembershipManager
 
 DOMAIN_VALIDATOR = RegexValidator(
     regex=URLValidator.host_re, message=_("This is not a valid domain")
@@ -61,7 +61,7 @@ class Community(TimeStampedModel):
 
     blacklisted_email_addresses = models.TextField(blank=True)
 
-    objects = CommunityQuerySet.as_manager()
+    objects = CommunityManager()
 
     class Meta:
         verbose_name_plural = _("Communities")
@@ -146,7 +146,7 @@ class Membership(TimeStampedModel):
     )
     active = models.BooleanField(default=True)
 
-    objects = MembershipQuerySet.as_manager()
+    objects = MembershipManager()
 
     class Meta:
         constraints = [

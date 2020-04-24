@@ -276,3 +276,7 @@ class MessageQuerySet(
             replies.values("parent").annotate(count=models.Count("pk")).values("count"),
             output_field=models.IntegerField(),
         )
+
+
+class MessageManager(models.Manager.from_queryset(MessageQuerySet)):
+    ...

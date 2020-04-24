@@ -112,3 +112,7 @@ class CommentQuerySet(
         Sets content object FKs to NULL.
         """
         return self.update(content_type=None, object_id=None)
+
+
+class CommentManager(models.Manager.from_queryset(CommentQuerySet)):
+    ...

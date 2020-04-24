@@ -312,3 +312,7 @@ class ActivityQuerySet(
         return self.with_common_annotations(user, community).select_related(
             "owner", "community", "parent", "parent__owner"
         )
+
+
+class ActivityManager(models.Manager.from_queryset(ActivityQuerySet)):
+    ...
