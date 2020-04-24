@@ -4,8 +4,10 @@
 from django.forms import inlineformset_factory
 from django.utils.functional import cached_property
 
-from localhub.activities.views.create import ActivityCreateView
-from localhub.activities.views.update import ActivityUpdateView
+from localhub.activities.views.create_update import (
+    ActivityCreateView,
+    ActivityUpdateView,
+)
 
 from ..models import Answer, Poll
 
