@@ -69,7 +69,7 @@
 
     {% if object.contact_phone %}
     <dt>{% trans "Phone" %}</dt>
-    <dd>{{ object.contact_phone }}</dd>
+    <dd>{{ object.contact_phone|phone2numeric }}</dd>
     {% endif %}
 
     {% if object.ticket_price %}

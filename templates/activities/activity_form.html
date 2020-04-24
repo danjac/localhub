@@ -46,7 +46,11 @@
 {% endwith %}
 
 {% block form %}
-{% include "activities/includes/activity_form.html" with multipart=True %}
+{% if object.id %}
+{% include "activities/includes/activity_form.html" with multipart=True is_new=False is_private=False %}
+{% else %}
+{% include "activities/includes/activity_form.html" with multipart=True is_new=True is_private=view.is_private %}
+{% endif %}
 {% endblock %}
 
 {% endblock content %}

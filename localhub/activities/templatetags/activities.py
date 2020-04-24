@@ -7,12 +7,19 @@ from django import template
 from localhub.utils.http import is_https
 
 from ..oembed import bootstrap_oembed
-from ..utils import get_activity_querysets, load_objects
+from ..utils import get_activity_models, get_activity_querysets, load_objects
 
 register = template.Library()
 
 
 _oembed_registry = bootstrap_oembed()
+
+
+@register.simple_tag(name="get_activity_models")
+def _get_activity_models():
+    """Just dumps the activity model class list into the template.
+    """
+    return get_activity_models()
 
 
 @register.simple_tag

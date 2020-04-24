@@ -4,6 +4,7 @@
 {% extends "includes/forms/stimulusjs_form.html" %}
 
 {% load i18n %}
+{% load activities %}
 {% load users %}
 
 {% block form_fields %}
@@ -26,21 +27,54 @@ will be concealed by default: <b>{{ tags_joined }}</b>.
 {{ block.super }}
 {% endblock form_fields %}
 {% block form_buttons %}
-{% if view.is_private or object.id %}
-{{ block.super }}
+{% if is_new %}
+<div class="container">
+  <div class="columns">
+    <div class="column col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 ml-0 pl-0 pb-1">
+
+      {% if is_private %}
+      {{ block.super }}
+      {% else %}
+      <button type="submit"
+              name="submit"
+              class="btn btn-primary">
+        {% trans "Publish" %}
+      </button>
+      <button type="submit"
+              name="save_private"
+              value="true"
+              data-action="form#submit"
+              class="btn btn-secondary">
+        {% trans "Save Private" %}
+      </button>
+      {% endif %}
+
+      {% spaceless %}
+    </div>
+    <div class="column col-mx-auto pl-0 ml-0 pb-1">
+      <div class="float-right-sm">
+        {% get_activity_models as activity_models %}
+        {% for model in activity_models %}
+        {% with model_name=model|verbose_name %}
+        {# for some reason this doesn't match directly #}
+        {% if model_name != view.model|verbose_name %}
+        <a class="btn btn-secondary{% if not forloop.last %} mr-1{% endif %}"
+           href="{% if is_private %}{{ model|resolve_url:"create_private" }}{% else %}{{ model|resolve_url:"create" }}{% endif %}">
+          {% blocktrans with model_name=model_name|title %}Submit {{ model_name }}{% endblocktrans %}
+        </a>
+        {% endif %}
+        {% endwith %}
+        {% endfor %}
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+  {% endspaceless %}
+</div>
+</div>
+</div>
 {% else %}
-<button type="submit"
-        name="submit"
-        class="btn btn-primary">
-  {% trans "Publish" %}
-</button>
-<button type="submit"
-        name="save_private"
-        value="true"
-        data-action="form#submit"
-        class="btn btn-secondary">
-  {% trans "Save Private" %}
-</button>
+{{ block.super }}
 {% endif %}
 
 {% endblock form_buttons %}
