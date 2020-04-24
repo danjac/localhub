@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.db import models
-from django.utils import timezone
+from django.db.models.functions import Now
 
 from localhub.activities.models.managers import ActivityManager, ActivityQuerySet
 from localhub.db.utils import boolean_value
@@ -53,7 +53,7 @@ class EventQuerySet(ActivityQuerySet):
                     models.Q(published__isnull=True) | models.Q(canceled__isnull=False),
                     then=models.Value(-1),
                 ),
-                models.When(starts__gte=timezone.now(), then=models.Value(1)),
+                models.When(starts__gte=Now(), then=models.Value(1)),
                 default=0,
                 output_field=models.IntegerField(),
             )
@@ -66,11 +66,10 @@ class EventQuerySet(ActivityQuerySet):
         Returns:
             QuerySet
         """
-        now = timezone.now()
         return self.annotate(
             timedelta=models.Case(
-                models.When(starts__gte=now, then=models.F("starts") - now),
-                models.When(starts__lt=now, then=now - models.F("starts")),
+                models.When(starts__gte=Now(), then=models.F("starts") - Now()),
+                models.When(starts__lt=Now(), then=Now() - models.F("starts")),
                 output_field=models.DurationField(),
             )
         )
