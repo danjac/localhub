@@ -1,10 +1,16 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from localhub.views import SuccessActionView, SuccessView
+from django.http import HttpResponseRedirect
+
+from localhub.views import SuccessActionView, SuccessDeleteView, SuccessView
 
 from ..signals import notification_read
-from .mixins import NotificationSuccessRedirectMixin, UnreadNotificationQuerySetMixin
+from .mixins import (
+    NotificationQuerySetMixin,
+    NotificationSuccessRedirectMixin,
+    UnreadNotificationQuerySetMixin,
+)
 
 
 class NotificationMarkAllReadView(
@@ -41,3 +47,27 @@ class NotificationMarkReadView(
 
 
 notification_mark_read_view = NotificationMarkReadView.as_view()
+
+
+class NotificationDeleteAllView(
+    NotificationQuerySetMixin, NotificationSuccessRedirectMixin, SuccessView
+):
+    def delete(self, request):
+        self.get_queryset().delete()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def post(self, request):
+        return self.delete(request)
+
+
+notification_delete_all_view = NotificationDeleteAllView.as_view()
+
+
+class NotificationDeleteView(
+    NotificationQuerySetMixin, NotificationSuccessRedirectMixin, SuccessDeleteView
+):
+
+    ...
+
+
+notification_delete_view = NotificationDeleteView.as_view()
