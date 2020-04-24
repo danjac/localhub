@@ -14,8 +14,11 @@ from localhub.communities.views import (
     community_sidebar_view,
     community_welcome_view,
 )
-from localhub.users.views.actions import dismiss_notice_view, switch_theme_view
-from localhub.users.views.delete import user_delete_view
+from localhub.users.views.actions import (
+    dismiss_notice_view,
+    switch_theme_view,
+    user_delete_view,
+)
 from localhub.users.views.update import user_update_view
 
 urlpatterns = [

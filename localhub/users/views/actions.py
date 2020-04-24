@@ -6,13 +6,31 @@ import datetime
 from django.conf import settings
 from django.http import Http404, HttpResponse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import View
+from django.views.generic import DeleteView, View
 
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.views import SuccessActionView
 
 from .mixins import CurrentUserMixin, UserQuerySetMixin
+
+
+class UserDeleteView(CurrentUserMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = "users.delete_user"
+    success_url = settings.LOCALHUB_HOME_PAGE_URL
+    template_name = "users/user_confirm_delete.html"
+
+
+user_delete_view = UserDeleteView.as_view()
+
+
+class UserDeleteView(CurrentUserMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = "users.delete_user"
+    success_url = settings.LOCALHUB_HOME_PAGE_URL
+    template_name = "users/user_confirm_delete.html"
+
+
+user_delete_view = UserDeleteView.as_view()
 
 
 class BaseUserActionView(UserQuerySetMixin, SuccessActionView):
@@ -76,6 +94,15 @@ class UserUnblockView(BaseUserBlockView):
 
 
 user_unblock_view = UserUnblockView.as_view()
+
+
+class UserDeleteView(CurrentUserMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = "users.delete_user"
+    success_url = settings.LOCALHUB_HOME_PAGE_URL
+    template_name = "users/user_confirm_delete.html"
+
+
+user_delete_view = UserDeleteView.as_view()
 
 
 class DismissNoticeView(CurrentUserMixin, View):
