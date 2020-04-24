@@ -7,28 +7,10 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 
 from localhub.activities.models import Activity
-from localhub.activities.models.managers import ActivityManager, ActivityQuerySet
 from localhub.db.search.indexer import SearchIndexer
 from localhub.notifications.decorators import dispatch
 
-
-class PollQuerySet(ActivityQuerySet):
-    def with_answers(self):
-        return self.prefetch_related(
-            models.Prefetch(
-                "answers",
-                queryset=Answer.objects.annotate(
-                    num_votes=models.Count("voters", distinct=True)
-                ).order_by("id"),
-            )
-        )
-
-    def for_activity_stream(self, user, community):
-        return super().for_activity_stream(user, community).with_answers()
-
-
-class PollManager(ActivityManager.from_queryset(PollQuerySet)):
-    ...
+from .managers import PollManager
 
 
 class Poll(Activity):
