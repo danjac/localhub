@@ -13,11 +13,15 @@ from localhub.activities.views.mixins import ActivityQuerySetMixin
 from ..models import Event
 
 
-class EventCancelView(BaseActivityActionView):
+class BaseEventActionView(BaseActivityActionView):
+
+    model = Event
+
+
+class EventCancelView(BaseEventActionView):
     success_message = _("This event has been canceled")
 
     permission_required = "events.cancel"
-    model = Event
 
     def post(self, request, *args, **kwargs):
         self.object.canceled = timezone.now()
@@ -29,10 +33,9 @@ class EventCancelView(BaseActivityActionView):
 event_cancel_view = EventCancelView.as_view()
 
 
-class BaseEventAttendView(BaseActivityActionView):
+class BaseEventAttendView(BaseEventActionView):
     permission_required = "events.attend"
     is_success_ajax_response = True
-    model = Event
 
 
 class EventAttendView(BaseEventAttendView):
