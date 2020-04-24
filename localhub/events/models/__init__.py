@@ -67,10 +67,26 @@ class Event(Activity):
         ]
     )
 
+    class RepeatChoices(models.TextChoices):
+        DAILY = "day", _("Same time every day")
+        WEEKLY = "week", _("Same day of the week at the same time")
+        MONTHLY = (
+            "month",
+            _("Same day of the month at the same time (or last day of month)"),
+        )
+        YEARLY = "year", _("Same date and time every year")
+
     url = models.URLField(verbose_name=_("Link"), max_length=500, null=True, blank=True)
 
     starts = models.DateTimeField(verbose_name=_("Starts on (UTC)"))
+    # Note: "ends" must be same day if repeating
     ends = models.DateTimeField(null=True, blank=True)
+
+    # Q: how to manage query distance : need to build "next date" in queryset
+    # i.e. get the start date, if daily: next date; if monthly next day of month and so on
+    repeats = models.CharField(max_length=20, choices=RepeatChoices.choices, null=True)
+    # if empty, runs indefinitely until canceled
+    repeats_until = models.DateTimeField(null=True, blank=True)
 
     timezone = TimeZoneField(default=settings.TIME_ZONE)
 
@@ -122,6 +138,15 @@ class Event(Activity):
 
     def get_domain(self):
         return get_domain(self.url) or ""
+
+    def matches_date(self, value):
+        """
+        Check if value (date or datetime) matches this date:
+
+        1) start time is on this date.
+        2) date falls between start and end time.
+        3) is repeating and this date falls into one of the options.
+        """
 
     def get_starts_with_tz(self):
         """Returns timezone-adjusted start time.
