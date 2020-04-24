@@ -3,6 +3,7 @@
 
 from django.conf import settings
 from django.db import IntegrityError
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -10,10 +11,10 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.bookmarks.models import Bookmark
 from localhub.likes.models import Like
-from localhub.views import SuccessActionView
+from localhub.views import SuccessActionView, SuccessDeleteView
 
 from ..utils import get_activity_models
-from .mixins import ActivityQuerySetMixin
+from .mixins import ActivityQuerySetMixin, ActivityTemplateMixin
 
 
 class BaseActivityActionView(
@@ -159,3 +160,29 @@ class ActivityDislikeView(BaseActivityLikeView):
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
+
+
+class ActivityDeleteView(
+    PermissionRequiredMixin,
+    ActivityQuerySetMixin,
+    ActivityTemplateMixin,
+    SuccessDeleteView,
+):
+    permission_required = "activities.delete_activity"
+    success_message = _("You have deleted this %(model)s")
+
+    def get_success_url(self):
+        if self.object.deleted or self.object.published:
+            return settings.LOCALHUB_HOME_PAGE_URL
+        return reverse("activities:private")
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if self.request.user != self.object.owner:
+            self.object.soft_delete()
+            self.object.notify_on_delete(self.request.user)
+        else:
+            self.object.delete()
+
+        return self.success_response()

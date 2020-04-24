@@ -5,6 +5,7 @@ from django.urls import path
 
 from ..views.actions import (
     ActivityBookmarkView,
+    ActivityDeleteView,
     ActivityDislikeView,
     ActivityLikeView,
     ActivityPinView,
@@ -18,7 +19,6 @@ from ..views.create import (
     ActivityCreateView,
     ActivityFlagView,
 )
-from ..views.delete import ActivityDeleteView
 from ..views.detail import ActivityDetailView
 from ..views.list import ActivityListView
 from ..views.update import ActivityUpdateTagsView, ActivityUpdateView
