@@ -2,28 +2,19 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.db import models
+from django.db.models.functions import Now  # ExtractWeekDay, Now
 from django.utils import timezone
 
 from localhub.activities.models.managers import ActivityManager, ActivityQuerySet
 from localhub.db.utils import boolean_value
 
-# TBD: these will live in a utils module
+# this should go under localhub.db.functions
 
 
-def next_day(dt):
-    ...
-
-
-def next_weekday(dt):
-    ...
-
-
-def next_month_date(dt):
-    ...
-
-
-def next_annual_date(dt):
-    ...
+class DateAdd(models.Func):
+    arg_joiner = " + CAST("
+    template = "%(expressions)s || 'days' AS INTERVAL)"
+    output_field = models.DateTimeField()
 
 
 class EventQuerySet(ActivityQuerySet):
@@ -32,38 +23,49 @@ class EventQuerySet(ActivityQuerySet):
 
         1) if repeating, next day/matching weekday/day of month/annual date
         2) if not repeating, start date.
+
+        # note: we can do exact daily match in python on a smaller range, so doesn't need to
+        be super exact, just enough to make ordering work.
+
+        for month to month views: start date, repeats within repeats until date:
+        if repeat every day or weekday, or if repeat every month within 30 days,
+        or repeat every year within 360 days.
         """
         now = timezone.now()
 
         return self.annotate(
-            next_day=models.Case(
+            days_diff=models.Case(
                 models.When(
                     models.Q(
                         repeats_until__gt=now, repeats=self.model.RepeatsChoices.DAILY,
                     ),
-                    then=models.Value(next_day(models.F("starts"))),
+                    # + 1 day
+                    then=models.Value(),
                 ),
                 models.When(
                     models.Q(
                         repeats_until__gt=now, repeats=self.model.RepeatsChoices.WEEKLY,
                     ),
-                    then=models.Value(next_weekday(models.F("starts"))),
+                    # + 1 week
+                    then=models.Value(),
                 ),
                 models.When(
                     models.Q(
                         repeats_until__gt=now,
                         repeats=self.model.RepeatsChoices.MONTHLY,
                     ),
-                    then=models.Value(next_month_date(models.F("starts"))),
+                    # + 1 month
+                    then=models.Value(),
                 ),
                 models.When(
                     models.Q(
                         repeats_until__gt=now, repeats=self.model.RepeatsChoices.YEARLY,
                     ),
-                    then=models.Value(next_annual_date(models.F("starts"))),
+                    # + 365 days
+                    then=models.Value(),
                 ),
-                default=models.F("starts"),
-                output_value=models.DateTime(),
+                default=None,
+                output_value=models.IntegerField,
             )
         )
 
@@ -111,7 +113,7 @@ class EventQuerySet(ActivityQuerySet):
                     models.Q(published__isnull=True) | models.Q(canceled__isnull=False),
                     then=models.Value(-1),
                 ),
-                models.When(starts__gte=timezone.now(), then=models.Value(1)),
+                models.When(starts__gte=Now(), then=models.Value(1)),
                 default=0,
                 output_field=models.IntegerField(),
             )
