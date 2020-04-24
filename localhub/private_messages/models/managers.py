@@ -250,6 +250,19 @@ class MessageQuerySet(
 
         return self.filter(pk__in=[obj.id for obj in self.raw(query)])
 
+    def notifications(self):
+        """
+        Returns:
+            QuerySet: Notifications associated with objects in this QuerySet
+        """
+        return get_generic_related_queryset(self, Notification)
+
+    def _reply_count_subquery(self, replies):
+        return models.Subquery(
+            replies.values("parent").annotate(count=models.Count("pk")).values("count"),
+            output_field=models.IntegerField(),
+        )
+
     def mark_read(self):
         """Mark read any un-read items. Associated Notifications
         are also marked read.
@@ -263,19 +276,6 @@ class MessageQuerySet(
         q = self.unread()
         q.notifications().mark_read()
         return q.update(read=timezone.now())
-
-    def notifications(self):
-        """
-        Returns:
-            QuerySet: Notifications associated with objects in this QuerySet
-        """
-        return get_generic_related_queryset(self, Notification)
-
-    def _reply_count_subquery(self, replies):
-        return models.Subquery(
-            replies.values("parent").annotate(count=models.Count("pk")).values("count"),
-            output_field=models.IntegerField(),
-        )
 
 
 class MessageManager(models.Manager.from_queryset(MessageQuerySet)):

@@ -115,4 +115,5 @@ class CommentQuerySet(
 
 
 class CommentManager(models.Manager.from_queryset(CommentQuerySet)):
+
     ...

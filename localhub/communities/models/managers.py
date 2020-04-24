@@ -62,6 +62,8 @@ class CommunityQuerySet(models.QuerySet):
             .distinct()
         )
 
+
+class CommunityManager(models.Manager.from_queryset(CommunityQuerySet)):
     def get_current(self, request):
         """
         Returns current community matching request domain if active.
@@ -71,7 +73,3 @@ class CommunityQuerySet(models.QuerySet):
         except self.model.DoesNotExist:
             site = get_current_site(request)
             return RequestCommunity(request, site.name, site.domain)
-
-
-class CommunityManager(models.Manager.from_queryset(CommunityQuerySet)):
-    ...

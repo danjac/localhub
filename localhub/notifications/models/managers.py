@@ -68,4 +68,5 @@ class NotificationQuerySet(models.QuerySet):
 
 
 class NotificationManager(models.Manager.from_queryset(NotificationQuerySet)):
+
     ...
