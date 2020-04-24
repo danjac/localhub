@@ -21,8 +21,7 @@ from ..views.create_update import (
     ActivityUpdateTagsView,
     ActivityUpdateView,
 )
-from ..views.detail import ActivityDetailView
-from ..views.list import ActivityListView
+from ..views.list_detail import ActivityDetailView, ActivityListView
 
 
 def create_activity_urls(

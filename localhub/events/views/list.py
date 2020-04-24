@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.views.generic.dates import DateMixin, DayMixin, MonthMixin, YearMixin
 
-from localhub.activities.views.list import ActivityListView, BaseActivityListView
+from localhub.activities.views.list_detail import ActivityListView, BaseActivityListView
 
 from ..models import Event
 
