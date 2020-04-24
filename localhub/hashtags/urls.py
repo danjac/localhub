@@ -9,11 +9,11 @@ from .views.actions import (
     tag_unblock_view,
     tag_unfollow_view,
 )
-from .views.detail import tag_detail_view
-from .views.list import (
+from .views.list_detail import (
     blocked_tag_list_view,
     following_tag_list_view,
     tag_autocomplete_list_view,
+    tag_detail_view,
     tag_list_view,
 )
 
