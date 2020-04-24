@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 class PhotoForm(ActivityForm):
+    class InvalidGPSLocation(ValueError):
+        ...
 
     extract_gps_data = forms.BooleanField(
         label=_("Extract GPS data from image if available"), required=False,
@@ -62,21 +64,28 @@ class PhotoForm(ActivityForm):
 
     def clean(self):
         cleaned_data = super(PhotoForm, self).clean()
+        try:
+            image = cleaned_data["image"]
+        except KeyError:
+            return cleaned_data
 
-        if self.cleaned_data.get("clear_gps_data"):
-            cleaned_data["latitude"] = None
-            cleaned_data["longitude"] = None
-        elif self.cleaned_data["extract_gps_data"]:
+        latitude = cleaned_data.get("latitude")
+        longitude = cleaned_data.get("longitude")
+
+        if cleaned_data.get("clear_gps_data"):
+            latitude, longitude = (None, None)
+
+        elif cleaned_data["extract_gps_data"]:
+
             try:
-                lat, lng = Exif.from_image(self.cleaned_data["image"]).locate()
-                cleaned_data["latitude"] = lat
-                cleaned_data["longitude"] = lng
-            except Exif.Invalid as e:
-                logger.error(e)
-                cleaned_data["latitude"] = None
-                cleaned_data["longitude"] = None
+                latitude, longitude = Exif.from_image(image).locate()
+            except Exif.Invalid:
+                latitude, longitude = (None, None)
+
+        cleaned_data["latitude"] = latitude
+        cleaned_data["longitude"] = longitude
 
         # try and get title from photo if missing
         if not cleaned_data["title"]:
-            cleaned_data["title"] = cleaned_data["image"].name
+            cleaned_data["title"] = image.name
         return cleaned_data

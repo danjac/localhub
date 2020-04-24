@@ -21,6 +21,11 @@ class TestPhotoCreateView:
         response = client.get(reverse("photos:create"))
         assert response.status_code == 200
 
+    def test_post_missing_image(self, client, member):
+        response = client.post(reverse("photos:create"), {"title": "test"})
+        assert response.status_code == "200"
+        assert "image" in response.context["form"].errors
+
     def test_post(self, client, member, fake_image, send_webpush_mock):
         response = client.post(
             reverse("photos:create"), {"title": "test", "image": fake_image}
