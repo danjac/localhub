@@ -38,7 +38,12 @@ COMMON_EMOJIS = [
                 "markdown": ":smile:",
                 "image": "images/emojis/smile.png",
             },
-            {"label": _("Joy"), "markdown": ":joy:", "image": "images/emojis/joy.png"},
+            {
+                "label": _("Wink"),
+                "markdown": ":wink:",
+                "image": "images/emojis/wink.png",
+            },
+            {"label": _("Joy"), "markdown": ":joy:", "image": "images/emojis/joy.png",},
             {
                 "label": _("Laughing"),
                 "markdown": ":laughing:",
@@ -49,7 +54,7 @@ COMMON_EMOJIS = [
                 "markdown": ":thinking:",
                 "image": "images/emojis/thinking.png",
             },
-            {"label": _("Sob"), "markdown": ":sob:", "image": "images/emojis/sob.png"},
+            {"label": _("Sob"), "markdown": ":sob:", "image": "images/emojis/sob.png",},
             {
                 "label": _("Heart Eyes"),
                 "markdown": ":heart_eyes:",
@@ -216,8 +221,8 @@ COMMON_EMOJIS = [
                 "markdown": ":skull:",
                 "image": "images/emojis/skull.png",
             },
-            {"label": _("Zap"), "markdown": ":zap:", "image": "images/emojis/zap.png"},
-            {"label": _("ZZZ"), "markdown": ":zzz:", "image": "images/emojis/zzz.png"},
+            {"label": _("Zap"), "markdown": ":zap:", "image": "images/emojis/zap.png",},
+            {"label": _("ZZZ"), "markdown": ":zzz:", "image": "images/emojis/zzz.png",},
         ],
     },
     {
@@ -238,7 +243,7 @@ COMMON_EMOJIS = [
                 "markdown": ":bulb:",
                 "image": "images/emojis/bulb.png",
             },
-            {"label": _("Bus"), "markdown": ":bus:", "image": "images/emojis/bus.png"},
+            {"label": _("Bus"), "markdown": ":bus:", "image": "images/emojis/bus.png",},
             {
                 "label": _("Car"),
                 "markdown": ":blue_car:",
@@ -289,7 +294,7 @@ COMMON_EMOJIS = [
                 "markdown": ":coffee:",
                 "image": "images/emojis/coffee.png",
             },
-            {"label": _("Tea"), "markdown": ":tea:", "image": "images/emojis/tea.png"},
+            {"label": _("Tea"), "markdown": ":tea:", "image": "images/emojis/tea.png",},
             {
                 "label": _("Cookie"),
                 "markdown": ":cookie:",
@@ -360,16 +365,16 @@ COMMON_EMOJIS = [
                 "markdown": ":fi:",
                 "image": "images/emojis/finland.png",
             },
-            {"label": _("Japan"), "markdown": ":jp:", "image": "images/emojis/jp.png"},
-            {"label": _("UK"), "markdown": ":gb:", "image": "images/emojis/uk.png"},
-            {"label": _("USA"), "markdown": ":us:", "image": "images/emojis/us.png"},
+            {"label": _("Japan"), "markdown": ":jp:", "image": "images/emojis/jp.png",},
+            {"label": _("UK"), "markdown": ":gb:", "image": "images/emojis/uk.png",},
+            {"label": _("USA"), "markdown": ":us:", "image": "images/emojis/us.png",},
         ],
     },
     {
         "name": _("Nature"),
         "emojis": [
-            {"label": _("Cat"), "markdown": ":cat:", "image": "images/emojis/cat.png"},
-            {"label": _("Dog"), "markdown": ":dog:", "image": "images/emojis/dog.png"},
+            {"label": _("Cat"), "markdown": ":cat:", "image": "images/emojis/cat.png",},
+            {"label": _("Dog"), "markdown": ":dog:", "image": "images/emojis/dog.png",},
             {
                 "label": _("Rainbow"),
                 "markdown": ":rainbow:",
