@@ -7,8 +7,66 @@ from django.utils import timezone
 from localhub.activities.models.managers import ActivityManager, ActivityQuerySet
 from localhub.db.utils import boolean_value
 
+# TBD: these will live in a utils module
+
+
+def next_day(dt):
+    ...
+
+
+def next_weekday(dt):
+    ...
+
+
+def next_month_date(dt):
+    ...
+
+
+def next_annual_date(dt):
+    ...
+
 
 class EventQuerySet(ActivityQuerySet):
+    def with_next_date(self):
+        """Annotates "next_date" accordingly:
+
+        1) if repeating, next day/matching weekday/day of month/annual date
+        2) if not repeating, start date.
+        """
+        now = timezone.now()
+
+        return self.annotate(
+            next_day=models.Case(
+                models.When(
+                    models.Q(
+                        repeats_until__gt=now, repeats=self.model.RepeatsChoices.DAILY,
+                    ),
+                    then=models.Value(next_day(models.F("starts"))),
+                ),
+                models.When(
+                    models.Q(
+                        repeats_until__gt=now, repeats=self.model.RepeatsChoices.WEEKLY,
+                    ),
+                    then=models.Value(next_weekday(models.F("starts"))),
+                ),
+                models.When(
+                    models.Q(
+                        repeats_until__gt=now,
+                        repeats=self.model.RepeatsChoices.MONTHLY,
+                    ),
+                    then=models.Value(next_month_date(models.F("starts"))),
+                ),
+                models.When(
+                    models.Q(
+                        repeats_until__gt=now, repeats=self.model.RepeatsChoices.YEARLY,
+                    ),
+                    then=models.Value(next_annual_date(models.F("starts"))),
+                ),
+                default=models.F("starts"),
+                output_value=models.DateTime(),
+            )
+        )
+
     def is_attending(self, user):
         """Annotates "is_attending" if user is attending the event.
 
