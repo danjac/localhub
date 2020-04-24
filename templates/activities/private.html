@@ -4,7 +4,6 @@
 {% extends "activities/base.html" %}
 
 {% load i18n %}
-{% load rules %}
 {% load users %}
 
 {% block subtitle %} / {% trans "Private Stash" %}{% endblock %}
@@ -19,44 +18,14 @@ them later by clicking on the "Publish" button in the Actions menu.
 {% enddismissable %}
 
 {% block content %}
-<div class="float-left">
-  <h1 class="page-header">{% trans "Private Stash" %}</h1>
-</div>
+<h1 class="page-header">{% trans "Private Stash" %}</h1>
 
-{% has_perm 'activities.create_activity' user community as can_create_activity %}
-
-{% if can_create_activity %}
-<div class="float-right">
-  <div class="dropdown mr-2"
-       data-controller="dropdown">
-    <button class="btn btn-sm"
-            data-action="dropdown#toggle">
-      {% trans "Submit..." %}<i class="icon icon-caret"></i>
-    </button>
-    <ul class="menu"
-        data-target="dropdown.menu">
-      <li class="menu-item">
-        <a href="{% url 'posts:create_private' %}">{% trans "Private Post" %}</a>
-      </li>
-      <li class="menu-item">
-        <a href="{% url 'events:create_private' %}">{% trans "Private Event" %}</a>
-      </li>
-      <li class="menu-item">
-        <a href="{% url 'photos:create_private' %}">{% trans "Private Photo" %}</a>
-      </li>
-      <li class="menu-item">
-        <a href="{% url 'polls:create_private' %}">{% trans "Private Poll" %}</a>
-      </li>
-    </ul>
-  </div>
-</div>
-{% endif %}
-
-<div class="clearfix"></div>
+{% include "activities/includes/submit_cta.html" with is_private=True %}
 
 {% if paginator.count or view.search_query %}
 {% include "includes/forms/search_form.html" with selector=True %}
 {% endif %}
+
 
 {% include "activities/includes/activity_list.html" %}
 {% endblock content %}

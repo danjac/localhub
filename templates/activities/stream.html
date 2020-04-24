@@ -4,7 +4,6 @@
 {% extends "activities/base.html" %}
 
 {% load i18n %}
-{% load rules %}
 {% load activities %}
 {% load notifications %}
 {% load users %}
@@ -33,26 +32,7 @@
 {% render_activity request user pinned.object is_pinned=True css_class="mb-2" %}
 {% endif %}
 
-{% has_perm "activities.create_activity" user community as can_create_activity %}
-
-{% if can_create_activity %}
-<div class="submit-cta mb-2 p-0">
-  <div class="input-group"
-       data-controller="ajax"
-       data-action="click->ajax#get"
-       data-ajax-url="{% url 'posts:create' %}"
-       data-ajax-follow>
-    <span class="input-group-addon">
-      {% avatar user %}
-    </span>
-    <input type="text"
-           New
-           class="form-input homepage-cta-input"
-           data-action="focus->ajax#get"
-           placeholder="{% trans "What's on your mind?" %}">
-  </div>
-</div>
-{% endif %}
+{% include "activities/includes/submit_cta.html" %}
 
 {% if not user.show_embedded_content %}
 
