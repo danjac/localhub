@@ -254,6 +254,16 @@ class Event(Activity):
         """
         return self.starts < timezone.now()
 
+    def is_repeating(self):
+        """If has repeat option, and repeats_until is NULL or
+        in future.
+        """
+        if not self.repeats:
+            return False
+        if self.repeats_until is None:
+            return True
+        return self.repeats_until > timezone.now()
+
     def is_attendable(self):
         """If event can be attended:
             - start date in future
@@ -267,7 +277,7 @@ class Event(Activity):
                 self.published,
                 not (self.deleted),
                 not (self.canceled),
-                not (self.has_started()),
+                not (self.has_started() and not self.is_repeating()),
             )
         )
 

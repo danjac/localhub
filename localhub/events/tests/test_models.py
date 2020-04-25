@@ -181,6 +181,28 @@ class TestEventManager:
 
 
 class TestEventModel:
+    def test_is_repeating_if_repeats_is_null(self):
+        event = Event(repeats=None)
+        assert not event.is_repeating()
+
+    def test_is_repeating_if_repeats_and_repeats_until_is_null(self):
+        event = Event(repeats=Event.RepeatChoices.DAILY, repeats_until=None)
+        assert event.is_repeating()
+
+    def test_is_repeating_if_repeats_and_repeats_until_gt_current_time(self):
+        event = Event(
+            repeats=Event.RepeatChoices.DAILY,
+            repeats_until=timezone.now() + timedelta(days=30),
+        )
+        assert event.is_repeating()
+
+    def test_is_repeating_if_repeats_and_repeats_until_lt_current_time(self):
+        event = Event(
+            repeats=Event.RepeatChoices.DAILY,
+            repeats_until=timezone.now() - timedelta(days=30),
+        )
+        assert not event.is_repeating()
+
     def test_has_not_started(self):
         event = Event(starts=timezone.now() + timedelta(days=30))
         assert not event.has_started()
@@ -204,7 +226,7 @@ class TestEventModel:
         )
         assert event.is_attendable()
 
-    def test_is_attendable_if_has_started_if_repeatable_past_repeats_until(self):
+    def test_is_attendable_if_has_started_if_repeatable_past_repeats_until(self,):
         event = EventFactory(
             starts=timezone.now() - timedelta(days=30),
             repeats=Event.RepeatChoices.DAILY,
