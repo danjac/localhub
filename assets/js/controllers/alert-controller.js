@@ -1,12 +1,12 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Controller } from 'stimulus';
+import ApplicationController from './application-controller';
 import { fadeOut } from '@utils/dom-helpers';
 
 const TIMEOUT = 3000;
 
-export default class extends Controller {
+export default class extends ApplicationController {
   /*
   Used with an alert element that "fades out" after a few seconds
   after page load.

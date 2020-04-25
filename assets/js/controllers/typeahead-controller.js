@@ -1,7 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Controller } from 'stimulus';
+import ApplicationController from './application-controller';
 import axios from 'axios';
 import getCaretPosition from 'textarea-caret';
 
@@ -13,7 +13,7 @@ const RETURN_KEY = 13;
 const ARROW_UP = 38;
 const ARROW_DOWN = 40;
 
-export default class extends Controller {
+export default class extends ApplicationController {
   /*
   Adds typeahead functionality to form input for handling tag and user mentions.
 
@@ -208,9 +208,9 @@ export default class extends Controller {
     const viewport = getViewport();
     const rect = this.selectorTarget.getBoundingClientRect();
 
-   // if (rect.height + rect.bottom > viewport.height) {
-   //   this.selectorTarget.style.top = viewport.height + 'px';
-  //  }
+    // if (rect.height + rect.bottom > viewport.height) {
+    //   this.selectorTarget.style.top = viewport.height + 'px';
+    //  }
 
     if (
       rect.width + rect.left > viewport.width ||

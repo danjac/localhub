@@ -1,17 +1,6 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-export function confirmDialog(options) {
-  /*
-  Shortcut to open default confirmation dialog.
-  options:
-    header: header text
-    body: body text
-    onConfirm (function): callback if "confirm" button clicked.
-  */
-  document.getElementById('confirm-dialog')['confirm-dialog'].open(options);
-}
-
 function makeAlert(level) {
   return (message) => {
     const tmpl = document.getElementById('alert-template');

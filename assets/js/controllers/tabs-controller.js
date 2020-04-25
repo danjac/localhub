@@ -1,6 +1,6 @@
-import { Controller } from 'stimulus';
+import ApplicationController from './application-controller';
 
-export default class extends Controller {
+export default class extends ApplicationController {
   /*
   Handles client-side tab navigation. Toggles tab "active" class
   and shows/hides tab pane content accordingly.

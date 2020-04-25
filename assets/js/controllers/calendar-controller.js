@@ -16,11 +16,11 @@ import {
   subMonths,
 } from 'date-fns';
 
-import { Controller } from 'stimulus';
+import ApplicationController from './application-controller';
 
 const DATE_FORMAT = 'dd/MM/yyyy';
 
-export default class extends Controller {
+export default class extends ApplicationController {
   /*
   Renders an HTML calendar. Used with a date <input> widget.
 

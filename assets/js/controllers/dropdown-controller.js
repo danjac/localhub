@@ -1,12 +1,12 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Controller } from 'stimulus';
+import ApplicationController from './application-controller';
 
 import { maxZIndex, getViewport } from '@utils/dom-helpers';
 
 // test comment
-export default class extends Controller {
+export default class extends ApplicationController {
   /*
     Manages dropdown and keeps the menu visible within the viewport.
 

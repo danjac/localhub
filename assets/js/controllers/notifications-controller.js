@@ -3,12 +3,12 @@
 
 import axios from 'axios';
 
-import { Controller } from 'stimulus';
+import ApplicationController from './application-controller';
 import { urlB64ToUint8Array } from '@utils/encoders';
 
 let registration = null;
 
-export default class extends Controller {
+export default class extends ApplicationController {
   /*
   Manages browser notifications using a serviceWorker. If the browser or device does
   not support browser notifications (e.g. depending on security settings) then

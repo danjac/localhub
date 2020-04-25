@@ -1,9 +1,9 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Controller } from 'stimulus';
+import ApplicationController from './application-controller';
 
-export default class extends Controller {
+export default class extends ApplicationController {
   /*
   Highlights an active menu item, tab etc with "active" class on
   page load.
@@ -24,9 +24,11 @@ export default class extends Controller {
 
     const regex = this.data.get('regex');
 
-    const matches = this.data.has('exact') ?
-      pathname === href :
-      (regex ? pathname.match(regex) : pathname.startsWith(href));
+    const matches = this.data.has('exact')
+      ? pathname === href
+      : regex
+      ? pathname.match(regex)
+      : pathname.startsWith(href);
     if (matches) {
       this.element.classList.add(this.data.get('active-class') || 'active');
     }

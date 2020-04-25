@@ -1,9 +1,9 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Controller } from 'stimulus';
+import ApplicationController from './application-controller';
 
-export default class extends Controller {
+export default class extends ApplicationController {
   /*
   Toggles one or more elements using d-none class or another class.
 

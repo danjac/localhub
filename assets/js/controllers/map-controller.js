@@ -4,7 +4,7 @@
 import 'leaflet/dist/leaflet.css';
 
 import L from 'leaflet';
-import { Controller } from 'stimulus';
+import ApplicationController from './application-controller';
 
 // https://github.com/PaulLeCam/react-leaflet/issues/255
 
@@ -23,7 +23,7 @@ L.Icon.Default.mergeOptions({
 
 const DEFAULT_ZOOM = 13;
 
-export default class extends Controller {
+export default class extends ApplicationController {
   /*
   Inserts an OpenStreetMap into the element on page load.
 
