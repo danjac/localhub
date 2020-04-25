@@ -60,6 +60,44 @@ class TestEventManager:
         assert first.next_date.weekday() == event.starts.weekday()
         assert (first.next_date.date() - datetime.date.today()).days == 7
 
+    def test_next_date_if_repeats_monthly_before_start_date(self):
+        "Should be same as start date if no repeat specified"
+        event = EventFactory(
+            repeats=Event.RepeatChoices.MONTHLY,
+            starts=timezone.now() + timedelta(days=14),
+        )
+        first = Event.objects.with_next_date().first()
+        assert first.next_date == event.starts
+
+    def test_next_date_if_repeats_monthly_after_start_date(self):
+        now = timezone.now()
+        EventFactory(
+            repeats=Event.RepeatChoices.MONTHLY, starts=now - timedelta(days=14),
+        )
+        first = Event.objects.with_next_date().first()
+        assert first.next_date > now
+        assert first.next_date.day == 1
+
+    def test_next_date_if_repeats_yearly_before_start_date(self):
+        "Should be same as start date if no repeat specified"
+        event = EventFactory(
+            repeats=Event.RepeatChoices.YEARLY,
+            starts=timezone.now() + timedelta(days=14),
+        )
+        first = Event.objects.with_next_date().first()
+        assert first.next_date == event.starts
+
+    def test_next_date_if_repeats_yearly_after_start_date(self):
+        "Should be same day and month one year from the date"
+        now = timezone.now()
+        event = EventFactory(
+            repeats=Event.RepeatChoices.YEARLY, starts=now - timedelta(days=14)
+        )
+        first = Event.objects.with_next_date().first()
+        assert first.next_date > now
+        assert first.next_date.month == event.starts.month
+        assert first.next_date.day == event.starts.day
+
     def test_relevance_if_starts_in_future(self):
         EventFactory(starts=timezone.now() + timedelta(days=30))
 
@@ -157,6 +195,21 @@ class TestEventModel:
 
     def test_is_attendable_if_has_started(self):
         event = EventFactory(starts=timezone.now() - timedelta(days=30))
+        assert not event.is_attendable()
+
+    def test_is_attendable_if_has_started_if_repeatable(self):
+        event = EventFactory(
+            starts=timezone.now() - timedelta(days=30),
+            repeats=Event.RepeatChoices.DAILY,
+        )
+        assert event.is_attendable()
+
+    def test_is_attendable_if_has_started_if_repeatable_past_repeats_until(self):
+        event = EventFactory(
+            starts=timezone.now() - timedelta(days=30),
+            repeats=Event.RepeatChoices.DAILY,
+            repeats_until=timezone.now() - timedelta(days=15),
+        )
         assert not event.is_attendable()
 
     def test_is_attendable_if_not_public(self):

@@ -2,7 +2,14 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.db import models
-from django.db.models.functions import Cast, ExtractWeekDay, Now, TruncDay, TruncWeek
+from django.db.models.functions import (
+    Cast,
+    ExtractWeekDay,
+    Now,
+    TruncDay,
+    TruncMonth,
+    TruncWeek,
+)
 
 from localhub.activities.models.managers import ActivityManager, ActivityQuerySet
 from localhub.db.utils import boolean_value
@@ -34,62 +41,12 @@ class YearAdd(IntervalAdd):
 
 class EventQuerySet(ActivityQuerySet):
     def with_next_date(self):
-        """
-
-        If not repeating, just get the start date. Nothing more needed.
-
-        We begin with base_date:
-
-        1) for every day, return NOW().
-        2) for weekdays:
-
-        # get day of week (notice Cast to ensure int)
-        # this is indexed from 1=Sunday through 7=Saturday.
-
-        annotate(dow=Cast(ExtractWeekDay(F("starts")), IntegerField()))
-
-        # get start of week: this will be MONDAY.
-
-        annotate(sow=TruncWeek(Now()))
-
-        # add dow MINUS 2 to sow (minus one b/c starting from Monday, minus 1 b/c of start index of 1)
-
-        annotate(base_date=DayAdd(sow, F("dow") - 2))
-
-        3) monthly: this assumes the 1st of every month:
-
-        # get start of month:
-
-        annotate(base_date=TruncMonth(Now()))
-
-        4) annually: this assumes the same date as the start date.
-
-        # we can just go with date.
-
-        annotate(base_date=F("starts"))
-
-        Now we have the base date, determine if it is in future. If in future, use that. If in past,
-        we need to add the correct period.
-
-        annotate(next_date=Case(
-            When(Q(repeats__isnull=True), then=F("starts"))
-            When(Q(base_date__gte=Now()), then=F("base_date"))
-            When(Q(repeats="daily", then=DateAdd(F("base_date"), 1))),
-            When(Q(repeats="weekly", then=DateAdd(F("base_date", 7)))),
-            When(Q(repeats="monthly", then=MonthAdd(F("base_date", 1))))
-            When(Q(repeats="yearly", then=YearAdd(F("base_date", 1)))),
-            output_field=DateTimeField()
-            )
-        )
-        """
-
         return self.annotate(
             start_of_day=TruncDay(Now()),
             start_of_week=TruncWeek(Now()),
             # Note: starts with MONDAY and is indexed from 1, so need to adjust by -2.
             day_of_week=Cast(ExtractWeekDay(models.F("starts")), models.IntegerField()),
             base_date=models.Case(
-                models.When(models.Q(repeats__isnull=True), then=models.F("starts")),
                 models.When(
                     models.Q(repeats=self.model.RepeatChoices.DAILY),
                     then=models.F("start_of_day"),
@@ -100,11 +57,17 @@ class EventQuerySet(ActivityQuerySet):
                         models.F("start_of_week"), models.F("day_of_week") - 2
                     ),
                 ),
+                models.When(
+                    models.Q(repeats=self.model.RepeatChoices.MONTHLY),
+                    then=TruncMonth(Now()),
+                ),
+                default=models.F("starts"),
                 output_field=models.DateTimeField(),
             ),
             next_date=models.Case(
                 models.When(
-                    models.Q(starts__gte=models.F("base_date")),
+                    models.Q(starts__gte=models.F("base_date"))
+                    & models.Q(starts__gte=Now()),
                     then=models.F("starts"),
                 ),
                 models.When(
@@ -114,6 +77,14 @@ class EventQuerySet(ActivityQuerySet):
                 models.When(
                     repeats=self.model.RepeatChoices.WEEKLY,
                     then=DateAdd(models.F("base_date"), 7),
+                ),
+                models.When(
+                    repeats=self.model.RepeatChoices.MONTHLY,
+                    then=MonthAdd(models.F("base_date"), 1),
+                ),
+                models.When(
+                    repeats=self.model.RepeatChoices.YEARLY,
+                    then=YearAdd(models.F("base_date"), 1),
                 ),
                 output_field=models.DateTimeField(),
             ),
