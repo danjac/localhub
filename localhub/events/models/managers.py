@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.db import models
-from django.db.models.functions import Now
+from django.db.models.functions import Cast, ExtractWeekDay, Now, TruncWeek
 
 from localhub.activities.models.managers import ActivityManager, ActivityQuerySet
 from localhub.db.utils import boolean_value
@@ -82,7 +82,33 @@ class EventQuerySet(ActivityQuerySet):
             )
         )
         """
-        return self
+
+        # Note: starts with MONDAY and is indexed from 1, so need to adjust by 2.
+        return self.annotate(
+            start_of_week=TruncWeek(Now()),
+            day_of_week=Cast(ExtractWeekDay(models.F("starts")), models.IntegerField()),
+            base_date=models.Case(
+                models.When(models.Q(repeats__isnull=True), then=models.F("starts")),
+                models.When(
+                    models.Q(repeats=self.model.RepeatChoices.WEEKLY),
+                    then=DateAdd(
+                        models.F("start_of_week"), models.F("day_of_week") - 2
+                    ),
+                ),
+                output_field=models.DateTimeField(),
+            ),
+            next_date=models.Case(
+                models.When(
+                    models.Q(starts__gte=models.F("base_date")),
+                    then=models.F("starts"),
+                ),
+                models.When(
+                    repeats=self.model.RepeatChoices.WEEKLY,
+                    then=DateAdd(models.F("base_date"), 7),
+                ),
+                output_field=models.DateTimeField(),
+            ),
+        )
 
     def is_attending(self, user):
         """Annotates "is_attending" if user is attending the event.
@@ -120,6 +146,8 @@ class EventQuerySet(ActivityQuerySet):
 
         Returns:
             QuerySet
+
+        # TBD : replace starts with next_date
         """
 
         return self.annotate(
@@ -140,6 +168,8 @@ class EventQuerySet(ActivityQuerySet):
 
         Returns:
             QuerySet
+
+        TBD: replace "starts" with "next_date"
         """
         return self.annotate(
             timedelta=models.Case(

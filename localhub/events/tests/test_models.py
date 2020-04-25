@@ -21,6 +21,30 @@ pytestmark = pytest.mark.django_db
 
 
 class TestEventManager:
+    def test_next_date_if_not_repeats(self):
+        "Should be same as start date if no repeat specified"
+        event = EventFactory(repeats=None)
+        first = Event.objects.with_next_date().first()
+        assert first.next_date == event.starts
+
+    def test_next_date_if_repeats_weekly_before_start_date(self):
+        "Should be same as start date if no repeat specified"
+        event = EventFactory(
+            repeats=Event.RepeatChoices.WEEKLY,
+            starts=timezone.now() + timedelta(days=14),
+        )
+        first = Event.objects.with_next_date().first()
+        assert first.next_date == event.starts
+
+    def test_next_date_if_repeats_weekly_after_start_date(self):
+        now = timezone.now()
+        event = EventFactory(
+            repeats=Event.RepeatChoices.WEEKLY, starts=now - timedelta(days=14)
+        )
+        first = Event.objects.with_next_date().first()
+        assert first.next_date.weekday() == event.starts.weekday()
+        assert (first.next_date.date() - datetime.date.today()).days == 7
+
     def test_relevance_if_starts_in_future(self):
         EventFactory(starts=timezone.now() + timedelta(days=30))
 

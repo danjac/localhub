@@ -82,7 +82,9 @@ class Event(Activity):
     # Note: "ends" must be same day if repeating
     ends = models.DateTimeField(null=True, blank=True)
 
-    repeats = models.CharField(max_length=20, choices=RepeatChoices.choices, null=True)
+    repeats = models.CharField(
+        max_length=20, choices=RepeatChoices.choices, null=True, blank=True
+    )
     repeats_until = models.DateTimeField(null=True, blank=True)
 
     timezone = TimeZoneField(default=settings.TIME_ZONE)
