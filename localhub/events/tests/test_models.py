@@ -223,6 +223,7 @@ class TestEventManager:
         second = EventFactory(starts=now + timedelta(days=15))
         third = EventFactory(starts=now - timedelta(days=20))
         fourth = EventFactory(starts=now - timedelta(days=5))
+        fifth = EventFactory(starts=now + timedelta(days=500))
 
         events = Event.objects.with_next_date().with_timedelta().order_by("timedelta")
         for event in events:
@@ -232,6 +233,7 @@ class TestEventManager:
         assert events[1] == second
         assert events[2] == third
         assert events[3] == first
+        assert events[4] == fifth
 
     def test_event_num_attendees_if_none(self, event):
         first = Event.objects.with_num_attendees().first()

@@ -137,8 +137,8 @@ class EventQuerySet(ActivityQuerySet):
         """
         return self.annotate(
             timedelta=models.Case(
-                models.When(starts__gte=Now(), then=models.F("next_date") - Now()),
-                models.When(starts__lt=Now(), then=Now() - models.F("next_date")),
+                models.When(next_date__gte=Now(), then=models.F("next_date") - Now()),
+                models.When(next_date__lt=Now(), then=Now() - models.F("next_date")),
                 output_field=models.DurationField(),
             )
         )
