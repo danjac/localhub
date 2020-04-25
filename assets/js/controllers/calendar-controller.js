@@ -63,7 +63,9 @@ export default class extends Controller {
 
   select(event) {
     event.preventDefault();
-    const selectedDate = event.currentTarget.getAttribute('data-calendar-date');
+    const selectedDate = event.currentTarget.getAttribute(
+      `data-${this.identifier}-date`
+    );
     this.dateInputTarget.value = selectedDate;
     this.calendarTarget.classList.add('d-none');
   }
@@ -88,7 +90,7 @@ export default class extends Controller {
       const btn = clone.querySelector('button');
 
       btn.append(date.getDate().toString());
-      btn.setAttribute('data-calendar-date', format(date, DATE_FORMAT));
+      btn.setAttribute(`data-${this.identifier}-date`, format(date, DATE_FORMAT));
 
       if (isSameDay(date, today)) {
         btn.classList.add('date-today');
