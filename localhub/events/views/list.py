@@ -9,6 +9,8 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.views.generic.dates import DateMixin, DayMixin, MonthMixin, YearMixin
 
+import pytz
+
 from localhub.activities.views.list_detail import ActivityListView, BaseActivityListView
 
 from ..models import Event
@@ -123,9 +125,16 @@ class EventCalendarView(
         """Group events by day into tuples of (number, events)
         """
         return [
-            (day, [e for e in self.object_list if e.starts.day == day])
-            for day in calendar.Calendar().itermonthdays(date.year, date.month)
+            (dt.day - 1, [e for e in self.object_list if e.matches_date(dt)])
+            for dt in self.iter_dates(date)
         ]
+
+    def iter_dates(self, date):
+        for day in calendar.Calendar().itermonthdays(date.year, date.month):
+            if day > 0:
+                yield datetime.datetime(
+                    day=day, month=date.month, year=date.year, tzinfo=pytz.UTC
+                )
 
 
 event_calendar_view = EventCalendarView.as_view()
