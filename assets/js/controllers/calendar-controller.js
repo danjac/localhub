@@ -34,7 +34,8 @@ export default class extends Controller {
     currentMonth: element rendering the current month.
     days: elements rendering each day.
     template: HTML <template> to render the calendar body.
-  */
+
+ */
   static targets = ['calendar', 'dateInput', 'currentMonth', 'days', 'template'];
 
   toggle(event) {

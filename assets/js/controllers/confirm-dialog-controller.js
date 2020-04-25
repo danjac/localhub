@@ -3,17 +3,6 @@
 
 import { Controller } from 'stimulus';
 
-export function openDialog(options) {
-  /*
-  Shortcut to open default confirmation dialog.
-  options:
-    header: header text
-    body: body text
-    onConfirm (function): callback if "confirm" button clicked.
-  */
-  document.getElementById('confirm-dialog')['confirm-dialog'].open(options);
-}
-
 export default class extends Controller {
   /*
   Handles confirmation modal dialog.
