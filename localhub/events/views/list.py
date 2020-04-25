@@ -66,15 +66,20 @@ class EventCalendarView(
             .published()
             .with_next_date()
             .exclude_blocked(self.request.user)
-            .filter(
-                parent__isnull=True,
-                next_date__month=self.current_month,
-                next_date__year=self.current_year,
-            )
+            .filter(parent__isnull=True,)
             .order_by("next_date")
         )
-        if self.current_day:
-            qs = qs.filter(next_date__day=self.current_day)
+        # repeating all these ValueError checks everywhere is not nice...
+        # we should just resolve all these in one place e.g. wrap get()
+        try:
+            if self.current_day:
+                qs = qs.for_date(
+                    self.current_day, self.current_month, self.current_year
+                )
+            else:
+                qs = qs.for_month(self.current_month, self.current_year)
+        except ValueError:
+            raise Http404()
         return qs
 
     def get_context_data(self, **kwargs):

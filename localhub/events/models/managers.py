@@ -166,6 +166,14 @@ class EventQuerySet(ActivityQuerySet):
             )
         )
 
+    def for_date(self, day, month, year):
+        """For convenience: given a day/month/year, return
+        events for this date.
+        """
+        return self.for_dates(
+            datetime.datetime(day=day, month=month, year=year, tzinfo=pytz.UTC)
+        )
+
     def for_month(self, month, year):
         """For convenience: given a month/year, return events
         within the 1st and last of month (i.e. 11:59:59 of last month)
