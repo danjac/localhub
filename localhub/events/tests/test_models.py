@@ -264,6 +264,16 @@ class TestEventModel:
 
         assert event.get_ends_with_tz().tzinfo.zone == "Europe/Helsinki"
 
+    def test_get_ends_with_tz_if_repeating(self):
+        EventFactory(
+            starts=timezone.now(),
+            repeats=Event.RepeatChoices.MONTHLY,
+            ends=timezone.now() + timedelta(hours=3),
+            timezone=pytz.timezone("Europe/Helsinki"),
+        )
+        first = Event.objects.with_next_date().first()
+        assert first.get_ends_with_tz().tzinfo.zone == "Europe/Helsinki"
+
     def test_get_absolute_url(self, event):
         assert event.get_absolute_url().startswith(f"/events/{event.id}/")
 
@@ -334,6 +344,12 @@ class TestEventModel:
             starts=timezone.now(), ends=timezone.now() + timedelta(hours=3)
         )
         assert event.get_next_end_date() == event.ends
+
+    def test_get_next_end_date_if_repeating_if_ends_is_None(self):
+        EventFactory(
+            starts=timezone.now(), repeats=Event.RepeatChoices.MONTHLY, ends=None,
+        )
+        assert Event.objects.with_next_date().first().get_next_end_date() is None
 
     def test_get_next_end_date_if_repeating(self):
         EventFactory(

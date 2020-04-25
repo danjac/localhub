@@ -152,22 +152,13 @@ class Event(Activity):
     def get_domain(self):
         return get_domain(self.url) or ""
 
-    def matches_date(self, value):
-        """
-        Check if value (date or datetime) matches this date:
-
-        1) start time is on this date.
-        2) date falls between start and end time.
-        3) is repeating and this date falls into one of the options.
-        """
-
     def get_starts_with_tz(self):
         """Returns timezone-adjusted start time.
 
         Returns:
             datetime
         """
-        return self.starts.astimezone(self.timezone)
+        return self.get_next_start_date().astimezone(self.timezone)
 
     def get_ends_with_tz(self):
         """Returns timezone-adjusted end time.
@@ -175,7 +166,8 @@ class Event(Activity):
         Returns:
             datetime or None: returns None if ends is None.
         """
-        return self.ends.astimezone(self.timezone) if self.ends else None
+        ends = self.get_next_end_date()
+        return ends.astimezone(self.timezone) if ends else None
 
     def get_location(self):
         """Returns a concatenated string of location fields.
@@ -291,7 +283,7 @@ class Event(Activity):
         method.
         """
 
-        if not self.is_repeating():
+        if not self.ends or not self.is_repeating():
             return self.ends
 
         if not hasattr(self, "next_date"):
