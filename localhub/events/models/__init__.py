@@ -72,7 +72,7 @@ class Event(Activity):
         WEEKLY = "week", _("Same day of the week at the same time")
         MONTHLY = (
             "month",
-            _("Same day of the month at the same time (or last day of month)"),
+            _("First day of the month at the same time"),
         )
         YEARLY = "year", _("Same date and time every year")
 

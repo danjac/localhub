@@ -83,43 +83,7 @@ class EventQuerySet(ActivityQuerySet):
             )
         )
         """
-        now = timezone.now()
-
-        return self.annotate(
-            days_diff=models.Case(
-                models.When(
-                    models.Q(
-                        repeats_until__gt=now, repeats=self.model.RepeatsChoices.DAILY,
-                    ),
-                    # + 1 day
-                    then=models.Value(),
-                ),
-                models.When(
-                    models.Q(
-                        repeats_until__gt=now, repeats=self.model.RepeatsChoices.WEEKLY,
-                    ),
-                    # + 1 week
-                    then=models.Value(),
-                ),
-                models.When(
-                    models.Q(
-                        repeats_until__gt=now,
-                        repeats=self.model.RepeatsChoices.MONTHLY,
-                    ),
-                    # + 1 month
-                    then=models.Value(),
-                ),
-                models.When(
-                    models.Q(
-                        repeats_until__gt=now, repeats=self.model.RepeatsChoices.YEARLY,
-                    ),
-                    # + 365 days
-                    then=models.Value(),
-                ),
-                default=None,
-                output_value=models.IntegerField,
-            )
-        )
+        return self
 
     def is_attending(self, user):
         """Annotates "is_attending" if user is attending the event.
