@@ -40,77 +40,73 @@ class TestEventManager:
     def test_for_dates_if_non_repeating_event_matches(self):
         """For a specific date, returns if start date matches this date.
         """
-        EventFactory(starts=timezone.now())
-        qs = Event.objects.for_dates(timezone.now())
+        now = timezone.now()
+        EventFactory(starts=now)
+        qs = Event.objects.for_dates(now)
         assert qs.count() == 1
 
     def test_for_dates_if_non_repeating_event_and_within_date_range_matches(self,):
         """Should fall into range
         """
-        EventFactory(starts=timezone.now())
-        qs = Event.objects.for_dates(
-            timezone.now() - timedelta(days=3), timezone.now() + timedelta(days=3),
-        )
+        now = timezone.now()
+        EventFactory(starts=now)
+        qs = Event.objects.for_dates(now - timedelta(days=3), now + timedelta(days=3),)
         assert qs.count() == 1
 
     def test_for_dates_if_non_repeating_event_not_matches(self):
         """For a specific date, returns if start date matches this date.
         """
-        EventFactory(starts=timezone.now() - timedelta(days=30))
-        qs = Event.objects.for_dates(timezone.now())
+        now = timezone.now()
+        EventFactory(starts=now - timedelta(days=30))
+        qs = Event.objects.for_dates(now)
         assert qs.count() == 0
 
     def test_for_dates_if_non_repeating_event_and_within_date_range_not_matches(self,):
         """Should fall into range
         """
-        EventFactory(starts=timezone.now() - timedelta(days=30))
-        qs = Event.objects.for_dates(
-            timezone.now() - timedelta(days=3), timezone.now() + timedelta(days=3),
-        )
+        now = timezone.now()
+        EventFactory(starts=now - timedelta(days=30))
+        qs = Event.objects.for_dates(now - timedelta(days=3), now + timedelta(days=3),)
         assert qs.count() == 0
 
     def test_for_dates_if_repeating_and_start_date_in_past(self):
         """If repeating, then OK if start date any time before the given date.
         """
+        now = timezone.now()
         EventFactory(
-            starts=timezone.now() - timedelta(days=30),
-            repeats=Event.RepeatChoices.WEEKLY,
+            starts=now - timedelta(days=30), repeats=Event.RepeatChoices.WEEKLY,
         )
-        qs = Event.objects.for_dates(timezone.now())
+        qs = Event.objects.for_dates(now)
         assert qs.count() == 1
 
     def test_for_dates_if_repeating_and_start_date_in_future(self):
         """Ignore if repeating and not started yet.
         """
+        now = timezone.now()
         EventFactory(
-            starts=timezone.now() + timedelta(days=30),
-            repeats=Event.RepeatChoices.WEEKLY,
+            starts=now + timedelta(days=30), repeats=Event.RepeatChoices.WEEKLY,
         )
-        qs = Event.objects.for_dates(timezone.now())
+        qs = Event.objects.for_dates(now)
         assert qs.count() == 0
 
     def test_for_dates_if_repeating_and_start_date_in_range(self):
         """Should be ok if start date within range
         """
+        now = timezone.now()
         EventFactory(
-            starts=timezone.now() + timedelta(days=3),
-            repeats=Event.RepeatChoices.WEEKLY,
+            starts=now + timedelta(days=3), repeats=Event.RepeatChoices.WEEKLY,
         )
-        qs = Event.objects.for_dates(
-            timezone.now() - timedelta(days=3), timezone.now() + timedelta(days=7),
-        )
+        qs = Event.objects.for_dates(now - timedelta(days=3), now + timedelta(days=7),)
         assert qs.count() == 1
 
     def test_for_dates_if_repeating_and_start_date_outside_of_range(self):
         """Should be ok if start date within range
         """
+        now = timezone.now()
         EventFactory(
-            starts=timezone.now() + timedelta(days=30),
-            repeats=Event.RepeatChoices.WEEKLY,
+            starts=now + timedelta(days=30), repeats=Event.RepeatChoices.WEEKLY,
         )
-        qs = Event.objects.for_dates(
-            timezone.now() - timedelta(days=3), timezone.now() + timedelta(days=7),
-        )
+        qs = Event.objects.for_dates(now - timedelta(days=3), now + timedelta(days=7),)
         assert qs.count() == 0
 
     def test_next_date_if_not_repeats(self):
@@ -276,26 +272,28 @@ class TestEventManager:
 
 class TestEventModel:
     def test_matches_date_if_non_repeating_and_matches_today(self):
-        event = Event(starts=timezone.now())
-        assert event.matches_date(timezone.now())
+        now = timezone.now()
+        event = Event(starts=now)
+        assert event.matches_date(now)
 
     def test_matches_date_if_non_repeating_and_not_matching_today(self):
-        event = Event(starts=timezone.now() - timedelta(days=30))
-        assert not event.matches_date(timezone.now())
+        now = timezone.now()
+        event = Event(starts=now - timedelta(days=30))
+        assert not event.matches_date(now)
 
     def test_matches_date_if_repeats_daily(self):
+        now = timezone.now()
         event = EventFactory(
-            starts=timezone.now() - timedelta(days=30),
-            repeats=Event.RepeatChoices.DAILY,
+            starts=now - timedelta(days=30), repeats=Event.RepeatChoices.DAILY,
         )
-        assert event.matches_date(timezone.now())
+        assert event.matches_date(now)
 
     def test_matches_date_if_repeats_daily_not_started_yet(self):
+        now = timezone.now()
         event = Event(
-            starts=timezone.now() + timedelta(days=30),
-            repeats=Event.RepeatChoices.DAILY,
+            starts=now + timedelta(days=30), repeats=Event.RepeatChoices.DAILY,
         )
-        assert not event.matches_date(timezone.now())
+        assert not event.matches_date(now)
 
     def test_is_repeating_if_repeats_is_null(self):
         event = Event(repeats=None)
@@ -322,37 +320,37 @@ class TestEventModel:
         assert not event.matches_date(dt)
 
     def test_matches_date_if_repeats_monthly_first_of_month(self):
+        now = timezone.now()
         event = EventFactory(
-            starts=timezone.now() - timedelta(days=30),
-            repeats=Event.RepeatChoices.MONTHLY,
+            starts=now - timedelta(days=30), repeats=Event.RepeatChoices.MONTHLY,
         )
-        dt = (timezone.now() + timedelta(days=60)).replace(day=1)
+        dt = (now + timedelta(days=60)).replace(day=1)
         assert event.matches_date(dt)
 
     def test_matches_date_if_repeats_monthly_not_first_of_month(self):
+        now = timezone.now()
         event = EventFactory(
-            starts=timezone.now() - timedelta(days=30),
-            repeats=Event.RepeatChoices.MONTHLY,
+            starts=now - timedelta(days=30), repeats=Event.RepeatChoices.MONTHLY,
         )
-        dt = (timezone.now() + timedelta(days=60)).replace(day=15)
+        dt = (now + timedelta(days=60)).replace(day=15)
         assert not event.matches_date(dt)
 
     def test_matches_date_if_repeats_yearly_matches_date(self):
+        now = timezone.now()
         event = EventFactory(
-            starts=timezone.now() - timedelta(days=30),
-            repeats=Event.RepeatChoices.YEARLY,
+            starts=now - timedelta(days=30), repeats=Event.RepeatChoices.YEARLY,
         )
-        dt = (timezone.now() + timedelta(days=400)).replace(
+        dt = (now + timedelta(days=400)).replace(
             day=event.starts.day, month=event.starts.month
         )
         assert event.matches_date(dt)
 
     def test_matches_date_if_repeats_yearly_not_matches_date(self):
+        now = timezone.now()
         event = EventFactory(
-            starts=timezone.now() - timedelta(days=30),
-            repeats=Event.RepeatChoices.YEARLY,
+            starts=now - timedelta(days=30), repeats=Event.RepeatChoices.YEARLY,
         )
-        dt = (timezone.now() + timedelta(days=400)).replace(
+        dt = (now + timedelta(days=400)).replace(
             day=event.starts.month, month=event.starts.month
         ) - timedelta(days=1)
         assert not event.matches_date(dt)
@@ -399,10 +397,11 @@ class TestEventModel:
         assert event.is_attendable()
 
     def test_is_attendable_if_has_started_if_repeatable_past_repeats_until(self,):
+        now = timezone.now()
         event = EventFactory(
-            starts=timezone.now() - timedelta(days=30),
+            starts=now - timedelta(days=30),
             repeats=Event.RepeatChoices.DAILY,
-            repeats_until=timezone.now() - timedelta(days=15),
+            repeats_until=now - timedelta(days=15),
         )
         assert not event.is_attendable()
 
@@ -427,18 +426,20 @@ class TestEventModel:
         assert event.get_ends_with_tz() is None
 
     def test_get_ends_with_tz(self):
+        now = timezone.now()
         event = EventFactory(
-            ends=timezone.now() + datetime.timedelta(days=30),
+            ends=now + datetime.timedelta(days=30),
             timezone=pytz.timezone("Europe/Helsinki"),
         )
 
         assert event.get_ends_with_tz().tzinfo.zone == "Europe/Helsinki"
 
     def test_get_ends_with_tz_if_repeating(self):
+        now = timezone.now()
         EventFactory(
-            starts=timezone.now(),
+            starts=now,
             repeats=Event.RepeatChoices.MONTHLY,
-            ends=timezone.now() + timedelta(hours=3),
+            ends=now + timedelta(hours=3),
             timezone=pytz.timezone("Europe/Helsinki"),
         )
         first = Event.objects.with_next_date().first()
@@ -454,48 +455,54 @@ class TestEventModel:
         assert Event(url="http://google.com").get_domain() == "google.com"
 
     def test_clean_if_ok(self):
-        event = Event(starts=timezone.now(), ends=timezone.now() + timedelta(days=3))
+        now = timezone.now()
+        event = Event(starts=now, ends=now + timedelta(days=3))
         event.clean()
 
     def test_clean_if_ends_before_starts(self):
-        event = Event(starts=timezone.now(), ends=timezone.now() - timedelta(days=3))
+        now = timezone.now()
+        event = Event(starts=now, ends=now - timedelta(days=3))
         with pytest.raises(ValidationError):
             event.clean()
 
     def test_clean_if_repeats_and_end_date_diff_from_start_date(self):
+        now = timezone.now()
         event = Event(
-            starts=timezone.now(),
-            ends=timezone.now() + timedelta(days=3),
+            starts=now,
+            ends=now + timedelta(days=3),
             repeats=Event.RepeatChoices.WEEKLY,
         )
         with pytest.raises(ValidationError):
             event.clean()
 
     def test_clean_if_repeats_and_repeats_until_before_start_date(self):
+        now = timezone.now()
         event = Event(
-            starts=timezone.now(),
-            ends=timezone.now() + timedelta(days=3),
+            starts=now,
+            ends=now + timedelta(days=3),
             repeats=Event.RepeatChoices.WEEKLY,
-            repeats_until=timezone.now() - timedelta(days=3),
+            repeats_until=now - timedelta(days=3),
         )
         with pytest.raises(ValidationError):
             event.clean()
 
     def test_clean_if_repeats_and_repeats_until_ok(self):
+        now = timezone.now()
         event = Event(
-            starts=timezone.now(),
-            ends=timezone.now() + timedelta(hours=2),
+            starts=now,
+            ends=now + timedelta(hours=2),
             repeats=Event.RepeatChoices.WEEKLY,
-            repeats_until=timezone.now() + timedelta(days=30),
+            repeats_until=now + timedelta(days=30),
         )
         event.clean()
 
     def test_clean_if_repeats_and_repeats_until_none(self):
+        now = timezone.now()
         event = Event(
-            starts=timezone.now(),
-            ends=timezone.now() + timedelta(hours=2),
+            starts=now,
+            ends=now + timedelta(hours=2),
             repeats=Event.RepeatChoices.WEEKLY,
-            repeats_until=timezone.now() + timedelta(days=30),
+            repeats_until=now + timedelta(days=30),
         )
         event.clean()
 
@@ -510,9 +517,8 @@ class TestEventModel:
         )
 
     def test_get_next_end_date_if_not_repeating(self):
-        event = EventFactory(
-            starts=timezone.now(), ends=timezone.now() + timedelta(hours=3)
-        )
+        now = timezone.now()
+        event = EventFactory(starts=now, ends=now + timedelta(hours=3))
         assert event.get_next_end_date() == event.ends
 
     def test_get_next_end_date_if_repeating_if_ends_is_None(self):
@@ -522,10 +528,11 @@ class TestEventModel:
         assert Event.objects.with_next_date().first().get_next_end_date() is None
 
     def test_get_next_end_date_if_repeating(self):
+        now = timezone.now()
         EventFactory(
-            starts=timezone.now(),
+            starts=now,
             repeats=Event.RepeatChoices.MONTHLY,
-            ends=timezone.now() + timedelta(hours=3),
+            ends=now + timedelta(hours=3),
         )
         first = Event.objects.with_next_date().first()
         dt = first.get_next_end_date()
