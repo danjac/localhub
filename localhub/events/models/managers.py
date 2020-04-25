@@ -18,31 +18,8 @@ from django.utils import timezone
 import pytz
 
 from localhub.activities.models.managers import ActivityManager, ActivityQuerySet
+from localhub.db.functions import DateAdd, MonthAdd, YearAdd
 from localhub.db.utils import boolean_value
-
-# this should go under localhub.db.functions
-
-
-class IntervalAdd(models.Func):
-    period = None
-    arg_joiner = " + CAST("
-    output_field = models.DateTimeField()
-
-    @property
-    def template(self):
-        return "%(expressions)s || '" + self.period + "' AS INTERVAL)"
-
-
-class DateAdd(IntervalAdd):
-    period = "days"
-
-
-class MonthAdd(IntervalAdd):
-    period = "months"
-
-
-class YearAdd(IntervalAdd):
-    period = "years"
 
 
 class EventQuerySet(ActivityQuerySet):
