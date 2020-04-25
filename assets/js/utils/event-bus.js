@@ -10,8 +10,7 @@ const publish = (name, data = {}) => {
   const event = new CustomEvent(name, {
     detail: Object.assign({}, data),
   });
-  console.log('custom event', event);
-  document.dispatchEvent(event);
+  document.body.dispatchEvent(event);
 };
 
 export default {

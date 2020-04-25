@@ -3,7 +3,6 @@
 
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
-import { v1 as uuid } from 'uuid';
 
 import { alerts } from '@utils/ui-helpers';
 import ApplicationController from './application-controller';
@@ -37,13 +36,6 @@ export default class extends ApplicationController {
 
   static targets = ['toggle'];
 
-  connect() {
-    this.subscribe('confirm:done', (data) => {
-      // check uuid
-      console.log(data);
-    });
-  }
-
   get(event) {
     this.confirm('GET', event);
   }
@@ -56,31 +48,17 @@ export default class extends ApplicationController {
     event.preventDefault();
     const { currentTarget } = event;
 
-    const onConfirm = () => {
-      this.dispatch(method, currentTarget);
-    };
-
     const header = this.data.get('confirm-header');
     const body = this.data.get('confirm-body');
-
-    // TBD: we'll generalize this. All pub events have a UUID,
-    // which is stored on firing and cleared on sub.
-    this.data.set('uuid', uuid());
-
-    const payload = {
-      method,
-      target: currentTarget,
-      uuid: this.data.get('uuid'),
-    };
 
     if (header && body) {
       this.publish('confirm:open', {
         body,
         header,
-        payload,
+        onConfirm: () => this.dispatch(method, currentTarget),
       });
     } else {
-      onConfirm();
+      this.dispatch(method, currentTarget);
     }
   }
 

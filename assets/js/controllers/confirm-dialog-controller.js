@@ -26,17 +26,18 @@ export default class extends ApplicationController {
         this.close();
       }
     });
-    const open = (data) => console.log(data);
-    this.subscribe('confirm:open', open);
+    this.subscribe('confirm:open', (event) => this.open(event));
   }
 
-  open({ header, body }) {
+  open({ detail: { header, body, onConfirm } }) {
     this.headerTarget.innerText = header;
     this.bodyTarget.innerText = body;
+    this.onConfirm = onConfirm;
     this.element.classList.add('active');
   }
 
   close() {
+    this.onConfirm = null;
     this.element.classList.remove('active');
   }
 
@@ -47,7 +48,10 @@ export default class extends ApplicationController {
 
   confirm(event) {
     event.preventDefault();
-    this.publish('confirm:done');
+    if (this.onConfirm) {
+      this.onConfirm();
+      this.onConfirm = null;
+    }
     this.close();
   }
 }
