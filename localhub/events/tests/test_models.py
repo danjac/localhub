@@ -27,6 +27,21 @@ class TestEventManager:
         first = Event.objects.with_next_date().first()
         assert first.next_date == event.starts
 
+    def test_next_date_if_repeats_daily_before_start_date(self):
+        "Should be same as start date if no repeat specified"
+        event = EventFactory(
+            repeats=Event.RepeatChoices.DAILY,
+            starts=timezone.now() + timedelta(days=14),
+        )
+        first = Event.objects.with_next_date().first()
+        assert first.next_date == event.starts
+
+    def test_next_date_if_repeats_daily_after_start_date(self):
+        now = timezone.now()
+        EventFactory(repeats=Event.RepeatChoices.DAILY, starts=now - timedelta(days=14))
+        first = Event.objects.with_next_date().first()
+        assert (first.next_date.date() - datetime.date.today()).days == 1
+
     def test_next_date_if_repeats_weekly_before_start_date(self):
         "Should be same as start date if no repeat specified"
         event = EventFactory(

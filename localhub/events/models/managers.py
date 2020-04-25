@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.db import models
-from django.db.models.functions import Cast, ExtractWeekDay, Now, TruncWeek
+from django.db.models.functions import Cast, ExtractWeekDay, Now, TruncDay, TruncWeek
 
 from localhub.activities.models.managers import ActivityManager, ActivityQuerySet
 from localhub.db.utils import boolean_value
@@ -83,12 +83,17 @@ class EventQuerySet(ActivityQuerySet):
         )
         """
 
-        # Note: starts with MONDAY and is indexed from 1, so need to adjust by 2.
         return self.annotate(
+            start_of_day=TruncDay(Now()),
             start_of_week=TruncWeek(Now()),
+            # Note: starts with MONDAY and is indexed from 1, so need to adjust by -2.
             day_of_week=Cast(ExtractWeekDay(models.F("starts")), models.IntegerField()),
             base_date=models.Case(
                 models.When(models.Q(repeats__isnull=True), then=models.F("starts")),
+                models.When(
+                    models.Q(repeats=self.model.RepeatChoices.DAILY),
+                    then=models.F("start_of_day"),
+                ),
                 models.When(
                     models.Q(repeats=self.model.RepeatChoices.WEEKLY),
                     then=DateAdd(
@@ -101,6 +106,10 @@ class EventQuerySet(ActivityQuerySet):
                 models.When(
                     models.Q(starts__gte=models.F("base_date")),
                     then=models.F("starts"),
+                ),
+                models.When(
+                    repeats=self.model.RepeatChoices.DAILY,
+                    then=DateAdd(models.F("base_date"), 1),
                 ),
                 models.When(
                     repeats=self.model.RepeatChoices.WEEKLY,
