@@ -71,7 +71,7 @@ class EventCalendarView(
         qs = (
             super()
             .get_queryset()
-            .published()
+            .published_or_owner(self.request.user)
             .with_next_date()
             .exclude_blocked(self.request.user)
             .filter(parent__isnull=True,)
