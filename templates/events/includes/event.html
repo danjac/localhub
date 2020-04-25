@@ -20,69 +20,89 @@
     {% if object.ends %}
 
     {% with start_date=object.starts|date:"DATE_FORMAT" end_date=object.ends|date:"DATE_FORMAT" start_time=object.starts|date:"TIME_FORMAT" end_time=object.ends|date:"TIME_FORMAT" %}
+
     {% if start_date == end_date %}
+
     <dt>{% trans "Date" %} <span class="label">{{ object.timezone }}</span></dt>
-    <dd{% if not object.is_attendable %} class="text-strike"
-                                         {% endif %}>{{ start_date }} @ {{ start_time }} - {{ end_time }}</dd{%>
-    {% else %} <dt>{% trans "Dates" %} <span class="label">{{ object.timezone }}</span></dt>
-    <dd{% if not object.is_attendable %} class="text-strike"
-                                         {% endif %}>{{ start_date }} @ {{ start_time }} - {{ end_date }} @
-      {{ end_time }}</dd{%>
-    {% endif %} {% endwith %}
-                            {% else %}
-                            <dt>{% trans "Date" %} <span class="label">{{ object.timezone }}</span></dt>
+
     <dd{% if not object.is_attendable %} class="text-strike"
                                          {% endif %}>
-      {{ object.starts|date:"DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }}
-    </dd{%>
-    {% endif %} {% endtimezone %}
-                            {% with location=object.get_full_location %}
-                            {% if location %}
-                            <dt>{% trans "Location" %}</dt>
-    <dd>
-      {% if not is_detail and object.has_map %}
-      <a href="{{ object.get_absolute_url }}#map-for-event-{{ object.id }}">{{ location }}</a>
+      {{ start_date }} @ {{ start_time }} - {{ end_time }}
+      </dd>
+
       {% else %}
-      {{ location }}
+      <dt>{% trans "Dates" %} <span class="label">{{ object.timezone }}</span></dt>
+
+      <dd{% if not object.is_attendable %} class="text-strike"
+                                           {% endif %}>
+        {{ start_date }} @ {{ start_time }} - {{ end_date }} @ {{ end_time }}</dd{%>
+    {% endif %} {% endwith %}
+                              {% else %}
+                              <dt>{% trans "Date" %} <span class="label">{{ object.timezone }}</span></dt>
+      <dd{% if not object.is_attendable %} class="text-strike"
+                                           {% endif %}>
+        {{ object.starts|date:"DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }}
+      </dd{%>
+
+   {% endif %} {% if object.repeats %}
+                              <dt>{% trans "Repeats" %}</dt>
+      <dd>
+      {# TBD e.g. "and every Monday at the same time" #}
+        {{ object.get_repeats_display }}
+        {% if object.repeats_until %}
+        {{ object.repeats_until|date:"DATE_FORMAT" }}
+        {% endif %}
+      </dd>
       {% endif %}
-    </dd>
-    {% endif %}
-    {% endwith %}
 
-    {% if object.url %}
-    <dt>{% trans "URL" %}</dt>
-    <dd class="text-ellipsis">{{ object.url|urlize }}</dd>
-    {% endif %}
+      {% endtimezone %}
+      {% with location=object.get_full_location %}
+      {% if location %}
+      <dt>{% trans "Location" %}</dt>
+      <dd>
+        {% if not is_detail and object.has_map %}
+        <a href="{{ object.get_absolute_url }}#map-for-event-{{ object.id }}">{{ location }}</a>
+        {% else %}
+        {{ location }}
+        {% endif %}
+      </dd>
+      {% endif %}
+      {% endwith %}
+
+      {% if object.url %}
+      <dt>{% trans "URL" %}</dt>
+      <dd class="text-ellipsis">{{ object.url|urlize }}</dd>
+      {% endif %}
 
 
-    {% if object.is_detail %}
+      {% if object.is_detail %}
 
-    {% if object.contact_name %}
-    <dt>{% trans "Contact" %}</dt>
-    <dd>{{ object.contact_name }}</dd>
-    {% endif %}
+      {% if object.contact_name %}
+      <dt>{% trans "Contact" %}</dt>
+      <dd>{{ object.contact_name }}</dd>
+      {% endif %}
 
-    {% if object.contact_email %}
-    <dt>{% trans "Email" %}</dt>
-    <dd>{{ object.contact_email|urlize }}</dd>
-    {% endif %}
+      {% if object.contact_email %}
+      <dt>{% trans "Email" %}</dt>
+      <dd>{{ object.contact_email|urlize }}</dd>
+      {% endif %}
 
-    {% if object.contact_phone %}
-    <dt>{% trans "Phone" %}</dt>
-    <dd>{{ object.contact_phone|phone2numeric }}</dd>
-    {% endif %}
+      {% if object.contact_phone %}
+      <dt>{% trans "Phone" %}</dt>
+      <dd>{{ object.contact_phone|phone2numeric }}</dd>
+      {% endif %}
 
-    {% if object.ticket_price %}
-    <dt>{% trans "Admission" %}</dt>
-    <dd>{{ object.ticket_price }}</dd>
-    {% endif %}
+      {% if object.ticket_price %}
+      <dt>{% trans "Admission" %}</dt>
+      <dd>{{ object.ticket_price }}</dd>
+      {% endif %}
 
-    {% if object.ticket_vendor %}
-    <dt>{% trans "Tickets available from" %}</dt>
-    <dd>{{ object.ticket_vendor|linebreaksbr }}</dd>
-    {% endif %}
+      {% if object.ticket_vendor %}
+      <dt>{% trans "Tickets available from" %}</dt>
+      <dd>{{ object.ticket_vendor|linebreaksbr }}</dd>
+      {% endif %}
 
-    {% endif %}
+      {% endif %}
 
   </dl>
 

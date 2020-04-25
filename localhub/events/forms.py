@@ -24,6 +24,10 @@ class EventForm(ActivityForm):
         label=_("Event ends"), required=False, input_date_formats=DATE_FORMATS
     )
 
+    repeats_until = CalendarField(
+        label=_("Repeat until"), input_date_formats=DATE_FORMATS, required=False,
+    )
+
     clear_geolocation = forms.BooleanField(
         label=_("Remove event from map"), required=False
     )
@@ -40,6 +44,8 @@ class EventForm(ActivityForm):
             "mentions",
             "starts",
             "ends",
+            "repeats",
+            "repeats_until",
             "timezone",
             "url",
             "venue",
@@ -64,6 +70,9 @@ class EventForm(ActivityForm):
         widgets = {
             "latitude": forms.HiddenInput,
             "longitude": forms.HiddenInput,
+        }
+        help_texts = {
+            "repeats": "Will repeat from the start date onwards",
         }
 
     def __init__(self, *args, **kwargs):
