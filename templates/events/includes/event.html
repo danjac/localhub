@@ -53,7 +53,9 @@
       {# TBD e.g. "and every Monday at the same time" #}
         {{ object.get_repeats_display }}
         {% if object.repeats_until %}
-        {{ object.repeats_until|date:"DATE_FORMAT" }}
+        {% blocktrans with until=object.repeats_until|date:"DATE_FORMAT" %}
+        until {{ until }}
+        {% endblocktrans %}
         {% endif %}
       </dd>
       {% endif %}

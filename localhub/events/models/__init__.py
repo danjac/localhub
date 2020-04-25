@@ -357,6 +357,9 @@ class Event(Activity):
         if not self.is_repeating() or starts > dt:
             return False
 
+        if self.repeats_until and self.repeats_until < dt:
+            return False
+
         if self.repeats == self.RepeatChoices.DAILY:
             return True
 
