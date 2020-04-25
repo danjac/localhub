@@ -29,6 +29,14 @@ class TestEventManager:
         qs = Event.objects.for_month(month=now.month, year=now.year,)
         assert qs.count() == 1
 
+    def test_for_date(self,):
+        """Should match date.
+        """
+        now = timezone.now()
+        EventFactory(starts=now)
+        qs = Event.objects.for_date(day=now.day, month=now.month, year=now.year,)
+        assert qs.count() == 1
+
     def test_for_dates_if_non_repeating_event_matches(self):
         """For a specific date, returns if start date matches this date.
         """
