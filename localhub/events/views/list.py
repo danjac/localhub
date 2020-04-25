@@ -66,16 +66,17 @@ class EventCalendarView(
             super()
             .get_queryset()
             .published()
+            .with_next_date()
             .exclude_blocked(self.request.user)
             .filter(
                 parent__isnull=True,
-                starts__month=self.current_month,
-                starts__year=self.current_year,
+                next_date__month=self.current_month,
+                next_date__year=self.current_year,
             )
-            .order_by("starts")
+            .order_by("next_date")
         )
         if self.current_day:
-            qs = qs.filter(starts__day=self.current_day)
+            qs = qs.filter(next_date__day=self.current_day)
         return qs
 
     def get_context_data(self, **kwargs):

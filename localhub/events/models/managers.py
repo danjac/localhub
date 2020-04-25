@@ -86,6 +86,7 @@ class EventQuerySet(ActivityQuerySet):
                     repeats=self.model.RepeatChoices.YEARLY,
                     then=YearAdd(models.F("base_date"), 1),
                 ),
+                default=models.F("starts"),
                 output_field=models.DateTimeField(),
             ),
         )
@@ -117,7 +118,9 @@ class EventQuerySet(ActivityQuerySet):
 
     def with_relevance(self):
         """
-        Annotates "relevance" value based on start date and/or status.
+        Annotates "relevance" value based on next date and/or status.
+
+        Use with with_next_date() !
 
         Relevance:
         1) if private/canceled: -1
@@ -126,8 +129,6 @@ class EventQuerySet(ActivityQuerySet):
 
         Returns:
             QuerySet
-
-        # TBD : replace starts with next_date
         """
 
         return self.annotate(
@@ -136,7 +137,7 @@ class EventQuerySet(ActivityQuerySet):
                     models.Q(published__isnull=True) | models.Q(canceled__isnull=False),
                     then=models.Value(-1),
                 ),
-                models.When(starts__gte=Now(), then=models.Value(1)),
+                models.When(next_date__gte=Now(), then=models.Value(1)),
                 default=0,
                 output_field=models.IntegerField(),
             )
@@ -146,15 +147,15 @@ class EventQuerySet(ActivityQuerySet):
         """
         Adds a DurationField with distance between now and the start time (future or past).
 
+        Use with with_next_date() !
+
         Returns:
             QuerySet
-
-        TBD: replace "starts" with "next_date"
         """
         return self.annotate(
             timedelta=models.Case(
-                models.When(starts__gte=Now(), then=models.F("starts") - Now()),
-                models.When(starts__lt=Now(), then=Now() - models.F("starts")),
+                models.When(starts__gte=Now(), then=models.F("next_date") - Now()),
+                models.When(starts__lt=Now(), then=Now() - models.F("next_date")),
                 output_field=models.DurationField(),
             )
         )
@@ -164,6 +165,7 @@ class EventQuerySet(ActivityQuerySet):
             super()
             .with_common_annotations(user, community)
             .with_num_attendees()
+            .with_next_date()
             .is_attending(user)
         )
 

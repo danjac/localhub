@@ -101,7 +101,7 @@ class TestEventManager:
     def test_relevance_if_starts_in_future(self):
         EventFactory(starts=timezone.now() + timedelta(days=30))
 
-        event = Event.objects.with_relevance().first()
+        event = Event.objects.with_next_date().with_relevance().first()
         assert event.relevance == 1
 
     def test_relevance_if_starts_in_future_and_canceled(self):
@@ -110,13 +110,13 @@ class TestEventManager:
             starts=now + timedelta(days=30), canceled=now,
         )
 
-        event = Event.objects.with_relevance().first()
+        event = Event.objects.with_next_date().with_relevance().first()
         assert event.relevance == -1
 
     def test_relevance_if_starts_in_past(self):
         EventFactory(starts=timezone.now() - timedelta(days=30))
 
-        event = Event.objects.with_relevance().first()
+        event = Event.objects.with_next_date().with_relevance().first()
         assert event.relevance == 0
 
     def test_relevance_if_starts_in_past_and_canceled(self):
@@ -125,7 +125,7 @@ class TestEventManager:
             starts=now - timedelta(days=30), canceled=now,
         )
 
-        event = Event.objects.with_relevance().first()
+        event = Event.objects.with_next_date().with_relevance().first()
         assert event.relevance == -1
 
     def test_with_timedelta(self):
@@ -136,7 +136,9 @@ class TestEventManager:
         third = EventFactory(starts=now - timedelta(days=20))
         fourth = EventFactory(starts=now - timedelta(days=5))
 
-        events = Event.objects.with_timedelta().order_by("timedelta")
+        events = Event.objects.with_next_date().with_timedelta().order_by("timedelta")
+        for event in events:
+            print(event.starts, event.next_date)
 
         assert events[0] == fourth
         assert events[1] == second
