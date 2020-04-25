@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.db import models
-from django.db.models.functions import Now  # ExtractWeekDay, Now
+from django.db.models.functions import Now
 
 from localhub.activities.models.managers import ActivityManager, ActivityQuerySet
 from localhub.db.utils import boolean_value
@@ -10,7 +10,7 @@ from localhub.db.utils import boolean_value
 # this should go under localhub.db.functions
 
 
-class DateAdd(models.Func):
+class IntervalAdd(models.Func):
     period = None
     arg_joiner = " + CAST("
     output_field = models.DateTimeField()
@@ -20,15 +20,15 @@ class DateAdd(models.Func):
         return "%(expressions)s || '" + self.period + "' AS INTERVAL)"
 
 
-class DayAdd(DateAdd):
+class DateAdd(IntervalAdd):
     period = "days"
 
 
-class MonthAdd(models.Func):
+class MonthAdd(IntervalAdd):
     period = "months"
 
 
-class YearAdd(models.Func):
+class YearAdd(IntervalAdd):
     period = "years"
 
 

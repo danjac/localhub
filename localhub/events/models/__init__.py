@@ -82,10 +82,7 @@ class Event(Activity):
     # Note: "ends" must be same day if repeating
     ends = models.DateTimeField(null=True, blank=True)
 
-    # Q: how to manage query distance : need to build "next date" in queryset
-    # i.e. get the start date, if daily: next date; if monthly next day of month and so on
     repeats = models.CharField(max_length=20, choices=RepeatChoices.choices, null=True)
-    # if empty, runs indefinitely until canceled
     repeats_until = models.DateTimeField(null=True, blank=True)
 
     timezone = TimeZoneField(default=settings.TIME_ZONE)
