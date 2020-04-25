@@ -40,26 +40,10 @@ class YearAdd(IntervalAdd):
 
 
 class EventQuerySet(ActivityQuerySet):
-    def with_next_date(self, date_from=None):
-        """
-        Problem: we have the next date, BUT not the date after that.
-
-        Example: we want a daily recurring event.
-
-        We get the next date, but not the next date after.
-        Therefore we need an additional "date_from" argument.
-        """
-
-        if date_from is None:
-            date_from = Now()
-        else:
-            # need to construct a datetime....
-            date_from = models.Value(date_from, output_field=models.DateField(),)
-
+    def with_next_date(self):
         return self.annotate(
-            current_date=date_from,
-            start_of_day=TruncDay(models.F("current_date")),
-            start_of_week=TruncWeek(models.F("current_date")),
+            start_of_day=TruncDay(Now()),
+            start_of_week=TruncWeek(Now()),
             # Note: starts with MONDAY and is indexed from 1, so need to adjust by -2.
             day_of_week=Cast(ExtractWeekDay(models.F("starts")), models.IntegerField()),
             base_date=models.Case(
@@ -75,7 +59,7 @@ class EventQuerySet(ActivityQuerySet):
                 ),
                 models.When(
                     models.Q(repeats=self.model.RepeatChoices.MONTHLY),
-                    then=TruncMonth(models.F("current_date")),
+                    then=TruncMonth(Now()),
                 ),
                 default=models.F("starts"),
                 output_field=models.DateTimeField(),
@@ -83,7 +67,7 @@ class EventQuerySet(ActivityQuerySet):
             next_date=models.Case(
                 models.When(
                     models.Q(starts__gte=models.F("base_date"))
-                    & models.Q(starts__gte=models.F("current_date")),
+                    & models.Q(starts__gte=Now()),
                     then=models.F("starts"),
                 ),
                 models.When(

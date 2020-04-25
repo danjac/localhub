@@ -375,7 +375,6 @@ class Event(Activity):
         Returns:
             Calendar
         """
-        # TBD: find best format for repeating dates
         event = CalendarEvent()
 
         starts = self.get_starts_with_tz()
