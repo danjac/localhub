@@ -1,6 +1,8 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import datetime
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -9,6 +11,7 @@ from django.utils import timezone
 from django.utils.encoding import smart_text
 from django.utils.translation import gettext_lazy as _
 
+import pytz
 from django_countries.fields import CountryField
 from icalendar import Calendar
 from icalendar import Event as CalendarEvent
@@ -264,6 +267,47 @@ class Event(Activity):
             bool
         """
         return self.starts < timezone.now()
+
+    def get_next_start_date(self):
+        """Returns next_date if repeating, otherwise starts.
+
+        Note that this must be used with the with_next_date() QuerySet
+        method.
+        """
+        if not self.is_repeating():
+            return self.starts
+
+        if not hasattr(self, "next_date"):
+            raise AttributeError(
+                "next_date not present: must be used with EventQuerySet.with_next_date()"
+            )
+        return self.next_date
+
+    def get_next_end_date(self):
+
+        """Returns the next_date plus ends time (must be same date as the start date)
+
+        Note that this must be used with the with_next_date() QuerySet
+        method.
+        """
+
+        if not self.is_repeating():
+            return self.ends
+
+        if not hasattr(self, "next_date"):
+            raise AttributeError(
+                "next_date not present: must be used with EventQuerySet.with_next_date()"
+            )
+
+        return datetime.datetime(
+            day=self.next_date.day,
+            month=self.next_date.month,
+            year=self.next_date.year,
+            hour=self.ends.hour,
+            minute=self.ends.minute,
+            second=self.ends.second,
+            tzinfo=pytz.UTC,
+        )
 
     def is_repeating(self):
         """If has repeat option, and repeats_until is NULL or

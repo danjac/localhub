@@ -9,6 +9,7 @@
 {% load activities %}
 
 {% block content %}
+{% with starts=object.get_next_start_date ends=object.get_next_end_date %}
 {% if object.canceled %}
 <p class="text-bold text-center py-2">{% trans "This event has been canceled." %}</p>
 <div class="text-muted">
@@ -17,9 +18,9 @@
   <dl class="text-small">
 
     {% timezone object.timezone %}
-    {% if object.ends %}
+    {% if ends %}
 
-    {% with start_date=object.starts|date:"DATE_FORMAT" end_date=object.ends|date:"DATE_FORMAT" start_time=object.starts|date:"TIME_FORMAT" end_time=object.ends|date:"TIME_FORMAT" %}
+    {% with start_date=starts|date:"DATE_FORMAT" end_date=ends|date:"DATE_FORMAT" start_time=starts|date:"TIME_FORMAT" end_time=ends|date:"TIME_FORMAT" %}
 
     {% if start_date == end_date %}
 
@@ -41,7 +42,7 @@
                               <dt>{% trans "Date" %} <span class="label">{{ object.timezone }}</span></dt>
       <dd{% if not object.is_attendable %} class="text-strike"
                                            {% endif %}>
-        {{ object.starts|date:"DATE_FORMAT" }} @ {{ object.starts|date:"TIME_FORMAT" }}
+        {{ starts|date:"DATE_FORMAT" }} @ {{ starts|date:"TIME_FORMAT" }}
       </dd{%>
 
    {% endif %} {% if object.repeats %}
@@ -119,6 +120,7 @@
 </div>
 {% endif %}
 
+{% endwith %}
 {% endblock content %}
 
 {% block actions %}{% include "events/includes/actions.html" %}{% endblock %}

@@ -319,6 +319,37 @@ class TestEventModel:
         )
         event.clean()
 
+    def test_get_next_start_date_if_not_repeating(self):
+        event = EventFactory(starts=timezone.now())
+        assert event.get_next_start_date() == event.starts
+
+    def test_get_next_start_date_if_repeating(self):
+        event = EventFactory(starts=timezone.now(), repeats=Event.RepeatChoices.MONTHLY)
+        assert (
+            Event.objects.with_next_date().first().get_next_start_date() > event.starts
+        )
+
+    def test_get_next_end_date_if_not_repeating(self):
+        event = EventFactory(
+            starts=timezone.now(), ends=timezone.now() + timedelta(hours=3)
+        )
+        assert event.get_next_end_date() == event.ends
+
+    def test_get_next_end_date_if_repeating(self):
+        EventFactory(
+            starts=timezone.now(),
+            repeats=Event.RepeatChoices.MONTHLY,
+            ends=timezone.now() + timedelta(hours=3),
+        )
+        first = Event.objects.with_next_date().first()
+        dt = first.get_next_end_date()
+
+        assert dt.day == first.next_date.day
+        assert dt.month == first.next_date.month
+        assert dt.year == first.next_date.year
+        assert dt.hour == first.ends.hour
+        assert dt.minute == first.ends.minute
+
     def test_get_location(self):
         event = Event(
             street_address="Areenankuja 1",
