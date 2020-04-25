@@ -3,7 +3,6 @@
 
 from django.db import models
 from django.db.models.functions import Now  # ExtractWeekDay, Now
-from django.utils import timezone
 
 from localhub.activities.models.managers import ActivityManager, ActivityQuerySet
 from localhub.db.utils import boolean_value
@@ -142,11 +141,10 @@ class EventQuerySet(ActivityQuerySet):
         Returns:
             QuerySet
         """
-        now = timezone.now()
         return self.annotate(
             timedelta=models.Case(
-                models.When(starts__gte=now, then=models.F("starts") - now),
-                models.When(starts__lt=now, then=now - models.F("starts")),
+                models.When(starts__gte=Now(), then=models.F("starts") - Now()),
+                models.When(starts__lt=Now(), then=Now() - models.F("starts")),
                 output_field=models.DurationField(),
             )
         )
