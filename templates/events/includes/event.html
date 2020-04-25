@@ -50,8 +50,13 @@
    {% endif %} {% if object.repeats %}
                               <dt>{% trans "Repeats" %}</dt>
       <dd>
-      {# TBD e.g. "and every Monday at the same time" #}
+      {% if object.repeats_weekly %}
+      {% blocktrans with weekday=object.starts|date:"l" %}
+      Same time every {{ weekday }}
+      {% endblocktrans %}
+      {% else %}
         {{ object.get_repeats_display }}
+        {% endif %}
         {% if object.repeats_until %}
         {% blocktrans with until=object.repeats_until|date:"DATE_FORMAT" %}
         until {{ until }}

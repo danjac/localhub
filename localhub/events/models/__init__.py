@@ -311,6 +311,18 @@ class Event(Activity):
             return True
         return self.repeats_until > timezone.now()
 
+    def repeats_daily(self):
+        return self.repeats == self.RepeatChoices.DAILY
+
+    def repeats_weekly(self):
+        return self.repeats == self.RepeatChoices.WEEKLY
+
+    def repeats_monthly(self):
+        return self.repeats == self.RepeatChoices.MONTHLY
+
+    def repeats_yearly(self):
+        return self.repeats == self.RepeatChoices.YEARLY
+
     def is_attendable(self):
         """If event can be attended:
             - start date in future
