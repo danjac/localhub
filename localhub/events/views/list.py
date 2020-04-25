@@ -39,6 +39,12 @@ class EventCalendarView(
     def get_allow_empty(self):
         return not (self.current_day)
 
+    def get(self, request, *args, **kwargs):
+        try:
+            return super().get(request, *args, **kwargs)
+        except ValueError:
+            raise Http404("These dates are not valid")
+
     @cached_property
     def current_day(self):
         try:
@@ -71,39 +77,24 @@ class EventCalendarView(
             .filter(parent__isnull=True,)
             .order_by("next_date")
         )
-        # repeating all these ValueError checks everywhere is not nice...
-        # we should just resolve all these in one place e.g. wrap get()
-        try:
-            if self.current_day:
-                qs = qs.for_date(
-                    self.current_day, self.current_month, self.current_year
-                )
-            else:
-                qs = qs.for_month(self.current_month, self.current_year)
-        except ValueError:
-            raise Http404()
+        if self.current_day:
+            qs = qs.for_date(self.current_day, self.current_month, self.current_year)
+        else:
+            qs = qs.for_month(self.current_month, self.current_year)
         return qs
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        # TBD: error handling, raise 404 if borked
-        try:
-            data["current_month"] = current_month = datetime.date(
-                day=1, month=self.current_month, year=self.current_year,
-            )
-        except ValueError:
-            raise Http404
+        data["current_month"] = current_month = datetime.date(
+            day=1, month=self.current_month, year=self.current_year,
+        )
 
         if self.current_day:
-            # we just need current date, nothing else
-            try:
-                data["current_date"] = current_month = datetime.date(
-                    day=self.current_day,
-                    month=self.current_month,
-                    year=self.current_year,
-                )
-            except ValueError:
-                raise Http404
+            # we don't need all the complicated calendar data,
+            # just events for this day
+            data["current_date"] = current_month = datetime.date(
+                day=self.current_day, month=self.current_month, year=self.current_year,
+            )
             return data
 
         now = timezone.now()
