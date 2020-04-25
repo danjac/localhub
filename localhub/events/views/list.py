@@ -124,17 +124,24 @@ class EventCalendarView(
     def get_slots(self, date):
         """Group events by day into tuples of (number, events)
         """
+
         return [
-            (dt.day - 1, [e for e in self.object_list if e.matches_date(dt)])
-            for dt in self.iter_dates(date)
+            (day, [e for e in self.object_list if dt and e.matches_date(dt)])
+            for day, dt in self.iter_dates(date)
         ]
 
     def iter_dates(self, date):
+        """Yields tuple of (counter, datetime) for each day of month. If day
+        falls out of range yields zero, None.
+        """
         for day in calendar.Calendar().itermonthdays(date.year, date.month):
             if day > 0:
-                yield datetime.datetime(
+                yield day, datetime.datetime(
                     day=day, month=date.month, year=date.year, tzinfo=pytz.UTC
                 )
+            else:
+                # falls outside the day range
+                yield 0, None
 
 
 event_calendar_view = EventCalendarView.as_view()
