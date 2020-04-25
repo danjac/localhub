@@ -35,7 +35,7 @@ class Event(Activity):
             ("US", "AU", "NZ"),
             "{street_address} {locality}, {postcode}, {region}, {country}",
         ),
-        (("RU",), "{street_address} {locality} {postcode}, {region}, {country}"),
+        (("RU",), "{street_address} {locality} {postcode}, {region}, {country}",),
     ]
 
     # default for Europe, S. America, China, S. Korea
@@ -118,7 +118,7 @@ class Event(Activity):
     )
 
     search_indexer = SearchIndexer(
-        ("A", "title"), ("B", "indexable_location"), ("C", "indexable_description")
+        ("A", "title"), ("B", "indexable_location"), ("C", "indexable_description"),
     )
 
     objects = EventManager()
@@ -134,6 +134,17 @@ class Event(Activity):
     def clean(self):
         if self.ends and self.ends < self.starts:
             raise ValidationError(_("End date cannot be before start date"))
+
+        if self.ends and self.ends.date() != self.starts.date() and self.repeats:
+            raise ValidationError(_("End date must be same as start date if repeating"))
+
+        if self.repeats_until and not self.repeats:
+            raise ValidationError(
+                _("Repeat until date cannot be set if not a repeating event")
+            )
+
+        if self.repeats_until and self.repeats_until < self.starts:
+            raise ValidationError(_("Repeat until date cannot be before start date"))
 
     def get_domain(self):
         return get_domain(self.url) or ""

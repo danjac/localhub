@@ -282,6 +282,43 @@ class TestEventModel:
         with pytest.raises(ValidationError):
             event.clean()
 
+    def test_clean_if_repeats_and_end_date_diff_from_start_date(self):
+        event = Event(
+            starts=timezone.now(),
+            ends=timezone.now() + timedelta(days=3),
+            repeats=Event.RepeatChoices.WEEKLY,
+        )
+        with pytest.raises(ValidationError):
+            event.clean()
+
+    def test_clean_if_repeats_and_repeats_until_before_start_date(self):
+        event = Event(
+            starts=timezone.now(),
+            ends=timezone.now() + timedelta(days=3),
+            repeats=Event.RepeatChoices.WEEKLY,
+            repeats_until=timezone.now() - timedelta(days=3),
+        )
+        with pytest.raises(ValidationError):
+            event.clean()
+
+    def test_clean_if_repeats_and_repeats_until_ok(self):
+        event = Event(
+            starts=timezone.now(),
+            ends=timezone.now() + timedelta(hours=2),
+            repeats=Event.RepeatChoices.WEEKLY,
+            repeats_until=timezone.now() + timedelta(days=30),
+        )
+        event.clean()
+
+    def test_clean_if_repeats_and_repeats_until_none(self):
+        event = Event(
+            starts=timezone.now(),
+            ends=timezone.now() + timedelta(hours=2),
+            repeats=Event.RepeatChoices.WEEKLY,
+            repeats_until=timezone.now() + timedelta(days=30),
+        )
+        event.clean()
+
     def test_get_location(self):
         event = Event(
             street_address="Areenankuja 1",
