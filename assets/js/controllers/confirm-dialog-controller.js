@@ -1,9 +1,9 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Controller } from 'stimulus';
+import ApplicationController from './application-controller';
 
-export default class extends Controller {
+export default class extends ApplicationController {
   /*
   Handles confirmation modal dialog.
 
@@ -19,26 +19,24 @@ export default class extends Controller {
 
   connect() {
     // allow this to be identified by name
-    this.element[this.identifier] = this;
-    this.onConfirm = null;
-    // TBD: prob. need to remove listener in disconnect
+    // this.element[this.identifier] = this;
     document.addEventListener('keydown', (event) => {
       // escape key
       if (event.keyCode === 27) {
         this.close();
       }
     });
+    const open = (data) => console.log(data);
+    this.subscribe('confirm:open', open);
   }
 
-  open({ header, body, onConfirm }) {
+  open({ header, body }) {
     this.headerTarget.innerText = header;
     this.bodyTarget.innerText = body;
-    this.onConfirm = onConfirm;
     this.element.classList.add('active');
   }
 
   close() {
-    this.onConfirm = null;
     this.element.classList.remove('active');
   }
 
@@ -49,9 +47,7 @@ export default class extends Controller {
 
   confirm(event) {
     event.preventDefault();
-    if (this.onConfirm) {
-      this.onConfirm();
-    }
+    this.publish('confirm:done');
     this.close();
   }
 }

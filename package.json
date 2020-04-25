@@ -29,6 +29,7 @@
     "leaflet": "^1.6.0",
     "stimulus": "^1.1.1",
     "textarea-caret": "^3.1.0",
-    "turbolinks": "^5.2.0"
+    "turbolinks": "^5.2.0",
+    "uuid": "^7.0.3"
   }
 }

@@ -1,13 +1,14 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Controller } from 'stimulus';
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
+import { v1 as uuid } from 'uuid';
 
-import { alerts, confirmDialog } from '@utils/ui-helpers';
+import { alerts } from '@utils/ui-helpers';
+import ApplicationController from './application-controller';
 
-export default class extends Controller {
+export default class extends ApplicationController {
   /*
   Handles non-form AJAX interactions.
 
@@ -36,6 +37,13 @@ export default class extends Controller {
 
   static targets = ['toggle'];
 
+  connect() {
+    this.subscribe('confirm:done', (data) => {
+      // check uuid
+      console.log(data);
+    });
+  }
+
   get(event) {
     this.confirm('GET', event);
   }
@@ -55,11 +63,21 @@ export default class extends Controller {
     const header = this.data.get('confirm-header');
     const body = this.data.get('confirm-body');
 
+    // TBD: we'll generalize this. All pub events have a UUID,
+    // which is stored on firing and cleared on sub.
+    this.data.set('uuid', uuid());
+
+    const payload = {
+      method,
+      target: currentTarget,
+      uuid: this.data.get('uuid'),
+    };
+
     if (header && body) {
-      confirmDialog({
+      this.publish('confirm:open', {
         body,
         header,
-        onConfirm,
+        payload,
       });
     } else {
       onConfirm();
