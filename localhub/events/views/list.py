@@ -66,7 +66,7 @@ class EventCalendarView(
             super()
             .get_queryset()
             .published()
-            .with_next_date()
+            .with_next_date(self.current_date)
             .exclude_blocked(self.request.user)
             .filter(
                 parent__isnull=True,
@@ -79,38 +79,49 @@ class EventCalendarView(
             qs = qs.filter(next_date__day=self.current_day)
         return qs
 
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        # TBD: error handling, raise 404 if borked
+    @cached_property
+    def first_of_month(self):
+        """Returns 1st of the month specified in URL (or today)
+        """
         try:
-            data["current_month"] = current_month = datetime.date(
+            return datetime.date(
                 day=1, month=self.current_month, year=self.current_year,
             )
         except ValueError:
             raise Http404
 
+    @cached_property
+    def current_date(self):
+        """
+        Returns the current date if specified, otherwise
+        returns None.
+        """
+        if not self.current_day:
+            return self.first_of_month
+        try:
+            return datetime.date(
+                day=self.current_day, month=self.current_month, year=self.current_year,
+            )
+        except ValueError:
+            raise Http404
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["current_month"] = self.current_date
+
         if self.current_day:
-            # we just need current date, nothing else
-            try:
-                data["current_date"] = current_month = datetime.date(
-                    day=self.current_day,
-                    month=self.current_month,
-                    year=self.current_year,
-                )
-            except ValueError:
-                raise Http404
-            return data
+            data["current_date"] = self.current_date
 
         now = timezone.now()
 
         data.update(
             {
-                "next_month": self.get_next_month(current_month),
-                "previous_month": self.get_previous_month(current_month),
-                "slots": self.get_slots(current_month),
+                "next_month": self.get_next_month(self.current_date),
+                "previous_month": self.get_previous_month(self.current_date),
+                "slots": self.get_slots(self.current_date),
                 "today": now,
-                "is_today": now.month == current_month.month
-                and now.year == current_month.year,
+                "is_today": now.month == self.current_date.month
+                and now.year == self.current_date.year,
             }
         )
 
