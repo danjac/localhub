@@ -328,6 +328,56 @@ class Event(Activity):
             )
         )
 
+    def matches_date(self, dt):
+        """Checks if event has a date matching this date. Useful e.g.
+        for scrolling through a list of dates.
+
+        For example:
+
+        We have a weekly event every Monday. We look at a calendar
+        starting from e.g. 1st of May. Our current date is the first of April 2020.
+
+        The *next_date* value will be 6th April, but that doesn't help us as it is non-repeating.
+        Instead we need to do this in Python:
+
+        Is event non-repeating? Just return start date == dt.
+        Is next_date today? Return True.
+        (note: get_next_start_date() is fine for both of the above cases)
+
+        Is repeats_until expired? Return False.
+
+        Is weekly? check if dt weekday == starts weekday
+        Is monthly? check if 1st of month
+        Is yearly? check if dt date + month == today
+        """
+        starts = self.get_next_start_date()
+        if starts.day == dt.day and starts.month == dt.month and starts.year == dt.year:
+            return True
+
+        if not self.is_repeating() or starts > dt:
+            return False
+
+        if self.repeats == self.RepeatChoices.DAILY:
+            return True
+
+        if (
+            self.repeats == self.RepeatChoices.WEEKLY
+            and dt.weekday() == starts.weekday()
+        ):
+            return True
+
+        if self.repeats == self.RepeatChoices.MONTHLY and dt.day == 1:
+            return True
+
+        if (
+            self.repeats == self.RepeatChoices.YEARLY
+            and dt.day == starts.day
+            and dt.month == starts.month
+        ):
+            return True
+
+        return False
+
     @dispatch
     def notify_on_attend(self, attendee):
         """Notifies owner (if not themselves the attendee) of attendance.

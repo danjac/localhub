@@ -21,6 +21,90 @@ pytestmark = pytest.mark.django_db
 
 
 class TestEventManager:
+    def test_for_month(self,):
+        """Should fall into range.
+        """
+        now = timezone.now()
+        EventFactory(starts=now)
+        qs = Event.objects.for_month(month=now.month, year=now.year,)
+        assert qs.count() == 1
+
+    def test_for_dates_if_non_repeating_event_matches(self):
+        """For a specific date, returns if start date matches this date.
+        """
+        EventFactory(starts=timezone.now())
+        qs = Event.objects.for_dates(timezone.now())
+        assert qs.count() == 1
+
+    def test_for_dates_if_non_repeating_event_and_within_date_range_matches(self,):
+        """Should fall into range
+        """
+        EventFactory(starts=timezone.now())
+        qs = Event.objects.for_dates(
+            timezone.now() - timedelta(days=3), timezone.now() + timedelta(days=3),
+        )
+        assert qs.count() == 1
+
+    def test_for_dates_if_non_repeating_event_not_matches(self):
+        """For a specific date, returns if start date matches this date.
+        """
+        EventFactory(starts=timezone.now() - timedelta(days=30))
+        qs = Event.objects.for_dates(timezone.now())
+        assert qs.count() == 0
+
+    def test_for_dates_if_non_repeating_event_and_within_date_range_not_matches(self,):
+        """Should fall into range
+        """
+        EventFactory(starts=timezone.now() - timedelta(days=30))
+        qs = Event.objects.for_dates(
+            timezone.now() - timedelta(days=3), timezone.now() + timedelta(days=3),
+        )
+        assert qs.count() == 0
+
+    def test_for_dates_if_repeating_and_start_date_in_past(self):
+        """If repeating, then OK if start date any time before the given date.
+        """
+        EventFactory(
+            starts=timezone.now() - timedelta(days=30),
+            repeats=Event.RepeatChoices.WEEKLY,
+        )
+        qs = Event.objects.for_dates(timezone.now())
+        assert qs.count() == 1
+
+    def test_for_dates_if_repeating_and_start_date_in_future(self):
+        """Ignore if repeating and not started yet.
+        """
+        EventFactory(
+            starts=timezone.now() + timedelta(days=30),
+            repeats=Event.RepeatChoices.WEEKLY,
+        )
+        qs = Event.objects.for_dates(timezone.now())
+        assert qs.count() == 0
+
+    def test_for_dates_if_repeating_and_start_date_in_range(self):
+        """Should be ok if start date within range
+        """
+        EventFactory(
+            starts=timezone.now() + timedelta(days=3),
+            repeats=Event.RepeatChoices.WEEKLY,
+        )
+        qs = Event.objects.for_dates(
+            timezone.now() - timedelta(days=3), timezone.now() + timedelta(days=7),
+        )
+        assert qs.count() == 1
+
+    def test_for_dates_if_repeating_and_start_date_outside_of_range(self):
+        """Should be ok if start date within range
+        """
+        EventFactory(
+            starts=timezone.now() + timedelta(days=30),
+            repeats=Event.RepeatChoices.WEEKLY,
+        )
+        qs = Event.objects.for_dates(
+            timezone.now() - timedelta(days=3), timezone.now() + timedelta(days=7),
+        )
+        assert qs.count() == 0
+
     def test_next_date_if_not_repeats(self):
         "Should be same as start date if no repeat specified"
         event = EventFactory(repeats=None)

@@ -59,9 +59,7 @@ class EventCalendarView(
             return timezone.now().year
 
     def get_queryset(self):
-        # simplified queryset: we don't need likes etc.
-        # order by starts with earliest first, so they
-        # appear in the right order in day views/slots.
+        # for rep
         qs = (
             super()
             .get_queryset()

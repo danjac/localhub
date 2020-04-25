@@ -1,6 +1,9 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import calendar
+import datetime
+
 from django.db import models
 from django.db.models.functions import (
     Cast,
@@ -10,6 +13,9 @@ from django.db.models.functions import (
     TruncMonth,
     TruncWeek,
 )
+from django.utils import timezone
+
+import pytz
 
 from localhub.activities.models.managers import ActivityManager, ActivityQuerySet
 from localhub.db.utils import boolean_value
@@ -159,6 +165,63 @@ class EventQuerySet(ActivityQuerySet):
                 output_field=models.DurationField(),
             )
         )
+
+    def for_month(self, month, year):
+        """For convenience: given a month/year, return events
+        within the 1st and last of month (i.e. 11:59:59 of last month)
+        """
+
+        date_from = datetime.datetime(day=1, month=month, year=year, tzinfo=pytz.UTC)
+
+        (_, last) = calendar.monthrange(year, month)
+
+        date_to = datetime.datetime(
+            day=last,
+            month=month,
+            year=year,
+            hour=23,
+            minute=59,
+            second=59,
+            tzinfo=pytz.UTC,
+        )
+
+        return self.for_dates(date_from, date_to)
+
+    def for_dates(self, date_from, date_to=None):
+        """Returns:
+
+        1) non-repeating dates with date range falling within these dates OR
+        2) repeating dates with start date > the date from date
+        """
+
+        non_repeats_q = models.Q(repeats__isnull=True) | models.Q(
+            repeats_until__lte=timezone.now()
+        )
+
+        repeats_q = models.Q(
+            models.Q(
+                models.Q(repeats_until__isnull=True)
+                | models.Q(repeats_until__gt=timezone.now())
+            ),
+            repeats__isnull=False,
+        )
+
+        if date_to is None:
+            # fetch all those for a specific date
+            non_repeats_q = non_repeats_q & models.Q(
+                starts__day=date_from.day,
+                starts__month=date_from.month,
+                starts__year=date_from.year,
+            )
+            repeats_q = repeats_q & models.Q(starts__lt=date_from)
+        else:
+            # fetch range of dates
+            non_repeats_q = non_repeats_q & models.Q(starts__range=(date_from, date_to))
+            # if repeating, we just need to know if it starts before
+            # the end date
+            repeats_q = repeats_q & models.Q(starts__lte=date_to)
+
+        return self.filter(non_repeats_q | repeats_q)
 
     def with_common_annotations(self, user, community):
         return (
