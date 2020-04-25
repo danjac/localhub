@@ -275,9 +275,87 @@ class TestEventManager:
 
 
 class TestEventModel:
+    def test_matches_date_if_non_repeating_and_matches_today(self):
+        event = Event(starts=timezone.now())
+        assert event.matches_date(timezone.now())
+
+    def test_matches_date_if_non_repeating_and_not_matching_today(self):
+        event = Event(starts=timezone.now() - timedelta(days=30))
+        assert not event.matches_date(timezone.now())
+
+    def test_matches_date_if_repeats_daily(self):
+        event = EventFactory(
+            starts=timezone.now() - timedelta(days=30),
+            repeats=Event.RepeatChoices.DAILY,
+        )
+        assert event.matches_date(timezone.now())
+
+    def test_matches_date_if_repeats_daily_not_started_yet(self):
+        event = Event(
+            starts=timezone.now() + timedelta(days=30),
+            repeats=Event.RepeatChoices.DAILY,
+        )
+        assert not event.matches_date(timezone.now())
+
     def test_is_repeating_if_repeats_is_null(self):
         event = Event(repeats=None)
         assert not event.is_repeating()
+
+    def test_matches_date_if_repeats_weekly(self):
+        # start on Monday
+        now = timezone.now()
+        # find first day of this week
+        event = EventFactory(
+            starts=now - timedelta(days=7), repeats=Event.RepeatChoices.WEEKLY,
+        )
+        dt = now + timedelta(days=7)
+        assert event.matches_date(dt)
+
+    def test_matches_date_if_repeats_weekly_wrong_weekday(self):
+        # start on Monday
+        now = timezone.now()
+        # find first day of this week
+        event = EventFactory(
+            starts=now - timedelta(days=7), repeats=Event.RepeatChoices.WEEKLY,
+        )
+        dt = now + timedelta(days=5)
+        assert not event.matches_date(dt)
+
+    def test_matches_date_if_repeats_monthly_first_of_month(self):
+        event = EventFactory(
+            starts=timezone.now() - timedelta(days=30),
+            repeats=Event.RepeatChoices.MONTHLY,
+        )
+        dt = (timezone.now() + timedelta(days=60)).replace(day=1)
+        assert event.matches_date(dt)
+
+    def test_matches_date_if_repeats_monthly_not_first_of_month(self):
+        event = EventFactory(
+            starts=timezone.now() - timedelta(days=30),
+            repeats=Event.RepeatChoices.MONTHLY,
+        )
+        dt = (timezone.now() + timedelta(days=60)).replace(day=15)
+        assert not event.matches_date(dt)
+
+    def test_matches_date_if_repeats_yearly_matches_date(self):
+        event = EventFactory(
+            starts=timezone.now() - timedelta(days=30),
+            repeats=Event.RepeatChoices.YEARLY,
+        )
+        dt = (timezone.now() + timedelta(days=400)).replace(
+            day=event.starts.day, month=event.starts.month
+        )
+        assert event.matches_date(dt)
+
+    def test_matches_date_if_repeats_yearly_not_matches_date(self):
+        event = EventFactory(
+            starts=timezone.now() - timedelta(days=30),
+            repeats=Event.RepeatChoices.YEARLY,
+        )
+        dt = (timezone.now() + timedelta(days=400)).replace(
+            day=event.starts.month, month=event.starts.month
+        ) - timedelta(days=1)
+        assert not event.matches_date(dt)
 
     def test_is_repeating_if_repeats_and_repeats_until_is_null(self):
         event = Event(repeats=Event.RepeatChoices.DAILY, repeats_until=None)

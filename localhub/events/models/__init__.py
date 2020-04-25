@@ -331,53 +331,38 @@ class Event(Activity):
     def matches_date(self, dt):
         """Checks if event has a date matching this date. Useful e.g.
         for scrolling through a list of dates.
-
-        For example:
-
-        We have a weekly event every Monday. We look at a calendar
-        starting from e.g. 1st of May. Our current date is the first of April 2020.
-
-        The *next_date* value will be 6th April, but that doesn't help us as it is non-repeating.
-        Instead we need to do this in Python:
-
-        Is event non-repeating? Just return start date == dt.
-        Is next_date today? Return True.
-        (note: get_next_start_date() is fine for both of the above cases)
-
-        Is repeats_until expired? Return False.
-
-        Is weekly? check if dt weekday == starts weekday
-        Is monthly? check if 1st of month
-        Is yearly? check if dt date + month == today
         """
-        starts = self.get_next_start_date()
-        if starts.day == dt.day and starts.month == dt.month and starts.year == dt.year:
-            return True
+        exact_match = (
+            self.starts.day == dt.day
+            and self.starts.month == dt.month
+            and self.starts.year == dt.year
+        )
 
-        if not self.is_repeating() or starts > dt:
+        if not self.is_repeating():
+            return exact_match
+
+        if exact_match:
+            return dt > timezone.now()
+
+        if self.starts > dt:
             return False
 
-        if self.repeats_until and self.repeats_until < dt:
+        if self.repeats_until and (
+            self.repeats_until < dt or self.repeats_until < timezone.now()
+        ):
             return False
 
         if self.repeats == self.RepeatChoices.DAILY:
             return True
 
-        if (
-            self.repeats == self.RepeatChoices.WEEKLY
-            and dt.weekday() == starts.weekday()
-        ):
-            return True
+        if self.repeats == self.RepeatChoices.WEEKLY:
+            return dt.weekday() == self.starts.weekday()
 
-        if self.repeats == self.RepeatChoices.MONTHLY and dt.day == 1:
-            return True
+        if self.repeats == self.RepeatChoices.MONTHLY:
+            return dt.day == 1
 
-        if (
-            self.repeats == self.RepeatChoices.YEARLY
-            and dt.day == starts.day
-            and dt.month == starts.month
-        ):
-            return True
+        if self.repeats == self.RepeatChoices.YEARLY:
+            return dt.day == self.starts.day and dt.month == self.starts.month
 
         return False
 
