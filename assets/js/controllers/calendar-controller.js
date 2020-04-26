@@ -28,6 +28,13 @@ export default class extends ApplicationController {
     toggle: re-renders or hides the calendar.
     select: select a specific date and insert into dateInput.
 
+  data:
+    publisher (String): when a calender date is selected, a calendar:select
+      event is published to the event bus with the data { publisher, currentMonth }.
+    subscriber (String): listens to calendar:select events for a specific publisher
+      name. Will update the currentMonth accordingly. This allows us
+      to ensure that the start months in all calendar controls are kept consistent.
+
   targets:
     calendar: the calendar container element
     dateInput: <input> tag triggering the input.
@@ -46,12 +53,6 @@ export default class extends ApplicationController {
   ];
 
   connect() {
-    // what we want is:
-    // we have e.g. a start date in another (calendar) controller
-    // the user selects the start date for a specific month.
-    // all other (subscriber) controllers change their currentMonth
-    // to this month.
-
     if (this.data.has('subscriber')) {
       this.subscribe('calendar:select', ({ detail: { currentMonth, publisher } }) => {
         if (publisher === this.data.get('subscriber')) {
