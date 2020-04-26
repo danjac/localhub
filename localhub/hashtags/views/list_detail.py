@@ -107,7 +107,7 @@ class TagDetailView(ParentObjectMixin, BaseActivityStreamView):
     def get(self, request, *args, **kwargs):
         if self.tag is None:
             return TemplateResponse(
-                request, "hashtags/not_found.html", {"tag": kwargs["slug"]}, status=404
+                request, "hashtags/not_found.html", {"tag": kwargs["slug"]}, status=404,
             )
         return super().get(request, *args, **kwargs)
 

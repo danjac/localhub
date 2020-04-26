@@ -5,7 +5,6 @@
 //
 // Event Bus events
 
-export const EVENT_CALENDAR_SELECT = 'calendar:select';
 export const EVENT_CONFIRM_OPEN = 'confirm:open';
 export const EVENT_TOAST_MESSAGE = 'toast:message';
 
