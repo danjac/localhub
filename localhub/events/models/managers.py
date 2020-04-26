@@ -147,28 +147,35 @@ class EventQuerySet(ActivityQuerySet):
         """For convenience: given a day/month/year, return
         events for this date.
         """
-        return self.for_dates(
-            datetime.datetime(day=day, month=month, year=year, tzinfo=pytz.UTC)
-        )
+        try:
+            dt = datetime.datetime(day=day, month=month, year=year, tzinfo=pytz.UTC)
+        except ValueError:
+            raise self.model.InvalidDate()
+        return self.for_dates(dt)
 
     def for_month(self, month, year):
         """For convenience: given a month/year, return events
         within the 1st and last of month (i.e. 11:59:59 of last month)
         """
 
-        date_from = datetime.datetime(day=1, month=month, year=year, tzinfo=pytz.UTC)
+        try:
+            date_from = datetime.datetime(
+                day=1, month=month, year=year, tzinfo=pytz.UTC
+            )
 
-        (_, last) = calendar.monthrange(year, month)
+            (_, last) = calendar.monthrange(year, month)
 
-        date_to = datetime.datetime(
-            day=last,
-            month=month,
-            year=year,
-            hour=23,
-            minute=59,
-            second=59,
-            tzinfo=pytz.UTC,
-        )
+            date_to = datetime.datetime(
+                day=last,
+                month=month,
+                year=year,
+                hour=23,
+                minute=59,
+                second=59,
+                tzinfo=pytz.UTC,
+            )
+        except ValueError:
+            raise self.model.InvalidDate()
 
         return self.for_dates(date_from, date_to)
 
@@ -210,6 +217,9 @@ class EventQuerySet(ActivityQuerySet):
                 )
             )
         else:
+            # TBD: we should check boundary issues where
+            # start date falls exactly on either from or to date.
+
             non_repeats_q = non_repeats_q & models.Q(starts__range=(date_from, date_to))
             # any that have already started BEFORE the date_from
             # OR will start with the range

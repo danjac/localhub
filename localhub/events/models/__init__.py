@@ -70,6 +70,11 @@ class Event(Activity):
         ]
     )
 
+    class InvalidDate(ValueError):
+        """Used with date queries"""
+
+        ...
+
     class RepeatChoices(models.TextChoices):
         DAILY = "day", _("Same time every day")
         WEEKLY = "week", _("Same day of the week at the same time")
@@ -344,7 +349,6 @@ class Event(Activity):
         """Checks if event has a date matching this date. Useful e.g.
         for scrolling through a list of dates.
 
-        TBD: pass in a DATE value and normalize on that (self.starts.date())
         """
         exact_match = (
             self.starts.day == dt.day

@@ -37,12 +37,14 @@ class EventCalendarView(
     model = Event
 
     def get_allow_empty(self):
+        # empty month view is fine, but you should not be able
+        # to navigate to a single date missing any events.
         return not (self.current_day)
 
     def get(self, request, *args, **kwargs):
         try:
             return super().get(request, *args, **kwargs)
-        except ValueError:
+        except Event.InvalidDate:
             raise Http404("These dates are not valid")
 
     @cached_property
@@ -83,48 +85,56 @@ class EventCalendarView(
             qs = qs.for_month(self.current_month, self.current_year)
         return qs
 
+    def make_date(self, day):
+        try:
+            return datetime.date(
+                day=day, month=self.current_month, year=self.current_year,
+            )
+        except ValueError:
+            raise Event.InvalidDate()
+
+    def make_datetime(self, day):
+        try:
+            return datetime.datetime(
+                day=day,
+                month=self.current_month,
+                year=self.current_year,
+                tzinfo=pytz.UTC,
+            )
+        except ValueError:
+            raise Event.InvalidDate()
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data["current_month"] = current_month = datetime.date(
-            day=1, month=self.current_month, year=self.current_year,
-        )
 
         if self.current_day:
-            # we don't need all the complicated calendar data,
-            # just events for this day
-            data["current_date"] = current_month = datetime.date(
-                day=self.current_day, month=self.current_month, year=self.current_year,
-            )
+            data["current_date"] = self.make_date(self.current_day)
+            match_datetime = self.make_datetime(self.current_day)
             data["events"] = [
                 event
                 for event in self.object_list
-                if event.matches_date(
-                    datetime.datetime(
-                        day=self.current_day,
-                        month=self.current_month,
-                        year=self.current_year,
-                        tzinfo=pytz.UTC,
-                    )
-                )
+                if event.matches_date(match_datetime)
             ]
             return data
 
         now = timezone.now()
 
+        data["current_month"] = first_of_month = self.make_date(1)
+
         data.update(
             {
-                "next_month": self.get_next_month(current_month),
-                "previous_month": self.get_previous_month(current_month),
-                "slots": self.get_slots(current_month),
+                "next_month": self.get_next_month(first_of_month),
+                "previous_month": self.get_previous_month(first_of_month),
+                "slots": self.get_slots(),
                 "today": now,
-                "is_today": now.month == current_month.month
-                and now.year == current_month.year,
+                "is_today": now.month == first_of_month.month
+                and now.year == first_of_month.year,
             }
         )
 
         return data
 
-    def get_slots(self, date):
+    def get_slots(self):
         """Group events by day into tuples of (number, events)
         """
 
@@ -133,21 +143,24 @@ class EventCalendarView(
                 day,
                 [event for event in self.object_list if dt and event.matches_date(dt)],
             )
-            for day, dt in self.iter_dates(date)
+            for day, dt in self.iter_dates()
         ]
 
-    def iter_dates(self, date):
+    def iter_dates(self):
         """Yields tuple of (counter, datetime) for each day of month. If day
         falls out of range yields zero, None.
         """
-        for day in calendar.Calendar().itermonthdays(date.year, date.month):
-            if day > 0:
-                yield day, datetime.datetime(
-                    day=day, month=date.month, year=date.year, tzinfo=pytz.UTC
-                )
-            else:
-                # falls outside the day range
-                yield 0, None
+        try:
+            for day in calendar.Calendar().itermonthdays(
+                self.current_year, self.current_month
+            ):
+                if day > 0:
+                    yield day, self.make_datetime(day=day)
+                else:
+                    # falls outside the day range
+                    yield 0, None
+        except ValueError:
+            raise Event.InvalidDate()
 
 
 event_calendar_view = EventCalendarView.as_view()

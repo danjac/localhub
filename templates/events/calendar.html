@@ -13,7 +13,7 @@
 <ul class="breadcrumb">
   <li class="li breadcrumb-item"><a href="{% url 'events:list' %}">{% trans "Events" %}</a></li>
   <li class="li breadcrumb-item">
-    <a href="{{ request.path }}?month={{ current_month.month }}&year={{ current_month.year }}">
+    <a href="{{ request.path }}?month={{ current_date.month }}&year={{ current_date.year }}">
       {% trans "Calendar" %}
     </a>
   </li>
