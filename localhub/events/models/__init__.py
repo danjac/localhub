@@ -343,6 +343,8 @@ class Event(Activity):
     def matches_date(self, dt):
         """Checks if event has a date matching this date. Useful e.g.
         for scrolling through a list of dates.
+
+        TBD: pass in a DATE value and normalize on that (self.starts.date())
         """
         exact_match = (
             self.starts.day == dt.day
@@ -350,10 +352,16 @@ class Event(Activity):
             and self.starts.year == dt.year
         )
 
+        # if non-repeating then must always be an exact match.
         if not self.is_repeating():
             return exact_match
 
-        if exact_match and dt < timezone.now():
+        # matches IF:
+        # 1) has already started repeating (dt > starts or now > starts)
+        # 2) now or dt < repeats_until
+        # 3) dt matches the appropriate repeats criteria.
+
+        if not exact_match and (self.starts > timezone.now() and self.starts > dt):
             return False
 
         if self.repeats_until and (

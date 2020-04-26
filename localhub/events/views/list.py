@@ -96,9 +96,9 @@ class EventCalendarView(
                 day=self.current_day, month=self.current_month, year=self.current_year,
             )
             data["events"] = [
-                e
-                for e in self.object_list
-                if e.matches_date(
+                event
+                for event in self.object_list
+                if event.matches_date(
                     datetime.datetime(
                         day=self.current_day,
                         month=self.current_month,
@@ -129,7 +129,10 @@ class EventCalendarView(
         """
 
         return [
-            (day, [e for e in self.object_list if dt and e.matches_date(dt)])
+            (
+                day,
+                [event for event in self.object_list if dt and event.matches_date(dt)],
+            )
             for day, dt in self.iter_dates(date)
         ]
 

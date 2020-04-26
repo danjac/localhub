@@ -146,7 +146,7 @@ class TestEventManager:
         )
         first = Event.objects.with_next_date().first()
         assert first.next_date.weekday() == event.starts.weekday()
-        assert (first.next_date.date() - datetime.date.today()).days == 7
+        assert ((first.next_date.date() - datetime.date.today()).days) % 7 == 0
 
     def test_next_date_if_repeats_monthly_before_start_date(self):
         "Should be same as start date if no repeat specified"

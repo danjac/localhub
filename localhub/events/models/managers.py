@@ -199,9 +199,16 @@ class EventQuerySet(ActivityQuerySet):
                 starts__year=date_from.year,
             )
             # any that have already started BEFORE the date_from
-            # and so will have started repeating
-            repeats_q = repeats_q & models.Q(starts__lte=date_from)
-
+            # and so will have started repeating, plus any
+            # that start specifically today
+            repeats_q = repeats_q & models.Q(
+                models.Q(starts__lte=date_from)
+                | models.Q(
+                    starts__day=date_from.day,
+                    starts__month=date_from.month,
+                    starts__year=date_from.year,
+                )
+            )
         else:
             non_repeats_q = non_repeats_q & models.Q(starts__range=(date_from, date_to))
             # any that have already started BEFORE the date_from
