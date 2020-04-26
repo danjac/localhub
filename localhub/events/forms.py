@@ -22,7 +22,7 @@ class EventForm(ActivityForm):
     starts = CalendarField(
         label=_("Event starts"),
         input_date_formats=DATE_FORMATS,
-        widget=CalendarWidget(publisher="starts"),
+        widget=CalendarWidget(publisher="starts", time_attrs={"value": "09:00"}),
     )
 
     ends = CalendarField(

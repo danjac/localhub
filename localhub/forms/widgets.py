@@ -82,7 +82,12 @@ class CalendarWidget(forms.SplitDateTimeWidget):
 
         time_attrs = kwargs.pop("time_attrs", {})
         time_attrs.update(
-            {"autocomplete": "off", "placeholder": _("HH:MM"), "type": "time",}
+            {
+                "autocomplete": "off",
+                "placeholder": _("HH:MM"),
+                "data-target": "calendar.timeInput",
+                "type": "time",
+            }
         )
         super().__init__(
             date_attrs=date_attrs,

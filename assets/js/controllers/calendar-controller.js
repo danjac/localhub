@@ -37,7 +37,14 @@ export default class extends ApplicationController {
     template: HTML <template> to render the calendar body.
 
  */
-  static targets = ['calendar', 'dateInput', 'currentMonth', 'days', 'template'];
+  static targets = [
+    'calendar',
+    'dateInput',
+    'currentMonth',
+    'days',
+    'template',
+    'timeInput',
+  ];
 
   connect() {
     // what we want is:
