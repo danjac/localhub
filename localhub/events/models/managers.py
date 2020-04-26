@@ -146,6 +146,18 @@ class EventQuerySet(ActivityQuerySet):
     def for_date(self, day, month, year):
         """For convenience: given a day/month/year, return
         events for this date.
+
+        Args:
+            day (int): day of month i.e. 1-31.
+            month (int): calendar month i.e. 1-12
+            year (int): calendar year
+
+        Returns:
+            QuerySet
+
+        Raises:
+            Event.InvalidDate: if day/month/year combo is not a valid
+                calendar date.
         """
         try:
             dt = datetime.datetime(day=day, month=month, year=year, tzinfo=pytz.UTC)
@@ -156,8 +168,18 @@ class EventQuerySet(ActivityQuerySet):
     def for_month(self, month, year):
         """For convenience: given a month/year, return events
         within the 1st and last of month (i.e. 11:59:59 of last month)
-        """
 
+        Args:
+            month (int): calendar month i.e. 1-12
+            year (int): calendar year
+
+        Returns:
+            QuerySet
+
+        Raises:
+            Event.InvalidDate: if month/year combo is not a valid
+                calendar date.
+        """
         try:
             date_from = datetime.datetime(
                 day=1, month=month, year=year, tzinfo=pytz.UTC
@@ -180,10 +202,20 @@ class EventQuerySet(ActivityQuerySet):
         return self.for_dates(date_from, date_to)
 
     def for_dates(self, date_from, date_to=None):
-        """Returns:
+        """Returns any events which either start within
+        these dates or (if repeating) are valid within these
+        dates.
 
-        1) non-repeating dates with date range falling within these dates OR
-        2) repeating dates with start date > the date from date
+        To check specific dates within these ranges to see
+        if an event actually occurs on that date, use this
+        filter with Event.matches_date().
+
+        Args:
+            date_from (date or datetime)
+            date_to (date or datetime, optional): if this is provided
+                will check range of dates
+        Returns:
+            QuerySet
         """
 
         non_repeats_q = models.Q(repeats__isnull=True) | models.Q(

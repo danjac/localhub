@@ -309,6 +309,9 @@ class Event(Activity):
     def is_repeating(self):
         """If has repeat option, and repeats_until is NULL or
         in future.
+
+        Returns:
+            bool
         """
         if not self.repeats:
             return False
@@ -349,6 +352,11 @@ class Event(Activity):
         """Checks if event has a date matching this date. Useful e.g.
         for scrolling through a list of dates.
 
+        Args:
+            dt (datetime)
+
+        Returns:
+            bool: if event occurs on this date (single or repeating)
         """
         exact_match = (
             self.starts.day == dt.day

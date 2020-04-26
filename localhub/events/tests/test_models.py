@@ -77,6 +77,50 @@ class TestEventManager:
         qs = Event.objects.for_dates(now - timedelta(days=3), now + timedelta(days=3),)
         assert qs.count() == 0
 
+    def test_for_dates_if_non_repeating_range_and_start_date_is_first_date(self):
+        """Should be inclusive
+        """
+        date_from = timezone.now()
+        date_to = date_from + timedelta(days=30)
+
+        EventFactory(starts=date_from, repeats=None)
+        qs = Event.objects.for_dates(date_from, date_to)
+        assert qs.count() == 1
+
+    def test_for_dates_if_non_repeating_range_and_start_date_is_last_date(self):
+        """Should be inclusive
+        """
+        date_from = timezone.now()
+        date_to = date_from + timedelta(days=30)
+
+        EventFactory(starts=date_to, repeats=None)
+        qs = Event.objects.for_dates(date_from, date_to)
+        assert qs.count() == 1
+
+    def test_for_dates_if_repeating_range_and_start_date_is_first_date(self):
+        """Should be inclusive
+        """
+        date_from = timezone.now()
+        date_to = date_from + timedelta(days=30)
+
+        EventFactory(
+            starts=date_from, repeats=Event.RepeatChoices.WEEKLY,
+        )
+        qs = Event.objects.for_dates(date_from, date_to)
+        assert qs.count() == 1
+
+    def test_for_dates_if_repeating_range_and_start_date_is_last_date(self):
+        """Should be inclusive
+        """
+        date_from = timezone.now()
+        date_to = date_from + timedelta(days=30)
+
+        EventFactory(
+            starts=date_to, repeats=Event.RepeatChoices.WEEKLY,
+        )
+        qs = Event.objects.for_dates(date_from, date_to)
+        assert qs.count() == 1
+
     def test_for_dates_if_repeating_and_start_date_in_past(self):
         """If repeating, then OK if start date any time before today
         """
