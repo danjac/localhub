@@ -9,6 +9,7 @@ import pytz
 
 from localhub.activities.forms import ActivityForm
 from localhub.forms.fields import CalendarField
+from localhub.forms.widgets import CalendarWidget
 from localhub.utils.geocode import geocode
 
 from .models import Event
@@ -18,14 +19,24 @@ DATE_FORMATS = ["%d/%m/%Y"]
 
 class EventForm(ActivityForm):
 
-    starts = CalendarField(label=_("Event starts"), input_date_formats=DATE_FORMATS)
+    starts = CalendarField(
+        label=_("Event starts"),
+        input_date_formats=DATE_FORMATS,
+        widget=CalendarWidget(publisher=True),
+    )
 
     ends = CalendarField(
-        label=_("Event ends"), required=False, input_date_formats=DATE_FORMATS
+        label=_("Event ends"),
+        required=False,
+        input_date_formats=DATE_FORMATS,
+        widget=CalendarWidget(subscriber=True),
     )
 
     repeats_until = CalendarField(
-        label=_("Repeat until"), input_date_formats=DATE_FORMATS, required=False,
+        label=_("Repeat until"),
+        input_date_formats=DATE_FORMATS,
+        required=False,
+        widget=CalendarWidget(subscriber=True),
     )
 
     clear_geolocation = forms.BooleanField(

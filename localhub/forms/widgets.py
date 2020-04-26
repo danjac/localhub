@@ -76,6 +76,10 @@ class CalendarWidget(forms.SplitDateTimeWidget):
                 "placeholder": _("DD/MM/YYYY"),
             }
         )
+
+        self.publisher = kwargs.pop("publisher", False)
+        self.subscriber = kwargs.pop("subscriber", False)
+
         time_attrs = kwargs.pop("time_attrs", {})
         time_attrs.update(
             {"autocomplete": "off", "placeholder": _("HH:MM"), "type": "time",}
@@ -88,3 +92,9 @@ class CalendarWidget(forms.SplitDateTimeWidget):
             *args,
             **kwargs
         )
+
+    def get_context(self, name, value, attrs):
+        data = super().get_context(name, value, attrs)
+
+        data.update({"publisher": self.publisher, "subscriber": self.subscriber})
+        return data

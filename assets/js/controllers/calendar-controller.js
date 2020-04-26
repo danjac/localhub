@@ -38,13 +38,36 @@ export default class extends ApplicationController {
  */
   static targets = ['calendar', 'dateInput', 'currentMonth', 'days', 'template'];
 
+  connect() {
+    // what we want is:
+    // we have e.g. a start date in another (calendar) controller
+    // the user selects the start date for a specific month.
+    // all other (subscriber) controllers change their currentMonth
+    // to this month.
+
+    if (this.data.has('subscriber')) {
+      this.subscribe('calendar:update', ({ detail: { currentMonth } }) => {
+        this.data.set('current-month', currentMonth);
+      });
+    }
+  }
+
   toggle(event) {
     event.preventDefault();
     if (!this.calendarTarget.classList.toggle('d-none')) {
       const { value } = this.dateInputTarget;
-
       this.selectedDate = value ? parse(value, DATE_FORMAT, new Date()) : null;
-      this.firstOfMonthDate = startOfMonth(this.selectedDate || new Date());
+
+      // first of month date will be selected date OR current-month
+      let date;
+      if (this.selectedDate) {
+        date = this.selectedDate;
+      } else if (this.data.has('current-month')) {
+        date = parse(this.data.get('current-month'), DATE_FORMAT, new Date());
+      } else {
+        date = new Date();
+      }
+      this.firstOfMonthDate = startOfMonth(date);
 
       this.render();
     }
@@ -69,6 +92,9 @@ export default class extends ApplicationController {
     );
     this.dateInputTarget.value = selectedDate;
     this.calendarTarget.classList.add('d-none');
+    if (this.data.has('publisher')) {
+      this.publish('calendar:update', { currentMonth: selectedDate });
+    }
   }
 
   render() {
@@ -76,6 +102,7 @@ export default class extends ApplicationController {
     const startDate = startOfWeek(this.firstOfMonthDate);
     const endDate = endOfWeek(lastOfMonthDate);
     const today = new Date();
+
     // set the current month first (tbd: i18n)
     this.currentMonthTarget.innerText = format(this.firstOfMonthDate, 'MMMM yyyy');
     // clear

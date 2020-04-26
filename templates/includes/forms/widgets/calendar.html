@@ -1,7 +1,11 @@
 {# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
-<div data-controller="calendar">
+<div {% spaceless %}data-controller="calendar"
+     {% if subscriber %}
+     data-calendar-subscriber{% endif %}
+     {% if publisher %}
+  data-calendar-publisher{% endif %}{% endspaceless %}>
   <template data-target="calendar.template">
     <div class="calendar-date">
       <button class="date-item"
