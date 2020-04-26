@@ -12,10 +12,15 @@
   </li>
   <li class="breadcrumb-item">
     <a href="{% url 'events:calendar' %}?month={{ event.starts.month }}&year={{ event.starts.year }}">
-      {{ event.starts|date:"F, Y" }}
+      {{ event.starts|date:"F Y" }}
     </a>
   </li>
-  <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'events:calendar' %}?day={{ event.starts.day }}&month={{ event.starts.month }}&year={{ event.starts.year }}">
+      {{ event.starts|date:"l j" }}
+    </a>
+  </li>
+   <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
 </ul>
 {% else %}
 {{ block.super }}
