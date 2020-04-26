@@ -21,13 +21,21 @@ pytestmark = pytest.mark.django_db
 
 
 class TestEventManager:
+    def test_for_month_if_invalid_date(self):
+        with pytest.raises(Event.InvalidDate):
+            Event.objects.for_month(month=13, year=2020)
+
     def test_for_month(self,):
         """Should fall into range.
         """
         now = timezone.now()
         EventFactory(starts=now)
-        qs = Event.objects.for_month(month=now.month, year=now.year,)
+        qs = Event.objects.for_month(month=now.month, year=now.year)
         assert qs.count() == 1
+
+    def test_for_date_if_invalid_date(self):
+        with pytest.raises(Event.InvalidDate):
+            Event.objects.for_date(day=33, month=13, year=2020)
 
     def test_for_date(self,):
         """Should match date.
