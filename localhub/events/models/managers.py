@@ -290,9 +290,6 @@ class EventQuerySet(ActivityQuerySet):
                 )
             )
         else:
-            # TBD: we should check boundary issues where
-            # start date falls exactly on either from or to date.
-
             non_repeats_q = non_repeats_q & models.Q(starts__range=(date_from, date_to))
             # any that have already started BEFORE the date_from
             # OR will start with the range
