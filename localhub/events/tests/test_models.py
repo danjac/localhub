@@ -520,7 +520,7 @@ class TestEventModel:
             event.clean()
 
     def test_clean_if_repeats_and_end_date_diff_from_start_date(self):
-        now = timezone.now()
+        now = timezone.now().replace(hour=1)
         event = Event(
             starts=now,
             ends=now + timedelta(days=3),
@@ -530,7 +530,7 @@ class TestEventModel:
             event.clean()
 
     def test_clean_if_repeats_and_repeats_until_before_start_date(self):
-        now = timezone.now()
+        now = timezone.now().replace(hour=1)
         event = Event(
             starts=now,
             ends=now + timedelta(days=3),
@@ -541,7 +541,7 @@ class TestEventModel:
             event.clean()
 
     def test_clean_if_repeats_and_repeats_until_ok(self):
-        now = timezone.now()
+        now = timezone.now().replace(hour=1)
         event = Event(
             starts=now,
             ends=now + timedelta(hours=2),
@@ -551,7 +551,7 @@ class TestEventModel:
         event.clean()
 
     def test_clean_if_repeats_and_repeats_until_none(self):
-        now = timezone.now()
+        now = timezone.now().replace(hour=1)
         event = Event(
             starts=now,
             ends=now + timedelta(hours=2),

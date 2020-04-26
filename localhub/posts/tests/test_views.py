@@ -385,3 +385,21 @@ class TestFlagView:
 
         notification = Notification.objects.get()
         assert notification.recipient == moderator.member
+
+
+class TestOpengraphPreviewView:
+    def test_get(self, client, mock_html_scraper_from_url):
+        response = client.get(
+            reverse("posts:opengraph_preview"), {"url": "https://imgur.com"}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["title"] == "Imgur"
+        assert data["image"] == "https://imgur.com/cat.gif"
+        assert data["description"] == "cat"
+
+    def test_get_bad_result(self, client, mock_html_scraper_from_invalid_url):
+        response = client.get(
+            reverse("posts:opengraph_preview"), {"url": "https://imgur.com"}
+        )
+        assert response.status_code == 400

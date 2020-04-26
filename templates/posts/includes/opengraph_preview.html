@@ -1,0 +1,24 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+<div data-controller="opengraph-preview"
+     data-opengraph-preview-preview-url="{% url 'posts:opengraph_preview' %}">
+  <h6 data-target="opengraph-preview.title"
+      class="d-none"></h6>
+  <div class="columns mb-1">
+    <div class="column col-12 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+      <img data-target="opengraph-preview.image"
+           class="img-responsive d-none">
+      </a>
+    </div>
+    <div class="column col-12 col-sm-9 col-md-9 col-lg-9 col-xl-9">
+      <blockquote class="text-small text-muted text-italic text-ellipsis d-none"
+                  data-target="opengraph-preview.description">
+      </blockquote>
+    </div>
+  </div>
+  <input type="{{ widget.type }}"
+         name="{{ widget.name }}"
+         data-action="opengraph-preview#change"
+         {% include "django/forms/widgets/attrs.html" %}>
+</div>
