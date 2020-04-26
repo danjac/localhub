@@ -22,21 +22,21 @@ class EventForm(ActivityForm):
     starts = CalendarField(
         label=_("Event starts"),
         input_date_formats=DATE_FORMATS,
-        widget=CalendarWidget(publisher=True),
+        widget=CalendarWidget(publisher="starts"),
     )
 
     ends = CalendarField(
         label=_("Event ends"),
         required=False,
         input_date_formats=DATE_FORMATS,
-        widget=CalendarWidget(subscriber=True),
+        widget=CalendarWidget(subscriber="starts"),
     )
 
     repeats_until = CalendarField(
         label=_("Repeat until"),
         input_date_formats=DATE_FORMATS,
         required=False,
-        widget=CalendarWidget(subscriber=True),
+        widget=CalendarWidget(subscriber="starts"),
     )
 
     clear_geolocation = forms.BooleanField(

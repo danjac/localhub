@@ -47,9 +47,14 @@ export default class extends ApplicationController {
     // to this month.
 
     if (this.data.has('subscriber')) {
-      this.subscribe(EVENT_CALENDAR_SELECT, ({ detail: { currentMonth } }) => {
-        this.data.set('current-month', currentMonth);
-      });
+      this.subscribe(
+        EVENT_CALENDAR_SELECT,
+        ({ detail: { currentMonth, publisher } }) => {
+          if (publisher === this.data.get('subscriber')) {
+            this.data.set('current-month', currentMonth);
+          }
+        }
+      );
     }
   }
 
@@ -94,7 +99,10 @@ export default class extends ApplicationController {
     this.dateInputTarget.value = selectedDate;
     this.calendarTarget.classList.add('d-none');
     if (this.data.has('publisher')) {
-      this.publish(EVENT_CALENDAR_SELECT, { currentMonth: selectedDate });
+      this.publish(EVENT_CALENDAR_SELECT, {
+        currentMonth: selectedDate,
+        publisher: this.data.get('publisher'),
+      });
     }
   }
 

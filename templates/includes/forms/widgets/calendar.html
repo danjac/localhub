@@ -3,9 +3,9 @@
 {% load i18n %}
 <div {% spaceless %}data-controller="calendar"
      {% if subscriber %}
-     data-calendar-subscriber{% endif %}
+  data-calendar-subscriber="{{ subscriber }}"{% endif %}
      {% if publisher %}
-  data-calendar-publisher{% endif %}{% endspaceless %}>
+  data-calendar-publisher="{{ publisher }}"{% endif %}{% endspaceless %}>
   <template data-target="calendar.template">
     <div class="calendar-date">
       <button class="date-item"
