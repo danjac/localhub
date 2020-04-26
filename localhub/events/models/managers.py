@@ -58,6 +58,15 @@ class EventQuerySet(ActivityQuerySet):
             ),
             next_date=models.Case(
                 models.When(
+                    models.Q(
+                        starts__day=now.day,
+                        starts__month=now.month,
+                        starts__year=now.year,
+                        starts__gt=now,
+                    ),
+                    then=models.F("starts"),
+                ),
+                models.When(
                     models.Q(starts__gte=models.F("base_date"))
                     & models.Q(starts__gte=Now()),
                     then=models.F("starts"),
