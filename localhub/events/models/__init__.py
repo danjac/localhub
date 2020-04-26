@@ -364,7 +364,7 @@ class Event(Activity):
             return exact_match
 
         # matches IF:
-        # 1) has already started repeating (dt > starts or now > starts)
+        # 1) has already started repeating (dt > starts)
         # 2) now or dt < repeats_until
         # 3) dt matches the appropriate repeats criteria.
 
