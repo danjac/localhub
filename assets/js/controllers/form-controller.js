@@ -1,11 +1,11 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import ApplicationController from './application-controller';
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-import { alerts } from '@utils/ui-helpers';
+import { TOAST_ERROR } from '@utils/constants';
+import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
   /*
@@ -105,7 +105,7 @@ export default class extends ApplicationController {
     this.enableFormElements();
     if (err.response) {
       const { status, statusText } = err.response;
-      alerts.error(`${status}: ${statusText}`);
+      this.toast(TOAST_ERROR, `${status}: ${statusText}`);
     }
   }
 

@@ -9,12 +9,13 @@ export function getViewport() {
   };
 }
 
-export function fadeOut(el) {
-  // gradually reduces opacity, then removes element.
+export function fadeOut(el, callback) {
+  // gradually reduces opacity. Once less than zero,
+  // callback is called.
   el.style.opacity = 1;
   (function fade() {
     if ((el.style.opacity -= 0.1) < 0) {
-      el.remove();
+      callback();
     } else {
       requestAnimationFrame(fade);
     }

@@ -1,6 +1,8 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { EVENT_CONFIRM_OPEN } from '@utils/constants';
+
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
@@ -26,7 +28,7 @@ export default class extends ApplicationController {
         this.close();
       }
     });
-    this.subscribe('confirm:open', (event) => this.open(event));
+    this.subscribe(EVENT_CONFIRM_OPEN, (event) => this.open(event));
   }
 
   open({ detail: { header, body, onConfirm } }) {

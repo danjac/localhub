@@ -16,6 +16,7 @@ import {
   subMonths,
 } from 'date-fns';
 
+import { EVENT_CALENDAR_SELECT } from '@utils/constants';
 import ApplicationController from './application-controller';
 
 const DATE_FORMAT = 'dd/MM/yyyy';
@@ -46,7 +47,7 @@ export default class extends ApplicationController {
     // to this month.
 
     if (this.data.has('subscriber')) {
-      this.subscribe('calendar:update', ({ detail: { currentMonth } }) => {
+      this.subscribe(EVENT_CALENDAR_SELECT, ({ detail: { currentMonth } }) => {
         this.data.set('current-month', currentMonth);
       });
     }
@@ -93,7 +94,7 @@ export default class extends ApplicationController {
     this.dateInputTarget.value = selectedDate;
     this.calendarTarget.classList.add('d-none');
     if (this.data.has('publisher')) {
-      this.publish('calendar:update', { currentMonth: selectedDate });
+      this.publish(EVENT_CALENDAR_SELECT, { currentMonth: selectedDate });
     }
   }
 

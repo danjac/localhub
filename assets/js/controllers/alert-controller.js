@@ -8,7 +8,7 @@ const TIMEOUT = 3000;
 
 export default class extends ApplicationController {
   /*
-  Used with an alert element that "fades out" after a few seconds
+  Used with an server-side rendered alert element that "fades out" after a few seconds
   after page load.
 
   data:
@@ -23,6 +23,6 @@ export default class extends ApplicationController {
   }
 
   dismiss() {
-    fadeOut(this.element);
+    fadeOut(this.element, () => this.element.remove());
   }
 }

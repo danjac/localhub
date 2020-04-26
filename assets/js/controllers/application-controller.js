@@ -3,6 +3,7 @@
 
 import { Controller } from 'stimulus';
 
+import { EVENT_TOAST_MESSAGE } from '@utils/constants';
 import eventBus from '@utils/event-bus';
 
 export default class extends Controller {
@@ -26,5 +27,9 @@ export default class extends Controller {
 
   disconnect() {
     this.unsubscribe();
+  }
+
+  toast(type, message) {
+    this.publish(EVENT_TOAST_MESSAGE, { type, message });
   }
 }
