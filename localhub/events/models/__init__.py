@@ -368,7 +368,7 @@ class Event(Activity):
         # 2) now or dt < repeats_until
         # 3) dt matches the appropriate repeats criteria.
 
-        if not exact_match and (self.starts > timezone.now() and self.starts > dt):
+        if not exact_match and self.starts > dt:
             return False
 
         if self.repeats_until and (
