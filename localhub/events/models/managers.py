@@ -28,9 +28,11 @@ class EventQuerySet(ActivityQuerySet):
         return self.annotate(
             start_of_day=TruncDay(Now()),
             start_of_week=TruncWeek(Now()),
-            # Note: starts with MONDAY and is indexed from 1, so need to adjust by -2.
             day_of_week=Cast(ExtractWeekDay(models.F("starts")), models.IntegerField()),
+            # base date : we first calculate a base date, and add the correct interval
+            # to this date to get the next date.
             base_date=models.Case(
+                # starts today: just use today
                 models.When(
                     models.Q(
                         starts__day=now.day,
@@ -39,16 +41,20 @@ class EventQuerySet(ActivityQuerySet):
                     ),
                     then=Now(),
                 ),
+                # repeats daily: from this morning
                 models.When(
                     models.Q(repeats=self.model.RepeatChoices.DAILY),
                     then=models.F("start_of_day"),
                 ),
+                # repeats weekly: from first day of week (Sunday)
+                # Note: starts with MONDAY and is indexed from 1, so need to adjust by -2.
                 models.When(
                     models.Q(repeats=self.model.RepeatChoices.WEEKLY),
                     then=DateAdd(
                         models.F("start_of_week"), models.F("day_of_week") - 2
                     ),
                 ),
+                # repeats monthly: from 1st of this month
                 models.When(
                     models.Q(repeats=self.model.RepeatChoices.MONTHLY),
                     then=TruncMonth(Now()),
@@ -57,6 +63,8 @@ class EventQuerySet(ActivityQuerySet):
                 output_field=models.DateTimeField(),
             ),
             next_date=models.Case(
+                # starts is later today: we have to use current datetime, otherwise
+                # any timedelta calculations will push it into the future.
                 models.When(
                     models.Q(
                         starts__day=now.day,
@@ -66,23 +74,29 @@ class EventQuerySet(ActivityQuerySet):
                     ),
                     then=models.F("starts"),
                 ),
+                # starts is later than the current date: we just use
+                # the start date.
                 models.When(
                     models.Q(starts__gte=models.F("base_date"))
                     & models.Q(starts__gte=Now()),
                     then=models.F("starts"),
                 ),
+                # daily: base date + 1 day
                 models.When(
                     repeats=self.model.RepeatChoices.DAILY,
                     then=DateAdd(models.F("base_date"), 1),
                 ),
+                # weekly: base date + 7 days
                 models.When(
                     repeats=self.model.RepeatChoices.WEEKLY,
                     then=DateAdd(models.F("base_date"), 7),
                 ),
+                # monthly: base date + 1 month (i.e. 1st of next month)
                 models.When(
                     repeats=self.model.RepeatChoices.MONTHLY,
                     then=MonthAdd(models.F("base_date"), 1),
                 ),
+                # yearly: base date + 1 year
                 models.When(
                     repeats=self.model.RepeatChoices.YEARLY,
                     then=YearAdd(models.F("base_date"), 1),
