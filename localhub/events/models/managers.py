@@ -24,6 +24,12 @@ from localhub.db.utils import boolean_value
 
 class EventQuerySet(ActivityQuerySet):
     def with_next_date(self):
+        """Returns the next date this event occurs.
+
+        For one-time events, this will just be the "starts" value. For repeating
+        events we need to calculate the next date based on the repeating criteria
+        from the time the repetition begins, i.e. at or after the start date.
+        """
         now = timezone.now()
         return self.annotate(
             start_of_day=TruncDay(Now()),
