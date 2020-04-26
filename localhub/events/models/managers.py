@@ -29,6 +29,9 @@ class EventQuerySet(ActivityQuerySet):
         For one-time events, this will just be the "starts" value. For repeating
         events we need to calculate the next date based on the repeating criteria
         from the time the repetition begins, i.e. at or after the start date.
+
+        Returns:
+            QuerySet
         """
         now = timezone.now()
         return self.annotate(
