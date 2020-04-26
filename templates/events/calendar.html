@@ -42,7 +42,7 @@
 
 {% if current_date %}
 
-{% for event in object_list %}
+{% for event in events %}
 {% render_activity request user event css_class="mt-2" %}
 {% endfor %}
 

@@ -353,10 +353,7 @@ class Event(Activity):
         if not self.is_repeating():
             return exact_match
 
-        if exact_match:
-            return dt > timezone.now()
-
-        if self.starts > dt:
+        if exact_match and dt < timezone.now():
             return False
 
         if self.repeats_until and (

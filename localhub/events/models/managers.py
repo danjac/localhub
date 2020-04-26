@@ -186,7 +186,7 @@ class EventQuerySet(ActivityQuerySet):
         repeats_q = models.Q(
             models.Q(
                 models.Q(repeats_until__isnull=True)
-                | models.Q(repeats_until__gt=timezone.now())
+                | models.Q(repeats_until__gte=date_from)
             ),
             repeats__isnull=False,
         )
@@ -198,13 +198,18 @@ class EventQuerySet(ActivityQuerySet):
                 starts__month=date_from.month,
                 starts__year=date_from.year,
             )
-            repeats_q = repeats_q & models.Q(starts__lt=date_from)
+            # any that have already started BEFORE the date_from
+            # and so will have started repeating
+            repeats_q = repeats_q & models.Q(starts__lte=date_from)
+
         else:
-            # fetch range of dates
             non_repeats_q = non_repeats_q & models.Q(starts__range=(date_from, date_to))
-            # if repeating, we just need to know if it starts before
-            # the end date
-            repeats_q = repeats_q & models.Q(starts__lte=date_to)
+            # any that have already started BEFORE the date_from
+            # OR will start with the range
+            repeats_q = repeats_q & models.Q(
+                models.Q(starts__range=(date_from, date_to))
+                | models.Q(starts__lte=date_from)
+            )
 
         return self.filter(non_repeats_q | repeats_q)
 

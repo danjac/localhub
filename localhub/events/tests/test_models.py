@@ -70,7 +70,7 @@ class TestEventManager:
         assert qs.count() == 0
 
     def test_for_dates_if_repeating_and_start_date_in_past(self):
-        """If repeating, then OK if start date any time before the given date.
+        """If repeating, then OK if start date any time before today
         """
         now = timezone.now()
         EventFactory(

@@ -95,6 +95,18 @@ class EventCalendarView(
             data["current_date"] = current_month = datetime.date(
                 day=self.current_day, month=self.current_month, year=self.current_year,
             )
+            data["events"] = [
+                e
+                for e in self.object_list
+                if e.matches_date(
+                    datetime.datetime(
+                        day=self.current_day,
+                        month=self.current_month,
+                        year=self.current_year,
+                        tzinfo=pytz.UTC,
+                    )
+                )
+            ]
             return data
 
         now = timezone.now()
