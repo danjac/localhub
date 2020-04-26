@@ -1,7 +1,6 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import datetime
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -11,7 +10,6 @@ from django.utils import timezone
 from django.utils.encoding import smart_text
 from django.utils.translation import gettext_lazy as _
 
-import pytz
 from django_countries.fields import CountryField
 from icalendar import Calendar
 from icalendar import Event as CalendarEvent
@@ -278,7 +276,8 @@ class Event(Activity):
             raise AttributeError(
                 "next_date not present: must be used with EventQuerySet.with_next_date()"
             )
-        return self.next_date
+        # ensure date/times preserved
+        return self.next_date.replace(hour=self.starts.hour, minute=self.starts.minute,)
 
     def get_next_end_date(self):
 
@@ -296,14 +295,10 @@ class Event(Activity):
                 "next_date not present: must be used with EventQuerySet.with_next_date()"
             )
 
-        return datetime.datetime(
+        return self.ends.replace(
             day=self.next_date.day,
             month=self.next_date.month,
             year=self.next_date.year,
-            hour=self.ends.hour,
-            minute=self.ends.minute,
-            second=self.ends.second,
-            tzinfo=pytz.UTC,
         )
 
     def is_repeating(self):
