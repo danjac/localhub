@@ -14,12 +14,12 @@
   <li class="li breadcrumb-item"><a href="{% url 'events:list' %}">{% trans "Events" %}</a></li>
   <li class="li breadcrumb-item">
     <a href="{{ request.path }}?month={{ current_date.month }}&year={{ current_date.year }}">
-      {% trans "Calendar" %}
+      {{ current_date|date:"F Y" }}
     </a>
   </li>
   <li class="li breadcrumb-item">
     <a data-turbolinks="false"
-       href="#">{{ current_date|date:"l, F j, Y" }}</a>
+       href="#">{{ current_date|date:"l j" }}</a>
   </li>
 </ul>
 {% endif %}
