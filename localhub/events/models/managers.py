@@ -24,12 +24,21 @@ from localhub.db.utils import boolean_value
 
 class EventQuerySet(ActivityQuerySet):
     def with_next_date(self):
+        now = timezone.now()
         return self.annotate(
             start_of_day=TruncDay(Now()),
             start_of_week=TruncWeek(Now()),
             # Note: starts with MONDAY and is indexed from 1, so need to adjust by -2.
             day_of_week=Cast(ExtractWeekDay(models.F("starts")), models.IntegerField()),
             base_date=models.Case(
+                models.When(
+                    models.Q(
+                        starts__day=now.day,
+                        starts__month=now.month,
+                        starts__year=now.year,
+                    ),
+                    then=Now(),
+                ),
                 models.When(
                     models.Q(repeats=self.model.RepeatChoices.DAILY),
                     then=models.F("start_of_day"),
