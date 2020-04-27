@@ -3,7 +3,7 @@
 
 import { Controller } from 'stimulus';
 
-import { EVENT_TOAST_MESSAGE } from '@utils/constants';
+import { EVENT_TOAST_MESSAGE } from '@utils/application-constants';
 import eventBus from '@utils/event-bus';
 
 export default class extends Controller {

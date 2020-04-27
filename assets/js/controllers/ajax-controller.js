@@ -4,7 +4,7 @@
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-import { TOAST_SUCCESS, TOAST_ERROR } from '@utils/constants';
+import { TOAST_SUCCESS, TOAST_ERROR } from '@utils/application-constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {

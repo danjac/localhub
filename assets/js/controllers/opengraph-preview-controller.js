@@ -7,7 +7,7 @@ import {
   EVENT_FORM_COMPLETE,
   EVENT_FORM_FETCHING,
   TOAST_ERROR,
-} from '@utils/constants';
+} from '@utils/application-constants';
 
 import ApplicationController from './application-controller';
 

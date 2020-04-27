@@ -8,7 +8,7 @@ import {
   EVENT_FORM_COMPLETE,
   EVENT_FORM_FETCHING,
   TOAST_ERROR,
-} from '@utils/constants';
+} from '@utils/application-constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
@@ -134,7 +134,7 @@ export default class extends ApplicationController {
   }
 
   toggleProgressBar() {
-    if (this.progressTarget) {
+    if (this.hasProgressTarget) {
       this.progressTarget.classList.toggle('d-none');
     }
   }
