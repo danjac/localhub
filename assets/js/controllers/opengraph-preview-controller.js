@@ -63,7 +63,7 @@ export default class extends ApplicationController {
     axios
       .get(this.data.get('preview-url'), { params: { url } })
       .then((response) => {
-        const { title, description, image } = response.data;
+        const { title, description, image, url } = response.data;
 
         if (title) {
           this.titleTarget.innerText = title;
@@ -82,6 +82,9 @@ export default class extends ApplicationController {
         } else {
           this.imageTarget.classList.add('d-none');
           this.missingImageTarget.classList.remove('d-none');
+        }
+        if (url) {
+          this.inputTarget.value = url;
         }
         this.updateSubscribers({ title, image, description });
       })

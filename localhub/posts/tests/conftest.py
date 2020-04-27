@@ -3,7 +3,20 @@
 
 import pytest
 
+from localhub.utils.http import URLResolver
 from localhub.utils.scraper import HTMLScraper
+
+
+@pytest.fixture
+def mock_url_resolver(mocker):
+    resolver = URLResolver("https://imgur.com")
+    mocker.patch("localhub.utils.http.URLResolver.from_url", return_value=resolver)
+
+
+@pytest.fixture
+def mock_url_image_resolver(mocker):
+    resolver = URLResolver("https://imgur.com/cat.gif")
+    mocker.patch("localhub.utils.http.URLResolver.from_url", return_value=resolver)
 
 
 @pytest.fixture()

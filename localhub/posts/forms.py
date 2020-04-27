@@ -14,7 +14,12 @@ class OpengraphPreviewInput(forms.URLInput):
 
     def __init__(self, attrs=None):
         super().__init__(attrs)
-        self.attrs["data-action"] = "opengraph-preview#change"
+        self.attrs.update(
+            {
+                "data-action": "opengraph-preview#change",
+                "data-target": "opengraph-preview.input",
+            }
+        )
 
 
 class PostForm(ActivityForm):

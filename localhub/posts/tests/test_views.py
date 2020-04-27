@@ -388,23 +388,25 @@ class TestFlagView:
 
 
 class TestOpengraphPreviewView:
-    def test_get(self, client, mock_html_scraper_from_url):
+    def test_get(self, client, mock_url_resolver, mock_html_scraper_from_url):
         response = client.get(
             reverse("posts:opengraph_preview"), {"url": "https://imgur.com"}
         )
         assert response.status_code == 200
         data = response.json()
         assert data["title"] == "Imgur"
+        assert data["url"] == "https://imgur.com"
         assert data["image"] == "https://imgur.com/cat.gif"
         assert data["description"] == "cat"
 
-    def test_get_if_image(self, client):
+    def test_get_if_image(self, client, mock_url_image_resolver):
         response = client.get(
             reverse("posts:opengraph_preview"), {"url": "https://imgur.com/cat.gif"}
         )
         assert response.status_code == 200
         data = response.json()
         assert data["title"] == "cat.gif"
+        assert data["url"] == "https://imgur.com/cat.gif"
         assert data["image"] == "https://imgur.com/cat.gif"
         assert data["description"] == ""
 
