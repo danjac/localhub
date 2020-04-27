@@ -19,17 +19,17 @@ const application = Application.start();
 const context = require.context('./controllers', true, /\.js$/);
 application.load(definitionsFromContext(context));
 
-// instant click setup
+// Instant click setup
 
+//https://github.com/turbolinks/turbolinks/issues/313#issuecomment-395819000
+//
 document.addEventListener('turbolinks:load', () => {
   document.querySelectorAll('a').forEach((el) => {
-    // TBD: all those AJAX <a> elements should be data-turbolinks="false"
-    if (el.dataset.turbolinks === 'false' || el.dataset.controller === 'ajax') {
+    if (el.dataset.turbolinks === 'false') {
       return;
     }
 
     let prefetcher;
-
     hoverintent(
       el,
       () => {
