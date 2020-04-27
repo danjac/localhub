@@ -10,7 +10,7 @@ from .models import Post
 
 
 class OpengraphPreviewInput(forms.URLInput):
-    template_name = "posts/includes/opengraph_preview.html"
+    template_name = "posts/includes/widgets/opengraph_preview.html"
 
     def __init__(self, attrs=None):
         super().__init__(attrs)
