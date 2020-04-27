@@ -72,5 +72,4 @@ class PostForm(ActivityForm):
         cleaned_data = super().clean()
         if not cleaned_data.get("title"):
             self.add_error("title", _("You must provide a title"))
-        cleaned_data["title"] = cleaned_data["title"][:300]
         return cleaned_data

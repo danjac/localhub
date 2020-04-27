@@ -33,7 +33,7 @@ class OpengraphPreviewView(View):
             else:
                 scraper = HTMLScraper.from_url(url_resolver.url)
                 data = {
-                    "title": scraper.title,
+                    "title": (scraper.title or "")[:300],
                     "image": scraper.image,
                     "description": scraper.description,
                 }
