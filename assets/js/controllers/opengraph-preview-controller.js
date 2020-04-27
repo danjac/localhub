@@ -47,6 +47,7 @@ export default class extends ApplicationController {
     this.titleTarget.innerText = '';
     this.descriptionTarget.innerText = '';
     this.imageTarget.setAttribute('src', '');
+
     this.missingDescriptionTarget.classList.add('d-none');
     this.missingImageTarget.classList.add('d-none');
 
