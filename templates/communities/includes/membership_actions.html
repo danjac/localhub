@@ -19,6 +19,7 @@
   {% if can_delete %}
   <a class="action"
      href="{% url 'communities:membership_delete' member.id %}"
+     data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
      data-ajax-confirm-header="{% trans 'Delete' %}"

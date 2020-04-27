@@ -3,7 +3,8 @@
 
 {% load i18n %}
 
-<a data-controller="ajax"
+<a data-turbolinks="false"
+   data-controller="ajax"
    data-action="ajax#post"
    data-ajax-redirect="{{ request.get_full_path }}"
    {% if css_class %}

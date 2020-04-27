@@ -113,6 +113,7 @@
         </a>
         <a class="btn btn-link hide-lg"
            href="{% url 'account_logout' %}"
+           data-turbolinks="false"
            data-controller="ajax"
            data-action="ajax#post"
            data-ajax-redirect="{{ home_page_url }}">{% trans "Logout" %}</a>
@@ -165,20 +166,20 @@
         {% endblocktrans %}
         {% enddismissable %}
 
-          {% for message in messages %}
-          <div class="alert text-center my-2 toast toast-{{ message.tags }}"
-               data-controller="alert">
-            <button class="btn btn-clear float-right"
-                    data-action="alert#dismiss"></button>
-            {{ message }}
-          </div>
-          {% endfor %}
-          <div class="alert text-center my-2 toast d-none"
-               data-controller="toast">
-            <button class="btn btn-clear float-right"
-                    data-action="toast#dismiss"></button>
-            <span data-target="toast.message"></span>
-          </div>
+        {% for message in messages %}
+        <div class="alert text-center my-2 toast toast-{{ message.tags }}"
+             data-controller="alert">
+          <button class="btn btn-clear float-right"
+                  data-action="alert#dismiss"></button>
+          {{ message }}
+        </div>
+        {% endfor %}
+        <div class="alert text-center my-2 toast d-none"
+             data-controller="toast">
+          <button class="btn btn-clear float-right"
+                  data-action="toast#dismiss"></button>
+          <span data-target="toast.message"></span>
+        </div>
       </div>
     </div>
 

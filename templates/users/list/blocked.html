@@ -18,6 +18,7 @@ You have blocked {{ counter }} people.
 <div class="float-right actions">
   <a class="action text-strike"
      href="{% url 'users:unblock' object.username %}"
+     data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post toggle#toggle"
      data-ajax-redirect="{{ request.get_full_path }}">

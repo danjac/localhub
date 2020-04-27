@@ -41,9 +41,11 @@
         <div class="actions">
           <a class="action"
              href="{% url 'invites:accept' invite.id %}"
+             data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post">{% trans "Accept" %}</a>
           <a class="action"
+             data-turbolinks="false"
              href="{% url 'invites:reject' invite.id %}"
              data-controller="ajax"
              data-action="ajax#post">{% trans "Reject" %}</a>

@@ -19,6 +19,7 @@
         <div class="float-right actions">
           <a class="action"
              href="{% url 'flags:delete' flag.id %}"
+             data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post">{% trans "Delete" %}</a>
         </div>

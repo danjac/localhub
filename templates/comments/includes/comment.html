@@ -101,12 +101,14 @@
               data-controller="ajax">
             <a href="{% url 'comments:dislike' comment.id %}"
                class="text-strike{% if not comment.has_liked %} d-none{% endif %}"
+               data-turbolinks="false"
                data-target="ajax.toggle"
                data-action="ajax#post">{% trans "Like" %}</a>
             <a href="{% url 'comments:like' comment.id %}"
                {% if comment.has_liked %}
                class="d-none"
                {% endif %}
+               data-turbolinks="false"
                data-target="ajax.toggle"
                data-action="ajax#post">{% trans "Like" %}</a>
           </li>
@@ -118,12 +120,14 @@
               data-controller="ajax">
             <a href="{% url 'comments:remove_bookmark' comment.id %}"
                class="text-strike{% if not comment.has_bookmarked %} d-none{% endif %}"
+               data-turbolinks="false"
                data-target="ajax.toggle"
                data-action="ajax#post">{% trans "Bookmark" %}</a>
             <a href="{% url 'comments:bookmark' comment.id %}"
                {% if comment.has_bookmarked %}
                class="d-none"
                {% endif %}
+               data-turbolinks="false"
                data-target="ajax.toggle"
                data-action="ajax#post">{% trans "Bookmark" %}</a>
           </li>
@@ -157,6 +161,7 @@
           {% if can_delete_comment %}
           <li class="menu-item">
             <a href="{% url 'comments:delete' comment.id %}"
+               data-turbolinks="false"
                data-controller="ajax"
                data-action="ajax#post"
                {% if not is_detail %}
@@ -171,6 +176,7 @@
           {% if not comment.is_blocked %}
           <li class="menu-item">
             <a href="#"
+               data-turbolinks="false"
                data-target="clipboard.button"
                data-action="clipboard#copy">
               {% trans "Copy Markdown" %}

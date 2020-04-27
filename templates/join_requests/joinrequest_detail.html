@@ -38,6 +38,7 @@
 <div class="actions mb-1">
   {% if is_pending or is_rejected %}
   <a class="action"
+     data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
      data-ajax-confirm-header="{% trans 'Accept' %}"
@@ -48,6 +49,7 @@
   {% endif %}
   {% if is_pending %}
   <a class="action"
+     data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
      data-ajax-redirect="{{ request.get_full_path }}"
@@ -56,6 +58,7 @@
      href="{% url 'join_requests:reject' object.id %}">{% trans "Reject" %}</a>
   {% endif %}
   <a class="action"
+     data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
      data-ajax-confirm-header="{% trans 'Delete' %}"

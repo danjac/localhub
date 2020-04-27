@@ -48,6 +48,7 @@
           {% if is_recipient and not message.read %}
           <li class="menu-item">
             <a href="{% url 'private_messages:message_mark_read' message.id %}"
+               data-turbolinks="false"
                data-controller="ajax"
                data-action="ajax#post"
                data-ajax-redirect="{{ request.get_full_path }}">{% trans "Mark As Read" %}</a>
@@ -58,12 +59,14 @@
               data-controller="ajax">
             <a href="{% url 'private_messages:message_remove_bookmark' message.id %}"
                class="text-strike{% if not message.has_bookmarked %} d-none{% endif %}"
+               data-turbolinks="false"
                data-target="ajax.toggle"
                data-action="ajax#post">{% trans "Bookmark" %}</a>
             <a href="{% url 'private_messages:message_bookmark' message.id %}"
                {% if message.has_bookmarked %}
                class="d-none"
                {% endif %}
+               data-turbolinks="false"
                data-target="ajax.toggle"
                data-action="ajax#post">{% trans "Bookmark" %}</a>
           </li>
@@ -83,6 +86,7 @@
           {% endif %}
           <li class="menu-item">
             <a href="{% url 'private_messages:message_delete' message.id %}"
+               data-turbolinks="false"
                data-controller="ajax"
                data-action="ajax#post"
                data-ajax-redirect="{{ post_delete_redirect|default:request.get_full_path }}"
@@ -92,6 +96,7 @@
           </li>
           <li class="menu-item">
             <a href="#"
+               data-turbolinks="false"
                data-target="clipboard.button"
                data-action="clipboard#copy">
               {% trans "Copy Markdown" %}

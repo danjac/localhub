@@ -81,6 +81,7 @@
   </li>
   <li class="menu-item show-lg">
     <a href="{% url 'account_logout' %}"
+       data-turbolinks="false"
        data-controller="ajax"
        data-action="ajax#post"
        data-ajax-redirect="{{ home_page_url }}">{% trans "Logout" %}</a>

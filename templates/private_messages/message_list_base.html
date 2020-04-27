@@ -20,6 +20,7 @@
   {% if unread_messages %}
   <a class="action"
      href="{% url 'private_messages:mark_all_read' %}"
+     data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
      data-ajax-redirect="{{ request.get_full_path }}">{% trans "Mark All As Read" %}</a>

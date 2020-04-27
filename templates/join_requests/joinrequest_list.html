@@ -32,8 +32,7 @@
 {% if not community.allow_join_requests %}
 <p class="toast text-center my-2">
   {% url 'communities:community_update' as settings_url %}
-  {% blocktrans %}Join requests are currently disabled for this community. You can re-enable them <a
-     href="{{ settings_url }}">in your community settings</a>.{% endblocktrans %}
+  {% blocktrans %}Join requests are currently disabled for this community. You can re-enable them <a href="{{ settings_url }}">in your community settings</a>.{% endblocktrans %}
 </p>
 {% endif %}
 
@@ -84,6 +83,7 @@
         <div class="actions">
           {% if is_pending or is_rejected %}
           <a class="action"
+             data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"
              data-ajax-confirm-header="{% trans 'Accept' %}"
@@ -93,6 +93,7 @@
           {% endif %}
           {% if is_pending %}
           <a class="action"
+             data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"
              data-ajax-confirm-header="{% trans 'Reject' %}"
@@ -100,6 +101,7 @@
              href="{% url 'join_requests:reject' join_request.id %}">{% trans "Reject" %}</a>
           {% endif %}
           <a class="action"
+             data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"
              data-ajax-confirm-header="{% trans 'Delete' %}"

@@ -85,11 +85,13 @@
           {% if invite.is_pending %}
           <a class="action"
              href="{% url 'invites:resend' invite.id %}"
+             data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post">{% trans "Re-send" %}</a>
           {% endif %}
           <a class="action"
              href="{% url 'invites:delete' invite.id %}"
+             data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"
              data-ajax-confirm-header="{% trans 'Delete invite' %}"
