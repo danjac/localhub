@@ -3,40 +3,33 @@
 
 import axios from 'axios';
 
-import { TOAST_ERROR } from '@utils/constants';
+import {
+  EVENT_FORM_COMPLETE,
+  EVENT_FORM_FETCHING,
+  TOAST_ERROR,
+} from '@utils/constants';
+
 import ApplicationController from './application-controller';
 
 const EVENT_OPENGRAPH_UPDATE = 'opengraph:update';
-const EVENT_OPENGRAPH_FETCHING = 'opengraph:fetching';
-const EVENT_OPENGRAPH_COMPLETE = 'opengraph:complete';
 const EVENT_OPENGRAPH_CLEAR = 'opengraph:clear';
 
 export default class extends ApplicationController {
   static targets = [
-    'image',
     'description',
-    'title',
+    'image',
     'input',
-    'missingImage',
     'missingDescription',
+    'missingImage',
+    'title',
   ];
 
   connect() {
     if (this.data.has('subscriber')) {
-      console.log('subscriber', this.data.get('subscriber'));
       this.subscribe(EVENT_OPENGRAPH_UPDATE, ({ detail: { name, value } }) => {
-        console.log('update', name, this.data.get('subscriber'));
         if (name === this.data.get('subscriber')) {
           this.inputTarget.value = value;
         }
-      });
-
-      this.subscribe(EVENT_OPENGRAPH_FETCHING, () => {
-        this.inputTarget.setAttribute('disabled', true);
-      });
-
-      this.subscribe(EVENT_OPENGRAPH_COMPLETE, () => {
-        this.inputTarget.removeAttribute('disabled');
       });
       this.subscribe(EVENT_OPENGRAPH_CLEAR, () => {
         this.inputTarget.value = '';
@@ -65,7 +58,7 @@ export default class extends ApplicationController {
     }
 
     currentTarget.setAttribute('disabled', true);
-    this.disableSubscribers();
+    this.disableFormControls();
 
     axios
       .get(this.data.get('preview-url'), { params: { url } })
@@ -94,17 +87,17 @@ export default class extends ApplicationController {
       })
       .catch((err) => this.handleServerError(err))
       .finally(() => {
-        this.enableSubscribers();
+        this.enableFormControls();
         currentTarget.removeAttribute('disabled');
       });
   }
 
-  disableSubscribers() {
-    this.publish(EVENT_OPENGRAPH_FETCHING);
+  disableFormControls() {
+    this.publish(EVENT_FORM_FETCHING);
   }
 
-  enableSubscribers() {
-    this.publish(EVENT_OPENGRAPH_COMPLETE);
+  enableFormControls() {
+    this.publish(EVENT_FORM_COMPLETE);
   }
 
   clearSubscribers() {

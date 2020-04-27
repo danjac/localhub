@@ -4,10 +4,12 @@
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-import { TOAST_ERROR } from '@utils/constants';
+import {
+  EVENT_FORM_COMPLETE,
+  EVENT_FORM_FETCHING,
+  TOAST_ERROR,
+} from '@utils/constants';
 import ApplicationController from './application-controller';
-
-// TBD: a "generic pending" event that disables controls, submission
 
 export default class extends ApplicationController {
   /*
@@ -29,6 +31,14 @@ export default class extends ApplicationController {
     this.formElements.forEach((element) =>
       element.addEventListener('change', () => this.data.set('changed', true))
     );
+
+    // allows us to disable the entire form from another controller
+    this.subscribe(EVENT_FORM_FETCHING, () => {
+      this.disableFormControls();
+    });
+    this.subscribe(EVENT_FORM_COMPLETE, () => {
+      this.enableFormControls();
+    });
   }
 
   unload(event) {
@@ -69,7 +79,7 @@ export default class extends ApplicationController {
 
     window.scrollTo(0, 0);
 
-    this.disableFormElements();
+    this.disableFormControls();
 
     const referrer = location.href;
 
@@ -86,7 +96,7 @@ export default class extends ApplicationController {
         const contentType = response.headers['content-type'];
 
         if (contentType.match(/html/)) {
-          this.enableFormElements();
+          this.enableFormControls();
           // errors in form, re-render
           Turbolinks.controller.cache.put(
             referrer,
@@ -104,20 +114,22 @@ export default class extends ApplicationController {
   }
 
   handleServerError(err) {
-    this.enableFormElements();
+    this.enableFormControls();
     if (err.response) {
       const { status, statusText } = err.response;
       this.toast(TOAST_ERROR, `${status}: ${statusText}`);
     }
   }
 
-  disableFormElements() {
+  disableFormControls() {
     this.toggleProgressBar();
+    this.element.setAttribute('disabled', true);
     this.formElements.forEach((el) => el.setAttribute('disabled', true));
   }
 
-  enableFormElements() {
+  enableFormControls() {
     this.toggleProgressBar();
+    this.element.removeAttribute('disabled');
     this.formElements.forEach((el) => el.removeAttribute('disabled'));
   }
 
