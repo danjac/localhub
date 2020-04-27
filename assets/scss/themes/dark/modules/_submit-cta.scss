@@ -1,0 +1,23 @@
+// Copyright (c) 2020 by Dan Jacob
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+.submit-cta {
+  border-color: $gray-color-dark;
+
+  .form-input {
+    &:focus {
+      border-color: $gray-color-dark;
+    }
+  }
+
+  .input-group-btn {
+    background-color: inherit;
+    border-color: $gray-color-dark;
+    color: $darkmode-text;
+  }
+
+  .input-group-addon {
+    background-color: $darkmode-lighter;
+    border-color: $gray-color-dark;
+  }
+}

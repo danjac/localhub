@@ -43,12 +43,9 @@ form:not(.search-form) {
 }
 
 .input-group-btn {
-  background-color: inherit;
   border-color: $gray-color-dark;
-  color: $darkmode-text;
 }
 
 .input-group-addon {
-  background-color: $darkmode-lighter;
   border-color: $gray-color-dark;
 }
