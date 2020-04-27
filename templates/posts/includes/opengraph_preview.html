@@ -17,8 +17,5 @@
       </blockquote>
     </div>
   </div>
-  <input type="{{ widget.type }}"
-         name="{{ widget.name }}"
-         data-action="opengraph-preview#change"
-         {% include "django/forms/widgets/attrs.html" %}>
+  {% include "django/forms/widgets/input.html" %}
 </div>

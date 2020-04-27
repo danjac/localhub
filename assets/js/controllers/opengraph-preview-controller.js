@@ -6,8 +6,36 @@ import axios from 'axios';
 import { TOAST_ERROR } from '@utils/constants';
 import ApplicationController from './application-controller';
 
+const EVENT_OPENGRAPH_UPDATE = 'opengraph:update';
+const EVENT_OPENGRAPH_FETCHING = 'opengraph:fetching';
+const EVENT_OPENGRAPH_COMPLETE = 'opengraph:complete';
+const EVENT_OPENGRAPH_CLEAR = 'opengraph:clear';
+
 export default class extends ApplicationController {
-  static targets = ['image', 'description', 'title', 'progress'];
+  static targets = ['image', 'description', 'title', 'input'];
+
+  connect() {
+    if (this.data.has('subscriber')) {
+      console.log('subscriber', this.data.get('subscriber'));
+      this.subscribe(EVENT_OPENGRAPH_UPDATE, ({ detail: { name, value } }) => {
+        console.log('update', name, this.data.get('subscriber'));
+        if (name === this.data.get('subscriber')) {
+          this.inputTarget.value = value;
+        }
+      });
+
+      this.subscribe(EVENT_OPENGRAPH_FETCHING, () => {
+        this.inputTarget.setAttribute('disabled', true);
+      });
+
+      this.subscribe(EVENT_OPENGRAPH_COMPLETE, () => {
+        this.inputTarget.removeAttribute('disabled');
+      });
+      this.subscribe(EVENT_OPENGRAPH_CLEAR, () => {
+        this.inputTarget.value = '';
+      });
+    }
+  }
 
   change(event) {
     const { currentTarget } = event;
@@ -23,12 +51,12 @@ export default class extends ApplicationController {
     const url = event.currentTarget.value;
 
     if (!url) {
+      this.clearSubscribers();
       return;
     }
 
     currentTarget.setAttribute('disabled', true);
-
-    // this.progressTarget.classList.toggle('d-none');
+    this.disableSubscribers();
 
     axios
       .get(this.data.get('preview-url'), { params: { url } })
@@ -47,16 +75,36 @@ export default class extends ApplicationController {
           this.imageTarget.setAttribute('src', image);
           this.imageTarget.classList.remove('d-none');
         }
+        this.updateSubscribers({ title, image, description });
       })
       .catch((err) => this.handleServerError(err))
       .finally(() => {
-        console.log('restore.....');
+        this.enableSubscribers();
         currentTarget.removeAttribute('disabled');
-        // this.progressTarget.classList.toggle('d-none');
       });
   }
 
+  disableSubscribers() {
+    this.publish(EVENT_OPENGRAPH_FETCHING);
+  }
+
+  enableSubscribers() {
+    this.publish(EVENT_OPENGRAPH_COMPLETE);
+  }
+
+  clearSubscribers() {
+    this.publish(EVENT_OPENGRAPH_CLEAR);
+  }
+
+  updateSubscribers(data) {
+    Object.keys(data).forEach((name) => {
+      this.publish(EVENT_OPENGRAPH_UPDATE, { name, value: data[name] });
+    });
+  }
+
   handleServerError(err) {
+    // TBD: we probably just want an error field
+    this.clearSubscribers();
     if (err.response) {
       const { status, statusText } = err.response;
       this.toast(TOAST_ERROR, `${status}: ${statusText}`);
