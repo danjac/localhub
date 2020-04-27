@@ -114,8 +114,8 @@ export default class extends ApplicationController {
     // TBD: we probably just want an error field
     this.clearSubscribers();
     if (err.response) {
-      const { status, statusText } = err.response;
-      this.toast(TOAST_ERROR, `${status}: ${statusText}`);
+      const { statusText } = err.response;
+      this.toast(TOAST_ERROR, statusText);
     }
   }
 }

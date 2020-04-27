@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django.http import HttpResponseBadRequest, JsonResponse
+from django.utils.translation import gettext as _
 from django.views.generic import View
 
 from localhub.utils.http import URLResolver
@@ -24,28 +25,29 @@ class OpengraphPreviewView(View):
         try:
             url_resolver = URLResolver.from_url(request.GET["url"], resolve=True)
             if url_resolver.is_image:
-                return JsonResponse(
-                    {
-                        "title": url_resolver.filename,
-                        "image": url_resolver.url,
-                        "description": "",
-                    }
-                )
-            scraper = HTMLScraper.from_url(url_resolver.url)
-        except KeyError:
-            return HttpResponseBadRequest("No URL provided")
-        except URLResolver.Invalid:
-            return HttpResponseBadRequest("Invalid or inaccessible URL")
-        except HTMLScraper.Invalid:
-            return HttpResponseBadRequest("Unable to fetch meta content from page")
+                data = {
+                    "title": url_resolver.filename,
+                    "image": url_resolver.url,
+                    "description": "",
+                }
+            else:
+                scraper = HTMLScraper.from_url(url_resolver.url)
+                data = {
+                    "title": scraper.title,
+                    "image": scraper.image,
+                    "description": scraper.description,
+                }
+            return JsonResponse(data)
 
-        return JsonResponse(
-            {
-                "title": scraper.title,
-                "image": scraper.image,
-                "description": scraper.description,
-            }
-        )
+        except KeyError:
+            return self.handle_bad_request(_("No URL provided"))
+        except URLResolver.Invalid:
+            return self.handle_bad_request(_("Invalid or inaccessible URL"))
+        except HTMLScraper.Invalid:
+            return self.handle_bad_request(_("Unable to fetch meta content from page"))
+
+    def handle_bad_request(self, error):
+        return HttpResponseBadRequest(error)
 
 
 opengraph_preview_view = OpengraphPreviewView.as_view()
