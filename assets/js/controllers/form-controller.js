@@ -7,6 +7,8 @@ import Turbolinks from 'turbolinks';
 import { TOAST_ERROR } from '@utils/constants';
 import ApplicationController from './application-controller';
 
+// TBD: a "generic pending" event that disables controls, submission
+
 export default class extends ApplicationController {
   /*
   AJAX form controller. Also handles multipart forms, redirects and error messages.

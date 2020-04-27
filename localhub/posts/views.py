@@ -23,9 +23,17 @@ class OpengraphPreviewView(View):
     def get(self, request):
         try:
             url_resolver = URLResolver.from_url(request.GET["url"], resolve=True)
+            if url_resolver.is_image:
+                return JsonResponse(
+                    {
+                        "title": url_resolver.filename,
+                        "image": url_resolver.url,
+                        "description": "",
+                    }
+                )
             scraper = HTMLScraper.from_url(url_resolver.url)
         except KeyError:
-            return HttpResponseBadRequest("No url provided")
+            return HttpResponseBadRequest("No URL provided")
         except URLResolver.Invalid:
             return HttpResponseBadRequest("Invalid or inaccessible URL")
         except HTMLScraper.Invalid:

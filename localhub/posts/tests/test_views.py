@@ -398,6 +398,16 @@ class TestOpengraphPreviewView:
         assert data["image"] == "https://imgur.com/cat.gif"
         assert data["description"] == "cat"
 
+    def test_get_if_image(self, client):
+        response = client.get(
+            reverse("posts:opengraph_preview"), {"url": "https://imgur.com/cat.gif"}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["title"] == "cat.gif"
+        assert data["image"] == "https://imgur.com/cat.gif"
+        assert data["description"] == ""
+
     def test_get_bad_result(self, client, mock_html_scraper_from_invalid_url):
         response = client.get(
             reverse("posts:opengraph_preview"), {"url": "https://imgur.com"}
