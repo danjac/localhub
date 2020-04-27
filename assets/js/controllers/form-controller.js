@@ -77,7 +77,7 @@ export default class extends ApplicationController {
       return;
     }
 
-    window.scrollTo(0, 0);
+    //window.scrollTo(0, 0);
 
     this.disableFormControls();
 
@@ -122,6 +122,7 @@ export default class extends ApplicationController {
   }
 
   disableFormControls() {
+    window.scrollTo(0, 0);
     this.toggleProgressBar();
     this.element.setAttribute('disabled', true);
     this.formElements.forEach((el) => el.setAttribute('disabled', true));
