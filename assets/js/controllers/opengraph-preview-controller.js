@@ -12,7 +12,14 @@ const EVENT_OPENGRAPH_COMPLETE = 'opengraph:complete';
 const EVENT_OPENGRAPH_CLEAR = 'opengraph:clear';
 
 export default class extends ApplicationController {
-  static targets = ['image', 'description', 'title', 'input'];
+  static targets = [
+    'image',
+    'description',
+    'title',
+    'input',
+    'missingImage',
+    'missingDescription',
+  ];
 
   connect() {
     if (this.data.has('subscriber')) {
@@ -47,6 +54,8 @@ export default class extends ApplicationController {
     this.titleTarget.innerText = '';
     this.descriptionTarget.innerText = '';
     this.imageTarget.setAttribute('src', '');
+    this.missingDescriptionTarget.classList.add('d-none');
+    this.missingImageTarget.classList.add('d-none');
 
     const url = event.currentTarget.value;
 
@@ -70,10 +79,16 @@ export default class extends ApplicationController {
         if (description) {
           this.descriptionTarget.innerText = description;
           this.descriptionTarget.classList.remove('d-none');
+        } else {
+          this.descriptionTarget.classList.add('d-none');
+          this.missingDescriptionTarget.classList.remove('d-none');
         }
         if (image) {
           this.imageTarget.setAttribute('src', image);
           this.imageTarget.classList.remove('d-none');
+        } else {
+          this.imageTarget.classList.add('d-none');
+          this.missingImageTarget.classList.remove('d-none');
         }
         this.updateSubscribers({ title, image, description });
       })

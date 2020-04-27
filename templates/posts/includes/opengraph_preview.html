@@ -1,6 +1,7 @@
 {# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{% load i18n %}
 <div data-controller="opengraph-preview"
      data-opengraph-preview-preview-url="{% url 'posts:opengraph_preview' %}">
   <h6 data-target="opengraph-preview.title"
@@ -9,9 +10,14 @@
     <div class="column col-12 col-sm-3 col-md-3 col-lg-3 col-xl-3">
       <img data-target="opengraph-preview.image"
            class="img-responsive d-none">
-      </a>
+      <em data-target="opengraph-preview.missingImage" class="d-none">No image available</em>
     </div>
     <div class="column col-12 col-sm-9 col-md-9 col-lg-9 col-xl-9">
+      <blockquote class="text-small text-muted text-italic text-ellipsis d-none"
+                  data-target="opengraph-preview.missingDescription">
+        {% trans "No description available" %}
+      </blockquote>
+
       <blockquote class="text-small text-muted text-italic text-ellipsis d-none"
                   data-target="opengraph-preview.description">
       </blockquote>
