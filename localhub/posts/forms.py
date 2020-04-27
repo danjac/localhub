@@ -14,12 +14,7 @@ class OpengraphPreviewInput(forms.URLInput):
 
     def __init__(self, attrs=None):
         super().__init__(attrs)
-        self.attrs.update(
-            {
-                "data-action": "opengraph-preview#change",
-                "data-target": "opengraph-preview.input",
-            }
-        )
+        self.attrs.update({"data-target": "opengraph-preview.input"})
 
 
 class PostForm(ActivityForm):
@@ -38,17 +33,11 @@ class PostForm(ActivityForm):
         )
         widgets = {"url": OpengraphPreviewInput}
         labels = {"url": _("URL")}
-        help_texts = {
-            "title": _(
-                "If you enter a URL, this will be replaced by the page title if available"
-            )
-        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # allow us to fetch URL from OG data, if possible
-        self.fields["title"].required = False
+        self.fields["title"].required = True
 
         self.fields["title"].widget.attrs.update(
             {
@@ -72,9 +61,3 @@ class PostForm(ActivityForm):
                 "data-opengraph-preview-subscriber": "description",
             }
         )
-
-    def clean(self):
-        cleaned_data = super().clean()
-        if not cleaned_data.get("title"):
-            self.add_error("title", _("You must provide a title"))
-        return cleaned_data

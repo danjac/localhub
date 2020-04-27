@@ -17,10 +17,11 @@ const EVENT_OPENGRAPH_CLEAR = 'opengraph:clear';
 export default class extends ApplicationController {
   static targets = [
     'description',
+    'descriptionPreview',
+    'fullPreview',
     'image',
+    'imagePreview',
     'input',
-    'missingDescription',
-    'missingImage',
     'title',
   ];
 
@@ -37,26 +38,29 @@ export default class extends ApplicationController {
     }
   }
 
-  change(event) {
-    const { currentTarget } = event;
+  fetch(event) {
+    event.preventDefault();
 
-    this.titleTarget.classList.add('d-none');
-    this.imageTarget.classList.add('d-none');
-    this.descriptionTarget.classList.add('d-none');
+    if (!this.inputTarget.checkValidity()) {
+      return false;
+    }
 
-    this.titleTarget.innerText = '';
-    this.descriptionTarget.innerText = '';
-    this.imageTarget.setAttribute('src', '');
-
-    this.missingDescriptionTarget.classList.add('d-none');
-    this.missingImageTarget.classList.add('d-none');
-
-    const url = event.currentTarget.value;
+    const url = this.inputTarget.value;
 
     if (!url) {
-      this.clearSubscribers();
-      return;
+      this.deleteFetchedUrl();
+      this.clearPreview();
+      return false;
     }
+
+    if (this.isFetchedUrl(url)) {
+      return false;
+    }
+
+    this.clearPreview();
+
+    // prevent refetch
+    const { currentTarget } = event;
 
     currentTarget.setAttribute('disabled', true);
     this.disableFormControls();
@@ -66,28 +70,14 @@ export default class extends ApplicationController {
       .then((response) => {
         const { title, description, image, url } = response.data;
 
-        if (title) {
-          this.titleTarget.innerText = title;
-          this.titleTarget.classList.remove('d-none');
-        }
-        if (description) {
-          this.descriptionTarget.innerText = description;
-          this.descriptionTarget.classList.remove('d-none');
-        } else {
-          this.descriptionTarget.classList.add('d-none');
-          this.missingDescriptionTarget.classList.remove('d-none');
-        }
-        if (image) {
-          this.imageTarget.setAttribute('src', image);
-          this.imageTarget.classList.remove('d-none');
-        } else {
-          this.imageTarget.classList.add('d-none');
-          this.missingImageTarget.classList.remove('d-none');
-        }
         if (url) {
           this.inputTarget.value = url;
         }
+
+        this.updatePreview(title, description, image);
         this.updateSubscribers({ title, image, description });
+
+        this.updateFetchedUrl(url);
       })
       .catch((err) => this.handleServerError(err))
       .finally(() => {
@@ -112,6 +102,64 @@ export default class extends ApplicationController {
     Object.keys(data).forEach((name) => {
       this.publish(EVENT_OPENGRAPH_UPDATE, { name, value: data[name] });
     });
+  }
+
+  clearPreview() {
+    this.titleTarget.innerText = '';
+    this.titleTarget.classList.add('d-none');
+
+    this.descriptionTargets.forEach((el) => {
+      el.innerText = '';
+    });
+
+    this.imageTargets.forEach((el) => {
+      el.setAttribute('src', '');
+    });
+
+    [
+      this.fullPreviewTarget,
+      this.descriptionPreviewTarget,
+      this.imagePreviewTarget,
+      this.titleTarget,
+    ].forEach((el) => el.classList.add('d-none'));
+  }
+
+  updatePreview(title, description, image) {
+    if (title) {
+      this.titleTarget.innerText = title;
+      this.titleTarget.classList.remove('d-none');
+    }
+
+    if (description) {
+      Array.from(this.descriptionTargets).forEach((el) => (el.innerText = description));
+    }
+
+    if (image) {
+      Array.from(this.imageTargets).forEach((el) => el.setAttribute('src', image));
+    }
+
+    if (description && image) {
+      this.fullPreviewTarget.classList.remove('d-none');
+    } else if (description) {
+      this.descriptionPreviewTarget.classList.remove('d-none');
+    } else if (image) {
+      this.imagePreviewTarget.classList.remove('d-none');
+    }
+  }
+
+  deleteFetchedUrl() {
+    this.data.delete('fetchedUrl');
+  }
+
+  updateFetchedUrl(url) {
+    this.data.set('fetchedUrl', url.trim());
+  }
+
+  isFetchedUrl(url) {
+    if (!this.data.has('fetchedUrl')) {
+      return false;
+    }
+    return this.data.get('fetchedUrl').trim() === url.trim();
   }
 
   handleServerError(err) {
