@@ -1,7 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { EVENT_CONFIRM_OPEN } from '@utils/application-constants';
+import { EVENT_CONFIRM_OPEN, KEY_ESC } from '@utils/application-constants';
 
 import ApplicationController from './application-controller';
 
@@ -16,19 +16,18 @@ export default class extends ApplicationController {
   actions:
     cancel: if "cancel" button is clicked
     confirm: if "confirm" button is clicked
+    keydown: windows key events
   */
   static targets = ['header', 'body'];
 
   connect() {
-    // allow this to be identified by name
-    // this.element[this.identifier] = this;
-    document.addEventListener('keydown', (event) => {
-      // escape key
-      if (event.keyCode === 27) {
-        this.close();
-      }
-    });
     this.subscribe(EVENT_CONFIRM_OPEN, (event) => this.open(event));
+  }
+
+  keydown(event) {
+    if (event.keyCode === KEY_ESC) {
+      this.close();
+    }
   }
 
   open({ detail: { header, body, onConfirm } }) {

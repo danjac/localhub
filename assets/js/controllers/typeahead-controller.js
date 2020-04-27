@@ -4,14 +4,17 @@
 import axios from 'axios';
 import getCaretPosition from 'textarea-caret';
 
-import { maxZIndex, getViewport } from '@utils/dom-helpers';
-import ApplicationController from './application-controller';
+import {
+  KEY_ARR_DOWN,
+  KEY_ARR_UP,
+  KEY_ESC,
+  KEY_RTN,
+  KEY_TAB,
+} from '@utils/application-constants';
 
-const ESC_KEY = 27;
-const TAB_KEY = 9;
-const RETURN_KEY = 13;
-const ARROW_UP = 38;
-const ARROW_DOWN = 40;
+import { getViewport, maxZIndex } from '@utils/dom-helpers';
+
+import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
   /*
@@ -35,7 +38,7 @@ export default class extends ApplicationController {
 
   connect() {
     document.addEventListener('keydown', (event) => {
-      if (event.keyCode === ESC_KEY) {
+      if (event.keyCode === KEY_ESC) {
         this.closeSelector();
       }
     });
@@ -56,7 +59,7 @@ export default class extends ApplicationController {
   keydown(event) {
     if (
       this.selectorOpen &&
-      [ARROW_DOWN, ARROW_UP, RETURN_KEY].indexOf(event.which) > -1
+      [KEY_ARR_DOWN, KEY_ARR_UP, KEY_RTN].indexOf(event.which) > -1
     ) {
       event.preventDefault();
     }
@@ -95,14 +98,14 @@ export default class extends ApplicationController {
     let prevItem = null;
 
     switch (event.which) {
-      case TAB_KEY:
-      case RETURN_KEY:
+      case KEY_TAB:
+      case KEY_RTN:
         this.handleSelection(
           this.selectorTarget.querySelector('li.selected > [data-typeahead-value]')
         );
         event.preventDefault();
         return false;
-      case ARROW_UP:
+      case KEY_ARR_UP:
         event.preventDefault();
         firstItem = this.selectorTarget.querySelector('li.selected');
         if (firstItem) {
@@ -113,7 +116,7 @@ export default class extends ApplicationController {
           }
         }
         return false;
-      case ARROW_DOWN:
+      case KEY_ARR_DOWN:
         event.preventDefault();
         firstItem = this.selectorTarget.querySelector('li.selected');
         if (firstItem) {

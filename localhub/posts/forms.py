@@ -16,7 +16,7 @@ class OpengraphPreviewInput(forms.URLInput):
         super().__init__(attrs)
         self.attrs.update(
             {
-                "data-action": "opengraph-preview#change",
+                "data-action": "opengraph-preview#change onpaste->opengraph-preview#change",
                 "data-target": "opengraph-preview.input",
             }
         )
