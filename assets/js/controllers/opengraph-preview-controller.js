@@ -3,11 +3,7 @@
 
 import axios from 'axios';
 
-import {
-  EVENT_FORM_COMPLETE,
-  EVENT_FORM_FETCHING,
-  TOAST_ERROR,
-} from '@utils/application-constants';
+import { EVENT_FORM_COMPLETE, EVENT_FORM_FETCHING } from '@utils/application-constants';
 
 import ApplicationController from './application-controller';
 
@@ -18,6 +14,7 @@ export default class extends ApplicationController {
   static targets = [
     'description',
     'descriptionPreview',
+    'error',
     'fullPreview',
     'image',
     'imagePreview',
@@ -40,6 +37,8 @@ export default class extends ApplicationController {
 
   fetch(event) {
     event.preventDefault();
+
+    this.errorTarget.classList.add('d-none');
 
     if (!this.inputTarget.checkValidity()) {
       return false;
@@ -79,7 +78,7 @@ export default class extends ApplicationController {
 
         this.updateFetchedUrl(url);
       })
-      .catch((err) => this.handleServerError(err))
+      .catch(() => this.handleServerError())
       .finally(() => {
         this.enableFormControls();
         currentTarget.removeAttribute('disabled');
@@ -162,12 +161,8 @@ export default class extends ApplicationController {
     return this.data.get('fetchedUrl').trim() === url.trim();
   }
 
-  handleServerError(err) {
-    // TBD: we probably just want an error field
+  handleServerError() {
     this.clearSubscribers();
-    if (err.response) {
-      const { statusText } = err.response;
-      this.toast(TOAST_ERROR, statusText);
-    }
+    this.errorTarget.classList.remove('d-none');
   }
 }

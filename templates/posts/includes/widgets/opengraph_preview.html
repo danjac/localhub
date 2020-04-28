@@ -5,6 +5,10 @@
 <div data-controller="opengraph-preview"
      data-opengraph-preview-preview-url="{% url 'posts:opengraph_preview' %}">
 
+  <div class="toast toast-error py-1 d-none" data-target="opengraph-preview.error">
+    {% trans "This URL is unavailable, or we are unable to fetch any meaningful data from this page." %}
+  </div>
+
   <h6 data-target="opengraph-preview.title"
       class="d-none"></h6>
 
