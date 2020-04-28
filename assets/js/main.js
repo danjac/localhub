@@ -4,10 +4,11 @@
 /* global require */
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
-import hoverintent from 'hoverintent';
 
 import { Application } from 'stimulus';
 import { definitionsFromContext } from 'stimulus/webpack-helpers';
+
+import instantClick from '@utils/instant-click';
 
 // Axios setup
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -20,42 +21,7 @@ const context = require.context('./controllers', true, /\.js$/);
 application.load(definitionsFromContext(context));
 
 // Instant click setup
-
-//https://github.com/turbolinks/turbolinks/issues/313#issuecomment-395819000
-//
-document.addEventListener('turbolinks:load', () => {
-  document.querySelectorAll('a').forEach((el) => {
-    if (el.dataset.turbolinks === 'false') {
-      return;
-    }
-
-    let prefetcher;
-    hoverintent(
-      el,
-      () => {
-        const href = el.getAttribute('href');
-        if (!href.match(/^\//)) {
-          return;
-        }
-        if (prefetcher) {
-          if (prefetcher.getAttribute('href') !== href) {
-            prefetcher.setAttribute('href', href);
-          }
-        } else {
-          const link = document.createElement('link');
-          link.setAttribute('rel', 'prefetch');
-          link.setAttribute('href', href);
-          prefetcher = document.body.appendChild(link);
-        }
-      },
-      () => {},
-      {
-        options: 50,
-        sensitivity: 5,
-      }
-    );
-  });
-});
+instantClick();
 
 // Turbolinks setup
 Turbolinks.start();
