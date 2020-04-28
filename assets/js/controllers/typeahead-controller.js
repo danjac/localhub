@@ -211,8 +211,13 @@ export default class extends ApplicationController {
     const viewport = getViewport();
     const rect = this.selectorTarget.getBoundingClientRect();
 
-    if (rect.height + rect.bottom > viewport.height) {
-      this.selectorTarget.style.top = rect.top - rect.height + 'px';
+    if (rect.bottom > viewport.height) {
+      let selectorTop = rect.bottom - viewport.height;
+      if (selectorTop + rect.height < viewport.height) {
+        selectorTop = viewport.height - rect.height;
+      }
+      this.selectorTarget.style.top = selectorTop + 'px';
+      this.selectorTarget.style.bottom = 'auto';
     }
 
     if (
