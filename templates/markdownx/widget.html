@@ -78,7 +78,8 @@
          data-markdown="1. [SELECTION]">{% trans "List (Numbers)" %}</a>
 
       <div class="dropdown"
-           data-controller="dropdown">
+           data-controller="dropdown"
+           data-action="click@window->dropdown#close">
         <button class="btn btn-sm"
                 type="button"
                 data-action="dropdown#toggle">

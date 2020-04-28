@@ -17,12 +17,6 @@ export default class extends ApplicationController {
   */
   static targets = ['menu'];
 
-  connect() {
-    document.addEventListener('click', () => {
-      this.close();
-    });
-  }
-
   toggle(event) {
     event.preventDefault();
     event.stopPropagation();
