@@ -45,10 +45,9 @@ class TrackerModelMixin:
     @classmethod
     def from_db(cls, db, field_names, values):
         new = super(TrackerModelMixin, cls).from_db(db, field_names, values)
-        new._tracked_values = {}
-
-        for field in cls.tracked_fields:
-            new._tracked_values[field] = values[field_names.index(field)]
+        new._tracked_values = {
+            field: values[field_names.index(field)] for field in cls.tracked_fields
+        }
 
         return new
 
@@ -57,14 +56,29 @@ class TrackerModelMixin:
         self.reset_tracker(fields)
 
     def reset_tracker(self, fields=None):
-        # reset tracked values to current values
+        """Reset tracker, so that fields will no longer be marked as changed.
+
+        Args:
+            fields (Iterable, optional): list of fields to reset. If None, then
+                resets tracker on all tracked fields (default: None)
+        """
         self._tracked_values = {
             field: getattr(self, field) for field in fields or self.tracked_fields
         }
 
-    def has_tracker_changed(self, *fields):
-        # if "tracked_fields" attribute is not set, then it
-        # hasn't been loaded from DB yet, hence is new...
+    def has_tracker_changed(self, fields=None):
+        """Checks if fields are dirty i.e. have changed since last DB load.
+
+        Note that if this is called on an instance that has not yet been saved
+        to the DB, this will always return True.
+
+        Args:
+            fields (Iterable, optional): list of fields to check. If None, checks
+                all tracked fields (default: None).
+
+        Returns:
+            bool
+        """
         if not hasattr(self, "_tracked_values"):
             return True
         for field in fields or self.tracked_fields:

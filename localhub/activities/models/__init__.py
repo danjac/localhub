@@ -320,10 +320,10 @@ class Activity(TrackerModelMixin, TimeStampedModel):
         return self.make_notification(self.owner, "edit", actor=self.editor)
 
     def hashtags_changed(self):
-        return self.has_tracker_changed("title", "description", "hashtags")
+        return self.has_tracker_changed(["title", "description", "hashtags"])
 
     def mentions_changed(self):
-        return self.has_tracker_changed("title", "description", "mentions")
+        return self.has_tracker_changed(["title", "description", "mentions"])
 
     @dispatch
     def notify_on_update(self):

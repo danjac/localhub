@@ -76,7 +76,7 @@ class EventCalendarView(
             .published_or_owner(self.request.user)
             .with_next_date()
             .exclude_blocked(self.request.user)
-            .filter(parent__isnull=True,)
+            .filter(parent__isnull=True)
             .order_by("next_date")
         )
         if self.current_day:
