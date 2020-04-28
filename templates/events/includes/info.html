@@ -8,7 +8,7 @@
 {% block extra_info %}
 {% if object.num_attendees and not object.canceled %}
 <div class="info">
-  {% if object.has_started %}
+  {% if object.has_ended %}
   {% blocktrans count counter=object.num_attendees %}
   1 Attended
   {% plural %}

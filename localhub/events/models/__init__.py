@@ -256,12 +256,24 @@ class Event(Activity):
         return self.DEFAULT_ADDRESS_FORMAT
 
     def has_started(self):
-        """If start date in past.
+        """If start date in past, unless still repeating.
 
         Returns:
             bool
         """
+        if self.is_repeating():
+            return False
         return self.starts < timezone.now()
+
+    def has_ended(self):
+        """If end date in past, unless still repeating.
+
+        Returns:
+            bool
+        """
+        if self.is_repeating():
+            return False
+        return self.ends < timezone.now()
 
     def get_next_start_date(self):
         """Returns next_date if repeating, otherwise starts.
@@ -339,7 +351,7 @@ class Event(Activity):
                 self.published,
                 not (self.deleted),
                 not (self.canceled),
-                not (self.has_started() and not self.is_repeating()),
+                not (self.has_started()),
             )
         )
 

@@ -435,6 +435,27 @@ class TestEventModel:
         event = Event(starts=timezone.now() - timedelta(days=30))
         assert event.has_started()
 
+    def test_has_started_if_repeating(self):
+        event = Event(
+            starts=timezone.now() - timedelta(days=30),
+            repeats=Event.RepeatChoices.DAILY,
+        )
+        assert not event.has_started()
+
+    def test_has_not_ended(self):
+        event = Event(ends=timezone.now() + timedelta(days=30))
+        assert not event.has_ended()
+
+    def test_has_ended(self):
+        event = Event(ends=timezone.now() - timedelta(days=30))
+        assert event.has_ended()
+
+    def test_has_ended_if_repeating(self):
+        event = Event(
+            ends=timezone.now() - timedelta(days=30), repeats=Event.RepeatChoices.DAILY
+        )
+        assert not event.has_ended()
+
     def test_is_attendable(self):
         event = EventFactory()
         assert event.is_attendable()
