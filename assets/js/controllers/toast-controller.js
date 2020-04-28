@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { EVENT_TOAST_MESSAGE } from '@utils/application-constants';
-import { fadeOut } from '@utils/dom-helpers';
+import { fadeOut, maxZIndex } from '@utils/dom-helpers';
 
 import ApplicationController from './application-controller';
 
@@ -35,6 +35,7 @@ export default class extends ApplicationController {
     this.messageTarget.innerText = message;
     this.element.classList.add(type);
     this.element.classList.remove('d-none');
+    this.element.style.zIndex = maxZIndex() + 1;
 
     this.timeout = setTimeout(() => {
       this.dismiss();
