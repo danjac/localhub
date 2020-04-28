@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { EVENT_CONFIRM_OPEN, KEY_ESC } from '@utils/application-constants';
-import { maxZIndex } from '@utils/dom-helpers';
+import { maximizeZIndex } from '@utils/dom-helpers';
 
 import ApplicationController from './application-controller';
 
@@ -36,7 +36,7 @@ export default class extends ApplicationController {
     this.bodyTarget.innerText = body;
     this.onConfirm = onConfirm;
     this.element.classList.add('active');
-    this.element.style.zIndex = maxZIndex() + 1;
+    maximizeZIndex(this.element);
   }
 
   close() {

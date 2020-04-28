@@ -1,7 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { maxZIndex, getViewport } from '@utils/dom-helpers';
+import { maximizeZIndex, getViewport } from '@utils/dom-helpers';
 import ApplicationController from './application-controller';
 
 // test comment
@@ -46,8 +46,7 @@ export default class extends ApplicationController {
     this.menuTarget.style.bottom = bottom;
     this.menuTarget.style.left = left;
     this.menuTarget.style.right = right;
-    // ensure menu not hidden under another element
-    this.menuTarget.style.zIndex = maxZIndex() + 1;
+    maximizeZIndex(this.menuTarget);
   }
 
   close() {

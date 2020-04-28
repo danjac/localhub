@@ -12,7 +12,7 @@ import {
   KEY_TAB,
 } from '@utils/application-constants';
 
-import { getViewport, maxZIndex } from '@utils/dom-helpers';
+import { getViewport, maximizeZIndex } from '@utils/dom-helpers';
 
 import ApplicationController from './application-controller';
 
@@ -221,7 +221,7 @@ export default class extends ApplicationController {
     ) {
       this.selectorTarget.style.left = '25%';
     }
-    this.selectorTarget.zIndex = maxZIndex() + 1;
+    maximizeZIndex(this.selectorTarget);
   }
 
   closeSelector() {

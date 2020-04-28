@@ -33,3 +33,10 @@ export function maxZIndex() {
       .pop() || 0
   );
 }
+
+export function maximizeZIndex(el) {
+  // makes the z-index of this element highest in DOM, to ensure it is not overlapped by other
+  // elements. Useful for modals, popup menus and tooltips, etc.
+  //
+  el.style.zIndex = maxZIndex() + 1;
+}
