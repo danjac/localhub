@@ -93,7 +93,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
   {% if not is_current_user %}
   <div class="dropdown mr-2"
        data-controller="dropdown"
-       data-action="click@window->dropdown#close">
+       data-action="click@window->dropdown#close keydown@window->dropdown#close">
     <button class="btn btn-sm"
             data-action="dropdown#toggle">
       {% trans "Actions" %}<i class="icon icon-caret"></i>
