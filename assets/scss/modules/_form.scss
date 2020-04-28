@@ -40,6 +40,6 @@ form:not(.search-form) {
   }
 }
 
-.form-input-hint {
-  color: $gray-color-dark;
+.form-help-text {
+  font-size: $font-size-sm;
 }
