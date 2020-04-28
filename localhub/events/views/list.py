@@ -141,24 +141,38 @@ class EventCalendarView(
         return [
             (
                 day,
+                is_past,
                 [event for event in self.object_list if dt and event.matches_date(dt)],
             )
-            for day, dt in self.iter_dates()
+            for day, is_past, dt in self.iter_dates()
         ]
 
+    def is_past(self, day):
+        now = timezone.now()
+        # any month in the future
+        if self.current_month > now.month and self.current_year >= now.year:
+            return False
+
+        # any month in the past
+        if self.current_month < now.month:
+            return True
+
+        # this month
+        return now.day > day
+
     def iter_dates(self):
-        """Yields tuple of (counter, datetime) for each day of month. If day
-        falls out of range yields zero, None.
+        """Yields tuple of (counter, is_past, datetime) for each day of month. If day
+        falls out of range yields zero, False, None.
         """
         try:
             for day in calendar.Calendar().itermonthdays(
                 self.current_year, self.current_month
             ):
                 if day > 0:
-                    yield day, self.make_datetime(day=day)
+                    yield day, self.is_past(day), self.make_datetime(day=day)
                 else:
                     # falls outside the day range
-                    yield 0, None
+                    yield 0, False, None
         except ValueError:
             raise Event.InvalidDate()
 

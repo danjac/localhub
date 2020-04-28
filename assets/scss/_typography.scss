@@ -16,3 +16,7 @@
 .text-extra-small {
   font-size: $font-size-xs !important;
 }
+
+.text-muted a {
+  @extend .text-muted;
+}

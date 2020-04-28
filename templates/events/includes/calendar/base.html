@@ -8,7 +8,7 @@
        href="{{ request.path }}?month={{ previous_month.month }}&year={{ previous_month.year }}">
       <i class="icon icon-arrow-left"></i>
     </a>
-    <div class="navbar-primary">{{ current_month|date:"F, Y" }}</div>
+    <div class="navbar-primary">{{ current_month|date:"F Y" }}</div>
     <a class="btn btn-action btn-link btn-lg"
        href="{{ request.path }}?month={{ next_month.month }}&year={{ next_month.year }}">
       <i class="icon icon-arrow-right"></i>
@@ -25,7 +25,7 @@
       <div class="calendar-date">{% trans "Sun" %}</div>
     </div>
     <div class="calendar-body">
-      {% for day, events in slots %}
+      {% for day, is_past, events in slots %}
       <div class="calendar-date">
         {% if day %}
         {% with num_events=events|length %}

@@ -7,7 +7,7 @@
 {% block calendar_date %}
 <button class="date-item{% if day == today.day and is_today %} date-today{% endif %}">{{ day }}</button>
 {% if events %}
-<div class="calendar-events">
+<div class="calendar-events{% if is_past %} text-muted{% endif %}">
   {% for event in events|slice:":2" %}
 
   <a class="calendar-event{% if not event.is_attendable %} text-strike{% elif event.is_attending %} text-bold{% endif %}"
