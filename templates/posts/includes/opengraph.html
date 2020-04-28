@@ -1,0 +1,44 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% if og_data %}
+
+{% if og_data.image and og_data.description %}
+<div class="columns opengraph pb-1">
+  {% endif %}
+
+
+  {% if og_data.image %}
+  {% if og_data.description %}
+  <div class="column col-3 col-md-12">
+    {% else %}
+    <div class="opengraph pb-1">
+      {% endif %}
+
+      <a href="{{ object.url }}"
+         class="opengraph-image-link"
+         target="_blank">
+        <img src="{{ og_data.image }}"
+             alt="{{ post.title }}"
+             loading="lazy"
+             class="img-responsive">
+      </a>
+    </div>
+    {% endif %}
+
+    {% if og_data.description %}
+    {% if og_data.image %}
+    <div class="column col-9 col-md-12">
+      {% else %}
+      <div class="opengraph pb-1">
+        {% endif %}
+        <blockquote class="text-small text-muted text-italic">
+          {{ og_data.description|html_unescape|urlize|truncatewords_html:300 }}
+        </blockquote>
+      </div>
+      {% endif %}
+
+      {% if og_data.image and og_data.description %}
+    </div>
+    {% endif %}
+    {% endif %}
