@@ -3,7 +3,11 @@
 
 import axios from 'axios';
 
-import { EVENT_FORM_COMPLETE, EVENT_FORM_FETCHING } from '@utils/application-constants';
+import {
+  EVENT_FORM_COMPLETE,
+  EVENT_FORM_FETCHING,
+  TOAST_ERROR,
+} from '@utils/application-constants';
 
 import ApplicationController from './application-controller';
 
@@ -14,7 +18,6 @@ export default class extends ApplicationController {
   static targets = [
     'description',
     'descriptionPreview',
-    'error',
     'fullPreview',
     'image',
     'imagePreview',
@@ -37,8 +40,6 @@ export default class extends ApplicationController {
 
   fetch(event) {
     event.preventDefault();
-
-    this.errorTarget.classList.add('d-none');
 
     if (!this.inputTarget.checkValidity()) {
       return false;
@@ -163,6 +164,6 @@ export default class extends ApplicationController {
 
   handleServerError() {
     this.clearSubscribers();
-    this.errorTarget.classList.remove('d-none');
+    this.toast(TOAST_ERROR, this.data.get('errorMessage'));
   }
 }
