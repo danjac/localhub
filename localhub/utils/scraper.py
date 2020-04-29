@@ -139,8 +139,7 @@ class HTMLScraper:
 
     def find_meta_tags(self, *names):
         for name in names:
-            value = self.find_meta_tag(name)
-            if value:
+            if value := self.find_meta_tag(name):
                 yield value
 
     def find_meta_tag(self, name):
@@ -155,11 +154,12 @@ class HTMLScraper:
 
     def find_text(self, *names):
         for name in names:
-            tag = self.soup.find(name)
-            if tag and tag.text:
-                value = tag.text.strip()
-                if value:
-                    yield value
+            if (
+                (tag := self.soup.find(name))
+                and tag.text
+                and (value := tag.text.strip())
+            ):
+                yield value
 
     def is_acceptable_image(self, image):
         try:
