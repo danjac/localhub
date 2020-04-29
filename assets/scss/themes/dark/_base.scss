@@ -7,7 +7,7 @@
 
 html,
 body {
-  @extend .bg-dark;
+  @include bg-color-variant('.bg-dark', $dark-color);
 }
 
 a {

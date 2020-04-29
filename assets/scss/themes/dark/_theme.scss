@@ -1,7 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-.dark-theme {
+@media (prefers-color-scheme: dark) {
   @import 'base';
   @import 'colors';
 

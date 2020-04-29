@@ -4,4 +4,15 @@
 .card {
   background-color: $darkmode-darker;
   border-color: $gray-color-dark;
+  &-title a {
+    color: $darkmode-link;
+
+    &:visited {
+      color: $darkmode-link;
+    }
+
+    &[target='_blank']:visited {
+      color: $darkmode-link-visited;
+    }
+  }
 }

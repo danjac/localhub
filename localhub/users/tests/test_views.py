@@ -361,21 +361,3 @@ class TestDismissNoticeView:
         response = client.post(reverse("dismiss_notice", args=["private-stash"]))
         assert response.status_code == 200
         login_user.refresh_from_db()
-        assert "private-stash" in login_user.dismissed_notices
-
-
-class TestSwitchThemeView:
-    def test_post_dark_theme(self, client):
-        response = client.post(reverse("switch_theme", args=["dark"]))
-        assert response.status_code == 200
-        assert response.cookies["theme"].value == "dark"
-
-    def test_post_light_theme(self, client):
-        response = client.post(reverse("switch_theme", args=["light"]))
-        assert response.status_code == 200
-        assert response.cookies["theme"].value == "light"
-
-    def test_post_invalid_theme(self, client):
-        response = client.post(reverse("switch_theme", args=["groovy"]))
-        assert response.status_code == 404
-        assert "theme" not in response.cookies

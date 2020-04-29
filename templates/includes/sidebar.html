@@ -195,9 +195,6 @@
     <a data-controller="active-link"
        href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
   </li>
-  <li class="menu-item">
-    {% include "users/includes/switch_theme.html" %}
-  </li>
   {% if can_manage_community %}
   <li class="menu-item">
     <a data-controller="active-link"
@@ -358,9 +355,6 @@
   <li class="menu-item">
     <a data-controller="active-link"
        href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
-  </li>
-  <li class="menu-item">
-    {% include "users/includes/switch_theme.html" %}
   </li>
 </ul>
 {% endif %}

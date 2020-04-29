@@ -3,12 +3,12 @@
 
 .btn-block,
 .btn-secondary {
-  background-color: $darkmode-lighter;
+  background-color: $darkmode-lighter !important;
   border-color: $gray-color-dark;
-  color: $darkmode-link;
+  color: $darkmode-link !important;
 }
 
 .btn-action,
 .btn-link {
-  color: $darkmode-link;
+  color: $darkmode-link !important;
 }

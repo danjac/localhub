@@ -14,11 +14,7 @@ from localhub.communities.views import (
     community_sidebar_view,
     community_welcome_view,
 )
-from localhub.users.views.actions import (
-    dismiss_notice_view,
-    switch_theme_view,
-    user_delete_view,
-)
+from localhub.users.views.actions import dismiss_notice_view, user_delete_view
 from localhub.users.views.update import user_update_view
 
 urlpatterns = [
@@ -46,7 +42,6 @@ urlpatterns = [
     path("welcome/", view=community_welcome_view, name="community_welcome"),
     path("sidebar/", view=community_sidebar_view, name="community_sidebar"),
     path("not-found/", view=community_not_found_view, name="community_not_found"),
-    path("~theme/<str:theme>/", switch_theme_view, name="switch_theme"),
     path("~dismiss-notice/<str:notice>/", dismiss_notice_view, name="dismiss_notice"),
     # Third-party
     path("account/", include("allauth.urls")),

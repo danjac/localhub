@@ -8,13 +8,11 @@
     border-top: 0.05rem solid $gray-color-dark;
   }
 
-  a:visited {
-    color: $gray-color;
+  a {
+    color: $darkmode-link !important;
   }
-
 
   &-item.active a {
-    color: $gray-color;
+    color: $darkmode-link !important;
   }
-
 }
