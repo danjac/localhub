@@ -453,20 +453,20 @@ class Event(Activity):
         event = CalendarEvent()
 
         starts = self.get_next_starts_with_tz()
-        ends = self.get_next_ends_with_tz()
 
         event.add("dtstart", starts)
         event.add("dtstamp", starts)
-        if ends:
+
+        if ends := self.get_next_ends_with_tz():
             event.add("dtend", ends)
+
         event.add("summary", self.title)
 
-        location = self.get_full_location()
-        if location:
+        if location := self.get_full_location():
             event.add("location", location)
 
         if self.description:
-            event.add("description", self.description)
+            event.add("description", self.description.plaintext().splitlines())
 
         calendar = Calendar()
         calendar.add_component(event)
