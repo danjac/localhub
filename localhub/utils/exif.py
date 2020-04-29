@@ -24,8 +24,7 @@ class Exif:
         """
         img = Image.open(fp)
 
-        exif = img._getexif()
-        if exif is None:
+        if (exif := img._getexif()) is None:
             raise cls.Invalid("Image does not contain EXIF tags")
 
         return cls(exif)
@@ -82,8 +81,7 @@ class Exif:
     def build_gps_dict(self):
         raw_values = {}
         for tag, value in self.exif.items():
-            decoded = TAGS.get(tag, tag)
-            if decoded == "GPSInfo":
+            if TAGS.get(tag, tag) == "GPSInfo":
                 raw_values = value
 
         if not raw_values:

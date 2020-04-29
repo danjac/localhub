@@ -147,8 +147,7 @@ class HTMLScraper:
             "meta", attrs={"name": name}
         )
         if meta and "content" in meta.attrs:
-            content = meta.attrs["content"].strip()
-            if content:
+            if content := meta.attrs["content"].strip():
                 return content
         return None
 
