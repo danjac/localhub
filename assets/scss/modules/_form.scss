@@ -40,6 +40,15 @@ form:not(.search-form) {
   }
 }
 
+.form-input-hint {
+  @extend .pb-1;
+  margin-bottom: 0;
+}
+
 .form-help-text {
+  @extend .text-muted;
+  @extend .pb-1;
   font-size: $font-size-sm;
+  margin-top: $unit-1;
+  margin-bottom: 0;
 }

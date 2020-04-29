@@ -35,11 +35,11 @@
   {% endif %}
 
   {% for error in field.errors %}
-  <p class="form-input-hint pb-1 mb-0">{{ error }}</p>
+  <p class="form-input-hint">{{ error }}</p>
   {% endfor %}
 
   {% if not field.errors and help_text %}
-  <p class="form-help-text pb-1 mb-0">{{ help_text }}</p>
+  <p class="form-help-text">{{ help_text }}</p>
   {% endif %}
 </div>
 {% endwith %}
