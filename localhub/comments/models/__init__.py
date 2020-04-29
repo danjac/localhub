@@ -163,8 +163,7 @@ class Comment(TrackerModelMixin, TimeStampedModel):
 
     @dispatch
     def notify_on_create(self):
-        content_object = self.get_content_object()
-        if content_object is None:
+        if (content_object := self.get_content_object()) is None:
             return []
 
         notifications = []
@@ -207,8 +206,7 @@ class Comment(TrackerModelMixin, TimeStampedModel):
 
     @dispatch
     def notify_on_update(self):
-        content_object = self.get_content_object()
-        if content_object is None:
+        if (self.get_content_object()) is None:
             return []
 
         if not self.has_tracker_changed():
