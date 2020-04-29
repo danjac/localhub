@@ -69,7 +69,7 @@
   </div>
   <div class="card-footer">
     <div class="pb-1">
-      {% if comment.num_likes and comment.owner == user %}
+      {% if comment.num_likes %}
       <div class="info">
         {{ comment.num_likes }}
         {% blocktrans count counter=comment.num_likes %}

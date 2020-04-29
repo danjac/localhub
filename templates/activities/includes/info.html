@@ -34,7 +34,7 @@
   </div>
   {% endif %}
 
-  {% if object.num_likes and object.owner == user %}
+  {% if object.num_likes %}
   <div class="info">
     {{ object.num_likes }}
     {% blocktrans count counter=object.num_likes %}
