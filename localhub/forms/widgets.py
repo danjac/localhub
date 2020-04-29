@@ -4,10 +4,8 @@
 import json
 
 from django import forms
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-
-from localhub.hashtags.constants import HASHTAGS_TYPEAHEAD_URL
-from localhub.users.constants import MENTIONS_TYPEAHEAD_URL
 
 
 class ClearableImageInput(forms.ClearableFileInput):
@@ -52,7 +50,10 @@ class BaseTypeaheadInput(TypeaheadMixin, forms.TextInput):
 class TypeaheadInput(BaseTypeaheadInput):
     """Default typeahead implementation, with all urls enabled"""
 
-    typeahead_urls = (HASHTAGS_TYPEAHEAD_URL, MENTIONS_TYPEAHEAD_URL)
+    typeahead_urls = (
+        settings.LOCALHUB_HASHTAGS_TYPEAHEAD_URL,
+        settings.LOCALHUB_MENTIONS_TYPEAHEAD_URL,
+    )
 
 
 class CalendarWidget(forms.SplitDateTimeWidget):

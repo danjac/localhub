@@ -3,15 +3,15 @@
 
 
 from django import forms
+from django.conf import settings
 
 from localhub.forms.widgets import BaseTypeaheadInput
 
-from .constants import HASHTAGS_TYPEAHEAD_URL
 from .validators import validate_hashtags
 
 
 class HashtagsTypeaheadInput(BaseTypeaheadInput):
-    typeahead_urls = (HASHTAGS_TYPEAHEAD_URL,)
+    typeahead_urls = (settings.LOCALHUB_HASHTAGS_TYPEAHEAD_URL,)
 
 
 class HashtagsField(forms.CharField):

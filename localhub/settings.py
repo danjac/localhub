@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import os
+import re
 import socket
 
 from django.urls import reverse_lazy
@@ -199,6 +200,12 @@ class Base(Configuration):
     LOCALHUB_DEFAULT_PAGE_SIZE = 12
     LOCALHUB_HOME_PAGE_URL = reverse_lazy("activity_stream")
     LOCALHUB_GEOLOCATOR_USER_AGENT = values.Value("localhub")
+
+    LOCALHUB_HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")
+    LOCALHUB_HASHTAGS_TYPEAHEAD_URL = ("#", reverse_lazy("hashtags:autocomplete_list"))
+
+    LOCALHUB_MENTIONS_RE = re.compile(r"(?:^|\s)[＠ @]{1}([^\s#<>!.?[\]|{}]+)")
+    LOCALHUB_MENTIONS_TYPEAHEAD_URL = ("@", reverse_lazy("users:autocomplete_list"))
 
     @property
     def BASE_DIR(self):

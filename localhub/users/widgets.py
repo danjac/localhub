@@ -2,10 +2,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from localhub.forms.widgets import BaseTypeaheadInput
+from django.conf import settings
 
-from .constants import MENTIONS_TYPEAHEAD_URL
+from localhub.forms.widgets import BaseTypeaheadInput
 
 
 class MentionsTypeaheadInput(BaseTypeaheadInput):
-    typeahead_urls = (MENTIONS_TYPEAHEAD_URL,)
+    typeahead_urls = (settings.LOCALHUB_MENTIONS_TYPEAHEAD_URL,)

@@ -2,10 +2,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
-
-from .utils import HASHTAGS_RE
 
 
 def validate_hashtags(value):
@@ -21,5 +20,5 @@ def validate_hashtags(value):
         return
 
     for token in value.split():
-        if not HASHTAGS_RE.match(token):
+        if not settings.LOCALHUB_HASHTAGS_RE.match(token):
             raise ValidationError(_("All tokens must be valid #tags"))

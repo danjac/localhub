@@ -2,11 +2,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+from django.conf import settings
 from django.urls import reverse
 
 from localhub.utils.text import slugify_unicode
-
-from .constants import MENTIONS_RE
 
 
 def user_display(user):
@@ -25,7 +24,7 @@ def extract_mentions(content):
         [
             mention
             for token in content.split(" ")
-            for mention in MENTIONS_RE.findall(token)
+            for mention in settings.LOCALHUB_MENTIONS_RE.findall(token)
         ]
     )
 
@@ -38,7 +37,7 @@ def linkify_mentions(content):
     tokens = content.split(" ")
     rv = []
     for token in tokens:
-        for mention in MENTIONS_RE.findall(token):
+        for mention in settings.LOCALHUB_MENTIONS_RE.findall(token):
             url = reverse("users:activities", args=[slugify_unicode(mention)])
             token = token.replace("@" + mention, f'<a href="{url}">@{mention}</a>')
 

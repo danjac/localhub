@@ -1,11 +1,10 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from django.conf import settings
 from django.urls import reverse
 
 from localhub.utils.text import slugify_unicode
-
-from .constants import HASHTAGS_RE
 
 
 def extract_hashtags(content):
@@ -22,7 +21,7 @@ def extract_hashtags(content):
         [
             hashtag.lower()
             for token in content.split(" ")
-            for hashtag in HASHTAGS_RE.findall(token)
+            for hashtag in settings.LOCALHUB_HASHTAGS_RE.findall(token)
         ]
     )
 
@@ -40,7 +39,7 @@ def linkify_hashtags(content):
     rv = []
     for token in tokens:
 
-        for tag in HASHTAGS_RE.findall(token):
+        for tag in settings.LOCALHUB_HASHTAGS_RE.findall(token):
             slug = slugify_unicode(tag)
             if slug:
                 url = reverse("hashtags:detail", args=[slug])

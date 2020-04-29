@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django import forms
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserChangeForm as BaseUserChangeForm
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
@@ -9,14 +10,13 @@ from django.utils.translation import gettext_lazy as _
 
 from localhub.forms.widgets import BaseTypeaheadInput, ClearableImageInput
 
-from .constants import MENTIONS_TYPEAHEAD_URL
 from .validators import validate_mentions
 
 User = get_user_model()
 
 
 class MentionsTypeaheadInput(BaseTypeaheadInput):
-    typeahead_urls = (MENTIONS_TYPEAHEAD_URL,)
+    typeahead_urls = (settings.LOCALHUB_MENTIONS_TYPEAHEAD_URL,)
 
 
 class MentionsField(forms.CharField):
