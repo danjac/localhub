@@ -17,10 +17,10 @@ class PhotoGalleryView(BaseActivityListView):
         return (
             super()
             .get_queryset()
-            .published()
+            .published_or_owner(self.request.user)
             .exclude_blocked(self.request.user)
             .filter(parent__isnull=True)
-            .order_by("-published")
+            .order_by("-created", "-published")
         )
 
 
