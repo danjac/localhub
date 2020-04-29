@@ -29,3 +29,10 @@ code {
 blockquote {
   border-color: $gray-color-dark;
 }
+
+header,
+footer {
+  a {
+    color: $gray-color !important;
+  }
+}
