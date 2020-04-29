@@ -40,6 +40,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.webpack
+    privileged: true
     command: yarn run dev
     volumes:
       - .:/app
@@ -51,6 +52,7 @@ services:
       dockerfile: Dockerfile.local
     env_file: .env
     restart: on-failure
+    privileged: true
     environment: *default-env
     depends_on:
       - postgres
