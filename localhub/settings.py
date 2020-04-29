@@ -202,10 +202,13 @@ class Base(Configuration):
     LOCALHUB_GEOLOCATOR_USER_AGENT = values.Value("localhub")
 
     LOCALHUB_HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")
-    LOCALHUB_HASHTAGS_TYPEAHEAD_URL = ("#", reverse_lazy("hashtags:autocomplete_list"))
+    LOCALHUB_HASHTAGS_TYPEAHEAD_CONFIG = (
+        "#",
+        reverse_lazy("hashtags:autocomplete_list"),
+    )
 
     LOCALHUB_MENTIONS_RE = re.compile(r"(?:^|\s)[＠ @]{1}([^\s#<>!.?[\]|{}]+)")
-    LOCALHUB_MENTIONS_TYPEAHEAD_URL = ("@", reverse_lazy("users:autocomplete_list"))
+    LOCALHUB_MENTIONS_TYPEAHEAD_CONFIG = ("@", reverse_lazy("users:autocomplete_list"))
 
     @property
     def BASE_DIR(self):

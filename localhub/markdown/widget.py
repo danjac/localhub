@@ -9,7 +9,7 @@ from localhub.forms.widgets import TypeaheadMixin
 
 
 class TypeaheadMarkdownWidget(TypeaheadMixin, MarkdownxWidget):
-    typeahead_urls = (
-        settings.LOCALHUB_HASHTAGS_TYPEAHEAD_URL,
-        settings.LOCALHUB_MENTIONS_TYPEAHEAD_URL,
+    typeahead_configs = (
+        settings.LOCALHUB_HASHTAGS_TYPEAHEAD_CONFIG,
+        settings.LOCALHUB_MENTIONS_TYPEAHEAD_CONFIG,
     )

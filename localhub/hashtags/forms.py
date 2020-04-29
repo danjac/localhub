@@ -11,7 +11,7 @@ from .validators import validate_hashtags
 
 
 class HashtagsTypeaheadInput(BaseTypeaheadInput):
-    typeahead_urls = (settings.LOCALHUB_HASHTAGS_TYPEAHEAD_URL,)
+    typeahead_configs = [settings.LOCALHUB_HASHTAGS_TYPEAHEAD_CONFIG]
 
 
 class HashtagsField(forms.CharField):

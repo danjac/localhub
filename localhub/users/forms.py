@@ -16,7 +16,7 @@ User = get_user_model()
 
 
 class MentionsTypeaheadInput(BaseTypeaheadInput):
-    typeahead_urls = (settings.LOCALHUB_MENTIONS_TYPEAHEAD_URL,)
+    typeahead_configs = [settings.LOCALHUB_MENTIONS_TYPEAHEAD_CONFIG]
 
 
 class MentionsField(forms.CharField):

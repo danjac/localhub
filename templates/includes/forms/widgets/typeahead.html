@@ -3,7 +3,7 @@
 
 {% load i18n %}
 <div data-controller="typeahead"
-     data-typeahead-urls="{{ typeahead_urls }}">
+     data-typeahead-config="{{ typeahead_config }}">
   <ul class="menu typeahead-selector d-none"
       data-target="typeahead.selector"></ul>
   <input data-target="typeahead.input"

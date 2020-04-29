@@ -46,7 +46,7 @@ export default class extends ApplicationController {
       this.closeSelector();
     });
 
-    this.urls = JSON.parse(this.data.get('urls'));
+    this.config = JSON.parse(this.data.get('config'));
   }
 
   select(event) {
@@ -72,8 +72,8 @@ export default class extends ApplicationController {
 
     let matched = false;
 
-    for (let i = 0; i < this.urls.length; ++i) {
-      const { url, key } = this.urls[i];
+    for (let i = 0; i < this.config.length; ++i) {
+      const { url, key } = this.config[i];
       if (this.handleTypeahead(url, key)) {
         matched = true;
         break;

@@ -14,17 +14,21 @@ class ClearableImageInput(forms.ClearableFileInput):
 
 class TypeaheadMixin:
 
-    typeahead_urls = ()
+    # typeahead configs should be a pair of (trigger key, url)
+    # e.g. [("@", "/mentions/search/"), ] -> the search will be initiated
+    # with the key "@" and queries "/mentions/search"
 
-    def __init__(self, attrs=None, typeahead_urls=()):
+    typeahead_configs = []
+
+    def __init__(self, attrs=None, typeahead_configs=None):
         super().__init__(attrs)
-        self.typeahead_urls = typeahead_urls or self.typeahead_urls
+        self.typeahead_configs = typeahead_configs or self.typeahead_configs
 
     def get_context(self, name, value, attrs):
         data = super().get_context(name, value, attrs)
         # convert to JSON for the JS to handle
-        data["typeahead_urls"] = json.dumps(
-            [{"key": key, "url": str(url)} for (key, url) in self.typeahead_urls]
+        data["typeahead_config"] = json.dumps(
+            [{"key": key, "url": str(url)} for (key, url) in self.typeahead_configs]
         )
         return data
 
@@ -50,10 +54,10 @@ class BaseTypeaheadInput(TypeaheadMixin, forms.TextInput):
 class TypeaheadInput(BaseTypeaheadInput):
     """Default typeahead implementation, with all urls enabled"""
 
-    typeahead_urls = (
-        settings.LOCALHUB_HASHTAGS_TYPEAHEAD_URL,
-        settings.LOCALHUB_MENTIONS_TYPEAHEAD_URL,
-    )
+    typeahead_configs = [
+        settings.LOCALHUB_HASHTAGS_TYPEAHEAD_CONFIG,
+        settings.LOCALHUB_MENTIONS_TYPEAHEAD_CONFIG,
+    ]
 
 
 class CalendarWidget(forms.SplitDateTimeWidget):

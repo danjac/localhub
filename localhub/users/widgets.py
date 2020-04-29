@@ -8,4 +8,4 @@ from localhub.forms.widgets import BaseTypeaheadInput
 
 
 class MentionsTypeaheadInput(BaseTypeaheadInput):
-    typeahead_urls = (settings.LOCALHUB_MENTIONS_TYPEAHEAD_URL,)
+    typeahead_configs = [settings.LOCALHUB_MENTIONS_TYPEAHEAD_CONFIG]
