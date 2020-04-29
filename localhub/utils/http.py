@@ -108,8 +108,7 @@ class URLResolver:
         Returns:
             str or None: domain or None if not valid URL.
         """
-        domain = self.parts.netloc
-        if domain.startswith("www."):
+        if (domain := self.parts.netloc).startswith("www."):
             domain = domain[4:]
         return domain
 
