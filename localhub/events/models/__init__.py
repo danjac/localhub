@@ -155,7 +155,7 @@ class Event(Activity):
     def get_domain(self):
         return get_domain(self.url) or ""
 
-    def get_starts_with_tz(self):
+    def get_next_starts_with_tz(self):
         """Returns timezone-adjusted start time.
 
         Returns:
@@ -163,14 +163,15 @@ class Event(Activity):
         """
         return self.get_next_start_date().astimezone(self.timezone)
 
-    def get_ends_with_tz(self):
+    def get_next_ends_with_tz(self):
         """Returns timezone-adjusted end time.
 
         Returns:
             datetime or None: returns None if ends is None.
         """
-        ends = self.get_next_end_date()
-        return ends.astimezone(self.timezone) if ends else None
+        if ends := self.get_next_end_date():
+            return ends.astimezone(self.timezone)
+        return None
 
     def get_location(self):
         """Returns a concatenated string of location fields.
@@ -289,7 +290,7 @@ class Event(Activity):
                 "next_date not present: must be used with EventQuerySet.with_next_date()"
             )
         # ensure date/times preserved
-        return self.next_date.replace(hour=self.starts.hour, minute=self.starts.minute,)
+        return self.next_date.replace(hour=self.starts.hour, minute=self.starts.minute)
 
     def get_next_end_date(self):
 
@@ -451,8 +452,8 @@ class Event(Activity):
         """
         event = CalendarEvent()
 
-        starts = self.get_starts_with_tz()
-        ends = self.get_ends_with_tz()
+        starts = self.get_next_starts_with_tz()
+        ends = self.get_next_ends_with_tz()
 
         event.add("dtstart", starts)
         event.add("dtstamp", starts)

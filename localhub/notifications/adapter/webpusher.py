@@ -43,8 +43,7 @@ class Webpusher:
             "url": self.get_url(),
         }
 
-        body = self.get_body()
-        if body:
+        if body := self.get_body():
             payload["body"] = force_text(body)
 
         if self.adapter.community.logo:

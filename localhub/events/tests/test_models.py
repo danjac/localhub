@@ -492,24 +492,24 @@ class TestEventModel:
         event = EventFactory(canceled=timezone.now())
         assert not event.is_attendable()
 
-    def test_get_starts_with_tz(self):
+    def test_get_next_starts_with_tz(self):
         event = EventFactory(timezone=pytz.timezone("Europe/Helsinki"))
-        assert event.get_starts_with_tz().tzinfo.zone == "Europe/Helsinki"
+        assert event.get_next_starts_with_tz().tzinfo.zone == "Europe/Helsinki"
 
-    def test_get_ends_with_tz_if_none(self):
+    def test_get_next_ends_with_tz_if_none(self):
         event = EventFactory(ends=None)
-        assert event.get_ends_with_tz() is None
+        assert event.get_next_ends_with_tz() is None
 
-    def test_get_ends_with_tz(self):
+    def test_get_next_ends_with_tz(self):
         now = timezone.now()
         event = EventFactory(
             ends=now + datetime.timedelta(days=30),
             timezone=pytz.timezone("Europe/Helsinki"),
         )
 
-        assert event.get_ends_with_tz().tzinfo.zone == "Europe/Helsinki"
+        assert event.get_next_ends_with_tz().tzinfo.zone == "Europe/Helsinki"
 
-    def test_get_ends_with_tz_if_repeating(self):
+    def test_get_next_ends_with_tz_if_repeating(self):
         now = timezone.now()
         EventFactory(
             starts=now,
@@ -518,7 +518,7 @@ class TestEventModel:
             timezone=pytz.timezone("Europe/Helsinki"),
         )
         first = Event.objects.with_next_date().first()
-        assert first.get_ends_with_tz().tzinfo.zone == "Europe/Helsinki"
+        assert first.get_next_ends_with_tz().tzinfo.zone == "Europe/Helsinki"
 
     def test_get_absolute_url(self, event):
         assert event.get_absolute_url().startswith(f"/events/{event.id}/")
