@@ -2,15 +2,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 .calendar {
-  border-color: $gray-color;
+  border-color: $gray-color-dark !important;
 
   &-header,
   &-nav,
   &-body {
-    border-color: $gray-color;
+    border-color: $gray-color-dark !important;
     background-color: $darkmode-lighter !important;
 
     .calendar-date {
+      border-color: $gray-color-dark !important;
       .date-item:focus,
       .date-item:hover {
         background: transparent;
