@@ -69,13 +69,15 @@ class TestNotificationMarkReadView:
             actor=post.owner,
             community=post.community,
         )
-        with mocker.patch(
+
+        mock_notification_read = mocker.patch(
             "localhub.notifications.signals.notification_read"
-        ) as mock_notification_read:
-            response = client.post(
-                reverse("notifications:mark_read", args=[notification.id])
-            )
-            assert mock_notification_read.send.called_with(instance=post)
+        )
+
+        response = client.post(
+            reverse("notifications:mark_read", args=[notification.id])
+        )
+        assert mock_notification_read.send.called_with(instance=post)
         assert response.url == reverse("notifications:list")
         notification.refresh_from_db()
         assert notification.is_read
@@ -92,14 +94,15 @@ class TestNotificationMarkAllReadView:
             community=post.community,
             verb="created",
         )
-        with mocker.patch(
+        mock_notification_read = mocker.patch(
             "localhub.notifications.signals.notification_read"
-        ) as mock_notification_read:
-            response = client.post(
-                reverse("notifications:mark_read", args=[notification.id])
-            )
-            response = client.post(reverse("notifications:mark_all_read"))
-            assert mock_notification_read.send.called_with(instance=post)
+        )
+
+        response = client.post(
+            reverse("notifications:mark_read", args=[notification.id])
+        )
+        response = client.post(reverse("notifications:mark_all_read"))
+        assert mock_notification_read.send.called_with(instance=post)
         assert response.url == reverse("notifications:list")
         notification.refresh_from_db()
         assert notification.is_read

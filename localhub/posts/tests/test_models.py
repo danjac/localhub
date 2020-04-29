@@ -306,11 +306,9 @@ class TestPostModel:
         FlagFactory(content_object=post)
         LikeFactory(content_object=post)
 
-        with mocker.patch(
-            "localhub.activities.signals.soft_delete"
-        ) as mock_soft_delete:
-            post.soft_delete()
-            assert mock_soft_delete.called_with(sender=Post, instance=post)
+        mock_soft_delete = mocker.patch("localhub.activities.signals.soft_delete")
+        post.soft_delete()
+        assert mock_soft_delete.called_with(sender=Post, instance=post)
 
         post.refresh_from_db()
 

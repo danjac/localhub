@@ -163,12 +163,12 @@ class Comment(TrackerModelMixin, TimeStampedModel):
 
     @dispatch
     def notify_on_create(self):
-        # should not happen, but just in case
         content_object = self.get_content_object()
         if content_object is None:
-            return None
+            return []
 
         notifications = []
+
         recipients = self.get_notification_recipients()
         notifications += self.notify_mentioned(recipients)
 
@@ -207,18 +207,17 @@ class Comment(TrackerModelMixin, TimeStampedModel):
 
     @dispatch
     def notify_on_update(self):
-        # should not happen, but just in case
         content_object = self.get_content_object()
         if content_object is None:
-            return None
+            return []
 
-        notifications = []
         if not self.has_tracker_changed():
-            return notifications
+            return []
 
-        recipients = self.get_notification_recipients()
-        notifications += self.notify_mentioned(recipients)
-        return takefirst(notifications, lambda n: n.recipient)
+        return takefirst(
+            self.notify_mentioned(self.get_notification_recipients()),
+            lambda n: n.recipient,
+        )
 
     @dispatch
     def notify_on_delete(self, moderator):
