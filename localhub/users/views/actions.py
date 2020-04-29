@@ -1,10 +1,9 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import datetime
 
 from django.conf import settings
-from django.http import Http404, HttpResponse
+from django.http import HttpResponse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DeleteView, View
 
@@ -112,22 +111,3 @@ class DismissNoticeView(CurrentUserMixin, View):
 
 
 dismiss_notice_view = DismissNoticeView.as_view()
-
-
-class SwitchThemeView(View):
-    def post(self, request, theme):
-        if theme not in settings.LOCALHUB_INSTALLED_THEMES:
-            raise Http404()
-
-        response = HttpResponse()
-        response.set_cookie(
-            "theme",
-            theme,
-            expires=datetime.datetime.now() + datetime.timedelta(days=365),
-            domain=settings.SESSION_COOKIE_DOMAIN,
-            httponly=True,
-        )
-        return response
-
-
-switch_theme_view = SwitchThemeView.as_view()
