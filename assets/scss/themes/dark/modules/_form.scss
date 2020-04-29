@@ -7,7 +7,7 @@ form:not(.search-form) {
 
 .form-input,
 .form-select {
-  background-color: $darkmode-darker;
+  background-color: $darkmode-darker !important;
   color: $darkmode-text;
   border-color: $gray-color-dark;
 
@@ -24,6 +24,10 @@ form:not(.search-form) {
 
   &:not(:placeholder-shown):invalid:focus {
     background-color: $darkmode-darker;
+  }
+
+  &:disabled {
+    background-color: $darkmode-darker !important;
   }
 }
 
