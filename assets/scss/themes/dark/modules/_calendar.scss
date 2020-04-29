@@ -8,7 +8,7 @@
   &-nav,
   &-body {
     border-color: $gray-color;
-    background-color: $darkmode-lighter;
+    background-color: $darkmode-lighter !important;
 
     .calendar-date {
       .date-item:focus,
