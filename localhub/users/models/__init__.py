@@ -29,6 +29,34 @@ from localhub.utils.itertools import takefirst
 from .managers import UserManager
 
 
+class MemberCache:
+    """Helper class for storing roles and state of each membership
+    a user has.
+    """
+
+    def __init__(self):
+        self.roles = {}
+        self.inactive = set()
+
+    def add_role(self, community_id, role, active):
+        if active:
+            self.roles[community_id] = role
+        else:
+            self.inactive.add(community_id)
+
+    def is_active(self, community_id):
+        return self.has_role(community_id)
+
+    def is_inactive(self, community_id):
+        return community_id in self.inactive
+
+    def has_role(self, community_id, roles=None):
+        if community_id in self.inactive or community_id not in self.roles:
+            return False
+
+        return self.roles[community_id] in roles if roles else True
+
+
 class User(TrackerModelMixin, AbstractUser):
     class ActivityStreamFilters(models.TextChoices):
         USERS = "users", _("Limited to only content from people I'm following")
@@ -111,24 +139,17 @@ class User(TrackerModelMixin, AbstractUser):
     def member_cache(self):
         """
         Returns:
-            A dict of membership status/roles across all communities
-            the user belongs to:
-
-            {
-                "active": {community_id: "admin"}, ...
-                "inactive": [list of community ids...]
-            }
+            A MemberCache instance of membership status/roles across all communities
+            the user belongs to.
         """
-        dct = {"active": {}, "inactive": []}
+
+        mc = MemberCache()
 
         for community_id, role, active in Membership.objects.filter(
             member=self
         ).values_list("community", "role", "active"):
-            if active:
-                dct["active"][community_id] = role
-            else:
-                dct["inactive"].append(community_id)
-        return dct
+            mc.add_role(community_id, role, active)
+        return mc
 
     def has_role(self, community, *roles):
         """Checks if user has given role in the community, if any. Result
@@ -141,14 +162,7 @@ class User(TrackerModelMixin, AbstractUser):
         Returns:
             bool: if user has any of these roles
         """
-
-        if roles:
-            try:
-                return self.member_cache["active"][community.id] in roles
-            except KeyError:
-                return False
-
-        return community.id in self.member_cache["active"]
+        return self.member_cache.has_role(community.id, roles)
 
     def is_admin(self, community):
         return self.has_role(community, Membership.Role.ADMIN)
@@ -173,7 +187,7 @@ class User(TrackerModelMixin, AbstractUser):
         Returns:
             bool
         """
-        return community.id in self.member_cache["inactive"]
+        return self.member_cache.is_inactive(community.id)
 
     def is_blocked(self, user):
         """ Check if user is blocking this other user, or is blocked by this other

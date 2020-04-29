@@ -29,7 +29,6 @@ def geocode(street_address=None, locality=None, postal_code=None, country=None):
     }
     if not all(q.values()):
         return None, None
-    result = geolocator.geocode(q)
-    if result:
+    if result := geolocator.geocode(q):
         return result.latitude, result.longitude
     return None, None

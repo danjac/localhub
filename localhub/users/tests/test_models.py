@@ -346,18 +346,22 @@ class TestUserModel:
         ).community
         fifth = CommunityFactory()
 
-        assert user.member_cache["active"][first.id] == Membership.Role.ADMIN
-        assert user.member_cache["active"][second.id] == Membership.Role.MODERATOR
-        assert user.member_cache["active"][third.id] == Membership.Role.MEMBER
+        assert user.member_cache.has_role(first.id, [Membership.Role.ADMIN])
+        assert user.member_cache.has_role(second.id, [Membership.Role.MODERATOR])
+        assert user.member_cache.has_role(third.id, [Membership.Role.MEMBER])
 
-        assert fourth.id not in user.member_cache["active"]
-        assert fifth.id not in user.member_cache["active"]
+        assert user.member_cache.has_role(first.id)
+        assert user.member_cache.has_role(second.id)
+        assert user.member_cache.has_role(third.id)
 
-        assert first.id not in user.member_cache["inactive"]
-        assert second.id not in user.member_cache["inactive"]
-        assert third.id not in user.member_cache["inactive"]
-        assert fourth.id in user.member_cache["inactive"]
-        assert fifth.id not in user.member_cache["inactive"]
+        assert not user.member_cache.has_role(fourth.id)
+        assert not user.member_cache.has_role(fifth.id)
+
+        assert not user.member_cache.is_inactive(first.id)
+        assert not user.member_cache.is_inactive(second.id)
+        assert not user.member_cache.is_inactive(third.id)
+        assert not user.member_cache.is_inactive(fifth.id)
+        assert user.member_cache.is_inactive(fourth.id)
 
     def test_get_blocked_users(self, user):
         blocked = UserFactory()
