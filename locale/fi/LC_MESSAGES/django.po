@@ -282,27 +282,27 @@ msgstr ""
 msgid "End date cannot be before start date"
 msgstr ""
 
-#: localhub/flags/models.py:49
+#: localhub.apps.flags/models.py:49
 msgid "Spam"
 msgstr "Roska"
 
-#: localhub/flags/models.py:50
+#: localhub.apps.flags/models.py:50
 msgid "Abuse"
 msgstr ""
 
-#: localhub/flags/models.py:51
+#: localhub.apps.flags/models.py:51
 msgid "Breach of community rules"
 msgstr ""
 
-#: localhub/flags/models.py:52
+#: localhub.apps.flags/models.py:52
 msgid "Illegal activity"
 msgstr "Laiton toiminta"
 
-#: localhub/flags/models.py:53
+#: localhub.apps.flags/models.py:53
 msgid "Pornography"
 msgstr ""
 
-#: localhub/flags/models.py:54
+#: localhub.apps.flags/models.py:54
 msgid "Breach of copyright"
 msgstr ""
 

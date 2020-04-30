@@ -8,6 +8,7 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.apps.comments.forms import CommentForm
 from localhub.apps.communities.views import CommunityRequiredMixin
+from localhub.apps.flags.forms import FlagForm
 from localhub.common.template.defaultfilters import resolve_url
 from localhub.common.views import (
     ParentObjectMixin,
@@ -15,7 +16,6 @@ from localhub.common.views import (
     SuccessFormView,
     SuccessUpdateView,
 )
-from localhub.flags.forms import FlagForm
 
 from ..forms import ActivityTagsForm
 from ..utils import get_activity_models

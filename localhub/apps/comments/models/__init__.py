@@ -15,6 +15,7 @@ from model_utils.models import TimeStampedModel
 
 from localhub.apps.bookmarks.models import Bookmark
 from localhub.apps.communities.models import Community
+from localhub.apps.flags.models import Flag
 from localhub.apps.likes.models import Like
 from localhub.apps.notifications.decorators import dispatch
 from localhub.apps.notifications.models import Notification
@@ -23,7 +24,6 @@ from localhub.common.db.search.indexer import SearchIndexer
 from localhub.common.db.tracker import TrackerModelMixin
 from localhub.common.markdown.fields import MarkdownField
 from localhub.common.utils.itertools import takefirst
-from localhub.flags.models import Flag
 
 from .managers import CommentManager
 

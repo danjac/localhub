@@ -5,13 +5,13 @@ from django.db import models
 
 from localhub.apps.bookmarks.models.mixins import BookmarkAnnotationsQuerySetMixin
 from localhub.apps.comments.models.mixins import CommentAnnotationsQuerySetMixin
+from localhub.apps.flags.models.mixins import FlagAnnotationsQuerySetMixin
 from localhub.apps.likes.models.mixins import LikeAnnotationsQuerySetMixin
 from localhub.apps.notifications.models.mixins import (
     NotificationAnnotationsQuerySetMixin,
 )
 from localhub.common.db.search.mixins import SearchQuerySetMixin
 from localhub.common.db.utils import boolean_value
-from localhub.flags.models.mixins import FlagAnnotationsQuerySetMixin
 
 
 class ActivityQuerySet(

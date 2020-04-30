@@ -4,10 +4,10 @@
 
 from django import template
 
+from localhub.apps.flags.templatetags import flags
 from localhub.apps.join_requests.templatetags import join_requests
 from localhub.apps.notifications.templatetags import notifications
 from localhub.apps.private_messages.templatetags import private_messages
-from localhub.flags.templatetags import flags
 from localhub.invites.templatetags import invites
 
 from ..models import Community
