@@ -398,7 +398,7 @@ class Production(Base):
     MAILGUN_SENDER_DOMAIN = values.Value()
 
     MIDDLEWARE = Base.MIDDLEWARE + [
-        "localhub.middleware.http.HttpResponseNotAllowedMiddleware",
+        "localhub.common.middleware.http.HttpResponseNotAllowedMiddleware",
         "silk.middleware.SilkyMiddleware",
     ]
 
