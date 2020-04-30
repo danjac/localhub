@@ -3,7 +3,7 @@
 
 from django.db import models
 
-from localhub.apps.bookmarks.models.mixins import BookmarkAnnotationsQuerySetMixin
+from localhub.apps.bookmarks.models import BookmarkAnnotationsQuerySetMixin
 from localhub.apps.communities.models import Membership
 from localhub.apps.flags.models.mixins import FlagAnnotationsQuerySetMixin
 from localhub.apps.likes.models.mixins import LikeAnnotationsQuerySetMixin
