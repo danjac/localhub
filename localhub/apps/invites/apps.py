@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class InvitesConfig(AppConfig):
-    name = "localhub.invites"
+    name = "localhub.apps.invites"

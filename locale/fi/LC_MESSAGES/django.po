@@ -306,58 +306,58 @@ msgstr ""
 msgid "Breach of copyright"
 msgstr ""
 
-#: localhub/invites/emails.py:14
+#: localhub.apps.invites/emails.py:14
 msgid "Invitation to join"
 msgstr ""
 
-#: localhub/invites/forms.py:26
+#: localhub.apps.invites/forms.py:26
 msgid "A user with this email address already belongs to this community"
 msgstr ""
 
-#: localhub/invites/forms.py:34
+#: localhub.apps.invites/forms.py:34
 msgid "An invitation has already been sent to this email address"
 msgstr ""
 
-#: localhub/invites/models.py:19 localhub.apps.join_requests/models.py:20
+#: localhub.apps.invites/models.py:19 localhub.apps.join_requests/models.py:20
 msgid "Pending"
 msgstr "Odottaa"
 
-#: localhub/invites/models.py:20 localhub.apps.join_requests/models.py:21
+#: localhub.apps.invites/models.py:20 localhub.apps.join_requests/models.py:21
 msgid "Accepted"
 msgstr "Hyväksytty"
 
-#: localhub/invites/models.py:21 localhub.apps.join_requests/models.py:22
+#: localhub.apps.invites/models.py:21 localhub.apps.join_requests/models.py:22
 msgid "Rejected"
 msgstr "Hyljätty"
 
-#: localhub/invites/views.py:88
+#: localhub.apps.invites/views.py:88
 #, python-format
 msgid "Your invitation has been sent to %s"
 msgstr ""
 
-#: localhub/invites/views.py:116
+#: localhub.apps.invites/views.py:116
 #, python-format
 msgid "Email has been re-sent to %s"
 msgstr ""
 
-#: localhub/invites/views.py:173
+#: localhub.apps.invites/views.py:173
 msgid "Sign up to join this community"
 msgstr ""
 
-#: localhub/invites/views.py:179
+#: localhub.apps.invites/views.py:179
 msgid "Login to join this community"
 msgstr ""
 
-#: localhub/invites/views.py:188
+#: localhub.apps.invites/views.py:188
 #, python-format
 msgid "Welcome to %s"
 msgstr "Tervetuloa yhteisöön %s"
 
-#: localhub/invites/views.py:190
+#: localhub.apps.invites/views.py:190
 msgid "You are already a member of this community"
 msgstr ""
 
-#: localhub/invites/views.py:200
+#: localhub.apps.invites/views.py:200
 msgid "This invite is invalid"
 msgstr ""
 

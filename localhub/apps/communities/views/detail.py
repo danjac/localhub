@@ -8,8 +8,8 @@ from django.views.generic import DetailView, TemplateView
 import rules
 from rules.contrib.views import PermissionRequiredMixin
 
+from localhub.apps.invites.models import Invite
 from localhub.apps.join_requests.models import JoinRequest
-from localhub.invites.models import Invite
 
 from ..models import Membership
 from .mixins import CurrentCommunityMixin, MembershipQuerySetMixin

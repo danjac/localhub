@@ -10,13 +10,13 @@ import pytest
 from localhub.apps.comments.factories import CommentFactory
 from localhub.apps.communities.factories import CommunityFactory, MembershipFactory
 from localhub.apps.communities.models import Membership
+from localhub.apps.invites.factories import InviteFactory
 from localhub.apps.join_requests.factories import JoinRequestFactory
 from localhub.apps.likes.factories import LikeFactory
 from localhub.apps.notifications.factories import NotificationFactory
 from localhub.apps.private_messages.factories import MessageFactory
 from localhub.apps.users.factories import UserFactory
 from localhub.events.factories import EventFactory
-from localhub.invites.factories import InviteFactory
 from localhub.photos.factories import PhotoFactory
 from localhub.polls.factories import PollFactory
 from localhub.posts.factories import PostFactory
