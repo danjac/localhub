@@ -7,9 +7,9 @@ from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.comments.forms import CommentForm
+from localhub.common.template.defaultfilters import resolve_url
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
-from localhub.template.defaultfilters import resolve_url
 from localhub.views import (
     ParentObjectMixin,
     SuccessCreateView,
