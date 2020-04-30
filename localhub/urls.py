@@ -23,7 +23,7 @@ urlpatterns = [
     path("", include("localhub.apps.activities.urls")),
     path("bookmarks/", include("localhub.apps.bookmarks.urls")),
     path("comments/", include("localhub.apps.comments.urls")),
-    path("events/", include("localhub.events.urls")),
+    path("events/", include("localhub.apps.events.urls")),
     path("flags/", include("localhub.apps.flags.urls")),
     path("invites/", include("localhub.apps.invites.urls")),
     path("join-requests/", include("localhub.apps.join_requests.urls")),

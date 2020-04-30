@@ -75,7 +75,7 @@ class TestEventForm:
         assert instance.longitude is None
 
     def test_save_if_fetch_geolocation_valid(self, mocker):
-        mocker.patch("localhub.events.forms.geocode", return_value=(60.1, 30.2))
+        mocker.patch("localhub.apps.events.forms.geocode", return_value=(60.1, 30.2))
         form = EventForm(self.get_form_data(fetch_geolocation=True))
         assert form.is_valid()
 
@@ -84,6 +84,6 @@ class TestEventForm:
         assert instance.longitude == 30.2
 
     def test_save_if_fetch_geolocation_invalid(self, mocker):
-        mocker.patch("localhub.events.forms.geocode", return_value=(None, None))
+        mocker.patch("localhub.apps.events.forms.geocode", return_value=(None, None))
         form = EventForm(self.get_form_data(fetch_geolocation=True))
         assert not form.is_valid()

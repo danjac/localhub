@@ -243,42 +243,42 @@ msgstr "Päivämäärä"
 msgid "Time"
 msgstr "Aika"
 
-#: localhub/events/forms.py:11
+#: localhub.apps.events/forms.py:11
 msgid ""
 "Time will be stored in UTC timezone. It will be shown in the timezone you "
 "select below."
 msgstr ""
 
-#: localhub/events/forms.py:18
+#: localhub.apps.events/forms.py:18
 msgid "Event starts"
 msgstr "Tapahtuma alkaa"
 
-#: localhub/events/forms.py:21
+#: localhub.apps.events/forms.py:21
 msgid "Event ends"
 msgstr "Tapahtuma loppuu"
 
-#: localhub/events/forms.py:45
+#: localhub.apps.events/forms.py:45
 msgid "Start and end times will be shown in this timezone"
 msgstr ""
 
-#: localhub/events/models.py:43 localhub.apps.posts/forms.py:16
+#: localhub.apps.events/models.py:43 localhub.apps.posts/forms.py:16
 #: templates/markdownx/widget2.html:39
 msgid "Link"
 msgstr "Linkki"
 
-#: localhub/events/models.py:45
+#: localhub.apps.events/models.py:45
 msgid "Starts on (UTC)"
 msgstr ""
 
-#: localhub/events/models.py:53
+#: localhub.apps.events/models.py:53
 msgid "City or town"
 msgstr "Kaupunki"
 
-#: localhub/events/models.py:64 templates/events/includes/event.html:67
+#: localhub.apps.events/models.py:64 templates/events/includes/event.html:67
 msgid "Tickets available from"
 msgstr ""
 
-#: localhub/events/models.py:80
+#: localhub.apps.events/models.py:80
 msgid "End date cannot be before start date"
 msgstr ""
 

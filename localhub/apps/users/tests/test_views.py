@@ -8,12 +8,12 @@ from pytest_django.asserts import assertTemplateUsed
 
 from localhub.apps.comments.factories import CommentFactory
 from localhub.apps.communities.factories import MembershipFactory
+from localhub.apps.events.factories import EventFactory
 from localhub.apps.likes.factories import LikeFactory
 from localhub.apps.notifications.factories import NotificationFactory
 from localhub.apps.notifications.models import Notification
 from localhub.apps.posts.factories import PostFactory
 from localhub.apps.private_messages.factories import MessageFactory
-from localhub.events.factories import EventFactory
 
 from ..factories import UserFactory
 

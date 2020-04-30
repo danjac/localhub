@@ -65,7 +65,7 @@ class Base(Configuration):
         "localhub.apps.bookmarks.apps.BookmarksConfig",
         "localhub.apps.comments.apps.CommentsConfig",
         "localhub.apps.communities.apps.CommunitiesConfig",
-        "localhub.events.apps.EventsConfig",
+        "localhub.apps.events.apps.EventsConfig",
         "localhub.apps.flags.apps.FlagsConfig",
         "localhub.apps.hashtags.apps.HashtagsConfig",
         "localhub.apps.invites.apps.InvitesConfig",
