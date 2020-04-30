@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class LikesConfig(AppConfig):
-    name = "localhub.likes"
+    name = "localhub.apps.likes"

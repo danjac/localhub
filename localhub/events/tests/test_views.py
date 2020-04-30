@@ -9,8 +9,8 @@ from django.utils.encoding import force_str
 import pytest
 
 from localhub.apps.communities.factories import MembershipFactory
-from localhub.likes.factories import LikeFactory
-from localhub.likes.models import Like
+from localhub.apps.likes.factories import LikeFactory
+from localhub.apps.likes.models import Like
 
 from ..factories import EventFactory
 from ..models import Event

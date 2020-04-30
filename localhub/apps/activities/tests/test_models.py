@@ -11,11 +11,11 @@ from localhub.apps.bookmarks.factories import BookmarkFactory
 from localhub.apps.comments.factories import CommentFactory
 from localhub.apps.communities.factories import CommunityFactory, MembershipFactory
 from localhub.apps.communities.models import Community
+from localhub.apps.likes.factories import LikeFactory
 from localhub.apps.notifications.factories import NotificationFactory
 from localhub.apps.users.factories import UserFactory
 from localhub.events.models import Event
 from localhub.flags.factories import FlagFactory
-from localhub.likes.factories import LikeFactory
 from localhub.photos.models import Photo
 from localhub.posts.factories import PostFactory
 from localhub.posts.models import Post

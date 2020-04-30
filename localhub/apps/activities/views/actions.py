@@ -10,8 +10,8 @@ from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.apps.bookmarks.models import Bookmark
+from localhub.apps.likes.models import Like
 from localhub.common.views import SuccessActionView, SuccessDeleteView
-from localhub.likes.models import Like
 
 from ..utils import get_activity_models
 from .mixins import ActivityQuerySetMixin, ActivityTemplateMixin
