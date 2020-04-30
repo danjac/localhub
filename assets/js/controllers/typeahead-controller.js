@@ -169,6 +169,9 @@ export default class extends ApplicationController {
             this.closeSelector();
           }
         }
+      })
+      .catch(() => {
+        this.closeSelector();
       });
   }
 
