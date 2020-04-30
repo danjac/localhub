@@ -10,10 +10,10 @@ from localhub.apps.comments.factories import CommentFactory
 from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.notifications.factories import NotificationFactory
 from localhub.apps.notifications.models import Notification
+from localhub.apps.private_messages.factories import MessageFactory
 from localhub.events.factories import EventFactory
 from localhub.likes.factories import LikeFactory
 from localhub.posts.factories import PostFactory
-from localhub.private_messages.factories import MessageFactory
 
 from ..factories import UserFactory
 

@@ -11,7 +11,7 @@ from .models import Message
 @receiver(
     notification_read,
     sender=Message,
-    dispatch_uid="localhub.private_messages.message_notification_read",
+    dispatch_uid="localhub.apps.private_messages.message_notification_read",
 )
 def message_notification_read(instance, **kwargs):
     instance.mark_read()

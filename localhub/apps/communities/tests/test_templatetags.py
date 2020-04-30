@@ -4,10 +4,10 @@
 
 import pytest
 
+from localhub.apps.private_messages.factories import MessageFactory
 from localhub.flags.factories import FlagFactory
 from localhub.invites.factories import InviteFactory
 from localhub.join_requests.factories import JoinRequestFactory
-from localhub.private_messages.factories import MessageFactory
 
 from ..factories import CommunityFactory, MembershipFactory
 from ..models import Membership

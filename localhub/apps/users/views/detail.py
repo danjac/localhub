@@ -8,8 +8,8 @@ from localhub.apps.activities.utils import get_activity_models
 from localhub.apps.activities.views.streams import BaseActivityStreamView
 from localhub.apps.comments.models import Comment
 from localhub.apps.comments.views.list_detail import BaseCommentListView
+from localhub.apps.private_messages.models import Message
 from localhub.likes.models import Like
-from localhub.private_messages.models import Message
 
 from .mixins import SingleUserMixin
 

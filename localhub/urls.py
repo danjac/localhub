@@ -29,7 +29,7 @@ urlpatterns = [
     path("join-requests/", include("localhub.join_requests.urls")),
     path("notifications/", include("localhub.apps.notifications.urls")),
     path("favorites/", include("localhub.likes.urls")),
-    path("messages/", include("localhub.private_messages.urls")),
+    path("messages/", include("localhub.apps.private_messages.urls")),
     path("photos/", include("localhub.photos.urls")),
     path("polls/", include("localhub.polls.urls")),
     path("posts/", include("localhub.posts.urls")),

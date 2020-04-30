@@ -8,8 +8,8 @@ from django.utils.functional import cached_property
 
 from localhub.apps.communities.models import Membership
 from localhub.apps.communities.views import CommunityRequiredMixin
+from localhub.apps.private_messages.models import Message
 from localhub.common.views import ParentObjectMixin
-from localhub.private_messages.models import Message
 
 
 class BaseUserQuerySetMixin(CommunityRequiredMixin):
