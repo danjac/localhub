@@ -582,10 +582,9 @@ class Activity(TrackerModelMixin, TimeStampedModel):
         return [self.make_notification(follower, "followed_user") for follower in qs]
 
     def notify_tag_followers(self, recipients):
-        if hashtags := self.extract_hashtags():
-            if not (tags := Tag.objects.filter(slug__in=hashtags)):
-                return []
-
+        if (hashtags := self.extract_hashtags()) and (
+            tags := Tag.objects.filter(slug__in=hashtags)
+        ):
             qs = recipients.filter(following_tags__in=tags).exclude(pk=self.owner.id)
 
             if self.editor:
