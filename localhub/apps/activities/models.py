@@ -453,8 +453,7 @@ class Activity(TrackerModelMixin, TimeStampedModel):
         )
 
     def get_absolute_url(self):
-        slug = self.slugify()
-        if slug:
+        if slug := self.slugify():
             return self.resolve_url("detail", slug)
         return self.resolve_url("detail_no_slug")
 
@@ -542,6 +541,15 @@ class Activity(TrackerModelMixin, TimeStampedModel):
             ]
         )
 
+    def hashtags_changed(self):
+        return self.has_tracker_changed(["title", "description", "hashtags"])
+
+    def mentions_changed(self):
+        return self.has_tracker_changed(["title", "description", "mentions"])
+
+    def get_notification_recipients(self):
+        return self.community.members.exclude(blocked=self.owner)
+
     def make_notification(self, recipient, verb, actor=None):
         return Notification(
             content_object=self,
@@ -574,9 +582,10 @@ class Activity(TrackerModelMixin, TimeStampedModel):
         return [self.make_notification(follower, "followed_user") for follower in qs]
 
     def notify_tag_followers(self, recipients):
-        hashtags = self.extract_hashtags()
-        if hashtags:
-            tags = Tag.objects.filter(slug__in=hashtags)
+        if hashtags := self.extract_hashtags():
+            if not (tags := Tag.objects.filter(slug__in=hashtags)):
+                return []
+
             qs = recipients.filter(following_tags__in=tags).exclude(pk=self.owner.id)
 
             if self.editor:
@@ -587,20 +596,13 @@ class Activity(TrackerModelMixin, TimeStampedModel):
 
             qs = qs.distinct()
 
-            if tags:
-                return [
-                    self.make_notification(follower, "followed_tag") for follower in qs
-                ]
+            return [self.make_notification(follower, "followed_tag") for follower in qs]
         return []
 
     def notify_parent_owner(self, recipients):
-        owner = recipients.filter(pk=self.parent.owner_id).first()
-        if owner:
+        if owner := recipients.filter(pk=self.parent.owner_id).first():
             return [self.make_notification(owner, "reshare")]
         return []
-
-    def get_notification_recipients(self):
-        return self.community.members.exclude(blocked=self.owner)
 
     @dispatch
     def notify_on_publish(self):
@@ -631,12 +633,6 @@ class Activity(TrackerModelMixin, TimeStampedModel):
 
     def notify_owner_on_edit(self):
         return self.make_notification(self.owner, "edit", actor=self.editor)
-
-    def hashtags_changed(self):
-        return self.has_tracker_changed(["title", "description", "hashtags"])
-
-    def mentions_changed(self):
-        return self.has_tracker_changed(["title", "description", "mentions"])
 
     @dispatch
     def notify_on_update(self):
@@ -756,8 +752,7 @@ class Activity(TrackerModelMixin, TimeStampedModel):
 
     def save_tags(self, is_new):
         if self.should_extract_hashtags(is_new):
-            hashtags = self.extract_hashtags()
-            if hashtags:
+            if hashtags := self.extract_hashtags():
                 self.tags.set(*hashtags, clear=True)
             else:
                 self.tags.clear()
