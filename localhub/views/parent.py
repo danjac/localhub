@@ -16,10 +16,14 @@ class ParentObjectMixin:
     """
 
     # if not required, sets parent to None if not found
+    # otherwise raises Http404
     parent_required = True
 
+    # name used in template, defaults to parent_object_name
     parent_context_object_name = None
     parent_object_name = "parent"
+
+    # required
     parent_model = None
 
     parent_pk_field = "pk"

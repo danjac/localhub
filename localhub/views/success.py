@@ -33,7 +33,6 @@ class SuccessMixin:
             str or None if no message defined
         """
         success_message = success_message or getattr(self, "success_message", None)
-
         if success_message is None:
             return None
 
@@ -79,9 +78,9 @@ class SuccessMixin:
         Raises:
             ImproperlyConfigured: if no object or success_url is defined.
         """
-        success_url = getattr(self, "success_url", None)
-        if success_url:
-            return self.success_url
+        if success_url := getattr(self, "success_url", None):
+            return success_url
+
         object = object or getattr(self, "object", None)
         if object is None:
             raise ImproperlyConfigured(
