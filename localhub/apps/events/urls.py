@@ -6,29 +6,24 @@ from django.urls import path
 
 from localhub.apps.activities.urls.generic import create_activity_urls
 
+from . import views
 from .forms import EventForm
 from .models import Event
-from .views import (
-    EventCreateView,
-    EventListView,
-    event_attend_view,
-    event_calendar_view,
-    event_cancel_view,
-    event_download_view,
-    event_unattend_view,
-)
 
 app_name = "events"
 
 
 urlpatterns = create_activity_urls(
-    Event, EventForm, create_view_class=EventCreateView, list_view_class=EventListView
+    Event,
+    EventForm,
+    create_view_class=views.EventCreateView,
+    list_view_class=views.EventListView,
 )
 
 urlpatterns += [
-    path("calendar/", event_calendar_view, name="calendar"),
-    path("<int:pk>~attend/", event_attend_view, name="attend"),
-    path("<int:pk>~unattend/", event_unattend_view, name="unattend"),
-    path("<int:pk>~cancel/", event_cancel_view, name="cancel"),
-    path("<int:pk>~download/", event_download_view, name="download"),
+    path("calendar/", views.event_calendar_view, name="calendar"),
+    path("<int:pk>~attend/", views.event_attend_view, name="attend"),
+    path("<int:pk>~unattend/", views.event_unattend_view, name="unattend"),
+    path("<int:pk>~cancel/", views.event_cancel_view, name="cancel"),
+    path("<int:pk>~download/", views.event_download_view, name="download"),
 ]
