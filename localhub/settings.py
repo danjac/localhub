@@ -73,7 +73,7 @@ class Base(Configuration):
         "localhub.apps.likes.apps.LikesConfig",
         "localhub.apps.notifications.apps.NotificationsConfig",
         "localhub.apps.photos.apps.PhotosConfig",
-        "localhub.polls.apps.PollsConfig",
+        "localhub.apps.polls.apps.PollsConfig",
         "localhub.apps.posts.apps.PostsConfig",
         "localhub.apps.private_messages.apps.PrivateMessagesConfig",
         "localhub.apps.users.apps.UsersConfig",

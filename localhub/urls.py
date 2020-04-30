@@ -31,7 +31,7 @@ urlpatterns = [
     path("favorites/", include("localhub.apps.likes.urls")),
     path("messages/", include("localhub.apps.private_messages.urls")),
     path("photos/", include("localhub.apps.photos.urls")),
-    path("polls/", include("localhub.polls.urls")),
+    path("polls/", include("localhub.apps.polls.urls")),
     path("posts/", include("localhub.apps.posts.urls")),
     path("people/", include("localhub.apps.users.urls")),
     path("site/", include("localhub.apps.communities.urls")),

@@ -8,9 +8,9 @@ import pytest
 
 from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.events.factories import EventFactory
+from localhub.apps.polls.factories import AnswerFactory, PollFactory
 from localhub.apps.posts.factories import PostFactory
 from localhub.apps.users.factories import UserFactory
-from localhub.polls.factories import AnswerFactory, PollFactory
 
 pytestmark = pytest.mark.django_db
 
