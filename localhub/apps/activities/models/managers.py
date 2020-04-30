@@ -7,9 +7,7 @@ from localhub.apps.bookmarks.models import BookmarkAnnotationsQuerySetMixin
 from localhub.apps.comments.models import CommentAnnotationsQuerySetMixin
 from localhub.apps.flags.models import FlagAnnotationsQuerySetMixin
 from localhub.apps.likes.models import LikeAnnotationsQuerySetMixin
-from localhub.apps.notifications.models.mixins import (
-    NotificationAnnotationsQuerySetMixin,
-)
+from localhub.apps.notifications.models import NotificationAnnotationsQuerySetMixin
 from localhub.common.db.search.mixins import SearchQuerySetMixin
 from localhub.common.db.utils import boolean_value
 

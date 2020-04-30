@@ -18,8 +18,8 @@ from localhub.apps.communities.models import Community, Membership
 from localhub.apps.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.apps.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.apps.notifications.decorators import dispatch
-from localhub.apps.notifications.models import Notification
-from localhub.apps.notifications.models.mixins import (
+from localhub.apps.notifications.models import (
+    Notification,
     NotificationAnnotationsQuerySetMixin,
 )
 from localhub.common.db.generic import (
