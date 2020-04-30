@@ -3,7 +3,7 @@
 
 from django.utils.translation import gettext_lazy as _
 
-from localhub.activities.notifications import (
+from localhub.apps.activities.notifications import (
     ActivityAdapter,
     ActivityMailer,
     ActivityWebpusher,

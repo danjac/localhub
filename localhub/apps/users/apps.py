@@ -5,4 +5,4 @@ from django.apps import AppConfig
 
 
 class UsersConfig(AppConfig):
-    name = "localhub.users"
+    name = "localhub.apps.users"

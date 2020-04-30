@@ -12,6 +12,8 @@ from model_utils.models import TimeStampedModel
 from taggit.managers import TaggableManager
 from taggit.models import Tag
 
+from localhub.apps.users.fields import MentionsField
+from localhub.apps.users.utils import extract_mentions
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.models import Comment
 from localhub.common.db.generic import (
@@ -29,8 +31,6 @@ from localhub.hashtags.utils import extract_hashtags
 from localhub.likes.models import Like
 from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
-from localhub.users.fields import MentionsField
-from localhub.users.utils import extract_mentions
 
 from .. import signals
 from .managers import ActivityManager
@@ -128,7 +128,7 @@ class Activity(TrackerModelMixin, TimeStampedModel):
 
         post.resolve_url("delete") -> /posts/1234/~delete/
 
-        See localhub/activities/urls/generic.py for list of common
+        See localhub.apps.activities/urls/generic.py for list of common
         activity actions.
 
         Args:

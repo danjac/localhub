@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class ActivitiesConfig(AppConfig):
-    name = "localhub.activities"
+    name = "localhub.apps.activities"

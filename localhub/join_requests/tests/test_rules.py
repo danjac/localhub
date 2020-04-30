@@ -3,9 +3,9 @@
 
 import pytest
 
+from localhub.apps.users.factories import UserFactory
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Membership
-from localhub.users.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 

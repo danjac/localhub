@@ -4,6 +4,7 @@
 import pytest
 from taggit.models import Tag
 
+from localhub.apps.users.factories import UserFactory
 from localhub.comments.factories import CommentFactory
 from localhub.comments.models import Comment
 from localhub.communities.factories import CommunityFactory, MembershipFactory
@@ -11,7 +12,6 @@ from localhub.communities.models import Membership
 from localhub.flags.factories import FlagFactory
 from localhub.likes.factories import LikeFactory
 from localhub.notifications.factories import NotificationFactory
-from localhub.users.factories import UserFactory
 
 from ..factories import PostFactory
 from ..models import Post
@@ -306,7 +306,7 @@ class TestPostModel:
         FlagFactory(content_object=post)
         LikeFactory(content_object=post)
 
-        mock_soft_delete = mocker.patch("localhub.activities.signals.soft_delete")
+        mock_soft_delete = mocker.patch("localhub.apps.activities.signals.soft_delete")
         post.soft_delete()
         assert mock_soft_delete.called_with(sender=Post, instance=post)
 

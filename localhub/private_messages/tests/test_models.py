@@ -6,10 +6,10 @@ from django.utils import timezone
 
 import pytest
 
+from localhub.apps.users.factories import UserFactory
 from localhub.bookmarks.factories import BookmarkFactory
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.notifications.factories import NotificationFactory
-from localhub.users.factories import UserFactory
 
 from ..factories import MessageFactory
 from ..models import Message

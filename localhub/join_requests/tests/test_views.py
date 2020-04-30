@@ -6,9 +6,9 @@ from django.urls import reverse
 
 import pytest
 
+from localhub.apps.users.factories import UserFactory
 from localhub.communities.factories import MembershipFactory
 from localhub.communities.models import Membership
-from localhub.users.factories import UserFactory
 
 from ..factories import JoinRequestFactory
 from ..models import JoinRequest

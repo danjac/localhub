@@ -5,8 +5,8 @@ from django.core.exceptions import ImproperlyConfigured
 
 import pytest
 
+from localhub.apps.users.factories import UserFactory
 from localhub.communities.factories import MembershipFactory
-from localhub.users.factories import UserFactory
 
 from ..forms import MessageRecipientForm
 

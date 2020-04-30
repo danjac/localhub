@@ -7,6 +7,7 @@ from django.http import HttpResponse
 
 import pytest
 
+from localhub.apps.users.factories import UserFactory
 from localhub.comments.factories import CommentFactory
 from localhub.communities.factories import CommunityFactory, MembershipFactory
 from localhub.communities.models import Membership
@@ -19,7 +20,6 @@ from localhub.photos.factories import PhotoFactory
 from localhub.polls.factories import PollFactory
 from localhub.posts.factories import PostFactory
 from localhub.private_messages.factories import MessageFactory
-from localhub.users.factories import UserFactory
 
 
 @pytest.fixture

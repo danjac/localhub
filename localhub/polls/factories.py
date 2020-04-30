@@ -5,8 +5,8 @@ from django.utils import timezone
 
 from factory import DjangoModelFactory, Faker, LazyFunction, SubFactory
 
+from localhub.apps.users.factories import UserFactory
 from localhub.communities.factories import CommunityFactory
-from localhub.users.factories import UserFactory
 
 from .models import Answer, Poll
 

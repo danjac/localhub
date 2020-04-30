@@ -1,7 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from localhub.activities.views.streams import BaseActivityStreamView
+from localhub.apps.activities.views.streams import BaseActivityStreamView
 from localhub.comments.views.list_detail import BaseCommentListView
 
 

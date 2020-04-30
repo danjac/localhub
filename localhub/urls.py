@@ -7,20 +7,20 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
 
-from localhub.activities.views.streams import activity_stream_view
+from localhub.apps.activities.views.streams import activity_stream_view
+from localhub.apps.users.views.actions import dismiss_notice_view, user_delete_view
+from localhub.apps.users.views.update import user_update_view
 from localhub.communities.views import (
     community_list_view,
     community_not_found_view,
     community_sidebar_view,
     community_welcome_view,
 )
-from localhub.users.views.actions import dismiss_notice_view, user_delete_view
-from localhub.users.views.update import user_update_view
 
 urlpatterns = [
     # Local
     path("", view=activity_stream_view, name="activity_stream"),
-    path("", include("localhub.activities.urls")),
+    path("", include("localhub.apps.activities.urls")),
     path("bookmarks/", include("localhub.bookmarks.urls")),
     path("comments/", include("localhub.comments.urls")),
     path("events/", include("localhub.events.urls")),
@@ -33,7 +33,7 @@ urlpatterns = [
     path("photos/", include("localhub.photos.urls")),
     path("polls/", include("localhub.polls.urls")),
     path("posts/", include("localhub.posts.urls")),
-    path("people/", include("localhub.users.urls")),
+    path("people/", include("localhub.apps.users.urls")),
     path("site/", include("localhub.communities.urls")),
     path("tags/", include("localhub.hashtags.urls")),
     path("sites/", community_list_view, name="community_list"),

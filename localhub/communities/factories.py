@@ -3,7 +3,7 @@
 
 from factory import DjangoModelFactory, Faker, Sequence, SubFactory
 
-from localhub.users.factories import UserFactory
+from localhub.apps.users.factories import UserFactory
 
 from .models import Community, Membership
 

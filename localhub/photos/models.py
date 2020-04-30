@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from sorl.thumbnail import ImageField
 
-from localhub.activities.models import Activity
+from localhub.apps.activities.models import Activity
 from localhub.common.db.search.indexer import SearchIndexer
 
 

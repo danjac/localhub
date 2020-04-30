@@ -8,9 +8,9 @@ import django_countries.fields
 import model_utils.fields
 import timezone_field.fields
 
+import localhub.apps.users.fields
 import localhub.common.markdown.fields
 import localhub.hashtags.fields
-import localhub.users.fields
 
 
 class Migration(migrations.Migration):
@@ -55,7 +55,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "mentions",
-                    localhub.users.fields.MentionsField(blank=True, max_length=300),
+                    localhub.apps.users.fields.MentionsField(
+                        blank=True, max_length=300
+                    ),
                 ),
                 (
                     "description",

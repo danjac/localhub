@@ -3,7 +3,7 @@
 
 import pytest
 
-from localhub.users.factories import UserFactory
+from localhub.apps.users.factories import UserFactory
 
 from ..factories import PostFactory
 from ..templatetags.posts import render_opengraph_content

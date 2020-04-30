@@ -5,7 +5,7 @@ from django.contrib import admin
 
 from sorl.thumbnail.admin import AdminImageMixin
 
-from localhub.activities.admin import ActivityAdmin
+from localhub.apps.activities.admin import ActivityAdmin
 
 from .models import Photo
 

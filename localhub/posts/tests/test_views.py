@@ -6,6 +6,7 @@ from django.urls import reverse
 
 import pytest
 
+from localhub.apps.users.factories import UserFactory
 from localhub.bookmarks.factories import BookmarkFactory
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.models import Comment
@@ -16,7 +17,6 @@ from localhub.likes.factories import LikeFactory
 from localhub.likes.models import Like
 from localhub.notifications.factories import NotificationFactory
 from localhub.notifications.models import Notification
-from localhub.users.factories import UserFactory
 
 from ..factories import PostFactory
 from ..models import Post

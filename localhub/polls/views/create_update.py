@@ -4,7 +4,7 @@
 from django.forms import inlineformset_factory
 from django.utils.functional import cached_property
 
-from localhub.activities.views.create_update import (
+from localhub.apps.activities.views.create_update import (
     ActivityCreateView,
     ActivityUpdateView,
 )

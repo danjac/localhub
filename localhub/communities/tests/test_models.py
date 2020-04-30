@@ -6,8 +6,8 @@ from django.test import override_settings
 
 import pytest
 
+from localhub.apps.users.factories import UserFactory
 from localhub.join_requests.models import JoinRequest
-from localhub.users.factories import UserFactory
 
 from ..factories import CommunityFactory, MembershipFactory
 from ..models import Community, Membership

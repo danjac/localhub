@@ -3,7 +3,7 @@
 
 import rules
 
-from localhub.activities.rules import is_activity_community_member, is_published
+from localhub.apps.activities.rules import is_activity_community_member, is_published
 
 
 @rules.predicate

@@ -9,7 +9,7 @@ from django.db.models import Q
 
 from taggit.models import Tag, TaggedItem
 
-from localhub.activities.utils import get_activity_models
+from localhub.apps.activities.utils import get_activity_models
 from localhub.communities.views import CommunityRequiredMixin
 
 

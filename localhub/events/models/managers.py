@@ -17,7 +17,7 @@ from django.utils import timezone
 
 import pytz
 
-from localhub.activities.models.managers import ActivityManager, ActivityQuerySet
+from localhub.apps.activities.models.managers import ActivityManager, ActivityQuerySet
 from localhub.common.db.functions import DateAdd, MonthAdd, YearAdd
 from localhub.common.db.utils import boolean_value
 

@@ -3,7 +3,7 @@
 
 from django.conf import settings
 
-from localhub.activities.views.list_detail import BaseActivityListView
+from localhub.apps.activities.views.list_detail import BaseActivityListView
 
 from .models import Photo
 

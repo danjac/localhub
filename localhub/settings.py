@@ -61,7 +61,7 @@ class Base(Configuration):
     ]
 
     LOCAL_APPS = [
-        "localhub.activities.apps.ActivitiesConfig",
+        "localhub.apps.activities.apps.ActivitiesConfig",
         "localhub.bookmarks.apps.BookmarksConfig",
         "localhub.comments.apps.CommentsConfig",
         "localhub.communities.apps.CommunitiesConfig",
@@ -76,7 +76,7 @@ class Base(Configuration):
         "localhub.polls.apps.PollsConfig",
         "localhub.posts.apps.PostsConfig",
         "localhub.private_messages.apps.PrivateMessagesConfig",
-        "localhub.users.apps.UsersConfig",
+        "localhub.apps.users.apps.UsersConfig",
     ]
 
     MIDDLEWARE = [
@@ -90,7 +90,7 @@ class Base(Configuration):
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.middleware.gzip.GZipMiddleware",
-        "localhub.users.middleware.UserLocaleMiddleware",
+        "localhub.apps.users.middleware.UserLocaleMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
     ]
@@ -129,7 +129,7 @@ class Base(Configuration):
 
     LOGIN_URL = "account_login"
 
-    ACCOUNT_USER_DISPLAY = "localhub.users.utils.user_display"
+    ACCOUNT_USER_DISPLAY = "localhub.apps.users.utils.user_display"
     ACCOUNT_EMAIL_REQUIRED = True
     ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
@@ -140,7 +140,7 @@ class Base(Configuration):
         }
     }
 
-    SOCIALACCOUNT_ADAPTER = "localhub.users.adapters.SocialAccountAdapter"
+    SOCIALACCOUNT_ADAPTER = "localhub.apps.users.adapters.SocialAccountAdapter"
 
     # Internationalization
     # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -179,7 +179,7 @@ class Base(Configuration):
     }
 
     # https://micawber.readthedocs.io/en/latest/django.html
-    MICAWBER_PROVIDERS = "localhub.activities.oembed.bootstrap_oembed"
+    MICAWBER_PROVIDERS = "localhub.apps.activities.oembed.bootstrap_oembed"
     MICAWBER_TEMPLATE_EXTENSIONS = [("oembed_no_urlize", {"urlize_all": False})]
 
     # https://celery.readthedocs.io/en/latest/userguide/configuration.html

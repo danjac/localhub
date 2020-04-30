@@ -1,7 +1,7 @@
 from factory import DjangoModelFactory, SubFactory
 
+from localhub.apps.users.factories import UserFactory
 from localhub.communities.factories import CommunityFactory
-from localhub.users.factories import UserFactory
 
 from .models import JoinRequest
 

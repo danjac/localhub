@@ -18,67 +18,67 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: localhub/activities/emails.py:20
+#: localhub.apps.activities/emails.py:20
 #, python-format
 msgid "Your %s has been deleted by a moderator"
 msgstr ""
 
-#: localhub/activities/emails.py:44
+#: localhub.apps.activities/emails.py:44
 #, python-format
 msgid "A moderator has edited your %s"
 msgstr ""
 
-#: localhub/activities/emails.py:45
+#: localhub.apps.activities/emails.py:45
 #, python-format
 msgid "Someone has flagged this %s"
 msgstr ""
 
-#: localhub/activities/emails.py:46
+#: localhub.apps.activities/emails.py:46
 #, python-format
 msgid "Someone you are following has submitted a new %s"
 msgstr ""
 
-#: localhub/activities/emails.py:47
+#: localhub.apps.activities/emails.py:47
 #, python-format
 msgid "Someone has liked your %s"
 msgstr ""
 
-#: localhub/activities/emails.py:48
+#: localhub.apps.activities/emails.py:48
 #, python-format
 msgid "Someone has mentioned you in their %s"
 msgstr ""
 
-#: localhub/activities/emails.py:49
+#: localhub.apps.activities/emails.py:49
 #, python-format
 msgid "Someone has submitted a new %s to review"
 msgstr ""
 
-#: localhub/activities/emails.py:50
+#: localhub.apps.activities/emails.py:50
 #, python-format
 msgid "Someone has submitted a new %s containing tags you are following"
 msgstr ""
 
-#: localhub/activities/models.py:162
+#: localhub.apps.activities/models.py:162
 #: templates/includes/default_sidebar.html:20
 #: templates/communities/base.html:19 templates/users/includes/default_sidebar.html:11
 msgid "Home"
 msgstr "Kotisivu"
 
-#: localhub/activities/views/generic.py:76
+#: localhub.apps.activities/views/generic.py:76
 msgid "Your update has been posted"
 msgstr ""
 
-#: localhub/activities/views/generic.py:86
+#: localhub.apps.activities/views/generic.py:86
 #: templates/activities/activity_form.html:16
 #: templates/activities/includes/comments.html:23
 msgid "Submit"
 msgstr "Lähetä"
 
-#: localhub/activities/views/generic.py:128
+#: localhub.apps.activities/views/generic.py:128
 msgid "Your changes have been saved"
 msgstr ""
 
-#: localhub/activities/views/generic.py:131
+#: localhub.apps.activities/views/generic.py:131
 #: templates/activities/includes/actions/update.html:8
 #: templates/comments/includes/actions.html:36
 #: templates/communities/membership_list.html:38
@@ -86,31 +86,31 @@ msgstr ""
 msgid "Edit"
 msgstr "Muokkaa"
 
-#: localhub/activities/views/generic.py:154
+#: localhub.apps.activities/views/generic.py:154
 #, python-format
 msgid "The %s has been deleted"
 msgstr ""
 
-#: localhub/activities/views/generic.py:275
+#: localhub.apps.activities/views/generic.py:275
 #: templates/activities/includes/actions/flag.html:9
 #: templates/comments/includes/actions.html:29 templates/flags/flag_form.html:7
 msgid "Flag"
 msgstr ""
 
-#: localhub/activities/views/generic.py:293
+#: localhub.apps.activities/views/generic.py:293
 #, python-format
 msgid "This %s has been flagged to the moderators"
 msgstr ""
 
-#: localhub/activities/views/generic.py:329
+#: localhub.apps.activities/views/generic.py:329
 msgid "Your comment has been posted"
 msgstr "Kommentti lähitetty"
 
-#: localhub/activities/views/tags.py:121
+#: localhub.apps.activities/views/tags.py:121
 msgid "You are now following this tag"
 msgstr ""
 
-#: localhub/activities/views/tags.py:140
+#: localhub.apps.activities/views/tags.py:140
 msgid "You have stopped following this tag"
 msgstr ""
 
@@ -500,67 +500,67 @@ msgstr "Englanti"
 msgid "Finnish"
 msgstr "Suomi"
 
-#: localhub/users/emails.py:12
+#: localhub.apps.users/emails.py:12
 msgid "Someone has started following you"
 msgstr ""
 
-#: localhub/users/models.py:104
+#: localhub.apps.users/models.py:104
 msgid "Someone comments on my post"
 msgstr ""
 
-#: localhub/users/models.py:105
+#: localhub.apps.users/models.py:105
 msgid "A moderator deletes my post or comment"
 msgstr ""
 
-#: localhub/users/models.py:106
+#: localhub.apps.users/models.py:106
 msgid "A moderator edits my post or comment"
 msgstr ""
 
-#: localhub/users/models.py:107
+#: localhub.apps.users/models.py:107
 msgid "Someone I'm following creates a post"
 msgstr ""
 
-#: localhub/users/models.py:108
+#: localhub.apps.users/models.py:108
 msgid "Someone likes my post or comment"
 msgstr ""
 
-#: localhub/users/models.py:109
+#: localhub.apps.users/models.py:109
 msgid "I am @mentioned in a post or comment"
 msgstr ""
 
-#: localhub/users/models.py:110
+#: localhub.apps.users/models.py:110
 msgid "I receive a direct message"
 msgstr ""
 
-#: localhub/users/models.py:111
+#: localhub.apps.users/models.py:111
 msgid "A post is created containing tags I'm following"
 msgstr ""
 
-#: localhub/users/models.py:112
+#: localhub.apps.users/models.py:112
 msgid "Post or comment is flagged (MODERATORS ONLY)"
 msgstr ""
 
-#: localhub/users/models.py:113
+#: localhub.apps.users/models.py:113
 msgid "Content to be reviewed (MODERATORS ONLY)"
 msgstr ""
 
-#: localhub/users/models.py:114
+#: localhub.apps.users/models.py:114
 msgid "Someone starts following me"
 msgstr ""
 
-#: localhub/users/models.py:117
+#: localhub.apps.users/models.py:117
 msgid "Full name"
 msgstr "Koko nimi"
 
-#: localhub/users/views.py:53
+#: localhub.apps.users/views.py:53
 msgid "Your details have been updated"
 msgstr ""
 
-#: localhub/users/views.py:129
+#: localhub.apps.users/views.py:129
 msgid "You are now following this user"
 msgstr ""
 
-#: localhub/users/views.py:148
+#: localhub.apps.users/views.py:148
 msgid "You have stopped following this user"
 msgstr ""
 

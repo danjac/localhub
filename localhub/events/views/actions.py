@@ -7,8 +7,8 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import View
 from django.views.generic.detail import SingleObjectMixin
 
-from localhub.activities.views.actions import BaseActivityActionView
-from localhub.activities.views.mixins import ActivityQuerySetMixin
+from localhub.apps.activities.views.actions import BaseActivityActionView
+from localhub.apps.activities.views.mixins import ActivityQuerySetMixin
 
 from ..models import Event
 

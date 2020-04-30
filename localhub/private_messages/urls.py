@@ -3,7 +3,7 @@
 
 from django.urls import path, re_path
 
-from localhub.users.urls import USERNAME_RE
+from localhub.apps.users.urls import USERNAME_RE
 
 from .views.actions import (
     message_bookmark_view,

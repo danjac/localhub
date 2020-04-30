@@ -11,7 +11,10 @@ from django.views.generic.dates import DateMixin, DayMixin, MonthMixin, YearMixi
 
 import pytz
 
-from localhub.activities.views.list_detail import ActivityListView, BaseActivityListView
+from localhub.apps.activities.views.list_detail import (
+    ActivityListView,
+    BaseActivityListView,
+)
 
 from ..models import Event
 

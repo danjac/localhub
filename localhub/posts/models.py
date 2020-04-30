@@ -4,7 +4,7 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
-from localhub.activities.models import Activity
+from localhub.apps.activities.models import Activity
 from localhub.common.db.search.indexer import SearchIndexer
 from localhub.common.utils.http import get_domain, is_https, is_image_url
 

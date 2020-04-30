@@ -4,7 +4,7 @@
 from django.apps import apps
 from django.db import models
 
-from localhub.activities.models.managers import ActivityManager, ActivityQuerySet
+from localhub.apps.activities.models.managers import ActivityManager, ActivityQuerySet
 
 
 class PollQuerySet(ActivityQuerySet):
