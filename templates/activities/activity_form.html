@@ -45,12 +45,25 @@
 </ul>
 {% endwith %}
 
-{% block form %}
-{% if object.id %}
-{% include "activities/includes/activity_form.html" with multipart=True is_new=False is_private=False %}
-{% else %}
-{% include "activities/includes/activity_form.html" with multipart=True is_new=True is_private=view.is_private %}
+
+
+{% if submit_actions %}
+<div class="actions mb-1">
+  {% block actions %}
+
+  {% for url, label in submit_actions %}
+  <a class="action"
+     href="{{ url }}">{{ label }}</a>
+  {% endfor %}
+
+
+  {% endblock actions %}
+</div>
 {% endif %}
+
+
+{% block form %}
+{% include "activities/includes/activity_form.html" with multipart=True is_new=view.is_new is_private=view.is_private %}
 {% endblock %}
 
 {% endblock content %}

@@ -9,6 +9,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from localhub.comments.forms import CommentForm
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
+from localhub.template.defaultfilters import resolve_url
 from localhub.views import (
     ParentObjectMixin,
     SuccessCreateView,
@@ -17,6 +18,7 @@ from localhub.views import (
 )
 
 from ..forms import ActivityTagsForm
+from ..utils import get_activity_models
 from .mixins import ActivityQuerySetMixin, ActivityTemplateMixin
 
 
@@ -27,7 +29,9 @@ class ActivityCreateView(
     SuccessCreateView,
 ):
     permission_required = "activities.create_activity"
+
     is_private = False
+    is_new = True
 
     def get_permission_object(self):
         return self.request.community
@@ -38,6 +42,23 @@ class ActivityCreateView(
             if self.object.published
             else _("Your %(model)s has been saved to your Private Stash")
         )
+
+    def get_submit_actions(self):
+        view_name = "create_private" if self.is_private else "create"
+        return [
+            (
+                resolve_url(model, view_name),
+                _("Submit %(model)s")
+                % {"model": model._meta.verbose_name.capitalize()},
+            )
+            for model in get_activity_models()
+            if model != self.model
+        ]
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["submit_actions"] = self.get_submit_actions()
+        return data
 
     def form_valid(self, form):
 
