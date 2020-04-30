@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from localhub.apps.activities.views.streams import BaseActivityStreamView
-from localhub.apps.comments.views.list_detail import BaseCommentListView
+from localhub.apps.comments.views import BaseCommentListView
 from localhub.apps.private_messages.views.list_detail import BaseMessageListView
 from localhub.apps.private_messages.views.mixins import SenderOrRecipientQuerySetMixin
 from localhub.common.views import SearchMixin

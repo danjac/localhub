@@ -25,8 +25,8 @@ from localhub.common.views import (
     SuccessUpdateView,
 )
 
-from ..forms import CommentForm
-from ..models import Comment
+from .forms import CommentForm
+from .models import Comment
 
 
 class CommentQuerySetMixin(CommunityRequiredMixin):
