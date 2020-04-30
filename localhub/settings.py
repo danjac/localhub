@@ -63,7 +63,7 @@ class Base(Configuration):
     LOCAL_APPS = [
         "localhub.apps.activities.apps.ActivitiesConfig",
         "localhub.bookmarks.apps.BookmarksConfig",
-        "localhub.comments.apps.CommentsConfig",
+        "localhub.apps.comments.apps.CommentsConfig",
         "localhub.apps.communities.apps.CommunitiesConfig",
         "localhub.events.apps.EventsConfig",
         "localhub.flags.apps.FlagsConfig",

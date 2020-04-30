@@ -4,7 +4,7 @@
 from django.conf import settings
 from django.views.generic import DetailView, ListView
 
-from localhub.comments.forms import CommentForm
+from localhub.apps.comments.forms import CommentForm
 from localhub.common.pagination import PresetCountPaginator
 from localhub.common.views import SearchMixin
 

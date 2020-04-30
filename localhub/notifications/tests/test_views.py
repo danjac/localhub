@@ -7,8 +7,8 @@ from django.urls import reverse
 
 import pytest
 
+from localhub.apps.comments.factories import CommentFactory
 from localhub.apps.communities.factories import MembershipFactory
-from localhub.comments.factories import CommentFactory
 from localhub.events.factories import EventFactory
 from localhub.photos.factories import PhotoFactory
 from localhub.posts.factories import PostFactory

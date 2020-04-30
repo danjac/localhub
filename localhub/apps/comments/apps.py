@@ -5,4 +5,4 @@ from django.apps import AppConfig
 
 
 class CommentsConfig(AppConfig):
-    name = "localhub.comments"
+    name = "localhub.apps.comments"

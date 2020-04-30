@@ -114,57 +114,57 @@ msgstr ""
 msgid "You have stopped following this tag"
 msgstr ""
 
-#: localhub/comments/emails.py:24
+#: localhub.apps.comments/emails.py:24
 msgid "Someone has made a comment on one of your posts"
 msgstr ""
 
-#: localhub/comments/emails.py:25
+#: localhub.apps.comments/emails.py:25
 msgid "Your comment has been deleted by a moderator"
 msgstr ""
 
-#: localhub/comments/emails.py:26
+#: localhub.apps.comments/emails.py:26
 msgid "A moderator has edited your comment"
 msgstr ""
 
-#: localhub/comments/emails.py:27
+#: localhub.apps.comments/emails.py:27
 msgid "Someone has flagged this comment"
 msgstr ""
 
-#: localhub/comments/emails.py:28
+#: localhub.apps.comments/emails.py:28
 msgid "Someone has liked your comment"
 msgstr ""
 
-#: localhub/comments/emails.py:29
+#: localhub.apps.comments/emails.py:29
 msgid "Someone has mentioned you in their comment"
 msgstr ""
 
-#: localhub/comments/emails.py:30
+#: localhub.apps.comments/emails.py:30
 msgid "Someone has posted or updated a comment to review"
 msgstr ""
 
-#: localhub/comments/forms.py:11 localhub/comments/views.py:84
+#: localhub.apps.comments/forms.py:11 localhub.apps.comments/views.py:84
 #: templates/comments/comment_detail.html:8
 #: templates/comments/comment_form.html:7
 msgid "Comment"
 msgstr "Kommenttoi"
 
-#: localhub/comments/views.py:126
+#: localhub.apps.comments/views.py:126
 msgid "Edit Comment"
 msgstr "Muokkaa kommentti"
 
-#: localhub/comments/views.py:135
+#: localhub.apps.comments/views.py:135
 msgid "Comment has been updated"
 msgstr "Kommentti päivitetty"
 
-#: localhub/comments/views.py:159
+#: localhub.apps.comments/views.py:159
 msgid "Comment has been deleted"
 msgstr "Kommentti poistettu"
 
-#: localhub/comments/views.py:237
+#: localhub.apps.comments/views.py:237
 msgid "Flag Comment"
 msgstr ""
 
-#: localhub/comments/views.py:253
+#: localhub.apps.comments/views.py:253
 msgid "This comment has been flagged to the moderators"
 msgstr ""
 

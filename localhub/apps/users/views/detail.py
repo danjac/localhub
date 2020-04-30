@@ -6,8 +6,8 @@ from django.views.generic import ListView
 
 from localhub.apps.activities.utils import get_activity_models
 from localhub.apps.activities.views.streams import BaseActivityStreamView
-from localhub.comments.models import Comment
-from localhub.comments.views.list_detail import BaseCommentListView
+from localhub.apps.comments.models import Comment
+from localhub.apps.comments.views.list_detail import BaseCommentListView
 from localhub.likes.models import Like
 from localhub.private_messages.models import Message
 

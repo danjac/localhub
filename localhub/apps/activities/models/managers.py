@@ -3,8 +3,8 @@
 
 from django.db import models
 
+from localhub.apps.comments.models.mixins import CommentAnnotationsQuerySetMixin
 from localhub.bookmarks.models.mixins import BookmarkAnnotationsQuerySetMixin
-from localhub.comments.models.mixins import CommentAnnotationsQuerySetMixin
 from localhub.common.db.search.mixins import SearchQuerySetMixin
 from localhub.common.db.utils import boolean_value
 from localhub.flags.models.mixins import FlagAnnotationsQuerySetMixin
