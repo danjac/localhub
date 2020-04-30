@@ -15,9 +15,9 @@ from django.views.generic.dates import (
     _date_from_string,
 )
 
+from localhub.common.pagination import PresetCountPaginator
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.notifications.models import Notification
-from localhub.pagination import PresetCountPaginator
 from localhub.views import SearchMixin
 
 from ..utils import get_activity_queryset_count, get_activity_querysets, load_objects
