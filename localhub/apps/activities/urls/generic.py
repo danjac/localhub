@@ -3,46 +3,28 @@
 
 from django.urls import path
 
-from ..views.actions import (
-    ActivityBookmarkView,
-    ActivityDeleteView,
-    ActivityDislikeView,
-    ActivityLikeView,
-    ActivityPinView,
-    ActivityPublishView,
-    ActivityRemoveBookmarkView,
-    ActivityReshareView,
-    ActivityUnpinView,
-)
-from ..views.create_update import (
-    ActivityCommentCreateView,
-    ActivityCreateView,
-    ActivityFlagView,
-    ActivityUpdateTagsView,
-    ActivityUpdateView,
-)
-from ..views.list_detail import ActivityDetailView, ActivityListView
+from ..views import generic
 
 
 def create_activity_urls(
     model,
     form_class=None,
-    list_view_class=ActivityListView,
-    create_view_class=ActivityCreateView,
-    update_view_class=ActivityUpdateView,
-    detail_view_class=ActivityDetailView,
-    delete_view_class=ActivityDeleteView,
-    flag_view_class=ActivityFlagView,
-    like_view_class=ActivityLikeView,
-    dislike_view_class=ActivityDislikeView,
-    reshare_view_class=ActivityReshareView,
-    publish_view_class=ActivityPublishView,
-    pin_view_class=ActivityPinView,
-    unpin_view_class=ActivityUnpinView,
-    bookmark_view_class=ActivityBookmarkView,
-    remove_bookmark_view_class=ActivityRemoveBookmarkView,
-    update_tags_view_class=ActivityUpdateTagsView,
-    create_comment_view_class=ActivityCommentCreateView,
+    list_view_class=generic.ActivityListView,
+    create_view_class=generic.ActivityCreateView,
+    update_view_class=generic.ActivityUpdateView,
+    detail_view_class=generic.ActivityDetailView,
+    delete_view_class=generic.ActivityDeleteView,
+    flag_view_class=generic.ActivityFlagView,
+    like_view_class=generic.ActivityLikeView,
+    dislike_view_class=generic.ActivityDislikeView,
+    reshare_view_class=generic.ActivityReshareView,
+    publish_view_class=generic.ActivityPublishView,
+    pin_view_class=generic.ActivityPinView,
+    unpin_view_class=generic.ActivityUnpinView,
+    bookmark_view_class=generic.ActivityBookmarkView,
+    remove_bookmark_view_class=generic.ActivityRemoveBookmarkView,
+    update_tags_view_class=generic.ActivityUpdateTagsView,
+    create_comment_view_class=generic.ActivityCommentCreateView,
 ):
     """
     Generates default URL patterns for activity subclasses.
