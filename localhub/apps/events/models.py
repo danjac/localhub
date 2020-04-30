@@ -26,8 +26,7 @@ from icalendar import Calendar
 from icalendar import Event as CalendarEvent
 from timezone_field import TimeZoneField
 
-from localhub.apps.activities.models import Activity
-from localhub.apps.activities.models.managers import ActivityManager, ActivityQuerySet
+from localhub.apps.activities.models import Activity, ActivityManager, ActivityQuerySet
 from localhub.apps.notifications.decorators import dispatch
 from localhub.common.db.functions import DateAdd, MonthAdd, YearAdd
 from localhub.common.db.search.indexer import SearchIndexer
