@@ -234,3 +234,6 @@ class TagUnblockView(BaseTagBlockView):
     def post(self, request, *args, **kwargs):
         self.request.user.blocked_tags.remove(self.object)
         return self.success_response()
+
+
+tag_unblock_view = TagUnblockView.as_view()
