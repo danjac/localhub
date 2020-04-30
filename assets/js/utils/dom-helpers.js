@@ -46,23 +46,6 @@ export function fitIntoViewport(el) {
   const viewport = getViewport();
   const rect = el.getBoundingClientRect();
 
-  return el.style.position === 'absolute'
-    ? fitAbsoluteIntoViewport(el, viewport, rect)
-    : fitRelativeIntoViewport(el, viewport, rect);
-}
-
-const fitAbsoluteIntoViewport = (el, viewport, rect) => {
-  if (rect.bottom >= viewport.height) {
-    el.style.top = 'auto';
-  }
-
-  if (rect.right >= viewport.width) {
-    el.style.left = 'auto';
-  }
-  return el;
-};
-
-const fitRelativeIntoViewport = (el, viewport, rect) => {
   if (rect.top < 0) {
     el.style.top = 0;
     el.style.bottom = 'auto';
@@ -78,4 +61,4 @@ const fitRelativeIntoViewport = (el, viewport, rect) => {
     el.style.right = 0;
   }
   return el;
-};
+}
