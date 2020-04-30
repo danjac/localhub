@@ -16,8 +16,7 @@ from model_utils.models import TimeStampedModel
 from localhub.apps.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from localhub.apps.communities.models import Community, Membership
 from localhub.apps.flags.models import Flag, FlagAnnotationsQuerySetMixin
-from localhub.apps.likes.models import Like
-from localhub.apps.likes.models.mixins import LikeAnnotationsQuerySetMixin
+from localhub.apps.likes.models import Like, LikeAnnotationsQuerySetMixin
 from localhub.apps.notifications.decorators import dispatch
 from localhub.apps.notifications.models import Notification
 from localhub.apps.notifications.models.mixins import (
