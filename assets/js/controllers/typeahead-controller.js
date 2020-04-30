@@ -200,16 +200,14 @@ export default class extends ApplicationController {
   }
 
   openSelector() {
-    const { top, left, height } = getCaretPosition(
-      this.inputTarget,
-      this.inputTarget.selectionEnd
-    );
+    const caret = getCaretPosition(this.inputTarget, this.inputTarget.selectionEnd);
     const { offsetTop, offsetLeft, scrollTop, scrollLeft } = this.inputTarget;
 
     this.selectorTarget.style.position = 'absolute';
 
-    this.selectorTarget.style.top = offsetTop - scrollTop + height + top + 'px';
-    this.selectorTarget.style.left = offsetLeft - scrollLeft + left + 'px';
+    this.selectorTarget.style.top =
+      offsetTop - scrollTop + caret.height + caret.top + 'px';
+    this.selectorTarget.style.left = offsetLeft - scrollLeft + caret.left + 'px';
 
     this.selectorTarget.style.right = 'auto';
     this.selectorTarget.style.bottom = 'auto';
