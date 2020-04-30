@@ -50,15 +50,15 @@ export function fitIntoViewport(el) {
     el.style.top = 0;
     el.style.bottom = 'auto';
   } else if (rect.bottom >= viewport.height) {
-    el.style.top = 'auto';
-    el.style.bottom = 0;
+    el.style.top = el.offsetTop - rect.height + 'px';
+    el.style.bottom = 'auto';
   }
   if (rect.left < 0) {
     el.style.left = 0;
     el.style.right = 'auto';
   } else if (rect.right >= viewport.width) {
-    el.style.left = 'auto';
     el.style.right = 0;
+    el.style.left = 'auto';
   }
   return el;
 }
