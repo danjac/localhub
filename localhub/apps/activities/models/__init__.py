@@ -12,11 +12,11 @@ from model_utils.models import TimeStampedModel
 from taggit.managers import TaggableManager
 from taggit.models import Tag
 
+from localhub.apps.bookmarks.models import Bookmark
 from localhub.apps.comments.models import Comment
 from localhub.apps.communities.models import Community
 from localhub.apps.users.fields import MentionsField
 from localhub.apps.users.utils import extract_mentions
-from localhub.bookmarks.models import Bookmark
 from localhub.common.db.generic import (
     AbstractGenericRelation,
     get_generic_related_queryset,

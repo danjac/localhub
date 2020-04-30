@@ -6,9 +6,9 @@ from django.utils import timezone
 
 import pytest
 
+from localhub.apps.bookmarks.factories import BookmarkFactory
+from localhub.apps.bookmarks.models import Bookmark
 from localhub.apps.communities.factories import MembershipFactory
-from localhub.bookmarks.factories import BookmarkFactory
-from localhub.bookmarks.models import Bookmark
 
 from ..factories import MessageFactory
 from ..models import Message

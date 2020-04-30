@@ -5,4 +5,4 @@ from django.apps import AppConfig
 
 
 class BookmarksConfig(AppConfig):
-    name = "localhub.bookmarks"
+    name = "localhub.apps.bookmarks"

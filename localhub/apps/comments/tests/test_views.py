@@ -6,11 +6,11 @@ from django.utils import timezone
 
 import pytest
 
+from localhub.apps.bookmarks.factories import BookmarkFactory
+from localhub.apps.bookmarks.models import Bookmark
 from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.communities.models import Membership
 from localhub.apps.users.factories import UserFactory
-from localhub.bookmarks.factories import BookmarkFactory
-from localhub.bookmarks.models import Bookmark
 from localhub.flags.models import Flag
 from localhub.likes.factories import LikeFactory
 from localhub.likes.models import Like

@@ -5,7 +5,7 @@ from django.db import IntegrityError
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
-from localhub.bookmarks.models import Bookmark
+from localhub.apps.bookmarks.models import Bookmark
 from localhub.common.views import SuccessActionView, SuccessDeleteView, SuccessView
 
 from ..models import Message

@@ -3,8 +3,8 @@
 
 from django.db import models
 
+from localhub.apps.bookmarks.models.mixins import BookmarkAnnotationsQuerySetMixin
 from localhub.apps.communities.models import Membership
-from localhub.bookmarks.models.mixins import BookmarkAnnotationsQuerySetMixin
 from localhub.common.db.search.mixins import SearchQuerySetMixin
 from localhub.flags.models.mixins import FlagAnnotationsQuerySetMixin
 from localhub.likes.models.mixins import LikeAnnotationsQuerySetMixin

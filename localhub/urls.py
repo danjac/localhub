@@ -21,7 +21,7 @@ urlpatterns = [
     # Local
     path("", view=activity_stream_view, name="activity_stream"),
     path("", include("localhub.apps.activities.urls")),
-    path("bookmarks/", include("localhub.bookmarks.urls")),
+    path("bookmarks/", include("localhub.apps.bookmarks.urls")),
     path("comments/", include("localhub.apps.comments.urls")),
     path("events/", include("localhub.events.urls")),
     path("flags/", include("localhub.flags.urls")),
