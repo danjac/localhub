@@ -12,9 +12,8 @@ from django.views.generic import ListView, TemplateView, View
 from localhub.apps.communities.views import CommunityRequiredMixin
 from localhub.common.views import SuccessActionView, SuccessDeleteView, SuccessView
 
-from ..models import PushSubscription
-from ..signals import notification_read
-from .models import Notification
+from .models import Notification, PushSubscription
+from .signals import notification_read
 
 
 class NotificationQuerySetMixin(CommunityRequiredMixin):
