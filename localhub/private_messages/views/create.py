@@ -8,8 +8,8 @@ from django.utils.translation import gettext as _
 
 from rules.contrib.views import PermissionRequiredMixin
 
+from localhub.apps.communities.views import CommunityRequiredMixin
 from localhub.common.views import ParentObjectMixin, SuccessFormView
-from localhub.communities.views import CommunityRequiredMixin
 
 from ..forms import MessageForm, MessageRecipientForm
 from .mixins import RecipientQuerySetMixin, SenderQuerySetMixin

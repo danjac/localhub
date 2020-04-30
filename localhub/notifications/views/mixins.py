@@ -3,7 +3,7 @@
 
 from django.urls import reverse_lazy
 
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.apps.communities.views import CommunityRequiredMixin
 
 from ..models import Notification
 

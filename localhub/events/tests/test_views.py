@@ -8,7 +8,7 @@ from django.utils.encoding import force_str
 
 import pytest
 
-from localhub.communities.factories import MembershipFactory
+from localhub.apps.communities.factories import MembershipFactory
 from localhub.likes.factories import LikeFactory
 from localhub.likes.models import Like
 

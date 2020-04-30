@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from model_utils.fields import MonitorField
 from model_utils.models import TimeStampedModel
 
-from localhub.communities.models import Community, Membership
+from localhub.apps.communities.models import Community, Membership
 
 
 class InviteQuerySet(models.QuerySet):

@@ -1,7 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.apps.communities.views import CommunityRequiredMixin
 
 
 class ActivityQuerySetMixin(CommunityRequiredMixin):

@@ -3,7 +3,7 @@
 
 from django.views.generic import DetailView
 
-from localhub.communities.views import CommunityAdminRequiredMixin
+from localhub.apps.communities.views import CommunityAdminRequiredMixin
 
 from ..models import JoinRequest
 from .mixins import JoinRequestQuerySetMixin

@@ -12,6 +12,7 @@ from model_utils.models import TimeStampedModel
 from taggit.managers import TaggableManager
 from taggit.models import Tag
 
+from localhub.apps.communities.models import Community
 from localhub.apps.users.fields import MentionsField
 from localhub.apps.users.utils import extract_mentions
 from localhub.bookmarks.models import Bookmark
@@ -24,7 +25,6 @@ from localhub.common.db.tracker import TrackerModelMixin
 from localhub.common.markdown.fields import MarkdownField
 from localhub.common.utils.itertools import takefirst
 from localhub.common.utils.text import slugify_unicode
-from localhub.communities.models import Community
 from localhub.flags.models import Flag
 from localhub.hashtags.fields import HashtagsField
 from localhub.hashtags.utils import extract_hashtags

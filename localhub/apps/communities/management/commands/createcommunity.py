@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand, CommandError
 
-from localhub.communities.models import Community, Membership
+from localhub.apps.communities.models import Community, Membership
 
 
 class Command(BaseCommand):

@@ -5,7 +5,7 @@ from django.urls import reverse
 
 import pytest
 
-from localhub.communities.factories import MembershipFactory
+from localhub.apps.communities.factories import MembershipFactory
 from localhub.private_messages.factories import MessageFactory
 
 from ..factories import BookmarkFactory

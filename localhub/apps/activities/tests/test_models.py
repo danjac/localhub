@@ -7,11 +7,11 @@ from django.utils import timezone
 import pytest
 from taggit.models import Tag
 
+from localhub.apps.communities.factories import CommunityFactory, MembershipFactory
+from localhub.apps.communities.models import Community
 from localhub.apps.users.factories import UserFactory
 from localhub.bookmarks.factories import BookmarkFactory
 from localhub.comments.factories import CommentFactory
-from localhub.communities.factories import CommunityFactory, MembershipFactory
-from localhub.communities.models import Community
 from localhub.events.models import Event
 from localhub.flags.factories import FlagFactory
 from localhub.likes.factories import LikeFactory

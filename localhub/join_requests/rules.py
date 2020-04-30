@@ -3,7 +3,7 @@
 
 import rules
 
-from localhub.communities.rules import is_admin, is_inactive_member, is_member
+from localhub.apps.communities.rules import is_admin, is_inactive_member, is_member
 
 
 @rules.predicate

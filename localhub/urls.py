@@ -8,14 +8,14 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 from localhub.apps.activities.views.streams import activity_stream_view
-from localhub.apps.users.views.actions import dismiss_notice_view, user_delete_view
-from localhub.apps.users.views.update import user_update_view
-from localhub.communities.views import (
+from localhub.apps.communities.views import (
     community_list_view,
     community_not_found_view,
     community_sidebar_view,
     community_welcome_view,
 )
+from localhub.apps.users.views.actions import dismiss_notice_view, user_delete_view
+from localhub.apps.users.views.update import user_update_view
 
 urlpatterns = [
     # Local
@@ -34,7 +34,7 @@ urlpatterns = [
     path("polls/", include("localhub.polls.urls")),
     path("posts/", include("localhub.posts.urls")),
     path("people/", include("localhub.apps.users.urls")),
-    path("site/", include("localhub.communities.urls")),
+    path("site/", include("localhub.apps.communities.urls")),
     path("tags/", include("localhub.hashtags.urls")),
     path("sites/", community_list_view, name="community_list"),
     path("account/~update", user_update_view, name="user_update"),

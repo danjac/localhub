@@ -8,7 +8,7 @@ from django.db import models
 
 from model_utils.models import TimeStampedModel
 
-from localhub.communities.models import Community
+from localhub.apps.communities.models import Community
 
 
 class BookmarkQuerySet(models.QuerySet):

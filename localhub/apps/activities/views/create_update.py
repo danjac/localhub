@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from rules.contrib.views import PermissionRequiredMixin
 
+from localhub.apps.communities.views import CommunityRequiredMixin
 from localhub.comments.forms import CommentForm
 from localhub.common.template.defaultfilters import resolve_url
 from localhub.common.views import (
@@ -14,7 +15,6 @@ from localhub.common.views import (
     SuccessFormView,
     SuccessUpdateView,
 )
-from localhub.communities.views import CommunityRequiredMixin
 from localhub.flags.forms import FlagForm
 
 from ..forms import ActivityTagsForm

@@ -11,8 +11,8 @@ from django.utils.encoding import force_str
 import pytest
 import pytz
 
+from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.users.factories import UserFactory
-from localhub.communities.factories import MembershipFactory
 
 from ..factories import EventFactory
 from ..models import Event

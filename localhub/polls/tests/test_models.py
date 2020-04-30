@@ -4,7 +4,7 @@
 
 import pytest
 
-from localhub.communities.factories import MembershipFactory
+from localhub.apps.communities.factories import MembershipFactory
 
 from ..factories import AnswerFactory
 from ..models import Poll

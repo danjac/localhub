@@ -3,7 +3,7 @@
 
 from rules.contrib.views import PermissionRequiredMixin
 
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.apps.communities.views import CommunityRequiredMixin
 
 from ..models import JoinRequest
 

@@ -6,9 +6,9 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
+from localhub.apps.communities.models import Membership
+from localhub.apps.communities.views import CommunityAdminRequiredMixin
 from localhub.common.views import SuccessActionView
-from localhub.communities.models import Membership
-from localhub.communities.views import CommunityAdminRequiredMixin
 
 from ..emails import send_acceptance_email, send_rejection_email
 from ..models import JoinRequest

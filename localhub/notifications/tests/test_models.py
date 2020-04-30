@@ -6,9 +6,9 @@ from unittest import mock
 import pytest
 from pywebpush import WebPushException
 
+from localhub.apps.communities.factories import CommunityFactory, MembershipFactory
+from localhub.apps.communities.models import Community
 from localhub.apps.users.factories import UserFactory
-from localhub.communities.factories import CommunityFactory, MembershipFactory
-from localhub.communities.models import Community
 
 from ..factories import NotificationFactory
 from ..models import Notification, PushSubscription

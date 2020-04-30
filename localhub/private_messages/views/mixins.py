@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.apps.communities.views import CommunityRequiredMixin
 
 from ..models import Message
 

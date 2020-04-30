@@ -11,7 +11,7 @@ from django.db import models
 from model_utils.models import TimeStampedModel
 from pywebpush import WebPushException, webpush
 
-from localhub.communities.models import Community
+from localhub.apps.communities.models import Community
 
 from .managers import NotificationManager
 

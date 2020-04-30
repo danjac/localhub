@@ -168,69 +168,69 @@ msgstr ""
 msgid "This comment has been flagged to the moderators"
 msgstr ""
 
-#: localhub/communities/models.py:37
+#: localhub.apps.communities/models.py:37
 msgid "This is not a valid domain"
 msgstr ""
 
-#: localhub/communities/models.py:51
+#: localhub.apps.communities/models.py:51
 msgid "Terms and conditions, code of conduct and other membership terms."
 msgstr ""
 
-#: localhub/communities/models.py:59
+#: localhub.apps.communities/models.py:59
 msgid ""
 "Any posts containing these tags in their description will be automatically "
 "hidden by default"
 msgstr ""
 
-#: localhub/communities/models.py:69
+#: localhub.apps.communities/models.py:69
 msgid ""
 "Will add domain to notification emails from this site, e.g. "
 "notifications@this-domain.com. If left empty will use the site domain by "
 "default."
 msgstr ""
 
-#: localhub/communities/models.py:84
+#: localhub.apps.communities/models.py:84
 msgid ""
 "This community is open to the world. Non-members can view all published "
 "content."
 msgstr ""
 
-#: localhub/communities/models.py:90
+#: localhub.apps.communities/models.py:90
 msgid "This community is currently live."
 msgstr ""
 
-#: localhub/communities/models.py:96
+#: localhub.apps.communities/models.py:96
 #: templates/includes/default_sidebar.html:133
 msgid "Communities"
 msgstr "Yhteisöt"
 
-#: localhub/communities/models.py:155
+#: localhub.apps.communities/models.py:155
 #: templates/communities/membership_list.html:15
 #: templates/users/user_list_base.html:31
 msgid "Member"
 msgstr "Jäsen"
 
-#: localhub/communities/models.py:156
+#: localhub.apps.communities/models.py:156
 msgid "Moderator"
 msgstr ""
 
-#: localhub/communities/models.py:157
+#: localhub.apps.communities/models.py:157
 msgid "Admin"
 msgstr "Ylläpitäjä"
 
-#: localhub/communities/views.py:69
+#: localhub.apps.communities/views.py:69
 msgid "You must be a member of this community"
 msgstr ""
 
-#: localhub/communities/views.py:76
+#: localhub.apps.communities/views.py:76
 msgid "No community is available for this domain"
 msgstr ""
 
-#: localhub/communities/views.py:126
+#: localhub.apps.communities/views.py:126
 msgid "Community settings have been updated"
 msgstr ""
 
-#: localhub/communities/views.py:197
+#: localhub.apps.communities/views.py:197
 msgid "Membership has been updated"
 msgstr ""
 

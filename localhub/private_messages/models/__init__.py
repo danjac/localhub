@@ -11,11 +11,11 @@ from django.utils import timezone
 
 from model_utils.models import TimeStampedModel
 
+from localhub.apps.communities.models import Community
 from localhub.bookmarks.models import Bookmark
 from localhub.common.db.generic import get_generic_related_queryset
 from localhub.common.db.search.indexer import SearchIndexer
 from localhub.common.markdown.fields import MarkdownField
-from localhub.communities.models import Community
 from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
 

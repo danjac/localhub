@@ -6,8 +6,8 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
+from localhub.apps.communities.views import CommunityAdminRequiredMixin
 from localhub.common.views import SuccessActionView
-from localhub.communities.views import CommunityAdminRequiredMixin
 
 from ..emails import send_invitation_email
 from ..models import Invite

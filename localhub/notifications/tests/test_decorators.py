@@ -3,7 +3,7 @@
 
 import pytest
 
-from localhub.communities.factories import MembershipFactory
+from localhub.apps.communities.factories import MembershipFactory
 
 from ..decorators import dispatch
 from ..models import Notification

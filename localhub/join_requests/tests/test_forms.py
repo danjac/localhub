@@ -3,7 +3,7 @@
 
 import pytest
 
-from localhub.communities.factories import CommunityFactory
+from localhub.apps.communities.factories import CommunityFactory
 
 from ..forms import JoinRequestForm
 from ..models import JoinRequest

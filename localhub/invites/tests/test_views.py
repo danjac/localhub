@@ -3,7 +3,7 @@ from django.urls import reverse
 
 import pytest
 
-from localhub.communities.models import Membership
+from localhub.apps.communities.models import Membership
 
 from ..factories import InviteFactory
 from ..models import Invite

@@ -5,8 +5,8 @@ from django.conf import settings
 from django.utils.functional import cached_property
 from django.views.generic import ListView
 
+from localhub.apps.communities.views import CommunityAdminRequiredMixin
 from localhub.common.views import SearchMixin
-from localhub.communities.views import CommunityAdminRequiredMixin
 
 from ..models import Invite
 from .mixins import InviteQuerySetMixin, InviteRecipientQuerySetMixin

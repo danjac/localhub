@@ -4,11 +4,11 @@
 import pytest
 from taggit.models import Tag
 
+from localhub.apps.communities.factories import CommunityFactory, MembershipFactory
+from localhub.apps.communities.models import Membership
 from localhub.apps.users.factories import UserFactory
 from localhub.comments.factories import CommentFactory
 from localhub.comments.models import Comment
-from localhub.communities.factories import CommunityFactory, MembershipFactory
-from localhub.communities.models import Membership
 from localhub.flags.factories import FlagFactory
 from localhub.likes.factories import LikeFactory
 from localhub.notifications.factories import NotificationFactory

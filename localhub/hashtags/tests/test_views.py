@@ -7,7 +7,7 @@ import pytest
 from pytest_django.asserts import assertTemplateUsed
 from taggit.models import Tag
 
-from localhub.communities.factories import CommunityFactory, MembershipFactory
+from localhub.apps.communities.factories import CommunityFactory, MembershipFactory
 from localhub.events.factories import EventFactory
 from localhub.photos.factories import PhotoFactory
 from localhub.posts.factories import PostFactory

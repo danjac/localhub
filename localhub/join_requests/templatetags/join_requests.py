@@ -4,7 +4,7 @@
 
 from django import template
 
-from localhub.communities.models import Membership
+from localhub.apps.communities.models import Membership
 
 from ..models import JoinRequest
 

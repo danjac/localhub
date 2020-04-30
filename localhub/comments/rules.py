@@ -3,7 +3,7 @@
 
 import rules
 
-from localhub.communities.rules import is_member, is_moderator
+from localhub.apps.communities.rules import is_member, is_moderator
 
 
 @rules.predicate

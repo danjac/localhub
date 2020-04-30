@@ -7,10 +7,10 @@ from django.http import HttpResponse
 
 import pytest
 
+from localhub.apps.communities.factories import CommunityFactory, MembershipFactory
+from localhub.apps.communities.models import Membership
 from localhub.apps.users.factories import UserFactory
 from localhub.comments.factories import CommentFactory
-from localhub.communities.factories import CommunityFactory, MembershipFactory
-from localhub.communities.models import Membership
 from localhub.events.factories import EventFactory
 from localhub.invites.factories import InviteFactory
 from localhub.join_requests.factories import JoinRequestFactory

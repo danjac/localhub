@@ -10,7 +10,7 @@ from django.db.models import Q
 from taggit.models import Tag, TaggedItem
 
 from localhub.apps.activities.utils import get_activity_models
-from localhub.communities.views import CommunityRequiredMixin
+from localhub.apps.communities.views import CommunityRequiredMixin
 
 
 class TagQuerySetMixin(CommunityRequiredMixin):

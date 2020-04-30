@@ -5,7 +5,7 @@ from django.apps import AppConfig
 
 
 class CommunitiesConfig(AppConfig):
-    name = "localhub.communities"
+    name = "localhub.apps.communities"
 
     def ready(self):
         from . import signals  # noqa

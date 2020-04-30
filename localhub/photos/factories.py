@@ -7,8 +7,8 @@ from django.utils import timezone
 import factory
 from factory import DjangoModelFactory, Faker, LazyFunction, SubFactory
 
+from localhub.apps.communities.factories import CommunityFactory
 from localhub.apps.users.factories import UserFactory
-from localhub.communities.factories import CommunityFactory
 
 from .models import Photo
 

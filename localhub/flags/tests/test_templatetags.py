@@ -3,8 +3,8 @@
 
 import pytest
 
-from localhub.communities.factories import MembershipFactory
-from localhub.communities.models import Membership
+from localhub.apps.communities.factories import MembershipFactory
+from localhub.apps.communities.models import Membership
 from localhub.posts.factories import PostFactory
 
 from ..factories import FlagFactory
