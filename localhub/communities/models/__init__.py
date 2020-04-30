@@ -12,8 +12,8 @@ from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 from sorl.thumbnail import ImageField
 
+from localhub.common.markdown.fields import MarkdownField
 from localhub.hashtags.utils import extract_hashtags
-from localhub.markdown.fields import MarkdownField
 
 from .managers import CommunityManager, MembershipManager
 
