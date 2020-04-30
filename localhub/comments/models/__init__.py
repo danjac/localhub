@@ -14,10 +14,10 @@ from django.utils import timezone
 from model_utils.models import TimeStampedModel
 
 from localhub.bookmarks.models import Bookmark
+from localhub.common.db.generic import get_generic_related_queryset
+from localhub.common.db.search.indexer import SearchIndexer
+from localhub.common.db.tracker import TrackerModelMixin
 from localhub.communities.models import Community
-from localhub.db.generic import get_generic_related_queryset
-from localhub.db.search.indexer import SearchIndexer
-from localhub.db.tracker import TrackerModelMixin
 from localhub.flags.models import Flag
 from localhub.likes.models import Like
 from localhub.markdown.fields import MarkdownField

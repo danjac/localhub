@@ -1,7 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from localhub.db.generic import get_generic_related_exists
+from localhub.common.db.generic import get_generic_related_exists
 
 from . import Flag
 

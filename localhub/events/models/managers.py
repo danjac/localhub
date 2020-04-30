@@ -18,8 +18,8 @@ from django.utils import timezone
 import pytz
 
 from localhub.activities.models.managers import ActivityManager, ActivityQuerySet
-from localhub.db.functions import DateAdd, MonthAdd, YearAdd
-from localhub.db.utils import boolean_value
+from localhub.common.db.functions import DateAdd, MonthAdd, YearAdd
+from localhub.common.db.utils import boolean_value
 
 
 class EventQuerySet(ActivityQuerySet):

@@ -6,7 +6,7 @@ from django.apps import apps
 from django.contrib.sites.shortcuts import get_current_site
 from django.db import models
 
-from localhub.db.search.mixins import SearchQuerySetMixin
+from localhub.common.db.search.mixins import SearchQuerySetMixin
 
 from .requests import RequestCommunity
 

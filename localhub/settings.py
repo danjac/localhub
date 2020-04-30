@@ -84,7 +84,7 @@ class Base(Configuration):
         "django.contrib.sites.middleware.CurrentSiteMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
         "django.middleware.locale.LocaleMiddleware",
-        "localhub.middleware.turbolinks.TurbolinksMiddleware",
+        "localhub.common.middleware.turbolinks.TurbolinksMiddleware",
         "localhub.communities.middleware.CurrentCommunityMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
@@ -162,13 +162,13 @@ class Base(Configuration):
 
     # https://neutronx.github.io/django-markdownx/customization/
 
-    MARKDOWNX_MARKDOWNIFY_FUNCTION = "localhub.markdown.utils.markdownify"
+    MARKDOWNX_MARKDOWNIFY_FUNCTION = "localhub.common.markdown.utils.markdownify"
 
     MARKDOWNX_MARKDOWN_EXTENSIONS = [
         "pymdownx.extra",
         "pymdownx.emoji",
-        "localhub.markdown.extensions:NewTabExtension",
-        "localhub.markdown.extensions:SafeImageExtension",
+        "localhub.common.markdown.extensions:NewTabExtension",
+        "localhub.common.markdown.extensions:SafeImageExtension",
     ]
 
     MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {
@@ -251,8 +251,8 @@ class Base(Configuration):
                 "OPTIONS": {
                     "debug": self.DEBUG,
                     "builtins": [
-                        "localhub.template.defaultfilters",
-                        "localhub.template.defaulttags",
+                        "localhub.common.template.defaultfilters",
+                        "localhub.common.template.defaulttags",
                     ],
                     "context_processors": [
                         "django.template.context_processors.debug",
@@ -264,9 +264,11 @@ class Base(Configuration):
                         "django.template.context_processors.tz",
                         "django.contrib.messages.context_processors.messages",
                         "localhub.communities.context_processors.community",
-                        "localhub.template.context_processors.home_page_url",
+                        "localhub.common.template.context_processors.home_page_url",
                     ],
-                    "libraries": {"pagination": "localhub.pagination.templatetags"},
+                    "libraries": {
+                        "pagination": "localhub.common.pagination.templatetags"
+                    },
                 },
             }
         ]
@@ -375,8 +377,8 @@ class Production(Base):
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
-    DEFAULT_FILE_STORAGE = "localhub.storages.MediaStorage"
-    STATICFILES_STORAGE = "localhub.storages.StaticStorage"
+    DEFAULT_FILE_STORAGE = "localhub.common.storages.MediaStorage"
+    STATICFILES_STORAGE = "localhub.common.storages.StaticStorage"
 
     AWS_MEDIA_LOCATION = "media"
     AWS_STATIC_LOCATION = "static"

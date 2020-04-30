@@ -3,12 +3,12 @@
 
 from django.db import models
 
-from localhub.db.generic import (
+from localhub.common.db.generic import (
     get_generic_related_count_subquery,
     get_generic_related_exists,
     get_generic_related_value_subquery,
 )
-from localhub.db.utils import boolean_value
+from localhub.common.db.utils import boolean_value
 
 from . import Like
 

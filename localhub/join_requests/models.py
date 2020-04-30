@@ -10,8 +10,8 @@ from django.utils.translation import gettext_lazy as _
 from model_utils.fields import MonitorField
 from model_utils.models import TimeStampedModel
 
+from localhub.common.db.search.mixins import SearchQuerySetMixin
 from localhub.communities.models import Community
-from localhub.db.search.mixins import SearchQuerySetMixin
 
 
 class JoinRequestQuerySet(SearchQuerySetMixin, models.QuerySet):

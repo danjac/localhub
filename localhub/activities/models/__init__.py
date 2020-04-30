@@ -14,9 +14,12 @@ from taggit.models import Tag
 
 from localhub.bookmarks.models import Bookmark
 from localhub.comments.models import Comment
+from localhub.common.db.generic import (
+    AbstractGenericRelation,
+    get_generic_related_queryset,
+)
+from localhub.common.db.tracker import TrackerModelMixin
 from localhub.communities.models import Community
-from localhub.db.generic import AbstractGenericRelation, get_generic_related_queryset
-from localhub.db.tracker import TrackerModelMixin
 from localhub.flags.models import Flag
 from localhub.hashtags.fields import HashtagsField
 from localhub.hashtags.utils import extract_hashtags
