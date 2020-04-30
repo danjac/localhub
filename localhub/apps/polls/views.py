@@ -20,8 +20,12 @@ from localhub.apps.activities.views.list_detail import (
 from localhub.apps.communities.views import CommunityRequiredMixin
 from localhub.common.views import SuccessActionView
 
-from ..models import Answer, Poll
-from .mixins import PollQuerySetMixin
+from .models import Answer, Poll
+
+
+class PollQuerySetMixin:
+    def get_queryset(self):
+        return super().get_queryset().with_answers()
 
 
 class AnswerVoteView(
@@ -77,8 +81,6 @@ class AnswerVoteView(
 
 
 answer_vote_view = AnswerVoteView.as_view()
-# Copyright (c) 2020 by Dan Jacob
-# SPDX-License-Identifier: AGPL-3.0-or-later
 
 
 class AnswersFormSetMixin:
@@ -126,22 +128,9 @@ class PollUpdateView(AnswersFormSetMixin, ActivityUpdateView):
         return response
 
 
-# Copyright (c) 2020 by Dan Jacob
-# SPDX-License-Identifier: AGPL-3.0-or-later
-
-
 class PollDetailView(PollQuerySetMixin, ActivityDetailView):
     ...
 
 
 class PollListView(PollQuerySetMixin, ActivityListView):
     ...
-
-
-# Copyright (c) 2020 by Dan Jacob
-# SPDX-License-Identifier: AGPL-3.0-or-later
-
-
-class PollQuerySetMixin:
-    def get_queryset(self):
-        return super().get_queryset().with_answers()

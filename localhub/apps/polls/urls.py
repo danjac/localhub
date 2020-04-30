@@ -5,11 +5,9 @@ from django.urls import path
 
 from localhub.apps.activities.urls.generic import create_activity_urls
 
+from . import views
 from .forms import PollForm
 from .models import Poll
-from .views.actions import answer_vote_view
-from .views.create_update import PollCreateView, PollUpdateView
-from .views.list_detail import PollDetailView, PollListView
 
 app_name = "polls"
 
@@ -17,8 +15,8 @@ app_name = "polls"
 urlpatterns = create_activity_urls(
     Poll,
     PollForm,
-    create_view_class=PollCreateView,
-    detail_view_class=PollDetailView,
-    list_view_class=PollListView,
-    update_view_class=PollUpdateView,
-) + [path("<int:pk>~vote/", answer_vote_view, name="vote")]
+    create_view_class=views.PollCreateView,
+    detail_view_class=views.PollDetailView,
+    list_view_class=views.PollListView,
+    update_view_class=views.PollUpdateView,
+) + [path("<int:pk>~vote/", views.answer_vote_view, name="vote")]
