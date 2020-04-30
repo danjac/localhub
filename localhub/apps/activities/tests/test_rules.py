@@ -6,7 +6,7 @@ from django.utils import timezone
 import pytest
 
 from localhub.apps.communities.models import Community, Membership
-from localhub.posts.factories import PostFactory
+from localhub.apps.posts.factories import PostFactory
 
 from ..rules import is_activity_community_moderator, is_deleted, is_owner, is_published
 

@@ -7,13 +7,13 @@ from django.utils import timezone
 
 import pytest
 
+from localhub.apps.posts.factories import PostFactory
+from localhub.apps.posts.models import Post
 from localhub.events.factories import EventFactory
 from localhub.events.models import Event
 from localhub.photos.factories import PhotoFactory
 from localhub.photos.models import Photo
 from localhub.polls.models import Poll
-from localhub.posts.factories import PostFactory
-from localhub.posts.models import Post
 
 from ..utils import (
     get_activity_model,

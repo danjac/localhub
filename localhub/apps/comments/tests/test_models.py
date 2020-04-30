@@ -10,8 +10,8 @@ from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.flags.factories import FlagFactory
 from localhub.apps.likes.factories import LikeFactory
 from localhub.apps.notifications.factories import NotificationFactory
+from localhub.apps.posts.factories import PostFactory
 from localhub.apps.users.factories import UserFactory
-from localhub.posts.factories import PostFactory
 
 from ..factories import CommentFactory
 from ..models import Comment

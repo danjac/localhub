@@ -6,7 +6,7 @@ from django.template import engines
 import pytest
 
 from localhub.apps.communities.factories import MembershipFactory
-from localhub.posts.factories import PostFactory
+from localhub.apps.posts.factories import PostFactory
 
 from ..factories import NotificationFactory
 from ..models import Notification

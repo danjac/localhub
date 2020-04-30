@@ -11,9 +11,9 @@ from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.likes.factories import LikeFactory
 from localhub.apps.notifications.factories import NotificationFactory
 from localhub.apps.notifications.models import Notification
+from localhub.apps.posts.factories import PostFactory
 from localhub.apps.private_messages.factories import MessageFactory
 from localhub.events.factories import EventFactory
-from localhub.posts.factories import PostFactory
 
 from ..factories import UserFactory
 

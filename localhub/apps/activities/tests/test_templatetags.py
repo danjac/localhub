@@ -5,7 +5,7 @@ from django.utils import timezone
 
 import pytest
 
-from localhub.posts.factories import PostFactory
+from localhub.apps.posts.factories import PostFactory
 
 from ..templatetags.activities import (
     get_pinned_activity,

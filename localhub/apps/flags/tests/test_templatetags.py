@@ -5,7 +5,7 @@ import pytest
 
 from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.communities.models import Membership
-from localhub.posts.factories import PostFactory
+from localhub.apps.posts.factories import PostFactory
 
 from ..factories import FlagFactory
 from ..templatetags.flags import get_external_flag_count, get_flag_count

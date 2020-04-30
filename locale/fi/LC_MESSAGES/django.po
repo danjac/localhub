@@ -261,7 +261,7 @@ msgstr "Tapahtuma loppuu"
 msgid "Start and end times will be shown in this timezone"
 msgstr ""
 
-#: localhub/events/models.py:43 localhub/posts/forms.py:16
+#: localhub/events/models.py:43 localhub.apps.posts/forms.py:16
 #: templates/markdownx/widget2.html:39
 msgid "Link"
 msgstr "Linkki"
@@ -476,19 +476,19 @@ msgstr ""
 msgid "Attribution NonCommercial NoDerivs"
 msgstr ""
 
-#: localhub/posts/forms.py:16
+#: localhub.apps.posts/forms.py:16
 msgid "Title"
 msgstr "Otsikko"
 
-#: localhub/posts/forms.py:21
+#: localhub.apps.posts/forms.py:21
 msgid "Add a full link here"
 msgstr ""
 
-#: localhub/posts/forms.py:30
+#: localhub.apps.posts/forms.py:30
 msgid "Either title or URL must be provided"
 msgstr ""
 
-#: localhub/posts/models.py:33 templates/includes/default_sidebar.html:58
+#: localhub.apps.posts/models.py:33 templates/includes/default_sidebar.html:58
 msgid "Post"
 msgstr "Postaus"
 

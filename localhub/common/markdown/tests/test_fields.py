@@ -2,7 +2,7 @@ from django.utils.encoding import force_str
 
 import pytest
 
-from localhub.posts.factories import PostFactory
+from localhub.apps.posts.factories import PostFactory
 
 pytestmark = pytest.mark.django_db
 

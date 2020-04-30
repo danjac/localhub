@@ -7,10 +7,10 @@ from django.urls import reverse
 import pytest
 
 from localhub.apps.communities.factories import MembershipFactory
+from localhub.apps.posts.factories import PostFactory
 from localhub.apps.users.factories import UserFactory
 from localhub.events.factories import EventFactory
 from localhub.polls.factories import AnswerFactory, PollFactory
-from localhub.posts.factories import PostFactory
 
 pytestmark = pytest.mark.django_db
 

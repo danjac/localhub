@@ -14,11 +14,11 @@ from localhub.apps.communities.models import Community
 from localhub.apps.flags.factories import FlagFactory
 from localhub.apps.likes.factories import LikeFactory
 from localhub.apps.notifications.factories import NotificationFactory
+from localhub.apps.posts.factories import PostFactory
+from localhub.apps.posts.models import Post
 from localhub.apps.users.factories import UserFactory
 from localhub.events.models import Event
 from localhub.photos.models import Photo
-from localhub.posts.factories import PostFactory
-from localhub.posts.models import Post
 
 pytestmark = pytest.mark.django_db
 

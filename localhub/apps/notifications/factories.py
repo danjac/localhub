@@ -4,8 +4,8 @@
 from factory import DjangoModelFactory, SubFactory
 
 from localhub.apps.communities.factories import CommunityFactory
+from localhub.apps.posts.factories import PostFactory
 from localhub.apps.users.factories import UserFactory
-from localhub.posts.factories import PostFactory
 
 from .models import Notification
 

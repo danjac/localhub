@@ -8,7 +8,7 @@ import factory
 import pytest
 
 from localhub.apps.comments.factories import CommentFactory
-from localhub.posts.factories import PostFactory
+from localhub.apps.posts.factories import PostFactory
 
 from ..factories import FlagFactory
 

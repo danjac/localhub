@@ -5,7 +5,7 @@ from django.urls import reverse
 
 import pytest
 
-from localhub.posts.factories import PostFactory
+from localhub.apps.posts.factories import PostFactory
 
 from ..factories import FlagFactory
 from ..models import Flag

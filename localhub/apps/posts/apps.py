@@ -5,4 +5,4 @@ from django.apps import AppConfig
 
 
 class PostsConfig(AppConfig):
-    name = "localhub.posts"
+    name = "localhub.apps.posts"

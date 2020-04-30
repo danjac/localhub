@@ -15,8 +15,8 @@ from localhub.apps.likes.factories import LikeFactory
 from localhub.apps.likes.models import Like
 from localhub.apps.notifications.factories import NotificationFactory
 from localhub.apps.notifications.models import Notification
+from localhub.apps.posts.factories import PostFactory
 from localhub.apps.users.factories import UserFactory
-from localhub.posts.factories import PostFactory
 
 from ..factories import CommentFactory
 from ..models import Comment

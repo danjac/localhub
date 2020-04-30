@@ -3,7 +3,7 @@
 
 import pytest
 
-from localhub.posts.notifications import PostAdapter
+from localhub.apps.posts.notifications import PostAdapter
 
 from ..factories import NotificationFactory
 
