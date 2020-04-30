@@ -5,7 +5,7 @@ import pytest
 
 from localhub.apps.communities.factories import MembershipFactory
 
-from ..decorators import dispatch
+from ..decorators import notify
 from ..models import Notification
 
 pytestmark = pytest.mark.django_db
@@ -21,7 +21,7 @@ class TestDispatch:
             recipient=MembershipFactory(community=post.community).member,
         )
 
-        @dispatch
+        @notify
         def do_mention(post):
             return [notification]
 
@@ -43,7 +43,7 @@ class TestDispatch:
             recipient=MembershipFactory(community=post.community).member,
         )
 
-        @dispatch
+        @notify
         def do_mention(post):
             return notification
 

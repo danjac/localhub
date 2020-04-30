@@ -17,7 +17,7 @@ from taggit.models import Tag
 from timezone_field import TimeZoneField
 
 from localhub.apps.communities.models import Membership
-from localhub.apps.notifications.decorators import dispatch
+from localhub.apps.notifications.decorators import notify
 from localhub.apps.notifications.models import Notification
 from localhub.common.db.fields import ChoiceArrayField
 from localhub.common.db.generic import get_generic_related_queryset
@@ -410,7 +410,7 @@ class User(TrackerModelMixin, AbstractUser):
         self.following.remove(user)
         self.followers.remove(user)
 
-    @dispatch
+    @notify
     def notify_on_join(self, community):
         """Returns notification to all other current members that
         this user has just joined the community.
@@ -432,7 +432,7 @@ class User(TrackerModelMixin, AbstractUser):
             for member in community.members.exclude(pk=self.pk)
         ]
 
-    @dispatch
+    @notify
     def notify_on_follow(self, recipient, community):
         """Sends notification to recipient that they have just been followed.
 
@@ -451,7 +451,7 @@ class User(TrackerModelMixin, AbstractUser):
             verb="new_follower",
         )
 
-    @dispatch
+    @notify
     def notify_on_update(self):
         """Sends notification to followers that user has updated their profile.
 

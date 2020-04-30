@@ -19,7 +19,7 @@ from localhub.apps.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.apps.hashtags.fields import HashtagsField
 from localhub.apps.hashtags.utils import extract_hashtags
 from localhub.apps.likes.models import Like, LikeAnnotationsQuerySetMixin
-from localhub.apps.notifications.decorators import dispatch
+from localhub.apps.notifications.decorators import notify
 from localhub.apps.notifications.models import (
     Notification,
     NotificationAnnotationsQuerySetMixin,
@@ -603,7 +603,7 @@ class Activity(TrackerModelMixin, TimeStampedModel):
             return [self.make_notification(owner, "reshare")]
         return []
 
-    @dispatch
+    @notify
     def notify_on_publish(self):
         """Generates Notification instances for users:
         - @mentioned users
@@ -633,7 +633,7 @@ class Activity(TrackerModelMixin, TimeStampedModel):
     def notify_owner_on_edit(self):
         return self.make_notification(self.owner, "edit", actor=self.editor)
 
-    @dispatch
+    @notify
     def notify_on_update(self):
         """Notifies mentioned users and tag followers if content changed.
 
@@ -654,7 +654,7 @@ class Activity(TrackerModelMixin, TimeStampedModel):
 
         return takefirst(notifications, lambda n: n.recipient)
 
-    @dispatch
+    @notify
     def notify_on_delete(self, moderator):
         """Notifies owner if object has been deleted by moderator.
 

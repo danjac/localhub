@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 
 from localhub.apps.communities.models import Community
-from localhub.apps.notifications.decorators import dispatch
+from localhub.apps.notifications.decorators import notify
 from localhub.apps.notifications.models import Notification
 from localhub.common.db.generic import get_generic_related_exists
 
@@ -82,7 +82,7 @@ class Flag(TimeStampedModel):
             models.Index(fields=["content_type", "object_id", "created", "-created"])
         ]
 
-    @dispatch
+    @notify
     def notify(self):
         """
         Sends notification to community moderators.

@@ -30,7 +30,7 @@ def register(model):
     return _adapter_wrapper
 
 
-def dispatch(func):
+def notify(func):
     """Handles email and push messages for all notifications returned. Notifications
     are automatically saved to the database.
 

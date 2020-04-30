@@ -17,7 +17,7 @@ from localhub.apps.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySet
 from localhub.apps.communities.models import Community, Membership
 from localhub.apps.flags.models import Flag, FlagAnnotationsQuerySetMixin
 from localhub.apps.likes.models import Like, LikeAnnotationsQuerySetMixin
-from localhub.apps.notifications.decorators import dispatch
+from localhub.apps.notifications.decorators import notify
 from localhub.apps.notifications.models import (
     Notification,
     NotificationAnnotationsQuerySetMixin,
@@ -291,7 +291,7 @@ class Comment(TrackerModelMixin, TimeStampedModel):
             return None
         return obj
 
-    @dispatch
+    @notify
     def notify_on_create(self):
         if (content_object := self.get_content_object()) is None:
             return []
@@ -334,7 +334,7 @@ class Comment(TrackerModelMixin, TimeStampedModel):
         ]
         return takefirst(notifications, lambda n: n.recipient)
 
-    @dispatch
+    @notify
     def notify_on_update(self):
         if (self.get_content_object()) is None:
             return []
@@ -347,6 +347,6 @@ class Comment(TrackerModelMixin, TimeStampedModel):
             lambda n: n.recipient,
         )
 
-    @dispatch
+    @notify
     def notify_on_delete(self, moderator):
         return self.make_notification("delete", self.owner, moderator)

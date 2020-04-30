@@ -8,7 +8,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 
 from localhub.apps.activities.models import Activity, ActivityManager, ActivityQuerySet
-from localhub.apps.notifications.decorators import dispatch
+from localhub.apps.notifications.decorators import notify
 from localhub.common.db.search.indexer import SearchIndexer
 
 
@@ -50,7 +50,7 @@ class Poll(Activity):
         """
         return sum([a.num_votes for a in self.answers.all()])
 
-    @dispatch
+    @notify
     def notify_on_vote(self, voter):
         """
         Sends a notification when someone has voted. Ignore if you

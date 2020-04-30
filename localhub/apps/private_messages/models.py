@@ -13,7 +13,7 @@ from model_utils.models import TimeStampedModel
 
 from localhub.apps.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from localhub.apps.communities.models import Community
-from localhub.apps.notifications.decorators import dispatch
+from localhub.apps.notifications.decorators import notify
 from localhub.apps.notifications.models import Notification
 from localhub.common.db.generic import get_generic_related_queryset
 from localhub.common.db.search.indexer import SearchIndexer
@@ -458,7 +458,7 @@ class Message(TimeStampedModel):
             verb=verb,
         )
 
-    @dispatch
+    @notify
     def notify_on_send(self):
         """Send notification to recipient.
 
@@ -467,7 +467,7 @@ class Message(TimeStampedModel):
         """
         return self.make_notification("send")
 
-    @dispatch
+    @notify
     def notify_on_reply(self):
         """Send notification to recipient.
 
@@ -476,7 +476,7 @@ class Message(TimeStampedModel):
         """
         return self.make_notification("reply")
 
-    @dispatch
+    @notify
     def notify_on_follow_up(self):
         """Send notification to recipient.
 

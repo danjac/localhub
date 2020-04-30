@@ -27,7 +27,7 @@ from icalendar import Event as CalendarEvent
 from timezone_field import TimeZoneField
 
 from localhub.apps.activities.models import Activity, ActivityManager, ActivityQuerySet
-from localhub.apps.notifications.decorators import dispatch
+from localhub.apps.notifications.decorators import notify
 from localhub.common.db.functions import DateAdd, MonthAdd, YearAdd
 from localhub.common.db.search.indexer import SearchIndexer
 from localhub.common.db.utils import boolean_value
@@ -706,7 +706,7 @@ class Event(Activity):
 
         return False
 
-    @dispatch
+    @notify
     def notify_on_attend(self, attendee):
         """Notifies owner (if not themselves the attendee) of attendance.
         Args:
@@ -721,7 +721,7 @@ class Event(Activity):
             recipient=self.owner, actor=attendee, verb="attend"
         )
 
-    @dispatch
+    @notify
     def notify_on_cancel(self, actor):
         """Notify all attendees of cancellation. Also notify the event
         owner if the actor is not the owner.
