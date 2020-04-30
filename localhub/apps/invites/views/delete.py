@@ -4,7 +4,7 @@
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 
-from localhub.apps.communities.views.mixins import CommunityAdminRequiredMixin
+from localhub.apps.communities.views import CommunityAdminRequiredMixin
 from localhub.common.views import SuccessDeleteView
 
 from ..models import Invite
