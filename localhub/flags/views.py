@@ -5,11 +5,11 @@
 from django.conf import settings
 from django.views.generic import ListView
 
+from localhub.common.views import SuccessDeleteView
 from localhub.communities.views import (
     CommunityModeratorRequiredMixin,
     CommunityRequiredMixin,
 )
-from localhub.views import SuccessDeleteView
 
 from .models import Flag
 

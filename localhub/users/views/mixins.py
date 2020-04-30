@@ -6,10 +6,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.response import TemplateResponse
 from django.utils.functional import cached_property
 
+from localhub.common.views import ParentObjectMixin
 from localhub.communities.models import Membership
 from localhub.communities.views import CommunityRequiredMixin
 from localhub.private_messages.models import Message
-from localhub.views import ParentObjectMixin
 
 
 class BaseUserQuerySetMixin(CommunityRequiredMixin):

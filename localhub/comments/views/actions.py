@@ -8,8 +8,8 @@ from django.utils.translation import gettext_lazy as _
 from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.bookmarks.models import Bookmark
+from localhub.common.views import SuccessActionView, SuccessDeleteView
 from localhub.likes.models import Like
-from localhub.views import SuccessActionView, SuccessDeleteView
 
 from .mixins import CommentQuerySetMixin
 

@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from rules.contrib.views import PermissionRequiredMixin
 
-from localhub.views import SuccessActionView
+from localhub.common.views import SuccessActionView
 
 from .mixins import TagQuerySetMixin
 

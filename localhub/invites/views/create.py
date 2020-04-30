@@ -5,11 +5,11 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
+from localhub.common.views import SuccessCreateView
 from localhub.communities.views import (
     CommunityAdminRequiredMixin,
     CommunityRequiredMixin,
 )
-from localhub.views import SuccessCreateView
 
 from ..emails import send_invitation_email
 from ..forms import InviteForm

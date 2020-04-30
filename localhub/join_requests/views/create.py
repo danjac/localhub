@@ -6,8 +6,8 @@ from django.utils.translation import gettext_lazy as _
 
 from rules.contrib.views import PermissionRequiredMixin
 
+from localhub.common.views import SuccessCreateView
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.views import SuccessCreateView
 
 from ..emails import send_join_request_email
 from ..forms import JoinRequestForm

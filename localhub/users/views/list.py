@@ -5,7 +5,7 @@ from django.conf import settings
 from django.db.models import Q
 from django.views.generic import ListView
 
-from localhub.views import SearchMixin
+from localhub.common.views import SearchMixin
 
 from .mixins import MemberQuerySetMixin, UserQuerySetMixin
 

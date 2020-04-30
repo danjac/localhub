@@ -10,7 +10,7 @@ from django.views.generic import ListView
 from taggit.models import Tag
 
 from localhub.activities.views.streams import BaseActivityStreamView
-from localhub.views import ParentObjectMixin, SearchMixin
+from localhub.common.views import ParentObjectMixin, SearchMixin
 
 from .mixins import TagQuerySetMixin
 

@@ -4,7 +4,7 @@
 from django.conf import settings
 from django.views.generic import DetailView, ListView
 
-from localhub.views import SearchMixin
+from localhub.common.views import SearchMixin
 
 from ..models import Comment
 from .mixins import CommentQuerySetMixin

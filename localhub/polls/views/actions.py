@@ -7,8 +7,8 @@ from django.views.generic.base import TemplateResponseMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
+from localhub.common.views import SuccessActionView
 from localhub.communities.views import CommunityRequiredMixin
-from localhub.views import SuccessActionView
 
 from ..models import Answer, Poll
 

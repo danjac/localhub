@@ -6,7 +6,7 @@ from django.views.generic import DetailView, ListView
 
 from localhub.comments.forms import CommentForm
 from localhub.common.pagination import PresetCountPaginator
-from localhub.views import SearchMixin
+from localhub.common.views import SearchMixin
 
 from .mixins import ActivityQuerySetMixin, ActivityTemplateMixin
 

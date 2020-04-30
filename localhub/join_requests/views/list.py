@@ -7,7 +7,7 @@ from django.db.models import Case, IntegerField, Value, When
 from django.utils.functional import cached_property
 from django.views.generic import ListView
 
-from localhub.views import SearchMixin
+from localhub.common.views import SearchMixin
 
 from ..models import JoinRequest
 from .mixins import JoinRequestAdminMixin, JoinRequestQuerySetMixin

@@ -9,7 +9,7 @@ from django.views.generic import DeleteView, View
 
 from rules.contrib.views import PermissionRequiredMixin
 
-from localhub.views import SuccessActionView
+from localhub.common.views import SuccessActionView
 
 from .mixins import CurrentUserMixin, UserQuerySetMixin
 

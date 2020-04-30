@@ -3,7 +3,7 @@
 
 from django.http import HttpResponseRedirect
 
-from localhub.views import SuccessActionView, SuccessDeleteView, SuccessView
+from localhub.common.views import SuccessActionView, SuccessDeleteView, SuccessView
 
 from ..signals import notification_read
 from .mixins import (

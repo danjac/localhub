@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 
 from rules.contrib.views import PermissionRequiredMixin
 
-from localhub.views import SuccessDeleteView
+from localhub.common.views import SuccessDeleteView
 
 from ..emails import send_membership_deleted_email
 from ..models import Membership

@@ -7,13 +7,13 @@ from django.utils.translation import gettext_lazy as _
 
 from rules.contrib.views import PermissionRequiredMixin
 
-from localhub.flags.forms import FlagForm
-from localhub.views import (
+from localhub.common.views import (
     ParentObjectMixin,
     SuccessCreateView,
     SuccessFormView,
     SuccessUpdateView,
 )
+from localhub.flags.forms import FlagForm
 
 from ..forms import CommentForm
 from ..models import Comment
