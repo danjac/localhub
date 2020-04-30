@@ -35,7 +35,7 @@ urlpatterns = [
     path("posts/", include("localhub.posts.urls")),
     path("people/", include("localhub.apps.users.urls")),
     path("site/", include("localhub.apps.communities.urls")),
-    path("tags/", include("localhub.hashtags.urls")),
+    path("tags/", include("localhub.apps.hashtags.urls")),
     path("sites/", community_list_view, name="community_list"),
     path("account/~update", user_update_view, name="user_update"),
     path("account/~delete", user_delete_view, name="user_delete"),

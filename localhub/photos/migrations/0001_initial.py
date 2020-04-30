@@ -8,9 +8,9 @@ from django.db import migrations, models
 import model_utils.fields
 import sorl.thumbnail.fields
 
+import localhub.apps.hashtags.fields
 import localhub.apps.users.fields
 import localhub.common.markdown.fields
-import localhub.hashtags.fields
 
 
 class Migration(migrations.Migration):
@@ -53,7 +53,9 @@ class Migration(migrations.Migration):
                 ("title", models.CharField(max_length=300)),
                 (
                     "hashtags",
-                    localhub.hashtags.fields.HashtagsField(blank=True, max_length=300),
+                    localhub.apps.hashtags.fields.HashtagsField(
+                        blank=True, max_length=300
+                    ),
                 ),
                 (
                     "mentions",

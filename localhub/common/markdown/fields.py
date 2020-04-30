@@ -17,8 +17,8 @@ from django.utils.safestring import mark_safe
 
 from markdownx.models import MarkdownxField
 
+from localhub.apps.hashtags.utils import extract_hashtags
 from localhub.apps.users.utils import extract_mentions
-from localhub.hashtags.utils import extract_hashtags
 
 from .utils import markdownify
 from .widget import TypeaheadMarkdownWidget

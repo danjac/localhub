@@ -16,6 +16,8 @@ from localhub.apps.bookmarks.models import Bookmark
 from localhub.apps.comments.models import Comment
 from localhub.apps.communities.models import Community
 from localhub.apps.flags.models import Flag
+from localhub.apps.hashtags.fields import HashtagsField
+from localhub.apps.hashtags.utils import extract_hashtags
 from localhub.apps.likes.models import Like
 from localhub.apps.notifications.decorators import dispatch
 from localhub.apps.notifications.models import Notification
@@ -29,8 +31,6 @@ from localhub.common.db.tracker import TrackerModelMixin
 from localhub.common.markdown.fields import MarkdownField
 from localhub.common.utils.itertools import takefirst
 from localhub.common.utils.text import slugify_unicode
-from localhub.hashtags.fields import HashtagsField
-from localhub.hashtags.utils import extract_hashtags
 
 from .. import signals
 from .managers import ActivityManager
