@@ -452,27 +452,27 @@ msgstr ""
 msgid "Please select at least one valid recipient"
 msgstr ""
 
-#: localhub/photos/models.py:24
+#: localhub.apps.photos/models.py:24
 msgid "Attribution"
 msgstr ""
 
-#: localhub/photos/models.py:25
+#: localhub.apps.photos/models.py:25
 msgid "Attribution ShareAlike"
 msgstr ""
 
-#: localhub/photos/models.py:26
+#: localhub.apps.photos/models.py:26
 msgid "Attribution NoDerivs"
 msgstr ""
 
-#: localhub/photos/models.py:27
+#: localhub.apps.photos/models.py:27
 msgid "Attribution NonCommercial"
 msgstr ""
 
-#: localhub/photos/models.py:28
+#: localhub.apps.photos/models.py:28
 msgid "Attribution NonCommercial ShareAlike"
 msgstr ""
 
-#: localhub/photos/models.py:29
+#: localhub.apps.photos/models.py:29
 msgid "Attribution NonCommercial NoDerivs"
 msgstr ""
 

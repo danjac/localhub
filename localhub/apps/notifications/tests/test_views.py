@@ -10,8 +10,8 @@ import pytest
 from localhub.apps.comments.factories import CommentFactory
 from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.events.factories import EventFactory
+from localhub.apps.photos.factories import PhotoFactory
 from localhub.apps.posts.factories import PostFactory
-from localhub.photos.factories import PhotoFactory
 
 from ..factories import NotificationFactory
 from ..models import Notification, PushSubscription

@@ -5,4 +5,4 @@ from django.apps import AppConfig
 
 
 class PhotosConfig(AppConfig):
-    name = "localhub.photos"
+    name = "localhub.apps.photos"

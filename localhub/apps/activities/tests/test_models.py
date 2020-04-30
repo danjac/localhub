@@ -15,10 +15,10 @@ from localhub.apps.events.models import Event
 from localhub.apps.flags.factories import FlagFactory
 from localhub.apps.likes.factories import LikeFactory
 from localhub.apps.notifications.factories import NotificationFactory
+from localhub.apps.photos.models import Photo
 from localhub.apps.posts.factories import PostFactory
 from localhub.apps.posts.models import Post
 from localhub.apps.users.factories import UserFactory
-from localhub.photos.models import Photo
 
 pytestmark = pytest.mark.django_db
 

@@ -15,10 +15,10 @@ from localhub.apps.invites.factories import InviteFactory
 from localhub.apps.join_requests.factories import JoinRequestFactory
 from localhub.apps.likes.factories import LikeFactory
 from localhub.apps.notifications.factories import NotificationFactory
+from localhub.apps.photos.factories import PhotoFactory
 from localhub.apps.posts.factories import PostFactory
 from localhub.apps.private_messages.factories import MessageFactory
 from localhub.apps.users.factories import UserFactory
-from localhub.photos.factories import PhotoFactory
 from localhub.polls.factories import PollFactory
 
 

@@ -9,10 +9,10 @@ import pytest
 
 from localhub.apps.events.factories import EventFactory
 from localhub.apps.events.models import Event
+from localhub.apps.photos.factories import PhotoFactory
+from localhub.apps.photos.models import Photo
 from localhub.apps.posts.factories import PostFactory
 from localhub.apps.posts.models import Post
-from localhub.photos.factories import PhotoFactory
-from localhub.photos.models import Photo
 from localhub.polls.models import Poll
 
 from ..utils import (

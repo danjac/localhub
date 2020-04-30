@@ -9,8 +9,8 @@ from taggit.models import Tag
 
 from localhub.apps.communities.factories import CommunityFactory, MembershipFactory
 from localhub.apps.events.factories import EventFactory
+from localhub.apps.photos.factories import PhotoFactory
 from localhub.apps.posts.factories import PostFactory
-from localhub.photos.factories import PhotoFactory
 
 pytestmark = pytest.mark.django_db
 
