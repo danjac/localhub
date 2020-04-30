@@ -1,18 +1,58 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import operator
+from functools import reduce
 
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
 from django.template.response import TemplateResponse
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView
 
-from taggit.models import Tag
+from rules.contrib.views import PermissionRequiredMixin
+from taggit.models import Tag, TaggedItem
 
+from localhub.apps.activities.utils import get_activity_models
 from localhub.apps.activities.views.streams import BaseActivityStreamView
-from localhub.common.views import ParentObjectMixin, SearchMixin
+from localhub.apps.communities.views import CommunityRequiredMixin
+from localhub.common.views import ParentObjectMixin, SearchMixin, SuccessActionView
 
-from .mixins import TagQuerySetMixin
+
+class TagQuerySetMixin(CommunityRequiredMixin):
+
+    model = Tag
+
+    # if True, only those tags used in this community by activities
+    # will be included
+    exclude_unused_tags = False
+
+    def get_tagged_items(self):
+        q = Q(
+            reduce(
+                operator.or_,
+                [
+                    Q(
+                        object_id__in=model.objects.filter(
+                            community=self.request.community
+                        ).values("id"),
+                        content_type=content_type,
+                    )
+                    for model, content_type in ContentType.objects.get_for_models(
+                        *get_activity_models()
+                    ).items()
+                ],
+            )
+        )
+        return TaggedItem.objects.filter(q)
+
+    def get_queryset(self):
+        if self.exclude_unused_tags:
+            return Tag.objects.filter(
+                taggit_taggeditem_items__in=self.get_tagged_items()
+            ).distinct()
+        return super().get_queryset()
 
 
 class BaseTagListView(TagQuerySetMixin, ListView):
@@ -132,3 +172,65 @@ class TagDetailView(ParentObjectMixin, BaseActivityStreamView):
 
 
 tag_detail_view = TagDetailView.as_view()
+
+
+class BaseTagActionView(TagQuerySetMixin, PermissionRequiredMixin, SuccessActionView):
+    ...
+
+
+class BaseTagFollowView(BaseTagActionView):
+    permission_required = "users.follow_tag"
+    template_name = "hashtags/includes/follow.html"
+    is_success_ajax_response = True
+
+    def get_permission_object(self):
+        return self.request.community
+
+
+class TagFollowView(BaseTagFollowView):
+    success_message = _("You are now following #%(object)s")
+
+    def post(self, request, *args, **kwargs):
+        self.request.user.following_tags.add(self.object)
+        return self.success_response()
+
+
+tag_follow_view = TagFollowView.as_view()
+
+
+class TagUnfollowView(BaseTagFollowView):
+    success_message = _("You are no longer following #%(object)s")
+
+    def post(self, request, *args, **kwargs):
+        self.request.user.following_tags.remove(self.object)
+        return self.success_response()
+
+
+tag_unfollow_view = TagUnfollowView.as_view()
+
+
+class BaseTagBlockView(BaseTagActionView):
+    permission_required = "users.block_tag"
+    is_success_ajax_response = True
+
+    def get_permission_object(self):
+        return self.request.community
+
+
+class TagBlockView(BaseTagBlockView):
+    success_message = _("You are now blocking #%(object)s")
+
+    def post(self, request, *args, **kwargs):
+        self.request.user.blocked_tags.add(self.object)
+        return self.success_response()
+
+
+tag_block_view = TagBlockView.as_view()
+
+
+class TagUnblockView(BaseTagBlockView):
+    success_message = _("You are no longer blocking #%(object)s")
+
+    def post(self, request, *args, **kwargs):
+        self.request.user.blocked_tags.remove(self.object)
+        return self.success_response()
