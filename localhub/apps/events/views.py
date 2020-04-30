@@ -14,13 +14,13 @@ from django.views.generic.detail import SingleObjectMixin
 
 import pytz
 
-from localhub.apps.activities.views.actions import BaseActivityActionView
-from localhub.apps.activities.views.create_update import ActivityCreateView
-from localhub.apps.activities.views.list_detail import (
+from localhub.apps.activities.views.generic import (
+    ActivityCreateView,
     ActivityListView,
+    ActivityQuerySetMixin,
+    BaseActivityActionView,
     BaseActivityListView,
 )
-from localhub.apps.activities.views.mixins import ActivityQuerySetMixin
 
 from .models import Event
 

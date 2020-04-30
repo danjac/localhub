@@ -9,13 +9,11 @@ from django.views.generic.base import TemplateResponseMixin
 
 from rules.contrib.views import PermissionRequiredMixin
 
-from localhub.apps.activities.views.create_update import (
+from localhub.apps.activities.views.generic import (
     ActivityCreateView,
-    ActivityUpdateView,
-)
-from localhub.apps.activities.views.list_detail import (
     ActivityDetailView,
     ActivityListView,
+    ActivityUpdateView,
 )
 from localhub.apps.communities.views import CommunityRequiredMixin
 from localhub.common.views import SuccessActionView
