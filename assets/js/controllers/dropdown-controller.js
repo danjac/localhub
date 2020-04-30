@@ -1,7 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { maximizeZIndex, getViewport } from '@utils/dom-helpers';
+import { maximizeZIndex, fitIntoViewport } from '@utils/dom-helpers';
 import ApplicationController from './application-controller';
 
 // test comment
@@ -21,32 +21,7 @@ export default class extends ApplicationController {
     event.preventDefault();
     event.stopPropagation();
     this.element.classList.toggle('active');
-
-    // ensure menu always appears within viewport
-    const viewport = getViewport();
-    const rect = this.menuTarget.getBoundingClientRect();
-
-    let top, bottom, left, right;
-
-    if (rect.bottom + rect.height > viewport.height) {
-      top = 'auto';
-      bottom = 0;
-    } else {
-      top = 0;
-      bottom = 'auto';
-    }
-    if (rect.left + rect.width > viewport.width) {
-      left = 'auto';
-      right = 0;
-    } else {
-      right = 'auto';
-      left = 0;
-    }
-    this.menuTarget.style.top = top;
-    this.menuTarget.style.bottom = bottom;
-    this.menuTarget.style.left = left;
-    this.menuTarget.style.right = right;
-    maximizeZIndex(this.menuTarget);
+    maximizeZIndex(fitIntoViewport(this.menuTarget));
   }
 
   close() {

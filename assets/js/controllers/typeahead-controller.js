@@ -12,7 +12,7 @@ import {
   KEY_TAB,
 } from '@utils/application-constants';
 
-import { getViewport, maximizeZIndex } from '@utils/dom-helpers';
+import { fitIntoViewport, maximizeZIndex } from '@utils/dom-helpers';
 
 import ApplicationController from './application-controller';
 
@@ -207,29 +207,16 @@ export default class extends ApplicationController {
     const { offsetTop, offsetLeft, scrollTop, scrollLeft } = this.inputTarget;
 
     this.selectorTarget.style.position = 'absolute';
+
     this.selectorTarget.style.top = offsetTop - scrollTop + height + top + 'px';
     this.selectorTarget.style.left = offsetLeft - scrollLeft + left + 'px';
+
+    this.selectorTarget.style.right = 'auto';
+    this.selectorTarget.style.bottom = 'auto';
+
     this.selectorTarget.classList.remove('d-none');
 
-    const viewport = getViewport();
-    const rect = this.selectorTarget.getBoundingClientRect();
-
-    if (rect.bottom > viewport.height) {
-      let selectorTop = rect.bottom - viewport.height;
-      if (selectorTop + rect.height < viewport.height) {
-        selectorTop = viewport.height - rect.height;
-      }
-      this.selectorTarget.style.top = selectorTop + 'px';
-      this.selectorTarget.style.bottom = 'auto';
-    }
-
-    if (
-      rect.width + rect.left > viewport.width ||
-      rect.width + rect.right > viewport.width
-    ) {
-      this.selectorTarget.style.left = '25%';
-    }
-    maximizeZIndex(this.selectorTarget);
+    maximizeZIndex(fitIntoViewport(this.selectorTarget));
   }
 
   closeSelector() {

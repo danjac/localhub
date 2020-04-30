@@ -39,4 +39,26 @@ export function maximizeZIndex(el) {
   // elements. Useful for modals, popup menus and tooltips, etc.
   //
   el.style.zIndex = maxZIndex() + 1;
+  return el;
+}
+
+export function fitIntoViewport(el) {
+  const viewport = getViewport();
+  const rect = el.getBoundingClientRect();
+
+  if (rect.top < 0) {
+    el.style.top = 0;
+    el.style.bottom = 'auto';
+  } else if (rect.bottom >= viewport.height) {
+    el.style.top = 'auto';
+    el.style.bottom = 0;
+  }
+  if (rect.left < 0) {
+    el.style.left = 0;
+    el.style.right = 'auto';
+  } else if (rect.right >= viewport.width) {
+    el.style.left = 'auto';
+    el.style.right = 0;
+  }
+  return el;
 }
