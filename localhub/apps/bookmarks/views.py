@@ -3,8 +3,10 @@
 
 from localhub.apps.activities.views.streams import BaseActivityStreamView
 from localhub.apps.comments.views import BaseCommentListView
-from localhub.apps.private_messages.views.list_detail import BaseMessageListView
-from localhub.apps.private_messages.views.mixins import SenderOrRecipientQuerySetMixin
+from localhub.apps.private_messages.views import (
+    BaseMessageListView,
+    SenderOrRecipientQuerySetMixin,
+)
 from localhub.common.views import SearchMixin
 
 
