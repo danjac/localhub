@@ -10,7 +10,7 @@ import pytz
 from localhub.activities.forms import ActivityForm
 from localhub.common.forms.fields import CalendarField
 from localhub.common.forms.widgets import CalendarWidget
-from localhub.utils.geocode import geocode
+from localhub.common.utils.geocode import geocode
 
 from .models import Event
 

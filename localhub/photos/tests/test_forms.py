@@ -3,7 +3,7 @@
 
 import pytest
 
-from localhub.utils.exif import Exif
+from localhub.common.utils.exif import Exif
 
 from ..factories import PhotoFactory
 from ..forms import PhotoForm
@@ -18,7 +18,7 @@ def mock_exif(mocker):
             return (61, 24)
 
     mocker.patch(
-        "localhub.utils.exif.Exif.from_image", return_value=MockExif(),
+        "localhub.common.utils.exif.Exif.from_image", return_value=MockExif(),
     )
 
     yield
@@ -31,7 +31,7 @@ def mock_invalid_exif(mocker):
             raise Exif.Invalid()
 
     mocker.patch(
-        "localhub.utils.exif.Exif.from_image", return_value=MockExif(),
+        "localhub.common.utils.exif.Exif.from_image", return_value=MockExif(),
     )
 
     yield

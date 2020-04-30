@@ -19,6 +19,8 @@ from localhub.common.db.generic import (
     get_generic_related_queryset,
 )
 from localhub.common.db.tracker import TrackerModelMixin
+from localhub.common.utils.itertools import takefirst
+from localhub.common.utils.text import slugify_unicode
 from localhub.communities.models import Community
 from localhub.flags.models import Flag
 from localhub.hashtags.fields import HashtagsField
@@ -29,8 +31,6 @@ from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
 from localhub.users.fields import MentionsField
 from localhub.users.utils import extract_mentions
-from localhub.utils.itertools import takefirst
-from localhub.utils.text import slugify_unicode
 
 from .. import signals
 from .managers import ActivityManager

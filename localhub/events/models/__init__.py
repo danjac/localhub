@@ -17,8 +17,8 @@ from timezone_field import TimeZoneField
 
 from localhub.activities.models import Activity
 from localhub.common.db.search.indexer import SearchIndexer
+from localhub.common.utils.http import get_domain
 from localhub.notifications.decorators import dispatch
-from localhub.utils.http import get_domain
 
 from .managers import EventManager
 

@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from localhub.activities.forms import ActivityForm
 from localhub.common.forms.widgets import ClearableImageInput
-from localhub.utils.exif import Exif
+from localhub.common.utils.exif import Exif
 
 from .models import Photo
 

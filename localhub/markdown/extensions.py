@@ -14,7 +14,7 @@ from markdown.inlinepatterns import (
 )
 from markdown.util import etree
 
-from localhub.utils.http import is_https
+from localhub.common.utils.http import is_https
 
 
 class SafeImageInlineProcessor(ImageInlineProcessor):

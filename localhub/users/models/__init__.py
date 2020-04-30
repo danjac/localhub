@@ -20,11 +20,11 @@ from localhub.common.db.fields import ChoiceArrayField
 from localhub.common.db.generic import get_generic_related_queryset
 from localhub.common.db.search.indexer import SearchIndexer
 from localhub.common.db.tracker import TrackerModelMixin
+from localhub.common.utils.itertools import takefirst
 from localhub.communities.models import Membership
 from localhub.markdown.fields import MarkdownField
 from localhub.notifications.decorators import dispatch
 from localhub.notifications.models import Notification
-from localhub.utils.itertools import takefirst
 
 from .managers import UserManager
 

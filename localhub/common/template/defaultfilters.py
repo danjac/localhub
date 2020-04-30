@@ -11,7 +11,7 @@ from django.utils.translation import gettext as _
 
 from bs4 import BeautifulSoup
 
-from localhub.utils.http import URLResolver, get_root_url, is_image_url
+from localhub.common.utils.http import URLResolver, get_root_url, is_image_url
 
 register = template.Library()
 
