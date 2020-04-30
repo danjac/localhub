@@ -7,8 +7,8 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 
 from localhub.apps.activities.models import Activity
+from localhub.apps.notifications.decorators import dispatch
 from localhub.common.db.search.indexer import SearchIndexer
-from localhub.notifications.decorators import dispatch
 
 from .managers import PollManager
 

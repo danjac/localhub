@@ -7,10 +7,10 @@ import pytest
 
 from localhub.apps.bookmarks.factories import BookmarkFactory
 from localhub.apps.communities.factories import MembershipFactory
+from localhub.apps.notifications.factories import NotificationFactory
 from localhub.apps.users.factories import UserFactory
 from localhub.flags.factories import FlagFactory
 from localhub.likes.factories import LikeFactory
-from localhub.notifications.factories import NotificationFactory
 from localhub.posts.factories import PostFactory
 
 from ..factories import CommentFactory

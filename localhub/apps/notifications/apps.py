@@ -5,7 +5,7 @@ from django.apps import AppConfig
 
 
 class NotificationsConfig(AppConfig):
-    name = "localhub.notifications"
+    name = "localhub.apps.notifications"
 
     def ready(self):
         self.module.autodiscover()

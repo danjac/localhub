@@ -10,12 +10,12 @@ from localhub.apps.bookmarks.factories import BookmarkFactory
 from localhub.apps.bookmarks.models import Bookmark
 from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.communities.models import Membership
+from localhub.apps.notifications.factories import NotificationFactory
+from localhub.apps.notifications.models import Notification
 from localhub.apps.users.factories import UserFactory
 from localhub.flags.models import Flag
 from localhub.likes.factories import LikeFactory
 from localhub.likes.models import Like
-from localhub.notifications.factories import NotificationFactory
-from localhub.notifications.models import Notification
 from localhub.posts.factories import PostFactory
 
 from ..factories import CommentFactory

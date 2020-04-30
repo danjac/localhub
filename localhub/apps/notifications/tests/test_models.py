@@ -72,7 +72,7 @@ class TestPushSubscriptionModel:
 
         payload = {"head": "hello", "body": "testing"}
 
-        with mock.patch("localhub.notifications.models.webpush") as mock_webpush:
+        with mock.patch("localhub.apps.notifications.models.webpush") as mock_webpush:
             sub.push(payload)
             assert mock_webpush.called_with(
                 {
@@ -98,7 +98,7 @@ class TestPushSubscriptionModel:
 
         e = WebPushException("BOOM", response=mock.Mock(status_code=410))
 
-        with mock.patch("localhub.notifications.models.webpush", side_effect=e):
+        with mock.patch("localhub.apps.notifications.models.webpush", side_effect=e):
             assert not sub.push(payload)
 
         assert not PushSubscription.objects.exists()

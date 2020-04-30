@@ -3,8 +3,8 @@
 
 from django.utils.translation import gettext_lazy as _
 
-from localhub.notifications.adapter import Adapter, Mailer, Webpusher
-from localhub.notifications.decorators import register
+from localhub.apps.notifications.adapter import Adapter, Mailer, Webpusher
+from localhub.apps.notifications.decorators import register
 
 from .models import Comment
 

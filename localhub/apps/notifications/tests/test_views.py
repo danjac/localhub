@@ -71,7 +71,7 @@ class TestNotificationMarkReadView:
         )
 
         mock_notification_read = mocker.patch(
-            "localhub.notifications.signals.notification_read"
+            "localhub.apps.notifications.signals.notification_read"
         )
 
         response = client.post(
@@ -95,7 +95,7 @@ class TestNotificationMarkAllReadView:
             verb="created",
         )
         mock_notification_read = mocker.patch(
-            "localhub.notifications.signals.notification_read"
+            "localhub.apps.notifications.signals.notification_read"
         )
 
         response = client.post(

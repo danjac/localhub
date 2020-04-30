@@ -71,7 +71,7 @@ class Base(Configuration):
         "localhub.invites.apps.InvitesConfig",
         "localhub.join_requests.apps.JoinRequestsConfig",
         "localhub.likes.apps.LikesConfig",
-        "localhub.notifications.apps.NotificationsConfig",
+        "localhub.apps.notifications.apps.NotificationsConfig",
         "localhub.photos.apps.PhotosConfig",
         "localhub.polls.apps.PollsConfig",
         "localhub.posts.apps.PostsConfig",

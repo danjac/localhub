@@ -3,8 +3,8 @@
 
 import pytest
 
-from localhub.notifications.factories import NotificationFactory
-from localhub.notifications.signals import notification_read
+from localhub.apps.notifications.factories import NotificationFactory
+from localhub.apps.notifications.signals import notification_read
 
 from ..factories import MessageFactory
 from ..models import Message

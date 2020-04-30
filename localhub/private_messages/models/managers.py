@@ -5,9 +5,9 @@ from django.db import models
 from django.utils import timezone
 
 from localhub.apps.bookmarks.models.mixins import BookmarkAnnotationsQuerySetMixin
+from localhub.apps.notifications.models import Notification
 from localhub.common.db.generic import get_generic_related_queryset
 from localhub.common.db.search.mixins import SearchQuerySetMixin
-from localhub.notifications.models import Notification
 
 
 class MessageQuerySet(

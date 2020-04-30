@@ -17,14 +17,14 @@ from taggit.models import Tag
 from timezone_field import TimeZoneField
 
 from localhub.apps.communities.models import Membership
+from localhub.apps.notifications.decorators import dispatch
+from localhub.apps.notifications.models import Notification
 from localhub.common.db.fields import ChoiceArrayField
 from localhub.common.db.generic import get_generic_related_queryset
 from localhub.common.db.search.indexer import SearchIndexer
 from localhub.common.db.tracker import TrackerModelMixin
 from localhub.common.markdown.fields import MarkdownField
 from localhub.common.utils.itertools import takefirst
-from localhub.notifications.decorators import dispatch
-from localhub.notifications.models import Notification
 
 from .managers import UserManager
 

@@ -3,7 +3,7 @@
 
 from django.dispatch import receiver
 
-from localhub.notifications.signals import notification_read
+from localhub.apps.notifications.signals import notification_read
 
 from .models import Message
 

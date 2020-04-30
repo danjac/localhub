@@ -10,12 +10,12 @@ import pytest
 from localhub.apps.comments.factories import CommentFactory
 from localhub.apps.communities.factories import CommunityFactory, MembershipFactory
 from localhub.apps.communities.models import Membership
+from localhub.apps.notifications.factories import NotificationFactory
 from localhub.apps.users.factories import UserFactory
 from localhub.events.factories import EventFactory
 from localhub.invites.factories import InviteFactory
 from localhub.join_requests.factories import JoinRequestFactory
 from localhub.likes.factories import LikeFactory
-from localhub.notifications.factories import NotificationFactory
 from localhub.photos.factories import PhotoFactory
 from localhub.polls.factories import PollFactory
 from localhub.posts.factories import PostFactory
@@ -173,4 +173,4 @@ def notification(post):
 
 @pytest.fixture
 def send_webpush_mock(mocker):
-    return mocker.patch("localhub.notifications.tasks.send_webpush")
+    return mocker.patch("localhub.apps.notifications.tasks.send_webpush")

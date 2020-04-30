@@ -10,8 +10,8 @@ from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 
 from localhub.apps.communities.models import Community
-from localhub.notifications.decorators import dispatch
-from localhub.notifications.models import Notification
+from localhub.apps.notifications.decorators import dispatch
+from localhub.apps.notifications.models import Notification
 
 
 class Flag(TimeStampedModel):

@@ -8,8 +8,8 @@ import pytest
 
 from localhub.apps.bookmarks.factories import BookmarkFactory
 from localhub.apps.communities.factories import CommunityFactory, MembershipFactory
+from localhub.apps.notifications.factories import NotificationFactory
 from localhub.apps.users.factories import UserFactory
-from localhub.notifications.factories import NotificationFactory
 
 from ..factories import MessageFactory
 from ..models import Message

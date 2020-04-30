@@ -9,8 +9,8 @@ from django.db import models
 from model_utils.models import TimeStampedModel
 
 from localhub.apps.communities.models import Community
-from localhub.notifications.decorators import dispatch
-from localhub.notifications.models import Notification
+from localhub.apps.notifications.decorators import dispatch
+from localhub.apps.notifications.models import Notification
 
 
 class LikeQuerySet(models.QuerySet):

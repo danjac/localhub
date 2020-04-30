@@ -13,11 +13,11 @@ from model_utils.models import TimeStampedModel
 
 from localhub.apps.bookmarks.models import Bookmark
 from localhub.apps.communities.models import Community
+from localhub.apps.notifications.decorators import dispatch
+from localhub.apps.notifications.models import Notification
 from localhub.common.db.generic import get_generic_related_queryset
 from localhub.common.db.search.indexer import SearchIndexer
 from localhub.common.markdown.fields import MarkdownField
-from localhub.notifications.decorators import dispatch
-from localhub.notifications.models import Notification
 
 from .managers import MessageManager
 

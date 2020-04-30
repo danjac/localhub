@@ -16,9 +16,9 @@ from icalendar import Event as CalendarEvent
 from timezone_field import TimeZoneField
 
 from localhub.apps.activities.models import Activity
+from localhub.apps.notifications.decorators import dispatch
 from localhub.common.db.search.indexer import SearchIndexer
 from localhub.common.utils.http import get_domain
-from localhub.notifications.decorators import dispatch
 
 from .managers import EventManager
 

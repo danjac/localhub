@@ -15,6 +15,8 @@ from taggit.models import Tag
 from localhub.apps.bookmarks.models import Bookmark
 from localhub.apps.comments.models import Comment
 from localhub.apps.communities.models import Community
+from localhub.apps.notifications.decorators import dispatch
+from localhub.apps.notifications.models import Notification
 from localhub.apps.users.fields import MentionsField
 from localhub.apps.users.utils import extract_mentions
 from localhub.common.db.generic import (
@@ -29,8 +31,6 @@ from localhub.flags.models import Flag
 from localhub.hashtags.fields import HashtagsField
 from localhub.hashtags.utils import extract_hashtags
 from localhub.likes.models import Like
-from localhub.notifications.decorators import dispatch
-from localhub.notifications.models import Notification
 
 from .. import signals
 from .managers import ActivityManager

@@ -8,7 +8,7 @@ from localhub.apps.activities.notifications import (
     ActivityMailer,
     ActivityWebpusher,
 )
-from localhub.notifications.decorators import register
+from localhub.apps.notifications.decorators import register
 
 from .models import Event
 
