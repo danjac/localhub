@@ -4,11 +4,11 @@
 
 from django import template
 
+from localhub.apps.join_requests.templatetags import join_requests
 from localhub.apps.notifications.templatetags import notifications
 from localhub.apps.private_messages.templatetags import private_messages
 from localhub.flags.templatetags import flags
 from localhub.invites.templatetags import invites
-from localhub.join_requests.templatetags import join_requests
 
 from ..models import Community
 from ..rules import is_admin, is_member, is_moderator

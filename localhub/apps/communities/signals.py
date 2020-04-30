@@ -5,7 +5,7 @@ from django.db import transaction
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
-from localhub.join_requests.models import JoinRequest
+from localhub.apps.join_requests.models import JoinRequest
 
 from .models import Membership
 

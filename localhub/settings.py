@@ -69,7 +69,7 @@ class Base(Configuration):
         "localhub.flags.apps.FlagsConfig",
         "localhub.hashtags.apps.HashtagsConfig",
         "localhub.invites.apps.InvitesConfig",
-        "localhub.join_requests.apps.JoinRequestsConfig",
+        "localhub.apps.join_requests.apps.JoinRequestsConfig",
         "localhub.apps.likes.apps.LikesConfig",
         "localhub.apps.notifications.apps.NotificationsConfig",
         "localhub.photos.apps.PhotosConfig",

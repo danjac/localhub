@@ -7,8 +7,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, F, Q
 from django.views.generic import ListView
 
+from localhub.apps.join_requests.models import JoinRequest
 from localhub.common.views import SearchMixin
-from localhub.join_requests.models import JoinRequest
 
 from ..models import Community, Membership
 from .mixins import CommunityAdminRequiredMixin, MembershipQuerySetMixin

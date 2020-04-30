@@ -318,15 +318,15 @@ msgstr ""
 msgid "An invitation has already been sent to this email address"
 msgstr ""
 
-#: localhub/invites/models.py:19 localhub/join_requests/models.py:20
+#: localhub/invites/models.py:19 localhub.apps.join_requests/models.py:20
 msgid "Pending"
 msgstr "Odottaa"
 
-#: localhub/invites/models.py:20 localhub/join_requests/models.py:21
+#: localhub/invites/models.py:20 localhub.apps.join_requests/models.py:21
 msgid "Accepted"
 msgstr "Hyväksytty"
 
-#: localhub/invites/models.py:21 localhub/join_requests/models.py:22
+#: localhub/invites/models.py:21 localhub.apps.join_requests/models.py:22
 msgid "Rejected"
 msgstr "Hyljätty"
 
@@ -361,43 +361,43 @@ msgstr ""
 msgid "This invite is invalid"
 msgstr ""
 
-#: localhub/join_requests/apps.py:7 templates/communities/base.html:34
+#: localhub.apps.join_requests/apps.py:7 templates/communities/base.html:34
 msgid "Join Requests"
 msgstr ""
 
-#: localhub/join_requests/emails.py:14
+#: localhub.apps.join_requests/emails.py:14
 msgid "A request has been received"
 msgstr ""
 
-#: localhub/join_requests/emails.py:38
+#: localhub.apps.join_requests/emails.py:38
 msgid "Your request has been approved"
 msgstr ""
 
-#: localhub/join_requests/emails.py:51
+#: localhub.apps.join_requests/emails.py:51
 msgid "Your request has been rejected"
 msgstr ""
 
-#: localhub/join_requests/forms.py:40
+#: localhub.apps.join_requests/forms.py:40
 msgid "You have already sent a request. Be patient."
 msgstr ""
 
-#: localhub/join_requests/views.py:87
+#: localhub.apps.join_requests/views.py:87
 msgid "Your request has been sent to the community admins"
 msgstr ""
 
-#: localhub/join_requests/views.py:126
+#: localhub.apps.join_requests/views.py:126
 msgid "Join request has been accepted"
 msgstr ""
 
-#: localhub/join_requests/views.py:130
+#: localhub.apps.join_requests/views.py:130
 msgid "User already belongs to this community"
 msgstr ""
 
-#: localhub/join_requests/views.py:141
+#: localhub.apps.join_requests/views.py:141
 msgid "An invite has been sent to this email"
 msgstr ""
 
-#: localhub/join_requests/views.py:160
+#: localhub.apps.join_requests/views.py:160
 msgid "Join request has been rejected"
 msgstr ""
 
