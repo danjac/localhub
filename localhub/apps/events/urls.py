@@ -8,14 +8,15 @@ from localhub.apps.activities.urls.generic import create_activity_urls
 
 from .forms import EventForm
 from .models import Event
-from .views.actions import (
+from .views import (
+    EventCreateView,
+    EventListView,
     event_attend_view,
+    event_calendar_view,
     event_cancel_view,
     event_download_view,
     event_unattend_view,
 )
-from .views.create import EventCreateView
-from .views.list import EventListView, event_calendar_view
 
 app_name = "events"
 
