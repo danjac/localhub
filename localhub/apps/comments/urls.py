@@ -3,36 +3,24 @@
 
 from django.urls import path
 
-from .views.actions import (
-    comment_bookmark_view,
-    comment_delete_view,
-    comment_dislike_view,
-    comment_like_view,
-    comment_remove_bookmark_view,
-)
-from .views.create_update import (
-    comment_flag_view,
-    comment_reply_view,
-    comment_update_view,
-)
-from .views.list_detail import comment_detail_view, comment_list_view
+from . import views
 
 app_name = "comments"
 
 
 urlpatterns = [
-    path("", comment_list_view, name="list"),
-    path("<int:pk>/", comment_detail_view, name="detail"),
-    path("<int:pk>/~update/", comment_update_view, name="update"),
-    path("<int:pk>/~delete/", comment_delete_view, name="delete"),
-    path("<int:pk>/~like/", comment_like_view, name="like"),
-    path("<int:pk>/~bookmark/", comment_bookmark_view, name="bookmark"),
+    path("", views.comment_list_view, name="list"),
+    path("<int:pk>/", views.comment_detail_view, name="detail"),
+    path("<int:pk>/~update/", views.comment_update_view, name="update"),
+    path("<int:pk>/~delete/", views.comment_delete_view, name="delete"),
+    path("<int:pk>/~like/", views.comment_like_view, name="like"),
+    path("<int:pk>/~bookmark/", views.comment_bookmark_view, name="bookmark"),
     path(
         "<int:pk>/~bookmark/remove/",
-        comment_remove_bookmark_view,
+        views.comment_remove_bookmark_view,
         name="remove_bookmark",
     ),
-    path("<int:pk>/~dislike/", comment_dislike_view, name="dislike"),
-    path("<int:pk>/~flag/", comment_flag_view, name="flag"),
-    path("<int:pk>/~reply/", comment_reply_view, name="reply"),
+    path("<int:pk>/~dislike/", views.comment_dislike_view, name="dislike"),
+    path("<int:pk>/~flag/", views.comment_flag_view, name="flag"),
+    path("<int:pk>/~reply/", views.comment_reply_view, name="reply"),
 ]
