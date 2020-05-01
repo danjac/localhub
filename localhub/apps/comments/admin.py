@@ -3,7 +3,7 @@
 
 from django.contrib import admin
 
-from localhub.common.markdown.admin import MarkdownFieldMixin
+from localhub.markdown.admin import MarkdownFieldMixin
 
 from .models import Comment
 

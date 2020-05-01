@@ -13,7 +13,7 @@ from localhub.apps.communities.views import (
     CommunityAdminRequiredMixin,
     CommunityRequiredMixin,
 )
-from localhub.common.views import (
+from localhub.views import (
     SearchMixin,
     SuccessActionView,
     SuccessCreateView,

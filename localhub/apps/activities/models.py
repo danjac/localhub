@@ -26,16 +26,13 @@ from localhub.apps.notifications.models import (
 )
 from localhub.apps.users.fields import MentionsField
 from localhub.apps.users.utils import extract_mentions
-from localhub.common.db.generic import (
-    AbstractGenericRelation,
-    get_generic_related_queryset,
-)
-from localhub.common.db.search.mixins import SearchQuerySetMixin
-from localhub.common.db.tracker import TrackerModelMixin
-from localhub.common.db.utils import boolean_value
-from localhub.common.markdown.fields import MarkdownField
-from localhub.common.utils.itertools import takefirst
-from localhub.common.utils.text import slugify_unicode
+from localhub.db.generic import AbstractGenericRelation, get_generic_related_queryset
+from localhub.db.search.mixins import SearchQuerySetMixin
+from localhub.db.tracker import TrackerModelMixin
+from localhub.db.utils import boolean_value
+from localhub.markdown.fields import MarkdownField
+from localhub.utils.itertools import takefirst
+from localhub.utils.text import slugify_unicode
 
 from . import signals
 

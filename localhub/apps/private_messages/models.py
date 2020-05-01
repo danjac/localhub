@@ -15,10 +15,10 @@ from localhub.apps.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySet
 from localhub.apps.communities.models import Community
 from localhub.apps.notifications.decorators import notify
 from localhub.apps.notifications.models import Notification
-from localhub.common.db.generic import get_generic_related_queryset
-from localhub.common.db.search.indexer import SearchIndexer
-from localhub.common.db.search.mixins import SearchQuerySetMixin
-from localhub.common.markdown.fields import MarkdownField
+from localhub.db.generic import get_generic_related_queryset
+from localhub.db.search.indexer import SearchIndexer
+from localhub.db.search.mixins import SearchQuerySetMixin
+from localhub.markdown.fields import MarkdownField
 
 
 class MessageQuerySet(

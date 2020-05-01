@@ -5,7 +5,7 @@ from django.conf import settings
 
 from markdownx.widgets import MarkdownxWidget
 
-from localhub.common.forms.widgets import TypeaheadMixin
+from localhub.forms.widgets import TypeaheadMixin
 
 
 class TypeaheadMarkdownWidget(TypeaheadMixin, MarkdownxWidget):

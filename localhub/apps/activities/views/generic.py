@@ -15,9 +15,9 @@ from localhub.apps.comments.forms import CommentForm
 from localhub.apps.communities.views import CommunityRequiredMixin
 from localhub.apps.flags.forms import FlagForm
 from localhub.apps.likes.models import Like
-from localhub.common.pagination import PresetCountPaginator
-from localhub.common.template.defaultfilters import resolve_url
-from localhub.common.views import (
+from localhub.pagination import PresetCountPaginator
+from localhub.template.defaultfilters import resolve_url
+from localhub.views import (
     ParentObjectMixin,
     SearchMixin,
     SuccessActionView,

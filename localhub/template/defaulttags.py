@@ -3,7 +3,7 @@
 
 from django import template
 
-from localhub.common.utils import emojis
+from localhub.utils import emojis
 
 register = template.Library()
 
