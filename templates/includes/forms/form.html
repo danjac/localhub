@@ -6,7 +6,7 @@
 <form {% spaceless %}
       method="{{ method|default:'POST' }}"
       action="{{ action|default:request.path }}"
-      {% if multipart %}
+      {% if view.is_multipart %}
       enctype="multipart/form-data"
       {% endif %}
       {% if form_id %}

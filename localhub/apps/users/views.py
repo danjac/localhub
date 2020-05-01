@@ -463,6 +463,7 @@ class UserUpdateView(
     success_message = _("Your details have been updated")
     form_class = UserForm
     template_name = "users/user_form.html"
+    is_multipart = True
 
     def get_success_url(self):
         return self.request.path
