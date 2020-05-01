@@ -210,6 +210,8 @@ class Base(Configuration):
     LOCALHUB_MENTIONS_RE = re.compile(r"(?:^|\s)[＠ @]{1}([^\s#<>!.?[\]|{}]+)")
     LOCALHUB_MENTIONS_TYPEAHEAD_CONFIG = ("@", reverse_lazy("users:autocomplete_list"))
 
+    LOCALHUB_WEBPUSH_ENABLED = values.BooleanValue(True)
+
     @property
     def BASE_DIR(self):
         return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

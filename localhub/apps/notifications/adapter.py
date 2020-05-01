@@ -1,6 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from django.conf import settings
 from django.core.mail import send_mail
 from django.template import loader
 from django.templatetags.static import static
@@ -144,14 +145,17 @@ class Webpusher:
         """
         Sends a webpush notification to registered browsers through celery.
         """
-        from . import tasks
+        if settings.LOCALHUB_WEBPUSH_ENABLED:
+            from . import tasks
 
-        try:
-            return tasks.send_webpush.delay(
-                self.adapter.recipient.id, self.adapter.community.id, self.get_payload()
-            )
-        except tasks.send_webpush.OperationalError as e:
-            celery_logger.exception(e)
+            try:
+                return tasks.send_webpush.delay(
+                    self.adapter.recipient.id,
+                    self.adapter.community.id,
+                    self.get_payload(),
+                )
+            except tasks.send_webpush.OperationalError as e:
+                celery_logger.exception(e)
 
     def get_header(self):
         return str(self.adapter.object)
