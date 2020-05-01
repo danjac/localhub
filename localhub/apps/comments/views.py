@@ -15,7 +15,7 @@ from localhub.apps.bookmarks.models import Bookmark
 from localhub.apps.communities.views import CommunityRequiredMixin
 from localhub.apps.flags.forms import FlagForm
 from localhub.apps.likes.models import Like
-from localhub.common.views import (
+from localhub.views import (
     ParentObjectMixin,
     SearchMixin,
     SuccessActionView,

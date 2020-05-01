@@ -14,7 +14,7 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.apps.bookmarks.models import Bookmark
 from localhub.apps.communities.views import CommunityRequiredMixin
-from localhub.common.views import (
+from localhub.views import (
     ParentObjectMixin,
     SearchMixin,
     SuccessActionView,

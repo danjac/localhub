@@ -11,8 +11,8 @@ from django.db import migrations, models
 import sorl.thumbnail.fields
 import timezone_field.fields
 
-import localhub.common.db.fields
-import localhub.common.markdown.fields
+import localhub.db.fields
+import localhub.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -113,7 +113,7 @@ class Migration(migrations.Migration):
                         blank=True, max_length=255, verbose_name="Full name"
                     ),
                 ),
-                ("bio", localhub.common.markdown.fields.MarkdownField(blank=True)),
+                ("bio", localhub.markdown.fields.MarkdownField(blank=True)),
                 (
                     "avatar",
                     sorl.thumbnail.fields.ImageField(
@@ -134,7 +134,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "activity_stream_filters",
-                    localhub.common.db.fields.ChoiceArrayField(
+                    localhub.db.fields.ChoiceArrayField(
                         base_field=models.CharField(
                             choices=[
                                 (
