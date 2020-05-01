@@ -3,11 +3,7 @@
 
 * {
   color: $gray-color;
-}
-
-html,
-body {
-  @include bg-color-variant('.bg-dark', $dark-color);
+  background-color: $dark-color;
 }
 
 a {
