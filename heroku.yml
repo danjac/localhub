@@ -14,6 +14,6 @@ release:
 
 run:
   # for ASGI (experimental!)
-  # web: gunicorn -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT --workers=1 --max-requests=1000 --max-requests-jitter=50 localhub.asgi
-  web: gunicorn -b 0.0.0.0:$PORT --workers=1 --max-requests=1000 --max-requests-jitter=50 localhub.wsgi
-  worker: celery -A localhub.celery_app worker -l INFO
+  # web: gunicorn -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT --workers=1 --max-requests=1000 --max-requests-jitter=50 bfg.asgi
+  web: gunicorn -b 0.0.0.0:$PORT --workers=1 --max-requests=1000 --max-requests-jitter=50 bfg.wsgi
+  worker: celery -A bfg.celery_app worker -l INFO
