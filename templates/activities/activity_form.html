@@ -46,17 +46,13 @@
 {% endwith %}
 
 
-
 {% if submit_actions %}
 <div class="actions mb-1">
   {% block actions %}
-
   {% for url, label in submit_actions %}
   <a class="action"
      href="{{ url }}">{{ label }}</a>
   {% endfor %}
-
-
   {% endblock actions %}
 </div>
 {% endif %}

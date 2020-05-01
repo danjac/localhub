@@ -5,14 +5,14 @@
 {% load i18n %}
 
 {% block form_extra_attrs %}
-{% block data_controller %}
-data-controller="form{% block form_extra_data_controllers %}"
+{% block form_controller %}
+data-controller="form{% block form_extra_controllers %}{% endblock %}"
 {% endblock %}
-{% block data_unload %}
+{% block form_unload %}
 data-form-unload="{% trans 'Are you sure you want to leave this page? All your changes will be lost.' %}"
 {% endblock %}
-{% block data_action %}
-data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload{% block form_extra_data_actions %}"
+{% block form_action %}
+data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload{% block form_extra_actions %}{% endblock %}"
 {% endblock %}
 {% endblock form_extra_attrs %}
 

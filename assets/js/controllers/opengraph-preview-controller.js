@@ -11,9 +11,6 @@ import {
 
 import ApplicationController from './application-controller';
 
-const EVENT_OPENGRAPH_UPDATE = 'opengraph:update';
-const EVENT_OPENGRAPH_CLEAR = 'opengraph:clear';
-
 export default class extends ApplicationController {
   static targets = [
     'description',
@@ -22,21 +19,9 @@ export default class extends ApplicationController {
     'image',
     'imagePreview',
     'input',
+    'listener',
     'title',
   ];
-
-  connect() {
-    if (this.data.has('subscriber')) {
-      this.subscribe(EVENT_OPENGRAPH_UPDATE, ({ detail: { name, value } }) => {
-        if (name === this.data.get('subscriber')) {
-          this.inputTarget.value = value;
-        }
-      });
-      this.subscribe(EVENT_OPENGRAPH_CLEAR, () => {
-        this.inputTarget.value = '';
-      });
-    }
-  }
 
   fetch(event) {
     event.preventDefault();
@@ -75,7 +60,7 @@ export default class extends ApplicationController {
         }
 
         this.updatePreview(title, description, image);
-        this.updateSubscribers({ title, image, description });
+        this.updateListeners({ title, image, description });
 
         this.updateFetchedUrl(url);
       })
@@ -94,13 +79,20 @@ export default class extends ApplicationController {
     this.publish(EVENT_FORM_COMPLETE);
   }
 
-  clearSubscribers() {
-    this.publish(EVENT_OPENGRAPH_CLEAR);
+  clearListeners() {
+    Array.from(this.listenerTargets).forEach((target) => (target.value = ''));
   }
 
-  updateSubscribers(data) {
+  updateListeners(data) {
     Object.keys(data).forEach((name) => {
-      this.publish(EVENT_OPENGRAPH_UPDATE, { name, value: data[name] });
+      Array.from(this.listenerTargets)
+        .filter(
+          (target) =>
+            target.getAttribute(`data-${this.identifier}-listener-value`) === name
+        )
+        .forEach((target) => {
+          target.value = data[name];
+        });
     });
   }
 
@@ -163,7 +155,7 @@ export default class extends ApplicationController {
   }
 
   handleServerError() {
-    this.clearSubscribers();
+    this.clearListeners();
     this.toast(TOAST_ERROR, this.data.get('errorMessage'));
   }
 }

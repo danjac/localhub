@@ -46,10 +46,9 @@ class PostForm(ActivityForm):
 
         self.fields["title"].widget.attrs.update(
             {
-                "data-controller": "opengraph-preview",
                 "data-target": self.fields["title"].widget.attrs["data-target"]
-                + " opengraph-preview.input",
-                "data-opengraph-preview-subscriber": "title",
+                + " opengraph-preview.listener",
+                "data-opengraph-preview-listener-value": "title",
             }
         )
 
@@ -58,15 +57,13 @@ class PostForm(ActivityForm):
 
         self.fields["opengraph_image"].widget = forms.HiddenInput(
             attrs={
-                "data-controller": "opengraph-preview",
-                "data-target": "opengraph-preview.input",
-                "data-opengraph-preview-subscriber": "image",
+                "data-target": "opengraph-preview.listener",
+                "data-opengraph-preview-listener-value": "image",
             }
         )
         self.fields["opengraph_description"].widget = forms.HiddenInput(
             attrs={
-                "data-controller": "opengraph-preview",
-                "data-target": "opengraph-preview.input",
-                "data-opengraph-preview-subscriber": "description",
+                "data-target": "opengraph-preview.listener",
+                "data-opengraph-preview-listener-value": "description",
             }
         )

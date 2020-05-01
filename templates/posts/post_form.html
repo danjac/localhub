@@ -1,0 +1,11 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+
+{% extends "activities/activity_form.html" %}
+
+{% block form %}
+{% include "posts/includes/post_form.html" with is_new=view.is_new is_private=view.is_private %}
+{% endblock %}
+
+

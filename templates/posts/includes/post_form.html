@@ -1,0 +1,16 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "activities/includes/activity_form.html" %}
+
+{% load i18n %}
+
+{% block form_extra_controllers %} opengraph-preview{% endblock %}
+
+{% block form_extra_attrs %}
+{{ block.super }}
+data-opengraph-preview-error-message="{% trans "This URL is unavailable, or we are unable to fetch any meaningful data from this page." %}"
+data-opengraph-preview-preview-url="{% url 'posts:opengraph_preview' %}"
+{% endblock %}
+
+
