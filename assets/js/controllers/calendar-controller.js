@@ -19,6 +19,7 @@ import {
 import ApplicationController from './application-controller';
 
 const DATE_FORMAT = 'dd/MM/yyyy';
+const EVENT_NOTIFY_ON_UPDATE = 'calendar:notify';
 
 export default class extends ApplicationController {
   /*
@@ -29,10 +30,10 @@ export default class extends ApplicationController {
     select: select a specific date and insert into dateInput.
 
   data:
-    publisher (String): when a calender date is selected, a calendar:select
-      event is published to the event bus with the data { publisher, currentMonth }.
-    subscriber (String): listens to calendar:select events for a specific publisher
-      name. Will update the currentMonth accordingly. This allows us
+    notify (String): when a calender date is selected, a EVENT_NOTIFY_ON_UPDATE
+      event is published to the event bus with the data { notify, startDate }.
+    listen (String): listens to EVENT_NOTIFY_ON_UPDATE events for a specific notify
+      name. Will update the current month accordingly. This allows us
       to ensure that the start months in all calendar controls are kept consistent.
 
   targets:
@@ -53,10 +54,10 @@ export default class extends ApplicationController {
   ];
 
   connect() {
-    if (this.data.has('subscriber')) {
-      this.subscribe('calendar:select', ({ detail: { currentMonth, publisher } }) => {
-        if (publisher === this.data.get('subscriber')) {
-          this.data.set('current-month', currentMonth);
+    if (this.data.has('listen')) {
+      this.subscribe(EVENT_NOTIFY_ON_UPDATE, ({ detail: { startDate, notify } }) => {
+        if (notify === this.data.get('listen')) {
+          this.data.set('startDate', startDate);
         }
       });
     }
@@ -72,8 +73,8 @@ export default class extends ApplicationController {
       let date;
       if (this.selectedDate) {
         date = this.selectedDate;
-      } else if (this.data.has('current-month')) {
-        date = parse(this.data.get('current-month'), DATE_FORMAT, new Date());
+      } else if (this.data.has('startDate')) {
+        date = parse(this.data.get('startDate'), DATE_FORMAT, new Date());
       } else {
         date = new Date();
       }
@@ -102,11 +103,17 @@ export default class extends ApplicationController {
     );
     this.dateInputTarget.value = selectedDate;
     this.calendarTarget.classList.add('d-none');
-    if (this.data.has('publisher')) {
-      this.publish('calendar:select', {
-        currentMonth: selectedDate,
-        publisher: this.data.get('publisher'),
+    if (this.data.has('notify')) {
+      this.publish(EVENT_NOTIFY_ON_UPDATE, {
+        startDate: selectedDate,
+        notify: this.data.get('notify'),
       });
+    }
+    if (this.timeInputTarget.value === '') {
+      if (this.data.has('defaultTime')) {
+        this.timeInputTarget.value = this.data.get('defaultTime');
+      }
+      this.timeInputTarget.focus();
     }
   }
 

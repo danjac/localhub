@@ -92,8 +92,10 @@ class CalendarWidget(forms.SplitDateTimeWidget):
             }
         )
 
-        self.publisher = kwargs.pop("publisher", False)
-        self.subscriber = kwargs.pop("subscriber", False)
+        self.notify = kwargs.pop("notify", False)
+        self.listen = kwargs.pop("listen", False)
+
+        self.default_time = kwargs.pop("default_time", None)
 
         time_attrs = kwargs.pop("time_attrs", {})
         time_attrs.update(
@@ -116,5 +118,11 @@ class CalendarWidget(forms.SplitDateTimeWidget):
     def get_context(self, name, value, attrs):
         data = super().get_context(name, value, attrs)
 
-        data.update({"publisher": self.publisher, "subscriber": self.subscriber})
+        data.update(
+            {
+                "notify": self.notify,
+                "listen": self.listen,
+                "default_time": self.default_time,
+            }
+        )
         return data

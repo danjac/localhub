@@ -2,10 +2,15 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
 <div {% spaceless %}data-controller="calendar"
-     {% if subscriber %}
-  data-calendar-subscriber="{{ subscriber }}"{% endif %}
-     {% if publisher %}
-  data-calendar-publisher="{{ publisher }}"{% endif %}{% endspaceless %}>
+     {% if default_time %}
+     data-calendar-default-time="{{ default_time }}"
+     {% endif %}
+     {% if listen %}
+     data-calendar-listen="{{ listen }}"
+     {% endif %}
+     {% if notify %}
+     data-calendar-notify="{{ notify }}"
+     {% endif %}{% endspaceless %}>
   <template data-target="calendar.template">
     <div class="calendar-date">
       <button class="date-item"
