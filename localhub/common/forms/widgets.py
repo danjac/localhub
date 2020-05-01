@@ -23,6 +23,13 @@ class TypeaheadMixin:
     def __init__(self, attrs=None, typeahead_configs=None):
         super().__init__(attrs)
         self.typeahead_configs = typeahead_configs or self.typeahead_configs
+        self.attrs.update(
+            {
+                "data-target": "typeahead.input",
+                "data-action": "keyup->typeahead#keyup keydown->typeahead#keydown",
+                "autocomplete": "off",
+            }
+        )
 
     def get_context(self, name, value, attrs):
         data = super().get_context(name, value, attrs)
@@ -43,6 +50,9 @@ class BaseTypeaheadInput(TypeaheadMixin, forms.TextInput):
     """
 
     template_name = "includes/forms/widgets/typeahead.html"
+
+    def __init__(self, attrs=None):
+        super().__init__(attrs)
 
     def format_value(self, value):
         """Replace any commas with space, remove any extra spaces"""

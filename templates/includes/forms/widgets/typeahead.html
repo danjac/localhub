@@ -6,12 +6,5 @@
      data-typeahead-config="{{ typeahead_config }}">
   <ul class="menu typeahead-selector d-none"
       data-target="typeahead.selector"></ul>
-  <input data-target="typeahead.input"
-         data-action="keyup->typeahead#keyup keydown->typeahead#keydown"
-         autocomplete="off"
-         class="form-input"
-         {% if widget.value %}value="{{ widget.value }}"
-         {% endif %}
-         name="{{ widget.name }}"
-         {% include "django/forms/widgets/attrs.html" %}>
+  {% include "django/forms/widgets/input.html" %}
 </div>

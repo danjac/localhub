@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from django import forms
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext as _
 
 from localhub.apps.activities.forms import ActivityForm
 
@@ -10,6 +10,8 @@ from .models import Post
 
 
 class OpengraphPreviewInput(forms.URLInput):
+    # TBD: this feels like the controller should be form-level,
+    # not widget. Ditto calendar controls for events.
     template_name = "posts/includes/widgets/opengraph_preview.html"
 
     def __init__(self, attrs=None):
@@ -36,8 +38,6 @@ class PostForm(ActivityForm):
             "opengraph_image",
             "opengraph_description",
         )
-        widgets = {"url": OpengraphPreviewInput}
-        labels = {"url": _("URL")}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -47,10 +47,14 @@ class PostForm(ActivityForm):
         self.fields["title"].widget.attrs.update(
             {
                 "data-controller": "opengraph-preview",
-                "data-target": "opengraph-preview.input",
+                "data-target": self.fields["title"].widget.attrs["data-target"]
+                + " opengraph-preview.input",
                 "data-opengraph-preview-subscriber": "title",
             }
         )
+
+        self.fields["url"].label = _("URL")
+        self.fields["url"].widget = OpengraphPreviewInput()
 
         self.fields["opengraph_image"].widget = forms.HiddenInput(
             attrs={
