@@ -11,12 +11,12 @@ from model_utils.models import TimeStampedModel
 from localhub.apps.communities.models import Community
 from localhub.apps.notifications.decorators import notify
 from localhub.apps.notifications.models import Notification
-from localhub.common.db.generic import (
+from localhub.db.generic import (
     get_generic_related_count_subquery,
     get_generic_related_exists,
     get_generic_related_value_subquery,
 )
-from localhub.common.db.utils import boolean_value
+from localhub.db.utils import boolean_value
 
 
 class LikeAnnotationsQuerySetMixin:

@@ -702,21 +702,23 @@ class TestEventModel:
         result = force_str(event.to_ical())
         assert "DTSTART" in result
 
-    def test_notify_on_attend_if_owner(self, event):
+    def test_notify_on_attend_if_owner(self, event, send_webpush_mock):
         assert len(event.notify_on_attend(event.owner)) == 0
 
-    def test_notify_on_attend_if_member(self, event, member):
+    def test_notify_on_attend_if_member(self, event, member, send_webpush_mock):
         notifications = event.notify_on_attend(member.member)
         assert len(notifications) == 1
         assert notifications[0].recipient == event.owner
         assert notifications[0].actor == member.member
         assert notifications[0].verb == "attend"
 
-    def test_notify_on_cancel_if_owner(self, event):
+    def test_notify_on_cancel_if_owner(self, event, send_webpush_mock):
         event.attendees.add(event.owner)
         assert len(event.notify_on_cancel(event.owner)) == 0
 
-    def test_notify_on_cancel_by_moderator_if_owner_attending(self, event, moderator):
+    def test_notify_on_cancel_by_moderator_if_owner_attending(
+        self, event, moderator, send_webpush_mock
+    ):
         event.attendees.add(event.owner)
 
         notifications = event.notify_on_cancel(moderator.member)
@@ -726,7 +728,7 @@ class TestEventModel:
         assert notifications[0].verb == "cancel"
 
     def test_notify_on_cancel_by_moderator_if_owner_not_attending(
-        self, event, moderator
+        self, event, moderator, send_webpush_mock
     ):
         notifications = event.notify_on_cancel(moderator.member)
         assert len(notifications) == 1
@@ -734,7 +736,7 @@ class TestEventModel:
         assert notifications[0].actor == moderator.member
         assert notifications[0].verb == "cancel"
 
-    def test_notify_on_cancel_if_attendee(self, event, member):
+    def test_notify_on_cancel_if_attendee(self, event, member, send_webpush_mock):
         event.attendees.add(member.member)
         notifications = event.notify_on_cancel(event.owner)
         assert len(notifications) == 1
@@ -742,6 +744,6 @@ class TestEventModel:
         assert notifications[0].actor == event.owner
         assert notifications[0].verb == "cancel"
 
-    def test_notify_on_cancel_if_attendee_not_member(self, event):
+    def test_notify_on_cancel_if_attendee_not_member(self, event, send_webpush_mock):
         event.attendees.add(UserFactory())
         assert len(event.notify_on_cancel(event.owner)) == 0

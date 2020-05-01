@@ -4,7 +4,7 @@
 from django.conf import settings
 from django.urls import reverse
 
-from localhub.common.utils.text import slugify_unicode
+from localhub.utils.text import slugify_unicode
 
 
 def extract_hashtags(content):

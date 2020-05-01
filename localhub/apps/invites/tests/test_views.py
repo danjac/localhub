@@ -130,7 +130,9 @@ class TestInviteAcceptView:
         invite.refresh_from_db()
         assert invite.is_pending()
 
-    def test_post_user_accepts(self, client, invite, login_user, mailoutbox):
+    def test_post_user_accepts(
+        self, client, invite, login_user, mailoutbox, send_webpush_mock
+    ):
         response = client.post(
             reverse("invites:accept", args=[invite.id]), {"accept": 1},
         )

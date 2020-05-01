@@ -22,15 +22,15 @@ from localhub.apps.notifications.models import (
     Notification,
     NotificationAnnotationsQuerySetMixin,
 )
-from localhub.common.db.generic import (
+from localhub.db.generic import (
     get_generic_related_count_subquery,
     get_generic_related_queryset,
 )
-from localhub.common.db.search.indexer import SearchIndexer
-from localhub.common.db.search.mixins import SearchQuerySetMixin
-from localhub.common.db.tracker import TrackerModelMixin
-from localhub.common.markdown.fields import MarkdownField
-from localhub.common.utils.itertools import takefirst
+from localhub.db.search.indexer import SearchIndexer
+from localhub.db.search.mixins import SearchQuerySetMixin
+from localhub.db.tracker import TrackerModelMixin
+from localhub.markdown.fields import MarkdownField
+from localhub.utils.itertools import takefirst
 
 
 class CommentQuerySet(

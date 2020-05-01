@@ -4,7 +4,7 @@
 
 from django.conf import settings
 
-from localhub.common.forms.widgets import BaseTypeaheadInput
+from localhub.forms.widgets import BaseTypeaheadInput
 
 
 class MentionsTypeaheadInput(BaseTypeaheadInput):
