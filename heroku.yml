@@ -1,6 +1,7 @@
 build:
   config:
     DJANGO_CONFIGURATION: Heroku
+    DJANGO_SETTINGS_MODULE: localhub.settings
   docker:
     web: Dockerfile.heroku
     worker: Dockerfile.heroku
