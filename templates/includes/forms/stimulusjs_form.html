@@ -6,11 +6,13 @@
 
 {% block form_extra_attrs %}
 {% block data_controller %}
-data-controller="form"
+data-controller="form{% block form_extra_data_controllers %}"
+{% endblock %}
+{% block data_unload %}
+data-form-unload="{% trans 'Are you sure you want to leave this page? All your changes will be lost.' %}"
 {% endblock %}
 {% block data_action %}
-data-form-unload="{% trans 'Are you sure you want to leave this page? All your changes will be lost.' %}"
-data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload"
+data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload{% block form_extra_data_actions %}"
 {% endblock %}
 {% endblock form_extra_attrs %}
 
