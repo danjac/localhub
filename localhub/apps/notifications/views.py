@@ -49,8 +49,12 @@ class NotificationListView(NotificationQuerySetMixin, ListView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data["is_unread_notifications"] = (
-            self.get_queryset().filter(is_read=False).exists()
+        data.update(
+            {
+                "is_unread_notifications": self.get_queryset()
+                .filter(is_read=False)
+                .exists(),
+            }
         )
         return data
 

@@ -57,6 +57,7 @@ def notifications_subscribe_btn(user, community):
         "user": user,
         "community": community,
         "vapid_public_key": settings.LOCALHUB_VAPID_PUBLIC_KEY,
+        "webpush_enabled": settings.LOCALHUB_WEBPUSH_ENABLED,
     }
 
 

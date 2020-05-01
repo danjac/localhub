@@ -3,7 +3,7 @@
 
 {% load i18n %}
 
-{% if user.is_authenticated %}
+{% if user.is_authenticated and webpush_enabled %}
 <div class="{{ css_class|default:"mb-2" }} d-none"
      data-controller="notifications"
      data-notifications-service-worker-url="{% url 'notifications:service_worker' %}"
