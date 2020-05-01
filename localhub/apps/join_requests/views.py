@@ -18,7 +18,7 @@ from localhub.apps.communities.views import (
     CommunityAdminRequiredMixin,
     CommunityRequiredMixin,
 )
-from localhub.views import (
+from localhub.common.views import (
     SearchMixin,
     SuccessActionView,
     SuccessCreateView,

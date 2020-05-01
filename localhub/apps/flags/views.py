@@ -9,7 +9,7 @@ from localhub.apps.communities.views import (
     CommunityModeratorRequiredMixin,
     CommunityRequiredMixin,
 )
-from localhub.views import SuccessDeleteView
+from localhub.common.views import SuccessDeleteView
 
 from .models import Flag
 

@@ -9,7 +9,7 @@ import model_utils.fields
 
 import localhub.apps.hashtags.fields
 import localhub.apps.users.fields
-import localhub.markdown.fields
+import localhub.common.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -61,7 +61,10 @@ class Migration(migrations.Migration):
                         blank=True, max_length=300
                     ),
                 ),
-                ("description", localhub.markdown.fields.MarkdownField(blank=True),),
+                (
+                    "description",
+                    localhub.common.markdown.fields.MarkdownField(blank=True),
+                ),
                 ("allow_comments", models.BooleanField(default=True)),
                 ("is_reshare", models.BooleanField(default=False)),
                 ("is_pinned", models.BooleanField(default=False)),

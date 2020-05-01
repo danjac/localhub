@@ -5,8 +5,8 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from django.utils.translation import gettext as _
 from django.views.generic import View
 
-from localhub.utils.http import URLResolver
-from localhub.utils.scraper import HTMLScraper
+from localhub.common.utils.http import URLResolver
+from localhub.common.utils.scraper import HTMLScraper
 
 
 class OpengraphPreviewView(View):

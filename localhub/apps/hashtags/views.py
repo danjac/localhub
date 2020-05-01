@@ -17,7 +17,7 @@ from taggit.models import Tag, TaggedItem
 from localhub.apps.activities.utils import get_activity_models
 from localhub.apps.activities.views.streams import BaseActivityStreamView
 from localhub.apps.communities.views import CommunityRequiredMixin
-from localhub.views import ParentObjectMixin, SearchMixin, SuccessActionView
+from localhub.common.views import ParentObjectMixin, SearchMixin, SuccessActionView
 
 
 class TagQuerySetMixin(CommunityRequiredMixin):

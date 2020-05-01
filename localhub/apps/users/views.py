@@ -22,7 +22,7 @@ from localhub.apps.communities.models import Membership
 from localhub.apps.communities.views import CommunityRequiredMixin
 from localhub.apps.likes.models import Like
 from localhub.apps.private_messages.models import Message
-from localhub.views import (
+from localhub.common.views import (
     ParentObjectMixin,
     SearchMixin,
     SuccessActionView,

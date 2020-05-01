@@ -9,7 +9,7 @@ from django.utils.translation import gettext as _
 
 from localhub.apps.activities.models import Activity, ActivityManager, ActivityQuerySet
 from localhub.apps.notifications.decorators import notify
-from localhub.db.search.indexer import SearchIndexer
+from localhub.common.db.search.indexer import SearchIndexer
 
 
 class PollQuerySet(ActivityQuerySet):

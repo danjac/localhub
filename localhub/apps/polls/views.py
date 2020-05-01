@@ -16,7 +16,7 @@ from localhub.apps.activities.views.generic import (
     ActivityUpdateView,
 )
 from localhub.apps.communities.views import CommunityRequiredMixin
-from localhub.views import SuccessActionView
+from localhub.common.views import SuccessActionView
 
 from .models import Answer, Poll
 

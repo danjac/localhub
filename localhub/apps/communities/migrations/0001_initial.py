@@ -8,7 +8,7 @@ from django.db import migrations, models
 import model_utils.fields
 import sorl.thumbnail.fields
 
-import localhub.markdown.fields
+import localhub.common.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -67,9 +67,12 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("tagline", models.TextField(blank=True)),
-                ("intro", localhub.markdown.fields.MarkdownField(blank=True)),
-                ("description", localhub.markdown.fields.MarkdownField(blank=True),),
-                ("terms", localhub.markdown.fields.MarkdownField(blank=True)),
+                ("intro", localhub.common.markdown.fields.MarkdownField(blank=True)),
+                (
+                    "description",
+                    localhub.common.markdown.fields.MarkdownField(blank=True),
+                ),
+                ("terms", localhub.common.markdown.fields.MarkdownField(blank=True)),
                 ("content_warning_tags", models.TextField(blank=True, default="#nsfw")),
                 (
                     "email_domain",

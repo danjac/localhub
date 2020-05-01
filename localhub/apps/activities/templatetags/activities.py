@@ -4,7 +4,7 @@
 
 from django import template
 
-from localhub.utils.http import is_https
+from localhub.common.utils.http import is_https
 
 from ..oembed import bootstrap_oembed
 from ..utils import get_activity_models, get_activity_querysets, load_objects

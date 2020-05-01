@@ -7,7 +7,7 @@ from localhub.apps.private_messages.views import (
     BaseMessageListView,
     SenderOrRecipientQuerySetMixin,
 )
-from localhub.views import SearchMixin
+from localhub.common.views import SearchMixin
 
 
 class BookmarksStreamView(SearchMixin, BaseActivityStreamView):

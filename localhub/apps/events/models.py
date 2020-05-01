@@ -28,10 +28,10 @@ from timezone_field import TimeZoneField
 
 from localhub.apps.activities.models import Activity, ActivityManager, ActivityQuerySet
 from localhub.apps.notifications.decorators import notify
-from localhub.db.functions import DateAdd, MonthAdd, YearAdd
-from localhub.db.search.indexer import SearchIndexer
-from localhub.db.utils import boolean_value
-from localhub.utils.http import get_domain
+from localhub.common.db.functions import DateAdd, MonthAdd, YearAdd
+from localhub.common.db.search.indexer import SearchIndexer
+from localhub.common.db.utils import boolean_value
+from localhub.common.utils.http import get_domain
 
 
 class EventQuerySet(ActivityQuerySet):

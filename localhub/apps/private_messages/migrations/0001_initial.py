@@ -7,7 +7,7 @@ from django.db import migrations, models
 
 import model_utils.fields
 
-import localhub.markdown.fields
+import localhub.common.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
                         verbose_name="modified",
                     ),
                 ),
-                ("message", localhub.markdown.fields.MarkdownField()),
+                ("message", localhub.common.markdown.fields.MarkdownField()),
                 ("read", models.DateTimeField(blank=True, null=True)),
                 ("recipient_deleted", models.DateTimeField(blank=True, null=True)),
                 ("sender_deleted", models.DateTimeField(blank=True, null=True)),

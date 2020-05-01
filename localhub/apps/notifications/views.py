@@ -10,7 +10,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, TemplateView, View
 
 from localhub.apps.communities.views import CommunityRequiredMixin
-from localhub.views import SuccessActionView, SuccessDeleteView, SuccessView
+from localhub.common.views import SuccessActionView, SuccessDeleteView, SuccessView
 
 from .models import Notification, PushSubscription
 from .signals import notification_read

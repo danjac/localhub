@@ -16,7 +16,7 @@ from rules.contrib.views import PermissionRequiredMixin
 
 from localhub.apps.invites.models import Invite
 from localhub.apps.join_requests.models import JoinRequest
-from localhub.views import SearchMixin, SuccessDeleteView, SuccessUpdateView
+from localhub.common.views import SearchMixin, SuccessDeleteView, SuccessUpdateView
 
 from .emails import send_membership_deleted_email
 from .forms import CommunityForm, MembershipForm
