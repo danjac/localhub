@@ -153,7 +153,7 @@ class ServiceWorkerView(TemplateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data["vapid_public_key"] = settings.VAPID_PUBLIC_KEY
+        data["vapid_public_key"] = settings.LOCALHUB_VAPID_PUBLIC_KEY
         return data
 
 

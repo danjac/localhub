@@ -56,7 +56,7 @@ def notifications_subscribe_btn(user, community):
     return {
         "user": user,
         "community": community,
-        "vapid_public_key": settings.VAPID_PUBLIC_KEY,
+        "vapid_public_key": settings.LOCALHUB_VAPID_PUBLIC_KEY,
     }
 
 

@@ -191,9 +191,9 @@ class Base(Configuration):
     TAGGIT_CASE_INSENSITIVE = True
 
     # https://web-push-codelab.glitch.me/
-    VAPID_PUBLIC_KEY = values.Value()
-    VAPID_PRIVATE_KEY = values.Value()
-    VAPID_ADMIN_EMAIL = values.Value()
+    LOCALHUB_VAPID_PUBLIC_KEY = values.Value()
+    LOCALHUB_VAPID_PRIVATE_KEY = values.Value()
+    LOCALHUB_VAPID_ADMIN_EMAIL = values.Value()
 
     # project-specific
 
@@ -316,9 +316,9 @@ class Testing(Base):
     THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + ["django_extensions"]
     SITE_ID = 1
 
-    VAPID_PUBLIC_KEY = None
-    VAPID_PRIVATE_KEY = None
-    VAPID_ADMIN_EMAIL = None
+    LOCALHUB_VAPID_PUBLIC_KEY = None
+    LOCALHUB_VAPID_PRIVATE_KEY = None
+    LOCALHUB_VAPID_ADMIN_EMAIL = None
 
     THUMBNAIL_KVSTORE = "sorl.thumbnail.kvstores.cached_db_kvstore.KVStore"
 
