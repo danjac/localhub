@@ -10,8 +10,6 @@ from .models import Post
 
 
 class OpengraphPreviewInput(forms.URLInput):
-    # TBD: this feels like the controller should be form-level,
-    # not widget. Ditto calendar controls for events.
     template_name = "posts/includes/widgets/opengraph_preview.html"
 
     def __init__(self, attrs=None):
