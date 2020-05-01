@@ -143,7 +143,7 @@ class TestEventDownloadView:
 
 
 class TestEventCancelView:
-    def test_post(self, client, event_for_member):
+    def test_post(self, client, event_for_member, send_webpush_mock):
         response = client.post(reverse("events:cancel", args=[event_for_member.id]))
         assert response.url == event_for_member.get_absolute_url()
         event_for_member.refresh_from_db()
@@ -151,14 +151,14 @@ class TestEventCancelView:
 
 
 class TestEventAttendView:
-    def test_post(self, client, event, member):
+    def test_post(self, client, event, member, send_webpush_mock):
         response = client.post(reverse("events:attend", args=[event.id]))
         assert response.status_code == 204
         assert member.member in event.attendees.all()
 
 
 class TestEventUnattendView:
-    def test_post(self, client, event, member):
+    def test_post(self, client, event, member, send_webpush_mock):
         event.attendees.add(member.member)
         response = client.post(reverse("events:unattend", args=[event.id]))
         assert response.status_code == 204

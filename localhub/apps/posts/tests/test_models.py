@@ -255,7 +255,7 @@ class TestPostModel:
         assert notifications[0].actor == post.owner
         assert notifications[0].verb == "mention"
 
-    def test_notify_on_publish_reshare(self, community):
+    def test_notify_on_publish_reshare(self, community, send_webpush_mock):
 
         mentioned = MembershipFactory(
             member=UserFactory(username="danjac"),
@@ -300,7 +300,7 @@ class TestPostModel:
         assert notifications[2].actor == reshare.owner
         assert notifications[2].verb == "followed_tag"
 
-    def test_soft_delete(self, post, mocker):
+    def test_soft_delete(self, post, mocker, send_webpush_mock):
         CommentFactory(content_object=post)
         NotificationFactory(content_object=post)
         FlagFactory(content_object=post)
