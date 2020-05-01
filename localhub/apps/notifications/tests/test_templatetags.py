@@ -65,12 +65,24 @@ class TestRenderNotification:
 
 
 class TestNotificationsSubscribeBtn:
-    def test_authenticated(self, member):
+    def test_authenticated(self, member, settings):
 
+        settings.LOCALHUB_WEBPUSH_ENABLED = True
         assert notifications_subscribe_btn(member.member, member.community) == {
             "user": member.member,
             "community": member.community,
             "vapid_public_key": None,
+            "webpush_enabled": True,
+        }
+
+    def test_webpush_disabled(self, member, settings):
+
+        settings.LOCALHUB_WEBPUSH_ENABLED = False
+        assert notifications_subscribe_btn(member.member, member.community) == {
+            "user": member.member,
+            "community": member.community,
+            "vapid_public_key": None,
+            "webpush_enabled": False,
         }
 
 
