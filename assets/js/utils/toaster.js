@@ -9,7 +9,7 @@ export default class {
   }
 
   sendMessage(type, message) {
-    this.controller.publish(EVENT_TOAST_MESSAGE, { type, message });
+    this.controller.bus.publish(EVENT_TOAST_MESSAGE, { type, message });
   }
 
   success(message) {

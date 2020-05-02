@@ -26,7 +26,7 @@ export default class extends ApplicationController {
   static targets = ['message'];
 
   connect() {
-    this.subscribe(EVENT_TOAST_MESSAGE, ({ detail: { type, message } }) => {
+    this.bus.subscribe(EVENT_TOAST_MESSAGE, ({ detail: { type, message } }) => {
       this.showMessage(type, message);
     });
   }

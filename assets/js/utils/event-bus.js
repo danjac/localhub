@@ -1,19 +1,24 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-const subscribe = (name, callback) => {
-  document.body.addEventListener(name, callback);
-  return () => document.body.removeEventListener(name, callback);
-};
+export default class {
+  constructor() {
+    this.subscriptions = [];
+  }
 
-const publish = (name, data = {}) => {
-  const event = new CustomEvent(name, {
-    detail: Object.assign({}, data),
-  });
-  document.body.dispatchEvent(event);
-};
+  subscribe(name, callback) {
+    document.body.addEventListener(name, callback);
+    this.subscriptions.push(() => document.body.removeEventListener(name, callback));
+  }
 
-export default {
-  publish,
-  subscribe,
-};
+  unsubscribe() {
+    this.subscriptions.forEach((unsub) => unsub());
+  }
+
+  publish(name, data = {}) {
+    const event = new CustomEvent(name, {
+      detail: Object.assign({}, data),
+    });
+    document.body.dispatchEvent(event);
+  }
+}

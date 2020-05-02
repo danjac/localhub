@@ -4,7 +4,6 @@
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-import { EVENT_FORM_COMPLETE, EVENT_FORM_FETCHING } from '@utils/application-constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
@@ -27,14 +26,6 @@ export default class extends ApplicationController {
     this.formElements.forEach((element) =>
       element.addEventListener('change', () => this.data.set('changed', true))
     );
-
-    // allows us to disable the entire form from another controller
-    this.subscribe(EVENT_FORM_FETCHING, () => {
-      this.disableFormControls();
-    });
-    this.subscribe(EVENT_FORM_COMPLETE, () => {
-      this.enableFormControls();
-    });
 
     this.element[this.identifier] = this;
   }

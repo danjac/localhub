@@ -4,6 +4,7 @@
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
+import { EVENT_CONFIRM_OPEN } from '@utils/application-constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
@@ -51,7 +52,7 @@ export default class extends ApplicationController {
     const body = this.data.get('confirm-body');
 
     if (header && body) {
-      this.dialog.confirm({
+      this.bus.publish(EVENT_CONFIRM_OPEN, {
         body,
         header,
         onConfirm: () => this.dispatch(method, currentTarget),
