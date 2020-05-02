@@ -34,15 +34,38 @@ class PhotoForm(ActivityForm):
             "hashtags",
             "mentions",
             "image",
-            "extract_gps_data",
-            "clear_gps_data",
             "description",
             "allow_comments",
+            "extract_gps_data",
+            "clear_gps_data",
             "artist",
             "original_url",
             "cc_license",
             "latitude",
             "longitude",
+        )
+        fieldsets = (
+            (
+                None,
+                (
+                    "title",
+                    "hashtags",
+                    "mentions",
+                    "image",
+                    "description",
+                    "allow_comments",
+                ),
+            ),
+            (
+                _("Photo Meta Data"),
+                (
+                    "extract_gps_data",
+                    "clear_gps_data",
+                    "artist",
+                    "original_url",
+                    "cc_license",
+                ),
+            ),
         )
 
     def __init__(self, *args, **kwargs):

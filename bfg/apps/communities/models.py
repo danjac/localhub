@@ -143,8 +143,6 @@ class Community(TimeStampedModel):
         null=True, blank=True, max_length=100, validators=[DOMAIN_VALIDATOR],
     )
 
-    google_tracking_id = models.CharField(null=True, blank=True, max_length=30)
-
     members = models.ManyToManyField(
         settings.AUTH_USER_MODEL, through="Membership", related_name="communities",
     )

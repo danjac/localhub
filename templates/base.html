@@ -50,22 +50,6 @@
         href="{% static 'dist/main.css' %}">
   <script defer
           src="{% static 'dist/main.js' %}"></script>
-  {% with google_tracking_id=community.google_tracking_id %}
-  {% if google_tracking_id %}
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async
-          src="https://www.googletagmanager.com/gtag/js?id={{ google_tracking_id }}"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-    gtag('config', '{{ google_tracking_id }}');
-  </script>
-  {% endif %}
-  {% endwith %}
 </head>
 
 <body>

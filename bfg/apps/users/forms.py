@@ -40,7 +40,6 @@ class UserForm(forms.ModelForm):
         fields = (
             "name",
             "avatar",
-            # "language",
             "bio",
             "send_email_notifications",
             "activity_stream_filters",
@@ -68,3 +67,18 @@ class UserForm(forms.ModelForm):
                 "Show embedded content such as Youtube videos and tweets"
             ),
         }
+
+        fieldsets = (
+            (None, ("name", "avatar",)),
+            (
+                _("Preferences"),
+                (
+                    "send_email_notifications",
+                    "show_sensitive_content",
+                    "show_external_images",
+                    "show_embedded_content",
+                    "activity_stream_filters",
+                ),
+            ),
+            (None, ("bio",)),
+        )

@@ -14,23 +14,29 @@ class CommunityForm(forms.ModelForm):
         model = Community
         fields = (
             "name",
-            "logo",
             "tagline",
+            "logo",
             "intro",
             "description",
             "terms",
-            "google_tracking_id",
             "content_warning_tags",
+            "active",
             "public",
             "allow_join_requests",
             "blacklisted_email_domains",
             "blacklisted_email_addresses",
         )
-        widgets = {"logo": ClearableImageInput, "content_warning_tags": TypeaheadInput}
+        widgets = {
+            "logo": ClearableImageInput,
+            "content_warning_tags": TypeaheadInput,
+            "tagline": forms.TextInput,
+            "blacklisted_email_domains": forms.Textarea(attrs={"rows": 5}),
+            "blacklisted_email_addresses": forms.Textarea(attrs={"rows": 5}),
+        }
 
         help_texts = {
             "logo": _("Logo will be rendered in PNG format."),
-            "tagline": _("Summary shown in Communities page"),
+            "tagline": _("Summary shown in Site Index"),
             "intro": _("Text shown in Login and other pages to non-members."),
             "description": _(
                 "Longer description of site shown to members in Description page."
@@ -48,7 +54,7 @@ class CommunityForm(forms.ModelForm):
                 "domain by default."
             ),
             "active": _("This community is currently live."),
-            "public": _("Community is visible to non-members in Communities page."),
+            "public": _("Community is visible to non-members in Site Index"),
             "allow_join_requests": _(
                 "Users can send requests to join this community. "
                 "If disabled they will only be able to join if an admin sends "
@@ -63,6 +69,21 @@ class CommunityForm(forms.ModelForm):
                 "rejected. Separate with spaces."
             ),
         }
+
+        fieldsets = (
+            (None, ("name", "tagline", "logo",)),
+            (_("Access"), ("active", "public")),
+            (_("Description"), ("tagline", "intro", "description",)),
+            (_("Terms and conditions"), ("content_warning_tags", "terms",),),
+            (
+                _("Join Requests"),
+                (
+                    "allow_join_requests",
+                    "blacklisted_email_domains",
+                    "blacklisted_email_addresses",
+                ),
+            ),
+        )
 
 
 class MembershipForm(forms.ModelForm):
