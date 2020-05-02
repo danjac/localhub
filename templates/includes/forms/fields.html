@@ -18,8 +18,9 @@
 {{ field }}
 {% endfor %}
 
-{% if form.form_helper %}
-{% for name, fields in form.form_helper %}
+{% with fieldsets=form|fieldsets %}
+{% if fieldsets %}
+{% for name, fields in fieldsets %}
 <fieldset>
   {% if name %}<div class="divider text-center"
        data-content="{{ name }}"></div>{% endif %}
@@ -33,3 +34,4 @@
 {% include "includes/forms/field.html" %}
 {% endfor %}
 {% endif %}
+{% endwith %}

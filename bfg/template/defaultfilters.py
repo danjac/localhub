@@ -35,6 +35,55 @@ def is_multipart(form):
 
 
 @register.filter
+def fieldsets(form):
+    """Returns fieldsets if form Meta class has defined fieldsets.
+
+    If None defined just returns empty list.
+
+    Example:
+
+    class PostForm(forms.ModelForm):
+        class Meta:
+            model = Post
+            fields = (...)
+            fieldsets = (
+                (
+                    (None,
+                    (
+                        "title",
+                        "url",
+                        "description",
+                    ),
+                    ("Tags", (
+                        "mentions",
+                        "hashtags",
+                    ),
+
+                    )
+                )
+            )
+
+    Any fields not in the form but present in the fieldset will be ignored.
+
+    Args:
+        form (Form)
+
+    Returns:
+        list of tuples consisting of (name, [bound fields])
+    """
+
+    try:
+        fieldsets = form.Meta.fieldsets
+    except AttributeError:
+        return []
+
+    return [
+        (name, [form[field] for field in fields if field in form.fields])
+        for name, fields in fieldsets
+    ]
+
+
+@register.filter
 def resolve_url(model, view_name):
     """Tries to guess URL of a model. Use this only when you
     don't know in advance what the model type is (e.g. a subclass)

@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 import pytz
 
 from bfg.apps.activities.forms import ActivityForm
-from bfg.forms import CalendarField, CalendarWidget, FormHelper
+from bfg.forms import CalendarField, CalendarWidget
 from bfg.utils.geocode import geocode
 
 from .models import Event
@@ -107,7 +107,6 @@ class EventForm(ActivityForm):
     def __init__(self, *args, **kwargs):
 
         super().__init__(*args, **kwargs)
-        self.form_helper = FormHelper(self)
 
         self.fields["latitude"].widget = forms.HiddenInput()
         self.fields["longitude"].widget = forms.HiddenInput()
