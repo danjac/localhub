@@ -3,8 +3,6 @@
 
 import axios from 'axios';
 
-import { EVENT_FORM_COMPLETE, EVENT_FORM_FETCHING } from '@utils/application-constants';
-
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
@@ -68,11 +66,11 @@ export default class extends ApplicationController {
   }
 
   disableFormControls() {
-    this.publish(EVENT_FORM_FETCHING);
+    this.element.form.disableFormControls();
   }
 
   enableFormControls() {
-    this.publish(EVENT_FORM_COMPLETE);
+    this.element.form.enableFormControls();
   }
 
   clearListeners() {

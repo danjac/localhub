@@ -51,7 +51,7 @@ export default class extends ApplicationController {
     const body = this.data.get('confirm-body');
 
     if (header && body) {
-      this.publish('confirm:open', {
+      this.dialog.confirm({
         body,
         header,
         onConfirm: () => this.dispatch(method, currentTarget),
@@ -68,7 +68,7 @@ export default class extends ApplicationController {
 
     const url =
       this.data.get('url') ||
-      target.getAttribute(`data-${this.data.identifier}-url`) ||
+      target.getAttribute(`data-${this.identifier}-url`) ||
       target.getAttribute('href');
 
     target.setAttribute('disabled', 'disabled');

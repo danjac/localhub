@@ -4,6 +4,7 @@
 import { Controller } from 'stimulus';
 
 import eventBus from '@utils/event-bus';
+import Dialog from '@utils/dialog';
 import Toaster from '@utils/toaster';
 
 export default class extends Controller {
@@ -12,6 +13,7 @@ export default class extends Controller {
   initialize() {
     this.subscriptions = [];
     this.toaster = new Toaster(this);
+    this.dialog = new Dialog(this);
   }
 
   publish(name, data) {

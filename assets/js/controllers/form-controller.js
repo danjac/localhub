@@ -35,6 +35,8 @@ export default class extends ApplicationController {
     this.subscribe(EVENT_FORM_COMPLETE, () => {
       this.enableFormControls();
     });
+
+    this.element[this.identifier] = this;
   }
 
   unload(event) {
