@@ -4,7 +4,6 @@
 from dataclasses import dataclass
 from urllib.parse import urljoin
 
-from django.apps import apps
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.validators import RegexValidator, URLValidator
@@ -48,11 +47,9 @@ class CommunityQuerySet(models.QuerySet):
                     )
                 ),
                 member_role=models.Subquery(
-                    apps.get_model("communities.Membership")
-                    .objects.filter(
+                    Membership.objects.filter(
                         member=user, active=True, community=models.OuterRef("pk"),
-                    )
-                    .values("role")[:1],
+                    ).values("role")[:1],
                 ),
             )
         return self.annotate(
