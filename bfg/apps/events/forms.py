@@ -8,7 +8,9 @@ from django.utils.translation import gettext_lazy as _
 import pytz
 
 from bfg.apps.activities.forms import ActivityForm
-from bfg.forms import CalendarField, CalendarWidget, FormHelper
+from bfg.forms import FormHelper
+from bfg.forms.fields import CalendarField
+from bfg.forms.widgets import CalendarWidget
 from bfg.utils.geocode import geocode
 
 from .models import Event

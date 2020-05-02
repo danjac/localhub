@@ -4,7 +4,7 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from bfg.forms import ClearableImageInput, TypeaheadInput
+from bfg.forms.widgets import ClearableImageInput, TypeaheadInput
 
 from .models import Community, Membership
 

@@ -5,7 +5,7 @@
 from django import forms
 from django.conf import settings
 
-from bfg.forms import BaseTypeaheadInput
+from bfg.forms.widgets import BaseTypeaheadInput
 
 from .validators import validate_hashtags
 

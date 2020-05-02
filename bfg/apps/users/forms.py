@@ -8,7 +8,7 @@ from django.contrib.auth.forms import UserChangeForm as BaseUserChangeForm
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
 from django.utils.translation import gettext_lazy as _
 
-from bfg.forms import BaseTypeaheadInput, ClearableImageInput
+from bfg.forms.widgets import BaseTypeaheadInput, ClearableImageInput
 
 from .validators import validate_mentions
 
