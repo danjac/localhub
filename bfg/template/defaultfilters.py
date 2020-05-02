@@ -5,6 +5,7 @@ import html
 
 from django import template
 from django.db.models import Model
+from django.forms import FileField
 from django.urls import NoReverseMatch, reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
@@ -14,6 +15,23 @@ from bs4 import BeautifulSoup
 from bfg.utils.http import URLResolver, get_root_url, is_image_url
 
 register = template.Library()
+
+
+@register.filter
+def is_multipart(form):
+    """Returns True if form has any FileField or subclasses thereof.
+
+    Args:
+        form (Form)
+
+    Returns:
+        bool
+    """
+
+    for field in form:
+        if issubclass(field.field.__class__, FileField):
+            return True
+    return False
 
 
 @register.filter

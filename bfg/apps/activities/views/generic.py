@@ -60,7 +60,6 @@ class ActivityCreateView(
 
     is_private = False
     is_new = True
-    is_multipart = True
 
     def get_permission_object(self):
         return self.request.community
@@ -186,7 +185,6 @@ class ActivityUpdateView(
 ):
     permission_required = "activities.change_activity"
     success_message = _("Your %(model)s has been updated")
-    is_multipart = True
 
     def form_valid(self, form):
 

@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+from django import forms
 from django.urls import NoReverseMatch, reverse
 
 import pytest
@@ -12,6 +13,7 @@ from ..defaultfilters import (
     contains,
     from_dictkey,
     html_unescape,
+    is_multipart,
     lazify,
     linkify,
     resolve_url,
@@ -21,6 +23,23 @@ from ..defaultfilters import (
 )
 
 pytestmark = pytest.mark.django_db
+
+
+class IsMultipartTests:
+    def test_form_with_no_file_fields(self):
+        class MyForm(forms.Form):
+            name = forms.CharField(max_length=200)
+
+        form = MyForm()
+        assert not is_multipart(form)
+
+    def test_form_with_with_file_fields(self):
+        class MyForm(forms.Form):
+            name = forms.CharField(max_length=200)
+            logo = forms.ImageField()
+
+        form = MyForm()
+        assert is_multipart(form)
 
 
 class ResolveUrlTests:

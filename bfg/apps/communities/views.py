@@ -221,7 +221,6 @@ class CommunityUpdateView(
 ):
     form_class = CommunityForm
     success_message = _("Community settings have been updated")
-    is_multipart = True
 
     def get_success_url(self):
         return self.request.path
