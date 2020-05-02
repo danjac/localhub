@@ -27,6 +27,6 @@ __all__ = [
     "CalendarField",
     "CalendarWidget",
     "ClearableImageInput",
-    "TypeaheadInput",
     "FormHelper",
+    "TypeaheadInput",
 ]
