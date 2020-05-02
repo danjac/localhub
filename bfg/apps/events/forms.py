@@ -48,7 +48,32 @@ class EventForm(ActivityForm):
         label=_("Add event to map if address provided"), required=False
     )
 
-    class EventFormHelper(FormHelper):
+    class Meta(ActivityForm.Meta):
+        model = Event
+        fields = (
+            "title",
+            "hashtags",
+            "mentions",
+            "starts",
+            "ends",
+            "repeats",
+            "repeats_until",
+            "timezone",
+            "url",
+            "description",
+            "allow_comments",
+            "venue",
+            "street_address",
+            "locality",
+            "postal_code",
+            "region",
+            "country",
+            "clear_geolocation",
+            "fetch_geolocation",
+            "latitude",
+            "longitude",
+        )
+        localized_fields = ("starts", "ends")
         fieldsets = [
             (
                 None,
@@ -81,37 +106,10 @@ class EventForm(ActivityForm):
             ),
         ]
 
-    class Meta(ActivityForm.Meta):
-        model = Event
-        fields = (
-            "title",
-            "hashtags",
-            "mentions",
-            "starts",
-            "ends",
-            "repeats",
-            "repeats_until",
-            "timezone",
-            "url",
-            "description",
-            "allow_comments",
-            "venue",
-            "street_address",
-            "locality",
-            "postal_code",
-            "region",
-            "country",
-            "clear_geolocation",
-            "fetch_geolocation",
-            "latitude",
-            "longitude",
-        )
-        localized_fields = ("starts", "ends")
-
     def __init__(self, *args, **kwargs):
 
         super().__init__(*args, **kwargs)
-        self.form_helper = self.EventFormHelper(self)
+        self.form_helper = FormHelper(self)
 
         self.fields["latitude"].widget = forms.HiddenInput()
         self.fields["longitude"].widget = forms.HiddenInput()

@@ -16,7 +16,8 @@ class FormHelper:
         self.form = form
 
     def __iter__(self):
-        for name, fields in self.fieldsets:
+        fieldsets = getattr(self.form.Meta, "fieldsets", [])
+        for name, fields in fieldsets:
             yield (
                 name,
                 [self.form[field] for field in fields if field in self.form.fields],
