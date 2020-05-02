@@ -11,7 +11,7 @@ export default class extends Controller {
   // subclass this.
   initialize() {
     this.bus = new EventBus();
-    this.toaster = new Toaster(this);
+    this.toaster = new Toaster(this.bus);
   }
 
   disconnect() {
