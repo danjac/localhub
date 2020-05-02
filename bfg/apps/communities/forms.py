@@ -70,24 +70,25 @@ class CommunityForm(forms.ModelForm):
             ),
         }
 
-        fieldsets = (
-            (None, ("name", "tagline", "logo",)),
-            (_("Access"), ("active", "public")),
-            (_("Description"), ("tagline", "intro", "description",)),
-            (_("Terms and conditions"), ("content_warning_tags", "terms",),),
-            (
-                _("Join Requests"),
-                (
-                    "allow_join_requests",
-                    "blacklisted_email_domains",
-                    "blacklisted_email_addresses",
-                ),
-            ),
-        )
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.form_helper = FormHelper(self)
+        self.form_helper = FormHelper(
+            self,
+            fieldsets=[
+                (None, ("name", "tagline", "logo",)),
+                (_("Access"), ("active", "public")),
+                (_("Description"), ("tagline", "intro", "description",)),
+                (_("Terms and conditions"), ("content_warning_tags", "terms",),),
+                (
+                    _("Join Requests"),
+                    (
+                        "allow_join_requests",
+                        "blacklisted_email_domains",
+                        "blacklisted_email_addresses",
+                    ),
+                ),
+            ],
+        )
 
 
 class MembershipForm(forms.ModelForm):

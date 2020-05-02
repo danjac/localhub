@@ -19,16 +19,16 @@
 {% endfor %}
 
 {% if form.form_helper %}
-{% for name, fields in form.form_helper %}
+{% for fieldset in form.form_helper %}
 <fieldset>
 
-  {% if name %}
-  <div class="divider text-center" data-content="{{ name }}"></div>
+  {% if fieldset.label %}
+  <div class="divider text-center" data-content="{{ fieldset.label }}"></div>
   {% elif not forloop.first %}
   <div class="divider"></div>
   {% endif %}
 
-  {% for field in fields %}
+  {% for field in fieldset %}
   {% include "includes/forms/field.html" %}
   {% endfor %}
 </fieldset>

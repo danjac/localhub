@@ -6,44 +6,26 @@ from .fields import CalendarField
 from .widgets import CalendarWidget, ClearableImageInput, TypeaheadInput
 
 
-class FormHelper:
-    """Simple class for managing form fieldsets in ModelForms. Fieldsets can be defined
-    under the form Meta class or added after form initialization.
-
-    Fieldsets should be defined as pairs of (name, fields)  e.g.
-
-    class MyForm(ModelForm):
-
-        model = MyModel
-        fields = (....)
-        fieldsets = (
-            (None, ("name", "description")),
-            ("Preferences", ("field_1", "field_2"))
-        )
-
-    Then initiate in your form (or view) as follows:
-
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.form_helper = FormHelper(self)
-
-    Iterating the helper yields the fieldsets (i.e. BoundField instances).
-    Any fields not present in the form at the time are ignored:
-
-    for name, fields in form.form_helper:
-        print(name, fields)
-
-    """
-
-    def __init__(self, form, fieldsets=None):
+class Fieldset:
+    def __init__(self, form, fields, label=None):
         self.form = form
-        self.fieldsets = fieldsets or getattr(self.form.Meta, "fieldsets", [])
+        self.fields = fields
+        self.label = label
 
     def __iter__(self):
-        for name, fields in self.fieldsets:
-            yield name, [
-                self.form[field] for field in fields if field in self.form.fields
-            ]
+        for field in self.fields:
+            if field in self.form.fields:
+                yield self.form[field]
+
+
+class FormHelper:
+    def __init__(self, form, fieldsets=None):
+        self.form = form
+        self.fieldsets = list(fieldsets or [])
+
+    def __iter__(self):
+        for label, fields in self.fieldsets:
+            yield Fieldset(self.form, fields, label)
 
 
 __all__ = [

@@ -69,21 +69,22 @@ class UserForm(forms.ModelForm):
             ),
         }
 
-        fieldsets = (
-            (None, ("name", "avatar",)),
-            (
-                _("Preferences"),
-                (
-                    "send_email_notifications",
-                    "show_sensitive_content",
-                    "show_external_images",
-                    "show_embedded_content",
-                    "activity_stream_filters",
-                ),
-            ),
-            (None, ("bio",)),
-        )
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.form_helper = FormHelper(self)
+        self.form_helper = FormHelper(
+            self,
+            fieldsets=[
+                (None, ("name", "avatar",)),
+                (
+                    _("Preferences"),
+                    (
+                        "send_email_notifications",
+                        "show_sensitive_content",
+                        "show_external_images",
+                        "show_embedded_content",
+                        "activity_stream_filters",
+                    ),
+                ),
+                (None, ("bio",)),
+            ],
+        )
