@@ -90,7 +90,7 @@ class Base(Configuration):
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.middleware.gzip.GZipMiddleware",
-        "bfg.apps.users.middleware.UserLocaleMiddleware",
+        # "bfg.apps.users.middleware.UserLocaleMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
     ]
