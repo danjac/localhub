@@ -79,6 +79,10 @@
        data-active-link-regex="({{ user.get_absolute_url }}|{% url 'users:comments' user.username %}|{% url 'users:messages' user.username %})$"
        href="{{ user.get_absolute_url }}">{% trans "My Profile" %}</a>
   </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'user_update' %}">{% trans "Settings" %}</a>
+  </li>
   <li class="menu-item show-lg">
     <a href="{% url 'account_logout' %}"
        data-turbolinks="false"
@@ -190,38 +194,6 @@
 
 <ul class="menu mt-2">
   <li class="divider"
-      data-content="{% trans 'Settings' %}"></li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
-  </li>
-  {% if can_manage_community %}
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
-  </li>
-  <li class="menu-item">
-    <a data-controller="active-link"
-       {% if site_counters.pending_join_requests %}
-       class="badge"
-       data-badge="{{ site_counters.pending_join_requests }}"
-       {% endif %}
-       href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
-  </li>
-  {% endif %}
-</ul>
-
-
-<ul class="menu mt-2">
-  <li class="divider"
       data-content="{% trans 'People' %}"></li>
   <li class="menu-item">
     <a data-controller="active-link"
@@ -252,7 +224,7 @@
 {% if can_manage_community or communities_count > 1 or community.description or community.terms %}
 <ul class="menu mt-2">
   <li class="divider"
-      data-content="{% trans 'Site' %}"></li>
+      data-content="{% trans 'Community' %}"></li>
   {% if community.description %}
   <li class="menu-item">
     <a data-controller="active-link"
@@ -271,6 +243,29 @@
     </a>
   </li>
   {% endif %}
+  {% if can_manage_community %}
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'communities:community_update' %}">{% trans "Settings" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
+  </li>
+  <li class="menu-item">
+    <a data-controller="active-link"
+       {% if site_counters.pending_join_requests %}
+       class="badge"
+       data-badge="{{ site_counters.pending_join_requests }}"
+       {% endif %}
+       href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
+  </li>
+  {% endif %}
+
   {% if communities_count > 1 %}
   <li class="menu-item">
     <a data-controller="active-link"
@@ -354,7 +349,7 @@
   {% endif %}
   <li class="menu-item">
     <a data-controller="active-link"
-       href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+       href="{% url 'user_update' %}">{% trans "Settings" %}</a>
   </li>
 </ul>
 {% endif %}

@@ -12,6 +12,8 @@
 
 <div class="actions mb-1">
   <a class="action"
+     href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+  <a class="action"
      href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
   <a class="action"
      href="{% url 'invites:list' %}">{% trans "Invites" %}</a>

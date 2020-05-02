@@ -5,9 +5,10 @@
 
 {% load i18n %}
 {% load socialaccount %}
+ {% load rules %}
 {% load users %}
 
-{% block subtitle %} / {% trans "My Settings" %}{% endblock %}
+{% block subtitle %} / {% trans "Settings" %}{% endblock %}
 
 {% block content %}
 
@@ -17,9 +18,18 @@ Your settings apply to all communities you belong to.
 {% endblocktrans %}
 {% enddismissable %}
 
-<h1 class="page-header">{% trans "My Settings" %}</h1>
+<h1 class="page-header">{% trans "Settings" %}</h1>
+
 
 <div class="actions mb-1">
+
+  {% has_perm "communities.manage_community" user community as can_manage_community %}
+
+  {% if can_manage_community %}
+  <a class="action"
+     href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
+  {% endif %}
+
   <a class="action"
      href="{% url 'account_email' %}">{% trans "Email Addresses" %}</a>
   {% get_providers as socialaccount_providers %}
