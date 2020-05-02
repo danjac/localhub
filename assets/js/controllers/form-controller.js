@@ -4,11 +4,7 @@
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-import {
-  EVENT_FORM_COMPLETE,
-  EVENT_FORM_FETCHING,
-  TOAST_ERROR,
-} from '@utils/application-constants';
+import { EVENT_FORM_COMPLETE, EVENT_FORM_FETCHING } from '@utils/application-constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
@@ -117,7 +113,7 @@ export default class extends ApplicationController {
     this.enableFormControls();
     if (err.response) {
       const { status, statusText } = err.response;
-      this.toast(TOAST_ERROR, `${status}: ${statusText}`);
+      this.toaster.error(`${status}: ${statusText}`);
     }
   }
 

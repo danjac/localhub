@@ -4,7 +4,6 @@
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-import { TOAST_SUCCESS, TOAST_ERROR } from '@utils/application-constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
@@ -96,7 +95,7 @@ export default class extends ApplicationController {
       .then((response) => {
         const successMessage = response.headers['x-success-message'];
         if (successMessage) {
-          this.toast(TOAST_SUCCESS, successMessage);
+          this.toaster.success(successMessage);
         }
         if (this.data.has('replace')) {
           this.element.innerHTML = response.data;
@@ -130,7 +129,7 @@ export default class extends ApplicationController {
   handleServerError(err) {
     if (err.response) {
       const { status, statusText } = err.response;
-      this.toast(TOAST_ERROR, `${status}: ${statusText}`);
+      this.toaster.error(`${status}: ${statusText}`);
     }
   }
 }

@@ -3,11 +3,7 @@
 
 import axios from 'axios';
 
-import {
-  EVENT_FORM_COMPLETE,
-  EVENT_FORM_FETCHING,
-  TOAST_ERROR,
-} from '@utils/application-constants';
+import { EVENT_FORM_COMPLETE, EVENT_FORM_FETCHING } from '@utils/application-constants';
 
 import ApplicationController from './application-controller';
 
@@ -156,6 +152,6 @@ export default class extends ApplicationController {
 
   handleServerError() {
     this.clearListeners();
-    this.toast(TOAST_ERROR, this.data.get('errorMessage'));
+    this.toaster.error(this.data.get('errorMessage'));
   }
 }

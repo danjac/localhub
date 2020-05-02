@@ -3,14 +3,15 @@
 
 import { Controller } from 'stimulus';
 
-import { EVENT_TOAST_MESSAGE } from '@utils/application-constants';
 import eventBus from '@utils/event-bus';
+import Toaster from '@utils/toaster';
 
 export default class extends Controller {
   // base controller for application. All controllers should
   // subclass this.
   initialize() {
     this.subscriptions = [];
+    this.toaster = new Toaster(this);
   }
 
   publish(name, data) {
@@ -27,9 +28,5 @@ export default class extends Controller {
 
   disconnect() {
     this.unsubscribe();
-  }
-
-  toast(type, message) {
-    this.publish(EVENT_TOAST_MESSAGE, { type, message });
   }
 }
