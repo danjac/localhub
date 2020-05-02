@@ -36,7 +36,7 @@ class CommunityForm(forms.ModelForm):
 
         help_texts = {
             "logo": _("Logo will be rendered in PNG format."),
-            "tagline": _("Summary shown in Site Index"),
+            "tagline": _("Summary shown in Communities page"),
             "intro": _("Text shown in Login and other pages to non-members."),
             "description": _(
                 "Longer description of site shown to members in Description page."
@@ -54,7 +54,7 @@ class CommunityForm(forms.ModelForm):
                 "domain by default."
             ),
             "active": _("This community is currently live."),
-            "public": _("Community is visible to non-members in Site Index"),
+            "public": _("Community is visible to non-members in Communities page"),
             "allow_join_requests": _(
                 "Users can send requests to join this community. "
                 "If disabled they will only be able to join if an admin sends "
