@@ -113,8 +113,9 @@
     </div>
     <ul class="menu typeahead-selector d-none"
         data-target="typeahead.selector"></ul>
-    <textarea data-target="markdown.textarea typeahead.input"
-              data-action="keyup->typeahead#keyup keydown->typeahead#keydown"
+    <textarea data-controller="autoresize"
+              data-target="markdown.textarea typeahead.input"
+              data-action="keyup->autoresize#resize keyup->typeahead#keyup keydown->typeahead#keydown"
               name="{{ widget.name }}"
               {% include "django/forms/widgets/attrs.html" %}>{% spaceless %}{% if widget.value %}{{ widget.value }}{% endif %}{% endspaceless %}</textarea>
     <p class="form-help-text">
