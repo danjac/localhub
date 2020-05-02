@@ -7,7 +7,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from bfg.apps.activities.forms import ActivityForm
-from bfg.forms.widgets import ClearableImageInput
+from bfg.forms import ClearableImageInput, FormHelper
 from bfg.utils.exif import Exif
 
 from .models import Photo
@@ -70,6 +70,7 @@ class PhotoForm(ActivityForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.form_helper = FormHelper(self)
 
         self.fields["image"].widget = ClearableImageInput()
         self.fields["latitude"].widget = forms.HiddenInput()

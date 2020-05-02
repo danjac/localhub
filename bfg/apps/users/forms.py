@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserChangeForm as BaseUserChangeForm
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
 from django.utils.translation import gettext_lazy as _
 
+from bfg.forms import FormHelper
 from bfg.forms.widgets import BaseTypeaheadInput, ClearableImageInput
 
 from .validators import validate_mentions
@@ -82,3 +83,7 @@ class UserForm(forms.ModelForm):
             ),
             (None, ("bio",)),
         )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.form_helper = FormHelper(self)
