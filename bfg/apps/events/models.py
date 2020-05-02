@@ -358,17 +358,7 @@ class Event(Activity):
     RESHARED_FIELDS = (
         Activity.RESHARED_FIELDS
         + LOCATION_FIELDS
-        + [
-            "url",
-            "starts",
-            "ends",
-            "timezone",
-            "venue",
-            "ticket_price",
-            "ticket_vendor",
-            "latitude",
-            "longitude",
-        ]
+        + ["url", "starts", "ends", "timezone", "venue", "latitude", "longitude",]
     )
 
     class InvalidDate(ValueError):
@@ -401,15 +391,6 @@ class Event(Activity):
     canceled = models.DateTimeField(null=True, blank=True)
 
     venue = models.CharField(max_length=200, blank=True)
-
-    ticket_price = models.CharField(max_length=200, blank=True)
-    ticket_vendor = models.TextField(
-        verbose_name=_("Tickets available from"), blank=True
-    )
-
-    contact_name = models.CharField(max_length=200, blank=True)
-    contact_phone = models.CharField(max_length=30, blank=True)
-    contact_email = models.EmailField(blank=True)
 
     street_address = models.CharField(max_length=200, blank=True)
     locality = models.CharField(

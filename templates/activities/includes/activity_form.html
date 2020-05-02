@@ -6,25 +6,6 @@
 {% load i18n %}
 {% load users %}
 
-{% block form_fields %}
-
-{% with tags=community.get_content_warning_tags|safeseq object_name=view.model|verbose_name %}
-{% if tags %}
-
-{% dismissable user "content-warning-tags" %}
-{% blocktrans with tags_joined=tags|join:" " count counter=tags|length %}
-If you include the tag <b>{{ tags_joined }}</b> in your content, the {{ object_name }}
-will be concealed by default.
-{% plural %}
-If you include the following tags in your content, the {{ object_name }}
-will be concealed by default: <b>{{ tags_joined }}</b>.
-{% endblocktrans %}
-{% enddismissable %}
-
-{% endif %}
-{% endwith %}
-{{ block.super }}
-{% endblock form_fields %}
 {% block form_buttons %}
 {% if view.is_new %}
 {% if view.is_private %}

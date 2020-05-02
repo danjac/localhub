@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 import pytz
 
 from bfg.apps.activities.forms import ActivityForm
+from bfg.forms import FormHelper
 from bfg.forms.fields import CalendarField
 from bfg.forms.widgets import CalendarWidget
 from bfg.utils.geocode import geocode
@@ -47,6 +48,39 @@ class EventForm(ActivityForm):
         label=_("Add event to map if address provided"), required=False
     )
 
+    class EventFormHelper(FormHelper):
+        fieldsets = [
+            (
+                None,
+                (
+                    "title",
+                    "hashtags",
+                    "mentions",
+                    "starts",
+                    "ends",
+                    "repeats",
+                    "repeats_until",
+                    "timezone",
+                    "url",
+                    "description",
+                    "allow_comments",
+                ),
+            ),
+            (
+                _("Location"),
+                (
+                    "venue",
+                    "street_address",
+                    "locality",
+                    "postal_code",
+                    "region",
+                    "country",
+                    "clear_geolocation",
+                    "fetch_geolocation",
+                ),
+            ),
+        ]
+
     class Meta(ActivityForm.Meta):
         model = Event
         fields = (
@@ -59,12 +93,9 @@ class EventForm(ActivityForm):
             "repeats_until",
             "timezone",
             "url",
+            "description",
+            "allow_comments",
             "venue",
-            "contact_name",
-            "contact_email",
-            "contact_phone",
-            "ticket_price",
-            "ticket_vendor",
             "street_address",
             "locality",
             "postal_code",
@@ -72,23 +103,20 @@ class EventForm(ActivityForm):
             "country",
             "clear_geolocation",
             "fetch_geolocation",
-            "description",
-            "allow_comments",
             "latitude",
             "longitude",
         )
         localized_fields = ("starts", "ends")
-        widgets = {
-            "latitude": forms.HiddenInput,
-            "longitude": forms.HiddenInput,
-        }
-        help_texts = {
-            "repeats": "Will repeat from the start date onwards",
-        }
 
     def __init__(self, *args, **kwargs):
 
         super().__init__(*args, **kwargs)
+        self.form_helper = self.EventFormHelper(self)
+
+        self.fields["latitude"].widget = forms.HiddenInput()
+        self.fields["longitude"].widget = forms.HiddenInput()
+
+        self.fields["repeats"].help_text = _("Will repeat from the start date onwards")
 
         self.fields["timezone"].help_text = _(
             "Start and end times will be shown in this timezone"
