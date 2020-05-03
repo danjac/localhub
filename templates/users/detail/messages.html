@@ -13,50 +13,38 @@
 
 {% block user_content %}
 
-{% if is_current_user %}
-
-{% if unread_messages %}
 <div class="my-2 toast text-center">
+
+  {% if unread_messages %}
   {% blocktrans count counter=unread_messages %}
-  You have <strong>1 unread message</strong>.
+  <strong>1 Unread</strong>
   {% plural %}
-  You have <strong>{{ counter }} unread messages</strong>.
+  <strong>{{ counter }} Unread</strong>
   {% endblocktrans %}
-</div>
-{% elif paginator.count %}
-<div class="my-2 toast text-center">
-  {% blocktrans count counter=paginator.count %}
-  You have exchanged <strong>1 message</strong> with someone else.
-  {% plural %}
-  You have exchanged <strong>{{ counter }} messages</strong> with other people.
-  {% endblocktrans %}
-</div>
-{% endif %}
+  {% endif %}
 
-{% else %}
-
-{% if unread_messages %}
-<div class="my-2 toast text-center">
-  {% blocktrans count counter=unread_messages %}
-  You have <strong>1 unread message</strong> from {{ display_name }}.
+  {% if sent_messages %}
+  {% if unread_messages %} / {% endif %}
+  {% blocktrans count counter=sent_messages %}
+  <strong>1 Sent</strong>
   {% plural %}
-  You have <strong>{{ counter }} unread messages</strong> from {{ display_name }}.
+  <strong>{{ counter }} Sent</strong>
   {% endblocktrans %}
-</div>
-{% elif paginator.count %}
-<div class="my-2 toast text-center">
-  {% blocktrans count counter=paginator.count %}
-  You have exchanged <strong>1 message</strong> with {{ display_name }}.
-  {% plural %}
-  You have exchanged <strong>{{ counter }} messages</strong> with {{ display_name }}.
-  {% endblocktrans %}
-</div>
-{% endif %}
+  {% endif %}
 
-{% endif %}
+  {% if received_messages %}
+  {% if unread_messages or sent_messages %} / {% endif %}
+  {% blocktrans count counter=received_messages %}
+  <strong>1 Received</strong>
+  {% plural %}
+  <strong>{{ counter }} Received</strong>
+  {% endblocktrans %}
+  {% endif %}
+
+</div>
 
 {% if is_current_user %}
-{% trans "You have not exchanged any messages." as t_empty_message %}
+{% trans "You have not sent or received any messages." as t_empty_message %}
 {% else %}
 {% blocktrans asvar t_empty_message trimmed %}
 You have not exchanged any messages with {{ display_name }}.

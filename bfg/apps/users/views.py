@@ -156,7 +156,8 @@ class SingleUserMixin(ParentObjectMixin, BaseUserQuerySetMixin):
             return 0
 
         return (
-            Message.objects.from_sender_to_recipient(self.user_obj, self.request.user)
+            Message.objects.for_community(self.request.community)
+            .from_sender_to_recipient(self.user_obj, self.request.user)
             .unread()
             .count()
         )
@@ -263,6 +264,22 @@ class UserMessageListView(SingleUserMixin, ListView):
         else:
             qs = qs.between(self.request.user, self.user_obj)
         return qs
+
+    def get_num_messages_sent(self):
+        return self.get_queryset().filter(sender=self.request.user).count()
+
+    def get_num_messages_received(self):
+        return self.get_queryset().filter(recipient=self.request.user).count()
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data.update(
+            {
+                "sent_messages": self.get_num_messages_sent(),
+                "received_messages": self.get_num_messages_received(),
+            }
+        )
+        return data
 
 
 user_message_list_view = UserMessageListView.as_view()
