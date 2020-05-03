@@ -4,13 +4,7 @@
 import axios from 'axios';
 import getCaretPosition from 'textarea-caret';
 
-import {
-  KEY_ARR_DOWN,
-  KEY_ARR_UP,
-  KEY_ESC,
-  KEY_RTN,
-  KEY_TAB,
-} from '@utils/application-constants';
+import { KEY_ARR_DOWN, KEY_ARR_UP, KEY_ESC, KEY_RTN, KEY_TAB } from '@utils/constants';
 
 import { fitIntoViewport, maximizeZIndex } from '@utils/dom-helpers';
 

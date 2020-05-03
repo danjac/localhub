@@ -4,7 +4,7 @@
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-import { EVENT_CONFIRM_OPEN } from '@utils/application-constants';
+import { EVENT_CONFIRM_OPEN } from '@utils/constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {

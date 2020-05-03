@@ -1,7 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { EVENT_CONFIRM_OPEN, KEY_ESC } from '@utils/application-constants';
+import { EVENT_CONFIRM_OPEN, KEY_ESC } from '@utils/constants';
 import { maximizeZIndex } from '@utils/dom-helpers';
 
 import ApplicationController from './application-controller';
