@@ -41,7 +41,7 @@
         {{ start_date }} @ {{ start_time }} - {{ end_date }} @ {{ end_time }}</dd{%>
     {% endif %} {% endwith %}
                               {% else %}
-                              <dt>{% trans "Date" %} <span class="label">{{ object.timezone }}</span></dt>
+                              <dt>{% if object.is_repeating %}{% trans "Next Date" %}{% else %}{% trans "Date" %}{% endif %}  <span class="label">{{ object.timezone }}</span></dt>
       <dd{% if not object.is_attendable %} class="text-strike"
                                            {% endif %}>
         {{ starts|date:"DATE_FORMAT" }} @ {{ starts|date:"TIME_FORMAT" }}

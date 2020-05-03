@@ -84,18 +84,6 @@ class EventQuerySet(ActivityQuerySet):
                 output_field=models.DateTimeField(),
             ),
             next_date=models.Case(
-                # starts is later today: we have to use current datetime, otherwise
-                # any timedelta calculations will push it into the future.
-                models.When(
-                    models.Q(
-                        starts__day=now.day,
-                        starts__month=now.month,
-                        starts__year=now.year,
-                        starts__gt=now,
-                    ),
-                    then=models.F("starts"),
-                ),
-                # starts is later than the current date: we just use
                 # the start date.
                 models.When(
                     models.Q(starts__gte=models.F("base_date"))
