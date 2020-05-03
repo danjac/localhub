@@ -320,10 +320,6 @@ class Testing(Base):
     THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + ["django_extensions"]
     SITE_ID = 1
 
-    SOCIAL_BFG_VAPID_PUBLIC_KEY = None
-    SOCIAL_BFG_VAPID_PRIVATE_KEY = None
-    SOCIAL_BFG_VAPID_ADMIN_EMAIL = None
-
     THUMBNAIL_KVSTORE = "sorl.thumbnail.kvstores.cached_db_kvstore.KVStore"
 
 
