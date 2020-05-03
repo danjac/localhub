@@ -390,22 +390,18 @@ class TestEventModel:
         assert not event.matches_date(dt)
 
     def test_matches_date_if_repeats_yearly_matches_date(self):
-        now = timezone.now()
-        event = EventFactory(
-            starts=now - timedelta(days=30), repeats=Event.RepeatChoices.YEARLY,
-        )
-        dt = (now + timedelta(days=400)).replace(
-            day=event.starts.day, month=event.starts.month
-        )
+        now = datetime.datetime(year=2020, month=4, day=4, tzinfo=pytz.UTC)
+        event = EventFactory(starts=now, repeats=Event.RepeatChoices.YEARLY,)
+        dt = now.replace(day=event.starts.day, month=event.starts.month, year=2021)
         assert event.matches_date(dt)
 
     def test_matches_date_if_repeats_yearly_not_matches_date(self):
-        now = timezone.now()
+        now = datetime.datetime(year=2020, month=4, day=4, tzinfo=pytz.UTC)
         event = EventFactory(
             starts=now - timedelta(days=30), repeats=Event.RepeatChoices.YEARLY,
         )
-        dt = (now + timedelta(days=400)).replace(
-            day=event.starts.month, month=event.starts.month
+        dt = now.replace(
+            day=event.starts.month, month=event.starts.month, year=2021
         ) - timedelta(days=1)
         assert not event.matches_date(dt)
 

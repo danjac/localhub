@@ -44,37 +44,37 @@ class PhotoForm(ActivityForm):
             "latitude",
             "longitude",
         )
-        fieldsets = (
-            (
-                None,
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.form_helper = FormHelper(
+            self,
+            fieldsets=(
                 (
-                    "title",
-                    "hashtags",
-                    "mentions",
-                    "image",
-                    "description",
-                    "allow_comments",
+                    None,
+                    (
+                        "title",
+                        "hashtags",
+                        "mentions",
+                        "image",
+                        "description",
+                        "allow_comments",
+                        "extract_gps_data",
+                        "clear_gps_data",
+                    ),
                 ),
-            ),
-            (
-                _("Photo Meta Data"),
                 (
-                    "extract_gps_data",
-                    "clear_gps_data",
-                    "artist",
-                    "original_url",
-                    "cc_license",
+                    _("Additional Information"),
+                    ("artist", "original_url", "cc_license",),
                 ),
             ),
         )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.form_helper = FormHelper(self)
-
         self.fields["image"].widget = ClearableImageInput()
         self.fields["latitude"].widget = forms.HiddenInput()
         self.fields["longitude"].widget = forms.HiddenInput()
+
+        self.fields["original_url"].label = _("Original URL")
 
         # we will try and use the photo filename if no title provided
         self.fields["title"].required = False
