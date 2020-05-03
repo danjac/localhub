@@ -145,11 +145,13 @@ export default class extends ApplicationController {
     }
 
     const text = value.slice(index, selectionStart);
-    if (!text || text.match(/[\s#<>!.?[\]|{}]+/)) {
+    // only trigger if no other text after this
+    const nextChar = value.slice(selectionStart, selectionStart + 1).trim();
+    if (nextChar || !text || text.match(/[\s#<>!.?[\]|{}]+/)) {
       return false;
     }
 
-    this.doSearch(text, searchUrl);
+    this.doSearch(text.trim(), searchUrl);
     return true;
   }
 
@@ -163,7 +165,14 @@ export default class extends ApplicationController {
       .then((response) => {
         if (response.data) {
           this.selectorTarget.innerHTML = response.data;
-          if (this.selectorTarget.querySelectorAll('[data-typeahead-value]').length) {
+          const results = this.selectorTarget.querySelectorAll(
+            '[data-typeahead-value]'
+          );
+          if (
+            results.length &&
+            results[0].getAttribute(`data-${this.identifier}-value`) !==
+              text.toLowerCase()
+          ) {
             this.openSelector();
           } else {
             this.closeSelector();
