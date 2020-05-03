@@ -25,7 +25,7 @@
     {% if start_date == end_date %}
 
     <dt>
-    {% if object.is_repeating %}{% trans "Next Date" %}{% else %}{% trans "Date" %}{% endif %} <span class="label">{{ object.timezone }}</span>
+      {% trans "Date" %} <span class="label">{{ object.timezone }}</span>
     </dt>
 
     <dd{% if not object.is_attendable %} class="text-strike"
@@ -41,7 +41,7 @@
         {{ start_date }} @ {{ start_time }} - {{ end_date }} @ {{ end_time }}</dd{%>
     {% endif %} {% endwith %}
                               {% else %}
-                              <dt>{% if object.is_repeating %}{% trans "Next Date" %}{% else %}{% trans "Date" %}{% endif %}  <span class="label">{{ object.timezone }}</span></dt>
+                              <dt>{% trans "Date" %} <span class="label">{{ object.timezone }}</span></dt>
       <dd{% if not object.is_attendable %} class="text-strike"
                                            {% endif %}>
         {{ starts|date:"DATE_FORMAT" }} @ {{ starts|date:"TIME_FORMAT" }}
@@ -50,11 +50,11 @@
    {% endif %} {% if object.repeats %}
                               <dt>{% trans "Repeats" %}</dt>
       <dd>
-      {% if object.repeats_weekly %}
-      {% blocktrans with weekday=object.starts|date:"l" %}
-      Same time every {{ weekday }}
-      {% endblocktrans %}
-      {% else %}
+        {% if object.repeats_weekly %}
+        {% blocktrans with weekday=object.starts|date:"l" %}
+        Same time every {{ weekday }}
+        {% endblocktrans %}
+        {% else %}
         {{ object.get_repeats_display }}
         {% endif %}
         {% if object.repeats_until %}
