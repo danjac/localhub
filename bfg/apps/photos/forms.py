@@ -16,8 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 class PhotoForm(ActivityForm):
-    class InvalidGPSLocation(ValueError):
-        ...
 
     extract_gps_data = forms.BooleanField(
         label=_("Extract GPS data from image if available"), required=False,
