@@ -146,7 +146,7 @@ class Base(Configuration):
     # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
     LANGUAGE_CODE = "en"
-    LANGUAGES = [("en-us", "English (US)"), ("en-gb", "English (GB)"), ("fi", "Suomi")]
+    LANGUAGES = [("en", "English (US)"), ("en-gb", "English (GB)"), ("fi", "Suomi")]
 
     TIME_ZONE = "UTC"
 
