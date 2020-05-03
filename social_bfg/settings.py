@@ -191,26 +191,30 @@ class Base(Configuration):
     TAGGIT_CASE_INSENSITIVE = True
 
     # https://web-push-codelab.glitch.me/
-    BFG_VAPID_PUBLIC_KEY = values.Value()
-    BFG_VAPID_PRIVATE_KEY = values.Value()
-    BFG_VAPID_ADMIN_EMAIL = values.Value()
+
+    SOCIAL_BFG_VAPID_PUBLIC_KEY = values.Value()
+    SOCIAL_BFG_VAPID_PRIVATE_KEY = values.Value()
+    SOCIAL_BFG_VAPID_ADMIN_EMAIL = values.Value()
 
     # project-specific
 
-    BFG_DEFAULT_PAGE_SIZE = 12
-    BFG_HOME_PAGE_URL = reverse_lazy("activity_stream")
-    BFG_GEOLOCATOR_USER_AGENT = values.Value("social_bfg.locator")
+    SOCIAL_BFG_DEFAULT_PAGE_SIZE = 12
+    SOCIAL_BFG_HOME_PAGE_URL = reverse_lazy("activity_stream")
+    SOCIAL_BFG_GEOLOCATOR_USER_AGENT = values.Value("social_bfg.locator")
 
-    BFG_HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")
-    BFG_HASHTAGS_TYPEAHEAD_CONFIG = (
+    SOCIAL_BFG_HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")
+    SOCIAL_BFG_HASHTAGS_TYPEAHEAD_CONFIG = (
         "#",
         reverse_lazy("hashtags:autocomplete_list"),
     )
 
-    BFG_MENTIONS_RE = re.compile(r"(?:^|\s)[＠ @]{1}([^\s#<>!.?[\]|{}]+)")
-    BFG_MENTIONS_TYPEAHEAD_CONFIG = ("@", reverse_lazy("users:autocomplete_list"))
+    SOCIAL_BFG_MENTIONS_RE = re.compile(r"(?:^|\s)[＠ @]{1}([^\s#<>!.?[\]|{}]+)")
+    SOCIAL_BFG_MENTIONS_TYPEAHEAD_CONFIG = (
+        "@",
+        reverse_lazy("users:autocomplete_list"),
+    )
 
-    BFG_WEBPUSH_ENABLED = values.BooleanValue(True)
+    SOCIAL_BFG_WEBPUSH_ENABLED = values.BooleanValue(True)
 
     @property
     def BASE_DIR(self):
@@ -295,11 +299,11 @@ class Base(Configuration):
 
     @property
     def LOGIN_REDIRECT_URL(self):
-        return self.BFG_HOME_PAGE_URL
+        return self.SOCIAL_BFG_HOME_PAGE_URL
 
     @property
-    def BFG_LONG_PAGE_SIZE(self):
-        return self.BFG_DEFAULT_PAGE_SIZE * 2
+    def SOCIAL_BFG_LONG_PAGE_SIZE(self):
+        return self.SOCIAL_BFG_DEFAULT_PAGE_SIZE * 2
 
 
 class DockerConfigMixin:
