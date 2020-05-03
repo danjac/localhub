@@ -2,9 +2,11 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+# Django
 from django import forms
 from django.conf import settings
 
+# Social-BFG
 from social_bfg.forms.widgets import BaseTypeaheadInput
 
 from .validators import validate_hashtags

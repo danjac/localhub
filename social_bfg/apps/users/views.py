@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+# Django
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -12,8 +13,10 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DeleteView, ListView, View
 
+# Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
 
+# Social-BFG
 from social_bfg.apps.activities.utils import get_activity_models
 from social_bfg.apps.activities.views.streams import BaseActivityStreamView
 from social_bfg.apps.comments.models import Comment

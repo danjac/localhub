@@ -5,8 +5,10 @@
 Rulesets for the activities app and subclassed models.
 """
 
+# Third Party Libraries
 import rules
 
+# Social-BFG
 from social_bfg.apps.communities.rules import is_member, is_moderator
 
 

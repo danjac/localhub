@@ -1,7 +1,9 @@
+# Django
 from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
 
+# Third Party Libraries
 from sorl.thumbnail.admin import AdminImageMixin
 
 from .forms import UserChangeForm, UserCreationForm

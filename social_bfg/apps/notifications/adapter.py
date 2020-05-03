@@ -1,6 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.conf import settings
 from django.core.mail import send_mail
 from django.template import loader
@@ -8,6 +9,7 @@ from django.templatetags.static import static
 from django.utils.encoding import force_text
 from django.utils.translation import override
 
+# Third Party Libraries
 from celery.utils.log import get_logger
 
 celery_logger = get_logger(__name__)

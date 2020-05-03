@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+# Django
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.postgres.fields import ArrayField
@@ -12,10 +13,12 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+# Third Party Libraries
 from sorl.thumbnail import ImageField
 from taggit.models import Tag
 from timezone_field import TimeZoneField
 
+# Social-BFG
 from social_bfg.apps.communities.models import Membership
 from social_bfg.apps.notifications.decorators import notify
 from social_bfg.apps.notifications.models import Notification

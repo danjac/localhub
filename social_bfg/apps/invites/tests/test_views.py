@@ -1,8 +1,11 @@
+# Django
 from django.conf import settings
 from django.urls import reverse
 
+# Third Party Libraries
 import pytest
 
+# Social-BFG
 from social_bfg.apps.communities.models import Membership
 
 from ..factories import InviteFactory

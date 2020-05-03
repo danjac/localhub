@@ -2,9 +2,11 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+# Django
 from django.conf import settings
 from django.urls import reverse
 
+# Social-BFG
 from social_bfg.utils.text import slugify_unicode
 
 

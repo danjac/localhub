@@ -1,8 +1,10 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Third Party Libraries
 import pytest
 
+# Social-BFG
 from social_bfg.apps.communities.factories import CommunityFactory
 
 from ..forms import JoinRequestForm

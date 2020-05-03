@@ -2,14 +2,17 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+# Django
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+# Third Party Libraries
 from model_utils.fields import MonitorField
 from model_utils.models import TimeStampedModel
 
+# Social-BFG
 from social_bfg.apps.communities.models import Community
 from social_bfg.db.search.mixins import SearchQuerySetMixin
 

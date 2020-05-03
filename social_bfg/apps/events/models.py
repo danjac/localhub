@@ -1,9 +1,11 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
 import calendar
 import datetime
 
+# Django
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -20,12 +22,14 @@ from django.utils import timezone
 from django.utils.encoding import smart_text
 from django.utils.translation import gettext_lazy as _
 
+# Third Party Libraries
 import pytz
 from django_countries.fields import CountryField
 from icalendar import Calendar
 from icalendar import Event as CalendarEvent
 from timezone_field import TimeZoneField
 
+# Social-BFG
 from social_bfg.apps.activities.models import (
     Activity,
     ActivityManager,

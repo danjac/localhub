@@ -2,8 +2,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+# Django
 from django.contrib import admin
 
+# Social-BFG
 from social_bfg.markdown.admin import MarkdownFieldMixin
 
 

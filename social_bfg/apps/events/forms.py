@@ -1,12 +1,15 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django import forms
 from django.utils.timezone import localtime, make_aware
 from django.utils.translation import gettext_lazy as _
 
+# Third Party Libraries
 import pytz
 
+# Social-BFG
 from social_bfg.apps.activities.forms import ActivityForm
 from social_bfg.forms import CalendarField, CalendarWidget, FormHelper
 from social_bfg.utils.geocode import geocode

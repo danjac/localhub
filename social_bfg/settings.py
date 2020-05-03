@@ -1,12 +1,15 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
 import os
 import re
 import socket
 
+# Django
 from django.urls import reverse_lazy
 
+# Third Party Libraries
 import pymdownx.emoji
 from configurations import Configuration, values
 

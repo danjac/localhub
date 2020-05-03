@@ -2,8 +2,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+# Third Party Libraries
 import pytest
 
+# Social-BFG
 from social_bfg.apps.flags.factories import FlagFactory
 from social_bfg.apps.invites.factories import InviteFactory
 from social_bfg.apps.join_requests.factories import JoinRequestFactory

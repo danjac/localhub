@@ -2,8 +2,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+# Django
 from django import template
 
+# Social-BFG
 from social_bfg.apps.flags.templatetags import flags
 from social_bfg.apps.invites.templatetags import invites
 from social_bfg.apps.join_requests.templatetags import join_requests

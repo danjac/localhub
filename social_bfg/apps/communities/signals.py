@@ -1,10 +1,12 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.db import transaction
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
+# Social-BFG
 from social_bfg.apps.join_requests.models import JoinRequest
 
 from .models import Membership

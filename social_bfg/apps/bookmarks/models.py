@@ -1,13 +1,16 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
+# Third Party Libraries
 from model_utils.models import TimeStampedModel
 
+# Social-BFG
 from social_bfg.apps.communities.models import Community
 from social_bfg.db.generic import (
     get_generic_related_exists,

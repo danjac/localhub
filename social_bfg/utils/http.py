@@ -1,12 +1,15 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
 import os
 from urllib.parse import urlparse
 
+# Django
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 
+# Third Party Libraries
 import requests
 
 _urlvalidator = URLValidator()

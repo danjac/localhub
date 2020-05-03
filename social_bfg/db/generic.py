@@ -6,6 +6,7 @@ Functions for more efficient handling of ContentType related
 objects with querysets.
 """
 
+# Django
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models

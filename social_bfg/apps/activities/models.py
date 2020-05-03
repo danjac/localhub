@@ -1,6 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
@@ -8,10 +9,12 @@ from django.db import models, transaction
 from django.urls import reverse
 from django.utils import timezone
 
+# Third Party Libraries
 from model_utils.models import TimeStampedModel
 from taggit.managers import TaggableManager
 from taggit.models import Tag
 
+# Social-BFG
 from social_bfg.apps.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from social_bfg.apps.comments.models import Comment, CommentAnnotationsQuerySetMixin
 from social_bfg.apps.communities.models import Community

@@ -1,9 +1,11 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.core.management import call_command
 from django.core.management.base import CommandError
 
+# Third Party Libraries
 import pytest
 
 from ..models import Community, Membership

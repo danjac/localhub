@@ -1,5 +1,7 @@
+# Django
 from django.contrib import admin
 
+# Social-BFG
 from social_bfg.markdown.admin import MarkdownFieldMixin
 
 from .models import Community, Membership

@@ -1,6 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Social-BFG
 from social_bfg.apps.activities.views.streams import BaseActivityStreamView
 from social_bfg.apps.comments.views import BaseCommentListView
 from social_bfg.apps.private_messages.views import (

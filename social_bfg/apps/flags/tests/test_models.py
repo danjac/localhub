@@ -2,11 +2,14 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+# Django
 from django.db.models import signals
 
+# Third Party Libraries
 import factory
 import pytest
 
+# Social-BFG
 from social_bfg.apps.comments.factories import CommentFactory
 from social_bfg.apps.posts.factories import PostFactory
 

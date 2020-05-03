@@ -2,9 +2,11 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+# Django
 from django.conf import settings
 from django.views.generic import ListView
 
+# Social-BFG
 from social_bfg.apps.communities.views import (
     CommunityModeratorRequiredMixin,
     CommunityRequiredMixin,

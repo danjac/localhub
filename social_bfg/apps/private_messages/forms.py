@@ -2,10 +2,12 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+# Django
 from django import forms
 from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.utils.translation import gettext_lazy as _
 
+# Social-BFG
 from social_bfg.apps.users.forms import MentionsField
 from social_bfg.apps.users.utils import extract_mentions
 

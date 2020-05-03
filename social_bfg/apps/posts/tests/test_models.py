@@ -1,9 +1,11 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Third Party Libraries
 import pytest
 from taggit.models import Tag
 
+# Social-BFG
 from social_bfg.apps.comments.factories import CommentFactory
 from social_bfg.apps.comments.models import Comment
 from social_bfg.apps.communities.factories import CommunityFactory, MembershipFactory

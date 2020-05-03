@@ -1,11 +1,14 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+# Third Party Libraries
 from sorl.thumbnail import ImageField
 
+# Social-BFG
 from social_bfg.apps.activities.models import Activity
 from social_bfg.db.search.indexer import SearchIndexer
 

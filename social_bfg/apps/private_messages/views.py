@@ -1,6 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
@@ -10,8 +11,10 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView
 
+# Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
 
+# Social-BFG
 from social_bfg.apps.bookmarks.models import Bookmark
 from social_bfg.apps.communities.views import CommunityRequiredMixin
 from social_bfg.views import (

@@ -5,13 +5,16 @@
 Custom Markdown-related functions.
 """
 
+# Standard Library
 from functools import partial
 
+# Third Party Libraries
 import bleach
 from bleach import Cleaner  # type: ignore
 from bleach.linkifier import TLDS, LinkifyFilter, build_url_re
 from markdownx.utils import markdownify as default_markdownify
 
+# Social-BFG
 from social_bfg.apps.hashtags.utils import linkify_hashtags
 from social_bfg.apps.users.utils import linkify_mentions
 

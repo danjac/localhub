@@ -1,8 +1,10 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
 import json
 
+# Django
 from django import forms
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _

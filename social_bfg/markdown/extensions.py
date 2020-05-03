@@ -3,6 +3,7 @@
 
 # Code adapted from https://github.com/pehala/markdown-newtab/
 
+# Third Party Libraries
 from markdown import Extension
 from markdown.inlinepatterns import (
     AUTOLINK_RE,
@@ -14,6 +15,7 @@ from markdown.inlinepatterns import (
 )
 from markdown.util import etree
 
+# Social-BFG
 from social_bfg.utils.http import is_https
 
 

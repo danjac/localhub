@@ -1,14 +1,17 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
 import json
 
+# Django
 from django.conf import settings
 from django.db import IntegrityError
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, TemplateView, View
 
+# Social-BFG
 from social_bfg.apps.communities.views import CommunityRequiredMixin
 from social_bfg.views import SuccessActionView, SuccessDeleteView, SuccessView
 

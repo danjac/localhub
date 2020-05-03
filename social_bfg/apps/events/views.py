@@ -1,9 +1,11 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
 import calendar
 import datetime
 
+# Django
 from django.http import Http404, HttpResponse
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -12,8 +14,10 @@ from django.views.generic import View
 from django.views.generic.dates import DateMixin, DayMixin, MonthMixin, YearMixin
 from django.views.generic.detail import SingleObjectMixin
 
+# Third Party Libraries
 import pytz
 
+# Social-BFG
 from social_bfg.apps.activities.views.generic import (
     ActivityCreateView,
     ActivityListView,

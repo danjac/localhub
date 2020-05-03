@@ -1,9 +1,11 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.conf import settings
 from django.core.cache import cache
 
+# Third Party Libraries
 from micawber.providers import Provider
 from micawber.providers import bootstrap_oembed as _bootstrap_oembed
 

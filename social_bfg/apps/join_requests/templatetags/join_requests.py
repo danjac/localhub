@@ -2,8 +2,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+# Django
 from django import template
 
+# Social-BFG
 from social_bfg.apps.communities.models import Membership
 
 from ..models import JoinRequest

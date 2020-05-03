@@ -1,9 +1,11 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
 import operator
 from functools import reduce
 
+# Django
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
@@ -11,9 +13,11 @@ from django.template.response import TemplateResponse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView
 
+# Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
 from taggit.models import Tag, TaggedItem
 
+# Social-BFG
 from social_bfg.apps.activities.utils import get_activity_models
 from social_bfg.apps.activities.views.streams import BaseActivityStreamView
 from social_bfg.apps.communities.views import CommunityRequiredMixin

@@ -1,12 +1,15 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.urls import reverse
 
+# Third Party Libraries
 import pytest
 from pytest_django.asserts import assertTemplateUsed
 from taggit.models import Tag
 
+# Social-BFG
 from social_bfg.apps.communities.factories import CommunityFactory, MembershipFactory
 from social_bfg.apps.events.factories import EventFactory
 from social_bfg.apps.photos.factories import PhotoFactory

@@ -1,11 +1,14 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
 import logging
 
+# Django
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+# Social-BFG
 from social_bfg.apps.activities.forms import ActivityForm
 from social_bfg.forms import ClearableImageInput, FormHelper
 from social_bfg.utils.exif import Exif

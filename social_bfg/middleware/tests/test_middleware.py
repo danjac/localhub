@@ -1,9 +1,11 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.http import HttpResponseNotAllowed, HttpResponseRedirect
 from django.test import override_settings
 
+# Third Party Libraries
 import pytest
 
 from ..http import HttpResponseNotAllowedMiddleware

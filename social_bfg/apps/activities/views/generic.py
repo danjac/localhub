@@ -1,6 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.conf import settings
 from django.db import IntegrityError
 from django.urls import reverse
@@ -8,8 +9,10 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView
 
+# Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
 
+# Social-BFG
 from social_bfg.apps.bookmarks.models import Bookmark
 from social_bfg.apps.comments.forms import CommentForm
 from social_bfg.apps.communities.views import CommunityRequiredMixin

@@ -1,6 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.indexes import GinIndex
@@ -9,8 +10,10 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 
+# Third Party Libraries
 from model_utils.models import TimeStampedModel
 
+# Social-BFG
 from social_bfg.apps.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from social_bfg.apps.communities.models import Community
 from social_bfg.apps.notifications.decorators import notify

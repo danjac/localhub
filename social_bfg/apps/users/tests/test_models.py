@@ -1,11 +1,14 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.utils import timezone
 
+# Third Party Libraries
 import pytest
 from allauth.account.models import EmailAddress
 
+# Social-BFG
 from social_bfg.apps.communities.factories import CommunityFactory, MembershipFactory
 from social_bfg.apps.communities.models import Membership
 from social_bfg.apps.private_messages.factories import MessageFactory

@@ -1,11 +1,14 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.conf import settings
 from django.urls import reverse
 
+# Third Party Libraries
 import pytest
 
+# Social-BFG
 from social_bfg.apps.bookmarks.factories import BookmarkFactory
 from social_bfg.apps.bookmarks.models import Bookmark
 from social_bfg.apps.comments.models import Comment

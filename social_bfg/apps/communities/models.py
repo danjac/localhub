@@ -1,9 +1,11 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
 from dataclasses import dataclass
 from urllib.parse import urljoin
 
+# Django
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.validators import RegexValidator, URLValidator
@@ -12,9 +14,11 @@ from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+# Third Party Libraries
 from model_utils.models import TimeStampedModel
 from sorl.thumbnail import ImageField
 
+# Social-BFG
 from social_bfg.apps.hashtags.utils import extract_hashtags
 from social_bfg.db.search.mixins import SearchQuerySetMixin
 from social_bfg.markdown.fields import MarkdownField

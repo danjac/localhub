@@ -1,6 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,9 +12,11 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import DetailView, ListView, TemplateView
 
+# Third Party Libraries
 import rules
 from rules.contrib.views import PermissionRequiredMixin
 
+# Social-BFG
 from social_bfg.apps.invites.models import Invite
 from social_bfg.apps.join_requests.models import JoinRequest
 from social_bfg.views import SearchMixin, SuccessDeleteView, SuccessUpdateView

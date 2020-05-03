@@ -1,10 +1,12 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.utils.translation import gettext as _
 from django.views.generic import View
 
+# Social-BFG
 from social_bfg.utils.http import URLResolver
 from social_bfg.utils.scraper import HTMLScraper
 

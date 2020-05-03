@@ -1,14 +1,17 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Django
 from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateResponseMixin
 
+# Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
 
+# Social-BFG
 from social_bfg.apps.activities.views.generic import (
     ActivityCreateView,
     ActivityDetailView,

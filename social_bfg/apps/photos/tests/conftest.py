@@ -1,10 +1,13 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
 import io
 
+# Django
 from django.core.files import File
 
+# Third Party Libraries
 import pytest
 from PIL import Image
 

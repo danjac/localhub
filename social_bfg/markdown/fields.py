@@ -12,11 +12,14 @@ This provides additional methods on the field:
 - obj.description.extract_hashtags() -> returns set of "#" tag strings
 """
 
+# Django
 from django.template.defaultfilters import striptags
 from django.utils.safestring import mark_safe
 
+# Third Party Libraries
 from markdownx.models import MarkdownxField
 
+# Social-BFG
 from social_bfg.apps.hashtags.utils import extract_hashtags
 from social_bfg.apps.users.utils import extract_mentions
 

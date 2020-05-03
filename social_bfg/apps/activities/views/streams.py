@@ -1,8 +1,10 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
 import itertools
 
+# Django
 from django.conf import settings
 from django.http import Http404
 from django.utils.formats import date_format
@@ -15,6 +17,7 @@ from django.views.generic.dates import (
     _date_from_string,
 )
 
+# Social-BFG
 from social_bfg.apps.communities.views import CommunityRequiredMixin
 from social_bfg.apps.notifications.models import Notification
 from social_bfg.pagination import PresetCountPaginator

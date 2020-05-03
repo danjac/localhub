@@ -1,7 +1,10 @@
+# Django
 from django.utils.encoding import force_str
 
+# Third Party Libraries
 import pytest
 
+# Social-BFG
 from social_bfg.apps.posts.factories import PostFactory
 
 pytestmark = pytest.mark.django_db

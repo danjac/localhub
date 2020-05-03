@@ -1,5 +1,7 @@
+# Third Party Libraries
 from factory import DjangoModelFactory, SubFactory
 
+# Social-BFG
 from social_bfg.apps.communities.factories import CommunityFactory
 from social_bfg.apps.users.factories import UserFactory
 

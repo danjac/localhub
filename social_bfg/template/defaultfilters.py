@@ -1,8 +1,10 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
 import html
 
+# Django
 from django import template
 from django.db.models import Model
 from django.forms import FileField
@@ -10,8 +12,10 @@ from django.urls import NoReverseMatch, reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 
+# Third Party Libraries
 from bs4 import BeautifulSoup
 
+# Social-BFG
 from social_bfg.utils.http import URLResolver, get_root_url, is_image_url
 
 register = template.Library()

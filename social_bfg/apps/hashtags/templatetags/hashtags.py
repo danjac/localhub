@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
+# Django
 from django import template
 from django.utils.safestring import mark_safe
 
