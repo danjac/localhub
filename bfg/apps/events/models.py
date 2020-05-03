@@ -160,12 +160,13 @@ class EventQuerySet(ActivityQuerySet):
 
         Relevance:
         1) if private/canceled: -1
-        2) if event coming up: +1
+        2) if event coming up OR same day as today: +1
         3) if event passed: 0
 
         Returns:
             QuerySet
         """
+        now = timezone.now()
 
         return self.annotate(
             relevance=models.Case(
@@ -173,7 +174,17 @@ class EventQuerySet(ActivityQuerySet):
                     models.Q(published__isnull=True) | models.Q(canceled__isnull=False),
                     then=models.Value(-1),
                 ),
-                models.When(next_date__gte=Now(), then=models.Value(1)),
+                models.When(
+                    models.Q(
+                        models.Q(next_date__gte=now)
+                        | models.Q(
+                            next_date__day=now.day,
+                            next_date__month=now.month,
+                            next_date__year=now.year,
+                        )
+                    ),
+                    then=models.Value(1),
+                ),
                 default=0,
                 output_field=models.IntegerField(),
             )
