@@ -3,6 +3,7 @@
 
 import axios from 'axios';
 
+import { Events } from '@utils/constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
@@ -66,11 +67,11 @@ export default class extends ApplicationController {
   }
 
   disableFormControls() {
-    this.element.form.disableFormControls();
+    this.bus.publish(Events.FORM_DISABLE);
   }
 
   enableFormControls() {
-    this.element.form.enableFormControls();
+    this.bus.publish(Events.FORM_ENABLE);
   }
 
   clearListeners() {

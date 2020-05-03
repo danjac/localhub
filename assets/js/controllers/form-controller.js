@@ -4,6 +4,7 @@
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
+import { Events } from '@utils/constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
@@ -27,7 +28,8 @@ export default class extends ApplicationController {
       element.addEventListener('change', () => this.data.set('changed', true))
     );
 
-    this.element[this.identifier] = this;
+    this.bus.subscribe(Events.FORM_ENABLE, () => this.enableFormControls());
+    this.bus.subscribe(Events.FORM_DISABLE, () => this.disableFormControls());
   }
 
   unload(event) {
