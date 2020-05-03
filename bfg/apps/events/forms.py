@@ -29,6 +29,7 @@ class EventForm(ActivityForm):
         required=False,
         input_date_formats=DATE_FORMATS,
         widget=CalendarWidget(listen="event:starts", default_time="09:00"),
+        help_text=_("Leave empty if it's an all-day event"),
     )
 
     repeats_until = CalendarField(
