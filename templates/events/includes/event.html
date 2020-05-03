@@ -20,7 +20,7 @@
     {% timezone object.timezone %}
     {% if ends %}
 
-    {% with start_date=starts|date:"DATE_FORMAT" end_date=ends|date:"DATE_FORMAT" start_time=starts|date:"TIME_FORMAT" end_time=ends|date:"TIME_FORMAT" %}
+    {% with start_date=starts|date:"SHORT_DATE_FORMAT" end_date=ends|date:"SHORT_DATE_FORMAT" start_time=starts|date:"TIME_FORMAT" end_time=ends|date:"TIME_FORMAT" %}
 
     {% if start_date == end_date %}
 
@@ -30,7 +30,7 @@
 
     <dd{% if not object.is_attendable %} class="text-strike"
                                          {% endif %}>
-      {{ start_date }} @ {{ start_time }} - {{ end_time }}
+      {{ starts|date:"D" }} {{ start_date }} @ {{ start_time }} - {{ end_time }}
       </dd>
 
       {% else %}
@@ -38,13 +38,13 @@
 
       <dd{% if not object.is_attendable %} class="text-strike"
                                            {% endif %}>
-        {{ start_date }} @ {{ start_time }} - {{ end_date }} @ {{ end_time }}</dd{%>
+      {{ starts|date:"D" }} {{ start_date }} @ {{ start_time }} - {{ ends|date:"D" }} {{ end_date }} @ {{ end_time }}</dd{%>
     {% endif %} {% endwith %}
                               {% else %}
                               <dt>{% trans "Date" %} <span class="label">{{ object.timezone }}</span></dt>
       <dd{% if not object.is_attendable %} class="text-strike"
                                            {% endif %}>
-        {{ starts|date:"DATE_FORMAT" }} @ {{ starts|date:"TIME_FORMAT" }}
+      {{ starts|date:"D" }} {{ starts|date:"SHORT_DATE_FORMAT" }} @ {{ starts|date:"TIME_FORMAT" }}
       </dd{%>
 
    {% endif %} {% if object.repeats %}
@@ -58,7 +58,7 @@
         {{ object.get_repeats_display }}
         {% endif %}
         {% if object.repeats_until %}
-        {% blocktrans with until=object.repeats_until|date:"DATE_FORMAT" %}
+        {% blocktrans with until=object.repeats_until|date:"SHORT_DATE_FORMAT" %}
         until {{ until }}
         {% endblocktrans %}
         {% endif %}

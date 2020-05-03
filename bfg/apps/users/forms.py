@@ -42,6 +42,7 @@ class UserForm(forms.ModelForm):
             "name",
             "avatar",
             "bio",
+            "language",
             "send_email_notifications",
             "activity_stream_filters",
             "show_sensitive_content",
@@ -78,6 +79,7 @@ class UserForm(forms.ModelForm):
                 (
                     _("Preferences"),
                     (
+                        "language",
                         "send_email_notifications",
                         "show_sensitive_content",
                         "show_external_images",

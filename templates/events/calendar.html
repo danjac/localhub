@@ -19,7 +19,7 @@
   </li>
   <li class="li breadcrumb-item">
     <a data-turbolinks="false"
-       href="#">{{ current_date|date:"l j" }}</a>
+       href="#">{{ current_date|date:"D" }} {{ current_date|date:"SHORT_DATE_FORMAT" }}</a>
   </li>
 </ul>
 {% endif %}

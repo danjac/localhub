@@ -89,8 +89,8 @@ class Base(Configuration):
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
+        "bfg.apps.users.middleware.UserLocaleMiddleware",
         "django.middleware.gzip.GZipMiddleware",
-        # "bfg.apps.users.middleware.UserLocaleMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
     ]
@@ -146,7 +146,7 @@ class Base(Configuration):
     # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
     LANGUAGE_CODE = "en"
-    LANGUAGES = [("en", "English"), ("fi", "Suomi")]
+    LANGUAGES = [("en-us", "English (US)"), ("en-gb", "English (GB)"), ("fi", "Suomi")]
 
     TIME_ZONE = "UTC"
 
