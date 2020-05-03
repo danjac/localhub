@@ -8,23 +8,23 @@ export default class {
     this.bus = bus;
   }
 
-  sendMessage(type, message) {
+  toast(type, message) {
     this.bus.pub(Events.TOAST_MESSAGE, { type, message });
   }
 
   success(message) {
-    this.sendMessage('toast-success', message);
+    this.toast('toast-success', message);
   }
 
   info(message) {
-    this.sendMessage('toast-info', message);
+    this.toast('toast-info', message);
   }
 
   warning(message) {
-    this.sendMessage('toast-warning', message);
+    this.toast('toast-warning', message);
   }
 
   error(message) {
-    this.sendMessage('toast-error', message);
+    this.toast('toast-error', message);
   }
 }
