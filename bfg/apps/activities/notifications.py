@@ -6,30 +6,30 @@ from django.utils.translation import gettext_lazy as _
 
 from bfg.apps.notifications.adapter import Adapter, Mailer, Webpusher
 
-HEADERS = [
-    ("delete", _("%(actor)s has deleted your %(object)s")),
-    ("edit", _("%(actor)s has edited your %(object)s")),
-    ("flag", _("%(actor)s has flagged this %(object)s")),
-    ("like", _("%(actor)s has liked your %(object)s")),
-    ("mention", _("%(actor)s has mentioned you in their %(object)s")),
-    (
-        "moderator_review",
-        _("%(actor)s has submitted or updated their %(object)s for review"),
-    ),
-    ("followed_user", _("%(actor)s has submitted a new %(object)s")),
-    (
-        "followed_tag",
-        _(
-            "Someone has submitted or updated a new %(object)s containing tags you are following"  # noqa
+
+class ActivityHeadersMixin:
+    HEADERS = [
+        ("delete", _("%(actor)s has deleted your %(object)s")),
+        ("edit", _("%(actor)s has edited your %(object)s")),
+        ("flag", _("%(actor)s has flagged this %(object)s")),
+        ("like", _("%(actor)s has liked your %(object)s")),
+        ("mention", _("%(actor)s has mentioned you in their %(object)s")),
+        (
+            "moderator_review",
+            _("%(actor)s has submitted or updated their %(object)s for review"),
         ),
-    ),
-    ("reshare", _("%(actor)s has reshared your %(object)s")),
-]
+        ("followed_user", _("%(actor)s has submitted a new %(object)s")),
+        (
+            "followed_tag",
+            _(
+                "Someone has submitted or updated a new %(object)s containing tags you are following"  # noqa
+            ),
+        ),
+        ("reshare", _("%(actor)s has reshared your %(object)s")),
+    ]
 
 
-class ActivityMailer(Mailer):
-    HEADERS = HEADERS
-
+class ActivityMailer(ActivityHeadersMixin, Mailer):
     def get_subject(self):
         return dict(self.HEADERS)[self.adapter.verb] % {
             "actor": self.adapter.actor.get_display_name(),
@@ -40,9 +40,7 @@ class ActivityMailer(Mailer):
         return super().get_template_prefixes() + ["activities/emails"]
 
 
-class ActivityWebpusher(Webpusher):
-    HEADERS = HEADERS
-
+class ActivityWebpusher(ActivityHeadersMixin, Webpusher):
     def get_header(self):
         return dict(self.HEADERS)[self.adapter.verb] % {
             "actor": self.adapter.actor.get_display_name(),

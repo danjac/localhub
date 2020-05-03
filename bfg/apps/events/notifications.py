@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from bfg.apps.activities.notifications import (
     ActivityAdapter,
+    ActivityHeadersMixin,
     ActivityMailer,
     ActivityWebpusher,
 )
@@ -12,18 +13,20 @@ from bfg.apps.notifications.decorators import register
 
 from .models import Event
 
-EVENT_HEADERS = [
-    ("attend", _("%(actor)s is attending your event")),
-    ("cancel", _("%(actor)s has canceled an event")),
-]
+
+class EventHeadersMixin(ActivityHeadersMixin):
+    HEADERS = ActivityHeadersMixin.HEADERS + [
+        ("attend", _("%(actor)s is attending your event")),
+        ("cancel", _("%(actor)s has canceled an event")),
+    ]
 
 
-class EventMailer(ActivityMailer):
-    HEADERS = ActivityMailer.HEADERS + EVENT_HEADERS
+class EventMailer(EventHeadersMixin, ActivityMailer):
+    ...
 
 
-class EventWebpusher(ActivityWebpusher):
-    HEADERS = ActivityWebpusher.HEADERS + EVENT_HEADERS
+class EventWebpusher(EventHeadersMixin, ActivityWebpusher):
+    ...
 
 
 @register(Event)

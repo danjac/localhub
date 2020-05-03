@@ -7,23 +7,25 @@ from django.utils.translation import gettext_lazy as _
 from bfg.apps.notifications.adapter import Adapter, Mailer, Webpusher
 from bfg.apps.notifications.decorators import register
 
-HEADERS = [
-    ("new_follower", _("%(actor)s has started following you")),
-    ("new_member", _("%(actor)s has just joined this community")),
-    ("update", _("%(actor)s has updated their profile")),
-]
+
+class UserHeadersMixin:
+    HEADERS = [
+        ("new_follower", _("%(actor)s has started following you")),
+        ("new_member", _("%(actor)s has just joined this community")),
+        ("update", _("%(actor)s has updated their profile")),
+    ]
 
 
-class UserMailer(Mailer):
+class UserMailer(UserHeadersMixin, Mailer):
     def get_subject(self):
-        return dict(HEADERS)[self.adapter.verb] % {
+        return dict(self.HEADERS)[self.adapter.verb] % {
             "actor": self.adapter.actor.get_display_name()
         }
 
 
-class UserWebpusher(Webpusher):
+class UserWebpusher(UserHeadersMixin, Webpusher):
     def get_header(self):
-        return dict(HEADERS)[self.adapter.verb] % {
+        return dict(self.HEADERS)[self.adapter.verb] % {
             "actor": self.adapter.actor.get_display_name()
         }
 

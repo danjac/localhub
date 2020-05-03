@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from bfg.apps.activities.notifications import (
     ActivityAdapter,
+    ActivityHeadersMixin,
     ActivityMailer,
     ActivityWebpusher,
 )
@@ -12,17 +13,19 @@ from bfg.apps.notifications.decorators import register
 
 from .models import Poll
 
-POLL_HEADERS = [
-    ("vote", _("%(actor)s has voted in your poll")),
-]
+
+class PollHeadersMixin(ActivityHeadersMixin):
+    HEADERS = ActivityHeadersMixin.HEADERS + [
+        ("vote", _("%(actor)s has voted in your poll")),
+    ]
 
 
-class PollMailer(ActivityMailer):
-    HEADERS = ActivityMailer.HEADERS + POLL_HEADERS
+class PollMailer(PollHeadersMixin, ActivityMailer):
+    ...
 
 
-class PollWebpusher(ActivityWebpusher):
-    HEADERS = ActivityWebpusher.HEADERS + POLL_HEADERS
+class PollWebpusher(PollHeadersMixin, ActivityWebpusher):
+    ...
 
 
 @register(Poll)

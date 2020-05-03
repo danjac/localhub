@@ -8,23 +8,26 @@ from bfg.apps.notifications.decorators import register
 
 from .models import Message
 
-HEADERS = {
-    "send": _("%(sender)s has sent you a message"),
-    "reply": _("%(sender)s has replied to your message"),
-    "follow_up": _("%(sender)s has sent you a follow-up to their message"),
-}
+
+class MessageHeadersMixin:
+
+    HEADERS = {
+        "send": _("%(sender)s has sent you a message"),
+        "reply": _("%(sender)s has replied to your message"),
+        "follow_up": _("%(sender)s has sent you a follow-up to their message"),
+    }
 
 
-class MessageMailer(Mailer):
+class MessageMailer(MessageHeadersMixin, Mailer):
     def get_subject(self):
-        return HEADERS[self.adapter.verb] % {
+        return self.HEADERS[self.adapter.verb] % {
             "sender": self.adapter.object.sender.get_display_name()
         }
 
 
-class MessageWebpusher(Webpusher):
+class MessageWebpusher(MessageHeadersMixin, Webpusher):
     def get_header(self):
-        return HEADERS[self.adapter.verb] % {
+        return self.HEADERS[self.adapter.verb] % {
             "sender": self.adapter.object.sender.get_display_name()
         }
 
