@@ -1,7 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { EVENT_TOAST_MESSAGE } from '@utils/constants';
+import { Events } from '@utils/constants';
 import { fadeOut, maximizeZIndex } from '@utils/dom-helpers';
 
 import ApplicationController from './application-controller';
@@ -26,7 +26,7 @@ export default class extends ApplicationController {
   static targets = ['message'];
 
   connect() {
-    this.bus.subscribe(EVENT_TOAST_MESSAGE, ({ detail: { type, message } }) => {
+    this.bus.subscribe(Events.TOAST_MESSAGE, ({ detail: { type, message } }) => {
       this.showMessage(type, message);
     });
   }

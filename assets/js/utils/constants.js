@@ -5,12 +5,18 @@
 //
 
 // Bus events
-export const EVENT_CONFIRM_OPEN = 'confirm:open';
-export const EVENT_TOAST_MESSAGE = 'toast:message';
 
-// Common keycodes
-export const KEY_ARR_DOWN = 40;
-export const KEY_ARR_UP = 38;
-export const KEY_ESC = 27;
-export const KEY_RTN = 13;
-export const KEY_TAB = 9;
+export const Events = {
+  CONFIRM_OPEN: 'confirm:open',
+  FORM_DISABLE: 'form:disable',
+  FORM_ENABLE: 'form:enable',
+  TOAST_MESSAGE: 'toast:message',
+};
+
+export const Keys = {
+  ARR_DOWN: 40,
+  ARR_UP: 38,
+  ESC: 27,
+  RTN: 13,
+  TAB: 9,
+};

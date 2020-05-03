@@ -1,7 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { EVENT_CONFIRM_OPEN, KEY_ESC } from '@utils/constants';
+import { Events, Keys } from '@utils/constants';
 import { maximizeZIndex } from '@utils/dom-helpers';
 
 import ApplicationController from './application-controller';
@@ -22,11 +22,11 @@ export default class extends ApplicationController {
   static targets = ['header', 'body'];
 
   connect() {
-    this.bus.subscribe(EVENT_CONFIRM_OPEN, (event) => this.open(event));
+    this.bus.subscribe(Events.CONFIRM_OPEN, (event) => this.open(event));
   }
 
   keydown(event) {
-    if (event.keyCode === KEY_ESC) {
+    if (event.keyCode === Keys.ESC) {
       this.close();
     }
   }

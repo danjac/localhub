@@ -4,8 +4,7 @@
 import axios from 'axios';
 import getCaretPosition from 'textarea-caret';
 
-import { KEY_ARR_DOWN, KEY_ARR_UP, KEY_ESC, KEY_RTN, KEY_TAB } from '@utils/constants';
-
+import { Keys } from '@utils/constants';
 import { fitIntoViewport, maximizeZIndex } from '@utils/dom-helpers';
 
 import ApplicationController from './application-controller';
@@ -32,7 +31,7 @@ export default class extends ApplicationController {
 
   connect() {
     document.addEventListener('keydown', (event) => {
-      if (event.keyCode === KEY_ESC) {
+      if (event.keyCode === Keys.ESC) {
         this.closeSelector();
       }
     });
@@ -53,7 +52,7 @@ export default class extends ApplicationController {
   keydown(event) {
     if (
       this.selectorOpen &&
-      [KEY_ARR_DOWN, KEY_ARR_UP, KEY_RTN].indexOf(event.which) > -1
+      [Keys.ARR_DOWN, Keys.ARR_UP, Keys.RTN].indexOf(event.which) > -1
     ) {
       event.preventDefault();
     }
@@ -92,14 +91,14 @@ export default class extends ApplicationController {
     let prevItem = null;
 
     switch (event.which) {
-      case KEY_TAB:
-      case KEY_RTN:
+      case Keys.TAB:
+      case Keys.RTN:
         this.handleSelection(
           this.selectorTarget.querySelector('li.selected > [data-typeahead-value]')
         );
         event.preventDefault();
         return false;
-      case KEY_ARR_UP:
+      case Keys.ARR_UP:
         event.preventDefault();
         firstItem = this.selectorTarget.querySelector('li.selected');
         if (firstItem) {
@@ -110,7 +109,7 @@ export default class extends ApplicationController {
           }
         }
         return false;
-      case KEY_ARR_DOWN:
+      case Keys.ARR_DOWN:
         event.preventDefault();
         firstItem = this.selectorTarget.querySelector('li.selected');
         if (firstItem) {

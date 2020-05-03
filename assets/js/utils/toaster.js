@@ -1,7 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { EVENT_TOAST_MESSAGE } from '@utils/constants';
+import { Events } from '@utils/constants';
 
 export default class {
   constructor(bus) {
@@ -9,7 +9,7 @@ export default class {
   }
 
   sendMessage(type, message) {
-    this.bus.publish(EVENT_TOAST_MESSAGE, { type, message });
+    this.bus.publish(Events.TOAST_MESSAGE, { type, message });
   }
 
   success(message) {
