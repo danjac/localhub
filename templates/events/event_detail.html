@@ -7,21 +7,23 @@
 
 {% block breadcrumbs %}
 {% if object.published %}
+{% with starts=event.get_next_start_date %}
 <ul class="breadcrumb">
   <li class="breadcrumb-item"><a href="{% url 'events:list' %}">{% trans "Events" %}</a>
   </li>
   <li class="breadcrumb-item">
-    <a href="{% url 'events:calendar' %}?month={{ event.starts.month }}&year={{ event.starts.year }}">
-      {{ event.starts|date:"F Y" }}
+    <a href="{% url 'events:calendar' %}?month={{ starts.month }}&year={{ starts.year }}">
+      {{ starts|date:"F Y" }}
     </a>
   </li>
   <li class="breadcrumb-item">
-    <a href="{% url 'events:calendar' %}?day={{ event.starts.day }}&month={{ event.starts.month }}&year={{ event.starts.year }}">
-      {{ event.starts|date:"l j" }}
+    <a href="{% url 'events:calendar' %}?day={{ starts.day }}&month={{ starts.month }}&year={{ starts.year }}">
+      {{ starts|date:"l j" }}
     </a>
   </li>
    <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
 </ul>
+{% endwith %}
 {% else %}
 {{ block.super }}
 {% endif %}
