@@ -93,7 +93,10 @@
           {% has_perm "users.follow_user" user object as can_follow_user %}
 
           {% if can_follow_user %}
+
+          <span data-controller="ajax">
           {% include "users/includes/follow.html" with user_obj=object is_following=object.is_following css_class="action" %}
+          </span>
           {% endif %}
 
           {% if can_create_message %}

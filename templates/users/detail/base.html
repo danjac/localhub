@@ -108,7 +108,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
       {% endif %}
 
       {% if not is_blocked and can_follow_user %}
-      <li class="menu-item">
+      <li class="menu-item" data-controller="ajax">
         {% include "users/includes/follow.html" %}
       </li>
       {% endif %}
