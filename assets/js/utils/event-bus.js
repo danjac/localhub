@@ -6,19 +6,19 @@ export default class {
     this.subscriptions = [];
   }
 
-  subscribe(name, callback) {
-    document.body.addEventListener(name, callback);
-    this.subscriptions.push(() => document.body.removeEventListener(name, callback));
-  }
-
-  unsubscribe() {
-    this.subscriptions.forEach((unsub) => unsub());
-  }
-
-  publish(name, data = {}) {
+  pub(name, data = {}) {
     const event = new CustomEvent(name, {
       detail: Object.assign({}, data),
     });
     document.body.dispatchEvent(event);
+  }
+
+  sub(name, callback) {
+    document.body.addEventListener(name, callback);
+    this.subscriptions.push(() => document.body.removeEventListener(name, callback));
+  }
+
+  unsub() {
+    this.subscriptions.forEach((unsub) => unsub());
   }
 }

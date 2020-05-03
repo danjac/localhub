@@ -67,11 +67,11 @@ export default class extends ApplicationController {
   }
 
   disableFormControls() {
-    this.bus.publish(Events.FORM_DISABLE);
+    this.bus.pub(Events.FORM_DISABLE);
   }
 
   enableFormControls() {
-    this.bus.publish(Events.FORM_ENABLE);
+    this.bus.pub(Events.FORM_ENABLE);
   }
 
   clearListeners() {

@@ -15,6 +15,6 @@ export default class extends Controller {
   }
 
   disconnect() {
-    this.bus.unsubscribe();
+    this.bus.unsub();
   }
 }

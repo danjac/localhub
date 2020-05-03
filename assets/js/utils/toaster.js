@@ -9,7 +9,7 @@ export default class {
   }
 
   sendMessage(type, message) {
-    this.bus.publish(Events.TOAST_MESSAGE, { type, message });
+    this.bus.pub(Events.TOAST_MESSAGE, { type, message });
   }
 
   success(message) {

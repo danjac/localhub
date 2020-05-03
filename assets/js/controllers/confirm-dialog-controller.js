@@ -22,7 +22,7 @@ export default class extends ApplicationController {
   static targets = ['header', 'body'];
 
   connect() {
-    this.bus.subscribe(Events.CONFIRM_OPEN, (event) => this.open(event));
+    this.bus.sub(Events.CONFIRM_OPEN, (event) => this.open(event));
   }
 
   keydown(event) {

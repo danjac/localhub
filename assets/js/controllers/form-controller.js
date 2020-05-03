@@ -28,8 +28,8 @@ export default class extends ApplicationController {
       element.addEventListener('change', () => this.data.set('changed', true))
     );
 
-    this.bus.subscribe(Events.FORM_ENABLE, () => this.enableFormControls());
-    this.bus.subscribe(Events.FORM_DISABLE, () => this.disableFormControls());
+    this.bus.sub(Events.FORM_ENABLE, () => this.enableFormControls());
+    this.bus.sub(Events.FORM_DISABLE, () => this.disableFormControls());
   }
 
   unload(event) {

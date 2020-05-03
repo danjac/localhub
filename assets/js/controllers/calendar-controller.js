@@ -55,14 +55,11 @@ export default class extends ApplicationController {
 
   connect() {
     if (this.data.has('listen')) {
-      this.bus.subscribe(
-        EVENT_NOTIFY_ON_UPDATE,
-        ({ detail: { startDate, notify } }) => {
-          if (notify === this.data.get('listen')) {
-            this.data.set('startDate', startDate);
-          }
+      this.bus.sub(EVENT_NOTIFY_ON_UPDATE, ({ detail: { startDate, notify } }) => {
+        if (notify === this.data.get('listen')) {
+          this.data.set('startDate', startDate);
         }
-      );
+      });
     }
   }
 
@@ -107,7 +104,7 @@ export default class extends ApplicationController {
     this.dateInputTarget.value = selectedDate;
     this.calendarTarget.classList.add('d-none');
     if (this.data.has('notify')) {
-      this.bus.publish(EVENT_NOTIFY_ON_UPDATE, {
+      this.bus.pub(EVENT_NOTIFY_ON_UPDATE, {
         startDate: selectedDate,
         notify: this.data.get('notify'),
       });

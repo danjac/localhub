@@ -52,7 +52,7 @@ export default class extends ApplicationController {
     const body = this.data.get('confirm-body');
 
     if (header && body) {
-      this.bus.publish(Events.CONFIRM_OPEN, {
+      this.bus.pub(Events.CONFIRM_OPEN, {
         body,
         header,
         onConfirm: () => this.dispatch(method, currentTarget),
