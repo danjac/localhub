@@ -553,11 +553,16 @@ class Event(Activity):
     def has_ended(self):
         """If end date in past, unless still repeating.
 
+        If end date is None, assumes the end of the same
+        day as the start date.
+
         Returns:
             bool
         """
         if self.is_repeating():
             return False
+        if self.ends is None:
+            return self.starts.replace(hour=23, minute=59, second=59) < timezone.now()
         return self.ends < timezone.now()
 
     def get_next_start_date(self):

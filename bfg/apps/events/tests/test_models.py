@@ -446,6 +446,16 @@ class TestEventModel:
         event = Event(ends=timezone.now() - timedelta(days=30))
         assert event.has_ended()
 
+    def test_has_ended_if_none(self):
+        # assumes end of the start date
+        event = Event(starts=timezone.now().replace(hour=12))
+        assert not event.has_ended()
+
+    def test_has_ended_if_following_day(self):
+        # assumes end of the start date
+        event = Event(starts=timezone.now() - timedelta(days=1))
+        assert event.has_ended()
+
     def test_has_ended_if_repeating(self):
         event = Event(
             ends=timezone.now() - timedelta(days=30), repeats=Event.RepeatChoices.DAILY
