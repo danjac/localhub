@@ -4,4 +4,4 @@ set -o errexit
 set -o nounset
 
 
-celery -A bfg.celery_app worker -l INFO
+celery -A social_bfg.celery_app worker -l INFO
