@@ -5,6 +5,7 @@ from django.conf import settings
 from django.urls import reverse
 
 import pytest
+
 from social_bfg.apps.bookmarks.factories import BookmarkFactory
 from social_bfg.apps.bookmarks.models import Bookmark
 from social_bfg.apps.comments.models import Comment

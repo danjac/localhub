@@ -6,6 +6,7 @@ from django.utils.timezone import localtime, make_aware
 from django.utils.translation import gettext_lazy as _
 
 import pytz
+
 from social_bfg.apps.activities.forms import ActivityForm
 from social_bfg.forms import CalendarField, CalendarWidget, FormHelper
 from social_bfg.utils.geocode import geocode

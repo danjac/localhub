@@ -1,6 +1,7 @@
 from django.utils.encoding import force_str
 
 import pytest
+
 from social_bfg.apps.posts.factories import PostFactory
 
 pytestmark = pytest.mark.django_db

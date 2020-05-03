@@ -9,6 +9,9 @@ from django.urls import reverse
 from django.utils import timezone
 
 from model_utils.models import TimeStampedModel
+from taggit.managers import TaggableManager
+from taggit.models import Tag
+
 from social_bfg.apps.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from social_bfg.apps.comments.models import Comment, CommentAnnotationsQuerySetMixin
 from social_bfg.apps.communities.models import Community
@@ -30,8 +33,6 @@ from social_bfg.db.utils import boolean_value
 from social_bfg.markdown.fields import MarkdownField
 from social_bfg.utils.itertools import takefirst
 from social_bfg.utils.text import slugify_unicode
-from taggit.managers import TaggableManager
-from taggit.models import Tag
 
 from . import signals
 

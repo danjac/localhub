@@ -4,6 +4,7 @@
 from django.conf import settings
 
 from markdownx.widgets import MarkdownxWidget
+
 from social_bfg.forms.widgets import TypeaheadMixin
 
 

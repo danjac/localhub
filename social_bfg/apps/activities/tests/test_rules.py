@@ -4,6 +4,7 @@
 from django.utils import timezone
 
 import pytest
+
 from social_bfg.apps.communities.models import Community, Membership
 from social_bfg.apps.posts.factories import PostFactory
 

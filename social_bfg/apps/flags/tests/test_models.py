@@ -6,6 +6,7 @@ from django.db.models import signals
 
 import factory
 import pytest
+
 from social_bfg.apps.comments.factories import CommentFactory
 from social_bfg.apps.posts.factories import PostFactory
 

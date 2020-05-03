@@ -5,11 +5,12 @@ from django.urls import reverse
 
 import pytest
 from pytest_django.asserts import assertTemplateUsed
+from taggit.models import Tag
+
 from social_bfg.apps.communities.factories import CommunityFactory, MembershipFactory
 from social_bfg.apps.events.factories import EventFactory
 from social_bfg.apps.photos.factories import PhotoFactory
 from social_bfg.apps.posts.factories import PostFactory
-from taggit.models import Tag
 
 pytestmark = pytest.mark.django_db
 

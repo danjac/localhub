@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
+
 from social_bfg.apps.posts.notifications import PostAdapter
 
 from ..factories import NotificationFactory

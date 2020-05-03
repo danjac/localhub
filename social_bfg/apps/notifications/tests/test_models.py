@@ -5,6 +5,7 @@ from unittest import mock
 
 import pytest
 from pywebpush import WebPushException
+
 from social_bfg.apps.communities.factories import CommunityFactory, MembershipFactory
 from social_bfg.apps.communities.models import Community
 from social_bfg.apps.users.factories import UserFactory

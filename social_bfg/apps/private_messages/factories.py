@@ -1,6 +1,7 @@
 # Copyright (c) 2020 by Dan Jacob
 
 from factory import DjangoModelFactory, Faker, SubFactory
+
 from social_bfg.apps.communities.factories import CommunityFactory
 from social_bfg.apps.users.factories import UserFactory
 

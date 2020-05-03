@@ -4,6 +4,7 @@
 from django.urls import reverse
 
 import pytest
+
 from social_bfg.apps.posts.factories import PostFactory
 
 from ..factories import FlagFactory

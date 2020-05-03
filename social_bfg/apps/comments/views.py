@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView
 
 from rules.contrib.views import PermissionRequiredMixin
+
 from social_bfg.apps.bookmarks.models import Bookmark
 from social_bfg.apps.communities.views import CommunityRequiredMixin
 from social_bfg.apps.flags.forms import FlagForm

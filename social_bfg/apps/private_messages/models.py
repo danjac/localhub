@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from model_utils.models import TimeStampedModel
+
 from social_bfg.apps.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from social_bfg.apps.communities.models import Community
 from social_bfg.apps.notifications.decorators import notify

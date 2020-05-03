@@ -13,6 +13,7 @@ from django.views.generic.dates import DateMixin, DayMixin, MonthMixin, YearMixi
 from django.views.generic.detail import SingleObjectMixin
 
 import pytz
+
 from social_bfg.apps.activities.views.generic import (
     ActivityCreateView,
     ActivityListView,

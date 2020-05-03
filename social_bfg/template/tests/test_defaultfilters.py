@@ -6,6 +6,7 @@ from django import forms
 from django.urls import NoReverseMatch, reverse
 
 import pytest
+
 from social_bfg.apps.posts.models import Post
 
 from ..defaultfilters import (

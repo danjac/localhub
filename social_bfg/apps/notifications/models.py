@@ -10,6 +10,7 @@ from django.db import models
 
 from model_utils.models import TimeStampedModel
 from pywebpush import WebPushException, webpush
+
 from social_bfg.apps.communities.models import Community
 from social_bfg.db.generic import get_generic_related_exists
 from social_bfg.db.utils import boolean_value

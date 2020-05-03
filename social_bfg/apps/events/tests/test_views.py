@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.utils.encoding import force_str
 
 import pytest
+
 from social_bfg.apps.communities.factories import MembershipFactory
 from social_bfg.apps.likes.factories import LikeFactory
 from social_bfg.apps.likes.models import Like

@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
+
 from social_bfg.apps.communities.factories import MembershipFactory
 
 from ..decorators import notify

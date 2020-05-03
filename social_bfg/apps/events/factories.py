@@ -7,6 +7,7 @@ from django.utils import timezone
 
 from factory import DjangoModelFactory, Faker, LazyFunction, SubFactory
 from factory.fuzzy import FuzzyDateTime
+
 from social_bfg.apps.communities.factories import CommunityFactory
 from social_bfg.apps.users.factories import UserFactory
 

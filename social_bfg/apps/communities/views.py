@@ -13,6 +13,7 @@ from django.views.generic import DetailView, ListView, TemplateView
 
 import rules
 from rules.contrib.views import PermissionRequiredMixin
+
 from social_bfg.apps.invites.models import Invite
 from social_bfg.apps.join_requests.models import JoinRequest
 from social_bfg.views import SearchMixin, SuccessDeleteView, SuccessUpdateView

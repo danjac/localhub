@@ -5,6 +5,7 @@ from django.utils import timezone
 
 import pytest
 from allauth.account.models import EmailAddress
+
 from social_bfg.apps.communities.factories import CommunityFactory, MembershipFactory
 from social_bfg.apps.communities.models import Membership
 from social_bfg.apps.private_messages.factories import MessageFactory

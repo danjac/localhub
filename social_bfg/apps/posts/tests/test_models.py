@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
+from taggit.models import Tag
+
 from social_bfg.apps.comments.factories import CommentFactory
 from social_bfg.apps.comments.models import Comment
 from social_bfg.apps.communities.factories import CommunityFactory, MembershipFactory
@@ -10,7 +12,6 @@ from social_bfg.apps.flags.factories import FlagFactory
 from social_bfg.apps.likes.factories import LikeFactory
 from social_bfg.apps.notifications.factories import NotificationFactory
 from social_bfg.apps.users.factories import UserFactory
-from taggit.models import Tag
 
 from ..factories import PostFactory
 from ..models import Post

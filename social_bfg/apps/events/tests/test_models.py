@@ -10,6 +10,7 @@ from django.utils.encoding import force_str
 
 import pytest
 import pytz
+
 from social_bfg.apps.communities.factories import MembershipFactory
 from social_bfg.apps.users.factories import UserFactory
 

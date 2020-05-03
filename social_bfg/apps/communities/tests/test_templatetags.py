@@ -3,6 +3,7 @@
 
 
 import pytest
+
 from social_bfg.apps.flags.factories import FlagFactory
 from social_bfg.apps.invites.factories import InviteFactory
 from social_bfg.apps.join_requests.factories import JoinRequestFactory

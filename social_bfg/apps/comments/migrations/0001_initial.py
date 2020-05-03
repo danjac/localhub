@@ -5,6 +5,7 @@ import django.utils.timezone
 from django.db import migrations, models
 
 import model_utils.fields
+
 import social_bfg.markdown.fields
 
 

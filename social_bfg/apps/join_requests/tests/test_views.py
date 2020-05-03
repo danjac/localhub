@@ -5,6 +5,7 @@ from django.conf import settings
 from django.urls import reverse
 
 import pytest
+
 from social_bfg.apps.communities.factories import MembershipFactory
 from social_bfg.apps.communities.models import Membership
 from social_bfg.apps.users.factories import UserFactory

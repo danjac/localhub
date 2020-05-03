@@ -11,6 +11,7 @@ import bleach
 from bleach import Cleaner  # type: ignore
 from bleach.linkifier import TLDS, LinkifyFilter, build_url_re
 from markdownx.utils import markdownify as default_markdownify
+
 from social_bfg.apps.hashtags.utils import linkify_hashtags
 from social_bfg.apps.users.utils import linkify_mentions
 

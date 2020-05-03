@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import rules
+
 from social_bfg.apps.communities.rules import is_member, is_moderator
 
 

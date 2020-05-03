@@ -13,6 +13,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import DeleteView, ListView, View
 
 from rules.contrib.views import PermissionRequiredMixin
+
 from social_bfg.apps.activities.utils import get_activity_models
 from social_bfg.apps.activities.views.streams import BaseActivityStreamView
 from social_bfg.apps.comments.models import Comment

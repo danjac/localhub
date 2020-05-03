@@ -24,6 +24,8 @@ import pytz
 from django_countries.fields import CountryField
 from icalendar import Calendar
 from icalendar import Event as CalendarEvent
+from timezone_field import TimeZoneField
+
 from social_bfg.apps.activities.models import (
     Activity,
     ActivityManager,
@@ -34,7 +36,6 @@ from social_bfg.db.functions import DateAdd, MonthAdd, YearAdd
 from social_bfg.db.search.indexer import SearchIndexer
 from social_bfg.db.utils import boolean_value
 from social_bfg.utils.http import get_domain
-from timezone_field import TimeZoneField
 
 
 class EventQuerySet(ActivityQuerySet):

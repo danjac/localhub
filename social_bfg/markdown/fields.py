@@ -16,6 +16,7 @@ from django.template.defaultfilters import striptags
 from django.utils.safestring import mark_safe
 
 from markdownx.models import MarkdownxField
+
 from social_bfg.apps.hashtags.utils import extract_hashtags
 from social_bfg.apps.users.utils import extract_mentions
 

@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateResponseMixin
 
 from rules.contrib.views import PermissionRequiredMixin
+
 from social_bfg.apps.activities.views.generic import (
     ActivityCreateView,
     ActivityDetailView,

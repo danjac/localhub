@@ -8,10 +8,11 @@ import django.utils.timezone
 from django.conf import settings
 from django.db import migrations, models
 
-import social_bfg.db.fields
-import social_bfg.markdown.fields
 import sorl.thumbnail.fields
 import timezone_field.fields
+
+import social_bfg.db.fields
+import social_bfg.markdown.fields
 
 
 class Migration(migrations.Migration):

@@ -4,6 +4,7 @@
 from django.core.exceptions import ImproperlyConfigured
 
 import pytest
+
 from social_bfg.apps.communities.factories import MembershipFactory
 from social_bfg.apps.users.factories import UserFactory
 

@@ -8,6 +8,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from model_utils.models import TimeStampedModel
+
 from social_bfg.apps.communities.models import Community
 from social_bfg.apps.notifications.decorators import notify
 from social_bfg.apps.notifications.models import Notification

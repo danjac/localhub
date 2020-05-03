@@ -6,10 +6,11 @@ import django.utils.timezone
 from django.db import migrations, models
 
 import model_utils.fields
+import sorl.thumbnail.fields
+
 import social_bfg.apps.hashtags.fields
 import social_bfg.apps.users.fields
 import social_bfg.markdown.fields
-import sorl.thumbnail.fields
 
 
 class Migration(migrations.Migration):

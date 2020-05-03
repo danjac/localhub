@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
+
 from social_bfg.utils.http import URLResolver
 from social_bfg.utils.scraper import HTMLScraper
 

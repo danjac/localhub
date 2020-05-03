@@ -5,6 +5,8 @@
 from django.utils import timezone
 
 import pytest
+from taggit.models import Tag
+
 from social_bfg.apps.bookmarks.factories import BookmarkFactory
 from social_bfg.apps.comments.factories import CommentFactory
 from social_bfg.apps.communities.factories import CommunityFactory, MembershipFactory
@@ -17,7 +19,6 @@ from social_bfg.apps.photos.models import Photo
 from social_bfg.apps.posts.factories import PostFactory
 from social_bfg.apps.posts.models import Post
 from social_bfg.apps.users.factories import UserFactory
-from taggit.models import Tag
 
 pytestmark = pytest.mark.django_db
 

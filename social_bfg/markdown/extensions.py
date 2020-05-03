@@ -13,6 +13,7 @@ from markdown.inlinepatterns import (
     LinkInlineProcessor,
 )
 from markdown.util import etree
+
 from social_bfg.utils.http import is_https
 
 

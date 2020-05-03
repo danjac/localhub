@@ -7,6 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from model_utils.models import TimeStampedModel
+
 from social_bfg.apps.communities.models import Community
 from social_bfg.apps.notifications.decorators import notify
 from social_bfg.apps.notifications.models import Notification

@@ -12,6 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView
 
 from rules.contrib.views import PermissionRequiredMixin
+
 from social_bfg.apps.communities.models import Membership
 from social_bfg.apps.communities.views import (
     CommunityAdminRequiredMixin,

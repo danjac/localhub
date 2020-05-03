@@ -6,6 +6,7 @@ from datetime import timedelta
 from django.utils import timezone
 
 import pytest
+
 from social_bfg.apps.events.factories import EventFactory
 from social_bfg.apps.events.models import Event
 from social_bfg.apps.photos.factories import PhotoFactory

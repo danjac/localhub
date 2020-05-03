@@ -13,10 +13,11 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from model_utils.models import TimeStampedModel
+from sorl.thumbnail import ImageField
+
 from social_bfg.apps.hashtags.utils import extract_hashtags
 from social_bfg.db.search.mixins import SearchQuerySetMixin
 from social_bfg.markdown.fields import MarkdownField
-from sorl.thumbnail import ImageField
 
 DOMAIN_VALIDATOR = RegexValidator(
     regex=URLValidator.host_re, message=_("This is not a valid domain")

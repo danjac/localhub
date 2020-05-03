@@ -12,6 +12,10 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from sorl.thumbnail import ImageField
+from taggit.models import Tag
+from timezone_field import TimeZoneField
+
 from social_bfg.apps.communities.models import Membership
 from social_bfg.apps.notifications.decorators import notify
 from social_bfg.apps.notifications.models import Notification
@@ -22,9 +26,6 @@ from social_bfg.db.search.mixins import SearchQuerySetMixin
 from social_bfg.db.tracker import TrackerModelMixin
 from social_bfg.markdown.fields import MarkdownField
 from social_bfg.utils.itertools import takefirst
-from sorl.thumbnail import ImageField
-from taggit.models import Tag
-from timezone_field import TimeZoneField
 
 
 class UserQuerySet(SearchQuerySetMixin, models.QuerySet):

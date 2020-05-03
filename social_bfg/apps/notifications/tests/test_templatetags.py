@@ -4,6 +4,7 @@
 from django.template import engines
 
 import pytest
+
 from social_bfg.apps.communities.factories import MembershipFactory
 from social_bfg.apps.posts.factories import PostFactory
 

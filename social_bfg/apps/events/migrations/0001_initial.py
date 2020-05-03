@@ -6,10 +6,11 @@ from django.db import migrations, models
 
 import django_countries.fields
 import model_utils.fields
+import timezone_field.fields
+
 import social_bfg.apps.hashtags.fields
 import social_bfg.apps.users.fields
 import social_bfg.markdown.fields
-import timezone_field.fields
 
 
 class Migration(migrations.Migration):

@@ -3,6 +3,7 @@
 
 
 import pytest
+
 from social_bfg.apps.communities.factories import MembershipFactory
 
 from ..factories import AnswerFactory

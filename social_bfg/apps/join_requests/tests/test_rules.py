@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import pytest
+
 from social_bfg.apps.communities.factories import CommunityFactory, MembershipFactory
 from social_bfg.apps.communities.models import Membership
 from social_bfg.apps.users.factories import UserFactory

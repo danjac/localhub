@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.test import override_settings
 
 import pytest
+
 from social_bfg.apps.join_requests.models import JoinRequest
 from social_bfg.apps.users.factories import UserFactory
 

@@ -6,6 +6,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
 
 import pytest
+
 from social_bfg.apps.comments.factories import CommentFactory
 from social_bfg.apps.communities.factories import CommunityFactory, MembershipFactory
 from social_bfg.apps.communities.models import Membership
