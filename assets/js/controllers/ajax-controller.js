@@ -85,8 +85,6 @@ export default class extends ApplicationController {
           return;
         }
 
-        this.bus.pub(Events.AJAX_COMPLETE);
-
         const successMessage = response.headers['x-success-message'];
 
         if (successMessage) {
@@ -107,6 +105,8 @@ export default class extends ApplicationController {
           /* eslint-disable-next-line no-eval */
           eval(response.data);
         }
+
+        this.bus.pub(Events.AJAX_COMPLETE);
       })
       .catch((err) => this.handleServerError(err))
       .finally(() => {
