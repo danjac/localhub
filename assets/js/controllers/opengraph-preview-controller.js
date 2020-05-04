@@ -18,8 +18,8 @@ export default class extends ApplicationController {
     'title',
   ];
   connect() {
-    this.bus.sub(Events.AJAX_FETCHING, () => this.data.set('fetching', true));
-    this.bus.sub(Events.AJAX_COMPLETE, () => this.data.delete('fetching'));
+    this.bus.sub(Events.FORM_FETCHING, () => this.data.set('fetching', true));
+    this.bus.sub(Events.FORM_COMPLETE, () => this.data.delete('fetching'));
   }
 
   fetch(event) {
@@ -46,7 +46,7 @@ export default class extends ApplicationController {
     this.clearPreview();
 
     currentTarget.setAttribute('disabled', true);
-    this.bus.pub(Events.AJAX_FETCHING);
+    this.bus.pub(Events.FORM_FETCHING);
 
     axios
       .get(this.data.get('preview-url'), { params: { url } })
@@ -62,7 +62,7 @@ export default class extends ApplicationController {
       })
       .catch(() => this.handleServerError())
       .finally(() => {
-        this.bus.pub(Events.AJAX_COMPLETE);
+        this.bus.pub(Events.FORM_COMPLETE);
         currentTarget.removeAttribute('disabled');
       });
   }

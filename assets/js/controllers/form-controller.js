@@ -8,19 +8,6 @@ import { Events } from '@utils/constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
-  /*
-  AJAX form controller. Also handles multipart forms, redirects and error messages.
-
-  actions:
-    submit: when form is submitted
-
-  data:
-    unload: message to display if user tries to navigate away without saving.
-      Ignored if not present.
-
-  targets:
-    progress: progress bar to show/hide during form processing
-  */
   static targets = ['errorMessage', 'errorDetail', 'progress'];
 
   connect() {
@@ -28,8 +15,8 @@ export default class extends ApplicationController {
       element.addEventListener('change', () => this.data.set('changed', true))
     );
 
-    this.bus.sub(Events.AJAX_FETCHING, () => this.disableFormControls());
-    this.bus.sub(Events.AJAX_COMPLETE, () => this.enableFormControls());
+    this.bus.sub(Events.FORM_FETCHING, () => this.disableFormControls());
+    this.bus.sub(Events.FORM_COMPLETE, () => this.enableFormControls());
   }
 
   unload(event) {
@@ -68,9 +55,7 @@ export default class extends ApplicationController {
       return;
     }
 
-    window.scrollTo(0, 0);
-
-    this.bus.pub(Events.AJAX_FETCHING);
+    this.bus.pub(Events.FORM_FETCHING);
 
     const referrer = location.href;
 
@@ -88,7 +73,7 @@ export default class extends ApplicationController {
 
         if (contentType.match(/html/)) {
           // errors in form, re-render
-          this.bus.pub(Events.AJAX_COMPLETE);
+          this.bus.pub(Events.FORM_COMPLETE);
           Turbolinks.controller.cache.put(
             referrer,
             Turbolinks.Snapshot.wrap(response.data)
@@ -105,7 +90,7 @@ export default class extends ApplicationController {
   }
 
   handleServerError(err) {
-    this.bus.pub(Events.AJAX_COMPLETE);
+    this.bus.pub(Events.FORM_COMPLETE);
     if (err.response) {
       const { status, statusText } = err.response;
       this.toaster.error(`${status}: ${statusText}`);
@@ -113,6 +98,7 @@ export default class extends ApplicationController {
   }
 
   disableFormControls() {
+    window.scrollTo(0, 0);
     this.toggleProgressBar();
     this.element.setAttribute('disabled', true);
     this.formElements.forEach((el) => el.setAttribute('disabled', true));
