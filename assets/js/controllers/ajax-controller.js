@@ -79,6 +79,13 @@ export default class extends ApplicationController {
       url,
     })
       .then((response) => {
+        // redirect passed down in header
+        if (response.headers['content-type'].match(/javascript/)) {
+          /* eslint-disable-next-line no-eval */
+          eval(response.data);
+          return;
+        }
+
         const redirect = this.data.get('redirect');
         if (redirect && redirect !== 'none') {
           Turbolinks.visit(redirect);
@@ -91,6 +98,9 @@ export default class extends ApplicationController {
           this.toaster.success(successMessage);
         }
 
+        // re-enable all ajax actions
+        this.bus.pub(Events.AJAX_COMPLETE);
+
         if (this.data.has('replace')) {
           this.element.innerHTML = response.data;
           return;
@@ -100,13 +110,6 @@ export default class extends ApplicationController {
           this.element.remove();
           return;
         }
-
-        if (response.headers['content-type'].match(/javascript/)) {
-          /* eslint-disable-next-line no-eval */
-          eval(response.data);
-        }
-
-        this.bus.pub(Events.AJAX_COMPLETE);
       })
       .catch((err) => this.handleServerError(err))
       .finally(() => {
