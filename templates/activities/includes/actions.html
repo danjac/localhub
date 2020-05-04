@@ -54,14 +54,14 @@
       <a href="{{ object|resolve_url:"dislike" }}"
          data-turbolinks="false"
          class="text-strike{% if not object.has_liked %} d-none{% endif %}"
-         data-target="ajax.toggle"
+         data-target="ajax.toggle ajax.button"
          data-action="ajax#post">{% trans "Like" %}</a>
       <a href="{{ object|resolve_url:"like" }}"
          data-turbolinks="false"
          {% if object.has_liked %}
          class="d-none"
          {% endif %}
-         data-target="ajax.toggle"
+         data-target="ajax.toggle ajax.button"
          data-action="ajax#post">{% trans "Like" %}</a>
     </li>
     {% endif %}
@@ -73,14 +73,14 @@
       <a href="{{ object|resolve_url:"remove_bookmark" }}"
          data-turbolinks="false"
          class="text-strike{% if not object.has_bookmarked %} d-none{% endif %}"
-         data-target="ajax.toggle"
+         data-target="ajax.toggle ajax.button"
          data-action="ajax#post">{% trans "Bookmark" %}</a>
       <a href="{{ object|resolve_url:"bookmark" }}"
          data-turbolinks="false"
          {% if object.has_bookmarked %}
          class="d-none"
          {% endif %}
-         data-target="ajax.toggle"
+         data-target="ajax.toggle ajax.button"
          data-action="ajax#post">{% trans "Bookmark" %}</a>
     </li>
     {% endif %}

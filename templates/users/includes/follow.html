@@ -5,14 +5,14 @@
 <a href="{% url 'users:unfollow' user_obj.username %}"
    data-turbolinks="false"
    class="text-strike{% if not is_following %} d-none{% endif %}{% if css_class %} {{ css_class }}{% endif %}"
-   data-target="ajax.toggle"
+   data-target="ajax.toggle ajax.button"
    data-action="ajax#post">
   {% trans "Follow" %}
 </a>
 <a href="{% url 'users:follow' user_obj.username %}"
    data-turbolinks="false"
    class="{% if css_class %}{{ css_class }}{% endif %}{% if is_following %} d-none{% endif %}"
-   data-target="ajax.toggle"
+   data-target="ajax.toggle ajax.button"
    data-action="ajax#post">
   {% trans "Follow" %}
 </a>

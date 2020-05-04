@@ -8,7 +8,7 @@
   <a href="{% url 'hashtags:unblock' tag.id %}"
      data-turbolinks="false"
      class="text-strike{% if not is_blocked %} d-none{% endif %}"
-     data-target="ajax.toggle"
+     data-target="ajax.toggle ajax.button"
      data-action="ajax#post">
     {% trans "Block" %}
   </a>
@@ -17,7 +17,7 @@
      {% if is_blocked %}
      class="d-none"
      {% endif %}
-     data-target="ajax.toggle"
+     data-target="ajax.toggle ajax.button"
      data-action="ajax#post">
     {% trans "Block" %}
   </a>

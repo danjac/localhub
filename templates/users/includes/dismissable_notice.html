@@ -7,6 +7,7 @@
   {% if user.is_authenticated %}
   <button class="btn btn-clear float-right"
           data-ajax-url="{% url 'dismiss_notice' notice %}"
+          data-target="ajax.button"
           data-action="ajax#post"></button>
   {% endif %}
   {{ dismissable_content }}

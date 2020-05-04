@@ -11,8 +11,8 @@ export default class extends ApplicationController {
   static targets = ['toggle', 'button'];
 
   connect() {
-    this.bus.sub(Events.AJAX_FETCHING, () => this.data.set('fetching', true));
-    this.bus.sub(Events.AJAX_COMPLETE, () => this.data.delete('fetching'));
+    this.bus.sub(Events.AJAX_FETCHING, () => this.ajaxFetching());
+    this.bus.sub(Events.AJAX_COMPLETE, () => this.ajaxComplete());
   }
 
   get(event) {
@@ -21,6 +21,26 @@ export default class extends ApplicationController {
 
   post(event) {
     this.confirm('POST', event);
+  }
+
+  ajaxFetching() {
+    this.data.set('fetching', true);
+    if (this.hasButtonTargets) {
+      Array.from(this.buttonTargets).forEach((btn) =>
+        btn.setAttribute('disabled', 'disabled')
+      );
+    } else {
+      this.element.setAttribute('disabled', 'disabled');
+    }
+  }
+
+  ajaxComplete() {
+    this.data.delete('fetching');
+    if (this.hasButtonTargets) {
+      Array.from(this.buttonTargets).forEach((btn) => btn.removeAttribute('disabled'));
+    } else {
+      this.element.removeAttribute('disabled');
+    }
   }
 
   confirm(method, event) {

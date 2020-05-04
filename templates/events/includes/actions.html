@@ -16,14 +16,14 @@
   <a href="{% url 'events:unattend' object.id %}"
      data-turbolinks="false"
      class="text-strike{% if not object.is_attending %} d-none{% endif %}"
-     data-target="ajax.toggle"
+     data-target="ajax.toggle ajax.button"
      data-action="ajax#post">{% trans "Attending" %}</a>
   <a href="{% url 'events:attend' object.id %}"
      data-turbolinks="false"
      {% if object.is_attending %}
      class="d-none"
      {% endif %}
-     data-target="ajax.toggle"
+     data-target="ajax.toggle ajax.button"
      data-action="ajax#post">{% trans "Attending" %}</a>
 </li>
 {% endif %}

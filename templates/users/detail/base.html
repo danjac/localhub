@@ -121,6 +121,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
            href="{% url 'users:unblock' user_obj.username %}"
            data-turbolinks="false"
            data-controller="ajax"
+           data-target="ajax.button"
            data-action="ajax#post toggle#toggle"
            data-ajax-redirect="{{ redirect_url }}">
           {% trans "Block" %}
@@ -129,6 +130,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
         <a href="{% url 'users:block' user_obj.username %}"
            data-turbolinks="false"
            data-controller="ajax"
+           data-target="ajax.button"
            data-action="ajax#post toggle#toggle"
            data-ajax-redirect="{{ redirect_url }}">
           {% trans "Block" %}

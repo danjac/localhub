@@ -27,6 +27,7 @@
            {% if can_vote %}
            data-action="click->ajax#post"
            data-ajax-url="{{ vote_url }}"
+           data-target="ajax.button"
            {% endif %}
            min="0"
            max="100"></meter>
@@ -34,6 +35,7 @@
     <div class="actions">
       <a class="action"
          data-action="ajax#post"
+         data-target="ajax.button"
          href="{{ vote_url }}">{% trans "Vote" %}</a>
     </div>
     {% endif %}
