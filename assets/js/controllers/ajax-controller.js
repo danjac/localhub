@@ -128,7 +128,6 @@ export default class extends ApplicationController {
   }
 
   handleAjaxComplete() {
-    console.log('AJAX COMPLETE');
     // re-enable all AJAX controls on the site.
     this.bus.pub(Events.AJAX_COMPLETE);
   }
