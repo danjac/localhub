@@ -79,36 +79,38 @@ export default class extends ApplicationController {
       url,
     })
       .then((response) => {
-        // redirect passed down in header
-        if (response.headers['content-type'].match(/javascript/)) {
-          /* eslint-disable-next-line no-eval */
-          eval(response.data);
-          return;
-        }
-
-        const redirect = this.data.get('redirect');
-        if (redirect && redirect !== 'none') {
-          Turbolinks.visit(redirect);
-          return;
-        }
-
+        // success message passed from server
         const successMessage = response.headers['x-success-message'];
 
         if (successMessage) {
           this.toaster.success(successMessage);
         }
 
-        // re-enable all ajax actions
-        this.bus.pub(Events.AJAX_COMPLETE);
-
-        if (this.data.has('replace')) {
-          this.element.innerHTML = response.data;
+        // data-ajax-redirect: override the default
+        // redirect passed from the server. If set to "none" it
+        // means "do not redirect at all".
+        const redirect = this.data.get('redirect');
+        if (redirect && redirect !== 'none') {
+          Turbolinks.visit(redirect);
           return;
         }
 
+        // data-ajax-replace: replace HTML in element with server HTML
+        if (this.data.has('replace')) {
+          this.element.innerHTML = response.data;
+        }
+
+        // data-ajax-remove: remove element from DOM
         if (this.data.has('remove')) {
           this.element.remove();
-          return;
+        }
+
+        // default behaviour: redirect passed down in header
+        if (!redirect && response.headers['content-type'].match(/javascript/)) {
+          /* eslint-disable-next-line no-eval */
+          eval(response.data);
+        } else {
+          this.handleAjaxComplete();
         }
       })
       .catch((err) => this.handleServerError(err))
@@ -118,10 +120,16 @@ export default class extends ApplicationController {
   }
 
   handleServerError(err) {
-    this.bus.pub(Events.AJAX_COMPLETE);
     if (err.response) {
       const { status, statusText } = err.response;
       this.toaster.error(`${status}: ${statusText}`);
     }
+    this.handleAjaxComplete();
+  }
+
+  handleAjaxComplete() {
+    console.log('AJAX COMPLETE');
+    // re-enable all AJAX controls on the site.
+    this.bus.pub(Events.AJAX_COMPLETE);
   }
 }
