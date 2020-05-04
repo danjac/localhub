@@ -28,8 +28,8 @@ export default class extends ApplicationController {
       element.addEventListener('change', () => this.data.set('changed', true))
     );
 
-    this.bus.sub(Events.FORM_ENABLE, () => this.enableFormControls());
-    this.bus.sub(Events.FORM_DISABLE, () => this.disableFormControls());
+    this.bus.sub(Events.AJAX_FETCHING, () => this.disableFormControls());
+    this.bus.sub(Events.AJAX_COMPLETE, () => this.enableFormControls());
   }
 
   unload(event) {
@@ -68,9 +68,9 @@ export default class extends ApplicationController {
       return;
     }
 
-    //window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
 
-    this.disableFormControls();
+    this.bus.pub(Events.AJAX_FETCHING);
 
     const referrer = location.href;
 
@@ -87,8 +87,8 @@ export default class extends ApplicationController {
         const contentType = response.headers['content-type'];
 
         if (contentType.match(/html/)) {
-          this.enableFormControls();
           // errors in form, re-render
+          this.bus.pub(Events.AJAX_COMPLETE);
           Turbolinks.controller.cache.put(
             referrer,
             Turbolinks.Snapshot.wrap(response.data)
@@ -105,7 +105,7 @@ export default class extends ApplicationController {
   }
 
   handleServerError(err) {
-    this.enableFormControls();
+    this.bus.pub(Events.AJAX_COMPLETE);
     if (err.response) {
       const { status, statusText } = err.response;
       this.toaster.error(`${status}: ${statusText}`);
@@ -113,7 +113,6 @@ export default class extends ApplicationController {
   }
 
   disableFormControls() {
-    window.scrollTo(0, 0);
     this.toggleProgressBar();
     this.element.setAttribute('disabled', true);
     this.formElements.forEach((el) => el.setAttribute('disabled', true));

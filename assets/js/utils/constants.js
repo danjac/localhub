@@ -8,9 +8,9 @@
 
 export const Events = {
   CONFIRM_OPEN: 'confirm:open',
-  FORM_DISABLE: 'form:disable',
-  FORM_ENABLE: 'form:enable',
   TOAST_MESSAGE: 'toast:message',
+  AJAX_FETCHING: 'ajax:fetching',
+  AJAX_COMPLETE: 'ajax:complete',
 };
 
 export const Keys = {

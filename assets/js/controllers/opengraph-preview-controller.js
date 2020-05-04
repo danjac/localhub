@@ -17,33 +17,36 @@ export default class extends ApplicationController {
     'listener',
     'title',
   ];
+  connect() {
+    this.bus.sub(Events.AJAX_FETCHING, () => this.data.set('fetching', true));
+    this.bus.sub(Events.AJAX_COMPLETE, () => this.data.delete('fetching'));
+  }
 
   fetch(event) {
     event.preventDefault();
 
-    if (!this.inputTarget.checkValidity()) {
+    // prevent refetch
+    const { currentTarget } = event;
+
+    if (
+      !this.inputTarget.checkValidity() ||
+      this.data.has('fetching') ||
+      currentTarget.getAttribute('disabled')
+    ) {
       return false;
     }
 
     const url = this.inputTarget.value;
 
     if (!url) {
-      this.deleteFetchedUrl();
       this.clearPreview();
-      return false;
-    }
-
-    if (this.isFetchedUrl(url)) {
       return false;
     }
 
     this.clearPreview();
 
-    // prevent refetch
-    const { currentTarget } = event;
-
     currentTarget.setAttribute('disabled', true);
-    this.disableFormControls();
+    this.bus.pub(Events.AJAX_FETCHING);
 
     axios
       .get(this.data.get('preview-url'), { params: { url } })
@@ -56,22 +59,12 @@ export default class extends ApplicationController {
 
         this.updatePreview(title, description, image);
         this.updateListeners({ title, image, description });
-
-        this.updateFetchedUrl(url);
       })
       .catch(() => this.handleServerError())
       .finally(() => {
-        this.enableFormControls();
+        this.bus.pub(Events.AJAX_COMPLETE);
         currentTarget.removeAttribute('disabled');
       });
-  }
-
-  disableFormControls() {
-    this.bus.pub(Events.FORM_DISABLE);
-  }
-
-  enableFormControls() {
-    this.bus.pub(Events.FORM_ENABLE);
   }
 
   clearListeners() {
@@ -132,21 +125,6 @@ export default class extends ApplicationController {
     } else if (image) {
       this.imagePreviewTarget.classList.remove('d-none');
     }
-  }
-
-  deleteFetchedUrl() {
-    this.data.delete('fetchedUrl');
-  }
-
-  updateFetchedUrl(url) {
-    this.data.set('fetchedUrl', url.trim());
-  }
-
-  isFetchedUrl(url) {
-    if (!this.data.has('fetchedUrl')) {
-      return false;
-    }
-    return this.data.get('fetchedUrl').trim() === url.trim();
   }
 
   handleServerError() {

@@ -8,33 +8,12 @@ import { Events } from '@utils/constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
-  /*
-  Handles non-form AJAX interactions.
+  static targets = ['toggle', 'button'];
 
-  actions:
-    get: HTTP GET request
-    post: HTTP POST request
-
-  data:
-    url: location of AJAX endpoint. If element has "href" attribute this
-      can be used instead. This may also be placed on the action event target button.
-    confirm-header: header used in confirm dialog. No confirm dialog will be triggered
-      if not defined.
-    confirm-body: body used in confirm dialog. No confirm dialog will be triggered
-      if not defined.
-    redirect: location of redirect on successful completion. This overrides any
-      Location returned from the server. If "none" will not perform any redirect.
-    toggle: if any toggle targets, will toggle this class (default: d-none)
-    remove (bool): element will be removed when ajax action is executed.
-    replace (bool): replaces inner HTML of element with HTML from response.
-    follow (bool): (GET requests only) : will just redirect directly to that URL without
-      calling the endpoint.
-
-  targets:
-    toggle: toggle specific items' class on successful execution.
-  */
-
-  static targets = ['toggle'];
+  connect() {
+    this.bus.sub(Events.AJAX_FETCHING, () => this.data.set('fetching', true));
+    this.bus.sub(Events.AJAX_COMPLETE, () => this.data.delete('fetching'));
+  }
 
   get(event) {
     this.confirm('GET', event);
@@ -46,7 +25,12 @@ export default class extends ApplicationController {
 
   confirm(method, event) {
     event.preventDefault();
+
     const { currentTarget } = event;
+
+    if (currentTarget.hasAttribute('disabled') || this.data.has('fetching')) {
+      return;
+    }
 
     const header = this.data.get('confirm-header');
     const body = this.data.get('confirm-body');
@@ -63,7 +47,7 @@ export default class extends ApplicationController {
   }
 
   dispatch(method, target) {
-    if (target.hasAttribute('disabled')) {
+    if (target.hasAttribute('disabled') || this.data.has('fetching')) {
       return;
     }
 
@@ -72,6 +56,7 @@ export default class extends ApplicationController {
       target.getAttribute(`data-${this.identifier}-url`) ||
       target.getAttribute('href');
 
+    this.bus.pub(Events.AJAX_FETCHING);
     target.setAttribute('disabled', 'disabled');
 
     if (this.data.has('follow') && method === 'GET') {
@@ -94,10 +79,20 @@ export default class extends ApplicationController {
       url,
     })
       .then((response) => {
+        const redirect = this.data.get('redirect');
+        if (redirect && redirect !== 'none') {
+          Turbolinks.visit(redirect);
+          return;
+        }
+
+        this.bus.pub(Events.AJAX_COMPLETE);
+
         const successMessage = response.headers['x-success-message'];
+
         if (successMessage) {
           this.toaster.success(successMessage);
         }
+
         if (this.data.has('replace')) {
           this.element.innerHTML = response.data;
           return;
@@ -105,14 +100,6 @@ export default class extends ApplicationController {
 
         if (this.data.has('remove')) {
           this.element.remove();
-          return;
-        }
-
-        const redirect = this.data.get('redirect');
-        if (redirect) {
-          if (redirect !== 'none') {
-            Turbolinks.visit(redirect);
-          }
           return;
         }
 
@@ -128,6 +115,7 @@ export default class extends ApplicationController {
   }
 
   handleServerError(err) {
+    this.bus.pub(Events.AJAX_COMPLETE);
     if (err.response) {
       const { status, statusText } = err.response;
       this.toaster.error(`${status}: ${statusText}`);
