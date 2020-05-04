@@ -85,13 +85,6 @@ class CommunityAdminRequiredMixin(CommunityPermissionRequiredMixin):
     permission_required = "communities.manage_community"
 
 
-class MembershipQuerySetMixin(CommunityRequiredMixin):
-    def get_queryset(self):
-        return Membership.objects.filter(
-            community=self.request.community
-        ).select_related("community", "member")
-
-
 class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
     """
     Returns all public communities, or communities the
@@ -202,23 +195,6 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
 community_list_view = CommunityListView.as_view()
 
 
-class MembershipListView(
-    CommunityAdminRequiredMixin, MembershipQuerySetMixin, SearchMixin, ListView,
-):
-    paginate_by = settings.SOCIAL_BFG_LONG_PAGE_SIZE
-    model = Membership
-
-    def get_queryset(self):
-        qs = super().get_queryset().order_by("member__name", "member__username")
-
-        if self.search_query:
-            qs = qs.search(self.search_query)
-        return qs
-
-
-membership_list_view = MembershipListView.as_view()
-
-
 class CommunityUpdateView(
     CurrentCommunityMixin, CommunityAdminRequiredMixin, SuccessUpdateView
 ):
@@ -230,76 +206,6 @@ class CommunityUpdateView(
 
 
 community_update_view = CommunityUpdateView.as_view()
-
-
-class MembershipUpdateView(
-    PermissionRequiredMixin, MembershipQuerySetMixin, SuccessUpdateView,
-):
-    model = Membership
-    form_class = MembershipForm
-    permission_required = "communities.change_membership"
-    success_message = _("Membership has been updated")
-
-
-membership_update_view = MembershipUpdateView.as_view()
-
-
-class BaseMembershipDeleteView(
-    PermissionRequiredMixin, MembershipQuerySetMixin, SuccessDeleteView,
-):
-    permission_required = "communities.delete_membership"
-    model = Membership
-
-
-class MembershipDeleteView(BaseMembershipDeleteView):
-    def get_success_url(self):
-        if self.object.member == self.request.user:
-            return settings.SOCIAL_BFG_HOME_PAGE_URL
-        return reverse("communities:membership_list")
-
-    def get_success_message(self):
-        return _("You have deleted the membership for %(user)s") % {
-            "user": self.object.member.username
-        }
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-
-        send_membership_deleted_email(self.object.member, self.object.community)
-
-        return self.success_response()
-
-
-membership_delete_view = MembershipDeleteView.as_view()
-
-
-class MembershipLeaveView(BaseMembershipDeleteView):
-    """
-    Allows the current user to be able to voluntarily leave a community.
-    """
-
-    template_name = "communities/membership_leave.html"
-
-    def get_object(self):
-        return super().get_queryset().filter(member__pk=self.request.user.id).get()
-
-    def get_success_message(self):
-        return _(
-            "You have left the community %(community)s"
-            % {"community": self.object.community.name}
-        )
-
-    def get_success_url(self):
-        return settings.SOCIAL_BFG_HOME_PAGE_URL
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-        return self.success_response()
-
-
-membership_leave_view = MembershipLeaveView.as_view()
 
 
 class BaseCommunityDetailView(CurrentCommunityMixin, DetailView):
@@ -397,6 +303,30 @@ class CommunityNotFoundView(TemplateView):
 community_not_found_view = CommunityNotFoundView.as_view()
 
 
+class MembershipQuerySetMixin(CommunityRequiredMixin):
+    def get_queryset(self):
+        return Membership.objects.filter(
+            community=self.request.community
+        ).select_related("community", "member")
+
+
+class MembershipListView(
+    CommunityAdminRequiredMixin, MembershipQuerySetMixin, SearchMixin, ListView,
+):
+    paginate_by = settings.SOCIAL_BFG_LONG_PAGE_SIZE
+    model = Membership
+
+    def get_queryset(self):
+        qs = super().get_queryset().order_by("member__name", "member__username")
+
+        if self.search_query:
+            qs = qs.search(self.search_query)
+        return qs
+
+
+membership_list_view = MembershipListView.as_view()
+
+
 class MembershipDetailView(
     PermissionRequiredMixin, MembershipQuerySetMixin, DetailView,
 ):
@@ -406,3 +336,73 @@ class MembershipDetailView(
 
 
 membership_detail_view = MembershipDetailView.as_view()
+
+
+class MembershipUpdateView(
+    PermissionRequiredMixin, MembershipQuerySetMixin, SuccessUpdateView,
+):
+    model = Membership
+    form_class = MembershipForm
+    permission_required = "communities.change_membership"
+    success_message = _("Membership has been updated")
+
+
+membership_update_view = MembershipUpdateView.as_view()
+
+
+class BaseMembershipDeleteView(
+    PermissionRequiredMixin, MembershipQuerySetMixin, SuccessDeleteView,
+):
+    permission_required = "communities.delete_membership"
+    model = Membership
+
+
+class MembershipDeleteView(BaseMembershipDeleteView):
+    def get_success_url(self):
+        if self.object.member == self.request.user:
+            return settings.SOCIAL_BFG_HOME_PAGE_URL
+        return reverse("communities:membership_list")
+
+    def get_success_message(self):
+        return _("You have deleted the membership for %(user)s") % {
+            "user": self.object.member.username
+        }
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+
+        send_membership_deleted_email(self.object.member, self.object.community)
+
+        return self.success_response()
+
+
+membership_delete_view = MembershipDeleteView.as_view()
+
+
+class MembershipLeaveView(BaseMembershipDeleteView):
+    """
+    Allows the current user to be able to voluntarily leave a community.
+    """
+
+    template_name = "communities/membership_leave.html"
+
+    def get_object(self):
+        return super().get_queryset().filter(member__pk=self.request.user.id).get()
+
+    def get_success_message(self):
+        return _(
+            "You have left the community %(community)s"
+            % {"community": self.object.community.name}
+        )
+
+    def get_success_url(self):
+        return settings.SOCIAL_BFG_HOME_PAGE_URL
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return self.success_response()
+
+
+membership_leave_view = MembershipLeaveView.as_view()
