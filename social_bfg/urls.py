@@ -77,3 +77,8 @@ if settings.DEBUG:
         path("errors/500/", TemplateView.as_view(template_name="500.html")),
         path("errors/csrf/", TemplateView.as_view(template_name="403_csrf.html")),
     ]
+
+    urlpatterns += [
+        # test page for verifying Tailwind
+        path("tw/", TemplateView.as_view(template_name="tw/test_page.html"))
+    ]

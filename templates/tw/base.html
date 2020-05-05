@@ -1,13 +1,55 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% spaceless %}
+
+{% load static %}
 {% load i18n %}
+{% load rules %}
+{% load thumbnail %}
+{% load activities %}
+{% load communities %}
+{% load users %}
+
+{% test_rule "communities.is_member" user community as is_member %}
+{% has_perm "communities.view_community" user community as can_view_community %}
+
+{% get_site_counters user community as site_counters %}
+{% get_external_site_counters user community as external_site_counters %}
+
+{% endspaceless %}
+
+{% with site_counters_total=site_counters.total|add:external_site_counters.total %}
+
 <!DOCTYPE html>
-<html lang="en">
+{% get_current_language as language_code %}
+<html lang="{{ language_code }}">
 
 <head>
+  <title>
+    {% spaceless %}{% block title %}{% if site_counters_total %}*{% endif %}{% if community %}{{ community.name }}{% endif %}{% block subtitle %}{% endblock %}{% endblock %}{% endspaceless %}
+  </title>
   <meta charset="UTF-8">
-  <title>Kotiseutu</title>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="turbolinks-cache-control"
+        content="no-cache">
+  <meta name="copyright"
+        content="Dan Jacob {% now "Y" %}">
+  <meta name="description"
+        content="Open source community web application">
+  <meta name="keywords"
+        content="open source,communities,private,local">
+  <meta name="robots"
+        content="index,follow">
+  <link rel="icon"
+        type="image/png"
+        href="{% static 'favicon.png' %}">
+  <link rel="apple-touch-icon image_src"
+        href="{% static 'apple-touch-icon.png' %}">
   <link rel="stylesheet"
-        href="./output.css"
-        type="text/css">
+        href="{% static 'dist/tw/main.css' %}">
+  <script defer
+          src="{% static 'dist/main.js' %}"></script>
 </head>
 
 <body class="h-screen">
@@ -58,3 +100,5 @@
 </body>
 
 </html>
+{% endwith %}
+
