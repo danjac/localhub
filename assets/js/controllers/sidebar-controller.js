@@ -18,7 +18,9 @@ export default class extends ApplicationController {
 
   toggle(event) {
     event.preventDefault();
-    this.mainTarget.classList.toggle('hide-lg');
-    this.navTarget.classList.toggle('hide-lg');
+    const toggleClass = this.data.get('toggle-class') || 'hide-lg';
+    console.log('sidebar toggle', toggleClass);
+    this.mainTarget.classList.toggle(toggleClass);
+    this.navTarget.classList.toggle(toggleClass);
   }
 }
