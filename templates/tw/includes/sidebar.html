@@ -14,7 +14,7 @@
   {% has_perm "communities.manage_community" user community as can_manage_community %}
   {% has_perm "private_messages.create_message" user community as can_create_message %}
 
-  <button class="lg:hidden border border-gray-500 bg-gray-100 hover:bg-gray-200 text-lg mb-4 w-full p-1"
+  <button class="lg:hidden border border-gray-500 bg-gray-100 hover:bg-gray-200 text-sm mb-4 w-full p-1"
           data-action="sidebar#toggle">
     {% trans "Close Menu" %}
   </button>
