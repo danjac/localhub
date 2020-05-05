@@ -3,6 +3,6 @@
 
 /* eslint-disable */
 module.exports = {
-  purge: ['./src/**/*.html'],
+  purge: ['./templates/tw/**/*.html'],
   plugins: [require('tailwindcss')('./tailwind.config.js'), require('autoprefixer')],
 };
