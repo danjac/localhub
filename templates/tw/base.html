@@ -1,0 +1,60 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Kotiseutu</title>
+  <link rel="stylesheet"
+        href="./output.css"
+        type="text/css">
+</head>
+
+<body class="h-screen">
+  {% block header %}
+  <header class="flex items-center justify-between p-3 bg-gray-900 text-gray-100 px-5">
+    <div class="flex items-center flex-shrink-0 mr-6">
+      <a href="#"
+         class="text-xl tracking-tight">Kotiseutu</a>
+    </div>
+    <div class="hidden lg:block">
+      <input type="search"
+             placeholder="Search..."
+             class="appearance-none border border-gray-500 w-full p-1 text-gray-900">
+    </div>
+    <div>
+      <a href="#"
+         class="inline-block mr-4">danjac</a>
+      <a href="#"
+         class="inline-block">{% trans "Logout" %}</a>
+    </div>
+  </header>
+  {% endblock header %}
+
+  {% block mobile_search %}
+  <div class="bg-gray-900 px-5 py-3 lg:hidden">
+    <input type="search"
+           placeholder="Search..."
+           class="appearance-none border border-gray-500 w-full p-1 text-gray-900">
+
+  </div>
+  {% endblock mobile_search %}
+
+  {% block layout %}
+
+  {% block sidebar %}
+  {% include "tw/includes/sidebar.html" %}
+  {% endblock sidebar %}
+
+  <div class="mt-5 px-5 flex">
+    <main class="lg:ml-5 w-full lg:w-5/6">
+      <!-- mobile "menu" button -->
+      <button class="lg:hidden border border-gray-500 text-lg mb-4 w-full p-2">{% trans "Menu" %}</button>
+      {% block content %}{% endblock %}
+    </main>
+
+  </div>
+  {% endblock layout %}
+</body>
+
+</html>
