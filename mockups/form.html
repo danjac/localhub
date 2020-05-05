@@ -45,13 +45,13 @@
           <a href=""
              class="block p-1 hover:bg-gray-500 hover:text-white">
             <span>Messages</span>
-            <button class="inline-flex rounded-full bg-blue-600 text-white font-bold p-1 ml-2 h-6 w-6 justify-center text-xs">4</button>
+            <button class="inline-flex rounded-full bg-blue-600 text-white font-semibold p-1 ml-2 h-6 w-6 justify-center text-xs">4</button>
           </a>
         </li>
         <li>
           <a href=""
              class="block p-1 hover:bg-gray-500 hover:text-white">Notifications
-            <button class="inline-flex rounded bg-blue-600 text-white font-bold p-1 ml-2 justify-center text-xs">New</button>
+            <button class="inline-flex rounded bg-blue-600 text-white font-semibold p-1 ml-2 justify-center text-xs">New</button>
           </a>
         </li>
         <li><a href=""
@@ -71,7 +71,7 @@
       </ul>
 
       <ul class="border border-gray-500 p-3 bg-gray-100 mt-4">
-        <li class="p-1 text-black font-bold">Actions</li>
+        <li class="p-1 text-black font-semibold">Actions</li>
         <li><a href=""
              class="block p-1 hover:bg-gray-500 hover:text-white">Submit Post</a></li>
         <li><a href=""
@@ -85,7 +85,7 @@
       </ul>
 
       <ul class="border border-gray-500 p-3 bg-gray-100 mt-4">
-        <li class="p-1 text-black font-bold">People</li>
+        <li class="p-1 text-black font-semibold">People</li>
         <li><a href=""
              class="block p-1 hover:bg-gray-500 hover:text-white">Members</a></li>
         <li><a href=""
@@ -97,7 +97,7 @@
       </ul>
 
       <ul class="border border-gray-500 p-3 bg-gray-100 mt-4">
-        <li class="p-1 text-black font-bold">Community</li>
+        <li class="p-1 text-black font-semibold">Community</li>
         <li><a href=""
              class="block p-1 hover:bg-gray-500 hover:text-white">About Kotiseutu</a></li>
         <li><a href=""
@@ -112,29 +112,29 @@
     <main class="lg:ml-5 w-full lg:w-5/6">
       <button class="lg:hidden border border-gray-500 text-lg mb-4 w-full p-1">Menu</button>
 
-      <ul class="flex text-sm text-gray-600 mb-4">
+      <ul class="flex text-sm text-gray-600 mb-2">
         <li class="mr-2"><a href="">Posts</a></li>
         <li class="mr-2"><span> / </span>
         <li><a href=""
-             class="text-gray-800">Submit Post</a></li>
+             class="text-gray-500">Submit Post</a></li>
       </ul>
 
-      <h1 class="font-bold text-xl mb-4">Submit Post</h1>
+      <h1 class="font-semibold text-xl mb-2">Submit Post</h1>
 
 
-      <div class="mb-4 text-sm">
+      <div class="mb-2 text-sm">
         <a href=""
-           class="text-blue-800 hover:text-blue-600 mr-4">Submit Photo</a>
+           class="text-blue-800 hover:text-blue-700 mr-4">Submit Photo</a>
         <a href=""
-           class="text-blue-800 hover:text-blue-600 mr-4">Submit Event</a>
+           class="text-blue-800 hover:text-blue-700 mr-4">Submit Event</a>
         <a href=""
-           class="text-blue-800 hover:text-blue-600">Submit Poll</a>
+           class="text-blue-800 hover:text-blue-700">Submit Poll</a>
       </div>
 
-      <form class="bg-gray-100 p-5 border border-gray-500 lg:w-3/4">
+      <form class="p-5 border border-gray-500 lg:w-3/4">
 
         <div class="mb-4">
-          <label class="font-bold mb-2">Title</label>
+          <label class="block font-semibold mb-2">Title</label>
           <input class="appearance-none w-full p-1 inline-block w-100 border border-gray-500">
         </div>
 
@@ -142,12 +142,12 @@
           <label>
             <input type="checkbox"
                    class="mr-2">
-            <span class="font-bold">Allow comments</span>
+            <span class="font-semibold">Allow comments</span>
           </label>
         </div>
 
         <div class="mb-4">
-          <label class="font-bold block mb-2">Access</label>
+          <label class="font-semibold block mb-2">Access</label>
           <label class="mr-2">
             <input type="radio"
                    checked
@@ -168,28 +168,28 @@
 
 
         <div class="mb-4">
-          <label class="font-bold mb-2">Image</label>
+          <label class="block font-semibold mb-2">Image</label>
           <input type="file"
                  class="appearance-none w-full p-1 inline-block w-100 border border-gray-500"
                  placeholder="Please select a file....">
         </div>
 
         <div class="mb-4">
-          <label class="font-bold mb-2">Additional Info</label>
+          <label class="block font-semibold mb-2">Additional Info</label>
           <input class="appearance-none w-full p-1 inline-block w-100 border border-gray-500 bg-gray-100 cursor-not-allowed"
                  readonly>
         </div>
 
 
         <div class="mb-4">
-          <label class="font-bold mb-2">Options</label>
+          <label class="block font-semibold mb-2">Options</label>
           <select class="appearance-none w-full p-1 inline-block w-100 border border-gray-500">
             <option value="">Please choose...</option>
           </select>
         </div>
 
         <div class="mb-4">
-          <label class="font-bold text-red-600">URL</label>
+          <label class="block font-semibold mb-2 text-red-600">URL</label>
           <input class="appearance-none w-full p-1 inline-block w-100 border border-gray-500">
           <p class="text-sm text-red-600">
             Please enter a valid URL.
@@ -197,20 +197,20 @@
         </div>
 
         <div class="mb-4">
-          <label class="font-bold">Description</label>
+          <label class="block font-semibold mb-2">Description</label>
 
           <ul class="flex border-gray-500 border-b mb-2 items-center text-sm">
             <li class="-mb-px mr-2">
               <a href=""
-                 class="inline-block font-semibold p-1 py-2 text-black">Edit</a>
+                 class="inline-block font-semibold py-2 px-4">Edit</a>
             </li>
             <li class="mr-2">
               <a href=""
-                 class="inline-block p-1 text-blue-800">Preview</a>
+                 class="inline-block py-2 px-4 text-blue-800">Preview</a>
             </li>
             <li class="mr-2">
               <a href=""
-                 class="inline-block p-1 text-blue-800">Hints</a>
+                 class="inline-block py-2 px-4 text-blue-800">Hints</a>
             </li>
           </ul>
           <textarea class="appearance-none w-full p-1 inline-block w-100 border border-gray-500"></textarea>
@@ -219,9 +219,9 @@
           </p>
         </div>
 
-        <div class="flex text-center">
-          <button class="bg-blue-800 text-white p-1 mr-2">Submit</button>
-          <button class="border border-gray-500 p-1">Save Private</button>
+        <div class="flex text-center mt-4">
+          <button class="bg-blue-800 text-white py-1 px-2 hover:bg-blue-600 mr-2">Submit</button>
+          <button class="border border-gray-500 py-1 px-2 hover:bg-gray-300">Save Private</button>
         </div>
 
       </form>
