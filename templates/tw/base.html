@@ -46,8 +46,6 @@
         href="{% static 'favicon.png' %}">
   <link rel="apple-touch-icon image_src"
         href="{% static 'apple-touch-icon.png' %}">
-  <link rel="stylesheet"
-        href="{% static 'dist/tw/main.css' %}">
   <script defer
           src="{% static 'dist/main.js' %}"></script>
 </head>
@@ -84,11 +82,12 @@
 
   {% block layout %}
 
-  {% block sidebar %}
-  {% include "tw/includes/sidebar.html" %}
-  {% endblock sidebar %}
-
   <div class="mt-5 px-5 flex">
+
+    {% block sidebar %}
+    {% include "tw/includes/sidebar.html" %}
+    {% endblock sidebar %}
+
     <main class="lg:ml-5 w-full lg:w-5/6">
       <!-- mobile "menu" button -->
       <button class="lg:hidden border border-gray-500 text-lg mb-4 w-full p-2">{% trans "Menu" %}</button>
@@ -101,4 +100,3 @@
 
 </html>
 {% endwith %}
-
