@@ -92,10 +92,14 @@
 
   {% block mobile_search %}
   <div class="bg-gray-900 px-5 py-3 lg:hidden">
-    <input type="search"
-           placeholder="Search..."
-           class="appearance-none border border-gray-500 w-full p-1 text-gray-900">
-
+      <form method="GET"
+            action="{% url 'activities:search' %}"
+            data-controller="form"
+            data-action="form#submit">
+        <input type="search"
+               placeholder="{% trans "Search..." %}"
+               name="q"
+               class="appearance-none border border-gray-500 w-full p-1 text-gray-900">
   </div>
   {% endblock mobile_search %}
 

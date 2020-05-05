@@ -126,40 +126,154 @@
   {% endif %}
 
   <ul class="border border-gray-500 p-3 bg-gray-100 mt-4">
+    <li class="p-1 text-black font-bold border-b border-gray-500 mb-2">{% trans 'Content' %}</li>
+    <li>
+      <a data-controller="active-link"
+         data-active-link-active-class="bg-gray-500 text-white"
+         class="block p-1 hover:bg-gray-500 hover:text-white"
+         href="{% url 'hashtags:list' %}">
+        {% trans "Tags" %}
+      </a>
+    </li>
+    <li>
+      <a data-controller="active-link"
+         data-active-link-exact
+         data-active-link-active-class="bg-gray-500 text-white"
+         class="block p-1 hover:bg-gray-500 hover:text-white"
+         href="{% url 'activities:timeline' %}">{% trans "Timeline" %}
+      </a>
+    </li>
+    <li>
+      <a data-controller="active-link"
+         data-active-link-active-class="bg-gray-500 text-white"
+         class="block p-1 hover:bg-gray-500 hover:text-white"
+         href="{% url 'likes:activities' %}">
+        {% trans "Favorites" %}
+      </a>
+    </li>
+    <li>
+      <a data-controller="active-link"
+         data-active-link-active-class="bg-gray-500 text-white"
+         class="block p-1 hover:bg-gray-500 hover:text-white"
+         href="{% url 'users:activity_likes' user.username %}">{% trans "Likes" %}
+      </a>
+    </li>
+    <li>
+      <a data-controller="active-link"
+         data-active-link-active-class="bg-gray-500 text-white"
+         class="block p-1 hover:bg-gray-500 hover:text-white"
+         href="{% url 'users:activity_mentions' user.username %}">{% trans "Mentions" %}
+      </a>
+    </li>
+    {% if can_moderate_community and site_counters.flags %}
+    <li>
+      <a data-controller="active-link"
+         data-active-link-active-class="bg-gray-500 text-white"
+         class="block p-1 hover:bg-gray-500 hover:text-white"
+         href="{% url 'flags:list' %}">
+        {% trans "Flags" %}
+        <span class="inline-flex bg-blue-600 rounded text-white font-bold p-1 px-2 ml-2 justify-center text-xs">{% trans "New" %}</span>
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+
+  <ul class="border border-gray-500 p-3 bg-gray-100 mt-4">
     <li class="p-1 text-black font-bold border-b border-gray-500 mb-2">{% trans "People" %}</li>
     <li>
       <a href="{% url 'users:member_list' %}"
          data-controller="active-link"
+         data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-500 hover:text-white">{% trans "Members" %}</a>
     </li>
     <li>
       <a href="{% url 'users:following_list' %}"
          data-controller="active-link"
+         data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-500 hover:text-white">{% trans "Following" %}</a>
     </li>
     <li>
       <a href="{% url 'users:follower_list' %}"
          data-controller="active-link"
+         data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-500 hover:text-white">{% trans "Followers" %}</a>
     </li>
     <li>
       <a href="{% url 'users:blocked_list' %}"
          data-controller="active-link"
+         data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-500 hover:text-white">{% trans "Blocked" %}</a>
     </li>
   </ul>
 
+  {% if can_manage_community or communities_count > 1 or community.description or community.terms %}
   <ul class="border border-gray-500 p-3 bg-gray-100 mt-4">
-    <li class="p-1 text-black font-bold">Community</li>
-    <li><a href=""
-         class="block p-1 hover:bg-gray-500 hover:text-white">About Kotiseutu</a></li>
-    <li><a href=""
-         class="block p-1 hover:bg-gray-500 hover:text-white">Terms</a></li>
-    <li><a href=""
-         class="block p-1 hover:bg-gray-500 hover:text-white">Settings</a></li>
+    <li class="p-1 text-black font-bold border-b border-gray-500 mb-2">{% trans "Community" %}</li>
+
+    {% if community.description %}
+    <li>
+      <a href="{% url 'communities:community_detail' %}"
+         data-controller="active-link"
+         data-active-link-active-class="bg-gray-500 text-white"
+         class="block p-1 hover:bg-gray-500 hover:text-white">
+        {% blocktrans with community_name=community.name %}
+        About {{ community_name }}
+        {% endblocktrans %}
+      </a>
+    </li>
+    {% endif %}
+
+    {% if community.terms %}
+    <li>
+      <a href="{% url 'communities:community_terms' %}"
+         data-controller="active-link"
+         data-active-link-active-class="bg-gray-500 text-white"
+         class="block p-1 hover:bg-gray-500 hover:text-white">{% trans "Terms" %}</a>
+    </li>
+    {% endif %}
+
+    {% if can_manage_community %}
+
+    <li>
+      <a href="{% url 'communities:community_update' %}"
+         data-controller="active-link"
+         data-active-link-active-class="bg-gray-500 text-white"
+         class="block p-1 hover:bg-gray-500 hover:text-white">{% trans "Settings" %}</a>
+    </li>
+
+    <li>
+      <a href="{% url 'communities:membership_list' %}"
+         data-controller="active-link"
+         data-active-link-active-class="bg-gray-500 text-white"
+         class="block p-1 hover:bg-gray-500 hover:text-white">{% trans "Members" %}</a>
+    </li>
+
+    <li>
+      <a href="{% url 'invites:list' %}"
+         data-controller="active-link"
+         data-active-link-active-class="bg-gray-500 text-white"
+         class="block p-1 hover:bg-gray-500 hover:text-white">{% trans "Invites" %}</a>
+    </li>
+
+    <li>
+      <a href="{% url 'join_requests:list' %}"
+         data-controller="active-link"
+         data-active-link-active-class="bg-gray-500 text-white"
+         class="block p-1 hover:bg-gray-500 hover:text-white">
+        {% trans "Join Requests" %}
+        {% if site_counters.pending_join_requests %}
+        <span class="inline-flex bg-blue-600 rounded text-white font-bold p-1 px-2 ml-2 justify-center text-xs">{% trans "New" %}</span>
+        {% endif %}
+
+      </a>
+    </li>
+
+
+    {% endif %}
     <li><a href=""
          class="block p-1 hover:bg-gray-500 hover:text-white">Communities</a></li>
   </ul>
+  {% endif %}
 
   {% else %}
   non-member menu....
