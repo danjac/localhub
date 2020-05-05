@@ -112,7 +112,7 @@ export default class extends ApplicationController {
 
   toggleProgressBar() {
     if (this.hasProgressTarget) {
-      this.progressTarget.classList.toggle('d-none');
+      this.progressTarget.classList.toggle('hidden');
     }
   }
 

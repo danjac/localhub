@@ -34,17 +34,17 @@ export default class extends ApplicationController {
   handleFile(file) {
     if (this.isImage(file.name)) {
       this.imageTarget.src = URL.createObjectURL(file);
-      this.imageTarget.classList.remove('d-none');
+      this.imageTarget.classList.remove('hidden');
     } else {
-      this.imageTarget.classList.add('d-none');
+      this.imageTarget.classList.add('hidden');
     }
     if (this.hasFileSizeTarget) {
       const size = this.readableFileSize(file.size);
       if (size) {
         this.fileSizeTarget.innerText = size;
-        this.fileSizeTarget.classList.remove('d-none');
+        this.fileSizeTarget.classList.remove('hidden');
       } else {
-        this.fileSizeTarget.classList.add('d-none');
+        this.fileSizeTarget.classList.add('hidden');
       }
     }
   }

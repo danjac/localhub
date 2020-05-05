@@ -20,7 +20,7 @@ export default class extends ApplicationController {
     // if clipboard API not supported e.g. on Safari or disabled for security,
     // remove button elements
     if (!navigator.clipboard && this.hasButtonTarget) {
-      this.buttonTarget.classList.add('d-none');
+      this.buttonTarget.classList.add('hidden');
     }
   }
 

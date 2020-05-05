@@ -34,7 +34,7 @@ export default class extends ApplicationController {
   showMessage(type, message) {
     this.messageTarget.innerText = message;
     this.element.classList.add(type);
-    this.element.classList.remove('d-none');
+    this.element.classList.remove('hidden');
     maximizeZIndex(this.element);
 
     this.timeout = setTimeout(() => {
@@ -45,7 +45,7 @@ export default class extends ApplicationController {
 
   dismiss() {
     fadeOut(this.element, () => {
-      this.element.classList.add('d-none');
+      this.element.classList.add('hidden');
       // reset opacity for next message
       this.element.style.opacity = 1;
     });

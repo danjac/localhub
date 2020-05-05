@@ -65,7 +65,7 @@ export default class extends ApplicationController {
 
   toggle(event) {
     event.preventDefault();
-    if (!this.calendarTarget.classList.toggle('d-none')) {
+    if (!this.calendarTarget.classList.toggle('hidden')) {
       const { value } = this.dateInputTarget;
       this.selectedDate = value ? parse(value, DATE_FORMAT, new Date()) : null;
 
@@ -102,7 +102,7 @@ export default class extends ApplicationController {
       `data-${this.identifier}-date`
     );
     this.dateInputTarget.value = selectedDate;
-    this.calendarTarget.classList.add('d-none');
+    this.calendarTarget.classList.add('hidden');
     if (this.data.has('notify')) {
       this.bus.pub(EVENT_NOTIFY_ON_UPDATE, {
         startDate: selectedDate,

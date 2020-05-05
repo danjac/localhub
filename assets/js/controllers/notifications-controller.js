@@ -98,15 +98,15 @@ export default class extends ApplicationController {
   }
 
   showSubscribeBtn() {
-    this.element.classList.remove('d-none');
-    this.subscribeBtnTarget.classList.remove('d-none');
-    this.unsubscribeBtnTarget.classList.add('d-none');
+    this.element.classList.remove('hidden');
+    this.subscribeBtnTarget.classList.remove('hidden');
+    this.unsubscribeBtnTarget.classList.add('hidden');
   }
 
   showUnsubscribeBtn() {
-    this.element.classList.remove('d-none');
-    this.unsubscribeBtnTarget.classList.remove('d-none');
-    this.subscribeBtnTarget.classList.add('d-none');
+    this.element.classList.remove('hidden');
+    this.unsubscribeBtnTarget.classList.remove('hidden');
+    this.subscribeBtnTarget.classList.add('hidden');
   }
 
   checkBrowserCompatibility() {

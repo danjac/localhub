@@ -214,13 +214,13 @@ export default class extends ApplicationController {
     this.selectorTarget.style.right = 'auto';
     this.selectorTarget.style.bottom = 'auto';
 
-    this.selectorTarget.classList.remove('d-none');
+    this.selectorTarget.classList.remove('hidden');
 
     maximizeZIndex(fitIntoViewport(this.selectorTarget));
   }
 
   closeSelector() {
-    this.selectorTarget.classList.add('d-none');
+    this.selectorTarget.classList.add('hidden');
     this.removeChildNodes(this.selectorTarget);
   }
 
@@ -231,6 +231,6 @@ export default class extends ApplicationController {
   }
 
   get selectorOpen() {
-    return !this.selectorTarget.classList.contains('d-none');
+    return !this.selectorTarget.classList.contains('hidden');
   }
 }

@@ -85,7 +85,7 @@ export default class extends ApplicationController {
     }
 
     // toggle for immediate feedback
-    const toggleClass = this.data.get('toggle') || 'd-none';
+    const toggleClass = this.data.get('toggle') || 'hidden';
 
     this.toggleTargets.forEach((target) => {
       target.classList.toggle(toggleClass);

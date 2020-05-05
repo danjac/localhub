@@ -86,7 +86,7 @@ export default class extends ApplicationController {
 
   clearPreview() {
     this.titleTarget.innerText = '';
-    this.titleTarget.classList.add('d-none');
+    this.titleTarget.classList.add('hidden');
 
     this.descriptionTargets.forEach((el) => {
       el.innerText = '';
@@ -101,13 +101,13 @@ export default class extends ApplicationController {
       this.descriptionPreviewTarget,
       this.imagePreviewTarget,
       this.titleTarget,
-    ].forEach((el) => el.classList.add('d-none'));
+    ].forEach((el) => el.classList.add('hidden'));
   }
 
   updatePreview(title, description, image) {
     if (title) {
       this.titleTarget.innerText = title;
-      this.titleTarget.classList.remove('d-none');
+      this.titleTarget.classList.remove('hidden');
     }
 
     if (description) {
@@ -119,11 +119,11 @@ export default class extends ApplicationController {
     }
 
     if (description && image) {
-      this.fullPreviewTarget.classList.remove('d-none');
+      this.fullPreviewTarget.classList.remove('hidden');
     } else if (description) {
-      this.descriptionPreviewTarget.classList.remove('d-none');
+      this.descriptionPreviewTarget.classList.remove('hidden');
     } else if (image) {
-      this.imagePreviewTarget.classList.remove('d-none');
+      this.imagePreviewTarget.classList.remove('hidden');
     }
   }
 
