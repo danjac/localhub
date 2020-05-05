@@ -1,0 +1,43 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load widget_tweaks %}
+{% with label=label|default:field.label help_text=help_text|default:field.help_text widget=field.field.widget %}
+<div class="mb-4 {% if field.errors %} text-red-600{% endif %}">
+  {% if widget.input_type == 'checkbox' %}
+  {% if widget.allow_multiple_selected %}
+  <label for="{{ field.id_for_label }}"
+         class="block font-semibold mb-2">{{ label }}</label>
+  {% render_field field %}
+  {% else %}
+  {% include "tw/includes/forms/widgets/checkbox_input.html" %}
+  {% endif %}
+  {% elif widget.input_type == 'radio' %}
+  <label class="block font-semibold mb-2">{{ label }}</label>
+  {% for choice in field %}
+  <div class="{% if not forloop.last %} mr-2{% endif %}">
+    <label class="">
+      {{ choice.tag }}
+      {{ choice.choice_label }}
+    </label>
+  </div>
+  {% endfor %}
+  {% else %}
+  <label for="{{ field.id_for_label }}"
+         class="block font-semibold mb-2">{{ label }}</label>
+
+  {% with widget_class=field.errors|yesno:"appearance-none w-full p-1 inline-block w-100 bg-red-100 border border-red-600 focus:border-red-300,appearance-none w-full p-1 inline-block w-100 border border-gray-500 focus:border-blue-500" %}
+  {% render_field field class=widget_class placeholder=widget.attrs.placeholder %}
+  {% endwith %}
+
+  {% endif %}
+
+  {% for error in field.errors %}
+  <p class="text-red-600 mb-2 text-sm">{{ error }}</p>
+  {% endfor %}
+
+  {% if not field.errors and help_text %}
+  <p class="text-gray-700 mb-2 text-sm">{{ help_text }}</p>
+  {% endif %}
+</div>
+{% endwith %}

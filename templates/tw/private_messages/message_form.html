@@ -1,0 +1,44 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends "tw/private_messages/base.html" %}
+
+{% load i18n %}
+{% load account %}
+{% load private_messages %}
+
+{% block subtitle %}{% if recipient %} / {% user_display recipient %}{% endif %} /
+{{ parent|yesno:_("Reply,Send Message") }} {% endblock %}
+
+{% block content %}
+
+{% if parent or recipient %}
+<ul class="">
+  {% if parent %}
+  <li class=""><a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a></li>
+  <li class="">
+    <a href="#">
+      {% if parent.sender == user %}{% trans "Follow-Up" %}{% else %}{% trans "Reply" %}{% endif %}
+    </a>
+  </li>
+  {% elif recipient %}
+  <li class=""><a href="{% url 'users:messages' recipient.username %}">{% user_display recipient %}</a>
+  </li>
+  <li class="">
+    <a data-turbolinks="false"
+       href="#">{% trans "Send Message" %}</a>
+  </li>
+  {% endif %}
+</ul>
+{% endif %}
+
+
+<h1 class="font-semibold text-xl mb-2">{% trans "Send Message" %}</h1>
+
+{% if parent %}
+{% render_message request user parent is_detail=True %}
+{% endif %}
+
+{% include "tw/includes/forms/stimulusjs_form.html" %}
+
+{% endblock %}

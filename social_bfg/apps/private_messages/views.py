@@ -179,6 +179,7 @@ class MessageCreateView(
     """
 
     form_class = MessageRecipientForm
+    template_name = "tw/private_messages/message_form.html"
 
     def form_valid(self, form):
         self.object = form.save(commit=False)

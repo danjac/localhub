@@ -1,0 +1,27 @@
+<div data-controller="image-preview"
+     data-action="drop->image-preview#drop">
+  <img src="{{ widget.value.url }}"
+       data-target="image-preview.image"
+       loading="lazy"
+       class="image-preview img-responsive mb-1{% if not widget.value.url %} d-none{% endif%}">
+  <div data-target="image-preview.fileSize"
+       class="d-none"></div>
+  {% if widget.is_initial %}
+  {% if not widget.required %}
+  <label for="{{ widget.checkbox_id }}"
+         class="form-checkbox">
+    <input type="checkbox"
+           name="{{ widget.checkbox_name }}"
+           id="{{ widget.checkbox_id }}">
+    <i class="form-icon"></i>
+    {{ widget.clear_checkbox_label }}
+  </label>
+  {% endif %}<br>
+  {{ widget.input_text }}:
+  {% endif %}
+  <input type="{{ widget.type }}"
+         name="{{ widget.name }}"
+         data-action="image-preview#change"
+         data-target="image-preview.input"
+         {% include "django/forms/widgets/attrs.html" %}>
+</div>

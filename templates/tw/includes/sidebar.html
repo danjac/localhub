@@ -119,6 +119,8 @@
     {% if can_create_message %}
     <li>
       <a href="{% url 'private_messages:message_create' %}"
+         data-controller="active-link"
+         data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-500 hover:text-white">{% trans "Send Message" %}</a>
     </li>
     {% endif %}

@@ -18,7 +18,6 @@ class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
         fields = ("message",)
-        labels = {"message": _("Send Message")}
 
 
 class MessageRecipientForm(MessageForm):
