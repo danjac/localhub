@@ -11,6 +11,39 @@
 
 <body class="h-screen">
 
+  <!-- toggle opacity-0 pointer-events-none -->
+  <div class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
+    <!-- modal overlay, create/hide in JS -->
+    <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+
+    <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto shadow-lg z-50 overflow-y-auto">
+      <div class="modal-content py-4 text-left px-6">
+        <div class="flex justify-between items-center">
+          <h2 class="font-bold">Delete Post</h2>
+          <div class="modal-close cursor-pointer z-50"
+               onclick="closeModal(); return false;">
+            <svg class="fill-current text-black"
+                 xmlns="http://www.w3.org/2000/svg"
+                 width="18"
+                 height="18"
+                 viewBox="0 0 18 18">
+              <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+            </svg>
+          </div>
+        </div>
+        <p class="py-4">
+          Are you sure you want to delete this post?
+        </p>
+        <div>
+          <button class="p-1 px-2 bg-blue-600 text-white">Yes, Please</button>
+          <button class="p-1 px-2 border border-gray-800"
+                  onclick="closeModal(); return false;">No, Cancel</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
   <header class="flex items-center justify-between p-3 bg-gray-900 text-gray-100 px-5">
     <div class="flex items-center flex-shrink-0 mr-6">
       <a href="#"
@@ -25,7 +58,8 @@
       <a href="#"
          class="inline-block mr-4">danjac</a>
       <a href="#"
-         class="inline-block">Logout</a>
+         class="inline-block"
+         onclick="openModal(); return false;">Logout</a>
     </div>
   </header>
 
@@ -48,12 +82,8 @@
             <button class="inline-flex rounded-full bg-blue-600 text-white font-bold p-1 ml-2 h-6 w-6 justify-center text-xs">4</button>
           </a>
         </li>
-        <li>
-          <a href=""
-             class="block p-1 hover:bg-gray-500 hover:text-white">Notifications
-            <button class="inline-flex rounded bg-blue-600 text-white font-bold p-1 ml-2 justify-center text-xs">New</button>
-          </a>
-        </li>
+        <li><a href=""
+             class="block p-1 hover:bg-gray-500 hover:text-white">Notifications</a></li>
         <li><a href=""
              class="block p-1 hover:bg-gray-500 hover:text-white">Comments</a></li>
         <li><a href=""
@@ -110,127 +140,82 @@
 
     </aside>
     <main class="lg:ml-5 w-full lg:w-5/6">
-      <button class="lg:hidden border border-gray-500 text-lg mb-4 w-full p-1">Menu</button>
+      <button class="lg:hidden border border-gray-500 text-lg mb-4 w-full p-2">Menu</button>
+      <h1 class="font-bold text-xl mb-4">Private Stash</h1>
 
-      <ul class="flex text-sm text-gray-600 mb-4">
-        <li class="mr-2"><a href="">Posts</a></li>
-        <li class="mr-2"><span> / </span>
-        <li><a href=""
-             class="text-gray-800">Submit Post</a></li>
-      </ul>
+      <div class="flex items-center border border-gray-500">
 
-      <h1 class="font-bold text-xl mb-4">Submit Post</h1>
+        <div class="p-1 border-r border-gray-500 bg-gray-200">
+          <img alt=""
+               height="32"
+               width="32"
+               src="https://d1hfgy95btx02f.cloudfront.net/media/cache/d8/ce/d8ce7922ec23c9ac6fce05719c09b110.jpg">
+        </div>
+        <div class="p-1">
+          <input class="appearance-none w-full p-1 inline-block w-100"
+                 placeholder="What's on your mind?">
+        </div>
 
-
-      <div class="mb-4 text-sm">
-        <a href=""
-           class="text-blue-600 hover:text-blue-400 mr-4">Submit Photo</a>
-        <a href=""
-           class="text-blue-600 hover:text-blue-400 mr-4">Submit Event</a>
-        <a href=""
-           class="text-blue-600 hover:text-blue-400">Submit Poll</a>
       </div>
 
-      <form class="bg-gray-100 p-5 border border-gray-800 lg:w-3/4">
+      <!-- POST CARD -->
+      <div class="border border-gray-500 p-3 mt-4">
+        <h2 class="text-lg mb-4">
+          <a href=""
+             class="text-blue-600 hover:text-blue-400 font-bold">Running a Project Post-Mortem</a>
+        </h2>
 
-        <div class="mb-4">
-          <label class="font-bold mb-2">Title</label>
-          <input class="appearance-none w-full p-1 inline-block w-100 border border-gray-800">
+        <div class="flex items-center mb-4">
+
+          <div class="flex rounded-full items-center text-sm p-1 mr-4 bg-gray-300">
+            <img alt=""
+                 height="16"
+                 width="16"
+                 class="mr-1 rounded-full"
+                 src="https://d1hfgy95btx02f.cloudfront.net/media/cache/d8/ce/d8ce7922ec23c9ac6fce05719c09b110.jpg">
+            <a href=""
+               class="">danjac</a>
+          </div>
+
+          <div class="text-sm text-gray-800">
+            5 days ago
+          </div>
+
         </div>
 
-        <div class="mb-4">
-          <label>
-            <input type="checkbox"
-                   class="mr-2">
-            <span class="font-bold">Allow comments</span>
-          </label>
-        </div>
+        <p>
+          Following two those two threads: Open source project using stimulus Common patterns? I am starting this thread where we can post relevant examples of projects using Stimulus. Hopefully, this can help people get started with more curated list of examples. Also maybe we can extract out of it some common patterns and good practice to help us all. For each project/example we post, I would like to suggest that we follow this template (all items being optional): Name : Github repo : Link to Live...
+        </p>
 
-        <div class="mb-4">
-          <label class="font-bold block mb-2">Access</label>
-          <label class="mr-2">
-            <input type="radio"
-                   checked
-                   class="mr-2">
-            <span class="">Moderators</span>
-          </label>
-          <label class="mr-2">
-            <input type="radio"
-                   class="mr-2">
-            <span class="">Admins</span>
-          </label>
-          <label class="">
-            <input type="radio"
-                   class="mr-2">
-            <span class="">Members</span>
-          </label>
-        </div>
-
-
-        <div class="mb-4">
-          <label class="font-bold mb-2">Image</label>
-          <input type="file"
-                 class="appearance-none w-full p-1 inline-block w-100 border border-gray-800"
-                 placeholder="Please select a file....">
-        </div>
-
-        <div class="mb-4">
-          <label class="font-bold mb-2">Additional Info</label>
-          <input class="appearance-none w-full p-1 inline-block w-100 border border-gray-800 bg-gray-100 cursor-not-allowed"
-                 readonly>
+        <div class="text-sm text-gray-800 mt-4">
+          <span class="mr-2">5 Likes</span>
+          <span>Updated 5 minutes ago</span>
         </div>
 
 
-        <div class="mb-4">
-          <label class="font-bold mb-2">Options</label>
-          <select class="appearance-none w-full p-1 inline-block w-100 border border-gray-800">
-            <option value="">Please choose...</option>
-          </select>
+        <div class="mt-4 text-sm flow">
+          <button class="p-1 border border-gray-500 mr-4">Actions...</button>
+          <a href=""
+             class="text-blue-800">Link</a>
         </div>
 
-        <div class="mb-4">
-          <label class="font-bold text-red-600">URL</label>
-          <input class="appearance-none w-full p-1 inline-block w-100 border border-gray-800">
-          <p class="text-sm text-red-600">
-            Please enter a valid URL.
-          </p>
-        </div>
+      </div>
 
-        <div class="mb-4">
-          <label class="font-bold">Description</label>
 
-          <ul class="flex border-black border-b mb-2 items-center text-sm">
-            <li class="-mb-px mr-2">
-              <a href=""
-                 class="inline-block font-semibold p-1 py-2 text-black">Edit</a>
-            </li>
-            <li class="mr-2">
-              <a href=""
-                 class="inline-block p-1 text-blue-800">Preview</a>
-            </li>
-            <li class="mr-2">
-              <a href=""
-                 class="inline-block p-1 text-blue-800">Hints</a>
-            </li>
-          </ul>
-          <textarea class="appearance-none w-full p-1 inline-block w-100 border border-gray-800"></textarea>
-          <p class="text-sm">
-            You can enter Markdown content.
-          </p>
-        </div>
-
-        <div class="flex text-center">
-          <button class="bg-blue-800 text-white p-1 mr-2">Submit</button>
-          <button class="border border-gray-800 p-1">Save Private</button>
-        </div>
-
-      </form>
     </main>
 
   </div>
-  <footer class="p-2 mt-4 text-center bg-gray-900 text-gray-100">
-    Footer content goes here...
-  </footer>
+  <script>
+    function openModal() {
+      console.log("open modal")
+      document.querySelector(".modal").classList.remove("opacity-0", "pointer-events-none");
+    }
+
+    function closeModal() {
+      console.log("close modal")
+      document.querySelector(".modal").classList.add("opacity-0", "pointer-events-none");
+    }
+  </script>
 
 </body>
 
