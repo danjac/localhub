@@ -11,3 +11,14 @@ Python/Django, Docker, PostgreSQL, Turbolinks, Stimulus, Tailwind.
 Social-BFG is licensed under the **GNU Affero Public License**. A copy of the license is provided in this repository.
 
 # Tailwind Rewrite Roadmap
+
+1. Mockups of common components and patterns [x]
+2. Webpack/PostCSS integration and configuration []
+3. Base layout and site navigation (header/sidebar, desktop+mobile, non-sidebar layouts) []
+4. Form and widgets []
+5. Cards (activities, comments and messages) []
+6. Tables (notifications, members, invites etc) []
+7. Photo gallery []
+8. Calendar pages and form widgets []
+9. Remaining fixes, tweaks []
+10. Remove mockups, old CSS files and dependencies []
