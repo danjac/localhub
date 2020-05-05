@@ -53,21 +53,40 @@
 <body class="h-screen">
   {% block header %}
   <header class="flex items-center justify-between p-3 bg-gray-900 text-gray-100 px-5">
+    {% if community %}
     <div class="flex items-center flex-shrink-0 mr-6">
       <a href="#"
-         class="text-xl tracking-tight">Kotiseutu</a>
+         class="text-xl tracking-tight">{{ community.name }}</a>
     </div>
+    {% endif %}
     <div class="hidden lg:block">
-      <input type="search"
-             placeholder="Search..."
-             class="appearance-none border border-gray-500 w-full p-1 text-gray-900">
+      <form method="GET"
+            action="{% url 'activities:search' %}"
+            data-controller="form"
+            data-action="form#submit">
+        <input type="search"
+               placeholder="{% trans "Search..." %}"
+               name="q"
+               class="appearance-none border border-gray-500 w-full p-1 text-gray-900">
+      </form>
     </div>
+    {% if user.is_authenticated %}
     <div>
       <a href="#"
-         class="inline-block mr-4">danjac</a>
-      <a href="#"
-         class="inline-block">{% trans "Logout" %}</a>
+         class="inline-block mr-4">{{ user.username }}</a>
+      <a href="{% url 'account_logout' %}"
+         class="inline-block"
+         data-turbolinks="false"
+         data-controller="ajax"
+         data-action="ajax#post"
+         data-ajax-redirect="{{ home_page_url }}">{% trans "Logout" %}</a>
     </div>
+    {% else %}
+    <a href="{% url 'account_login' %}"
+       class="inline-block">{% trans "Login" %}</a>
+    <a href="{% url 'account_signup' %}"
+       class="inline-block">{% trans "Signup" %}</a>
+    {% endif %}
   </header>
   {% endblock header %}
 
