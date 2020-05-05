@@ -11,6 +11,7 @@ django-configurations
 django-countries
 django-debug-toolbar
 django-extensions
+django-jinja
 django-markdownx
 django-model-utils
 django-redis
