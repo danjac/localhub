@@ -6,35 +6,32 @@
 
 <div class="markdownx"
      data-controller="tabs typeahead"
+     data-tabs-active-class="bg-gray-500 text-white border-t border-r border-l border-gray-600"
+     data-tabs-inactive-class="hover:bg-gray-500 hover:text-white"
      data-typeahead-config="{{ typeahead_config }}">
-  <ul class="">
-    <li class=""
-        data-target="tabs.tab"
-        data-tab="editor">
-      <a href="#"
-         data-action="tabs#select"
-         data-tab="editor">{% trans "Edit" %}</a>
-    </li>
-    <li class=""
-        data-target="tabs.tab"
-        data-tab="preview">
-      <a href="#"
-         data-action="tabs#select"
-         data-tab="preview">{% trans "Preview" %}</a>
-    </li>
-    <li class=""
-        data-target="tabs.tab"
-        data-tab="guide">
-      <a href="#"
-         data-action="tabs#select"
-         data-tab="guide">{% trans "Markdown Guide" %}</a>
-    </li>
-  </ul>
+  <div class="flex flex-wrap items-center text-sm border-b border-gray-500 mb-2">
+    <button class="mr-2 p-1 px-2 lg:px-5"
+            type="button"
+            data-target="tabs.tab"
+            data-action="tabs#select"
+            data-tab="editor">{% trans "Edit" %}</button>
+    <button class="mr-2 p-1 px-2 lg:px-5"
+            type="button"
+            data-target="tabs.tab"
+            data-action="tabs#select"
+            data-tab="preview">{% trans "Preview" %}</button>
+    <button class="p-1 px-2 lg:px-5"
+            type="button"
+            data-target="tabs.tab"
+            data-action="tabs#select"
+            data-tab="guide">
+      {% trans "Hints" %}</button>
+  </div>
   <div class="-mb-px mb-2"
        data-target="tabs.pane"
        data-tab="editor"
        data-controller="markdown">
-    <div class="text-sm flex flex-wrap items-center mb-2">
+    <div class="text-xs flex flex-wrap items-center mb-2">
 
       <a href="#"
          class="inline-block mr-2 text-blue-800 hover:text-blue-700"

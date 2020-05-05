@@ -17,22 +17,42 @@ export default class extends ApplicationController {
   */
   static targets = ['tab', 'pane'];
 
+  connect() {
+    const tabs = Array.from(this.tabTargets);
+    this.addClassnames(tabs[0], this.data.get('active-class'));
+    tabs
+      .slice(1)
+      .forEach((tab) => this.addClassnames(tab, this.data.get('inactive-class')));
+  }
+
   select(event) {
     event.preventDefault();
     const activeTab = event.currentTarget.dataset.tab;
     this.tabTargets.forEach((tab) => {
       if (tab.dataset.tab === activeTab) {
-        tab.classList.add('active');
+        this.addClassnames(tab, this.data.get('active-class'));
+        this.removeClassnames(tab, this.data.get('inactive-class'));
       } else {
-        tab.classList.remove('active');
+        this.addClassnames(tab, this.data.get('inactive-class'));
+        this.removeClassnames(tab, this.data.get('active-class'));
       }
     });
     this.paneTargets.forEach((pane) => {
       if (pane.dataset.tab === activeTab) {
-        pane.classList.remove('d-none');
+        pane.classList.remove('hidden');
       } else {
-        pane.classList.add('d-none');
+        pane.classList.add('hidden');
       }
     });
+  }
+
+  addClassnames(el, classnames) {
+    console.log('add', classnames);
+    classnames.split(/ /).forEach((classname) => el.classList.add(classname));
+  }
+
+  removeClassnames(el, classnames) {
+    console.log('remove', classnames);
+    classnames.split(/ /).forEach((classname) => el.classList.remove(classname));
   }
 }
