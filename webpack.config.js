@@ -5,21 +5,15 @@
 const webpack = require('webpack');
 const path = require('path');
 const TerserJSPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-  entry: ['./assets/scss/main.scss', './assets/js/main.js', './assets/css/main.css'],
+  entry: ['./assets/js/main.js', './assets/css/main.css'],
   mode: process.env.NODE_ENV,
   optimization: {
-    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+    minimizer: [new TerserJSPlugin({})],
   },
   module: {
     rules: [
-      {
-        test: /\.scss/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
-      },
       {
         test: /\.css$/,
         use: [
@@ -59,9 +53,4 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './assets/dist/'),
   },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-    }),
-  ],
 };
