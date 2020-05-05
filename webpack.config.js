@@ -12,22 +12,30 @@ module.exports = {
   entry: ['./assets/scss/main.scss', './assets/js/main.js'],
   mode: process.env.NODE_ENV,
   optimization: {
-    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})]
+    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
   },
   module: {
     rules: [
       {
-        test: /\.(scss|css)/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+        test: /\.scss/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          { loader: 'css-loader', options: { importLoaders: 1 } },
+          'postcss-loader',
+        ],
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
         use: {
           loader: 'url-loader',
           options: {
-            limit: 8192
-          }
-        }
+            limit: 8192,
+          },
+        },
       },
       {
         test: /\.m?js$/,
@@ -36,24 +44,24 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['@babel/preset-env'],
-            plugins: ['@babel/plugin-proposal-class-properties']
-          }
-        }
-      }
-    ]
+            plugins: ['@babel/plugin-proposal-class-properties'],
+          },
+        },
+      },
+    ],
   },
   resolve: {
     alias: {
       '@controllers': path.resolve(__dirname, './assets/js/controllers'),
-      '@utils': path.resolve(__dirname, './assets/js/utils')
-    }
+      '@utils': path.resolve(__dirname, './assets/js/utils'),
+    },
   },
   output: {
-    path: path.resolve(__dirname, './assets/dist/')
+    path: path.resolve(__dirname, './assets/dist/'),
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '[name].css'
-    })
-  ]
+      filename: '[name].css',
+    }),
+  ],
 };
