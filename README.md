@@ -15,7 +15,7 @@ Social-BFG is licensed under the **GNU Affero Public License**. A copy of the li
 1. Mockups of common components and patterns [x]
 2. Webpack/PostCSS integration and configuration [x]
 3. Base layout and site navigation (header/sidebar, desktop+mobile, non-sidebar layouts) [x]
-4. Forms and simple widgets []
+4. Forms and simple widgets [x]
 5. Cards (activities, comments and messages) []
 6. Tables (notifications, members, invites etc) []
 7. Photo gallery []

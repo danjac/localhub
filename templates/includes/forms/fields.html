@@ -23,9 +23,9 @@
 <fieldset>
 
   {% if fieldset.label %}
-  <div class="divider text-center" data-content="{{ fieldset.label }}"></div>
+  <div class="p-1 font-semibold border-b border-gray-500 mb-2 text-center">{{ fieldset.label }}</div>
   {% elif not forloop.first %}
-  <div class="divider"></div>
+  <hr class="p-1 font-semibold border-b border-gray-500 mb-2">
   {% endif %}
 
   {% for field in fieldset %}

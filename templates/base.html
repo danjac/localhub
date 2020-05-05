@@ -82,25 +82,27 @@
          data-ajax-redirect="{{ home_page_url }}">{% trans "Logout" %}</a>
     </div>
     {% else %}
-    <a href="{% url 'account_login' %}"
-       class="inline-block">{% trans "Login" %}</a>
-    <a href="{% url 'account_signup' %}"
-       class="inline-block">{% trans "Signup" %}</a>
+    <div>
+      <a href="{% url 'account_login' %}"
+         class="inline-block mr-4">{% trans "Login" %}</a>
+      <a href="{% url 'account_signup' %}"
+         class="inline-block">{% trans "Signup" %}</a>
+    </div>
     {% endif %}
   </header>
   {% endblock header %}
 
   {% block mobile_search %}
   <div class="bg-gray-900 px-5 py-3 lg:hidden">
-      <form method="GET"
-            action="{% url 'activities:search' %}"
-            data-controller="form"
-            data-action="form#submit">
-        <input type="search"
-               placeholder="{% trans "Search..." %}"
-               name="q"
-               class="appearance-none border border-gray-500 w-full p-1 text-gray-900">
-      </form>
+    <form method="GET"
+          action="{% url 'activities:search' %}"
+          data-controller="form"
+          data-action="form#submit">
+      <input type="search"
+             placeholder="{% trans "Search..." %}"
+             name="q"
+             class="appearance-none border border-gray-500 w-full p-1 text-gray-900">
+    </form>
   </div>
   {% endblock mobile_search %}
 

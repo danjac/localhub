@@ -12,32 +12,46 @@
 {% block content %}
 
 {% with list_url=view.model|resolve_url:"list" model_name_plural=view.model|verbose_name_plural|title model_name=view.model|verbose_name|title %}
-<ul class="breadcrumb">
+<ul class="flex flex-wrap text-sm mb-3">
 
   {% if object %}
 
   {% if object.published %}
-  <li class="breadcrumb-item">
-    <a href="{{ list_url }}">{{ model_name_plural }}</a>
+  <li class="mr-2">
+    <a class="text-gray-500 hover:text-gray-400" href="{{ list_url }}">{{ model_name_plural }}</a>
   </li>
+  <li class="mr-2 text-gray-600"> / </li>
   {% else %}
-  <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
+  <li class="mr-2">
+    <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
+  </li>
+  <li class="mr-2 text-gray-600"> / </li>
   {% endif %}
 
-  <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
-  <li class="breadcrumb-item"><a href="#">{% blocktrans %}Edit {{ model_name }}{% endblocktrans %}</a></li>
+  <li class="mr-2">
+    <a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a>
+  </li>
+  <li class="mr-2 text-gray-600"> / </li>
+  <li class="mr-2">
+    <a href="#">{% blocktrans %}Edit {{ model_name }}{% endblocktrans %}</a>
+  </li>
 
   {% else %}
 
   {% if view.is_private %}
-  <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
-  {% else %}
-  <li class="breadcrumb-item">
-    <a href="{{ list_url }}">{{ model_name_plural }}</a>
+  <li class="mr-2">
+    <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
   </li>
+  <li class="mr-2 text-gray-600"> / </li>
+  {% else %}
+  <li class="mr-2">
+    <a class="text-gray-600 hover:text-gray-500" href="{{ list_url }}">{{ model_name_plural }}</a>
+  </li>
+  <li class="mr-2 text-gray-600"> / </li>
   {% endif %}
-  <li class="breadcrumb-item">
+  <li class="">
     <a data-turbolinks="false"
+       class="text-gray-700"
        href="#">{% blocktrans %}Submit {{ model_name }}{% endblocktrans %}</a>
   </li>
   {% endif %}
@@ -47,10 +61,10 @@
 
 
 {% if submit_actions %}
-<div class="actions mb-1">
+<div class="mb-3 text-sm">
   {% block actions %}
   {% for url, label in submit_actions %}
-  <a class="action"
+  <a class="text-blue-800 hover:text-blue-600{% if not forloop.last %} mr-2{% endif %}"
      href="{{ url }}">{{ label }}</a>
   {% endfor %}
   {% endblock actions %}
