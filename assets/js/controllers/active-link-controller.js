@@ -30,7 +30,14 @@ export default class extends ApplicationController {
       ? pathname.match(regex)
       : pathname.startsWith(href);
     if (matches) {
-      this.element.classList.add(this.data.get('active-class') || 'active');
+      this.addActiveClasses();
     }
+  }
+
+  addActiveClasses() {
+    const activeClasses = this.data.has('active-class')
+      ? this.data.get('active-class').split(/ /)
+      : ['active'];
+    activeClasses.forEach((classname) => this.element.classList.add(classname));
   }
 }
