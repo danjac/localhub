@@ -3,6 +3,5 @@
 
 /* eslint-disable */
 module.exports = {
-  purge: ['./templates/tw/**/*.html'],
   plugins: [require('tailwindcss')('./tailwind.config.js'), require('autoprefixer')],
 };
