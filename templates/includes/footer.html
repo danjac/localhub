@@ -2,10 +2,11 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-<div class="container bg-dark">
-  <footer class="text-center py-2 col-mx-auto col-10 col-lg-12">
-    &copy; Dan Jacob {% now "Y" %}. {% blocktrans %}Powered by <b>Social-BFG</b>, an open-source social network platform.
-    <a href="https://gitlab.com/danjac/localhub/">Open software</a> licensed under <a
-       href="http://www.affero.org/oagpl.html">AGPL</a>{% endblocktrans %}.
-  </footer>
-</div>
+
+<footer class="p-2 mt-4 text-center bg-gray-900 text-gray-100 text-sm">
+  &copy; Dan Jacob {% now "Y" %}. {% blocktrans %}Powered by <b>Social-BFG</b>, an open-source social network platform.
+  <a class="underline"
+     href="https://gitlab.com/danjac/localhub/">Open software</a> licensed under
+  <a class="underline"
+     href="http://www.affero.org/oagpl.html">AGPL</a>{% endblocktrans %}.
+</footer>
