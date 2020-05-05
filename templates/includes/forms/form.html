@@ -12,20 +12,19 @@
       {% if form_id %}
       id="{{ form_id }}"
       {% endif %}
-      {% if css_class %}
-      class="{{ css_class }}"
-      {% endif %}
+      class="{{ css_class|default:"p-5 border border-gray-500 lg:w-3/4" }}"
       {% block form_extra_attrs %}{% endblock %}
       {% endspaceless %}>
-    {% block form_fields %}
-    {% include "includes/forms/fields.html" %}
-    {% endblock form_fields %}
+  {% block form_fields %}
+  {% include "includes/forms/fields.html" %}
+  {% endblock form_fields %}
+  <div class="flex text-center mt-4">
     {% block form_buttons %}
-    {% trans "Submit" as t_submit %}
     <button type="submit"
             name="submit"
-            class="btn btn-primary">
-        {{ submit_btn|default:t_submit }}
+            class="bg-blue-800 text-white py-1 px-2 hover:bg-blue-600 mr-2">
+      {{ submit_btn|default:_("Submit") }}
     </button>
     {% endblock %}
+  </div>
 </form>

@@ -20,11 +20,11 @@ export default class extends ApplicationController {
   toggle(event) {
     event.preventDefault();
     event.stopPropagation();
-    this.element.classList.toggle('active');
+    this.menuTarget.classList.remove('hidden');
     maximizeZIndex(fitIntoViewport(this.menuTarget));
   }
 
   close() {
-    this.element.classList.remove('active');
+    this.menuTarget.classList.add('hidden');
   }
 }

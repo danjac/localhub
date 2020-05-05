@@ -6,7 +6,7 @@
 
 {% csrf_token %}
 
-<div class="toast toast-error text-center d-none"
+<div class="bg-red-500 text-white font-semibold p-3 mb-4 text-center hidden"
      data-target="form.errorMessage">
   {% trans "Sorry, an error has occurred with your form" %}
   <div data-target="form.errorDetail"></div>
