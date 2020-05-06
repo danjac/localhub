@@ -7,21 +7,17 @@
 
 {% has_perm "activities.create_activity" user community as can_create_activity %}
 {% if can_create_activity %}
-<div class="">
-  <div class="input-group"
-       data-controller="ajax"
-       data-action="click->ajax#get"
-       data-ajax-url="{% if is_private %}{% url 'posts:create_private' %}{% else %}{% url 'posts:create' %}{% endif %}"
-       data-ajax-follow>
-    <span class="">
-      {% avatar user "32" %}
-    </span>
-    <input type="text"
-           class="form-input homepage-cta-input"
-           data-action="focus->ajax#get"
-           data-target="ajax.button"
-           placeholder="{% trans "What's on your mind?" %}">
+
+<div class="flex items-center border border-gray-500"
+     data-controller="linkify"
+     data-action="click->linkify#fetch"
+     data-linkify-url="{% if is_private %}{% url 'posts:create_private' %}{% else %}{% url 'posts:create' %}{% endif %}">
+  <div class="p-1 border-r border-gray-500 bg-gray-200">
+    {% avatar user "32" %}
+  </div>
+  <div class="p-1">
+    <input class="appearance-none w-full p-1 inline-block w-100"
+           placeholder="What's on your mind?">
   </div>
 </div>
 {% endif %}
-

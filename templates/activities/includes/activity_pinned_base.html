@@ -3,36 +3,38 @@
 
 {% load i18n %}
 
-<div class="card{% if css_class %} {{ css_class }}{% endif %}"
+<div class="border border-gray-500 p-3 {{ css_class|default:"" }}"
      data-controller="clipboard">
-  <div class="card-header">
-    <div class="card-title h6 pb-2">
+  <div class="mb-2">
+    <div class="text-blue-800 hover:text-blue-700 font-semibold flex flex-wrap items-center mb-2">
       {% block title %}
-      {% if object.url %}
-      {{ object.url|linkify:object.title }}
-      {% else %}
-      <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
-      {% endif %}
-      <span class="label">{% trans object_type|capfirst %}</span>
-      <span class="label">{% trans "Pinned" %}</span>
+      <span class="mr-4 tracking-tight">
+        {% if object.url %}
+        {{ object.url|linkify:object.title }}
+        {% else %}
+        <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+        {% endif %}
+      </span>
+      <span class="rounded bg-gray-600 text-white text-xs mr-4 px-4">{% trans object_type|capfirst %}</span>
+      <span class="rounded bg-gray-600 text-white text-xs px-4">{% trans "Pinned" %}</span>
     </div>
     {% endblock title %}
-    <div class="card-subtitle h6 pb-1">
+    <div class="">
       {% block timesince %}
       {% include "includes/timesince.html" with owner=object.owner timestamp=object.published %}
       {% endblock timesince %}
     </div>
   </div>
-  <div class="card-footer">
-    <div class="pb-1">
+  <div class="">
+    <div class="">
       {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
     </div>
     {% if object.description %}
     <textarea data-target="clipboard.textarea"
               readonly
-              class="d-none">{{ object.description }}</textarea>
+              class="hidden">{{ object.description }}</textarea>
     {% endif %}
-    <div class="d-flex align-center pb-1">
+    <div class="flex items-center">
       {% block actions %}{% include "activities/includes/actions.html" %}{% endblock %}
       {% block links %}{% include "activities/includes/links.html" %}{% endblock %}
     </div>

@@ -79,11 +79,6 @@ export default class extends ApplicationController {
     this.bus.pub(Events.AJAX_FETCHING);
     target.setAttribute('disabled', 'disabled');
 
-    if (this.data.has('follow') && method === 'GET') {
-      Turbolinks.visit(url);
-      return;
-    }
-
     // toggle for immediate feedback
     const toggleClass = this.data.get('toggle') || 'hidden';
 
