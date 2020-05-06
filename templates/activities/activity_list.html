@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<h1 class="page-header">{{ view.model|verbose_name_plural|title }}</h1>
+<h1 class="font-semibold text-lg mb-3">{{ view.model|verbose_name_plural|title }}</h1>
 
 {% if page_obj.number == 1 %}
 {% block activity_list_header %}{% endblock %}

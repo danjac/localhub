@@ -18,7 +18,8 @@
 
   {% if object.published %}
   <li class="mr-2">
-    <a class="text-gray-500 hover:text-gray-400" href="{{ list_url }}">{{ model_name_plural }}</a>
+    <a class="text-gray-500 hover:text-gray-400"
+       href="{{ list_url }}">{{ model_name_plural }}</a>
   </li>
   <li class="mr-2 text-gray-500"> / </li>
   {% else %}
@@ -33,7 +34,8 @@
   </li>
   <li class="mr-2 text-gray-500"> / </li>
   <li class="mr-2 text-gray-600">
-    <a href="#">{% blocktrans %}Edit {{ model_name }}{% endblocktrans %}</a>
+    <a class="text-gray-600"
+       href="#">{% blocktrans %}Edit {{ model_name }}{% endblocktrans %}</a>
   </li>
 
   {% else %}
@@ -45,7 +47,8 @@
   <li class="mr-2 text-gray-500"> / </li>
   {% else %}
   <li class="mr-2">
-    <a class="text-gray-500 hover:text-gray-400" href="{{ list_url }}">{{ model_name_plural }}</a>
+    <a class="text-gray-500 hover:text-gray-400"
+       href="{{ list_url }}">{{ model_name_plural }}</a>
   </li>
   <li class="mr-2 text-gray-500"> / </li>
   {% endif %}

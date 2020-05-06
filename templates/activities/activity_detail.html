@@ -12,14 +12,25 @@
 {% block content %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
+<ul class="flex flex-wrap text-sm mb-3">
   {% if object.published %}
-  <li class="breadcrumb-item"><a href="{{ object|resolve_url:"list" }}">{{ object|verbose_name_plural|title }}</a>
+  <li class="mr-2">
+    <a class="text-gray-500 hover:text-gray-400"
+       href="{{ object|resolve_url:"list" }}">
+      {{ object|verbose_name_plural|title }}
+    </a>
   </li>
   {% else %}
-  <li class="breadcrumb-item"><a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a></li>
+  <li class="mr-2">
+    <a class="text-gray-500 hover:text-gray-400"
+       href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
+  </li>
   {% endif %}
-  <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
+  <li class="mr-2 text-gray-500"> / </li>
+  <li class="">
+    <a class="text-gray-600"
+       href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a>
+  </li>
 </ul>
 {% endblock breadcrumbs %}
 
@@ -59,7 +70,7 @@
   {% endif %}
 
   {% if comment_form %}
-  {% include "includes/forms/stimulusjs_form.html" with action=object|resolve_url:"comment" form=comment_form form_id="comment-form" %}
+  {% include "includes/forms/stimulusjs_form.html" with action=object|resolve_url:"comment" form=comment_form form_id="comment-form" css_class="p-5 border border-gray-500 w-full" %}
   {% elif not object.allow_comments %}
   <p class="toast text-center my-2">{% trans "Comments are locked" %}</p>
   {% elif object.published %}
