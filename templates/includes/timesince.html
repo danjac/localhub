@@ -2,13 +2,15 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
+<div class="flex items-center">
 {% if owner %}
 {% include "users/includes/chip.html" with profile=owner %}
 {% endif %}
-<span class="timesince">
+<span class="text-sm text-gray-800">
   {% if verb %}
   {% blocktrans with created=timestamp|timesince %}{{ verb }} {{ created }} ago{% endblocktrans %}
   {% else %}
   {% blocktrans with created=timestamp|timesince %}{{ created }} ago{% endblocktrans %}
   {% endif %}
 </span>
+</div>

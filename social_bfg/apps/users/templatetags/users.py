@@ -16,12 +16,17 @@ register = template.Library()
 
 
 @register.inclusion_tag("users/includes/avatar.html")
-def avatar(user, avatar_class="avatar-sm"):
+def avatar(user, size, css_class=""):
     """
     Displays the avatar if any for a given user. If no image available
     will render initials (based on name/username)
     """
-    return {"user": user, "avatar_class": avatar_class, "initials": user.get_initials()}
+    return {
+        "user": user,
+        size: "size",
+        "css_class": css_class,
+        "initials": user.get_initials(),
+    }
 
 
 @register.tag

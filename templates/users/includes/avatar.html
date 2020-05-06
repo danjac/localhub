@@ -1,14 +1,12 @@
 {% load thumbnail %}
 {% load account %}
-{% thumbnail user.avatar "40" crop="center" as avatar %}
+{% thumbnail user.avatar size|default:"16" crop="center" as avatar %}
 {% user_display user as username %}
-<figure class="avatar {{ avatar_class }}">
   <img src="{{ avatar.url }}"
        width="{{ avatar.width }}"
        height="{{ avatar.height }}"
-       alt="{{ username }}">
-</figure>
+       alt="{{ username }}"
+       class="rounded-full {{ css_class }}">
 {% empty %}
-<figure class="avatar {{ avatar_class }}"
-        data-initial="{{ initials }}"></figure>
+<figure class="rounded-full bg-blue-600 {{ css_class }}">{{ initials }}</figure>
 {% endthumbnail %}

@@ -7,14 +7,14 @@
 
 {% has_perm "activities.create_activity" user community as can_create_activity %}
 {% if can_create_activity %}
-<div class="submit-cta mb-2 p-0">
+<div class="">
   <div class="input-group"
        data-controller="ajax"
        data-action="click->ajax#get"
        data-ajax-url="{% if is_private %}{% url 'posts:create_private' %}{% else %}{% url 'posts:create' %}{% endif %}"
        data-ajax-follow>
-    <span class="input-group-addon">
-      {% avatar user %}
+    <span class="">
+      {% avatar user "32" %}
     </span>
     <input type="text"
            class="form-input homepage-cta-input"
