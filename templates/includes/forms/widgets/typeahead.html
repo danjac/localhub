@@ -3,8 +3,9 @@
 
 {% load i18n %}
 <div data-controller="typeahead"
+     data-typeahead-selected-class="bg-gray-100 text-white"
      data-typeahead-config="{{ typeahead_config }}">
-  <ul class="menu typeahead-selector d-none"
+  <ul class="hidden absolute mt-1 border border-gray-500 bg-gray-100 p-1 w-1/3 lg:w-1/6"
       data-target="typeahead.selector"></ul>
   {% include "django/forms/widgets/input.html" %}
 </div>

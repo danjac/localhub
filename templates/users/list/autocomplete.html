@@ -5,23 +5,21 @@
 {% load users %}
 
 {% for user_obj in object_list %}
-<li class="menu-item{% if forloop.first %} selected{% endif %}">
-  <a href="#"
-     data-action="typeahead#select"
-     data-typeahead-value="{{ user_obj.username }}"
-     data-typeahead-key="@">
-    <div class="tile tile-centered">
-      <div class="tile-icon">
-        {% avatar user_obj %}
-      </div>
-      <div class="tile-content">
-        {% user_display user_obj as display_name %}
-        {{ display_name }}
-        {% if display_name != user_obj.username %}
-        (@{{ user_obj.username }})
-        {% endif %}
-      </div>
-    </div>
-  </a>
+<li class="p-1 hover:bg-gray-500 hover:text-white {% if forloop.first %} bg-gray-500 text-white selected{% endif %}"
+    data-action="typeahead#select"
+    data-typeahead-value="{{ user_obj.username }}"
+    data-typeahead-key="@">
+  <div class="flex items-center">
+    <span class="inline-block mr-2">
+      {% avatar user_obj "16" %}
+    </span>
+    <span class="inline-block">
+      {% user_display user_obj as display_name %}
+      {{ display_name }}
+      {% if display_name != user_obj.username %}
+      (@{{ user_obj.username }})
+      {% endif %}
+    </span>
+  </div>
 </li>
 {% endfor %}

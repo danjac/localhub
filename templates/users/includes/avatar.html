@@ -1,5 +1,6 @@
 {% load thumbnail %}
 {% load account %}
+{# TBD: calc h- and w- and size based on t-shirt sizes #}
 {% thumbnail user.avatar size|default:"16" crop="center" as avatar %}
 {% user_display user as username %}
   <img src="{{ avatar.url }}"
@@ -8,5 +9,5 @@
        alt="{{ username }}"
        class="rounded-full {{ css_class }}">
 {% empty %}
-<figure class="rounded-full bg-blue-600 {{ css_class }}">{{ initials }}</figure>
+<div class="justified-center text-center text-xs rounded-full bg-blue-600 h-6 w-6 p-1 text-white">{{ initials }}</div>
 {% endthumbnail %}

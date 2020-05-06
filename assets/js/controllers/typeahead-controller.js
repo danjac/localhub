@@ -81,6 +81,18 @@ export default class extends ApplicationController {
     return false;
   }
 
+  addSelectedClasses(el) {
+    el.classList.add(this.getSelectedClassNames());
+  }
+
+  removeSelectedClasses(el) {
+    el.classList.remove(this.getSelectedClassNames());
+  }
+
+  getSelectedClassNames() {
+    return this.data.get('selectedClass').split(/ /).concat('selected');
+  }
+
   handleSelectorEvents(event) {
     if (!this.selectorOpen) {
       return true;
@@ -93,9 +105,7 @@ export default class extends ApplicationController {
     switch (event.which) {
       case Keys.TAB:
       case Keys.RTN:
-        this.handleSelection(
-          this.selectorTarget.querySelector('li.selected > [data-typeahead-value]')
-        );
+        this.handleSelection(this.selectorTarget.querySelector('li.selected'));
         event.preventDefault();
         return false;
       case Keys.ARR_UP:
@@ -104,8 +114,8 @@ export default class extends ApplicationController {
         if (firstItem) {
           prevItem = firstItem.previousElementSibling;
           if (prevItem) {
-            firstItem.classList.remove('selected');
-            prevItem.classList.add('selected');
+            this.addSelectedClasses(firstItem);
+            this.removeSelectedClasses(prevItem);
           }
         }
         return false;
