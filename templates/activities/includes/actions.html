@@ -11,27 +11,25 @@
           data-action="dropdown#toggle">
     {% trans "Actions..." %}
   </button>
-  <ul class="hidden absolute mt-1 border border-gray-500 bg-gray-100 p-1 w-1/3 lg:w-1/6"
-      data-target="dropdown.menu">
+  <div class="hidden absolute mt-1 border border-gray-500 bg-gray-100 p-1 w-1/3 lg:w-1/6"
+       data-target="dropdown.menu">
 
     {% has_perm "activities.pin_activity" user object as can_pin %}
 
     {% if can_pin %}
     {% if object.is_pinned %}
-    <li class="p-1 hover:bg-gray-500 hover:text-white">
-      <a href="{{ object|resolve_url:"unpin" }}"
-         class="line-through"
-         data-turbolinks="false"
-         data-controller="ajax"
-         data-action="ajax#post">{% trans "Pin" %}</a>
-    </li>
+    <a class="block p-1 hover:bg-gray-500 hover:text-white line-through"
+       href="{{ object|resolve_url:"unpin" }}"
+       class="line-through"
+       data-turbolinks="false"
+       data-controller="ajax"
+       data-action="ajax#post">{% trans "Pin" %}</a>
     {% else %}
-    <li class="p-1 hover:bg-gray-500 hover:text-white">
-      <a href="{{ object|resolve_url:"pin" }}"
-         data-turbolinks="false"
-         data-controller="ajax"
-         data-action="ajax#post">{% trans "Pin" %}</a>
-    </li>
+    <a class="block p-1 hover:bg-gray-500 hover:text-white"
+       href="{{ object|resolve_url:"pin" }}"
+       data-turbolinks="false"
+       data-controller="ajax"
+       data-action="ajax#post">{% trans "Pin" %}</a>
     {% endif %}
     {% endif %}
 
@@ -39,125 +37,112 @@
 
     {% has_perm "activities.create_comment" user object as can_create_comment %}
     {% if can_create_comment %}
-    <li class="p-1 hover:bg-gray-500 hover:text-white">
-      <a href="{{ object|resolve_url:"comment" }}">
-        {% trans "Comment" %}
-      </a>
-    </li>
+    <a class="block p-1 hover:bg-gray-500 hover:text-white"
+       href="{{ object|resolve_url:"comment" }}">
+      {% trans "Comment" %}
+    </a>
     {% endif %}
     {% endif %}
 
     {% has_perm "activities.like_activity" user object as can_like %}
     {% if can_like %}
-    <li class="p-1 hover:bg-gray-500 hover:text-white"
-        data-controller="ajax">
-      <a href="{{ object|resolve_url:"dislike" }}"
+    <div data-controller="ajax">
+      <a class="block p-1 hover:bg-gray-500 hover:text-white line-through{% if not object.has_liked %} hidden{% endif %}"
+         href="{{ object|resolve_url:"dislike" }}"
          data-turbolinks="false"
-         class="line-through{% if not object.has_liked %} hidden{% endif %}"
+         class=""
          data-target="ajax.toggle ajax.button"
          data-action="ajax#post">{% trans "Like" %}</a>
-      <a href="{{ object|resolve_url:"like" }}"
+      <a class="block p-1 hover:bg-gray-500 hover:text-white {% if object.has_liked %} hidden{% endif %}"
+         href="{{ object|resolve_url:"like" }}"
          data-turbolinks="false"
-         {% if object.has_liked %}
-         class="hidden"
-         {% endif %}
          data-target="ajax.toggle ajax.button"
          data-action="ajax#post">{% trans "Like" %}</a>
-    </li>
+    </div>
     {% endif %}
 
     {% has_perm "activities.bookmark_activity" user object as can_bookmark %}
     {% if can_bookmark %}
-    <li class="p-1 hover:bg-gray-500 hover:text-white"
-        data-controller="ajax">
-      <a href="{{ object|resolve_url:"remove_bookmark" }}"
+    <div data-controller="ajax">
+      <a class="block p-1 hover:bg-gray-500 hover:text-white line-through{% if not object.has_bookmarked %} hidden{% endif %}"
+         href="{{ object|resolve_url:"remove_bookmark" }}"
          data-turbolinks="false"
-         class="line-through{% if not object.has_bookmarked %} hidden{% endif %}"
+         class=""
          data-target="ajax.toggle ajax.button"
          data-action="ajax#post">{% trans "Bookmark" %}</a>
-      <a href="{{ object|resolve_url:"bookmark" }}"
+      <a class="block p-1 hover:bg-gray-500 hover:text-white{% if object.has_bookmarked %} hidden{% endif %}"
+         href="{{ object|resolve_url:"bookmark" }}"
          data-turbolinks="false"
-         {% if object.has_bookmarked %}
-         class="hidden"
-         {% endif %}
          data-target="ajax.toggle ajax.button"
          data-action="ajax#post">{% trans "Bookmark" %}</a>
-    </li>
+    </div>
     {% endif %}
-
 
     {% if not object.has_reshared %}
     {% has_perm "activities.reshare_activity" user object as can_reshare %}
     {% if can_reshare %}
-    <li class="p-1 hover:bg-gray-500 hover:text-white">
-      <a data-controller="ajax"
-         data-turbolinks="false"
-         data-action="ajax#post"
-         href="{{ object|resolve_url:"reshare" }}">{% trans "Reshare" %}</a>
-    </li>
+    <a class="block p-1 hover:bg-gray-500 hover:text-white"
+       data-controller="ajax"
+       data-turbolinks="false"
+       data-action="ajax#post"
+       href="{{ object|resolve_url:"reshare" }}">{% trans "Reshare" %}</a>
     {% endif %}
     {% endif %}
 
     {% has_perm "activities.flag_activity" user object as can_flag %}
     {% if can_flag and not object.has_flagged %}
-    <li class="p-1 hover:bg-gray-500 hover:text-white">
-      <a href="{{ object|resolve_url:"flag" }}">
-        {% trans "Flag" %}
-      </a>
-    </li>
+    <a class="block p-1 hover:bg-gray-500 hover:text-white"
+       href="{{ object|resolve_url:"flag" }}">
+      {% trans "Flag" %}
+    </a>
     {% endif %}
 
     {% has_perm "activities.change_activity" user object as can_change %}
     {% if can_change %}
 
     {% if not object.published %}
-    <li class="p-1 hover:bg-gray-500 hover:text-white">
-      <a data-controller="ajax"
-         data-turbolinks="false"
-         data-action="ajax#post"
-         data-ajax-confirm-header="{% trans 'Publish' %}"
-         data-ajax-confirm-body="{% blocktrans trimmed %}Are you sure you want to publish this {{ object_type }}? You cannot reverse this action.{% endblocktrans %}"
-         href="{{ object|resolve_url:"publish" }}">{% trans "Publish" %}</a>
-      {% endif %}
-    <li class="p-1 hover:bg-gray-500 hover:text-white">
-      <a href="{{ object|resolve_url:"update" }}">{% trans "Edit" %}</a>
-    </li>
+    <a class="block p-1 hover:bg-gray-500 hover:text-white"
+       data-controller="ajax"
+       data-turbolinks="false"
+       data-action="ajax#post"
+       data-ajax-confirm-header="{% trans 'Publish' %}"
+       data-ajax-confirm-body="{% blocktrans trimmed %}Are you sure you want to publish this {{ object_type }}? You cannot reverse this action.{% endblocktrans %}"
+       href="{{ object|resolve_url:"publish" }}">{% trans "Publish" %}</a>
     {% endif %}
-
+    <a class="block p-1 hover:bg-gray-500 hover:text-white"
+       href="{{ object|resolve_url:"update" }}">{% trans "Edit" %}</a>
+    {% endif %}
 
     {% has_perm "activities.change_activity_tags" user object as can_change_tags %}
     {% if can_change_tags %}
-    <li class="p-1 hover:bg-gray-500 hover:text-white">
-      <a href="{{ object|resolve_url:"update_tags" }}">{% trans "Edit Tags" %}</a>
-    </li>
+    <a class="block p-1 hover:bg-gray-500 hover:text-white"
+       href="{{ object|resolve_url:"update_tags" }}">{% trans "Edit Tags" %}</a>
     {% endif %}
 
     {% has_perm "activities.delete_activity" user object as can_delete %}
     {% if can_delete %}
-    <li class="p-1 hover:bg-gray-500 hover:text-white">
-      <a href="{{ object|resolve_url:"delete" }}"
-         data-turbolinks="false"
-         data-controller="ajax"
-         data-action="ajax#post"
-         {% if not is_detail %}
-         data-ajax-redirect="{{ request.get_full_path }}"
-         {% endif %}
-         data-ajax-confirm-header="{% trans 'Delete' %}"
-         data-ajax-confirm-body="{% blocktrans %}Are you sure you want to delete this {{ object_type }}?{% endblocktrans %}">
-        {% trans "Delete" %}</a>
-    </li>
+    <a class="block p-1 hover:bg-gray-500 hover:text-white"
+       href="{{ object|resolve_url:"delete" }}"
+       data-turbolinks="false"
+       data-controller="ajax"
+       data-action="ajax#post"
+       {% if not is_detail %}
+       data-ajax-redirect="{{ request.get_full_path }}"
+       {% endif %}
+       data-ajax-confirm-header="{% trans 'Delete' %}"
+       data-ajax-confirm-body="{% blocktrans %}Are you sure you want to delete this {{ object_type }}?{% endblocktrans %}">
+      {% trans "Delete" %}</a>
     {% endif %}
 
     {% if object.description %}
-    <li class="p-1 hover:bg-gray-500 hover:text-white">
-      <a href="#"
-         data-turbolinks="false"
-         data-target="clipboard.button"
-         data-action="clipboard#copy">
-        {% trans "Copy Markdown" %}
-      </a>
-    </li>
+    <a class="block p-1 hover:bg-gray-500 hover:text-white"
+       href="#"
+       data-turbolinks="false"
+       data-target="clipboard.button"
+       data-action="clipboard#copy">
+      {% trans "Copy Markdown" %}
+    </a>
     {% endif %}
     {% block extra_actions %}{% endblock %}
-  </ul>
+  </div>
 </div>

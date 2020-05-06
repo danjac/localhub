@@ -7,6 +7,7 @@ import re
 import socket
 
 # Django
+from django.contrib import messages
 from django.urls import reverse_lazy
 
 # Third Party Libraries
@@ -162,6 +163,16 @@ class Base(Configuration):
     # https://docs.djangoproject.com/en/1.11/ref/forms/renderers/
 
     FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
+
+    # https://docs.djangoproject.com/en/3.0/ref/contrib/messages/
+
+    MESSAGE_TAGS = {
+        messages.DEBUG: "bg-gray-600",
+        messages.INFO: "bg-blue-600",
+        messages.SUCCESS: "bg-green-600",
+        messages.WARNING: "bg-orange-600",
+        messages.ERROR: "bg-red-600",
+    }
 
     # https://neutronx.github.io/django-markdownx/customization/
 
