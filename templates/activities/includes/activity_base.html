@@ -11,31 +11,29 @@
 
 <article role="{{ object_type }}"
          id="{{ object_type }}-{{ object.id }}"
-         class="card {{ object_type }}-card{% if css_class %} {{ css_class }}{% endif %}"
+         class="border border-gray-500 p-2{% if css_class %} {{ css_class }}{% endif %}"
          data-controller="clipboard{% if is_content_sensitive %} toggle{% endif %}">
   {% block header %}
   {% if is_content_sensitive %}
-  <div class="card-header"
+  <div class="mb-2"
        data-target="toggle.togglable">
-    <div class="card-subtitle pb-1 h6">
+    <div class="">
       {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
     </div>
   </div>
-  <div class="card-header d-none"
+  <div class="hidden"
        data-target="toggle.togglable">
     {% else %}
-    <div class="card-header">
+    <div class="mb-4">
       {% endif %}
 
-      <div class="card-title pb-2 h6{% if object.is_new %} text-bold{% endif %}">
+      <div class="text-blue-800 hover:text-blue-700 font-semibold flex flex-wrap items-center mb-2">
 
         {% if object.is_reshare %}
 
-        <div class="card-subtitle pb-1 h6">
+        <div class="mr-4 tracking-tight">
           {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner verb="reshared" %}
         </div>
-
-        <div class="divider"></div>
 
         {% if object.parent and not object.parent.deleted %}
         <a href="{{ object.parent.get_absolute_url }}">{{ object.title|truncatechars:130 }}</a>
@@ -45,48 +43,54 @@
 
         {% block title %}
 
-        {% if is_detail %}
+        <div class="tracking-tight flex items-center">
 
-        {% block detail_title %}
-        {% if object.url %}
-        {{ object.url|linkify:object.title }}
-        {% else %}
-        {{ object.title|linkify_hashtags|linkify_mentions }}
-        {% endif %}
-        {% endblock %}
+          {% if is_detail %}
 
-        {% else %}
+          {% block detail_title %}
+          <span class="inline-block text-lg mr-4">
+            {% if object.url %}
+            {{ object.url|linkify:object.title }}
+            {% else %}
+            {{ object.title|linkify_hashtags|linkify_mentions }}
+            {% endif %}
+          </span>
+          {% endblock %}
 
-        {% with object.title|truncatechars:130 as object_title %}
+          {% else %}
 
-        {% block list_item_title %}
-        <a href="{{ object.get_absolute_url }}">{{ object_title }}</a>
-        {% endblock %}
+          {% with object.title|truncatechars:130 as object_title %}
 
-        {% endwith %}
+          {% block list_item_title %}
+          <a class="inline-block mr-4"
+             href="{{ object.get_absolute_url }}">{{ object_title }}</a>
+          {% endblock %}
 
-        {% endif %}
+          {% endwith %}
 
-        <span class="label">{{ object_type|title }}</span>
+          {% endif %}
 
-        {% if not object.published %}
-        <span class="label">{% trans "Private" %}</span>
-        {% endif %}
+          <span class="inline-block rounded bg-gray-600 text-white text-xs mr-4 px-4">{{ object_type|title }}</span>
 
-        {% if can_moderate_community and object.is_flagged %}
-        <span class="label bg-primary">{% trans "Flagged" %}</span>
-        {% endif %}
+          {% if not object.published %}
+          <span class="inline-block rounded bg-gray-600 text-white text-xs mr-4 px-4">{% trans "Private" %}</span>
+          {% endif %}
 
-        {% if object.is_new %}
-        <span class="label bg-primary">{% trans "New" %}</span>
-        {% endif %}
+          {% if can_moderate_community and object.is_flagged %}
+          <span class="inline-block rounded bg-gray-600 text-white text-xs mr-4 px-4">{% trans "Flagged" %}</span>
+          {% endif %}
 
+          {% if object.is_new %}
+          <span class="inline-block rounded bg-blue-600 text-white text-xs mr-4 px-4">{% trans "New" %}</span>
+          {% endif %}
+
+        </div>
         {% endblock title %}
         {% endif %}
 
       </div>
 
-      <div class="card-subtitle pb-1">
+      <div class="flex flex-wrap items-center mb-2">
         {% if object.parent %}
         {% include "includes/timesince.html" with timestamp=object.parent.published|default:object.created owner=object.parent.owner %}
         {% elif not object.is_reshare %}
@@ -95,19 +99,19 @@
       </div>
 
       {% if object.url or object.hashtags or object.mentions %}
-      <div class="card-subtitle pb-1">
+      <div class="">
         {% if object.url %}
-        <div class="info">
+        <div class="">
           {{ object.url|domain|linkify }}
         </div>
         {% endif %}
         {% if object.hashtags %}
-        <div class="info">
+        <div class="">
           {{ object.hashtags|linkify_hashtags }}
         </div>
         {% endif %}
         {% if object.mentions %}
-        <div class="info">
+        <div class="">
           {{ object.mentions|linkify_mentions }}
         </div>
         {% endif %}
@@ -118,16 +122,16 @@
     {% endblock header %}
 
     {% block body %}
-    <div class="card-body">
+    <div class="">
       {% if object.is_reshare and not object.parent or object.parent.deleted %}
       {% trans "[Deleted]" %}
       {% else %}
       {% if object.is_reshare %}<blockquote>{% endif %}
         {% if is_content_sensitive %}
-        <div class="empty bg-dark"
+        <div class=""
              data-target="toggle.togglable">
-          <p class="empty-title h5">{% trans "Sensitive Content" %}</p>
-          <p class="empty-subtitle">
+          <p class="">{% trans "Sensitive Content" %}</p>
+          <p class="">
             {% trans "This post has been tagged sensitive. You can view all sensitive content by default in your settings." %}
           </p>
           <p>
@@ -135,12 +139,12 @@
             #{{ tag }}{% if not forloop.last %}, {% endif %}
             {% endfor %}
           </p>
-          <div class="empty-action">
-            <button class="btn btn-primary"
+          <div class="">
+            <button class=""
                     data-action="toggle#toggle">{% trans "Show Content" %}</button>
           </div>
         </div>
-        <div class="d-none"
+        <div class="hidden"
              data-target="toggle.togglable">
           {% endif %}
           {% with ignore_collapsable=is_detail|default:is_content_sensitive %}
@@ -157,15 +161,14 @@
 
     {% block footer %}
 
-    <div class="card-footer">
-      <div class="pb-1">
+    <div class="border-t border-gray-200 pt-2 mt-4">
+      <div class="flex-items-center">
         {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
       </div>
-      <div class="d-flex align-center pb-1">
+      <div class="flex items-center">
         {% block actions %}{% include "activities/includes/actions.html" %}{% endblock %}
         {% block links %}{% include "activities/includes/links.html" %}{% endblock %}
       </div>
-      <div class="clearfix"></div>
     </div>
     {% endblock footer %}
 </article>

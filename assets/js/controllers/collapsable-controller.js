@@ -43,15 +43,24 @@ export default class extends ApplicationController {
     }
   }
 
+  getCollapsableClasses() {
+    return this.data.get('class').split(/ /).concat('collapsable');
+  }
+
   removeCollapsable() {
-    this.containerTarget.classList.remove('collapsable');
+    this.getCollapsableClasses().forEach((classname) =>
+      this.containerTarget.classList.remove(classname)
+    );
     this.toggleTargets.forEach((el) => el.classList.add('hidden'));
     this.observer.disconnect(this.containerTarget);
   }
 
   makeCollapsable(height) {
     if (height > MAX_HEIGHT && !this.isCollapsable) {
-      this.containerTarget.classList.add('collapsable');
+      this.getCollapsableClasses().forEach((classname) =>
+        this.containerTarget.classList.add(classname)
+      );
+      this.containerTarget.style.maxHeight = MAX_HEIGHT;
       this.toggleTargets.forEach((target) => target.classList.remove('hidden'));
     }
   }

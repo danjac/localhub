@@ -6,10 +6,9 @@
 {% load i18n %}
 
 {% block extra_actions %}
-<li class="menu-item">
-  <a href="{{ object.image.url }}"
-     download>
-    {% trans "Download" %}
-  </a>
-</li>
+<a href="{{ object.image.url }}"
+   class="block p-1 hover:bg-gray-500 hover:text-white"
+   download>
+  {% trans "Download" %}
+</a>
 {% endblock %}

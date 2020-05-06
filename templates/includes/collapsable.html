@@ -2,14 +2,15 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-<div data-controller="collapsable">
+<div data-controller="collapsable"
+  data-collapsable-class="opacity-25 h-32 lg:h-48 overflow-hidden">
   <div data-target="collapsable.container"
        data-action="click->collapsable#toggle">
     {{ collapsable_content }}
   </div>
-  <div class="text-center d-none"
+  <div class="flex justify-center items-center hidden"
        data-target="collapsable.toggle">
-    <button class="mt-1 btn btn-link btn-sm"
+    <button class="text-blue-800 hover:text-blue-600"
             data-action="collapsable#toggle"
             href="#">{% trans "Show More" %}</button>
   </div>

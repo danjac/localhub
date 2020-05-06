@@ -3,7 +3,7 @@
 
 {% load i18n %}
 
-<div class="border border-gray-500 p-2 {{ css_class|default:"" }}"
+<div class="border border-gray-500 p-2{% if css_class %} {{ css_class }}{% endif %}"
      data-controller="clipboard">
   <div class="mb-2">
     <div class="text-blue-800 hover:text-blue-700 font-semibold flex flex-wrap items-center mb-2">
