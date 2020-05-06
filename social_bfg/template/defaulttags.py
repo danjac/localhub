@@ -3,11 +3,9 @@
 
 # Django
 from django import template
-from django.utils.safestring import mark_safe
 
 # Social-BFG
 from social_bfg.utils import emojis
-from social_bfg.utils.http import URLResolver
 
 register = template.Library()
 
@@ -17,23 +15,6 @@ def common_emojis():
     """Returns list of commonly used emojis, for use e.g. in markdown widget.
     """
     return emojis.COMMON_EMOJIS
-
-
-@register.simple_tag
-def external_link(url, text, css_class=""):
-    try:
-        resolver = URLResolver.from_url(url)
-    except URLResolver.Invalid:
-        return url
-
-    text = text or resolver.domain
-    if not text:
-        return url
-
-    css_class = f' class="{css_class}"' if css_class else ""
-    return mark_safe(
-        f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank"{css_class}>{text}</a>'
-    )
 
 
 @register.tag(name="collapsable")

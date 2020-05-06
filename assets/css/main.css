@@ -5,15 +5,19 @@
 /* internal links e.g. <a href="" class="app-link"> */
 
 a {
-  @apply text-blue-600;
+  @apply text-blue-700;
 }
 
 a:hover {
-  @apply text-blue-500;
+  @apply text-blue-600;
 }
 
 .btn {
   @apply p-1 px-2;
+}
+
+.btn-block {
+  @apply border border-gray-500;
 }
 
 .btn-dropdown {
@@ -54,22 +58,6 @@ a:hover {
 
 .dropdown-menu-item:hover {
   @apply bg-gray-500 text-white;
-}
-
-.form-input {
-  @apply appearance-none p-1 border border-gray-500;
-}
-
-.form-input:focus {
-  @apply border-blue-500;
-}
-
-.form-input-error {
-  @apply bg-red-100 border border-red-600;
-}
-
-.form-input-error:focus {
-  @apply border-red-300;
 }
 
 .tag {

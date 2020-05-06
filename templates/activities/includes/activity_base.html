@@ -27,7 +27,7 @@
     <div class="mb-4">
       {% endif %}
 
-      <div class="text-blue-800 hover:text-blue-700 font-semibold flex flex-wrap items-center mb-2">
+      <div class="font-semibold flex flex-wrap items-center mb-2">
 
         {% if object.is_reshare %}
 
@@ -49,10 +49,10 @@
 
           {% block detail_title %}
           {% if object.url %}
-          {% external_link object.url object.title css_class="text-blue-800 hover:text-blue-700 mr-4" %}
+          {{ object.url|linkify:object.title }}
           {% else %}
           <span class="mr-4">
-          {{ object.title|linkify_hashtags|linkify_mentions:"text-blue-800 hover:text-blue-700 mr-4" }}
+            {{ object.title|linkify_hashtags|linkify_mentions }}
           </span>
           {% endif %}
           {% endblock %}
@@ -102,17 +102,17 @@
       <div class="text-sm">
         {% if object.url %}
         <div class="mr-4">
-          {% external_link object.url|domain object.url|domain css_class="text-blue-800 hover:text-blue-700" %}
+          {{ object.url|domain|linkify }}
         </div>
         {% endif %}
         {% if object.hashtags %}
         <div class="mr-4">
-          {{ object.hashtags|linkify_hashtags:"text-blue-800 hover:text-blue-700" }}
+          {{ object.hashtags|linkify_hashtags }}
         </div>
         {% endif %}
         {% if object.mentions %}
         <div class="">
-          {{ object.mentions|linkify_mentions:"text-blue-800 hover:text-blue-700" }}
+          {{ object.mentions|linkify_mentions }}
         </div>
         {% endif %}
       </div>
