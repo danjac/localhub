@@ -3,16 +3,14 @@
 
 {% load i18n %}
 
-<div class="empty {{ css_class|default:"mt-2" }}">
-  <p class="empty-title h5">
-    {% if empty_message %}
-    {{ empty_message }}
-    {% elif view.search_query %}
-    {% blocktrans with query=view.search_query %}
-    Sorry, no results found for &quot;{{ query }}&quot;
-    {% endblocktrans %}
-    {% else %}
-    {% trans "There's nothing to see here right now." %}
-    {% endif %}
-  </p>
+<div class="text-lg bg-gray-200 p-12 text-center align-middle {{ css_class|default:"mt-5" }}">
+  {% if empty_message %}
+  {{ empty_message }}
+  {% elif view.search_query %}
+  {% blocktrans with query=view.search_query %}
+  Sorry, no results found for &quot;{{ query }}&quot;
+  {% endblocktrans %}
+  {% else %}
+  {% trans "There's nothing to see here right now." %}
+  {% endif %}
 </div>
