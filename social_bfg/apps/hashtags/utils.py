@@ -28,7 +28,7 @@ def extract_hashtags(content):
     )
 
 
-def linkify_hashtags(content):
+def linkify_hashtags(content, css_class=None):
     """Replace all #hashtags in text with links to some tag search page.
 
     Args:
@@ -39,13 +39,16 @@ def linkify_hashtags(content):
     """
     tokens = content.split(" ")
     rv = []
+    css_class = f' class="{css_class}"' if css_class else ""
     for token in tokens:
 
         for tag in settings.SOCIAL_BFG_HASHTAGS_RE.findall(token):
             slug = slugify_unicode(tag)
             if slug:
                 url = reverse("hashtags:detail", args=[slug])
-                token = token.replace("#" + tag, f'<a href="{url}">#{tag}</a>')
+                token = token.replace(
+                    "#" + tag, f'<a href="{url}"{css_class}>#{tag}</a>'
+                )
 
         rv.append(token)
 

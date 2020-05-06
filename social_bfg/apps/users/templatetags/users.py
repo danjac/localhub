@@ -90,8 +90,8 @@ class DismissableNode(template.Node):
 
 
 @register.filter(name="linkify_mentions")
-def _linkify_mentions(content):
-    return mark_safe(linkify_mentions(content))
+def _linkify_mentions(content, css_class=None):
+    return mark_safe(linkify_mentions(content, css_class))
 
 
 @register.filter

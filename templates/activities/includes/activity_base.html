@@ -51,7 +51,7 @@
           {% if object.url %}
           {% external_link object.url object.title css_class="text-blue-800 hover:text-blue-700 mr-4" %}
           {% else %}
-          {{ object.title|linkify_hashtags|linkify_mentions }}
+          {{ object.title|linkify_hashtags|linkify_mentions:"text-blue-800 hover:text-blue-700 mr-4" }}
           {% endif %}
           {% endblock %}
 
@@ -97,20 +97,20 @@
       </div>
 
       {% if object.url or object.hashtags or object.mentions %}
-      <div class="">
+      <div class="text-sm">
         {% if object.url %}
-        <div class="">
+        <div class="mr-4">
           {{ object.url|domain|linkify }}
         </div>
         {% endif %}
         {% if object.hashtags %}
-        <div class="">
-          {{ object.hashtags|linkify_hashtags }}
+        <div class="mr-4">
+          {{ object.hashtags|linkify_hashtags:"text-blue-800 hover:text-blue-700" }}
         </div>
         {% endif %}
         {% if object.mentions %}
         <div class="">
-          {{ object.mentions|linkify_mentions }}
+          {{ object.mentions|linkify_mentions:"text-blue-800 hover:text-blue-700" }}
         </div>
         {% endif %}
       </div>

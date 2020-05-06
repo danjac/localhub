@@ -31,17 +31,20 @@ def extract_mentions(content):
     )
 
 
-def linkify_mentions(content):
+def linkify_mentions(content, css_class=None):
     """
     Replace all @mentions in the text with links to user profile page.
     """
 
     tokens = content.split(" ")
     rv = []
+    css_class = f' class="{css_class}"' if css_class else ""
     for token in tokens:
         for mention in settings.SOCIAL_BFG_MENTIONS_RE.findall(token):
             url = reverse("users:activities", args=[slugify_unicode(mention)])
-            token = token.replace("@" + mention, f'<a href="{url}">@{mention}</a>')
+            token = token.replace(
+                "@" + mention, f'<a href="{url}"{css_class}>@{mention}</a>'
+            )
 
         rv.append(token)
 
