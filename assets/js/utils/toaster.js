@@ -13,7 +13,7 @@ export default class {
   }
 
   success(message) {
-    this.toast('toast-success', message);
+    this.toast('bg-green-800 text-white', message);
   }
 
   info(message) {
