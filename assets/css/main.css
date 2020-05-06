@@ -2,11 +2,13 @@
 
 @tailwind components;
 
-.action {
+/* internal links e.g. <a href="" class="app-link"> */
+
+a {
   @apply text-blue-600;
 }
 
-.action:hover {
+a:hover {
   @apply text-blue-500;
 }
 
@@ -30,6 +32,14 @@
   @apply border border-gray-500;
 }
 
+.card {
+  @apply border border-gray-500 p-2;
+}
+
+.card-footer {
+  @apply border-t border-gray-200 pt-2 mt-4;
+}
+
 .dropdown-menu {
   @apply absolute border border-gray-500 bg-gray-100 mt-1 p-1 w-1/3;
 }
@@ -39,7 +49,7 @@
 }
 
 .dropdown-menu-item {
-  @apply block p-1;
+  @apply block p-1 text-gray-800;
 }
 
 .dropdown-menu-item:hover {
@@ -60,6 +70,10 @@
 
 .form-input-error:focus {
   @apply border-red-300;
+}
+
+.tag {
+  @apply rounded bg-gray-600 text-white px-4 text-xs;
 }
 
 @tailwind utilities;

@@ -3,7 +3,7 @@
 
 {% load i18n %}
 
-<div class="border border-gray-500 p-2{% if css_class %} {{ css_class }}{% endif %}"
+<div class="card{% if css_class %} {{ css_class }}{% endif %}"
      data-controller="clipboard">
   <div class="mb-2">
     <div class="text-blue-800 hover:text-blue-700 font-semibold flex flex-wrap items-center mb-2">
@@ -15,8 +15,8 @@
         <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
         {% endif %}
       </span>
-      <span class="rounded bg-gray-600 text-white text-xs mr-4 px-4">{% trans object_type|capfirst %}</span>
-      <span class="rounded bg-gray-600 text-white text-xs px-4">{% trans "Pinned" %}</span>
+      <span class="tag inline-block mr-4">{% trans object_type|capfirst %}</span>
+      <span class="tag inline-block">{% trans "Pinned" %}</span>
     </div>
     {% endblock title %}
     <div class="">
@@ -25,8 +25,8 @@
       {% endblock timesince %}
     </div>
   </div>
-  <div class="border-t border-gray-200 pt-2 mt-4">
-    <div class="">
+  <div class="card-footer">
+    <div class="flex-items-center">
       {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
     </div>
     {% if object.description %}

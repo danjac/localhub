@@ -50,14 +50,14 @@
           src="{% static 'dist/main.js' %}"></script>
 </head>
 
-<body class="h-screen container mx-auto">
+<body class="h-screen container mx-auto antialiased">
 
   {% block header %}
   <header class="flex items-center justify-between p-3 bg-gray-900 text-gray-100 px-5">
     {% if community %}
     <div class="flex items-center flex-shrink-0 mr-6">
       <a href="#"
-         class="text-xl tracking-tight">{{ community.name }}</a>
+         class="text-xl tracking-tight text-white">{{ community.name }}</a>
     </div>
     {% endif %}
     <div class="hidden lg:block">
@@ -74,9 +74,9 @@
     {% if user.is_authenticated %}
     <div>
       <a href="#"
-         class="inline-block mr-4">{{ user.username }}</a>
+         class="inline-block text-white mr-4">{{ user.username }}</a>
       <a href="{% url 'account_logout' %}"
-         class="inline-block"
+         class="inline-block text-white"
          data-turbolinks="false"
          data-controller="ajax"
          data-action="ajax#post"
@@ -85,9 +85,9 @@
     {% else %}
     <div>
       <a href="{% url 'account_login' %}"
-         class="inline-block mr-4">{% trans "Login" %}</a>
+         class="inline-block text-white mr-4">{% trans "Login" %}</a>
       <a href="{% url 'account_signup' %}"
-         class="inline-block">{% trans "Signup" %}</a>
+         class="inline-block text-white">{% trans "Signup" %}</a>
     </div>
     {% endif %}
   </header>

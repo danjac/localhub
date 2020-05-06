@@ -11,7 +11,7 @@
 
 <article role="{{ object_type }}"
          id="{{ object_type }}-{{ object.id }}"
-         class="border border-gray-500 p-2{% if css_class %} {{ css_class }}{% endif %}"
+         class="card{% if css_class %} {{ css_class }}{% endif %}"
          data-controller="clipboard{% if is_content_sensitive %} toggle{% endif %}">
   {% block header %}
   {% if is_content_sensitive %}
@@ -70,18 +70,18 @@
 
           {% endif %}
 
-          <span class="inline-block rounded bg-gray-600 text-white text-xs mr-4 px-4">{{ object_type|title }}</span>
+          <span class="tag inline-block mr-4">{{ object_type|title }}</span>
 
           {% if not object.published %}
-          <span class="inline-block rounded bg-gray-600 text-white text-xs mr-4 px-4">{% trans "Private" %}</span>
+          <span class="tag inline-block mr-4">{% trans "Private" %}</span>
           {% endif %}
 
           {% if can_moderate_community and object.is_flagged %}
-          <span class="inline-block rounded bg-gray-600 text-white text-xs mr-4 px-4">{% trans "Flagged" %}</span>
+          <span class="tag inline-block mr-4">{% trans "Flagged" %}</span>
           {% endif %}
 
           {% if object.is_new %}
-          <span class="inline-block rounded bg-blue-600 text-white text-xs mr-4 px-4">{% trans "New" %}</span>
+          <span class="tag inline-block">{% trans "New" %}</span>
           {% endif %}
 
         </div>
@@ -161,7 +161,7 @@
 
     {% block footer %}
 
-    <div class="border-t border-gray-200 pt-2 mt-4">
+    <div class="card-footer">
       <div class="flex-items-center">
         {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
       </div>
