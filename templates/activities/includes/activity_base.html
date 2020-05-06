@@ -100,7 +100,7 @@
       <div class="text-sm">
         {% if object.url %}
         <div class="mr-4">
-          {{ object.url|domain|linkify }}
+          {% external_link object.url|domain object.url|domain css_class="text-blue-800 hover:text-blue-700" %}
         </div>
         {% endif %}
         {% if object.hashtags %}

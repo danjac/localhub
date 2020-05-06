@@ -30,7 +30,7 @@ def external_link(url, text, css_class=""):
     if not text:
         return url
 
-    css_class = f' class="{css_class}"' or ""
+    css_class = f' class="{css_class}"' if css_class else ""
     return mark_safe(
         f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank"{css_class}>{text}</a>'
     )
