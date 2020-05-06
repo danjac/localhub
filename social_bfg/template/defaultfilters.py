@@ -18,6 +18,8 @@ from bs4 import BeautifulSoup
 # Social-BFG
 from social_bfg.utils.http import URLResolver, get_root_url, is_image_url
 
+from .defaulttags import external_link
+
 register = template.Library()
 
 
@@ -163,7 +165,7 @@ def url_to_img(url, linkify=True):
     if resolver.is_image and resolver.is_https:
         html = f'<img src="{resolver.url}" alt="{resolver.filename}">'
         if linkify:
-            return _external_link(resolver.url, html)
+            return external_link(resolver.url, html)
         return mark_safe(html)
     return ""
 
@@ -191,7 +193,7 @@ def linkify(url, text=None):
     if not text:
         return url
 
-    return _external_link(url, text)
+    return external_link(url, text)
 
 
 register.filter(is_image_url)
@@ -208,9 +210,3 @@ def lazify(text):
     for element in soup.find_all(["iframe", "img"]):
         element["loading"] = "lazy"
     return mark_safe(str(soup))
-
-
-def _external_link(url, text):
-    return mark_safe(
-        f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{text}</a>'
-    )

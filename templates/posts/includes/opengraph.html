@@ -2,43 +2,24 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% if og_data %}
-
-{% if og_data.image and og_data.description %}
-<div class="columns opengraph pb-1">
+<div class="flex items-center py-2">
+  {% if og_data.image %}
+  <a href="{{ object.url }}"
+     {% if og_data.description %}
+     class="block w-1/3 h-auto mr-4"
+     {% endif %}
+     target="_blank">
+    <img src="{{ og_data.image }}"
+         alt="{{ post.title }}"
+         loading="lazy"
+         class="">
+  </a>
   {% endif %}
 
-
-  {% if og_data.image %}
   {% if og_data.description %}
-  <div class="column col-3 col-md-12">
-    {% else %}
-    <div class="opengraph pb-1">
-      {% endif %}
-
-      <a href="{{ object.url }}"
-         class="opengraph-image-link"
-         target="_blank">
-        <img src="{{ og_data.image }}"
-             alt="{{ post.title }}"
-             loading="lazy"
-             class="img-responsive">
-      </a>
-    </div>
-    {% endif %}
-
-    {% if og_data.description %}
-    {% if og_data.image %}
-    <div class="column col-9 col-md-12">
-      {% else %}
-      <div class="opengraph pb-1">
-        {% endif %}
-        <blockquote class="text-small text-muted text-italic">
-          {{ og_data.description|html_unescape|urlize|truncatewords_html:300 }}
-        </blockquote>
-      </div>
-      {% endif %}
-
-      {% if og_data.image and og_data.description %}
-    </div>
-    {% endif %}
-    {% endif %}
+  <blockquote class="text-gray-800 border-l border-gray-200 text-sm pl-3 italic whitespace-normal">
+    {{ og_data.description|html_unescape|urlize|truncatewords_html:300 }}
+  </blockquote>
+  {% endif %}
+</div>
+{% endif %}

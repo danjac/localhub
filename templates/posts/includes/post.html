@@ -7,14 +7,6 @@
 {% load activities %}
 {% load posts %}
 
-{% block list_item_title %}
-{% if object.url %}
-{{ object.url|linkify:object_title }}
-{% else %}
-{{ block.super }}
-{% endif %}
-{% endblock list_item_title %}
-
 {% block content %}
 
 {% with user|is_oembed_url:object.url as is_oembed %}

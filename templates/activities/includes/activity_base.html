@@ -48,13 +48,11 @@
           {% if is_detail %}
 
           {% block detail_title %}
-          <span class="inline-block text-lg mr-4">
-            {% if object.url %}
-            {{ object.url|linkify:object.title }}
-            {% else %}
-            {{ object.title|linkify_hashtags|linkify_mentions }}
-            {% endif %}
-          </span>
+          {% if object.url %}
+          {% external_link object.url object.title css_class="text-blue-800 hover:text-blue-700 mr-4" %}
+          {% else %}
+          {{ object.title|linkify_hashtags|linkify_mentions }}
+          {% endif %}
           {% endblock %}
 
           {% else %}
