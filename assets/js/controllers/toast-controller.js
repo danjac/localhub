@@ -23,7 +23,7 @@ export default class extends ApplicationController {
     dismiss
   */
 
-  static targets = ['message'];
+  static targets = ['message', 'container'];
 
   connect() {
     this.bus.sub(Events.TOAST_MESSAGE, ({ detail: { type, message } }) => {
@@ -33,7 +33,8 @@ export default class extends ApplicationController {
 
   showMessage(type, message) {
     this.messageTarget.innerText = message;
-    this.element.classList.add(type);
+    this.containerTarget.classList.add(type);
+
     this.element.classList.remove('hidden');
     maximizeZIndex(this.element);
 

@@ -111,26 +111,47 @@
 
   {% if messages %}
   <div class="flex justify-center">
-  {% for message in messages %}
-  <div class="absolute z-50 w-4/5 lg:w-1/3 flex items-center text-center p-3 mb-2 text-white {{ message.tags }}"
-       data-controller="alert">
-    <div class="mx-auto text-center">
-      {{ message }}
+    {% for message in messages %}
+    <div class="absolute z-50 w-4/5 lg:w-1/3 flex items-center text-center p-3 mb-2 text-white {{ message.tags }}"
+         data-controller="alert">
+      <div class="mx-auto text-center">
+        {{ message }}
+      </div>
+      <button data-action="alert#dismiss"
+              class="">
+        <svg class="fill-current text-white"
+             xmlns="http://www.w3.org/2000/svg"
+             width="18"
+             height="18"
+             viewBox="0 0 18 18">
+          <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+        </svg>
+      </button>
     </div>
-    <button data-action="alert#dismiss"
-            class="">
-      <svg class="fill-current text-white"
-           xmlns="http://www.w3.org/2000/svg"
-           width="18"
-           height="18"
-           viewBox="0 0 18 18">
-        <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
-      </svg>
-    </button>
-  </div>
-  {% endfor %}
+    {% endfor %}
   </div>
   {% endif %}
+
+
+  <div class="flex justify-center hidden"
+       data-controller="toast">
+    <div data-target="toast.container"
+         class="absolute z-50 w-4/5 lg:w-1/3 flex items-center text-center p-3 mb-2 text-white">
+      <div class="mx-auto text-center"
+           data-target="toast.message">
+      </div>
+      <button data-action="toast#dismiss"
+              class="">
+        <svg class="fill-current text-white"
+             xmlns="http://www.w3.org/2000/svg"
+             width="18"
+             height="18"
+             viewBox="0 0 18 18">
+          <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
 
   <div class="mt-5 px-5 flex min-h-full"
        data-controller="sidebar"
