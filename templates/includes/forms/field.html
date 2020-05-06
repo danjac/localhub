@@ -26,7 +26,7 @@
   <label for="{{ field.id_for_label }}"
          class="block font-semibold mb-2">{{ label }}</label>
 
-  {% with widget_class=field.errors|yesno:"appearance-none w-full p-1 inline-block w-100 bg-red-100 border border-red-600 focus:border-red-300,appearance-none w-full p-1 inline-block w-100 border border-gray-500 focus:border-blue-500" %}
+  {% with widget_class=field.errors|yesno:"form-input form-input-error w-full,form-input w-full" %}
   {% render_field field class=widget_class placeholder=widget.attrs.placeholder %}
   {% endwith %}
 
