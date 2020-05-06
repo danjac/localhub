@@ -2,4 +2,12 @@
 
 @tailwind components;
 
+.action {
+  @apply text-blue-600;
+}
+
+.action:hover {
+  @apply text-blue-500;
+}
+
 @tailwind utilities;

@@ -51,7 +51,9 @@
           {% if object.url %}
           {% external_link object.url object.title css_class="text-blue-800 hover:text-blue-700 mr-4" %}
           {% else %}
+          <span class="mr-4">
           {{ object.title|linkify_hashtags|linkify_mentions:"text-blue-800 hover:text-blue-700 mr-4" }}
+          </span>
           {% endif %}
           {% endblock %}
 

@@ -18,12 +18,12 @@ You can enable emails for your notifications
 {% enddismissable %}
 
 
-<h1 class="page-header">{% trans "Notifications" %}</h1>
+<h1 class="text-lg font-semibold mb-2">{% trans "Notifications" %}</h1>
 
 {% if object_list %}
-<div class="actions mb-1">
+<div class="text-sm mb-1">
   {% if is_unread_notifications %}
-  <a class="action"
+  <a class="action mr-4"
      href="{% url 'notifications:mark_all_read' %}"
      data-turbolinks="false"
      data-controller="ajax"
@@ -43,12 +43,12 @@ You can enable emails for your notifications
 
 {% if object_list %}
 
-<table class="table table-hover table-responsive">
-  <tbody>
+<table class="table-fixed">
+  <tbody class="text-sm">
     {% for notification in object_list %}
     {% notification notification %}
     <tr>
-      <td>
+      <td class="border px-4 py-2">
         <div class="notification">
 
           <div class="notification-header{% if not notification.is_read %} text-bold{% endif %}">
@@ -59,15 +59,15 @@ You can enable emails for your notifications
           </div>
         </div>
       </td>
-      <td>
-        <span class="timesince">
+      <td class="border px-4 py-2">
+        <span class="text-gray-600">
           {% blocktrans with created=notification.created|timesince %}
           {{ created }} ago
           {% endblocktrans %}
         </span>
       </td>
-      <td>
-        <div class="actions float-right">
+      <td class="border px-4 py-2">
+        <div class="float-right">
           {% if not notification.is_read %}
           <a class="action"
              href="{% url 'notifications:mark_read' notification.pk %}"

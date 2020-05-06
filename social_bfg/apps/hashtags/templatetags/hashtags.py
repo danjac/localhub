@@ -17,4 +17,4 @@ register = template.Library()
 
 @register.filter(name="linkify_hashtags")
 def _linkify_hashtags(content, css_class=None):
-    return mark_safe(linkify_hashtags(content, css_class))
+    return mark_safe(linkify_hashtags(content))
