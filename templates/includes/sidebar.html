@@ -20,12 +20,12 @@
   </button>
 
   <ul class="border border-gray-500 p-3 bg-gray-100">
-    <li><a href="{{ home_page_url }}"
+    <li class="mb-1"><a href="{{ home_page_url }}"
          data-controller="active-link"
          data-active-link-exact
          data-active-link-active-class="bg-gray-500 text-white"
-         class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Activities" %}</a></li>
-    <li>
+         class="block p-1 mb-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Activities" %}</a></li>
+    <li class="mb-1">
       <a href="{% url 'private_messages:inbox' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
@@ -36,7 +36,7 @@
         {% endif %}
       </a>
     </li>
-    <li>
+    <li class="mb-1">
       <a href="{% url 'notifications:list' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
@@ -47,45 +47,45 @@
         {% endif %}
       </a>
     </li>
-    <li>
+    <li class="mb-1">
       <a href="{% url 'comments:list' %}"
          data-controller="active-link"
          data-active-link-exact
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Comments" %}</a>
     </li>
-    <li>
+    <li class="mb-1">
       <a href="{% url 'activities:private' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Private Stash" %}</a>
     </li>
-    <li>
+    <li class="mb-1">
       <a href="{% url 'bookmarks:activities' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Bookmarks" %}</a>
     </li>
-    <li>
+    <li class="mb-1">
       <a href="{% url 'photos:gallery' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Gallery" %}</a>
     </li>
-    <li>
+    <li class="mb-1">
       <a href="{% url 'events:calendar' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Calendar" %}</a>
     </li>
-    <li>
+    <li class="mb-1">
       <a href="{{ user.get_absolute_url }}"
          data-controller="active-link"
          data-active-link-regex="({{ user.get_absolute_url }}|{% url 'users:comments' user.username %}|{% url 'users:messages' user.username %})$"
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "My Profile" %}</a>
     </li>
-    <li>
+    <li class="mb-1">
       <a href="{% url 'user_update' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
@@ -98,19 +98,19 @@
     <li class="p-1 text-black font-bold border-b border-gray-500 mb-2">{% trans "Actions" %}</li>
 
     {% if can_create_activity %}
-    <li>
+    <li class="mb-1">
       <a href="{% url 'posts:create' %}"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Submit Post" %}</a>
     </li>
-    <li>
+    <li class="mb-1">
       <a href="{% url 'events:create' %}"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Submit Event" %}</a>
     </li>
-    <li>
+    <li class="mb-1">
       <a href="{% url 'photos:create' %}"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Submit Photo" %}</a>
     </li>
-    <li>
+    <li class="mb-1">
       <a href="{% url 'polls:create' %}"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Submit Poll" %}</a>
     </li>
@@ -129,7 +129,7 @@
 
   <ul class="border border-gray-500 p-3 bg-gray-100 mt-4">
     <li class="p-1 text-black font-bold border-b border-gray-500 mb-2">{% trans 'Content' %}</li>
-    <li>
+    <li class="mb-1">
       <a data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900"
@@ -137,7 +137,7 @@
         {% trans "Tags" %}
       </a>
     </li>
-    <li>
+    <li class="mb-1">
       <a data-controller="active-link"
          data-active-link-exact
          data-active-link-active-class="bg-gray-500 text-white"
@@ -145,7 +145,7 @@
          href="{% url 'activities:timeline' %}">{% trans "Timeline" %}
       </a>
     </li>
-    <li>
+    <li class="mb-1">
       <a data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900"
@@ -153,14 +153,14 @@
         {% trans "Favorites" %}
       </a>
     </li>
-    <li>
+    <li class="mb-1">
       <a data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900"
          href="{% url 'users:activity_likes' user.username %}">{% trans "Likes" %}
       </a>
     </li>
-    <li>
+    <li class="mb-1">
       <a data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900"
@@ -168,7 +168,7 @@
       </a>
     </li>
     {% if can_moderate_community and site_counters.flags %}
-    <li>
+    <li class="mb-1">
       <a data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900"
@@ -182,25 +182,25 @@
 
   <ul class="border border-gray-500 p-3 bg-gray-100 mt-4">
     <li class="p-1 text-black font-bold border-b border-gray-500 mb-2">{% trans "People" %}</li>
-    <li>
+    <li class="mb-1">
       <a href="{% url 'users:member_list' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Members" %}</a>
     </li>
-    <li>
+    <li class="mb-1">
       <a href="{% url 'users:following_list' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Following" %}</a>
     </li>
-    <li>
+    <li class="mb-1">
       <a href="{% url 'users:follower_list' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Followers" %}</a>
     </li>
-    <li>
+    <li class="mb-1">
       <a href="{% url 'users:blocked_list' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
@@ -213,7 +213,7 @@
     <li class="p-1 text-black font-bold border-b border-gray-500 mb-2">{% trans "Community" %}</li>
 
     {% if community.description %}
-    <li>
+    <li class="mb-1">
       <a href="{% url 'communities:community_detail' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
@@ -226,7 +226,7 @@
     {% endif %}
 
     {% if community.terms %}
-    <li>
+    <li class="mb-1">
       <a href="{% url 'communities:community_terms' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
@@ -236,28 +236,28 @@
 
     {% if can_manage_community %}
 
-    <li>
+    <li class="mb-1">
       <a href="{% url 'communities:community_update' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Settings" %}</a>
     </li>
 
-    <li>
+    <li class="mb-1">
       <a href="{% url 'communities:membership_list' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Members" %}</a>
     </li>
 
-    <li>
+    <li class="mb-1">
       <a href="{% url 'invites:list' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
          class="block p-1 hover:bg-gray-400 hover:text-gray-900">{% trans "Invites" %}</a>
     </li>
 
-    <li>
+    <li class="mb-1">
       <a href="{% url 'join_requests:list' %}"
          data-controller="active-link"
          data-active-link-active-class="bg-gray-500 text-white"
