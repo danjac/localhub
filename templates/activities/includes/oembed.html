@@ -7,6 +7,8 @@
 
 {% if object.url %}
 <div data-controller="oembed"
+     data-oembed-video-class="block max-w-100 h-auto"
+     data-oembed-image-class="block max-w-100 h-auto"
      class="whitespace-normal pb-2">
   {% if is_oembed %}
   {{ object.url|oembed_no_urlize|url_to_img|lazify }}

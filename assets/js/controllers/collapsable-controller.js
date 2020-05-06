@@ -48,8 +48,9 @@ export default class extends ApplicationController {
   }
 
   removeCollapsable() {
-    this.getCollapsableClasses().forEach((classname) =>
-      this.containerTarget.classList.remove(classname)
+    this.containerTarget.classList.remove.apply(
+      this.containerTarget.classList,
+      this.getCollapsableClasses()
     );
     this.toggleTargets.forEach((el) => el.classList.add('hidden'));
     this.observer.disconnect(this.containerTarget);
@@ -57,8 +58,9 @@ export default class extends ApplicationController {
 
   makeCollapsable(height) {
     if (height > MAX_HEIGHT && !this.isCollapsable) {
-      this.getCollapsableClasses().forEach((classname) =>
-        this.containerTarget.classList.add(classname)
+      this.containerTarget.classList.add.apply(
+        this.containerTarget.classList,
+        this.getCollapsableClasses()
       );
       this.containerTarget.style.maxHeight = MAX_HEIGHT;
       this.toggleTargets.forEach((target) => target.classList.remove('hidden'));

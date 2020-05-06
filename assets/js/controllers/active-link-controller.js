@@ -38,6 +38,6 @@ export default class extends ApplicationController {
     const activeClasses = this.data.has('active-class')
       ? this.data.get('active-class').split(/ /)
       : ['active'];
-    activeClasses.forEach((classname) => this.element.classList.add(classname));
+    this.element.classList.add.apply(this.element.classList, activeClasses);
   }
 }

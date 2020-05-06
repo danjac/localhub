@@ -17,13 +17,16 @@ export default class extends ApplicationController {
       this.element.querySelector('iframe, video, audio') &&
       !this.element.querySelector('script')
     ) {
-      this.element.classList.add('video-responsive');
+      this.element.classList.add.apply(
+        this.element.classList,
+        this.get('video-class').split(/ /)
+      );
     } else {
       // if we just have embedded images, make these responsive.
       const images = this.element.querySelectorAll('img');
       if (images.length > 0) {
         images.forEach((el) => {
-          el.classList.add('img-responsive');
+          el.classList.add.apply(el.classList, this.data.get('image-class').split(/ /));
         });
       } else {
         this.element.remove();

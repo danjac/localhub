@@ -47,12 +47,10 @@ export default class extends ApplicationController {
   }
 
   addClassnames(el, classnames) {
-    console.log('add', classnames);
-    classnames.split(/ /).forEach((classname) => el.classList.add(classname));
+    el.classList.add.apply(el.classList, classnames.split(/ /));
   }
 
   removeClassnames(el, classnames) {
-    console.log('remove', classnames);
-    classnames.split(/ /).forEach((classname) => el.classList.remove(classname));
+    el.classList.remove.apply(el.classList, classnames.split(/ /));
   }
 }
