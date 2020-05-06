@@ -17,8 +17,8 @@
        name="{{ name }}"
        value="{{ value }}">
 {% endfor %}
-<div class="form-group">
-  <input class="form-input"
+<div class="mb-4">
+  <input class="appearance-none border border-gray-500 w-full p-1 text-gray-900"
          name="{{ view.search_parameter|default:'q' }}"
          type="search"
          {% if not view.search_optional %}
@@ -28,12 +28,12 @@
            data-target="search.input"
            {% endif %}
            data-action="keyup->search#change"
-           placeholder="{% trans "Search" %}"
+           placeholder="{% trans "Search..." %}"
            value="{{ view.search_query|default:"" }}">
   </div>
   {% if selector %}
-  <div class="form-group">
-    <select class="form-select"
+  <div class="mb-4">
+    <select class="appearance-none border border-gray-500 w-full p-1 text-gray-900"
             data-target="search.selector"
             data-action="search#select">
       <option value="">{% trans "Search in..." %}</option>
@@ -63,7 +63,7 @@
   {% endif %}
 
   {% if view.search_query and view.search_optional %}
-  <a class="btn btn-block mt-2"
+  <a class="block border text-center border-gray-500 bg-gray-100 hover:bg-gray-200 mb-4 w-full p-1"
      href="{{ non_search_path }}">
     {% trans "Clear Search" %}
   </a>
