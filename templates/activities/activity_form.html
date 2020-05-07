@@ -12,50 +12,40 @@
 {% block content %}
 
 {% with list_url=view.model|resolve_url:"list" model_name_plural=view.model|verbose_name_plural|title model_name=view.model|verbose_name|title %}
-<ul class="flex flex-wrap text-sm mb-3">
+<ul class="breadcrumbs mb-3">
 
   {% if object %}
 
   {% if object.published %}
-  <li class="mr-2">
-    <a class="text-gray-500 hover:text-gray-400"
-       href="{{ list_url }}">{{ model_name_plural }}</a>
+  <li class="breadcrumb">
+    <a href="{{ list_url }}">{{ model_name_plural }}</a>
   </li>
-  <li class="mr-2 text-gray-500"> / </li>
   {% else %}
-  <li class="mr-2 text-gray-500 hover:text-gray-400">
+  <li class="breadcrumb">
     <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
   </li>
-  <li class="mr-2 text-gray-500"> / </li>
   {% endif %}
 
-  <li class="mr-2 text-gray-500 hover:text-gray-400">
+  <li class"breadcrumb">
     <a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a>
   </li>
-  <li class="mr-2 text-gray-500"> / </li>
-  <li class="mr-2 text-gray-600">
-    <a class="text-gray-600"
-       href="#">{% blocktrans %}Edit {{ model_name }}{% endblocktrans %}</a>
+  <li class="breadcrumb">
+    {% blocktrans %}Edit {{ model_name }}{% endblocktrans %}
   </li>
 
   {% else %}
 
   {% if view.is_private %}
-  <li class="mr-2 text-gray-500 hover:text-gray-400">
+  <li class="breadcrumb">
     <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
   </li>
-  <li class="mr-2 text-gray-500"> / </li>
   {% else %}
-  <li class="mr-2">
-    <a class="text-gray-500 hover:text-gray-400"
-       href="{{ list_url }}">{{ model_name_plural }}</a>
+  <li class="breadcrumb">
+    <a href="{{ list_url }}">{{ model_name_plural }}</a>
   </li>
-  <li class="mr-2 text-gray-500"> / </li>
   {% endif %}
-  <li class="">
-    <a data-turbolinks="false"
-       class="text-gray-600"
-       href="#">{% blocktrans %}Submit {{ model_name }}{% endblocktrans %}</a>
+  <li class="breadcrumb">
+       {% blocktrans %}Submit {{ model_name }}{% endblocktrans %}
   </li>
   {% endif %}
 
@@ -67,7 +57,8 @@
 <div class="mb-3 text-sm">
   {% block actions %}
   {% for url, label in submit_actions %}
-  <a class="text-blue-800 hover:text-blue-600{% if not forloop.last %} mr-2{% endif %}"
+  <a {% if not forloop.last %}class=" mr-2"
+     {% endif %}
      href="{{ url }}">{{ label }}</a>
   {% endfor %}
   {% endblock actions %}
