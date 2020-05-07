@@ -6,10 +6,10 @@
 
 <div class="markdownx"
      data-controller="tabs typeahead"
-     data-tabs-active-class="bg-gray-800 text-white border-t border-r border-l border-gray-800"
-     data-tabs-inactive-class="hover:bg-gray-700 hover:text-white"
+     data-tabs-active-class="bg-blue-800 text-white border-t border-r border-l border-gray-800"
+     data-tabs-inactive-class="hover:bg-blue-700 hover:text-white"
      data-typeahead-config="{{ typeahead_config }}">
-  <div class="flex flex-wrap items-center text-sm border-b border-gray-500 mb-2">
+  <div class="flex flex-wrap items-center text-sm border-b border-blue-800 mb-2">
     <button class="mr-2 p-1 px-2 lg:px-5"
             type="button"
             data-target="tabs.tab"
@@ -131,70 +131,70 @@
   <div class="hidden"
        data-target="tabs.pane"
        data-tab="guide">
-    <table class="table-auto text-sm">
+    <table class="table-fixed text-sm block whitespace-no-wrap overflow-x-scroll md:w-full md:whitespace-normal md:overflox-x-auto md:table">
       <tbody>
         <tr>
-          <td># Header</td>
-          <td>
+          <td class="border px-4 py-2"># Header</td>
+          <td class="border px-4 py-2">
             <h1>{% trans "Header (h1)" %}</h1>
           </td>
         </tr>
         <tr class="bg-gray-100">
-          <td>## Header</td>
-          <td>
+          <td class="border px-4 py-2">## Header</td>
+          <td class="border px-4 py-2">
             <h2>{% trans "Header (h2)" %}</h2>
           </td>
         </tr>
         <tr>
-          <td>### Header</td>
-          <td>
+          <td class="border px-4 py-2">### Header</td>
+          <td class="border px-4 py-2">
             <h3>{% trans "Header (h3)" %}</h3>
           </td>
         </tr>
         <tr class="bg-gray-100">
-          <td>*Bold*</td>
-          <td><strong>{% trans "Bold" %}</strong></td>
+          <td class="border px-4 py-2">*Bold*</td>
+          <td class="border px-4 py-2"><strong>{% trans "Bold" %}</strong></td>
         </tr>
         <tr>
-          <td>_Italic_</td>
-          <td><em>{% trans "Italic" %}</em></td>
+          <td class="border px-4 py-2">_Italic_</td>
+          <td class="border px-4 py-2"><em>{% trans "Italic" %}</em></td>
         </tr>
         <tr class="bg-gray-100">
-          <td>[Link text](http://example.com)</td>
-          <td><a href="#">{% trans "Link" %}</a></td>
+          <td class="border px-4 py-2">[Link text](http://example.com)</td>
+          <td class="border px-4 py-2"><a href="#">{% trans "Link" %}</a></td>
         </tr>
         <tr>
-          <td>![alt](https://example.com)</td>
-          <td>
+          <td class="border px-4 py-2">![alt](https://example.com)</td>
+         <td class="border px-4 py-2">
             {% trans "Image" %}
             <br>
             <b>{% trans "Note: only safe images (starting with https://) will be shown." %}</b>
           </td>
         </tr>
         <tr class="bg-gray-100">
-          <td>@mention</td>
-          <td><a href="#">@mention</a> {% trans "(link to profile)" %}</td>
+          <td class="border px-4 py-2">@mention</td>
+          <td class="border px-4 py-2"><a href="#">@mention</a> {% trans "(link to profile)" %}</td>
         </tr>
         <tr>
-          <td>#hashtag</td>
-          <td><a href="#">#hashtag</a> {% trans "(link to hashtag)" %}</td>
+          <td class="border px-4 py-2">#hashtag</td>
+          <td class="border px-4 py-2"><a href="#">#hashtag</a> {% trans "(link to hashtag)" %}</td>
         </tr>
         <tr class="bg-gray-100">
-          <td>`Code`</td>
-          <td><code>{% trans "Code" %}</code></td>
+          <td class="border px-4 py-2">`Code`</td>
+          <td class="border px-4 py-2"><code>{% trans "Code" %}</code></td>
         </tr>
         <tr>
-          <td>&gt; Quote</td>
-          <td>
+          <td class="border px-4 py-2">&gt; Quote</td>
+          <td class="border px-4 py-2">
             <blockquote>{% trans "Quote" %}</blockquote>
           </td>
         </tr>
         <tr class="bg-gray-100">
-          <td>
+          <td class="border px-4 py-2">
             * List item 1 <br>
             * List item 2
           </td>
-          <td>
+          <td class="border px-4 py-2">
             <ul>
               <li>List item 1</li>
               <li>List item 2</li>
@@ -202,33 +202,30 @@
           </td>
         </tr>
         <tr>
-          <td>
+          <td class="border px-4 py-2">
             1. List item 1 <br>
             1. List item 2
           </td>
-          <td>
+          <td class="border px-4 py-2">
             <ol>
               <li>List item 1</li>
               <li>List item 2</li>
             </ol>
           </td>
         </tr>
-        <tr class="bg-gray-100">
-          <td colspan="2">
-            {% blocktrans %}
-            <a target="_blank"
-               rel="nofollow"
-               href="https://www.markdownguide.org/basic-syntax">Markdown Guide</a>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <a target="_blank"
-               rel="nofollow"
-               href="https://gist.github.com/rxaviers/7360908">Emoji Markdown Symbols</a>
-            {% endblocktrans %}
-          </td>
-        </tr>
       </tbody>
     </table>
+    <div class="mt-4 py-2 text-sm flex flex-wrap items-center">
+      {% blocktrans %}
+      <a class="inline-block mr-4"
+         target="_blank"
+         rel="nofollow"
+         href="https://www.markdownguide.org/basic-syntax">Markdown Guide</a>
+      <a target="_blank"
+         class="inline-block"
+         rel="nofollow"
+         href="https://gist.github.com/rxaviers/7360908">More Emojis...</a>
+      {% endblocktrans %}
+    </div>
   </div>
 </div>

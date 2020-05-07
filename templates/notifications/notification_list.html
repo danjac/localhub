@@ -18,18 +18,18 @@ You can enable emails for your notifications
 {% enddismissable %}
 
 
-<h1 class="text-lg font-semibold mb-2">{% trans "Notifications" %}</h1>
+<h1 class="page-header mb-2">{% trans "Notifications" %}</h1>
 
 {% if object_list %}
-<div class="text-sm mb-1">
+<div class="flex flex-wrap items-center text-sm mb-4">
   {% if is_unread_notifications %}
-  <a class="action mr-4"
+  <a class="inline-block mr-4"
      href="{% url 'notifications:mark_all_read' %}"
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post">{% trans "Mark All Read" %}</a>
   {% endif %}
-  <a class="action"
+  <a class="inline-block"
      href="{% url 'notifications:delete_all' %}"
      data-turbolinks="false"
      data-controller="ajax"
@@ -43,12 +43,12 @@ You can enable emails for your notifications
 
 {% if object_list %}
 
-<table class="table-fixed">
-  <tbody class="text-sm">
+<table class="table-auto text-sm block whitespace-no-wrap overflow-x-scroll md:w-full md:whitespace-normal md:overflox-x-auto md:table">
+  <tbody>
     {% for notification in object_list %}
     {% notification notification %}
-    <tr>
-      <td class="border px-4 py-2">
+    <tr class="{% cycle 'bg-gray-100' '' %} hover:bg-gray-200">
+      <td class="border py-2 px-2">
         <div class="notification">
 
           <div class="notification-header{% if not notification.is_read %} text-bold{% endif %}">
@@ -59,15 +59,14 @@ You can enable emails for your notifications
           </div>
         </div>
       </td>
-      <td class="border px-4 py-2">
+      <td class="border py-2 px-2 text-right">
         <span class="text-gray-600">
           {% blocktrans with created=notification.created|timesince %}
           {{ created }} ago
           {% endblocktrans %}
         </span>
       </td>
-      <td class="border px-4 py-2">
-        <div class="float-right">
+      <td class="border py-2 px-2 text-right">
           {% if not notification.is_read %}
           <a class="action"
              href="{% url 'notifications:mark_read' notification.pk %}"
@@ -80,7 +79,6 @@ You can enable emails for your notifications
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post">{% trans "Delete" %}</a>
-        </div>
       </td>
     </tr>
     {% endnotification %}
