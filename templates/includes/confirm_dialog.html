@@ -1,32 +1,39 @@
-  <!-- toggle opacity-0 pointer-events-none -->
-  <div class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
-    <!-- modal overlay, create/hide in JS -->
-    <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-    <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto shadow-lg z-50 overflow-y-auto">
-      <div class="modal-content py-4 text-left px-6">
-        <div class="flex justify-between items-center">
-          <h2 class="font-bold">Delete Post</h2>
-          <div class="modal-close cursor-pointer z-50"
-               onclick="closeModal(); return false;">
-            <svg class="fill-current text-black"
-                 xmlns="http://www.w3.org/2000/svg"
-                 width="18"
-                 height="18"
-                 viewBox="0 0 18 18">
-              <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
-            </svg>
-          </div>
-        </div>
-        <p class="py-4">
-          Are you sure you want to delete this post?
-        </p>
-        <div>
-          <button class="p-1 px-2 bg-blue-600 text-white">Yes, Please</button>
-          <button class="p-1 px-2 border border-gray-800"
-                  onclick="closeModal(); return false;">No, Cancel</button>
+{% load i18n %}
+<div class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center"
+     data-controller="confirm-dialog"
+     data-confirm-dialog-inactive-class="opacity-0 pointer-events-none"
+     data-action="keydown@window->confirm-dialog#keydown">
+  <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+
+  <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto shadow-lg z-50 overflow-y-auto">
+    <div class="modal-content py-4 text-left px-6">
+      <div class="flex justify-between items-center">
+        <h2 class="font-bold"
+            data-target="confirm-dialog.header"></h2>
+        <div class="modal-close cursor-pointer z-50"
+             data-action="confirm-dialog#close">
+          <svg class="fill-current text-black"
+               xmlns="http://www.w3.org/2000/svg"
+               width="18"
+               height="18"
+               viewBox="0 0 18 18">
+            <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+          </svg>
         </div>
       </div>
+      <p class="py-4"
+         data-target="confirm-dialog.body">
+      </p>
+      <div>
+        <button class="p-1 px-2 bg-blue-600 text-white"
+                data-action="confirm-dialog#confirm">{% trans "Yes, Please" %}</button>
+        <button class="p-1 px-2 border border-gray-800"
+                data-action="confirm-dialog#close">{% trans "No, Cancel" %}</button>
+      </div>
     </div>
-
   </div>
+
+</div>

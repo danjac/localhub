@@ -7,18 +7,6 @@ import { maximizeZIndex } from '@utils/dom-helpers';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
-  /*
-  Handles confirmation modal dialog.
-
-  targets:
-    header: header of dialog
-    body: main content of dialog
-
-  actions:
-    cancel: if "cancel" button is clicked
-    confirm: if "confirm" button is clicked
-    keydown: windows key events
-  */
   static targets = ['header', 'body'];
 
   connect() {
@@ -35,13 +23,13 @@ export default class extends ApplicationController {
     this.headerTarget.innerText = header;
     this.bodyTarget.innerText = body;
     this.onConfirm = onConfirm;
-    this.element.classList.add('active');
+    this.element.classList.remove.apply(this.element.classList, this.inactiveClasses);
     maximizeZIndex(this.element);
   }
 
   close() {
     this.onConfirm = null;
-    this.element.classList.remove('active');
+    this.element.classList.add.apply(this.element.classList, this.inactiveClasses);
   }
 
   cancel(event) {
@@ -56,5 +44,9 @@ export default class extends ApplicationController {
       this.onConfirm = null;
     }
     this.close();
+  }
+
+  get inactiveClasses() {
+    return this.data.get('inactiveClass').split(/ /);
   }
 }
