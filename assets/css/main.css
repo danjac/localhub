@@ -106,7 +106,7 @@ dd {
 }
 
 .notification {
-  @apply bg-blue-800 text-white text-center p-3;
+  @apply bg-blue-800 text-white text-center p-2;
 }
 
 .notification a {

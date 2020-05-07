@@ -161,6 +161,7 @@
     {% include "includes/sidebar.html" %}
     {% endblock sidebar %}
 
+    {% block main_section %}
     <main class="lg:ml-5 w-full lg:w-5/6"
           data-target="sidebar.main">
       <!-- mobile "menu" button -->
@@ -175,6 +176,7 @@
 
       {% block content %}{% endblock %}
     </main>
+    {% endblock main_section %}
 
   </div>
   {% endblock layout %}
