@@ -3,19 +3,17 @@
 
 {% load i18n %}
 <span data-controller="ajax"
-      class="action">
+      class="{{ css_class }}">
   <a href="{% url 'hashtags:unfollow' tag.id %}"
      data-turbolinks="false"
-     class="text-strike{% if not is_following %} d-none{% endif %}"
+     class="line-through{% if not is_following %} hidden{% endif %}"
      data-target="ajax.toggle ajax.button"
      data-action="ajax#post">
     {% trans "Follow" %}
   </a>
   <a href="{% url 'hashtags:follow' tag.id %}"
      data-turbolinks="false"
-     {% if is_following %}
-     class="d-none"
-     {% endif %}
+     class="{% if is_following %}hidden{% endif %}"
      data-target="ajax.toggle ajax.button"
      data-action="ajax#post">
     {% trans "Follow" %}

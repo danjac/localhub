@@ -8,65 +8,59 @@
 
 {% block content %}
 
-<h1 class="page-header">{% trans "Tags" %}</h1>
+<h1 class="page-header mb-4">{% trans "Tags" %}</h1>
 
 {% has_perm "users.follow_tag" user as can_follow_tag %}
 {% has_perm "users.block_tag" user as can_block_tag %}
 
 {% if can_follow_tag or can_block_tag %}
-<ul class="tab tab-block">
-  <li class="tab-item"
-      data-controller="active-link"
-      data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'hashtags:list' %}">{% trans "All" %}</a>
-  </li>
+<div class="tabs text-sm mb-4">
+  <a class="tab-item w-1/4"
+     data-controller="active-link"
+     data-active-link-exact
+     href="{% url 'hashtags:list' %}">{% trans "All" %}</a>
   {% if can_follow_tag %}
-  <li class="tab-item"
-      data-controller="active-link"
-      data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'hashtags:following_list' %}">{% trans "Following" %}</a>
-  </li>
+  <a class="tab-item w-1/4"
+     data-controller="active-link"
+     data-active-link-exact
+     href="{% url 'hashtags:following_list' %}">{% trans "Following" %}</a>
   {% endif %}
   {% if can_block_tag %}
-  <li class="tab-item"
-      data-controller="active-link"
-      data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'hashtags:blocked_list' %}">{% trans "Blocked" %}</a>
-  </li>
+  <a class="tab-item w-1/4"
+     data-controller="active-link"
+     data-active-link-exact
+     href="{% url 'hashtags:blocked_list' %}">{% trans "Blocked" %}</a>
   {% endif %}
-</ul>
+</div>
 {% endif %}
 
 {% block tag_list %}
 {% if object_list %}
 {% with blocked=user.blocked_tags.all following=user.following_tags.all %}
-<table class="table table-hover">
+<table class="table-fixed text-sm block whitespace-no-wrap overflow-x-scroll md:w-full md:whitespace-normal md:overflox-x-auto md:table">
   <tbody>
     {% for tag in object_list %}
-    <tr>
-      <td>
+    <tr class="{% cycle 'bg-gray-100' '' %} hover:bg-gray-200">
+      <td class="border-t border-l border-b py-2 px-2 w-4/5">
         <a href="{% url 'hashtags:detail' tag.slug %}">
           #{{ tag.name }}
         </a>
         {% if tag.name.lower in content_warnings %}
-        <span class="label">{% trans "Sensitive" %}</span>
+        <span class="tag">{% trans "Sensitive" %}</span>
         {% endif %}
       </td>
       {% if can_follow_tag or can_block_tag %}
-      <td>
-        <div class="float-right actions">
+      <td class="border-t border-r border-b py-2 px-2 w-1/4">
+        <div class="text-right">
           {% if can_follow_tag %}
           {% with following|contains:tag as is_following %}
-          {% include "hashtags/includes/follow.html" %}
+          {% include "hashtags/includes/follow.html" with css_class="inline-block mr-4" %}
           {% endwith %}
           {% endif %}
 
           {% if can_block_tag %}
           {% with blocked|contains:tag as is_blocked %}
-          {% include "hashtags/includes/block.html" %}
+          {% include "hashtags/includes/block.html" with css_class="inline-block" %}
           {% endwith %}
           {% endif %}
         </div>
