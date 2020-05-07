@@ -144,26 +144,26 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
     </ul>
   </div>
   {% endif %}
-  <div class="actions">
+  <div class="flex flex-wrap items-center mb-4 text-sm">
     {% if is_current_user %}
-    <a class="action"
+    <a class="inline-block mr-4"
        href="{% url 'user_update' %}">
       {% trans "Settings" %}
     </a>
     {% endif %}
 
     {% if not is_blocked %}
-    <a class="action"
+    <a class="inline-block mr-4"
        href="{% url 'users:activity_likes' user_obj.username %}">
       {% trans "Likes" %}
     </a>
-    <a class="action"
+    <a class="inline-block mr-4"
        href="{% url 'users:activity_mentions' user_obj.username %}">
       {% trans "Mentions" %}
     </a>
     {% endif %}
     {% if can_view_membership %}
-    <a class="action"
+    <a class="inline-block"
        href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
     {% endif %}
 
