@@ -12,12 +12,23 @@
          role="comment"
          data-controller="clipboard"
          id="comment-{{ comment.id }}">
-  <div class="card-header">
+  <div class="">
     {% if include_content_object %}
-    <div class="card-title pb-2 h6">
+    <div class="flex flex-wrap items-center mb-4">
       {% if content_object %}
-      <a href="{{ content_object.get_absolute_url }}">{{ content_object }}</a>
-      <span class="label">{{ content_object|verbose_name|title }}</span>
+      <a class="inline-block font-semibold mr-4"
+         href="{{ content_object.get_absolute_url }}">{{ content_object }}</a>
+      <a class="tag hover:text-gray-300 mr-4"
+         href="{{ content_object|resolve_url:"list" }}">{{ content_object|verbose_name|title }}</a>
+
+      {% if can_moderate_community and comment.is_flagged %}
+      <span class="tag bg-warning mr-4">{% trans "Flagged" %}</span>
+      {% endif %}
+
+      {% if comment.is_new %}
+      <span class="tag tag-primary">{% trans "New" %}</span>
+      {% endif %}
+
       {% else %}
       {% trans "[Deleted]" %}
       {% endif %}
@@ -25,22 +36,16 @@
       {% endif %}
     </div>
     {% endif %}
-    <div class="card-title pb-2 h6{% if comment.is_new %} text-bold{% endif %}">
+    <div class="">
       {% url 'users:comments' comment.owner.username as owner_url %}
       {% include "includes/timesince.html" with profile_url=owner_url timestamp=comment.created owner=comment.owner %}
-      {% if can_moderate_community and comment.is_flagged %}
-      <span class="label bg-primary">{% trans "Flagged" %}</span>
-      {% endif %}
-      {% if comment.is_new %}
-      <span class="label bg-primary">{% trans "New" %}</span>
-      {% endif %}
     </div>
   </div>
   {% if comment.is_blocked %}
   <div class="card-body"
        data-controller="toggle">
     <strong>{% trans "You have blocked this user." %}</strong>
-    <div class="markdown-content d-none"
+    <div class="markdown-content hidden"
          data-target="toggle.togglable">
       {{ comment.content.markdown|strip_external_images:user|lazify }}
     </div>
@@ -55,20 +60,20 @@
   <div class="card-body">
     <textarea data-target="clipboard.textarea"
               readonly
-              class="d-none">{{ comment.content }}</textarea>
+              class="hidden">{{ comment.content }}</textarea>
     {% if comment.deleted %}
     <p>{% blocktrans %}This comment has been deleted by a community moderator{% endblocktrans %}</p>
     {% endif %}
     {% if show_content %}
     {% collapsable is_detail %}
-    <div class="markdown-content pb-1">
+    <div class="markdown-content mb-4">
       {{ comment.content.markdown|strip_external_images:user|lazify }}
     </div>
     {% endcollapsable %}
     {% endif %}
   </div>
-  <div class="card-footer">
-    <div class="pb-1">
+  <div class="card-footer mt-4">
+    <div class="flex flex-wrap items-center text-xs text-gray-600 mb-2">
       {% if comment.num_likes %}
       <div class="info">
         {{ comment.num_likes }}
@@ -86,8 +91,8 @@
       </div>
       {% endif %}
     </div>
-    <div class="d-flex align-center pb-1">
-      <div class="dropdown mr-2"
+    <div class="">
+      <div class="mr-2"
            data-controller="dropdown"
            data-action="click@window->dropdown#close keydown@window->dropdown#close">
         <button class="btn btn-sm"
@@ -101,13 +106,13 @@
           <li class="menu-item"
               data-controller="ajax">
             <a href="{% url 'comments:dislike' comment.id %}"
-               class="text-strike{% if not comment.has_liked %} d-none{% endif %}"
+               class="text-strike{% if not comment.has_liked %} hidden{% endif %}"
                data-turbolinks="false"
                data-target="ajax.toggle ajax.button"
                data-action="ajax#post">{% trans "Like" %}</a>
             <a href="{% url 'comments:like' comment.id %}"
                {% if comment.has_liked %}
-               class="d-none"
+               class="hidden"
                {% endif %}
                data-turbolinks="false"
                data-target="ajax.toggle ajax.button"
@@ -120,13 +125,13 @@
           <li class="menu-item"
               data-controller="ajax">
             <a href="{% url 'comments:remove_bookmark' comment.id %}"
-               class="text-strike{% if not comment.has_bookmarked %} d-none{% endif %}"
+               class="text-strike{% if not comment.has_bookmarked %} hidden{% endif %}"
                data-turbolinks="false"
                data-target="ajax.toggle ajax.button"
                data-action="ajax#post">{% trans "Bookmark" %}</a>
             <a href="{% url 'comments:bookmark' comment.id %}"
                {% if comment.has_bookmarked %}
-               class="d-none"
+               class="hidden"
                {% endif %}
                data-turbolinks="false"
                data-target="ajax.toggle ajax.button"

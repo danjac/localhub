@@ -42,7 +42,7 @@ dd {
 }
 
 .btn-block {
-  @apply border border-gray-500;
+  @apply border border-gray-500 block text-center text-black;
 }
 
 .btn-dropdown {
@@ -88,6 +88,16 @@ dd {
 
 .dropdown-menu-item:hover {
   @apply bg-gray-500 text-white;
+}
+
+.markdown-content,
+.markdownx-preview {
+  @apply tracking-tight;
+}
+
+.markdown-content p,
+.markdownx-preview p {
+  @apply py-4;
 }
 
 .page-header {

@@ -48,13 +48,13 @@
           {% if is_detail %}
 
           {% block detail_title %}
-          {% if object.url %}
-          {{ object.url|linkify:object.title }}
-          {% else %}
           <span class="mr-4">
+            {% if object.url %}
+            {{ object.url|linkify:object.title }}
+            {% else %}
             {{ object.title|linkify_hashtags|linkify_mentions }}
+            {% endif %}
           </span>
-          {% endif %}
           {% endblock %}
 
           {% else %}
@@ -70,7 +70,10 @@
 
           {% endif %}
 
-          <span class="tag inline-block mr-4">{{ object_type|title }}</span>
+          <a class="tag inline-block mr-4 hover:text-gray-300"
+             href="{{ object|resolve_url:"list" }}">
+            {{ object_type|title }}
+          </a>
 
           {% if not object.published %}
           <span class="tag inline-block mr-4">{% trans "Private" %}</span>
@@ -162,9 +165,7 @@
     {% block footer %}
 
     <div class="card-footer mt-4">
-      <div class="flex-items-center">
-        {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
-      </div>
+      {% block info %}{% include "activities/includes/info.html" %}{% endblock %}
       <div class="flex items-center">
         {% block actions %}{% include "activities/includes/actions.html" %}{% endblock %}
         {% block links %}{% include "activities/includes/links.html" %}{% endblock %}
