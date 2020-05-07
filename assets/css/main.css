@@ -12,6 +12,14 @@ a:hover {
   @apply text-blue-600;
 }
 
+dt {
+  @apply font-semibold pb-2;
+}
+
+dd {
+  @apply pb-2;
+}
+
 .btn {
   @apply p-1 px-2;
 }

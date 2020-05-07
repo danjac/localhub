@@ -15,7 +15,7 @@
   </a>
 </div>
 {% empty %}
-<em class="text-small">{% trans "No photo available" %}</em>
+<p class="p-2 text-sm italic">{% trans "No photo available" %}</p>
 {% endthumbnail %}
 
 {% if is_detail %}
@@ -24,7 +24,7 @@
 
 {% include "activities/includes/description.html" %}
 {% if is_detail %}
-<dl class="text-small">
+<dl class="text-sm mt-4">
   <dt>{% trans "Original Size" %}</dt>
   <dd>{{ object.image.width }}x{{ object.image.height }}</dd>
   <dt>{% trans "Download Size" %}</dt>

@@ -8,6 +8,7 @@ import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
   static targets = [
+    'container',
     'description',
     'descriptionPreview',
     'fullPreview',
@@ -85,6 +86,7 @@ export default class extends ApplicationController {
   }
 
   clearPreview() {
+    this.containerTarget.classList.add('hidden');
     this.titleTarget.innerText = '';
     this.titleTarget.classList.add('hidden');
 
@@ -116,6 +118,10 @@ export default class extends ApplicationController {
 
     if (image) {
       Array.from(this.imageTargets).forEach((el) => el.setAttribute('src', image));
+    }
+
+    if (description || image || title) {
+      this.containerTarget.classList.remove('hidden');
     }
 
     if (description && image) {

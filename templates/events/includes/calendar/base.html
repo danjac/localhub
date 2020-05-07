@@ -2,38 +2,38 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-<div class="calendar{% if css_class %} {{ css_class }}{% endif %}">
-  <div class="calendar-nav navbar">
-    <a class="btn btn-action btn-link btn-lg"
+<div class="border border-gray-500 min-w-100{% if css_class %} {{ css_class }}{% endif %}">
+  <div class="flex items-center justify-between bg-gray-200 px-4 py-2">
+    <a class="text-sm"
        href="{{ request.path }}?month={{ previous_month.month }}&year={{ previous_month.year }}">
-      <i class="icon icon-arrow-left"></i>
+      Previous
     </a>
-    <div class="navbar-primary">{{ current_month|date:"F Y" }}</div>
-    <a class="btn btn-action btn-link btn-lg"
+    <div class="font-semibold">{{ current_month|date:"F Y" }}</div>
+    <a class="text-sm"
        href="{{ request.path }}?month={{ next_month.month }}&year={{ next_month.year }}">
-      <i class="icon icon-arrow-right"></i>
+      Next
     </a>
   </div>
-  <div class="calendar-container">
-    <div class="calendar-header">
-      <div class="calendar-date">{% trans "Mon" %}</div>
-      <div class="calendar-date">{% trans "Tue" %}</div>
-      <div class="calendar-date">{% trans "Wed" %}</div>
-      <div class="calendar-date">{% trans "Thu" %}</div>
-      <div class="calendar-date">{% trans "Fri" %}</div>
-      <div class="calendar-date">{% trans "Sat" %}</div>
-      <div class="calendar-date">{% trans "Sun" %}</div>
-    </div>
-    <div class="calendar-body">
-      {% for day, is_past, events in slots %}
-      <div class="calendar-date">
-        {% if day %}
-        {% with num_events=events|length %}
-        {% block calendar_date %}{% endblock %}
-        {% endwith %}
-        {% endif %}
+  <div class="flex flex-wrap justify-between items-center py-4 px-1 lg:px-4 bg-gray-100">
+    <div class="text-sm mr-4">{% trans "Mon" %}</div>
+    <div class="text-sm mr-4">{% trans "Tue" %}</div>
+    <div class="text-sm mr-4">{% trans "Wed" %}</div>
+    <div class="text-sm mr-4">{% trans "Thu" %}</div>
+    <div class="text-sm mr-4">{% trans "Fri" %}</div>
+    <div class="text-sm mr-4">{% trans "Sat" %}</div>
+    <div class="text-sm">{% trans "Sun" %}</div>
+  </div>
+  <div class="flex flex-wrap">
+    {% for day, is_past, events in slots %}
+    <div class="text-xs" style="max-width: 14.28%; flex: 0 0 14.28%;">
+      {% if day %}
+      {% with num_events=events|length %}
+      <div class="h-10 lg:h-32 p-2 tracking-tight border border-gray-500 align-middle">
+      {% block calendar_date %}{% endblock %}
       </div>
-      {% endfor %}
+      {% endwith %}
+      {% endif %}
     </div>
+    {% endfor %}
   </div>
 </div>

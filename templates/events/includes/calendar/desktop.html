@@ -5,18 +5,19 @@
 {% load i18n %}
 
 {% block calendar_date %}
-<button class="date-item{% if day == today.day and is_today %} date-today{% endif %}">{{ day }}</button>
+<button class="float-right{% if day == today.day and is_today %} font-semibold{% endif %}">{{ day }}</button>
+<div class="clearfix"></div>
 {% if events %}
-<div class="calendar-events{% if is_past %} text-muted{% endif %}">
+<div class="hidden lg:block text-xs{% if is_past %} text-gray-500{% endif %}">
   {% for event in events|slice:":2" %}
 
-  <a class="calendar-event{% if not event.is_attendable %} text-strike{% elif event.is_attending %} text-bold{% endif %}"
+  <a class="text-xs{% if not event.is_attendable %} line-through{% elif event.is_attending %} font-semibold{% endif %}"
      href="{{ event.get_absolute_url }}"
      title="{{ event.title }}">{{ event.title }}</a>
   {% endfor %}
 
   {% if num_events > 2 %}
-  <a class="calendar-event"
+  <a class="text-xs"
      href="{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}"
      href="">{{ num_events|add:"-2" }} {% trans "More..." %}</a>
   {% endif %}
