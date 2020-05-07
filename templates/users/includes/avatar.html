@@ -2,12 +2,17 @@
 {% load account %}
 {# TBD: calc h- and w- and size based on t-shirt sizes #}
 {% thumbnail user.avatar size|default:"16" crop="center" as avatar %}
+
 {% user_display user as username %}
-  <img src="{{ avatar.url }}"
-       width="{{ avatar.width }}"
-       height="{{ avatar.height }}"
-       alt="{{ username }}"
-       class="rounded-full {{ css_class }}">
+<img src="{{ avatar.url }}"
+     width="{{ avatar.width }}"
+     height="{{ avatar.height }}"
+     alt="{{ username }}"
+     class="rounded-full {{ css_class }}">
 {% empty %}
-<div class="inline-block justified-center align-middle text-center p-1 text-xs rounded-full bg-blue-600 text-white {{ css_class }}">{{ initials.0 }}</div>
+{% if show_placeholder %}
+<div class="font-bold align-middle rounded-full text-center bg-blue-800 text-white text-xs {{ css_class }}">
+  {{ user.get_initials.0 }}
+</div>
+{% endif %}
 {% endthumbnail %}

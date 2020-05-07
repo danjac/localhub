@@ -27,8 +27,8 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 {% enddismissable %}
 {% endif %}
 
-<h1 class="page-header">
-  {% avatar user_obj "64" %}
+<h1 class="page-header flex flex-wrap items-center">
+  {% avatar user_obj "64" css_class="mr-4" show_placeholder=False %}
   {% if user_obj.username == display_name %}
   @{{ display_name }}
   {% else %}
@@ -108,7 +108,8 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
       {% endif %}
 
       {% if not is_blocked and can_follow_user %}
-      <li class="menu-item" data-controller="ajax">
+      <li class="menu-item"
+          data-controller="ajax">
         {% include "users/includes/follow.html" %}
       </li>
       {% endif %}
@@ -171,32 +172,22 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 
 
 {% if not is_blocked %}
-<ul class="tab tab-block">
-  <li class="tab-item"
-      data-controller="active-link"
-      data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:activities' user_obj.username %}">{% trans "Activities" %}</a>
-  </li>
-  <li class="tab-item"
-      data-controller="active-link"
-      data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:messages' user_obj.username %}"
-       {% if unread_messages %}
-       class="badge"
-       data-badge="{{ unread_messages }}"
-       {% endif %}>
-      {% trans "Messages" %}
-    </a>
-  </li>
-  <li class="tab-item"
-      data-controller="active-link"
-      data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:comments' user_obj.username %}">{% trans "Comments" %}</a>
-  </li>
-</ul>
+<div class="tabs mb-4 text-sm">
+  <a class="tab-item w-1/4"
+     data-controller="active-link"
+     data-active-link-exact
+     href="{% url 'users:activities' user_obj.username %}">{% trans "Activities" %}</a>
+  <a class="tab-item w-1/4"
+     data-controller="active-link"
+     data-active-link-exact
+     href="{% url 'users:messages' user_obj.username %}">
+    {% trans "Messages" %}
+  </a>
+  <a class="tab-item w-1/4"
+     data-controller="active-link"
+     data-active-link-exact
+     href="{% url 'users:comments' user_obj.username %}">{% trans "Comments" %}</a>
+</div>
 {% block user_content %}{% endblock %}
 {% endif %}
 {% endblock content %}

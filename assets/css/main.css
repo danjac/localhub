@@ -106,7 +106,7 @@ dd {
 }
 
 .notification {
-  @apply bg-blue-800 text-white;
+  @apply bg-blue-800 text-white text-center p-3;
 }
 
 .notification a {
@@ -138,11 +138,11 @@ dd {
 }
 
 .tabs {
-  @apply flex flex-wrap items-center border-b border-blue-800;
+  @apply flex flex-wrap items-center border-b border-gray-800;
 }
 
 .tab-item {
-  @apply block p-1 text-center;
+  @apply block p-1 text-center border-t border-r border-l rounded-t border-gray-800;
 }
 
 .tab-item:md {
@@ -150,11 +150,11 @@ dd {
 }
 
 .tab-item.active {
-  @apply bg-blue-800 text-white border-t border-r border-l border-gray-800 rounded-t;
+  @apply bg-gray-800 text-white;
 }
 
 .tab-item:hover {
-  @apply bg-blue-500 text-white rounded-t;
+  @apply bg-gray-500 text-white;
 }
 
 .tab-item:not(:last-child) {

@@ -13,31 +13,31 @@
 
 {% block user_content %}
 
-<div class="my-2 toast text-center">
+<div class="notification mb-4">
 
   {% if unread_messages %}
   {% blocktrans count counter=unread_messages %}
-  <strong>1 Unread</strong>
+  1 Unread
   {% plural %}
-  <strong>{{ counter }} Unread</strong>
+  {{ counter }} Unread
   {% endblocktrans %}
   {% endif %}
 
   {% if sent_messages %}
   {% if unread_messages %} / {% endif %}
   {% blocktrans count counter=sent_messages %}
-  <strong>1 Sent</strong>
+  1 Sent
   {% plural %}
-  <strong>{{ counter }} Sent</strong>
+  {{ counter }} Sent
   {% endblocktrans %}
   {% endif %}
 
   {% if received_messages %}
   {% if unread_messages or sent_messages %} / {% endif %}
   {% blocktrans count counter=received_messages %}
-  <strong>1 Received</strong>
+  1 Received
   {% plural %}
-  <strong>{{ counter }} Received</strong>
+  {{ counter }} Received
   {% endblocktrans %}
   {% endif %}
 
