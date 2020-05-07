@@ -47,58 +47,58 @@
 {% include "includes/pagination.html" with css_class="mb-2" %}
 {% endif %}
 
-<table class="">
+<table class="table-auto text-sm block whitespace-no-wrap overflow-x-scroll md:w-full md:whitespace-normal md:overflox-x-auto md:table">
   <tbody>
     {% for object in object_list %}
-    <tr>
-      <td>
-        {% block user_item_detail %}
-        {% if object.num_unread_messages %}
-        {% url 'users:messages' object.username as messages_url %}
-        {% include "users/includes/chip.html" with profile=object profile_url=messages_url %}
-        {% else %}
-        {% include "users/includes/chip.html" with profile=object %}
-        {% endif %}
+    <tr class="{% cycle 'bg-gray-100' '' %} hover:bg-gray-200">
+      <td class="border py-2 px-2">
+        <div class="flex flex-wrap items-center">
 
-        {% if object.role == "admin" or object.role == "moderator" %}
-        <span class="tag">{{ object.role_display }}</span>
-        {% endif %}
+          {% block user_item_detail %}
+          {% if object.num_unread_messages %}
+          {% url 'users:messages' object.username as messages_url %}
+          {% include "users/includes/chip.html" with profile=object profile_url=messages_url css_class="mr-2" %}
+          {% else %}
+          {% include "users/includes/chip.html" with profile=object css_class="mr-2" %}
+          {% endif %}
 
-        {% if object.num_unread_messages %}
-        <span class="tag">{% trans "New" %}</span>
-        {% endif %}
-        {% endblock user_item_detail %}
+          {% if object.role == "admin" or object.role == "moderator" %}
+          <span class="tag px-1 mr-2">{{ object.role_display }}</span>
+          {% endif %}
+
+          {% if object.num_unread_messages %}
+          <span class="tag px-1">{% trans "New" %}</span>
+          {% endif %}
+          {% endblock user_item_detail %}
       </td>
-      <td>
+      <td class="border py-2 px-2">
         {% include "includes/timesince.html" with verb=_("Joined") timestamp=object.joined %}
       </td>
-      <td>
+      <td class="border py-2 px-2 text-right">
         {% block user_item_actions %}
-        <div class="float-right actions">
-          {% if user == object %}
-          <a class="action"
-             href="{% url 'user_update' %}">{% trans "Settings" %}</a>
+        {% if user == object %}
+        <a href="{% url 'user_update' %}">{% trans "Settings" %}</a>
 
-          {% else %}
+        {% else %}
 
-          {% has_perm "users.follow_user" user object as can_follow_user %}
+        {% has_perm "users.follow_user" user object as can_follow_user %}
 
-          {% if can_follow_user %}
+        {% if can_follow_user %}
 
-          <span data-controller="ajax">
-            {% include "users/includes/follow.html" with user_obj=object is_following=object.is_following css_class="action" %}
-          </span>
-          {% endif %}
+        <span data-controller="ajax"
+              class="inline-block mr-2">
+          {% include "users/includes/follow.html" with user_obj=object is_following=object.is_following css_class="action" %}
+        </span>
+        {% endif %}
 
-          {% if can_create_message %}
-          <a class="action"
-             href="{% url 'private_messages:message_create_recipient' object.username %}">
-            {% trans "Send Message" %}
-          </a>
-          {% endif %}
+        {% if can_create_message %}
+        <a class="inline-block"
+           href="{% url 'private_messages:message_create_recipient' object.username %}">
+          {% trans "Send Message" %}
+        </a>
+        {% endif %}
 
-          {% endif %}
-        </div>
+        {% endif %}
         {% endblock user_item_actions %}
       </td>
     </tr>

@@ -102,7 +102,7 @@
       </div>
 
       {% if object.url or object.hashtags or object.mentions %}
-      <div class="text-sm">
+      <div class="flex flex-wrap items-center text-sm">
         {% if object.url %}
         <div class="mr-4">
           {{ object.url|domain|linkify }}
