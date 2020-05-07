@@ -4,14 +4,14 @@
 {% load i18n %}
 <div class="border-l border-t border-gray-500 min-w-100">
   <div class="flex items-center justify-between bg-gray-200 px-4 py-2 border-r border-b border-gray-500">
-    <a class="text-sm"
+    <a class="text-sm text-black"
        href="{{ request.path }}?month={{ previous_month.month }}&year={{ previous_month.year }}">
-      Previous
+      {% trans "Previous" %}
     </a>
     <div class="font-semibold">{{ current_month|date:"F Y" }}</div>
-    <a class="text-sm"
+    <a class="text-sm text-black"
        href="{{ request.path }}?month={{ next_month.month }}&year={{ next_month.year }}">
-      Next
+      {% trans "Next" %}
     </a>
   </div>
   <div class="flex flex-wrap justify-between text-center items-center py-4 px-1 lg:px-4 bg-gray-100 border-r border-b border-gray-500">

@@ -34,43 +34,43 @@
     <div class="text-xs flex flex-wrap items-center mb-2">
 
       <a href="#"
-         class="inline-block mr-2 text-blue-800 hover:text-blue-700"
+         class="inline-block mr-2"
          data-action="markdown#select"
          data-markdown="**[SELECTION]**">{% trans "Bold" %}</a>
 
       <a href="#"
-         class="inline-block mr-2 text-blue-800 hover:text-blue-700"
+         class="inline-block mr-2"
          data-action="markdown#select"
          data-markdown="_[SELECTION]_">{% trans "Italic" %}</a>
 
       <a href="#"
-         class="inline-block mr-2 text-blue-800 hover:text-blue-700"
+         class="inline-block mr-2"
          data-action="markdown#select"
          data-markdown="[[SELECTION]](url)">{% trans "Link" %}</a>
 
       <a href="#"
-         class="inline-block mr-2 text-blue-800 hover:text-blue-700"
+         class="inline-block mr-2"
          data-action="markdown#select"
          data-markdown="![]([SELECTION])">{% trans "Image" %}</a>
 
       <a href="#"
-         class="inline-block mr-2 text-blue-800 hover:text-blue-700"
+         class="inline-block mr-2"
          data-action="markdown#select"
          data-markdown="> [SELECTION]">{% trans "Quote" %}</a>
 
       <a href="#"
-         class="inline-block mr-2 text-blue-800 hover:text-blue-700"
+         class="inline-block mr-2"
          data-action="markdown#select"
          data-markdown="`[SELECTION]`">{% trans "Code" %}</a>
 
       <a href="#"
-         class="inline-block mr-2 text-blue-800 hover:text-blue-700"
+         class="inline-block mr-2"
          data-action="markdown#select"
          data-multiline
          data-markdown="* [SELECTION]">{% trans "List (Bullets)" %}</a>
 
       <a href="#"
-         class="inline-block mr-2 text-blue-800 hover:text-blue-700"
+         class="inline-block mr-2"
          data-action="markdown#select"
          data-multiline
          data-markdown="1. [SELECTION]">{% trans "List (Numbers)" %}</a>
@@ -79,12 +79,12 @@
            data-controller="dropdown"
            data-dropdown-toggle-class="hidden"
            data-action="click@window->dropdown#close keydown@window->dropdown#close">
-        <button class="border border-gray-800 p-1 px-2 hover:bg-gray-100 focus:bg-gray-100"
+        <button class="btn btn-dropdowbtn btn-dropdown"
                 type="button"
                 data-action="dropdown#toggle">
           {% trans "Emoji..." %}
         </button>
-        <ul class="hidden absolute bg-gray-100 mt-3 p-2 overflow-y-scroll h-32 border border-gray-800"
+        <ul class="hidden dropdown-menu mt-3 overflow-y-scroll h-32"
             data-target="dropdown.menu">
           {% common_emojis as emoji_categories %}
           {% for category in emoji_categories %}
