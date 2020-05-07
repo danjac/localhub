@@ -10,32 +10,31 @@
 
 {% block content %}
 {% if current_date %}
-<ul class="breadcrumb">
-  <li class="li breadcrumb-item"><a href="{% url 'events:list' %}">{% trans "Events" %}</a></li>
-  <li class="li breadcrumb-item">
+<ul class="breadcrumbs mb-4">
+  <li class="breadcrumb"><a href="{% url 'events:list' %}">{% trans "Events" %}</a></li>
+  <li class="breadcrumb">
     <a href="{{ request.path }}?month={{ current_date.month }}&year={{ current_date.year }}">
       {{ current_date|date:"F Y" }}
     </a>
   </li>
-  <li class="li breadcrumb-item">
-    <a data-turbolinks="false"
-       href="#">{{ current_date|date:"D" }} {{ current_date|date:"SHORT_DATE_FORMAT" }}</a>
+  <li class="breadcrumb">
+    {{ current_date|date:"D" }} {{ current_date|date:"SHORT_DATE_FORMAT" }}
   </li>
 </ul>
 {% endif %}
 
-<h1 class="page-header">{% trans "Calendar" %}</h1>
+<h1 class="page-header mb-4">{% trans "Calendar" %}</h1>
 
 {% if not current_date %}
-<div class="actions mb-1">
+<div class="flex flex-wrap items-center mb-4">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
-  <a class="action"
+  <a class="inline-block mr-4"
      href="{% url 'events:create' %}">
     {% trans "Submit Event" %}
   </a>
   {% endif %}
-  <a class="action"
+  <a class="inline-block"
      href="{% url 'events:list' %}">{% trans "Events" %}</a>
 </div>
 {% endif %}

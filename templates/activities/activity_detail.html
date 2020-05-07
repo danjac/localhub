@@ -66,7 +66,7 @@
   {% endif %}
 
   {% if comment_form %}
-  {% include "includes/forms/stimulusjs_form.html" with action=object|resolve_url:"comment" form=comment_form form_id="comment-form" css_class="p-1 md:p-5 border border-gray-500 w-full" %}
+  {% include "includes/forms/stimulusjs_form.html" with action=object|resolve_url:"comment" form=comment_form form_id="comment-form" css_class="px-2 py-5 border border-gray-500 w-full" %}
   {% elif not object.allow_comments %}
   <p class="toast text-center my-2">{% trans "Comments are locked" %}</p>
   {% elif object.published %}

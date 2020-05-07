@@ -9,32 +9,28 @@
 
 {% block content %}
 
-<ul class="breadcrumb">
+<ul class="breadcrumbs mb-4">
   {% if content_object %}
-  <li class="breadcrumb-item">
+  <li class="breadcrumb">
     <a href="{{ content_object.get_absolute_url }}">{{ content_object|truncatechars:60 }}</a>
   </li>
   {% else %}
-  <li class="breadcrumb-item">
+  <li class="breadcrumb">
     <a href="{% url 'comments:list' %}">{% trans "Comments" %}</a>
   </li>
   {% endif %}
   {% if comment.parent and not comment.parent.deleted %}
-  <li class="breadcrumb-item">
+  <li class="breadcrumb">
     <a href="{{ comment.parent.get_absolute_url }}">{% trans "Parent" %}</a>
   </li>
   {% endif %}
-  <li class="breadcrumb-item">
-    <a data-turbolinks="false"
-       href="#">{% trans "Comment" %}</a>
-  </li>
+  <li class="breadcrumb">{% trans "Comment" %}</li>
 </ul>
 
 {% render_comment request user comment is_detail=True include_content_object=True %}
 
 {% if replies %}
-<div class="divider text-center"
-     data-content="{% trans "Replies" %}"></div>
+<h2 class="font-semibold text-center border-b pb-1 mb-4">{% trans "Replies" %}"</h2>
 {% for reply in replies %}
 {% render_comment request user reply include_content_object=False include_parent=False css_class="mb-2" %}
 {% endfor %}

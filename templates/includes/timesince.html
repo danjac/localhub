@@ -6,7 +6,7 @@
   {% if owner %}
   {% include "users/includes/chip.html" with profile=owner css_class="mr-4" %}
   {% endif %}
-  <div class="inline-block text-sm text-gray-800">
+  <div class="inline-block text-sm text-muted">
     {% if verb %}
     {% blocktrans with created=timestamp|timesince %}{{ verb }} {{ created }} ago{% endblocktrans %}
     {% else %}

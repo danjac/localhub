@@ -8,20 +8,22 @@
 {% block breadcrumbs %}
 {% if object.published %}
 {% with starts=event.get_next_start_date %}
-<ul class="breadcrumb">
-  <li class="breadcrumb-item"><a href="{% url 'events:list' %}">{% trans "Events" %}</a>
+<ul class="breadcrumbs mb-4">
+  <li class="breadcrumb">
+    <a href="{% url 'events:list' %}">{% trans "Events" %}</a>
   </li>
-  <li class="breadcrumb-item">
+  <li class="breadcrumb">
     <a href="{% url 'events:calendar' %}?month={{ starts.month }}&year={{ starts.year }}">
       {{ starts|date:"F Y" }}
     </a>
   </li>
-  <li class="breadcrumb-item">
+  <li class="breadcrumb">
     <a href="{% url 'events:calendar' %}?day={{ starts.day }}&month={{ starts.month }}&year={{ starts.year }}">
       {{ starts|date:"SHORT_DATE_FORMAT" }}
     </a>
+  <li class="breadcrumb">
+    {{ object.title|truncatechars:60 }}
   </li>
-   <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a></li>
 </ul>
 {% endwith %}
 {% else %}
