@@ -11,41 +11,33 @@
 
 {% has_perm "private_messages.create_message" user community as can_create_message %}
 
-<h1 class="page-header">{% trans "People" %}</h1>
+<h1 class="page-header mb-4">{% trans "People" %}</h1>
 
-<ul class="tab tab-block mt-2">
-  <li class="tab-item"
-      data-controller="active-link"
-      data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:member_list' %}">{% trans "Members" %}</a>
-  </li>
-  <li class="tab-item"
-      data-controller="active-link"
-      data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:following_list' %}">{% trans "Following" %}</a>
-  </li>
-  <li class="tab-item"
-      data-controller="active-link"
-      data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:follower_list' %}">{% trans "Followers" %}</a>
-  </li>
-  <li class="tab-item"
-      data-controller="active-link"
-      data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:blocked_list' %}">{% trans "Blocked" %}</a>
-  </li>
-</ul>
+<div class="tabs mb-4 text-sm">
+  <a class="tab-item lg:w-1/5"
+     data-controller="active-link"
+     data-active-link-exact
+     href="{% url 'users:member_list' %}">{% trans "Members" %}</a>
+  <a class="tab-item lg:w-1/5"
+     data-controller="active-link"
+     data-active-link-exact
+     href="{% url 'users:following_list' %}">{% trans "Following" %}</a>
+  <a class="tab-item lg:w-1/5"
+     data-controller="active-link"
+     data-active-link-exact
+     href="{% url 'users:follower_list' %}">{% trans "Followers" %}</a>
+  <a class="tab-item lg:w-1/5"
+     data-controller="active-link"
+     data-active-link-exact
+     href="{% url 'users:blocked_list' %}">{% trans "Blocked" %}</a>
+</div>
 
 {% block user_list %}
 
 {% if object_list %}
 
 {% block counter_container %}
-<div class="my-2 toast text-center">
+<div class="notification mb-4">
   {% block counter %}
   {% endblock counter %}
 </div>
@@ -55,7 +47,7 @@
 {% include "includes/pagination.html" with css_class="mb-2" %}
 {% endif %}
 
-<table class="table table-hover table-responsive">
+<table class="">
   <tbody>
     {% for object in object_list %}
     <tr>
@@ -69,12 +61,11 @@
         {% endif %}
 
         {% if object.role == "admin" or object.role == "moderator" %}
-        <div class="label">{{ object.role_display }}</div>
+        <span class="tag">{{ object.role_display }}</span>
         {% endif %}
 
         {% if object.num_unread_messages %}
-        <span class="badge"
-              data-badge="{{ object.num_unread_messages }}"></span>
+        <span class="tag">{% trans "New" %}</span>
         {% endif %}
         {% endblock user_item_detail %}
       </td>
@@ -95,7 +86,7 @@
           {% if can_follow_user %}
 
           <span data-controller="ajax">
-          {% include "users/includes/follow.html" with user_obj=object is_following=object.is_following css_class="action" %}
+            {% include "users/includes/follow.html" with user_obj=object is_following=object.is_following css_class="action" %}
           </span>
           {% endif %}
 
