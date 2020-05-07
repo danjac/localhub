@@ -10,30 +10,27 @@
 
 {% block content %}
 
-<h1 class="page-header">{% trans "Gallery" %}</h1>
+<h1 class="page-header mb-4">{% trans "Gallery" %}</h1>
 
-<div class="actions mb-1">
+<div class="flex flex-wrap items-center border-b border-gray-500 mb-4 pb-2 text-sm">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
-  <a class="action"
+  <a class="inline-block mr-4"
      href="{% url 'photos:create' %}">
     {% trans "Submit Photo" %}
   </a>
   {% endif %}
-  <a class="action"
+  <a class="inline-block"
      href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
 </div>
-
-<div class="divider"></div>
 
 {% if page_obj.number > 1 %}
 {% include "includes/pagination.html" with css_class="mt-1 mb-2" %}
 {% endif %}
 
-<div class="container">
-  <div class="columns">
+<div class="flex flex-wrap justify-between">
     {% for photo in object_list %}
-    <div class="photo-gallery {{ forloop.counter|divisibleby:4|yesno:"pr-0,pr-1" }} pl-0 column col-sm-12 col-md-6 col-3 mb-2">
+    <div class="mb-3">
       <a href="{{ photo.get_absolute_url }}"
          title="{{ photo.title }}">
         {% if photo.image|is_portrait %}

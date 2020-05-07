@@ -6,21 +6,21 @@
 {% load rules %}
 
 {% block activity_list_header %}
-<div class="actions mb-1">
+<div class="flex flex-wrap items-center mb-4 text-sm">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
-  <a class="action"
+  <a class="inline-block mr-4"
      href="{% url 'photos:create' %}">
     {% trans "Submit Photo" %}
   </a>
   {% endif %}
-  <a class="action"
+  <a class="inline-block mr-4"
      href="{% url 'photos:gallery' %}">{% trans "Gallery" %}</a>
-  <a class="action"
+  <a class="inline-block mr-4"
      href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
-  <a class="action"
+  <a class="inline-block mr-4"
      href="{% url 'events:list' %}">{% trans "Events" %}</a>
-  <a class="action"
+  <a class="inline-block"
      href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
 </div>
 {% endblock %}

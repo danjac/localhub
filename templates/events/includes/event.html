@@ -12,10 +12,10 @@
 {% with starts=object.get_next_start_date ends=object.get_next_end_date %}
 {% if object.canceled %}
 <p class="text-bold text-center py-2">{% trans "This event has been canceled." %}</p>
-<div class="text-muted">
+<div class="text-gray-600">
   {% endif %}
 
-  <dl class="text-small">
+  <dl class="text-sm">
 
     {% timezone object.timezone %}
     {% if ends %}
@@ -25,24 +25,24 @@
     {% if start_date == end_date %}
 
     <dt>
-      {% trans "Date" %} <span class="label">{{ object.timezone }}</span>
+      {% trans "Date" %} <span class="tag">{{ object.timezone }}</span>
     </dt>
 
-    <dd{% if not object.is_attendable %} class="text-strike"
+    <dd{% if not object.is_attendable %} class="line-through"
                                          {% endif %}>
       {{ starts|date:"D" }} {{ start_date }} @ {{ start_time }} - {{ end_time }}
       </dd>
 
       {% else %}
-      <dt>{% trans "Dates" %} <span class="label">{{ object.timezone }}</span></dt>
+      <dt>{% trans "Dates" %} <span class="tag">{{ object.timezone }}</span></dt>
 
-      <dd{% if not object.is_attendable %} class="text-strike"
+      <dd{% if not object.is_attendable %} class="line-through"
                                            {% endif %}>
       {{ starts|date:"D" }} {{ start_date }} @ {{ start_time }} - {{ ends|date:"D" }} {{ end_date }} @ {{ end_time }}</dd{%>
     {% endif %} {% endwith %}
                               {% else %}
-                              <dt>{% trans "Date" %} <span class="label">{{ object.timezone }}</span></dt>
-      <dd{% if not object.is_attendable %} class="text-strike"
+                              <dt>{% trans "Date" %} <span class="tag">{{ object.timezone }}</span></dt>
+      <dd{% if not object.is_attendable %} class="line-through"
                                            {% endif %}>
       {{ starts|date:"D" }} {{ starts|date:"SHORT_DATE_FORMAT" }} @ {{ starts|date:"TIME_FORMAT" }}
       </dd{%>
@@ -81,7 +81,7 @@
 
       {% if object.url %}
       <dt>{% trans "URL" %}</dt>
-      <dd class="text-ellipsis">{{ object.url|urlize }}</dd>
+      <dd class="truncate">{{ object.url|urlize }}</dd>
       {% endif %}
 
 

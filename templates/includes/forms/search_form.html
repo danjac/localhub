@@ -71,11 +71,11 @@
 </form>
 
 {% if view.search_query and object_list %}
-<div class="toast text-center my-2">
-  {% blocktrans count counter=paginator.count %}
-  1 result found
+<div class="bg-gray-200 font-semibold text-center p-3 border">
+  {% blocktrans count counter=paginator.count with query=view.search_query %}
+  1 Result for "{{ query }}"
   {% plural %}
-  {{ counter }} results found
+  {{ counter }} Results for "{{ query }}"
   {% endblocktrans %}
 </div>
 {% endif %}
