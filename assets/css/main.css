@@ -12,8 +12,10 @@ a:hover {
   @apply text-blue-600;
 }
 
+button:disabled,
 input:disabled,
-select:disabled {
+select:disabled,
+textarea:disabled {
   @apply cursor-not-allowed opacity-50;
 }
 dt {
