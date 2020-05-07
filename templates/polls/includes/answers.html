@@ -17,28 +17,21 @@
 </p>
 {% endif %}
 {% endif %}
-<ol class="poll-answers text-small">
-  {% for answer in object.answers.all %}
-  {% url 'polls:vote' answer.id as vote_url %}
-  <li>{{ answer }}
-    <meter class="meter"
-           value="{% widthratio answer.num_votes object.total_num_votes 100 %}"
-           title="{% blocktrans count counter=answer.num_votes %}1 vote{% plural %}{{ counter }} votes{% endblocktrans %}"
-           {% if can_vote %}
-           data-action="click->ajax#post"
-           data-ajax-url="{{ vote_url }}"
-           data-target="ajax.button"
-           {% endif %}
-           min="0"
-           max="100"></meter>
-    {% if can_vote %}
-    <div class="actions">
-      <a class="action"
-         data-action="ajax#post"
-         data-target="ajax.button"
-         href="{{ vote_url }}">{% trans "Vote" %}</a>
+{% for answer in object.answers.all %}
+{% url 'polls:vote' answer.id as vote_url %}
+<div class="mt-4 text-sm">
+  <div class="font-semibold mb-2">{{ answer }}</div>
+  <div class="w-full bg-gray-200 {% if answer.num_votes %} p-0{% else %} p-3{% endif %}"
+       {% if can_vote %}
+       data-action="click->ajax#post"
+       data-ajax-url="{{ vote_url }}"
+       data-target="ajax.button"
+       {% endif %}>
+    {% if answer.num_votes %}
+    <div class="{% cycle 'bg-indigo-800' 'bg-green-800' 'bg-teal-800' 'bg-blue-800' %} p-1 font-semibold leading-none text-white text-center rounded"
+         style="width: {% widthratio answer.num_votes object.total_num_votes 100 %}%">
+      {% blocktrans count counter=answer.num_votes %}1 vote{% plural %}{{ counter }} votes{% endblocktrans %}
     </div>
     {% endif %}
-  </li>
+  </div>
   {% endfor %}
-</ol>
