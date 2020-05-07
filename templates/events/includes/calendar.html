@@ -15,19 +15,19 @@
     </a>
   </div>
   <div class="flex flex-wrap justify-between text-center items-center py-4 px-1 lg:px-4 bg-gray-100 border-r border-b border-gray-500">
-    <div class="text-sm" style="max-width: 14.28%; flex: 0 0 14.28%;">{% trans "Mon" %}</div>
-    <div class="text-sm" style="max-width: 14.28%; flex: 0 0 14.28%;">{% trans "Tue" %}</div>
-    <div class="text-sm" style="max-width: 14.28%; flex: 0 0 14.28%;">{% trans "Wed" %}</div>
-    <div class="text-sm" style="max-width: 14.28%; flex: 0 0 14.28%;">{% trans "Thu" %}</div>
-    <div class="text-sm" style="max-width: 14.28%; flex: 0 0 14.28%;">{% trans "Fri" %}</div>
-    <div class="text-sm" style="max-width: 14.28%; flex: 0 0 14.28%;">{% trans "Sat" %}</div>
-    <div class="text-sm" style="max-width: 14.28%; flex: 0 0 14.28%;">{% trans "Sun" %}</div>
+    <div class="text-sm calendar-item">{% trans "Mon" %}</div>
+    <div class="text-sm calendar-item">{% trans "Tue" %}</div>
+    <div class="text-sm calendar-item">{% trans "Wed" %}</div>
+    <div class="text-sm calendar-item">{% trans "Thu" %}</div>
+    <div class="text-sm calendar-item">{% trans "Fri" %}</div>
+    <div class="text-sm calendar-item">{% trans "Sat" %}</div>
+    <div class="text-sm calendar-item">{% trans "Sun" %}</div>
   </div>
   <div class="flex flex-wrap">
     {% for day, is_past, events in slots %}
     {% with num_events=events|length %}
-    <div class="text-xs{% if num_events %} bg-gray-100 cursor-pointer{% endif %}"
-         style="max-width: 14.28%; flex: 0 0 14.28%;">
+    <div class="calendar-item text-xs{% if num_events %} bg-gray-100 cursor-pointer{% endif %}"
+         >
       {% if day %}
       <div class="h-10 lg:h-32 p-2 tracking-tight border-r border-b border-gray-500 align-middle"
            {% if num_events %}

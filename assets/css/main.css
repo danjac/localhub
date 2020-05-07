@@ -44,6 +44,11 @@ dd {
   @apply border border-gray-500;
 }
 
+.calendar-item {
+  max-width: 14.28%;
+  flex: 0 0 14.28%;
+}
+
 .card {
   @apply border border-gray-500 p-2;
 }
