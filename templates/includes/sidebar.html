@@ -5,19 +5,22 @@
 {% get_community_count user as communities_count %}
 {% test_rule "communities.is_member" user community as is_member %}
 
-<aside class="hidden lg:block text-sm w-full lg:w-1/6"
-       data-target="sidebar.nav">
+
+<nav class="hidden lg:block text-sm w-full lg:w-1/6"
+     data-target="sidebar.nav">
+
+  <button class="btn btn-block lg:hidden mb-4 text-base"
+          data-action="sidebar#toggle"
+          data-target="sidebar.nav">
+    {% trans "Close Menu" %}
+  </button>
+
   {% if is_member %}
 
   {% has_perm "activities.create_activity" user community as can_create_activity %}
   {% has_perm "communities.moderate_community" user community as can_moderate_community %}
   {% has_perm "communities.manage_community" user community as can_manage_community %}
   {% has_perm "private_messages.create_message" user community as can_create_message %}
-
-  <button class="lg:hidden btn btn-block mb-4 w-full"
-          data-action="sidebar#toggle">
-    {% trans "Close Menu" %}
-  </button>
 
   <ul class="sidebar-menu">
     <li class="mb-1">
@@ -255,4 +258,4 @@
   {% else %}
   non-member menu....
   {% endif %}
-</aside>
+</nav>

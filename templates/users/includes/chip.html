@@ -4,7 +4,7 @@
 {% load account %}
 {% load users %}
 {% user_display profile as profile_name %}
-<div class="flex rounded-full items-center text-sm p-1 mr-4 bg-gray-300 w-20">
+<div class="flex rounded-full items-center text-sm p-1 bg-gray-300 w-20 {% if css_class %} {{ css_class }}{% endif %}">
   {% avatar profile "16" css_class="mr-2" %}
   <a title="{{ profile_name }}"
      class="truncate text-gray-900"

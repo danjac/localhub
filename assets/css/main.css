@@ -47,7 +47,7 @@ dd {
 }
 
 .btn-block {
-  @apply border border-gray-500 block text-center text-black;
+  @apply border border-gray-500 block text-center text-black w-full;
 }
 
 .btn-dropdown {
