@@ -23,7 +23,7 @@
 
   <template data-target="calendar.activeTemplate">
     <div class="calendar-item text-xs cursor-pointer"
-         data-action="calendar#select">
+         data-action="click->calendar#select">
       <div class="h-12 md:h-24 p-2 tracking-tight border-r border-b border-gray-500 justify-center align-middle">
         <button class="md:float-right"></button>
         <div class="md:clearfix"></div>
@@ -52,14 +52,14 @@
         {% trans "Next" %}
       </a>
     </div>
-    <div class="flex flex-wrap justify-between text-center items-center py-4 px-1 lg:px-4 bg-gray-100 border-r border-b border-gray-500">
+    <div class="flex flex-wrap justify-between text-center items-center py-4 bg-gray-100 border-r border-b border-gray-500">
+      <div class="text-sm calendar-item">{% trans "Sun" %}</div>
       <div class="text-sm calendar-item">{% trans "Mon" %}</div>
       <div class="text-sm calendar-item">{% trans "Tue" %}</div>
       <div class="text-sm calendar-item">{% trans "Wed" %}</div>
       <div class="text-sm calendar-item">{% trans "Thu" %}</div>
       <div class="text-sm calendar-item">{% trans "Fri" %}</div>
       <div class="text-sm calendar-item">{% trans "Sat" %}</div>
-      <div class="text-sm calendar-item">{% trans "Sun" %}</div>
     </div>
 
     <div class="flex flex-wrap"

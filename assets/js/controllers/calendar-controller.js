@@ -111,27 +111,31 @@ export default class extends ApplicationController {
     // render each day
     let date = startDate;
     while (isBefore(date, endDate)) {
-      const clone = this.activeTemplateTarget.content.cloneNode(true);
+      let clone;
+      if (isBefore(date, this.firstOfMonthDate) || isAfter(date, lastOfMonthDate)) {
+        clone = this.inactiveTemplateTarget.content.cloneNode(true);
+      } else {
+        clone = this.activeTemplateTarget.content.cloneNode(true);
 
-      const div = clone.querySelector('div');
-      const btn = clone.querySelector('button');
+        const btn = clone.querySelector('button');
 
-      btn.append(date.getDate().toString());
-      btn.setAttribute(`data-${this.identifier}-date`, format(date, DATE_FORMAT));
+        btn.append(date.getDate().toString());
 
-      if (isSameDay(date, today)) {
-        btn.classList.add('date-today');
+        const calendarItem = clone.querySelector('.calendar-item');
+        calendarItem.setAttribute(
+          `data-${this.identifier}-date`,
+          format(date, DATE_FORMAT)
+        );
+
+        if (isSameDay(date, today)) {
+          calendarItem.classList.add('bg-gray-100');
+        }
+
+        if (this.selectedDate && isSameDay(date, this.selectedDate)) {
+          calendarItem.classList.add('bg-gray-200', 'font-semibold');
+        }
       }
 
-      if (this.selectedDate && isSameDay(date, this.selectedDate)) {
-        btn.classList.add('font-semibold');
-      }
-      // insert into DOM
-      if (isBefore(date, this.firstOfMonthDate)) {
-        div.classList.add('prev-month');
-      } else if (isAfter(date, lastOfMonthDate)) {
-        div.classList.add('next-month');
-      }
       this.daysTarget.append(clone);
 
       date = addDays(date, 1);
