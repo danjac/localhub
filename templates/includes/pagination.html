@@ -4,30 +4,24 @@
 {% load i18n %}
 {% load pagination %}
 {% if is_paginated %}
-<ul class="pagination {{ css_class|default:"mt-2" }}">
-  <li class="page-item page-prev{% if not page_obj.has_previous %} disabled{% endif %}">
-    {% spaceless %}
-    <a class="btn btn-link"
-       {% if page_obj.has_previous %}
-       href="{% pagination_url page_obj.previous_page_number %}"
-       {% else %}
-       href="#"
-       {% endif %}>
-      {% trans "Previous" %}
-    </a>
-    {% endspaceless %}
-  </li>
-  <li class="page-item page-next{% if not page_obj.has_next %} disabled{% endif %}">
-    {% spaceless %}
-    <a class="btn btn-link"
-       {% if page_obj.has_next %}
-       href="{% pagination_url page_obj.next_page_number %}"
-       {% else %}
-       href="#"
-       {% endif %}>
-      {% trans "Next" %}
-    </a>
-    {% endspaceless %}
-  </li>
-</ul>
+<div class="text-sm flex justify-between {{ css_class|default:"mt-2" }}">
+  <a {% if page_obj.has_previous %}
+     class="block"
+     href="{% pagination_url page_obj.previous_page_number %}"
+     {% else %}
+     class="text-gray-500 pointer-events-none"
+     href="javascript:void(0);"
+     {% endif %}>
+    {% trans "Previous" %}
+  </a>
+  <a {% if page_obj.has_next %}
+     href="{% pagination_url page_obj.next_page_number %}"
+     class="block"
+     {% else %}
+     href="javascript:void(0);"
+     class="text-gray-500 pointer-events-none"
+     {% endif %}>
+    {% trans "Next" %}
+  </a>
+</div>
 {% endif %}
