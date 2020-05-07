@@ -3,7 +3,7 @@
 
 {% load i18n %}
 <div data-controller="collapsable"
-  data-collapsable-class="opacity-25 h-32 lg:h-48 overflow-hidden">
+  data-collapsable-class="opacity-25 h-32 md:h-48 lg:h-64 overflow-hidden">
   <div data-target="collapsable.container"
        data-action="click->collapsable#toggle">
     {{ collapsable_content }}

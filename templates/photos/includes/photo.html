@@ -8,7 +8,7 @@
 {% load activities %}
 
 {% block content %}
-{% thumbnail object.image "900" upscale=False as image %}
+{% thumbnail object.image "1000" upscale=False as image %}
 <div>
   <a href="{{ object.get_absolute_url }}">
     {% include "photos/includes/image.html" with title=object.title %}
