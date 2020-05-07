@@ -8,25 +8,25 @@
 {% block content %}
 
 {% if parent %}
-<ul class="breadcrumb">
-  <li class="breadcrumb-item">
+<ul class="breadcrumbs">
+  <li class="breadcrumb">
     <a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a>
   </li>
-  <li class="breadcrumb-item"><a href="#">{% trans "Message" %}</a></li>
+  <li class="breadcrumb">{% trans "Message" %}</li>
 </ul>
 {% endif %}
 
 {% has_perm "private_messages.create_message" user community as can_create_message %}
 
-<h1 class="page-header">{% trans "Messages" %}</h1>
+<h1 class="page-header mb-4">{% trans "Messages" %}</h1>
 
-<div class="actions mb-1">
-  <a class="action"
+<div class="flex flex-wrap items-center mb-4 text-sm">
+  <a class="inline-block mr-4"
      href="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</a>
-  <a class="action"
+  <a class="inline-block mr-4"
      href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
   {% if can_create_message %}
-  <a class="action"
+  <a class="inline-block"
      href="{% url 'private_messages:message_create_recipient' other_user.username %}">
     {% user_display other_user as other_user_name %}
     {% blocktrans %}

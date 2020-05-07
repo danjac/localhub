@@ -5,9 +5,10 @@
 {% load account %}
 {% load users %}
 
-<div class="card{% if is_sender %} bg-gray{% endif %} message {{ css_class|default:"mb-2" }}"
+<div class="card {{ css_class|default:"mb-2" }}"
      id="message-{{ message.id }}"
      data-controller="clipboard">
+
   <div class="flex flex-wrap items-center mb-4">
     {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url css_class="mr-2" %}
     <div class="mr-2">
@@ -23,6 +24,7 @@
     <div class="tag tag-primary">{% trans "New" %}</div>
     {% endif %}
   </div>
+
   <div class="mb-4">
     {% collapsable is_detail %}
     <div class="markdown-content">
@@ -33,6 +35,7 @@
               readonly
               class="hidden">{{ message.message }}</textarea>
   </div>
+
   <div class="card-footer mt-4">
     <div class="flex flex-wrap items-center">
       <div class="mr-4 text-sm"
@@ -42,8 +45,10 @@
                 data-action="dropdown#toggle">
           {% trans "Actions..." %}
         </button>
+
         <div class="dropdown-menu hidden mt-1"
              data-target="dropdown.menu">
+
           {% if is_recipient and not message.read %}
           <a href="{% url 'private_messages:message_mark_read' message.id %}"
              class="dropdown-menu-item"
@@ -72,7 +77,6 @@
              class="dropdown-menu-item">
             {% trans "Reply" %}
           </a>
-          </li>
           {% elif can_follow_up %}
           <a href="{% url 'private_messages:message_follow_up' message.id %}"
              class="dropdown-menu-item">
@@ -96,6 +100,7 @@
             {% trans "Copy Markdown" %}
           </a>
         </div>
+
       </div>
       {% if not is_detail %}
       <a class="inline-block mr-4 text-sm"
@@ -104,7 +109,7 @@
       <a class="inline-block text-sm"
          href="{{ parent_url }}">{% trans "Parent" %}</a>
       {% endif %}
+      {% endif %}
     </div>
-    {% endif %}
   </div>
 </div>

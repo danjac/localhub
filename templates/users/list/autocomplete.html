@@ -11,13 +11,14 @@
     data-typeahead-key="@">
   <div class="flex items-center">
     <span class="inline-block mr-2">
-      {% avatar user_obj "16" %}
+      {% avatar user_obj "32" css_class="mr-1 h-6 w-6 text-sm" %}
     </span>
     <span class="inline-block">
       {% user_display user_obj as display_name %}
-      {{ display_name }}
-      {% if display_name != user_obj.username %}
-      (@{{ user_obj.username }})
+      {% if display_name == user_obj.username %}
+      @{{ display_name }}
+      {% else %}
+      {{ display_name }} (@{{ user_obj.username }})
       {% endif %}
     </span>
   </div>

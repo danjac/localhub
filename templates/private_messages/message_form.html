@@ -13,32 +13,31 @@
 {% block content %}
 
 {% if parent or recipient %}
-<ul class="">
+<ul class="breadcrumbs mb-4">
   {% if parent %}
-  <li class=""><a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a></li>
-  <li class="">
+  <li class="breadcrumb"><a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a></li>
+  <li class="breadcrumb">
     <a href="#">
       {% if parent.sender == user %}{% trans "Follow-Up" %}{% else %}{% trans "Reply" %}{% endif %}
     </a>
   </li>
   {% elif recipient %}
-  <li class=""><a href="{% url 'users:messages' recipient.username %}">{% user_display recipient %}</a>
+  <li class="breadcrumb"><a href="{% url 'users:messages' recipient.username %}">{% user_display recipient %}</a>
   </li>
-  <li class="">
-    <a data-turbolinks="false"
-       href="#">{% trans "Send Message" %}</a>
+  <li class="breadcrumb">
+    {% trans "Send Message" %}
   </li>
   {% endif %}
 </ul>
 {% endif %}
 
-
-<h1 class="font-semibold text-xl mb-2">{% trans "Send Message" %}</h1>
-
 {% if parent %}
 {% render_message request user parent is_detail=True %}
+{% include "includes/forms/stimulusjs_form.html" with css_class="px-2 py-5 border border-gray-500 w-full" %}
+{% else %}
+<h1 class="page-header mb-4">{% trans "Send Message" %}</h1>
+{% include "includes/forms/stimulusjs_form.html" %}
 {% endif %}
 
-{% include "includes/forms/stimulusjs_form.html" %}
 
 {% endblock %}
