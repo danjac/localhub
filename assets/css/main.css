@@ -105,6 +105,14 @@ dd {
   @apply py-4;
 }
 
+.notification {
+  @apply bg-blue-800 text-white;
+}
+
+.notification a {
+  @apply text-white underline;
+}
+
 .page-header {
   @apply text-lg font-semibold;
 }
@@ -122,11 +130,35 @@ dd {
 }
 
 .sidebar-menu-item:hover {
-  @apply bg-gray-400 text-gray-900 text-gray-100;
+  @apply bg-gray-400 text-gray-900;
 }
 
 .sidebar-menu-item.active {
   @apply bg-gray-500 text-white;
+}
+
+.tabs {
+  @apply flex flex-wrap items-center border-b border-blue-800;
+}
+
+.tab-item {
+  @apply block p-1 text-center;
+}
+
+.tab-item:md {
+  @apply px-5;
+}
+
+.tab-item.active {
+  @apply bg-blue-800 text-white border-t border-r border-l border-gray-800 rounded-t;
+}
+
+.tab-item:hover {
+  @apply bg-blue-500 text-white rounded-t;
+}
+
+.tab-item:not(:last-child) {
+  @apply mr-2;
 }
 
 .tag {

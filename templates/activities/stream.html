@@ -16,7 +16,7 @@
 
 {% if latest_notification %}
 {% notification latest_notification %}
-<div class="bg-blue-800 text-white p-3 flex mb-2"
+<div class="notification text-white p-3 flex mb-2"
      data-controller="ajax"
      data-ajax-url="{% url 'notifications:mark_read' latest_notification.id %}"
      data-ajax-remove>

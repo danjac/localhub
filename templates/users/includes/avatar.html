@@ -9,5 +9,5 @@
        alt="{{ username }}"
        class="rounded-full {{ css_class }}">
 {% empty %}
-<div class="justified-center text-center text-xs rounded-full bg-blue-600 h-6 w-6 p-1 text-white">{{ initials }}</div>
+<div class="inline-block justified-center align-middle text-center p-1 text-xs rounded-full bg-blue-600 text-white {{ css_class }}">{{ initials.0 }}</div>
 {% endthumbnail %}

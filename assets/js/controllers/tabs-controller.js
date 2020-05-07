@@ -18,11 +18,7 @@ export default class extends ApplicationController {
   static targets = ['tab', 'pane'];
 
   connect() {
-    const tabs = Array.from(this.tabTargets);
-    this.addClassnames(tabs[0], this.data.get('active-class'));
-    tabs
-      .slice(1)
-      .forEach((tab) => this.addClassnames(tab, this.data.get('inactive-class')));
+    Array.from(this.tabTargets)[0].classList.add('active');
   }
 
   select(event) {
@@ -30,11 +26,9 @@ export default class extends ApplicationController {
     const activeTab = event.currentTarget.dataset.tab;
     this.tabTargets.forEach((tab) => {
       if (tab.dataset.tab === activeTab) {
-        this.addClassnames(tab, this.data.get('active-class'));
-        this.removeClassnames(tab, this.data.get('inactive-class'));
+        tab.classList.add('active');
       } else {
-        this.addClassnames(tab, this.data.get('inactive-class'));
-        this.removeClassnames(tab, this.data.get('active-class'));
+        tab.classList.remove('active');
       }
     });
     this.paneTargets.forEach((pane) => {
@@ -44,13 +38,5 @@ export default class extends ApplicationController {
         pane.classList.add('hidden');
       }
     });
-  }
-
-  addClassnames(el, classnames) {
-    el.classList.add.apply(el.classList, classnames.split(/ /));
-  }
-
-  removeClassnames(el, classnames) {
-    el.classList.remove.apply(el.classList, classnames.split(/ /));
   }
 }

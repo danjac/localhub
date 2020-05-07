@@ -35,7 +35,7 @@
          class="sidebar-menu-item">
         <span>{% trans "Messages" %}</span>
         {% if site_counters.unread_messages %}
-        <span class="tag tag-primary">{% trans "New" %}</span>
+        <span class="tag tag-primary px-1">{% trans "New" %}</span>
         {% endif %}
       </a>
     </li>
@@ -45,7 +45,7 @@
          class="sidebar-menu-item">
         <span>{% trans "Notifications" %}</span>
         {% if site_counters.unread_notifications %}
-        <span class="tag tag-primary">{% trans "New" %}</span>
+        <span class="tag tag-primary px-1">{% trans "New" %}</span>
         {% endif %}
       </a>
     </li>
@@ -162,7 +162,7 @@
          class="sidebar-menu-item"
          href="{% url 'flags:list' %}">
         {% trans "Flags" %}
-        <span class="tag tag-primary">{% trans "New" %}</span>
+        <span class="tag tag-primary px-1">{% trans "New" %}</span>
       </a>
     </li>
     {% endif %}
@@ -242,7 +242,7 @@
          class="sidebar-menu-item">
         {% trans "Join Requests" %}
         {% if site_counters.pending_join_requests %}
-        <span class="tag tag-primary">{% trans "New" %}</span>
+        <span class="tag tag-primary px-1">{% trans "New" %}</span>
         {% endif %}
 
       </a>
