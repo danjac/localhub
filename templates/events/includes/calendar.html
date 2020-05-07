@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-<div class="border-l border-t border-gray-500 min-w-100{% if css_class %} {{ css_class }}{% endif %}">
+<div class="border-l border-t border-gray-500 min-w-100">
   <div class="flex items-center justify-between bg-gray-200 px-4 py-2 border-r border-b border-gray-500">
     <a class="text-sm"
        href="{{ request.path }}?month={{ previous_month.month }}&year={{ previous_month.year }}">

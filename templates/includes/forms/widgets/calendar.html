@@ -11,43 +11,60 @@
      {% if notify %}
      data-calendar-notify="{{ notify }}"
      {% endif %}{% endspaceless %}>
-  <template data-target="calendar.template">
-    <div class="calendar-date">
-      <button class="date-item"
-              data-action="calendar#select">
-      </button>
+
+  <div class="flex flex-wrap">
+    <div class="w-32 mr-1">
+      {% include widget.subwidgets.0.template_name with widget=widget.subwidgets.0 %}
     </div>
-  </template>
-  <div class="input-group">
-    {% include widget.subwidgets.0.template_name with widget=widget.subwidgets.0 %}
-    {% include widget.subwidgets.1.template_name with widget=widget.subwidgets.1 %}
+    <div class="">
+      {% include widget.subwidgets.1.template_name with widget=widget.subwidgets.1 %}
+    </div>
   </div>
-  <div class="columns pt-1">
-    <div class="column col-mr-auto col-4 col-md-12">
-      <div class="calendar d-none"
-           data-target="calendar.calendar">
-        <div class="calendar-nav navbar">
-          <button class="btn btn-action btn-link btn-lg"
-                  data-action="calendar#prevMonth"><i class="icon icon-arrow-left"></i></button>
-          <div class="navbar-primary"
-               data-target="calendar.currentMonth">March 2017</div>
-          <button class="btn btn-action btn-link btn-lg"
-                  data-action="calendar#nextMonth"><i class="icon icon-arrow-right"></i></button>
-        </div>
-        <div class="calendar-container">
-          <div class="calendar-header">
-            <div class="calendar-date">{% trans "Sun" %}</div>
-            <div class="calendar-date">{% trans "Mon" %}</div>
-            <div class="calendar-date">{% trans "Tue" %}</div>
-            <div class="calendar-date">{% trans "Wed" %}</div>
-            <div class="calendar-date">{% trans "Thu" %}</div>
-            <div class="calendar-date">{% trans "Fri" %}</div>
-            <div class="calendar-date">{% trans "Sat" %}</div>
-          </div>
-          <div class="calendar-body"
-               data-target="calendar.days"></div>
-        </div>
+
+  <template data-target="calendar.activeTemplate">
+    <div class="calendar-item text-xs cursor-pointer"
+         data-action="calendar#select">
+      <div class="h-12 md:h-24 p-2 tracking-tight border-r border-b border-gray-500 justify-center align-middle">
+        <button class="md:float-right"></button>
+        <div class="md:clearfix"></div>
       </div>
     </div>
+  </template>
+
+  <template data-target="calendar.inactiveTemplate">
+    <div class="calendar-item text-xs">
+      <div class="h-24 lg:h-32 p-2 border-b border-r border-gray-500"></div>
+    </div>
+  </template>
+
+  <div class="border-l border-t border-gray-500 min-w-100 hidden mt-2" data-target="calendar.calendar">
+
+    <div class="flex items-center justify-between bg-gray-200 px-4 py-2 border-r border-b border-gray-500">
+      <a class="text-sm"
+         data-action="calendar#prevMonth"
+         href="#">
+        {% trans "Previous" %}
+      </a>
+      <div class="font-semibold" data-target="calendar.currentMonth">{{ current_month|date:"F Y" }}</div>
+      <a class="text-sm"
+         data-action="calendar#nextMonth"
+         href="#">
+        {% trans "Next" %}
+      </a>
+    </div>
+    <div class="flex flex-wrap justify-between text-center items-center py-4 px-1 lg:px-4 bg-gray-100 border-r border-b border-gray-500">
+      <div class="text-sm calendar-item">{% trans "Mon" %}</div>
+      <div class="text-sm calendar-item">{% trans "Tue" %}</div>
+      <div class="text-sm calendar-item">{% trans "Wed" %}</div>
+      <div class="text-sm calendar-item">{% trans "Thu" %}</div>
+      <div class="text-sm calendar-item">{% trans "Fri" %}</div>
+      <div class="text-sm calendar-item">{% trans "Sat" %}</div>
+      <div class="text-sm calendar-item">{% trans "Sun" %}</div>
+    </div>
+
+    <div class="flex flex-wrap"
+         data-target="calendar.days">
+    </div>
+
   </div>
 </div>

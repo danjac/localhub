@@ -22,34 +22,13 @@ const DATE_FORMAT = 'dd/MM/yyyy';
 const EVENT_NOTIFY_ON_UPDATE = 'calendar:notify';
 
 export default class extends ApplicationController {
-  /*
-  Renders an HTML calendar. Used with a date <input> widget.
-
-  actions:
-    toggle: re-renders or hides the calendar.
-    select: select a specific date and insert into dateInput.
-
-  data:
-    notify (String): when a calender date is selected, a EVENT_NOTIFY_ON_UPDATE
-      event is published to the event bus with the data { notify, startDate }.
-    listen (String): listens to EVENT_NOTIFY_ON_UPDATE events for a specific notify
-      name. Will update the current month accordingly. This allows us
-      to ensure that the start months in all calendar controls are kept consistent.
-
-  targets:
-    calendar: the calendar container element
-    dateInput: <input> tag triggering the input.
-    currentMonth: element rendering the current month.
-    days: elements rendering each day.
-    template: HTML <template> to render the calendar body.
-
- */
   static targets = [
+    'activeTemplate',
     'calendar',
     'dateInput',
     'currentMonth',
     'days',
-    'template',
+    'inactiveTemplate',
     'timeInput',
   ];
 
@@ -132,7 +111,7 @@ export default class extends ApplicationController {
     // render each day
     let date = startDate;
     while (isBefore(date, endDate)) {
-      const clone = this.templateTarget.content.cloneNode(true);
+      const clone = this.activeTemplateTarget.content.cloneNode(true);
 
       const div = clone.querySelector('div');
       const btn = clone.querySelector('button');
@@ -145,7 +124,7 @@ export default class extends ApplicationController {
       }
 
       if (this.selectedDate && isSameDay(date, this.selectedDate)) {
-        btn.classList.add('badge');
+        btn.classList.add('font-semibold');
       }
       // insert into DOM
       if (isBefore(date, this.firstOfMonthDate)) {
