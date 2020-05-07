@@ -17,12 +17,7 @@ class TestAvatar:
     def test_initial_if_name(self):
         user = UserFactory(name="Test User")
         context = avatar(user)
-        assert context["initials"] == "TU"
-
-    def test_initial_if_initials(self):
-        user = UserFactory(name="testuser")
-        context = avatar(user)
-        assert context["initials"] == "T"
+        assert context["user"] == user
 
 
 class TestDismissable:
