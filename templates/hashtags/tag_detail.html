@@ -9,25 +9,25 @@
 
 {% block content %}
 
-<ul class="breadcrumb">
-  <li class="breadcrumb-item"><a href="{% url 'hashtags:list' %}">{% trans "Tags" %}</a></li>
-  <li class="breadcrumb-item"><a href="#" data-turbolinks="false">{{ tag.name }}</a></li>
+<ul class="breadcrumbs mb-4">
+  <li class="breadcrumb"><a href="{% url 'hashtags:list' %}">{% trans "Tags" %}</a></li>
+  <li class="breadcrumb">{{ tag.name }}</li>
 </ul>
 
 {% has_perm "users.follow_tag" user as can_follow_tag %}
 {% has_perm "users.block_tag" user as can_block_tag %}
 
 {% if can_follow_tag or can_block_tag %}
-<div class="actions">
+<div class="flex flex-wrap items-center mb-4">
   {% if can_follow_tag %}
   {% with user.following_tags.all|contains:tag as is_following %}
-  {% include "hashtags/includes/follow.html" %}
+  {% include "hashtags/includes/follow.html" with css_class="inline-block mr-4" %}
   {% endwith %}
   {% endif %}
 
   {% if can_block_tag %}
   {% with user.blocked_tags.all|contains:tag as is_blocked %}
-  {% include "hashtags/includes/block.html" %}
+  {% include "hashtags/includes/block.html" with css_class="inline-block" %}
   {% endwith %}
   {% endif %}
 </div>
@@ -35,7 +35,7 @@
 
 {% with total=paginator.count %}
 {% if total %}
-<div class="toast text-center my-2">
+<div class="notification">
   {% blocktrans with name=tag.name count counter=total %}
   <strong>One activity</strong> has been tagged with <strong>#{{ name }}</strong>.
   {% plural %}
