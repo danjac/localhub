@@ -134,7 +134,7 @@ dd {
 }
 
 .sidebar-menu-item.active {
-  @apply bg-gray-500 text-white;
+  @apply bg-gray-500 text-white font-bold;
 }
 
 .tabs {
@@ -142,7 +142,7 @@ dd {
 }
 
 .tab-item {
-  @apply block p-1 text-center border-t border-r border-l rounded-t border-gray-800;
+  @apply block p-1 text-center border-t border-r border-l rounded-t border-gray-800 text-black;
 }
 
 .tab-item:md {
