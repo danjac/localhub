@@ -12,24 +12,20 @@
 {% block content %}
 
 {% block breadcrumbs %}
-<ul class="flex flex-wrap text-sm mb-3">
+<ul class="breadcrumbs mb-3">
   {% if object.published %}
-  <li class="mr-2">
-    <a class="text-gray-500 hover:text-gray-400"
-       href="{{ object|resolve_url:"list" }}">
+  <li class="breadcrumb">
+    <a href="{{ object|resolve_url:"list" }}">
       {{ object|verbose_name_plural|title }}
     </a>
   </li>
   {% else %}
-  <li class="mr-2">
-    <a class="text-gray-500 hover:text-gray-400"
-       href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
+  <li class="breadcrumb">
+    <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
   </li>
   {% endif %}
-  <li class="mr-2 text-gray-500"> / </li>
-  <li class="">
-    <a class="text-gray-600"
-       href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a>
+  <li class="breadcrumb">
+    {{ object.title|truncatechars:60 }}
   </li>
 </ul>
 {% endblock breadcrumbs %}

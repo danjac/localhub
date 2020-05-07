@@ -26,9 +26,10 @@
   </li>
   {% endif %}
 
-  <li class"breadcrumb">
+  <li class="breadcrumb">
     <a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a>
   </li>
+
   <li class="breadcrumb">
     {% blocktrans %}Edit {{ model_name }}{% endblocktrans %}
   </li>
