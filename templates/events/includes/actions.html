@@ -11,46 +11,42 @@
 {% has_perm "events.attend" user object as can_attend %}
 
 {% if can_attend %}
-<li class="menu-item"
-    data-controller="ajax">
+<div data-controller="ajax">
   <a href="{% url 'events:unattend' object.id %}"
      data-turbolinks="false"
-     class="text-strike{% if not object.is_attending %} d-none{% endif %}"
+     class="dropdown-menu-item line-through{% if not object.is_attending %} hidden{% endif %}"
      data-target="ajax.toggle ajax.button"
      data-action="ajax#post">{% trans "Attending" %}</a>
   <a href="{% url 'events:attend' object.id %}"
      data-turbolinks="false"
-     {% if object.is_attending %}
-     class="d-none"
-     {% endif %}
+     class="dropdown-menu-item{% if object.is_attending %} hidden{% endif %}"
      data-target="ajax.toggle ajax.button"
      data-action="ajax#post">{% trans "Attending" %}</a>
-</li>
+</div>
 {% endif %}
 
 {% if object.is_attendable %}
-<li class="menu-item">
-  <a href="{% url 'events:download' object.id %}"
-     data-turbolinks="false"
-     download>
-    {% trans 'Download' %}
-  </a>
-</li>
+<a href="{% url 'events:download' object.id %}"
+   class="dropdown-menu-item"
+   data-turbolinks="false"
+   download>
+  {% trans 'Download' %}
+</a>
 {% endif %}
 
 {% has_perm "events.cancel" user object as can_cancel %}
 {% if can_cancel %}
-<li class="menu-item">
-  <a href="{% url 'events:cancel' object.id %}"
-     data-controller="ajax"
-     data-action="ajax#post"
-     {% if not is_detail %}
-     data-ajax-redirect="{{ request.get_full_path }}"
-     {% endif %}
-     data-ajax-confirm-header="{% trans 'Cancel' %}"
-     data-ajax-confirm-body="{% trans 'Are you sure you want to cancel this event?' %}">
-    {% trans "Cancel Event" %}</a>
-</li>
+<a href="{% url 'events:cancel' object.id %}"
+   class="dropdown-menu-item"
+   data-controller="ajax"
+   data-action="ajax#post"
+   {% if not is_detail %}
+   data-ajax-redirect="{{ request.get_full_path }}"
+   {% endif %}
+   data-ajax-confirm-header="{% trans 'Cancel' %}"
+   data-ajax-confirm-body="{% trans 'Are you sure you want to cancel this event?' %}">
+  {% trans "Cancel Event" %}</a>
+</div>
 {% endif %}
 
 

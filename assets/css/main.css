@@ -95,6 +95,10 @@ dd {
   @apply bg-gray-500 text-white;
 }
 
+.leaflet-tile-pane {
+  filter: grayscale(100%);
+}
+
 .markdown-content,
 .markdownx-preview {
   @apply tracking-tight;

@@ -3,7 +3,7 @@
 
 {% if object.has_map %}
 <div id="map-for-{{ object_type }}-{{ object.id }}"
-     class="osm-map osm-map-lg mt-1{% if css_class %} {{ css_class }}{% endif %}"
+     class="h-64 lg:h-screen my-4{% if css_class %} {{ css_class }}{% endif %}"
      data-controller="map"
      data-map-latitude="{{ object.latitude }}"
      data-map-longitude="{{ object.longitude }}"></div>
