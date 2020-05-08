@@ -87,8 +87,10 @@ ol {
   @apply absolute border border-gray-500 bg-gray-100 p-1 w-1/3;
 }
 
-.dropdown-menu:lg {
-  @apply w-1/6;
+@screen lg {
+  .dropdown-menu {
+    @apply w-1/6;
+  }
 }
 
 .dropdown-menu-item {
@@ -188,6 +190,16 @@ ol {
 
 .tab-item:not(:last-child) {
   @apply mr-2;
+}
+
+.table-auto-scroll {
+  @apply table-auto block whitespace-no-wrap overflow-x-scroll;
+}
+
+@screen md {
+  .table-auto-scroll {
+    @apply w-full whitespace-normal overflow-x-auto scrolling-touch table;
+  }
 }
 
 .tag {

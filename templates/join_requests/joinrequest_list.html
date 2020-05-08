@@ -49,7 +49,7 @@
 {% endif %}
 
 {% if object_list %}
-<table class="table-auto text-sm block whitespace-no-wrap overflow-x-scroll md:w-full md:whitespace-normal md:overflox-x-auto md:table">
+<table class="table-auto-scroll text-sm">
   <thead>
     <tr class="bg-gray-300 border">
       <th class="text-left py-2 px-2">{% trans "User" %}</th>
@@ -75,8 +75,8 @@
           {{ join_request.get_status_display }}
           {% if is_pending %}</b>{% endif %}
       </td>
-      <td>
-        <div class="flex flex-wrap items-center text-sm">
+      <td class="border py-2 px-2">
+        <div class="flex flex-wrap">
           {% if is_pending or is_rejected %}
           <a class="mr-2"
              data-turbolinks="false"

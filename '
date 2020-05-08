@@ -47,7 +47,7 @@
 {% include "includes/pagination.html" with css_class="mb-2" %}
 {% endif %}
 
-<table class="table-auto-scroll text-sm">
+<table class="table-scroll text-sm">
   <tbody>
     {% for object in object_list %}
     <tr class="{% cycle '' 'bg-gray-100' %} hover:bg-gray-200">
