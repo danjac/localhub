@@ -1,10 +1,10 @@
 {# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-<div class="notification flex mb-2{% if css_class %} {{ css_class }}{% endif %}"
+<div class="notification flex my-2{% if css_class %} {{ css_class }}{% endif %}"
      data-controller="ajax"
      data-ajax-remove>
-  <div class="mx-auto text-center">
+  <div class="mx-auto text-center px-2">
     {{ dismissable_content }}
   </div>
   {% if user.is_authenticated %}

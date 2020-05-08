@@ -67,8 +67,13 @@ export default class extends ApplicationController {
 
   subscribe(event) {
     event.preventDefault();
+    const pubKey = this.data.get('vapid-public-key');
+    if (!pubKey) {
+      console.log('vapid-public-key not defined');
+      return;
+    }
     const options = {
-      applicationServerKey: urlB64ToUint8Array(this.data.get('vapid-public-key')),
+      applicationServerKey: urlB64ToUint8Array(pubKey),
       userVisibleOnly: true,
     };
     registration.pushManager.subscribe(options).then((subscription) => {

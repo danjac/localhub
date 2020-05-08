@@ -79,7 +79,7 @@ class CommunityForm(forms.ModelForm):
             fieldsets=[
                 (None, ("name", "tagline", "logo",)),
                 (_("Access"), ("active", "public")),
-                (_("Description"), ("tagline", "intro", "description",)),
+                (_("About this community"), ("intro", "description",)),
                 (_("Terms and conditions"), ("content_warning_tags", "terms",),),
                 (
                     _("Join Requests"),

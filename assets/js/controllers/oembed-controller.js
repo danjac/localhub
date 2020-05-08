@@ -13,20 +13,18 @@ export default class extends ApplicationController {
 
   */
   connect() {
-    if (
-      this.element.querySelector('iframe, video, audio') &&
-      !this.element.querySelector('script')
-    ) {
-      this.element.classList.add.apply(
-        this.element.classList,
-        this.get('video-class').split(/ /)
-      );
+    const videoClasses = this.data.get('video-class').split(/ /);
+    const embedded = this.element.querySelector('iframe, video, audio');
+
+    if (videoClasses && embedded && !this.element.querySelector('script')) {
+      embedded.classList.add.apply(embedded.classList, videoClasses);
     } else {
       // if we just have embedded images, make these responsive.
       const images = this.element.querySelectorAll('img');
-      if (images.length > 0) {
+      const imageClasses = this.data.get('image-class').split(/ /);
+      if (imageClasses && images.length > 0) {
         images.forEach((el) => {
-          el.classList.add.apply(el.classList, this.data.get('image-class').split(/ /));
+          el.classList.add.apply(el.classList, imageClasses);
         });
       } else {
         this.element.remove();

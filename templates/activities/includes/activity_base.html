@@ -9,13 +9,14 @@
 
 {% has_perm "communities.moderate_community" user community as can_moderate_community %}
 
+
 <article role="{{ object_type }}"
          id="{{ object_type }}-{{ object.id }}"
          class="card{% if css_class %} {{ css_class }}{% endif %}"
          data-controller="clipboard{% if is_content_sensitive %} toggle{% endif %}">
   {% block header %}
   {% if is_content_sensitive %}
-  <div class="mb-2"
+  <div class=""
        data-target="toggle.togglable">
     <div class="">
       {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner %}
@@ -131,10 +132,10 @@
       {% else %}
       {% if object.is_reshare %}<blockquote>{% endif %}
         {% if is_content_sensitive %}
-        <div class=""
+        <div class="bg-gray-800 align-middle text-center text-white my-4 p-5"
              data-target="toggle.togglable">
-          <p class="">{% trans "Sensitive Content" %}</p>
-          <p class="">
+          <p class="mb-2 text-lg font-semibold">{% trans "Sensitive Content" %}</p>
+          <p class="mb-2">
             {% trans "This post has been tagged sensitive. You can view all sensitive content by default in your settings." %}
           </p>
           <p>
@@ -143,7 +144,7 @@
             {% endfor %}
           </p>
           <div class="">
-            <button class=""
+            <button class="btn btn-primary"
                     data-action="toggle#toggle">{% trans "Show Content" %}</button>
           </div>
         </div>
