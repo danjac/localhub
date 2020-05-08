@@ -72,8 +72,12 @@
           </a>
 
           {% if not object.published %}
-          <span class="tag inline-block mr-4">{% trans "Private" %}</span>
+          <a class="tag inline-block mr-4 hover:text-gray-300"
+             href="{% url 'activities:private' %}">
+            {% trans "Private" %}
+          </a>
           {% endif %}
+
 
           {% if can_moderate_community and object.is_flagged %}
           <span class="tag inline-block mr-4">{% trans "Flagged" %}</span>
