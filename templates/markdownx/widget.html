@@ -24,7 +24,7 @@
             data-target="tabs.tab"
             data-action="tabs#select"
             data-tab="guide">
-      {% trans "Hints" %}</button>
+      {% trans "Help" %}</button>
   </div>
   <div class="-mb-px mb-2"
        data-target="tabs.pane"
@@ -131,23 +131,29 @@
        data-target="tabs.pane"
        data-tab="guide">
     <table class="table-fixed text-sm block whitespace-no-wrap overflow-x-scroll md:w-full md:whitespace-normal md:overflox-x-auto md:table">
+      <thead>
+        <tr>
+          <th class="border px-4 py-2 text-left bg-gray-200">{% trans "You type:" %}</th>
+          <th class="border px-4 py-2 text-left bg-gray-200">{% trans "You see:" %}</th>
+        </tr>
+      </thead>
       <tbody>
         <tr>
           <td class="border px-4 py-2"># Header</td>
           <td class="border px-4 py-2">
-            <h1>{% trans "Header (h1)" %}</h1>
+            <h1 class="text-2xl">{% trans "Header (h1)" %}</h1>
           </td>
         </tr>
         <tr class="bg-gray-100">
           <td class="border px-4 py-2">## Header</td>
           <td class="border px-4 py-2">
-            <h2>{% trans "Header (h2)" %}</h2>
+            <h2 class="text-xl">{% trans "Header (h2)" %}</h2>
           </td>
         </tr>
         <tr>
           <td class="border px-4 py-2">### Header</td>
           <td class="border px-4 py-2">
-            <h3>{% trans "Header (h3)" %}</h3>
+            <h3 class="text-lg">{% trans "Header (h3)" %}</h3>
           </td>
         </tr>
         <tr class="bg-gray-100">

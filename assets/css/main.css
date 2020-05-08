@@ -108,6 +108,21 @@ ol {
   @apply tracking-tight whitespace-normal break-words py-3 text-sm;
 }
 
+.markdown-content h1,
+.markdownx-preview h1 {
+  @apply text-2xl;
+}
+
+.markdown-content h2,
+.markdownx-preview h2 {
+  @apply text-xl;
+}
+
+.markdown-content h3,
+.markdownx-preview h3 {
+  @apply text-lg;
+}
+
 .img-responsive,
 .markdown-content img,
 .markdown-preview img {
