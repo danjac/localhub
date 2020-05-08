@@ -3,7 +3,7 @@
 
 /* eslint-disable */
 module.exports = {
-  purge: ['./templates/tw/**/*.html'],
+  purge: ['./templates/**/*.html'],
   theme: {
     extend: {},
   },
