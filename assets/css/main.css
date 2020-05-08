@@ -105,7 +105,7 @@ ol {
 
 .markdown-content,
 .markdownx-preview {
-  @apply tracking-tight whitespace-normal break-words py-3;
+  @apply tracking-tight whitespace-normal break-words py-3 text-sm;
 }
 
 .img-responsive,
