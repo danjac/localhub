@@ -33,13 +33,8 @@ export default class extends ApplicationController {
   }
 
   confirm() {
-    // add temp checkmark to button
-    const icon = document.createElement('i');
-    icon.classList.add('icon', 'icon-check', 'float-right');
-    this.buttonTarget.appendChild(icon);
-    const timeout = setTimeout(() => {
-      icon.remove();
-      clearTimeout(timeout);
-    }, 1000);
+    if (this.data.has('message')) {
+      this.toaster.info(this.data.get('message'));
+    }
   }
 }

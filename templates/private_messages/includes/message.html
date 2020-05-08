@@ -7,7 +7,8 @@
 
 <div class="card {{ css_class|default:"mb-2" }}"
      id="message-{{ message.id }}"
-     data-controller="clipboard">
+     data-controller="clipboard"
+     data-clipboard-message="{% trans 'Markdown content has been copied' %}">
 
   <div class="flex flex-wrap items-center mb-4">
     {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url css_class="mr-2" %}
