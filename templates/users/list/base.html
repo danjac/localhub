@@ -14,19 +14,19 @@
 <h1 class="page-header mb-4">{% trans "People" %}</h1>
 
 <div class="tabs mb-4 text-sm">
-  <a class="tab-item lg:w-1/5"
+  <a class="tab-item"
      data-controller="active-link"
      data-active-link-exact
      href="{% url 'users:member_list' %}">{% trans "Members" %}</a>
-  <a class="tab-item lg:w-1/5"
+  <a class="tab-item"
      data-controller="active-link"
      data-active-link-exact
      href="{% url 'users:following_list' %}">{% trans "Following" %}</a>
-  <a class="tab-item lg:w-1/5"
+  <a class="tab-item"
      data-controller="active-link"
      data-active-link-exact
      href="{% url 'users:follower_list' %}">{% trans "Followers" %}</a>
-  <a class="tab-item lg:w-1/5"
+  <a class="tab-item"
      data-controller="active-link"
      data-active-link-exact
      href="{% url 'users:blocked_list' %}">{% trans "Blocked" %}</a>

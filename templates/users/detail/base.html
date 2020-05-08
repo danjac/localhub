@@ -168,17 +168,17 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 
 {% if not is_blocked %}
 <div class="tabs mb-4 text-sm">
-  <a class="tab-item w-1/4"
+  <a class="tab-item"
      data-controller="active-link"
      data-active-link-exact
      href="{% url 'users:activities' user_obj.username %}">{% trans "Activities" %}</a>
-  <a class="tab-item w-1/4"
+  <a class="tab-item"
      data-controller="active-link"
      data-active-link-exact
      href="{% url 'users:messages' user_obj.username %}">
     {% trans "Messages" %}
   </a>
-  <a class="tab-item w-1/4"
+  <a class="tab-item"
      data-controller="active-link"
      data-active-link-exact
      href="{% url 'users:comments' user_obj.username %}">{% trans "Comments" %}</a>

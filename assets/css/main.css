@@ -156,7 +156,7 @@ ol {
 }
 
 .tab-item {
-  @apply block p-1 text-center border-t border-r border-l rounded-t border-gray-800 text-black;
+  @apply block p-1 text-center border-t border-r border-l rounded-t border-gray-800 text-black px-4;
 }
 
 .tab-item:md {

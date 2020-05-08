@@ -15,18 +15,18 @@
 
 {% if can_follow_tag or can_block_tag %}
 <div class="tabs text-sm mb-4">
-  <a class="tab-item w-1/4"
+  <a class="tab-item"
      data-controller="active-link"
      data-active-link-exact
      href="{% url 'hashtags:list' %}">{% trans "All" %}</a>
   {% if can_follow_tag %}
-  <a class="tab-item w-1/4"
+  <a class="tab-item"
      data-controller="active-link"
      data-active-link-exact
      href="{% url 'hashtags:following_list' %}">{% trans "Following" %}</a>
   {% endif %}
   {% if can_block_tag %}
-  <a class="tab-item w-1/4"
+  <a class="tab-item"
      data-controller="active-link"
      data-active-link-exact
      href="{% url 'hashtags:blocked_list' %}">{% trans "Blocked" %}</a>
