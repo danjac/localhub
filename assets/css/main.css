@@ -29,6 +29,10 @@ dd {
   @apply pb-2;
 }
 
+ol {
+  @apply list-decimal list-inside;
+}
+
 .breadcrumbs {
   @apply text-sm flex flex-wrap text-gray-500;
 }
@@ -101,7 +105,7 @@ dd {
 
 .markdown-content,
 .markdownx-preview {
-  @apply tracking-tight;
+  @apply tracking-tight whitespace-normal py-3;
 }
 
 .img-responsive,
