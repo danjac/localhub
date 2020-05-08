@@ -11,21 +11,18 @@
 
 {% user_display object.sender as display_name %}
 
-<ul class="breadcrumb">
-  <li class="breadcrumb-item">
+<ul class="breadcrumbs mb-4">
+  <li class="breadcrumb">
     <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
-  <li class="breadcrumb-item">
+  <li class="breadcrumb">
     <a href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
   </li>
-  <li class="breadcrumb-item">
-    <a data-turbolinks="false"
-       href="#">{{ display_name }}</a>
-  </li>
+  <li class="breadcrumb">{{ display_name }}</li>
 </ul>
 
-<h1 class="page-header">
-  {% avatar object.sender "avatar-lg" %}
+<h1 class="page-header mb-4">
+  {% avatar object.sender "32" show_placeholder=False %}
   {% if object.sender.username == display_name %}
   @{{ display_name }}
   {% else %}
@@ -35,9 +32,9 @@
 </h1>
 
 {% with is_pending=object.is_pending is_rejected=object.is_rejectd %}
-<div class="actions mb-1">
+<div class="flex flex-wrap items-center mb-4 text-sm">
   {% if is_pending or is_rejected %}
-  <a class="action"
+  <a class="mr-4"
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
@@ -48,7 +45,7 @@
   </a>
   {% endif %}
   {% if is_pending %}
-  <a class="action"
+  <a class="mr-4"
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
@@ -57,7 +54,7 @@
      data-ajax-confirm-body="{% trans 'Are you sure you want to reject this request?' %}"
      href="{% url 'join_requests:reject' object.id %}">{% trans "Reject" %}</a>
   {% endif %}
-  <a class="action"
+  <a class=""
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"

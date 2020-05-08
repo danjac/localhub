@@ -256,6 +256,59 @@
   {% endif %}
 
   {% else %}
-  non-member menu....
+
+  <ul class="sidebar-menu">
+    {% if community.active %}
+    <li class="mb-1">
+      <a data-controller="active-link"
+         class="sidebar-menu-item"
+         href="{% url 'community_welcome' %}">
+        {{ community.name }}
+      </a>
+    </li>
+    {% endif %}
+
+    {% if external_site_counters.sent_join_requests %}
+    <li class="mb-1">
+      <a data-controller="active-link"
+         class="sidebar-menu-item"
+         href="{% url 'join_requests:sent_list' %}">
+        {% trans "Join Requests" %}
+      </a>
+    </li>
+    {% endif %}
+
+    {% if external_site_counters.pending_invites %}
+    <li class="mb-1">
+      <a data-controller="active-link"
+         data-active-link-exact
+         class="sidebar-menu-item"
+         href="{% url 'invites:received_list' %}">
+        <span>{% trans "Invites" %}</span>
+        {% if external_site_counters.pending_invites %}
+        <span class="tag tag-primary px-1">{% trans "New" %}</span>
+        {% endif %}
+      </a>
+    </li>
+    {% endif %}
+
+    {% if communities_count > 1 %}
+    <li class="mb-1">
+      <a data-controller="active-link"
+         data-active-link-exact
+         href="{% url 'community_list' %}">
+        <span>{% trans "Other Sites" %}</span>
+        {% if external_site_counters.total %}
+        <span class="tag tag-primary px-1">{% trans "New" %}</span>
+        {% endif %}
+      </a>
+    </li>
+    {% endif %}
+    <li class="">
+      <a data-controller="active-link"
+         class="sidebar-menu-item"
+         href="{% url 'user_update' %}">{% trans "Settings" %}</a>
+    </li>
+  </ul>
   {% endif %}
 </nav>

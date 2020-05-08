@@ -5,9 +5,9 @@
 {% load i18n %}
 
 {% block content %}
-<h1 class="page-header">{% trans "Request Invitation" %}</h1>
-<p>
+<h1 class="page-header mb-4">{% trans "Request Invitation" %}</h1>
+<p class="mb-4">
   {% trans "Your request will be sent to the site admins. If they approve your request, you will automatically become a member of this community." %}
 </p>
-{% include "includes/forms/stimulusjs_form.html" %}
+{% include "includes/forms/stimulusjs_form.html" with css_class="w-full p-2" %}
 {% endblock %}

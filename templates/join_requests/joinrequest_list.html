@@ -7,82 +7,78 @@
 
 {% block content %}
 
-<ul class="breadcrumb">
-  <li class="breadcrumb-item">
+<ul class="breadcrumbs mb-4">
+  <li class="breadcrumb">
     <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
-  <li class="breadcrumb-item">
-    <a data-turbolinks="false"
-       href="#">{% trans "Join Requests" %}</a>
-  </li>
+  <li class="breadcrumb">{% trans "Join Requests" %}</li>
 </ul>
 
 
-<h1 class="page-header">
+<h1 class="page-header mb-4">
   {% trans "Join Requests" %}
   {% if status_display %}
   - {{ status_display}}
   {% endif %}
 </h1>
 
-{% if paginator.count or view.search_query %}
-{% include "includes/forms/search_form.html" with selector=True %}
-{% endif %}
-
-{% if not community.allow_join_requests %}
-<p class="toast text-center my-2">
-  {% url 'communities:community_update' as settings_url %}
-  {% blocktrans %}Join requests are currently disabled for this community. You can re-enable them <a href="{{ settings_url }}">in your community settings</a>.{% endblocktrans %}
-</p>
-{% endif %}
-
 {% if total_count %}
-<div class="actions my-1">
+<div class="flex flex-wrap items-center mb-4 text-sm">
   {% if status %}
-  <a class="action"
+  <a class="mr-4"
      href="{{ request.path }}">{% trans "Show All" %}</a>
   {% endif %}
   {% for value, label in status_choices %}
   {% if status != value %}
-  <a class="action"
+  <a class="mr-4"
      href="{{ request.path }}?status={{ value }}">{{ label }}</a>
   {% endif %}
   {% endfor %}
 </div>
 {% endif %}
 
+{% if paginator.count or view.search_query %}
+{% include "includes/forms/search_form.html" with selector=True %}
+{% endif %}
+
+{% if not community.allow_join_requests %}
+<p class="notification my-4">
+  {% url 'communities:community_update' as settings_url %}
+  {% blocktrans %}Join requests are currently disabled for this community. You can re-enable them <a href="{{ settings_url }}">in your community settings</a>.{% endblocktrans %}
+</p>
+{% endif %}
 
 {% if object_list %}
-<table class="table table-hover table-responsive">
+<table class="table-auto text-sm block whitespace-no-wrap overflow-x-scroll md:w-full md:whitespace-normal md:overflox-x-auto md:table">
   <thead>
-    <tr>
-      <th>{% trans "User" %}</th>
-      <th>{% trans "Requested" %}</th>
-      <th>{% trans "Status" %}</th>
-      <th>{% trans "Actions" %}</th>
+    <tr class="bg-gray-300 border">
+      <th class="text-left py-2 px-2">{% trans "User" %}</th>
+      <th class="text-left py-2 px-2">{% trans "Requested" %}</th>
+      <th class="text-left py-2 px-2">{% trans "Status" %}</th>
+      <th class="text-left py-2 px-2">{% trans "Actions" %}</th>
     </tr>
   </thead>
   <tbody>
     {% for join_request in object_list %}
     {% with is_pending=join_request.is_pending is_rejected=join_request.is_rejected detail_url=join_request.get_absolute_url %}
-    <tr>
-      <td>
+    <tr class="{% cycle 'bg-gray-100' '' %} hover:bg-gray-200">
+      <td class="border py-2 px-2">
         {% if is_pending %}<b>{% endif %}
           <a href="{{ detail_url }}">{% user_display join_request.sender %}</a>
           {% if is_pending %}</b>{% endif %}
       </td>
-      <td>
+      <td class="border py-2 px-2">
         {% include "includes/timesince.html" with timestamp=join_request.created %}
       </td>
-      <td>
+      <td class="border py-2 px-2">
         {% if is_pending %}<b>{% endif %}
           {{ join_request.get_status_display }}
           {% if is_pending %}</b>{% endif %}
       </td>
       <td>
-        <div class="actions">
+        <div class="flex flex-wrap items-center text-sm">
           {% if is_pending or is_rejected %}
-          <a class="action"
+          <a class="mr-2"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"
@@ -92,7 +88,7 @@
           </a>
           {% endif %}
           {% if is_pending %}
-          <a class="action"
+          <a class="mr-2"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"
@@ -100,7 +96,7 @@
              data-ajax-confirm-body="{% trans 'Are you sure you want to reject this request?' %}"
              href="{% url 'join_requests:reject' join_request.id %}">{% trans "Reject" %}</a>
           {% endif %}
-          <a class="action"
+          <a class=""
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"
