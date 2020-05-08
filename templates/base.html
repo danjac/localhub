@@ -79,12 +79,7 @@
     </div>
     {% if user.is_authenticated %}
     <div>
-      {% thumbnail user.avatar "32" format="PNG" as avatar %}
-      <img src="{{ avatar.url }}"
-           class="inline-block mr-1 full-rounded"
-           height="32"
-           width="32">
-      {% endthumbnail %}
+      {% avatar user "32" css_class="inline-block mr-1" show_placeholder=False %}
       <a href="{{ user.get_absolute_url }}"
          class="inline-block text-white hover:text-gray-100 mr-4">
         {{ user.username }}
