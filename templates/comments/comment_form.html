@@ -14,29 +14,28 @@
 
 {% block content %}
 
-<ul class="breadcrumb-item">
+<ul class="breadcrumbs mb-4">
   {% if parent %}
-  <li class="breadcrumb-item""><a href="{% url 'comments:list' %}">{% trans "Comments" %}</a></li>
-  <li class="breadcrumb-item""><a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a></li>
-  <li class="breadcrumb-item""><a href="#">{% trans "Reply" %}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'comments:list' %}">{% trans "Comments" %}</a></li>
+  <li class="breadcrumb-item"><a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a></li>
+  <li class="breadcrumb-item">{% trans "Reply" %}</li>
   {% elif object %}
-  <li class="breadcrumb-item""><a href="{% url 'comments:list' %}">{% trans "Comments" %}</a></li>
-  <li class="breadcrumb-item""><a href="{{ object.get_absolute_url }}">{% trans "Comment" %}</a></li>
-  <li class="breadcrumb-item""><a href="#">{% trans "Edit" %}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'comments:list' %}">{% trans "Comments" %}</a></li>
+  <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{% trans "Comment" %}</a></li>
+  <li class="breadcrumb-item">{% trans "Edit" %}</li>
   {% elif content_object %}
-  <li class="breadcrumb-item""><a href="{{ content_object.get_absolute_url }}">{{ content_object|truncatechars:60 }}</a>
+  <li class="breadcrumb-item"><a href="{{ content_object.get_absolute_url }}">{{ content_object|truncatechars:60 }}</a>
   </li>
-  <li class="breadcrumb-item"">
-    <a data-turbolinks="false"
-       href="#">{% trans "Comment" %}</a>
-  </li>
+  <li class="breadcrumb-item">{% trans "Comment" %}</li>
   {% endif %}
 </ul>
 
 {% if parent %}
 {% render_comment request user parent is_detail=True css_class="mb-2" %}
+{% include "includes/forms/stimulusjs_form.html" with form_id="comment-form" css_class="w-full" %}
+{% else %}
+{% include "includes/forms/stimulusjs_form.html" with form_id="comment-form" %}
 {% endif %}
 
-{% include "includes/forms/stimulusjs_form.html" with form_id="comment-form" %}
 
 {% endblock content %}

@@ -82,11 +82,11 @@ export default class extends ApplicationController {
   }
 
   addSelectedClasses(el) {
-    el.classList.add(this.getSelectedClassNames());
+    el.classList.add.apply(el.classList, this.getSelectedClassNames());
   }
 
   removeSelectedClasses(el) {
-    el.classList.remove(this.getSelectedClassNames());
+    el.classList.remove.apply(el.classList, this.getSelectedClassNames());
   }
 
   getSelectedClassNames() {
@@ -114,8 +114,8 @@ export default class extends ApplicationController {
         if (firstItem) {
           prevItem = firstItem.previousElementSibling;
           if (prevItem) {
-            this.addSelectedClasses(firstItem);
-            this.removeSelectedClasses(prevItem);
+            this.removeSelectedClasses(firstItem);
+            this.addSelectedClasses(prevItem);
           }
         }
         return false;
@@ -125,8 +125,8 @@ export default class extends ApplicationController {
         if (firstItem) {
           nextItem = firstItem.nextElementSibling;
           if (nextItem) {
-            firstItem.classList.remove('selected');
-            nextItem.classList.add('selected');
+            this.removeSelectedClasses(firstItem);
+            this.addSelectedClasses(nextItem);
           }
         }
         return false;
