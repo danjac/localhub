@@ -71,7 +71,7 @@
 </form>
 
 {% if view.search_query and object_list %}
-<div class="bg-gray-200 font-semibold text-center p-3 border">
+<div class="notification mb-4">
   {% blocktrans count counter=paginator.count with query=view.search_query %}
   1 Result for "{{ query }}"
   {% plural %}
