@@ -19,7 +19,7 @@
 <p>
   {% if invite %}
 
-  {% url 'invites:accept' invite.id as invite_url %}
+  {% url 'invites:detail' invite.id as invite_url %}
   {% blocktrans %}
   You have a pending invite. Please go <a href="{{ invite_url }}">here</a> to accept or reject your invite.
   {% endblocktrans %}
