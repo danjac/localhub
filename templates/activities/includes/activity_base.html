@@ -28,19 +28,14 @@
     <div class="mb-4">
       {% endif %}
 
+      {% if object.is_reshare %}
+
+      <div class="mb-4 tracking-tight pb-4 border-b border-gray-500">
+        {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner verb="reshared" %}
+      </div>
+      {% endif %}
+
       <div class="font-semibold flex flex-wrap items-center mb-2">
-
-        {% if object.is_reshare %}
-
-        <div class="mr-4 tracking-tight">
-          {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner verb="reshared" %}
-        </div>
-
-        {% if object.parent and not object.parent.deleted %}
-        <a href="{{ object.parent.get_absolute_url }}">{{ object.title|truncatechars:130 }}</a>
-        {% endif %}
-
-        {% else %}
 
         {% block title %}
 
@@ -90,7 +85,6 @@
 
         </div>
         {% endblock title %}
-        {% endif %}
 
       </div>
 
@@ -130,35 +124,32 @@
       {% if object.is_reshare and not object.parent or object.parent.deleted %}
       {% trans "[Deleted]" %}
       {% else %}
-      {% if object.is_reshare %}<blockquote>{% endif %}
-        {% if is_content_sensitive %}
-        <div class="bg-gray-800 align-middle text-center text-white my-4 p-5"
-             data-target="toggle.togglable">
-          <p class="mb-2 text-lg font-semibold">{% trans "Sensitive Content" %}</p>
-          <p class="mb-2">
-            {% trans "This post has been tagged sensitive. You can view all sensitive content by default in your settings." %}
-          </p>
-          <p>
-            {% for tag in object.get_content_warning_tags %}
-            #{{ tag }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-          </p>
-          <div class="">
-            <button class="btn btn-primary"
-                    data-action="toggle#toggle">{% trans "Show Content" %}</button>
-          </div>
+      {% if is_content_sensitive %}
+      <div class="bg-gray-800 align-middle text-center text-white my-4 p-5"
+           data-target="toggle.togglable">
+        <p class="mb-2 text-lg font-semibold">{% trans "Sensitive Content" %}</p>
+        <p class="mb-2">
+          {% trans "This post has been tagged sensitive. You can view all sensitive content by default in your settings." %}
+        </p>
+        <p>
+          {% for tag in object.get_content_warning_tags %}
+          #{{ tag }}{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        </p>
+        <div class="">
+          <button class="btn btn-primary"
+                  data-action="toggle#toggle">{% trans "Show Content" %}</button>
         </div>
-        <div class="hidden"
-             data-target="toggle.togglable">
-          {% endif %}
-          {% with ignore_collapsable=is_detail|default:is_content_sensitive %}
-          {% collapsable ignore_collapsable %}
-          {% block content %}{% endblock %}
-          {% endcollapsable %}
-          {% endwith %}
-          {% if is_content_sensitive %}</div>{% endif %}
-        {% if object.is_reshare %}
-      </blockquote>{% endif %}
+      </div>
+      <div class="hidden"
+           data-target="toggle.togglable">
+        {% endif %}
+        {% with ignore_collapsable=is_detail|default:is_content_sensitive %}
+        {% collapsable ignore_collapsable %}
+        {% block content %}{% endblock %}
+        {% endcollapsable %}
+        {% endwith %}
+        {% if is_content_sensitive %}</div>{% endif %}
       {% endif %}
     </div>
     {% endblock body %}

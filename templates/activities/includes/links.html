@@ -4,11 +4,11 @@
 {% load i18n %}
 {% if object.parent or not is_detail %}
   {% if not is_detail %}
-  <a class="text-sm action"
+  <a class="text-sm action mr-4"
      href="{{ object.get_absolute_url }}">{% trans "Link" %}</a>
   {% endif %}
   {% if object.parent and not object.parent.deleted %}
-  <a class="text-sm action"
+  <a class="text-sm action mr-4"
      href="{{ object.parent.get_absolute_url }}">{% trans "Parent" %}</a>
   {% endif %}
   {% block extra_links %}{% endblock %}
