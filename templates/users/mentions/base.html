@@ -9,35 +9,28 @@
 
 {% block content %}
 
-<ul class="breadcrumb">
-  <li class="breadcrumb-item">
+<ul class="breadcrumbs mb-4">
+  <li class="breadcrumb">
     <a href="{{ user_obj.get_absolute_url }}">
       {% user_display user_obj %}
     </a>
   </li>
-  <li class="breadcrumb-item">
-    <a href="#"
-       data-turbolinks="false">{% trans "Mentions" %}</a>
+  <li class="breadcrumb">
+    {% trans "Mentions" %}
   </li>
 </ul>
 
-<h1 class="page-header">
-  {% trans "Mentions" %}
-</h1>
+<h1 class="page-header mb-4">{% trans "Mentions" %}</h1>
 
-<ul class="tab tab-block">
-  <li class="tab-item"
-      data-controller="active-link"
-      data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:activity_mentions' user_obj.username %}">{% trans "Activities" %}</a>
-  </li>
-  <li class="tab-item"
-      data-controller="active-link"
-      data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'users:comment_mentions' user_obj.username %}">{% trans "Comments" %}</a>
-  </li>
-</ul>
+<div class="tabs text-sm mb-4">
+  <a class="tab-item w-1/3"
+     data-controller="active-link"
+     data-active-link-exact
+     href="{% url 'users:activity_mentions' user_obj.username %}">{% trans "Activities" %}</a>
+  <a class="tab-item w-1/3"
+     data-controller="active-link"
+     data-active-link-exact
+     href="{% url 'users:comment_mentions' user_obj.username %}">{% trans "Comments" %}</a>
+</div>
 {% block mentions_content %}{% endblock %}
 {% endblock %}

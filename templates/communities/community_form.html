@@ -8,16 +8,16 @@
 {% block subtitle %} / {% trans "Site Settings" %}{% endblock %}
 
 {% block content %}
-<h1 class="page-header">{% trans "Site Settings" %}</h1>
+<h1 class="page-header mb-4">{% trans "Site Settings" %}</h1>
 
-<div class="actions mb-1">
-  <a class="action"
+<div class="flex flex-wrap items-center text-sm mb-4">
+  <a class="mr-4"
      href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
-  <a class="action"
+  <a class="mr-4"
      href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
-  <a class="action"
+  <a class="mr-4"
      href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
-  <a class="action"
+  <a class="mr-4"
      href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
 </div>
 
