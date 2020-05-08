@@ -17,35 +17,35 @@
   {% if object %}
 
   {% if object.published %}
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{{ list_url }}">{{ model_name_plural }}</a>
   </li>
   {% else %}
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
   </li>
   {% endif %}
 
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a>
   </li>
 
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     {% blocktrans %}Edit {{ model_name }}{% endblocktrans %}
   </li>
 
   {% else %}
 
   {% if view.is_private %}
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
   </li>
   {% else %}
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{{ list_url }}">{{ model_name_plural }}</a>
   </li>
   {% endif %}
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
        {% blocktrans %}Submit {{ model_name }}{% endblocktrans %}
   </li>
   {% endif %}

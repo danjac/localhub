@@ -10,8 +10,8 @@
 {% block content %}
 
 <ul class="breadcrumbs mb-4">
-  <li class="breadcrumb"><a href="{% url 'hashtags:list' %}">{% trans "Tags" %}</a></li>
-  <li class="breadcrumb">{{ tag.name }}</li>
+  <li class="breadcrumb-item"><a href="{% url 'hashtags:list' %}">{% trans "Tags" %}</a></li>
+  <li class="breadcrumb-item">{{ tag.name }}</li>
 </ul>
 
 {% has_perm "users.follow_tag" user as can_follow_tag %}

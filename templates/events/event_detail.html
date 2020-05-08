@@ -9,19 +9,19 @@
 {% if object.published %}
 {% with starts=event.get_next_start_date %}
 <ul class="breadcrumbs mb-4">
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{% url 'events:list' %}">{% trans "Events" %}</a>
   </li>
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{% url 'events:calendar' %}?month={{ starts.month }}&year={{ starts.year }}">
       {{ starts|date:"F Y" }}
     </a>
   </li>
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{% url 'events:calendar' %}?day={{ starts.day }}&month={{ starts.month }}&year={{ starts.year }}">
       {{ starts|date:"SHORT_DATE_FORMAT" }}
     </a>
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     {{ object.title|truncatechars:60 }}
   </li>
 </ul>

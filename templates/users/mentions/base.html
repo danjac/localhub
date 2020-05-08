@@ -10,12 +10,12 @@
 {% block content %}
 
 <ul class="breadcrumbs mb-4">
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{{ user_obj.get_absolute_url }}">
       {% user_display user_obj %}
     </a>
   </li>
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     {% trans "Mentions" %}
   </li>
 </ul>

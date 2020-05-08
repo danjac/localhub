@@ -12,13 +12,13 @@
 {% user_display object.sender as display_name %}
 
 <ul class="breadcrumbs mb-4">
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
   </li>
-  <li class="breadcrumb">{{ display_name }}</li>
+  <li class="breadcrumb-item">{{ display_name }}</li>
 </ul>
 
 <h1 class="page-header mb-4">

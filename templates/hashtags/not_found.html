@@ -8,9 +8,9 @@
 
 {% block content %}
 
-<ul class="breadcrumb">
-  <li class="breadcrumb-item"><a href="{% url 'hashtags:list' %}">{% trans "Tags" %}</a></li>
-  <li class="breadcrumb-item"><a href="#" data-turbolinks="false">{{ tag }}</a></li>
+<ul class="breadcrumb-item">
+  <li class="breadcrumb-item""><a href="{% url 'hashtags:list' %}">{% trans "Tags" %}</a></li>
+  <li class="breadcrumb-item""><a href="#" data-turbolinks="false">{{ tag }}</a></li>
 </ul>
 
 <h1 class="page-header">{% trans "Tag not found" %}</h1>

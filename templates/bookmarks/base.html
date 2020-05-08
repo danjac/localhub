@@ -8,28 +8,22 @@
 
 {% block content %}
 
-<h1 class="page-header">{% trans "Bookmarks" %}</h1>
+<h1 class="page-header mb-4">{% trans "Bookmarks" %}</h1>
 
-<ul class="tab tab-block">
-  <li class="tab-item"
-      data-controller="active-link"
-      data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'bookmarks:activities' %}">{% trans "Activities" %}</a>
-  </li>
-  <li class="tab-item"
-      data-controller="active-link"
-      data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'bookmarks:messages' %}">{% trans "Messages" %}</a>
-  </li>
-  <li class="tab-item"
-      data-controller="active-link"
-      data-active-link-exact>
-    <a data-target="active-link.match"
-       href="{% url 'bookmarks:comments' %}">{% trans "Comments" %}</a>
-  </li>
-</ul>
+<div class="tabs text-sm mb-4">
+  <a class="tab-item w-1/4"
+     data-controller="active-link"
+     data-active-link-exact
+     href="{% url 'bookmarks:activities' %}">{% trans "Activities" %}</a>
+  <a class="tab-item w-1/4"
+     data-controller="active-link"
+     data-active-link-exact
+     href="{% url 'bookmarks:messages' %}">{% trans "Messages" %}</a>
+  <a class="tab-item w-1/4"
+     data-controller="active-link"
+     data-active-link-exact
+     href="{% url 'bookmarks:comments' %}">{% trans "Comments" %}</a>
+</div>
 
 {% if paginator.count or view.search_query %}
 {% include "includes/forms/search_form.html" with selector=True %}

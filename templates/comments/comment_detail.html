@@ -11,20 +11,20 @@
 
 <ul class="breadcrumbs mb-4">
   {% if content_object %}
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{{ content_object.get_absolute_url }}">{{ content_object|truncatechars:60 }}</a>
   </li>
   {% else %}
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{% url 'comments:list' %}">{% trans "Comments" %}</a>
   </li>
   {% endif %}
   {% if comment.parent and not comment.parent.deleted %}
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{{ comment.parent.get_absolute_url }}">{% trans "Parent" %}</a>
   </li>
   {% endif %}
-  <li class="breadcrumb">{% trans "Comment" %}</li>
+  <li class="breadcrumb-item">{% trans "Comment" %}</li>
 </ul>
 
 {% render_comment request user comment is_detail=True include_content_object=True %}

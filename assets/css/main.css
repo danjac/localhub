@@ -33,11 +33,11 @@ dd {
   @apply text-sm flex flex-wrap text-gray-500;
 }
 
-.breadcrumb:not(:last-child) {
+.breadcrumb-item:not(:last-child) {
   @apply mr-2;
 }
 
-.breadcrumb:not(:first-child)::before {
+.breadcrumb-item:not(:first-child)::before {
   content: '/';
   @apply mr-2;
 }

@@ -9,10 +9,10 @@
 
 {% if parent %}
 <ul class="breadcrumbs">
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a>
   </li>
-  <li class="breadcrumb">{% trans "Message" %}</li>
+  <li class="breadcrumb-item">{% trans "Message" %}</li>
 </ul>
 {% endif %}
 

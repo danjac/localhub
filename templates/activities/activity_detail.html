@@ -14,17 +14,17 @@
 {% block breadcrumbs %}
 <ul class="breadcrumbs mb-3">
   {% if object.published %}
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{{ object|resolve_url:"list" }}">
       {{ object|verbose_name_plural|title }}
     </a>
   </li>
   {% else %}
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
   </li>
   {% endif %}
-  <li class="breadcrumb">
+  <li class="breadcrumb-item">
     {{ object.title|truncatechars:60 }}
   </li>
 </ul>
