@@ -104,6 +104,12 @@ dd {
   @apply tracking-tight;
 }
 
+.img-responsive,
+.markdown-content img,
+.markdown-preview img {
+  @apply block h-auto max-w-full;
+}
+
 .markdown-content p,
 .markdownx-preview p {
   @apply py-4;
