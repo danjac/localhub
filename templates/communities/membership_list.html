@@ -10,20 +10,18 @@
 
 {% block content %}
 
-<ul class="breadcrumb">
-  <li class="breadcrumb-item">
+<ul class="breadcrumbs mb-4">
+  <li class="breadcrumb">
     <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
-  <li class="breadcrumb-item">
-    <a data-turbolinks="false"
-       href="#">{% trans "Memberships" %}</a>
+  <li class="breadcrumb">{% trans "Memberships" %}
   </li>
 </ul>
 
-<h1 class="page-header">{% trans "Memberships" %}</h1>
+<h1 class="page-header mb-4">{% trans "Memberships" %}</h1>
 
 {% if not view.search_query %}
-<div class="my-2 toast text-center">
+<div class="notification mb-4">
   {% blocktrans count counter=paginator.count %}
   This site has one member.
   {% plural %}
@@ -35,37 +33,35 @@
 {% include "includes/forms/search_form.html" with selector=True %}
 
 {% if object_list %}
-<table class="table table-hover table-responsive">
+<table class="table-auto text-sm block whitespace-no-wrap overflow-x-scroll md:w-full md:whitespace-normal md:overflox-x-auto md:table">
   <thead>
-    <tr>
-      <th>{% trans "Member" %}</th>
-      <th>{% trans "Joined" %}</th>
-      <th>{% trans "Status" %}</th>
-      <th>{% trans "Role" %}</th>
-      <th>{% trans "Actions" %}</th>
+    <tr class="bg-gray-300 border">
+      <th class="text-left py-2 px-2">{% trans "Member" %}</th>
+      <th class="text-left py-2 px-2">{% trans "Joined" %}</th>
+      <th class="text-left py-2 px-2">{% trans "Status" %}</th>
+      <th class="text-left py-2 px-2">{% trans "Role" %}</th>
+      <th class="text-left py-2 px-2">{% trans "Actions" %}</th>
     </tr>
   </thead>
   <tbody>
     {% for member in object_list %}
     {% has_perm "communities.change_membership" user member as can_change %}
     {% has_perm "communities.delete_membership" user member as can_delete %}
-    <tr>
-      <td>
+    <tr class="{% cycle 'bg-gray-100' '' %} hover:bg-gray-200">
+      <td class="border py-2 px-2">
         {% url 'communities:membership_detail' member.id as membership_detail_url %}
         {% include "users/includes/chip.html" with profile=member.member profile_url=membership_detail_url %}
       </td>
-      <td>
+      <td class="border py-2 px-2">
         {% include "includes/timesince.html" with timestamp=member.created %}
       </td>
-      {% if member.active %}
-      <td>{% trans "Active" %}</td>
-      {% else %}
-      <td class="text-gray">{% trans "Inactive" %}</td>
-      {% endif %}
-      <td {% if not member.active %}
-          class="text-gray"
-          {% endif %}>{{ member.get_role_display }}</td>
-      <td>
+      <td class="border py-2 px-2">
+        {% if member.active %}{% trans "Active" %}{% else %}{% trans "Inactive" %}{% endif %}
+      </td>
+      <td class="border py-2 px-2">
+        {{ member.get_role_display }}
+      </td>
+      <td class="border py-2 px-2">
         {% include "communities/includes/membership_actions.html" %}
       </td>
     </tr>

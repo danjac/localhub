@@ -5,19 +5,19 @@
 
 {% if member.member != user %}
 {% if can_change or can_delete %}
-<div class="actions{% if css_class %} {{ css_class }}{% endif %}">
-  <a class="action"
+<div class="flex flex-wrap items-center">
+  <a class="mr-2"
      href="{% url 'private_messages:message_create_recipient' member.member.username %}">
     {% trans "Send Message" %}
   </a>
   {% if can_change %}
-  <a class="action"
+  <a class="mr-2"
      href="{% url 'communities:membership_update' member.id %}">
     {% trans "Edit" %}
   </a>
   {% endif %}
   {% if can_delete %}
-  <a class="action"
+  <a class="mr-2"
      href="{% url 'communities:membership_delete' member.id %}"
      data-turbolinks="false"
      data-controller="ajax"

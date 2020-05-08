@@ -14,23 +14,22 @@
 
 {% user_display member as display_name %}
 
-<ul class="breadcrumb">
-  <li class="breadcrumb-item">
+<ul class="breadcrumbs mb-4">
+  <li class="breadcrumb">
     <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
-  <li class="breadcrumb-item">
+  <li class="breadcrumb">
     <a href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
   </li>
-  <li class="breadcrumb-item">
-    <a data-turbolinks="false"
-       href="#">{{ display_name }}</a>
+  <li class="breadcrumb">
+    {{ display_name }}
   </li>
 </ul>
 
 {% user_display member as display_name %}
 
-<h1 class="page-header">
-  {% avatar member "avatar-lg" %}
+<h1 class="page-header flex flex-wrap items-center mb-4">
+  {% avatar member "32" show_placeholder=False css_class="mr-4" %}
   {% if member.username == display_name %}
   @{{ display_name }}
   {% else %}
@@ -40,13 +39,13 @@
 </h1>
 
 
-<div class="actions mb-1">
+<div class="flex flex-wrap items-center text-sm mb-1">
   {% if object.active %}
-  <a class="action"
+  <a class="mr-4"
      href="{% url 'users:activities' member.username %}">{% trans "Activities" %}</a>
-  <a class="action"
+  <a class="mr-4"
      href="{% url 'users:comments' member.username %}">{% trans "Comments" %}</a>
-  <a class="action"
+  <a class=""
      href="{% url 'users:messages' member.username %}">{% trans "Messages" %}</a>
   {% endif %}
 </div>
@@ -55,7 +54,7 @@
 {% has_perm "communities.delete_membership" user object as can_delete %}
 {% include "communities/includes/membership_actions.html" with member=object css_class="mb-1" %}
 
-<dl class="text-small">
+<dl class="text-sm">
   <dt>{% trans "Status" %}</dt>
   <dd>{{ object.active|yesno:"Active,Inactive" }}</dd>
 
