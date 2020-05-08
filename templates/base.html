@@ -73,8 +73,16 @@
     </div>
     {% if user.is_authenticated %}
     <div>
+      {% thumbnail user.avatar "20" as avatar %}
+      <img src="{{ avatar.url }}"
+           class="inline-block mr-1 full-rounded"
+           height="20"
+           width="20">
+      {% endthumbnail %}
       <a href="{{ user.get_absolute_url }}"
-         class="inline-block text-white hover:text-gray-100 mr-4">{{ user.username }}</a>
+         class="inline-block text-white hover:text-gray-100 mr-4">
+        {{ user.username }}
+      </a>
       <a href="{% url 'account_logout' %}"
          class="inline-block text-white hover:text-gray-100"
          data-turbolinks="false"
