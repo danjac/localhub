@@ -16,7 +16,7 @@
 
 {% if latest_notification %}
 {% notification latest_notification %}
-<div class="notification flex my-2"
+<div class="notification flex mb-2"
      data-controller="ajax"
      data-ajax-redirect="{{ home_page_url }}"
      data-ajax-url="{% url 'notifications:mark_read' latest_notification.id %}"
