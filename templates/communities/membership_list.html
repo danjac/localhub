@@ -50,7 +50,7 @@
     <tr class="{% cycle 'bg-gray-100' '' %} hover:bg-gray-200">
       <td class="border py-2 px-2">
         {% url 'communities:membership_detail' member.id as membership_detail_url %}
-        {% include "users/includes/chip.html" with profile=member.member profile_url=membership_detail_url %}
+        {% include "users/includes/chip.html" with profile=member.member profile_url=membership_detail_url css_class="w-32" %}
       </td>
       <td class="border py-2 px-2">
         {% include "includes/timesince.html" with timestamp=member.created %}
