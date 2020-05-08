@@ -3,9 +3,9 @@
   <img src="{{ widget.value.url }}"
        data-target="image-preview.image"
        loading="lazy"
-       class="image-preview img-responsive mb-1{% if not widget.value.url %} d-none{% endif%}">
+       class="bg-gray-300 img-responsive mb-4{% if not widget.value.url %} hidden{% endif%}">
   <div data-target="image-preview.fileSize"
-       class="d-none"></div>
+       class="hidden"></div>
   {% if widget.is_initial %}
   {% if not widget.required %}
   <label for="{{ widget.checkbox_id }}"

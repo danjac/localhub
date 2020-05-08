@@ -81,10 +81,18 @@
          data-active-link-regex="({{ user.get_absolute_url }}|{% url 'users:comments' user.username %}|{% url 'users:messages' user.username %})$"
          class="sidebar-menu-item">{% trans "My Profile" %}</a>
     </li>
-    <li class="mb-1">
+    <li class="mb-1 md:mb-0">
       <a href="{% url 'user_update' %}"
          data-controller="active-link"
          class="sidebar-menu-item">{% trans "Settings" %}</a>
+    </li>
+    <li class="mb-1 md:hidden">
+      <a href="{% url 'account_logout' %}"
+         class="sidebar-menu-item"
+         data-turbolinks="false"
+         data-controller="ajax"
+         data-action="ajax#post"
+         data-ajax-redirect="{{ home_page_url }}">{% trans "Logout" %}</a>
     </li>
   </ul>
 
@@ -304,10 +312,18 @@
       </a>
     </li>
     {% endif %}
-    <li class="">
+    <li class="mb-1 md:mb-0">
       <a data-controller="active-link"
          class="sidebar-menu-item"
          href="{% url 'user_update' %}">{% trans "Settings" %}</a>
+    </li>
+    <li class="mb-1 md:hidden">
+      <a href="{% url 'account_logout' %}"
+         class="sidebar-menu-item"
+         data-turbolinks="false"
+         data-controller="ajax"
+         data-action="ajax#post"
+         data-ajax-redirect="{{ home_page_url }}">{% trans "Logout" %}</a>
     </li>
   </ul>
   {% endif %}
