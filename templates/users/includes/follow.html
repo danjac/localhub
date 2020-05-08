@@ -4,14 +4,14 @@
 {% load i18n %}
 <a href="{% url 'users:unfollow' user_obj.username %}"
    data-turbolinks="false"
-   class="line-through{% if not is_following %} hidden{% endif %}"
+   class="line-through{% if not is_following %} hidden{% endif %} {{ css_class }}"
    data-target="ajax.toggle ajax.button"
    data-action="ajax#post">
   {% trans "Follow" %}
 </a>
 <a href="{% url 'users:follow' user_obj.username %}"
    data-turbolinks="false"
-   class="{% if is_following %} hidden{% endif %}"
+   class="{% if is_following %} hidden{% endif %} {{ css_class }}"
    data-target="ajax.toggle ajax.button"
    data-action="ajax#post">
   {% trans "Follow" %}

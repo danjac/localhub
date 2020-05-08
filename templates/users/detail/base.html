@@ -89,85 +89,80 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 </p>
 {% endif %}
 
-<div class="d-flex align-center pb-1">
+<div class="flex flex-wrap items-center mb-4">
+
   {% if not is_current_user %}
-  <div class="dropdown mr-2"
+  <div class="text-sm mr-4"
        data-controller="dropdown"
        data-action="click@window->dropdown#close keydown@window->dropdown#close">
-    <button class="btn btn-sm"
+    <button class="btn btn-dropdown"
             data-action="dropdown#toggle">
-      {% trans "Actions" %}<i class="icon icon-caret"></i>
+      {% trans "Actions..." %}<i class="icon icon-caret"></i>
     </button>
-    <ul class="menu"
-        data-target="dropdown.menu">
+    <div class="dropdown-menu mt-1 hidden"
+         data-target="dropdown.menu">
 
       {% if can_create_message and not is_blocked %}
-      <li class="menu-item">
-        <a href="{% url 'private_messages:message_create_recipient' user_obj.username %}">{% trans "Send Message" %}</a>
-      </li>
+      <a class="dropdown-menu-item"
+         href="{% url 'private_messages:message_create_recipient' user_obj.username %}">{% trans "Send Message" %}</a>
       {% endif %}
 
       {% if not is_blocked and can_follow_user %}
-      <li class="menu-item"
-          data-controller="ajax">
-        {% include "users/includes/follow.html" %}
-      </li>
+      <div data-controller="ajax">
+        {% include "users/includes/follow.html" with css_class="dropdown-menu-item" %}
+      </div>
       {% endif %}
 
       {% if can_block_user %}
-      <li class="menu-item">
-        {% with redirect_url=user_obj.get_absolute_url %}
-        {% if is_blocking %}
-        <a class="text-strike"
-           href="{% url 'users:unblock' user_obj.username %}"
-           data-turbolinks="false"
-           data-controller="ajax"
-           data-target="ajax.button"
-           data-action="ajax#post toggle#toggle"
-           data-ajax-redirect="{{ redirect_url }}">
-          {% trans "Block" %}
-        </a>
-        {% else %}
-        <a href="{% url 'users:block' user_obj.username %}"
-           data-turbolinks="false"
-           data-controller="ajax"
-           data-target="ajax.button"
-           data-action="ajax#post toggle#toggle"
-           data-ajax-redirect="{{ redirect_url }}">
-          {% trans "Block" %}
-        </a>
-        {% endif %}
-        {% endwith %}
-      </li>
+      {% with redirect_url=user_obj.get_absolute_url %}
+      {% if is_blocking %}
+      <a class="dropdown-menu-item line-through"
+         href="{% url 'users:unblock' user_obj.username %}"
+         data-turbolinks="false"
+         data-controller="ajax"
+         data-target="ajax.button"
+         data-action="ajax#post toggle#toggle"
+         data-ajax-redirect="{{ redirect_url }}">
+        {% trans "Block" %}
+      </a>
+      {% else %}
+      <a href="{% url 'users:block' user_obj.username %}"
+         class="dropdown-menu-item"
+         data-turbolinks="false"
+         data-controller="ajax"
+         data-target="ajax.button"
+         data-action="ajax#post toggle#toggle"
+         data-ajax-redirect="{{ redirect_url }}">
+        {% trans "Block" %}
+      </a>
       {% endif %}
-
-    </ul>
+      {% endwith %}
+      {% endif %}
+    </div>
   </div>
   {% endif %}
-  <div class="flex flex-wrap items-center mb-4 text-sm">
-    {% if is_current_user %}
-    <a class="inline-block mr-4"
-       href="{% url 'user_update' %}">
-      {% trans "Settings" %}
-    </a>
-    {% endif %}
+  {% if is_current_user %}
+  <a class="inline-block mr-4 text-sm"
+     href="{% url 'user_update' %}">
+    {% trans "Settings" %}
+  </a>
+  {% endif %}
 
-    {% if not is_blocked %}
-    <a class="inline-block mr-4"
-       href="{% url 'users:activity_likes' user_obj.username %}">
-      {% trans "Likes" %}
-    </a>
-    <a class="inline-block mr-4"
-       href="{% url 'users:activity_mentions' user_obj.username %}">
-      {% trans "Mentions" %}
-    </a>
-    {% endif %}
-    {% if can_view_membership %}
-    <a class="inline-block"
-       href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
-    {% endif %}
+  {% if not is_blocked %}
+  <a class="inline-block mr-4 text-sm"
+     href="{% url 'users:activity_likes' user_obj.username %}">
+    {% trans "Likes" %}
+  </a>
+  <a class="inline-block mr-4 text-sm"
+     href="{% url 'users:activity_mentions' user_obj.username %}">
+    {% trans "Mentions" %}
+  </a>
+  {% endif %}
+  {% if can_view_membership %}
+  <a class="inline-block text-sm"
+     href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
+  {% endif %}
 
-  </div>
 </div>
 
 
