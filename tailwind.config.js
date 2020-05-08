@@ -3,7 +3,18 @@
 
 /* eslint-disable */
 module.exports = {
-  purge: ['./templates/**/*.html'],
+  purge: {
+    content: ['./templates/**/*.html'],
+    options: {
+      whitelist: [
+        'bg-gray-600',
+        'bg-blue-600',
+        'bg-green-600',
+        'bg-orange-600',
+        'bg-red-600',
+      ],
+    },
+  },
   theme: {
     extend: {},
   },
