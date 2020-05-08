@@ -94,7 +94,7 @@
   {% regroup object_list by month as months %}
   {% for month, activities in months %}
   <div class="mb-4">
-    <div class="mb-2 font-semibold">{{ month }}</div>
+    <div class="mb-2 font-semibold text-center p-2 bg-indigo-800 text-white">{{ month }}</div>
     {% for activity in activities %}
     {% with object=activity.object object_type=activity.object_type %}
     <div class="flex flex-wrap items-center mb-2 text-sm">
