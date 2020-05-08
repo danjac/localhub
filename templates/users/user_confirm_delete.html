@@ -5,21 +5,21 @@
 {% load i18n %}
 
 {% block content %}
-<ul class="breadcrumb-item">
-  <li class="breadcrumb-item""><a href="{% url 'user_update' %}">{% trans "Settings" %}</a></li>
-  <li class="breadcrumb-item"">
-    <a data-turbolinks="false"
-       href="#">{% trans "Delete Account" %}</a>
+<ul class="breadcrumbs mb-4">
+  <li class="breadcrumb-item"><a href="{% url 'user_update' %}">{% trans "Settings" %}</a></li>
+  <li class="breadcrumb-item">
+    {% trans "Delete Account" %}
   </li>
 </ul>
 
-<h1 class="page-header">{% trans "Delete Account" %}</h1>
+<h1 class="page-header mb-4">{% trans "Delete Account" %}</h1>
 
 
 <form method="POST"
+      class="border border-gray-500 p-5"
       action="{% url 'user_delete' %}">
   {% csrf_token %}
-  <p>
+  <p class="mb-4">
     {% blocktrans %}
     Please confirm you want to delete your account. This will also <b>permanently</b> remove all your posts and
     comments.

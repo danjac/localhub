@@ -9,29 +9,29 @@
 
 {% block content %}
 
-<ul class="breadcrumb-item">
-  <li class="breadcrumb-item""><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
-  <li class="breadcrumb-item"">
-    <a data-turbolinks="false"
-       href="#">{% trans "Email Addresses" %}</a>
+<ul class="breadcrumbs mb-4">
+  <li class="breadcrumb-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
+  <li class="breadcrumb-item">
+    {% trans "Email Addresses" %}
   </li>
 </ul>
 
-<h1 class="page-header">{% trans "Email Addresses" %}</h1>
+<h1 class="page-header mb-4">{% trans "Email Addresses" %}</h1>
 
 
 {% with emailaddresses=user.emailaddress_set.all emailaddress_count=user.emailaddress_set.count %}
 {% if emailaddress_count %}
-<p>{% trans "The following email addresses are associated with your account:" %}</p>
+<p class="mb-2">{% trans "The following email addresses are associated with your account:" %}</p>
 
 <form action="{% url 'account_email' %}"
-      method="post">
+      method="POST"
+      class="p-5 border border-gray-500 w-full md:w-1/2">
   {% csrf_token %}
 
   {% for emailaddress in emailaddresses %}
-  <div class="form-group">
+  <div class="mb-4">
     <label for="email_radio_{{ forloop.counter }}"
-           class="form-label">
+           class="font-semibold">
       <input id="email_radio_{{ forloop.counter }}"
              type="radio"
              name="email"
@@ -40,9 +40,9 @@
              value="{{ emailaddress.email }}" />
       {{ emailaddress.email }}
       {% if emailaddress.verified %}
-      <span class="label">{% trans "Verified" %}</span>
+      <span class="tag">{% trans "Verified" %}</span>
       {% else %}
-      <span class="label">{% trans "Unverified" %}</span>
+      <span class="tag">{% trans "Unverified" %}</span>
       {% endif %}
       {% if emailaddress.primary %}<span class="chip">{% trans "Primary" %}</span>{% endif %}
     </label>
@@ -64,7 +64,7 @@
 </form>
 
 {% else %}
-<p><strong>{% trans 'Warning:'%}</strong>
+<p class=""><strong>{% trans 'Warning:'%}</strong>
   {% trans "You currently do not have any e-mail address set up. You should really add an e-mail address so you can receive notifications, reset your password, etc." %}
 </p>
 
@@ -72,11 +72,13 @@
 
 {% endwith %}
 
-<h6 class="mt-2">{% trans "Add E-mail Address" %}</h6>
+<h2 class="my-4 font-semibold pb-2 border-b border-gray-500 w-full md:w-1/2">
+  {% trans "Add E-mail Address" %}
+</h2>
 
-<form method="post"
+<form method="POST"
       action="{% url 'account_email' %}"
-      class="add_email">
+      class="p-5 border border-gray-500 w-full md:w-1/2">
   {% include "includes/forms/fields.html" %}
   <button name="action_add"
           class="btn btn-primary"

@@ -66,8 +66,9 @@ ol {
   @apply bg-blue-700;
 }
 
-.btn-secondary {
-  @apply border border-gray-500;
+.btn-secondary,
+a.btn-secondary {
+  @apply border border-gray-500 text-black;
 }
 
 .calendar-item {
