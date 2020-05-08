@@ -18,7 +18,7 @@
 {% has_perm "users.block_tag" user as can_block_tag %}
 
 {% if can_follow_tag or can_block_tag %}
-<div class="flex flex-wrap items-center mb-4">
+<div class="flex flex-wrap items-center mb-4 text-sm">
   {% if can_follow_tag %}
   {% with user.following_tags.all|contains:tag as is_following %}
   {% include "hashtags/includes/follow.html" with css_class="inline-block mr-4" %}
