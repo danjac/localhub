@@ -8,33 +8,30 @@
 
 {% block content %}
 
-<ul class="breadcrumb">
-  <li class="breadcrumb-item">
+<ul class="breadcrumbs mb-4">
+  <li class="breadcrumb">
     <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
-  <li class="breadcrumb-item">
-    <a data-turbolinks="false"
-       href="#">{% trans "Invites" %}</a>
+  <li class="breadcrumb">
+    {% trans "Invites" %}
   </li>
 </ul>
 
 
-<h1 class="page-header">
-  {% trans "Invites" %}{% if status_display %}- {{ status_display }}{% endif %}
+<h1 class="page-header mb-4">
+  {% trans "Invites" %}{% if status_display %} / {{ status_display }}{% endif %}
 </h1>
 
 {% get_pending_invite_count user as pending_invites_count %}
 
-<div class="actions mb-1">
-  <a class="action"
+<div class="flex flex-wrap items-center text-sm">
+  <a class="mr-4"
      href="{% url 'invites:create' %}">
     {% trans "Send an invite" %}
   </a>
   {% if pending_invites_count %}
-  <a class="action"
-     href="{% url 'invites:received_list' %}"
-     class="badge"
-     data-badge="{{ pending_invites_count }}">
+  <a class=""
+     href="{% url 'invites:received_list' %}">
     {% trans "Invites received" %}
   </a>
   {% endif %}
@@ -45,14 +42,14 @@
 {% endif %}
 
 {% if total_count %}
-<div class="actions my-1">
+<div class="flex flex-wrap items-center text-sm mb-4">
   {% if status %}
-  <a class="action"
+  <a class="mr-4"
      href="{{ request.path }}">{% trans "Show All" %}</a>
   {% endif %}
   {% for value, label in status_choices %}
   {% if status != value %}
-  <a class="action"
+  <a class="mr-4"
      href="{{ request.path }}?status={{ value }}">{{ label }}</a>
   {% endif %}
   {% endfor %}
@@ -61,35 +58,35 @@
 
 
 {% if object_list %}
-<table class="table table-hover table-responsive">
+<table class="table-auto text-sm block whitespace-no-wrap overflow-x-scroll md:w-full md:whitespace-normal md:overflox-x-auto md:table">
   <thead>
-    <tr>
-      <th>{% trans "Email" %}</th>
-      <th>{% trans "Sent" %}</th>
-      <th>{% trans "Status" %}</th>
-      <th>{% trans "Actions" %}</th>
+    <tr class="bg-gray-300 border">
+      <th class="text-left py-2 px-2">{% trans "Email" %}</th>
+      <th class="text-left py-2 px-2">{% trans "Sent" %}</th>
+      <th class="text-left py-2 px-2">{% trans "Status" %}</th>
+      <th class="text-left py-2 px-2">{% trans "Actions" %}</th>
     </tr>
   </thead>
   <tbody>
     {% for invite in object_list %}
-    <tr>
-      <td>
+    <tr class="{% cycle 'bg-gray-100' '' %} hover:bg-gray-200">
+      <td class="border py-2 px-2">
         {{ invite.email }}
       </td>
-      <td>
+      <td class="border py-2 px-2">
         {% include "includes/timesince.html" with timestamp=invite.sent %}
       </td>
-      <td>{{ invite.get_status_display }}</td>
-      <td>
-        <div class="actions">
+      <td class="border py-2 px-2">{{ invite.get_status_display }}</td>
+      <td class="border py-2 px-2">
+        <div class="flex flex-wrap items-center text-sm">
           {% if invite.is_pending %}
-          <a class="action"
+          <a class="mr-2"
              href="{% url 'invites:resend' invite.id %}"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post">{% trans "Re-send" %}</a>
           {% endif %}
-          <a class="action"
+          <a class=""
              href="{% url 'invites:delete' invite.id %}"
              data-turbolinks="false"
              data-controller="ajax"

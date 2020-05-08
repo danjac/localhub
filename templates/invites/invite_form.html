@@ -4,20 +4,19 @@
 
 {% block content %}
 
-<ul class="breadcrumb">
-  <li class="breadcrumb-item">
+<ul class="breadcrumbs mb-4">
+  <li class="breadcrumb">
     <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
-  <li class="breadcrumb-item">
+  <li class="breadcrumb">
     <a href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
   </li>
-  <li class="breadcrumb-item">
-    <a data-turbolinks="false"
-       href="#">{% trans "Send Invite" %}</a>
+  <li class="breadcrumb">
+    {% trans "Send Invite" %}
   </li>
 </ul>
 
 
-<h1 class="page-header">Invite a new member</h1>
+<h1 class="page-header mb-4">Invite a new member</h1>
 {% include "includes/forms/stimulusjs_form.html" with submit_btn=_("Send Invite") %}
 {% endblock content %}
