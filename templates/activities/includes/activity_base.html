@@ -40,12 +40,12 @@
 
         {% block title %}
 
-        <div class="tracking-tight flex items-center">
+        <div class="tracking-tight flex flex-wrap items-center">
 
           {% if is_detail %}
 
           {% block detail_title %}
-          <span class="mr-4">
+          <span class="inline-block mr-4">
             {% if object.url %}
             {{ object.url|linkify:object.title }}
             {% else %}

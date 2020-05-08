@@ -17,7 +17,7 @@
   {% endif %}
 
   {% if og_data.description %}
-  <blockquote class="text-gray-800 border-l border-gray-200 text-sm pl-3 italic whitespace-normal">
+  <blockquote class="text-gray-800 border-l border-gray-200 text-sm pl-3 italic whitespace-normal break-words">
     {{ og_data.description|html_unescape|urlize|truncatewords_html:300 }}
   </blockquote>
   {% endif %}
