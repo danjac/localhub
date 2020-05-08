@@ -69,7 +69,7 @@
   </thead>
   <tbody>
     {% for invite in object_list %}
-    <tr class="{% cycle 'bg-gray-100' '' %} hover:bg-gray-200">
+    <tr class="{% cycle '' 'bg-gray-100' %} hover:bg-gray-200">
       <td class="border py-2 px-2">
         {{ invite.email }}
       </td>

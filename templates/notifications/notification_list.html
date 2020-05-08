@@ -47,7 +47,7 @@ You can enable emails for your notifications
   <tbody>
     {% for notification in object_list %}
     {% notification notification %}
-    <tr class="{% cycle 'bg-gray-100' '' %} hover:bg-gray-200">
+    <tr class="{% cycle '' 'bg-gray-100' %} hover:bg-gray-200">
       <td class="border py-2 px-2{% if not notification.is_read %} text-bold{% endif %}">
 
         {{ notification_content }}
