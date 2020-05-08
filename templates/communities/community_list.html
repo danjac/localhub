@@ -8,70 +8,55 @@
 
 {% block content %}
 
-<h1 class="page-header">{% trans "Communities" %}</h1>
+<h1 class="page-header mb-4">{% trans "Communities" %}</h1>
 
 {% include "includes/forms/search_form.html" with selector=False %}
 
 {% for object in object_list %}
-<div class="card mb-2">
-  <div class="card-header">
-    <div class="card-title h6">
-      {% if object == community %}
-      {{ object.name }}
-      {% else %}
-      <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
-      {% endif %}
+<div class="card mb-4">
+  <div class="flex flex-wrap items-center">
+    {% if object == community %}
+    {{ object.name }}
+    {% else %}
+    <a class="inline-block mr-4"
+       href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+    {% endif %}
 
-      {% if object.is_member %}
-      <span class="label">{{ roles|from_dictkey:object.member_role }}</span>
-      {% elif not object.allow_join_requests %}
-      <span class="label">{% trans "Invite Only" %}</span>
-      {% endif %}
-    </div>
+    {% if object.is_member %}
+    <span class="tag mr-4">{{ roles|from_dictkey:object.member_role }}</span>
+    {% elif not object.allow_join_requests %}
+    <span class="tag">{% trans "Invite Only" %}</span>
+    {% endif %}
   </div>
 
-  <div class="card-body text-small">
+  <div class="text-sm">
     {{ object.tagline|linebreaksbr }}
   </div>
   {% if community != object and object.is_member %}
   {% with num_notifications=counters.notifications|from_dictkey:object.id num_messages=counters.messages|from_dictkey:object.id num_join_requests=counters.join_requests|from_dictkey:object.id num_flags=counters.flags|from_dictkey:object.id object_url=object.get_absolute_url %}
   {% if num_notifications or num_messages or num_join_requests or num_flags %}
   <div class="card-footer">
-    <div class="actions">
+    <div class="flex flex-wrap items-center text-sm">
       {% if num_flags %}
-      <a class="action"
-         href="{{ object_url }}{% url 'flags:list' %}">
-        <span class="badge"
-              data-badge="{{ num_flags }}">
-          {% trans "Flags" %}
-        </span>
+      <a class="inline-block mr-4"
+         href="{{ object_url }}{% url 'flags:list' %}">{% trans "Flags" %}
       </a>
       {% endif %}
       {% if num_notifications %}
-      <a class="action"
+      <a class="mr-4"
          href="{{ object_url }}{% url 'notifications:list' %}">
-        <span class="badge"
-              data-badge="{{ num_notifications }}">
-          {% trans "Notifications" %}
-        </span>
+        {% trans "Notifications" %}
       </a>
       {% endif %}
       {% if num_messages %}
-      <a class="action"
+      <a class="mr-4"
          href="{{ object_url }}{% url 'private_messages:inbox' %}">
-        <span class="badge"
-              data-badge="{{ num_messages }}">
-          {% trans "Messages" %}
-        </span>
+        {% trans "Messages" %}
       </a>
       {% endif %}
       {% if num_join_requests %}
-      <a class="action"
+      <a class=""
          href="{{ object_url }}{% url 'join_requests:list' %}">
-        <span class="badge"
-              data-badge="{{ num_join_requests }}">
-          {% trans "Join Requests" %}
-        </span>
       </a>
       {% endif %}
     </div>
