@@ -116,7 +116,7 @@ ol {
 
 .markdown-content p,
 .markdownx-preview p {
-  @apply py-4;
+  @apply py-2;
 }
 
 .notification {
