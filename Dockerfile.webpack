@@ -2,6 +2,21 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 FROM node:12.16.1-slim
+
+# Update
+RUN apt-get update -y
+RUN apt-get install apt-transport-https gnupg curl -y
+#
+# Add Yarn repository
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
+# Update
+RUN apt-get update -y
+
+# Install Yarn
+RUN apt-get install yarn -y
+
 WORKDIR /app
 COPY assets ./assets
 COPY webpack.config.js ./webpack.config.js
