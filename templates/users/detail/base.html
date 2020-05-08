@@ -27,23 +27,25 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 {% enddismissable %}
 {% endif %}
 
-<h1 class="page-header flex flex-wrap items-center">
-  {% avatar user_obj "64" css_class="mr-4" show_placeholder=False %}
-  {% if user_obj.username == display_name %}
-  @{{ display_name }}
-  {% else %}
-  {{ display_name }}
-  (@{{ user_obj.username }})
-  {% endif %}
+<h1 class="page-header flex flex-wrap items-center mb-4">
+  <div class="inline-block mr-4">
+    {% avatar user_obj "64" css_class="mr-4" show_placeholder=False %}
+    {% if user_obj.username == display_name %}
+    @{{ display_name }}
+    {% else %}
+    {{ display_name }}
+    (@{{ user_obj.username }})
+    {% endif %}
+  </div>
   {% if membership.is_admin %}
-  <span class="label">{% trans "Admin" %}</span>
+  <span class="inline-block tag mr-4">{% trans "Admin" %}</span>
   {% elif membership.is_moderator %}
-  <span class="label">{% trans "Moderator" %}</span>
+  <span class="inline-block tag">{% trans "Moderator" %}</span>
   {% endif %}
 </h1>
 
 {% if is_blocked %}
-<p class="text-small">
+<p class="mb-4 text-sm">
   <b>
     {% if is_blocker %}
     {% trans "This user has blocked you." %}
@@ -52,7 +54,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
     {% endif %}
   </b>
 </p>
-<p class="text-small">
+<p class="mb-4 text-sm">
   <b>
     {% if is_blocker %}
     {% trans "You cannot send messages to this person." %}
@@ -70,7 +72,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 {% endif %}
 
 {% if not is_blocked %}
-<p class="py-1 text-small">
+<p class="mb-4 text-sm">
   {% if is_current_user %}
   {% blocktrans with created=membership.created|timesince %}
   You have been a member for <b>{{ created }}</b>.
@@ -84,7 +86,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 {% endif %}
 
 {% if is_follower %}
-<p class="py-1 text-small">
+<p class="mb-4 text-sm">
   {% blocktrans %}{{ display_name }} is following you.{% endblocktrans %}
 </p>
 {% endif %}
