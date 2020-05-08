@@ -176,7 +176,7 @@ ol {
 }
 
 .tag {
-  @apply rounded bg-gray-600 text-white px-4 text-xs;
+  @apply rounded bg-gray-600 text-white px-1 text-xs;
 }
 
 .tag-primary {
