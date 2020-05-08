@@ -16,7 +16,9 @@
 <div class="card mb-4">
   <div class="flex flex-wrap items-center">
     {% if object == community %}
-    {{ object.name }}
+    <span class="inline-block mr-4">
+      {{ object.name }}
+    </span>
     {% else %}
     <a class="inline-block mr-4"
        href="{{ object.get_absolute_url }}">{{ object.name }}</a>
