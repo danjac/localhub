@@ -29,25 +29,24 @@
 {% endif %}
 
 <div class="flex flex-wrap justify-between">
-    {% for photo in object_list %}
-    <div class="mb-3">
-      <a href="{{ photo.get_absolute_url }}"
-         title="{{ photo.title }}">
-        {% if photo.image|is_portrait %}
-        {% thumbnail photo.image "300x200" upscale=False crop="top" as image %}
-        {% include "photos/includes/image.html" with title=photo.title %}
-        {% endthumbnail %}
-        {% else %}
-        {% thumbnail photo.image "300" upscale=False as image %}
-        {% include "photos/includes/image.html" with title=photo.title %}
-        {% endthumbnail %}
-        {% endif %}
-      </a>
-    </div>
-    {% empty %}
-    {% include "includes/empty.html" %}
-    {% endfor %}
+  {% for photo in object_list %}
+  <div class="mb-3">
+    <a href="{{ photo.get_absolute_url }}"
+       title="{{ photo.title }}">
+      {% if photo.image|is_portrait %}
+      {% thumbnail photo.image "300x200" upscale=False crop="top" as image %}
+      {% include "photos/includes/image.html" with title=photo.title %}
+      {% endthumbnail %}
+      {% else %}
+      {% thumbnail photo.image "300" upscale=False as image %}
+      {% include "photos/includes/image.html" with title=photo.title %}
+      {% endthumbnail %}
+      {% endif %}
+    </a>
   </div>
+  {% empty %}
+  {% include "includes/empty.html" %}
+  {% endfor %}
 </div>
 {% include "includes/pagination.html" %}
 {% endblock %}
