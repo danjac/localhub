@@ -8,8 +8,6 @@ import { Events } from '@utils/constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
-  static targets = ['errorMessage', 'errorDetail', 'progress'];
-
   connect() {
     this.formElements.forEach((element) =>
       element.addEventListener('change', () => this.data.set('changed', true))
@@ -99,21 +97,13 @@ export default class extends ApplicationController {
 
   disableFormControls() {
     window.scrollTo(0, 0);
-    this.toggleProgressBar();
     this.element.setAttribute('disabled', true);
     this.formElements.forEach((el) => el.setAttribute('disabled', true));
   }
 
   enableFormControls() {
-    this.toggleProgressBar();
     this.element.removeAttribute('disabled');
     this.formElements.forEach((el) => el.removeAttribute('disabled'));
-  }
-
-  toggleProgressBar() {
-    if (this.hasProgressTarget) {
-      this.progressTarget.classList.toggle('hidden');
-    }
   }
 
   serialize(event, multipart) {

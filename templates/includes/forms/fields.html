@@ -6,12 +6,6 @@
 
 {% csrf_token %}
 
-<div class="bg-red-500 text-white font-semibold p-3 mb-4 text-center hidden"
-     data-target="form.errorMessage">
-  {% trans "Sorry, an error has occurred with your form" %}
-  <div data-target="form.errorDetail"></div>
-</div>
-
 {% include "includes/forms/non_field_errors.html" %}
 
 {% for field in form.hidden_fields %}
