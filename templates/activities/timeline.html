@@ -45,7 +45,7 @@
   {% endif %}
   {% if not current_month %}
   {% for counter, name in months %}
-  <a class="inline-block mr-1"
+  <a class="inline-block mr-4"
      href="{{ request.path }}?month={{ counter }}&year={{ current_year }}&order={{ order }}">{{ name }}</a>
   {% endfor %}
   {% endif %}
