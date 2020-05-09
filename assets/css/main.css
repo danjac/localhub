@@ -154,7 +154,7 @@ a.btn-secondary {
 }
 
 .sidebar-menu {
-  @apply border border-gray-500 p-3 bg-gray-100;
+  @apply border border-gray-500 p-1 bg-gray-100;
 }
 
 .sidebar-menu-header {

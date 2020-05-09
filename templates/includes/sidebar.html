@@ -103,18 +103,22 @@
     {% if can_create_activity %}
     <li class="mb-1">
       <a href="{% url 'posts:create' %}"
+         data-controller="active-link"
          class="sidebar-menu-item">{% trans "Submit Post" %}</a>
     </li>
     <li class="mb-1">
       <a href="{% url 'events:create' %}"
+         data-controller="active-link"
          class="sidebar-menu-item">{% trans "Submit Event" %}</a>
     </li>
     <li class="mb-1">
       <a href="{% url 'photos:create' %}"
+         data-controller="active-link"
          class="sidebar-menu-item">{% trans "Submit Photo" %}</a>
     </li>
     <li class="mb-1">
       <a href="{% url 'polls:create' %}"
+         data-controller="active-link"
          class="sidebar-menu-item">{% trans "Submit Poll" %}</a>
     </li>
     {% endif %}
