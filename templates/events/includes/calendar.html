@@ -26,15 +26,14 @@
   <div class="flex flex-wrap">
     {% for day, is_past, events in slots %}
     {% with num_events=events|length %}
-    <div class="calendar-item text-xs{% if day == today.day and is_current_month %} bg-blue-100 {% elif num_events %} bg-gray-100 cursor-pointer{% endif %}"
-         >
+    <div class="calendar-item text-xs{% if day == today.day and is_current_month %} bg-blue-100{% elif num_events %} bg-gray-100{% endif %}{% if num_events %} cursor-pointer{% endif %}"
+         {% if num_events %}
+         data-controller="linkify"
+         data-action="click->linkify#fetch"
+         data-linkify-url="{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}"
+         {% endif %}>
       {% if day %}
-      <div class="h-10 lg:h-32 p-2 tracking-tight border-r border-b border-gray-500 align-middle"
-           {% if num_events %}
-           data-controller="linkify"
-           data-action="click->linkify#fetch"
-           data-linkify-url="{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}"
-           {% endif %}>
+      <div class="h-10 lg:h-32 p-2 tracking-tight border-r border-b border-gray-500 align-middle">
         <button class="float-right">{{ day }}</button>
         <div class="clearfix"></div>
         {% if events %}
