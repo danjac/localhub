@@ -1,7 +1,6 @@
 {# Copyright (c) 2020 by Dan Jacob #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% load account %}
 {% load users %}
 
 {% for user_obj in object_list %}
@@ -14,12 +13,7 @@
       {% avatar user_obj "32" css_class="mr-1 h-6 w-6 text-sm" %}
     </span>
     <span class="inline-block">
-      {% user_display user_obj as display_name %}
-      {% if display_name == user_obj.username %}
-      @{{ display_name }}
-      {% else %}
-      {{ display_name }} (@{{ user_obj.username }})
-      {% endif %}
+      @{{ user_obj.username }})
     </span>
   </div>
 </li>
