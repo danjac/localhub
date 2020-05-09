@@ -120,7 +120,7 @@
   {% if messages %}
   <div class="flex justify-center">
     {% for message in messages %}
-    <div class="absolute z-50 w-4/5 lg:w-1/3 flex items-center text-center p-3 mb-2 text-white {{ message.tags }}"
+    <div class="absolute z-50 w-4/5 lg:w-1/3 flex items-center text-center p-3 mb-4 text-white {{ message.tags }}"
          data-controller="alert">
       <div class="mx-auto text-center">
         {{ message }}
