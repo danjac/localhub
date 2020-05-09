@@ -19,10 +19,24 @@ def common_emojis():
 
 
 @register.simple_tag
-def svg(name, css_class=""):
+def svg(name, variant="black", size="24", css_class=None, fill=False):
+    """
+    """
+
+    if css_class:
+        css_classes = [css_class]
+    elif variant == "white":
+        css_classes = ["text-white"]
+    else:
+        css_classes = ["text-black"]
+
+    if fill:
+        css_classes.append("fill-current")
+
     return mark_safe(
         template.loader.render_to_string(
-            f"includes/svg/{name}.svg.html", {"css_class": css_class}
+            f"includes/svg/{name}.svg.html",
+            {"css_class": " ".join(css_classes), "stroke": variant, "size": size},
         )
     )
 

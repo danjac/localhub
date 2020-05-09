@@ -33,15 +33,15 @@
   </div>
 
   <div class="flex items-center">
-    <div class="flex-grow">
+    <div class="inline-block flex-grow">
       {% include "django/forms/widgets/input.html" %}
     </div>
-    <button type="button"
-            class="bg-gray-200 border border-l-0 border-gray-500 py-1 px-3"
-            disabled
-            data-target="opengraph-preview.button"
-            data-action="opengraph-preview#fetch">
-      {% svg "refresh" %}
-    </button>
+    <div class="inline-block px-4 py-1 bg-gray-200 border border-l-0 border-gray-500">
+      <button type="button"
+              class=""
+              data-action="opengraph-preview#fetch">
+        {% svg "refresh" size="16" css_class="text-sm" %}
+      </button>
+    </div>
   </div>
 </div>

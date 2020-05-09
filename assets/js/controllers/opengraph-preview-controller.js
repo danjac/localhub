@@ -8,6 +8,7 @@ import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
   static targets = [
+    'button',
     'container',
     'description',
     'descriptionPreview',
@@ -18,9 +19,18 @@ export default class extends ApplicationController {
     'listener',
     'title',
   ];
+
   connect() {
     this.bus.sub(Events.FORM_FETCHING, () => this.data.set('fetching', true));
     this.bus.sub(Events.FORM_COMPLETE, () => this.data.delete('fetching'));
+  }
+
+  change() {
+    if (this.isURL && !this.isFetching) {
+      this.buttonTarget.removeAttribute('disabled');
+    } else {
+      this.buttonTarget.setAttribute('disabled', true);
+    }
   }
 
   fetch(event) {
@@ -29,11 +39,7 @@ export default class extends ApplicationController {
     // prevent refetch
     const { currentTarget } = event;
 
-    if (
-      !this.inputTarget.checkValidity() ||
-      this.data.has('fetching') ||
-      currentTarget.getAttribute('disabled')
-    ) {
+    if (!this.isURL || this.isFetching || currentTarget.getAttribute('disabled')) {
       return false;
     }
 
@@ -136,5 +142,13 @@ export default class extends ApplicationController {
   handleServerError() {
     this.clearListeners();
     this.toaster.error(this.data.get('errorMessage'));
+  }
+
+  get isFetching() {
+    return this.data.has('fetching');
+  }
+
+  get isURL() {
+    return this.inputTarget.checkValidity();
   }
 }
