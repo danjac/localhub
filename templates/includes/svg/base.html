@@ -1,0 +1,21 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% spaceless %}
+{# https://github.com/refactoringui/heroicons #}
+<svg {% block svg_attrs %}width="{{ size }}"
+     height="{{ size }}"
+     viewBox="0 0 {{ size }} {{ size }}"
+     fill="none"
+     focusable="false"
+     role="img"
+     class="{{ css_class }}"
+     xmlns="http://www.w3.org/2000/svg"{% endblock svg_attrs %}>
+  {% block path %}
+  <path d="{% block path_data %}{% endblock path_data %}"
+        stroke="{{ stroke }}"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round" />
+{% endblock path %}
+</svg>
+{% endspaceless %}
