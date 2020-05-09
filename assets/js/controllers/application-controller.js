@@ -3,6 +3,7 @@
 
 import { Controller } from 'stimulus';
 
+import { ClassList } from '@utils/class-list';
 import EventBus from '@utils/event-bus';
 import Toaster from '@utils/toaster';
 
@@ -12,6 +13,7 @@ export default class extends Controller {
   initialize() {
     this.bus = new EventBus();
     this.toaster = new Toaster(this.bus);
+    this.classList = new ClassList(this.element);
   }
 
   disconnect() {

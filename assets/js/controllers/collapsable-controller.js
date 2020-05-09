@@ -1,6 +1,8 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import * as classList from '@utils/class-list';
+
 import ApplicationController from './application-controller';
 
 const MAX_HEIGHT = 360;
@@ -43,25 +45,15 @@ export default class extends ApplicationController {
     }
   }
 
-  getCollapsableClasses() {
-    return this.data.get('class').split(/ /).concat('collapsable');
-  }
-
   removeCollapsable() {
-    this.containerTarget.classList.remove.apply(
-      this.containerTarget.classList,
-      this.getCollapsableClasses()
-    );
+    classList.remove(this.containerTarget, this.collapsableClass);
     this.toggleTargets.forEach((el) => el.classList.add('hidden'));
     this.observer.disconnect(this.containerTarget);
   }
 
   makeCollapsable(height) {
     if (height > MAX_HEIGHT && !this.isCollapsable) {
-      this.containerTarget.classList.add.apply(
-        this.containerTarget.classList,
-        this.getCollapsableClasses()
-      );
+      classList.add(this.containerTarget, this.collapsableClass);
       this.containerTarget.style.maxHeight = MAX_HEIGHT;
       this.toggleTargets.forEach((target) => target.classList.remove('hidden'));
     }
@@ -69,5 +61,9 @@ export default class extends ApplicationController {
 
   get isCollapsable() {
     return this.containerTarget.classList.contains('collapsable');
+  }
+
+  get collapsableClass() {
+    return this.data.get('class') + ' collapsable';
   }
 }

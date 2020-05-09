@@ -23,13 +23,13 @@ export default class extends ApplicationController {
     this.headerTarget.innerText = header;
     this.bodyTarget.innerText = body;
     this.onConfirm = onConfirm;
-    this.element.classList.remove.apply(this.element.classList, this.inactiveClasses);
+    this.classList.remove(this.inactiveClasses);
     maximizeZIndex(this.element);
   }
 
   close() {
     this.onConfirm = null;
-    this.element.classList.add.apply(this.element.classList, this.inactiveClasses);
+    this.classList.add(this.inactiveClasses);
   }
 
   cancel(event) {
@@ -47,6 +47,6 @@ export default class extends ApplicationController {
   }
 
   get inactiveClasses() {
-    return this.data.get('inactiveClass').split(/ /);
+    return this.data.get('inactiveClass');
   }
 }

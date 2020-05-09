@@ -4,6 +4,7 @@
 import axios from 'axios';
 import getCaretPosition from 'textarea-caret';
 
+import * as classList from '@utils/class-list';
 import { Keys } from '@utils/constants';
 import { fitIntoViewport, maximizeZIndex } from '@utils/dom-helpers';
 
@@ -81,18 +82,6 @@ export default class extends ApplicationController {
     return false;
   }
 
-  addSelectedClasses(el) {
-    el.classList.add.apply(el.classList, this.getSelectedClassNames());
-  }
-
-  removeSelectedClasses(el) {
-    el.classList.remove.apply(el.classList, this.getSelectedClassNames());
-  }
-
-  getSelectedClassNames() {
-    return this.data.get('selectedClass').split(/ /).concat('selected');
-  }
-
   handleSelectorEvents(event) {
     if (!this.selectorOpen) {
       return true;
@@ -114,8 +103,8 @@ export default class extends ApplicationController {
         if (firstItem) {
           prevItem = firstItem.previousElementSibling;
           if (prevItem) {
-            this.removeSelectedClasses(firstItem);
-            this.addSelectedClasses(prevItem);
+            classList.remove(firstItem, this.selectedClass);
+            classList.add(prevItem, this.selectedClass);
           }
         }
         return false;
@@ -125,8 +114,8 @@ export default class extends ApplicationController {
         if (firstItem) {
           nextItem = firstItem.nextElementSibling;
           if (nextItem) {
-            this.removeSelectedClasses(firstItem);
-            this.addSelectedClasses(nextItem);
+            classList.remove(firstItem, this.selectedClass);
+            classList.add(nextItem, this.selectedClass);
           }
         }
         return false;
@@ -242,5 +231,9 @@ export default class extends ApplicationController {
 
   get selectorOpen() {
     return !this.selectorTarget.classList.contains('hidden');
+  }
+
+  get selectedClass() {
+    return this.data.get('selectedClass') + ' selected';
   }
 }

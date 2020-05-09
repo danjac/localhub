@@ -1,6 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import * as classList from '@utils/class-list';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
@@ -13,18 +14,17 @@ export default class extends ApplicationController {
 
   */
   connect() {
-    const videoClasses = this.data.get('video-class').split(/ /);
+    const videoClass = this.data.get('video-class');
     const embedded = this.element.querySelector('iframe, video, audio');
 
-    if (videoClasses && embedded && !this.element.querySelector('script')) {
-      embedded.classList.add.apply(embedded.classList, videoClasses);
+    if (videoClass && embedded && !this.element.querySelector('script')) {
+      classList.add(embedded, videoClass);
     } else {
-      // if we just have embedded images, make these responsive.
       const images = this.element.querySelectorAll('img');
-      const imageClasses = this.data.get('image-class').split(/ /);
-      if (imageClasses && images.length > 0) {
+      const imageClass = this.data.get('image-class');
+      if (imageClass && images.length > 0) {
         images.forEach((el) => {
-          el.classList.add.apply(el.classList, imageClasses);
+          classList.add(el, imageClass);
         });
       } else {
         this.element.remove();
