@@ -9,7 +9,6 @@ import datetime
 from django.http import Http404, HttpResponse
 from django.utils import timezone
 from django.utils.functional import cached_property
-from django.utils.timezone import localtime, override
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import View
 from django.views.generic.dates import DateMixin, DayMixin, MonthMixin, YearMixin
@@ -33,10 +32,9 @@ from .models import Event
 
 class TimezoneOverrideMixin:
     def dispatch(self, request, *args, **kwargs):
-        timezone = (
+        with timezone.override(
             request.user.default_timezone if request.user.is_authenticated else None
-        )
-        with override(timezone):
+        ):
             return super().dispatch(request, *args, **kwargs)
 
 
@@ -148,11 +146,13 @@ class EventCalendarView(
         return not (self.current_day)
 
     def get(self, request, *args, **kwargs):
-        with override(request.user.default_timezone):
-            try:
-                return super().get(request, *args, **kwargs)
-            except Event.InvalidDate:
-                raise Http404("These dates are not valid")
+        try:
+            return super().get(request, *args, **kwargs)
+        except Event.InvalidDate:
+            raise Http404("These dates are not valid")
+
+    def get_current_time(self):
+        return timezone.localtime(timezone.now())
 
     @cached_property
     def current_day(self):
@@ -166,14 +166,14 @@ class EventCalendarView(
         try:
             return int(self.get_month())
         except (Http404, ValueError):
-            return timezone.now().month
+            return self.get_current_time().month
 
     @cached_property
     def current_year(self):
         try:
             return int(self.get_year())
         except (Http404, ValueError):
-            return timezone.now().year
+            return self.get_current_time().year
 
     def get_queryset(self):
         # for rep
@@ -197,7 +197,7 @@ class EventCalendarView(
 
     def make_datetime(self, day):
         try:
-            return localtime(
+            return timezone.localtime(
                 datetime.datetime(
                     day=day,
                     month=self.current_month,
@@ -221,7 +221,7 @@ class EventCalendarView(
             ]
             return data
 
-        now = localtime(timezone.now())
+        now = self.get_current_time()
 
         data["current_month"] = first_of_month = self.make_date(1)
 
