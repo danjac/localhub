@@ -4,7 +4,8 @@
 {% load i18n %}
 
 <div class="card{% if css_class %} {{ css_class }}{% endif %}"
-     data-controller="clipboard">
+     data-controller="clipboard"
+     data-clipboard-message="{% trans 'Markdown content has been copied' %}">
   <div class="mb-2">
     <div class="text-blue-800 hover:text-blue-700 font-semibold flex flex-wrap items-center mb-2">
       {% block title %}
