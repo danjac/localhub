@@ -38,4 +38,6 @@ assets/dist/
 celerybeat.pid
 celerybeat-schedule
 
+# Common typos
 :w
+'
