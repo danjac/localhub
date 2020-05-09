@@ -8,7 +8,7 @@
 
 {% block content %}
 
-<h1 class="page-header mb-4">{% trans "Tags" %}</h1>
+<h1 class="page-header mb-2">{% trans "Tags" %}</h1>
 
 {% has_perm "users.follow_tag" user as can_follow_tag %}
 {% has_perm "users.block_tag" user as can_block_tag %}
