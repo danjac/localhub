@@ -45,7 +45,7 @@
   {% endif %}
   {% if not current_month %}
   {% for counter, name in months %}
-  <a class="inline-block"
+  <a class="inline-block mr-1"
      href="{{ request.path }}?month={{ counter }}&year={{ current_year }}&order={{ order }}">{{ name }}</a>
   {% endfor %}
   {% endif %}
@@ -90,16 +90,17 @@
 
 {% if object_list %}
 
-<div class="">
-  {% regroup object_list by month as months %}
-  {% for month, activities in months %}
-  <div class="mb-4">
-    <div class="mb-2 font-semibold text-center p-2 bg-indigo-800 text-white">{{ month }}</div>
-    {% for activity in activities %}
-    {% with object=activity.object object_type=activity.object_type %}
-    <div class="flex flex-wrap items-center mb-2 text-sm">
+{% regroup object_list by month as months %}
+{% for month, activities in months %}
+<div class="mb-4 border-r border-l border-b border-gray-500">
+  <div class="font-semibold text-center p-2 bg-indigo-800 text-white">{{ month }}</div>
+  {% for activity in activities %}
+  {% with object=activity.object object_type=activity.object_type %}
+  <div class="p-3 {% if not forloop.last %} border-b border-gray-500{% endif %}{% cycle '' ' bg-gray-100' %}">
+    <div class="flex flex-wrap items-center mb-4 text-sm">
 
-      <a class="mr-4" href="{{ object.get_absolute_url }}">
+      <a class="mr-4"
+         href="{{ object.get_absolute_url }}">
         {{ object|truncatechars:100 }}
       </a>
 
@@ -112,14 +113,14 @@
       <span class="mr-4 tag">{% trans "Reshare" %}</span>
       {% endif %}
     </div>
-    <div class="mb-4 border-b border-gray-500 pb-2">
+    <div class="">
       {% include "includes/timesince.html" with timestamp=object.published owner=object.owner %}
     </div>
-    {% endwith %}
-    {% endfor %}
   </div>
+  {% endwith %}
   {% endfor %}
 </div>
+{% endfor %}
 {% include "includes/pagination.html" %}
 {% else %}
 {% trans "There are no items for this period" as t_empty %}
