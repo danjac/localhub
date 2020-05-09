@@ -32,11 +32,16 @@
 
   </div>
 
-  <div class="">
-    {% include "django/forms/widgets/input.html" %}
-    <button type="button"
-            class=""
-            data-action="opengraph-preview#fetch">
-    </button>
+  <div class="flex items-center">
+    <div class="inline-block flex-grow">
+      {% include "django/forms/widgets/input.html" %}
+    </div>
+    <div class="inline-block px-4 py-1 bg-gray-200 border border-l-0 border-gray-500">
+      <button type="button"
+              class=""
+              data-action="opengraph-preview#fetch">
+        X
+      </button>
+    </div>
   </div>
 </div>

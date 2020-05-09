@@ -3,6 +3,7 @@
 
 # Django
 from django import template
+from django.utils.safestring import mark_safe
 
 # Social-BFG
 from social_bfg.utils import emojis
@@ -15,6 +16,15 @@ def common_emojis():
     """Returns list of commonly used emojis, for use e.g. in markdown widget.
     """
     return emojis.COMMON_EMOJIS
+
+
+@register.simple_tag
+def svg(name, css_class=""):
+    return mark_safe(
+        template.loader.render_to_string(
+            f"includes/svg/{name}.svg.html", {"css_class": css_class}
+        )
+    )
 
 
 @register.tag(name="collapsable")
