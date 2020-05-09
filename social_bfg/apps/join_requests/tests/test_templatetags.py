@@ -8,6 +8,7 @@ import pytest
 from social_bfg.apps.communities.factories import MembershipFactory
 from social_bfg.apps.communities.models import Membership
 
+# Local
 from ..factories import JoinRequestFactory
 from ..templatetags.join_requests import (
     get_pending_external_join_request_count,

@@ -13,6 +13,7 @@ from social_bfg.apps.communities.factories import CommunityFactory, MembershipFa
 from social_bfg.apps.communities.models import Community
 from social_bfg.apps.users.factories import UserFactory
 
+# Local
 from ..factories import NotificationFactory
 from ..models import Notification, PushSubscription
 

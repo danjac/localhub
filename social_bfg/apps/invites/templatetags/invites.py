@@ -4,6 +4,7 @@
 # Django
 from django import template
 
+# Local
 from ..models import Invite
 
 register = template.Library()

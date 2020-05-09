@@ -7,6 +7,7 @@ from django.urls import path
 # Social-BFG
 from social_bfg.apps.activities.urls.generic import create_activity_urls
 
+# Local
 from .forms import PhotoForm
 from .models import Photo
 from .views import photo_gallery_view

@@ -6,6 +6,7 @@
 from social_bfg.apps.activities.notifications import ActivityAdapter
 from social_bfg.apps.notifications.decorators import register
 
+# Local
 from .models import Post
 
 

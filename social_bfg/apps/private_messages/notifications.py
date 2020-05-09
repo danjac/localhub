@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from social_bfg.apps.notifications.adapter import Adapter, Mailer, Webpusher
 from social_bfg.apps.notifications.decorators import register
 
+# Local
 from .models import Message
 
 

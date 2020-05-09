@@ -13,6 +13,7 @@ from social_bfg.apps.bookmarks.factories import BookmarkFactory
 from social_bfg.apps.bookmarks.models import Bookmark
 from social_bfg.apps.communities.factories import MembershipFactory
 
+# Local
 from ..factories import MessageFactory
 from ..models import Message
 

@@ -7,6 +7,7 @@ from factory import DjangoModelFactory, Faker, Sequence, SubFactory
 # Social-BFG
 from social_bfg.apps.users.factories import UserFactory
 
+# Local
 from .models import Community, Membership
 
 

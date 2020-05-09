@@ -5,6 +5,7 @@
 import pytest
 import requests
 
+# Local
 from ..http import (
     URLResolver,
     get_domain,

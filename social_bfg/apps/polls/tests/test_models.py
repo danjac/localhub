@@ -8,6 +8,7 @@ import pytest
 # Social-BFG
 from social_bfg.apps.communities.factories import MembershipFactory
 
+# Local
 from ..factories import AnswerFactory
 from ..models import Poll
 

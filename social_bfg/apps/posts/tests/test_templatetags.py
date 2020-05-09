@@ -7,6 +7,7 @@ import pytest
 # Social-BFG
 from social_bfg.apps.users.factories import UserFactory
 
+# Local
 from ..factories import PostFactory
 from ..templatetags.posts import render_opengraph_content
 

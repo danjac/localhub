@@ -10,6 +10,7 @@ import pytest
 # Social-BFG
 from social_bfg.apps.communities.factories import MembershipFactory
 
+# Local
 from ..factories import MessageFactory
 from ..templatetags.private_messages import (
     get_unread_external_message_count,

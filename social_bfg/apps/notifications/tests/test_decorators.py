@@ -7,6 +7,7 @@ import pytest
 # Social-BFG
 from social_bfg.apps.communities.factories import MembershipFactory
 
+# Local
 from ..decorators import notify
 from ..models import Notification
 

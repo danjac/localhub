@@ -13,6 +13,7 @@ from social_bfg.apps.communities.factories import MembershipFactory
 from social_bfg.apps.likes.factories import LikeFactory
 from social_bfg.apps.likes.models import Like
 
+# Local
 from ..factories import PhotoFactory
 from ..models import Photo
 

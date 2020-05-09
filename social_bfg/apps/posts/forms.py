@@ -8,6 +8,7 @@ from django.utils.translation import gettext as _
 # Social-BFG
 from social_bfg.apps.activities.forms import ActivityForm
 
+# Local
 from .models import Post
 
 

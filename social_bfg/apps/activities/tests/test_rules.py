@@ -11,6 +11,7 @@ import pytest
 from social_bfg.apps.communities.models import Community, Membership
 from social_bfg.apps.posts.factories import PostFactory
 
+# Local
 from ..rules import is_activity_community_moderator, is_deleted, is_owner, is_published
 
 pytestmark = pytest.mark.django_db

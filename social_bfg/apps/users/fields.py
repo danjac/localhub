@@ -4,6 +4,7 @@
 # Django
 from django.db import models
 
+# Local
 from .forms import MentionsField as MentionsFormField
 from .utils import extract_mentions
 from .validators import validate_mentions

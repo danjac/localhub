@@ -7,6 +7,7 @@ from django.dispatch import receiver
 # Social-BFG
 from social_bfg.apps.notifications.signals import notification_read
 
+# Local
 from .models import Message
 
 

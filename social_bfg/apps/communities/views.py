@@ -21,6 +21,7 @@ from social_bfg.apps.invites.models import Invite
 from social_bfg.apps.join_requests.models import JoinRequest
 from social_bfg.views import SearchMixin, SuccessDeleteView, SuccessUpdateView
 
+# Local
 from .emails import send_membership_deleted_email
 from .forms import CommunityForm, MembershipForm
 from .models import Community, Membership

@@ -9,6 +9,7 @@ from social_bfg.apps.communities.factories import CommunityFactory
 from social_bfg.apps.posts.factories import PostFactory
 from social_bfg.apps.users.factories import UserFactory
 
+# Local
 from .models import Flag
 
 

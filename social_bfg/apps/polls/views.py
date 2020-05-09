@@ -21,6 +21,7 @@ from social_bfg.apps.activities.views.generic import (
 from social_bfg.apps.communities.views import CommunityRequiredMixin
 from social_bfg.views import SuccessActionView
 
+# Local
 from .models import Answer, Poll
 
 

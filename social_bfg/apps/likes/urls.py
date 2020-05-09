@@ -4,6 +4,7 @@
 # Django
 from django.urls import path
 
+# Local
 from .views import liked_comment_list_view, liked_stream_view
 
 app_name = "likes"

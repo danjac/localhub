@@ -10,6 +10,7 @@ import pytest
 # Social-BFG
 from social_bfg.apps.posts.factories import PostFactory
 
+# Local
 from ..factories import FlagFactory
 from ..models import Flag
 

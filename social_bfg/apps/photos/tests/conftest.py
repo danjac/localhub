@@ -11,6 +11,7 @@ from django.core.files import File
 import pytest
 from PIL import Image
 
+# Local
 from ..factories import PhotoFactory
 
 

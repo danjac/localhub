@@ -19,6 +19,7 @@ from social_bfg.apps.polls.models import Poll
 from social_bfg.apps.posts.factories import PostFactory
 from social_bfg.apps.posts.models import Post
 
+# Local
 from ..utils import (
     get_activity_model,
     get_activity_models,

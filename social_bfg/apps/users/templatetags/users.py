@@ -10,6 +10,7 @@ from django.utils.safestring import mark_safe
 # Third Party Libraries
 from bs4 import BeautifulSoup
 
+# Local
 from ..utils import linkify_mentions
 
 register = template.Library()

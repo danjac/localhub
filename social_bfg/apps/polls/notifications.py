@@ -13,6 +13,7 @@ from social_bfg.apps.activities.notifications import (
 )
 from social_bfg.apps.notifications.decorators import register
 
+# Local
 from .models import Poll
 
 

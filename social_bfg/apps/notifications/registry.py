@@ -4,6 +4,7 @@
 # Django
 from django.core.exceptions import ImproperlyConfigured
 
+# Local
 from .adapter import Adapter
 
 

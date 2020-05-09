@@ -7,6 +7,7 @@ from django.template import engines
 # Third Party Libraries
 import pytest
 
+# Local
 from ..factories import UserFactory
 from ..templatetags.users import avatar, strip_external_images
 

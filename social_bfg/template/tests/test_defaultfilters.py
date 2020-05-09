@@ -12,6 +12,7 @@ import pytest
 # Social-BFG
 from social_bfg.apps.posts.models import Post
 
+# Local
 from ..defaultfilters import (
     contains,
     from_dictkey,

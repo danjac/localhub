@@ -4,6 +4,7 @@
 # Third Party Libraries
 import pytest
 
+# Local
 from ..templatetags.invites import get_pending_invite_count
 
 pytestmark = pytest.mark.django_db

@@ -23,6 +23,7 @@ from markdownx.models import MarkdownxField
 from social_bfg.apps.hashtags.utils import extract_hashtags
 from social_bfg.apps.users.utils import extract_mentions
 
+# Local
 from .utils import markdownify
 from .widget import TypeaheadMarkdownWidget
 

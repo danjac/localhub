@@ -26,6 +26,7 @@ from social_bfg.views import (
     SuccessView,
 )
 
+# Local
 from .forms import MessageForm, MessageRecipientForm
 from .models import Message
 

@@ -7,6 +7,7 @@ import pytest
 # Social-BFG
 from social_bfg.apps.posts.notifications import PostAdapter
 
+# Local
 from ..factories import NotificationFactory
 
 pytestmark = pytest.mark.django_db

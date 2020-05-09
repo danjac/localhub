@@ -8,6 +8,7 @@ from django.urls import path
 # Social-BFG
 from social_bfg.apps.activities.urls.generic import create_activity_urls
 
+# Local
 from . import views
 from .forms import EventForm
 from .models import Event

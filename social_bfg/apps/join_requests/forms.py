@@ -6,6 +6,7 @@
 from django import forms
 from django.utils.translation import gettext as _
 
+# Local
 from .models import JoinRequest
 
 

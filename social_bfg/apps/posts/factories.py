@@ -11,6 +11,7 @@ from factory import DjangoModelFactory, Faker, LazyFunction, SubFactory
 from social_bfg.apps.communities.factories import CommunityFactory
 from social_bfg.apps.users.factories import UserFactory
 
+# Local
 from .models import Post
 
 

@@ -11,6 +11,7 @@ import pytest
 from social_bfg.apps.communities.factories import MembershipFactory
 from social_bfg.apps.private_messages.factories import MessageFactory
 
+# Local
 from ..factories import BookmarkFactory
 
 pytestmark = pytest.mark.django_db

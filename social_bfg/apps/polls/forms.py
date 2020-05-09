@@ -4,6 +4,7 @@
 # Social-BFG
 from social_bfg.apps.activities.forms import ActivityForm
 
+# Local
 from .models import Poll
 
 

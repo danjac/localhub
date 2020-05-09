@@ -4,6 +4,7 @@
 # Third Party Libraries
 import pytest
 
+# Local
 from ..exif import Exif
 
 

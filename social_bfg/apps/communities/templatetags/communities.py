@@ -12,6 +12,7 @@ from social_bfg.apps.join_requests.templatetags import join_requests
 from social_bfg.apps.notifications.templatetags import notifications
 from social_bfg.apps.private_messages.templatetags import private_messages
 
+# Local
 from ..models import Community
 from ..rules import is_admin, is_member, is_moderator
 

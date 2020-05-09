@@ -26,6 +26,7 @@ from social_bfg.apps.activities.views.generic import (
     BaseActivityListView,
 )
 
+# Local
 from .models import Event
 
 

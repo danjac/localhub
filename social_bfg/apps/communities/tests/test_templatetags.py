@@ -11,6 +11,7 @@ from social_bfg.apps.invites.factories import InviteFactory
 from social_bfg.apps.join_requests.factories import JoinRequestFactory
 from social_bfg.apps.private_messages.factories import MessageFactory
 
+# Local
 from ..factories import CommunityFactory, MembershipFactory
 from ..models import Membership
 from ..templatetags.communities import (

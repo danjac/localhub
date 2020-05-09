@@ -9,6 +9,7 @@ from django.conf import settings
 # Social-BFG
 from social_bfg.forms.widgets import BaseTypeaheadInput
 
+# Local
 from .validators import validate_hashtags
 
 

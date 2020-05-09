@@ -12,6 +12,7 @@ import pytest
 from social_bfg.apps.join_requests.models import JoinRequest
 from social_bfg.apps.users.factories import UserFactory
 
+# Local
 from ..factories import CommunityFactory, MembershipFactory
 from ..models import Community, Membership
 

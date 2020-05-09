@@ -4,6 +4,7 @@
 # Third Party Libraries
 import pytest
 
+# Local
 from ..models import PushSubscription
 from ..tasks import send_webpush
 

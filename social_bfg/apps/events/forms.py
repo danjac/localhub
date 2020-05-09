@@ -14,6 +14,7 @@ from social_bfg.apps.activities.forms import ActivityForm
 from social_bfg.forms import CalendarField, CalendarWidget, FormHelper
 from social_bfg.utils.geocode import geocode
 
+# Local
 from .models import Event
 
 DATE_FORMATS = ["%d/%m/%Y"]

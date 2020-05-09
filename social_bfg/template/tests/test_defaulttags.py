@@ -4,6 +4,7 @@
 # Django
 from django import template
 
+# Local
 from ..defaulttags import svg
 
 

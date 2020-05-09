@@ -11,6 +11,7 @@ from django.views.generic import View
 # Third Party Libraries
 import pytest
 
+# Local
 from ..factories import CommunityFactory, MembershipFactory
 from ..models import Membership, RequestCommunity
 from ..views import CommunityRequiredMixin

@@ -30,6 +30,7 @@ from social_bfg.views import (
     SuccessUpdateView,
 )
 
+# Local
 from ..forms import ActivityTagsForm
 from ..utils import get_activity_models
 

@@ -15,6 +15,7 @@ from django.views.generic import ListView, TemplateView, View
 from social_bfg.apps.communities.views import CommunityRequiredMixin
 from social_bfg.views import SuccessActionView, SuccessDeleteView, SuccessView
 
+# Local
 from .models import Notification, PushSubscription
 from .signals import notification_read
 

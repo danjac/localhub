@@ -8,6 +8,7 @@ from django.core.management.base import CommandError
 # Third Party Libraries
 import pytest
 
+# Local
 from ..models import Community, Membership
 
 pytestmark = pytest.mark.django_db

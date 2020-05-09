@@ -13,6 +13,7 @@ from django.utils.translation import gettext_lazy as _
 from social_bfg.forms import FormHelper
 from social_bfg.forms.widgets import BaseTypeaheadInput, ClearableImageInput
 
+# Local
 from .validators import validate_mentions
 
 User = get_user_model()

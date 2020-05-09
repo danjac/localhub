@@ -37,6 +37,7 @@ from social_bfg.markdown.fields import MarkdownField
 from social_bfg.utils.itertools import takefirst
 from social_bfg.utils.text import slugify_unicode
 
+# Local
 from . import signals
 
 

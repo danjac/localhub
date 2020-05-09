@@ -7,6 +7,7 @@ import pytest
 # Social-BFG
 from social_bfg.apps.communities.factories import CommunityFactory
 
+# Local
 from ..forms import JoinRequestForm
 from ..models import JoinRequest
 

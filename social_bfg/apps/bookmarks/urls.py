@@ -4,6 +4,7 @@
 # Django
 from django.urls import path
 
+# Local
 from .views import (
     bookmarks_comment_list_view,
     bookmarks_message_list_view,

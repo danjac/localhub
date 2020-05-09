@@ -5,6 +5,7 @@
 import pytest
 import requests
 
+# Local
 from ..scraper import HTMLScraper
 
 

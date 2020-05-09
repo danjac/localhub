@@ -18,6 +18,7 @@ from social_bfg.apps.notifications.models import Notification
 from social_bfg.apps.posts.factories import PostFactory
 from social_bfg.apps.private_messages.factories import MessageFactory
 
+# Local
 from ..factories import UserFactory
 
 pytestmark = pytest.mark.django_db

@@ -4,6 +4,7 @@
 # Third Party Libraries
 import pytest
 
+# Local
 from ..factories import UserFactory
 from ..rules import is_self
 

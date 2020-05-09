@@ -16,6 +16,7 @@ from social_bfg.apps.notifications.factories import NotificationFactory
 from social_bfg.apps.posts.factories import PostFactory
 from social_bfg.apps.users.factories import UserFactory
 
+# Local
 from ..factories import CommentFactory
 from ..models import Comment
 

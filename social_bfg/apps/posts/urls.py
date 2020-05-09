@@ -8,6 +8,7 @@ from django.urls import path
 # Social-BFG
 from social_bfg.apps.activities.urls.generic import create_activity_urls
 
+# Local
 from .forms import PostForm
 from .models import Post
 from .views import opengraph_preview_view

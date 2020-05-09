@@ -4,6 +4,7 @@
 # Django
 from django.utils.functional import SimpleLazyObject
 
+# Local
 from .models import Community
 
 

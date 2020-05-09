@@ -4,6 +4,7 @@
 # Third Party Libraries
 import pytest
 
+# Local
 from ..middleware import CurrentCommunityMiddleware
 
 pytestmark = pytest.mark.django_db

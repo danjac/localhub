@@ -9,6 +9,7 @@ from django.dispatch import receiver
 # Social-BFG
 from social_bfg.apps.join_requests.models import JoinRequest
 
+# Local
 from .models import Membership
 
 

@@ -22,6 +22,7 @@ from social_bfg.views import (
     SuccessDeleteView,
 )
 
+# Local
 from .emails import send_invitation_email
 from .forms import InviteForm
 from .models import Invite

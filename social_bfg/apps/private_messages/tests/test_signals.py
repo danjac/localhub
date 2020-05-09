@@ -8,6 +8,7 @@ import pytest
 from social_bfg.apps.notifications.factories import NotificationFactory
 from social_bfg.apps.notifications.signals import notification_read
 
+# Local
 from ..factories import MessageFactory
 from ..models import Message
 

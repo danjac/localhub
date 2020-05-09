@@ -10,6 +10,7 @@ from django.utils import timezone
 # Third Party Libraries
 import pytest
 
+# Local
 from ..factories import EventFactory
 from ..rules import is_attendable
 

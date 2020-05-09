@@ -17,6 +17,7 @@ from social_bfg.apps.events.factories import EventFactory
 from social_bfg.apps.photos.factories import PhotoFactory
 from social_bfg.apps.posts.factories import PostFactory
 
+# Local
 from ..factories import NotificationFactory
 from ..models import Notification, PushSubscription
 

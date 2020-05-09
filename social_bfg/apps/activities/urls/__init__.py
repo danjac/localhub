@@ -4,6 +4,7 @@
 # Django
 from django.urls import path
 
+# Local
 from ..views import streams
 
 app_name = "activities"

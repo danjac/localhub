@@ -28,6 +28,7 @@ from social_bfg.views import (
     SuccessDeleteView,
 )
 
+# Local
 from .emails import send_acceptance_email, send_join_request_email, send_rejection_email
 from .forms import JoinRequestForm
 from .models import JoinRequest

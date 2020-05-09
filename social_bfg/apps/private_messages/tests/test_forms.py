@@ -11,6 +11,7 @@ import pytest
 from social_bfg.apps.communities.factories import MembershipFactory
 from social_bfg.apps.users.factories import UserFactory
 
+# Local
 from ..forms import MessageRecipientForm
 
 pytestmark = pytest.mark.django_db

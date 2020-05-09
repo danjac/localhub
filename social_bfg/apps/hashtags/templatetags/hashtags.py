@@ -6,6 +6,7 @@
 from django import template
 from django.utils.safestring import mark_safe
 
+# Local
 from ..utils import linkify_hashtags
 
 register = template.Library()

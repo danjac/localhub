@@ -10,6 +10,7 @@ import pytest
 # Social-BFG
 from social_bfg.apps.posts.factories import PostFactory
 
+# Local
 from ..templatetags.activities import (
     get_pinned_activity,
     is_oembed_url,

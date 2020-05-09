@@ -13,6 +13,7 @@ from social_bfg.apps.activities.forms import ActivityForm
 from social_bfg.forms import ClearableImageInput, FormHelper
 from social_bfg.utils.exif import Exif
 
+# Local
 from .models import Photo
 
 logger = logging.getLogger(__name__)

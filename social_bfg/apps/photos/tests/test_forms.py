@@ -7,6 +7,7 @@ import pytest
 # Social-BFG
 from social_bfg.utils.exif import Exif
 
+# Local
 from ..factories import PhotoFactory
 from ..forms import PhotoForm
 

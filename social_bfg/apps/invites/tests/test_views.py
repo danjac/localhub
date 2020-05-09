@@ -8,6 +8,7 @@ import pytest
 # Social-BFG
 from social_bfg.apps.communities.models import Membership
 
+# Local
 from ..factories import InviteFactory
 from ..models import Invite
 

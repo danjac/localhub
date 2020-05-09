@@ -13,6 +13,7 @@ from social_bfg.apps.communities.views import (
 )
 from social_bfg.views import SuccessDeleteView
 
+# Local
 from .models import Flag
 
 

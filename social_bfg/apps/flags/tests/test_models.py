@@ -13,6 +13,7 @@ import pytest
 from social_bfg.apps.comments.factories import CommentFactory
 from social_bfg.apps.posts.factories import PostFactory
 
+# Local
 from ..factories import FlagFactory
 
 pytestmark = pytest.mark.django_db

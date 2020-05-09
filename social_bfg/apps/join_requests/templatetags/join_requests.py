@@ -8,6 +8,7 @@ from django import template
 # Social-BFG
 from social_bfg.apps.communities.models import Membership
 
+# Local
 from ..models import JoinRequest
 
 register = template.Library()

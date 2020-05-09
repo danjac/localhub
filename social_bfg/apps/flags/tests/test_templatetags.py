@@ -9,6 +9,7 @@ from social_bfg.apps.communities.factories import MembershipFactory
 from social_bfg.apps.communities.models import Membership
 from social_bfg.apps.posts.factories import PostFactory
 
+# Local
 from ..factories import FlagFactory
 from ..templatetags.flags import get_external_flag_count, get_flag_count
 

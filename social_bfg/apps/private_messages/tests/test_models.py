@@ -14,6 +14,7 @@ from social_bfg.apps.communities.factories import CommunityFactory, MembershipFa
 from social_bfg.apps.notifications.factories import NotificationFactory
 from social_bfg.apps.users.factories import UserFactory
 
+# Local
 from ..factories import MessageFactory
 from ..models import Message
 

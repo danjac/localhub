@@ -13,6 +13,7 @@ from social_bfg.apps.communities.factories import CommunityFactory, MembershipFa
 from social_bfg.apps.communities.models import Membership
 from social_bfg.apps.private_messages.factories import MessageFactory
 
+# Local
 from ..factories import UserFactory
 
 pytestmark = pytest.mark.django_db

@@ -7,6 +7,7 @@ import pytest
 # Social-BFG
 from social_bfg.apps.users.factories import UserFactory
 
+# Local
 from ..factories import MembershipFactory
 from ..models import Membership
 from ..rules import (

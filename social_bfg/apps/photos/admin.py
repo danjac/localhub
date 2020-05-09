@@ -10,6 +10,7 @@ from sorl.thumbnail.admin import AdminImageMixin
 # Social-BFG
 from social_bfg.apps.activities.admin import ActivityAdmin
 
+# Local
 from .models import Photo
 
 

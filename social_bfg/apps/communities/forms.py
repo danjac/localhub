@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 # Social-BFG
 from social_bfg.forms import ClearableImageInput, FormHelper, TypeaheadInput
 
+# Local
 from .models import Community, Membership
 
 

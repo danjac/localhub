@@ -7,6 +7,7 @@ from django.urls import path, re_path
 # Social-BFG
 from social_bfg.apps.users.urls import USERNAME_RE
 
+# Local
 from . import views
 
 app_name = "private_messages"
