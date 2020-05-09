@@ -15,6 +15,10 @@ a:hover {
   @apply text-blue-600;
 }
 
+blockquote {
+  @apply text-gray-800 border-l-4 border-gray-200 pl-3 italic whitespace-normal break-words;
+}
+
 button:disabled,
 input:disabled,
 select:disabled,
