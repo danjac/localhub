@@ -73,7 +73,7 @@ class BaseTagListView(TagQuerySetMixin, ListView):
 
 
 class TagAutocompleteListView(BaseTagListView):
-    template_name = "hashtags/tag_autocomplete_list.html"
+    template_name = "hashtags/list/autocomplete.html"
     exclude_unused_tags = True
 
     def get_queryset(self):
@@ -87,7 +87,7 @@ tag_autocomplete_list_view = TagAutocompleteListView.as_view()
 
 
 class TagListView(SearchMixin, BaseTagListView):
-    template_name = "hashtags/tag_list.html"
+    template_name = "hashtags/list/all.html"
     paginate_by = settings.SOCIAL_BFG_LONG_PAGE_SIZE
     exclude_unused_tags = True
 
@@ -121,7 +121,7 @@ tag_list_view = TagListView.as_view()
 
 
 class FollowingTagListView(BaseTagListView):
-    template_name = "hashtags/following_tag_list.html"
+    template_name = "hashtags/list/following.html"
 
     def get_queryset(self):
         return self.request.user.following_tags.order_by("name")
@@ -131,7 +131,7 @@ following_tag_list_view = FollowingTagListView.as_view()
 
 
 class BlockedTagListView(BaseTagListView):
-    template_name = "hashtags/blocked_tag_list.html"
+    template_name = "hashtags/list/blocked.html"
 
     def get_queryset(self):
         return self.request.user.blocked_tags.order_by("name")
