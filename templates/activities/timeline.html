@@ -55,13 +55,14 @@
 {% if selected_dates %}
 {% spaceless %}
 <div class="notification mb-4">
+
   {% blocktrans count counter=paginator.count %}
   <strong>One activity</strong> was posted
   {% plural %}
   A total of <strong>{{ counter }} activities</strong> were posted
   {% endblocktrans %}
   {% with num_months=selected_months|length num_years=selected_years|length %}
-  {% if num_months == 1 and num_years == 1 %}
+  {% if num_months < 2 and num_years == 1 %}
   {% with earliest=selected_dates|first|date:"E Y" %}
   {% blocktrans %}
   in <b>{{ earliest }}</b>.
