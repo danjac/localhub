@@ -308,8 +308,9 @@
     <li class="mb-1">
       <a data-controller="active-link"
          data-active-link-exact
+         class="sidebar-menu-item"
          href="{% url 'community_list' %}">
-        <span>{% trans "Other Sites" %}</span>
+        <span>{% trans "Communities" %}</span>
         {% if external_site_counters.total %}
         <span class="tag tag-primary px-1">{% trans "New" %}</span>
         {% endif %}
