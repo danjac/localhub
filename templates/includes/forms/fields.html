@@ -16,10 +16,8 @@
 {% for fieldset in form.form_helper %}
 <fieldset>
 
-  {% if fieldset.label %}
-  <div class="p-1 font-semibold border-b border-gray-500 mb-2 text-center">{{ fieldset.label }}</div>
-  {% elif not forloop.first %}
-  <hr class="p-1 font-semibold border-b border-gray-500 mb-2">
+  {% if fieldset.label or not forloop.first %}
+  <div class="p-1 font-semibold border-b border-gray-500 mb-2 text-center">{{ fieldset.label|default:"" }}</div>
   {% endif %}
 
   {% for field in fieldset %}

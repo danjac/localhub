@@ -14,7 +14,7 @@
 
 {% block content %}
 
-<ul class="breadcrumbs mb-4">
+<ul class="breadcrumbs mb-2">
   {% if parent %}
   <li class="breadcrumb-item"><a href="{% url 'comments:list' %}">{% trans "Comments" %}</a></li>
   <li class="breadcrumb-item"><a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a></li>

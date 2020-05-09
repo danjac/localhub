@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<ul class="breadcrumbs mb-4">
+<ul class="breadcrumbs mb-2">
   {% if content_object %}
   <li class="breadcrumb-item">
     <a href="{{ content_object.get_absolute_url }}">{{ content_object|truncatechars:60 }}</a>

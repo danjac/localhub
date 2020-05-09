@@ -10,7 +10,7 @@
 
 {% block content %}
 {% if current_date %}
-<ul class="breadcrumbs mb-4">
+<ul class="breadcrumbs mb-2">
   <li class="breadcrumb-item"><a href="{% url 'events:list' %}">{% trans "Events" %}</a></li>
   <li class="breadcrumb-item">
     <a href="{{ request.path }}?month={{ current_date.month }}&year={{ current_date.year }}">

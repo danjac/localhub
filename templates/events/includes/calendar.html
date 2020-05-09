@@ -26,7 +26,7 @@
   <div class="flex flex-wrap">
     {% for day, is_past, events in slots %}
     {% with num_events=events|length %}
-    <div class="calendar-item text-xs{% if num_events %} bg-gray-100 cursor-pointer{% endif %}"
+    <div class="calendar-item text-xs{% if day == today.day and is_current_month %} bg-blue-100 {% elif num_events %} bg-gray-100 cursor-pointer{% endif %}"
          >
       {% if day %}
       <div class="h-10 lg:h-32 p-2 tracking-tight border-r border-b border-gray-500 align-middle"
@@ -35,7 +35,7 @@
            data-action="click->linkify#fetch"
            data-linkify-url="{{ request.path }}?day={{ day }}&month={{ current_month.month }}&year={{ current_month.year }}"
            {% endif %}>
-        <button class="float-right{% if day == today.day and is_today %} font-bold text-sm{% endif %}">{{ day }}</button>
+        <button class="float-right">{{ day }}</button>
         <div class="clearfix"></div>
         {% if events %}
         <div class="hidden lg:block text-xs{% if is_past %} text-gray-500{% endif %}">

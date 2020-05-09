@@ -8,7 +8,7 @@
 
 {% block content %}
 {% if date_filters or current_year or current_month %}
-<ul class="breadcrumbs mb-4">
+<ul class="breadcrumbs mb-2">
   {% if date_filters %}
   <li class="breadcrumb-item">
     <a href="{{ request.path }}?order={{ order }}">{% trans "All" %}</a>

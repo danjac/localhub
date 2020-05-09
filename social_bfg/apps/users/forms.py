@@ -46,6 +46,7 @@ class UserForm(forms.ModelForm):
             "avatar",
             "bio",
             "language",
+            "default_timezone",
             "send_email_notifications",
             "activity_stream_filters",
             "show_sensitive_content",
@@ -71,6 +72,7 @@ class UserForm(forms.ModelForm):
             "show_embedded_content": _(
                 "Show embedded content such as Youtube videos and tweets"
             ),
+            "default_timezone": _("Timezone"),
         }
 
     def __init__(self, *args, **kwargs):
@@ -83,6 +85,7 @@ class UserForm(forms.ModelForm):
                     _("Preferences"),
                     (
                         "language",
+                        "default_timezone",
                         "send_email_notifications",
                         "show_sensitive_content",
                         "show_external_images",

@@ -186,7 +186,7 @@ class TestEventCalendarView:
         )
         assert response.status_code == 200
         assert "current_date" not in response.context
-        assert response.context["is_today"]
+        assert response.context["is_current_month"]
 
     def test_get_calendar_view_with_invalid_date(self, client, event, member):
         response = client.get(

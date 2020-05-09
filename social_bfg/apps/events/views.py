@@ -9,6 +9,7 @@ import datetime
 from django.http import Http404, HttpResponse
 from django.utils import timezone
 from django.utils.functional import cached_property
+from django.utils.timezone import localtime, override
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import View
 from django.views.generic.dates import DateMixin, DayMixin, MonthMixin, YearMixin
@@ -28,6 +29,15 @@ from social_bfg.apps.activities.views.generic import (
 
 # Local
 from .models import Event
+
+
+class TimezoneOverrideMixin:
+    def dispatch(self, request, *args, **kwargs):
+        timezone = (
+            request.user.default_timezone if request.user.is_authenticated else None
+        )
+        with override(timezone):
+            return super().dispatch(request, *args, **kwargs)
 
 
 class BaseEventActionView(BaseActivityActionView):
@@ -80,7 +90,9 @@ class EventUnattendView(BaseEventAttendView):
 event_unattend_view = EventUnattendView.as_view()
 
 
-class EventDownloadView(ActivityQuerySetMixin, SingleObjectMixin, View):
+class EventDownloadView(
+    ActivityQuerySetMixin, SingleObjectMixin, TimezoneOverrideMixin, View
+):
     """
     Generates a calendar .ics file.
     """
@@ -98,14 +110,14 @@ class EventDownloadView(ActivityQuerySetMixin, SingleObjectMixin, View):
 event_download_view = EventDownloadView.as_view()
 
 
-class EventCreateView(ActivityCreateView):
+class EventCreateView(TimezoneOverrideMixin, ActivityCreateView):
     def get_initial(self):
         initial = super().get_initial()
         initial["timezone"] = self.request.user.default_timezone
         return initial
 
 
-class EventListView(ActivityListView):
+class EventListView(TimezoneOverrideMixin, ActivityListView):
     def get_queryset(self):
         return (
             super()
@@ -117,7 +129,12 @@ class EventListView(ActivityListView):
 
 
 class EventCalendarView(
-    YearMixin, MonthMixin, DayMixin, DateMixin, BaseActivityListView
+    YearMixin,
+    MonthMixin,
+    DayMixin,
+    DateMixin,
+    TimezoneOverrideMixin,
+    BaseActivityListView,
 ):
     template_name = "events/calendar.html"
     date_field = "starts"
@@ -131,10 +148,11 @@ class EventCalendarView(
         return not (self.current_day)
 
     def get(self, request, *args, **kwargs):
-        try:
-            return super().get(request, *args, **kwargs)
-        except Event.InvalidDate:
-            raise Http404("These dates are not valid")
+        with override(request.user.default_timezone):
+            try:
+                return super().get(request, *args, **kwargs)
+            except Event.InvalidDate:
+                raise Http404("These dates are not valid")
 
     @cached_property
     def current_day(self):
@@ -175,20 +193,17 @@ class EventCalendarView(
         return qs
 
     def make_date(self, day):
-        try:
-            return datetime.date(
-                day=day, month=self.current_month, year=self.current_year,
-            )
-        except ValueError:
-            raise Event.InvalidDate()
+        return self.make_datetime(day).date()
 
     def make_datetime(self, day):
         try:
-            return datetime.datetime(
-                day=day,
-                month=self.current_month,
-                year=self.current_year,
-                tzinfo=pytz.UTC,
+            return localtime(
+                datetime.datetime(
+                    day=day,
+                    month=self.current_month,
+                    year=self.current_year,
+                    tzinfo=pytz.UTC,
+                )
             )
         except ValueError:
             raise Event.InvalidDate()
@@ -206,7 +221,7 @@ class EventCalendarView(
             ]
             return data
 
-        now = timezone.now()
+        now = localtime(timezone.now())
 
         data["current_month"] = first_of_month = self.make_date(1)
 
@@ -216,7 +231,7 @@ class EventCalendarView(
                 "previous_month": self.get_previous_month(first_of_month),
                 "slots": self.get_slots(),
                 "today": now,
-                "is_today": now.month == first_of_month.month
+                "is_current_month": now.month == first_of_month.month
                 and now.year == first_of_month.year,
             }
         )
