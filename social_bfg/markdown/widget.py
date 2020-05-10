@@ -8,7 +8,7 @@ from django.conf import settings
 from markdownx.widgets import MarkdownxWidget
 
 # Social-BFG
-from social_bfg.forms.widgets import TypeaheadMixin
+from social_bfg.common.forms.widgets import TypeaheadMixin
 
 
 class TypeaheadMarkdownWidget(TypeaheadMixin, MarkdownxWidget):

@@ -6,7 +6,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 # Social-BFG
-from social_bfg.forms import TypeaheadInput
+from social_bfg.common.forms import TypeaheadInput
 
 # Local
 from .models import Activity
