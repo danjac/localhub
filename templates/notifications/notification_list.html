@@ -43,6 +43,8 @@ You can enable emails for your notifications
         data-webpush-service-worker-url="{% url 'notifications:service_worker' %}"
         data-webpush-subscribe-url="{% url 'notifications:subscribe' %}"
         data-webpush-unsubscribe-url="{% url 'notifications:unsubscribe' %}"
+        data-webpush-subscribe-message="{% trans "Browser notifications enabled" %}"
+        data-webpush-unsubscribe-message="{% trans "Browser notifications disabled" %}"
         data-webpush-public-key="{{ webpush_settings.public_key }}">
     <a href="javascript:void(0)"
        data-target="webpush.subscribe"

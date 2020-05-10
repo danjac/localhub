@@ -55,7 +55,11 @@ export default class extends ApplicationController {
     };
     registration.pushManager.subscribe(options).then((subscription) => {
       this.showUnsubscribe();
-      return this.syncWithServer(subscription, this.data.get('subscribe-url'));
+      return this.syncWithServer(
+        subscription,
+        this.data.get('subscribe-url'),
+        'subscribe-message'
+      );
     });
   }
 
@@ -67,16 +71,28 @@ export default class extends ApplicationController {
       .then((subscription) =>
         subscription
           .unsubscribe()
-          .then(this.syncWithServer(subscription, this.data.get('unsubscribe-url')))
+          .then(
+            this.syncWithServer(
+              subscription,
+              this.data.get('unsubscribe-url'),
+              'unsubscribe-message'
+            )
+          )
       );
   }
 
-  syncWithServer(subscription, url) {
-    return axios.post(url, JSON.stringify(subscription), {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+  syncWithServer(subscription, url, message) {
+    axios
+      .post(url, JSON.stringify(subscription), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(() => {
+        if (message && this.data.has(message)) {
+          this.toaster.info(this.data.get(message));
+        }
+      });
   }
 
   showSubscribe() {
