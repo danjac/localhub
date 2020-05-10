@@ -8,12 +8,12 @@
 
 {% block content %}
 
-<ul class="breadcrumb-item">
-  <li class="breadcrumb-item""><a href="{% url 'hashtags:list' %}">{% trans "Tags" %}</a></li>
-  <li class="breadcrumb-item""><a href="#" data-turbolinks="false">{{ tag }}</a></li>
+<ul class="breadcrumbs mb-2">
+  <li class="breadcrumb-item"><a href="{% url 'hashtags:list' %}">{% trans "Tags" %}</a></li>
+  <li class="breadcrumb-item">{{ tag }}</li>
 </ul>
 
-<h1 class="page-header">{% trans "Tag not found" %}</h1>
+<h1 class="page-header mb-2">{% trans "Tag not found" %}</h1>
 <p>
   {% blocktrans %}
   Sorry, there don't appear to be any activities in this community tagged <b>#{{ tag }}</b>.
