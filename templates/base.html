@@ -49,15 +49,21 @@
   <script src="{% static 'dist/main.js' %}"></script>
 </head>
 
-<body class="h-screen container-lg mx-auto antialiased">
+<body class="h-screen container-lg mx-auto antialiased"
+      data-controller="sidebar">
 
   {% block header %}
   <header class="flex items-center justify-between bg-gray-900 text-gray-100 p-2 md:px-5">
     {% if community %}
     <div class="flex items-center flex-shrink-0 mr-6">
+      <button class="lg:hidden mr-3"
+              data-action="sidebar#toggle"
+              type="button">
+        {% svg "menu" "white" size="24" %}
+      </button>
       {% thumbnail community.logo "32" format="PNG" as logo %}
       <img src="{{ logo.url }}"
-           class="inline-block mr-1 bg-transparent"
+           class="mr-1 bg-transparent hidden lg:inline-block"
            height="32"
            width="32">
       {% endthumbnail %}
@@ -149,9 +155,7 @@
     </div>
   </div>
 
-  <div class="mt-2 px-2 md:px-5 flex min-h-full"
-       data-controller="sidebar"
-       data-sidebar-toggle-class="hidden">
+  <div class="mt-2 px-2 md:px-5 flex min-h-full">
 
     {% block sidebar %}
     {% include "includes/sidebar.html" %}
@@ -160,16 +164,6 @@
     {% block main_section %}
     <main class="lg:ml-2 w-full lg:w-5/6"
           data-target="sidebar.main">
-      <!-- mobile "menu" button -->
-      <button class="btn btn-block lg:hidden mb-3"
-              data-action="sidebar#toggle">
-        {% trans "Menu" %}
-        {% if site_counters_total %}
-        <span class="inline-flex items-center bg-blue-600 rounded text-white font-bold p-1 px-2 ml-2 justify-center text-xs">{% trans "New" %}</span>
-        {% endif %}
-
-      </button>
-
       {% block content %}{% endblock %}
     </main>
     {% endblock main_section %}

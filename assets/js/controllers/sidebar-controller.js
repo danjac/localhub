@@ -4,23 +4,12 @@
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
-  /*
-  Show/hide mobile sidebar navigation elements.
-
-  actions:
-    toggle: toggle sidebar/main content elements.
-
-  targets:
-    main: main content of application
-    nav: sidebar nav element
-  */
   static targets = ['main', 'nav'];
 
   toggle(event) {
+    console.log('toggle menu....');
     event.preventDefault();
-    const toggleClass = this.data.get('toggle-class') || 'hide-lg';
-    console.log('sidebar toggle', toggleClass);
-    this.mainTarget.classList.toggle(toggleClass);
-    this.navTarget.classList.toggle(toggleClass);
+    this.mainTarget.classList.toggle('hidden');
+    this.navTarget.classList.toggle('hidden');
   }
 }
