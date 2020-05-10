@@ -14,24 +14,24 @@
 
 {% if page_obj.number == 1 %}
 
-{% if latest_notification %}
-{% notification latest_notification %}
-<div class="notification flex mb-2"
-     data-controller="ajax"
-     data-ajax-redirect="{{ home_page_url }}"
-     data-ajax-url="{% url 'notifications:mark_read' latest_notification.id %}"
-     data-ajax-remove>
-  <div class="mx-auto text-center">
-    {{ notification_content }}
-  </div>
+{% if notifications %}
+<div data-controller="notifications">
+  {% for item in notifications %}
+  {% notification item %}
+  <div class="notification flex mb-2{% if not forloop.first %} hidden{% endif %}"
+       data-target="notifications.notification">
+    <div class="mx-auto text-center">
+      {{ notification_content }}
+    </div>
 
-  <button data-target="ajax.button"
-          data-action="ajax#post"
-          class="">
-    {% svg "x_circle" "white" %}
-  </button>
+    <button data-action="notifications#dismiss"
+            data-notifications-mark-read-url="{% url 'notifications:mark_read' item.id %}">
+      {% svg "x_circle" "white" %}
+    </button>
+  </div>
+  {% endnotification %}
+  {% endfor %}
 </div>
-{% endnotification %}
 {% endif %}
 
 {% get_pinned_activity user community as pinned %}

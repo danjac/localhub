@@ -114,7 +114,7 @@ class ActivityStreamView(BaseActivityStreamView):
             .exclude_blocked(self.request.user)
         )
 
-    def get_latest_notification(self):
+    def get_unread_notifications(self):
         return (
             Notification.objects.for_community(self.request.community)
             .for_recipient(self.request.user)
@@ -122,12 +122,11 @@ class ActivityStreamView(BaseActivityStreamView):
             .unread()
             .select_related("actor", "content_type", "community", "recipient")
             .order_by("-created")
-            .first()
         )
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data.update({"latest_notification": self.get_latest_notification()})
+        data.update({"notifications": self.get_unread_notifications()})
         return data
 
 
