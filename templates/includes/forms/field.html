@@ -7,16 +7,16 @@
   {% if widget.input_type == 'checkbox' %}
   {% if widget.allow_multiple_selected %}
   <label for="{{ field.id_for_label }}"
-         class="block font-semibold mb-2">{{ label }}</label>
+         class="block font-semibold mb-2 text-sm">{{ label }}</label>
   {% render_field field %}
   {% else %}
   {% include "includes/forms/widgets/checkbox_input.html" %}
   {% endif %}
   {% elif widget.input_type == 'radio' %}
-  <label class="block font-semibold mb-2">{{ label }}</label>
+  <label class="block font-semibold mb-2 text-sm">{{ label }}</label>
   {% for choice in field %}
   <div class="{% if not forloop.last %} mr-2{% endif %}">
-    <label class="">
+    <label class="font-semibold text-sm">
       {{ choice.tag }}
       {{ choice.choice_label }}
     </label>
@@ -24,7 +24,7 @@
   {% endfor %}
   {% else %}
   <label for="{{ field.id_for_label }}"
-         class="block font-semibold mb-2">{{ label }}</label>
+         class="block font-semibold mb-2 text-sm">{{ label }}</label>
 
   {% with widget_class=field.errors|yesno:"appearance-none p-1 w-full bg-red-100 border border-red-600 focus:border-red-300,appearance-none p-1 border border-gray-500 w-full focus:border-blue-500" %}
   {% render_field field class=widget_class placeholder=widget.attrs.placeholder %}
