@@ -19,7 +19,7 @@
       class="border border-gray-500 p-5"
       action="{% url 'user_delete' %}">
   {% csrf_token %}
-  <p class="mb-4">
+  <p class="mb-2">
     {% blocktrans %}
     Please confirm you want to delete your account. This will also <b>permanently</b> remove all your posts and
     comments.

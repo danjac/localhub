@@ -32,7 +32,7 @@
 <h1 class="page-header mb-2">{% trans "Timeline" %}</h1>
 
 {% if dates %}
-<div class="flex flex-wrap items-center mb-4 text-sm">
+<div class="flex flex-wrap items-center mb-2 text-sm">
   <a class="inline-block mr-4"
      href="{{ reverse_sort_url }}">
     {% if order == "desc" %}{% trans "Oldest First" %}{% else %}{% trans "Newest First" %}{% endif %}
@@ -54,7 +54,7 @@
 
 {% if selected_dates %}
 {% spaceless %}
-<div class="notification mb-4">
+<div class="notification mb-2">
 
   {% blocktrans count counter=paginator.count %}
   <strong>One activity</strong> was posted
@@ -93,12 +93,12 @@
 
 {% regroup object_list by month as months %}
 {% for month, activities in months %}
-<div class="mb-4 border-r border-l border-b border-gray-500">
+<div class="mb-2 border-r border-l border-b border-gray-500">
   <div class="font-semibold text-center p-2 bg-indigo-800 text-white">{{ month }}</div>
   {% for activity in activities %}
   {% with object=activity.object object_type=activity.object_type %}
   <div class="p-3 {% if not forloop.last %} border-b border-gray-500{% endif %}{% cycle '' ' bg-gray-100' %}">
-    <div class="flex flex-wrap items-center mb-4 text-sm">
+    <div class="flex flex-wrap items-center mb-2 text-sm">
 
       <a class="mr-4"
          href="{{ object.get_absolute_url }}">

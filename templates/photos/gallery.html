@@ -12,7 +12,7 @@
 
 <h1 class="page-header mb-2">{% trans "Gallery" %}</h1>
 
-<div class="flex flex-wrap items-center border-b border-gray-500 mb-4 pb-2 text-sm">
+<div class="flex flex-wrap items-center border-b border-gray-500 mb-2 pb-2 text-sm">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
   <a class="inline-block mr-4"

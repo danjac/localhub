@@ -10,7 +10,7 @@
      data-controller="clipboard"
      data-clipboard-message="{% trans 'Markdown content has been copied' %}">
 
-  <div class="flex flex-wrap items-center mb-4">
+  <div class="flex flex-wrap items-center mb-2">
     {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url css_class="mr-2" %}
     <div class="mr-2">
       {% trans "to" %}
@@ -26,7 +26,7 @@
     {% endif %}
   </div>
 
-  <div class="mb-4">
+  <div class="mb-2">
     {% collapsable is_detail %}
     <div class="markdown-content">
       {{ message.message.markdown|strip_external_images:user|lazify }}

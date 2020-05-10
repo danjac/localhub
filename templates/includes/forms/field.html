@@ -3,7 +3,7 @@
 
 {% load widget_tweaks %}
 {% with label=label|default:field.label help_text=help_text|default:field.help_text widget=field.field.widget %}
-<div class="mb-4 {% if field.errors %} text-red-600{% endif %}">
+<div class="mb-2 {% if field.errors %} text-red-600{% endif %}">
   {% if widget.input_type == 'checkbox' %}
   {% if widget.allow_multiple_selected %}
   <label for="{{ field.id_for_label }}"

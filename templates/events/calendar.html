@@ -26,7 +26,7 @@
 <h1 class="page-header mb-2">{% trans "Calendar" %}</h1>
 
 {% if not current_date %}
-<div class="flex flex-wrap items-center mb-4 text-sm">
+<div class="flex flex-wrap items-center mb-2 text-sm">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
   <a class="inline-block mr-4"

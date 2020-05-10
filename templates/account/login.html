@@ -13,7 +13,7 @@
 <h1 class="page-header mb-2">{% trans "Login" %}</h1>
 
 {% if community.intro %}
-<div class="mb-4">
+<div class="mb-2">
   {{ community.intro.markdown|strip_external_images:user|lazify }}
 </div>
 {% endif %}

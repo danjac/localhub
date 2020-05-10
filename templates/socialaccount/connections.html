@@ -21,7 +21,7 @@
 
 
 {% if form.accounts %}
-<p class="mb-4">{% blocktrans %}You can sign in to your account using any of the following third party accounts:{% endblocktrans %}
+<p class="mb-2">{% blocktrans %}You can sign in to your account using any of the following third party accounts:{% endblocktrans %}
 </p>
 
 
@@ -32,7 +32,7 @@
 
   <fieldset>
     {% if form.non_field_errors %}
-    <p class="mb-4 text-center text-red-900">{{ form.non_field_errors }}</div>
+    <p class="mb-2 text-center text-red-900">{{ form.non_field_errors }}</div>
       {% endif %}
 
       {% for base_account in form.accounts %}
@@ -51,7 +51,7 @@
     {% endwith %}
     {% endfor %}
 
-    <div class="mb-4">
+    <div class="mb-2">
       <button type="submit"
               class="btn btn-primary">{% trans 'Remove' %}</button>
     </div>

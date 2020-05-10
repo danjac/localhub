@@ -14,7 +14,7 @@
 {% has_perm "private_messages.create_message" user community as can_create_message %}
 {% get_unread_message_count user community as unread_messages %}
 {% if can_create_message or unread_messages %}
-<div class="flex flex-wrap items-center mb-4 text-sm">
+<div class="flex flex-wrap items-center mb-2 text-sm">
   <a href="{% url 'private_messages:message_create'%}"
      class="inline-block mr-4">{% trans "Send Message" %}</a>
   {% if unread_messages %}

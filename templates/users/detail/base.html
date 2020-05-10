@@ -88,13 +88,13 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 </p>
 {% elif user_obj.bio %}
 {% collapsable %}
-<div class="markdown-content mb-4">
+<div class="markdown-content mb-2">
   {{ user_obj.bio.markdown|strip_external_images:user|lazify }}
 </div>
 {% endcollapsable %}
 {% endif %}
 
-<div class="flex flex-wrap items-center mb-4">
+<div class="flex flex-wrap items-center mb-2">
 
   {% if not is_current_user %}
   <div class="text-sm mr-4"
@@ -172,7 +172,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 
 
 {% if not is_blocked %}
-<div class="tabs mb-4 text-sm">
+<div class="tabs mb-2 text-sm">
   <a class="tab-item"
      data-controller="active-link"
      data-active-link-exact

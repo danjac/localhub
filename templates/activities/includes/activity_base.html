@@ -26,12 +26,12 @@
   <div class="hidden"
        data-target="toggle.togglable">
     {% else %}
-    <div class="mb-4">
+    <div class="mb-2">
       {% endif %}
 
       {% if object.is_reshare %}
 
-      <div class="mb-4 tracking-tight pb-4 border-b border-gray-500">
+      <div class="mb-2 tracking-tight pb-4 border-b border-gray-500">
         {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner verb="reshared" %}
       </div>
       {% endif %}

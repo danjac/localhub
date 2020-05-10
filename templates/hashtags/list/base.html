@@ -14,7 +14,7 @@
 {% has_perm "users.block_tag" user as can_block_tag %}
 
 {% if can_follow_tag or can_block_tag %}
-<div class="tabs text-sm mb-4">
+<div class="tabs text-sm mb-2">
   <a class="tab-item"
      data-controller="active-link"
      data-active-link-exact

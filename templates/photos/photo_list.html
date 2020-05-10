@@ -6,7 +6,7 @@
 {% load rules %}
 
 {% block activity_list_header %}
-<div class="flex flex-wrap items-center mb-4 text-sm">
+<div class="flex flex-wrap items-center mb-2 text-sm">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
   <a class="inline-block mr-4"

@@ -29,7 +29,7 @@
   {% csrf_token %}
 
   {% for emailaddress in emailaddresses %}
-  <div class="mb-4">
+  <div class="mb-2">
     <label for="email_radio_{{ forloop.counter }}"
            class="font-semibold">
       <input id="email_radio_{{ forloop.counter }}"
