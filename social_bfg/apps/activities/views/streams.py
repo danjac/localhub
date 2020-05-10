@@ -20,8 +20,8 @@ from django.views.generic.dates import (
 # Social-BFG
 from social_bfg.apps.communities.views import CommunityRequiredMixin
 from social_bfg.apps.notifications.models import Notification
+from social_bfg.common.views import SearchMixin
 from social_bfg.pagination import PresetCountPaginator
-from social_bfg.views import SearchMixin
 
 # Local
 from ..utils import get_activity_queryset_count, get_activity_querysets, load_objects

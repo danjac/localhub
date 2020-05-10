@@ -8,7 +8,7 @@ from social_bfg.apps.private_messages.views import (
     BaseMessageListView,
     SenderOrRecipientQuerySetMixin,
 )
-from social_bfg.views import SearchMixin
+from social_bfg.common.views import SearchMixin
 
 
 class BookmarksStreamView(SearchMixin, BaseActivityStreamView):

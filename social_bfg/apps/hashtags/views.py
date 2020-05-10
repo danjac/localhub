@@ -21,7 +21,7 @@ from taggit.models import Tag, TaggedItem
 from social_bfg.apps.activities.utils import get_activity_models
 from social_bfg.apps.activities.views.streams import BaseActivityStreamView
 from social_bfg.apps.communities.views import CommunityRequiredMixin
-from social_bfg.views import ParentObjectMixin, SearchMixin, SuccessActionView
+from social_bfg.common.views import ParentObjectMixin, SearchMixin, SuccessActionView
 
 
 class TagQuerySetMixin(CommunityRequiredMixin):

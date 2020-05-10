@@ -11,7 +11,7 @@ from social_bfg.apps.communities.views import (
     CommunityModeratorRequiredMixin,
     CommunityRequiredMixin,
 )
-from social_bfg.views import SuccessDeleteView
+from social_bfg.common.views import SuccessDeleteView
 
 # Local
 from .models import Flag

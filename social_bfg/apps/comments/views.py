@@ -18,7 +18,7 @@ from social_bfg.apps.bookmarks.models import Bookmark
 from social_bfg.apps.communities.views import CommunityRequiredMixin
 from social_bfg.apps.flags.forms import FlagForm
 from social_bfg.apps.likes.models import Like
-from social_bfg.views import (
+from social_bfg.common.views import (
     ParentObjectMixin,
     SearchMixin,
     SuccessActionView,

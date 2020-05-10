@@ -17,7 +17,7 @@ from rules.contrib.views import PermissionRequiredMixin
 # Social-BFG
 from social_bfg.apps.bookmarks.models import Bookmark
 from social_bfg.apps.communities.views import CommunityRequiredMixin
-from social_bfg.views import (
+from social_bfg.common.views import (
     ParentObjectMixin,
     SearchMixin,
     SuccessActionView,
