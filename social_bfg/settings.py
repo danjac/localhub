@@ -286,7 +286,9 @@ class Base(Configuration):
                         "social_bfg.apps.communities.context_processors.community",
                         "social_bfg.template.context_processors.home_page_url",
                     ],
-                    "libraries": {"pagination": "social_bfg.pagination.templatetags"},
+                    "libraries": {
+                        "pagination": "social_bfg.common.pagination.templatetags"
+                    },
                 },
             }
         ]
