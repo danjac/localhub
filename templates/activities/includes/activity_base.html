@@ -26,17 +26,17 @@
   <div class="hidden"
        data-target="toggle.togglable">
     {% else %}
-    <div class="mb-2">
+    <div class="mb-3">
       {% endif %}
 
       {% if object.is_reshare %}
 
-      <div class="mb-2 tracking-tight pb-4 border-b border-gray-500">
+      <div class="mb-3 tracking-tight pb-4 border-b border-gray-500">
         {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner verb="reshared" %}
       </div>
       {% endif %}
 
-      <div class="font-semibold flex flex-wrap items-center mb-2">
+      <div class="font-semibold flex flex-wrap items-center mb-3">
 
         {% block title %}
 
@@ -93,7 +93,7 @@
 
       </div>
 
-      <div class="flex flex-wrap items-center mb-2">
+      <div class="flex flex-wrap items-center mb-3">
         {% if object.parent %}
         {% include "includes/timesince.html" with timestamp=object.parent.published|default:object.created owner=object.parent.owner %}
         {% elif not object.is_reshare %}
@@ -132,8 +132,8 @@
       {% if is_content_sensitive %}
       <div class="bg-gray-800 align-middle text-center text-white my-4 p-5"
            data-target="toggle.togglable">
-        <p class="mb-2 text-lg font-semibold">{% trans "Sensitive Content" %}</p>
-        <p class="mb-2">
+        <p class="mb-3 text-lg font-semibold">{% trans "Sensitive Content" %}</p>
+        <p class="mb-3">
           {% trans "This post has been tagged sensitive. You can view all sensitive content by default in your settings." %}
         </p>
         <p>

@@ -18,7 +18,7 @@
 <div data-controller="notifications">
   {% for item in notifications %}
   {% notification item %}
-  <div class="notification flex mb-2{% if not forloop.first %} hidden{% endif %}"
+  <div class="notification flex mb-3{% if not forloop.first %} hidden{% endif %}"
        data-target="notifications.notification">
     <div class="mx-auto text-center">
       {{ notification_content }}
@@ -36,7 +36,7 @@
 
 {% get_pinned_activity user community as pinned %}
 {% if pinned %}
-{% render_activity request user pinned.object is_pinned=True css_class="mb-2" %}
+{% render_activity request user pinned.object is_pinned=True css_class="mb-3" %}
 {% endif %}
 
 {% include "activities/includes/submit_cta.html" %}

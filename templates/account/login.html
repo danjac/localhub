@@ -10,10 +10,10 @@
 
 {% block content %}
 
-<h1 class="page-header mb-2">{% trans "Login" %}</h1>
+<h1 class="page-header mb-3">{% trans "Login" %}</h1>
 
 {% if community.intro %}
-<div class="mb-2">
+<div class="mb-3">
   {{ community.intro.markdown|strip_external_images:user|lazify }}
 </div>
 {% endif %}

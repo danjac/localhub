@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<ul class="breadcrumbs mb-2">
+<ul class="breadcrumbs mb-3">
   <li class="breadcrumb-item">
     <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
@@ -15,7 +15,7 @@
 </ul>
 
 
-<h1 class="page-header mb-2">
+<h1 class="page-header mb-3">
   {% trans "Join Requests" %}
   {% if status_display %}
   - {{ status_display}}
@@ -23,14 +23,14 @@
 </h1>
 
 {% if total_count %}
-<div class="flex flex-wrap items-center mb-2 text-sm">
+<div class="page-nav mb-3">
   {% if status %}
-  <a class="mr-2"
+  <a class="page-nav-item"
      href="{{ request.path }}">{% trans "Show All" %}</a>
   {% endif %}
   {% for value, label in status_choices %}
   {% if status != value %}
-  <a class="mr-2"
+  <a class="page-nav-item"
      href="{{ request.path }}?status={{ value }}">{{ label }}</a>
   {% endif %}
   {% endfor %}

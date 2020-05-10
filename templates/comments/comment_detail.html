@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<ul class="breadcrumbs mb-2">
+<ul class="breadcrumbs mb-3">
   {% if content_object %}
   <li class="breadcrumb-item">
     <a href="{{ content_object.get_absolute_url }}">{{ content_object|truncatechars:60 }}</a>
@@ -30,9 +30,9 @@
 {% render_comment request user comment is_detail=True include_content_object=True %}
 
 {% if replies %}
-<h2 class="font-semibold text-center border-b pb-1 mb-2">{% trans "Replies" %}"</h2>
+<h2 class="font-semibold text-center border-b pb-1 mb-3">{% trans "Replies" %}"</h2>
 {% for reply in replies %}
-{% render_comment request user reply include_content_object=False include_parent=False css_class="mb-2" %}
+{% render_comment request user reply include_content_object=False include_parent=False css_class="mb-3" %}
 {% endfor %}
 {% endif %}
 

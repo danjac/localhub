@@ -8,12 +8,12 @@
 
 {% block content %}
 
-<h1 class="page-header mb-2">{% trans "Communities" %}</h1>
+<h1 class="page-header mb-3">{% trans "Communities" %}</h1>
 
 {% include "includes/forms/search_form.html" with selector=False %}
 
 {% for object in object_list %}
-<div class="card mb-2">
+<div class="card mb-3">
   <div class="flex flex-wrap items-center">
     {% if object == community %}
     <span class="inline-block mr-2">

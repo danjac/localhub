@@ -14,7 +14,7 @@
 
 {% user_display member as display_name %}
 
-<ul class="breadcrumbs mb-2">
+<ul class="breadcrumbs mb-3">
   <li class="breadcrumb-item">
     <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
@@ -28,7 +28,7 @@
 
 {% user_display member as display_name %}
 
-<h1 class="page-header flex flex-wrap items-center mb-2">
+<h1 class="page-header flex flex-wrap items-center mb-3">
   {% avatar member "32" show_placeholder=False css_class="mr-2" %}
   {% if member.username == display_name %}
   @{{ display_name }}

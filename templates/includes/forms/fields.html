@@ -17,7 +17,7 @@
 <fieldset>
 
   {% if fieldset.label or not forloop.first %}
-  <div class="p-1 font-semibold border-b border-gray-500 mb-2 text-center">{{ fieldset.label|default:"" }}</div>
+  <div class="p-1 font-semibold border-b border-gray-500 mb-3 text-center">{{ fieldset.label|default:"" }}</div>
   {% endif %}
 
   {% for field in fieldset %}

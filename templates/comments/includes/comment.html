@@ -15,7 +15,7 @@
          id="comment-{{ comment.id }}">
   <div class="">
     {% if include_content_object %}
-    <div class="flex flex-wrap items-center mb-2">
+    <div class="flex flex-wrap items-center mb-3">
       {% if content_object %}
       <a class="inline-block font-semibold mr-2"
          href="{{ content_object.get_absolute_url }}">{{ content_object }}</a>
@@ -67,14 +67,14 @@
     {% endif %}
     {% if show_content %}
     {% collapsable is_detail %}
-    <div class="markdown-content mb-2">
+    <div class="markdown-content mb-3">
       {{ comment.content.markdown|strip_external_images:user|lazify }}
     </div>
     {% endcollapsable %}
     {% endif %}
   </div>
   <div class="card-footer mt-4">
-    <div class="flex flex-wrap items-center text-xs text-muted mb-2">
+    <div class="flex flex-wrap items-center text-xs text-muted mb-3">
       {% if comment.num_likes %}
       <div class="mr-2">
         {{ comment.num_likes }}

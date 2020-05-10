@@ -12,7 +12,7 @@
 <nav class="hidden lg:block text-sm w-full lg:w-1/6"
      data-target="sidebar.nav">
 
-  <button class="btn btn-block lg:hidden mb-2 text-base"
+  <button class="btn btn-block lg:hidden mb-3 text-base"
           data-action="sidebar#toggle"
           data-target="sidebar.nav">
     {% trans "Close Menu" %}
@@ -101,7 +101,7 @@
 
   {% if can_create_activity or can_create_message %}
   <ul class="sidebar-menu mt-4">
-    <li class="sidebar-menu-header mb-2">{% trans "Actions" %}</li>
+    <li class="sidebar-menu-header mb-3">{% trans "Actions" %}</li>
 
     {% if can_create_activity %}
     <li class="mb-1">
@@ -137,7 +137,7 @@
   {% endif %}
 
   <ul class="sidebar-menu mt-4">
-    <li class="sidebar-menu-header mb-2">{% trans 'Content' %}</li>
+    <li class="sidebar-menu-header mb-3">{% trans 'Content' %}</li>
     <li class="mb-1">
       <a data-controller="active-link"
          class="sidebar-menu-item"
@@ -184,7 +184,7 @@
   </ul>
 
   <ul class="sidebar-menu mt-4">
-    <li class="sidebar-menu-header mb-2">{% trans "People" %}</li>
+    <li class="sidebar-menu-header mb-3">{% trans "People" %}</li>
     <li class="mb-1">
       <a href="{% url 'users:member_list' %}"
          data-controller="active-link"
@@ -209,7 +209,7 @@
 
   {% if can_manage_community or communities_count > 1 or community.description or community.terms %}
   <ul class="sidebar-menu mt-4">
-    <li class="sidebar-menu-header mb-2">{% trans "Community" %}</li>
+    <li class="sidebar-menu-header mb-3">{% trans "Community" %}</li>
 
     {% if community.description %}
     <li class="mb-1">

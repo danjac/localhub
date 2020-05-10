@@ -11,7 +11,7 @@
 
 {% user_display object.sender as display_name %}
 
-<ul class="breadcrumbs mb-2">
+<ul class="breadcrumbs mb-3">
   <li class="breadcrumb-item">
     <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
@@ -21,7 +21,7 @@
   <li class="breadcrumb-item">{{ display_name }}</li>
 </ul>
 
-<h1 class="page-header mb-2">
+<h1 class="page-header mb-3">
   {% avatar object.sender "32" show_placeholder=False %}
   {% if object.sender.username == display_name %}
   @{{ display_name }}
@@ -32,7 +32,7 @@
 </h1>
 
 {% with is_pending=object.is_pending is_rejected=object.is_rejectd %}
-<div class="flex flex-wrap items-center mb-2 text-sm">
+<div class="flex flex-wrap items-center mb-3 text-sm">
   {% if is_pending or is_rejected %}
   <a class="mr-2"
      data-turbolinks="false"

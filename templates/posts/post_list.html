@@ -6,19 +6,19 @@
 {% load rules %}
 
 {% block activity_list_header %}
-<div class="text-sm mb-1">
+<div class="page-nav mb-3">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
-  <a class="text-blue-800 hover:text-blue-700 mr-2"
+  <a class="page-nav-item"
      href="{% url 'posts:create' %}">
     {% trans "Submit Post" %}
   </a>
   {% endif %}
-  <a class="text-blue-800 hover:text-blue-700 mr-2"
+  <a class="page-nav-item"
      href="{% url 'events:list' %}">{% trans "Events" %}</a>
-  <a class="text-blue-800 hover:text-blue-700 mr-2"
+  <a class="page-nav-item"
      href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
-  <a class="text-blue-800 hover:text-blue-700"
+  <a class="page-nav-item"
      href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
 </div>
 {% endblock %}

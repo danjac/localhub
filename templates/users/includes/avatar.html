@@ -1,8 +1,6 @@
 {% load thumbnail %}
 {% load account %}
-{# TBD: calc h- and w- and size based on t-shirt sizes #}
 {% thumbnail user.avatar size|default:"16" format="PNG" crop="center" as avatar %}
-
 {% user_display user as username %}
 <img src="{{ avatar.url }}"
      width="{{ avatar.width }}"

@@ -10,7 +10,7 @@
 
 {% block content %}
 {% if current_date %}
-<ul class="breadcrumbs mb-2">
+<ul class="breadcrumbs mb-3">
   <li class="breadcrumb-item"><a href="{% url 'events:list' %}">{% trans "Events" %}</a></li>
   <li class="breadcrumb-item">
     <a href="{{ request.path }}?month={{ current_date.month }}&year={{ current_date.year }}">
@@ -23,18 +23,18 @@
 </ul>
 {% endif %}
 
-<h1 class="page-header mb-2">{% trans "Calendar" %}</h1>
+<h1 class="page-header mb-3">{% trans "Calendar" %}</h1>
 
 {% if not current_date %}
-<div class="flex flex-wrap items-center mb-2 text-sm">
+<div class="page-nav mb-3">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
-  <a class="inline-block mr-2"
+  <a class="page-nav-item"
      href="{% url 'events:create' %}">
     {% trans "Submit Event" %}
   </a>
   {% endif %}
-  <a class="inline-block"
+  <a class="page-nav-item"
      href="{% url 'events:list' %}">{% trans "Events" %}</a>
 </div>
 {% endif %}

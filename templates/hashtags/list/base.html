@@ -8,13 +8,13 @@
 
 {% block content %}
 
-<h1 class="page-header mb-2">{% trans "Tags" %}</h1>
+<h1 class="page-header mb-3">{% trans "Tags" %}</h1>
 
 {% has_perm "users.follow_tag" user as can_follow_tag %}
 {% has_perm "users.block_tag" user as can_block_tag %}
 
 {% if can_follow_tag or can_block_tag %}
-<div class="tabs text-sm mb-2">
+<div class="tabs text-sm mb-3">
   <a class="tab-item"
      data-controller="active-link"
      data-active-link-exact

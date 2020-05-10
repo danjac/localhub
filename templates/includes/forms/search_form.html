@@ -17,7 +17,7 @@
        name="{{ name }}"
        value="{{ value }}">
 {% endfor %}
-<div class="mb-2">
+<div class="mb-3">
   <input class="appearance-none border border-gray-500 w-full p-1 text-gray-900"
          name="{{ view.search_parameter|default:'q' }}"
          type="search"
@@ -32,7 +32,7 @@
            value="{{ view.search_query|default:"" }}">
   </div>
   {% if selector %}
-  <div class="mb-2">
+  <div class="mb-3">
     <select class="appearance-none border border-gray-500 w-full p-1 text-gray-900"
             data-target="search.selector"
             data-action="search#select">
@@ -63,7 +63,7 @@
   {% endif %}
 
   {% if view.search_query and view.search_optional %}
-  <a class="btn btn-block mb-2 w-full p-1"
+  <a class="btn btn-block mb-3 w-full p-1"
      href="{{ non_search_path }}">
     {% trans "Clear Search" %}
   </a>
@@ -71,7 +71,7 @@
 </form>
 
 {% if view.search_query and object_list %}
-<div class="notification mb-2">
+<div class="notification mb-3">
   {% blocktrans count counter=paginator.count with query=view.search_query %}
   1 Result for "{{ query }}"
   {% plural %}

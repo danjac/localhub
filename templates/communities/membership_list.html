@@ -10,7 +10,7 @@
 
 {% block content %}
 
-<ul class="breadcrumbs mb-2">
+<ul class="breadcrumbs mb-3">
   <li class="breadcrumb-item">
     <a href="{% url 'communities:community_update' %}">{% trans "Site Settings" %}</a>
   </li>
@@ -18,10 +18,10 @@
   </li>
 </ul>
 
-<h1 class="page-header mb-2">{% trans "Memberships" %}</h1>
+<h1 class="page-header mb-3">{% trans "Memberships" %}</h1>
 
 {% if not view.search_query %}
-<div class="notification mb-2">
+<div class="notification mb-3">
   {% blocktrans count counter=paginator.count %}
   This site has one member.
   {% plural %}

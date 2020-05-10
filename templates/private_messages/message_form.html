@@ -13,7 +13,7 @@
 {% block content %}
 
 {% if parent or recipient %}
-<ul class="breadcrumbs mb-2">
+<ul class="breadcrumbs mb-3">
   {% if parent %}
   <li class="breadcrumb-item"><a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a></li>
   <li class="breadcrumb-item">
@@ -35,7 +35,7 @@
 {% render_message request user parent is_detail=True %}
 {% include "includes/forms/stimulusjs_form.html" with css_class="px-2 py-5 border border-gray-500 w-full" %}
 {% else %}
-<h1 class="page-header mb-2">{% trans "Send Message" %}</h1>
+<h1 class="page-header mb-3">{% trans "Send Message" %}</h1>
 {% include "includes/forms/stimulusjs_form.html" %}
 {% endif %}
 

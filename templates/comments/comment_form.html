@@ -14,7 +14,7 @@
 
 {% block content %}
 
-<ul class="breadcrumbs mb-2">
+<ul class="breadcrumbs mb-3">
   {% if parent %}
   <li class="breadcrumb-item"><a href="{% url 'comments:list' %}">{% trans "Comments" %}</a></li>
   <li class="breadcrumb-item"><a href="{{ parent.get_absolute_url }}">{% trans "Parent" %}</a></li>
@@ -31,7 +31,7 @@
 </ul>
 
 {% if parent %}
-{% render_comment request user parent is_detail=True css_class="mb-2" %}
+{% render_comment request user parent is_detail=True css_class="mb-3" %}
 {% include "includes/forms/stimulusjs_form.html" with form_id="comment-form" css_class="w-full" %}
 {% else %}
 {% include "includes/forms/stimulusjs_form.html" with form_id="comment-form" %}

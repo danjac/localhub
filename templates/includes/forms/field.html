@@ -3,17 +3,17 @@
 
 {% load widget_tweaks %}
 {% with label=label|default:field.label help_text=help_text|default:field.help_text widget=field.field.widget %}
-<div class="mb-2 {% if field.errors %} text-red-600{% endif %}">
+<div class="mb-3 {% if field.errors %} text-red-600{% endif %}">
   {% if widget.input_type == 'checkbox' %}
   {% if widget.allow_multiple_selected %}
   <label for="{{ field.id_for_label }}"
-         class="block font-semibold mb-2 text-sm">{{ label }}</label>
+         class="block font-semibold mb-3 text-sm">{{ label }}</label>
   {% render_field field %}
   {% else %}
   {% include "includes/forms/widgets/checkbox_input.html" %}
   {% endif %}
   {% elif widget.input_type == 'radio' %}
-  <label class="block font-semibold mb-2 text-sm">{{ label }}</label>
+  <label class="block font-semibold mb-3 text-sm">{{ label }}</label>
   {% for choice in field %}
   <div class="{% if not forloop.last %} mr-2{% endif %}">
     <label class="font-semibold text-sm">
@@ -24,7 +24,7 @@
   {% endfor %}
   {% else %}
   <label for="{{ field.id_for_label }}"
-         class="block font-semibold mb-2 text-sm">{{ label }}</label>
+         class="block font-semibold mb-3 text-sm">{{ label }}</label>
 
   {% with widget_class=field.errors|yesno:"appearance-none p-1 w-full bg-red-100 border border-red-600 focus:border-red-300,appearance-none p-1 border border-gray-500 w-full focus:border-blue-500" %}
   {% render_field field class=widget_class placeholder=widget.attrs.placeholder %}
@@ -33,11 +33,11 @@
   {% endif %}
 
   {% for error in field.errors %}
-  <p class="text-red-600 mb-2 text-sm">{{ error }}</p>
+  <p class="text-red-600 mb-3 text-sm">{{ error }}</p>
   {% endfor %}
 
   {% if not field.errors and help_text %}
-  <p class="text-gray-700 mb-2 text-sm">{{ help_text }}</p>
+  <p class="text-gray-700 mb-3 text-sm">{{ help_text }}</p>
   {% endif %}
 </div>
 {% endwith %}

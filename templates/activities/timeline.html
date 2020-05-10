@@ -8,7 +8,7 @@
 
 {% block content %}
 {% if date_filters or current_year or current_month %}
-<ul class="breadcrumbs mb-2">
+<ul class="breadcrumbs mb-3">
   {% if date_filters %}
   <li class="breadcrumb-item">
     <a href="{{ request.path }}?order={{ order }}">{% trans "All" %}</a>
@@ -29,23 +29,23 @@
 </ul>
 {% endif %}
 
-<h1 class="page-header mb-2">{% trans "Timeline" %}</h1>
+<h1 class="page-header mb-3">{% trans "Timeline" %}</h1>
 
 {% if dates %}
-<div class="flex flex-wrap items-center mb-2 text-sm">
-  <a class="inline-block mr-2"
+<div class="page-nav mb-3">
+  <a class="page-nav-item"
      href="{{ reverse_sort_url }}">
     {% if order == "desc" %}{% trans "Oldest First" %}{% else %}{% trans "Newest First" %}{% endif %}
   </a>
   {% if not current_year %}
   {% for year in years %}
-  <a class="inline-block mr-2"
+  <a class="page-nav-item"
      href="{{ request.path }}?year={{ year }}&order={{ order }}">{{ year }}</a>
   {% endfor %}
   {% endif %}
   {% if not current_month %}
   {% for counter, name in months %}
-  <a class="inline-block mr-2"
+  <a class="page-nav-item"
      href="{{ request.path }}?month={{ counter }}&year={{ current_year }}&order={{ order }}">{{ name }}</a>
   {% endfor %}
   {% endif %}
@@ -54,7 +54,7 @@
 
 {% if selected_dates %}
 {% spaceless %}
-<div class="notification mb-2">
+<div class="notification mb-3">
 
   {% blocktrans count counter=paginator.count %}
   <strong>One activity</strong> was posted
@@ -93,12 +93,12 @@
 
 {% regroup object_list by month as months %}
 {% for month, activities in months %}
-<div class="mb-2 border-r border-l border-b border-gray-500">
+<div class="mb-3 border-r border-l border-b border-gray-500">
   <div class="font-semibold text-center p-2 bg-indigo-800 text-white">{{ month }}</div>
   {% for activity in activities %}
   {% with object=activity.object object_type=activity.object_type %}
   <div class="p-3 hover:bg-gray-200 {% if not forloop.last %} border-b border-gray-500{% endif %}{% cycle '' ' bg-gray-100' %}">
-    <div class="flex flex-wrap items-center mb-2 text-sm">
+    <div class="flex flex-wrap items-center mb-3 text-sm">
 
       <a class="mr-2"
          href="{{ object.get_absolute_url }}">

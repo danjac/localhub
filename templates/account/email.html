@@ -9,19 +9,19 @@
 
 {% block content %}
 
-<ul class="breadcrumbs mb-2">
+<ul class="breadcrumbs mb-3">
   <li class="breadcrumb-item"><a href="{% url 'user_update' %}">{% trans "My Settings" %}</a></li>
   <li class="breadcrumb-item">
     {% trans "Email Addresses" %}
   </li>
 </ul>
 
-<h1 class="page-header mb-2">{% trans "Email Addresses" %}</h1>
+<h1 class="page-header mb-3">{% trans "Email Addresses" %}</h1>
 
 
 {% with emailaddresses=user.emailaddress_set.all emailaddress_count=user.emailaddress_set.count %}
 {% if emailaddress_count %}
-<p class="mb-2">{% trans "The following email addresses are associated with your account:" %}</p>
+<p class="mb-3">{% trans "The following email addresses are associated with your account:" %}</p>
 
 <form action="{% url 'account_email' %}"
       method="POST"
@@ -29,7 +29,7 @@
   {% csrf_token %}
 
   {% for emailaddress in emailaddresses %}
-  <div class="mb-2">
+  <div class="mb-3">
     <label for="email_radio_{{ forloop.counter }}"
            class="font-semibold">
       <input id="email_radio_{{ forloop.counter }}"

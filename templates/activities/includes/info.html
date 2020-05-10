@@ -3,7 +3,7 @@
 
 {% load i18n %}
 
-<div class="flex flex-wrap items-center text-xs text-muted mb-2">
+<div class="flex flex-wrap items-center text-xs text-muted mb-3">
   {% with num_comments=object.num_comments|default:0 object_url=object.get_absolute_url %}
   {% if num_comments %}
   <div class="mr-2">

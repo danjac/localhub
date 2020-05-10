@@ -55,12 +55,10 @@
 
 
 {% if submit_actions %}
-<div class="mb-3 text-sm">
+<div class="page-nav mb-3">
   {% block actions %}
   {% for url, label in submit_actions %}
-  <a {% if not forloop.last %}class=" mr-2"
-     {% endif %}
-     href="{{ url }}">{{ label }}</a>
+  <a class="page-nav-item" href="{{ url }}">{{ label }}</a>
   {% endfor %}
   {% endblock actions %}
 </div>

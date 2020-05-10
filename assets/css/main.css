@@ -153,6 +153,27 @@ a.btn-secondary {
   @apply text-lg font-semibold;
 }
 
+.page-nav {
+  @apply flex flex-wrap items-center text-sm;
+}
+
+.page-nav-item {
+  @apply inline-block tracking-tight leading-none;
+}
+
+.page-nav-item,
+.page-nav-item a {
+  @apply text-blue-900;
+}
+.page-nav-item:hover,
+.page-nav-item a:hover {
+  @apply text-blue-600;
+}
+
+.page-nav-item:not(:last-child) {
+  @apply mr-3;
+}
+
 .sidebar-menu {
   @apply border border-gray-500 p-1 bg-gray-100;
 }

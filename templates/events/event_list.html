@@ -7,21 +7,21 @@
 
 {% block activity_list_header %}
 
-<div class="flex items-center flex-wrap text-sm mb-1">
+<div class="page-nav mb-3">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
-  <a class="inline-block mr-2"
+  <a class="page-nav-item"
      href="{% url 'events:create' %}">
     {% trans "Submit Event" %}
   </a>
   {% endif %}
-  <a class="inline-block mr-2"
+  <a class="page-nav-item"
      href="{% url 'events:calendar' %}">{% trans "Calendar" %}</a>
-  <a class="inline-block mr-2"
+  <a class="page-nav-item"
      href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
-  <a class="inline-block mr-2"
+  <a class="page-nav-item"
      href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
-  <a class="inline-block mr-2"
+  <a class="page-nav-item"
      href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
 </div>
 {% endblock %}

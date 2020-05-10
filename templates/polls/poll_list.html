@@ -6,19 +6,19 @@
 {% load rules %}
 
 {% block activity_list_header %}
-<div class="actions mb-1">
+<div class="page-nav mb-3">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
-  <a class="action"
+  <a class="page-nav-item"
      href="{% url 'polls:create' %}">
     {% trans "Submit Poll" %}
   </a>
   {% endif %}
-  <a class="action"
+  <a class="page-nav-item"
      href="{% url 'photos:list' %}">{% trans "Posts" %}</a>
-  <a class="action"
+  <a class="page-nav-item"
      href="{% url 'events:list' %}">{% trans "Events" %}</a>
-  <a class="action"
+  <a class="page-nav-item"
      href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
 </div>
 {% endblock %}

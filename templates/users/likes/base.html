@@ -10,7 +10,7 @@
 {% block content %}
 
 
-<ul class="breadcrumbs mb-2">
+<ul class="breadcrumbs mb-3">
   <li class="breadcrumb-item">
     <a href="{{ user_obj.get_absolute_url }}">
       {% user_display user_obj %}
@@ -20,9 +20,9 @@
   </li>
 </ul>
 
-<h1 class="page-header mb-2">{% trans "Likes" %}</h1>
+<h1 class="page-header mb-3">{% trans "Likes" %}</h1>
 
-<div class="tabs text-sm mb-2">
+<div class="tabs text-sm mb-3">
   <a class="tab-item"
      data-controller="active-link"
      data-active-link-exact
