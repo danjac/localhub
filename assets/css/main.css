@@ -228,6 +228,27 @@ a.btn-secondary {
   }
 }
 
+.table-nav {
+  @apply flex flex-wrap items-center text-sm;
+}
+
+.table-nav-item {
+  @apply inline-block tracking-tight leading-none;
+}
+
+.table-nav-item,
+.table-nav-item a {
+  @apply text-blue-900;
+}
+.table-nav-item:hover,
+.table-nav-item a:hover {
+  @apply text-blue-600;
+}
+
+.table-nav-item:not(:last-child) {
+  @apply mr-3;
+}
+
 .tag {
   @apply rounded bg-gray-600 text-white px-1 text-xs;
 }

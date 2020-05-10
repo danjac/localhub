@@ -39,20 +39,21 @@
 </h1>
 
 
-<div class="flex flex-wrap items-center text-sm mb-1">
+<div class="page-nav border-b pb-3 mb-3">
   {% if object.active %}
-  <a class="mr-2"
+  <a class="page-nav-item"
      href="{% url 'users:activities' member.username %}">{% trans "Activities" %}</a>
-  <a class="mr-2"
+  <a class="page-nav-item"
      href="{% url 'users:comments' member.username %}">{% trans "Comments" %}</a>
-  <a class=""
+  <a class="page-nav-item"
      href="{% url 'users:messages' member.username %}">{% trans "Messages" %}</a>
   {% endif %}
 </div>
 
 {% has_perm "communities.change_membership" user object as can_change %}
 {% has_perm "communities.delete_membership" user object as can_delete %}
-{% include "communities/includes/membership_actions.html" with member=object css_class="mb-1" %}
+
+{% include "communities/includes/membership_actions.html" with member=object css_class="mb-3" %}
 
 <dl class="text-sm">
   <dt>{% trans "Status" %}</dt>

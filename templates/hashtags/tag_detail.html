@@ -18,16 +18,16 @@
 {% has_perm "users.block_tag" user as can_block_tag %}
 
 {% if can_follow_tag or can_block_tag %}
-<div class="flex flex-wrap items-center mb-3 text-sm">
+<div class="page-nav mb-3">
   {% if can_follow_tag %}
   {% with user.following_tags.all|contains:tag as is_following %}
-  {% include "hashtags/includes/follow.html" with css_class="inline-block mr-2" %}
+  {% include "hashtags/includes/follow.html" with css_class="page-nav-item" %}
   {% endwith %}
   {% endif %}
 
   {% if can_block_tag %}
   {% with user.blocked_tags.all|contains:tag as is_blocked %}
-  {% include "hashtags/includes/block.html" with css_class="inline-block" %}
+  {% include "hashtags/includes/block.html" with css_class="page-nav-item" %}
   {% endwith %}
   {% endif %}
 </div>

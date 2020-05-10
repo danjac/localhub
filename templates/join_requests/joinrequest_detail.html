@@ -32,9 +32,9 @@
 </h1>
 
 {% with is_pending=object.is_pending is_rejected=object.is_rejectd %}
-<div class="flex flex-wrap items-center mb-3 text-sm">
+<div class="page-nav mb-3 border-b pb-3">
   {% if is_pending or is_rejected %}
-  <a class="mr-2"
+  <a class="page-nav-item"
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
@@ -45,7 +45,7 @@
   </a>
   {% endif %}
   {% if is_pending %}
-  <a class="mr-2"
+  <a class="page-nav-item"
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
@@ -54,7 +54,7 @@
      data-ajax-confirm-body="{% trans 'Are you sure you want to reject this request?' %}"
      href="{% url 'join_requests:reject' object.id %}">{% trans "Reject" %}</a>
   {% endif %}
-  <a class=""
+  <a class="page-nav-item"
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
@@ -65,7 +65,7 @@
 {% endwith %}
 
 
-<dl>
+<dl class="text-sm">
   <dt>{% trans "Status" %}</dt>
   <dd>{{ object.get_status_display }}</dd>
   <dt>{% trans "Requested" %}</dt>
@@ -85,7 +85,9 @@
 
 
 {% if object.intro %}
-{{ object.intro|linebreaks }}
+<div class="border-t mt-3">
+  {{ object.intro|linebreaks }}
+</div>
 {% endif %}
 
 {% endblock content %}

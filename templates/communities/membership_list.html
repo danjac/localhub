@@ -62,7 +62,7 @@
         {{ member.get_role_display }}
       </td>
       <td class="border py-2 px-2">
-        {% include "communities/includes/membership_actions.html" %}
+        {% include "communities/includes/membership_actions.html" with is_table=True %}
       </td>
     </tr>
     {% endfor %}

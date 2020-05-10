@@ -37,7 +37,7 @@
 {% block tag_list %}
 {% if object_list %}
 {% with blocked=user.blocked_tags.all following=user.following_tags.all %}
-<table class="table-fixed text-sm block whitespace-no-wrap overflow-x-scroll md:w-full md:whitespace-normal md:overflox-x-auto md:table">
+<table class="table-auto-scroll text-sm">
   <tbody>
     {% for tag in object_list %}
     <tr class="{% cycle '' 'bg-gray-100' %} hover:bg-gray-200">
@@ -51,16 +51,16 @@
       </td>
       {% if can_follow_tag or can_block_tag %}
       <td class="border-t border-r border-b py-2 px-2 w-1/4">
-        <div class="text-right">
+        <div class="table-nav">
           {% if can_follow_tag %}
           {% with following|contains:tag as is_following %}
-          {% include "hashtags/includes/follow.html" with css_class="inline-block mr-2" %}
+          {% include "hashtags/includes/follow.html" with css_class="table-nav-item" %}
           {% endwith %}
           {% endif %}
 
           {% if can_block_tag %}
           {% with blocked|contains:tag as is_blocked %}
-          {% include "hashtags/includes/block.html" with css_class="inline-block" %}
+          {% include "hashtags/includes/block.html" with css_class="table-nav-item" %}
           {% endwith %}
           {% endif %}
         </div>

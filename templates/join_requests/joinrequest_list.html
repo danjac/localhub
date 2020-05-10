@@ -76,9 +76,9 @@
           {% if is_pending %}</b>{% endif %}
       </td>
       <td class="border py-2 px-2">
-        <div class="flex flex-wrap">
+        <div class="table-nav">
           {% if is_pending or is_rejected %}
-          <a class="mr-2"
+          <a class="table-nav-item"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"
@@ -88,7 +88,7 @@
           </a>
           {% endif %}
           {% if is_pending %}
-          <a class="mr-2"
+          <a class="table-nav-item"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"
@@ -96,7 +96,7 @@
              data-ajax-confirm-body="{% trans 'Are you sure you want to reject this request?' %}"
              href="{% url 'join_requests:reject' join_request.id %}">{% trans "Reject" %}</a>
           {% endif %}
-          <a class=""
+          <a class="table-nav-item"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post"

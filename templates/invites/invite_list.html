@@ -76,15 +76,15 @@
       </td>
       <td class="border py-2 px-2">{{ invite.get_status_display }}</td>
       <td class="border py-2 px-2">
-        <div class="flex flex-wrap items-center text-sm">
+        <div class="table-nav">
           {% if invite.is_pending %}
-          <a class="mr-2"
+          <a class="table-nav-item"
              href="{% url 'invites:resend' invite.id %}"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post">{% trans "Re-send" %}</a>
           {% endif %}
-          <a class=""
+          <a class="table-nav-item"
              href="{% url 'invites:delete' invite.id %}"
              data-turbolinks="false"
              data-controller="ajax"
