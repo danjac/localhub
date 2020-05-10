@@ -59,8 +59,14 @@
           {% with object.title|truncatechars:130 as object_title %}
 
           {% block list_item_title %}
+          {% if object.url %}
+          <span class="inline-block mr-2">
+            {{ object.url|linkify:object.title }}
+          </span>
+          {% else %}
           <a class="inline-block mr-2"
              href="{{ object.get_absolute_url }}">{{ object_title }}</a>
+          {% endif %}
           {% endblock %}
 
           {% endwith %}
