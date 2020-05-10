@@ -12,7 +12,7 @@ import model_utils.fields
 # Social-BFG
 import social_bfg.apps.hashtags.fields
 import social_bfg.apps.users.fields
-import social_bfg.markdown.fields
+import social_bfg.common.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -80,7 +80,10 @@ class Migration(migrations.Migration):
                         blank=True, max_length=300
                     ),
                 ),
-                ("description", social_bfg.markdown.fields.MarkdownField(blank=True),),
+                (
+                    "description",
+                    social_bfg.common.markdown.fields.MarkdownField(blank=True),
+                ),
                 ("allow_comments", models.BooleanField(default=True)),
                 ("is_reshare", models.BooleanField(default=False)),
                 ("is_pinned", models.BooleanField(default=False)),

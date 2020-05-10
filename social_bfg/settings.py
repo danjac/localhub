@@ -176,13 +176,13 @@ class Base(Configuration):
 
     # https://neutronx.github.io/django-markdownx/customization/
 
-    MARKDOWNX_MARKDOWNIFY_FUNCTION = "social_bfg.markdown.utils.markdownify"
+    MARKDOWNX_MARKDOWNIFY_FUNCTION = "social_bfg.common.markdown.utils.markdownify"
 
     MARKDOWNX_MARKDOWN_EXTENSIONS = [
         "pymdownx.extra",
         "pymdownx.emoji",
-        "social_bfg.markdown.extensions:NewTabExtension",
-        "social_bfg.markdown.extensions:SafeImageExtension",
+        "social_bfg.common.markdown.extensions:NewTabExtension",
+        "social_bfg.common.markdown.extensions:SafeImageExtension",
     ]
 
     MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {

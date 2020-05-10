@@ -36,7 +36,7 @@ from social_bfg.common.db.generic import (
 from social_bfg.common.db.search.mixins import SearchQuerySetMixin
 from social_bfg.common.db.tracker import TrackerModelMixin
 from social_bfg.common.db.utils import boolean_value
-from social_bfg.markdown.fields import MarkdownField
+from social_bfg.common.markdown.fields import MarkdownField
 from social_bfg.utils.itertools import takefirst
 from social_bfg.utils.text import slugify_unicode
 

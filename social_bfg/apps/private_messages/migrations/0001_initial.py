@@ -10,7 +10,7 @@ from django.db import migrations, models
 import model_utils.fields
 
 # Social-BFG
-import social_bfg.markdown.fields
+import social_bfg.common.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
                         verbose_name="modified",
                     ),
                 ),
-                ("message", social_bfg.markdown.fields.MarkdownField()),
+                ("message", social_bfg.common.markdown.fields.MarkdownField()),
                 ("read", models.DateTimeField(blank=True, null=True)),
                 ("recipient_deleted", models.DateTimeField(blank=True, null=True)),
                 ("sender_deleted", models.DateTimeField(blank=True, null=True)),

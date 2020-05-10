@@ -21,7 +21,7 @@ from social_bfg.apps.notifications.models import Notification
 from social_bfg.common.db.generic import get_generic_related_queryset
 from social_bfg.common.db.search.indexer import SearchIndexer
 from social_bfg.common.db.search.mixins import SearchQuerySetMixin
-from social_bfg.markdown.fields import MarkdownField
+from social_bfg.common.markdown.fields import MarkdownField
 
 
 class MessageQuerySet(
