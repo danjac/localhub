@@ -271,8 +271,8 @@ class Base(Configuration):
                 "OPTIONS": {
                     "debug": self.DEBUG,
                     "builtins": [
-                        "social_bfg.template.defaultfilters",
-                        "social_bfg.template.defaulttags",
+                        "social_bfg.common.template.defaultfilters",
+                        "social_bfg.common.template.defaulttags",
                     ],
                     "context_processors": [
                         "django.template.context_processors.debug",
@@ -284,7 +284,7 @@ class Base(Configuration):
                         "django.template.context_processors.tz",
                         "django.contrib.messages.context_processors.messages",
                         "social_bfg.apps.communities.context_processors.community",
-                        "social_bfg.template.context_processors.home_page_url",
+                        "social_bfg.common.template.context_processors.home_page_url",
                     ],
                     "libraries": {
                         "pagination": "social_bfg.common.pagination.templatetags"

@@ -19,6 +19,7 @@ from social_bfg.apps.communities.views import CommunityRequiredMixin
 from social_bfg.apps.flags.forms import FlagForm
 from social_bfg.apps.likes.models import Like
 from social_bfg.common.pagination import PresetCountPaginator
+from social_bfg.common.template.defaultfilters import resolve_url
 from social_bfg.common.views import (
     ParentObjectMixin,
     SearchMixin,
@@ -28,7 +29,6 @@ from social_bfg.common.views import (
     SuccessFormView,
     SuccessUpdateView,
 )
-from social_bfg.template.defaultfilters import resolve_url
 
 # Local
 from ..forms import ActivityTagsForm
