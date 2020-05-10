@@ -391,8 +391,8 @@ class Production(Base):
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
-    DEFAULT_FILE_STORAGE = "social_bfg.storages.MediaStorage"
-    STATICFILES_STORAGE = "social_bfg.storages.StaticStorage"
+    DEFAULT_FILE_STORAGE = "social_bfg.common.storages.MediaStorage"
+    STATICFILES_STORAGE = "social_bfg.common.storages.StaticStorage"
 
     AWS_MEDIA_LOCATION = "media"
     AWS_STATIC_LOCATION = "static"
