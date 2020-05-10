@@ -12,7 +12,7 @@ import pytz
 # Social-BFG
 from social_bfg.apps.activities.forms import ActivityForm
 from social_bfg.common.forms import CalendarField, CalendarWidget, FormHelper
-from social_bfg.utils.geocode import geocode
+from social_bfg.common.utils.geocode import geocode
 
 # Local
 from .models import Event

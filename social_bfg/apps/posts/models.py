@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 # Social-BFG
 from social_bfg.apps.activities.models import Activity
 from social_bfg.common.db.search.indexer import SearchIndexer
-from social_bfg.utils.http import get_domain, is_https, is_image_url
+from social_bfg.common.utils.http import get_domain, is_https, is_image_url
 
 
 class Post(Activity):

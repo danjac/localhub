@@ -5,7 +5,7 @@
 import pytest
 
 # Social-BFG
-from social_bfg.utils.exif import Exif
+from social_bfg.common.utils.exif import Exif
 
 # Local
 from ..factories import PhotoFactory
@@ -21,7 +21,7 @@ def mock_exif(mocker):
             return (61, 24)
 
     mocker.patch(
-        "social_bfg.utils.exif.Exif.from_image", return_value=MockExif(),
+        "social_bfg.common.utils.exif.Exif.from_image", return_value=MockExif(),
     )
 
     yield
@@ -34,7 +34,7 @@ def mock_invalid_exif(mocker):
             raise Exif.Invalid()
 
     mocker.patch(
-        "social_bfg.utils.exif.Exif.from_image", return_value=MockExif(),
+        "social_bfg.common.utils.exif.Exif.from_image", return_value=MockExif(),
     )
 
     yield

@@ -11,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 # Social-BFG
 from social_bfg.apps.activities.forms import ActivityForm
 from social_bfg.common.forms import ClearableImageInput, FormHelper
-from social_bfg.utils.exif import Exif
+from social_bfg.common.utils.exif import Exif
 
 # Local
 from .models import Photo

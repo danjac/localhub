@@ -6,7 +6,7 @@ from django import template
 from django.utils.safestring import mark_safe
 
 # Social-BFG
-from social_bfg.utils import emojis
+from social_bfg.common.utils import emojis
 
 register = template.Library()
 

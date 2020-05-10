@@ -16,7 +16,7 @@ from markdown.inlinepatterns import (
 from markdown.util import etree
 
 # Social-BFG
-from social_bfg.utils.http import is_https
+from social_bfg.common.utils.http import is_https
 
 
 class SafeImageInlineProcessor(ImageInlineProcessor):

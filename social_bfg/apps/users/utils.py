@@ -7,7 +7,7 @@ from django.conf import settings
 from django.urls import reverse
 
 # Social-BFG
-from social_bfg.utils.text import slugify_unicode
+from social_bfg.common.utils.text import slugify_unicode
 
 
 def user_display(user):

@@ -13,7 +13,7 @@ class TestGeocoder:
             longitude = 50
 
         mocker.patch(
-            "social_bfg.utils.geocode.geolocator.geocode",
+            "social_bfg.common.utils.geocode.geolocator.geocode",
             return_value=MockGoodOSMResult,
         )
 
@@ -27,7 +27,7 @@ class TestGeocoder:
     def test_geocode_not_ok(self, mocker):
 
         mock_geocode = mocker.patch(
-            "social_bfg.utils.geocode.geolocator.geocode", return_value=None
+            "social_bfg.common.utils.geocode.geolocator.geocode", return_value=None
         )
 
         assert geocode(
@@ -45,7 +45,7 @@ class TestGeocoder:
             longitude = 50
 
         mock_geocode = mocker.patch(
-            "social_bfg.utils.geocode.geolocator.geocode",
+            "social_bfg.common.utils.geocode.geolocator.geocode",
             return_value=MockGoodOSMResult,
         )
 

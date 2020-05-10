@@ -6,7 +6,7 @@
 from django import template
 
 # Social-BFG
-from social_bfg.utils.http import is_https
+from social_bfg.common.utils.http import is_https
 
 # Local
 from ..oembed import bootstrap_oembed

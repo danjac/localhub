@@ -7,8 +7,8 @@ from django.utils.translation import gettext as _
 from django.views.generic import View
 
 # Social-BFG
-from social_bfg.utils.http import URLResolver
-from social_bfg.utils.scraper import HTMLScraper
+from social_bfg.common.utils.http import URLResolver
+from social_bfg.common.utils.scraper import HTMLScraper
 
 
 class OpengraphPreviewView(View):
