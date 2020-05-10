@@ -5,12 +5,12 @@
 
 {% if user.is_authenticated and webpush_enabled %}
 <div class="{{ css_class|default:"mb-2" }} hidden"
-     data-controller="notifications"
-     data-notifications-service-worker-url="{% url 'notifications:service_worker' %}"
-     data-notifications-subscribe-url="{% url 'notifications:subscribe' %}"
-     data-notifications-unsubscribe-url="{% url 'notifications:unsubscribe' %}"
+     data-controller="webpush"
+     data-webpush-service-worker-url="{% url 'notifications:service_worker' %}"
+     data-webpush-subscribe-url="{% url 'notifications:subscribe' %}"
+     data-webpush-unsubscribe-url="{% url 'notifications:unsubscribe' %}"
      {% if vapid_public_key %}
-     data-notifications-vapid-public-key="{{ vapid_public_key }}"
+     data-webpush-vapid-public-key="{{ vapid_public_key }}"
      {% endif %}>
   <button class="btn btn-block hidden"
           href="#"
