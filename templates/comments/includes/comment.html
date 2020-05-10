@@ -8,7 +8,7 @@
 
 {% has_perm "communities.moderate_community" user community as can_moderate_community %}
 
-<article class="card {% if css_class %} {{ css_class }}{% endif %}"
+<article class="card {% if css_class %} {{ css_class }}{% endif %} {% if comment.is_blocked %} bg-gray-100{% endif %}"
          role="comment"
          data-controller="clipboard"
          data-clipboard-message="{% trans 'Markdown content has been copied' %}"
@@ -37,26 +37,32 @@
       {% endif %}
     </div>
     {% endif %}
-    <div class="">
+    <div class="flex flex-wrap items-center">
       {% url 'users:comments' comment.owner.username as owner_url %}
-      {% include "includes/timesince.html" with profile_url=owner_url timestamp=comment.created owner=comment.owner %}
+      {% include "includes/timesince.html" with profile_url=owner_url timestamp=comment.created owner=comment.owner css_class="mr-2" %}
+      {% if comment.is_blocked %}
+      <span class="tag tag-primary">{% trans "Blocked" %}</span>
+      {% endif %}
     </div>
   </div>
   {% if comment.is_blocked %}
   <div class="card-body"
        data-controller="toggle">
-    <strong>{% trans "You have blocked this user." %}</strong>
+
     <div class="markdown-content hidden"
          data-target="toggle.togglable">
       {{ comment.content.markdown|strip_external_images:user|lazify }}
     </div>
-    <div class="actions">
-      <a class="action"
-         href="#"
-         data-target="toggle.togglable"
-         data-action="toggle#toggle">{% trans "View Comment" %}</a>
+
+    <div data-target="toggle.togglable text-center align-middle py-3">
+      <div class="flex justify-center items-center">
+        <button class="btn btn-block w-1/3 text-sm"
+                data-action="toggle#toggle"
+                href="javascript:void(0);">{% trans "View Comment" %}</a>
+      </div>
     </div>
   </div>
+
   {% else %}
   <div class="card-body">
     <textarea data-target="clipboard.textarea"

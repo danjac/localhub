@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-<div class="flex items-center">
+<div class="flex items-center {{ css_class }}">
   {% if owner %}
   {% include "users/includes/chip.html" with profile=owner css_class="mr-2" %}
   {% endif %}
