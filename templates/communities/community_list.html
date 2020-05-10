@@ -16,16 +16,16 @@
 <div class="card mb-2">
   <div class="flex flex-wrap items-center">
     {% if object == community %}
-    <span class="inline-block mr-4">
+    <span class="inline-block mr-2">
       {{ object.name }}
     </span>
     {% else %}
-    <a class="inline-block mr-4"
+    <a class="inline-block mr-2"
        href="{{ object.get_absolute_url }}">{{ object.name }}</a>
     {% endif %}
 
     {% if object.is_member %}
-    <span class="tag mr-4">{{ roles|from_dictkey:object.member_role }}</span>
+    <span class="tag mr-2">{{ roles|from_dictkey:object.member_role }}</span>
     {% elif not object.allow_join_requests %}
     <span class="tag">{% trans "Invite Only" %}</span>
     {% endif %}
@@ -40,18 +40,18 @@
   <div class="card-footer">
     <div class="flex flex-wrap items-center text-sm">
       {% if num_flags %}
-      <a class="inline-block mr-4"
+      <a class="inline-block mr-2"
          href="{{ object_url }}{% url 'flags:list' %}">{% trans "Flags" %}
       </a>
       {% endif %}
       {% if num_notifications %}
-      <a class="mr-4"
+      <a class="mr-2"
          href="{{ object_url }}{% url 'notifications:list' %}">
         {% trans "Notifications" %}
       </a>
       {% endif %}
       {% if num_messages %}
-      <a class="mr-4"
+      <a class="mr-2"
          href="{{ object_url }}{% url 'private_messages:inbox' %}">
         {% trans "Messages" %}
       </a>

@@ -23,7 +23,7 @@ You can enable emails for your notifications
 {% if object_list %}
 <div class="flex flex-wrap items-center text-sm mb-2">
   {% if is_unread_notifications %}
-  <a class="inline-block mr-4"
+  <a class="inline-block mr-2"
      href="{% url 'notifications:mark_all_read' %}"
      data-turbolinks="false"
      data-controller="ajax"
@@ -65,7 +65,7 @@ You can enable emails for your notifications
       <td class="border py-2 px-2">
         <div class="text-right">
           {% if not notification.is_read %}
-          <a class="inline-block mr-4"
+          <a class="inline-block mr-2"
              href="{% url 'notifications:mark_read' notification.pk %}"
              data-turbolinks="false"
              data-controller="ajax"

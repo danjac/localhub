@@ -9,16 +9,16 @@
 <div class="flex flex-wrap items-center mb-2 text-sm">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
-  <a class="inline-block mr-4"
+  <a class="inline-block mr-2"
      href="{% url 'photos:create' %}">
     {% trans "Submit Photo" %}
   </a>
   {% endif %}
-  <a class="inline-block mr-4"
+  <a class="inline-block mr-2"
      href="{% url 'photos:gallery' %}">{% trans "Gallery" %}</a>
-  <a class="inline-block mr-4"
+  <a class="inline-block mr-2"
      href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
-  <a class="inline-block mr-4"
+  <a class="inline-block mr-2"
      href="{% url 'events:list' %}">{% trans "Events" %}</a>
   <a class="inline-block"
      href="{% url 'polls:list' %}">{% trans "Polls" %}</a>

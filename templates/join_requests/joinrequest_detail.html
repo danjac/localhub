@@ -34,7 +34,7 @@
 {% with is_pending=object.is_pending is_rejected=object.is_rejectd %}
 <div class="flex flex-wrap items-center mb-2 text-sm">
   {% if is_pending or is_rejected %}
-  <a class="mr-4"
+  <a class="mr-2"
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
@@ -45,7 +45,7 @@
   </a>
   {% endif %}
   {% if is_pending %}
-  <a class="mr-4"
+  <a class="mr-2"
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"

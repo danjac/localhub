@@ -25,7 +25,7 @@
 {% get_pending_invite_count user as pending_invites_count %}
 
 <div class="flex flex-wrap items-center text-sm">
-  <a class="mr-4"
+  <a class="mr-2"
      href="{% url 'invites:create' %}">
     {% trans "Send an invite" %}
   </a>
@@ -44,12 +44,12 @@
 {% if total_count %}
 <div class="flex flex-wrap items-center text-sm mb-2">
   {% if status %}
-  <a class="mr-4"
+  <a class="mr-2"
      href="{{ request.path }}">{% trans "Show All" %}</a>
   {% endif %}
   {% for value, label in status_choices %}
   {% if status != value %}
-  <a class="mr-4"
+  <a class="mr-2"
      href="{{ request.path }}?status={{ value }}">{{ label }}</a>
   {% endif %}
   {% endfor %}

@@ -29,7 +29,7 @@
 <div class="flex flex-wrap items-center mb-2 text-sm">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
-  <a class="inline-block mr-4"
+  <a class="inline-block mr-2"
      href="{% url 'events:create' %}">
     {% trans "Submit Event" %}
   </a>

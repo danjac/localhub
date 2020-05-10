@@ -16,9 +16,9 @@
 {% if can_create_message or unread_messages %}
 <div class="flex flex-wrap items-center mb-2 text-sm">
   <a href="{% url 'private_messages:message_create'%}"
-     class="inline-block mr-4">{% trans "Send Message" %}</a>
+     class="inline-block mr-2">{% trans "Send Message" %}</a>
   {% if unread_messages %}
-  <a class="inline-block mr-4"
+  <a class="inline-block mr-2"
      href="{% url 'private_messages:mark_all_read' %}"
      data-turbolinks="false"
      data-controller="ajax"

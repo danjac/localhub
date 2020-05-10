@@ -25,12 +25,12 @@
 {% if total_count %}
 <div class="flex flex-wrap items-center mb-2 text-sm">
   {% if status %}
-  <a class="mr-4"
+  <a class="mr-2"
      href="{{ request.path }}">{% trans "Show All" %}</a>
   {% endif %}
   {% for value, label in status_choices %}
   {% if status != value %}
-  <a class="mr-4"
+  <a class="mr-2"
      href="{{ request.path }}?status={{ value }}">{{ label }}</a>
   {% endif %}
   {% endfor %}

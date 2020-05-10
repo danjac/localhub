@@ -21,9 +21,9 @@
 <h1 class="page-header mb-2">{% trans "Messages" %}</h1>
 
 <div class="flex flex-wrap items-center mb-2 text-sm">
-  <a class="inline-block mr-4"
+  <a class="inline-block mr-2"
      href="{% url 'private_messages:inbox' %}">{% trans "Inbox" %}</a>
-  <a class="inline-block mr-4"
+  <a class="inline-block mr-2"
      href="{% url 'private_messages:outbox' %}">{% trans "Outbox" %}</a>
   {% if can_create_message %}
   <a class="inline-block"

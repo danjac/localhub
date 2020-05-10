@@ -9,14 +9,14 @@
   <div class="mb-2">
     <div class="text-blue-800 hover:text-blue-700 font-semibold flex flex-wrap items-center mb-2">
       {% block title %}
-      <span class="mr-4 tracking-tight">
+      <span class="mr-2 tracking-tight">
         {% if object.url %}
         {{ object.url|linkify:object.title }}
         {% else %}
         <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
         {% endif %}
       </span>
-      <span class="tag inline-block mr-4">{% trans object_type|capfirst %}</span>
+      <span class="tag inline-block mr-2">{% trans object_type|capfirst %}</span>
       <span class="tag inline-block">{% trans "Pinned" %}</span>
     </div>
     {% endblock title %}

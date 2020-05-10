@@ -80,7 +80,7 @@
     <div>
       {% avatar user "32" css_class="inline-block mr-1" show_placeholder=False %}
       <a href="{{ user.get_absolute_url }}"
-         class="inline-block text-white hover:text-gray-100 mr-4">
+         class="inline-block text-white hover:text-gray-100 mr-2">
         {{ user.username }}
       </a>
       <a href="{% url 'account_logout' %}"
@@ -93,7 +93,7 @@
     {% else %}
     <div>
       <a href="{% url 'account_login' %}"
-         class="inline-block text-white hover:text-gray-100 mr-4">{% trans "Login" %}</a>
+         class="inline-block text-white hover:text-gray-100 mr-2">{% trans "Login" %}</a>
       <a href="{% url 'account_signup' %}"
          class="inline-block text-white hover:text-gray-100">{% trans "Signup" %}</a>
     </div>

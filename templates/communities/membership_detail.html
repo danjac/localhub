@@ -29,7 +29,7 @@
 {% user_display member as display_name %}
 
 <h1 class="page-header flex flex-wrap items-center mb-2">
-  {% avatar member "32" show_placeholder=False css_class="mr-4" %}
+  {% avatar member "32" show_placeholder=False css_class="mr-2" %}
   {% if member.username == display_name %}
   @{{ display_name }}
   {% else %}
@@ -41,9 +41,9 @@
 
 <div class="flex flex-wrap items-center text-sm mb-1">
   {% if object.active %}
-  <a class="mr-4"
+  <a class="mr-2"
      href="{% url 'users:activities' member.username %}">{% trans "Activities" %}</a>
-  <a class="mr-4"
+  <a class="mr-2"
      href="{% url 'users:comments' member.username %}">{% trans "Comments" %}</a>
   <a class=""
      href="{% url 'users:messages' member.username %}">{% trans "Messages" %}</a>

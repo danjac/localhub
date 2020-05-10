@@ -15,8 +15,8 @@
     <div class="mr-2">
       {% trans "to" %}
     </div>
-    {% include "users/includes/chip.html" with profile=message.recipient profile_url=recipient_url css_class="mr-4" %}
-    <span class="mr-4 text-muted text-sm">
+    {% include "users/includes/chip.html" with profile=message.recipient profile_url=recipient_url css_class="mr-2" %}
+    <span class="mr-2 text-muted text-sm">
       {% blocktrans with created=message.created|timesince %}
       {{ created }} ago
       {% endblocktrans %}
@@ -39,7 +39,7 @@
 
   <div class="card-footer mt-4">
     <div class="flex flex-wrap items-center">
-      <div class="mr-4 text-sm"
+      <div class="mr-2 text-sm"
            data-controller="dropdown"
            data-action="click@window->dropdown#close keydown@window->dropdown#close">
         <button class="btn btn-dropdown"
@@ -104,7 +104,7 @@
 
       </div>
       {% if not is_detail %}
-      <a class="inline-block mr-4 text-sm"
+      <a class="inline-block mr-2 text-sm"
          href="{{ message_url }}">{% trans "Link" %}</a>
       {% if parent %}
       <a class="inline-block text-sm"

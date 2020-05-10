@@ -9,14 +9,14 @@
 <div class="text-sm mb-1">
   {% has_perm 'activities.create_activity' user community as can_create_activity %}
   {% if can_create_activity %}
-  <a class="text-blue-800 hover:text-blue-700 mr-4"
+  <a class="text-blue-800 hover:text-blue-700 mr-2"
      href="{% url 'posts:create' %}">
     {% trans "Submit Post" %}
   </a>
   {% endif %}
-  <a class="text-blue-800 hover:text-blue-700 mr-4"
+  <a class="text-blue-800 hover:text-blue-700 mr-2"
      href="{% url 'events:list' %}">{% trans "Events" %}</a>
-  <a class="text-blue-800 hover:text-blue-700 mr-4"
+  <a class="text-blue-800 hover:text-blue-700 mr-2"
      href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
   <a class="text-blue-800 hover:text-blue-700"
      href="{% url 'polls:list' %}">{% trans "Polls" %}</a>

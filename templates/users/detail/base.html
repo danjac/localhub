@@ -28,10 +28,10 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 {% endif %}
 
 <h1 class="page-header flex flex-wrap items-center mb-2">
-  <div class="inline-block mr-4">
+  <div class="inline-block mr-2">
     {% avatar user_obj "64" css_class="mr-1" show_placeholder=False %}
   </div>
-  <div class="inline-block mr-4">
+  <div class="inline-block mr-2">
     {% if user_obj.username == display_name %}
     @{{ display_name }}
     {% else %}
@@ -40,7 +40,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
     {% endif %}
   </div>
   {% if membership.is_admin %}
-  <span class="inline-block tag mr-4">{% trans "Admin" %}</span>
+  <span class="inline-block tag mr-2">{% trans "Admin" %}</span>
   {% elif membership.is_moderator %}
   <span class="inline-block tag">{% trans "Moderator" %}</span>
   {% endif %}
@@ -97,7 +97,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 <div class="flex flex-wrap items-center mb-2">
 
   {% if not is_current_user %}
-  <div class="text-sm mr-4"
+  <div class="text-sm mr-2"
        data-controller="dropdown"
        data-action="click@window->dropdown#close keydown@window->dropdown#close">
     <button class="btn btn-dropdown"
@@ -147,18 +147,18 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
   </div>
   {% endif %}
   {% if is_current_user %}
-  <a class="inline-block mr-4 text-sm"
+  <a class="inline-block mr-2 text-sm"
      href="{% url 'user_update' %}">
     {% trans "Settings" %}
   </a>
   {% endif %}
 
   {% if not is_blocked %}
-  <a class="inline-block mr-4 text-sm"
+  <a class="inline-block mr-2 text-sm"
      href="{% url 'users:activity_likes' user_obj.username %}">
     {% trans "Likes" %}
   </a>
-  <a class="inline-block mr-4 text-sm"
+  <a class="inline-block mr-2 text-sm"
      href="{% url 'users:activity_mentions' user_obj.username %}">
     {% trans "Mentions" %}
   </a>

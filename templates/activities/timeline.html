@@ -33,19 +33,19 @@
 
 {% if dates %}
 <div class="flex flex-wrap items-center mb-2 text-sm">
-  <a class="inline-block mr-4"
+  <a class="inline-block mr-2"
      href="{{ reverse_sort_url }}">
     {% if order == "desc" %}{% trans "Oldest First" %}{% else %}{% trans "Newest First" %}{% endif %}
   </a>
   {% if not current_year %}
   {% for year in years %}
-  <a class="inline-block mr-4"
+  <a class="inline-block mr-2"
      href="{{ request.path }}?year={{ year }}&order={{ order }}">{{ year }}</a>
   {% endfor %}
   {% endif %}
   {% if not current_month %}
   {% for counter, name in months %}
-  <a class="inline-block mr-4"
+  <a class="inline-block mr-2"
      href="{{ request.path }}?month={{ counter }}&year={{ current_year }}&order={{ order }}">{{ name }}</a>
   {% endfor %}
   {% endif %}
@@ -100,18 +100,18 @@
   <div class="p-3 {% if not forloop.last %} border-b border-gray-500{% endif %}{% cycle '' ' bg-gray-100' %}">
     <div class="flex flex-wrap items-center mb-2 text-sm">
 
-      <a class="mr-4"
+      <a class="mr-2"
          href="{{ object.get_absolute_url }}">
         {{ object|truncatechars:100 }}
       </a>
 
-      <a class="mr-4 tag inline-block mr-4 hover:text-gray-300"
+      <a class="mr-2 tag inline-block mr-2 hover:text-gray-300"
          href="{{ object|resolve_url:"list" }}">
         {{ object_type|title }}
       </a>
 
       {% if object.is_reshare %}
-      <span class="mr-4 tag">{% trans "Reshare" %}</span>
+      <span class="mr-2 tag">{% trans "Reshare" %}</span>
       {% endif %}
     </div>
     <div class="">

@@ -17,13 +17,13 @@
     {% if include_content_object %}
     <div class="flex flex-wrap items-center mb-2">
       {% if content_object %}
-      <a class="inline-block font-semibold mr-4"
+      <a class="inline-block font-semibold mr-2"
          href="{{ content_object.get_absolute_url }}">{{ content_object }}</a>
-      <a class="tag hover:text-gray-300 mr-4"
+      <a class="tag hover:text-gray-300 mr-2"
          href="{{ content_object|resolve_url:"list" }}">{{ content_object|verbose_name|title }}</a>
 
       {% if can_moderate_community and comment.is_flagged %}
-      <span class="tag bg-warning mr-4">{% trans "Flagged" %}</span>
+      <span class="tag bg-warning mr-2">{% trans "Flagged" %}</span>
       {% endif %}
 
       {% if comment.is_new %}
@@ -76,7 +76,7 @@
   <div class="card-footer mt-4">
     <div class="flex flex-wrap items-center text-xs text-muted mb-2">
       {% if comment.num_likes %}
-      <div class="mr-4">
+      <div class="mr-2">
         {{ comment.num_likes }}
         {% blocktrans count counter=comment.num_likes %}
         Like
@@ -93,7 +93,7 @@
       {% endif %}
     </div>
     <div class="flex flex-wrap items-center">
-      <div class="text-sm mr-4"
+      <div class="text-sm mr-2"
            data-controller="dropdown"
            data-action="click@window->dropdown#close keydown@window->dropdown#close">
         <button class="btn btn-dropdown"
@@ -184,7 +184,7 @@
       </div>
       <div>
         {% if not is_detail and not comment.deleted %}
-        <a class="inline-block text-sm mr-4"
+        <a class="inline-block text-sm mr-2"
            href="{{ comment.get_absolute_url }}">{% trans "Link" %}</a>
         {% endif %}
         {% if parent %}
