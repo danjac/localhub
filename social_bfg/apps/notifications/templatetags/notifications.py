@@ -3,7 +3,6 @@
 
 # Django
 from django import template
-from django.conf import settings
 from django.db.models import F
 
 # Local
@@ -51,16 +50,6 @@ class RenderNotificationNode(template.Node):
             content = self.nodelist.render(context)
             return content
         return ""
-
-
-@register.inclusion_tag("notifications/includes/subscribe_btn.html")
-def notifications_subscribe_btn(user, community):
-    return {
-        "user": user,
-        "community": community,
-        "vapid_public_key": settings.SOCIAL_BFG_VAPID_PUBLIC_KEY,
-        "webpush_enabled": settings.SOCIAL_BFG_WEBPUSH_ENABLED,
-    }
 
 
 @register.simple_tag

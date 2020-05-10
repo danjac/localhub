@@ -9,35 +9,17 @@ import ApplicationController from './application-controller';
 let registration = null;
 
 export default class extends ApplicationController {
-  /*
-  Manages browser notifications using a serviceWorker. If the browser or device does
-  not support browser notifications (e.g. depending on security settings) then
-  the subscription button is removed.
-
-  actions:
-    subscribe: subscribes browser to service
-    unsubscribe: unsubscribes browser from service
-
-  data:
-    service-worker-url: URL pointing to the serviceWorker.
-    subscribe-url: URL to AJAX endpoint subscribing this browser.
-    unsubscribe-url: URL to AJAX endpoint unsubscribing this browser.
-    vapid-public-key: the Vapid service public subscription key
-
-  targets:
-    subscribeBtn: button or other element to subscribe to notifications
-    unsubscribeBtn: button or other element to unsubscribe from notifications
-  */
-  static targets = ['subscribeBtn', 'unsubscribeBtn'];
+  static targets = ['subscribe', 'unsubscribe'];
 
   connect() {
     // check browser can do notifications, and permission OK.
     try {
+      this.checkConfiguration();
       this.checkBrowserCompatibility();
       this.registerServiceWorker();
     } catch (e) {
       this.element.remove();
-      console.log('Compatibility issue:', e.toString());
+      console.warn('Webpush', e.toString());
     }
   }
 
@@ -48,9 +30,9 @@ export default class extends ApplicationController {
       registration = swRegistration;
       return registration.pushManager.getSubscription().then((subscription) => {
         if (subscription) {
-          this.showUnsubscribeBtn();
+          this.showUnsubscribe();
         } else {
-          this.showSubscribeBtn();
+          this.showSubscribe();
         }
       });
     };
@@ -67,24 +49,19 @@ export default class extends ApplicationController {
 
   subscribe(event) {
     event.preventDefault();
-    const pubKey = this.data.get('vapid-public-key');
-    if (!pubKey) {
-      console.log('vapid-public-key not defined');
-      return;
-    }
     const options = {
-      applicationServerKey: urlB64ToUint8Array(pubKey),
+      applicationServerKey: urlB64ToUint8Array(this.data.get('public-key')),
       userVisibleOnly: true,
     };
     registration.pushManager.subscribe(options).then((subscription) => {
-      this.showUnsubscribeBtn();
+      this.showUnsubscribe();
       return this.syncWithServer(subscription, this.data.get('subscribe-url'));
     });
   }
 
   unsubscribe(event) {
     event.preventDefault();
-    this.showSubscribeBtn();
+    this.showSubscribe();
     registration.pushManager
       .getSubscription()
       .then((subscription) =>
@@ -102,16 +79,22 @@ export default class extends ApplicationController {
     });
   }
 
-  showSubscribeBtn() {
+  showSubscribe() {
     this.element.classList.remove('hidden');
-    this.subscribeBtnTarget.classList.remove('hidden');
-    this.unsubscribeBtnTarget.classList.add('hidden');
+    this.subscribeTarget.classList.remove('hidden');
+    this.unsubscribeTarget.classList.add('hidden');
   }
 
-  showUnsubscribeBtn() {
+  showUnsubscribe() {
     this.element.classList.remove('hidden');
-    this.unsubscribeBtnTarget.classList.remove('hidden');
-    this.subscribeBtnTarget.classList.add('hidden');
+    this.unsubscribeTarget.classList.remove('hidden');
+    this.subscribeTarget.classList.add('hidden');
+  }
+
+  checkConfiguration() {
+    if (!this.data.has('public-key')) {
+      throw new Error('pubKey not available');
+    }
   }
 
   checkBrowserCompatibility() {

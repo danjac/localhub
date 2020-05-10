@@ -58,6 +58,10 @@ class NotificationListView(NotificationQuerySetMixin, ListView):
                 "is_unread_notifications": self.get_queryset()
                 .filter(is_read=False)
                 .exists(),
+                "webpush_settings": {
+                    "public_key": settings.SOCIAL_BFG_VAPID_PUBLIC_KEY,
+                    "enabled": settings.SOCIAL_BFG_WEBPUSH_ENABLED,
+                },
             }
         )
         return data

@@ -17,7 +17,6 @@ from ..models import Notification
 from ..templatetags.notifications import (
     get_unread_external_notification_count,
     get_unread_notification_count,
-    notifications_subscribe_btn,
 )
 
 pytestmark = pytest.mark.django_db
@@ -66,28 +65,6 @@ class TestRenderNotification:
         )
         response = tmpl.render({"notification": notification}).strip()
         assert response == ""
-
-
-class TestNotificationsSubscribeBtn:
-    def test_authenticated(self, member, settings):
-
-        settings.SOCIAL_BFG_WEBPUSH_ENABLED = True
-        assert notifications_subscribe_btn(member.member, member.community) == {
-            "user": member.member,
-            "community": member.community,
-            "vapid_public_key": None,
-            "webpush_enabled": True,
-        }
-
-    def test_webpush_disabled(self, member, settings):
-
-        settings.SOCIAL_BFG_WEBPUSH_ENABLED = False
-        assert notifications_subscribe_btn(member.member, member.community) == {
-            "user": member.member,
-            "community": member.community,
-            "vapid_public_key": None,
-            "webpush_enabled": False,
-        }
 
 
 class TestGetUnreadNotificationCount:

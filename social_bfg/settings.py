@@ -210,7 +210,7 @@ class Base(Configuration):
     SOCIAL_BFG_VAPID_PRIVATE_KEY = values.Value()
     SOCIAL_BFG_VAPID_ADMIN_EMAIL = values.Value()
 
-    # project-specific
+    SOCIAL_BFG_WEBPUSH_ENABLED = values.BooleanValue(True)
 
     SOCIAL_BFG_DEFAULT_PAGE_SIZE = 12
     SOCIAL_BFG_HOME_PAGE_URL = reverse_lazy("activity_stream")
@@ -227,8 +227,6 @@ class Base(Configuration):
         "@",
         reverse_lazy("users:autocomplete_list"),
     )
-
-    SOCIAL_BFG_WEBPUSH_ENABLED = values.BooleanValue(True)
 
     @property
     def BASE_DIR(self):

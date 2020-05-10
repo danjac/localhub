@@ -20,8 +20,8 @@ You can enable emails for your notifications
 
 <h1 class="page-header mb-2">{% trans "Notifications" %}</h1>
 
-{% if object_list %}
 <div class="flex flex-wrap items-center text-sm mb-2">
+  {% if object_list %}
   {% if is_unread_notifications %}
   <a class="inline-block mr-2"
      href="{% url 'notifications:mark_all_read' %}"
@@ -29,17 +29,34 @@ You can enable emails for your notifications
      data-controller="ajax"
      data-action="ajax#post">{% trans "Mark All Read" %}</a>
   {% endif %}
-  <a class="inline-block"
+  <a class="inline-block mr-2"
      href="{% url 'notifications:delete_all' %}"
      data-turbolinks="false"
      data-controller="ajax"
      data-action="ajax#post"
      data-ajax-confirm-header="{% trans 'Delete All' %}"
      data-ajax-confirm-body="{% trans 'Are you sure you want to delete all your notifications?' %}">{% trans "Delete All" %}</a>
+  {% endif %}
+  {% if webpush_settings.enabled %}
+  <span class="hidden"
+        data-controller="webpush"
+        data-webpush-service-worker-url="{% url 'notifications:service_worker' %}"
+        data-webpush-subscribe-url="{% url 'notifications:subscribe' %}"
+        data-webpush-unsubscribe-url="{% url 'notifications:unsubscribe' %}"
+        data-webpush-public-key="{{ webpush_settings.public_key }}">
+    <a href="#"
+       data-target="webpush.subscribe"
+       data-action="webpush#subscribe">
+      {% trans "Enable Browser Notifications" %}
+    </a>
+    <a href="#"
+       data-target="webpush.unsubscribe"
+       data-action="webpush#unsubscribe">
+      {% trans "Disable Browser Notifications" %}
+    </a>
+  </span>
+  {% endif %}
 </div>
-{% endif %}
-
-{% notifications_subscribe_btn user community %}
 
 {% if object_list %}
 
