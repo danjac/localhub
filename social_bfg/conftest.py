@@ -27,10 +27,7 @@ from social_bfg.apps.users.factories import UserFactory
 
 @pytest.fixture
 def get_response():
-    def _get_response(req):
-        return HttpResponse()
-
-    return _get_response
+    return lambda req: HttpResponse()
 
 
 @pytest.fixture
