@@ -18,31 +18,39 @@ Your settings apply to all communities you belong to.
 {% endblocktrans %}
 {% enddismissable %}
 
-<h1 class="page-header mb-2">{% trans "Settings" %}</h1>
+<div class="flex flex-wrap items-center justify-between w-full lg:w-3/4 mb-2">
+  <h1 class="page-header">{% trans "Settings" %}</h1>
 
+  <div class="text-sm"
+       data-controller="dropdown"
+       data-action="click@window->dropdown#close keydown@window->dropdown#close">
+    <button class="btn btn-dropdown"
+            data-action="dropdown#toggle">
+      {% trans "More Settings..." %}
+    </button>
+    <div class="dropdown-menu mt-1 hidden"
+         data-target="dropdown.menu">
+      {% has_perm "communities.manage_community" user community as can_manage_community %}
 
-<div class="flex flex-wrap items-center text-sm mb-2">
+      {% if can_manage_community %}
+      <a class="dropdown-menu-item"
+         href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
+      {% endif %}
 
-  {% has_perm "communities.manage_community" user community as can_manage_community %}
-
-  {% if can_manage_community %}
-  <a class="mr-2"
-     href="{% url 'communities:community_update' %}">{% trans "Community Settings" %}</a>
-  {% endif %}
-
-  <a class="mr-2"
-     href="{% url 'account_email' %}">{% trans "Email Addresses" %}</a>
-  {% get_providers as socialaccount_providers %}
-  {% if socialaccount_providers %}
-  <a class="mr-2"
-     href="{% url 'socialaccount_connections' %}">{% trans "Social Logins" %}</a>
-  {% endif %}
-  <a class="mr-2"
-     href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a>
-  <a class=""
-     href="{% url 'user_delete' %}">{% trans "Delete Account" %}</a>
+      <a class="dropdown-menu-item"
+         href="{% url 'account_email' %}">{% trans "Email Addresses" %}</a>
+      {% get_providers as socialaccount_providers %}
+      {% if socialaccount_providers %}
+      <a class="dropdown-menu-item"
+         href="{% url 'socialaccount_connections' %}">{% trans "Social Logins" %}</a>
+      {% endif %}
+      <a class="dropdown-menu-item"
+         href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a>
+      <a class="dropdown-menu-item"
+         href="{% url 'user_delete' %}">{% trans "Delete Account" %}</a>
+    </div>
+  </div>
 </div>
 
-{% trans "Save Settings" as t_save_settings %}
-{% include "includes/forms/stimulusjs_form.html" with submit_btn=t_save_settings %}
+{% include "includes/forms/stimulusjs_form.html" with submit_btn=_("Save Settings") %}
 {% endblock content %}
