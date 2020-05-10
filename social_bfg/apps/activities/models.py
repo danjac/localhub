@@ -29,10 +29,13 @@ from social_bfg.apps.notifications.models import (
 )
 from social_bfg.apps.users.fields import MentionsField
 from social_bfg.apps.users.utils import extract_mentions
-from social_bfg.db.generic import AbstractGenericRelation, get_generic_related_queryset
-from social_bfg.db.search.mixins import SearchQuerySetMixin
-from social_bfg.db.tracker import TrackerModelMixin
-from social_bfg.db.utils import boolean_value
+from social_bfg.common.db.generic import (
+    AbstractGenericRelation,
+    get_generic_related_queryset,
+)
+from social_bfg.common.db.search.mixins import SearchQuerySetMixin
+from social_bfg.common.db.tracker import TrackerModelMixin
+from social_bfg.common.db.utils import boolean_value
 from social_bfg.markdown.fields import MarkdownField
 from social_bfg.utils.itertools import takefirst
 from social_bfg.utils.text import slugify_unicode

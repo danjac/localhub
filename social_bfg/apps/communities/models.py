@@ -20,7 +20,7 @@ from sorl.thumbnail import ImageField
 
 # Social-BFG
 from social_bfg.apps.hashtags.utils import extract_hashtags
-from social_bfg.db.search.mixins import SearchQuerySetMixin
+from social_bfg.common.db.search.mixins import SearchQuerySetMixin
 from social_bfg.markdown.fields import MarkdownField
 
 DOMAIN_VALIDATOR = RegexValidator(

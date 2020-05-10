@@ -14,7 +14,7 @@ import sorl.thumbnail.fields
 import timezone_field.fields
 
 # Social-BFG
-import social_bfg.db.fields
+import social_bfg.common.db.fields
 import social_bfg.markdown.fields
 
 
@@ -137,7 +137,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "activity_stream_filters",
-                    social_bfg.db.fields.ChoiceArrayField(
+                    social_bfg.common.db.fields.ChoiceArrayField(
                         base_field=models.CharField(
                             choices=[
                                 (

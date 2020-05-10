@@ -36,9 +36,9 @@ from social_bfg.apps.activities.models import (
     ActivityQuerySet,
 )
 from social_bfg.apps.notifications.decorators import notify
-from social_bfg.db.functions import DateAdd, MonthAdd, YearAdd
-from social_bfg.db.search.indexer import SearchIndexer
-from social_bfg.db.utils import boolean_value
+from social_bfg.common.db.functions import DateAdd, MonthAdd, YearAdd
+from social_bfg.common.db.search.indexer import SearchIndexer
+from social_bfg.common.db.utils import boolean_value
 from social_bfg.utils.http import get_domain
 
 

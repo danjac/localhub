@@ -14,7 +14,7 @@ from model_utils.models import TimeStampedModel
 
 # Social-BFG
 from social_bfg.apps.communities.models import Community
-from social_bfg.db.search.mixins import SearchQuerySetMixin
+from social_bfg.common.db.search.mixins import SearchQuerySetMixin
 
 
 class JoinRequestQuerySet(SearchQuerySetMixin, models.QuerySet):
