@@ -6,14 +6,8 @@
 {% load rules %}
 
 {% block activity_list_header %}
+
 <div class="page-nav mb-3">
-  {% has_perm 'activities.create_activity' user community as can_create_activity %}
-  {% if can_create_activity %}
-  <a class="page-nav-item"
-     href="{% url 'posts:create' %}">
-    {% trans "Submit Post" %}
-  </a>
-  {% endif %}
   <a class="page-nav-item"
      href="{% url 'events:list' %}">{% trans "Events" %}</a>
   <a class="page-nav-item"
@@ -21,4 +15,11 @@
   <a class="page-nav-item"
      href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
 </div>
+
+{% has_perm 'activities.create_activity' user community as can_create_activity %}
+{% if can_create_activity %}
+{% url 'posts:create' as submit_url %}
+{% include "activities/includes/submit_cta.html" with submit_url=submit_url css_class="mb-3" %}
+{% endif %}
+
 {% endblock %}
