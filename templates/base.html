@@ -86,7 +86,7 @@
     <div>
       {% avatar user "32" css_class="inline-block mr-1" show_placeholder=False %}
       <a href="{{ user.get_absolute_url }}"
-         class="inline-block text-white hover:text-gray-100 mr-2">
+         class="inline-block text-white hover:text-gray-100 md:mr-2">
         {{ user.username }}
       </a>
       <a href="{% url 'account_logout' %}"
