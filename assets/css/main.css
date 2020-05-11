@@ -8,7 +8,7 @@
 @tailwind components;
 
 a {
-  @apply text-blue-700;
+  @apply text-blue-800;
 }
 
 a:hover {
@@ -167,11 +167,11 @@ a.btn-secondary {
 
 .page-nav-item,
 .page-nav-item a {
-  @apply text-blue-900;
+  @apply text-indigo-900;
 }
 .page-nav-item:hover,
 .page-nav-item a:hover {
-  @apply text-blue-600;
+  @apply text-indigo-600;
 }
 
 .page-nav-item:not(:last-child) {
@@ -248,11 +248,11 @@ a.btn-secondary {
 
 .table-nav-item,
 .table-nav-item a {
-  @apply text-blue-900;
+  @apply text-indigo-900;
 }
 .table-nav-item:hover,
 .table-nav-item a:hover {
-  @apply text-blue-600;
+  @apply text-indigo-600;
 }
 
 .table-nav-item:not(:last-child) {
