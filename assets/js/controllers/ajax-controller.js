@@ -25,7 +25,7 @@ export default class extends ApplicationController {
 
   ajaxFetching() {
     this.data.set('fetching', true);
-    if (this.hasButtonTargets) {
+    if (this.buttonTargets.length) {
       Array.from(this.buttonTargets).forEach((btn) =>
         btn.setAttribute('disabled', 'disabled')
       );
@@ -36,7 +36,7 @@ export default class extends ApplicationController {
 
   ajaxComplete() {
     this.data.delete('fetching');
-    if (this.hasButtonTargets) {
+    if (this.buttonTargets.length) {
       Array.from(this.buttonTargets).forEach((btn) => btn.removeAttribute('disabled'));
     } else {
       this.element.removeAttribute('disabled');
@@ -48,7 +48,7 @@ export default class extends ApplicationController {
 
     const { currentTarget } = event;
 
-    if (currentTarget.hasAttribute('disabled') || this.data.has('fetching')) {
+    if (currentTarget.hasAttribute('disabled') || this.isFetching) {
       return;
     }
 
@@ -67,7 +67,7 @@ export default class extends ApplicationController {
   }
 
   dispatch(method, target) {
-    if (target.hasAttribute('disabled') || this.data.has('fetching')) {
+    if (target.hasAttribute('disabled') || this.isFetching) {
       return;
     }
 
@@ -145,5 +145,9 @@ export default class extends ApplicationController {
   handleAjaxComplete() {
     // re-enable all AJAX controls on the site.
     this.bus.pub(Events.AJAX_COMPLETE);
+  }
+
+  get isFetching() {
+    return this.data.has('fetching');
   }
 }
