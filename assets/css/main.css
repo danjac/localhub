@@ -8,7 +8,7 @@
 @tailwind components;
 
 a {
-  @apply text-blue-700;
+  @apply text-blue-800;
 }
 
 a:hover {
@@ -107,7 +107,7 @@ a.btn-secondary {
 }
 
 .dropdown-menu-item:hover {
-  @apply bg-gray-500 text-white;
+  @apply bg-indigo-700 text-white;
 }
 
 .leaflet-tile-pane {
@@ -167,11 +167,11 @@ a.btn-secondary {
 
 .page-nav-item,
 .page-nav-item a {
-  @apply text-blue-900;
+  @apply text-indigo-900;
 }
 .page-nav-item:hover,
 .page-nav-item a:hover {
-  @apply text-blue-600;
+  @apply text-indigo-600;
 }
 
 .page-nav-item:not(:last-child) {
@@ -191,15 +191,15 @@ a.btn-secondary {
 }
 
 .sidebar-menu-item:hover {
-  @apply bg-gray-400 text-gray-900;
+  @apply bg-indigo-800 text-white;
 }
 
 .sidebar-menu-item.active {
-  @apply bg-gray-500 text-white font-bold;
+  @apply bg-indigo-900 text-white font-bold;
 }
 
 .tabs {
-  @apply flex items-center border-b border-gray-500 overflow-x-scroll;
+  @apply flex items-center border-b border-blue-700 overflow-x-scroll;
 }
 
 @screen md {
@@ -209,7 +209,7 @@ a.btn-secondary {
 }
 
 .tab-item {
-  @apply block p-1 text-center border-t border-r border-l rounded-t border-gray-500 text-black px-4;
+  @apply block p-1 text-center border-t border-r border-l rounded-t border-blue-700 text-blue-900 px-4;
 }
 
 .tab-item:md {
@@ -217,11 +217,11 @@ a.btn-secondary {
 }
 
 .tab-item.active {
-  @apply bg-gray-800 text-white;
+  @apply bg-blue-900 text-white font-bold;
 }
 
 .tab-item:hover {
-  @apply bg-gray-500 text-white;
+  @apply bg-blue-700 text-white;
 }
 
 .tab-item:not(:last-child) {
@@ -248,11 +248,11 @@ a.btn-secondary {
 
 .table-nav-item,
 .table-nav-item a {
-  @apply text-blue-900;
+  @apply text-indigo-900;
 }
 .table-nav-item:hover,
 .table-nav-item a:hover {
-  @apply text-blue-600;
+  @apply text-indigo-600;
 }
 
 .table-nav-item:not(:last-child) {
