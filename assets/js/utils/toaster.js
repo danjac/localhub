@@ -13,18 +13,18 @@ export default class {
   }
 
   success(message) {
-    this.toast('bg-green-800', message);
+    this.toast('message-success', message);
   }
 
   info(message) {
-    this.toast('bg-blue-600', message);
+    this.toast('message-info', message);
   }
 
   warning(message) {
-    this.toast('bg-orange-600', message);
+    this.toast('message-warning', message);
   }
 
   error(message) {
-    this.toast('bg-red-600', message);
+    this.toast('message-error', message);
   }
 }
