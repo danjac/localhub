@@ -144,6 +144,26 @@ a.btn-secondary {
 .markdownx-preview p {
   @apply py-1;
 }
+.message {
+  @apply text-white;
+}
+
+.message-debug {
+  @apply bg-gray-600;
+}
+
+.message-info {
+  @apply bg-blue-600;
+}
+.message-success {
+  @apply bg-green-600;
+}
+.message-warning {
+  @apply bg-orange-600;
+}
+.message-error {
+  @apply bg-orange-600;
+}
 
 .notification {
   @apply bg-blue-800 text-white text-center p-2;

@@ -167,11 +167,11 @@ class Base(Configuration):
     # https://docs.djangoproject.com/en/3.0/ref/contrib/messages/
 
     MESSAGE_TAGS = {
-        messages.DEBUG: "bg-gray-600",
-        messages.INFO: "bg-blue-600",
-        messages.SUCCESS: "bg-green-600",
-        messages.WARNING: "bg-orange-600",
-        messages.ERROR: "bg-red-600",
+        messages.DEBUG: "message-debug",
+        messages.INFO: "message-info",
+        messages.SUCCESS: "message-success",
+        messages.WARNING: "message-warning",
+        messages.ERROR: "message-error",
     }
 
     # https://neutronx.github.io/django-markdownx/customization/
