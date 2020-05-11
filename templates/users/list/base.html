@@ -72,9 +72,6 @@
           {% endblock user_item_detail %}
       </td>
       <td class="border py-2 px-2">
-        {% include "includes/timesince.html" with verb=_("Joined") timestamp=object.joined %}
-      </td>
-      <td class="border py-2 px-2">
         <div class="table-nav">
         {% block user_item_actions %}
         {% if user == object %}
