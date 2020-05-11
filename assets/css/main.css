@@ -199,7 +199,13 @@ a.btn-secondary {
 }
 
 .tabs {
-  @apply flex flex-wrap items-center border-b border-gray-500 overflow-x-scroll;
+  @apply flex items-center border-b border-gray-500 overflow-x-scroll;
+}
+
+@screen md {
+  .tabs {
+    @apply overflow-x-auto;
+  }
 }
 
 .tab-item {
@@ -233,7 +239,7 @@ a.btn-secondary {
 }
 
 .table-nav {
-  @apply flex flex-wrap items-center text-sm;
+  @apply flex items-center text-sm;
 }
 
 .table-nav-item {
