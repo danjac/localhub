@@ -378,7 +378,7 @@ class Production(Base):
     ALLOWED_HOSTS = values.ListValue()
     CSRF_TRUSTED_ORIGINS = values.ListValue()
 
-    ADMINS = values.ListValue()
+    ADMINS = values.SingleNestedTupleValue()
 
     # Security settings
     SECURE_BROWSER_XSS_FILTER = True
