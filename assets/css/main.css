@@ -62,6 +62,10 @@ ol {
   @apply border border-gray-500;
 }
 
+.btn-dropdown:focus {
+  @apply bg-gray-100;
+}
+
 .btn-primary {
   @apply bg-blue-800 text-white;
 }
