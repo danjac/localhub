@@ -53,25 +53,65 @@
       data-controller="sidebar">
 
   {% block header %}
-  <header class="flex items-center justify-between bg-gray-900 text-gray-100 p-2 md:px-5">
-    {% if community %}
-    <div class="flex items-center flex-shrink-0 mr-6">
-      <button class="lg:hidden mr-3"
-              data-action="sidebar#toggle"
-              type="button">
-        {% svg "menu" "white" size="24" %}
-      </button>
-      {% thumbnail community.logo "32" format="PNG" as logo %}
-      <img src="{{ logo.url }}"
-           class="mr-1 bg-transparent hidden lg:inline-block"
-           height="32"
-           width="32">
-      {% endthumbnail %}
-      <a href="{{ home_page_url }}"
-         class="text-xl tracking-tight text-white hover:text-gray-100">{{ community.name }}</a>
+  <header class="bg-indigo-900 text-white">
+    <div class="flex items-center justify-between p-2 md:px-5">
+      {% if community %}
+      <div class="flex items-center flex-shrink-0 mr-6">
+        <button class="lg:hidden mr-3"
+                data-action="sidebar#toggle"
+                type="button">
+          {% svg "menu" "white" size="24" %}
+        </button>
+        {% thumbnail community.logo "32" format="PNG" as logo %}
+        <img src="{{ logo.url }}"
+             class="mr-1 bg-transparent hidden lg:inline-block"
+             height="32"
+             width="32">
+        {% endthumbnail %}
+        <a href="{{ home_page_url }}"
+           class="text-xl tracking-tight text-white hover:text-gray-100">{{ community.name }}</a>
+      </div>
+      {% endif %}
+      {% if community and is_member %}
+      <div class="hidden lg:block">
+        <form method="GET"
+              action="{% url 'activities:search' %}"
+              data-controller="form"
+              data-action="form#submit">
+          <input type="search"
+                 placeholder="{% trans "Search..." %}"
+                 name="q"
+                 class="appearance-none border border-gray-500 w-full p-1 text-gray-900">
+        </form>
+      </div>
+      {% endif %}
+      {% if user.is_authenticated %}
+      <div>
+        {% avatar user "32" css_class="inline-block mr-1" show_placeholder=False %}
+        <a href="{{ user.get_absolute_url }}"
+           class="inline-block text-white hover:text-gray-100 md:mr-2">
+          {{ user.username }}
+        </a>
+        <a href="{% url 'account_logout' %}"
+           class="hidden md:inline-block text-white hover:text-gray-100"
+           data-turbolinks="false"
+           data-controller="ajax"
+           data-action="ajax#post"
+           data-ajax-redirect="{{ home_page_url }}">{% trans "Logout" %}</a>
+      </div>
+      {% else %}
+      <div>
+        <a href="{% url 'account_login' %}"
+           class="inline-block text-white hover:text-gray-100 mr-2">{% trans "Login" %}</a>
+        <a href="{% url 'account_signup' %}"
+           class="inline-block text-white hover:text-gray-100">{% trans "Signup" %}</a>
+      </div>
+      {% endif %}
     </div>
-    {% endif %}
-    <div class="hidden lg:block">
+
+    {% block mobile_search %}
+    {% if community and is_member %}
+    <div class=" px-2 md:px-5 py-2 lg:hidden">
       <form method="GET"
             action="{% url 'activities:search' %}"
             data-controller="form"
@@ -82,44 +122,12 @@
                class="appearance-none border border-gray-500 w-full p-1 text-gray-900">
       </form>
     </div>
-    {% if user.is_authenticated %}
-    <div>
-      {% avatar user "32" css_class="inline-block mr-1" show_placeholder=False %}
-      <a href="{{ user.get_absolute_url }}"
-         class="inline-block text-white hover:text-gray-100 md:mr-2">
-        {{ user.username }}
-      </a>
-      <a href="{% url 'account_logout' %}"
-         class="hidden md:inline-block text-white hover:text-gray-100"
-         data-turbolinks="false"
-         data-controller="ajax"
-         data-action="ajax#post"
-         data-ajax-redirect="{{ home_page_url }}">{% trans "Logout" %}</a>
-    </div>
-    {% else %}
-    <div>
-      <a href="{% url 'account_login' %}"
-         class="inline-block text-white hover:text-gray-100 mr-2">{% trans "Login" %}</a>
-      <a href="{% url 'account_signup' %}"
-         class="inline-block text-white hover:text-gray-100">{% trans "Signup" %}</a>
-    </div>
     {% endif %}
+    {% endblock mobile_search %}
+
   </header>
   {% endblock header %}
 
-  {% block mobile_search %}
-  <div class="bg-gray-900 px-2 md:px-5 py-2 lg:hidden">
-    <form method="GET"
-          action="{% url 'activities:search' %}"
-          data-controller="form"
-          data-action="form#submit">
-      <input type="search"
-             placeholder="{% trans "Search..." %}"
-             name="q"
-             class="appearance-none border border-gray-500 w-full p-1 text-gray-900">
-    </form>
-  </div>
-  {% endblock mobile_search %}
 
   {% block layout %}
 
