@@ -11,13 +11,13 @@
 
 {% block content %}
 
-<h1 class="page-header">{% trans "Terms & Conditions" %}</h1>
+<h1 class="page-header mb-3">{% trans "Terms & Conditions" %}</h1>
 
 {% has_perm "communities.manage_community" user community as can_manage %}
 {% if can_manage or community.description %}
-<div class="actions mb-1">
+<div class="page-nav">
   {% if community.description %}
-  <a class="action"
+  <a class="page-nav-item"
      href="{% url 'communities:community_detail' %}">
     {% blocktrans with community_name=community.name %}
     About {{ community.name }}
@@ -25,7 +25,7 @@
   </a>
   {% endif %}
   {% if can_manage %}
-  <a class="action"
+  <a class="page-nav-item"
      href="{% url "communities:community_update" %}">
     {% trans "Community Settings" %}
   </a>
