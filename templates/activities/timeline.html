@@ -94,7 +94,9 @@
 {% regroup object_list by month as months %}
 {% for month, activities in months %}
 <div class="mb-3 border-r border-l border-b border-gray-500">
+  {% if months|length > 1 %}
   <div class="font-semibold text-center p-2 bg-indigo-800 text-white">{{ month }}</div>
+  {% endif %}
   {% for activity in activities %}
   {% with object=activity.object object_type=activity.object_type %}
   <div class="p-3 hover:bg-gray-200 {% if not forloop.last %} border-b border-gray-500{% endif %}{% cycle '' ' bg-gray-100' %}">
