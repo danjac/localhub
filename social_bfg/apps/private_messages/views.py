@@ -192,13 +192,10 @@ class MessageCreateView(
         return self.success_response()
 
     def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-
-        kwargs.update(
-            {"community": self.request.community, "sender": self.request.user}
-        )
-
-        return kwargs
+        return {
+            **super().get_form_kwargs(),
+            **{"community": self.request.community, "sender": self.request.user},
+        }
 
 
 message_create_view = MessageCreateView.as_view()
@@ -266,16 +263,14 @@ class MessageDetailView(SenderOrRecipientQuerySetMixin, DetailView):
         )
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data.update(
-            {
+        return {
+            **super().get_context_data(**kwargs),
+            **{
                 "replies": self.get_replies(),
                 "parent": self.object.get_parent(self.request.user),
                 "other_user": self.object.get_other_user(self.request.user),
-            }
-        )
-
-        return data
+            },
+        }
 
 
 message_detail_view = MessageDetailView.as_view()

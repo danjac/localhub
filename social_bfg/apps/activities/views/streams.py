@@ -84,17 +84,16 @@ class BaseActivityStreamView(CommunityRequiredMixin, TemplateView):
         return load_objects(page, querysets)
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
         page = self.get_page()
-        data.update(
-            {
+        return {
+            **super().get_context_data(**kwargs),
+            **{
                 "page_obj": page,
                 "paginator": page.paginator,
                 "object_list": page.object_list,
                 "is_paginated": page.has_other_pages(),
-            }
-        )
-        return data
+            },
+        }
 
 
 class ActivityStreamView(BaseActivityStreamView):
@@ -125,9 +124,10 @@ class ActivityStreamView(BaseActivityStreamView):
         )
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data.update({"notifications": self.get_unread_notifications()})
-        return data
+        return {
+            **super().get_context_data(**kwargs),
+            **{"notifications": self.get_unread_notifications()},
+        }
 
 
 activity_stream_view = ActivityStreamView.as_view()
@@ -313,8 +313,9 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
         dates = self.get_dates()
         selected_dates = self.get_selected_dates(dates)
 
-        data.update(
-            {
+        return {
+            **data,
+            **{
                 "dates": dates,
                 "selected_dates": selected_dates,
                 "current_month": self.current_month,
@@ -326,9 +327,8 @@ class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
                 "reverse_sort_url": self.get_reverse_sort_url(),
                 "order": self.sort_order,
                 "date_filters": self.date_kwargs,
-            }
-        )
-        return data
+            },
+        }
 
 
 timeline_view = TimelineView.as_view()

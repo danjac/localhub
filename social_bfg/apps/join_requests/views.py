@@ -125,17 +125,18 @@ class JoinRequestCreateView(
         return self.request.community
 
     def get_form_kwargs(self, *args, **kwargs):
-        kwargs = super().get_form_kwargs()
-        kwargs.update({"user": self.request.user, "community": self.request.community})
-        return kwargs
-
-    def get_success_url(self):
-        return reverse("community_welcome")
+        return {
+            **super().get_form_kwargs(),
+            **{"user": self.request.user, "community": self.request.community},
+        }
 
     def form_valid(self, form):
         self.object = form.save()
         send_join_request_email(self.object)
         return self.success_response()
+
+    def get_success_url(self):
+        return reverse("community_welcome")
 
 
 join_request_create_view = JoinRequestCreateView.as_view()
@@ -226,16 +227,15 @@ class JoinRequestListView(
         return qs
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data.update(
-            {
+        return {
+            **super().get_context_data(**kwargs),
+            **{
                 "total_count": self.total_count,
                 "status": self.status,
                 "status_display": self.status_display,
                 "status_choices": list(JoinRequest.Status.choices),
-            }
-        )
-        return data
+            },
+        }
 
 
 join_request_list_view = JoinRequestListView.as_view()

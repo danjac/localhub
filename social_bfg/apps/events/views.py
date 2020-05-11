@@ -225,18 +225,17 @@ class EventCalendarView(
 
         data["current_month"] = first_of_month = self.make_date(1)
 
-        data.update(
-            {
+        return {
+            **data,
+            **{
                 "next_month": self.get_next_month(first_of_month),
                 "previous_month": self.get_previous_month(first_of_month),
                 "slots": self.get_slots(),
                 "today": now,
                 "is_current_month": now.month == first_of_month.month
                 and now.year == first_of_month.year,
-            }
-        )
-
-        return data
+            },
+        }
 
     def get_slots(self):
         """Group events by day into tuples of (number, events)
