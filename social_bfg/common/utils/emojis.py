@@ -82,6 +82,11 @@ COMMON_EMOJIS = [
                 "image": "images/emojis/disappointed.png",
             },
             {
+                "label": _("No Mouth"),
+                "markdown": ":no_mouth:",
+                "image": "images/emojis/no_mouth.png",
+            },
+            {
                 "label": _("Innocent"),
                 "markdown": ":innocent:",
                 "image": "images/emojis/innocent.png",
