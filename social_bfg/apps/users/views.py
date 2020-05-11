@@ -167,9 +167,9 @@ class SingleUserMixin(ParentObjectMixin, BaseUserQuerySetMixin):
         )
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data.update(
-            {
+        return {
+            **super().get_context_data(**kwargs),
+            **{
                 "is_current_user": self.is_current_user,
                 "is_blocked": self.is_blocked,
                 "is_blocker": self.is_blocker,
@@ -179,9 +179,8 @@ class SingleUserMixin(ParentObjectMixin, BaseUserQuerySetMixin):
                 "display_name": self.display_name,
                 "membership": self.membership,
                 "unread_messages": self.unread_messages,
-            }
-        )
-        return data
+            },
+        }
 
 
 class BaseUserActivityStreamView(SingleUserMixin, BaseActivityStreamView):
@@ -213,13 +212,16 @@ class UserStreamView(BaseUserActivityStreamView):
         return qs.published()
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["num_likes"] = (
-            Like.objects.for_models(*get_activity_models())
-            .filter(recipient=self.user_obj, community=self.request.community)
-            .count()
-        )
-        return data
+        return {
+            **super().get_context_data(**kwargs),
+            **{
+                "num_likes": (
+                    Like.objects.for_models(*get_activity_models())
+                    .filter(recipient=self.user_obj, community=self.request.community)
+                    .count()
+                )
+            },
+        }
 
 
 user_stream_view = UserStreamView.as_view()
@@ -232,13 +234,16 @@ class UserCommentListView(BaseUserCommentListView):
         return super().get_queryset().filter(owner=self.user_obj).order_by("-created")
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["num_likes"] = (
-            Like.objects.for_models(Comment)
-            .filter(recipient=self.user_obj, community=self.request.community)
-            .count()
-        )
-        return data
+        return {
+            **super().get_context_data(**kwargs),
+            **{
+                "num_likes": (
+                    Like.objects.for_models(Comment)
+                    .filter(recipient=self.user_obj, community=self.request.community)
+                    .count()
+                )
+            },
+        }
 
 
 user_comment_list_view = UserCommentListView.as_view()
@@ -276,14 +281,13 @@ class UserMessageListView(SingleUserMixin, ListView):
         return self.get_queryset().filter(recipient=self.request.user).count()
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data.update(
-            {
+        return {
+            **super().get_context_data(**kwargs),
+            **{
                 "sent_messages": self.get_num_messages_sent(),
                 "received_messages": self.get_num_messages_received(),
-            }
-        )
-        return data
+            },
+        }
 
 
 user_message_list_view = UserMessageListView.as_view()
