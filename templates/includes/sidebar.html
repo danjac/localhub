@@ -78,12 +78,6 @@
          data-controller="active-link"
          class="sidebar-menu-item">{% trans "Calendar" %}</a>
     </li>
-    <li class="mb-1">
-      <a href="{{ user.get_absolute_url }}"
-         data-controller="active-link"
-         data-active-link-regex="({{ user.get_absolute_url }}|{% url 'users:comments' user.username %}|{% url 'users:messages' user.username %})$"
-         class="sidebar-menu-item">{% trans "My Profile" %}</a>
-    </li>
     <li class="mb-1 md:mb-0">
       <a href="{% url 'user_update' %}"
          data-controller="active-link"
