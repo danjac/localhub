@@ -51,7 +51,7 @@
       <option value="{% url 'photos:list' %}">{% trans "Photos" %}</option>
       <option value="{% url 'polls:list' %}">{% trans "Polls" %}</option>
       <option value="{% url 'hashtags:list' %}">{% trans "Tags" %}</option>
-      <option value="{% url 'community_list' %}">{% trans "Sites" %}</option>
+      <option value="{% url 'community_list' %}">{% trans "Communities" %}</option>
       {% has_perm "communities.manage_community" user community as can_manage_community %}
       {% if can_manage_community %}
       <option value="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</option>
