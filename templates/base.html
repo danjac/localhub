@@ -165,24 +165,28 @@
     </div>
   </div>
 
+  {% if community.active and is_member %}
   <div class="mt-2 px-2 md:px-5 flex min-h-full">
 
     {% block sidebar %}
     {% include "includes/sidebar.html" %}
     {% endblock sidebar %}
 
-    {% block main_section %}
-    <main class="lg:ml-2 w-full lg:w-5/6"
-          data-target="sidebar.main">
-      {% block content %}{% endblock %}
-    </main>
-    {% endblock main_section %}
+    <div class="lg:ml-2 w-full lg:w-5/6"
+         data-target="sidebar.main">
 
-  </div>
-  {% endblock layout %}
+      {% else %}
+      <div class="container mx-auto flex justify-center min-h-full">
+        <div class="w-full md:mt-12 lg:w-1/2 lg:ml-32">
+          {% include "includes/no_sidebar_nav.html" %}
+          {% endif %}
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+      {% endblock layout %}
 
-  {% include "includes/footer.html" %}
-  {% include "includes/confirm_dialog.html" %}
+      {% include "includes/footer.html" %}
+      {% include "includes/confirm_dialog.html" %}
 
 </body>
 

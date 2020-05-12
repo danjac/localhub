@@ -2,11 +2,60 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends "base.html" %}
+{% load i18n %}
+{% load communities %}
+
+
 {% block mobile_menu_button %}{% endblock %}
 {% block sidebar %}{% endblock %}
 {% block main_section %}
+
+{% get_community_count user as communities_count %}
+
 <main class="container mx-auto lg:ml-32 lg:mt-12 flex justify-center">
   <div class="w-full lg:w-3/5">
+
+    {% if user.is_authenticated %}
+
+    <div class="page-nav mb-3">
+      {% if community.active %}
+      <a class="page-nav-item"
+         href="{% url 'community_welcome' %}">
+        {{ community.name }}
+      </a>
+      {% endif %}
+      {% if external_site_counters.sent_join_requests %}
+      <a class="page-nav-item"
+         href="{% url 'join_requests:sent_list' %}">
+        {% trans "Join Requests" %}
+      </a>
+      {% endif %}
+
+      {% if external_site_counters.pending_invites %}
+      <a class="page-nav-item"
+         href="{% url 'invites:received_list' %}">
+        <span>{% trans "Invites" %}</span>
+        {% if external_site_counters.pending_invites %}
+        <span class="tag tag-primary px-1">{% trans "New" %}</span>
+        {% endif %}
+      </a>
+      {% endif %}
+
+      {% if communities_count > 1 %}
+      <a class="page-nav-item"
+         href="{% url 'community_list' %}">
+        <span>{% trans "Communities" %}</span>
+        {% if external_site_counters.total %}
+        <span class="tag tag-primary px-1">{% trans "New" %}</span>
+        {% endif %}
+      </a>
+      {% endif %}
+
+      <a class="page-nav-item"
+         href="{% url 'user_update' %}">{% trans "Settings" %}</a>
+
+    </div>
+    {% endif %}
     {% block content %}{% endblock %}
   </div>
 </main>
