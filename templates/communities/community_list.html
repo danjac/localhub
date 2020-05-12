@@ -14,7 +14,7 @@
 
 {% for object in object_list %}
 <div class="card mb-3">
-  <div class="flex flex-wrap items-center">
+  <div class="flex flex-wrap items-center mb-3">
     {% if object == community %}
     <span class="inline-block mr-2">
       {{ object.name }}
@@ -31,13 +31,14 @@
     {% endif %}
   </div>
 
-  <div class="text-sm">
+  <div class="text-sm mb-3">
     {{ object.tagline|linebreaksbr }}
   </div>
+
   {% if community != object and object.is_member %}
   {% with num_notifications=counters.notifications|from_dictkey:object.id num_messages=counters.messages|from_dictkey:object.id num_join_requests=counters.join_requests|from_dictkey:object.id num_flags=counters.flags|from_dictkey:object.id object_url=object.get_absolute_url %}
   {% if num_notifications or num_messages or num_join_requests or num_flags %}
-  <div class="card-footer">
+  <div class="card-footer border-t pt-3">
     <div class="flex flex-wrap items-center text-sm">
       {% if num_flags %}
       <a class="inline-block mr-2"
