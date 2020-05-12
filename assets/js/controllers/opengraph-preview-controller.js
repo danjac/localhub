@@ -20,8 +20,13 @@ export default class extends ApplicationController {
     'title',
   ];
 
+  connect() {
+    this.bus.sub(Events.FORM_FETCHING, () => this.data.set('disabled', true));
+    this.bus.sub(Events.FORM_COMPLETE, () => this.data.delete('disabled'));
+  }
+
   change() {
-    if (this.isURL && !this.isFetching) {
+    if (this.validateURL() && !this.data.has('disabled')) {
       this.buttonTarget.removeAttribute('disabled');
     } else {
       this.buttonTarget.setAttribute('disabled', true);
@@ -34,7 +39,11 @@ export default class extends ApplicationController {
     // prevent refetch
     const { currentTarget } = event;
 
-    if (!this.isURL || this.isFetching || currentTarget.getAttribute('disabled')) {
+    if (
+      !this.validateURL() ||
+      this.data.has('disabled') ||
+      currentTarget.getAttribute('disabled')
+    ) {
       return false;
     }
 
@@ -46,7 +55,6 @@ export default class extends ApplicationController {
     }
 
     this.clearPreview();
-    this.disableFormControls();
 
     this.bus.pub(Events.FORM_FETCHING);
 
@@ -65,20 +73,11 @@ export default class extends ApplicationController {
       .catch(() => this.handleServerError())
       .finally(() => {
         this.bus.pub(Events.FORM_COMPLETE);
-        this.enableFormControls();
       });
   }
 
   clearListeners() {
     this.listenerTargets.forEach((target) => (target.value = ''));
-  }
-
-  disableFormControls() {
-    this.formControls.forEach((control) => control.setAttribute('disabled', true));
-  }
-
-  enableFormControls() {
-    this.formControls.forEach((control) => control.removeAttribute('disabled'));
   }
 
   updateListeners(data) {
@@ -147,17 +146,7 @@ export default class extends ApplicationController {
     this.toaster.error(this.data.get('errorMessage'));
   }
 
-  get formControls() {
-    return [this.inputTarget, this.buttonTarget].concat(
-      Array.from(this.listenerTargets)
-    );
-  }
-
-  get isFetching() {
-    return this.data.has('fetching');
-  }
-
-  get isURL() {
+  validateURL() {
     return this.inputTarget.checkValidity();
   }
 }
