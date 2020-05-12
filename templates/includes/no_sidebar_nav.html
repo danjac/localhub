@@ -9,12 +9,6 @@
 {% if user.is_authenticated %}
 
 <div class="page-nav my-3 border-b pb-3">
-  {% if community.active %}
-  <a class="page-nav-item"
-     href="{% url 'community_welcome' %}">
-    {{ community.name }}
-  </a>
-  {% endif %}
   {% if external_site_counters.sent_join_requests %}
   <a class="page-nav-item"
      href="{% url 'join_requests:sent_list' %}">
