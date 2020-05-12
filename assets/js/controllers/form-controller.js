@@ -13,8 +13,8 @@ export default class extends ApplicationController {
       element.addEventListener('change', () => this.data.set('changed', true))
     );
 
-    this.bus.sub(Events.FORM_FETCHING, () => this.disableFormControls());
-    this.bus.sub(Events.FORM_COMPLETE, () => this.enableFormControls());
+    this.bus.sub(Events.FORM_FETCHING, () => this.disableFormSubmit());
+    this.bus.sub(Events.FORM_COMPLETE, () => this.enableFormSubmit());
   }
 
   unload(event) {
@@ -48,12 +48,16 @@ export default class extends ApplicationController {
   }
 
   handleSubmit(method, url, data) {
+    if (this.data.has('disabled')) {
+      return;
+    }
+
     if (method === 'GET') {
       Turbolinks.visit(`${url}?${data}`);
       return;
     }
 
-    this.bus.pub(Events.FORM_FETCHING);
+    this.disableFormControls();
 
     const referrer = location.href;
 
@@ -71,7 +75,7 @@ export default class extends ApplicationController {
 
         if (contentType.match(/html/)) {
           // errors in form, re-render
-          this.bus.pub(Events.FORM_COMPLETE);
+          this.enableFormControls();
           Turbolinks.controller.cache.put(
             referrer,
             Turbolinks.Snapshot.wrap(response.data)
@@ -88,21 +92,29 @@ export default class extends ApplicationController {
   }
 
   handleServerError(err) {
-    this.bus.pub(Events.FORM_COMPLETE);
+    this.enableFormControls();
     if (err.response) {
       const { status, statusText } = err.response;
       this.toaster.error(`${status}: ${statusText}`);
     }
   }
 
+  disableFormSubmit() {
+    this.data.set('disabled', true);
+  }
+
+  enableFormSubmit() {
+    this.data.delete('disabled');
+  }
+
   disableFormControls() {
     window.scrollTo(0, 0);
-    this.element.setAttribute('disabled', true);
+    this.disableFormSubmit();
     this.formElements.forEach((el) => el.setAttribute('disabled', true));
   }
 
   enableFormControls() {
-    this.element.removeAttribute('disabled');
+    this.enableFormSubmit();
     this.formElements.forEach((el) => el.removeAttribute('disabled'));
   }
 
