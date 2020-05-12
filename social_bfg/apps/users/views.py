@@ -22,6 +22,7 @@ from social_bfg.apps.activities.views.streams import BaseActivityStreamView
 from social_bfg.apps.comments.models import Comment
 from social_bfg.apps.comments.views import BaseCommentListView
 from social_bfg.apps.communities.models import Membership
+from social_bfg.apps.communities.rules import is_member
 from social_bfg.apps.communities.views import CommunityRequiredMixin
 from social_bfg.apps.likes.models import Like
 from social_bfg.apps.private_messages.models import Message
@@ -496,6 +497,15 @@ class UserUpdateView(
         self.object = form.save()
         self.object.notify_on_update()
         return self.success_response()
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super().get_context_data(**kwargs),
+            **{
+                "is_community": self.request.community.active
+                and is_member(self.request.user, self.request.community)
+            },
+        }
 
 
 user_update_view = UserUpdateView.as_view()

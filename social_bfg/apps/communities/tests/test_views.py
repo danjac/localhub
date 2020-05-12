@@ -109,11 +109,6 @@ class TestCommunityTermsView:
         assert client.get(reverse("communities:community_terms")).status_code == 200
 
 
-class TestCommunitySidebarView:
-    def test_get(self, client, member):
-        assert client.get(reverse("community_sidebar")).status_code == 200
-
-
 class TestCommunityUpdateView:
     def test_get(self, client, admin):
         assert client.get(reverse("communities:community_update")).status_code == 200

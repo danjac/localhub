@@ -4,17 +4,25 @@
 {% for group, options, index in widget.optgroups %}
 
 {% if group %}
-<div>{{ group }}</div>
+<div class="border-b pb-2">{{ group }}</div>
 {% endif %}
 
 {% for option in options %}
-<div>
-{% if option.wrap_label %}
-<label class="form-checkbox form-inline"{% if option.attrs.id %} for="{{ option.attrs.id }}"{% endif %}>
-  {% endif %}
-  {% include "django/forms/widgets/input.html" with widget=option %}
-  <i class="form-icon"></i>
-{% if option.wrap_label %} {{ option.label }}</label>{% endif %}
-{% endfor %}
+<div class="flex items-center {% if not forloop.last %} mb-2{% endif %}">
+  {% if option.wrap_label %}
+  <label class="font-semibold text-sm"
+         {% if option.attrs.id %}
+         for="{{ option.attrs.id }}"
+         {% endif %}>
+    {% endif %}
+    <div class="inline-block mr-1">
+      {% include "django/forms/widgets/input.html" with widget=option %}
+    </div>
+    {% if option.wrap_label %}
+    <div class="inline-block">
+      {{ option.label }}
+    </div>
+  </label>{% endif %}
+  {% endfor %}
 </div>
 {% endfor %}

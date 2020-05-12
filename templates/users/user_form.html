@@ -5,20 +5,15 @@
 
 {% load i18n %}
 {% load socialaccount %}
- {% load rules %}
+{% load rules %}
 {% load users %}
 
 {% block subtitle %} / {% trans "Settings" %}{% endblock %}
 
 {% block content %}
 
-{% dismissable user "profile-settings" %}
-{% blocktrans %}
-Your settings apply to all communities you belong to.
-{% endblocktrans %}
-{% enddismissable %}
+<div class="flex flex-wrap items-center justify-between w-full mb-3 {% if is_community %}lg:w-3/4{% endif %}">
 
-<div class="flex flex-wrap items-center justify-between w-full lg:w-3/4 mb-3">
   <h1 class="page-header">{% trans "Settings" %}</h1>
 
   <div class="text-sm"
@@ -52,5 +47,14 @@ Your settings apply to all communities you belong to.
   </div>
 </div>
 
+{% dismissable user "profile-settings" %}
+{% blocktrans %}
+Your settings apply to all communities you belong to.
+{% endblocktrans %}
+{% enddismissable %}
+
+
+{% with css_class=is_community|yesno:",p-1 md:p-3 border border-gray-500 w-full" %}
 {% include "includes/forms/stimulusjs_form.html" with submit_btn=_("Save Settings") %}
+{% endwith %}
 {% endblock content %}
