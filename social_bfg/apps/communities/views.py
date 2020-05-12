@@ -270,17 +270,6 @@ class CommunityWelcomeView(BaseCommunityDetailView):
 community_welcome_view = CommunityWelcomeView.as_view()
 
 
-class CommunitySidebarView(BaseCommunityDetailView):
-    """
-    Renders sidebar for non-JS browsers.
-    """
-
-    template_name = "communities/sidebar.html"
-
-
-community_sidebar_view = CommunitySidebarView.as_view()
-
-
 class CommunityTermsView(BaseCommunityDetailView):
     template_name = "communities/terms.html"
 

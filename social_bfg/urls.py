@@ -13,7 +13,6 @@ from social_bfg.apps.activities.views.streams import activity_stream_view
 from social_bfg.apps.communities.views import (
     community_list_view,
     community_not_found_view,
-    community_sidebar_view,
     community_welcome_view,
 )
 from social_bfg.apps.users.views import (
@@ -45,7 +44,6 @@ urlpatterns = [
     path("account/~update", user_update_view, name="user_update"),
     path("account/~delete", user_delete_view, name="user_delete"),
     path("welcome/", view=community_welcome_view, name="community_welcome"),
-    path("sidebar/", view=community_sidebar_view, name="community_sidebar"),
     path("not-found/", view=community_not_found_view, name="community_not_found"),
     path("~dismiss-notice/<str:notice>/", dismiss_notice_view, name="dismiss_notice"),
     # Third-party
