@@ -31,6 +31,7 @@ class TestHTMLScraperFromUrl:
             assert scraper.title is None
             assert scraper.image is None
             assert scraper.description is None
+            assert scraper.url == "http://google.com"
 
     def test_if_html_response(self, mocker):
         class MockResponse:
@@ -58,6 +59,7 @@ class TestHTMLScraperFromUrl:
         assert scraper.title == "meta title"
         assert scraper.image == "https://imgur.com/test.jpg"
         assert scraper.description == "meta desc"
+        assert scraper.url == "http://google.com"
 
     def test_if_bad_response(self, mocker):
         class MockResponse:
@@ -96,8 +98,36 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper().scrape(html)
+        scraper = HTMLScraper("http://example.com").scrape(html)
         assert scraper.title == "meta title"
+
+    def test_url_from_og(self):
+        html = """<html>
+        <head>
+            <title>page title</title>
+            <meta property="og:url" content="http://example.com/test/">
+            <meta property="og:title" content="meta title">
+        </head>
+        <body>
+        </body>
+        </html>
+        """
+        scraper = HTMLScraper("http://example.com/").scrape(html)
+        assert scraper.url == "http://example.com/test/"
+
+    def test_url_from_og_wrong_domain(self):
+        html = """<html>
+        <head>
+            <title>page title</title>
+            <meta property="og:url" content="http://example.com/test/">
+            <meta property="og:title" content="meta title">
+        </head>
+        <body>
+        </body>
+        </html>
+        """
+        scraper = HTMLScraper("http://wrong-example.com/").scrape(html)
+        assert scraper.url == "http://wrong-example.com/"
 
     def test_title_from_twitter(self):
         html = """<html>
@@ -109,7 +139,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper().scrape(html)
+        scraper = HTMLScraper("http://example.com/").scrape(html)
         assert scraper.title == "meta title"
 
     def test_title_from_h1(self):
@@ -122,7 +152,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper().scrape(html)
+        scraper = HTMLScraper("http://example.com/").scrape(html)
         assert scraper.title == "PAGE HEADER"
 
     def test_title_from_title_tag(self):
@@ -134,7 +164,7 @@ class TestHTMLScraperFromUrl:
         <body>
         </html>
         """
-        scraper = HTMLScraper().scrape(html)
+        scraper = HTMLScraper("http://example.com/").scrape(html)
         assert scraper.title == "page title"
 
     def test_title_not_found(self):
@@ -145,7 +175,7 @@ class TestHTMLScraperFromUrl:
         <body>
         </html>
         """
-        scraper = HTMLScraper().scrape(html)
+        scraper = HTMLScraper("http://example.com/").scrape(html)
         assert scraper.title is None
 
     def test_image_in_meta_property_not_https(self):
@@ -158,7 +188,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper().scrape(html)
+        scraper = HTMLScraper("http://example.com/").scrape(html)
         assert scraper.image is None
 
     def test_image_in_meta_property_is_https(self):
@@ -171,7 +201,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper().scrape(html)
+        scraper = HTMLScraper("http://example.com/").scrape(html)
         assert scraper.image == "https://imgur.com/test.jpg"
 
     def test_image_in_meta_name(self):
@@ -184,7 +214,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper().scrape(html)
+        scraper = HTMLScraper("http://example.com/").scrape(html)
         assert scraper.image == "https://imgur.com/test.jpg"
 
     def test_image_in_meta_invalid_url(self):
@@ -197,7 +227,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper().scrape(html)
+        scraper = HTMLScraper("http://example.com/").scrape(html)
         assert scraper.image is None
 
     def test_image_not_in_meta(self):
@@ -208,7 +238,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper().scrape(html)
+        scraper = HTMLScraper("http://example.com/").scrape(html)
         assert scraper.image is None
 
     def test_description_in_meta_property(self):
@@ -221,7 +251,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper().scrape(html)
+        scraper = HTMLScraper("http://example.com/").scrape(html)
         assert scraper.description == "test"
 
     def test_description_in_meta_name(self):
@@ -234,7 +264,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper().scrape(html)
+        scraper = HTMLScraper("http://example.com/").scrape(html)
         assert scraper.description == "test"
 
     def test_description_in_first_para(self):
@@ -247,7 +277,7 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper().scrape(html)
+        scraper = HTMLScraper("http://example.com/").scrape(html)
         assert scraper.description == "this is content"
 
     def test_description_not_in_meta(self):
@@ -259,5 +289,5 @@ class TestHTMLScraperFromUrl:
         </body>
         </html>
         """
-        scraper = HTMLScraper().scrape(html)
+        scraper = HTMLScraper("http://example.com/").scrape(html)
         assert scraper.description is None
