@@ -20,11 +20,6 @@ export default class extends ApplicationController {
     'title',
   ];
 
-  connect() {
-    this.bus.sub(Events.FORM_FETCHING, () => this.data.set('fetching', true));
-    this.bus.sub(Events.FORM_COMPLETE, () => this.data.delete('fetching'));
-  }
-
   change() {
     if (this.isURL && !this.isFetching) {
       this.buttonTarget.removeAttribute('disabled');
@@ -51,8 +46,8 @@ export default class extends ApplicationController {
     }
 
     this.clearPreview();
+    this.disableFormControls();
 
-    currentTarget.setAttribute('disabled', true);
     this.bus.pub(Events.FORM_FETCHING);
 
     axios
@@ -70,12 +65,20 @@ export default class extends ApplicationController {
       .catch(() => this.handleServerError())
       .finally(() => {
         this.bus.pub(Events.FORM_COMPLETE);
-        currentTarget.removeAttribute('disabled');
+        this.enableFormControls();
       });
   }
 
   clearListeners() {
-    Array.from(this.listenerTargets).forEach((target) => (target.value = ''));
+    this.listenerTargets.forEach((target) => (target.value = ''));
+  }
+
+  disableFormControls() {
+    this.formControls.forEach((control) => control.setAttribute('disabled', true));
+  }
+
+  enableFormControls() {
+    this.formControls.forEach((control) => control.removeAttribute('disabled'));
   }
 
   updateListeners(data) {
@@ -142,6 +145,12 @@ export default class extends ApplicationController {
   handleServerError() {
     this.clearListeners();
     this.toaster.error(this.data.get('errorMessage'));
+  }
+
+  get formControls() {
+    return [this.inputTarget, this.buttonTarget].concat(
+      Array.from(this.listenerTargets)
+    );
   }
 
   get isFetching() {
