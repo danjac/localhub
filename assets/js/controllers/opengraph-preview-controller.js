@@ -23,13 +23,16 @@ export default class extends ApplicationController {
   connect() {
     this.bus.sub(Events.FORM_FETCHING, () => this.data.set('disabled', true));
     this.bus.sub(Events.FORM_COMPLETE, () => this.data.delete('disabled'));
+    this.validate();
   }
 
-  change() {
-    if (this.validateURL() && !this.data.has('disabled')) {
+  validate() {
+    if (this.inputTarget.value && this.validateURL() && !this.data.has('disabled')) {
       this.buttonTarget.removeAttribute('disabled');
+      return true;
     } else {
       this.buttonTarget.setAttribute('disabled', true);
+      return false;
     }
   }
 
@@ -40,7 +43,7 @@ export default class extends ApplicationController {
     const { currentTarget } = event;
 
     if (
-      !this.validateURL() ||
+      !this.validate() ||
       this.data.has('disabled') ||
       currentTarget.getAttribute('disabled')
     ) {

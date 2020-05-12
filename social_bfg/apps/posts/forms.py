@@ -20,7 +20,7 @@ class OpengraphPreviewInput(forms.URLInput):
         self.attrs.update(
             {
                 "data-target": "opengraph-preview.input",
-                "data-action": "opengraph-preview#fetch keydown->opengraph-preview#change",
+                "data-action": "opengraph-preview#fetch keyup->opengraph-preview#validate",
             }
         )
 
