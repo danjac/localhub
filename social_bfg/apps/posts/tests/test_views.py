@@ -399,7 +399,7 @@ class TestOpengraphPreviewView:
         assert response.status_code == 200
         data = response.json()
         assert data["title"] == "Imgur"
-        assert data["url"] == "https://imgur.com"
+        assert data["url"] == "https://imgur.com/"
         assert data["image"] == "https://imgur.com/cat.gif"
         assert data["description"] == "cat"
 

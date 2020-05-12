@@ -27,7 +27,7 @@ def mock_url_image_resolver(mocker):
 
 @pytest.fixture()
 def mock_html_scraper_from_url(mocker):
-    scraper = HTMLScraper()
+    scraper = HTMLScraper("https://imgur.com/")
     scraper.title = "Imgur"
     scraper.image = "https://imgur.com/cat.gif"
     scraper.description = "cat"

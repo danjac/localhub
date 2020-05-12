@@ -35,25 +35,21 @@ class OpengraphPreviewView(View):
 
     def fetch_preview_data(self, url):
         url_resolver = URLResolver.from_url(url, resolve=True)
-        data = {"url": url_resolver.url}
         if url_resolver.is_image:
-            data.update(
-                {
-                    "title": url_resolver.filename,
-                    "image": url_resolver.url,
-                    "description": "",
-                }
-            )
-        else:
-            scraper = HTMLScraper.from_url(url_resolver.url)
-            data.update(
-                {
-                    "title": (scraper.title or "")[:300],
-                    "image": scraper.image,
-                    "description": scraper.description,
-                }
-            )
-        return data
+            return {
+                "title": url_resolver.filename,
+                "image": url_resolver.url,
+                "url": url_resolver.url,
+                "description": "",
+            }
+
+        scraper = HTMLScraper.from_url(url_resolver.url)
+        return {
+            "title": (scraper.title or "")[:300],
+            "image": scraper.image,
+            "url": scraper.url,
+            "description": scraper.description,
+        }
 
     def handle_bad_request(self, error):
         return HttpResponseBadRequest(error)

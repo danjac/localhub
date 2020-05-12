@@ -10,7 +10,7 @@ import requests
 from bs4 import BeautifulSoup
 
 # Local
-from .http import URLResolver
+from .http import URLResolver, get_domain
 
 
 class HTMLScraper:
@@ -61,7 +61,8 @@ class HTMLScraper:
     class Invalid(ValueError):
         ...
 
-    def __init__(self):
+    def __init__(self, url):
+        self.url = url
         self.title = None
         self.image = None
         self.description = None
@@ -96,7 +97,7 @@ class HTMLScraper:
         except requests.RequestException as e:
             raise cls.Invalid(e)
 
-        return cls().scrape(response.content)
+        return cls(url).scrape(response.content)
 
     def scrape(self, html):
         """Parses HTML title, image and description from HTML OpenGraph and
@@ -112,21 +113,30 @@ class HTMLScraper:
         self.title = self.get_title()
         self.image = self.get_image()
         self.description = self.get_description()
+        self.url = self.get_url() or self.url
         return self
 
     def get_title(self):
         for value in itertools.chain(
-            self.find_meta_tags("og:title", "twitter:title"),
+            self.find_meta_tags("og:title", "twitter:title", "parsely-title"),
             self.find_text("h1", "title"),
         ):
             if value:
                 return value
         return None
 
+    def get_url(self):
+        domain = get_domain(self.url)
+        for value in self.find_meta_tags("og:url", "twitter:url", "parsely-link"):
+            if value and self.is_acceptable_url(value, domain):
+                return value
+
+        return None
+
     def get_description(self):
         for value in itertools.chain(
             self.find_meta_tags(
-                "og:description", "twitter:description", "fb:status", "description"
+                "og:description", "twitter:description", "fb:status", "description",
             ),
             self.find_text("p"),
         ):
@@ -135,7 +145,9 @@ class HTMLScraper:
         return None
 
     def get_image(self):
-        for value in self.find_meta_tags("og:image", "twitter:image"):
+        for value in self.find_meta_tags(
+            "og:image", "twitter:image", "parsely-image-url"
+        ):
             if self.is_acceptable_image(value):
                 return value
         return None
@@ -162,6 +174,15 @@ class HTMLScraper:
                 and (value := tag.text.strip())
             ):
                 yield value
+
+    def is_acceptable_url(self, url, domain):
+        # must be a valid URL matching domain of the source URL.
+        try:
+            resolver = URLResolver.from_url(url)
+        except URLResolver.Invalid:
+            return False
+
+        return resolver.domain == domain
 
     def is_acceptable_image(self, image):
         try:
