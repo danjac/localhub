@@ -12,11 +12,6 @@
 
 <h1 class="page-header mb-3">{% trans "Login" %}</h1>
 
-{% if community.intro %}
-<div class="mb-3">
-  {{ community.intro.markdown|strip_external_images:user|lazify }}
-</div>
-{% endif %}
 {% include "account/includes/signup_link.html" %}
 {% url 'account_login' as login_url %}
 {% include "account/includes/login_form.html" with action=login_url %}
