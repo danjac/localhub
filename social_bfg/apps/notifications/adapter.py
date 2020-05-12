@@ -178,10 +178,7 @@ class Webpusher:
         if body := self.get_body():
             payload["body"] = force_text(body)
 
-        if self.adapter.community.logo:
-            payload["icon"] = self.adapter.community.logo.url
-        else:
-            payload["icon"] = static("favicon.png")
+        payload["icon"] = static("favicon.png")
 
         return payload
 
