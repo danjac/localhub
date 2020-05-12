@@ -4,12 +4,14 @@
 {% extends "activities/base.html" %}
 
 {% load i18n %}
+{% load rules %}
 {% load activities %}
 {% load comments %}
 
 {% block subtitle %} / {{ object|verbose_name_plural|title }} / {{ object.title }}{% endblock %}
 
 {% block content %}
+{% with object|verbose_name|title as object_name %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumbs mb-3">
@@ -37,6 +39,17 @@
   This {{ object_name }} has been removed by a community moderator.
   {% endblocktrans %}
 </p>
+{% endif %}
+
+{% has_perm "activities.create_activity" user community as can_create_activity %}
+{% if can_create_activity %}
+<div class="page-nav mb-3">
+  {% with action=object.published|yesno:"create,create_private" %}
+  <a href="{{ object|resolve_url:action }}">
+    {% blocktrans %}Submit New {{ object_name }}{% endblocktrans %}
+  </a>
+  {% endwith %}
+</div>
 {% endif %}
 
 {% block activities_detail_content %}
@@ -77,4 +90,5 @@
 
 </div>
 {% endif %}
+{% endwith %}
 {% endblock content %}
