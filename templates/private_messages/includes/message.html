@@ -10,7 +10,7 @@
      data-controller="clipboard"
      data-clipboard-message="{% trans 'Markdown content has been copied' %}">
 
-  <div class="flex flex-wrap items-center mb-3">
+  <div class="flex flex-wrap items-center">
     {% include "users/includes/chip.html" with profile=message.sender profile_url=sender_url css_class="mr-2" %}
     <div class="mr-2">
       {% trans "to" %}
@@ -26,16 +26,14 @@
     {% endif %}
   </div>
 
-  <div class="">
-    {% collapsable is_detail %}
-    <div class="markdown-content">
-      {{ message.message.markdown|strip_external_images:user|lazify }}
-    </div>
-    {% endcollapsable %}
-    <textarea data-target="clipboard.textarea"
-              readonly
-              class="hidden">{{ message.message }}</textarea>
+  {% collapsable is_detail %}
+  <div class="markdown-content">
+    {{ message.message.markdown|strip_external_images:user|lazify }}
   </div>
+  {% endcollapsable %}
+  <textarea data-target="clipboard.textarea"
+            readonly
+            class="hidden">{{ message.message }}</textarea>
 
   <div class="card-footer">
     <div class="flex flex-wrap items-center">
