@@ -22,7 +22,7 @@ class OpengraphPreviewInput(forms.URLInput):
         self.attrs.update(
             {
                 "data-target": "opengraph-preview.input",
-                "data-action": "paste->opengraph-preview#validate keyup->opengraph-preview#validate",
+                "data-action": "paste->opengraph-preview#validate keyup->opengraph-preview#validate change->opengraph-preview#validate",
             }
         )
 
