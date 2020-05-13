@@ -27,8 +27,19 @@ export default class extends ApplicationController {
     this.validate();
   }
 
-  validate() {
-    if (this.inputTarget.value && this.validateURL() && !this.data.has('disabled')) {
+  validate(event) {
+    let value;
+    if (event) {
+      event.stopPropagation();
+      if (event.type === 'paste' && event.clipboardData) {
+        value = event.clipboardData.getData('text/plain');
+      } else {
+        value = event.currentTarget.value;
+      }
+    } else {
+      value = this.inputTarget.value;
+    }
+    if (value && this.validateURL() && !this.data.has('disabled')) {
       this.fetchTarget.removeAttribute('disabled');
       return true;
     } else {
@@ -57,7 +68,7 @@ export default class extends ApplicationController {
       return false;
     }
 
-    const url = this.inputTarget.value;
+    const url = this.inputTarget.value.trim();
 
     if (!url) {
       this.clearPreview();

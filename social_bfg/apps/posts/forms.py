@@ -19,10 +19,17 @@ class OpengraphPreviewInput(forms.URLInput):
         super().__init__(attrs)
         self.preview_image = preview_image
         self.preview_description = preview_description
+
         self.attrs.update(
             {
                 "data-target": "opengraph-preview.input",
-                "data-action": "paste->opengraph-preview#validate keyup->opengraph-preview#validate change->opengraph-preview#validate",
+                # try to catch as many events as possible esp. for mobile
+                "data-action": " ".join(
+                    [
+                        f"{event}->opengraph-preview#validate"
+                        for event in ("keyup", "change", "paste")
+                    ]
+                ),
             }
         )
 
