@@ -79,7 +79,7 @@
     {% endif %}
     {% if show_content %}
     {% collapsable is_detail %}
-    <div class="markdown-content mb-3">
+    <div class="markdown-content">
       {{ comment.content.markdown|strip_external_images:user|lazify }}
     </div>
     {% endcollapsable %}
