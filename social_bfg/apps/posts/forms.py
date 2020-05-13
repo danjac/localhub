@@ -15,14 +15,28 @@ from .models import Post
 class OpengraphPreviewInput(forms.URLInput):
     template_name = "posts/includes/widgets/opengraph_preview.html"
 
-    def __init__(self, attrs=None):
+    def __init__(self, attrs=None, preview_description=None, preview_image=None):
         super().__init__(attrs)
+        self.preview_image = preview_image
+        self.preview_description = preview_description
         self.attrs.update(
             {
                 "data-target": "opengraph-preview.input",
-                "data-action": "opengraph-preview#fetch keyup->opengraph-preview#validate",
+                "data-action": "keyup->opengraph-preview#validate",
             }
         )
+
+    def get_context(self, name, value, attrs):
+        data = super().get_context(name, value, attrs)
+
+        data.update(
+            {
+                "has_preview": self.preview_description or self.preview_image,
+                "preview_description": self.preview_description,
+                "preview_image": self.preview_image,
+            }
+        )
+        return data
 
 
 class PostForm(ActivityForm):
@@ -54,7 +68,10 @@ class PostForm(ActivityForm):
         )
 
         self.fields["url"].label = _("URL")
-        self.fields["url"].widget = OpengraphPreviewInput()
+        self.fields["url"].widget = OpengraphPreviewInput(
+            preview_image=self.instance.opengraph_image,
+            preview_description=self.instance.opengraph_description,
+        )
 
         self.fields["opengraph_image"].widget = forms.HiddenInput(
             attrs={

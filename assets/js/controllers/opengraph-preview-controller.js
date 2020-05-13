@@ -8,7 +8,8 @@ import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
   static targets = [
-    'button',
+    'clear',
+    'fetch',
     'container',
     'description',
     'descriptionPreview',
@@ -28,12 +29,18 @@ export default class extends ApplicationController {
 
   validate() {
     if (this.inputTarget.value && this.validateURL() && !this.data.has('disabled')) {
-      this.buttonTarget.removeAttribute('disabled');
+      this.fetchTarget.removeAttribute('disabled');
       return true;
     } else {
-      this.buttonTarget.setAttribute('disabled', true);
+      this.fetchTarget.setAttribute('disabled', true);
       return false;
     }
+  }
+
+  clear(event) {
+    event.preventDefault();
+    this.clearPreview();
+    this.clearListeners(['image', 'description']);
   }
 
   fetch(event) {
@@ -79,8 +86,12 @@ export default class extends ApplicationController {
       });
   }
 
-  clearListeners() {
-    this.listenerTargets.forEach((target) => (target.value = ''));
+  clearListeners(targets = ['title', 'description', 'image']) {
+    Array.from(this.listenerTargets)
+      .filter((target) =>
+        targets.includes(target.getAttribute(`data-${this.identifier}-listener-value`))
+      )
+      .forEach((target) => (target.value = ''));
   }
 
   updateListeners(data) {
@@ -97,6 +108,8 @@ export default class extends ApplicationController {
   }
 
   clearPreview() {
+    this.clearTarget.setAttribute('disabled', true);
+
     this.containerTarget.classList.add('hidden');
     this.titleTarget.innerText = '';
     this.titleTarget.classList.add('hidden');
@@ -133,6 +146,7 @@ export default class extends ApplicationController {
 
     if (description || image || title) {
       this.containerTarget.classList.remove('hidden');
+      this.clearTarget.removeAttribute('disabled');
     }
 
     if (description && image) {
