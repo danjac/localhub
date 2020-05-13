@@ -21,6 +21,16 @@ export default class extends ApplicationController {
   static targets = ['container', 'toggle'];
 
   connect() {
+    this.check();
+  }
+
+  disconnect() {
+    if (this.observer) {
+      this.observer.disconnect(this.containerTarget);
+    }
+  }
+
+  check() {
     if (ResizeObserver) {
       this.observer = new ResizeObserver((entries) => {
         for (const entry of entries) {
@@ -28,12 +38,6 @@ export default class extends ApplicationController {
         }
       });
       this.observer.observe(this.containerTarget);
-    }
-  }
-
-  disconnect() {
-    if (this.observer) {
-      this.observer.disconnect(this.containerTarget);
     }
   }
 
