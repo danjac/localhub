@@ -346,11 +346,9 @@ class Local(DockerConfigMixin, Base):
     THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + [
         "debug_toolbar",
         "django_extensions",
-        "silk",
     ]
 
     MIDDLEWARE = Base.MIDDLEWARE + [
-        "silk.middleware.SilkyMiddleware",
         "debug_toolbar.middleware.DebugToolbarMiddleware",
     ]
 
@@ -358,8 +356,6 @@ class Local(DockerConfigMixin, Base):
         "DISABLE_PANELS": ["debug_toolbar.panels.redirects.RedirectsPanel"],
         "SHOW_TEMPLATE_CONTEXT": True,
     }
-
-    SILKY_PYTHON_PROFILER = True
 
     SITE_ID = 1
 
@@ -369,11 +365,11 @@ class Production(Base):
     Production settings for 12-factor deployment using environment variables.
 
     Assumes AWS/S3 and Mailgun integration.
-
-    Silk is enabled for performance monitoring.
     """
 
-    THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + ["anymail", "silk"]
+    THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + [
+        "anymail",
+    ]
 
     ALLOWED_HOSTS = values.ListValue()
     CSRF_TRUSTED_ORIGINS = values.ListValue()
@@ -413,17 +409,7 @@ class Production(Base):
 
     MIDDLEWARE = Base.MIDDLEWARE + [
         "social_bfg.common.middleware.http.HttpResponseNotAllowedMiddleware",
-        "silk.middleware.SilkyMiddleware",
     ]
-
-    # https://github.com/jazzband/django-silk#configuration
-
-    SILKY_AUTHENTICATION = True  # User must login
-    SILKY_AUTHORISATION = True
-    SILKY_INTERCEPT_PERCENT = 50
-    SILKY_MAX_REQUEST_BODY_SIZE = -1  # Silk takes anything <0 as no limit
-    SILKY_MAX_RESPONSE_BODY_SIZE = 1024
-    SILKY_MAX_RECORDED_REQUESTS = 10 ** 4
 
     @property
     def ANYMAIL(self):
