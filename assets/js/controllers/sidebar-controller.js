@@ -7,9 +7,13 @@ export default class extends ApplicationController {
   static targets = ['main', 'nav'];
 
   toggle(event) {
-    console.log('toggle menu....');
     event.preventDefault();
     this.mainTarget.classList.toggle('hidden');
     this.navTarget.classList.toggle('hidden');
+  }
+
+  reset() {
+    this.mainTarget.classList.remove('hidden');
+    this.navTarget.classList.add('hidden');
   }
 }
