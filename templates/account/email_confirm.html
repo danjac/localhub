@@ -9,23 +9,25 @@
 {% block account_subtitle %}{% trans "Confirm E-Mail" %}{% endblock %}
 
 {% block content %}
-<h1 class="page-header">{% trans "Confirm E-mail Address" %}</h1>
-<div class="divider"></div>
+<h1 class="page-header mb-3 pb-3 border-b">{% trans "Confirm E-mail Address" %}</h1>
 
 {% if confirmation %}
 
 {% user_display confirmation.email_address.user as user_display %}
 
 <form method="POST"
-      action="{% url 'account_confirm_email' confirmation.key %}">
-  <p>{% blocktrans with confirmation.email_address.email as email %}Please confirm that <a
-       href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user {{ user_display }}.{% endblocktrans %}
-  </p>
+      action="{% url 'account_confirm_email' confirmation.key %}"
+      class="p-1 md:p-3 border border-gray-500 lg:w-3/4">
+
   {% csrf_token %}
-  <button type="submit"
-          class="btn btn-primary">
-    {% trans 'Confirm' %}
-  </button>
+  <p class="mb-3">{% blocktrans with confirmation.email_address.email as email %}Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user {{ user_display }}.{% endblocktrans %}
+  </p>
+  <div class="pt-2 border-t">
+    <button type="submit"
+            class="btn btn-primary">
+      {% trans 'Confirm' %}
+    </button>
+  </div>
 </form>
 
 {% else %}
