@@ -28,7 +28,7 @@
 {% include "includes/pagination.html" with css_class="mt-1 mb-3" %}
 {% endif %}
 
-<div class="flex flex-wrap justify-between">
+<div class="flex flex-wrap justify-center sm:justify-between">
   {% for photo in object_list %}
   <div class="mb-3">
     <a href="{{ photo.get_absolute_url }}"
