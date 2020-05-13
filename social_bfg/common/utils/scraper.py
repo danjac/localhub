@@ -63,6 +63,7 @@ class HTMLScraper:
 
     def __init__(self, url):
         self.url = url
+        self.domain = get_domain(url)
         self.title = None
         self.image = None
         self.description = None
@@ -126,9 +127,8 @@ class HTMLScraper:
         return None
 
     def get_url(self):
-        domain = get_domain(self.url)
         for value in self.find_meta_tags("og:url", "twitter:url", "parsely-link"):
-            if value and self.is_acceptable_url(value, domain):
+            if value and self.is_acceptable_url(value):
                 return value
 
         return None
@@ -175,14 +175,9 @@ class HTMLScraper:
             ):
                 yield value
 
-    def is_acceptable_url(self, url, domain):
+    def is_acceptable_url(self, url):
         # must be a valid URL matching domain of the source URL.
-        try:
-            resolver = URLResolver.from_url(url)
-        except URLResolver.Invalid:
-            return False
-
-        return resolver.domain == domain
+        return (domain := get_domain(url)) and domain == self.domain
 
     def is_acceptable_image(self, image):
         try:
