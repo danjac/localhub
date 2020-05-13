@@ -4,11 +4,11 @@
 {% for group, options, index in widget.optgroups %}
 
 {% if group %}
-<div class="border-b pb-2">{{ group }}</div>
+<div class="border-b pb-3">{{ group }}</div>
 {% endif %}
 
 {% for option in options %}
-<div class="flex items-center {% if not forloop.last %} mb-2{% endif %}">
+<div class="flex items-center {% if not forloop.last %} mb-3{% endif %}">
   {% if option.wrap_label %}
   <label class="font-semibold text-sm"
          {% if option.attrs.id %}
