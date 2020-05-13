@@ -28,17 +28,17 @@
 {% include "includes/pagination.html" with css_class="mt-1 mb-3" %}
 {% endif %}
 
-<div class="flex flex-wrap justify-center sm:justify-between">
+<div class="flex flex-wrap justify-between">
   {% for photo in object_list %}
   <div class="mb-3">
     <a href="{{ photo.get_absolute_url }}"
        title="{{ photo.title }}">
       {% if photo.image|is_portrait %}
-      {% thumbnail photo.image "300x200" upscale=False crop="top" as image %}
+      {% thumbnail photo.image "500x300" upscale=False crop="top" as image %}
       {% include "photos/includes/image.html" with title=photo.title %}
       {% endthumbnail %}
       {% else %}
-      {% thumbnail photo.image "300" upscale=False as image %}
+      {% thumbnail photo.image "500" upscale=False as image %}
       {% include "photos/includes/image.html" with title=photo.title %}
       {% endthumbnail %}
       {% endif %}

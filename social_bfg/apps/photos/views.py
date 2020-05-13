@@ -14,7 +14,7 @@ from .models import Photo
 class PhotoGalleryView(BaseActivityListView):
     model = Photo
     template_name = "photos/gallery.html"
-    paginate_by = settings.SOCIAL_BFG_LONG_PAGE_SIZE
+    paginate_by = settings.SOCIAL_BFG_DEFAULT_PAGE_SIZE
 
     def get_queryset(self):
         return (
