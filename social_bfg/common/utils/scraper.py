@@ -114,7 +114,7 @@ class HTMLScraper:
         self.title = self.get_title()
         self.image = self.get_image()
         self.description = self.get_description()
-        self.url = self.get_url() or self.url
+        self.url = self.get_url()
         return self
 
     def get_title(self):
@@ -127,11 +127,13 @@ class HTMLScraper:
         return None
 
     def get_url(self):
+        """Check meta tags for any acceptable URL (must be a valid URL matching
+        the domain of the origin URL). Returns origin URL if none found."""
         for value in self.find_meta_tags("og:url", "twitter:url", "parsely-link"):
             if value and self.is_acceptable_url(value):
                 return value
 
-        return None
+        return self.url
 
     def get_description(self):
         for value in itertools.chain(
