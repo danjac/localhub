@@ -134,7 +134,8 @@
   {% block layout %}
 
   {% if messages %}
-  <div class="flex justify-center">
+  <div class="flex justify-center"
+       style="background: cover url('{% static 'images/test.jpg' %}')">
     {% for message in messages %}
     <div class="absolute z-50 w-4/5 lg:w-1/3 flex items-center text-center p-3 message {{ message.tags }}"
          data-controller="alert">
@@ -177,7 +178,7 @@
 
       {% else %}
       <div class="container mx-auto flex justify-center min-h-full">
-        <div class="w-full md:mt-12 lg:w-1/2 lg:ml-32">
+        <div class="w-full md:mt-12 lg:w-1/2 lg:ml-32 p-5">
           {% include "includes/no_sidebar_nav.html" %}
           {% endif %}
           {% block content %}{% endblock %}
