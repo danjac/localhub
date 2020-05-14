@@ -7,6 +7,9 @@ from PIL.ExifTags import GPSTAGS, TAGS
 
 
 class Exif:
+
+    ROTATIONS = {3: 180, 6: 270, 8: 90}
+
     class Invalid(ValueError):
         ...
 
@@ -28,10 +31,32 @@ class Exif:
         if (exif := img._getexif()) is None:
             raise cls.Invalid("Image does not contain EXIF tags")
 
-        return cls(exif)
+        return cls(img, exif)
 
-    def __init__(self, exif):
+    def __init__(self, image, exif):
+        self.image = image
         self.exif = exif
+
+    def rotate(self):
+        """Attempt to rotate image based on EXIF orientation tags.
+
+        Raises:
+            Exif.Invalid: if data does not contain orientation tags.
+        """
+
+        self.image.seek(0)
+
+        orientation = None
+
+        for key in TAGS.keys():
+            if TAGS[key] == "Orientation":
+                orientation = key
+                break
+
+        if orientation is None or orientation not in self.ROTATIONS:
+            raise self.Invalid("Cannot find valid orientation key")
+
+        self.image.rotate(self.ROTATIONS[orientation], expand=True)
 
     def locate(self):
         """Returns lat, lng pair of coordinates.

@@ -4,6 +4,7 @@
 import axios from 'axios';
 
 import { Events } from '@utils/constants';
+import * as classList from '@utils/class-list';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
@@ -18,7 +19,7 @@ export default class extends ApplicationController {
     'imagePreview',
     'input',
     'listener',
-    'title',
+    'titlePreview',
   ];
 
   connect() {
@@ -121,9 +122,7 @@ export default class extends ApplicationController {
   clearPreview() {
     this.clearTarget.setAttribute('disabled', true);
 
-    this.containerTarget.classList.add('hidden');
-    this.titleTarget.innerText = '';
-    this.titleTarget.classList.add('hidden');
+    this.titlePreviewTarget.innerText = '';
 
     this.descriptionTargets.forEach((el) => {
       el.innerText = '';
@@ -134,17 +133,18 @@ export default class extends ApplicationController {
     });
 
     [
+      this.containerTarget,
       this.fullPreviewTarget,
       this.descriptionPreviewTarget,
       this.imagePreviewTarget,
-      this.titleTarget,
-    ].forEach((el) => el.classList.add('hidden'));
+      this.titlePreviewTarget,
+    ].forEach((el) => this.hideElement(el));
   }
 
   updatePreview(title, description, image) {
     if (title) {
-      this.titleTarget.innerText = title;
-      this.titleTarget.classList.remove('hidden');
+      this.titlePreviewTarget.innerText = title;
+      this.showElement(this.titlePreviewTarget);
     }
 
     if (description) {
@@ -156,17 +156,35 @@ export default class extends ApplicationController {
     }
 
     if (description || image || title) {
-      this.containerTarget.classList.remove('hidden');
+      this.showElement(this.containerTarget);
       this.clearTarget.removeAttribute('disabled');
     }
 
     if (description && image) {
-      this.fullPreviewTarget.classList.remove('hidden');
+      this.showElement(this.fullPreviewTarget);
     } else if (description) {
-      this.descriptionPreviewTarget.classList.remove('hidden');
+      this.showElement(this.descriptionPreviewTarget);
     } else if (image) {
-      this.imagePreviewTarget.classList.remove('hidden');
+      this.showElement(this.imagePreviewTarget);
     }
+  }
+
+  getActiveClass(el) {
+    return el.getAttribute(`data-${this.identifier}-active-class`);
+  }
+
+  getInactiveClass(el) {
+    return el.getAttribute(`data-${this.identifier}-inactive-class`) || 'hidden';
+  }
+
+  showElement(el) {
+    classList.add(el, this.getActiveClass(el));
+    classList.remove(el, this.getInactiveClass(el));
+  }
+
+  hideElement(el) {
+    classList.remove(el, this.getActiveClass(el));
+    classList.add(el, this.getInactiveClass(el));
   }
 
   handleServerError() {

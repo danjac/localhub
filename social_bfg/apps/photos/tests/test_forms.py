@@ -4,40 +4,11 @@
 # Third Party Libraries
 import pytest
 
-# Social-BFG
-from social_bfg.common.utils.exif import Exif
-
 # Local
 from ..factories import PhotoFactory
 from ..forms import PhotoForm
 
 pytestmark = pytest.mark.django_db
-
-
-@pytest.fixture()
-def mock_exif(mocker):
-    class MockExif:
-        def locate(self):
-            return (61, 24)
-
-    mocker.patch(
-        "social_bfg.common.utils.exif.Exif.from_image", return_value=MockExif(),
-    )
-
-    yield
-
-
-@pytest.fixture()
-def mock_invalid_exif(mocker):
-    class MockExif:
-        def locate(self):
-            raise Exif.Invalid()
-
-    mocker.patch(
-        "social_bfg.common.utils.exif.Exif.from_image", return_value=MockExif(),
-    )
-
-    yield
 
 
 class TestPhotoForm:

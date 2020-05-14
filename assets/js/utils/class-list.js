@@ -23,6 +23,9 @@ export class ClassList {
   }
 
   add(classnames) {
+    if (!classnames) {
+      return this.element;
+    }
     this.element.classList.add.apply(
       this.element.classList,
       this.splitClassnames(classnames)
@@ -31,6 +34,9 @@ export class ClassList {
   }
 
   remove(classnames) {
+    if (!classnames) {
+      return this.element;
+    }
     this.element.classList.remove.apply(
       this.element.classList,
       this.splitClassnames(classnames)
@@ -39,6 +45,9 @@ export class ClassList {
   }
 
   toggle(classnames) {
+    if (!classnames) {
+      return this.element;
+    }
     this.element.classList.toggle.apply(
       this.element.classList,
       this.splitClassnames(classnames)

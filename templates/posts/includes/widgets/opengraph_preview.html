@@ -3,13 +3,15 @@
 
 {% load i18n %}
 <div>
-  <div {% if not has_preview %}class="hidden"{% endif %}
+  <div {% if not has_preview %}class="hidden"
+       {% endif %}
        data-target="opengraph-preview.container">
-    <div data-target="opengraph-preview.title"
+    <div data-target="opengraph-preview.titlePreview"
          class="text-sm font-semibold mb-3"></div>
 
     <div class="lg:flex my-2"
-         data-target="opengraph-preview.fullPreview">
+         data-target="opengraph-preview.fullPreview"
+         data-opengraph-preview-active-class="lg:flex">
       <div class="block mb-1 lg:mb-0 lg:w-1/3 h-auto lg:mr-2">
         <img data-target="opengraph-preview.image"
              {% if preview_image and preview_description %}
@@ -39,9 +41,9 @@
     <blockquote class="text-sm my-2"
                 data-target="opengraph-preview.descriptionPreview"
                 data-target="opengraph-preview.description">
-        {% if preview_description and not preview_image %}
-        {{ preview_description }}
-        {% endif %}
+      {% if preview_description and not preview_image %}
+      {{ preview_description }}
+      {% endif %}
     </blockquote>
 
   </div>
@@ -51,7 +53,7 @@
       {% include "django/forms/widgets/input.html" %}
     </div>
     <button type="button"
-            class="bg-gray-200 border border-l-0 border-gray-500 p-1"
+            class="btn btn-input-addon"
             title="{% trans 'Fetch content from URL' %}"
             disabled
             data-target="opengraph-preview.fetch"
@@ -59,7 +61,7 @@
       {% svg "download" %}
     </button>
     <button type="button"
-            class="bg-gray-200 border border-l-0 border-gray-500 p-1"
+            class="btn btn-input-addon"
             title="{% trans 'Remove content from URL' %}"
             {% if not has_preview %}
             disabled

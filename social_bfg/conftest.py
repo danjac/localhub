@@ -1,13 +1,18 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Standard Library
+import io
+
 # Django
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
+from django.core.files import File
 from django.http import HttpResponse
 
 # Third Party Libraries
 import pytest
+from PIL import Image
 
 # Social-BFG
 from social_bfg.apps.comments.factories import CommentFactory
@@ -169,6 +174,15 @@ def notification(post):
         content_object=post,
         verb="mention",
     )
+
+
+@pytest.fixture
+def fake_image():
+    file_obj = io.BytesIO()
+    image = Image.new("RGBA", size=(500, 500), color="blue")
+    image.save(file_obj, "png")
+    file_obj.seek(0)
+    return File(file_obj, name="test.jpg")
 
 
 @pytest.fixture

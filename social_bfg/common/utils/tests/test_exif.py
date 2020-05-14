@@ -11,7 +11,7 @@ from ..exif import Exif
 class TestConvertToDegress:
     def test_valid(self):
         value = ((61, 1), (3, 1), (27, 1))
-        assert Exif(None).convert_to_degress(value) == pytest.approx(61, 0.5)
+        assert Exif(None, None).convert_to_degress(value) == pytest.approx(61, 0.5)
 
     def test_invalid(self):
         value = (
@@ -19,7 +19,7 @@ class TestConvertToDegress:
             (3, 1),
         )
         with pytest.raises(Exif.Invalid):
-            Exif(None).convert_to_degress(value)
+            Exif(None, None).convert_to_degress(value)
 
 
 class TestLocate:
@@ -36,7 +36,7 @@ class TestLocate:
             "GPSLongitudeRef": "E",
         }
         self.mock_build_gps_dict(mocker, data)
-        lat, lng = Exif(None).locate()
+        lat, lng = Exif(None, None).locate()
         assert lat == pytest.approx(61, 0.5)
         assert lng == pytest.approx(61, 0.5)
 
@@ -49,7 +49,7 @@ class TestLocate:
         }
         self.mock_build_gps_dict(mocker, data)
 
-        lat, lng = Exif(None).locate()
+        lat, lng = Exif(None, None).locate()
         assert lat == pytest.approx(-61, 0.5)
         assert lng == pytest.approx(61, 0.5)
 
@@ -61,7 +61,7 @@ class TestLocate:
             "GPSLongitudeRef": "W",
         }
         self.mock_build_gps_dict(mocker, data)
-        lat, lng = Exif(None).locate()
+        lat, lng = Exif(None, None).locate()
         assert lat == pytest.approx(61, 0.5)
         assert lng == pytest.approx(-61, 0.5)
 
@@ -74,4 +74,4 @@ class TestLocate:
         }
         self.mock_build_gps_dict(mocker, data)
         with pytest.raises(Exif.Invalid):
-            Exif(None).locate()
+            Exif(None, None).locate()

@@ -95,6 +95,19 @@ class PhotoForm(ActivityForm):
         except KeyError:
             return cleaned_data
 
+        try:
+            exif = Exif.from_image(image)
+        except Exif.Invalid:
+            exif = None
+
+        # try and rotate image if orientation provided
+
+        if exif:
+            try:
+                exif.rotate()
+            except Exif.Invalid:
+                pass
+
         latitude = cleaned_data.get("latitude")
         longitude = cleaned_data.get("longitude")
 
@@ -104,7 +117,7 @@ class PhotoForm(ActivityForm):
         elif cleaned_data["extract_gps_data"]:
 
             try:
-                latitude, longitude = Exif.from_image(image).locate()
+                latitude, longitude = exif.locate()
             except Exif.Invalid:
                 latitude, longitude = (None, None)
 
