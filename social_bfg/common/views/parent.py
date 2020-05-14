@@ -13,7 +13,16 @@ class ParentObjectMixin:
     for fetching a "parent" object.
 
     This is useful when you want e.g. a form or list view with
-    a different "parent" related object to another object
+    a different "parent" related object to another object.
+
+    Parent should be defined according to `parent_object_name` so
+    it can be accessed automatically in the template. This can be
+    done directly e.g. self.parent = self.get_parent_object() or
+    as a cached property. This must be set if parent_required is True
+    or will raise AttributeError.
+
+    If parent_required is True, get_parent_object() will raise Http404,
+    otherwise the value will be set to None.
     """
 
     # if not required, sets parent to None if not found
@@ -100,9 +109,17 @@ class ParentObjectMixin:
 
     def get_context_data(self, **kwargs):
         """Includes parent_context_object_name in context data.
+
+        If parent_required is True will raise AttributeError if
+        the parent is not defined as `parent_object_name`. Otherwise
+        ignored.
         """
         data = super().get_context_data(**kwargs)
-        data[self.get_parent_context_object_name()] = getattr(
-            self, self.parent_object_name
-        )
+        try:
+            data[self.get_parent_context_object_name()] = getattr(
+                self, self.parent_object_name
+            )
+        except AttributeError:
+            if self.parent_required:
+                raise
         return data
