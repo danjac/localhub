@@ -262,7 +262,7 @@
     <li><a href="{% url 'community_list' %}"
          class="sidebar-menu-item">
         <span>{% trans "Communities" %}</span>
-        {% if external_site_counters %}
+        {% if external_site_counters.total %}
         <span class="tag tag-primary px-1">{% trans "New" %}</span>
         {% endif %}
       </a></li>
