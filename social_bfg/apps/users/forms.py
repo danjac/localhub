@@ -80,6 +80,10 @@ class UserForm(forms.ModelForm):
                 "Filters only apply to other people's activities, not your own. "
                 "Filters are mutually exclusive and may cancel each other out."
             ),
+            "show_sensitive_content": _(
+                "You can remove sensitive content completely from your feeds by "
+                "blocking the relevant tags."
+            ),
         }
 
     def __init__(self, *args, **kwargs):
