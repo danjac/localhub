@@ -33,10 +33,6 @@ class ParentObjectMixin:
     parent_pk_kwarg = "pk"
     parent_slug_kwarg = "slug"
 
-    def setup(self, *args, **kwargs):
-        super().setup(*args, **kwargs)
-        setattr(self, self.parent_object_name, self.get_parent_object())
-
     def get_parent_queryset(self):
         """Returns the parent queryset.
 

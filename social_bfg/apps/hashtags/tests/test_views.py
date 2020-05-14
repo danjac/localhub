@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
+from django.conf import settings
 from django.urls import reverse
 
 # Third Party Libraries
@@ -116,6 +117,14 @@ class TestTagDetailView:
         assert response.status_code == 404
         assert response.context["tag"] == "movies"
         assertTemplateUsed(response, "hashtags/not_found.html")
+
+    def test_get_if_anonymous(self, client, community):
+        PostFactory(
+            community=community, owner=MembershipFactory(community=community).member,
+        ).tags.add("movies")
+
+        response = client.get(reverse("hashtags:detail", args=["movies"]))
+        assert response.url.startswith(reverse(settings.LOGIN_URL))
 
     def test_get(self, client, member):
         PostFactory(
