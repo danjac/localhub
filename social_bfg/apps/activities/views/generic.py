@@ -6,6 +6,7 @@ from django.conf import settings
 from django.db import IntegrityError
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView
 
@@ -121,6 +122,10 @@ class ActivityFlagView(
 
     parent_object_name = "activity"
 
+    @cached_property
+    def activity(self):
+        return self.get_parent_object()
+
     def get_parent_queryset(self):
         return (
             super()
@@ -162,6 +167,10 @@ class ActivityCommentCreateView(
     success_message = _("Your %(model)s has been posted")
 
     parent_object_name = "content_object"
+
+    @cached_property
+    def content_object(self):
+        return self.get_parent_object()
 
     def get_permission_object(self):
         return self.content_object

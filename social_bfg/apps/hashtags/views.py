@@ -149,6 +149,7 @@ class TagDetailView(ParentObjectMixin, BaseActivityStreamView):
     parent_required = False
 
     def get(self, request, *args, **kwargs):
+        self.tag = self.get_parent_object()
         if self.tag is None:
             return TemplateResponse(
                 request, "hashtags/not_found.html", {"tag": kwargs["slug"]}, status=404,

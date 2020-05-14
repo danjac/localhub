@@ -76,6 +76,10 @@ class CommentFlagView(
 
     parent_object_name = "comment"
 
+    @cached_property
+    def comment(self):
+        return self.get_parent_object()
+
     def get_parent_queryset(self):
         return (
             super()
@@ -117,6 +121,10 @@ class CommentReplyView(
     model = Comment
     form_class = CommentForm
     success_message = _("You have replied to this %(model)s")
+
+    @cached_property
+    def parent(self):
+        return self.get_parent_object()
 
     def get_permission_object(self):
         return self.parent

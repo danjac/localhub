@@ -112,6 +112,10 @@ class SingleUserMixin(ParentObjectMixin, BaseUserQuerySetMixin):
         return response
 
     @cached_property
+    def user_obj(self):
+        return self.get_parent_object()
+
+    @cached_property
     def display_name(self):
         return self.user_obj.get_display_name()
 

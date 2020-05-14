@@ -72,6 +72,10 @@ class BaseMessageFormView(PermissionRequiredMixin, SuccessFormView):
 
 class BaseReplyFormView(ParentObjectMixin, BaseMessageFormView):
     @cached_property
+    def parent(self):
+        return self.get_parent_object()
+
+    @cached_property
     def recipient(self):
         return self.parent.get_other_user(self.request.user)
 
@@ -140,6 +144,10 @@ class MessageRecipientCreateView(
     parent_object_name = "recipient"
     parent_slug_kwarg = "username"
     parent_slug_field = "username"
+
+    @cached_property
+    def recipient(self):
+        return self.get_parent_object()
 
     def get_parent_queryset(self):
         return (
