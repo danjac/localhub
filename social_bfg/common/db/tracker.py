@@ -46,7 +46,9 @@ class TrackerModelMixin:
     def from_db(cls, db, field_names, values):
         new = super(TrackerModelMixin, cls).from_db(db, field_names, values)
         new._tracked_values = {
-            field: values[field_names.index(field)] for field in cls.tracked_fields
+            field: values[field_names.index(field)]
+            for field in cls.tracked_fields
+            if field in field_names
         }
 
         return new
