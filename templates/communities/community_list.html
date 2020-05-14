@@ -42,24 +42,30 @@
     <div class="flex flex-wrap items-center text-sm">
       {% if num_flags %}
       <a class="inline-block mr-2"
-         href="{{ object_url }}{% url 'flags:list' %}">{% trans "Flags" %}
+         href="{{ object_url }}{% url 'flags:list' %}">
+        <span>{% trans "Flags" %}</span>
+        <span class="tag tag-primary px-1">{% trans "New" %}</span>
       </a>
       {% endif %}
       {% if num_notifications %}
       <a class="mr-2"
          href="{{ object_url }}{% url 'notifications:list' %}">
-        {% trans "Notifications" %}
+        <span>{% trans "Notifications" %}</span>
+        <span class="tag tag-primary px-1">{% trans "New" %}</span>
       </a>
       {% endif %}
       {% if num_messages %}
       <a class="mr-2"
          href="{{ object_url }}{% url 'private_messages:inbox' %}">
-        {% trans "Messages" %}
+        <span>{% trans "Messages" %}</span>
+        <span class="tag tag-primary px-1">{% trans "New" %}</span>
       </a>
       {% endif %}
       {% if num_join_requests %}
       <a class=""
          href="{{ object_url }}{% url 'join_requests:list' %}">
+        <span>{% trans "Join Requests" %}</span>
+        <span class="tag tag-primary px-1">{% trans "New" %}</span>
       </a>
       {% endif %}
     </div>

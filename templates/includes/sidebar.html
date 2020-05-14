@@ -249,7 +249,7 @@
       <a href="{% url 'join_requests:list' %}"
          data-controller="active-link"
          class="sidebar-menu-item">
-        {% trans "Join Requests" %}
+        <span>{% trans "Join Requests" %}</span>
         {% if site_counters.pending_join_requests %}
         <span class="tag tag-primary px-1">{% trans "New" %}</span>
         {% endif %}
@@ -260,7 +260,12 @@
 
     {% endif %}
     <li><a href="{% url 'community_list' %}"
-         class="sidebar-menu-item">Communities</a></li>
+         class="sidebar-menu-item">
+        <span>{% trans "Communities" %}</span>
+        {% if external_site_counters %}
+        <span class="tag tag-primary px-1">{% trans "New" %}</span>
+        {% endif %}
+      </a></li>
   </ul>
   {% endif %}
 
