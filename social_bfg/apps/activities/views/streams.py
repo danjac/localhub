@@ -55,13 +55,13 @@ class BaseActivityStreamView(CommunityRequiredMixin, TemplateView):
         """
         return model.objects.for_activity_stream(
             self.request.user, self.request.community
-        )
+        ).distinct()
 
     def get_count_queryset_for_model(self, model):
         """
         We do not usually need all the additional annotations etc for the count.
         """
-        return model.objects
+        return model.objects.distinct()
 
     def get_count(self):
         return get_activity_queryset_count(

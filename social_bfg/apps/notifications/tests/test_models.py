@@ -54,7 +54,13 @@ class TestNotificationManager:
         NotificationFactory(actor=other)
         assert Notification.objects.exclude_blocked_actors(user).count() == 0
 
-    def test_exclude_blocked_actors_if_not_blocked(self, user):
+    def test_exclude_blocked_actors_if_blocking(self, user):
+        other = UserFactory()
+        user.blockers.add(other)
+        NotificationFactory(actor=other)
+        assert Notification.objects.exclude_blocked_actors(user).count() == 0
+
+    def test_exclude_blocked_actors_if_none_blocked_or_blocking(self, user):
         other = UserFactory()
         NotificationFactory(actor=other)
         assert Notification.objects.exclude_blocked_actors(user).count() == 1

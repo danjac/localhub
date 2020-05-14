@@ -394,6 +394,18 @@ class User(TrackerModelMixin, AbstractUser):
             return False
         return self.get_blocked_users().filter(pk=user.id).exists()
 
+    def is_activity_stream_tags_filter(self):
+        return self.ActivityStreamFilters.TAGS in self.activity_stream_filters
+
+    def is_activity_stream_users_filter(self):
+        return self.ActivityStreamFilters.USERS in self.activity_stream_filters
+
+    def is_activity_stream_all_filters(self):
+        return (
+            self.is_activity_stream_tags_filter()
+            and self.is_activity_stream_users_filter()
+        )
+
     def get_blocked_users(self):
         """Return a) users I'm blocking and b) users blocking me.
 

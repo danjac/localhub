@@ -75,6 +75,13 @@ class UserForm(forms.ModelForm):
             "default_timezone": _("Timezone"),
         }
 
+        help_texts = {
+            "activity_stream_filters": _(
+                "Filters only apply to other people's activities, not your own. "
+                "Filters are mutually exclusive and may cancel each other out."
+            ),
+        }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.form_helper = FormHelper(

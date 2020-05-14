@@ -70,7 +70,9 @@ class CommentQuerySet(
 
         if user.is_anonymous:
             return self
-        return self.exclude(owner__in=user.blocked.all())
+        return self.exclude(owner__in=user.blocked.all()).exclude(
+            owner__in=user.blockers.all()
+        )
 
     def exclude_deleted(self, user=None):
         qs = self.filter(deleted__isnull=True)

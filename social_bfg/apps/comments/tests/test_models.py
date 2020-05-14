@@ -77,6 +77,19 @@ class TestCommentManager:
         assert my_comment in comments
         assert second_comment in comments
 
+    def test_exclude_blocking_users(self, user):
+
+        my_comment = CommentFactory(owner=user)
+
+        first_comment = CommentFactory()
+        second_comment = CommentFactory()
+        user.blockers.add(first_comment.owner)
+
+        comments = Comment.objects.exclude_blocked_users(user).all()
+        assert len(comments) == 2
+        assert my_comment in comments
+        assert second_comment in comments
+
     def test_with_is_blocked_if_anonymous(self, anonymous_user):
 
         CommentFactory()
