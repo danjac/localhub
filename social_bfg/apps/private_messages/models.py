@@ -255,14 +255,16 @@ class MessageQuerySet(
 
         query = (
             "WITH RECURSIVE children (id) AS ("
-            f"SELECT {table_name}.id FROM {table_name} WHERE id={parent.pk} "
+            f"SELECT {table_name}.id FROM {table_name} WHERE id=%(parent_id)s "
             f"UNION ALL SELECT {table_name}.id FROM children, {table_name} "
             f"WHERE {table_name}.parent_id=children.id)"
             f"SELECT {table_name}.id FROM {table_name}, children "
-            f"WHERE children.id={table_name}.id AND {table_name}.id != {parent.pk}"
+            f"WHERE children.id={table_name}.id AND {table_name}.id != %(parent_id)s"
         )
 
-        return self.filter(pk__in=[obj.id for obj in self.raw(query)])
+        return self.filter(
+            pk__in=[obj.id for obj in self.raw(query, {"parent_id": parent.pk})]
+        )
 
     def notifications(self):
         """
