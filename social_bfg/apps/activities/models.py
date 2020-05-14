@@ -274,22 +274,23 @@ class ActivityQuerySet(
             QuerySet
         """
 
-        if user.is_anonymous or not user.activity_stream_filters:
+        if user.is_anonymous:
             return self
 
-        qs = self.none()
+        if user.is_activity_stream_all_filters():
+            return self.following_users(user) | self.following_tags(user)
 
-        if "users" in user.activity_stream_filters:
-            qs = qs | self.following_users(user)
+        if user.is_activity_stream_users_filter():
+            return self.following_users(user)
 
-        if "tags" in user.activity_stream_filters:
-            qs = qs | self.following_tags(user)
+        if user.is_activity_stream_tags_filter():
+            return self.following_tags(user)
 
-        return qs
+        return self
 
     def exclude_blocked_users(self, user):
-        """Excludes any activities of users blocked by this user. If user
-        is anonymous then passes unfiltered queryset.
+        """Excludes any activities of users blocked by this user or who are blocking this user.
+        If user is anonymous then passes unfiltered queryset.
 
         Args:
             user (User)
@@ -299,7 +300,9 @@ class ActivityQuerySet(
         """
         if user.is_anonymous:
             return self
-        return self.exclude(owner__in=user.blocked.all())
+        return self.exclude(owner__in=user.blocked.all()).exclude(
+            owner__in=user.blockers.all()
+        )
 
     def exclude_blocked_tags(self, user):
         """Excludes any activities of tags blocked by this user. If user

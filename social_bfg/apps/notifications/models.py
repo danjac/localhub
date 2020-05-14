@@ -68,7 +68,8 @@ class NotificationQuerySet(models.QuerySet):
         )
 
     def exclude_blocked_actors(self, recipient):
-        """Exclude all notifications with actors blocked by the recipient.
+        """Exclude all notifications with actors blocked by the recipient,
+        or who are blocking the recipient.
 
         Args:
             recipient (User): notification recipient
@@ -77,7 +78,9 @@ class NotificationQuerySet(models.QuerySet):
             QuerySet
         """
 
-        return self.exclude(actor__in=recipient.blocked.all())
+        return self.exclude(actor__in=recipient.blocked.all()).exclude(
+            actor__in=recipient.blockers.all()
+        )
 
     def for_recipient(self, recipient):
         """Return all notifications for a recipient

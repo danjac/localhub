@@ -15,8 +15,8 @@ You have blocked {{ counter }} people.
 {% endblock counter %}
 
 {% block user_item_actions %}
-<div class="float-right actions">
-  <a class="action text-strike"
+<div class="table-nav">
+  <a class="table-nav-item line-through"
      href="{% url 'users:unblock' object.username %}"
      data-turbolinks="false"
      data-controller="ajax"

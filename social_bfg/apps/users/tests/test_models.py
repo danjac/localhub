@@ -503,3 +503,31 @@ class TestUserModel:
         user.block_user(other)
         assert other in user.blocked.all()
         assert other not in user.followers.all()
+
+    def test_is_activity_stream_no_filters(self, user_model):
+        user = user_model()
+
+        assert not user.is_activity_stream_all_filters()
+        assert not user.is_activity_stream_users_filter()
+        assert not user.is_activity_stream_tags_filter()
+
+    def test_is_activity_stream_filter_users_and_tags(self, user_model):
+        user = user_model(activity_stream_filters=["users", "tags"])
+
+        assert user.is_activity_stream_all_filters()
+        assert user.is_activity_stream_users_filter()
+        assert user.is_activity_stream_tags_filter()
+
+    def test_is_activity_stream_filter_users_only(self, user_model):
+        user = user_model(activity_stream_filters=["users"])
+
+        assert not user.is_activity_stream_all_filters()
+        assert user.is_activity_stream_users_filter()
+        assert not user.is_activity_stream_tags_filter()
+
+    def test_is_activity_stream_filter_tags_only(self, user_model):
+        user = user_model(activity_stream_filters=["tags"])
+
+        assert not user.is_activity_stream_all_filters()
+        assert not user.is_activity_stream_users_filter()
+        assert user.is_activity_stream_tags_filter()

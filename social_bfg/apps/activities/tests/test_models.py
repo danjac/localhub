@@ -262,11 +262,15 @@ class TestActivityManager:
 
         assert Post.objects.with_activity_stream_filters(anonymous_user).count() == 4
 
-    def test_with_activity_stream_filters_if_following_users_and_tags(self, user):
+    def test_with_activity_stream_filters_if_following_users_and_tags_mutually_exclusive(
+        self, user
+    ):
 
+        # following user, but not tag
         first_post = PostFactory()
         user.following.add(first_post.owner)
 
+        # following tag, but not user
         second_post = PostFactory()
         second_post.tags.add("reviews")
         user.following_tags.add(Tag.objects.get(name="reviews"))
@@ -277,17 +281,53 @@ class TestActivityManager:
 
         posts = Post.objects.with_activity_stream_filters(user).all()
         assert len(posts) == 2
-
         assert first_post in posts
         assert second_post in posts
 
-    def test_exclude_blocked_users(self, user):
+    def test_with_activity_stream_filters_if_following_users_and_tags_with_results(
+        self, user
+    ):
+
+        # following user and tag
+        first_post = PostFactory()
+        first_post.tags.add("reviews")
+        user.following.add(first_post.owner)
+
+        # following tag, but not user
+        second_post = PostFactory(owner=first_post.owner)
+        second_post.tags.add("reviews")
+        user.following_tags.add(Tag.objects.get(name="reviews"))
+
+        # sanity check
+        PostFactory()
+
+        user.activity_stream_filters = ["tags", "users"]
+
+        posts = Post.objects.with_activity_stream_filters(user).all()
+        assert len(posts) == 2
+        assert first_post in posts
+        assert second_post in posts
+
+    def test_exclude_blocked_users_if_user_blocking(self, user):
 
         my_post = PostFactory(owner=user)
 
         first_post = PostFactory()
         second_post = PostFactory()
         user.blocked.add(first_post.owner)
+
+        posts = Post.objects.exclude_blocked_users(user).all()
+        assert len(posts) == 2
+        assert my_post in posts
+        assert second_post in posts
+
+    def test_exclude_blocked_users_if_user_blocked(self, user):
+
+        my_post = PostFactory(owner=user)
+
+        first_post = PostFactory()
+        second_post = PostFactory()
+        user.blockers.add(first_post.owner)
 
         posts = Post.objects.exclude_blocked_users(user).all()
         assert len(posts) == 2
