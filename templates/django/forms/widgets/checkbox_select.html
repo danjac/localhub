@@ -8,7 +8,7 @@
 {% endif %}
 
 {% for option in options %}
-<div class="flex items-center {% if not forloop.last %} mb-3{% endif %}">
+<div class="flex items-center mb-3">
   {% if option.wrap_label %}
   <label class="font-semibold text-sm"
          {% if option.attrs.id %}
@@ -23,6 +23,6 @@
       {{ option.label }}
     </div>
   </label>{% endif %}
-  {% endfor %}
 </div>
+{% endfor %}
 {% endfor %}
