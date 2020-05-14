@@ -48,6 +48,6 @@
 </div>
 
 {% with css_class=is_community|yesno:",p-1 md:p-3 border border-gray-500 w-full" %}
-{% include "includes/forms/stimulusjs_form.html" with submit_btn=_("Save Settings") %}
+{% include "users/includes/user_form.html" with submit_btn=_("Save Settings") %}
 {% endwith %}
 {% endblock content %}

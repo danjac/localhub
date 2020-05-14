@@ -91,19 +91,25 @@ class UserForm(forms.ModelForm):
         self.form_helper = FormHelper(
             self,
             fieldsets=[
-                (None, ("name", "avatar",)),
                 (
-                    _("Preferences"),
+                    None,
                     (
+                        "name",
+                        "avatar",
                         "language",
                         "default_timezone",
                         "send_email_notifications",
+                        "bio",
+                    ),
+                ),
+                (
+                    _("Content Preferences"),
+                    (
                         "show_sensitive_content",
                         "show_external_images",
                         "show_embedded_content",
                         "activity_stream_filters",
                     ),
                 ),
-                (None, ("bio",)),
             ],
         )
