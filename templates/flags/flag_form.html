@@ -6,6 +6,11 @@
 
 {% block content %}
 
+<ul class="breadcrumbs mb-3">
+  <li class="breadcrumb-item"><a href="{{ parent.get_absolute_url }}">{{ parent|verbose_name|title }}</a></li>
+  <li class="breadcrumb-item"><a href="#">{% trans "Flag" %}</a></li>
+</ul>
+
 <h1 class="page-header mb-3">{% trans "Flag" %}</h1>
 
 {% include "includes/forms/stimulusjs_form.html" %}

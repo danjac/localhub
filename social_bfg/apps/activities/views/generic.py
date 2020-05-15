@@ -16,7 +16,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from social_bfg.apps.bookmarks.models import Bookmark
 from social_bfg.apps.comments.forms import CommentForm
 from social_bfg.apps.communities.views import CommunityRequiredMixin
-from social_bfg.apps.flags.forms import FlagForm
+from social_bfg.apps.flags.views import BaseFlagCreateView
 from social_bfg.apps.likes.models import Like
 from social_bfg.common.pagination import PresetCountPaginator
 from social_bfg.common.template.defaultfilters import resolve_url
@@ -112,14 +112,10 @@ class ActivityCreateView(
 
 
 class ActivityFlagView(
-    PermissionRequiredMixin, ActivityQuerySetMixin, ParentObjectMixin, SuccessFormView,
+    PermissionRequiredMixin, ActivityQuerySetMixin, BaseFlagCreateView
 ):
-    form_class = FlagForm
-    template_name = "activities/flag_form.html"
     permission_required = "activities.flag_activity"
     success_message = _("This %(model)s has been flagged to the moderators")
-
-    parent_context_object_name = "activity"
 
     def get_parent_queryset(self):
         return (
@@ -131,23 +127,6 @@ class ActivityFlagView(
 
     def get_permission_object(self):
         return self.parent
-
-    def get_success_url(self):
-        return super().get_success_url(object=self.parent)
-
-    def get_success_message(self):
-        return super().get_success_message(model=self.parent)
-
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.content_object = self.parent
-        self.object.community = self.request.community
-        self.object.user = self.request.user
-        self.object.save()
-
-        self.object.notify()
-
-        return self.success_response()
 
 
 activity_flag_view = ActivityFlagView.as_view()

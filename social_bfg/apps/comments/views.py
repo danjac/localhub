@@ -16,7 +16,7 @@ from rules.contrib.views import PermissionRequiredMixin
 # Social-BFG
 from social_bfg.apps.bookmarks.models import Bookmark
 from social_bfg.apps.communities.views import CommunityRequiredMixin
-from social_bfg.apps.flags.forms import FlagForm
+from social_bfg.apps.flags.views import BaseFlagCreateView
 from social_bfg.apps.likes.models import Like
 from social_bfg.common.views import (
     ParentObjectMixin,
@@ -24,7 +24,6 @@ from social_bfg.common.views import (
     SuccessActionView,
     SuccessCreateView,
     SuccessDeleteView,
-    SuccessFormView,
     SuccessUpdateView,
 )
 
@@ -67,13 +66,10 @@ comment_update_view = CommentUpdateView.as_view()
 
 
 class CommentFlagView(
-    PermissionRequiredMixin, CommentQuerySetMixin, ParentObjectMixin, SuccessFormView,
+    PermissionRequiredMixin, CommentQuerySetMixin, BaseFlagCreateView
 ):
-    form_class = FlagForm
-    template_name = "comments/flag_form.html"
     permission_required = "comments.flag_comment"
     success_message = _("This comment has been flagged to the moderators")
-    parent_context_object_name = "comment"
 
     def get_parent_queryset(self):
         return (
@@ -85,20 +81,6 @@ class CommentFlagView(
 
     def get_permission_object(self):
         return self.parent
-
-    def get_success_url(self):
-        return super().get_success_url(object=self.parent)
-
-    def form_valid(self, form):
-        flag = form.save(commit=False)
-        flag.content_object = self.parent
-        flag.community = self.request.community
-        flag.user = self.request.user
-        flag.save()
-
-        flag.notify()
-
-        return self.success_response()
 
 
 comment_flag_view = CommentFlagView.as_view()
