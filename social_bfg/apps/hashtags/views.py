@@ -80,7 +80,13 @@ class TagAutocompleteListView(BaseTagListView):
         search_term = self.request.GET.get("q", "").strip()
         if not search_term:
             return Tag.objects.none()
-        return super().get_queryset().filter(name__istartswith=search_term)
+        return (
+            super()
+            .get_queryset()
+            .filter(name__istartswith=search_term)[
+                : settings.SOCIAL_BFG_DEFAULT_PAGE_SIZE
+            ]
+        )
 
 
 tag_autocomplete_list_view = TagAutocompleteListView.as_view()
