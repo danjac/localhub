@@ -37,10 +37,8 @@
 
 {% if parent %}
 {% render_comment request user parent is_detail=True css_class="mb-3" %}
-{% include "includes/forms/stimulusjs_form.html" with form_id="comment-form" css_class="w-full" %}
-{% else %}
-{% include "includes/forms/stimulusjs_form.html" with form_id="comment-form" %}
 {% endif %}
 
+{% include "includes/forms/stimulusjs_form.html" with form_id="comment-form" css_class="w-full" %}
 
 {% endblock content %}

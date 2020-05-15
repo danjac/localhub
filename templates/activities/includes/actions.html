@@ -38,7 +38,7 @@
     {% has_perm "activities.create_comment" user object as can_create_comment %}
     {% if can_create_comment %}
     <a class="dropdown-menu-item"
-       href="{{ object|resolve_url:"comment" }}">
+       href="{{ object|resolve_url:"comment" }}#comment-form">
       {% trans "Comment" %}
     </a>
     {% endif %}

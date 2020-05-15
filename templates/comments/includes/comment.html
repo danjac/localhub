@@ -149,7 +149,7 @@
           {% has_perm "comments.reply_to_comment" user comment as can_reply %}
           {% if can_reply %}
           <a class="dropdown-menu-item"
-             href="{% url 'comments:reply' comment.id %}">{% trans "Reply" %}</a>
+             href="{% url 'comments:reply' comment.id %}#comment-form">{% trans "Reply" %}</a>
           {% endif %}
 
           {% has_perm "comments.flag_comment" user comment as can_flag_comment %}
@@ -163,7 +163,7 @@
 
           {% if can_change_comment %}
           <a class="dropdown-menu-item"
-             href="{% url 'comments:update' comment.id %}">
+             href="{% url 'comments:update' comment.id %}#comment-form">
             {% trans "Edit" %}
           </a>
           {% endif %}
