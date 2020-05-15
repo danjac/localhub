@@ -99,9 +99,9 @@ class UserForm(forms.ModelForm):
                         "language",
                         "default_timezone",
                         "send_email_notifications",
-                        "bio",
                     ),
                 ),
+                (None, ("bio",)),
                 (
                     _("Content Preferences"),
                     (
