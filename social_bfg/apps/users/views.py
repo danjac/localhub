@@ -92,7 +92,7 @@ class CurrentUserMixin(LoginRequiredMixin):
 class SingleUserMixin(ParentObjectMixin, BaseUserQuerySetMixin):
     parent_slug_kwarg = "username"
     parent_slug_field = "username"
-    parent_object_name = "user_obj"
+    parent_context_object_name = "user_obj"
     parent_required = False
 
     def get_parent_queryset(self):

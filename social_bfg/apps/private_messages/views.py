@@ -72,10 +72,6 @@ class BaseMessageFormView(PermissionRequiredMixin, SuccessFormView):
 
 class BaseReplyFormView(ParentObjectMixin, BaseMessageFormView):
     @cached_property
-    def parent(self):
-        return self.get_parent_object()
-
-    @cached_property
     def recipient(self):
         return self.parent.get_other_user(self.request.user)
 
@@ -141,13 +137,9 @@ class MessageRecipientCreateView(
 ):
     """Send new message to a specific recipient"""
 
-    parent_object_name = "recipient"
+    parent_context_object_name = "recipient"
     parent_slug_kwarg = "username"
     parent_slug_field = "username"
-
-    @cached_property
-    def recipient(self):
-        return self.get_parent_object()
 
     def get_parent_queryset(self):
         return (
@@ -161,7 +153,7 @@ class MessageRecipientCreateView(
         form = super().get_form(form_class)
         form["message"].label = _(
             "Send message to %(recipient)s"
-            % {"recipient": self.recipient.get_display_name()}
+            % {"recipient": self.parent.get_display_name()}
         )
         return form
 
@@ -169,7 +161,7 @@ class MessageRecipientCreateView(
         self.object = form.save(commit=False)
         self.object.community = self.request.community
         self.object.sender = self.request.user
-        self.object.recipient = self.recipient
+        self.object.recipient = self.parent
         self.object.save()
 
         self.object.notify_on_send()

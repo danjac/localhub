@@ -11,15 +11,41 @@ from social_bfg.apps.communities.views import (
     CommunityModeratorRequiredMixin,
     CommunityRequiredMixin,
 )
-from social_bfg.common.views import SuccessDeleteView
+from social_bfg.common.views import (
+    ParentObjectMixin,
+    SuccessCreateView,
+    SuccessDeleteView,
+)
 
 # Local
+from .forms import FlagForm
 from .models import Flag
 
 
 class FlagQuerySetMixin(CommunityRequiredMixin, CommunityModeratorRequiredMixin):
     def get_queryset(self):
         return Flag.objects.filter(community=self.request.community)
+
+
+class BaseFlagCreateView(
+    ParentObjectMixin, SuccessCreateView,
+):
+    form_class = FlagForm
+    template_name = "flags/flag_form.html"
+
+    def get_success_url(self):
+        return super().get_success_url(object=self.parent)
+
+    def form_valid(self, form):
+        flag = form.save(commit=False)
+        flag.content_object = self.parent
+        flag.community = self.request.community
+        flag.user = self.request.user
+        flag.save()
+
+        flag.notify()
+
+        return self.success_response()
 
 
 class FlagListView(FlagQuerySetMixin, ListView):

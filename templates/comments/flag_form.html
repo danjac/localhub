@@ -5,9 +5,9 @@
 {% load i18n %}
 
 {% block content %}
-<ul class="breadcrumb-item">
-  <li class="breadcrumb-item""><a href="{{ comment.get_absolute_url }}">{% trans "Comment" %}</a></li>
-  <li class="breadcrumb-item""><a href="#">{% trans "Flag" %}</a></li>
+<ul class="breadcrumbs mb-3">
+  <li class="breadcrumb-item"><a href="{{ comment.get_absolute_url }}">{% trans "Comment" %}</a></li>
+  <li class="breadcrumb-item"><a href="#">{% trans "Flag" %}</a></li>
 </ul>
 
 {{ block.super }}
