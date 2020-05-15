@@ -7,7 +7,7 @@
 {% providers_media_js %}
 {% get_providers as socialaccount_providers %}
 {% if socialaccount_providers %}
-<p>
+<p class="{{ css_class }}">
   {% trans "Login or signup through" %}
   {% for provider in socialaccount_providers %}
   <a href="{% provider_login_url provider.id process="login" next="/" %}">{{ provider.name }}</a>

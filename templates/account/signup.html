@@ -15,5 +15,5 @@
 {% url 'account_signup' as signup_url %}
 {% trans "Sign Up" as t_signup %}
 {% include "account/includes/signup_form.html" with action=signup_url submit_btn=t_signup %}
-{% include "account/includes/social_logins.html" %}
+{% include "account/includes/social_logins.html" with css_class="mt-3" %}
 {% endblock content %}
