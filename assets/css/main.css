@@ -19,6 +19,7 @@ blockquote {
   @apply text-gray-800 border-l-4 border-gray-200 pl-3 italic whitespace-normal break-words;
 }
 
+.disabled,
 button:disabled,
 input:disabled,
 select:disabled,
@@ -120,6 +121,22 @@ a.btn-secondary {
 
 .dropdown-menu-item:hover {
   @apply bg-indigo-700 text-white;
+}
+
+.form-input {
+  @apply appearance-none p-1 border border-gray-500 w-full;
+}
+
+.form-input:focus {
+  @apply border-blue-500;
+}
+
+.form-input-error {
+  @apply bg-red-100 border-red-600;
+}
+
+.form-input-error:focus {
+  @apply border-red-300;
 }
 
 .leaflet-tile-pane {
