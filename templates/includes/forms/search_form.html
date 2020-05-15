@@ -18,27 +18,18 @@
          value="{{ value }}">
   {% endfor %}
   <div class="flex items-center mb-3">
-    <div class="flex-grow">
-      <input class="form-input"
-             name="{{ view.search_parameter|default:'q' }}"
-             type="search"
-             {% if not view.search_optional %}
-             required
-             {% endif %}
-             {% if selector %}
-             data-target="search.input"
-             {% endif %}
-             data-action="keyup->search#change"
-             placeholder="{% trans "Search..." %}"
-             value="{{ view.search_query|default:"" }}">
-    </div>
-    {% if view.search_optional %}
-    <a href="{% if view.search_query %}{{ non_search_path }}{% else %}javascript:void(0);{% endif %}"
-       class="btn btn-input-addon{% if not view.search_query %} disabled{% endif %}"
-       title="{% trans "Clear Search" %}">
-      {% svg "x" %}
-    </a>
-    {% endif %}
+    <input class="form-input"
+           name="{{ view.search_parameter|default:'q' }}"
+           type="search"
+           {% if not view.search_optional %}
+           required
+           {% endif %}
+           {% if selector %}
+           data-target="search.input"
+           {% endif %}
+           data-action="keyup->search#change"
+           placeholder="{% trans "Search..." %}"
+           value="{{ view.search_query|default:"" }}">
   </div>
   {% if selector %}
   <div class="mb-3">
@@ -72,6 +63,13 @@
   {% endif %}
 
 </form>
+
+{% if view.search_optional and view.search_query %}
+<a href="{{ non_search_path }}"
+   class="btn btn-block mb-3">
+  {% trans "Clear Search" %}
+</a>
+{% endif %}
 
 {% if view.search_query and object_list %}
 <div class="notification mb-3">
