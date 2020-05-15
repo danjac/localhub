@@ -123,6 +123,22 @@ a.btn-secondary {
   @apply bg-indigo-700 text-white;
 }
 
+.form-input {
+  @apply appearance-none p-1 border border-gray-500 w-full;
+}
+
+.form-input:focus {
+  @apply border-blue-500;
+}
+
+.form-input-error {
+  @apply bg-red-100 border-red-600;
+}
+
+.form-input-error:focus {
+  @apply border-red-300;
+}
+
 .leaflet-tile-pane {
   filter: grayscale(100%);
 }

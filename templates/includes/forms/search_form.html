@@ -19,7 +19,7 @@
   {% endfor %}
   <div class="flex items-center mb-3">
     <div class="flex-grow">
-      <input class="appearance-none border border-gray-500 w-full p-1 text-gray-900"
+      <input class="form-input"
              name="{{ view.search_parameter|default:'q' }}"
              type="search"
              {% if not view.search_optional %}
