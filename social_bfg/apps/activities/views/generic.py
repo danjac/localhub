@@ -6,7 +6,6 @@ from django.conf import settings
 from django.db import IntegrityError
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView
 
@@ -120,11 +119,7 @@ class ActivityFlagView(
     permission_required = "activities.flag_activity"
     success_message = _("This %(model)s has been flagged to the moderators")
 
-    parent_object_name = "activity"
-
-    @cached_property
-    def activity(self):
-        return self.get_parent_object()
+    parent_context_object_name = "activity"
 
     def get_parent_queryset(self):
         return (
@@ -135,17 +130,17 @@ class ActivityFlagView(
         )
 
     def get_permission_object(self):
-        return self.activity
+        return self.parent
 
     def get_success_url(self):
-        return super().get_success_url(object=self.activity)
+        return super().get_success_url(object=self.parent)
 
     def get_success_message(self):
-        return super().get_success_message(model=self.activity)
+        return super().get_success_message(model=self.parent)
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        self.object.content_object = self.activity
+        self.object.content_object = self.parent
         self.object.community = self.request.community
         self.object.user = self.request.user
         self.object.save()
@@ -166,21 +161,17 @@ class ActivityCommentCreateView(
     permission_required = "activities.create_comment"
     success_message = _("Your %(model)s has been posted")
 
-    parent_object_name = "content_object"
-
-    @cached_property
-    def content_object(self):
-        return self.get_parent_object()
+    parent_context_object_name = "content_object"
 
     def get_permission_object(self):
-        return self.content_object
+        return self.parent
 
     def get_parent_queryset(self):
         return self.get_queryset()
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        self.object.content_object = self.content_object
+        self.object.content_object = self.parent
         self.object.community = self.request.community
         self.object.owner = self.request.user
         self.object.save()

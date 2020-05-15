@@ -4,6 +4,7 @@
 # Django
 from django.core.exceptions import ImproperlyConfigured
 from django.http import Http404
+from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 
 
@@ -29,9 +30,7 @@ class ParentObjectMixin:
     # otherwise raises Http404
     parent_required = True
 
-    # name used in template, defaults to parent_object_name
-    parent_context_object_name = None
-    parent_object_name = "parent"
+    parent_context_object_name = "parent"
 
     # required
     parent_model = None
@@ -55,9 +54,9 @@ class ParentObjectMixin:
 
         return self.parent_model.objects.all()
 
-    def get_parent_context_object_name(self):
+    def get_parent_context_object_name(self, parent):
         """Context name used in template."""
-        return self.parent_context_object_name or self.parent_object_name
+        return self.parent_context_object_name
 
     def get_parent_kwargs(self):
         """Returns PK and slug kwargs in the URL. If neither present then
@@ -83,6 +82,7 @@ class ParentObjectMixin:
 
         return kwargs
 
+    # TBD : add "parent" cached property
     def get_parent_object(self, queryset=None):
         """Fetches the parent object. If parent_required is True and object is not
         None, then raises Http 404. Otherwise returns None.
@@ -107,19 +107,11 @@ class ParentObjectMixin:
                 )
             return None
 
+    parent = cached_property(get_parent_object)
+
     def get_context_data(self, **kwargs):
         """Includes parent_context_object_name in context data.
-
-        If parent_required is True will raise AttributeError if
-        the parent is not defined as `parent_object_name`. Otherwise
-        ignored.
         """
         data = super().get_context_data(**kwargs)
-        try:
-            data[self.get_parent_context_object_name()] = getattr(
-                self, self.parent_object_name
-            )
-        except AttributeError:
-            if self.parent_required:
-                raise
+        data[self.get_parent_context_object_name(self.parent)] = self.parent
         return data

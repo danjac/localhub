@@ -73,12 +73,7 @@ class CommentFlagView(
     template_name = "comments/flag_form.html"
     permission_required = "comments.flag_comment"
     success_message = _("This comment has been flagged to the moderators")
-
-    parent_object_name = "comment"
-
-    @cached_property
-    def comment(self):
-        return self.get_parent_object()
+    parent_context_object_name = "comment"
 
     def get_parent_queryset(self):
         return (
@@ -89,19 +84,14 @@ class CommentFlagView(
         )
 
     def get_permission_object(self):
-        return self.comment
+        return self.parent
 
     def get_success_url(self):
-        return super().get_success_url(object=self.comment)
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["comment"] = self.comment
-        return data
+        return super().get_success_url(object=self.parent)
 
     def form_valid(self, form):
         flag = form.save(commit=False)
-        flag.content_object = self.comment
+        flag.content_object = self.parent
         flag.community = self.request.community
         flag.user = self.request.user
         flag.save()
@@ -121,10 +111,6 @@ class CommentReplyView(
     model = Comment
     form_class = CommentForm
     success_message = _("You have replied to this %(model)s")
-
-    @cached_property
-    def parent(self):
-        return self.get_parent_object()
 
     def get_permission_object(self):
         return self.parent
