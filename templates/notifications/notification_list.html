@@ -67,7 +67,7 @@ You can enable emails for your notifications
     {% for notification in object_list %}
     {% notification notification %}
     <tr class="{% cycle '' 'bg-gray-100' %} hover:bg-gray-200">
-      <td class="border py-2 px-2{% if not notification.is_read %} text-bold{% endif %}">
+      <td class="border p-2{% if not notification.is_read %} text-bold{% endif %}">
 
         {{ notification_content }}
         {% if not notification.is_read %}
@@ -76,12 +76,12 @@ You can enable emails for your notifications
         </div>
         </div>
       </td>
-      <td class="border py-2 px-2 text-gray-600">
+      <td class="border p-2 text-gray-600">
         {% blocktrans with created=notification.created|timesince %}
         {{ created }} ago
         {% endblocktrans %}
       </td>
-      <td class="border py-2 px-2">
+      <td class="border p-2">
         <div class="table-nav">
           {% if not notification.is_read %}
           <a class="table-nav-item"

@@ -5,19 +5,26 @@
 
 {% if flags %}
 
-<div class="divider text-center"
-     data-content="{% trans "Flags" %}"></div>
-<table class="table table-hover table-responsive">
+<h2 class="my-3 border-t border-gray-500 pt-3 font-semibold">{% trans "Flags" %}</h2>
+
+<table class="table-auto-scroll text-sm mb-3">
+  <thead>
+    <tr class="bg-gray-300">
+      <th class="text-left border p-2">{% trans "Flagged by" %}</th>
+      <th class="text-left border p-2">{% trans "Reason" %}</th>
+      <th class="text-left border p-2">{% trans "Actions" %}</th>
+    </tr>
+  </thead>
   <tbody>
     {% for flag in flags %}
-    <tr>
-      <td>
+    <tr class="{% cycle '' 'bg-gray-100' %} hover:bg-gray-200">
+      <td class="border p-2">
         {% include "includes/timesince.html" with timestamp=flag.created owner=flag.user verb=_("flagged") %}
       </td>
-      <td>{{ flag.get_reason_display }}</td>
-      <td>
-        <div class="float-right actions">
-          <a class="action"
+      <td class="border p-2">{{ flag.get_reason_display }}</td>
+      <td class="border p-2">
+        <div class="table-nav">
+          <a class="table-nav-item"
              href="{% url 'flags:delete' flag.id %}"
              data-turbolinks="false"
              data-controller="ajax"
