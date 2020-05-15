@@ -36,10 +36,10 @@
 <table class="table-auto-scroll text-sm">
   <thead>
     <tr class="bg-gray-300">
-      <th class="text-left border p-2">{% trans "Member" %}</th>
-      <th class="text-left border p-2">{% trans "Status" %}</th>
-      <th class="text-left border p-2">{% trans "Role" %}</th>
-      <th class="text-left border p-2">{% trans "Actions" %}</th>
+      <th class="text-left border px-2 py-2">{% trans "Member" %}</th>
+      <th class="text-left border px-2 py-2">{% trans "Status" %}</th>
+      <th class="text-left border px-2 py-2">{% trans "Role" %}</th>
+      <th class="text-left border px-2 py-2">{% trans "Actions" %}</th>
     </tr>
   </thead>
   <tbody>
@@ -47,17 +47,17 @@
     {% has_perm "communities.change_membership" user member as can_change %}
     {% has_perm "communities.delete_membership" user member as can_delete %}
     <tr class="{% cycle '' 'bg-gray-100' %} hover:bg-gray-200">
-      <td class="border p-2">
+      <td class="border px-2 py-2">
         {% url 'communities:membership_detail' member.id as membership_detail_url %}
         {% include "users/includes/chip.html" with profile=member.member profile_url=membership_detail_url css_class="w-32" %}
       </td>
-      <td class="border p-2">
+      <td class="border px-2 py-2">
         {% if member.active %}{% trans "Active" %}{% else %}{% trans "Inactive" %}{% endif %}
       </td>
-      <td class="border p-2">
+      <td class="border px-2 py-2">
         {{ member.get_role_display }}
       </td>
-      <td class="border p-2">
+      <td class="border px-2 py-2">
         {% include "communities/includes/membership_actions.html" with is_table=True %}
       </td>
     </tr>
