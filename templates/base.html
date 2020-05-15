@@ -57,6 +57,7 @@
     <div class="flex items-center justify-between p-2 md:px-5">
       {% if community %}
       <div class="flex items-center flex-shrink-0 mr-6">
+        {% if is_member %}
         {% block mobile_menu_button %}
         <button class="lg:hidden mr-3"
                 data-action="sidebar#toggle"
@@ -64,6 +65,7 @@
           {% svg "menu" "white" size="24" %}
         </button>
         {% endblock mobile_menu_button %}
+        {% endif %}
         {% thumbnail community.logo "32" format="PNG" as logo %}
         <img src="{{ logo.url }}"
              class="mr-1 bg-transparent hidden lg:inline-block"
