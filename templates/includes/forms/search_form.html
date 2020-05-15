@@ -33,7 +33,7 @@
              value="{{ view.search_query|default:"" }}">
     </div>
     {% if view.search_optional %}
-    <a href="{{ non_search_path }}"
+    <a href="{% if view.search_query %}{{ non_search_path }}{% else %}javascript:void(0);{% endif %}"
        class="btn btn-input-addon{% if not view.search_query %} disabled{% endif %}"
        title="{% trans "Clear Search" %}">
       {% svg "x" %}
