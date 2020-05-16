@@ -12,7 +12,9 @@
      xmlns="http://www.w3.org/2000/svg"{% endblock svg_attrs %}>
   {% block path %}
   <path d="{% block path_data %}{% endblock path_data %}"
+        {% if stroke %}
         stroke="{{ stroke }}"
+        {% endif %}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round" />
