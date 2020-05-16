@@ -37,8 +37,10 @@ export default class extends ApplicationController {
   }
 
   clear(event) {
+    // clears OG image and description
     event.preventDefault();
     this.clearPreview();
+    // we don't want to remove the title, as user may wish to edit
     this.clearSubscribers(['opengraph_image', 'opengraph_description']);
   }
 
