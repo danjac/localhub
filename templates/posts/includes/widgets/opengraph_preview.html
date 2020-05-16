@@ -3,48 +3,8 @@
 
 {% load i18n %}
 <div>
-  <div {% if not has_preview %}class="hidden"
-       {% endif %}
-       data-target="opengraph-preview.container">
-    <div data-target="opengraph-preview.titlePreview"
-         class="text-sm font-semibold mb-3"></div>
-
-    <div class="lg:flex my-2"
-         data-target="opengraph-preview.fullPreview"
-         data-opengraph-preview-active-class="lg:flex">
-      <div class="block mb-1 lg:mb-0 lg:w-1/3 h-auto lg:mr-2">
-        <img data-target="opengraph-preview.image"
-             {% if preview_image and preview_description %}
-             src="{{ preview_image }}"
-             loading="lazy"
-             {% endif %}
-             class="img-responsive">
-      </div>
-      <blockquote class="text-sm"
-                  data-target="opengraph-preview.description">
-        {% if preview_image and preview_description %}
-        {{ preview_description }}
-        {% endif %}
-      </blockquote>
-    </div>
-
-    <div class="my-2"
-         data-target="opengraph-preview.imagePreview">
-      <img data-target="opengraph-preview.image"
-           {% if preview_image and not preview_description %}
-           src="{{ preview_image }}"
-           loading="lazy"
-           {% endif %}
-           class="img-responsive">
-    </div>
-
-    <blockquote class="text-sm my-2"
-                data-target="opengraph-preview.descriptionPreview opengraph-preview.description">
-      {% if preview_description and not preview_image %}
-      {{ preview_description }}
-      {% endif %}
-    </blockquote>
-
+  <div data-target="opengraph-preview.container">
+    {% include "posts/includes/opengraph_preview.html" %}
   </div>
 
   <div class="flex items-center">
@@ -62,7 +22,7 @@
     <button type="button"
             class="btn btn-input-addon"
             title="{% trans 'Remove content from URL' %}"
-            {% if not has_preview %}
+            {% if not preview.description and not preview.image %}
             disabled
             {% endif %}
             data-target="opengraph-preview.clear"

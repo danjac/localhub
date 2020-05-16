@@ -4,23 +4,10 @@
 import axios from 'axios';
 
 import { Events } from '@utils/constants';
-import * as classList from '@utils/class-list';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
-  static targets = [
-    'clear',
-    'fetch',
-    'container',
-    'description',
-    'descriptionPreview',
-    'fullPreview',
-    'image',
-    'imagePreview',
-    'input',
-    'listener',
-    'titlePreview',
-  ];
+  static targets = ['clear', 'fetch', 'container', 'subscriber', 'input'];
 
   connect() {
     this.bus.sub(Events.FORM_FETCHING, () => this.data.set('disabled', true));
@@ -52,7 +39,7 @@ export default class extends ApplicationController {
   clear(event) {
     event.preventDefault();
     this.clearPreview();
-    this.clearListeners(['image', 'description']);
+    this.clearSubscribers(['opengraph_image', 'opengraph_description']);
   }
 
   fetch(event) {
@@ -83,14 +70,9 @@ export default class extends ApplicationController {
     axios
       .get(this.data.get('preview-url'), { params: { url } })
       .then((response) => {
-        const { title, description, image, url } = response.data;
-
-        if (url) {
-          this.inputTarget.value = url;
-        }
-
-        this.updatePreview(title, description, image);
-        this.updateListeners({ title, image, description });
+        const { html, fields } = response.data;
+        this.updateSubscribers(fields);
+        this.updatePreview(html);
       })
       .catch(() => this.handleServerError())
       .finally(() => {
@@ -98,97 +80,36 @@ export default class extends ApplicationController {
       });
   }
 
-  clearListeners(targets = ['title', 'description', 'image']) {
-    Array.from(this.listenerTargets)
-      .filter((target) =>
-        targets.includes(target.getAttribute(`data-${this.identifier}-listener-value`))
-      )
-      .forEach((target) => (target.value = ''));
+  clearSubscribers(names = ['title', 'opengraph_description', 'opengraph_image']) {
+    let targets = Array.from(this.subscriberTargets);
+    if (names) {
+      targets = targets.filter((target) => names.includes(target.getAttribute('name')));
+    }
+    targets.forEach((target) => (target.value = ''));
   }
 
-  updateListeners(data) {
+  updateSubscribers(data) {
     Object.keys(data).forEach((name) => {
-      Array.from(this.listenerTargets)
-        .filter(
-          (target) =>
-            target.getAttribute(`data-${this.identifier}-listener-value`) === name
-        )
+      Array.from(this.subscriberTargets)
+        .filter((target) => target.getAttribute('name') === name)
         .forEach((target) => {
           target.value = data[name];
         });
     });
   }
 
+  updatePreview(content) {
+    this.clearTarget.removeAttribute('disabled');
+    this.containerTarget.innerHTML = content;
+  }
+
   clearPreview() {
     this.clearTarget.setAttribute('disabled', true);
-
-    this.titlePreviewTarget.innerText = '';
-
-    this.descriptionTargets.forEach((el) => {
-      el.innerText = '';
-    });
-
-    this.imageTargets.forEach((el) => {
-      el.setAttribute('src', '');
-    });
-
-    [
-      this.containerTarget,
-      this.fullPreviewTarget,
-      this.descriptionPreviewTarget,
-      this.imagePreviewTarget,
-      this.titlePreviewTarget,
-    ].forEach((el) => this.hideElement(el));
-  }
-
-  updatePreview(title, description, image) {
-    if (title) {
-      this.titlePreviewTarget.innerText = title;
-      this.showElement(this.titlePreviewTarget);
-    }
-
-    if (description) {
-      Array.from(this.descriptionTargets).forEach((el) => (el.innerText = description));
-    }
-
-    if (image) {
-      Array.from(this.imageTargets).forEach((el) => el.setAttribute('src', image));
-    }
-
-    if (description || image || title) {
-      this.showElement(this.containerTarget);
-      this.clearTarget.removeAttribute('disabled');
-    }
-
-    if (description && image) {
-      this.showElement(this.fullPreviewTarget);
-    } else if (description) {
-      this.showElement(this.descriptionPreviewTarget);
-    } else if (image) {
-      this.showElement(this.imagePreviewTarget);
-    }
-  }
-
-  getActiveClass(el) {
-    return el.getAttribute(`data-${this.identifier}-active-class`);
-  }
-
-  getInactiveClass(el) {
-    return el.getAttribute(`data-${this.identifier}-inactive-class`) || 'hidden';
-  }
-
-  showElement(el) {
-    classList.add(el, this.getActiveClass(el));
-    classList.remove(el, this.getInactiveClass(el));
-  }
-
-  hideElement(el) {
-    classList.remove(el, this.getActiveClass(el));
-    classList.add(el, this.getInactiveClass(el));
+    this.containerTarget.innerHTML = '';
   }
 
   handleServerError() {
-    this.clearListeners();
+    this.clearSubscribers();
     this.toaster.error(this.data.get('errorMessage'));
   }
 

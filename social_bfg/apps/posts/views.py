@@ -3,6 +3,7 @@
 
 # Django
 from django.http import HttpResponseBadRequest, JsonResponse
+from django.template import loader
 from django.utils.translation import gettext as _
 from django.views.generic import View
 
@@ -15,17 +16,11 @@ class OpengraphPreviewView(View):
     """
     Does opengraph preview of URL.
 
-    Returns JSON:
-    {
-        "title"
-        "image"
-        "description"
-    }
     """
 
     def get(self, request):
         try:
-            return JsonResponse(self.fetch_preview_data(request.GET["url"]))
+            return self.fetch_preview_data(request.GET["url"])
         except KeyError:
             return self.handle_bad_request(_("No URL provided"))
         except URLResolver.Invalid:
@@ -33,23 +28,46 @@ class OpengraphPreviewView(View):
         except HTMLScraper.Invalid:
             return self.handle_bad_request(_("Unable to fetch meta content from page"))
 
+    def render_preview_data(self, url, title, image, description):
+        return JsonResponse(
+            {
+                "fields": {
+                    "url": url,
+                    "title": title,
+                    "opengraph_image": image,
+                    "opengraph_description": description,
+                },
+                "html": loader.render_to_string(
+                    "posts/includes/opengraph_preview.html",
+                    {
+                        "preview": {
+                            "title": title,
+                            "image": image,
+                            "description": description,
+                        }
+                    },
+                ),
+            }
+        )
+
     def fetch_preview_data(self, url):
         url_resolver = URLResolver.from_url(url, resolve=True)
         if url_resolver.is_image:
-            return {
-                "title": url_resolver.filename,
-                "image": url_resolver.url,
-                "url": url_resolver.url,
-                "description": "",
-            }
+            return self.render_preview_data(
+                url=url_resolver.url,
+                title=url_resolver.filename,
+                image=url_resolver.url,
+                description="",
+            )
 
         scraper = HTMLScraper.from_url(url_resolver.url)
-        return {
-            "title": (scraper.title or "")[:300],
-            "image": scraper.image,
-            "url": scraper.url,
-            "description": scraper.description,
-        }
+
+        return self.render_preview_data(
+            url=scraper.url,
+            title=(scraper.title or "")[:300],
+            image=scraper.image,
+            description=scraper.description,
+        )
 
     def handle_bad_request(self, error):
         return HttpResponseBadRequest(error)
