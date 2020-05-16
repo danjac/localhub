@@ -168,6 +168,11 @@ a.btn-secondary {
   @apply block h-auto max-w-full;
 }
 
+.markdown-content ul,
+.markdownx-preview ul {
+  @apply list-disc list-inside;
+}
+
 .markdown-content p,
 .markdownx-preview p {
   @apply py-1;
