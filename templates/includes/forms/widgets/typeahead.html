@@ -5,7 +5,7 @@
 <div data-controller="typeahead"
      data-typeahead-selected-class="bg-gray-500 text-white"
      data-typeahead-config="{{ typeahead_config }}">
-  <ul class="hidden absolute mt-1 border border-gray-500 bg-gray-100 p-1 w-1/2 lg:w-1/6"
+  <ul class="hidden typeahead-menu mt-1 text-sm"
       data-target="typeahead.selector"></ul>
   {% include "django/forms/widgets/input.html" %}
 </div>

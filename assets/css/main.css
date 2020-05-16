@@ -122,6 +122,16 @@ a.btn-secondary {
   @apply bg-indigo-700 text-white;
 }
 
+.typeahead-menu {
+  @apply absolute border border-gray-500 bg-gray-100 p-1 w-1/2 overflow-y-auto h-32 max-h-full;
+}
+
+@screen lg {
+  .typeahead-menu {
+    @apply w-1/6;
+  }
+}
+
 .form-input {
   @apply appearance-none p-1 border border-gray-500 w-full block;
 }
@@ -252,7 +262,7 @@ a.btn-secondary {
 }
 
 .tabs {
-  @apply flex items-center border-b border-blue-700 overflow-x-scroll;
+  @apply flex items-center border-b border-blue-700 overflow-x-auto;
 }
 
 @screen md {
