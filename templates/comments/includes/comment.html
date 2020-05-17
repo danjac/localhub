@@ -13,7 +13,7 @@
          data-controller="clipboard"
          data-clipboard-message="{% trans 'Markdown content has been copied' %}"
          id="comment-{{ comment.id }}">
-  <div class="">
+  <div class="mb-3">
     {% if include_content_object %}
     <div class="flex flex-wrap items-center mb-3">
       {% if content_object %}
@@ -46,7 +46,7 @@
     </div>
   </div>
   {% if comment.is_blocked %}
-  <div class="card-body my-3 cursor-pointer"
+  <div class="mb-3 cursor-pointer"
        data-controller="toggle"
        data-action="click->toggle#toggle"
        >
@@ -70,7 +70,7 @@
   </div>
 
   {% else %}
-  <div class="card-body">
+  <div class="mb-3">
     <textarea data-target="clipboard.textarea"
               readonly
               class="hidden">{{ comment.content }}</textarea>

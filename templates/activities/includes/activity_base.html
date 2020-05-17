@@ -131,7 +131,7 @@
     {% endblock header %}
 
     {% block body %}
-    <div class="">
+    <div class="mb-3">
       {% if object.is_reshare and not object.parent or object.parent.deleted %}
       {% trans "[Deleted]" %}
       {% else %}
