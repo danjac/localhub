@@ -7,7 +7,8 @@ import { Events } from '@utils/constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
-  static targets = ['clear', 'fetch', 'container', 'subscriber', 'input'];
+  // fetches preview HTML and fields from server, updates fields and inserts HTML.
+  static targets = ['clearButton', 'fetchButton', 'container', 'field', 'input'];
 
   connect() {
     this.bus.sub(Events.FORM_FETCHING, () => this.data.set('disabled', true));
@@ -28,10 +29,10 @@ export default class extends ApplicationController {
       value = this.inputTarget.value;
     }
     if (value && this.validateURL() && !this.data.has('disabled')) {
-      this.fetchTarget.removeAttribute('disabled');
+      this.fetchButtonTarget.removeAttribute('disabled');
       return true;
     } else {
-      this.fetchTarget.setAttribute('disabled', true);
+      this.fetchButtonTarget.setAttribute('disabled', true);
       return false;
     }
   }
@@ -39,13 +40,15 @@ export default class extends ApplicationController {
   clear(event) {
     // clears OG image and description
     event.preventDefault();
-    this.clearPreview();
+    this.containerTarget.innerHTML = '';
     // we don't want to remove the title, as user may wish to edit
-    this.clearSubscribers(['opengraph_image', 'opengraph_description']);
+    this.resetForm(['opengraph_image', 'opengraph_description']);
   }
 
   fetch(event) {
     event.preventDefault();
+
+    this.clearButtonTarget.setAttribute('disabled', true);
 
     // prevent refetch
     const { currentTarget } = event;
@@ -61,11 +64,11 @@ export default class extends ApplicationController {
     const url = this.inputTarget.value.trim();
 
     if (!url) {
-      this.clearPreview();
+      this.containerTarget.innerHTML = '';
       return false;
     }
 
-    this.clearPreview();
+    this.containerTarget.innerHTML = '';
 
     this.bus.pub(Events.FORM_FETCHING);
 
@@ -73,8 +76,9 @@ export default class extends ApplicationController {
       .get(this.data.get('preview-url'), { params: { url } })
       .then((response) => {
         const { html, fields } = response.data;
-        this.updateSubscribers(fields);
-        this.updatePreview(html);
+        this.syncForm(fields);
+        this.containerTarget.innerHTML = html;
+        this.clearButtonTarget.removeAttribute('disabled');
       })
       .catch(() => this.handleServerError())
       .finally(() => {
@@ -82,17 +86,17 @@ export default class extends ApplicationController {
       });
   }
 
-  clearSubscribers(names = ['title', 'opengraph_description', 'opengraph_image']) {
-    let targets = Array.from(this.subscriberTargets);
+  resetForm(names = ['title', 'opengraph_description', 'opengraph_image']) {
+    let targets = Array.from(this.fieldTargets);
     if (names) {
       targets = targets.filter((target) => names.includes(target.getAttribute('name')));
     }
     targets.forEach((target) => (target.value = ''));
   }
 
-  updateSubscribers(data) {
+  syncForm(data) {
     Object.keys(data).forEach((name) => {
-      Array.from(this.subscriberTargets)
+      Array.from(this.fieldTargets)
         .filter((target) => target.getAttribute('name') === name)
         .forEach((target) => {
           target.value = data[name];
@@ -100,18 +104,8 @@ export default class extends ApplicationController {
     });
   }
 
-  updatePreview(content) {
-    this.clearTarget.removeAttribute('disabled');
-    this.containerTarget.innerHTML = content;
-  }
-
-  clearPreview() {
-    this.clearTarget.setAttribute('disabled', true);
-    this.containerTarget.innerHTML = '';
-  }
-
   handleServerError() {
-    this.clearSubscribers();
+    this.resetForm();
     this.toaster.error(this.data.get('errorMessage'));
   }
 

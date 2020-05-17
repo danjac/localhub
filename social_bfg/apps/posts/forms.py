@@ -84,5 +84,5 @@ class PostForm(ActivityForm):
             data_targets = (
                 self.fields[field].widget.attrs.get("data-target", "").split(" ")
             )
-            data_targets.append("opengraph-preview.subscriber")
+            data_targets.append("opengraph-preview.field")
             self.fields[field].widget.attrs["data-target"] = " ".join(data_targets)
