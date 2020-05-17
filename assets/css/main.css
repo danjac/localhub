@@ -152,6 +152,10 @@ a.btn-secondary {
   filter: grayscale(100%);
 }
 
+.markdownx-preview {
+  @apply bg-gray-100 border border-gray-500 p-5;
+}
+
 .markdown-content,
 .markdownx-preview {
   @apply leading-relaxed whitespace-normal break-words text-sm;
