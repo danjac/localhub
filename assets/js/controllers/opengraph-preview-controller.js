@@ -3,8 +3,8 @@
 
 import axios from 'axios';
 
-import { Events } from '@utils/constants';
-import ApplicationController from './application-controller';
+import { Events } from '@/utils/constants';
+import ApplicationController from '@/controllers/application-controller';
 
 export default class extends ApplicationController {
   // fetches preview HTML and fields from server, updates fields and inserts HTML.

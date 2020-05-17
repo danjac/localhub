@@ -3,7 +3,7 @@
 
 import Turbolinks from 'turbolinks';
 
-import ApplicationController from './application-controller';
+import ApplicationController from '@/controllers/application-controller';
 
 export default class extends ApplicationController {
   /*

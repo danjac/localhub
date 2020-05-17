@@ -16,7 +16,7 @@ import {
   subMonths,
 } from 'date-fns';
 
-import ApplicationController from './application-controller';
+import ApplicationController from '@/controllers/application-controller';
 
 const DATE_FORMAT = 'dd/MM/yyyy';
 const EVENT_NOTIFY_ON_UPDATE = 'calendar:notify';

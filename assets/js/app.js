@@ -8,7 +8,7 @@ import Turbolinks from 'turbolinks';
 import { Application } from 'stimulus';
 import { definitionsFromContext } from 'stimulus/webpack-helpers';
 
-import instantClick from '@utils/instant-click';
+import instantClick from '@/utils/instant-click';
 
 // Axios setup
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';

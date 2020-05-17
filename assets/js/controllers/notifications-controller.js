@@ -3,7 +3,7 @@
 
 import axios from 'axios';
 
-import ApplicationController from './application-controller';
+import ApplicationController from '@/controllers/application-controller';
 
 export default class extends ApplicationController {
   static targets = ['notification'];

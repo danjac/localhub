@@ -7,7 +7,7 @@ const path = require('path');
 const TerserJSPlugin = require('terser-webpack-plugin');
 
 module.exports = {
-  entry: ['./assets/js/main.js', './assets/css/main.css'],
+  entry: ['./assets/js/app.js', './assets/css/app.css'],
   mode: process.env.NODE_ENV,
   optimization: {
     minimizer: [new TerserJSPlugin({})],
@@ -46,11 +46,11 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '@controllers': path.resolve(__dirname, './assets/js/controllers'),
-      '@utils': path.resolve(__dirname, './assets/js/utils'),
+      '@': path.resolve(__dirname, './assets/js'),
     },
   },
   output: {
     path: path.resolve(__dirname, './assets/dist/'),
+    filename: 'bundle.js',
   },
 };

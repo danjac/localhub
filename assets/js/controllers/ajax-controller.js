@@ -4,8 +4,8 @@
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-import { Events } from '@utils/constants';
-import ApplicationController from './application-controller';
+import { Events } from '@/utils/constants';
+import ApplicationController from '@/controllers/application-controller';
 
 export default class extends ApplicationController {
   static targets = ['toggle', 'button'];

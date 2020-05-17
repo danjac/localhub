@@ -4,11 +4,11 @@
 import axios from 'axios';
 import getCaretPosition from 'textarea-caret';
 
-import * as classList from '@utils/class-list';
-import { Keys } from '@utils/constants';
-import { fitIntoViewport, maximizeZIndex } from '@utils/dom-helpers';
+import * as classList from '@/utils/class-list';
+import { Keys } from '@/utils/constants';
+import { fitIntoViewport, maximizeZIndex } from '@/utils/dom-helpers';
 
-import ApplicationController from './application-controller';
+import ApplicationController from '@/controllers/application-controller';
 
 export default class extends ApplicationController {
   /*

@@ -1,10 +1,10 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Events, Keys } from '@utils/constants';
-import { maximizeZIndex } from '@utils/dom-helpers';
+import { Events, Keys } from '@/utils/constants';
+import { maximizeZIndex } from '@/utils/dom-helpers';
 
-import ApplicationController from './application-controller';
+import ApplicationController from '@/controllers/application-controller';
 
 export default class extends ApplicationController {
   static targets = ['header', 'body'];
