@@ -155,12 +155,4 @@ export default class extends ApplicationController {
   get formElements() {
     return Array.from(this.element.elements);
   }
-
-  set changed(isChanged) {
-    this.data.set('changed', isChanged);
-  }
-
-  get changed() {
-    return this.data.get('changed') === true;
-  }
 }
