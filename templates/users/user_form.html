@@ -12,7 +12,7 @@
 
 {% block content %}
 
-<div class="flex flex-wrap items-center justify-between w-full mb-3 {% if is_community %}lg:w-3/4{% endif %}">
+<div class="flex flex-wrap items-center justify-between w-full mb-3">
 
   <h1 class="page-header">{% trans "Settings" %}</h1>
 
@@ -46,8 +46,5 @@
     </div>
   </div>
 </div>
-
-{% with css_class=is_community|yesno:",p-1 md:p-3 border border-gray-500 w-full" %}
 {% include "users/includes/user_form.html" with submit_btn=_("Save Settings") %}
-{% endwith %}
 {% endblock content %}
