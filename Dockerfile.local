@@ -6,7 +6,7 @@ FROM python:3.8.2-buster
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-RUN apt-get update && apt-get install -y postgresql
+RUN apt-get update && apt-get install -y postgresql gettext
 
 # Copy requirements to insure caching
 COPY ./requirements.txt /requirements.txt

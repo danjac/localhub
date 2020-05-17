@@ -1,0 +1,4403 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-17 14:25+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: social_bfg/apps/activities/forms.py:26
+msgid "Title"
+msgstr "Otsikko"
+
+#: social_bfg/apps/activities/forms.py:27
+#: social_bfg/apps/activities/forms.py:43
+msgid "#tags"
+msgstr "#taggit"
+
+#: social_bfg/apps/activities/forms.py:28
+msgid "@mentions"
+msgstr "@huomautukset"
+
+#: social_bfg/apps/activities/forms.py:34
+msgid "#tags can also be added to title and description."
+msgstr "voidaan liittää #taggit otsikkoon tai kuvaukseen"
+
+
+#: social_bfg/apps/activities/forms.py:35
+msgid "@mentions can also be added to title and description."
+msgstr "voidaan liittää @huomaukset otsikkoon tai kuvaukseen"
+
+#: social_bfg/apps/activities/notifications.py:14
+#, python-format
+msgid "%(actor)s has deleted your %(object)s"
+msgstr "%(actor)s on poistanut sinun %(object)s"
+
+#: social_bfg/apps/activities/notifications.py:15
+#, python-format
+msgid "%(actor)s has edited your %(object)s"
+msgstr "%(actor)s on muokkaanut sinun %(object)s"
+
+#: social_bfg/apps/activities/notifications.py:16
+#, python-format
+msgid "%(actor)s has flagged this %(object)s"
+msgstr "%(actor)s on hälyttänyt sinun %(object)s:sta"
+
+#: social_bfg/apps/activities/notifications.py:17
+#, python-format
+msgid "%(actor)s has liked your %(object)s"
+msgstr "%(actor)s on tykkäänyt sinun %(object)s:sta"
+
+#: social_bfg/apps/activities/notifications.py:18
+#, python-format
+msgid "%(actor)s has mentioned you in their %(object)s"
+msgstr "%(actor)s on merkinnyt sinut %(object)s:ssa"
+
+#: social_bfg/apps/activities/notifications.py:21
+#, python-format
+msgid "%(actor)s has submitted or updated their %(object)s for review"
+msgstr "%(actor)s on lähettänyt %(object)s:n tarkistettavaksi"
+
+#: social_bfg/apps/activities/notifications.py:23
+#, python-format
+msgid "%(actor)s has submitted a new %(object)s"
+msgstr "%(actor)s on lähettänyt %(object)s:n"
+
+#: social_bfg/apps/activities/notifications.py:27
+#, python-format
+msgid ""
+"Someone has submitted or updated a new %(object)s containing tags you are "
+"following"
+msgstr "%(actor)s on lähettänyt %(object)s:n, jossa on sinun seuraamia taggeja"
+
+#: social_bfg/apps/activities/notifications.py:30
+#, python-format
+msgid "%(actor)s has reshared your %(object)s"
+msgstr "%(actor)s on jakaanut sinun %(object)s:n"
+
+#: social_bfg/apps/activities/views/generic.py:73
+#: social_bfg/apps/activities/views/generic.py:333
+#, python-format
+msgid "Your %(model)s has been published"
+msgstr ""
+
+#: social_bfg/apps/activities/views/generic.py:75
+#, python-format
+msgid "Your %(model)s has been saved to your Private Stash"
+msgstr ""
+
+#: social_bfg/apps/activities/views/generic.py:83
+#, python-format
+msgid "Submit %(model)s"
+msgstr ""
+
+#: social_bfg/apps/activities/views/generic.py:118
+#, python-format
+msgid "This %(model)s has been flagged to the moderators"
+msgstr ""
+
+#: social_bfg/apps/activities/views/generic.py:141
+#, python-format
+msgid "Your %(model)s has been posted"
+msgstr ""
+
+#: social_bfg/apps/activities/views/generic.py:170
+#: social_bfg/apps/comments/views.py:48
+#, python-format
+msgid "Your %(model)s has been updated"
+msgstr ""
+
+#: social_bfg/apps/activities/views/generic.py:195
+msgid "Tags have been updated"
+msgstr ""
+
+#: social_bfg/apps/activities/views/generic.py:312
+#, python-format
+msgid "You have reshared this %(model)s"
+msgstr ""
+
+#: social_bfg/apps/activities/views/generic.py:353
+#, python-format
+msgid "The %(model)s has been pinned to the top of the activity stream"
+msgstr ""
+
+#: social_bfg/apps/activities/views/generic.py:373
+#, python-format
+msgid "The %(model)s has been unpinned from the top of the activity stream"
+msgstr ""
+
+#: social_bfg/apps/activities/views/generic.py:389
+#, python-format
+msgid "You have added this %(model)s to your bookmarks"
+msgstr ""
+
+#: social_bfg/apps/activities/views/generic.py:405
+#, python-format
+msgid "You have removed this %(model)s from your bookmarks"
+msgstr ""
+
+#: social_bfg/apps/activities/views/generic.py:421
+#, python-format
+msgid "You have liked this %(model)s"
+msgstr ""
+
+#: social_bfg/apps/activities/views/generic.py:439
+#, python-format
+msgid "You have stopped liking this %(model)s"
+msgstr ""
+
+#: social_bfg/apps/activities/views/generic.py:456
+#, python-format
+msgid "You have deleted this %(model)s"
+msgstr ""
+
+#: social_bfg/apps/comments/forms.py:16
+#: templates/activities/includes/actions.html:42
+#: templates/comments/comment_detail.html:27
+#: templates/comments/comment_form.html:14
+#: templates/comments/comment_form.html:25
+#: templates/comments/comment_form.html:30 templates/comments/flag_form.html:9
+msgid "Comment"
+msgstr ""
+
+#: social_bfg/apps/comments/notifications.py:17
+#, python-format
+msgid "%(actor)s has deleted this comment"
+msgstr ""
+
+#: social_bfg/apps/comments/notifications.py:18
+#, python-format
+msgid "%(actor)s has flagged this comment"
+msgstr ""
+
+#: social_bfg/apps/comments/notifications.py:19
+#, python-format
+msgid "%(actor)s has liked your comment"
+msgstr ""
+
+#: social_bfg/apps/comments/notifications.py:20
+#, python-format
+msgid "%(actor)s has mentioned you in their comment"
+msgstr ""
+
+#: social_bfg/apps/comments/notifications.py:23
+#, python-format
+msgid "%(actor)s has submitted or updated a comment to review"
+msgstr ""
+
+#: social_bfg/apps/comments/notifications.py:25
+#, python-format
+msgid "%(actor)s has submitted a comment on one of your posts"
+msgstr ""
+
+#: social_bfg/apps/comments/notifications.py:28
+#, python-format
+msgid "%(actor)s has made a comment on a post you've commented on"
+msgstr ""
+
+#: social_bfg/apps/comments/notifications.py:30
+#, python-format
+msgid "%(actor)s has replied to your comment"
+msgstr ""
+
+#: social_bfg/apps/comments/notifications.py:31
+#, python-format
+msgid "%(actor)s has submitted a new comment"
+msgstr ""
+
+#: social_bfg/apps/comments/views.py:72
+msgid "This comment has been flagged to the moderators"
+msgstr ""
+
+#: social_bfg/apps/comments/views.py:95
+#, python-format
+msgid "You have replied to this %(model)s"
+msgstr ""
+
+#: social_bfg/apps/comments/views.py:109
+#: templates/comments/comment_form.html:22
+#: templates/comments/includes/comment.html:152
+#: templates/private_messages/includes/message.html:77
+#: templates/private_messages/message_form.html:21
+msgid "Reply"
+msgstr ""
+
+#: social_bfg/apps/comments/views.py:222
+msgid "You have bookmarked this comment"
+msgstr ""
+
+#: social_bfg/apps/comments/views.py:240
+msgid "You have removed this comment from your bookmarks"
+msgstr ""
+
+#: social_bfg/apps/comments/views.py:259
+msgid "You have liked this comment"
+msgstr ""
+
+#: social_bfg/apps/comments/views.py:278
+msgid "You have stopped liking this comment"
+msgstr ""
+
+#: social_bfg/apps/comments/views.py:296
+msgid "You have deleted this comment"
+msgstr ""
+
+#: social_bfg/apps/communities/emails.py:16
+#, python-format
+msgid "Your membership of community %(community)s has been terminated"
+msgstr ""
+
+#: social_bfg/apps/communities/forms.py:41
+msgid "Logo will be rendered in PNG format."
+msgstr ""
+
+#: social_bfg/apps/communities/forms.py:42
+msgid "Summary shown in Communities page"
+msgstr ""
+
+#: social_bfg/apps/communities/forms.py:43
+msgid "Text shown in Login and other pages to non-members."
+msgstr ""
+
+#: social_bfg/apps/communities/forms.py:45
+msgid "Longer description of site shown to members in Description page."
+msgstr ""
+
+#: social_bfg/apps/communities/forms.py:48
+msgid "Terms and conditions, code of conduct and other membership terms."
+msgstr ""
+
+#: social_bfg/apps/communities/forms.py:51
+msgid ""
+"Any posts containing these tags in their description will be automatically "
+"hidden by default."
+msgstr ""
+
+#: social_bfg/apps/communities/forms.py:55
+msgid ""
+"Will add domain to notification emails from this site, e.g. "
+"notifications@this-domain.com. If left empty will use the site domain by "
+"default."
+msgstr ""
+
+#: social_bfg/apps/communities/forms.py:59
+msgid "This community is currently live."
+msgstr ""
+
+#: social_bfg/apps/communities/forms.py:60
+msgid "Community is visible to non-members in Communities page"
+msgstr ""
+
+#: social_bfg/apps/communities/forms.py:62
+msgid ""
+"Users can send requests to join this community. If disabled they will only "
+"be able to join if an admin sends them an invite."
+msgstr ""
+
+#: social_bfg/apps/communities/forms.py:67
+msgid ""
+"Join requests from these email domains will be automatically rejected. "
+"Separate with spaces."
+msgstr ""
+
+#: social_bfg/apps/communities/forms.py:71
+msgid ""
+"Join requests from these email addresses will be automatically rejected. "
+"Separate with spaces."
+msgstr ""
+
+#: social_bfg/apps/communities/forms.py:82
+msgid "Access"
+msgstr ""
+
+#: social_bfg/apps/communities/forms.py:83
+msgid "About this community"
+msgstr ""
+
+#: social_bfg/apps/communities/forms.py:84
+msgid "Terms and conditions"
+msgstr ""
+
+#: social_bfg/apps/communities/forms.py:86
+#: social_bfg/apps/join_requests/apps.py:11
+#: templates/communities/community_form.html:21
+#: templates/communities/community_list.html:67
+#: templates/includes/forms/search_form.html:59
+#: templates/includes/no_sidebar_nav.html:15
+#: templates/includes/sidebar.html:252 templates/join_requests/base.html:7
+#: templates/join_requests/joinrequest_detail.html:19
+#: templates/join_requests/joinrequest_list.html:14
+#: templates/join_requests/joinrequest_list.html:19
+#: templates/join_requests/sent_joinrequest_list.html:11
+msgid "Join Requests"
+msgstr ""
+
+#: social_bfg/apps/communities/models.py:27
+msgid "This is not a valid domain"
+msgstr ""
+
+#: social_bfg/apps/communities/models.py:167
+#: templates/communities/community_list.html:7
+#: templates/communities/community_list.html:11
+#: templates/includes/forms/search_form.html:54
+#: templates/includes/no_sidebar_nav.html:32
+#: templates/includes/sidebar.html:264
+msgid "Communities"
+msgstr ""
+
+#: social_bfg/apps/communities/models.py:237
+#: templates/communities/membership_list.html:39
+msgid "Member"
+msgstr ""
+
+#: social_bfg/apps/communities/models.py:238
+#: templates/users/detail/base.html:47
+msgid "Moderator"
+msgstr ""
+
+#: social_bfg/apps/communities/models.py:239
+#: templates/users/detail/base.html:45
+msgid "Admin"
+msgstr ""
+
+#: social_bfg/apps/communities/views.py:60
+msgid "You must be a member of this community"
+msgstr ""
+
+#: social_bfg/apps/communities/views.py:65
+msgid "No community is available for this domain"
+msgstr ""
+
+#: social_bfg/apps/communities/views.py:203
+msgid "Community settings have been updated"
+msgstr ""
+
+#: social_bfg/apps/communities/views.py:337
+msgid "Membership has been updated"
+msgstr ""
+
+#: social_bfg/apps/communities/views.py:357
+#, python-format
+msgid "You have deleted the membership for %(user)s"
+msgstr ""
+
+#: social_bfg/apps/communities/views.py:385
+#, python-format
+msgid "You have left the community %(community)s"
+msgstr ""
+
+#: social_bfg/apps/events/forms.py:26
+msgid "Event starts"
+msgstr ""
+
+#: social_bfg/apps/events/forms.py:32
+msgid "Event ends"
+msgstr ""
+
+#: social_bfg/apps/events/forms.py:36
+msgid "Leave empty if it's an all-day event"
+msgstr ""
+
+#: social_bfg/apps/events/forms.py:40
+msgid "Repeat until"
+msgstr ""
+
+#: social_bfg/apps/events/forms.py:47
+msgid "Remove event from map"
+msgstr ""
+
+#: social_bfg/apps/events/forms.py:51
+msgid "Add event to map if address provided"
+msgstr ""
+
+#: social_bfg/apps/events/forms.py:104 templates/events/includes/event.html:71
+msgid "Location"
+msgstr ""
+
+#: social_bfg/apps/events/forms.py:122
+msgid "Will repeat from the start date onwards"
+msgstr ""
+
+#: social_bfg/apps/events/forms.py:125
+msgid "Start and end times will be shown in this timezone"
+msgstr ""
+
+#: social_bfg/apps/events/forms.py:143
+msgid "Recalculate position on map"
+msgstr ""
+
+#: social_bfg/apps/events/forms.py:179
+msgid "Unable to locate address on map"
+msgstr ""
+
+#: social_bfg/apps/events/models.py:377
+msgid "Same time every day"
+msgstr ""
+
+#: social_bfg/apps/events/models.py:378
+msgid "Same day of the week at the same time"
+msgstr ""
+
+#: social_bfg/apps/events/models.py:381
+msgid "First day of the month at the same time"
+msgstr ""
+
+#: social_bfg/apps/events/models.py:383
+msgid "Same date and time every year"
+msgstr ""
+
+#: social_bfg/apps/events/models.py:385
+#: templates/activities/includes/links.html:8
+#: templates/comments/includes/comment.html:200
+#: templates/markdownx/widget.html:48 templates/markdownx/widget.html:170
+#: templates/private_messages/includes/message.html:106
+msgid "Link"
+msgstr ""
+
+#: social_bfg/apps/events/models.py:387
+msgid "Starts on (UTC)"
+msgstr ""
+
+#: social_bfg/apps/events/models.py:404
+msgid "City or town"
+msgstr ""
+
+#: social_bfg/apps/events/models.py:433
+msgid "End date cannot be before start date"
+msgstr ""
+
+#: social_bfg/apps/events/models.py:436
+msgid "End date must be same as start date if repeating"
+msgstr ""
+
+#: social_bfg/apps/events/models.py:440
+msgid "Repeat until date cannot be set if not a repeating event"
+msgstr ""
+
+#: social_bfg/apps/events/models.py:444
+msgid "Repeat until date cannot be before start date"
+msgstr ""
+
+#: social_bfg/apps/events/notifications.py:22
+#, python-format
+msgid "%(actor)s is attending your event"
+msgstr ""
+
+#: social_bfg/apps/events/notifications.py:23
+#, python-format
+msgid "%(actor)s has canceled an event"
+msgstr ""
+
+#: social_bfg/apps/events/views.py:47
+msgid "This event has been canceled"
+msgstr ""
+
+#: social_bfg/apps/events/views.py:67
+msgid "You are now attending this event"
+msgstr ""
+
+#: social_bfg/apps/events/views.py:80
+msgid "You are no longer attending this event"
+msgstr ""
+
+#: social_bfg/apps/flags/models.py:49
+msgid "Spam"
+msgstr ""
+
+#: social_bfg/apps/flags/models.py:50
+msgid "Abuse"
+msgstr ""
+
+#: social_bfg/apps/flags/models.py:51
+msgid "Breach of community rules"
+msgstr ""
+
+#: social_bfg/apps/flags/models.py:52
+msgid "Illegal activity"
+msgstr ""
+
+#: social_bfg/apps/flags/models.py:53
+msgid "Pornography"
+msgstr ""
+
+#: social_bfg/apps/flags/models.py:54
+msgid "Breach of copyright"
+msgstr ""
+
+#: social_bfg/apps/hashtags/validators.py:25
+msgid "All tokens must be valid #tags"
+msgstr ""
+
+#: social_bfg/apps/hashtags/views.py:201
+#, python-format
+msgid "You are now following #%(object)s"
+msgstr ""
+
+#: social_bfg/apps/hashtags/views.py:212
+#, python-format
+msgid "You are no longer following #%(object)s"
+msgstr ""
+
+#: social_bfg/apps/hashtags/views.py:231
+#, python-format
+msgid "You are now blocking #%(object)s"
+msgstr ""
+
+#: social_bfg/apps/hashtags/views.py:242
+#, python-format
+msgid "You are no longer blocking #%(object)s"
+msgstr ""
+
+#: social_bfg/apps/invites/emails.py:20
+msgid "Invitation to join"
+msgstr ""
+
+#: social_bfg/apps/invites/forms.py:26
+msgid "A user with this email address already belongs to this community"
+msgstr ""
+
+#: social_bfg/apps/invites/forms.py:32
+msgid "An invitation has already been sent to this email address"
+msgstr ""
+
+#: social_bfg/apps/invites/models.py:44
+#: social_bfg/apps/join_requests/models.py:41
+msgid "Pending"
+msgstr ""
+
+#: social_bfg/apps/invites/models.py:45
+#: social_bfg/apps/join_requests/models.py:42
+msgid "Accepted"
+msgstr ""
+
+#: social_bfg/apps/invites/models.py:46
+#: social_bfg/apps/join_requests/models.py:43
+msgid "Rejected"
+msgstr ""
+
+#: social_bfg/apps/invites/views.py:69
+#, python-format
+msgid "Your invitation has been re-sent to %(email)s"
+msgstr ""
+
+#: social_bfg/apps/invites/views.py:102
+#, python-format
+msgid "You are now a member of %(community)s"
+msgstr ""
+
+#: social_bfg/apps/invites/views.py:146
+#, python-format
+msgid "Your invitation has been sent to %(email)s"
+msgstr ""
+
+#: social_bfg/apps/invites/views.py:169
+msgid "You have deleted this invite"
+msgstr ""
+
+#: social_bfg/apps/join_requests/emails.py:27
+#, python-format
+msgid "%s | Someone has requested to join this community"
+msgstr ""
+
+#: social_bfg/apps/join_requests/emails.py:41
+msgid "Your request has been accepted"
+msgstr ""
+
+#: social_bfg/apps/join_requests/emails.py:50
+msgid "Your request has been rejected"
+msgstr ""
+
+#: social_bfg/apps/join_requests/forms.py:29
+msgid "You have already requested to join this community"
+msgstr ""
+
+#: social_bfg/apps/join_requests/forms.py:34
+msgid "Sorry, we cannot accept your application to join at this time."
+msgstr ""
+
+#: social_bfg/apps/join_requests/models.py:58
+msgid "Introduction"
+msgstr ""
+
+#: social_bfg/apps/join_requests/models.py:60
+msgid ""
+"Tell us a little bit about yourself and why you would like to join this "
+"community (Optional)."
+msgstr ""
+
+#: social_bfg/apps/join_requests/views.py:66
+#, python-format
+msgid "Join request for %(sender)s has been accepted"
+msgstr ""
+
+#: social_bfg/apps/join_requests/views.py:74
+msgid "User already belongs to this community"
+msgstr ""
+
+#: social_bfg/apps/join_requests/views.py:99
+#, python-format
+msgid "Join request for %(sender)s has been rejected"
+msgstr ""
+
+#: social_bfg/apps/join_requests/views.py:122
+msgid "Your request has been sent to the community admins"
+msgstr ""
+
+#: social_bfg/apps/join_requests/views.py:167
+#, python-format
+msgid "Your join request for %(community)s has been deleted"
+msgstr ""
+
+#: social_bfg/apps/join_requests/views.py:170
+#, python-format
+msgid "Join request for %(sender)s has been deleted"
+msgstr ""
+
+#: social_bfg/apps/photos/forms.py:25
+msgid "Extract GPS data from image if available"
+msgstr ""
+
+#: social_bfg/apps/photos/forms.py:29
+msgid "Clear GPS data from image"
+msgstr ""
+
+#: social_bfg/apps/photos/forms.py:69
+msgid "Additional Information"
+msgstr ""
+
+#: social_bfg/apps/photos/forms.py:79 templates/photos/includes/photo.html:47
+msgid "Original URL"
+msgstr ""
+
+#: social_bfg/apps/photos/forms.py:86
+msgid "Re-extract GPS data from image if available"
+msgstr ""
+
+#: social_bfg/apps/photos/models.py:18
+msgid "Attribution"
+msgstr ""
+
+#: social_bfg/apps/photos/models.py:19
+msgid "Attribution ShareAlike"
+msgstr ""
+
+#: social_bfg/apps/photos/models.py:20
+msgid "Attribution NoDerivs"
+msgstr ""
+
+#: social_bfg/apps/photos/models.py:21
+msgid "Attribution NonCommercial"
+msgstr ""
+
+#: social_bfg/apps/photos/models.py:24
+msgid "Attribution NonCommercial ShareAlike"
+msgstr ""
+
+#: social_bfg/apps/photos/models.py:28
+msgid "Attribution NonCommercial NoDerivs"
+msgstr ""
+
+#: social_bfg/apps/photos/models.py:46 social_bfg/apps/photos/models.py:69
+msgid "Photo"
+msgstr ""
+
+#: social_bfg/apps/photos/models.py:48
+msgid ""
+"For best results, photos should be no larger than 1MB. If the image is too "
+"large it will not be accepted."
+msgstr ""
+
+#: social_bfg/apps/polls/models.py:48
+msgid "Poll"
+msgstr ""
+
+#: social_bfg/apps/polls/notifications.py:22
+#, python-format
+msgid "%(actor)s has voted in your poll"
+msgstr ""
+
+#: social_bfg/apps/polls/views.py:46
+msgid "Thanks for voting!"
+msgstr ""
+
+#: social_bfg/apps/posts/forms.py:70 templates/events/includes/event.html:83
+msgid "URL"
+msgstr ""
+
+#: social_bfg/apps/posts/forms.py:76
+msgid ""
+"You can attach an image and/or description from the webpage to this post by "
+"clicking the Download button on the right."
+msgstr ""
+
+#: social_bfg/apps/posts/models.py:37
+msgid "Post"
+msgstr ""
+
+#: social_bfg/apps/posts/views.py:25
+msgid "No URL provided"
+msgstr ""
+
+#: social_bfg/apps/posts/views.py:27
+msgid "Invalid or inaccessible URL"
+msgstr ""
+
+#: social_bfg/apps/posts/views.py:29
+msgid "Unable to fetch meta content from page"
+msgstr ""
+
+#: social_bfg/apps/private_messages/apps.py:11
+msgid "Private Messages"
+msgstr ""
+
+#: social_bfg/apps/private_messages/forms.py:30
+msgid "Use @mention format to find and add a recipient"
+msgstr ""
+
+#: social_bfg/apps/private_messages/forms.py:56
+msgid "You can only select one recipient at a time"
+msgstr ""
+
+#: social_bfg/apps/private_messages/forms.py:65
+msgid "No active member found matching this name"
+msgstr ""
+
+#: social_bfg/apps/private_messages/notifications.py:18
+#, python-format
+msgid "%(sender)s has sent you a message"
+msgstr ""
+
+#: social_bfg/apps/private_messages/notifications.py:19
+#, python-format
+msgid "%(sender)s has replied to your message"
+msgstr ""
+
+#: social_bfg/apps/private_messages/notifications.py:20
+#, python-format
+msgid "%(sender)s has sent you a follow-up to their message"
+msgstr ""
+
+#: social_bfg/apps/private_messages/views.py:68
+#, python-format
+msgid "Your message has been sent to %(recipient)s"
+msgstr ""
+
+#: social_bfg/apps/private_messages/views.py:110
+#, python-format
+msgid "Send reply to %(recipient)s"
+msgstr ""
+
+#: social_bfg/apps/private_messages/views.py:126
+#, python-format
+msgid "Send follow-up to %(recipient)s"
+msgstr ""
+
+#: social_bfg/apps/private_messages/views.py:155
+#, python-format
+msgid "Send message to %(recipient)s"
+msgstr ""
+
+#: social_bfg/apps/private_messages/views.py:310
+msgid "You have bookmarked this message"
+msgstr ""
+
+#: social_bfg/apps/private_messages/views.py:328
+msgid "You have removed this message from your bookmarks"
+msgstr ""
+
+#: social_bfg/apps/private_messages/views.py:351
+msgid "You have deleted this message"
+msgstr ""
+
+#: social_bfg/apps/users/forms.py:64
+msgid "Send me an email when I receive a new Message or Notification"
+msgstr ""
+
+#: social_bfg/apps/users/forms.py:67
+msgid "Show external images embedded in Markdown and OpenGraph content"
+msgstr ""
+
+#: social_bfg/apps/users/forms.py:70
+msgid "Show sensitive content by default in public feeds"
+msgstr ""
+
+#: social_bfg/apps/users/forms.py:73
+msgid "Show embedded content such as Youtube videos and tweets"
+msgstr ""
+
+#: social_bfg/apps/users/forms.py:75
+msgid "Timezone"
+msgstr ""
+
+#: social_bfg/apps/users/forms.py:80
+msgid ""
+"Filters only apply to other people's activities, not your own. Filters are "
+"mutually exclusive and may cancel each other out."
+msgstr ""
+
+#: social_bfg/apps/users/forms.py:84
+msgid ""
+"You can remove sensitive content completely from your feeds by blocking the "
+"relevant tags."
+msgstr ""
+
+#: social_bfg/apps/users/forms.py:106
+msgid "Content Preferences"
+msgstr ""
+
+#: social_bfg/apps/users/models.py:253
+msgid "Limited to only content from people I'm following"
+msgstr ""
+
+#: social_bfg/apps/users/models.py:254
+msgid "Limited to only tags I'm following"
+msgstr ""
+
+#: social_bfg/apps/users/models.py:256
+msgid "Full name"
+msgstr ""
+
+#: social_bfg/apps/users/notifications.py:15
+#, python-format
+msgid "%(actor)s has started following you"
+msgstr ""
+
+#: social_bfg/apps/users/notifications.py:16
+#, python-format
+msgid "%(actor)s has just joined this community"
+msgstr ""
+
+#: social_bfg/apps/users/notifications.py:17
+#, python-format
+msgid "%(actor)s has updated their profile"
+msgstr ""
+
+#: social_bfg/apps/users/validators.py:25
+msgid "All tokens must be valid @mentions"
+msgstr ""
+
+#: social_bfg/apps/users/views.py:493
+msgid "Your details have been updated"
+msgstr ""
+
+#: social_bfg/apps/users/views.py:550
+#, python-format
+msgid "You are now following %(object)s"
+msgstr ""
+
+#: social_bfg/apps/users/views.py:563
+#, python-format
+msgid "You are no longer following %(object)s"
+msgstr ""
+
+#: social_bfg/apps/users/views.py:578
+#, python-format
+msgid "You are now blocking %(object)s"
+msgstr ""
+
+#: social_bfg/apps/users/views.py:589
+#, python-format
+msgid "You are no longer blocking %(object)s"
+msgstr ""
+
+#: social_bfg/common/forms/widgets.py:93
+msgid "DD/MM/YYYY"
+msgstr ""
+
+#: social_bfg/common/forms/widgets.py:106
+msgid "HH:MM"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:15 templates/includes/sidebar.html:181
+#: templates/users/list/base.html:8 templates/users/list/base.html:14
+msgid "People"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:18
+msgid "Thumbs Up"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:23
+msgid "Thumbs Down"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:28
+msgid "Heart"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:33
+msgid "Clap"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:38
+msgid "Smile"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:43
+msgid "Wink"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:47
+msgid "Joy"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:49
+msgid "Laughing"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:54
+msgid "Thinking"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:58
+msgid "Sob"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:60
+msgid "Heart Eyes"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:65
+msgid "Smirk"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:70
+msgid "Blush"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:75
+msgid "Confused"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:80
+msgid "Disappointed"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:85
+msgid "No Mouth"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:90
+msgid "Innocent"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:95
+msgid "Neutral Face"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:100
+msgid "Fearful"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:105
+msgid "Sweat"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:110
+msgid "Angry"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:115
+msgid "Rage"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:120
+msgid "Astonished"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:125
+msgid "Stuck Out Tongue"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:130
+msgid "Open Mouth"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:135
+msgid "Satisfied"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:140
+msgid "Scream"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:145
+msgid "Sunglasses"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:150
+msgid "Fire"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:155
+msgid "Tada"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:160
+msgid "See No Evil"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:165
+msgid "Point Up"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:170
+msgid "Wave"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:175
+msgid "Raised Hands"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:180
+msgid "Pray"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:185
+msgid "Metal"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:190
+msgid "Alien"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:195
+msgid "Angel"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:199
+msgid "Man"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:201
+msgid "Woman"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:206
+msgid "Baby"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:211
+msgid "Detective"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:216
+msgid "Mask"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:221
+msgid "Poop"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:226
+msgid "Skull"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:230
+msgid "Zap"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:231
+msgid "ZZZ"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:235
+msgid "Objects"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:238
+msgid "Airplane"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:243
+msgid "Bomb"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:248
+msgid "Bulb"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:252
+msgid "Bus"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:254
+msgid "Car"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:259
+msgid "Rocket"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:264
+msgid "Taxi"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:269
+msgid "Train"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:274
+msgid "Checkered Flag"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:279
+msgid "Banana"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:284
+msgid "Cake"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:289
+msgid "Beer"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:294
+msgid "Wine Glass"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:299
+msgid "Coffee"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:303
+msgid "Tea"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:305
+msgid "Cookie"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:310
+msgid "Eggplant"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:315 templates/events/calendar.html:9
+#: templates/events/calendar.html:26 templates/events/event_list.html:12
+#: templates/includes/sidebar.html:79
+msgid "Calendar"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:320
+msgid "Watch"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:325
+msgid "Hourglass"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:330
+msgid "Computer"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:335
+msgid "Headphones"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:340
+msgid "Microphone"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:345
+msgid "Violin"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:350
+msgid "Birthday"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:355
+msgid "Gift"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:360
+msgid "Santa"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:367
+msgid "Places"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:370
+msgid "Finland"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:374
+msgid "Japan"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:375
+msgid "UK"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:376
+msgid "USA"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:380
+msgid "Nature"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:382
+msgid "Cat"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:383
+msgid "Dog"
+msgstr ""
+
+#: social_bfg/common/utils/emojis.py:385
+msgid "Rainbow"
+msgstr ""
+
+#: social_bfg/common/views/parent.py:99
+#, python-format
+msgid "No %(object_name)s found"
+msgstr ""
+
+#: templates/400.html:7 templates/500.html:7
+msgid "An error has occurred"
+msgstr ""
+
+#: templates/400.html:9
+msgid "Sorry, we could not complete your request. Please try again later."
+msgstr ""
+
+#: templates/403.html:7
+msgid "Permission Denied"
+msgstr ""
+
+#: templates/403.html:9
+msgid "Sorry, you do not have permission to view this page."
+msgstr ""
+
+#: templates/403_csrf.html:8
+msgid ""
+"Sorry, there's been a problem posting your form. Please reload this page and "
+"try again."
+msgstr ""
+
+#: templates/403_csrf.html:12
+msgid "Reload Page"
+msgstr ""
+
+#: templates/404.html:7
+msgid "Page not found"
+msgstr ""
+
+#: templates/404.html:9
+msgid "Sorry, this page does not exist, or it has been removed."
+msgstr ""
+
+#: templates/405.html:7
+msgid "Not Allowed"
+msgstr ""
+
+#: templates/405.html:9
+msgid ""
+"Sorry, you cannot perform this action. You may have disabled JavaScript on "
+"your browser or are using an older browser that does not support this action."
+msgstr ""
+
+#: templates/500.html:9
+msgid ""
+"Sorry, an unexpected error has occurred. The server admins have already been "
+"notified."
+msgstr ""
+
+#: templates/account/base.html:8
+msgid "Account"
+msgstr ""
+
+#: templates/account/email.html:8 templates/account/email.html:15
+#: templates/account/email.html:19 templates/users/user_form.html:36
+msgid "Email Addresses"
+msgstr ""
+
+#: templates/account/email.html:13 templates/account/password_change.html:12
+#: templates/communities/community_form.html:15
+#: templates/socialaccount/connections.html:13
+msgid "My Settings"
+msgstr ""
+
+#: templates/account/email.html:24
+msgid "The following email addresses are associated with your account:"
+msgstr ""
+
+#: templates/account/email.html:43
+msgid "Verified"
+msgstr ""
+
+#: templates/account/email.html:45
+msgid "Unverified"
+msgstr ""
+
+#: templates/account/email.html:47
+msgid "Primary"
+msgstr ""
+
+#: templates/account/email.html:55
+msgid "Make Primary"
+msgstr ""
+
+#: templates/account/email.html:58
+msgid "Re-send Verification"
+msgstr ""
+
+#: templates/account/email.html:61 templates/socialaccount/connections.html:56
+msgid "Remove"
+msgstr ""
+
+#: templates/account/email.html:67
+msgid "Warning:"
+msgstr ""
+
+#: templates/account/email.html:68
+msgid ""
+"You currently do not have any e-mail address set up. You should really add "
+"an e-mail address so you can receive notifications, reset your password, etc."
+msgstr ""
+
+#: templates/account/email.html:76
+msgid "Add E-mail Address"
+msgstr ""
+
+#: templates/account/email.html:85
+msgid "Add E-mail"
+msgstr ""
+
+#: templates/account/email_confirm.html:9
+msgid "Confirm E-Mail"
+msgstr ""
+
+#: templates/account/email_confirm.html:12
+msgid "Confirm E-mail Address"
+msgstr ""
+
+#: templates/account/email_confirm.html:23
+#, python-format
+msgid ""
+"Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail "
+"address for user %(user_display)s."
+msgstr ""
+
+#: templates/account/email_confirm.html:28
+msgid "Confirm"
+msgstr ""
+
+#: templates/account/email_confirm.html:37
+#, python-format
+msgid ""
+"This e-mail confirmation link expired or is invalid. Please <a href="
+"\"%(email_url)s\">issue a new\n"
+"    e-mail confirmation request</a>."
+msgstr ""
+
+#: templates/account/includes/login_form.html:19
+msgid "Sign in"
+msgstr ""
+
+#: templates/account/includes/login_form.html:20
+msgid "Forgot your password?"
+msgstr ""
+
+#: templates/account/includes/signup_link.html:6
+#, python-format
+msgid ""
+"If you have not created an account yet, then please\n"
+"  <a href=\"%(signup_url)s\">sign up</a> first."
+msgstr ""
+
+#: templates/account/includes/social_logins.html:11
+msgid "Login or signup through"
+msgstr ""
+
+#: templates/account/login.html:9 templates/account/login.html:13
+#: templates/base.html:109
+msgid "Login"
+msgstr ""
+
+#: templates/account/logout.html:7 templates/account/logout.html:11
+#: templates/account/logout.html:25 templates/base.html:104
+#: templates/includes/sidebar.html:92
+msgid "Logout"
+msgstr ""
+
+#: templates/account/logout.html:13
+msgid "Are you sure you want to log out?"
+msgstr ""
+
+#: templates/account/password_change.html:8
+#: templates/account/password_change.html:14
+#: templates/account/password_change.html:18
+#: templates/account/password_reset_from_key.html:8
+#: templates/account/password_reset_from_key.html:11
+#: templates/account/password_reset_from_key.html:18
+#: templates/account/password_reset_from_key_done.html:4
+#: templates/account/password_reset_from_key_done.html:7
+#: templates/users/user_form.html:43
+msgid "Change Password"
+msgstr ""
+
+#: templates/account/password_reset.html:6
+#: templates/account/password_reset.html:10
+#: templates/account/password_reset_done.html:9
+#: templates/account/password_reset_done.html:12
+msgid "Password Reset"
+msgstr ""
+
+#: templates/account/password_reset.html:15
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll send you "
+"an e-mail allowing you to reset it."
+msgstr ""
+
+#: templates/account/password_reset.html:19
+msgid "Reset My Password"
+msgstr ""
+
+#: templates/account/password_reset_done.html:14
+msgid ""
+"We have sent you an e-mail. Please contact us if you do not receive it "
+"within a few\n"
+"    minutes."
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:11
+msgid "Bad Token"
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:15
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used. Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
+"a>."
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:21
+msgid "Your password is now changed."
+msgstr ""
+
+#: templates/account/password_reset_from_key_done.html:9
+#, python-format
+msgid ""
+"Your password has been changed. Please <a href=\"%(login_url)s\">log in</a> "
+"again using your new\n"
+"    password."
+msgstr ""
+
+#: templates/account/password_set.html:8 templates/account/password_set.html:11
+#: templates/account/password_set.html:14
+msgid "Set Password"
+msgstr ""
+
+#: templates/account/signup.html:7 templates/base.html:111
+#: templates/socialaccount/signup.html:8
+msgid "Signup"
+msgstr ""
+
+#: templates/account/signup.html:11 templates/account/signup.html:16
+#: templates/socialaccount/signup.html:11
+#: templates/socialaccount/signup.html:18
+msgid "Sign Up"
+msgstr ""
+
+#: templates/account/signup.html:13
+#, python-format
+msgid ""
+"Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
+msgstr ""
+
+#: templates/activities/activity_confirm_delete.html:8
+#: templates/activities/activity_confirm_delete.html:22
+#: templates/activities/activity_confirm_delete.html:43
+#: templates/activities/includes/actions.html:132
+#: templates/activities/includes/actions.html:134
+#: templates/comments/comment_confirm_delete.html:13
+#: templates/comments/includes/comment.html:182
+#: templates/communities/includes/membership_actions.html:31
+#: templates/communities/includes/membership_actions.html:32
+#: templates/communities/membership_confirm_delete.html:13
+#: templates/flags/includes/flags.html:31
+#: templates/invites/invite_confirm_delete.html:13
+#: templates/invites/invite_list.html:93
+#: templates/join_requests/joinrequest_confirm_delete.html:13
+#: templates/join_requests/joinrequest_detail.html:61
+#: templates/join_requests/joinrequest_detail.html:63
+#: templates/join_requests/joinrequest_list.html:103
+#: templates/join_requests/joinrequest_list.html:105
+#: templates/join_requests/sent_joinrequest_list.html:44
+#: templates/notifications/notification_list.html:97
+#: templates/private_messages/includes/message.html:92
+#: templates/private_messages/message_confirm_delete.html:13
+msgid "Delete"
+msgstr ""
+
+#: templates/activities/activity_confirm_delete.html:17
+#: templates/activities/activity_detail.html:26
+#: templates/activities/activity_form.html:25
+#: templates/activities/activity_form.html:41
+#: templates/activities/private.html:9 templates/activities/private.html:21
+#: templates/includes/forms/search_form.html:44
+#: templates/includes/sidebar.html:64
+msgid "Private Stash"
+msgstr ""
+
+#: templates/activities/activity_confirm_delete.html:27
+#, python-format
+msgid ""
+"\n"
+"  Delete %(object_name)s\n"
+"  "
+msgstr ""
+
+#: templates/activities/activity_confirm_delete.html:36
+#, python-format
+msgid ""
+"\n"
+"    Do you really want to delete this %(object_name)s?\n"
+"    "
+msgstr ""
+
+#: templates/activities/activity_confirm_delete.html:41
+#: templates/comments/comment_confirm_delete.html:11
+#: templates/communities/membership_confirm_delete.html:11
+#: templates/communities/membership_leave.html:19
+#: templates/events/includes/actions.html:46
+#: templates/invites/invite_confirm_delete.html:11
+#: templates/join_requests/joinrequest_confirm_delete.html:11
+#: templates/private_messages/message_confirm_delete.html:11
+#: templates/users/user_confirm_delete.html:29
+msgid "Cancel"
+msgstr ""
+
+#: templates/activities/activity_detail.html:38
+#, python-format
+msgid ""
+"\n"
+"  This %(object_name)s has been removed by a community moderator.\n"
+"  "
+msgstr ""
+
+#: templates/activities/activity_detail.html:49
+#, python-format
+msgid "Submit New %(object_name)s"
+msgstr ""
+
+#: templates/activities/activity_detail.html:67
+#: templates/bookmarks/base.html:25 templates/bookmarks/comments.html:7
+#: templates/comments/base.html:8 templates/comments/comment_detail.html:19
+#: templates/comments/comment_form.html:20
+#: templates/comments/comment_form.html:24
+#: templates/comments/comment_list.html:8
+#: templates/communities/membership_detail.html:47
+#: templates/includes/forms/search_form.html:43
+#: templates/includes/sidebar.html:59 templates/likes/base.html:21
+#: templates/likes/comments.html:7 templates/users/detail/base.html:193
+#: templates/users/detail/comments.html:7 templates/users/likes/base.html:33
+#: templates/users/likes/comments.html:7 templates/users/mentions/base.html:33
+#: templates/users/mentions/comments.html:7
+msgid "Comments"
+msgstr ""
+
+#: templates/activities/activity_detail.html:84
+msgid "Comments are locked"
+msgstr ""
+
+#: templates/activities/activity_detail.html:87
+msgid "You do not have permission to post comments on this site."
+msgstr ""
+
+#: templates/activities/activity_form.html:9
+#: templates/activities/includes/actions.html:113
+#: templates/comments/comment_form.html:13
+#: templates/comments/comment_form.html:26
+#: templates/comments/includes/comment.html:167
+#: templates/communities/includes/membership_actions.html:22
+#: templates/communities/membership_form.html:10
+#: templates/markdownx/widget.html:16
+msgid "Edit"
+msgstr ""
+
+#: templates/activities/activity_form.html:10
+#: templates/includes/forms/form.html:27
+msgid "Submit"
+msgstr ""
+
+#: templates/activities/activity_form.html:34
+#, python-format
+msgid "Edit %(model_name)s"
+msgstr ""
+
+#: templates/activities/activity_form.html:49
+#, python-format
+msgid "Submit %(model_name)s"
+msgstr ""
+
+#: templates/activities/emails/notifications/delete.html:9
+#, python-format
+msgid ""
+"\n"
+"  <a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has removed your "
+"<a\n"
+"     href=\"%(absolute_url)s\">%(object_name)s</a>:\n"
+"  "
+msgstr ""
+
+#: templates/activities/emails/notifications/delete.html:18
+#, python-format
+msgid ""
+"\n"
+"  You can still view your %(object_name)s and delete it completely.\n"
+"  "
+msgstr ""
+
+#: templates/activities/emails/notifications/delete.txt:8
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has deleted your %(object_name)s: \n"
+msgstr ""
+
+#: templates/activities/emails/notifications/delete.txt:14
+#, python-format
+msgid ""
+"\n"
+"You can still view your %(object_name)s here and delete it completely:\n"
+msgstr ""
+
+#: templates/activities/emails/notifications/edit.html:9
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has edited your <a\n"
+"   href=\"%(absolute_url)s\">%(object_name)s</a>.\n"
+msgstr ""
+
+#: templates/activities/emails/notifications/edit.txt:8
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has edited your %(object_name)s.\n"
+msgstr ""
+
+#: templates/activities/emails/notifications/flag.html:8
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has flagged you in "
+"their <a\n"
+"   href=\"%(absolute_url)s\">%(object_name)s</a>.\n"
+msgstr ""
+
+#: templates/activities/emails/notifications/flag.txt:8
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has flagged you in their %(object_name)s.\n"
+msgstr ""
+
+#: templates/activities/emails/notifications/followed_tag.html:9
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has submitted or "
+"updated a new <a\n"
+"   href=\"%(absolute_url)s\">%(object_name)s</a> containing tags you are "
+"following.\n"
+msgstr ""
+
+#: templates/activities/emails/notifications/followed_tag.txt:8
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has submitted or updated a new %(object_name)s containing "
+"tags you are following.\n"
+msgstr ""
+
+#: templates/activities/emails/notifications/followed_user.html:7
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has submitted a new "
+"<a\n"
+"   href=\"%(absolute_url)s\">%(object_name)s</a>.\n"
+msgstr ""
+
+#: templates/activities/emails/notifications/followed_user.txt:7
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has submitted a new %(object_name)s.\n"
+msgstr ""
+
+#: templates/activities/emails/notifications/like.html:9
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has liked your <a\n"
+"   href=\"%(absolute_url)s\">%(object_name)s</a>.\n"
+msgstr ""
+
+#: templates/activities/emails/notifications/like.txt:8
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has liked your %(object_name)s.\n"
+msgstr ""
+
+#: templates/activities/emails/notifications/mention.html:8
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has mentioned you "
+"in their <a\n"
+"   href=\"%(absolute_url)s\">%(object_name)s</a>.\n"
+msgstr ""
+
+#: templates/activities/emails/notifications/mention.txt:8
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has mentioned you in their %(object_name)s.\n"
+msgstr ""
+
+#: templates/activities/emails/notifications/reshare.html:8
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has reshared your "
+"<a\n"
+"   href=\"%(absolute_url)s\">%(object_name)s</a>.\n"
+msgstr ""
+
+#: templates/activities/emails/notifications/reshare.txt:8
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has reshared your %(object_name)s.\n"
+msgstr ""
+
+#: templates/activities/flag_form.html:17
+#: templates/activities/includes/actions.html:96
+#: templates/comments/flag_form.html:10
+#: templates/comments/includes/comment.html:159
+#: templates/flags/flag_form.html:11 templates/flags/flag_form.html:14
+msgid "Flag"
+msgstr ""
+
+#: templates/activities/includes/actions.html:12
+#: templates/comments/includes/comment.html:113
+#: templates/private_messages/includes/message.html:45
+#: templates/users/detail/base.html:107
+msgid "Actions..."
+msgstr ""
+
+#: templates/activities/includes/actions.html:26
+#: templates/activities/includes/actions.html:32
+msgid "Pin"
+msgstr ""
+
+#: templates/activities/includes/actions.html:55
+#: templates/activities/includes/actions.html:60
+#: templates/comments/includes/comment.html:124
+#: templates/comments/includes/comment.html:129
+msgid "Like"
+msgstr ""
+
+#: templates/activities/includes/actions.html:72
+#: templates/activities/includes/actions.html:77
+#: templates/comments/includes/comment.html:140
+#: templates/comments/includes/comment.html:145
+#: templates/private_messages/includes/message.html:66
+#: templates/private_messages/includes/message.html:71
+msgid "Bookmark"
+msgstr ""
+
+#: templates/activities/includes/actions.html:88
+#: templates/activities/includes/info.html:65
+#: templates/activities/timeline.html:116
+msgid "Reshare"
+msgstr ""
+
+#: templates/activities/includes/actions.html:108
+#: templates/activities/includes/actions.html:110
+#: templates/activities/includes/activity_form.html:17
+msgid "Publish"
+msgstr ""
+
+#: templates/activities/includes/actions.html:109
+#, python-format
+msgid ""
+"Are you sure you want to publish this %(object_type)s? You cannot reverse "
+"this action."
+msgstr ""
+
+#: templates/activities/includes/actions.html:119
+msgid "Edit Tags"
+msgstr ""
+
+#: templates/activities/includes/actions.html:133
+#, python-format
+msgid "Are you sure you want to delete this %(object_type)s?"
+msgstr ""
+
+#: templates/activities/includes/actions.html:143
+#: templates/comments/includes/comment.html:191
+#: templates/private_messages/includes/message.html:99
+msgid "Copy Markdown"
+msgstr ""
+
+#: templates/activities/includes/activity_base.html:17
+#: templates/activities/includes/activity_pinned_base.html:8
+#: templates/comments/includes/comment.html:14
+#: templates/private_messages/includes/message.html:11
+msgid "Markdown content has been copied"
+msgstr ""
+
+#: templates/activities/includes/activity_base.html:84
+msgid "Private"
+msgstr ""
+
+#: templates/activities/includes/activity_base.html:90
+#: templates/comments/includes/comment.html:26
+msgid "Flagged"
+msgstr ""
+
+#: templates/activities/includes/activity_base.html:94
+#: templates/comments/includes/comment.html:30
+#: templates/communities/community_list.html:47
+#: templates/communities/community_list.html:54
+#: templates/communities/community_list.html:61
+#: templates/communities/community_list.html:68
+#: templates/includes/no_sidebar_nav.html:24
+#: templates/includes/no_sidebar_nav.html:34 templates/includes/sidebar.html:41
+#: templates/includes/sidebar.html:51 templates/includes/sidebar.html:174
+#: templates/includes/sidebar.html:254 templates/includes/sidebar.html:266
+#: templates/notifications/notification_list.html:74
+#: templates/private_messages/includes/message.html:25
+#: templates/users/list/base.html:70
+msgid "New"
+msgstr ""
+
+#: templates/activities/includes/activity_base.html:136
+#: templates/comments/includes/comment.html:34
+msgid "[Deleted]"
+msgstr ""
+
+#: templates/activities/includes/activity_base.html:141
+msgid "Sensitive Content"
+msgstr ""
+
+#: templates/activities/includes/activity_base.html:143
+msgid ""
+"This post has been tagged sensitive. You can view all sensitive content by "
+"default in your settings."
+msgstr ""
+
+#: templates/activities/includes/activity_base.html:152
+msgid "Show Content"
+msgstr ""
+
+#: templates/activities/includes/activity_form.html:24
+msgid "Save Private"
+msgstr ""
+
+#: templates/activities/includes/activity_pinned_base.html:20
+msgid "Pinned"
+msgstr ""
+
+#: templates/activities/includes/info.html:14
+msgid ""
+"\n"
+"      Comment\n"
+"      "
+msgid_plural ""
+"\n"
+"      Comments\n"
+"      "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/activities/includes/info.html:29
+msgid ""
+"\n"
+"    Reshare\n"
+"    "
+msgid_plural ""
+"\n"
+"    Reshares\n"
+"    "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/activities/includes/info.html:40
+msgid ""
+"\n"
+"    Like\n"
+"    "
+msgid_plural ""
+"\n"
+"    Likes\n"
+"    "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/activities/includes/info.html:50
+#: templates/comments/includes/comment.html:103
+#, python-format
+msgid "Updated %(edited)s ago"
+msgstr ""
+
+#: templates/activities/includes/info.html:61
+#, python-format
+msgid ""
+"\n"
+"  %(num_reshares)s reshares\n"
+"  "
+msgstr ""
+
+#: templates/activities/includes/links.html:12
+#: templates/comments/comment_detail.html:24
+#: templates/comments/comment_form.html:21
+#: templates/comments/includes/comment.html:204
+#: templates/private_messages/includes/message.html:109
+#: templates/private_messages/message_detail.html:13
+#: templates/private_messages/message_form.html:18
+msgid "Parent"
+msgstr ""
+
+#: templates/activities/includes/notifications/delete.html:6
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has deleted your <a href="
+"\"%(object_url)s\">%(object_name)s</a>.\n"
+msgstr ""
+
+#: templates/activities/includes/notifications/edit.html:6
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has edited your <a href="
+"\"%(object_url)s\">%(object_name)s</a>.\n"
+msgstr ""
+
+#: templates/activities/includes/notifications/flag.html:5
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has flagged you in their <a\n"
+"   href=\"%(object_url)s\">%(object_name)s</a>.\n"
+msgstr ""
+
+#: templates/activities/includes/notifications/followed_tag.html:6
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has submitted or updated a "
+"new <a\n"
+"   href=\"%(object_url)s\">%(object_name)s</a> containing tags you are\n"
+"following.\n"
+msgstr ""
+
+#: templates/activities/includes/notifications/followed_user.html:5
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has submitted a new <a href="
+"\"%(object_url)s\">%(object_name)s</a>.\n"
+msgstr ""
+
+#: templates/activities/includes/notifications/like.html:6
+#, python-format
+msgid ""
+"\n"
+"<a class=\"action\" href=\"%(actor_url)s\">%(actor_display)s</a> has liked "
+"your\n"
+"<a class=\"action\" href=\"%(object_url)s\">%(object_name)s</a>.\n"
+msgstr ""
+
+#: templates/activities/includes/notifications/mention.html:6
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has mentioned you in their "
+"<a\n"
+"   href=\"%(object_url)s\">%(object_name)s</a>.\n"
+msgstr ""
+
+#: templates/activities/includes/notifications/reshare.html:6
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has reshared your <a href="
+"\"%(object_url)s\">%(object_name)s</a>.\n"
+msgstr ""
+
+#: templates/activities/private.html:12
+msgid ""
+"\n"
+"Activities in your Private Stash are only visible to you. They do not appear "
+"in\n"
+"the Activity Feed, individual content feeds or Timeline. You can also keep "
+"draft posts and\n"
+"other activities in your Private Stash, and publish them later by clicking "
+"on the \"Publish\"\n"
+"button in the Actions menu. Private activities do not allow comments.\n"
+msgstr ""
+
+#: templates/activities/search.html:7 templates/activities/search.html:10
+msgid "Search"
+msgstr ""
+
+#: templates/activities/stream.html:11 templates/bookmarks/activities.html:7
+#: templates/bookmarks/base.html:17
+#: templates/communities/membership_detail.html:45
+#: templates/likes/activities.html:7 templates/likes/base.html:17
+#: templates/users/detail/activities.html:7
+#: templates/users/detail/base.html:183 templates/users/likes/activities.html:7
+#: templates/users/likes/base.html:29
+#: templates/users/mentions/activities.html:7
+#: templates/users/mentions/base.html:29
+msgid "Activities"
+msgstr ""
+
+#: templates/activities/stream.html:48
+#, python-format
+msgid ""
+"\n"
+"You can view embedded content in your feed, for example YouTube videos, by "
+"checking the <b>Show embedded content</b>\n"
+"option in your\n"
+"<a href=\"%(user_settings_url)s\">user settings</a>.\n"
+msgstr ""
+
+#: templates/activities/timeline.html:7 templates/activities/timeline.html:32
+#: templates/includes/sidebar.html:146
+msgid "Timeline"
+msgstr ""
+
+#: templates/activities/timeline.html:14 templates/hashtags/list/base.html:21
+msgid "All"
+msgstr ""
+
+#: templates/activities/timeline.html:38
+msgid "Oldest First"
+msgstr ""
+
+#: templates/activities/timeline.html:38
+msgid "Newest First"
+msgstr ""
+
+#: templates/activities/timeline.html:59
+#, python-format
+msgid ""
+"\n"
+"  <strong>One activity</strong> was posted\n"
+"  "
+msgid_plural ""
+"\n"
+"  A total of <strong>%(counter)s activities</strong> were posted\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/activities/timeline.html:67
+#, python-format
+msgid ""
+"\n"
+"  in <b>%(earliest)s</b>.\n"
+"  "
+msgstr ""
+
+#: templates/activities/timeline.html:74 templates/activities/timeline.html:81
+#, python-format
+msgid ""
+"\n"
+"  from <b>%(earliest)s</b> to <b>%(latest)s</b>.\n"
+"  "
+msgstr ""
+
+#: templates/activities/timeline.html:129
+msgid "There are no items for this period"
+msgstr ""
+
+#: templates/base.html:86 templates/base.html:124
+#: templates/includes/forms/search_form.html:31
+msgid "Search..."
+msgstr ""
+
+#: templates/bookmarks/activities.html:10
+msgid "You have not bookmarked any activities."
+msgstr ""
+
+#: templates/bookmarks/base.html:7 templates/bookmarks/base.html:11
+#: templates/includes/sidebar.html:69
+msgid "Bookmarks"
+msgstr ""
+
+#: templates/bookmarks/base.html:21 templates/bookmarks/messages.html:8
+#: templates/communities/community_list.html:60
+#: templates/communities/membership_detail.html:49
+#: templates/includes/sidebar.html:39 templates/private_messages/base.html:7
+#: templates/private_messages/message_detail.html:21
+#: templates/private_messages/message_list_base.html:12
+#: templates/users/detail/base.html:188 templates/users/detail/messages.html:12
+msgid "Messages"
+msgstr ""
+
+#: templates/bookmarks/comments.html:10
+msgid "You have not bookmarked any comments."
+msgstr ""
+
+#: templates/bookmarks/messages.html:11
+msgid "You have not bookmarked any messages."
+msgstr ""
+
+#: templates/comments/comment_confirm_delete.html:4
+#: templates/comments/includes/comment.html:180
+msgid "Delete Comment"
+msgstr ""
+
+#: templates/comments/comment_confirm_delete.html:9
+msgid "Do you really want to delete this comment?"
+msgstr ""
+
+#: templates/comments/comment_detail.html:33
+msgid "Replies"
+msgstr ""
+
+#: templates/comments/comment_form.html:12
+msgid "Reply "
+msgstr ""
+
+#: templates/comments/emails/comment_deleted.html:10
+#: templates/comments/emails/comment_deleted.txt:4
+#, python-format
+msgid "Hi %(owner)s,"
+msgstr ""
+
+#: templates/comments/emails/comment_deleted.html:13
+#: templates/comments/emails/comment_deleted.txt:5
+msgid "The following comment was deleted by a moderator"
+msgstr ""
+
+#: templates/comments/emails/notifications/delete.html:9
+#, python-format
+msgid ""
+"\n"
+"  <a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has deleted your "
+"<a href=\"%(absolute_url)s\">comment</a>:\n"
+"  "
+msgstr ""
+
+#: templates/comments/emails/notifications/delete.html:17
+msgid ""
+"\n"
+"  You can still view your comment and delete it completely.\n"
+"  "
+msgstr ""
+
+#: templates/comments/emails/notifications/delete.txt:8
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has removed your comment:\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/delete.txt:14
+msgid ""
+"\n"
+"You can still view your comment here and delete it completely:\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/flag.html:8
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has flagged this <a "
+"href=\"%(absolute_url)s\">comment</a>.\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/flag.txt:8
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has flagged this comment.\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/followed_user.html:7
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has submitted a new "
+"<a href=\"%(absolute_url)s\">comment</a>.\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/followed_user.txt:8
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has submitted a new comment.\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/like.html:8
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has liked this <a "
+"href=\"%(absolute_url)s\">comment</a>.\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/like.txt:8
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has liked this comment.\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/mention.html:7
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has mentioned you in their <a href=\"%(absolute_url)s"
+"\">comment</a>.\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/mention.txt:7
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has mentioned you in their comment.\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/moderator_review.html:7
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has posted or updated <a href=\"%(absolute_url)s"
+"\">comment</a> to review.\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/moderator_review.txt:7
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has posted or updated a comment for you to review.\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/new_comment.html:7
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has <a href=\"%(absolute_url)s\">commented</a> on one of "
+"your posts.\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/new_comment.txt:7
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has commented on one of your posts.\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/new_sibling.html:7
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has <a href=\"%(absolute_url)s\">commented</a> on a post "
+"you have also commented on.\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/new_sibling.txt:8
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has commented on a post you have also commented on.\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/reply.html:7
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has replied to your <a href=\"%(absolute_url)s\">comment</"
+"a>.\n"
+msgstr ""
+
+#: templates/comments/emails/notifications/reply.txt:8
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has replied to your comment.\n"
+msgstr ""
+
+#: templates/comments/includes/comment.html:44
+#: templates/hashtags/list/base.html:32 templates/hashtags/list/blocked.html:7
+#: templates/includes/sidebar.html:200 templates/users/list/base.html:32
+#: templates/users/list/blocked.html:7
+msgid "Blocked"
+msgstr ""
+
+#: templates/comments/includes/comment.html:55
+msgid "This comment is hidden because you have blocked this user."
+msgstr ""
+
+#: templates/comments/includes/comment.html:67
+msgid "Show Comment"
+msgstr ""
+
+#: templates/comments/includes/comment.html:78
+msgid "This comment has been deleted by a community moderator"
+msgstr ""
+
+#: templates/comments/includes/comment.html:93
+msgid ""
+"\n"
+"        Like\n"
+"        "
+msgid_plural ""
+"\n"
+"        Likes\n"
+"        "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/comments/includes/comment.html:181
+msgid "Are you sure you want to delete this comment?"
+msgstr ""
+
+#: templates/comments/includes/notifications/delete.html:6
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has removed your <a href="
+"\"%(object_url)s\">comment</a>.\n"
+msgstr ""
+
+#: templates/comments/includes/notifications/flag.html:6
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has flagged this <a href="
+"\"%(object_url)s\">comment</a>.\n"
+msgstr ""
+
+#: templates/comments/includes/notifications/followed_user.html:5
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has submitted a new <a href="
+"\"%(object_url)s\">comment</a>.\n"
+msgstr ""
+
+#: templates/comments/includes/notifications/like.html:6
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has liked your <a href="
+"\"%(object_url)s\">comment</a>.\n"
+msgstr ""
+
+#: templates/comments/includes/notifications/mention.html:6
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has mentioned you in their "
+"<a href=\"%(object_url)s\">comment</a>.\n"
+msgstr ""
+
+#: templates/comments/includes/notifications/new_comment.html:5
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has <a href=\"%(object_url)s"
+"\">commented</a> on one of your posts.\n"
+msgstr ""
+
+#: templates/comments/includes/notifications/new_sibling.html:5
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has <a href=\"%(object_url)s"
+"\">commented</a> on a post you've\n"
+"commented on.\n"
+msgstr ""
+
+#: templates/comments/includes/notifications/reply.html:5
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has replied to your <a href="
+"\"%(object_url)s\">comment</a>.\n"
+msgstr ""
+
+#: templates/communities/community_detail.html:10
+msgid "About"
+msgstr ""
+
+#: templates/communities/community_detail.html:22
+#: templates/communities/terms.html:10 templates/includes/sidebar.html:224
+msgid "Terms"
+msgstr ""
+
+#: templates/communities/community_detail.html:29
+#: templates/communities/terms.html:30 templates/users/user_form.html:32
+msgid "Community Settings"
+msgstr ""
+
+#: templates/communities/community_form.html:8
+#: templates/communities/community_form.html:11
+#: templates/communities/membership_detail.html:19
+#: templates/communities/membership_form.html:19
+#: templates/communities/membership_list.html:15
+#: templates/invites/invite_form.html:9 templates/invites/invite_list.html:13
+#: templates/join_requests/joinrequest_detail.html:16
+#: templates/join_requests/joinrequest_list.html:12
+msgid "Site Settings"
+msgstr ""
+
+#: templates/communities/community_form.html:17
+#: templates/communities/membership_detail.html:11
+#: templates/communities/membership_detail.html:22
+#: templates/communities/membership_form.html:9
+#: templates/communities/membership_form.html:22
+#: templates/communities/membership_list.html:9
+#: templates/communities/membership_list.html:17
+#: templates/communities/membership_list.html:21
+#: templates/includes/forms/search_form.html:57
+msgid "Memberships"
+msgstr ""
+
+#: templates/communities/community_form.html:19
+#: templates/includes/forms/search_form.html:58
+#: templates/includes/no_sidebar_nav.html:22
+#: templates/includes/sidebar.html:245 templates/invites/base.html:8
+#: templates/invites/invite_form.html:12 templates/invites/invite_list.html:16
+#: templates/invites/invite_list.html:22
+#: templates/invites/received_invite_list.html:9
+msgid "Invites"
+msgstr ""
+
+#: templates/communities/community_form.html:24
+#: templates/communities/membership_form.html:33
+#: templates/users/user_form.html:49
+msgid "Save Settings"
+msgstr ""
+
+#: templates/communities/community_list.html:30
+msgid "Invite Only"
+msgstr ""
+
+#: templates/communities/community_list.html:46 templates/flags/base.html:7
+#: templates/flags/flag_list.html:6 templates/flags/flag_list.html:9
+#: templates/flags/includes/flags.html:8 templates/includes/sidebar.html:173
+msgid "Flags"
+msgstr ""
+
+#: templates/communities/community_list.html:53
+#: templates/includes/sidebar.html:49
+#: templates/notifications/notification_list.html:9
+#: templates/notifications/notification_list.html:21
+msgid "Notifications"
+msgstr ""
+
+#: templates/communities/emails/membership_deleted.html:10
+#: templates/communities/emails/membership_deleted.txt:4
+#, python-format
+msgid "Hi %(member_name)s,"
+msgstr ""
+
+#: templates/communities/emails/membership_deleted.html:12
+#, python-format
+msgid ""
+"\n"
+"<p>\n"
+"Your membership of the community %(community)s has been terminated. You will "
+"not be able to post new content until your membership has been restored.\n"
+"</p>\n"
+"<p>\n"
+"Your posts will not be available on the site, however they will not be "
+"removed from the database until you delete your own account.\n"
+"</p>\n"
+msgstr ""
+
+#: templates/communities/emails/membership_deleted.txt:5
+#, python-format
+msgid ""
+"\n"
+"Your membership of the community %(community)s has been terminated. You will "
+"not be able to post new content until your membership has been restored.\n"
+"\n"
+"Your posts will not be available on the site, however they will not be "
+"removed from the database until you delete your own account.\n"
+msgstr ""
+
+#: templates/communities/includes/membership_actions.html:11
+#: templates/includes/no_sidebar_nav.html:40 templates/includes/sidebar.html:84
+#: templates/includes/sidebar.html:233 templates/users/account_base.html:7
+#: templates/users/detail/base.html:156 templates/users/list/base.html:78
+#: templates/users/user_confirm_delete.html:9 templates/users/user_form.html:11
+#: templates/users/user_form.html:17
+msgid "Settings"
+msgstr ""
+
+#: templates/communities/includes/membership_actions.html:17
+#: templates/includes/sidebar.html:127
+#: templates/private_messages/message_form.html:28
+#: templates/private_messages/message_form.html:38
+#: templates/private_messages/message_list_base.html:19
+#: templates/users/detail/base.html:114 templates/users/list/base.html:92
+msgid "Send Message"
+msgstr ""
+
+#: templates/communities/includes/membership_actions.html:32
+msgid "Are you sure you want to delete this membership?"
+msgstr ""
+
+#: templates/communities/membership_confirm_delete.html:4
+msgid "Delete Membership"
+msgstr ""
+
+#: templates/communities/membership_confirm_delete.html:9
+msgid "Do you really want to delete this membership?"
+msgstr ""
+
+#: templates/communities/membership_detail.html:59
+#: templates/communities/membership_list.html:40
+#: templates/invites/invite_list.html:64
+#: templates/join_requests/joinrequest_detail.html:69
+#: templates/join_requests/joinrequest_list.html:57
+#: templates/join_requests/sent_joinrequest_list.html:27
+msgid "Status"
+msgstr ""
+
+#: templates/communities/membership_detail.html:62
+#: templates/communities/membership_list.html:41
+msgid "Role"
+msgstr ""
+
+#: templates/communities/membership_detail.html:66
+#, python-format
+msgid ""
+"\n"
+"    Joined %(community_name)s\n"
+"    "
+msgstr ""
+
+#: templates/communities/membership_leave.html:12
+#, python-format
+msgid ""
+"\n"
+"    Please confirm you want to leave the community <b>%(community_name)s</"
+"b>. Your posts and comments will not be\n"
+"    deleted until you delete your\n"
+"    account.\n"
+"    "
+msgstr ""
+
+#: templates/communities/membership_leave.html:22
+#, python-format
+msgid ""
+"\n"
+"    Leave %(community_name)s\n"
+"    "
+msgstr ""
+
+#: templates/communities/membership_list.html:25
+#, python-format
+msgid ""
+"\n"
+"  This site has one member.\n"
+"  "
+msgid_plural ""
+"\n"
+"  This site has %(counter)s members.\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/communities/membership_list.html:42
+#: templates/flags/includes/flags.html:15 templates/includes/sidebar.html:98
+#: templates/invites/invite_list.html:65
+#: templates/invites/received_invite_list.html:26
+#: templates/join_requests/joinrequest_list.html:58
+#: templates/join_requests/sent_joinrequest_list.html:28
+msgid "Actions"
+msgstr ""
+
+#: templates/communities/membership_list.html:55
+msgid "Active"
+msgstr ""
+
+#: templates/communities/membership_list.html:55
+msgid "Inactive"
+msgstr ""
+
+#: templates/communities/not_found.html:7
+msgid "Community Not Found"
+msgstr ""
+
+#: templates/communities/not_found.html:9
+msgid "No community found for this domain"
+msgstr ""
+
+#: templates/communities/terms.html:14
+msgid "Terms & Conditions"
+msgstr ""
+
+#: templates/communities/terms.html:22
+#, python-format
+msgid ""
+"\n"
+"    About %(community.name)s\n"
+"    "
+msgstr ""
+
+#: templates/communities/welcome.html:23
+#, python-format
+msgid ""
+"\n"
+"  You have a pending invite. Please go <a href=\"%(invite_url)s\">here</a> "
+"to accept or reject your invite.\n"
+"  "
+msgstr ""
+
+#: templates/communities/welcome.html:30
+msgid ""
+"\n"
+"  Your request for an invite has been sent to the community admins. You will "
+"receive an email when they have made\n"
+"  their decision.\n"
+"  "
+msgstr ""
+
+#: templates/communities/welcome.html:35
+msgid ""
+"\n"
+"  Your request for an invite was rejected by the community admins. You "
+"cannot join this community at this time.\n"
+"  "
+msgstr ""
+
+#: templates/communities/welcome.html:43
+#, python-format
+msgid ""
+"\n"
+"  You are not a member of this community. You can request an invite <a href="
+"\"%(join_request_url)s\">here</a>.\n"
+"  "
+msgstr ""
+
+#: templates/communities/welcome.html:49
+msgid ""
+"\n"
+"  Your membership is currently suspended.\n"
+"  "
+msgstr ""
+
+#: templates/communities/welcome.html:54
+msgid ""
+"\n"
+"  This community is locked and new members are accepted only by private "
+"invitation.\n"
+"  "
+msgstr ""
+
+#: templates/communities/welcome.html:64
+#, python-format
+msgid ""
+"\n"
+"  You can find other communities <a href=\"%(community_list_url)s\">here</"
+"a>.\n"
+"  "
+msgstr ""
+
+#: templates/error_base.html:11
+msgid "Error"
+msgstr ""
+
+#: templates/error_base.html:27
+msgid "Home"
+msgstr ""
+
+#: templates/events/calendar.html:9 templates/events/calendar.html:14
+#: templates/events/calendar.html:38 templates/events/event_detail.html:13
+#: templates/includes/forms/search_form.html:50
+#: templates/photos/photo_list.html:16 templates/polls/poll_list.html:14
+#: templates/posts/post_list.html:12
+msgid "Events"
+msgstr ""
+
+#: templates/events/calendar.html:34 templates/includes/sidebar.html:109
+msgid "Submit Event"
+msgstr ""
+
+#: templates/events/emails/notifications/attend.html:9
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> is attending this "
+"<a href=\"%(absolute_url)s\">event</a>.\n"
+msgstr ""
+
+#: templates/events/emails/notifications/attend.txt:8
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s is attending this event.\n"
+msgstr ""
+
+#: templates/events/emails/notifications/cancel.html:9
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has canceled this "
+"<a href=\"%(absolute_url)s\">event</a>.\n"
+msgstr ""
+
+#: templates/events/emails/notifications/cancel.txt:8
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has canceled this event.\n"
+msgstr ""
+
+#: templates/events/event_list.html:14
+#: templates/includes/forms/search_form.html:49
+#: templates/photos/photo_list.html:14 templates/polls/poll_list.html:12
+msgid "Posts"
+msgstr ""
+
+#: templates/events/event_list.html:16
+#: templates/includes/forms/search_form.html:51 templates/photos/gallery.html:9
+#: templates/photos/gallery.html:24 templates/polls/poll_list.html:16
+#: templates/posts/post_list.html:14
+msgid "Photos"
+msgstr ""
+
+#: templates/events/event_list.html:18
+#: templates/includes/forms/search_form.html:52
+#: templates/photos/photo_list.html:18 templates/posts/post_list.html:16
+msgid "Polls"
+msgstr ""
+
+#: templates/events/includes/actions.html:19
+#: templates/events/includes/actions.html:24
+msgid "Attending"
+msgstr ""
+
+#: templates/events/includes/actions.html:33
+#: templates/photos/includes/actions.html:12
+msgid "Download"
+msgstr ""
+
+#: templates/events/includes/actions.html:47
+msgid "Are you sure you want to cancel this event?"
+msgstr ""
+
+#: templates/events/includes/actions.html:48
+msgid "Cancel Event"
+msgstr ""
+
+#: templates/events/includes/calendar.html:9
+#: templates/includes/forms/widgets/calendar.html:46
+#: templates/includes/pagination.html:15
+msgid "Previous"
+msgstr ""
+
+#: templates/events/includes/calendar.html:14
+#: templates/includes/forms/widgets/calendar.html:52
+#: templates/includes/pagination.html:24
+msgid "Next"
+msgstr ""
+
+#: templates/events/includes/calendar.html:18
+#: templates/includes/forms/widgets/calendar.html:57
+msgid "Mon"
+msgstr ""
+
+#: templates/events/includes/calendar.html:19
+#: templates/includes/forms/widgets/calendar.html:58
+msgid "Tue"
+msgstr ""
+
+#: templates/events/includes/calendar.html:20
+#: templates/includes/forms/widgets/calendar.html:59
+msgid "Wed"
+msgstr ""
+
+#: templates/events/includes/calendar.html:21
+#: templates/includes/forms/widgets/calendar.html:60
+msgid "Thu"
+msgstr ""
+
+#: templates/events/includes/calendar.html:22
+#: templates/includes/forms/widgets/calendar.html:61
+msgid "Fri"
+msgstr ""
+
+#: templates/events/includes/calendar.html:23
+#: templates/includes/forms/widgets/calendar.html:62
+msgid "Sat"
+msgstr ""
+
+#: templates/events/includes/calendar.html:24
+#: templates/includes/forms/widgets/calendar.html:56
+msgid "Sun"
+msgstr ""
+
+#: templates/events/includes/calendar.html:50
+msgid "More..."
+msgstr ""
+
+#: templates/events/includes/event.html:14
+msgid "This event has been canceled."
+msgstr ""
+
+#: templates/events/includes/event.html:28
+#: templates/events/includes/event.html:44
+msgid "Date"
+msgstr ""
+
+#: templates/events/includes/event.html:37
+msgid "Dates"
+msgstr ""
+
+#: templates/events/includes/event.html:51
+msgid "Repeats"
+msgstr ""
+
+#: templates/events/includes/event.html:54
+#, python-format
+msgid ""
+"\n"
+"        Same time every %(weekday)s\n"
+"        "
+msgstr ""
+
+#: templates/events/includes/event.html:61
+#, python-format
+msgid ""
+"\n"
+"        until %(until)s\n"
+"        "
+msgstr ""
+
+#: templates/events/includes/event.html:91
+msgid "Contact"
+msgstr ""
+
+#: templates/events/includes/event.html:96
+#: templates/invites/invite_list.html:62
+msgid "Email"
+msgstr ""
+
+#: templates/events/includes/event.html:101
+msgid "Phone"
+msgstr ""
+
+#: templates/events/includes/event.html:106
+msgid "Admission"
+msgstr ""
+
+#: templates/events/includes/event.html:111
+msgid "Tickets available from"
+msgstr ""
+
+#: templates/events/includes/info.html:12
+#, python-format
+msgid ""
+"\n"
+"  1 Attended\n"
+"  "
+msgid_plural ""
+"\n"
+"  %(counter)s Attended\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/events/includes/info.html:18
+#, python-format
+msgid ""
+"\n"
+"  1 Attending\n"
+"  "
+msgid_plural ""
+"\n"
+"  %(counter)s Attending\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/events/includes/links.html:10
+#: templates/photos/includes/links.html:10
+msgid "Map"
+msgstr ""
+
+#: templates/events/includes/notifications/attend.html:6
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> is attending this <a href="
+"\"%(object_url)s\">event</a>.\n"
+msgstr ""
+
+#: templates/events/includes/notifications/cancel.html:6
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has canceled this <a href="
+"\"%(object_url)s\">event</a>.\n"
+msgstr ""
+
+#: templates/flags/flag_list.html:15
+msgid "Flagged item"
+msgstr ""
+
+#: templates/flags/flag_list.html:16 templates/flags/includes/flags.html:13
+msgid "Flagged by"
+msgstr ""
+
+#: templates/flags/flag_list.html:17 templates/flags/includes/flags.html:14
+msgid "Reason"
+msgstr ""
+
+#: templates/hashtags/base.html:7 templates/hashtags/list/base.html:11
+#: templates/hashtags/not_found.html:12 templates/hashtags/tag_detail.html:13
+#: templates/includes/forms/search_form.html:53
+#: templates/includes/sidebar.html:139
+msgid "Tags"
+msgstr ""
+
+#: templates/hashtags/includes/block.html:13
+#: templates/hashtags/includes/block.html:20
+#: templates/users/detail/base.html:133 templates/users/detail/base.html:143
+#: templates/users/list/blocked.html:25
+msgid "Block"
+msgstr ""
+
+#: templates/hashtags/includes/follow.html:12
+#: templates/hashtags/includes/follow.html:19
+#: templates/users/includes/follow.html:10
+#: templates/users/includes/follow.html:17
+msgid "Follow"
+msgstr ""
+
+#: templates/hashtags/list/all.html:20
+msgid ""
+"There are no tags matching your query currently used by any posts in this "
+"community."
+msgstr ""
+
+#: templates/hashtags/list/base.html:26
+#: templates/hashtags/list/following.html:7 templates/includes/sidebar.html:190
+#: templates/users/list/base.html:24 templates/users/list/following.html:7
+msgid "Following"
+msgstr ""
+
+#: templates/hashtags/list/base.html:49
+msgid "Sensitive"
+msgstr ""
+
+#: templates/hashtags/list/blocked.html:9
+msgid "You have not blocked any tags."
+msgstr ""
+
+#: templates/hashtags/list/following.html:9
+msgid "You are not following any tags at the moment."
+msgstr ""
+
+#: templates/hashtags/not_found.html:16
+msgid "Tag not found"
+msgstr ""
+
+#: templates/hashtags/not_found.html:18
+#, python-format
+msgid ""
+"\n"
+"  Sorry, there don't appear to be any activities in this community tagged "
+"<b>#%(tag)s</b>.\n"
+"  "
+msgstr ""
+
+#: templates/hashtags/tag_detail.html:39
+#, python-format
+msgid ""
+"\n"
+"  <strong>One activity</strong> has been tagged with <strong>#%(name)s</"
+"strong>.\n"
+"  "
+msgid_plural ""
+"\n"
+"  <strong>%(total)s activities</strong> have been tagged with <strong>#"
+"%(name)s</strong>.\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/includes/collapsable.html:15
+msgid "Show More"
+msgstr ""
+
+#: templates/includes/confirm_dialog.html:26
+msgid "Yes, Please"
+msgstr ""
+
+#: templates/includes/confirm_dialog.html:28
+msgid "No, Cancel"
+msgstr ""
+
+#: templates/includes/empty.html:10
+#, python-format
+msgid ""
+"\n"
+"  Sorry, no results found for &quot;%(query)s&quot;\n"
+"  "
+msgstr ""
+
+#: templates/includes/empty.html:14
+msgid "There's nothing to see here right now."
+msgstr ""
+
+#: templates/includes/footer.html:7
+msgid ""
+"Powered by <b>Social-BFG</b>, an open-source social network platform.\n"
+"  <a class=\"underline text-white\"\n"
+"     href=\"https://gitlab.com/danjac/localhub/\">Open software</a> licensed "
+"under\n"
+"  <a class=\"underline text-white\"\n"
+"     href=\"http://www.affero.org/oagpl.html\">AGPL</a>"
+msgstr ""
+
+#: templates/includes/forms/search_form.html:39
+msgid "Search in..."
+msgstr ""
+
+#: templates/includes/forms/search_form.html:40
+#: templates/includes/sidebar.html:33
+msgid "Activity Stream"
+msgstr ""
+
+#: templates/includes/forms/search_form.html:41
+msgid "Messages - Inbox"
+msgstr ""
+
+#: templates/includes/forms/search_form.html:42
+msgid "Messages - Outbox"
+msgstr ""
+
+#: templates/includes/forms/search_form.html:45
+msgid "Bookmarks - Activities"
+msgstr ""
+
+#: templates/includes/forms/search_form.html:46
+msgid "Bookmarks - Messages"
+msgstr ""
+
+#: templates/includes/forms/search_form.html:47
+msgid "Bookmarks - Comments"
+msgstr ""
+
+#: templates/includes/forms/search_form.html:48
+#: templates/includes/sidebar.html:185 templates/includes/sidebar.html:239
+#: templates/users/list/base.html:20 templates/users/list/members.html:7
+msgid "Members"
+msgstr ""
+
+#: templates/includes/forms/search_form.html:73
+msgid "Clear Search"
+msgstr ""
+
+#: templates/includes/forms/search_form.html:79
+#, python-format
+msgid ""
+"\n"
+"  1 Result for \"%(query)s\"\n"
+"  "
+msgid_plural ""
+"\n"
+"  %(counter)s Results for \"%(query)s\"\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/includes/forms/stimulusjs_form.html:12
+msgid ""
+"Are you sure you want to leave this page? All your changes will be lost."
+msgstr ""
+
+#: templates/includes/sidebar.html:19
+msgid "Close Menu"
+msgstr ""
+
+#: templates/includes/sidebar.html:74 templates/photos/gallery.html:9
+#: templates/photos/gallery.html:13 templates/photos/photo_list.html:12
+msgid "Gallery"
+msgstr ""
+
+#: templates/includes/sidebar.html:104
+msgid "Submit Post"
+msgstr ""
+
+#: templates/includes/sidebar.html:114 templates/photos/gallery.html:20
+msgid "Submit Photo"
+msgstr ""
+
+#: templates/includes/sidebar.html:119
+msgid "Submit Poll"
+msgstr ""
+
+#: templates/includes/sidebar.html:134
+msgid "Content"
+msgstr ""
+
+#: templates/includes/sidebar.html:153 templates/likes/base.html:7
+#: templates/likes/base.html:11
+msgid "Favorites"
+msgstr ""
+
+#: templates/includes/sidebar.html:159 templates/users/detail/base.html:163
+#: templates/users/likes/base.html:8 templates/users/likes/base.html:19
+#: templates/users/likes/base.html:23
+msgid "Likes"
+msgstr ""
+
+#: templates/includes/sidebar.html:165 templates/users/detail/base.html:167
+#: templates/users/mentions/base.html:8 templates/users/mentions/base.html:19
+#: templates/users/mentions/base.html:23
+msgid "Mentions"
+msgstr ""
+
+#: templates/includes/sidebar.html:195 templates/users/list/base.html:28
+#: templates/users/list/followers.html:7
+msgid "Followers"
+msgstr ""
+
+#: templates/includes/sidebar.html:206
+#: templates/invites/received_invite_list.html:24
+#: templates/join_requests/sent_joinrequest_list.html:26
+msgid "Community"
+msgstr ""
+
+#: templates/includes/sidebar.html:213
+#, python-format
+msgid ""
+"\n"
+"        About %(community_name)s\n"
+"        "
+msgstr ""
+
+#: templates/includes/timesince.html:11
+#, python-format
+msgid "%(verb)s %(created)s ago"
+msgstr ""
+
+#: templates/includes/timesince.html:13
+#: templates/join_requests/joinrequest_detail.html:73
+#, python-format
+msgid "%(created)s ago"
+msgstr ""
+
+#: templates/invites/emails/invitation.html:9
+#: templates/invites/emails/invitation.txt:7
+msgid "Hi"
+msgstr ""
+
+#: templates/invites/emails/invitation.html:13
+#, python-format
+msgid ""
+"\n"
+"    You've been invited to join the community %(community)s.\n"
+"    "
+msgstr ""
+
+#: templates/invites/emails/invitation.html:19
+#, python-format
+msgid ""
+"\n"
+"    Click on <a href=\"%(accept_url)s\">this link</a> or copy and paste the "
+"link below into your browser navbar.\n"
+"    "
+msgstr ""
+
+#: templates/invites/emails/invitation.txt:9
+#, python-format
+msgid ""
+"\n"
+"You've been invited to join the community %(community)s.\n"
+msgstr ""
+
+#: templates/invites/emails/invitation.txt:13
+msgid "Click on this link or copy and paste into your browser navbar"
+msgstr ""
+
+#: templates/invites/invite_confirm_delete.html:4
+msgid "Delete Invite"
+msgstr ""
+
+#: templates/invites/invite_confirm_delete.html:9
+msgid "Do you really want to delete this invite?"
+msgstr ""
+
+#: templates/invites/invite_detail.html:9
+msgid "Accept Invitation"
+msgstr ""
+
+#: templates/invites/invite_detail.html:13
+#, python-format
+msgid ""
+"\n"
+"    You have been invited to join the community <b>%(community)s</b>. If you "
+"click the option <b>Accept</b> you will\n"
+"    be added as a new member.\n"
+"    "
+msgstr ""
+
+#: templates/invites/invite_detail.html:23
+#: templates/invites/received_invite_list.html:46
+#: templates/join_requests/joinrequest_detail.html:41
+#: templates/join_requests/joinrequest_detail.html:44
+#: templates/join_requests/joinrequest_list.html:85
+#: templates/join_requests/joinrequest_list.html:87
+msgid "Accept"
+msgstr ""
+
+#: templates/invites/invite_detail.html:29
+#: templates/invites/received_invite_list.html:51
+#: templates/join_requests/joinrequest_detail.html:53
+#: templates/join_requests/joinrequest_detail.html:55
+#: templates/join_requests/joinrequest_list.html:95
+#: templates/join_requests/joinrequest_list.html:97
+msgid "Reject"
+msgstr ""
+
+#: templates/invites/invite_form.html:15 templates/invites/invite_form.html:21
+msgid "Send Invite"
+msgstr ""
+
+#: templates/invites/invite_list.html:30
+msgid "Send an invite"
+msgstr ""
+
+#: templates/invites/invite_list.html:35
+msgid "Invites received"
+msgstr ""
+
+#: templates/invites/invite_list.html:41
+#: templates/join_requests/joinrequest_list.html:29
+msgid "Show All"
+msgstr ""
+
+#: templates/invites/invite_list.html:63
+#: templates/invites/received_invite_list.html:25
+msgid "Sent"
+msgstr ""
+
+#: templates/invites/invite_list.html:85
+msgid "Re-send"
+msgstr ""
+
+#: templates/invites/invite_list.html:92
+msgid "Delete invite"
+msgstr ""
+
+#: templates/invites/invite_list.html:93
+msgid "You sure you want to delete this invite?"
+msgstr ""
+
+#: templates/invites/received_invite_list.html:16
+msgid "Manage invites"
+msgstr ""
+
+#: templates/invites/received_invite_list.html:36
+#, python-format
+msgid ""
+"\n"
+"        %(timestamp)s ago\n"
+"        "
+msgstr ""
+
+#: templates/join_requests/emails/accepted.html:12
+#, python-format
+msgid ""
+"\n"
+"    Hi, %(user_name)s\n"
+"    "
+msgstr ""
+
+#: templates/join_requests/emails/accepted.html:18
+#, python-format
+msgid ""
+"\n"
+"You have been accepted to join <a href=\"%(community_url)s\">%(community)s</"
+"a>! Welcome on board!\n"
+msgstr ""
+
+#: templates/join_requests/emails/accepted.txt:11
+#, python-format
+msgid ""
+"\n"
+"Hi, %(user_name)s\n"
+msgstr ""
+
+#: templates/join_requests/emails/accepted.txt:14
+#, python-format
+msgid ""
+"\n"
+"You have been accepted to join %(community)s! Welcome on board!\n"
+"%(community_url)s\n"
+msgstr ""
+
+#: templates/join_requests/emails/join_request.html:13
+#: templates/join_requests/emails/rejected.html:11
+msgid "Hi,"
+msgstr ""
+
+#: templates/join_requests/emails/join_request.html:19
+#, python-format
+msgid ""
+"\n"
+"  %(sender)s has requested to join this community.\n"
+"  "
+msgstr ""
+
+#: templates/join_requests/emails/join_request.html:23
+#, python-format
+msgid ""
+"\n"
+"  You have received a request from %(email)s to join this community.\n"
+"  "
+msgstr ""
+
+#: templates/join_requests/emails/join_request.html:31
+msgid "Review all requests"
+msgstr ""
+
+#: templates/join_requests/emails/rejected.html:14
+#, python-format
+msgid ""
+"\n"
+"  Sorry, you have not been accepted to join %(community)s.\n"
+"  "
+msgstr ""
+
+#: templates/join_requests/emails/rejected.txt:6
+#, python-format
+msgid ""
+"\n"
+"Hi,\n"
+"Sorry, you have not been accepted to join %(community)s.\n"
+msgstr ""
+
+#: templates/join_requests/joinrequest_confirm_delete.html:4
+msgid "Delete Join Requst"
+msgstr ""
+
+#: templates/join_requests/joinrequest_confirm_delete.html:9
+msgid "Do you really want to delete this request?"
+msgstr ""
+
+#: templates/join_requests/joinrequest_detail.html:42
+#: templates/join_requests/joinrequest_list.html:86
+msgid "Are you sure you want to accept this request?"
+msgstr ""
+
+#: templates/join_requests/joinrequest_detail.html:54
+#: templates/join_requests/joinrequest_list.html:96
+msgid "Are you sure you want to reject this request?"
+msgstr ""
+
+#: templates/join_requests/joinrequest_detail.html:62
+#: templates/join_requests/joinrequest_list.html:104
+msgid "Are you sure you want to delete this request?"
+msgstr ""
+
+#: templates/join_requests/joinrequest_detail.html:71
+#: templates/join_requests/joinrequest_list.html:56
+msgid "Requested"
+msgstr ""
+
+#: templates/join_requests/joinrequest_detail.html:78
+msgid "About this person"
+msgstr ""
+
+#: templates/join_requests/joinrequest_form.html:8
+msgid "Request Invitation"
+msgstr ""
+
+#: templates/join_requests/joinrequest_form.html:10
+msgid ""
+"Your request will be sent to the site admins. If they approve your request, "
+"you will automatically become a member of this community."
+msgstr ""
+
+#: templates/join_requests/joinrequest_list.html:47
+#, python-format
+msgid ""
+"Join requests are currently disabled for this community. You can re-enable "
+"them <a href=\"%(settings_url)s\">in your community settings</a>."
+msgstr ""
+
+#: templates/join_requests/joinrequest_list.html:55
+msgid "User"
+msgstr ""
+
+#: templates/join_requests/sent_joinrequest_list.html:17
+msgid "Manage join requests"
+msgstr ""
+
+#: templates/likes/activities.html:10
+msgid "You have not liked any activities."
+msgstr ""
+
+#: templates/likes/comments.html:10
+msgid "You have not liked any comments."
+msgstr ""
+
+#: templates/markdownx/widget.html:21
+msgid "Preview"
+msgstr ""
+
+#: templates/markdownx/widget.html:27
+msgid "Help"
+msgstr ""
+
+#: templates/markdownx/widget.html:38 templates/markdownx/widget.html:162
+msgid "Bold"
+msgstr ""
+
+#: templates/markdownx/widget.html:43 templates/markdownx/widget.html:166
+msgid "Italic"
+msgstr ""
+
+#: templates/markdownx/widget.html:53 templates/markdownx/widget.html:175
+msgid "Image"
+msgstr ""
+
+#: templates/markdownx/widget.html:58 templates/markdownx/widget.html:195
+msgid "Quote"
+msgstr ""
+
+#: templates/markdownx/widget.html:63 templates/markdownx/widget.html:190
+msgid "Code"
+msgstr ""
+
+#: templates/markdownx/widget.html:69
+msgid "List (Bullets)"
+msgstr ""
+
+#: templates/markdownx/widget.html:75
+msgid "List (Numbers)"
+msgstr ""
+
+#: templates/markdownx/widget.html:84
+msgid "Emoji..."
+msgstr ""
+
+#: templates/markdownx/widget.html:137
+msgid "You type:"
+msgstr ""
+
+#: templates/markdownx/widget.html:138
+msgid "You see:"
+msgstr ""
+
+#: templates/markdownx/widget.html:145
+msgid "Header (h1)"
+msgstr ""
+
+#: templates/markdownx/widget.html:151
+msgid "Header (h2)"
+msgstr ""
+
+#: templates/markdownx/widget.html:157
+msgid "Header (h3)"
+msgstr ""
+
+#: templates/markdownx/widget.html:177
+msgid "Note: only safe images (starting with https://) will be shown."
+msgstr ""
+
+#: templates/markdownx/widget.html:182
+msgid "(link to profile)"
+msgstr ""
+
+#: templates/markdownx/widget.html:186
+msgid "(link to hashtag)"
+msgstr ""
+
+#: templates/markdownx/widget.html:225
+msgid ""
+"\n"
+"      <a class=\"inline-block mr-2\"\n"
+"         target=\"_blank\"\n"
+"         rel=\"nofollow\"\n"
+"         href=\"https://www.markdownguide.org/basic-syntax\">Markdown Guide</"
+"a>\n"
+"      <a target=\"_blank\"\n"
+"         class=\"inline-block\"\n"
+"         rel=\"nofollow\"\n"
+"         href=\"https://gist.github.com/rxaviers/7360908\">More Emojis...</"
+"a>\n"
+"      "
+msgstr ""
+
+#: templates/notifications/emails/base.html:15
+#: templates/private_messages/emails/notification.html:14
+#, python-format
+msgid ""
+"\n"
+"  Hello from %(community_name)s !\n"
+"  "
+msgstr ""
+
+#: templates/notifications/emails/base.html:21
+#: templates/notifications/emails/base.txt:16
+#, python-format
+msgid "Hi %(recipient)s,"
+msgstr ""
+
+#: templates/notifications/emails/base.html:29
+#: templates/notifications/emails/base.txt:20
+#: templates/private_messages/emails/notification.html:44
+#, python-format
+msgid ""
+"\n"
+"  Thank you from %(community_name)s !\n"
+"  "
+msgstr ""
+
+#: templates/notifications/emails/base.txt:12
+#: templates/private_messages/emails/notification.txt:8
+#, python-format
+msgid ""
+"\n"
+"Hello from %(community_name)s !\n"
+msgstr ""
+
+#: templates/notifications/notification_list.html:15
+#, python-format
+msgid ""
+"\n"
+"You can enable emails for your notifications\n"
+"<a href=\"%(user_settings_url)s\">in your settings</a>."
+msgstr ""
+
+#: templates/notifications/notification_list.html:30
+msgid "Mark All Read"
+msgstr ""
+
+#: templates/notifications/notification_list.html:37
+#: templates/notifications/notification_list.html:38
+msgid "Delete All"
+msgstr ""
+
+#: templates/notifications/notification_list.html:38
+msgid "Are you sure you want to delete all your notifications?"
+msgstr ""
+
+#: templates/notifications/notification_list.html:46
+msgid "Browser notifications enabled"
+msgstr ""
+
+#: templates/notifications/notification_list.html:47
+msgid "Browser notifications disabled"
+msgstr ""
+
+#: templates/notifications/notification_list.html:52
+msgid "Enable Browser Notifications"
+msgstr ""
+
+#: templates/notifications/notification_list.html:57
+msgid "Disable Browser Notifications"
+msgstr ""
+
+#: templates/notifications/notification_list.html:80
+#, python-format
+msgid ""
+"\n"
+"        %(created)s ago\n"
+"        "
+msgstr ""
+
+#: templates/notifications/notification_list.html:91
+msgid "Mark Read"
+msgstr ""
+
+#: templates/photos/includes/photo.html:18
+msgid "No photo available"
+msgstr ""
+
+#: templates/photos/includes/photo.html:28
+msgid "Original Size"
+msgstr "Alkuperäinen Koko"
+
+#: templates/photos/includes/photo.html:30
+msgid "Download Size"
+msgstr "Latauskoko"
+
+#: templates/photos/includes/photo.html:33
+msgid "GPS Location"
+msgstr "GPS-Sijainti"
+
+#: templates/photos/includes/photo.html:36
+#, python-format
+msgid ""
+"\n"
+"  %(latitude)s&deg;N %(longitude)s&deg;W\n"
+"  "
+msgstr ""
+
+#: templates/photos/includes/photo.html:43
+msgid "Artist"
+msgstr "Taitelilija"
+
+#: templates/photos/includes/photo.html:51
+msgid "Creative Commons License"
+msgstr ""
+
+#: templates/polls/emails/notifications/vote.html:8
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has voted in your "
+"<a href=\"%(object_url)s\">poll</a>.\n"
+msgstr ""
+
+#: templates/polls/emails/notifications/vote.txt:7
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has voted in your poll.\n"
+msgstr ""
+
+#: templates/polls/includes/answers.html:12
+msgid "You can only vote on a poll when it has been made public."
+msgstr ""
+
+#: templates/polls/includes/answers.html:16
+msgid "Voting for this poll has been locked."
+msgstr ""
+
+#: templates/polls/includes/answers.html:34
+#, python-format
+msgid "1 vote"
+msgid_plural "%(counter)s votes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/polls/includes/info.html:11
+#, python-format
+msgid ""
+"\n"
+"  1 Vote\n"
+"  "
+msgid_plural ""
+"\n"
+"  %(counter)s Votes\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/polls/includes/notifications/vote.html:6
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has voted in your <a href="
+"\"%(object_url)s\">%(object_name)s</a>.\n"
+msgstr ""
+
+#: templates/polls/includes/poll_form.html:12
+msgid "Answers"
+msgstr "Vastaukset"
+
+#: templates/posts/includes/post_form.html:12
+msgid ""
+"This URL is unavailable, or we are unable to fetch any meaningful data from "
+"this page."
+msgstr ""
+
+#: templates/posts/includes/widgets/opengraph_preview.html:16
+msgid "Fetch content from URL"
+msgstr ""
+
+#: templates/posts/includes/widgets/opengraph_preview.html:24
+msgid "Remove content from URL"
+msgstr ""
+
+#: templates/private_messages/emails/notification.html:20
+#, python-format
+msgid ""
+"\n"
+"  Hi %(recipient_display)s,\n"
+"  "
+msgstr ""
+
+#: templates/private_messages/emails/notification.html:27
+#, python-format
+msgid ""
+"\n"
+"  <a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has replied to "
+"your <a\n"
+"     href=\"%(absolute_url)s\">message</a>.\n"
+"  "
+msgstr ""
+
+#: templates/private_messages/emails/notification.html:32
+#, python-format
+msgid ""
+"\n"
+"  <a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has sent you a <a "
+"href=\"%(absolute_url)s\">follow-up</a>\n"
+"  to one of their messages.\n"
+"  "
+msgstr ""
+
+#: templates/private_messages/emails/notification.html:37
+#, python-format
+msgid ""
+"\n"
+"  <a href=\"%(actor_absolute_url)s\">%(actor_display)s</a> has sent you a <a "
+"href=\"%(absolute_url)s\">message</a>.\n"
+"  "
+msgstr ""
+
+#: templates/private_messages/emails/notification.txt:15
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has replied to your message:\n"
+msgstr ""
+
+#: templates/private_messages/emails/notification.txt:19
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has sent you a follow-up to one of their messages:\n"
+msgstr ""
+
+#: templates/private_messages/emails/notification.txt:23
+#, python-format
+msgid ""
+"\n"
+"%(actor_display)s has sent you a message:\n"
+msgstr ""
+
+#: templates/private_messages/emails/notification.txt:31
+#, python-format
+msgid ""
+"\n"
+"Thank you from %(community_name)s !\n"
+msgstr ""
+
+#: templates/private_messages/inbox.html:8
+#: templates/private_messages/message_detail.html:25
+#: templates/private_messages/message_list_base.html:37
+msgid "Inbox"
+msgstr "Saaneet"
+
+#: templates/private_messages/inbox.html:16
+msgid "You have not received any messages"
+msgstr "Et saanut yhtä viestiäkään"
+
+#: templates/private_messages/includes/email_settings.html:9
+#, python-format
+msgid ""
+"\n"
+"You can enable email notifications for new messages <a href="
+"\"%(user_settings_url)s\">in your settings</a>.\n"
+msgstr ""
+
+#: templates/private_messages/includes/message.html:16
+msgid "to"
+msgstr ""
+
+#: templates/private_messages/includes/message.html:20
+#, python-format
+msgid ""
+"\n"
+"      %(created)s ago\n"
+"      "
+msgstr ""
+
+#: templates/private_messages/includes/message.html:57
+msgid "Mark As Read"
+msgstr "Merkitse Luettetyksi"
+
+#: templates/private_messages/includes/message.html:82
+#: templates/private_messages/message_form.html:21
+msgid "Follow-Up"
+msgstr ""
+
+#: templates/private_messages/includes/message.html:91
+#: templates/private_messages/message_confirm_delete.html:4
+msgid "Delete Message"
+msgstr "Poista Viesti"
+
+#: templates/private_messages/includes/message.html:92
+msgid ""
+"Are you sure you want to delete this message? Replies to this message will "
+"not be deleted. The message may still be available to the other person."
+msgstr ""
+
+#: templates/private_messages/includes/notification.html:6
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has replied to your <a href="
+"\"%(object_url)s\">message</a>.\n"
+msgstr ""
+
+#: templates/private_messages/includes/notification.html:10
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has sent you a <a href="
+"\"%(object_url)s\">follow-up</a> to one of\n"
+"their messages.\n"
+msgstr ""
+
+#: templates/private_messages/includes/notification.html:15
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor_display)s</a> has sent you a <a href="
+"\"%(object_url)s\">message</a>.\n"
+msgstr ""
+
+#: templates/private_messages/message_confirm_delete.html:9
+msgid "Do you really want to delete this message?"
+msgstr "Haluatko varmasti poistaa tämän viestin?"
+
+#: templates/private_messages/message_detail.html:15
+msgid "Message"
+msgstr "Viesti"
+
+#: templates/private_messages/message_detail.html:27
+#: templates/private_messages/message_list_base.html:41
+#: templates/private_messages/outbox.html:8
+msgid "Outbox"
+msgstr "Läheteneet"
+
+#: templates/private_messages/message_detail.html:32
+#, python-format
+msgid ""
+"\n"
+"    Send Message to %(other_user_name)s\n"
+"    "
+msgstr ""
+
+#: templates/private_messages/message_form.html:11
+msgid "Reply,Send Message"
+msgstr "Vastaa,Lähetä Viesti"
+
+#: templates/private_messages/message_list_base.html:26
+msgid "Mark All As Read"
+msgstr ""
+
+#: templates/private_messages/outbox.html:16
+msgid "You have not sent any messages"
+msgstr ""
+
+#: templates/socialaccount/authentication_error.html:8
+#: templates/socialaccount/authentication_error.html:11
+msgid "Social Network Login Failure"
+msgstr ""
+
+#: templates/socialaccount/authentication_error.html:19
+msgid ""
+"An error occurred while attempting to login via your social network account."
+msgstr ""
+
+#: templates/socialaccount/connections.html:8
+#: templates/socialaccount/connections.html:16
+#: templates/socialaccount/connections.html:20
+#: templates/users/user_form.html:40
+msgid "Social Logins"
+msgstr "Sosiaalikirjautumiset"
+
+#: templates/socialaccount/connections.html:24
+msgid ""
+"You can sign in to your account using any of the following third party "
+"accounts:"
+msgstr ""
+
+#: templates/socialaccount/connections.html:64
+msgid ""
+"You currently have no social network accounts connected to this account."
+msgstr ""
+
+#: templates/socialaccount/connections.html:68
+msgid "Add a 3rd Party Account"
+msgstr ""
+
+#: templates/socialaccount/signup.html:13
+#, python-format
+msgid ""
+"You are about to use your\n"
+"  %(provider_name)s account to login to\n"
+"  %(site_name)s. As a final step, please complete the following form:"
+msgstr ""
+
+#: templates/users/account_base.html:9
+msgid "Menu"
+msgstr "Valikko"
+
+#: templates/users/detail/activities.html:14
+#, python-format
+msgid ""
+"\n"
+"  <strong>1 Activity</strong>\n"
+"  "
+msgid_plural "1 Asia"
+"\n"
+"  <strong>%(counter)s Activities</strong>\n"
+"  "
+msgstr[0] "%(counter) Asiaa"
+msgstr[1] ""
+
+#: templates/users/detail/activities.html:21
+#: templates/users/detail/comments.html:21
+#, python-format
+msgid ""
+"\n"
+"  / <strong>1 Like</strong>\n"
+"  "
+msgid_plural "1 Tykkäys"
+"\n"
+"  / <strong>%(counter)s Likes</strong>\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/detail/activities.html:32
+msgid "You have not submitted any activities."
+msgstr ""
+
+#: templates/users/detail/activities.html:34
+#, python-format
+msgid "%(display_name)s has not published any activities."
+msgstr ""
+
+#: templates/users/detail/base.html:24
+#, python-format
+msgid ""
+"\n"
+"You can edit your profile in <a href=\"%(user_settings_url)s\">your "
+"settings</a>.\n"
+msgstr ""
+
+#: templates/users/detail/base.html:54
+#, python-format
+msgid ""
+"\n"
+"  You have been a member for <b>%(created)s</b>.\n"
+"  "
+msgstr ""
+
+#: templates/users/detail/base.html:58
+#, python-format
+msgid ""
+"\n"
+"  %(display_name)s has been a member for <b>%(created)s</b>.\n"
+"  "
+msgstr ""
+
+#: templates/users/detail/base.html:67
+#, python-format
+msgid "%(display_name)s is following you."
+msgstr ""
+
+#: templates/users/detail/base.html:76
+msgid "This user has blocked you."
+msgstr ""
+
+#: templates/users/detail/base.html:78
+msgid "You are blocking this user."
+msgstr ""
+
+#: templates/users/detail/base.html:85
+msgid "You cannot send messages to this person."
+msgstr "Et saa lähettää viestejä tälle henkilölle."
+
+#: templates/users/detail/base.html:87
+msgid ""
+"You cannot exchange messages with this person and their content has been "
+"removed from your feeds."
+msgstr ""
+
+#: templates/users/detail/base.html:172
+msgid "Membership"
+msgstr "Jäsenyys"
+
+#: templates/users/detail/comments.html:14
+#, python-format
+msgid ""
+"\n"
+"  <strong>1 Comment</strong>\n"
+"  "
+msgid_plural "1 Kommentti"
+"\n"
+"  <strong>%(counter)s Comments</strong>\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/detail/comments.html:33
+msgid "You have not submitted any comments."
+msgstr ""
+
+#: templates/users/detail/comments.html:35
+#, python-format
+msgid "%(display_name)s has not submitted any comments."
+msgstr ""
+
+#: templates/users/detail/messages.html:19
+#, python-format
+msgid ""
+"\n"
+"  1 Unread\n"
+"  "
+msgid_plural ""
+"\n"
+"  %(counter)s Unread\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/detail/messages.html:28
+#, python-format
+msgid ""
+"\n"
+"  1 Sent\n"
+"  "
+msgid_plural ""
+"\n"
+"  %(counter)s Sent\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/detail/messages.html:37
+#, python-format
+msgid ""
+"\n"
+"  1 Received\n"
+"  "
+msgid_plural ""
+"\n"
+"  %(counter)s Received\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/detail/messages.html:47
+msgid "You have not sent or received any messages."
+msgstr "Et saanut etkä lähettänyt yhtä viestiäkään."
+
+#: templates/users/detail/messages.html:49
+#, python-format
+msgid "You have not exchanged any messages with %(display_name)s."
+msgstr ""
+
+#: templates/users/detail/not_found.html:7
+msgid "User not found"
+msgstr ""
+
+#: templates/users/detail/not_found.html:9
+#, python-format
+msgid ""
+"\n"
+"  Sorry, there appears to be no active member of this community\n"
+"  matching <b>@%(username)s</b>.\n"
+"  "
+msgstr ""
+
+#: templates/users/emails/notification.html:13
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(absolute_url)s\">%(actor)s</a> is now following you.\n"
+msgstr ""
+
+#: templates/users/emails/notification.html:17
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(absolute_url)s\">%(actor)s</a> has joined this community.\n"
+msgstr ""
+
+#: templates/users/emails/notification.html:21
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(absolute_url)s\">%(actor)s</a> has updated their profile.\n"
+msgstr ""
+
+#: templates/users/emails/notification.txt:10
+#, python-format
+msgid ""
+"\n"
+"%(actor)s is now following you.\n"
+msgstr ""
+
+#: templates/users/emails/notification.txt:14
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has joined this community.\n"
+msgstr ""
+
+#: templates/users/emails/notification.txt:18
+#, python-format
+msgid ""
+"\n"
+"%(actor)s has updated their profile.\n"
+msgstr ""
+
+#: templates/users/emails/notification.txt:22
+#, python-format
+msgid ""
+"\n"
+"Link to user: %(absolute_url)s\n"
+msgstr "Linkki käyttäjälle: %(absolute_url)s\n"
+
+#: templates/users/includes/notification.html:10
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor)s</a> is now following you.\n"
+msgstr ""
+
+#: templates/users/includes/notification.html:14
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor)s</a> has joined this community.\n"
+msgstr ""
+
+#: templates/users/includes/notification.html:18
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(actor_url)s\">%(actor)s</a> has updated their profile.\n"
+msgstr ""
+
+#: templates/users/includes/user_form.html:11
+msgid ""
+"\n"
+"Your settings apply to all communities you belong to.\n"
+msgstr ""
+
+#: templates/users/likes/activities.html:21
+#: templates/users/likes/comments.html:20
+#, python-format
+msgid ""
+"\n"
+"  <strong>1 like</strong> for\n"
+"  "
+msgid_plural ""
+"\n"
+"  <strong>%(counter)s likes</strong> for\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/likes/activities.html:27
+#, python-format
+msgid ""
+"\n"
+"  <strong>1 activity</strong>.\n"
+"  "
+msgid_plural "1 asia"
+"\n"
+"  <strong>%(counter)s activities</strong>.\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/likes/activities.html:37
+msgid "You do not have any likes for your activities."
+msgstr ""
+
+#: templates/users/likes/activities.html:39
+#, python-format
+msgid "%(display_name)s has not received any likes for their activities."
+msgstr ""
+
+#: templates/users/likes/comments.html:26
+#, python-format
+msgid ""
+"\n"
+"  <strong>1 comment</strong>.\n"
+"  "
+msgid_plural ""
+"\n"
+"  <strong>%(counter)s comments</strong>.\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/likes/comments.html:36
+msgid "You do not have any likes for your comments."
+msgstr ""
+
+#: templates/users/likes/comments.html:38
+#, python-format
+msgid "%(display_name)s has not received any likes for their comments."
+msgstr ""
+
+#: templates/users/list/blocked.html:10
+#, python-format
+msgid ""
+"\n"
+"You have blocked one person.\n"
+msgid_plural ""
+"\n"
+"You have blocked %(counter)s people.\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/list/followers.html:10
+#, python-format
+msgid ""
+"\n"
+"You have one follower.\n"
+msgid_plural "Sinulla on yksi seuraaja"
+"\n"
+"You have %(counter)s followers.\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/list/following.html:10
+#, python-format
+msgid ""
+"\n"
+"You are following one person.\n"
+msgid_plural ""
+"\n"
+"You are following %(counter)s people.\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/list/members.html:17
+#, python-format
+msgid ""
+"\n"
+"This community has one member.\n"
+msgid_plural ""
+"\n"
+"This community has %(counter)s members.\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/mentions/activities.html:16
+#, python-format
+msgid ""
+"\n"
+"  You have been mentioned in <strong>1 activity</strong>\n"
+"  "
+msgid_plural ""
+"\n"
+"  You have been mentioned in <strong>%(counter)s activities</strong>\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/mentions/activities.html:22
+#, python-format
+msgid ""
+"\n"
+"  %(display_name)s has been mentioned in <strong>1 activity</strong>\n"
+"  "
+msgid_plural ""
+"\n"
+"  %(display_name)s has been mentioned in <strong>%(counter)s activities</"
+"strong>\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/mentions/activities.html:32
+msgid "You have not been mentioned in any activities."
+msgstr ""
+
+#: templates/users/mentions/activities.html:34
+#, python-format
+msgid "%(display_name)s has not been mentioned in any activities."
+msgstr ""
+
+#: templates/users/mentions/comments.html:14
+#, python-format
+msgid ""
+"\n"
+"  You have been mentioned in <strong>1 comment</strong>\n"
+"  "
+msgid_plural ""
+"\n"
+"  You have been mentioned in <strong>%(counter)s comments</strong>\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/mentions/comments.html:20
+#, python-format
+msgid ""
+"\n"
+"  %(display_name)s has been mentioned in <strong>1 comment</strong>\n"
+"  "
+msgid_plural ""
+"\n"
+"  %(display_name)s has been mentioned in <strong>%(counter)s comments</"
+"strong>\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/mentions/comments.html:30
+msgid "You have not been mentioned in any comments."
+msgstr ""
+
+#: templates/users/mentions/comments.html:32
+#, python-format
+msgid "%(display_name)s has not been mentioned in any comments."
+msgstr ""
+
+#: templates/users/user_confirm_delete.html:11
+#: templates/users/user_confirm_delete.html:15
+#: templates/users/user_form.html:45
+msgid "Delete Account"
+msgstr "Poista Käyttäjätili"
+
+#: templates/users/user_confirm_delete.html:23
+msgid ""
+"\n"
+"    Please confirm you want to delete your account. This will also "
+"<b>permanently</b> remove all your posts and\n"
+"    comments.\n"
+"    "
+msgstr ""
+
+#: templates/users/user_confirm_delete.html:31
+msgid "Delete account"
+msgstr ""
+
+#: templates/users/user_form.html:24
+msgid "More Settings..."
+msgstr ""
