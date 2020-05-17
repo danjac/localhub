@@ -8,7 +8,7 @@
 
 export const Events = {
   CONFIRM_OPEN: 'confirm:open',
-  TOAST_MESSAGE: 'toasformmessage',
+  TOAST_MESSAGE: 'toast:message',
   FORM_FETCHING: 'form:fetching',
   FORM_COMPLETE: 'form:complete',
 };
