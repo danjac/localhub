@@ -28,7 +28,7 @@ export default class extends ApplicationController {
     } else {
       value = this.inputTarget.value;
     }
-    if (value && this.validateURL() && !this.data.has('disabled')) {
+    if (value && this.inputTarget.checkValidity() && !this.data.has('disabled')) {
       this.fetchButtonTarget.removeAttribute('disabled');
       return true;
     } else {
@@ -48,6 +48,7 @@ export default class extends ApplicationController {
   fetch(event) {
     event.preventDefault();
 
+    this.containerTarget.innerHTML = '';
     this.clearButtonTarget.setAttribute('disabled', true);
 
     // prevent refetch
@@ -64,11 +65,8 @@ export default class extends ApplicationController {
     const url = this.inputTarget.value.trim();
 
     if (!url) {
-      this.containerTarget.innerHTML = '';
       return false;
     }
-
-    this.containerTarget.innerHTML = '';
 
     this.bus.pub(Events.FORM_FETCHING);
 
@@ -80,7 +78,10 @@ export default class extends ApplicationController {
         this.containerTarget.innerHTML = html;
         this.clearButtonTarget.removeAttribute('disabled');
       })
-      .catch(() => this.handleServerError())
+      .catch(() => {
+        this.resetForm();
+        this.toaster.error(this.data.get('errorMessage'));
+      })
       .finally(() => {
         this.bus.pub(Events.FORM_COMPLETE);
       });
@@ -102,14 +103,5 @@ export default class extends ApplicationController {
           target.value = data[name];
         });
     });
-  }
-
-  handleServerError() {
-    this.resetForm();
-    this.toaster.error(this.data.get('errorMessage'));
-  }
-
-  validateURL() {
-    return this.inputTarget.checkValidity();
   }
 }
