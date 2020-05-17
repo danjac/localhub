@@ -3,7 +3,7 @@
 
 import axios from 'axios';
 
-import { Events } from '@/utils/constants';
+import { Events } from '@/constants';
 import ApplicationController from '@/controllers/application-controller';
 
 export default class extends ApplicationController {

@@ -9,8 +9,6 @@
 export const Events = {
   CONFIRM_OPEN: 'confirm:open',
   TOAST_MESSAGE: 'toasformmessage',
-  AJAX_FETCHING: 'ajax:fetching',
-  AJAX_COMPLETE: 'ajax:complete',
   FORM_FETCHING: 'form:fetching',
   FORM_COMPLETE: 'form:complete',
 };

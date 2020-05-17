@@ -4,16 +4,11 @@
 import axios from 'axios';
 import Turbolinks from 'turbolinks';
 
-import { Events } from '@/utils/constants';
+import { Events } from '@/constants';
 import ApplicationController from '@/controllers/application-controller';
 
 export default class extends ApplicationController {
   static targets = ['toggle', 'button'];
-
-  connect() {
-    this.bus.sub(Events.AJAX_FETCHING, () => this.ajaxFetching());
-    this.bus.sub(Events.AJAX_COMPLETE, () => this.ajaxComplete());
-  }
 
   get(event) {
     this.confirm('GET', event);
@@ -23,32 +18,12 @@ export default class extends ApplicationController {
     this.confirm('POST', event);
   }
 
-  ajaxFetching() {
-    this.data.set('fetching', true);
-    if (this.buttonTargets.length) {
-      Array.from(this.buttonTargets).forEach((btn) =>
-        btn.setAttribute('disabled', 'disabled')
-      );
-    } else {
-      this.element.setAttribute('disabled', 'disabled');
-    }
-  }
-
-  ajaxComplete() {
-    this.data.delete('fetching');
-    if (this.buttonTargets.length) {
-      Array.from(this.buttonTargets).forEach((btn) => btn.removeAttribute('disabled'));
-    } else {
-      this.element.removeAttribute('disabled');
-    }
-  }
-
   confirm(method, event) {
     event.preventDefault();
 
     const { currentTarget } = event;
 
-    if (currentTarget.hasAttribute('disabled') || this.isFetching) {
+    if (this.isFetching(currentTarget)) {
       return;
     }
 
@@ -67,7 +42,7 @@ export default class extends ApplicationController {
   }
 
   dispatch(method, target) {
-    if (target.hasAttribute('disabled') || this.isFetching) {
+    if (this.isFetching(target)) {
       return;
     }
 
@@ -76,7 +51,6 @@ export default class extends ApplicationController {
       target.getAttribute(`data-${this.identifier}-url`) ||
       target.getAttribute('href');
 
-    this.bus.pub(Events.AJAX_FETCHING);
     target.setAttribute('disabled', 'disabled');
 
     // toggle for immediate feedback
@@ -85,6 +59,8 @@ export default class extends ApplicationController {
     this.toggleTargets.forEach((target) => {
       target.classList.toggle(toggleClass);
     });
+
+    this.startFetching();
 
     axios({
       headers: {
@@ -125,29 +101,43 @@ export default class extends ApplicationController {
           /* eslint-disable-next-line no-eval */
           eval(response.data);
         } else {
-          this.handleAjaxComplete();
+          // only disable fetching if no redirects
+          this.stopFetching();
         }
       })
-      .catch((err) => this.handleServerError(err))
+      .catch((err) => {
+        if (err.response) {
+          const { status, statusText } = err.response;
+          this.toaster.error(`${status}: ${statusText}`);
+        }
+        this.stopFetching();
+      })
       .finally(() => {
         target.removeAttribute('disabled');
       });
   }
 
-  handleServerError(err) {
-    if (err.response) {
-      const { status, statusText } = err.response;
-      this.toaster.error(`${status}: ${statusText}`);
+  isFetching(target) {
+    return target.hasAttribute('disabled') || this.data.has('fetching');
+  }
+
+  startFetching() {
+    this.data.set('fetching', true);
+    if (this.buttonTargets.length) {
+      Array.from(this.buttonTargets).forEach((btn) =>
+        btn.setAttribute('disabled', 'disabled')
+      );
+    } else {
+      this.element.setAttribute('disabled', 'disabled');
     }
-    this.handleAjaxComplete();
   }
 
-  handleAjaxComplete() {
-    // re-enable all AJAX controls on the site.
-    this.bus.pub(Events.AJAX_COMPLETE);
-  }
-
-  get isFetching() {
-    return this.data.has('fetching');
+  stopFetching() {
+    this.data.delete('fetching');
+    if (this.buttonTargets.length) {
+      Array.from(this.buttonTargets).forEach((btn) => btn.removeAttribute('disabled'));
+    } else {
+      this.element.removeAttribute('disabled');
+    }
   }
 }

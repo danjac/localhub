@@ -5,7 +5,7 @@ import axios from 'axios';
 import getCaretPosition from 'textarea-caret';
 
 import * as classList from '@/utils/class-list';
-import { Keys } from '@/utils/constants';
+import { Keys } from '@/constants';
 import { fitIntoViewport, maximizeZIndex } from '@/utils/dom-helpers';
 
 import ApplicationController from '@/controllers/application-controller';
