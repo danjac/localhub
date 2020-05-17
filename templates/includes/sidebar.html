@@ -35,6 +35,7 @@
     <li class="mb-1">
       <a href="{% url 'private_messages:inbox' %}"
          data-controller="active-link"
+         data-active-link-regex="{% url 'private_messages:inbox' %}|{% url 'private_messages:outbox' %}"
          class="sidebar-menu-item">
         <span>{% trans "Messages" %}</span>
         {% if site_counters.unread_messages %}
