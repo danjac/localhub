@@ -154,7 +154,7 @@ a.btn-secondary {
 
 .markdown-content,
 .markdownx-preview {
-  @apply tracking-tight whitespace-normal break-words py-3 text-sm;
+  @apply tracking-wide leading-relaxed whitespace-normal break-words py-3 text-sm;
 }
 
 .markdown-content h1,
