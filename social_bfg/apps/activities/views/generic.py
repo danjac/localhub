@@ -221,7 +221,7 @@ class ActivityListView(SearchMixin, BaseActivityListView):
         qs = (
             super()
             .get_queryset()
-            .published()
+            .published_or_owner(self.request.user)
             .with_common_annotations(self.request.user, self.request.community)
             .exclude_blocked(self.request.user)
         )
