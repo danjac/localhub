@@ -204,7 +204,7 @@ class BaseActivityListView(ActivityQuerySetMixin, ActivityTemplateMixin, ListVie
 
 
 class ActivityListView(SearchMixin, BaseActivityListView):
-    ordering = "-published"
+    ordering = ("-created", "-published")
 
     def get_ordering(self):
         if isinstance(self.ordering, str):
