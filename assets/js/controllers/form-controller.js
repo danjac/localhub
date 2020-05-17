@@ -88,15 +88,13 @@ export default class extends ApplicationController {
           eval(response.data);
         }
       })
-      .catch((err) => this.handleServerError(err));
-  }
-
-  handleServerError(err) {
-    this.bus.pub(Events.FORM_COMPLETE);
-    if (err.response) {
-      const { status, statusText } = err.response;
-      this.toaster.error(`${status}: ${statusText}`);
-    }
+      .catch((err) => {
+        this.bus.pub(Events.FORM_COMPLETE);
+        if (err.response) {
+          const { status, statusText } = err.response;
+          this.toaster.error(`${status}: ${statusText}`);
+        }
+      });
   }
 
   disableFormControls() {
