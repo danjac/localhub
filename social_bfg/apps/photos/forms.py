@@ -59,10 +59,10 @@ class PhotoForm(ActivityForm):
                         "hashtags",
                         "mentions",
                         "image",
-                        "description",
-                        "allow_comments",
                         "extract_gps_data",
                         "clear_gps_data",
+                        "description",
+                        "allow_comments",
                     ),
                 ),
                 (
