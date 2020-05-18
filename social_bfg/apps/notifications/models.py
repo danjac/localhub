@@ -16,8 +16,8 @@ from pywebpush import WebPushException, webpush
 
 # Social-BFG
 from social_bfg.apps.communities.models import Community
-from social_bfg.common.db.generic import get_generic_related_exists
-from social_bfg.common.db.utils import boolean_value
+from social_bfg.db.generic import get_generic_related_exists
+from social_bfg.db.utils import boolean_value
 
 
 class NotificationAnnotationsQuerySetMixin:

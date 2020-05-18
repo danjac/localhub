@@ -14,8 +14,8 @@ import sorl.thumbnail.fields
 import timezone_field.fields
 
 # Social-BFG
-import social_bfg.common.db.fields
-import social_bfg.common.markdown.fields
+import social_bfg.db.fields
+import social_bfg.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -116,7 +116,7 @@ class Migration(migrations.Migration):
                         blank=True, max_length=255, verbose_name="Full name"
                     ),
                 ),
-                ("bio", social_bfg.common.markdown.fields.MarkdownField(blank=True)),
+                ("bio", social_bfg.markdown.fields.MarkdownField(blank=True)),
                 (
                     "avatar",
                     sorl.thumbnail.fields.ImageField(
@@ -137,7 +137,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "activity_stream_filters",
-                    social_bfg.common.db.fields.ChoiceArrayField(
+                    social_bfg.db.fields.ChoiceArrayField(
                         base_field=models.CharField(
                             choices=[
                                 (

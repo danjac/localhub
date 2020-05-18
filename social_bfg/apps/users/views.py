@@ -26,7 +26,7 @@ from social_bfg.apps.communities.rules import is_member
 from social_bfg.apps.communities.views import CommunityRequiredMixin
 from social_bfg.apps.likes.models import Like
 from social_bfg.apps.private_messages.models import Message
-from social_bfg.common.views import (
+from social_bfg.views import (
     ParentObjectMixin,
     SearchMixin,
     SuccessActionView,

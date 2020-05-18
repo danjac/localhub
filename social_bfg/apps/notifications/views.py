@@ -13,7 +13,7 @@ from django.views.generic import ListView, TemplateView, View
 
 # Social-BFG
 from social_bfg.apps.communities.views import CommunityRequiredMixin
-from social_bfg.common.views import SuccessActionView, SuccessDeleteView, SuccessView
+from social_bfg.views import SuccessActionView, SuccessDeleteView, SuccessView
 
 # Local
 from .models import Notification, PushSubscription

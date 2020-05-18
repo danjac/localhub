@@ -11,7 +11,7 @@ import model_utils.fields
 import sorl.thumbnail.fields
 
 # Social-BFG
-import social_bfg.common.markdown.fields
+import social_bfg.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -70,12 +70,9 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("tagline", models.TextField(blank=True)),
-                ("intro", social_bfg.common.markdown.fields.MarkdownField(blank=True)),
-                (
-                    "description",
-                    social_bfg.common.markdown.fields.MarkdownField(blank=True),
-                ),
-                ("terms", social_bfg.common.markdown.fields.MarkdownField(blank=True)),
+                ("intro", social_bfg.markdown.fields.MarkdownField(blank=True)),
+                ("description", social_bfg.markdown.fields.MarkdownField(blank=True),),
+                ("terms", social_bfg.markdown.fields.MarkdownField(blank=True)),
                 ("content_warning_tags", models.TextField(blank=True, default="#nsfw")),
                 (
                     "email_domain",

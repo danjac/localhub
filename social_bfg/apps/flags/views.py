@@ -11,11 +11,7 @@ from social_bfg.apps.communities.views import (
     CommunityModeratorRequiredMixin,
     CommunityRequiredMixin,
 )
-from social_bfg.common.views import (
-    ParentObjectMixin,
-    SuccessCreateView,
-    SuccessDeleteView,
-)
+from social_bfg.views import ParentObjectMixin, SuccessCreateView, SuccessDeleteView
 
 # Local
 from .forms import FlagForm

@@ -9,7 +9,7 @@ from django.db import migrations, models
 import model_utils.fields
 
 # Social-BFG
-import social_bfg.common.markdown.fields
+import social_bfg.markdown.fields
 
 
 class Migration(migrations.Migration):
@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
                 ("edited", models.DateTimeField(blank=True, null=True)),
                 ("deleted", models.DateTimeField(blank=True, null=True)),
                 ("object_id", models.PositiveIntegerField(blank=True, null=True)),
-                ("content", social_bfg.common.markdown.fields.MarkdownField()),
+                ("content", social_bfg.markdown.fields.MarkdownField()),
                 (
                     "search_document",
                     django.contrib.postgres.search.SearchVectorField(

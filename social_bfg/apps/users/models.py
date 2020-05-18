@@ -22,13 +22,13 @@ from timezone_field import TimeZoneField
 from social_bfg.apps.communities.models import Membership
 from social_bfg.apps.notifications.decorators import notify
 from social_bfg.apps.notifications.models import Notification
-from social_bfg.common.db.fields import ChoiceArrayField
-from social_bfg.common.db.generic import get_generic_related_queryset
-from social_bfg.common.db.search.indexer import SearchIndexer
-from social_bfg.common.db.search.mixins import SearchQuerySetMixin
-from social_bfg.common.db.tracker import TrackerModelMixin
-from social_bfg.common.markdown.fields import MarkdownField
-from social_bfg.common.utils.itertools import takefirst
+from social_bfg.db.fields import ChoiceArrayField
+from social_bfg.db.generic import get_generic_related_queryset
+from social_bfg.db.search.indexer import SearchIndexer
+from social_bfg.db.search.mixins import SearchQuerySetMixin
+from social_bfg.db.tracker import TrackerModelMixin
+from social_bfg.markdown.fields import MarkdownField
+from social_bfg.utils.itertools import takefirst
 
 
 class UserQuerySet(SearchQuerySetMixin, models.QuerySet):

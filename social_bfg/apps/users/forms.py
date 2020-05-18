@@ -10,8 +10,8 @@ from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
 from django.utils.translation import gettext_lazy as _
 
 # Social-BFG
-from social_bfg.common.forms import FormHelper
-from social_bfg.common.forms.widgets import BaseTypeaheadInput, ClearableImageInput
+from social_bfg.forms import FormHelper
+from social_bfg.forms.widgets import BaseTypeaheadInput, ClearableImageInput
 
 # Local
 from .validators import validate_mentions

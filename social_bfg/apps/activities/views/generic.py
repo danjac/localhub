@@ -18,9 +18,9 @@ from social_bfg.apps.comments.forms import CommentForm
 from social_bfg.apps.communities.views import CommunityRequiredMixin
 from social_bfg.apps.flags.views import BaseFlagCreateView
 from social_bfg.apps.likes.models import Like
-from social_bfg.common.pagination import PresetCountPaginator
-from social_bfg.common.template.defaultfilters import resolve_url
-from social_bfg.common.views import (
+from social_bfg.pagination import PresetCountPaginator
+from social_bfg.template.defaultfilters import resolve_url
+from social_bfg.views import (
     ParentObjectMixin,
     SearchMixin,
     SuccessActionView,

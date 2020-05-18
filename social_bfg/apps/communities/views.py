@@ -19,7 +19,7 @@ from rules.contrib.views import PermissionRequiredMixin
 # Social-BFG
 from social_bfg.apps.invites.models import Invite
 from social_bfg.apps.join_requests.models import JoinRequest
-from social_bfg.common.views import SearchMixin, SuccessDeleteView, SuccessUpdateView
+from social_bfg.views import SearchMixin, SuccessDeleteView, SuccessUpdateView
 
 # Local
 from .emails import send_membership_deleted_email

@@ -20,8 +20,8 @@ from sorl.thumbnail import ImageField
 
 # Social-BFG
 from social_bfg.apps.hashtags.utils import extract_hashtags
-from social_bfg.common.db.search.mixins import SearchQuerySetMixin
-from social_bfg.common.markdown.fields import MarkdownField
+from social_bfg.db.search.mixins import SearchQuerySetMixin
+from social_bfg.markdown.fields import MarkdownField
 
 DOMAIN_VALIDATOR = RegexValidator(
     regex=URLValidator.host_re, message=_("This is not a valid domain")

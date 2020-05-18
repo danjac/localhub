@@ -88,7 +88,7 @@ class Base(Configuration):
         "django.contrib.sites.middleware.CurrentSiteMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
         "django.middleware.locale.LocaleMiddleware",
-        "social_bfg.common.middleware.turbolinks.TurbolinksMiddleware",
+        "social_bfg.middleware.turbolinks.TurbolinksMiddleware",
         "social_bfg.apps.communities.middleware.CurrentCommunityMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
@@ -176,13 +176,13 @@ class Base(Configuration):
 
     # https://neutronx.github.io/django-markdownx/customization/
 
-    MARKDOWNX_MARKDOWNIFY_FUNCTION = "social_bfg.common.markdown.utils.markdownify"
+    MARKDOWNX_MARKDOWNIFY_FUNCTION = "social_bfg.markdown.utils.markdownify"
 
     MARKDOWNX_MARKDOWN_EXTENSIONS = [
         "pymdownx.extra",
         "pymdownx.emoji",
-        "social_bfg.common.markdown.extensions:NewTabExtension",
-        "social_bfg.common.markdown.extensions:SafeImageExtension",
+        "social_bfg.markdown.extensions:NewTabExtension",
+        "social_bfg.markdown.extensions:SafeImageExtension",
     ]
 
     MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {
@@ -269,8 +269,8 @@ class Base(Configuration):
                 "OPTIONS": {
                     "debug": self.DEBUG,
                     "builtins": [
-                        "social_bfg.common.template.defaultfilters",
-                        "social_bfg.common.template.defaulttags",
+                        "social_bfg.template.defaultfilters",
+                        "social_bfg.template.defaulttags",
                     ],
                     "context_processors": [
                         "django.template.context_processors.debug",
@@ -282,11 +282,9 @@ class Base(Configuration):
                         "django.template.context_processors.tz",
                         "django.contrib.messages.context_processors.messages",
                         "social_bfg.apps.communities.context_processors.community",
-                        "social_bfg.common.template.context_processors.home_page_url",
+                        "social_bfg.template.context_processors.home_page_url",
                     ],
-                    "libraries": {
-                        "pagination": "social_bfg.common.pagination.templatetags"
-                    },
+                    "libraries": {"pagination": "social_bfg.pagination.templatetags"},
                 },
             }
         ]
@@ -387,8 +385,8 @@ class Production(Base):
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
-    DEFAULT_FILE_STORAGE = "social_bfg.common.storages.MediaStorage"
-    STATICFILES_STORAGE = "social_bfg.common.storages.StaticStorage"
+    DEFAULT_FILE_STORAGE = "social_bfg.storages.MediaStorage"
+    STATICFILES_STORAGE = "social_bfg.storages.StaticStorage"
 
     AWS_MEDIA_LOCATION = "media"
     AWS_STATIC_LOCATION = "static"
@@ -408,7 +406,7 @@ class Production(Base):
     MAILGUN_SENDER_DOMAIN = values.Value()
 
     MIDDLEWARE = Base.MIDDLEWARE + [
-        "social_bfg.common.middleware.http.HttpResponseNotAllowedMiddleware",
+        "social_bfg.middleware.http.HttpResponseNotAllowedMiddleware",
     ]
 
     @property

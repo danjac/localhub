@@ -15,7 +15,7 @@ from model_utils.models import TimeStampedModel
 from social_bfg.apps.communities.models import Community
 from social_bfg.apps.notifications.decorators import notify
 from social_bfg.apps.notifications.models import Notification
-from social_bfg.common.db.generic import get_generic_related_exists
+from social_bfg.db.generic import get_generic_related_exists
 
 
 class FlagAnnotationsQuerySetMixin:

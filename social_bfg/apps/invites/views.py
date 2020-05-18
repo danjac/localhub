@@ -15,7 +15,7 @@ from social_bfg.apps.communities.views import (
     CommunityAdminRequiredMixin,
     CommunityRequiredMixin,
 )
-from social_bfg.common.views import (
+from social_bfg.views import (
     SearchMixin,
     SuccessActionView,
     SuccessCreateView,

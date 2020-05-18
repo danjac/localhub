@@ -25,7 +25,7 @@ class TestConvertToDegress:
 class TestLocate:
     def mock_build_gps_dict(self, mocker, mock_data):
         mocker.patch(
-            "social_bfg.common.utils.exif.Exif.build_gps_dict", return_value=mock_data
+            "social_bfg.utils.exif.Exif.build_gps_dict", return_value=mock_data
         )
 
     def test_ok(self, mocker):

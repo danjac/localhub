@@ -14,12 +14,12 @@ from model_utils.models import TimeStampedModel
 from social_bfg.apps.communities.models import Community
 from social_bfg.apps.notifications.decorators import notify
 from social_bfg.apps.notifications.models import Notification
-from social_bfg.common.db.generic import (
+from social_bfg.db.generic import (
     get_generic_related_count_subquery,
     get_generic_related_exists,
     get_generic_related_value_subquery,
 )
-from social_bfg.common.db.utils import boolean_value
+from social_bfg.db.utils import boolean_value
 
 
 class LikeAnnotationsQuerySetMixin:
