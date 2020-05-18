@@ -80,7 +80,7 @@ msgstr "%(actor)s on lähettänyt %(object)s:n"
 msgid ""
 "Someone has submitted or updated a new %(object)s containing tags you are "
 "following"
-msgstr "%(actor)s on lähettänyt %(object)s:n, jossa on sinun seuraamia taggeja"
+msgstr "Joku on lähettänyt %(object)s:n, jossa on sinun seuraamia taggeja"
 
 #: social_bfg/apps/activities/notifications.py:30
 #, python-format
@@ -101,7 +101,7 @@ msgstr ""
 #: social_bfg/apps/activities/views/generic.py:83
 #, python-format
 msgid "Submit %(model)s"
-msgstr ""
+msgstr "Lähetä %(model)s"
 
 #: social_bfg/apps/activities/views/generic.py:118
 #, python-format
@@ -170,7 +170,7 @@ msgstr ""
 #: templates/comments/comment_form.html:25
 #: templates/comments/comment_form.html:30 templates/comments/flag_form.html:9
 msgid "Comment"
-msgstr ""
+msgstr "Komentti"
 
 #: social_bfg/apps/comments/notifications.py:17
 #, python-format
@@ -180,22 +180,22 @@ msgstr ""
 #: social_bfg/apps/comments/notifications.py:18
 #, python-format
 msgid "%(actor)s has flagged this comment"
-msgstr ""
+msgstr "%(actor)s on merkinnyt tämän komentin"
 
 #: social_bfg/apps/comments/notifications.py:19
 #, python-format
 msgid "%(actor)s has liked your comment"
-msgstr ""
+msgstr "%(actor)s on tykkäänyt tämästä komentista"
 
 #: social_bfg/apps/comments/notifications.py:20
 #, python-format
 msgid "%(actor)s has mentioned you in their comment"
-msgstr ""
+msgstr "%(actor)s on merkinnyt sinut komentissaan"
 
 #: social_bfg/apps/comments/notifications.py:23
 #, python-format
-msgid "%(actor)s has submitted or updated a comment to review"
-msgstr ""
+msgid "%(actor)s has submitted or updated a comment for review"
+msgstr "%(actor)s on lähettänyt komentin tarkistettavaksi"
 
 #: social_bfg/apps/comments/notifications.py:25
 #, python-format
@@ -210,21 +210,21 @@ msgstr ""
 #: social_bfg/apps/comments/notifications.py:30
 #, python-format
 msgid "%(actor)s has replied to your comment"
-msgstr ""
+msgstr "%(actor)s on vastannut komenttiisi"
 
 #: social_bfg/apps/comments/notifications.py:31
 #, python-format
 msgid "%(actor)s has submitted a new comment"
-msgstr ""
+msgstr "%(actor)s on lähettänyt uuden komentin"
 
 #: social_bfg/apps/comments/views.py:72
 msgid "This comment has been flagged to the moderators"
-msgstr ""
+msgstr "Tämä komentti on merkitty välittäjille"
 
 #: social_bfg/apps/comments/views.py:95
 #, python-format
 msgid "You have replied to this %(model)s"
-msgstr ""
+msgstr "Olet vastaanut tämän %(model)s:iin"
 
 #: social_bfg/apps/comments/views.py:109
 #: templates/comments/comment_form.html:22
@@ -232,40 +232,40 @@ msgstr ""
 #: templates/private_messages/includes/message.html:77
 #: templates/private_messages/message_form.html:21
 msgid "Reply"
-msgstr ""
+msgstr "Vastaa"
 
 #: social_bfg/apps/comments/views.py:222
 msgid "You have bookmarked this comment"
-msgstr ""
+msgstr "Olet vastaanut komentin kirjanmerkkeihin"
 
 #: social_bfg/apps/comments/views.py:240
 msgid "You have removed this comment from your bookmarks"
-msgstr ""
+msgstr "Olet poistanut komentin kirjanmerkeista"
 
 #: social_bfg/apps/comments/views.py:259
 msgid "You have liked this comment"
-msgstr ""
+msgstr "Olet tykkäänyt tästä komentista"
 
 #: social_bfg/apps/comments/views.py:278
 msgid "You have stopped liking this comment"
-msgstr ""
+msgstr "Et enää tykkää tästä komentista"
 
 #: social_bfg/apps/comments/views.py:296
 msgid "You have deleted this comment"
-msgstr ""
+msgstr "Olet poistanut tämän komentin"
 
 #: social_bfg/apps/communities/emails.py:16
 #, python-format
 msgid "Your membership of community %(community)s has been terminated"
-msgstr ""
+msgstr "%(community)s - yhteisön jäsennys on päättynyt"
 
 #: social_bfg/apps/communities/forms.py:41
 msgid "Logo will be rendered in PNG format."
-msgstr ""
+msgstr "Logo esitetään PNG-muodossa."
 
 #: social_bfg/apps/communities/forms.py:42
 msgid "Summary shown in Communities page"
-msgstr ""
+msgstr "Yhteenveto Yhteisöiden sivu"
 
 #: social_bfg/apps/communities/forms.py:43
 msgid "Text shown in Login and other pages to non-members."
@@ -277,13 +277,13 @@ msgstr ""
 
 #: social_bfg/apps/communities/forms.py:48
 msgid "Terms and conditions, code of conduct and other membership terms."
-msgstr ""
+msgstr "Käyttöehdot, menettelyohjeet and muut säännöt ja ehdot."
 
 #: social_bfg/apps/communities/forms.py:51
 msgid ""
 "Any posts containing these tags in their description will be automatically "
 "hidden by default."
-msgstr ""
+msgstr "Postaukset jossa on nämä tagit olennaisesti piilotetaan."
 
 #: social_bfg/apps/communities/forms.py:55
 msgid ""
@@ -294,7 +294,7 @@ msgstr ""
 
 #: social_bfg/apps/communities/forms.py:59
 msgid "This community is currently live."
-msgstr ""
+msgstr "Yhteisö nyt julkinen"
 
 #: social_bfg/apps/communities/forms.py:60
 msgid "Community is visible to non-members in Communities page"
@@ -324,11 +324,11 @@ msgstr ""
 
 #: social_bfg/apps/communities/forms.py:83
 msgid "About this community"
-msgstr ""
+msgstr "Yhteisön kuvaus"
 
 #: social_bfg/apps/communities/forms.py:84
 msgid "Terms and conditions"
-msgstr ""
+msgstr "Käyttöehdot"
 
 #: social_bfg/apps/communities/forms.py:86
 #: social_bfg/apps/join_requests/apps.py:11
@@ -342,7 +342,7 @@ msgstr ""
 #: templates/join_requests/joinrequest_list.html:19
 #: templates/join_requests/sent_joinrequest_list.html:11
 msgid "Join Requests"
-msgstr ""
+msgstr "Liitymispyyntö"
 
 #: social_bfg/apps/communities/models.py:27
 msgid "This is not a valid domain"
@@ -355,22 +355,22 @@ msgstr ""
 #: templates/includes/no_sidebar_nav.html:32
 #: templates/includes/sidebar.html:264
 msgid "Communities"
-msgstr ""
+msgstr "Yhteisöt"
 
 #: social_bfg/apps/communities/models.py:237
 #: templates/communities/membership_list.html:39
 msgid "Member"
-msgstr ""
+msgstr "Jäsen"
 
 #: social_bfg/apps/communities/models.py:238
 #: templates/users/detail/base.html:47
 msgid "Moderator"
-msgstr ""
+msgstr "Välittäjä"
 
 #: social_bfg/apps/communities/models.py:239
 #: templates/users/detail/base.html:45
 msgid "Admin"
-msgstr ""
+msgstr "Järjestelmänvalvooja"
 
 #: social_bfg/apps/communities/views.py:60
 msgid "You must be a member of this community"
@@ -400,11 +400,11 @@ msgstr ""
 
 #: social_bfg/apps/events/forms.py:26
 msgid "Event starts"
-msgstr ""
+msgstr "Tapahtuma alkaa"
 
 #: social_bfg/apps/events/forms.py:32
 msgid "Event ends"
-msgstr ""
+msgstr "Tapahtuma päättyy"
 
 #: social_bfg/apps/events/forms.py:36
 msgid "Leave empty if it's an all-day event"
@@ -412,19 +412,19 @@ msgstr ""
 
 #: social_bfg/apps/events/forms.py:40
 msgid "Repeat until"
-msgstr ""
+msgstr "Toista päivämäärään asti"
 
 #: social_bfg/apps/events/forms.py:47
 msgid "Remove event from map"
-msgstr ""
+msgstr "Poista tapahatuma kartasta"
 
 #: social_bfg/apps/events/forms.py:51
 msgid "Add event to map if address provided"
-msgstr ""
+msgstr "Lisää tapahtuma kartaan jos osoite on saatavilla"
 
 #: social_bfg/apps/events/forms.py:104 templates/events/includes/event.html:71
 msgid "Location"
-msgstr ""
+msgstr "Sijainti"
 
 #: social_bfg/apps/events/forms.py:122
 msgid "Will repeat from the start date onwards"
@@ -464,7 +464,7 @@ msgstr ""
 #: templates/markdownx/widget.html:48 templates/markdownx/widget.html:170
 #: templates/private_messages/includes/message.html:106
 msgid "Link"
-msgstr ""
+msgstr "Linkki"
 
 #: social_bfg/apps/events/models.py:387
 msgid "Starts on (UTC)"
@@ -472,7 +472,7 @@ msgstr ""
 
 #: social_bfg/apps/events/models.py:404
 msgid "City or town"
-msgstr ""
+msgstr "Kaupunki"
 
 #: social_bfg/apps/events/models.py:433
 msgid "End date cannot be before start date"
@@ -514,15 +514,15 @@ msgstr ""
 
 #: social_bfg/apps/flags/models.py:49
 msgid "Spam"
-msgstr ""
+msgstr "Roskaposti"
 
 #: social_bfg/apps/flags/models.py:50
 msgid "Abuse"
-msgstr ""
+msgstr "Solvaus"
 
 #: social_bfg/apps/flags/models.py:51
 msgid "Breach of community rules"
-msgstr ""
+msgstr "Yhteisön sääntöjen rikkomus"
 
 #: social_bfg/apps/flags/models.py:52
 msgid "Illegal activity"
@@ -530,7 +530,7 @@ msgstr ""
 
 #: social_bfg/apps/flags/models.py:53
 msgid "Pornography"
-msgstr ""
+msgstr "Pornografia"
 
 #: social_bfg/apps/flags/models.py:54
 msgid "Breach of copyright"
@@ -4396,8 +4396,8 @@ msgstr ""
 
 #: templates/users/user_confirm_delete.html:31
 msgid "Delete account"
-msgstr ""
+msgstr "Poista Käyttäjätili"
 
 #: templates/users/user_form.html:24
 msgid "More Settings..."
-msgstr ""
+msgstr "Lisää asetuksia..."

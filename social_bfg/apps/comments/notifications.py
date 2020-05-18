@@ -20,7 +20,7 @@ class CommentHeadersMixin:
         ("mention", _("%(actor)s has mentioned you in their comment")),
         (
             "moderator_review",
-            _("%(actor)s has submitted or updated a comment to review"),
+            _("%(actor)s has submitted or updated a comment for review"),
         ),
         ("new_comment", _("%(actor)s has submitted a comment on one of your posts")),
         (
