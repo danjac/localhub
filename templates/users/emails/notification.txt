@@ -19,8 +19,6 @@
 {{ actor }} has updated their profile.
 {% endblocktrans %}
 {% endif %}
-{% blocktrans %}
-Link to user: {{ absolute_url }}
-{% endblocktrans %}
+{% blocktrans %}Link to user: {{ absolute_url }}{% endblocktrans %}
 {% endautoescape %}
 {% endblock %}

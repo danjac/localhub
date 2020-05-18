@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-17 14:25+0000\n"
+"POT-Creation-Date: 2020-05-18 22:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +34,6 @@ msgstr "@huomautukset"
 #: social_bfg/apps/activities/forms.py:34
 msgid "#tags can also be added to title and description."
 msgstr "voidaan liittää #taggit otsikkoon tai kuvaukseen"
-
 
 #: social_bfg/apps/activities/forms.py:35
 msgid "@mentions can also be added to title and description."
@@ -336,7 +335,7 @@ msgstr "Käyttöehdot"
 #: templates/communities/community_list.html:67
 #: templates/includes/forms/search_form.html:59
 #: templates/includes/no_sidebar_nav.html:15
-#: templates/includes/sidebar.html:252 templates/join_requests/base.html:7
+#: templates/includes/sidebar.html:253 templates/join_requests/base.html:7
 #: templates/join_requests/joinrequest_detail.html:19
 #: templates/join_requests/joinrequest_list.html:14
 #: templates/join_requests/joinrequest_list.html:19
@@ -353,7 +352,7 @@ msgstr ""
 #: templates/communities/community_list.html:11
 #: templates/includes/forms/search_form.html:54
 #: templates/includes/no_sidebar_nav.html:32
-#: templates/includes/sidebar.html:264
+#: templates/includes/sidebar.html:265
 msgid "Communities"
 msgstr "Yhteisöt"
 
@@ -912,358 +911,358 @@ msgstr ""
 msgid "You are no longer blocking %(object)s"
 msgstr ""
 
-#: social_bfg/common/forms/widgets.py:93
+#: social_bfg/forms/widgets.py:93
 msgid "DD/MM/YYYY"
 msgstr ""
 
-#: social_bfg/common/forms/widgets.py:106
+#: social_bfg/forms/widgets.py:106
 msgid "HH:MM"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:15 templates/includes/sidebar.html:181
+#: social_bfg/utils/emojis.py:15 templates/includes/sidebar.html:182
 #: templates/users/list/base.html:8 templates/users/list/base.html:14
 msgid "People"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:18
+#: social_bfg/utils/emojis.py:18
 msgid "Thumbs Up"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:23
+#: social_bfg/utils/emojis.py:23
 msgid "Thumbs Down"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:28
+#: social_bfg/utils/emojis.py:28
 msgid "Heart"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:33
+#: social_bfg/utils/emojis.py:33
 msgid "Clap"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:38
+#: social_bfg/utils/emojis.py:38
 msgid "Smile"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:43
+#: social_bfg/utils/emojis.py:43
 msgid "Wink"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:47
+#: social_bfg/utils/emojis.py:47
 msgid "Joy"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:49
+#: social_bfg/utils/emojis.py:49
 msgid "Laughing"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:54
+#: social_bfg/utils/emojis.py:54
 msgid "Thinking"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:58
+#: social_bfg/utils/emojis.py:58
 msgid "Sob"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:60
+#: social_bfg/utils/emojis.py:60
 msgid "Heart Eyes"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:65
+#: social_bfg/utils/emojis.py:65
 msgid "Smirk"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:70
+#: social_bfg/utils/emojis.py:70
 msgid "Blush"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:75
+#: social_bfg/utils/emojis.py:75
 msgid "Confused"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:80
+#: social_bfg/utils/emojis.py:80
 msgid "Disappointed"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:85
+#: social_bfg/utils/emojis.py:85
 msgid "No Mouth"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:90
+#: social_bfg/utils/emojis.py:90
 msgid "Innocent"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:95
+#: social_bfg/utils/emojis.py:95
 msgid "Neutral Face"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:100
+#: social_bfg/utils/emojis.py:100
 msgid "Fearful"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:105
+#: social_bfg/utils/emojis.py:105
 msgid "Sweat"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:110
+#: social_bfg/utils/emojis.py:110
 msgid "Angry"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:115
+#: social_bfg/utils/emojis.py:115
 msgid "Rage"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:120
+#: social_bfg/utils/emojis.py:120
 msgid "Astonished"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:125
+#: social_bfg/utils/emojis.py:125
 msgid "Stuck Out Tongue"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:130
+#: social_bfg/utils/emojis.py:130
 msgid "Open Mouth"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:135
+#: social_bfg/utils/emojis.py:135
 msgid "Satisfied"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:140
+#: social_bfg/utils/emojis.py:140
 msgid "Scream"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:145
+#: social_bfg/utils/emojis.py:145
 msgid "Sunglasses"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:150
+#: social_bfg/utils/emojis.py:150
 msgid "Fire"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:155
+#: social_bfg/utils/emojis.py:155
 msgid "Tada"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:160
+#: social_bfg/utils/emojis.py:160
 msgid "See No Evil"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:165
+#: social_bfg/utils/emojis.py:165
 msgid "Point Up"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:170
+#: social_bfg/utils/emojis.py:170
 msgid "Wave"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:175
+#: social_bfg/utils/emojis.py:175
 msgid "Raised Hands"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:180
+#: social_bfg/utils/emojis.py:180
 msgid "Pray"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:185
+#: social_bfg/utils/emojis.py:185
 msgid "Metal"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:190
+#: social_bfg/utils/emojis.py:190
 msgid "Alien"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:195
+#: social_bfg/utils/emojis.py:195
 msgid "Angel"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:199
+#: social_bfg/utils/emojis.py:199
 msgid "Man"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:201
+#: social_bfg/utils/emojis.py:201
 msgid "Woman"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:206
+#: social_bfg/utils/emojis.py:206
 msgid "Baby"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:211
+#: social_bfg/utils/emojis.py:211
 msgid "Detective"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:216
+#: social_bfg/utils/emojis.py:216
 msgid "Mask"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:221
+#: social_bfg/utils/emojis.py:221
 msgid "Poop"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:226
+#: social_bfg/utils/emojis.py:226
 msgid "Skull"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:230
+#: social_bfg/utils/emojis.py:230
 msgid "Zap"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:231
+#: social_bfg/utils/emojis.py:231
 msgid "ZZZ"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:235
+#: social_bfg/utils/emojis.py:235
 msgid "Objects"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:238
+#: social_bfg/utils/emojis.py:238
 msgid "Airplane"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:243
+#: social_bfg/utils/emojis.py:243
 msgid "Bomb"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:248
+#: social_bfg/utils/emojis.py:248
 msgid "Bulb"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:252
+#: social_bfg/utils/emojis.py:252
 msgid "Bus"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:254
+#: social_bfg/utils/emojis.py:254
 msgid "Car"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:259
+#: social_bfg/utils/emojis.py:259
 msgid "Rocket"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:264
+#: social_bfg/utils/emojis.py:264
 msgid "Taxi"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:269
+#: social_bfg/utils/emojis.py:269
 msgid "Train"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:274
+#: social_bfg/utils/emojis.py:274
 msgid "Checkered Flag"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:279
+#: social_bfg/utils/emojis.py:279
 msgid "Banana"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:284
+#: social_bfg/utils/emojis.py:284
 msgid "Cake"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:289
+#: social_bfg/utils/emojis.py:289
 msgid "Beer"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:294
+#: social_bfg/utils/emojis.py:294
 msgid "Wine Glass"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:299
+#: social_bfg/utils/emojis.py:299
 msgid "Coffee"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:303
+#: social_bfg/utils/emojis.py:303
 msgid "Tea"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:305
+#: social_bfg/utils/emojis.py:305
 msgid "Cookie"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:310
+#: social_bfg/utils/emojis.py:310
 msgid "Eggplant"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:315 templates/events/calendar.html:9
+#: social_bfg/utils/emojis.py:315 templates/events/calendar.html:9
 #: templates/events/calendar.html:26 templates/events/event_list.html:12
-#: templates/includes/sidebar.html:79
+#: templates/includes/sidebar.html:80
 msgid "Calendar"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:320
+#: social_bfg/utils/emojis.py:320
 msgid "Watch"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:325
+#: social_bfg/utils/emojis.py:325
 msgid "Hourglass"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:330
+#: social_bfg/utils/emojis.py:330
 msgid "Computer"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:335
+#: social_bfg/utils/emojis.py:335
 msgid "Headphones"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:340
+#: social_bfg/utils/emojis.py:340
 msgid "Microphone"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:345
+#: social_bfg/utils/emojis.py:345
 msgid "Violin"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:350
+#: social_bfg/utils/emojis.py:350
 msgid "Birthday"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:355
+#: social_bfg/utils/emojis.py:355
 msgid "Gift"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:360
+#: social_bfg/utils/emojis.py:360
 msgid "Santa"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:367
+#: social_bfg/utils/emojis.py:367
 msgid "Places"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:370
+#: social_bfg/utils/emojis.py:370
 msgid "Finland"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:374
+#: social_bfg/utils/emojis.py:374
 msgid "Japan"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:375
+#: social_bfg/utils/emojis.py:375
 msgid "UK"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:376
+#: social_bfg/utils/emojis.py:376
 msgid "USA"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:380
+#: social_bfg/utils/emojis.py:380
 msgid "Nature"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:382
+#: social_bfg/utils/emojis.py:382
 msgid "Cat"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:383
+#: social_bfg/utils/emojis.py:383
 msgid "Dog"
 msgstr ""
 
-#: social_bfg/common/utils/emojis.py:385
+#: social_bfg/utils/emojis.py:385
 msgid "Rainbow"
 msgstr ""
 
-#: social_bfg/common/views/parent.py:99
+#: social_bfg/views/parent.py:99
 #, python-format
 msgid "No %(object_name)s found"
 msgstr ""
@@ -1430,13 +1429,13 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: templates/account/logout.html:7 templates/account/logout.html:11
+#: templates/account/logout.html:7 templates/account/logout.html:10
 #: templates/account/logout.html:25 templates/base.html:104
-#: templates/includes/sidebar.html:92
+#: templates/includes/sidebar.html:93
 msgid "Logout"
 msgstr ""
 
-#: templates/account/logout.html:13
+#: templates/account/logout.html:12
 msgid "Are you sure you want to log out?"
 msgstr ""
 
@@ -1553,7 +1552,7 @@ msgstr ""
 #: templates/activities/activity_form.html:41
 #: templates/activities/private.html:9 templates/activities/private.html:21
 #: templates/includes/forms/search_form.html:44
-#: templates/includes/sidebar.html:64
+#: templates/includes/sidebar.html:65
 msgid "Private Stash"
 msgstr ""
 
@@ -1606,7 +1605,7 @@ msgstr ""
 #: templates/comments/comment_list.html:8
 #: templates/communities/membership_detail.html:47
 #: templates/includes/forms/search_form.html:43
-#: templates/includes/sidebar.html:59 templates/likes/base.html:21
+#: templates/includes/sidebar.html:60 templates/likes/base.html:21
 #: templates/likes/comments.html:7 templates/users/detail/base.html:193
 #: templates/users/detail/comments.html:7 templates/users/likes/base.html:33
 #: templates/users/likes/comments.html:7 templates/users/mentions/base.html:33
@@ -1885,9 +1884,9 @@ msgstr ""
 #: templates/communities/community_list.html:61
 #: templates/communities/community_list.html:68
 #: templates/includes/no_sidebar_nav.html:24
-#: templates/includes/no_sidebar_nav.html:34 templates/includes/sidebar.html:41
-#: templates/includes/sidebar.html:51 templates/includes/sidebar.html:174
-#: templates/includes/sidebar.html:254 templates/includes/sidebar.html:266
+#: templates/includes/no_sidebar_nav.html:34 templates/includes/sidebar.html:42
+#: templates/includes/sidebar.html:52 templates/includes/sidebar.html:175
+#: templates/includes/sidebar.html:255 templates/includes/sidebar.html:267
 #: templates/notifications/notification_list.html:74
 #: templates/private_messages/includes/message.html:25
 #: templates/users/list/base.html:70
@@ -2088,7 +2087,7 @@ msgid ""
 msgstr ""
 
 #: templates/activities/timeline.html:7 templates/activities/timeline.html:32
-#: templates/includes/sidebar.html:146
+#: templates/includes/sidebar.html:147
 msgid "Timeline"
 msgstr ""
 
@@ -2147,14 +2146,14 @@ msgid "You have not bookmarked any activities."
 msgstr ""
 
 #: templates/bookmarks/base.html:7 templates/bookmarks/base.html:11
-#: templates/includes/sidebar.html:69
+#: templates/includes/sidebar.html:70
 msgid "Bookmarks"
 msgstr ""
 
 #: templates/bookmarks/base.html:21 templates/bookmarks/messages.html:8
 #: templates/communities/community_list.html:60
 #: templates/communities/membership_detail.html:49
-#: templates/includes/sidebar.html:39 templates/private_messages/base.html:7
+#: templates/includes/sidebar.html:40 templates/private_messages/base.html:7
 #: templates/private_messages/message_detail.html:21
 #: templates/private_messages/message_list_base.html:12
 #: templates/users/detail/base.html:188 templates/users/detail/messages.html:12
@@ -2348,7 +2347,7 @@ msgstr ""
 
 #: templates/comments/includes/comment.html:44
 #: templates/hashtags/list/base.html:32 templates/hashtags/list/blocked.html:7
-#: templates/includes/sidebar.html:200 templates/users/list/base.html:32
+#: templates/includes/sidebar.html:201 templates/users/list/base.html:32
 #: templates/users/list/blocked.html:7
 msgid "Blocked"
 msgstr ""
@@ -2451,7 +2450,7 @@ msgid "About"
 msgstr ""
 
 #: templates/communities/community_detail.html:22
-#: templates/communities/terms.html:10 templates/includes/sidebar.html:224
+#: templates/communities/terms.html:10 templates/includes/sidebar.html:225
 msgid "Terms"
 msgstr ""
 
@@ -2486,7 +2485,7 @@ msgstr ""
 #: templates/communities/community_form.html:19
 #: templates/includes/forms/search_form.html:58
 #: templates/includes/no_sidebar_nav.html:22
-#: templates/includes/sidebar.html:245 templates/invites/base.html:8
+#: templates/includes/sidebar.html:246 templates/invites/base.html:8
 #: templates/invites/invite_form.html:12 templates/invites/invite_list.html:16
 #: templates/invites/invite_list.html:22
 #: templates/invites/received_invite_list.html:9
@@ -2505,12 +2504,12 @@ msgstr ""
 
 #: templates/communities/community_list.html:46 templates/flags/base.html:7
 #: templates/flags/flag_list.html:6 templates/flags/flag_list.html:9
-#: templates/flags/includes/flags.html:8 templates/includes/sidebar.html:173
+#: templates/flags/includes/flags.html:8 templates/includes/sidebar.html:174
 msgid "Flags"
 msgstr ""
 
 #: templates/communities/community_list.html:53
-#: templates/includes/sidebar.html:49
+#: templates/includes/sidebar.html:50
 #: templates/notifications/notification_list.html:9
 #: templates/notifications/notification_list.html:21
 msgid "Notifications"
@@ -2548,8 +2547,8 @@ msgid ""
 msgstr ""
 
 #: templates/communities/includes/membership_actions.html:11
-#: templates/includes/no_sidebar_nav.html:40 templates/includes/sidebar.html:84
-#: templates/includes/sidebar.html:233 templates/users/account_base.html:7
+#: templates/includes/no_sidebar_nav.html:40 templates/includes/sidebar.html:85
+#: templates/includes/sidebar.html:234 templates/users/account_base.html:7
 #: templates/users/detail/base.html:156 templates/users/list/base.html:78
 #: templates/users/user_confirm_delete.html:9 templates/users/user_form.html:11
 #: templates/users/user_form.html:17
@@ -2557,7 +2556,7 @@ msgid "Settings"
 msgstr ""
 
 #: templates/communities/includes/membership_actions.html:17
-#: templates/includes/sidebar.html:127
+#: templates/includes/sidebar.html:128
 #: templates/private_messages/message_form.html:28
 #: templates/private_messages/message_form.html:38
 #: templates/private_messages/message_list_base.html:19
@@ -2632,7 +2631,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/communities/membership_list.html:42
-#: templates/flags/includes/flags.html:15 templates/includes/sidebar.html:98
+#: templates/flags/includes/flags.html:15 templates/includes/sidebar.html:99
 #: templates/invites/invite_list.html:65
 #: templates/invites/received_invite_list.html:26
 #: templates/join_requests/joinrequest_list.html:58
@@ -2743,7 +2742,7 @@ msgstr ""
 msgid "Events"
 msgstr ""
 
-#: templates/events/calendar.html:34 templates/includes/sidebar.html:109
+#: templates/events/calendar.html:34 templates/includes/sidebar.html:110
 msgid "Submit Event"
 msgstr ""
 
@@ -2981,7 +2980,7 @@ msgstr ""
 #: templates/hashtags/base.html:7 templates/hashtags/list/base.html:11
 #: templates/hashtags/not_found.html:12 templates/hashtags/tag_detail.html:13
 #: templates/includes/forms/search_form.html:53
-#: templates/includes/sidebar.html:139
+#: templates/includes/sidebar.html:140
 msgid "Tags"
 msgstr ""
 
@@ -3006,7 +3005,7 @@ msgid ""
 msgstr ""
 
 #: templates/hashtags/list/base.html:26
-#: templates/hashtags/list/following.html:7 templates/includes/sidebar.html:190
+#: templates/hashtags/list/following.html:7 templates/includes/sidebar.html:191
 #: templates/users/list/base.html:24 templates/users/list/following.html:7
 msgid "Following"
 msgstr ""
@@ -3115,7 +3114,7 @@ msgid "Bookmarks - Comments"
 msgstr ""
 
 #: templates/includes/forms/search_form.html:48
-#: templates/includes/sidebar.html:185 templates/includes/sidebar.html:239
+#: templates/includes/sidebar.html:186 templates/includes/sidebar.html:240
 #: templates/users/list/base.html:20 templates/users/list/members.html:7
 msgid "Members"
 msgstr ""
@@ -3146,56 +3145,56 @@ msgstr ""
 msgid "Close Menu"
 msgstr ""
 
-#: templates/includes/sidebar.html:74 templates/photos/gallery.html:9
+#: templates/includes/sidebar.html:75 templates/photos/gallery.html:9
 #: templates/photos/gallery.html:13 templates/photos/photo_list.html:12
 msgid "Gallery"
 msgstr ""
 
-#: templates/includes/sidebar.html:104
+#: templates/includes/sidebar.html:105
 msgid "Submit Post"
 msgstr ""
 
-#: templates/includes/sidebar.html:114 templates/photos/gallery.html:20
+#: templates/includes/sidebar.html:115 templates/photos/gallery.html:20
 msgid "Submit Photo"
 msgstr ""
 
-#: templates/includes/sidebar.html:119
+#: templates/includes/sidebar.html:120
 msgid "Submit Poll"
 msgstr ""
 
-#: templates/includes/sidebar.html:134
+#: templates/includes/sidebar.html:135
 msgid "Content"
 msgstr ""
 
-#: templates/includes/sidebar.html:153 templates/likes/base.html:7
+#: templates/includes/sidebar.html:154 templates/likes/base.html:7
 #: templates/likes/base.html:11
 msgid "Favorites"
 msgstr ""
 
-#: templates/includes/sidebar.html:159 templates/users/detail/base.html:163
+#: templates/includes/sidebar.html:160 templates/users/detail/base.html:163
 #: templates/users/likes/base.html:8 templates/users/likes/base.html:19
 #: templates/users/likes/base.html:23
 msgid "Likes"
 msgstr ""
 
-#: templates/includes/sidebar.html:165 templates/users/detail/base.html:167
+#: templates/includes/sidebar.html:166 templates/users/detail/base.html:167
 #: templates/users/mentions/base.html:8 templates/users/mentions/base.html:19
 #: templates/users/mentions/base.html:23
 msgid "Mentions"
 msgstr ""
 
-#: templates/includes/sidebar.html:195 templates/users/list/base.html:28
+#: templates/includes/sidebar.html:196 templates/users/list/base.html:28
 #: templates/users/list/followers.html:7
 msgid "Followers"
 msgstr ""
 
-#: templates/includes/sidebar.html:206
+#: templates/includes/sidebar.html:207
 #: templates/invites/received_invite_list.html:24
 #: templates/join_requests/sent_joinrequest_list.html:26
 msgid "Community"
 msgstr ""
 
-#: templates/includes/sidebar.html:213
+#: templates/includes/sidebar.html:214
 #, python-format
 msgid ""
 "\n"
@@ -3961,36 +3960,23 @@ msgstr "Valikko"
 
 #: templates/users/detail/activities.html:14
 #, python-format
-msgid ""
-"\n"
-"  <strong>1 Activity</strong>\n"
-"  "
-msgid_plural "1 Asia"
-"\n"
-"  <strong>%(counter)s Activities</strong>\n"
-"  "
-msgstr[0] "%(counter) Asiaa"
-msgstr[1] ""
+msgid "1 Activity"
+msgid_plural "%(counter)s Activities"
+msgstr[0] "1 Asia"
+msgstr[1] "%(counter)s Asiaa"
 
-#: templates/users/detail/activities.html:21
-#: templates/users/detail/comments.html:21
+#: templates/users/detail/activities.html:16
 #, python-format
-msgid ""
-"\n"
-"  / <strong>1 Like</strong>\n"
-"  "
-msgid_plural "1 Tykkäys"
-"\n"
-"  / <strong>%(counter)s Likes</strong>\n"
-"  "
-msgstr[0] ""
-msgstr[1] ""
+msgid "1 Like"
+msgid_plural "%(counter)s Likes"
+msgstr[0] "1 Tykkäys"
+msgstr[1] "%(counter)s Tykkäystä"
 
-#: templates/users/detail/activities.html:32
+#: templates/users/detail/activities.html:23
 msgid "You have not submitted any activities."
-msgstr ""
+msgstr "Et lähettänyt yhtä asiakaan"
 
-#: templates/users/detail/activities.html:34
+#: templates/users/detail/activities.html:25
 #, python-format
 msgid "%(display_name)s has not published any activities."
 msgstr ""
@@ -4052,9 +4038,22 @@ msgid ""
 "\n"
 "  <strong>1 Comment</strong>\n"
 "  "
-msgid_plural "1 Kommentti"
+msgid_plural ""
 "\n"
 "  <strong>%(counter)s Comments</strong>\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/users/detail/comments.html:21
+#, python-format
+msgid ""
+"\n"
+"  / <strong>1 Like</strong>\n"
+"  "
+msgid_plural ""
+"\n"
+"  / <strong>%(counter)s Likes</strong>\n"
 "  "
 msgstr[0] ""
 msgstr[1] ""
@@ -4172,10 +4171,11 @@ msgid ""
 msgstr ""
 
 #: templates/users/emails/notification.txt:22
-#, python-format
-msgid ""
-"\n"
-"Link to user: %(absolute_url)s\n"
+#, fuzzy, python-format
+#| msgid ""
+#| "\n"
+#| "Link to user: %(absolute_url)s\n"
+msgid "Link to user: %(absolute_url)s"
 msgstr "Linkki käyttäjälle: %(absolute_url)s\n"
 
 #: templates/users/includes/notification.html:10
@@ -4225,7 +4225,7 @@ msgid ""
 "\n"
 "  <strong>1 activity</strong>.\n"
 "  "
-msgid_plural "1 asia"
+msgid_plural ""
 "\n"
 "  <strong>%(counter)s activities</strong>.\n"
 "  "
@@ -4279,7 +4279,7 @@ msgstr[1] ""
 msgid ""
 "\n"
 "You have one follower.\n"
-msgid_plural "Sinulla on yksi seuraaja"
+msgid_plural ""
 "\n"
 "You have %(counter)s followers.\n"
 msgstr[0] ""
@@ -4300,10 +4300,10 @@ msgstr[1] ""
 #, python-format
 msgid ""
 "\n"
-"This community has one member.\n"
+"This site has one member.\n"
 msgid_plural ""
 "\n"
-"This community has %(counter)s members.\n"
+"This site has %(counter)s members.\n"
 msgstr[0] ""
 msgstr[1] ""
 

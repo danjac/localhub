@@ -10,21 +10,12 @@
 
 {% if paginator.count %}
 <div class="notification mb-3">
-
-  {% blocktrans count counter=paginator.count %}
-  <strong>1 Activity</strong>
-  {% plural %}
-  <strong>{{ counter }} Activities</strong>
-  {% endblocktrans %}
-
+  <strong>
+  {% blocktrans count counter=paginator.count %}1 Activity{% plural %}{{ counter }} Activities{% endblocktrans %}
   {% if num_likes %}
-  {% blocktrans count counter=num_likes %}
-  / <strong>1 Like</strong>
-  {% plural %}
-  / <strong>{{ counter }} Likes</strong>
-  {% endblocktrans %}
+  / {% blocktrans count counter=num_likes %}1 Like{% plural %}{{ counter }} Likes{% endblocktrans %}
   {% endif %}
-
+</strong>
 </div>
 {% endif %}
 
@@ -38,4 +29,4 @@
 
 {% include "activities/includes/activity_list.html" with empty_message=t_empty_message %}
 
-{% endblock user_content %}
+k{% endblock user_content %}
