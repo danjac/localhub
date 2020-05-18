@@ -72,13 +72,13 @@
 
 {% endwith %}
 
-<h2 class="my-4 font-semibold pb-2 border-b border-gray-500 lg:w-3/4">
+<h2 class="my-4 font-semibold pb-2 border-b border-gray-500">
   {% trans "Add E-mail Address" %}
 </h2>
 
 <form method="POST"
       action="{% url 'account_email' %}"
-      class="p-5 border border-gray-500 lg:w-3/4">
+      class="p-5 border border-gray-500">
   {% include "includes/forms/fields.html" %}
   <button name="action_add"
           class="btn btn-primary"
