@@ -1,4 +1,4 @@
 -r base.in
 -r test.in
+-r aws.in
 
-django-storages

@@ -11,6 +11,7 @@ ENV PYTHONHASHSEED=random
 RUN apt-get update && apt-get install -y postgresql gettext
 
 COPY ./requirements/base.txt /requirements/base.txt
+COPY ./requirements/aws.txt /requirements/aws.txt
 COPY ./requirements/heroku.txt /requirements/heroku.txt
 
 RUN pip install -r requirements/heroku.txt
