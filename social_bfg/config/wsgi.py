@@ -16,7 +16,7 @@ import os
 # Third Party Libraries
 from configurations.wsgi import get_wsgi_application  # noqa
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "social_bfg.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "social_bfg.config.settings")
 os.environ.setdefault("DJANGO_CONFIGURATION", "Local")
 
 

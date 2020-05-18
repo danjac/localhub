@@ -8,7 +8,7 @@ import os
 import configurations  # noqa
 from celery import Celery
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "social_bfg.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "social_bfg.config.settings")
 os.environ.setdefault("DJANGO_CONFIGURATION", "Local")
 
 # https://django-configurations.readthedocs.io/en/stable/cookbook/#celery

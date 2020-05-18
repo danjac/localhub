@@ -3,6 +3,7 @@
 
 # Standard Library
 import os
+import pathlib
 import re
 import socket
 
@@ -36,7 +37,7 @@ class Base(Configuration):
     LANGUAGE_COOKIE_DOMAIN = values.Value()
     CSRF_TRUSTED_ORIGINS = []
 
-    WSGI_APPLICATION = "social_bfg.wsgi.application"
+    WSGI_APPLICATION = "social_bfg.config.wsgi.application"
 
     DJANGO_APPS = [
         "django.forms",
@@ -99,7 +100,7 @@ class Base(Configuration):
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
     ]
 
-    ROOT_URLCONF = "social_bfg.urls"
+    ROOT_URLCONF = "social_bfg.config.urls"
 
     # base Django admin URL (should be something obscure in production)
 
@@ -230,7 +231,7 @@ class Base(Configuration):
 
     @property
     def BASE_DIR(self):
-        return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        return str(pathlib.Path(__file__).parents[2])
 
     @property
     def INSTALLED_APPS(self):
@@ -385,8 +386,8 @@ class Production(Base):
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
-    DEFAULT_FILE_STORAGE = "social_bfg.storages.MediaStorage"
-    STATICFILES_STORAGE = "social_bfg.storages.StaticStorage"
+    DEFAULT_FILE_STORAGE = "social_bfg.config.storages.MediaStorage"
+    STATICFILES_STORAGE = "social_bfg.config.storages.StaticStorage"
 
     AWS_MEDIA_LOCATION = "media"
     AWS_STATIC_LOCATION = "static"

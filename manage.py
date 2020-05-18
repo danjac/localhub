@@ -3,12 +3,13 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 """Django's command-line utility for administrative tasks."""
+# Standard Library
 import os
 import sys
 
 
 def main():
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "social_bfg.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "social_bfg.config.settings")
     os.environ.setdefault("DJANGO_CONFIGURATION", "Local")
     try:
         from configurations.management import execute_from_command_line
