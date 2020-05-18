@@ -16,6 +16,63 @@ import pymdownx.emoji
 from configurations import Configuration, values
 
 
+class DockerMixin:
+    """Configuration for Docker deployments."""
+
+    @property
+    def INTERNAL_IPS(self):
+        _, _, ips = socket.gethostbyname_ex(socket.gethostname())
+        return [ip[:-1] + "1" for ip in ips]
+
+
+class MailgunMixin:
+    """Configuration for Mailgun email"""
+
+    CELERY_EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+    MAILGUN_API_KEY = values.Value()
+    MAILGUN_SENDER_DOMAIN = values.Value()
+
+    @property
+    def ANYMAIL(self):
+        return {
+            "MAILGUN_API_KEY": self.MAILGUN_API_KEY,
+            "MAILGUN_SENDER_DOMAIN": self.MAILGUN_SENDER_DOMAIN,
+        }
+
+    @property
+    def SERVER_EMAIL(self):
+        return f"errors@{self.MAILGUN_SENDER_DOMAIN}"
+
+    @property
+    def DEFAULT_FROM_EMAIL(self):
+        return f"support@{self.MAILGUN_SENDER_DOMAIN}"
+
+    @property
+    def INSTALLED_APPS(self):
+        return super().INSTALLED_APPS + ["anymail"]
+
+
+class AWSMixin:
+    """Configuration for S3 deployments.
+    """
+
+    DEFAULT_FILE_STORAGE = "social_bfg.config.storages.MediaStorage"
+    STATICFILES_STORAGE = "social_bfg.config.storages.StaticStorage"
+
+    AWS_MEDIA_LOCATION = "media"
+    AWS_STATIC_LOCATION = "static"
+
+    AWS_ACCESS_KEY_ID = values.Value()
+    AWS_SECRET_ACCESS_KEY = values.Value()
+    AWS_STORAGE_BUCKET_NAME = values.Value()
+    AWS_S3_CUSTOM_DOMAIN = values.Value()
+    AWS_S3_REGION_NAME = values.Value("eu-north-1")
+    AWS_QUERYSTRING_AUTH = False
+    AWS_DEFAULT_ACL = "public-read"
+
+    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=600"}
+
+
 class Base(Configuration):
 
     SECRET_KEY = values.SecretValue()
@@ -320,13 +377,6 @@ class Base(Configuration):
         return self.SOCIAL_BFG_DEFAULT_PAGE_SIZE * 2
 
 
-class DockerConfigMixin:
-    @property
-    def INTERNAL_IPS(self):
-        _, _, ips = socket.gethostbyname_ex(socket.gethostname())
-        return [ip[:-1] + "1" for ip in ips]
-
-
 class Testing(Base):
     PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
     ALLOWED_HOSTS = Configuration.ALLOWED_HOSTS + [".example.com"]
@@ -336,7 +386,7 @@ class Testing(Base):
     THUMBNAIL_KVSTORE = "sorl.thumbnail.kvstores.cached_db_kvstore.KVStore"
 
 
-class Local(DockerConfigMixin, Base):
+class Local(DockerMixin, Base):
 
     DEBUG = True
 
@@ -361,13 +411,7 @@ class Local(DockerConfigMixin, Base):
 class Production(Base):
     """
     Production settings for 12-factor deployment using environment variables.
-
-    Assumes AWS/S3 and Mailgun integration.
     """
-
-    THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + [
-        "anymail",
-    ]
 
     ALLOWED_HOSTS = values.ListValue()
     CSRF_TRUSTED_ORIGINS = values.ListValue()
@@ -385,47 +429,16 @@ class Production(Base):
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
-    DEFAULT_FILE_STORAGE = "social_bfg.config.storages.MediaStorage"
-    STATICFILES_STORAGE = "social_bfg.config.storages.StaticStorage"
-
-    AWS_MEDIA_LOCATION = "media"
-    AWS_STATIC_LOCATION = "static"
-
-    AWS_ACCESS_KEY_ID = values.Value()
-    AWS_SECRET_ACCESS_KEY = values.Value()
-    AWS_STORAGE_BUCKET_NAME = values.Value()
-    AWS_S3_CUSTOM_DOMAIN = values.Value()
-    AWS_S3_REGION_NAME = values.Value("eu-north-1")
-    AWS_QUERYSTRING_AUTH = False
-    AWS_DEFAULT_ACL = "public-read"
-
-    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=600"}
-
-    CELERY_EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
-    MAILGUN_API_KEY = values.Value()
-    MAILGUN_SENDER_DOMAIN = values.Value()
-
     MIDDLEWARE = Base.MIDDLEWARE + [
         "social_bfg.middleware.http.HttpResponseNotAllowedMiddleware",
     ]
 
-    @property
-    def ANYMAIL(self):
-        return {
-            "MAILGUN_API_KEY": self.MAILGUN_API_KEY,
-            "MAILGUN_SENDER_DOMAIN": self.MAILGUN_SENDER_DOMAIN,
-        }
 
-    @property
-    def SERVER_EMAIL(self):
-        return f"errors@{self.MAILGUN_SENDER_DOMAIN}"
-
-    @property
-    def DEFAULT_FROM_EMAIL(self):
-        return f"support@{self.MAILGUN_SENDER_DOMAIN}"
+class Deployment(AWSMixin, Production):
+    """Settings for running tasks in the deployment pipeline."""
 
 
-class Heroku(DockerConfigMixin, Production):
+class Heroku(DockerMixin, AWSMixin, MailgunMixin, Production):
     """
     Production settings specific to Heroku docker-based setup.
 

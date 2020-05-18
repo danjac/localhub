@@ -62,17 +62,14 @@ deploy:assets:
   script:
     - docker-compose -f docker-compose.deploy.yml pull
     - docker-compose -f docker-compose.deploy.yml run webpack yarn build
-    - docker-compose -f docker-compose.deploy.yml run -e DJANGO_CONFIGURATION=Production -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
+    - docker-compose -f docker-compose.deploy.yml run -e DJANGO_CONFIGURATION=Deployment -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
   only:
     - release
 
 deploy:heroku:
-  image: node:12
+  image: tmaier/dpl:latest
   stage: deploy
   script:
-    - apt-get update -qy
-    - apt-get install -y rubygems
-    - gem install dpl
     - dpl --provider=heroku --app=${HEROKU_APP_NAME} --api-key=${HEROKU_API_KEY} --skip-cleanup
   only:
     - release
