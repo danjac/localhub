@@ -10,12 +10,7 @@
     {% if not is_detail %}
     <a href="{{ object_url }}#comments">
       {% endif %}
-      {{ num_comments }}
-      {% blocktrans count counter=num_comments %}
-      Comment
-      {% plural %}
-      Comments
-      {% endblocktrans %}
+      {{ num_comments }} {% blocktrans count counter=num_comments %}Comment{% plural %}Comments{% endblocktrans %}
       {% if not is_detail %}
     </a>
     {% endif %}
@@ -25,23 +20,13 @@
 
   {% if not is_detail and object.num_reshares %}
   <div class="mr-2">
-    {{ object.num_reshares }}
-    {% blocktrans count counter=object.num_reshares %}
-    Reshare
-    {% plural %}
-    Reshares
-    {% endblocktrans %}
+    {{ object.num_reshares }} {% blocktrans count counter=object.num_reshares %}Reshare{% plural %}Reshares {% endblocktrans %}
   </div>
   {% endif %}
 
   {% if object.num_likes %}
   <div class="mr-2">
-    {{ object.num_likes }}
-    {% blocktrans count counter=object.num_likes %}
-    Like
-    {% plural %}
-    Likes
-    {% endblocktrans %}
+    {{ object.num_likes }} {% blocktrans count counter=object.num_likes %}Like{% plural %}Likes{% endblocktrans %}
   </div>
   {% endif %}
 

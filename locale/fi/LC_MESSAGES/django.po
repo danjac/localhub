@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-18 22:17+0000\n"
+"POT-Creation-Date: 2020-05-18 22:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -164,12 +164,17 @@ msgstr ""
 
 #: social_bfg/apps/comments/forms.py:16
 #: templates/activities/includes/actions.html:42
+#: templates/activities/includes/info.html:13
 #: templates/comments/comment_detail.html:27
 #: templates/comments/comment_form.html:14
 #: templates/comments/comment_form.html:25
 #: templates/comments/comment_form.html:30 templates/comments/flag_form.html:9
+#, fuzzy
+#| msgid "Comment"
 msgid "Comment"
-msgstr "Komentti"
+msgid_plural "Comments"
+msgstr[0] "Komentti"
+msgstr[1] "Komentti"
 
 #: social_bfg/apps/comments/notifications.py:17
 #, python-format
@@ -341,7 +346,7 @@ msgstr "Käyttöehdot"
 #: templates/join_requests/joinrequest_list.html:19
 #: templates/join_requests/sent_joinrequest_list.html:11
 msgid "Join Requests"
-msgstr "Liitymispyyntö"
+msgstr "Liitymispyynnöt"
 
 #: social_bfg/apps/communities/models.py:27
 msgid "This is not a valid domain"
@@ -866,7 +871,7 @@ msgstr ""
 
 #: social_bfg/apps/users/models.py:256
 msgid "Full name"
-msgstr ""
+msgstr "Koko nimi"
 
 #: social_bfg/apps/users/notifications.py:15
 #, python-format
@@ -1544,7 +1549,7 @@ msgstr ""
 #: templates/private_messages/includes/message.html:92
 #: templates/private_messages/message_confirm_delete.html:13
 msgid "Delete"
-msgstr ""
+msgstr "Poista"
 
 #: templates/activities/activity_confirm_delete.html:17
 #: templates/activities/activity_detail.html:26
@@ -1554,7 +1559,7 @@ msgstr ""
 #: templates/includes/forms/search_form.html:44
 #: templates/includes/sidebar.html:65
 msgid "Private Stash"
-msgstr ""
+msgstr "Yksityinen Kätkö"
 
 #: templates/activities/activity_confirm_delete.html:27
 #, python-format
@@ -1813,10 +1818,13 @@ msgstr ""
 
 #: templates/activities/includes/actions.html:55
 #: templates/activities/includes/actions.html:60
+#: templates/activities/includes/info.html:29
 #: templates/comments/includes/comment.html:124
 #: templates/comments/includes/comment.html:129
 msgid "Like"
-msgstr ""
+msgid_plural "Likes"
+msgstr[0] ""
+msgstr[1] ""
 
 #: templates/activities/includes/actions.html:72
 #: templates/activities/includes/actions.html:77
@@ -1828,10 +1836,13 @@ msgid "Bookmark"
 msgstr ""
 
 #: templates/activities/includes/actions.html:88
-#: templates/activities/includes/info.html:65
+#: templates/activities/includes/info.html:23
+#: templates/activities/includes/info.html:50
 #: templates/activities/timeline.html:116
 msgid "Reshare"
-msgstr ""
+msgid_plural "Reshares "
+msgstr[0] ""
+msgstr[1] ""
 
 #: templates/activities/includes/actions.html:108
 #: templates/activities/includes/actions.html:110
@@ -1859,14 +1870,14 @@ msgstr ""
 #: templates/comments/includes/comment.html:191
 #: templates/private_messages/includes/message.html:99
 msgid "Copy Markdown"
-msgstr ""
+msgstr "Kopioi Markdown-teksti"
 
 #: templates/activities/includes/activity_base.html:17
 #: templates/activities/includes/activity_pinned_base.html:8
 #: templates/comments/includes/comment.html:14
 #: templates/private_messages/includes/message.html:11
 msgid "Markdown content has been copied"
-msgstr ""
+msgstr "Markdown-teksti kopioittu"
 
 #: templates/activities/includes/activity_base.html:84
 msgid "Private"
@@ -1891,12 +1902,12 @@ msgstr ""
 #: templates/private_messages/includes/message.html:25
 #: templates/users/list/base.html:70
 msgid "New"
-msgstr ""
+msgstr "Uusi"
 
 #: templates/activities/includes/activity_base.html:136
 #: templates/comments/includes/comment.html:34
 msgid "[Deleted]"
-msgstr ""
+msgstr "[Poistunut]"
 
 #: templates/activities/includes/activity_base.html:141
 msgid "Sensitive Content"
@@ -1914,55 +1925,19 @@ msgstr ""
 
 #: templates/activities/includes/activity_form.html:24
 msgid "Save Private"
-msgstr ""
+msgstr "Tallenna Yksityiseen Kätköön"
 
 #: templates/activities/includes/activity_pinned_base.html:20
 msgid "Pinned"
 msgstr ""
 
-#: templates/activities/includes/info.html:14
-msgid ""
-"\n"
-"      Comment\n"
-"      "
-msgid_plural ""
-"\n"
-"      Comments\n"
-"      "
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/activities/includes/info.html:29
-msgid ""
-"\n"
-"    Reshare\n"
-"    "
-msgid_plural ""
-"\n"
-"    Reshares\n"
-"    "
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/activities/includes/info.html:40
-msgid ""
-"\n"
-"    Like\n"
-"    "
-msgid_plural ""
-"\n"
-"    Likes\n"
-"    "
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/activities/includes/info.html:50
+#: templates/activities/includes/info.html:35
 #: templates/comments/includes/comment.html:103
 #, python-format
 msgid "Updated %(edited)s ago"
 msgstr ""
 
-#: templates/activities/includes/info.html:61
+#: templates/activities/includes/info.html:46
 #, python-format
 msgid ""
 "\n"
@@ -2780,20 +2755,20 @@ msgstr ""
 #: templates/includes/forms/search_form.html:49
 #: templates/photos/photo_list.html:14 templates/polls/poll_list.html:12
 msgid "Posts"
-msgstr ""
+msgstr "Postaukset"
 
 #: templates/events/event_list.html:16
 #: templates/includes/forms/search_form.html:51 templates/photos/gallery.html:9
 #: templates/photos/gallery.html:24 templates/polls/poll_list.html:16
 #: templates/posts/post_list.html:14
 msgid "Photos"
-msgstr ""
+msgstr "Kuvat"
 
 #: templates/events/event_list.html:18
 #: templates/includes/forms/search_form.html:52
 #: templates/photos/photo_list.html:18 templates/posts/post_list.html:16
 msgid "Polls"
-msgstr ""
+msgstr "Gallupit"
 
 #: templates/events/includes/actions.html:19
 #: templates/events/includes/actions.html:24
@@ -2803,7 +2778,7 @@ msgstr ""
 #: templates/events/includes/actions.html:33
 #: templates/photos/includes/actions.html:12
 msgid "Download"
-msgstr ""
+msgstr "Lataa"
 
 #: templates/events/includes/actions.html:47
 msgid "Are you sure you want to cancel this event?"
@@ -2811,49 +2786,49 @@ msgstr ""
 
 #: templates/events/includes/actions.html:48
 msgid "Cancel Event"
-msgstr ""
+msgstr "Peruuta Tapahtuma"
 
 #: templates/events/includes/calendar.html:9
 #: templates/includes/forms/widgets/calendar.html:46
 #: templates/includes/pagination.html:15
 msgid "Previous"
-msgstr ""
+msgstr "Entiset"
 
 #: templates/events/includes/calendar.html:14
 #: templates/includes/forms/widgets/calendar.html:52
 #: templates/includes/pagination.html:24
 msgid "Next"
-msgstr ""
+msgstr "Seuraavat"
 
 #: templates/events/includes/calendar.html:18
 #: templates/includes/forms/widgets/calendar.html:57
 msgid "Mon"
-msgstr ""
+msgstr "Ma"
 
 #: templates/events/includes/calendar.html:19
 #: templates/includes/forms/widgets/calendar.html:58
 msgid "Tue"
-msgstr ""
+msgstr "Ti"
 
 #: templates/events/includes/calendar.html:20
 #: templates/includes/forms/widgets/calendar.html:59
 msgid "Wed"
-msgstr ""
+msgstr "Ke"
 
 #: templates/events/includes/calendar.html:21
 #: templates/includes/forms/widgets/calendar.html:60
 msgid "Thu"
-msgstr ""
+msgstr "To"
 
 #: templates/events/includes/calendar.html:22
 #: templates/includes/forms/widgets/calendar.html:61
 msgid "Fri"
-msgstr ""
+msgstr "Pe"
 
 #: templates/events/includes/calendar.html:23
 #: templates/includes/forms/widgets/calendar.html:62
 msgid "Sat"
-msgstr ""
+msgstr "La"
 
 #: templates/events/includes/calendar.html:24
 #: templates/includes/forms/widgets/calendar.html:56
@@ -2862,7 +2837,7 @@ msgstr ""
 
 #: templates/events/includes/calendar.html:50
 msgid "More..."
-msgstr ""
+msgstr "Lisää..."
 
 #: templates/events/includes/event.html:14
 msgid "This event has been canceled."
@@ -2879,7 +2854,7 @@ msgstr ""
 
 #: templates/events/includes/event.html:51
 msgid "Repeats"
-msgstr ""
+msgstr "Toistuu"
 
 #: templates/events/includes/event.html:54
 #, python-format
@@ -2904,11 +2879,11 @@ msgstr ""
 #: templates/events/includes/event.html:96
 #: templates/invites/invite_list.html:62
 msgid "Email"
-msgstr ""
+msgstr "Sähköpostiosoite"
 
 #: templates/events/includes/event.html:101
 msgid "Phone"
-msgstr ""
+msgstr "Puhelin"
 
 #: templates/events/includes/event.html:106
 msgid "Admission"
@@ -2947,7 +2922,7 @@ msgstr[1] ""
 #: templates/events/includes/links.html:10
 #: templates/photos/includes/links.html:10
 msgid "Map"
-msgstr ""
+msgstr "Kartta"
 
 #: templates/events/includes/notifications/attend.html:6
 #, python-format
@@ -2975,28 +2950,28 @@ msgstr ""
 
 #: templates/flags/flag_list.html:17 templates/flags/includes/flags.html:14
 msgid "Reason"
-msgstr ""
+msgstr "Syy"
 
 #: templates/hashtags/base.html:7 templates/hashtags/list/base.html:11
 #: templates/hashtags/not_found.html:12 templates/hashtags/tag_detail.html:13
 #: templates/includes/forms/search_form.html:53
 #: templates/includes/sidebar.html:140
 msgid "Tags"
-msgstr ""
+msgstr "Taggit"
 
 #: templates/hashtags/includes/block.html:13
 #: templates/hashtags/includes/block.html:20
 #: templates/users/detail/base.html:133 templates/users/detail/base.html:143
 #: templates/users/list/blocked.html:25
 msgid "Block"
-msgstr ""
+msgstr "Blokkaa"
 
 #: templates/hashtags/includes/follow.html:12
 #: templates/hashtags/includes/follow.html:19
 #: templates/users/includes/follow.html:10
 #: templates/users/includes/follow.html:17
 msgid "Follow"
-msgstr ""
+msgstr "Seuraa"
 
 #: templates/hashtags/list/all.html:20
 msgid ""
@@ -3024,7 +2999,7 @@ msgstr ""
 
 #: templates/hashtags/not_found.html:16
 msgid "Tag not found"
-msgstr ""
+msgstr "Taggia ei löydy"
 
 #: templates/hashtags/not_found.html:18
 #, python-format
@@ -3056,11 +3031,11 @@ msgstr ""
 
 #: templates/includes/confirm_dialog.html:26
 msgid "Yes, Please"
-msgstr ""
+msgstr "Kyllä"
 
 #: templates/includes/confirm_dialog.html:28
 msgid "No, Cancel"
-msgstr ""
+msgstr "Peruuta"
 
 #: templates/includes/empty.html:10
 #, python-format
@@ -3086,12 +3061,12 @@ msgstr ""
 
 #: templates/includes/forms/search_form.html:39
 msgid "Search in..."
-msgstr ""
+msgstr "Hakuehdot..."
 
 #: templates/includes/forms/search_form.html:40
 #: templates/includes/sidebar.html:33
 msgid "Activity Stream"
-msgstr ""
+msgstr "Toimintavirta"
 
 #: templates/includes/forms/search_form.html:41
 msgid "Messages - Inbox"
@@ -3117,11 +3092,11 @@ msgstr ""
 #: templates/includes/sidebar.html:186 templates/includes/sidebar.html:240
 #: templates/users/list/base.html:20 templates/users/list/members.html:7
 msgid "Members"
-msgstr ""
+msgstr "Jäsenet"
 
 #: templates/includes/forms/search_form.html:73
 msgid "Clear Search"
-msgstr ""
+msgstr "Poista Haku"
 
 #: templates/includes/forms/search_form.html:79
 #, python-format
