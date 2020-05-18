@@ -56,6 +56,7 @@ class Base(Configuration):
         "allauth.account",
         "allauth.socialaccount",
         "allauth.socialaccount.providers.google",
+        "django_extensions",
         "djcelery_email",
         "markdownx",
         "micawber.contrib.mcdjango",
@@ -330,7 +331,6 @@ class Testing(Base):
     PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
     ALLOWED_HOSTS = Configuration.ALLOWED_HOSTS + [".example.com"]
     CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
-    THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + ["django_extensions"]
     SITE_ID = 1
 
     THUMBNAIL_KVSTORE = "sorl.thumbnail.kvstores.cached_db_kvstore.KVStore"
@@ -344,7 +344,6 @@ class Local(DockerConfigMixin, Base):
 
     THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + [
         "debug_toolbar",
-        "django_extensions",
     ]
 
     MIDDLEWARE = Base.MIDDLEWARE + [

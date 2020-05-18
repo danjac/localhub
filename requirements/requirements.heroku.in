@@ -9,6 +9,7 @@ django-anymail[mailgun]
 django-celery-email
 django-configurations
 django-countries
+django-extensions
 django-markdownx
 django-model-utils
 django-redis

@@ -47,7 +47,7 @@ test:django:
   stage: test
   script:
     - docker-compose -f docker-compose.deploy.yml pull
-    - docker-compose -f docker-compose.deploy.yml run django ./manage.py validate_templates
+    - docker-compose -f docker-compose.deploy.yml run -e DJANGO_CONFIGURATION=Testing django ./manage.py validate_templates
     - docker-compose -f docker-compose.deploy.yml run django pytest
   only:
     - release
