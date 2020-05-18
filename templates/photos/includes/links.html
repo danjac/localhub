@@ -7,6 +7,6 @@
 
 {% block extra_links %}
 {% if object.has_map and not is_detail %}
-<a href="{{ object.get_absolute_url }}#map-for-photo-{{ object.id }}">{% trans "Map" %}</a>
+<a class="text-sm" href="{{ object.get_absolute_url }}#map-for-photo-{{ object.id }}">{% trans "Map" %}</a>
 {% endif %}
 {% endblock %}
