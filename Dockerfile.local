@@ -10,9 +10,11 @@ ENV PYTHONHASHSEED=random
 
 RUN apt-get update && apt-get install -y postgresql gettext
 
-COPY ./requirements/requirements.local.txt /requirements.txt
+COPY ./requirements/base.txt /requirements/base.txt
+COPY ./requirements/test.txt /requirements/test.txt
+COPY ./requirements/local.txt /requirements/local.txt
 
-RUN pip install -r requirements.txt
+RUN pip install -r requirements/local.txt
 
 WORKDIR /app
 

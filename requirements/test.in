@@ -1,0 +1,6 @@
+factory-boy
+pytest
+pytest-cov
+pytest-django
+pytest-mock
+pytest-xdist

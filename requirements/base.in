@@ -7,7 +7,6 @@ django-allauth
 django-celery-email
 django-configurations
 django-countries
-django-debug-toolbar
 django-extensions
 django-markdownx
 django-model-utils
@@ -15,7 +14,6 @@ django-redis
 django-taggit
 django-timezone-field
 django-widget-tweaks
-factory-boy
 geopy
 icalendar
 ipython
@@ -24,11 +22,6 @@ pillow
 psycopg2-binary
 pymdown-extensions
 pyopenssl
-pytest
-pytest-cov
-pytest-django
-pytest-mock
-pytest-xdist
 pytz
 pywebpush
 redis
