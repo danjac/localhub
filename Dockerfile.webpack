@@ -9,4 +9,4 @@ COPY assets ./assets
 COPY webpack.config.js ./webpack.config.js
 COPY package.json ./package.json
 COPY package-lock.json ./package-lock.json
-RUN npm install
+RUN yarn

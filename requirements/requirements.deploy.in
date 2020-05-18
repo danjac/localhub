@@ -5,6 +5,7 @@ celery
 dj-database-url
 django
 django-allauth
+django-celery-email
 django-configurations
 django-countries
 django-extensions
