@@ -13,7 +13,6 @@
 <p class="mb-3">{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
 
 {% url 'account_signup' as signup_url %}
-{% trans "Sign Up" as t_signup %}
-{% include "account/includes/signup_form.html" with action=signup_url submit_btn=t_signup %}
+{% include "account/includes/signup_form.html" with action=signup_url submit_btn=_("Sign Up") %}
 {% include "account/includes/social_logins.html" with css_class="mt-3" %}
 {% endblock content %}

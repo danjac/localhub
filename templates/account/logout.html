@@ -7,12 +7,12 @@
 {% block account_subtitle %}{% trans "Logout" %}{% endblock %}
 
 {% block content %}
-<div class="col-6 col-mx-auto col-sm-12 text-center">
-  <h1 class="page-header">{% trans "Logout" %}</h1>
+  <h1 class="page-header mb-3">{% trans "Logout" %}</h1>
 
   <p>{% trans "Are you sure you want to log out?" %}</p>
 
   <form method="post"
+        class="p-2 border border-gray-500"
         action="{% url 'account_logout' %}">
     {% csrf_token %}
     {% if redirect_field_value %}
@@ -20,7 +20,7 @@
            name="{{ redirect_field_name }}"
            value="{{ redirect_field_value }}" />
     {% endif %}
-    <button class="btn btn-block btn-primary"
+    <button class="btn btn-primary"
             type="submit">
       {% trans 'Logout' %}
     </button>

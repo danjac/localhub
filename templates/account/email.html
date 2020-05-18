@@ -25,7 +25,7 @@
 
 <form action="{% url 'account_email' %}"
       method="POST"
-      class="p-5 border border-gray-500 lg:w-3/4">
+      class="p-5 border border-gray-500">
   {% csrf_token %}
 
   {% for emailaddress in emailaddresses %}
