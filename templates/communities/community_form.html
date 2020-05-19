@@ -21,6 +21,6 @@
      href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
 </div>
 
-{% include "includes/forms/stimulusjs_form.html" with submit_btn=_("Save Settings") %}
+{% include "includes/forms/ajax_form.html" with submit_btn=_("Save Settings") %}
 
 {% endblock content %}

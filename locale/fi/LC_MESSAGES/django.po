@@ -3111,7 +3111,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/includes/forms/stimulusjs_form.html:12
+#: templates/includes/forms/ajax_form.html:12
 msgid ""
 "Are you sure you want to leave this page? All your changes will be lost."
 msgstr ""
