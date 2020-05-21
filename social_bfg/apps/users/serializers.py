@@ -4,7 +4,7 @@
 # Django
 from django.contrib.auth import get_user_model
 
-# Third Party Libraries
+# Django Rest Framework
 from rest_framework import serializers
 
 

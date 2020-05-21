@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-# Third Party Libraries
+# Django Rest Framework
 from rest_framework import serializers
 
 # Social-BFG
