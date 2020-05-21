@@ -264,14 +264,6 @@ class Base(Configuration):
 
     TAGGIT_CASE_INSENSITIVE = True
 
-    # rest framework
-
-    REST_FRAMEWORK = {
-        "DEFAULT_AUTHENTICATION_CLASSES": [
-            "rest_framework.authentication.SessionAuthentication",
-        ]
-    }
-
     # https://web-push-codelab.glitch.me/
 
     SOCIAL_BFG_VAPID_PUBLIC_KEY = values.Value()
@@ -356,6 +348,18 @@ class Base(Configuration):
                 },
             }
         ]
+
+    # rest framework
+
+    @property
+    def REST_FRAMEWORK(self):
+        return {
+            "DEFAULT_AUTHENTICATION_CLASSES": [
+                "rest_framework.authentication.SessionAuthentication",
+            ],
+            "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+            "PAGE_SIZE": self.SOCIAL_BFG_DEFAULT_PAGE_SIZE,
+        }
 
     # Sorl-thumbnail
 

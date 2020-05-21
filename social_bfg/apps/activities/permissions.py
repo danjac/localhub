@@ -10,9 +10,9 @@ class IsActivityOwner(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return self.request.user == obj.owner
+        return request.user == obj.owner
 
 
 class IsNotActivityOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        return obj.owner != self.request.user
+        return obj.owner != request.user
