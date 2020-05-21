@@ -15,9 +15,7 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     owner = UserSerializer(read_only=True)
     parent = serializers.PrimaryKeyRelatedField(read_only=True)
-    object_type = serializers.SerializerMethodField()
-
-    publish = serializers.BooleanField(write_only=True, required=False)
+    object_type = serializers.SerializerMethodField(read_only=True)
 
     # annotated fields
 

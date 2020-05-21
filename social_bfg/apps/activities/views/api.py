@@ -403,13 +403,13 @@ class ActivityViewSet(ModelViewSet):
     # TBD: moderator delete should be a dedicated endpoint.
 
     def perform_create(self, serializer):
-        obj = serializer.save(
+        serializer.save(
             owner=self.request.user,
             community=self.request.community,
-            published=timezone.now() if serializer.data.get("publish") else None,
+            published=timezone.now() if self.request.data.get("publish") else None,
         )
-        if obj.published:
-            obj.notify_on_publish()
+        if serializer.instance.published:
+            serializer.instance.notify_on_publish()
 
     @action(detail=True, methods=["post"])
     def publish(self, request, pk=None):

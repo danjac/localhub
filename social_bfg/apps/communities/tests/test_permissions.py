@@ -11,14 +11,29 @@ pytestmark = pytest.mark.django_db
 
 
 class TestIsCommunity:
-    def test_if_active(self, api_req_factory, community):
+    def test_if_community_active(self, api_req_factory, community, user):
         req = api_req_factory.get("/")
         req.community = community
+        req.user = user
         assert permissions.IsCommunity().has_permission(req, None)
 
-    def test_if_inactive(self, api_req_factory, request_community):
+    def test_if_community_inactive(self, api_req_factory, request_community, user):
         req = api_req_factory.get("/")
         req.community = request_community
+        req.user = user
+        assert not permissions.IsCommunity().has_permission(req, None)
+
+    def test_if_user_anonymous(self, api_req_factory, community, anonymous_user):
+        req = api_req_factory.get("/")
+        req.community = community
+        req.user = anonymous_user
+        assert not permissions.IsCommunity().has_permission(req, None)
+
+    def test_if_user_inactive(self, api_req_factory, community, user):
+        user.is_active = False
+        req = api_req_factory.get("/")
+        req.community = community
+        req.user = user
         assert not permissions.IsCommunity().has_permission(req, None)
 
 
