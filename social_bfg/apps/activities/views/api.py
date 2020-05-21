@@ -395,6 +395,14 @@ class ActivityViewSet(ModelViewSet):
         IsActivityOwner,
     ]
 
+    def get_queryset(self):
+        return (
+            self.model.objects.select_related("owner", "editor", "parent__owner")
+            .published_or_owner(self.request.user)
+            .with_common_annotations(self.request.user, self.request.community)
+            .order_by("-published", "-created")
+        )
+
     # TBD: moderator delete should be a dedicated endpoint.
 
     def perform_create(self, serializer):
@@ -466,24 +474,15 @@ class ActivityViewSet(ModelViewSet):
 
     @action(detail=True, methods=["post"], permission_classes=[IsCommunityMember])
     def add_comment(self, request, pk=None):
+        obj = self.get_object()
+        if not obj.allow_comments():
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
             comment = serializer.save(
-                owner=request.user,
-                community=request.community,
-                content_object=self.get_object(),
+                owner=request.user, community=request.community, content_object=obj,
             )
 
             comment.notify_on_create()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    def get_queryset(self):
-        # TBD: search query
-        return (
-            super()
-            .get_queryset()
-            .select_related("owner", "editor", "parent__owner")
-            .published_or_owner(self.request.user)
-            .with_common_annotations(self.request.user, self.request.community)
-            .order_by("-published", "-created")
-        )

@@ -32,7 +32,7 @@ from social_bfg.apps.users.views import (
 )
 
 router = DefaultRouter()
-router.register("posts", PostViewSet)
+router.register("posts", PostViewSet, basename="posts")
 
 urlpatterns = [
     path("", view=activity_stream_view, name="activity_stream"),
