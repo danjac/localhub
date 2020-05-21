@@ -21,6 +21,10 @@ class CommunitySerializer(serializers.ModelSerializer):
 
     absolute_url = serializers.SerializerMethodField()
 
+    description_markdown = serializers.SerializerMethodField()
+    terms_markdown = serializers.SerializerMethodField()
+    intro_markdown = serializers.SerializerMethodField()
+
     class Meta:
         model = Community
         fields = (
