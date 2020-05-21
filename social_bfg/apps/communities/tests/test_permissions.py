@@ -20,3 +20,17 @@ class TestIsCommunity:
         req = api_req_factory.get("/")
         req.community = request_community
         assert not permissions.IsCommunity().has_permission(req, None)
+
+
+class TestIsCommunityMember:
+    def test_if_member(self, api_req_factory, member):
+        req = api_req_factory.get("/")
+        req.community = member.community
+        req.user = member.member
+        assert permissions.IsCommunityMember().has_permission(req, None)
+
+    def test_if_not_member(self, api_req_factory, community, user):
+        req = api_req_factory.get("/")
+        req.community = community
+        req.user = user
+        assert not permissions.IsCommunityMember().has_permission(req, None)
