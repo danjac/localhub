@@ -264,6 +264,14 @@ class Base(Configuration):
 
     TAGGIT_CASE_INSENSITIVE = True
 
+    # rest framework
+
+    REST_FRAMEWORK = {
+        "DEFAULT_AUTHENTICATION_CLASSES": [
+            "rest_framework.authentication.SessionAuthentication",
+        ]
+    }
+
     # https://web-push-codelab.glitch.me/
 
     SOCIAL_BFG_VAPID_PUBLIC_KEY = values.Value()
