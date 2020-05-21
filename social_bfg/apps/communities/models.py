@@ -111,18 +111,6 @@ class RequestCommunity:
     def get_absolute_url(self):
         return self.request.full_path
 
-    def user_has_role(self, user, *roles):
-        return False
-
-    def is_member(self, user):
-        return False
-
-    def is_moderator(self, user):
-        return False
-
-    def is_admin(self, user):
-        return False
-
 
 class Community(TimeStampedModel):
     domain = models.CharField(

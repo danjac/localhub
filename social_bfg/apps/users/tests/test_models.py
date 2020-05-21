@@ -294,8 +294,16 @@ class TestUserModel:
         assert not user.is_member(community)
 
     def test_is_member_if_active_member_wrong_role(self):
+        member = MembershipFactory(active=True, role=Membership.Role.MEMBER)
+        assert not member.member.is_admin(member.community)
+
+    def test_is_member_if_active_member_has_role_if_moderator(self):
+        member = MembershipFactory(active=True, role=Membership.Role.MODERATOR)
+        assert member.member.is_member(member.community)
+
+    def test_is_member_if_active_member_has_role_if_admin(self):
         member = MembershipFactory(active=True, role=Membership.Role.ADMIN)
-        assert not member.member.is_member(member.community)
+        assert member.member.is_member(member.community)
 
     def test_is_member_if_inactive_member_right_role(self):
         member = MembershipFactory(active=False, role=Membership.Role.MEMBER)
@@ -309,7 +317,7 @@ class TestUserModel:
         assert not user.is_moderator(community)
 
     def test_is_moderator_if_active_member_wrong_role(self):
-        member = MembershipFactory(active=True, role=Membership.Role.ADMIN)
+        member = MembershipFactory(active=True, role=Membership.Role.MEMBER)
         assert not member.member.is_moderator(member.community)
 
     def test_is_moderator_if_inactive_member_right_role(self):

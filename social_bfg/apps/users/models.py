@@ -359,10 +359,17 @@ class User(TrackerModelMixin, AbstractUser):
         return self.has_role(community, Membership.Role.ADMIN)
 
     def is_moderator(self, community):
-        return self.has_role(community, Membership.Role.MODERATOR)
+        return self.has_role(
+            community, Membership.Role.MODERATOR, Membership.Role.ADMIN
+        )
 
     def is_member(self, community):
-        return self.has_role(community, Membership.Role.MEMBER)
+        return self.has_role(
+            community,
+            Membership.Role.MEMBER,
+            Membership.Role.MODERATOR,
+            Membership.Role.ADMIN,
+        )
 
     def is_active_member(self, community):
         """Checks if user an active member of any role.

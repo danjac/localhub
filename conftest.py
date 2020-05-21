@@ -20,7 +20,7 @@ from PIL import Image
 # Social-BFG
 from social_bfg.apps.comments.factories import CommentFactory
 from social_bfg.apps.communities.factories import CommunityFactory, MembershipFactory
-from social_bfg.apps.communities.models import Membership
+from social_bfg.apps.communities.models import Membership, RequestCommunity
 from social_bfg.apps.events.factories import EventFactory
 from social_bfg.apps.invites.factories import InviteFactory
 from social_bfg.apps.join_requests.factories import JoinRequestFactory
@@ -182,6 +182,11 @@ def notification(post):
         content_object=post,
         verb="mention",
     )
+
+
+@pytest.fixture
+def request_community(api_req_factory):
+    return RequestCommunity(api_req_factory.get("/"), "example", "example.com")
 
 
 @pytest.fixture
