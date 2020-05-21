@@ -9,11 +9,26 @@ from rest_framework import serializers
 from social_bfg.apps.users.serializers import UserSerializer
 
 
+class RelatedActivitySerializer(serializers.Serializer):
+    """For use as generic content object. We can't use
+    a ModelSerializer as that doesn't work with abstract models.
+    """
+
+    id = serializers.IntegerField()
+    title = serializers.CharField()
+    object_name = serializers.SerializerMethodField()
+
+    def get_object_name(self, obj):
+        return obj._meta.model_name
+
+
 class ActivitySerializer(serializers.ModelSerializer):
-    """Base class for all activity serializers."""
+    """Base class for all activity serializers. Subclass
+    for all supported models."""
 
     owner = UserSerializer(read_only=True)
     parent = serializers.PrimaryKeyRelatedField(read_only=True)
+    object_type = serializers.SerializerMethodField()
 
     # annotated fields
 
@@ -28,6 +43,8 @@ class ActivitySerializer(serializers.ModelSerializer):
     has_liked = serializers.BooleanField(read_only=True)
     has_reshared = serializers.BooleanField(read_only=True)
 
+    markdown = serializers.SerializerMethodField()
+
     class Meta:
         fields = (
             "id",
@@ -35,6 +52,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             "hashtags",
             "mentions",
             "description",
+            "markdown",
             "allow_comments",
             "owner",
             "is_pinned",
@@ -51,6 +69,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             "has_flagged",
             "has_liked",
             "has_reshared",
+            "object_type",
         )
 
         read_only_fields = (
@@ -59,3 +78,9 @@ class ActivitySerializer(serializers.ModelSerializer):
             "is_reshare",
             "is_pinned",
         )
+
+    def get_markdown(self, obj):
+        return obj.description.markdown()
+
+    def get_object_type(self, obj):
+        return obj._meta.model_name
