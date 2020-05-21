@@ -1,0 +1,58 @@
+# Copyright (c) 2020 by Dan Jacob
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+
+# Django Rest Framework
+from rest_framework import serializers
+
+# Social-BFG
+from social_bfg.apps.activities.serializers import ActivitySerializer
+
+# Local
+from .models import Event
+
+
+class EventSerializer(ActivitySerializer):
+
+    next_date = serializers.DateTimeField(read_only=True)
+    num_attendees = serializers.IntegerField(read_only=True)
+    is_attending = serializers.BooleanField(read_only=True)
+
+    location = serializers.SerializerMethodField()
+    full_location = serializers.SerializerMethodField()
+
+    class Meta(ActivitySerializer.Meta):
+        model = Event
+        fields = ActivitySerializer.Meta.fields + (
+            "starts",
+            "ends",
+            "repeats",
+            "repeats_until",
+            "canceled",
+            "latitude",
+            "longitude",
+            "street_address",
+            "locality",
+            "postal_code",
+            "region",
+            "country",
+            "timezone",
+            "venue",
+            "next_date",
+            "is_attending",
+            "num_attendees",
+            "location",
+            "full_location",
+        )
+
+        read_only_fields = (
+            "canceled",
+            "latitude",
+            "longitude",
+        )
+
+    def get_location(self, obj):
+        return obj.get_location()
+
+    def get_full_location(self, obj):
+        return obj.get_full_location()

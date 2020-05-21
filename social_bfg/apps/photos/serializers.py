@@ -27,7 +27,6 @@ class PhotoSerializer(ActivitySerializer):
             "latitude",
             "longitude",
             "artist",
-            "artist",
             "original_url",
             "cc_license",
             "small_image_url",
