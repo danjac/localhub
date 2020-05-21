@@ -16,7 +16,7 @@ from social_bfg.apps.users.factories import UserFactory
 pytestmark = pytest.mark.django_db
 
 
-class TestDefaultStreamAPIView:
+class TestDefaultActivityStreamAPIView:
     def test_get_if_non_member(self, client, login_user, community):
         response = client.get("/api/streams/default/")
         assert response.status_code == status.HTTP_403_FORBIDDEN
@@ -34,3 +34,25 @@ class TestDefaultStreamAPIView:
         response = client.get("/api/streams/default/")
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data["results"]) == 4
+
+
+class TestActivitySearchAPIView:
+    def test_get(self, client, member, transactional_db):
+        PostFactory(community=member.community, title="test", owner=member.member)
+        EventFactory(community=member.community, title="test", owner=member.member)
+
+        response = client.get("/api/streams/search/", {"q": "test"})
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data["results"]) == 2
+
+
+class TestTimelineAPIVIew:
+    def test_get(self, client, member):
+        PostFactory(community=member.community, owner=member.member)
+        EventFactory(community=member.community, owner=member.member)
+
+        response = client.get("/api/streams/timeline/")
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data["results"]["items"]) == 2
+        # TBD: test exact date info
+        assert response.data["results"]["date_info"]

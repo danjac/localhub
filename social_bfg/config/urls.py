@@ -9,7 +9,11 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 # Social-BFG
-from social_bfg.apps.activities.views.api import default_stream_api_view
+from social_bfg.apps.activities.views.api import (
+    activity_search_api_view,
+    default_activity_stream_api_view,
+    timeline_api_view,
+)
 from social_bfg.apps.activities.views.streams import activity_stream_view
 from social_bfg.apps.communities.views import (
     community_list_view,
@@ -26,7 +30,9 @@ urlpatterns = [
     # Local
     path("", view=activity_stream_view, name="activity_stream"),
     path("", include("social_bfg.apps.activities.urls")),
-    path("api/streams/default/", view=default_stream_api_view),
+    path("api/streams/default/", view=default_activity_stream_api_view),
+    path("api/streams/search/", view=activity_search_api_view),
+    path("api/streams/timeline/", view=timeline_api_view),
     path("bookmarks/", include("social_bfg.apps.bookmarks.urls")),
     path("comments/", include("social_bfg.apps.comments.urls")),
     path("events/", include("social_bfg.apps.events.urls")),
