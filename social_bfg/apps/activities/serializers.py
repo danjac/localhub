@@ -13,6 +13,7 @@ class ActivitySerializer(serializers.ModelSerializer):
     """Base class for all activity serializers."""
 
     owner = UserSerializer(read_only=True)
+    parent = serializers.PrimaryKeyRelatedField(read_only=True)
 
     # annotated fields
 
@@ -23,6 +24,7 @@ class ActivitySerializer(serializers.ModelSerializer):
     is_flagged = serializers.BooleanField(read_only=True)
     is_new = serializers.BooleanField(read_only=True)
     has_bookmarked = serializers.BooleanField(read_only=True)
+    has_flagged = serializers.BooleanField(read_only=True)
     has_liked = serializers.BooleanField(read_only=True)
     has_reshared = serializers.BooleanField(read_only=True)
 
@@ -35,6 +37,25 @@ class ActivitySerializer(serializers.ModelSerializer):
             "description",
             "allow_comments",
             "owner",
+            "is_pinned",
+            "is_reshare",
             "created",
-            "updated",
+            "edited",
+            "published",
+            "is_new",
+            "is_flagged",
+            "num_likes",
+            "num_reshares",
+            "num_comments",
+            "has_bookmarked",
+            "has_flagged",
+            "has_liked",
+            "has_reshared",
+        )
+
+        read_only_fields = (
+            "edited",
+            "published",
+            "is_reshare",
+            "is_pinned",
         )
