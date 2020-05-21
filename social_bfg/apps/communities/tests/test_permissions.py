@@ -34,3 +34,31 @@ class TestIsCommunityMember:
         req.community = community
         req.user = user
         assert not permissions.IsCommunityMember().has_permission(req, None)
+
+
+class TestIsCommunityModerator:
+    def test_if_moderator(self, api_req_factory, moderator):
+        req = api_req_factory.get("/")
+        req.community = moderator.community
+        req.user = moderator.member
+        assert permissions.IsCommunityModerator().has_permission(req, None)
+
+    def test_if_not_moderator(self, api_req_factory, community, user):
+        req = api_req_factory.get("/")
+        req.community = community
+        req.user = user
+        assert not permissions.IsCommunityModerator().has_permission(req, None)
+
+
+class TestIsCommunityAdmin:
+    def test_if_admin(self, api_req_factory, admin):
+        req = api_req_factory.get("/")
+        req.community = admin.community
+        req.user = admin.member
+        assert permissions.IsCommunityAdmin().has_permission(req, None)
+
+    def test_if_not_admin(self, api_req_factory, community, user):
+        req = api_req_factory.get("/")
+        req.community = community
+        req.user = user
+        assert not permissions.IsCommunityAdmin().has_permission(req, None)
