@@ -10,6 +10,9 @@ from django.contrib.auth.models import AnonymousUser
 from django.core.files import File
 from django.http import HttpResponse
 
+# Django Rest Framework
+from rest_framework.test import APIRequestFactory
+
 # Third Party Libraries
 import pytest
 from PIL import Image
@@ -28,6 +31,11 @@ from social_bfg.apps.polls.factories import PollFactory
 from social_bfg.apps.posts.factories import PostFactory
 from social_bfg.apps.private_messages.factories import MessageFactory
 from social_bfg.apps.users.factories import UserFactory
+
+
+@pytest.fixture
+def api_req_factory():
+    return APIRequestFactory()
 
 
 @pytest.fixture
