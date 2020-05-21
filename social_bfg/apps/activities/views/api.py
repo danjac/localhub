@@ -25,6 +25,10 @@ from social_bfg.pagination import PresetCountPaginator
 # Local
 from ..utils import get_activity_queryset_count, get_activity_querysets, load_objects
 
+# For now parking all "API" views here. Will eventually remove existing views
+# and split these up in to "generic" and "streams" modules as before. Also
+# all other API views in other apps will follow same pattern.
+
 
 class StreamPaginator(PageNumberPagination):
 

@@ -11,7 +11,7 @@ from django.core.files import File
 from django.http import HttpResponse
 
 # Django Rest Framework
-from rest_framework.test import APIRequestFactory
+from rest_framework.test import APIClient, APIRequestFactory
 
 # Third Party Libraries
 import pytest
@@ -36,6 +36,11 @@ from social_bfg.apps.users.factories import UserFactory
 @pytest.fixture
 def api_req_factory():
     return APIRequestFactory()
+
+
+@pytest.fixture
+def client():
+    return APIClient()
 
 
 @pytest.fixture
@@ -78,6 +83,9 @@ def member(client, login_user, community):
     return MembershipFactory(
         member=login_user, community=community, role=Membership.Role.MEMBER
     )
+
+
+# some duplication while we have 2 kinds of client. Will reconcile later.
 
 
 @pytest.fixture

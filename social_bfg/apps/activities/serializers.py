@@ -31,12 +31,14 @@ class ActivitySerializer(serializers.ModelSerializer):
     has_reshared = serializers.BooleanField(read_only=True)
 
     markdown = serializers.SerializerMethodField()
+    hashtag_list = serializers.SerializerMethodField()
 
     class Meta:
         fields = (
             "id",
             "title",
             "hashtags",
+            "hashtag_list",
             "mentions",
             "description",
             "markdown",
@@ -71,3 +73,6 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     def get_object_type(self, obj):
         return obj._meta.model_name
+
+    def get_hashtag_list(self, obj):
+        return obj.hashtags.extract_hashtags()
