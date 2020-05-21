@@ -12,7 +12,7 @@ execnet==1.7.1            # via pytest-xdist
 factory-boy==2.12.0       # via -r test.in
 faker==4.1.0              # via factory-boy
 more-itertools==8.3.0     # via pytest
-packaging==20.3           # via pytest
+packaging==20.4           # via pytest
 pluggy==0.13.1            # via pytest
 py==1.8.1                 # via pytest
 pyparsing==2.4.7          # via packaging

@@ -117,6 +117,7 @@ class Base(Configuration):
         "djcelery_email",
         "markdownx",
         "micawber.contrib.mcdjango",
+        "rest_framework",
         "rules.apps.AutodiscoverRulesConfig",
         "sorl.thumbnail",
         "taggit",
