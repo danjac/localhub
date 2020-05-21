@@ -60,6 +60,10 @@ class CommunitySerializer(serializers.ModelSerializer):
 
 
 class MembershipSerializer(serializers.ModelSerializer):
+    """Current member role could be included in initial page load.
+
+    We probably don't need the entire membership details.
+    """
 
     community = CommunitySerializer(read_only=True)
     member = UserSerializer(read_only=True)

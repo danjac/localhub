@@ -25,6 +25,8 @@ class UserSerializer(serializers.ModelSerializer):
 class AuthenticatedUserSerializer(UserSerializer):
     """Complete info on current auth user """
 
+    roles = serializers.SerializerMethodField()
+
     class Meta(UserSerializer.Meta):
         fields = UserSerializer.Meta.fields + (
             "language",
@@ -34,4 +36,8 @@ class AuthenticatedUserSerializer(UserSerializer):
             "show_sensitive_content",
             "show_external_images",
             "show_embedded_content",
+            "roles",
         )
+
+    def get_roles(self, obj):
+        return obj.member_cache.roles
