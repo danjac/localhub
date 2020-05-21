@@ -8,6 +8,7 @@ from rest_framework import status
 import pytest
 
 # Social-BFG
+from social_bfg.apps.communities.factories import MembershipFactory
 from social_bfg.apps.events.factories import EventFactory
 from social_bfg.apps.polls.factories import AnswerFactory, PollFactory
 from social_bfg.apps.posts.factories import PostFactory
@@ -56,3 +57,19 @@ class TestTimelineAPIVIew:
         assert len(response.data["results"]["items"]) == 2
         # TBD: test exact date info
         assert response.data["results"]["date_info"]
+
+
+class TestActivityPrivateView:
+    def test_get(self, client, member):
+        PostFactory(community=member.community, owner=member.member)
+        PostFactory(
+            community=member.community,
+            owner=MembershipFactory(community=member.community).member,
+            published=None,
+        )
+        PostFactory(community=member.community, owner=member.member, published=None)
+        EventFactory(community=member.community, owner=member.member, published=None)
+
+        response = client.get("/api/streams/private/")
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data["results"]) == 2

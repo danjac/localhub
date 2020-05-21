@@ -353,3 +353,27 @@ class TimelineAPIView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamAPIVie
 
 
 timeline_api_view = TimelineAPIView.as_view()
+
+
+class PrivateAPIView(BaseActivityStreamAPIView):
+    # will fold in SearchMixin later
+
+    search_param = "q"
+
+    @cached_property
+    def search_query(self):
+        return self.request.GET.get(self.search_param)
+
+    def get_ordering(self):
+        if self.search_query:
+            return ("-rank", "-created")
+        return "-created"
+
+    def filter_queryset(self, queryset):
+        qs = super().filter_queryset(queryset).private(self.request.user)
+        if self.search_query:
+            qs = qs.search(self.search_query)
+        return qs
+
+
+private_api_view = PrivateAPIView.as_view()
