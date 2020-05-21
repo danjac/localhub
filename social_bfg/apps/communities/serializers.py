@@ -65,13 +65,13 @@ class MembershipSerializer(serializers.ModelSerializer):
     We probably don't need the entire membership details.
     """
 
-    community = CommunitySerializer(read_only=True)
+    # community = CommunitySerializer(read_only=True)
     member = UserSerializer(read_only=True)
 
     class Meta:
         model = Membership
         fields = (
-            "community",
+            # "community",
             "member",
             "role",
             "active",
