@@ -14,3 +14,4 @@ class TestEventSerializer:
     def test_serialize_event(self, event):
         data = EventSerializer(event).data
         assert data["title"] == event.title
+        assert data["timezone"] == "UTC"
