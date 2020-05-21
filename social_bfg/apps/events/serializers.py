@@ -14,12 +14,13 @@ from .models import Event
 
 class EventSerializer(ActivitySerializer):
 
+    location = serializers.SerializerMethodField()
+    full_location = serializers.SerializerMethodField()
+
+    # annotated fields
     next_date = serializers.DateTimeField(read_only=True)
     num_attendees = serializers.IntegerField(read_only=True)
     is_attending = serializers.BooleanField(read_only=True)
-
-    location = serializers.SerializerMethodField()
-    full_location = serializers.SerializerMethodField()
 
     class Meta(ActivitySerializer.Meta):
         model = Event
@@ -29,6 +30,7 @@ class EventSerializer(ActivitySerializer):
             "repeats",
             "repeats_until",
             "canceled",
+            "url",
             "latitude",
             "longitude",
             "street_address",
