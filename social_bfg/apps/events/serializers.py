@@ -5,14 +5,21 @@
 # Django Rest Framework
 from rest_framework import serializers
 
+# Third Party Libraries
+from django_countries.serializer_fields import CountryField
+
 # Social-BFG
 from social_bfg.apps.activities.serializers import ActivitySerializer
+from social_bfg.serializers.fields import TimeZoneField
 
 # Local
 from .models import Event
 
 
 class EventSerializer(ActivitySerializer):
+
+    country = CountryField()
+    timezone = TimeZoneField()
 
     location = serializers.SerializerMethodField()
     full_location = serializers.SerializerMethodField()

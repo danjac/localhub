@@ -7,6 +7,9 @@ from django.contrib.auth import get_user_model
 # Django Rest Framework
 from rest_framework import serializers
 
+# Social-BFG
+from social_bfg.serializers.fields import TimeZoneField
+
 
 class UserSerializer(serializers.ModelSerializer):
     """Shows minimal info on users"""
@@ -25,6 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
 class AuthenticatedUserSerializer(UserSerializer):
     """Complete info on current auth user """
 
+    default_timezone = TimeZoneField()
     roles = serializers.SerializerMethodField()
 
     class Meta(UserSerializer.Meta):

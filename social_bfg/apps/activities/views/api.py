@@ -2,12 +2,12 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
+from django.conf import settings
 from django.utils.functional import cached_property
 
 # Django Rest Framework
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from rest_framework.views import APIView
 
 # Social-BFG
@@ -27,6 +27,9 @@ from ..utils import get_activity_queryset_count, get_activity_querysets, load_ob
 
 
 class StreamPaginator(PageNumberPagination):
+
+    page_size = settings.SOCIAL_BFG_DEFAULT_PAGE_SIZE
+
     def __init__(self, count):
         self.count = count
 
@@ -35,6 +38,9 @@ class StreamPaginator(PageNumberPagination):
 
 
 class BaseActivityStreamAPIView(APIView):
+    """Provides a generic stream of different activities. Subclasses
+    will always be paginated.
+    """
 
     ordering = ("-published", "-created")
 
@@ -45,7 +51,7 @@ class BaseActivityStreamAPIView(APIView):
     ]
 
     # may need modification
-    paginator_class = StreamPaginator
+    pagination_class = StreamPaginator
 
     serializer_classes = {
         Post: PostSerializer,
@@ -94,7 +100,7 @@ class BaseActivityStreamAPIView(APIView):
 
     def get_serializer(self, obj):
         serializer_class = self.get_serializer_class(obj)
-        return serializer_class(obj, **self.get_serializer_context())
+        return serializer_class(obj, context=self.get_serializer_context())
 
     @cached_property
     def paginator(self):
@@ -116,6 +122,21 @@ class BaseActivityStreamAPIView(APIView):
 
     def get(self, request, *args, **kwargs):
         data = [
-            self.get_serializer(item["object"]) for item in self.paginate_querysets()
+            self.get_serializer(item["object"]).data
+            for item in self.paginate_querysets()
         ]
-        return Response(self.get_paginated_response(self, data))
+        return self.get_paginated_response(data)
+
+
+class DefaultStreamAPIView(BaseActivityStreamAPIView):
+    def filter_queryset(self, queryset):
+        return (
+            super()
+            .filter_queryset(queryset)
+            .published()
+            .with_activity_stream_filters(self.request.user)
+            .exclude_blocked(self.request.user)
+        )
+
+
+default_stream_api_view = DefaultStreamAPIView.as_view()
