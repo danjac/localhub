@@ -6,9 +6,21 @@
 import pytest
 
 # Local
-from ..permissions import IsActivityOwner
+from ..permissions import IsActivityOwner, IsNotActivityOwner
 
 pytestmark = pytest.mark.django_db
+
+
+class TestIsNotActivityOwner:
+    def test_is_owner(self, post, api_req_factory):
+        req = api_req_factory.get("/")
+        req.user = post.owner
+        assert not IsNotActivityOwner().has_object_permission(req, None, post)
+
+    def test_is_not_owner(self, post, user, api_req_factory):
+        req = api_req_factory.post("/")
+        req.user = user
+        assert IsNotActivityOwner().has_object_permission(req, None, post)
 
 
 class TestIsActivityOwner:
