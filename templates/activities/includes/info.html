@@ -49,7 +49,7 @@
   {% else %}
   {% trans "Reshare" %}
   {% for reshare in reshares %}
-  {% include "users/includes/chip.html" with css_class="w-32" profile=reshare.owner profile_url=reshare.get_absolute_url %}&nbsp;
+  {% include "users/includes/chip.html" with css_class="w-24" profile=reshare.owner profile_url=reshare.get_absolute_url %}&nbsp;
   {% endfor %}
   {% endif %}
 </div>
