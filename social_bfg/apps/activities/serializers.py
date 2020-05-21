@@ -17,6 +17,8 @@ class ActivitySerializer(serializers.ModelSerializer):
     parent = serializers.PrimaryKeyRelatedField(read_only=True)
     object_type = serializers.SerializerMethodField()
 
+    publish = serializers.BooleanField(write_only=True, required=False)
+
     # annotated fields
 
     num_likes = serializers.IntegerField(read_only=True)
