@@ -6,8 +6,8 @@
 from rest_framework import serializers
 
 # Social-BFG
-from social_bfg.apps.activities.serializers import RelatedActivitySerializer
 from social_bfg.apps.users.serializers import UserSerializer
+from social_bfg.serializers import GenericObjectSerializer
 
 # Local
 from .models import Comment
@@ -59,7 +59,9 @@ class CommentSerializer(serializers.ModelSerializer):
     def get_content_object(self, obj):
         if obj.content_object is None:
             return None
-        return RelatedActivitySerializer(obj.content_object).data
+        # this should prob. be a "generic serializer" that just
+        # renders __str__ instead of title.
+        return GenericObjectSerializer(obj.content_object).data
 
     def get_markdown(self, obj):
         return obj.content.markdown()

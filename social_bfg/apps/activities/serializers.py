@@ -9,19 +9,6 @@ from rest_framework import serializers
 from social_bfg.apps.users.serializers import UserSerializer
 
 
-class RelatedActivitySerializer(serializers.Serializer):
-    """For use as generic content object. We can't use
-    a ModelSerializer as that doesn't work with abstract models.
-    """
-
-    id = serializers.IntegerField()
-    title = serializers.CharField()
-    object_name = serializers.SerializerMethodField()
-
-    def get_object_name(self, obj):
-        return obj._meta.model_name
-
-
 class ActivitySerializer(serializers.ModelSerializer):
     """Base class for all activity serializers. Subclass
     for all supported models."""
