@@ -10,8 +10,8 @@ from ..serializers import PostSerializer
 pytestmark = pytest.mark.django_db
 
 
-class TestPhotoSerializer:
-    def test_serialize_photo(self, post):
+class TestPostSerializer:
+    def test_serialize_post(self, post):
         data = PostSerializer(post).data
         assert data["title"] == post.title
         assert data["owner"]["username"] == post.owner.username
