@@ -3,7 +3,7 @@
 
 import Turbolinks from 'turbolinks';
 
-import ApplicationController from '@/controllers/application-controller';
+import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
   // Makes any non-anchor element linkable with Turbolinks.

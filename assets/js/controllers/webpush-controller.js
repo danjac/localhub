@@ -4,7 +4,7 @@
 import axios from 'axios';
 
 import { urlB64ToUint8Array } from '@/utils/encoders';
-import ApplicationController from '@/controllers/application-controller';
+import ApplicationController from './application-controller';
 
 let registration = null;
 

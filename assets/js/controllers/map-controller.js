@@ -4,7 +4,7 @@
 import 'leaflet/dist/leaflet.css';
 
 import L from 'leaflet';
-import ApplicationController from '@/controllers/application-controller';
+import ApplicationController from './application-controller';
 
 // https://github.com/PaulLeCam/react-leaflet/issues/255
 

@@ -4,7 +4,7 @@
 import { Events, Keys } from '@/constants';
 import { maximizeZIndex } from '@/utils/dom-helpers';
 
-import ApplicationController from '@/controllers/application-controller';
+import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
   static targets = ['header', 'body'];

@@ -4,7 +4,7 @@
 import { Events } from '@/constants';
 import { fadeOut, maximizeZIndex } from '@/utils/dom-helpers';
 
-import ApplicationController from '@/controllers/application-controller';
+import ApplicationController from './application-controller';
 
 const TIMEOUT = 3000;
 
