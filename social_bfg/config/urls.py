@@ -52,10 +52,6 @@ urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
 ]
 
-# silk
-if "silk" in settings.INSTALLED_APPS:
-    urlpatterns += [path("silk/", include("silk.urls", namespace="silk"))]
-
 if settings.DEBUG:
 
     # debug toolbar
