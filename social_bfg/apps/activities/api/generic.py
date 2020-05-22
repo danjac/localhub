@@ -170,7 +170,6 @@ class ActivityViewSet(ModelViewSet):
 
         obj.is_pinned = True
         obj.save()
-        # TBD: these actions should all be HTTP_204_NO_CONTENT
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(

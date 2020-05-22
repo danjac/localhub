@@ -15,7 +15,6 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     owner = UserSerializer(read_only=True)
     parent = serializers.PrimaryKeyRelatedField(read_only=True)
-    object_type = serializers.SerializerMethodField(read_only=True)
 
     # annotated fields
 
@@ -32,8 +31,9 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     markdown = serializers.SerializerMethodField()
     hashtag_list = serializers.SerializerMethodField()
-
+    object_type = serializers.SerializerMethodField()
     endpoints = serializers.SerializerMethodField()
+    parent_owner = serializers.SerializerMethodField()
 
     class Meta:
 
@@ -65,6 +65,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             "has_reshared",
             "object_type",
             "endpoints",
+            "parent_owner",
         )
 
         read_only_fields = (
@@ -82,6 +83,9 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     def get_hashtag_list(self, obj):
         return obj.hashtags.extract_hashtags()
+
+    def get_parent_owner(self, obj):
+        return UserSerializer(obj.parent.owner).data if obj.parent else None
 
     def get_endpoints(self, obj):
         endpoints = {
