@@ -440,7 +440,7 @@ class ActivityViewSet(ModelViewSet):
             # dupe, ignore
             pass
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_200_OK)
 
     @action(
         detail=True,
@@ -449,7 +449,7 @@ class ActivityViewSet(ModelViewSet):
     )
     def dislike(self, request, pk=None):
         self.get_object().get_likes().filter(user=request.user).delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_200_OK)
 
     @action(detail=True, methods=["post"], permission_classes=[IsCommunityMember])
     def add_bookmark(self, request, pk=None):
@@ -462,12 +462,12 @@ class ActivityViewSet(ModelViewSet):
         except IntegrityError:
             # dupe, ignore
             pass
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_200_OK)
 
     @action(detail=True, methods=["delete"], permission_classes=[IsCommunityMember])
     def remove_bookmark(self, request, pk=None):
         self.get_object().get_bookmarks().filter(user=request.user).delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_200_OK)
 
     @action(detail=True, methods=["post"], permission_classes=[IsCommunityMember])
     def add_comment(self, request, pk=None):
