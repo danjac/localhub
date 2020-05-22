@@ -9,6 +9,7 @@ import pytest
 
 # Social-BFG
 from social_bfg.apps.bookmarks.models import Bookmark
+from social_bfg.apps.comments.models import Comment
 from social_bfg.apps.likes.models import Like
 from social_bfg.apps.notifications.models import Notification
 
@@ -102,3 +103,19 @@ class TestPostViewSet:
         response = client.delete(f"/api/posts/{post.id}/dislike/")
         assert response.status_code == status.HTTP_200_OK
         assert Like.objects.filter(user=member.member).count() == 0
+
+    def test_add_comment(self, client, post, member):
+        data = {"content": "test comment"}
+        response = client.post(
+            f"/api/posts/{post.id}/add_comment/", data, format="json"
+        )
+        assert response.status_code == status.HTTP_201_CREATED
+        comment = Comment.objects.first()
+        assert comment.owner == member.member
+        assert comment.content_object == post
+        assert (
+            Notification.objects.filter(
+                recipient=post.owner, verb="new_comment"
+            ).count()
+            == 1
+        )

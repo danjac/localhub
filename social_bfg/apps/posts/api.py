@@ -3,7 +3,7 @@
 
 
 # Social-BFG
-from social_bfg.apps.activities.views.api import ActivityViewSet
+from social_bfg.apps.activities.api.generic import ActivityViewSet
 
 # Local
 from .models import Post

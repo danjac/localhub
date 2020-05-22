@@ -12,12 +12,6 @@ from django.views.generic import TemplateView
 from rest_framework.routers import DefaultRouter
 
 # Social-BFG
-from social_bfg.apps.activities.views.api import (
-    activity_search_api_view,
-    default_activity_stream_api_view,
-    private_api_view,
-    timeline_api_view,
-)
 from social_bfg.apps.activities.views.streams import activity_stream_view
 from social_bfg.apps.communities.views import (
     community_list_view,
@@ -38,10 +32,6 @@ urlpatterns = [
     path("", view=activity_stream_view, name="activity_stream"),
     path("", include("social_bfg.apps.activities.urls")),
     # TBD: merge stream URLs into single include
-    path("api/streams/default/", view=default_activity_stream_api_view),
-    path("api/streams/search/", view=activity_search_api_view),
-    path("api/streams/timeline/", view=timeline_api_view),
-    path("api/streams/private/", view=private_api_view),
     path("api/", include(router.urls)),
     path("bookmarks/", include("social_bfg.apps.bookmarks.urls")),
     path("comments/", include("social_bfg.apps.comments.urls")),

@@ -16,3 +16,8 @@ class IsActivityOwner(permissions.BasePermission):
 class IsNotActivityOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         return obj.owner != request.user
+
+
+class IsCommentAllowed(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.allow_comments
