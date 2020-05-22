@@ -141,3 +141,11 @@ class ActivityViewSet(ModelViewSet):
         obj.save()
         # TBD: these actions should all be HTTP_204_NO_CONTENT
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=["delete"], permission_classes=[IsCommunityModerator])
+    def unpin(self, request, pk=None):
+        obj = self.get_object()
+        obj.is_pinned = False
+        obj.save()
+        # TBD: these actions should all be HTTP_204_NO_CONTENT
+        return Response(status=status.HTTP_204_NO_CONTENT)

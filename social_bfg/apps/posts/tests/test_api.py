@@ -139,3 +139,10 @@ class TestPostViewSet:
             f"/api/posts/{post.id}/add_comment/", data, format="json"
         )
         assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    def test_pin(self, client, post, moderator):
+        response = client.post(f"/api/posts/{post.id}/pin/")
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        post.refresh_from_db()
+        assert post.is_pinned
+        assert post.is_pinned
