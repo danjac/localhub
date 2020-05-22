@@ -60,6 +60,8 @@ class EventSerializer(ActivitySerializer):
             "longitude",
         )
 
+        api_basename = "/api/events/"
+
     def get_location(self, obj):
         return obj.get_location()
 

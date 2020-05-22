@@ -33,7 +33,12 @@ class ActivitySerializer(serializers.ModelSerializer):
     markdown = serializers.SerializerMethodField()
     hashtag_list = serializers.SerializerMethodField()
 
+    endpoints = serializers.SerializerMethodField()
+
     class Meta:
+
+        api_basename = None
+
         fields = (
             "id",
             "title",
@@ -59,6 +64,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             "has_liked",
             "has_reshared",
             "object_type",
+            "endpoints",
         )
 
         read_only_fields = (
@@ -76,3 +82,24 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     def get_hashtag_list(self, obj):
         return obj.hashtags.extract_hashtags()
+
+    def get_endpoints(self, obj):
+        endpoints = {
+            endpoint: obj.community.resolve_url(
+                f"{self.Meta.api_basename}{obj.pk}/{endpoint}"
+            )
+            for endpoint in (
+                "add_bookmark",
+                "add_comment",
+                "comments",
+                "dislike",
+                "like",
+                "pin",
+                "remove_bookmark",
+                "unpin",
+            )
+        }
+        endpoints["detail"] = obj.community.resolve_url(
+            f"{self.Meta.api_basename}{obj.pk}/"
+        )
+        return endpoints

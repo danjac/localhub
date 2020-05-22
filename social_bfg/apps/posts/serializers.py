@@ -17,3 +17,4 @@ class PostSerializer(ActivitySerializer):
             "opengraph_image",
             "opengraph_description",
         )
+        api_basename = "/api/posts/"

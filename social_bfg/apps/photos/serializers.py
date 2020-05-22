@@ -32,6 +32,7 @@ class PhotoSerializer(ActivitySerializer):
             "small_image_url",
             "large_image_url",
         )
+        api_basename = "/api/photos/"
 
     def _get_thumbnail_url(self, obj, size, **kwargs):
         return get_thumbnail(obj.image, size, upscale=False, **kwargs).url

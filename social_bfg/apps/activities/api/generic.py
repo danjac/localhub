@@ -37,7 +37,7 @@ class ActivityViewSet(ModelViewSet):
             self.model.objects.for_community(self.request.community)
             .published_or_owner(self.request.user)
             .with_common_annotations(self.request.user, self.request.community)
-            .select_related("owner", "editor", "parent__owner")
+            .select_related("owner", "editor", "parent__owner", "community")
             .order_by("-published", "-created")
         )
 

@@ -15,3 +15,4 @@ class TestPostSerializer:
         data = PostSerializer(post).data
         assert data["title"] == post.title
         assert data["owner"]["username"] == post.owner.username
+        assert data["endpoints"]["detail"].endswith(f"/api/posts/{post.id}/")

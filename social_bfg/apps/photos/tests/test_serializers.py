@@ -16,3 +16,4 @@ class TestPhotoSerializer:
         assert data["title"] == photo.title
         assert data["small_image_url"].endswith(".jpg")
         assert data["large_image_url"].endswith(".jpg")
+        assert data["endpoints"]["detail"].endswith(f"/api/photos/{photo.id}/")

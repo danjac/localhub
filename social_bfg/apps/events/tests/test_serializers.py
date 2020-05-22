@@ -15,3 +15,4 @@ class TestEventSerializer:
         data = EventSerializer(event).data
         assert data["title"] == event.title
         assert data["timezone"] == "UTC"
+        assert data["endpoints"]["detail"].endswith(f"/api/events/{event.id}/")

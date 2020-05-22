@@ -36,5 +36,7 @@ class PollSerializer(ActivitySerializer):
             "answers",
         )
 
+        api_basename = "/api/polls/"
+
     def get_total_num_votes(self, obj):
         return obj.total_num_votes

@@ -17,3 +17,4 @@ class TestPollSerializer:
         data = PollSerializer(poll).data
         assert data["title"] == poll.title
         assert len(data["answers"]) == 3
+        assert data["endpoints"]["detail"].endswith(f"/api/polls/{poll.id}/")
