@@ -5,8 +5,11 @@
 # Third Party Libraries
 import pytest
 
+# Social-BFG
+from social_bfg.apps.posts.models import Post
+
 # Local
-from ..permissions import IsActivityOwner, IsNotActivityOwner
+from ..permissions import IsActivityOwner, IsCommentAllowed, IsNotActivityOwner
 
 pytestmark = pytest.mark.django_db
 
@@ -43,3 +46,15 @@ class TestIsActivityOwner:
         req = api_req_factory.post("/")
         req.user = user
         assert not IsActivityOwner().has_object_permission(req, None, post)
+
+
+class TestIsCommentAllowed:
+    def test_if_comment_allowed(self, api_req_factory):
+        req = api_req_factory.get("/")
+        post = Post(allow_comments=True)
+        assert IsCommentAllowed().has_object_permission(req, None, post)
+
+    def test_if_comment_not_allowed(self, api_req_factory):
+        req = api_req_factory.get("/")
+        post = Post(allow_comments=False)
+        assert not IsCommentAllowed().has_object_permission(req, None, post)
