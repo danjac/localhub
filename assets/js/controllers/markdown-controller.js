@@ -51,6 +51,7 @@ export default class extends ApplicationController {
       value.substring(0, selectionStart) +
       markdownText +
       value.substring(selectionEnd, value.length);
+    this.togglePreviewTab();
     this.textareaTarget.dispatchEvent(new Event('input'));
   }
 }
