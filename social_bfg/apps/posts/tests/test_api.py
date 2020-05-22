@@ -40,6 +40,29 @@ class TestPostViewSet:
         response = client.get(f"/api/posts/{post.id}/")
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
+    def test_update(self, client, member):
+        data = {
+            "title": "test",
+            "description": "test",
+            "publish": "true",
+            "allow_comments": "true",
+            "url": "",
+        }
+        post = PostFactory(owner=member.member, community=member.community)
+        response = client.put(f"/api/posts/{post.id}/", data, format="json")
+        assert response.status_code == status.HTTP_200_OK
+        post.refresh_from_db()
+        assert post.editor == post.owner
+        assert post.edited
+
+    def test_reshare(self, client, post, member):
+        response = client.post(f"/api/posts/{post.id}/reshare/")
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.data["is_reshare"]
+        assert (
+            Post.objects.filter(parent__isnull=False, owner=member.member).count() == 1
+        )
+
     def test_create_and_publish(self, client, member):
         data = {
             "title": "test",

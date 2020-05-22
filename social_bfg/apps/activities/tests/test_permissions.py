@@ -48,6 +48,10 @@ class TestIsActivityOwner:
         assert not IsActivityOwner().has_object_permission(req, None, post)
 
 
+class TestIsPublished:
+    ...
+
+
 class TestIsCommentAllowed:
     def test_if_comment_allowed(self, api_req_factory):
         req = api_req_factory.get("/")

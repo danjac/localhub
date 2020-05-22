@@ -1,7 +1,6 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-
 # Django
 from django.db import IntegrityError
 from django.utils import timezone
@@ -22,7 +21,12 @@ from social_bfg.apps.communities.permissions import (
 from social_bfg.apps.likes.models import Like
 
 # Local
-from ..permissions import IsActivityOwner, IsCommentAllowed, IsNotActivityOwner
+from ..permissions import (
+    IsActivityOwner,
+    IsCommentAllowed,
+    IsNotActivityOwner,
+    IsPublished,
+)
 from ..utils import get_activity_models
 
 
@@ -44,13 +48,20 @@ class ActivityViewSet(ModelViewSet):
     # TBD: moderator delete should be a dedicated endpoint.
 
     def perform_create(self, serializer):
-        serializer.save(
+        obj = serializer.save(
             owner=self.request.user,
             community=self.request.community,
             published=timezone.now() if self.request.data.get("publish") else None,
         )
-        if serializer.instance.published:
-            serializer.instance.notify_on_publish()
+        if obj.published:
+            obj.notify_on_publish()
+
+    def perform_update(self, serializer):
+        obj = serializer.save(edited=timezone.now(), editor=self.request.user)
+        obj.update_reshares()
+
+        if obj.published:
+            obj.notify_on_update()
 
     @action(detail=True, methods=["post"])
     def publish(self, request, pk=None):
@@ -64,7 +75,7 @@ class ActivityViewSet(ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
-        permission_classes=[IsCommunityMember, IsNotActivityOwner],
+        permission_classes=[IsCommunityMember, IsPublished, IsNotActivityOwner],
     )
     def like(self, request, pk=None):
 
@@ -86,7 +97,7 @@ class ActivityViewSet(ModelViewSet):
     @action(
         detail=True,
         methods=["delete"],
-        permission_classes=[IsCommunityMember, IsNotActivityOwner],
+        permission_classes=[IsCommunityMember, IsPublished, IsNotActivityOwner],
     )
     def dislike(self, request, pk=None):
         self.get_object().get_likes().filter(user=request.user).delete()
@@ -113,7 +124,7 @@ class ActivityViewSet(ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
-        permission_classes=[IsCommunityMember, IsCommentAllowed],
+        permission_classes=[IsCommunityMember, IsPublished, IsCommentAllowed],
     )
     def add_comment(self, request, pk=None):
         obj = self.get_object()
@@ -122,11 +133,31 @@ class ActivityViewSet(ModelViewSet):
             comment = serializer.save(
                 owner=request.user, community=request.community, content_object=obj,
             )
-
             comment.notify_on_create()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
 
-    @action(detail=True, methods=["post"], permission_classes=[IsCommunityModerator])
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[IsCommunityMember, IsNotActivityOwner, IsPublished],
+    )
+    def reshare(self, request, pk=None):
+        reshare = self.get_object().reshare(self.request.user)
+        reshare.notify_on_publish()
+        serializer = self.serializer_class(reshare)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[IsPublished, IsCommunityModerator],
+    )
     def pin(self, request, pk=None):
         # TBD: we need either an endpoint to get the "pinned" object, or just include
         # with initial JSON load.
@@ -142,7 +173,11 @@ class ActivityViewSet(ModelViewSet):
         # TBD: these actions should all be HTTP_204_NO_CONTENT
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=True, methods=["delete"], permission_classes=[IsCommunityModerator])
+    @action(
+        detail=True,
+        methods=["delete"],
+        permission_classes=[IsPublished, IsCommunityModerator],
+    )
     def unpin(self, request, pk=None):
         obj = self.get_object()
         obj.is_pinned = False

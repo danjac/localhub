@@ -21,3 +21,8 @@ class IsNotActivityOwner(permissions.BasePermission):
 class IsCommentAllowed(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         return obj.allow_comments
+
+
+class IsPublished(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.published is not None
