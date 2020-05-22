@@ -75,7 +75,7 @@ class TestPostViewSet:
             owner=member.member, community=member.community, published=None
         )
         response = client.post(f"/api/posts/{post.id}/publish/")
-        assert response.status_code == status.HTTP_200_OK
+        assert response.status_code == status.HTTP_204_NO_CONTENT
         post.refresh_from_db()
         assert post.published
 
@@ -85,7 +85,7 @@ class TestPostViewSet:
 
     def test_add_bookmark(self, client, post, member):
         response = client.post(f"/api/posts/{post.id}/add_bookmark/")
-        assert response.status_code == status.HTTP_200_OK
+        assert response.status_code == status.HTTP_204_NO_CONTENT
         assert (
             Bookmark.objects.filter(user=member.member).first().content_object == post
         )
@@ -97,7 +97,7 @@ class TestPostViewSet:
 
     def test_like_if_not_owner(self, client, post, member):
         response = client.post(f"/api/posts/{post.id}/like/")
-        assert response.status_code == status.HTTP_200_OK
+        assert response.status_code == status.HTTP_204_NO_CONTENT
         assert Like.objects.filter(user=member.member).count() == 1
         assert (
             Notification.objects.filter(recipient=post.owner, verb="like").count() == 1
@@ -111,7 +111,7 @@ class TestPostViewSet:
             recipient=post.owner,
         )
         response = client.delete(f"/api/posts/{post.id}/dislike/")
-        assert response.status_code == status.HTTP_200_OK
+        assert response.status_code == status.HTTP_204_NO_CONTENT
         assert Like.objects.filter(user=member.member).count() == 0
 
     def test_add_comment(self, client, post, member):
