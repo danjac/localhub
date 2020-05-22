@@ -119,3 +119,13 @@ class TestPostViewSet:
             ).count()
             == 1
         )
+
+    def test_add_comment_if_not_allowed(self, client, member):
+        post = PostFactory(
+            community=member.community, owner=member.member, allow_comments=False
+        )
+        data = {"content": "test comment"}
+        response = client.post(
+            f"/api/posts/{post.id}/add_comment/", data, format="json"
+        )
+        assert response.status_code == status.HTTP_403_FORBIDDEN

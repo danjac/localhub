@@ -30,9 +30,10 @@ class ActivityViewSet(ModelViewSet):
 
     def get_queryset(self):
         return (
-            self.model.objects.select_related("owner", "editor", "parent__owner")
+            self.model.objects.for_community(self.request.community)
             .published_or_owner(self.request.user)
             .with_common_annotations(self.request.user, self.request.community)
+            .select_related("owner", "editor", "parent__owner")
             .order_by("-published", "-created")
         )
 
