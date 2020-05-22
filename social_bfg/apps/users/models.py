@@ -9,7 +9,6 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models, transaction
-from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
@@ -304,8 +303,8 @@ class User(TrackerModelMixin, AbstractUser):
             models.Index(fields=["name", "username", "email"]),
         ]
 
-    def get_absolute_url(self):
-        return reverse("users:activities", args=[self.username])
+    # def get_absolute_url(self):
+    # return reverse("users:activities", args=[self.username])
 
     def get_display_name(self):
         """Displays full name or username
