@@ -18,6 +18,9 @@ from social_bfg.apps.communities.views import (
     community_not_found_view,
     community_welcome_view,
 )
+from social_bfg.apps.events.api import EventViewSet
+from social_bfg.apps.photos.api import PhotoViewSet
+from social_bfg.apps.polls.api import PollViewSet
 from social_bfg.apps.posts.api import PostViewSet
 from social_bfg.apps.users.views import (
     dismiss_notice_view,
@@ -26,7 +29,11 @@ from social_bfg.apps.users.views import (
 )
 
 router = DefaultRouter()
+
 router.register("posts", PostViewSet, basename="posts")
+router.register("events", EventViewSet, basename="events")
+router.register("photos", PhotoViewSet, basename="photos")
+router.register("polls", PollViewSet, basename="polls")
 
 urlpatterns = [
     path("", view=activity_stream_view, name="activity_stream"),

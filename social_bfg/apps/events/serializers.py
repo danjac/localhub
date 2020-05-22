@@ -18,7 +18,7 @@ from .models import Event
 
 class EventSerializer(ActivitySerializer):
 
-    country = CountryField()
+    country = CountryField(required=False)
     timezone = TimeZoneField()
 
     location = serializers.SerializerMethodField()
