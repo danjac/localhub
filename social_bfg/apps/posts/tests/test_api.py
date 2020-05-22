@@ -9,6 +9,7 @@ import pytest
 
 # Social-BFG
 from social_bfg.apps.bookmarks.models import Bookmark
+from social_bfg.apps.comments.factories import CommentFactory
 from social_bfg.apps.comments.models import Comment
 from social_bfg.apps.likes.models import Like
 from social_bfg.apps.notifications.models import Notification
@@ -146,3 +147,11 @@ class TestPostViewSet:
         post.refresh_from_db()
         assert post.is_pinned
         assert post.is_pinned
+
+    def test_comments(self, client, post, member):
+        CommentFactory.create_batch(
+            3, owner=member.member, community=member.community, content_object=post
+        )
+        response = client.get(f"/api/posts/{post.id}/comments/")
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 3

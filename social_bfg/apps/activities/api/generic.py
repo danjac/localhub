@@ -149,3 +149,17 @@ class ActivityViewSet(ModelViewSet):
         obj.save()
         # TBD: these actions should all be HTTP_204_NO_CONTENT
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=["get"])
+    def comments(self, request, pk=None):
+        # TBD: should be paginated
+        comments = (
+            self.get_object()
+            .get_comments()
+            .for_community(self.request.community)
+            .with_common_annotations(self.request.user, self.request.community)
+            .exclude_deleted()
+            .with_common_related()
+            .order_by("created")
+        )
+        return Response(CommentSerializer(comments, many=True).data)
