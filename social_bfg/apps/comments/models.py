@@ -9,7 +9,6 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.template.defaultfilters import truncatechars
-from django.urls import reverse
 from django.utils import timezone
 
 # Third Party Libraries
@@ -214,7 +213,8 @@ class Comment(TrackerModelMixin, TimeStampedModel):
         return self.abbreviate()
 
     def get_absolute_url(self):
-        return reverse("comments:detail", args=[self.id])
+        return ""
+        # return reverse("comments:detail", args=[self.id])
 
     def get_permalink(self):
         """

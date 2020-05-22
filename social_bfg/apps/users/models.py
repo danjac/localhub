@@ -29,6 +29,8 @@ from social_bfg.db.tracker import TrackerModelMixin
 from social_bfg.markdown.fields import MarkdownField
 from social_bfg.utils.itertools import takefirst
 
+# from django.urls import reverse
+
 
 class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
     def for_email(self, email):
@@ -303,8 +305,9 @@ class User(TrackerModelMixin, AbstractUser):
             models.Index(fields=["name", "username", "email"]),
         ]
 
-    # def get_absolute_url(self):
-    # return reverse("users:activities", args=[self.username])
+    def get_absolute_url(self):
+        return f"/api/users/{self.id}/"
+        # return reverse("users-detail", args=[self.username])
 
     def get_display_name(self):
         """Displays full name or username
