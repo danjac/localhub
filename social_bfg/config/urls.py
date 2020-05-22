@@ -5,7 +5,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.views.generic import TemplateView
 
 # Django Rest Framework
@@ -42,7 +42,6 @@ urlpatterns = [
     path("", include("social_bfg.apps.activities.urls")),
     # TBD: merge stream URLs into single include
     path("api/", include(router.urls)),
-    path("spa/", frontend_view),
     path("bookmarks/", include("social_bfg.apps.bookmarks.urls")),
     path("comments/", include("social_bfg.apps.comments.urls")),
     path("events/", include("social_bfg.apps.events.urls")),
@@ -68,11 +67,8 @@ urlpatterns = [
     path("account/", include("allauth.urls")),
     path("markdownx/", include("markdownx.urls")),
     path(settings.ADMIN_URL, admin.site.urls),
+    re_path(r"^.*", frontend_view),
 ]
-
-# silk
-if "silk" in settings.INSTALLED_APPS:
-    urlpatterns += [path("silk/", include("silk.urls", namespace="silk"))]
 
 if settings.DEBUG:
 

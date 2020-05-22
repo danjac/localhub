@@ -319,7 +319,7 @@ class Base(Configuration):
     def STATICFILES_DIRS(self):
         return [
             os.path.join(self.BASE_DIR, "assets"),
-            os.path.join(self.BASE_DIR, "frontend", "dist", "static"),
+            # os.path.join(self.BASE_DIR, "frontend", "dist", "static"),
         ]
 
     @property
