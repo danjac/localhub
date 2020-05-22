@@ -14,7 +14,19 @@ export default class extends ApplicationController {
   targets:
     textarea: <textarea> element to apply markdown syntax
   */
-  static targets = ['textarea'];
+  static targets = ['textarea', 'previewTab'];
+
+  connect() {
+    this.togglePreviewTab();
+  }
+
+  togglePreviewTab() {
+    if (this.textareaTarget.value.trim()) {
+      this.previewTabTarget.removeAttribute('disabled');
+    } else {
+      this.previewTabTarget.setAttribute('disabled', true);
+    }
+  }
 
   select(event) {
     event.preventDefault();

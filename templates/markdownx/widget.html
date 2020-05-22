@@ -5,7 +5,7 @@
 {% load static %}
 
 <div class="markdownx"
-     data-controller="tabs typeahead"
+     data-controller="tabs typeahead markdown"
      data-typeahead-selected-class="bg-gray-500 text-white"
      data-typeahead-config="{{ typeahead_config }}">
   <div class="tabs mb-3 text-sm">
@@ -16,7 +16,8 @@
             data-tab="editor">{% trans "Edit" %}</button>
     <button class="tab-item"
             type="button"
-            data-target="tabs.tab"
+            disabled
+            data-target="tabs.tab markdown.previewTab"
             data-action="tabs#select"
             data-tab="preview">{% trans "Preview" %}</button>
     <button class="tab-item"
@@ -28,8 +29,7 @@
   </div>
   <div class="-mb-px mb-3"
        data-target="tabs.pane"
-       data-tab="editor"
-       data-controller="markdown">
+       data-tab="editor">
     <div class="text-xs flex flex-wrap items-center mb-3">
 
       <a href="#"
@@ -116,7 +116,7 @@
 
     <textarea data-controller="autoresize"
               data-target="markdown.textarea typeahead.input"
-              data-action="keyup->autoresize#resize keyup->typeahead#keyup keydown->typeahead#keydown"
+              data-action="keyup->autoresize#resize keyup->typeahead#keyup keydown->typeahead#keydown keyup->markdown#togglePreviewTab"
               name="{{ widget.name }}"
               {% include "django/forms/widgets/attrs.html" %}>{% spaceless %}{% if widget.value %}{{ widget.value }}{% endif %}{% endspaceless %}</textarea>
     <p class="text-sm text-gray-700">
