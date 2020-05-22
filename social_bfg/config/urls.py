@@ -27,6 +27,7 @@ from social_bfg.apps.users.views import (
     user_delete_view,
     user_update_view,
 )
+from social_bfg.views.frontend import frontend_view
 
 router = DefaultRouter()
 
@@ -35,11 +36,13 @@ router.register("events", EventViewSet, basename="events")
 router.register("photos", PhotoViewSet, basename="photos")
 router.register("polls", PollViewSet, basename="polls")
 
+
 urlpatterns = [
     path("", view=activity_stream_view, name="activity_stream"),
     path("", include("social_bfg.apps.activities.urls")),
     # TBD: merge stream URLs into single include
     path("api/", include(router.urls)),
+    path("spa/", frontend_view),
     path("bookmarks/", include("social_bfg.apps.bookmarks.urls")),
     path("comments/", include("social_bfg.apps.comments.urls")),
     path("events/", include("social_bfg.apps.events.urls")),

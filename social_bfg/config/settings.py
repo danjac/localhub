@@ -317,14 +317,20 @@ class Base(Configuration):
 
     @property
     def STATICFILES_DIRS(self):
-        return [os.path.join(self.BASE_DIR, "assets")]
+        return [
+            os.path.join(self.BASE_DIR, "assets"),
+            os.path.join(self.BASE_DIR, "frontend", "dist", "static"),
+        ]
 
     @property
     def TEMPLATES(self):
         return [
             {
                 "BACKEND": "django.template.backends.django.DjangoTemplates",
-                "DIRS": [os.path.join(self.BASE_DIR, "templates")],
+                "DIRS": [
+                    os.path.join(self.BASE_DIR, "templates"),
+                    os.path.join(self.BASE_DIR, "frontend", "dist"),
+                ],
                 "APP_DIRS": True,
                 "OPTIONS": {
                     "debug": self.DEBUG,
