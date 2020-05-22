@@ -29,6 +29,16 @@ class TestPostViewSet:
         response = client.get("/api/posts/")
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
+    def test_detail(self, client, member, post):
+        response = client.get(f"/api/posts/{post.id}/")
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["title"] == post.title
+
+    def test_detail_if_not_community_post(self, client, member):
+        post = PostFactory()
+        response = client.get(f"/api/posts/{post.id}/")
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
     def test_create_and_publish(self, client, member):
         data = {
             "title": "test",
