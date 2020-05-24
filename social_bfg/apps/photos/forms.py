@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 
 # Social-BFG
 from social_bfg.apps.activities.forms import ActivityForm
-from social_bfg.forms import ClearableImageInput, FormHelper
+from social_bfg.forms import ClearableImageInput, FieldSet
 from social_bfg.utils.exif import Exif
 
 # Local
@@ -49,28 +49,27 @@ class PhotoForm(ActivityForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.form_helper = FormHelper(
-            self,
-            fieldsets=(
-                (
-                    None,
-                    (
-                        "title",
-                        "hashtags",
-                        "mentions",
-                        "image",
-                        "extract_gps_data",
-                        "clear_gps_data",
-                        "description",
-                        "allow_comments",
-                    ),
-                ),
-                (
-                    _("Additional Information"),
-                    ("artist", "original_url", "cc_license",),
-                ),
+
+        self.fieldsets = [
+            FieldSet(
+                self,
+                "title",
+                "hashtags",
+                "mentions",
+                "image",
+                "extract_gps_data",
+                "clear_gps_data",
+                "description",
+                "allow_comments",
             ),
-        )
+            FieldSet(
+                self,
+                "artist",
+                "original_url",
+                "cc_license",
+                label=_("Additional Information"),
+            ),
+        ]
 
         self.fields["image"].widget = ClearableImageInput()
         self.fields["latitude"].widget = forms.HiddenInput()

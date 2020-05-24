@@ -6,7 +6,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 # Social-BFG
-from social_bfg.forms import ClearableImageInput, FormHelper, TypeaheadInput
+from social_bfg.forms import ClearableImageInput, FieldSet, TypeaheadInput
 
 # Local
 from .models import Community, Membership
@@ -75,23 +75,22 @@ class CommunityForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.form_helper = FormHelper(
-            self,
-            fieldsets=[
-                (None, ("name", "tagline", "logo",)),
-                (_("Access"), ("active", "public")),
-                (_("About this community"), ("intro", "description",)),
-                (_("Terms and conditions"), ("content_warning_tags", "terms",),),
-                (
-                    _("Join Requests"),
-                    (
-                        "allow_join_requests",
-                        "blacklisted_email_domains",
-                        "blacklisted_email_addresses",
-                    ),
-                ),
-            ],
-        )
+
+        self.fieldsets = [
+            FieldSet(self, "name", "tagline", "logo"),
+            FieldSet(self, "active", "public", label=_("Access")),
+            FieldSet(self, "intro", "description", label=_("About this community")),
+            FieldSet(
+                self, "content_warning_tags", "terms", label=_("Terms and Conditions")
+            ),
+            FieldSet(
+                self,
+                "allow_join_requests",
+                "blacklisted_email_domains",
+                "blacklisted_email_addresses",
+                label=_("Join Requests"),
+            ),
+        ]
 
 
 class MembershipForm(forms.ModelForm):
