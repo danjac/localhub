@@ -10,7 +10,7 @@ from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
 from django.utils.translation import gettext_lazy as _
 
 # Social-BFG
-from social_bfg.forms import FieldSet
+from social_bfg.forms import FormHelper
 from social_bfg.forms.widgets import BaseTypeaheadInput, ClearableImageInput
 
 # Local
@@ -89,22 +89,26 @@ class UserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fieldsets = [
-            FieldSet(
-                self,
-                "name",
-                "avatar",
-                "language",
-                "default_timezone",
-                "send_email_notifications",
-                "bio",
+        self.fieldsets = FormHelper(
+            self,
+            (
+                None,
+                (
+                    "name",
+                    "avatar",
+                    "language",
+                    "default_timezone",
+                    "send_email_notifications",
+                    "bio",
+                ),
             ),
-            FieldSet(
-                self,
-                "show_sensitive_content",
-                "show_external_images",
-                "show_embedded_content",
-                "activity_stream_filters",
-                label=_("Content Preferences"),
+            (
+                _("Content Preferences"),
+                (
+                    "show_sensitive_content",
+                    "show_external_images",
+                    "show_embedded_content",
+                    "activity_stream_filters",
+                ),
             ),
-        ]
+        )

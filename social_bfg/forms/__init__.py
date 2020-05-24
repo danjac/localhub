@@ -4,13 +4,13 @@
 
 # Local
 from .fields import CalendarField
-from .fieldset import FieldSet
+from .fieldsets import FormHelper
 from .widgets import CalendarWidget, ClearableImageInput, TypeaheadInput
 
 __all__ = [
     "CalendarField",
     "CalendarWidget",
     "ClearableImageInput",
-    "FieldSet",
+    "FormHelper",
     "TypeaheadInput",
 ]

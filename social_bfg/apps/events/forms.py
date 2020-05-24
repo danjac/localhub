@@ -11,7 +11,7 @@ import pytz
 
 # Social-BFG
 from social_bfg.apps.activities.forms import ActivityForm
-from social_bfg.forms import CalendarField, CalendarWidget, FieldSet
+from social_bfg.forms import CalendarField, CalendarWidget, FormHelper
 from social_bfg.utils.geocode import geocode
 
 # Local
@@ -82,35 +82,38 @@ class EventForm(ActivityForm):
 
         super().__init__(*args, **kwargs)
 
-        self.fieldsets = [
-            FieldSet(
-                self,
-                "title",
-                "hashtags",
-                "mentions",
-                "starts",
-                "ends",
-                "repeats",
-                "repeats_until",
-                "timezone",
-                "url",
-                "description",
-                "allow_comments",
+        self.fieldsets = FormHelper(
+            self,
+            (
+                None,
+                (
+                    "title",
+                    "hashtags",
+                    "mentions",
+                    "starts",
+                    "ends",
+                    "repeats",
+                    "repeats_until",
+                    "timezone",
+                    "url",
+                    "description",
+                    "allow_comments",
+                ),
             ),
-            FieldSet(
-                self,
-                "venue",
-                "street_address",
-                "locality",
-                "postal_code",
-                "region",
-                "country",
-                "clear_geolocation",
-                "fetch_geolocation",
-                label=_("Location"),
+            (
+                _("Location"),
+                (
+                    "venue",
+                    "street_address",
+                    "locality",
+                    "postal_code",
+                    "region",
+                    "country",
+                    "clear_geolocation",
+                    "fetch_geolocation",
+                ),
             ),
-        ]
-
+        )
         self.fields["latitude"].widget = forms.HiddenInput()
         self.fields["longitude"].widget = forms.HiddenInput()
 
