@@ -30,3 +30,4 @@ rules
 sorl-thumbnail
 unidecode
 werkzeug
+whitenoise
