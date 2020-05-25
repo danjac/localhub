@@ -16,6 +16,7 @@ x-env: &default-env
 
 volumes:
   pg_data: {}
+  node_modules: {}
 
 services:
   postgres:
@@ -35,16 +36,6 @@ services:
     restart: always
     ports:
       - '8025:8025'
-
-  webpack:
-    build:
-      context: .
-      dockerfile: Dockerfile.webpack
-    privileged: true
-    command: yarn run dev
-    volumes:
-      - .:/app
-      - /app/node_modules
 
   django: &django
     build:
@@ -72,3 +63,12 @@ services:
       - redis
     ports: []
     command: /start-celeryworker
+
+  vue:
+    build:
+      context: frontend
+    privileged: true
+    command: yarn dev
+    volumes:
+      - ./frontend:/app
+      - node_modules:/app/node_modules

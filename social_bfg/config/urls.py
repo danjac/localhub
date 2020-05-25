@@ -33,7 +33,6 @@ urlpatterns = [
     path("account/", include("allauth.urls")),
     path("markdownx/", include("markdownx.urls")),
     path(settings.ADMIN_URL, admin.site.urls),
-    re_path(r"^.*", frontend_view),
 ]
 
 if settings.DEBUG:
@@ -45,3 +44,7 @@ if settings.DEBUG:
 
     # static views
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [
+    re_path(r"^.*", frontend_view),
+]
