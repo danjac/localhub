@@ -3,9 +3,9 @@
 
 FROM node:12.16.1-slim
 
-WORKDIR /app/frontend
+WORKDIR /app
 
 COPY package.json .
-COPY yarn.lock .
+# COPY yarn.lock .
 
 RUN yarn

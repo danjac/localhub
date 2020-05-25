@@ -7,7 +7,6 @@
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
-
   <body>
     <noscript>
       <strong
@@ -15,7 +14,6 @@
         without JavaScript enabled. Please enable it to continue.</strong
       >
     </noscript>
-    {{ init_data|json_script:"init-data" }}
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
