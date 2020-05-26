@@ -6,7 +6,9 @@
 
     <ul class="sidebar-menu">
       <li class="mb-1">
-        <a href="/" class="sidebar-menu-item">Activity Stream</a>
+        <router-link exact :to="{ name: 'Home' }" class="sidebar-menu-item"
+          >Activity Stream
+        </router-link>
       </li>
       <li class="mb-1">
         <a href="/messages/inbox/" class="sidebar-menu-item">
@@ -110,9 +112,9 @@
       <li class="sidebar-menu-header mb-3">Community</li>
 
       <li class="mb-1">
-        <a href="/community/about/" class="sidebar-menu-item">
-          About Kotiseutu
-        </a>
+        <router-link :to="{ name: 'About' }" class="sidebar-menu-item">
+          About this site
+        </router-link>
       </li>
 
       <li class="mb-1">
