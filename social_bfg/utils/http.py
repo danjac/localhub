@@ -172,6 +172,9 @@ def get_root_url(url):
         return None
 
 
+get_base_url = get_root_url
+
+
 def get_domain(url):
     """Returns domain of URL e.g. http://google.com -> google.com.
 

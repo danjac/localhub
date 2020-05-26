@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 # Social-BFG
 from social_bfg.apps.activities.models import Activity
 from social_bfg.db.search.indexer import SearchIndexer
-from social_bfg.utils.http import get_domain, is_https, is_image_url
+from social_bfg.utils.http import get_base_url, get_domain, is_https, is_image_url
 
 
 class Post(Activity):
@@ -38,6 +38,9 @@ class Post(Activity):
 
     def get_domain(self):
         return get_domain(self.url) or ""
+
+    def get_base_url(self):
+        return get_base_url(self.url) or ""
 
     def get_opengraph_image_if_safe(self):
         """

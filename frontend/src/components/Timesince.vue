@@ -1,9 +1,7 @@
 <template>
-  <div class="flex flex-wrap items-center">
-    <div class="flex items-center mt-2">
-      <chip :user="user" />
-      <div class="inline-block text-sm text-muted">{{ action }} {{ timeAgo }} ago</div>
-    </div>
+  <div class="flex items-center">
+    <chip :user="user" />
+    <div class="inline-block text-sm text-muted">{{ action }} {{ timeAgo }} ago</div>
   </div>
 </template>
 
