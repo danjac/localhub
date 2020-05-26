@@ -30,7 +30,7 @@ urlpatterns = [
     # TBD: merge stream URLs into single include
     path("api/", include(router.urls)),
     # Third-party
-    path("account/", include("allauth.urls")),
+    path("auth/", include("allauth.urls")),
     path("markdownx/", include("markdownx.urls")),
     path(settings.ADMIN_URL, admin.site.urls),
 ]

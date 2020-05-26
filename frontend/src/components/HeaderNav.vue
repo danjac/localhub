@@ -30,9 +30,11 @@
           height="32"
         />
 
-        <a href="/" class="text-xl tracking-tight text-white hover:text-gray-100">{{
-          community.name
-        }}</a>
+        <router-link
+          :to="{ name: 'Home' }"
+          class="text-xl tracking-tight text-white hover:text-gray-100"
+          >{{ community.name }}</router-link
+        >
       </div>
 
       <div class="hidden lg:block" v-if="currentUser && community">
@@ -64,9 +66,12 @@
       </div>
 
       <div v-else>
-        <a href="#" class="inline-block text-white hover:text-gray-100 mr-2">
+        <router-link
+          :to="{ name: 'Login' }"
+          class="inline-block text-white hover:text-gray-100 mr-2"
+        >
           Login
-        </a>
+        </router-link>
 
         <a href="#" class="inline-block text-white hover:text-gray-100">
           Signup

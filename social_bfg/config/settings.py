@@ -274,7 +274,7 @@ class Base(Configuration):
     SOCIAL_BFG_WEBPUSH_ENABLED = values.BooleanValue(True)
 
     SOCIAL_BFG_DEFAULT_PAGE_SIZE = 12
-    SOCIAL_BFG_HOME_PAGE_URL = reverse_lazy("activity_stream")
+    SOCIAL_BFG_HOME_PAGE_URL = "/"  # reverse_lazy("activity_stream")
     SOCIAL_BFG_GEOLOCATOR_USER_AGENT = values.Value("social_bfg.locator")
 
     SOCIAL_BFG_HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")
