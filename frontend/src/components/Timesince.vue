@@ -1,0 +1,39 @@
+<template>
+  <div class="flex flex-wrap items-center">
+    <div class="flex items-center mt-2">
+      <chip :user="user" />
+      <div class="inline-block text-sm text-muted">{{ action }} {{ timeAgo }} ago</div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { parseISO, formatDistanceToNow } from 'date-fns';
+import Chip from '@/components/Chip';
+
+export default {
+  name: 'Timesince',
+  components: {
+    Chip,
+  },
+  props: {
+    timestamp: {
+      type: String,
+      required: true,
+    },
+    user: {
+      type: Object,
+      required: true,
+    },
+    action: {
+      type: String,
+      default: '',
+    },
+  },
+  computed: {
+    timeAgo() {
+      return formatDistanceToNow(parseISO(this.timestamp));
+    },
+  },
+};
+</script>

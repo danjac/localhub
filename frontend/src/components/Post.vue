@@ -21,14 +21,11 @@
         </div>
       </div>
 
-      <div class="flex flex-wrap items-center mb-3">
-        <div class="flex items-center mt-2">
-          <chip :user="object.owner" />
-          <div class="inline-block text-sm text-muted">
-            2&nbsp;hours, 34&nbsp;minutes ago
-          </div>
-        </div>
-      </div>
+      <Timesince
+        :timestamp="object.published || object.created"
+        :user="object.owner"
+        class="mb-3"
+      />
 
       <div class="flex flex-wrap items-center text-sm">
         <div class="mr-2">
@@ -164,7 +161,7 @@
 </template>
 
 <script>
-import Chip from '@/components/Chip';
+import Timesince from '@/components/Timesince';
 
 export default {
   name: 'Post',
@@ -172,7 +169,7 @@ export default {
     object: Object,
   },
   components: {
-    Chip,
+    Timesince,
   },
 };
 </script>
