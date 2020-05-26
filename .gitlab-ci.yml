@@ -69,6 +69,8 @@ deploy:assets:
 deploy:heroku:
   image: tmaier/dpl:latest
   stage: deploy
+  dependencies:
+    - deploy:assets
   script:
     - dpl --provider=heroku --app=${HEROKU_APP_NAME} --api-key=${HEROKU_API_KEY} --skip-cleanup
   only:
