@@ -313,7 +313,7 @@ class Base(Configuration):
 
     @property
     def STATIC_ROOT(self):
-        return os.path.join(self.BASE_DIR, "static")
+        return os.path.join(self.BASE_DIR, "assets", "dist")
 
     @property
     def STATICFILES_DIRS(self):

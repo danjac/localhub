@@ -58,7 +58,7 @@ deploy:assets:
   retry: 1
   artifacts:
     paths:
-      - static
+      - assets
   script:
     - docker-compose -f docker-compose.deploy.yml pull
     - docker-compose -f docker-compose.deploy.yml run webpack yarn build
@@ -69,9 +69,6 @@ deploy:assets:
 deploy:heroku:
   image: tmaier/dpl:latest
   stage: deploy
-  artifacts:
-    paths:
-      - static
   script:
     - dpl --provider=heroku --app=${HEROKU_APP_NAME} --api-key=${HEROKU_API_KEY} --skip-cleanup
   only:
