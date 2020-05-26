@@ -3,10 +3,11 @@
 
 # Django
 from django.conf import settings
-from django.urls import reverse
 
 # Social-BFG
 from social_bfg.utils.text import slugify_unicode
+
+# from django.urls import reverse
 
 
 def extract_hashtags(content):
@@ -45,7 +46,7 @@ def linkify_hashtags(content, css_class=None):
         for tag in settings.SOCIAL_BFG_HASHTAGS_RE.findall(token):
             slug = slugify_unicode(tag)
             if slug:
-                url = reverse("hashtags:detail", args=[slug])
+                url = f"/tags/{slug}/"  # reverse("hashtags:detail", args=[slug])
                 token = token.replace(
                     "#" + tag, f'<a href="{url}"{css_class}>#{tag}</a>'
                 )

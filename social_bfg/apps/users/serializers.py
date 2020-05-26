@@ -14,15 +14,21 @@ from social_bfg.serializers.fields import TimeZoneField
 class UserSerializer(serializers.ModelSerializer):
     """Shows minimal info on users"""
 
+    full_name = serializers.SerializerMethodField()
+
     class Meta:
         model = get_user_model()
         fields = (
             "id",
             "username",
             "name",
+            "full_name",
             "avatar",
             "bio",
         )
+
+    def get_full_name(self, obj):
+        return obj.name or obj.username
 
 
 class AuthenticatedUserSerializer(UserSerializer):

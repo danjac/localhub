@@ -1,17 +1,20 @@
 <template>
   <div class="home">
     <LoadingBar v-if="loading" />
-    {{ pageObj }}
+    <ActivityList :activities="pageObj.results" />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+
+import ActivityList from '@/components/ActivityList.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 
 export default {
   name: 'Home',
   components: {
+    ActivityList,
     LoadingBar,
   },
   data() {
