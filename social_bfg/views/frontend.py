@@ -3,6 +3,7 @@
 
 
 # Django
+from django.contrib import messages
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
@@ -26,7 +27,14 @@ class FrontendView(TemplateView):
             "community": CommunitySerializer(self.request.community).data
             if self.request.community.active
             else None,
+            "messages": self.get_messages(),
         }
+
+    def get_messages(self):
+        return [
+            {"message": message.message, "tags": message.tags}
+            for message in messages.get_messages(self.request)
+        ]
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)

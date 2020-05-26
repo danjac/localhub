@@ -19,6 +19,9 @@ export default new Vuex.Store({
     messages(state, messages) {
       state.messages = messages;
     },
+    dismissMessage(state, counter) {
+      state.messages.splice(counter, 1);
+    },
   },
   actions: {
     // initialize app from initial data in JSON
@@ -26,6 +29,9 @@ export default new Vuex.Store({
       commit('user', user);
       commit('community', community);
       commit('messages', messages);
+    },
+    dismissMessage({ commit }, counter) {
+      commit('dismissMessage', counter);
     },
   },
   modules: {},
