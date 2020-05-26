@@ -27,11 +27,11 @@ services:
   vue:
     build:
       context: frontend
-      cache_from:
-        - '${CI_REGISTRY_IMAGE-deploy}/vue:${CI_COMMIT_SHORT_SHA-deploy}'
+    cache_from:
+      - '${CI_REGISTRY_IMAGE-deploy}/vue:${CI_COMMIT_SHORT_SHA-deploy}'
     image: '${CI_REGISTRY_IMAGE-deploy}/vue:${CI_COMMIT_SHORT_SHA-deploy}'
     volumes:
-      - .:/app
+      - ./frontend:/app
       - /app/node_modules
 
   django: &django

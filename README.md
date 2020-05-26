@@ -25,3 +25,5 @@ Favicon: https://www.iconfinder.com/3ab2ou (Creative Commons Attribution)
 [] Frontend unit tests
 [] Gitlab and Heroku pipeline integration
 [] Removal of non-SPA code (Old assets, Django templates, forms etc)
+
+Note: for frontend build we ensure that gitlab does the asset build first, and we store the artifacts so they are accessible to heroku.
