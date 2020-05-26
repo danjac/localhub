@@ -13,7 +13,8 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-(function () {
+(() => {
+  // hydrate store from server-loaded JSON data
   const dataTag = document.getElementById('init-data');
   if (dataTag) {
     const initData = JSON.parse(dataTag.textContent);
