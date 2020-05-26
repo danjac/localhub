@@ -1,13 +1,17 @@
-<template> </template>
+<template>
+  <div>
+    login goes here
+  </div>
+</template>
 
 <script>
-import axios from "axios";
+import axios from 'axios';
 
 export default {
   data() {
     return {
-      username: "",
-      password: "",
+      username: '',
+      password: '',
       invalidLogin: false,
     };
   },
@@ -15,16 +19,16 @@ export default {
     async authenticate() {
       this.invalidLogin = false;
       const data = new URLSearchParams();
-      data.append("login", this.username);
-      data.append("password", this.password);
+      data.append('login', this.username);
+      data.append('password', this.password);
       try {
         const response = await axios({
           data,
-          url: "/api/auth/login/",
-          method: "POST",
+          url: '/api/auth/login/',
+          method: 'POST',
         });
         if (response.status === 200) {
-          window.location.href = "/";
+          window.location.href = '/';
         } else if (response.status === 400) {
           this.invalidLogin = true;
         }

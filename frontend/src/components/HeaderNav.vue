@@ -30,11 +30,9 @@
           height="32"
         />
 
-        <a
-          href="/"
-          class="text-xl tracking-tight text-white hover:text-gray-100"
-          >{{ community.name }}</a
-        >
+        <a href="/" class="text-xl tracking-tight text-white hover:text-gray-100">{{
+          community.name
+        }}</a>
       </div>
 
       <div class="hidden lg:block" v-if="currentUser && community">
@@ -60,9 +58,7 @@
         <a href="#" class="inline-block text-white hover:text-gray-100 md:mr-2">
           {{ currentUser.username }}
         </a>
-        <a
-          href="#"
-          class="hidden md:inline-block text-white hover:text-gray-100"
+        <a href="#" class="hidden md:inline-block text-white hover:text-gray-100"
           >Logout
         </a>
       </div>
@@ -98,7 +94,7 @@
 
 <script>
 export default {
-  name: "HeaderNav",
+  name: 'HeaderNav',
   computed: {
     currentUser() {
       return this.$store.state.user;

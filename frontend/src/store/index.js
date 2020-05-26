@@ -1,5 +1,5 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import Vue from 'vue';
+import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
@@ -23,9 +23,9 @@ export default new Vuex.Store({
   actions: {
     // initialize app from initial data in JSON
     hydrate({ commit }, { user, community, messages }) {
-      commit("user", user);
-      commit("community", community);
-      commit("messages", messages);
+      commit('user', user);
+      commit('community', community);
+      commit('messages', messages);
     },
   },
   modules: {},
