@@ -136,8 +136,7 @@
   {% block layout %}
 
   {% if messages %}
-  <div class="flex justify-center"
-       style="background: cover url('{% static 'images/test.jpg' %}')">
+  <div class="flex justify-center">
     {% for message in messages %}
     <div class="absolute z-50 w-4/5 lg:w-1/3 flex items-center text-center p-3 message {{ message.tags }}"
          data-controller="alert">
