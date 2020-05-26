@@ -13,26 +13,26 @@
     <component :is="layout" class="mt-5">
       <router-view />
     </component>
+    <Footer />
   </div>
 </template>
 
 <script>
-import HeaderNav from './components/HeaderNav.vue';
-import ToastMessage from './components/ToastMessage.vue';
-import SideNavLayout from './layouts/SideNavLayout.vue';
-import SimpleLayout from './layouts/SimpleLayout.vue';
+import HeaderNav from '@/components/HeaderNav.vue';
+import ToastMessage from '@/components/ToastMessage.vue';
+import Footer from '@/components/Footer.vue';
+import SideNavLayout from '@/layouts/SideNavLayout.vue';
+import SimpleLayout from '@/layouts/SimpleLayout.vue';
 
 export default {
   components: {
     HeaderNav,
+    Footer,
     ToastMessage,
   },
   computed: {
     layout() {
-      // TBD: we need "is_member" in the store to determine user membership....
-      return this.$store.state.user && this.$store.state.community
-        ? SideNavLayout
-        : SimpleLayout;
+      return this.$store.getters.isMember ? SideNavLayout : SimpleLayout;
     },
     messages() {
       return this.$store.state.messages;

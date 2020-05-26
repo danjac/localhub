@@ -34,5 +34,31 @@ export default new Vuex.Store({
       commit('dismissMessage', counter);
     },
   },
+  getters: {
+    isMember(state) {
+      return (
+        state.user &&
+        state.community &&
+        state.community.active &&
+        !!state.user.roles[state.community.id]
+      );
+    },
+    isModerator(state) {
+      return (
+        state.user &&
+        state.community &&
+        state.community.active &&
+        ['moderator', 'admin'].includes(state.user.roles[state.community.id])
+      );
+    },
+    isAdmin(state) {
+      return (
+        state.user &&
+        state.community &&
+        state.community.active &&
+        state.user.roles[state.community.id] === 'admin'
+      );
+    },
+  },
   modules: {},
 });
