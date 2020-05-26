@@ -42,7 +42,7 @@ build:
   only:
     - release
 
-test:django:
+test_django:
   extends: .docker_config
   stage: test
   script:
@@ -52,7 +52,7 @@ test:django:
   only:
     - release
 
-deploy:assets:
+deploy_assets:
   extends: .docker_config
   stage: deploy
   retry: 1
@@ -66,11 +66,11 @@ deploy:assets:
   only:
     - release
 
-deploy:heroku:
+deploy_heroku:
   image: tmaier/dpl:latest
   stage: deploy
   dependencies:
-    - deploy:assets
+    - deploy_assets
   script:
     - dpl --provider=heroku --app=${HEROKU_APP_NAME} --api-key=${HEROKU_API_KEY} --skip-cleanup
   only:
