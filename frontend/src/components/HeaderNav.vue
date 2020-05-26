@@ -1,8 +1,8 @@
 <template>
   <header class="bg-indigo-900 text-white">
     <div class="flex items-center justify-between p-2 md:px-5">
-      <div class="flex items-center flex-shrink-0 mr-6" v-if="community">
-        <button class="lg:hidden mr-3" type="button">
+      <div class="flex items-center flex-shrink-0 mr-6" v-if="isMember">
+        <button class="lg:hidden mr-3" type="button" @click.prevent="toggleNav">
           <svg
             width="24"
             height="24"
@@ -37,7 +37,7 @@
         >
       </div>
 
-      <div class="hidden lg:block" v-if="currentUser && community">
+      <div class="hidden lg:block" v-if="isMember">
         <form method="GET" action="/search/">
           <input
             type="search"
@@ -82,7 +82,7 @@
       </div>
     </div>
 
-    <div class="px-2 md:px-5 pb-2 lg:hidden">
+    <div class="px-2 md:px-5 pb-2 lg:hidden" v-if="isMember">
       <form
         method="GET"
         action="/search/"
@@ -112,11 +112,17 @@ export default {
     community() {
       return this.$store.state.community;
     },
+    isMember() {
+      return this.$store.getters.isMember;
+    },
   },
   methods: {
     async logout() {
       await axios.post('/auth/logout/');
       window.location.href = '/';
+    },
+    toggleNav() {
+      this.$store.dispatch('toggleNav');
     },
   },
 };

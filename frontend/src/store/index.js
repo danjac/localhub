@@ -8,6 +8,7 @@ export default new Vuex.Store({
     user: null,
     community: null,
     messages: [],
+    showNav: false,
   },
   mutations: {
     user(state, user) {
@@ -22,6 +23,12 @@ export default new Vuex.Store({
     dismissMessage(state, counter) {
       state.messages.splice(counter, 1);
     },
+    toggleNav(state) {
+      state.showNav = !state.showNav;
+    },
+    closeNav(state) {
+      state.showNav = false;
+    },
   },
   actions: {
     // initialize app from initial data in JSON
@@ -33,12 +40,18 @@ export default new Vuex.Store({
     dismissMessage({ commit }, counter) {
       commit('dismissMessage', counter);
     },
+    toggleNav({ commit }) {
+      commit('toggleNav');
+    },
+    closeNav({ commit }) {
+      commit('closeNav');
+    },
   },
   getters: {
     isMember(state) {
       return (
-        state.user &&
-        state.community &&
+        !!state.user &&
+        !!state.community &&
         state.community.active &&
         !!state.user.roles[state.community.id]
       );

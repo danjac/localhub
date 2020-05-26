@@ -1,6 +1,6 @@
 <template>
-  <nav class="hidden lg:block text-sm w-full lg:w-1/6">
-    <button class="btn btn-block lg:hidden mb-3 text-base">
+  <nav class="lg:block text-sm w-full lg:w-1/6">
+    <button class="btn btn-block lg:hidden mb-3 text-base" @click.prevent="closeNav">
       Close Menu
     </button>
 
@@ -117,19 +117,19 @@
         </router-link>
       </li>
 
-      <li class="mb-1">
+      <li class="mb-1" v-if="isAdmin">
         <a href="/community/~update/" class="sidebar-menu-item">Settings</a>
       </li>
 
-      <li class="mb-1">
+      <li class="mb-1" v-if="isAdmin">
         <a href="/community/memberships/" class="sidebar-menu-item">Members</a>
       </li>
 
-      <li class="mb-1">
+      <li class="mb-1" v-if="isAdmin">
         <a href="/invites/" class="sidebar-menu-item">Invites</a>
       </li>
 
-      <li class="mb-1">
+      <li class="mb-1" v-if="isAdmin">
         <a href="/join-requests/" class="sidebar-menu-item">
           <span>Join Requests</span>
         </a>
@@ -143,3 +143,19 @@
     </ul>
   </nav>
 </template>
+
+<script>
+export default {
+  name: 'SideNav',
+  computed: {
+    isAdmin() {
+      return this.$store.getters.isAdmin;
+    },
+  },
+  methods: {
+    closeNav() {
+      this.$store.dispatch('closeNav');
+    },
+  },
+};
+</script>

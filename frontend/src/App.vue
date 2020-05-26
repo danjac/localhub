@@ -10,7 +10,7 @@
       @dismiss="dismissMessage(counter)"
     />
 
-    <component :is="layout" class="mt-5">
+    <component class="mt-5" :is="layout">
       <router-view />
     </component>
     <Footer />
@@ -36,6 +36,15 @@ export default {
     },
     messages() {
       return this.$store.state.messages;
+    },
+    isMember() {
+      return this.$store.getters.isMember;
+    },
+    isModerator() {
+      return this.$store.getters.isModerator;
+    },
+    isAdmin() {
+      return this.$store.getters.isAdmin;
     },
   },
   methods: {
