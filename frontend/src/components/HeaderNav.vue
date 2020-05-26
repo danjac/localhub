@@ -60,7 +60,10 @@
         <a href="#" class="inline-block text-white hover:text-gray-100 md:mr-2">
           {{ currentUser.username }}
         </a>
-        <a href="#" class="hidden md:inline-block text-white hover:text-gray-100"
+        <a
+          href="#"
+          @click.prevent="logout"
+          class="hidden md:inline-block text-white hover:text-gray-100"
           >Logout
         </a>
       </div>
@@ -98,6 +101,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'HeaderNav',
   computed: {
@@ -106,6 +111,12 @@ export default {
     },
     community() {
       return this.$store.state.community;
+    },
+  },
+  methods: {
+    async logout() {
+      await axios.post('/auth/logout/');
+      window.location.href = '/';
     },
   },
 };
