@@ -413,24 +413,8 @@ class Testing(Base):
 
 
 class Local(DockerMixin, Base):
-
     DEBUG = True
-
     ALLOWED_HOSTS = ["*"]
-
-    THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + [
-        "debug_toolbar",
-    ]
-
-    MIDDLEWARE = Base.MIDDLEWARE + [
-        "debug_toolbar.middleware.DebugToolbarMiddleware",
-    ]
-
-    DEBUG_TOOLBAR_CONFIG = {
-        "DISABLE_PANELS": ["debug_toolbar.panels.redirects.RedirectsPanel"],
-        "SHOW_TEMPLATE_CONTEXT": True,
-    }
-
     SITE_ID = 1
 
 

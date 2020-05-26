@@ -1,4 +1,3 @@
 -r base.in
 -r test.in
 
-django-debug-toolbar
