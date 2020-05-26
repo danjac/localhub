@@ -49,27 +49,23 @@ class PhotoForm(ActivityForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.form_helper = FormHelper(
+
+        self.fieldsets = FormHelper(
             self,
-            fieldsets=(
+            (
+                None,
                 (
-                    None,
-                    (
-                        "title",
-                        "hashtags",
-                        "mentions",
-                        "image",
-                        "extract_gps_data",
-                        "clear_gps_data",
-                        "description",
-                        "allow_comments",
-                    ),
-                ),
-                (
-                    _("Additional Information"),
-                    ("artist", "original_url", "cc_license",),
+                    "title",
+                    "hashtags",
+                    "mentions",
+                    "image",
+                    "extract_gps_data",
+                    "clear_gps_data",
+                    "description",
+                    "allow_comments",
                 ),
             ),
+            (_("Additional Information"), ("artist", "original_url", "cc_license",)),
         )
 
         self.fields["image"].widget = ClearableImageInput()

@@ -2,10 +2,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-class Fieldset:
+class FieldSet:
     def __init__(self, form, fields, label=None):
         self.form = form
-        self.fields = fields
+        self.fields = list(fields)
         self.label = label
 
     def __iter__(self):
@@ -15,13 +15,10 @@ class Fieldset:
 
 
 class FormHelper:
-    """Helper class organizing fieldsets.
-    """
-
-    def __init__(self, form, fieldsets=None):
+    def __init__(self, form, *fieldsets):
         self.form = form
-        self.fieldsets = list(fieldsets or [])
+        self.fieldsets = list(fieldsets)
 
     def __iter__(self):
         for label, fields in self.fieldsets:
-            yield Fieldset(self.form, fields, label)
+            yield FieldSet(self.form, fields, label=label)

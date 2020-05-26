@@ -1,7 +1,7 @@
 // Copyright (c) 2020 by Dan Jacob
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import ApplicationController from '@/controllers/application-controller';
+import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
   /*
@@ -14,7 +14,19 @@ export default class extends ApplicationController {
   targets:
     textarea: <textarea> element to apply markdown syntax
   */
-  static targets = ['textarea'];
+  static targets = ['textarea', 'previewTab'];
+
+  connect() {
+    this.togglePreviewTab();
+  }
+
+  togglePreviewTab() {
+    if (this.textareaTarget.value.trim()) {
+      this.previewTabTarget.removeAttribute('disabled');
+    } else {
+      this.previewTabTarget.setAttribute('disabled', true);
+    }
+  }
 
   select(event) {
     event.preventDefault();
@@ -39,6 +51,8 @@ export default class extends ApplicationController {
       value.substring(0, selectionStart) +
       markdownText +
       value.substring(selectionEnd, value.length);
-    this.textareaTarget.dispatchEvent(new Event('input'));
+    ['change', 'keyup', 'keydown', 'input'].forEach((event) =>
+      this.textareaTarget.dispatchEvent(new Event(event))
+    );
   }
 }

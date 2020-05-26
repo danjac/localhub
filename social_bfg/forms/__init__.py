@@ -4,7 +4,7 @@
 
 # Local
 from .fields import CalendarField
-from .form_helper import FormHelper
+from .fieldsets import FormHelper
 from .widgets import CalendarWidget, ClearableImageInput, TypeaheadInput
 
 __all__ = [

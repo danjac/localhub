@@ -3,7 +3,7 @@
 
 import * as classList from '@/utils/class-list';
 
-import ApplicationController from '@/controllers/application-controller';
+import ApplicationController from './application-controller';
 
 const MAX_HEIGHT = 360;
 

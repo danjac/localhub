@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { fadeOut } from '@/utils/dom-helpers';
-import ApplicationController from '@/controllers/application-controller';
+import ApplicationController from './application-controller';
 
 const TIMEOUT = 3000;
 

@@ -68,6 +68,7 @@ class AWSMixin:
     AWS_S3_CUSTOM_DOMAIN = values.Value()
     AWS_S3_REGION_NAME = values.Value("eu-north-1")
     AWS_QUERYSTRING_AUTH = False
+    AWS_IS_GZIPPED = True
     AWS_DEFAULT_ACL = "public-read"
 
     AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=600"}

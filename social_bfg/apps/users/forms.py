@@ -88,28 +88,27 @@ class UserForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.form_helper = FormHelper(
+
+        self.fieldsets = FormHelper(
             self,
-            fieldsets=[
+            (
+                None,
                 (
-                    None,
-                    (
-                        "name",
-                        "avatar",
-                        "language",
-                        "default_timezone",
-                        "send_email_notifications",
-                    ),
+                    "name",
+                    "avatar",
+                    "language",
+                    "default_timezone",
+                    "send_email_notifications",
+                    "bio",
                 ),
-                (None, ("bio",)),
+            ),
+            (
+                _("Content Preferences"),
                 (
-                    _("Content Preferences"),
-                    (
-                        "show_sensitive_content",
-                        "show_external_images",
-                        "show_embedded_content",
-                        "activity_stream_filters",
-                    ),
+                    "show_sensitive_content",
+                    "show_external_images",
+                    "show_embedded_content",
+                    "activity_stream_filters",
                 ),
-            ],
+            ),
         )

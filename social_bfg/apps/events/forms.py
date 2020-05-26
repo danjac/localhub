@@ -81,41 +81,39 @@ class EventForm(ActivityForm):
     def __init__(self, *args, **kwargs):
 
         super().__init__(*args, **kwargs)
-        self.form_helper = FormHelper(
-            self,
-            fieldsets=[
-                (
-                    None,
-                    (
-                        "title",
-                        "hashtags",
-                        "mentions",
-                        "starts",
-                        "ends",
-                        "repeats",
-                        "repeats_until",
-                        "timezone",
-                        "url",
-                        "description",
-                        "allow_comments",
-                    ),
-                ),
-                (
-                    _("Location"),
-                    (
-                        "venue",
-                        "street_address",
-                        "locality",
-                        "postal_code",
-                        "region",
-                        "country",
-                        "clear_geolocation",
-                        "fetch_geolocation",
-                    ),
-                ),
-            ],
-        )
 
+        self.fieldsets = FormHelper(
+            self,
+            (
+                None,
+                (
+                    "title",
+                    "hashtags",
+                    "mentions",
+                    "starts",
+                    "ends",
+                    "repeats",
+                    "repeats_until",
+                    "timezone",
+                    "url",
+                    "description",
+                    "allow_comments",
+                ),
+            ),
+            (
+                _("Location"),
+                (
+                    "venue",
+                    "street_address",
+                    "locality",
+                    "postal_code",
+                    "region",
+                    "country",
+                    "clear_geolocation",
+                    "fetch_geolocation",
+                ),
+            ),
+        )
         self.fields["latitude"].widget = forms.HiddenInput()
         self.fields["longitude"].widget = forms.HiddenInput()
 
