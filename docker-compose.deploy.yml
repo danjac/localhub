@@ -24,13 +24,12 @@ services:
     image: redis:5.0.7
     restart: always
 
-  webpack:
+  vue:
     build:
-      context: .
-      dockerfile: Dockerfile.webpack
+      context: frontend
       cache_from:
-        - '${CI_REGISTRY_IMAGE-deploy}/webpack:${CI_COMMIT_SHORT_SHA-deploy}'
-    image: '${CI_REGISTRY_IMAGE-deploy}/webpack:${CI_COMMIT_SHORT_SHA-deploy}'
+        - '${CI_REGISTRY_IMAGE-deploy}/vue:${CI_COMMIT_SHORT_SHA-deploy}'
+    image: '${CI_REGISTRY_IMAGE-deploy}/vue:${CI_COMMIT_SHORT_SHA-deploy}'
     volumes:
       - .:/app
       - /app/node_modules

@@ -38,11 +38,11 @@ build:
   stage: build
   artifacts:
     paths:
-      - assets
+      - frontend/dist
   script:
     - docker-compose -f docker-compose.deploy.yml build
     - docker-compose -f docker-compose.deploy.yml push
-    - docker-compose -f docker-compose.deploy.yml run webpack yarn build
+    - docker-compose -f docker-compose.deploy.yml run vue yarn build
   only:
     - release
 
