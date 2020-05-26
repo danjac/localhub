@@ -58,6 +58,7 @@ deploy:assets:
   retry: 1
   artifacts:
     paths:
+      - static
       - assets
   script:
     - docker-compose -f docker-compose.deploy.yml pull
