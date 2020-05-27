@@ -31,6 +31,20 @@ const routes = [
     name: 'Login',
     component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue'),
   },
+  {
+    path: '/posts',
+    name: 'PostList',
+    component: () =>
+      import(/* webpackChunkName: "postList" */ '../views/posts/PostList.vue'),
+    children: [
+      {
+        path: '/submit',
+        name: 'SubmitPost',
+        component: () =>
+          import(/* webpackChunkName: "submitPost" */ '../views/posts/SubmitPost.vue'),
+      },
+    ],
+  },
 ];
 
 const router = new VueRouter({
