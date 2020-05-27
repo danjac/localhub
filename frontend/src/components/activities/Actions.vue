@@ -40,19 +40,19 @@
 
       <a
         class="dropdown-menu-item line-through"
-        v-if="object.hasLiked && !isOwner"
+        v-if="object.has_liked && !isOwner"
         @click.prevent="dislike"
         >Like</a
       >
       <a
         class="dropdown-menu-item"
-        v-if="!object.hasLiked && !isOwner"
-        @click.prevent="Like"
+        v-if="!object.has_liked && !isOwner"
+        @click.prevent="like"
         >Like</a
       >
       <slot />
     </Dropdown>
-    <ConfirmDialog ref="deleteConfirm" @confirm="confirmDelete" header="Delete">
+    <ConfirmDialog ref="deleteConfirm" @confirm="handleDelete" header="Delete">
       Are you sure you want to delete this item?
     </ConfirmDialog>
   </div>
@@ -118,27 +118,29 @@ export default {
         this.serverErrorMessage(e);
       }
     },
-    like() {
-      this.object.has_liked = true;
-      axios.post(this.object.endpoints.like);
-      this.$store.dispatch('addMessage', {
-        message: 'You have liked this item',
-        tags: 'message-success',
-      });
+    async like() {
+      try {
+        await axios.post(this.object.endpoints.like);
+        this.successMessage('You have liked this item');
+        this.object.has_liked = true;
+      } catch (e) {
+        this.serverErrorMessage(e);
+      }
     },
-    dislike() {
-      this.object.has_liked = false;
-      axios.post(this.object.endpoints.dislike);
-      this.$store.dispatch('addMessage', {
-        message: 'You no longer like this item',
-        tags: 'message-success',
-      });
+    async dislike() {
+      try {
+        await axios.delete(this.object.endpoints.dislike);
+        this.successMessage('You have stopped liking this item');
+        this.object.has_liked = false;
+      } catch (e) {
+        this.serverErrorMessage(e);
+      }
     },
-    async confirmDelete() {
+    async handleDelete() {
       try {
         await axios.delete(this.object.endpoints.base);
-        this.successMessage('This item has been deleted');
         this.$emit('delete');
+        this.successMessage('This item has been deleted');
       } catch (e) {
         this.serverErrorMessage(e);
       }

@@ -1,5 +1,5 @@
 <template>
-  <Activity :object="object" :is-detail="isDetail">
+  <Activity @delete="$emit('delete')" :object="object" :isDetail="isDetail">
     <template v-slot:header>
       <div class="flex flex-wrap items-center text-sm">
         <div class="mr-2">

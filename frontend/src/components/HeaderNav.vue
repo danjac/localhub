@@ -48,17 +48,18 @@
         </form>
       </div>
 
-      <div v-if="currentUser">
+      <div v-if="user">
         <img
-          :src="currentUser.avatar"
-          :alt="currentUser.full_name"
+          v-if="user.avatar"
+          :src="user.avatar"
+          :alt="user.full_name"
           class="rounded-full bg-transparent inline-block mr-1"
           width="32"
           height="32"
         />
 
         <a href="#" class="inline-block text-white hover:text-gray-100 md:mr-2">
-          {{ currentUser.username }}
+          {{ user.username }}
         </a>
         <a
           href="#"
@@ -106,7 +107,7 @@ import axios from 'axios';
 export default {
   name: 'HeaderNav',
   computed: {
-    currentUser() {
+    user() {
       return this.$store.state.user;
     },
     community() {

@@ -6,6 +6,7 @@
       :key="`${obj.object_type}-${obj.id}`"
       :object="obj"
       class="mb-2"
+      @delete="$emit('delete', obj)"
     >
     </component>
   </div>

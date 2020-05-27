@@ -80,6 +80,7 @@ class ActivityViewSet(ModelViewSet):
     def like(self, request, pk=None):
 
         obj = self.get_object()
+        # notifications broken due to missing links...
         try:
             Like.objects.create(
                 user=request.user,

@@ -1,5 +1,5 @@
 <template>
-  <Activity :object="object" :is-detail="isDetail">
+  <Activity :object="object" :isDetail="isDetail" @delete="$emit('delete')">
     <template v-slot:content>
       <img
         class="img-responsive"

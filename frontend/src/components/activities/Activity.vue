@@ -38,15 +38,15 @@
 
     <div class="card-footer">
       <slot name="stats">
-        <Stats :object="object" :is-detail="isDetail" class="mb-3" />
+        <Stats :object="object" :isDetail="isDetail" class="mb-3" />
       </slot>
 
       <div class="flex items-center">
         <slot name="actions">
           <Actions
             :object="object"
-            :is-detail="isDetail"
-            @delete="isDeleted = true"
+            :isDetail="isDetail"
+            @delete="handleDelete"
             class="mr-2"
           />
         </slot>
@@ -95,6 +95,12 @@ export default {
     return {
       isDeleted: false,
     };
+  },
+  methods: {
+    handleDelete() {
+      this.isDeleted = true;
+      this.$emit('delete');
+    },
   },
 };
 </script>

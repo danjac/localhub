@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <LoadingBar v-if="loading" />
-    <ActivityList :activities="pageObj.results" />
+    <ActivityList :activities="pageObj.results" @delete="fetchFirstPage" />
     <Pagination
       :next="pageObj.next"
       :previous="pageObj.previous"
@@ -38,9 +38,12 @@ export default {
     };
   },
   created() {
-    this.fetchPage('/api/streams/default/');
+    this.fetchFirstPage();
   },
   methods: {
+    fetchFirstPage() {
+      this.fetchPage('/api/streams/default/');
+    },
     nextPage() {
       this.fetchPage(this.pageObj.next);
     },
