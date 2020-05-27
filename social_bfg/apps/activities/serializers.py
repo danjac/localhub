@@ -104,7 +104,7 @@ class ActivitySerializer(serializers.ModelSerializer):
                 "unpin",
             )
         }
-        endpoints["detail"] = obj.community.resolve_url(
+        endpoints["base"] = obj.community.resolve_url(
             f"{self.Meta.api_basename}{obj.pk}/"
         )
         return endpoints

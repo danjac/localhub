@@ -1,60 +1,73 @@
 <template>
-  <Dropdown label="Actions...">
-    <a class="dropdown-menu-item" href="#">Comment</a>
+  <div>
+    <Dropdown label="Actions...">
+      <a class="dropdown-menu-item" href="#">Comment</a>
 
-    <a
-      class="dropdown-menu-item line-through"
-      v-if="isModerator && object.is_pinned"
-      @click.prevent="unpin"
-      >Pin</a
-    >
-    <a
-      class="dropdown-menu-item"
-      v-if="isModerator && !object.is_pinned"
-      @click.prevent="pin"
-      >Pin</a
-    >
+      <a
+        class="dropdown-menu-item line-through"
+        v-if="isModerator && object.is_pinned"
+        @click.prevent="unpin"
+        >Pin</a
+      >
+      <a
+        class="dropdown-menu-item"
+        v-if="isModerator && !object.is_pinned"
+        @click.prevent="pin"
+        >Pin</a
+      >
 
-    <a
-      class="dropdown-menu-item line-through"
-      v-if="object.has_bookmarked"
-      @click.prevent="removeBookmark"
-      >Bookmark</a
-    >
-    <a
-      class="dropdown-menu-item"
-      v-if="!object.has_bookmarked"
-      @click.prevent="addBookmark"
-      >Bookmark</a
-    >
+      <a
+        class="dropdown-menu-item line-through"
+        v-if="object.has_bookmarked"
+        @click.prevent="removeBookmark"
+        >Bookmark</a
+      >
+      <a
+        class="dropdown-menu-item"
+        v-if="!object.has_bookmarked"
+        @click.prevent="addBookmark"
+        >Bookmark</a
+      >
 
-    <a class="dropdown-menu-item" v-if="isOwner">Edit</a>
+      <a class="dropdown-menu-item" v-if="isOwner">Edit</a>
 
-    <a class="dropdown-menu-item" v-if="isOwner || isModerator">Delete</a>
+      <a
+        class="dropdown-menu-item"
+        v-if="isOwner || isModerator"
+        @click.prevent="$refs.deleteConfirm.open()"
+        >Delete</a
+      >
 
-    <a
-      class="dropdown-menu-item line-through"
-      v-if="object.hasLiked && !isOwner"
-      @click.prevent="dislike"
-      >Like</a
-    >
-    <a
-      class="dropdown-menu-item"
-      v-if="!object.hasLiked && !isOwner"
-      @click.prevent="Like"
-      >Like</a
-    >
-    <slot />
-  </Dropdown>
+      <a
+        class="dropdown-menu-item line-through"
+        v-if="object.hasLiked && !isOwner"
+        @click.prevent="dislike"
+        >Like</a
+      >
+      <a
+        class="dropdown-menu-item"
+        v-if="!object.hasLiked && !isOwner"
+        @click.prevent="Like"
+        >Like</a
+      >
+      <slot />
+    </Dropdown>
+    <ConfirmDialog ref="deleteConfirm" @confirm="confirmDelete" header="Delete">
+      Are you sure you want to delete this item?
+    </ConfirmDialog>
+  </div>
 </template>
 
 <script>
 import axios from 'axios';
+
+import ConfirmDialog from '@/components/ConfirmDialog';
 import Dropdown from '@/components/Dropdown';
 
 export default {
   components: {
     Dropdown,
+    ConfirmDialog,
   },
   props: {
     object: {
@@ -120,6 +133,15 @@ export default {
         message: 'You no longer like this item',
         tags: 'message-success',
       });
+    },
+    async confirmDelete() {
+      try {
+        await axios.delete(this.object.endpoints.base);
+        this.successMessage('This item has been deleted');
+        this.$emit('delete');
+      } catch (e) {
+        this.serverErrorMessage(e);
+      }
     },
     successMessage(message) {
       this.$store.dispatch('addMessage', {

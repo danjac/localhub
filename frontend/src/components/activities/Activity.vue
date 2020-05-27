@@ -1,5 +1,5 @@
 <template>
-  <article :role="object.object_type" class="card">
+  <article :role="object.object_type" class="card" v-show="!isDeleted">
     <div class="mb-3">
       <div class="font-semibold flex flex-wrap items-center mb-3">
         <div class="tracking-tight flex flex-wrap items-center break-words">
@@ -43,7 +43,12 @@
 
       <div class="flex items-center">
         <slot name="actions">
-          <Actions :object="object" :is-detail="isDetail" class="mr-2" />
+          <Actions
+            :object="object"
+            :is-detail="isDetail"
+            @delete="isDeleted = true"
+            class="mr-2"
+          />
         </slot>
         <slot name="links">
           <a
@@ -85,6 +90,11 @@ export default {
     Stats,
     Actions,
     Timesince,
+  },
+  data() {
+    return {
+      isDeleted: false,
+    };
   },
 };
 </script>
