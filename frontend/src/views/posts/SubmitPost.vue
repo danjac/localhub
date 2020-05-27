@@ -1,56 +1,25 @@
 <template>
   <div>
-    <form
-      method="POST"
-      action="/posts/~create"
-      class="p-1 md:p-3 border border-gray-500"
-      data-controller="form opengraph-preview"
-      data-form-unload="Are you sure you want to leave this page? All your changes will be lost."
-      data-action="form#submit beforeunload@window->form#unload turbolinks:before-visit@window->form#unload"
-      data-opengraph-preview-error-message="This URL is unavailable, or we are unable to fetch any meaningful data from this page."
-      data-opengraph-preview-preview-url="/posts/opengraph-preview/"
-    >
-      <input
-        type="hidden"
-        name="opengraph_image"
-        data-target=" opengraph-preview.field"
-        id="id_opengraph_image"
-      />
-
-      <input
-        type="hidden"
-        name="opengraph_description"
-        data-target=" opengraph-preview.field"
-        id="id_opengraph_description"
-      />
+    <form class="p-1 md:p-3 border border-gray-500" @submit.prevent="submit">
+      <input type="hidden" name="opengraph_image" id="id_opengraph_image" />
+      <input type="hidden" name="opengraph_description" id="id_opengraph_description" />
 
       <div class="mb-3">
         <label for="id_title" class="block font-semibold mb-3 text-sm">Title</label>
+        <input
+          type="text"
+          v-model.trim="$v.title.$model"
+          autocomplete="off"
+          class="form-input"
+          :class="{ 'form-input-error': $v.title.$error }"
+        />
 
-        <div
-          data-controller="typeahead"
-          data-typeahead-selected-class="bg-gray-500 text-white"
-          data-typeahead-config='[{"key": "#", "url": "/tags/autocomplete/"}, {"key": "@", "url": "/people/autocomplete/"}]'
-        >
-          <ul
-            class="hidden typeahead-menu mt-1 text-sm"
-            data-target="typeahead.selector"
-          ></ul>
-          <input
-            type="text"
-            name="title"
-            data-target="typeahead.input opengraph-preview.field"
-            data-action="keyup->typeahead#keyup keydown->typeahead#keydown"
-            autocomplete="off"
-            maxlength="300"
-            placeholder=""
-            class="form-input"
-            required=""
-            id="id_title"
-          />
+        <div v-if="$v.title.$error">
+          <div v-if="!$v.title.required" class="text-red-600 mb-3 text-sm">
+            You must provide a title
+          </div>
         </div>
       </div>
-
       <div class="mb-3">
         <label for="id_url" class="block font-semibold mb-3 text-sm">URL</label>
 
@@ -62,11 +31,9 @@
               <input
                 type="url"
                 name="url"
-                data-target="opengraph-preview.input opengraph-preview.field"
-                data-action="keyup->opengraph-preview#validate change->opengraph-preview#validate paste->opengraph-preview#validate"
-                placeholder=""
+                v-model.trim="$v.url.$model"
                 class="form-input"
-                id="id_url"
+                :class="{ 'form-input-error': $v.title.$error }"
               />
             </div>
             <button
@@ -123,6 +90,12 @@
                 ></path>
               </svg>
             </button>
+          </div>
+        </div>
+
+        <div v-if="$v.url.$error">
+          <div v-if="!$v.url.url" class="text-red-600 mb-3 text-sm">
+            You must provide a valid URL
           </div>
         </div>
 
@@ -2139,7 +2112,6 @@
           type="submit"
           name="save_private"
           value="true"
-          data-action="form#submit"
           class="btn btn-secondary"
         >
           Save Private
@@ -2148,3 +2120,33 @@
     </form>
   </div>
 </template>
+
+<script>
+import { required, url } from 'vuelidate/lib/validators';
+
+export default {
+  data() {
+    return {
+      title: '',
+    };
+  },
+  validations: {
+    title: {
+      required,
+    },
+    url: {
+      url,
+    },
+  },
+  methods: {
+    submit() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        console.log('invalid...');
+      } else {
+        console.log(this.$v.title.$model, this.title);
+      }
+    },
+  },
+};
+</script>
