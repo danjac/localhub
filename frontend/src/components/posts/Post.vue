@@ -16,7 +16,7 @@
             </a>
           </span>
           <a class="tag inline-block mr-2 hover:text-gray-300" href="#">
-            {{ object.object_type }}
+            {{ object.object_type | capitalize }}
           </a>
         </div>
       </div>
@@ -63,75 +63,10 @@
     </div>
 
     <div class="card-footer">
-      <div class="flex flex-wrap items-center text-xs text-muted mb-3">
-        <div class="mr-2">
-          <a
-            href="/posts/2243/were-all-about-to-get-lost-in-a-labyrinth-sequel/#comments"
-          >
-            1 Comment
-          </a>
-        </div>
-      </div>
+      <Stats :object="object" :is-detail="isDetail" class="mb-3" />
 
       <div class="flex items-center">
-        <div
-          class="text-sm mr-2"
-          data-controller="dropdown"
-          data-action="click@window->dropdown#close keydown@window->dropdown#close"
-        >
-          <button class="btn btn-dropdown" data-action="dropdown#toggle">
-            Actions...
-          </button>
-          <div class="dropdown-menu mt-1 hidden" data-target="dropdown.menu">
-            <a
-              class="dropdown-menu-item"
-              href="/posts/2243/~pin/"
-              data-turbolinks="false"
-              data-controller="ajax"
-              data-action="ajax#post"
-              >Pin</a
-            >
-
-            <a class="dropdown-menu-item" href="/posts/2243/~comment/#comment-form">
-              Comment
-            </a>
-
-            <div data-controller="ajax">
-              <a
-                class="dropdown-menu-item line-through hidden"
-                href="/posts/2243/~bookmark/remove/"
-                data-turbolinks="false"
-                data-target="ajax.toggle ajax.button"
-                data-action="ajax#post"
-                >Bookmark</a
-              >
-              <a
-                class="dropdown-menu-item"
-                href="/posts/2243/~bookmark/"
-                data-turbolinks="false"
-                data-target="ajax.toggle ajax.button"
-                data-action="ajax#post"
-                >Bookmark</a
-              >
-            </div>
-
-            <a class="dropdown-menu-item" href="/posts/2243/~update/">Edit</a>
-
-            <a
-              class="dropdown-menu-item"
-              href="/posts/2243/~delete/"
-              data-turbolinks="false"
-              data-controller="ajax"
-              data-action="ajax#post"
-              data-ajax-redirect="/"
-              data-ajax-confirm-header="Delete"
-              data-ajax-confirm-body="Are you sure you want to delete this post?"
-            >
-              Delete</a
-            >
-          </div>
-        </div>
-
+        <Actions :object="object" :is-detail="isDetail" class="mr-2" />
         <a
           class="text-sm mr-2"
           href="/posts/2243/were-all-about-to-get-lost-in-a-labyrinth-sequel/"
@@ -143,16 +78,32 @@
 </template>
 
 <script>
+import { capitalize } from 'lodash';
+
 import Collapsable from '@/components/Collapsable';
 import Timesince from '@/components/Timesince';
+import Actions from '@/components/activities/Actions';
+import Stats from '@/components/activities/Stats';
 
 export default {
   name: 'Post',
+  filters: {
+    capitalize,
+  },
   props: {
-    object: Object,
+    object: {
+      type: Object,
+      required: true,
+    },
+    isDetail: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {
     Collapsable,
+    Stats,
+    Actions,
     Timesince,
   },
 };
