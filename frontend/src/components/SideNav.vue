@@ -47,7 +47,9 @@
       <li class="sidebar-menu-header mb-3">Actions</li>
 
       <li class="mb-1">
-        <a href="/posts/~create" class="sidebar-menu-item">Submit Post</a>
+        <router-link class="sidebar-menu-item" to="/posts/submit"
+          >Submit Post</router-link
+        >
       </li>
       <li class="mb-1">
         <a href="/events/~create" class="sidebar-menu-item">Submit Event</a>

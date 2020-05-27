@@ -36,14 +36,12 @@ const routes = [
     name: 'PostList',
     component: () =>
       import(/* webpackChunkName: "postList" */ '../views/posts/PostList.vue'),
-    children: [
-      {
-        path: '/submit',
-        name: 'SubmitPost',
-        component: () =>
-          import(/* webpackChunkName: "submitPost" */ '../views/posts/SubmitPost.vue'),
-      },
-    ],
+  },
+  {
+    path: '/posts/submit',
+    name: 'SubmitPost',
+    component: () =>
+      import(/* webpackChunkName: "submitPost" */ '../views/posts/SubmitPost.vue'),
   },
 ];
 
