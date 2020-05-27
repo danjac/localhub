@@ -7,7 +7,6 @@ export function getViewport() {
 }
 
 export function fitIntoViewport(el) {
-  console.log('fit element into viewport', el);
   const viewport = getViewport();
   const rect = el.getBoundingClientRect();
 
