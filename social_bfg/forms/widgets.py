@@ -52,13 +52,14 @@ class BaseTypeaheadInput(TypeaheadMixin, forms.TextInput):
     """
 
     template_name = "includes/forms/widgets/typeahead.html"
+    tokenize_input = True
 
     def __init__(self, attrs=None):
         super().__init__(attrs)
 
     def format_value(self, value):
         """Replace any commas with space, remove any extra spaces"""
-        if not value:
+        if not value or not self.tokenize_input:
             return value
         return " ".join(value.replace(",", " ").strip().lower().split())
 
@@ -70,6 +71,8 @@ class TypeaheadInput(BaseTypeaheadInput):
         settings.SOCIAL_BFG_HASHTAGS_TYPEAHEAD_CONFIG,
         settings.SOCIAL_BFG_MENTIONS_TYPEAHEAD_CONFIG,
     ]
+
+    tokenize_input = False
 
 
 class CalendarWidget(forms.SplitDateTimeWidget):
