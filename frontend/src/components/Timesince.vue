@@ -7,7 +7,7 @@
 
 <script>
 import { parseISO, formatDistanceToNow } from 'date-fns';
-import Chip from '@/components/Chip';
+import Chip from '@/components/users/Chip';
 
 export default {
   name: 'Timesince',

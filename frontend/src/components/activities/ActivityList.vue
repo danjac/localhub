@@ -7,16 +7,16 @@
       :object="obj"
       class="mb-2"
     >
-      {{ obj.object_type }}
     </component>
   </div>
 </template>
 
 <script>
+// TBD: move this under /activities subdirector
 // import Event from '@/components/Event';
 //import Poll from '@/components/Poll';
-import Post from '@/components/Post';
-import Photo from '@/components/Photo';
+import Post from '@/components/posts/Post';
+import Photo from '@/components/photos/Photo';
 
 export default {
   name: 'ActivityList',

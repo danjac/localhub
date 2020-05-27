@@ -8,7 +8,7 @@
 <script>
 import axios from 'axios';
 
-import ActivityList from '@/components/ActivityList.vue';
+import ActivityList from '@/components/activities/ActivityList.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 
 export default {
