@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { uniqueId } from 'lodash';
 
 Vue.use(Vuex);
 
@@ -17,11 +18,11 @@ export default new Vuex.Store({
     community(state, community) {
       state.community = community;
     },
-    messages(state, messages) {
-      state.messages = messages;
+    addMessage(state, msg) {
+      state.messages.push({ ...msg, id: uniqueId() });
     },
-    dismissMessage(state, counter) {
-      state.messages.splice(counter, 1);
+    dismissMessage(state, msgId) {
+      state.messages = state.messages.filter((msg) => msg.id != msgId);
     },
     toggleNav(state) {
       state.showNav = !state.showNav;
@@ -35,7 +36,10 @@ export default new Vuex.Store({
     hydrate({ commit }, { user, community, messages }) {
       commit('user', user);
       commit('community', community);
-      commit('messages', messages);
+      messages.forEach((msg) => commit('addMessage', msg));
+    },
+    addMessage({ commit }, msg) {
+      commit('addMessage', msg);
     },
     dismissMessage({ commit }, counter) {
       commit('dismissMessage', counter);

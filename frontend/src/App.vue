@@ -2,13 +2,15 @@
   <div id="app" class="h-screen container-lg mx-auto antialiased">
     <HeaderNav />
 
-    <ToastMessage
-      v-for="(message, counter) in messages"
-      :key="counter"
-      :message="message"
-      class="mb-2"
-      @dismiss="dismissMessage(counter)"
-    />
+    <div class="flex justify-center" v-if="messages">
+      <ToastMessage
+        v-for="message in messages"
+        :key="message.id"
+        :message="message"
+        class="mb-2"
+        @dismiss="dismissMessage(message.id)"
+      />
+    </div>
 
     <component class="mt-5" :is="layout">
       <router-view />
@@ -48,8 +50,8 @@ export default {
     },
   },
   methods: {
-    dismissMessage(counter) {
-      this.$store.dispatch('dismissMessage', counter);
+    dismissMessage(msgId) {
+      this.$store.dispatch('dismissMessage', msgId);
     },
   },
 };

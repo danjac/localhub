@@ -91,7 +91,7 @@ class ActivitySerializer(serializers.ModelSerializer):
         # TBD: use reverse() and named urls,  see https://www.django-rest-framework.org/api-guide/routers/
         endpoints = {
             endpoint: obj.community.resolve_url(
-                f"{self.Meta.api_basename}{obj.pk}/{endpoint}"
+                f"{self.Meta.api_basename}{obj.pk}/{endpoint}/"
             )
             for endpoint in (
                 "add_bookmark",
