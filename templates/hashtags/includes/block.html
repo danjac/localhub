@@ -3,20 +3,19 @@
 
 {% load i18n %}
 
-<span data-controller="ajax"
-      class="{{ css_class }}">
-  <a href="{% url 'hashtags:unblock' tag.id %}"
-     data-turbolinks="false"
-     class="line-through{% if not is_blocked %} hidden{% endif %}"
-     data-target="ajax.toggle ajax.button"
-     data-action="ajax#post">
-    {% trans "Block" %}
-  </a>
-  <a href="{% url 'hashtags:block' tag.id %}"
-     data-turbolinks="false"
-     class="{% if is_blocked %}hidden{% endif %}"
-     data-target="ajax.toggle ajax.button"
-     data-action="ajax#post">
-    {% trans "Block" %}
-  </a>
-</span>
+{% if is_blocked %}
+<a href="{% url 'hashtags:unblock' object.id %}"
+   data-turbolinks="false"
+   class="line-through"
+   data-target="ajax.button"
+   data-action="ajax#post">
+  {% trans "Block" %}
+</a>
+{% else %}
+<a href="{% url 'hashtags:block' object.id %}"
+   data-turbolinks="false"
+   data-target="ajax.button"
+   data-action="ajax#post">
+  {% trans "Block" %}
+</a>
+{% endif %}

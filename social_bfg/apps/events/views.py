@@ -61,6 +61,7 @@ event_cancel_view = EventCancelView.as_view()
 class BaseEventAttendView(BaseEventActionView):
     permission_required = "events.attend"
     is_success_ajax_response = True
+    success_template_name = "events/includes/attend.html"
 
 
 class EventAttendView(BaseEventAttendView):
@@ -71,6 +72,9 @@ class EventAttendView(BaseEventAttendView):
         self.object.attendees.add(self.request.user)
         self.object.notify_on_attend(self.request.user)
         return self.success_response()
+
+    def get_success_context_data(self):
+        return {**super().get_success_context_data(), "is_attending": True}
 
 
 event_attend_view = EventAttendView.as_view()
@@ -83,6 +87,9 @@ class EventUnattendView(BaseEventAttendView):
         self.object = self.get_object()
         self.object.attendees.remove(self.request.user)
         return self.success_response()
+
+    def get_success_context_data(self):
+        return {**super().get_success_context_data(), "is_attending": False}
 
 
 event_unattend_view = EventUnattendView.as_view()

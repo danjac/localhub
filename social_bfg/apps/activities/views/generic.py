@@ -383,6 +383,7 @@ class ActivityUnpinView(BaseActivityActionView):
 class BaseActivityBookmarkView(BaseActivityActionView):
     permission_required = "activities.bookmark_activity"
     is_success_ajax_response = True
+    success_template_name = "activities/includes/bookmark.html"
 
 
 class ActivityBookmarkView(BaseActivityBookmarkView):
@@ -400,6 +401,12 @@ class ActivityBookmarkView(BaseActivityBookmarkView):
             pass
         return self.success_response()
 
+    def get_success_context_data(self):
+        return {
+            **super().get_success_context_data(),
+            "has_bookmarked": True,
+        }
+
 
 class ActivityRemoveBookmarkView(BaseActivityBookmarkView):
     success_message = _("You have removed this %(model)s from your bookmarks")
@@ -411,10 +418,17 @@ class ActivityRemoveBookmarkView(BaseActivityBookmarkView):
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
 
+    def get_success_context_data(self):
+        return {
+            **super().get_success_context_data(),
+            "has_bookmarked": False,
+        }
+
 
 class BaseActivityLikeView(BaseActivityActionView):
     permission_required = "activities.like_activity"
     is_success_ajax_response = True
+    success_template_name = "activities/includes/like.html"
 
 
 class ActivityLikeView(BaseActivityLikeView):
@@ -434,6 +448,12 @@ class ActivityLikeView(BaseActivityLikeView):
             pass
         return self.success_response()
 
+    def get_success_context_data(self):
+        return {
+            **super().get_success_context_data(),
+            "has_liked": True,
+        }
+
 
 class ActivityDislikeView(BaseActivityLikeView):
     success_message = _("You have stopped liking this %(model)s")
@@ -444,6 +464,12 @@ class ActivityDislikeView(BaseActivityLikeView):
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
+
+    def get_success_context_data(self):
+        return {
+            **super().get_success_context_data(),
+            "has_liked": False,
+        }
 
 
 class ActivityDeleteView(

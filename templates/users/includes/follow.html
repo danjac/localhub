@@ -2,17 +2,19 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% load i18n %}
-<a href="{% url 'users:unfollow' user_obj.username %}"
+{% if is_following %}
+<a href="{% url 'users:unfollow' object.username %}"
    data-turbolinks="false"
-   class="line-through{% if not is_following %} hidden{% endif %} {{ css_class }}"
-   data-target="ajax.toggle ajax.button"
+   class="line-through"
+   data-target="ajax.button"
    data-action="ajax#post">
   {% trans "Follow" %}
 </a>
-<a href="{% url 'users:follow' user_obj.username %}"
+{% else %}
+<a href="{% url 'users:follow' object.username %}"
    data-turbolinks="false"
-   class="{% if is_following %} hidden{% endif %} {{ css_class }}"
-   data-target="ajax.toggle ajax.button"
+   data-target="ajax.button"
    data-action="ajax#post">
   {% trans "Follow" %}
 </a>
+{% endif %}

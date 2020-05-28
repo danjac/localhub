@@ -304,6 +304,7 @@ message_mark_read_view = MessageMarkReadView.as_view()
 
 class BaseMessageBookmarkView(SenderOrRecipientQuerySetMixin, SuccessActionView):
     is_success_ajax_response = True
+    success_template_name = "private_messages/includes/bookmark.html"
 
 
 class MessageBookmarkView(BaseMessageBookmarkView):
@@ -320,6 +321,12 @@ class MessageBookmarkView(BaseMessageBookmarkView):
             pass
         return self.success_response()
 
+    def get_success_context_data(self):
+        return {
+            **super().get_success_context_data(),
+            "has_bookmarked": True,
+        }
+
 
 message_bookmark_view = MessageBookmarkView.as_view()
 
@@ -333,6 +340,12 @@ class MessageRemoveBookmarkView(BaseMessageBookmarkView):
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
+
+    def get_success_context_data(self):
+        return {
+            **super().get_success_context_data(),
+            "has_bookmarked": False,
+        }
 
 
 message_remove_bookmark_view = MessageRemoveBookmarkView.as_view()

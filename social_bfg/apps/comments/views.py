@@ -216,6 +216,7 @@ class BaseCommentActionView(CommentQuerySetMixin, SuccessActionView):
 class BaseCommentBookmarkView(PermissionRequiredMixin, BaseCommentActionView):
     permission_required = "comments.bookmark_comment"
     is_success_ajax_response = True
+    success_template_name = "comments/includes/bookmark.html"
 
 
 class CommentBookmarkView(BaseCommentBookmarkView):
@@ -232,6 +233,9 @@ class CommentBookmarkView(BaseCommentBookmarkView):
             pass
         return self.success_response()
 
+    def get_success_context_data(self):
+        return {**super().get_success_context_data(), "has_bookmarked": True}
+
 
 comment_bookmark_view = CommentBookmarkView.as_view()
 
@@ -246,6 +250,9 @@ class CommentRemoveBookmarkView(BaseCommentBookmarkView):
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
 
+    def get_success_context_data(self):
+        return {**super().get_success_context_data(), "has_bookmarked": False}
+
 
 comment_remove_bookmark_view = CommentRemoveBookmarkView.as_view()
 
@@ -253,6 +260,7 @@ comment_remove_bookmark_view = CommentRemoveBookmarkView.as_view()
 class BaseCommentLikeView(PermissionRequiredMixin, BaseCommentActionView):
     permission_required = "comments.like_comment"
     is_success_ajax_response = True
+    success_template_name = "comments/includes/like.html"
 
 
 class CommentLikeView(BaseCommentLikeView):
@@ -270,6 +278,9 @@ class CommentLikeView(BaseCommentLikeView):
             pass
         return self.success_response()
 
+    def get_success_context_data(self):
+        return {**super().get_success_context_data(), "has_liked": True}
+
 
 comment_like_view = CommentLikeView.as_view()
 
@@ -283,6 +294,9 @@ class CommentDislikeView(BaseCommentLikeView):
 
     def delete(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
+
+    def get_success_context_data(self):
+        return {**super().get_success_context_data(), "has_liked": False}
 
 
 comment_dislike_view = CommentDislikeView.as_view()

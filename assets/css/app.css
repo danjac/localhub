@@ -114,11 +114,13 @@ a.btn-secondary {
   }
 }
 
-.dropdown-menu-item {
+.dropdown-menu-item,
+.dropdown-menu-item-container a {
   @apply block p-1 text-gray-800;
 }
 
-.dropdown-menu-item:hover {
+.dropdown-menu-item:hover,
+.dropdown-menu-item-container:hover a {
   @apply bg-indigo-700 text-white;
 }
 

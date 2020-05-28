@@ -48,12 +48,12 @@
   {% if comment.is_blocked %}
   <div class="mb-3 cursor-pointer"
        data-controller="toggle"
-       data-action="click->toggle#toggle"
-       >
+       data-action="click->toggle#toggle">
 
-       <p class="font-semibold p-5 text-center" data-target="toggle.togglable">
-         {% trans "This comment is hidden because you have blocked this user." %}
-       </p>
+    <p class="font-semibold p-5 text-center"
+       data-target="toggle.togglable">
+      {% trans "This comment is hidden because you have blocked this user." %}
+    </p>
 
     <div class="markdown-content hidden"
          data-target="toggle.togglable">
@@ -63,8 +63,7 @@
     <div data-target="toggle.togglable text-center align-middle py-3">
       <div class="flex justify-center items-center">
         <button class="btn btn-link w-full text-sm"
-                data-action="toggle#toggle"
-                >{% trans "Show Comment" %}</button>
+                data-action="toggle#toggle">{% trans "Show Comment" %}</button>
       </div>
     </div>
   </div>
@@ -116,33 +115,17 @@
              data-target="dropdown.menu">
           {% has_perm "comments.like_comment" user comment as can_like_comment %}
           {% if can_like_comment %}
-          <div data-controller="ajax">
-            <a href="{% url 'comments:dislike' comment.id %}"
-               class="dropdown-menu-item line-through{% if not comment.has_liked %} hidden{% endif %}"
-               data-turbolinks="false"
-               data-target="ajax.toggle ajax.button"
-               data-action="ajax#post">{% trans "Like" %}</a>
-            <a href="{% url 'comments:like' comment.id %}"
-               class="dropdown-menu-item {% if comment.has_liked %} hidden{% endif %}"
-               data-turbolinks="false"
-               data-target="ajax.toggle ajax.button"
-               data-action="ajax#post">{% trans "Like" %}</a>
+          <div data-controller="ajax"
+               data-ajax-replace>
+            {% include "comments/includes/like.html" with object=comment has_liked=comment.has_liked %}
           </div>
           {% endif %}
 
           {% has_perm "comments.bookmark_comment" user comment as can_bookmark_comment %}
           {% if can_bookmark_comment %}
-          <div data-controller="ajax">
-            <a href="{% url 'comments:remove_bookmark' comment.id %}"
-               class="dropdown-menu-item line-through{% if not comment.has_bookmarked %} hidden{% endif %}"
-               data-turbolinks="false"
-               data-target="ajax.toggle ajax.button"
-               data-action="ajax#post">{% trans "Bookmark" %}</a>
-            <a href="{% url 'comments:bookmark' comment.id %}"
-               class="dropdown-menu-item {% if comment.has_bookmarked %} hidden{% endif %}"
-               data-turbolinks="false"
-               data-target="ajax.toggle ajax.button"
-               data-action="ajax#post">{% trans "Bookmark" %}</a>
+          <div data-controller="ajax"
+               data-ajax-replace>
+            {% include "comments/includes/bookmark.html" with object=comment has_bookmarked=comment.has_bookmarked %}
           </div>
           {% endif %}
 

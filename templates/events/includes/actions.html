@@ -11,17 +11,8 @@
 {% has_perm "events.attend" user object as can_attend %}
 
 {% if can_attend %}
-<div data-controller="ajax">
-  <a href="{% url 'events:unattend' object.id %}"
-     data-turbolinks="false"
-     class="dropdown-menu-item line-through{% if not object.is_attending %} hidden{% endif %}"
-     data-target="ajax.toggle ajax.button"
-     data-action="ajax#post">{% trans "Attending" %}</a>
-  <a href="{% url 'events:attend' object.id %}"
-     data-turbolinks="false"
-     class="dropdown-menu-item{% if object.is_attending %} hidden{% endif %}"
-     data-target="ajax.toggle ajax.button"
-     data-action="ajax#post">{% trans "Attending" %}</a>
+<div data-controller="ajax" data-ajax-replace>
+  {% include "events/includes/attend.html" with is_attending=object.is_attending %}
 </div>
 {% endif %}
 

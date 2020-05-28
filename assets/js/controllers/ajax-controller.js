@@ -8,7 +8,7 @@ import { Events } from '@/constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
-  static targets = ['toggle', 'button'];
+  static targets = ['button'];
 
   get(event) {
     this.confirm('GET', event);
@@ -53,13 +53,6 @@ export default class extends ApplicationController {
 
     target.setAttribute('disabled', 'disabled');
 
-    // toggle for immediate feedback
-    const toggleClass = this.data.get('toggle') || 'hidden';
-
-    this.toggleTargets.forEach((target) => {
-      target.classList.toggle(toggleClass);
-    });
-
     this.startFetching();
 
     axios({
@@ -81,19 +74,21 @@ export default class extends ApplicationController {
         // redirect passed from the server. If set to "none" it
         // means "do not redirect at all".
         const redirect = this.data.get('redirect');
-        if (redirect && redirect !== 'none') {
-          Turbolinks.visit(redirect);
+        if (redirect) {
+          if (redirect !== 'none') Turbolinks.visit(redirect);
           return;
         }
 
         // data-ajax-replace: replace HTML in element with server HTML
         if (this.data.has('replace')) {
           this.element.innerHTML = response.data;
+          return;
         }
 
         // data-ajax-remove: remove element from DOM
         if (this.data.has('remove')) {
           this.element.remove();
+          return;
         }
 
         // default behaviour: redirect passed down in header

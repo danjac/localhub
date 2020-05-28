@@ -58,17 +58,9 @@
           {% endif %}
 
           <div class="menu-item"
-               data-controller="ajax">
-            <a href="{% url 'private_messages:message_remove_bookmark' message.id %}"
-               class="dropdown-menu-item line-through{% if not message.has_bookmarked %} hidden{% endif %}"
-               data-turbolinks="false"
-               data-target="ajax.toggle ajax.button"
-               data-action="ajax#post">{% trans "Bookmark" %}</a>
-            <a href="{% url 'private_messages:message_bookmark' message.id %}"
-               class="dropdown-menu-item {% if message.has_bookmarked %} hidden{% endif %}"
-               data-turbolinks="false"
-               data-target="ajax.toggle ajax.button"
-               data-action="ajax#post">{% trans "Bookmark" %}</a>
+               data-controller="ajax"
+               data-ajax-replace>
+            {% include "private_messages/includes/bookmark.html" with object=message has_bookmarked=message.has_bookmarked %}
           </div>
 
           {% if can_reply %}

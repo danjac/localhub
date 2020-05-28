@@ -258,7 +258,7 @@ class TestUserFollowView:
             community=member.community, member=UserFactory(),
         ).member
         response = client.post(reverse("users:follow", args=[user.username]))
-        assert response.status_code == 204
+        assert response.status_code == 200
         assert user in member.member.following.all()
         notification = Notification.objects.get()
         assert notification.recipient == user
@@ -290,7 +290,7 @@ class TestUserUnfollowView:
         user = MembershipFactory(community=member.community).member
         member.member.following.add(user)
         response = client.post(reverse("users:unfollow", args=[user.username]))
-        assert response.status_code == 204
+        assert response.status_code == 200
         assert user not in member.member.following.all()
 
 

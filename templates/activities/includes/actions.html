@@ -46,35 +46,16 @@
 
     {% has_perm "activities.like_activity" user object as can_like %}
     {% if can_like %}
-    <div data-controller="ajax">
-      <a class="dropdown-menu-item line-through{% if not object.has_liked %} hidden{% endif %}"
-         href="{{ object|resolve_url:"dislike" }}"
-         data-turbolinks="false"
-         class=""
-         data-target="ajax.toggle ajax.button"
-         data-action="ajax#post">{% trans "Like" %}</a>
-      <a class="dropdown-menu-item {% if object.has_liked %} hidden{% endif %}"
-         href="{{ object|resolve_url:"like" }}"
-         data-turbolinks="false"
-         data-target="ajax.toggle ajax.button"
-         data-action="ajax#post">{% trans "Like" %}</a>
+    <div data-controller="ajax" data-ajax-replace>
+      {% include "activities/includes/like.html" with has_liked=object.has_liked %}
     </div>
     {% endif %}
 
     {% has_perm "activities.bookmark_activity" user object as can_bookmark %}
     {% if can_bookmark %}
-    <div data-controller="ajax">
-      <a class="dropdown-menu-item line-through{% if not object.has_bookmarked %} hidden{% endif %}"
-         href="{{ object|resolve_url:"remove_bookmark" }}"
-         data-turbolinks="false"
-         class=""
-         data-target="ajax.toggle ajax.button"
-         data-action="ajax#post">{% trans "Bookmark" %}</a>
-      <a class="dropdown-menu-item {% if object.has_bookmarked %} hidden{% endif %}"
-         href="{{ object|resolve_url:"bookmark" }}"
-         data-turbolinks="false"
-         data-target="ajax.toggle ajax.button"
-         data-action="ajax#post">{% trans "Bookmark" %}</a>
+    <div data-controller="ajax"
+         data-ajax-replace>
+      {% include "activities/includes/bookmark.html" with has_bookmarked=object.has_bookmarked %}
     </div>
     {% endif %}
 

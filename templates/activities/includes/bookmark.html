@@ -1,0 +1,16 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load i18n %}
+{% if has_bookmarked %}
+<a class="dropdown-menu-item line-through"
+   href="{{ object|resolve_url:"remove_bookmark" }}"
+   data-turbolinks="false"
+   data-target="ajax.button"
+   data-action="ajax#post">{% trans "Bookmark" %}</a>
+{% else %}
+<a class="dropdown-menu-item"
+   href="{{ object|resolve_url:"bookmark" }}"
+   data-turbolinks="false"
+   data-target="ajax.button"
+   data-action="ajax#post">{% trans "Bookmark" %}</a>
+{% endif %}

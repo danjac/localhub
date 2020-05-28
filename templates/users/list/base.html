@@ -73,27 +73,29 @@
       </td>
       <td class="border py-2 px-2">
         <div class="table-nav">
-        {% block user_item_actions %}
-        {% if user == object %}
-        <a class="table-nav-item" href="{% url 'user_update' %}">{% trans "Settings" %}</a>
-        {% else %}
-        {% has_perm "users.follow_user" user object as can_follow_user %}
-        {% if can_follow_user %}
+          {% block user_item_actions %}
+          {% if user == object %}
+          <a class="table-nav-item"
+             href="{% url 'user_update' %}">{% trans "Settings" %}</a>
+          {% else %}
+          {% has_perm "users.follow_user" user object as can_follow_user %}
+          {% if can_follow_user %}
 
-        <span data-controller="ajax"
-              class="table-nav-item">
-          {% include "users/includes/follow.html" with user_obj=object is_following=object.is_following css_class="action" %}
-        </span>
-        {% endif %}
+          <span data-controller="ajax"
+                data-ajax-replace
+                class="table-nav-item">
+            {% include "users/includes/follow.html" with is_following=object.is_following %}
+          </span>
+          {% endif %}
 
-        {% if can_create_message %}
-        <a class="table-nav-item"
-           href="{% url 'private_messages:message_create_recipient' object.username %}">
-          {% trans "Send Message" %}
-        </a>
-        {% endif %}
+          {% if can_create_message %}
+          <a class="table-nav-item"
+             href="{% url 'private_messages:message_create_recipient' object.username %}">
+            {% trans "Send Message" %}
+          </a>
+          {% endif %}
 
-        {% endif %}
+          {% endif %}
         </div>
         {% endblock user_item_actions %}
       </td>
