@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form class="p-1 md:p-3 border border-gray-500" @submit.prevent="submit">
+    <form class="p-1 md:p-3 border border-gray-500" @submit.prevent="submit" novalidate>
       <input type="hidden" name="opengraph_image" id="id_opengraph_image" />
       <input type="hidden" name="opengraph_description" id="id_opengraph_description" />
 
@@ -33,7 +33,7 @@
                 name="url"
                 v-model.trim="$v.url.$model"
                 class="form-input"
-                :class="{ 'form-input-error': $v.title.$error }"
+                :class="{ 'form-input-error': $v.url.$error }"
               />
             </div>
             <button
@@ -2128,6 +2128,7 @@ export default {
   data() {
     return {
       title: '',
+      url: '',
     };
   },
   validations: {
@@ -2142,7 +2143,7 @@ export default {
     submit() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        console.log('invalid...');
+        window.scrollTo(0, 0);
       } else {
         console.log(this.$v.title.$model, this.title);
       }
