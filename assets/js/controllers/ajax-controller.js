@@ -23,37 +23,27 @@ export default class extends ApplicationController {
 
     const { currentTarget } = event;
 
-    if (this.isFetching(currentTarget)) {
-      return;
-    }
-
     const header = this.data.get('confirm-header');
     const body = this.data.get('confirm-body');
+
+    const handleDispatch = () => this.dispatch(method, currentTarget);
 
     if (header && body) {
       this.bus.pub(Events.CONFIRM_OPEN, {
         body,
         header,
-        onConfirm: () => this.dispatch(method, currentTarget),
+        onConfirm: handleDispatch,
       });
     } else {
-      this.dispatch(method, currentTarget);
+      handleDispatch();
     }
   }
 
   dispatch(method, target) {
-    if (this.isFetching(target)) {
-      return;
-    }
-
     const url =
       this.data.get('url') ||
       target.getAttribute(`data-${this.identifier}-url`) ||
       target.getAttribute('href');
-
-    target.setAttribute('disabled', 'disabled');
-
-    this.startFetching();
 
     axios({
       headers: {
@@ -95,9 +85,6 @@ export default class extends ApplicationController {
         if (!redirect && response.headers['content-type'].match(/javascript/)) {
           /* eslint-disable-next-line no-eval */
           eval(response.data);
-        } else {
-          // only disable fetching if no redirects
-          this.stopFetching();
         }
       })
       .catch((err) => {
@@ -105,34 +92,6 @@ export default class extends ApplicationController {
           const { status, statusText } = err.response;
           this.toaster.error(`${status}: ${statusText}`);
         }
-        this.stopFetching();
-      })
-      .finally(() => {
-        target.removeAttribute('disabled');
       });
-  }
-
-  isFetching(target) {
-    return target.hasAttribute('disabled') || this.data.has('fetching');
-  }
-
-  startFetching() {
-    this.data.set('fetching', true);
-    if (this.buttonTargets.length) {
-      Array.from(this.buttonTargets).forEach((btn) =>
-        btn.setAttribute('disabled', 'disabled')
-      );
-    } else {
-      this.element.setAttribute('disabled', 'disabled');
-    }
-  }
-
-  stopFetching() {
-    this.data.delete('fetching');
-    if (this.buttonTargets.length) {
-      Array.from(this.buttonTargets).forEach((btn) => btn.removeAttribute('disabled'));
-    } else {
-      this.element.removeAttribute('disabled');
-    }
   }
 }
