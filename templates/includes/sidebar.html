@@ -211,9 +211,7 @@
       <a href="{% url 'communities:community_detail' %}"
          data-controller="active-link"
          class="sidebar-menu-item">
-        {% blocktrans with community_name=community.name %}
-        About {{ community_name }}
-        {% endblocktrans %}
+        {% trans "About This Site" %}
       </a>
     </li>
     {% endif %}
@@ -231,7 +229,7 @@
     <li class="mb-1">
       <a href="{% url 'communities:community_update' %}"
          data-controller="active-link"
-         class="sidebar-menu-item">{% trans "Settings" %}</a>
+         class="sidebar-menu-item">{% trans "Site Settings" %}</a>
     </li>
 
     <li class="mb-1">
@@ -262,7 +260,7 @@
     {% endif %}
     <li><a href="{% url 'community_list' %}"
          class="sidebar-menu-item">
-        <span>{% trans "Communities" %}</span>
+        <span>{% trans "Community Index" %}</span>
         {% if external_site_counters.total %}
         <span class="tag tag-primary px-1">{% trans "New" %}</span>
         {% endif %}
