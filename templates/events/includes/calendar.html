@@ -40,13 +40,13 @@
         <div class="hidden lg:block text-xs{% if is_past %} text-gray-500{% endif %}">
           {% for event in events|slice:":2" %}
 
-          <a class="text-xs{% if not event.is_attendable %} line-through{% elif event.is_attending %} font-semibold{% endif %}"
+          <a class="block text-xs{% if not event.is_attendable %} line-through{% elif event.is_attending %} font-semibold{% endif %}"
              href="{{ event.get_absolute_url }}"
              title="{{ event.title }}">{{ event.title }}</a>
           {% endfor %}
 
           {% if num_events > 2 %}
-          <a class="text-xs"
+          <a class="block text-xs"
              href="#">{{ num_events|add:"-2" }} {% trans "More..." %}
           </a>
           {% endif %}
