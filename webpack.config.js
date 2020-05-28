@@ -11,6 +11,16 @@ module.exports = {
   mode: process.env.NODE_ENV,
   optimization: {
     minimizer: [new TerserJSPlugin({})],
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          chunks: 'initial',
+          name: 'vendor',
+          test: /node_modules/,
+          enforce: true,
+        },
+      },
+    },
   },
   module: {
     rules: [
@@ -51,6 +61,5 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, './assets/dist/'),
-    filename: 'bundle.js',
   },
 };
