@@ -5,6 +5,7 @@
 <div id="map-for-{{ object_type }}-{{ object.id }}"
      class="h-64  my-4{% if css_class %} {{ css_class }}{% endif %}"
      data-controller="map"
+     data-map-zoom="12"
      data-map-latitude="{{ object.latitude }}"
      data-map-longitude="{{ object.longitude }}"></div>
 {% endif %}

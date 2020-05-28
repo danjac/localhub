@@ -36,6 +36,7 @@ export default class extends ApplicationController {
   connect() {
     const coords = [this.latitude, this.longitude];
     const map = L.map(this.element.id).setView(coords, this.defaultZoom);
+
     L.tileLayer(this.tileLayer, {
       attribution:
         'Map data &copy; <a href="https://www.openstreetmap.org/">' +
@@ -47,6 +48,7 @@ export default class extends ApplicationController {
     const group = new L.featureGroup([marker]);
     L.marker(coords).addTo(map);
     map.fitBounds(group.getBounds());
+    map.setZoom(this.defaultZoom);
     map.scrollWheelZoom.disable();
   }
 
