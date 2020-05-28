@@ -83,6 +83,30 @@ class TestNotificationMarkReadView:
             reverse("notifications:mark_read", args=[notification.id])
         )
         assert mock_notification_read.send.called_with(instance=post)
+        assert response.status_code == 204
+        notification.refresh_from_db()
+        assert notification.is_read
+
+
+class TestNotificationMarkReadRedirectView:
+    def test_post(self, client, member, mocker):
+        owner = MembershipFactory(community=member.community).member
+        post = PostFactory(community=member.community, owner=owner)
+        notification = NotificationFactory(
+            content_object=post,
+            recipient=member.member,
+            actor=post.owner,
+            community=post.community,
+        )
+
+        mock_notification_read = mocker.patch(
+            "social_bfg.apps.notifications.signals.notification_read"
+        )
+
+        response = client.post(
+            reverse("notifications:mark_read_redirect", args=[notification.id])
+        )
+        assert mock_notification_read.send.called_with(instance=post)
         assert response.url == reverse("notifications:list")
         notification.refresh_from_db()
         assert notification.is_read

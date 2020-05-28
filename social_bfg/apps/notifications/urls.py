@@ -16,6 +16,11 @@ urlpatterns = [
     path("~unsubscribe/", views.unsubscribe_view, name="unsubscribe"),
     path("<int:pk>/~delete/", views.notification_delete_view, name="delete"),
     path("<int:pk>/~mark-read/", views.notification_mark_read_view, name="mark_read"),
+    path(
+        "<int:pk>/~mark-read+redirect/",
+        views.notification_mark_read_redirect_view,
+        name="mark_read_redirect",
+    ),
     path("~delete-all/", views.notification_delete_all_view, name="delete_all"),
     path(
         "~mark-all-read/", views.notification_mark_all_read_view, name="mark_all_read",

@@ -89,9 +89,9 @@ class NotificationMarkAllReadView(
 notification_mark_all_read_view = NotificationMarkAllReadView.as_view()
 
 
-class NotificationMarkReadView(
-    UnreadNotificationQuerySetMixin, NotificationSuccessRedirectMixin, SuccessActionView
-):
+class NotificationMarkReadView(UnreadNotificationQuerySetMixin, SuccessActionView):
+    is_success_ajax_response = True
+
     def post(self, request, *args, **kwargs):
         self.object.is_read = True
         self.object.save()
@@ -104,6 +104,15 @@ class NotificationMarkReadView(
 
 
 notification_mark_read_view = NotificationMarkReadView.as_view()
+
+
+class NotificationMarkReadRedirectView(
+    NotificationSuccessRedirectMixin, NotificationMarkReadView
+):
+    is_success_ajax_response = False
+
+
+notification_mark_read_redirect_view = NotificationMarkReadRedirectView.as_view()
 
 
 class NotificationDeleteAllView(

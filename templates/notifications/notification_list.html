@@ -85,7 +85,7 @@ You can enable emails for your notifications
         <div class="table-nav">
           {% if not notification.is_read %}
           <a class="table-nav-item"
-             href="{% url 'notifications:mark_read' notification.pk %}"
+             href="{% url 'notifications:mark_read_redirect' notification.pk %}"
              data-turbolinks="false"
              data-controller="ajax"
              data-action="ajax#post">{% trans "Mark Read" %}</a>
