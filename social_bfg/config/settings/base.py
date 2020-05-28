@@ -5,7 +5,6 @@
 import os
 import pathlib
 import re
-import socket
 
 # Django
 from django.contrib import messages
@@ -14,64 +13,6 @@ from django.urls import reverse_lazy
 # Third Party Libraries
 import pymdownx.emoji
 from configurations import Configuration, values
-
-
-class DockerMixin:
-    """Configuration for Docker deployments."""
-
-    @property
-    def INTERNAL_IPS(self):
-        _, _, ips = socket.gethostbyname_ex(socket.gethostname())
-        return [ip[:-1] + "1" for ip in ips]
-
-
-class MailgunMixin:
-    """Configuration for Mailgun email"""
-
-    CELERY_EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
-    MAILGUN_API_KEY = values.Value()
-    MAILGUN_SENDER_DOMAIN = values.Value()
-
-    @property
-    def ANYMAIL(self):
-        return {
-            "MAILGUN_API_KEY": self.MAILGUN_API_KEY,
-            "MAILGUN_SENDER_DOMAIN": self.MAILGUN_SENDER_DOMAIN,
-        }
-
-    @property
-    def SERVER_EMAIL(self):
-        return f"errors@{self.MAILGUN_SENDER_DOMAIN}"
-
-    @property
-    def DEFAULT_FROM_EMAIL(self):
-        return f"support@{self.MAILGUN_SENDER_DOMAIN}"
-
-    @property
-    def INSTALLED_APPS(self):
-        return super().INSTALLED_APPS + ["anymail"]
-
-
-class AWSMixin:
-    """Configuration for S3 deployments.
-    """
-
-    DEFAULT_FILE_STORAGE = "social_bfg.config.storages.MediaStorage"
-    STATICFILES_STORAGE = "social_bfg.config.storages.StaticStorage"
-
-    AWS_MEDIA_LOCATION = "media"
-    AWS_STATIC_LOCATION = "static"
-
-    AWS_ACCESS_KEY_ID = values.Value()
-    AWS_SECRET_ACCESS_KEY = values.Value()
-    AWS_STORAGE_BUCKET_NAME = values.Value()
-    AWS_S3_CUSTOM_DOMAIN = values.Value()
-    AWS_S3_REGION_NAME = values.Value("eu-north-1")
-    AWS_QUERYSTRING_AUTH = False
-    AWS_IS_GZIPPED = True
-    AWS_DEFAULT_ACL = "public-read"
-
-    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=600"}
 
 
 class Base(Configuration):
@@ -290,7 +231,7 @@ class Base(Configuration):
 
     @property
     def BASE_DIR(self):
-        return str(pathlib.Path(__file__).parents[2])
+        return str(pathlib.Path(__file__).parents[3])
 
     @property
     def INSTALLED_APPS(self):
@@ -376,83 +317,3 @@ class Base(Configuration):
     @property
     def SOCIAL_BFG_LONG_PAGE_SIZE(self):
         return self.SOCIAL_BFG_DEFAULT_PAGE_SIZE * 2
-
-
-class Testing(Base):
-    PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
-    ALLOWED_HOSTS = Configuration.ALLOWED_HOSTS + [".example.com"]
-    CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
-    SITE_ID = 1
-
-    THUMBNAIL_KVSTORE = "sorl.thumbnail.kvstores.cached_db_kvstore.KVStore"
-
-
-class Local(DockerMixin, Base):
-
-    DEBUG = True
-
-    ALLOWED_HOSTS = ["*"]
-
-    THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + [
-        "debug_toolbar",
-    ]
-
-    MIDDLEWARE = Base.MIDDLEWARE + [
-        "debug_toolbar.middleware.DebugToolbarMiddleware",
-    ]
-
-    DEBUG_TOOLBAR_CONFIG = {
-        "DISABLE_PANELS": ["debug_toolbar.panels.redirects.RedirectsPanel"],
-        "SHOW_TEMPLATE_CONTEXT": True,
-    }
-
-    SITE_ID = 1
-
-
-class Production(Base):
-    """
-    Production settings for 12-factor deployment using environment variables.
-    """
-
-    ALLOWED_HOSTS = values.ListValue()
-    CSRF_TRUSTED_ORIGINS = values.ListValue()
-
-    ADMINS = values.SingleNestedTupleValue()
-
-    # Security settings
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    SECURE_HSTS_SECONDS = 15768001  # 6 months
-    SECURE_SSL_REDIRECT = True
-
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-
-    MIDDLEWARE = Base.MIDDLEWARE + [
-        "social_bfg.middleware.http.HttpResponseNotAllowedMiddleware",
-    ]
-
-
-class Deployment(AWSMixin, Production):
-    """Settings for running tasks in the deployment pipeline."""
-
-
-class Heroku(DockerMixin, AWSMixin, MailgunMixin, Production):
-    """
-    Production settings specific to Heroku docker-based setup.
-
-    See heroku.yml for additional settings.
-    """
-
-    # This is required for Heroku SSL.
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-    # Stream logging to stdout: use `heroku log` to view
-    LOGGING = {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "handlers": {"console": {"class": "logging.StreamHandler"}},
-        "loggers": {"root": {"handlers": ["console"], "level": "INFO"}},
-    }
