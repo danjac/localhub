@@ -8,8 +8,6 @@ import { Events } from '@/constants';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
-  static targets = ['button'];
-
   get(event) {
     this.confirm('GET', event);
   }
@@ -52,46 +50,48 @@ export default class extends ApplicationController {
       method,
       url,
     })
-      .then((response) => {
-        // success message passed from server
-        const successMessage = response.headers['x-success-message'];
-
-        if (successMessage) {
-          this.toaster.success(successMessage);
-        }
-
-        // data-ajax-redirect: override the default
-        // redirect passed from the server. If set to "none" it
-        // means "do not redirect at all".
-        const redirect = this.data.get('redirect');
-        if (redirect) {
-          if (redirect !== 'none') Turbolinks.visit(redirect);
-          return;
-        }
-
-        // data-ajax-replace: replace HTML in element with server HTML
-        if (this.data.has('replace')) {
-          this.element.innerHTML = response.data;
-          return;
-        }
-
-        // data-ajax-remove: remove element from DOM
-        if (this.data.has('remove')) {
-          this.element.remove();
-          return;
-        }
-
-        // default behaviour: redirect passed down in header
-        if (!redirect && response.headers['content-type'].match(/javascript/)) {
-          /* eslint-disable-next-line no-eval */
-          eval(response.data);
-        }
-      })
+      .then((response) => this.handleResponse(response))
       .catch((err) => {
         if (err.response) {
           const { status, statusText } = err.response;
           this.toaster.error(`${status}: ${statusText}`);
         }
       });
+  }
+
+  handleResponse(response) {
+    // success message passed from server
+    const successMessage = response.headers['x-success-message'];
+
+    if (successMessage) {
+      this.toaster.success(successMessage);
+    }
+
+    // data-ajax-redirect: override the default
+    // redirect passed from the server. If set to "none" it
+    // means "do not redirect at all".
+    const redirect = this.data.get('redirect');
+    if (redirect) {
+      if (redirect !== 'none') Turbolinks.visit(redirect);
+      return;
+    }
+
+    // data-ajax-replace: replace HTML in element with server HTML
+    if (this.data.has('replace')) {
+      this.element.innerHTML = response.data;
+      return;
+    }
+
+    // data-ajax-remove: remove element from DOM
+    if (this.data.has('remove')) {
+      this.element.remove();
+      return;
+    }
+
+    // default behaviour: redirect passed down in header
+    if (!redirect && response.headers['content-type'].match(/javascript/)) {
+      /* eslint-disable-next-line no-eval */
+      eval(response.data);
+    }
   }
 }
