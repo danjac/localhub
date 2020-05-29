@@ -130,11 +130,11 @@ class ActivityViewSet(ModelViewSet):
     def add_comment(self, request, pk=None):
         obj = self.get_object()
         serializer = CommentSerializer(data=request.data)
-        if serializer.is_valid():
-            comment = serializer.save(
-                owner=request.user, community=request.community, content_object=obj,
-            )
-            comment.notify_on_create()
+        serializer.is_valid(raise_exception=True)
+        comment = serializer.save(
+            owner=request.user, community=request.community, content_object=obj,
+        )
+        comment.notify_on_create()
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
