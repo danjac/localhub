@@ -8,6 +8,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONFAULTHANDLER=1
 ENV PYTHONHASHSEED=random
 
+WORKDIR /app
+
 RUN apt-get update \
     && apt-get install --no-install-recommends -y postgresql-client-11 \
     && apt-get clean \
@@ -19,7 +21,6 @@ COPY ./requirements/local.txt /requirements/local.txt
 
 RUN pip install -r requirements/local.txt
 
-WORKDIR /app
 
 COPY ./docker/entrypoint /entrypoint
 RUN chmod +x /entrypoint
