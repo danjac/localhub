@@ -3,6 +3,8 @@
 
 FROM node:12.16.1-slim
 
+WORKDIR /app
+
 COPY webpack.config.js ./webpack.config.js
 COPY postcss.config.js ./postcss.config.js
 COPY tailwind.config.js ./tailwind.config.js
@@ -11,4 +13,3 @@ COPY yarn.lock ./yarn.lock
 
 RUN yarn
 
-WORKDIR /app
