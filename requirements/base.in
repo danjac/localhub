@@ -14,6 +14,7 @@ django-redis
 django-taggit
 django-timezone-field
 django-widget-tweaks
+future
 geopy
 icalendar
 ipython
