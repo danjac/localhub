@@ -167,7 +167,10 @@
         </tr>
         <tr class="bg-gray-100">
           <td class="border px-4 py-2">[Link text](http://example.com)</td>
-          <td class="border px-4 py-2"><a href="#">{% trans "Link" %}</a></td>
+          <td class="border px-4 py-2">
+            <a data-turbolinks="false"
+               href="javascript:void(0);">{% trans "Link" %}</a>
+          </td>
         </tr>
         <tr>
           <td class="border px-4 py-2">![alt](https://example.com)</td>
@@ -179,11 +182,17 @@
         </tr>
         <tr class="bg-gray-100">
           <td class="border px-4 py-2">@mention</td>
-          <td class="border px-4 py-2"><a href="#">@mention</a> {% trans "(link to profile)" %}</td>
+          <td class="border px-4 py-2">
+            <a data-turbolinks="false"
+               href="javascript:void(0);">@mention</a> {% trans "(link to profile)" %}
+          </td>
         </tr>
         <tr>
           <td class="border px-4 py-2">#hashtag</td>
-          <td class="border px-4 py-2"><a href="#">#hashtag</a> {% trans "(link to hashtag)" %}</td>
+          <td class="border px-4 py-2">
+            <a data-turbolinks="false"
+               href="javascript:void(0);">#hashtag</a> {% trans "(link to hashtag)" %}
+          </td>
         </tr>
         <tr class="bg-gray-100">
           <td class="border px-4 py-2">`Code`</td>
