@@ -19,7 +19,7 @@
   </li>
   <li class="breadcrumb-item">
     <a href="{% url 'events:calendar' %}?day={{ starts.day }}&month={{ starts.month }}&year={{ starts.year }}">
-      {{ starts|date:"DATE_FORMAT" }}
+      {{ starts|date:"d F Y" }}
     </a>
   <li class="breadcrumb-item">
     {{ object.title|truncatechars:60 }}
