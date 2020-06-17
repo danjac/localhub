@@ -38,7 +38,7 @@ export default class extends ApplicationController {
   }
 
   hide() {
-    this.containerTargeiiiiiiiiot.classList.add('hidden');
+    this.containerTarget.classList.add('hidden');
   }
 
   showContainer() {
