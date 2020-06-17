@@ -31,7 +31,7 @@ def extract_mentions(content):
     )
 
 
-def linkify_mentions(content, css_class=None):
+def linkify_mentions(content, css_class=None, with_hovercard_attrs=True):
     """
     Replace all @mentions in the text with links to user profile page.
     """
@@ -41,9 +41,17 @@ def linkify_mentions(content, css_class=None):
     css_class = f' class="{css_class}"' if css_class else ""
     for token in tokens:
         for mention in settings.SOCIAL_BFG_MENTIONS_RE.findall(token):
-            url = reverse("users:activities", args=[slugify_unicode(mention)])
+            username = slugify_unicode(mention)
+            url = reverse("users:activities", args=[username])
+            hovercard_url = reverse("users:hovercard", args=[username])
+            actions = (
+                'data-action="mouseenter->hovercard#show mouseleave->hovercard#hide"'
+            )
+            hovercard_attrs = f'data-controller="hovercard" data-hovercard-url={hovercard_url} {actions} '
+            start = "<a " + (hovercard_attrs if with_hovercard_attrs else "")
             token = token.replace(
-                "@" + mention, f'<a href="{url}"{css_class}>@{mention}</a>'
+                "@" + mention,
+                f'{start}href="{url}"{css_class}>@{mention}<span data-target="hovercard.container"></span></a>',
             )
 
         rv.append(token)

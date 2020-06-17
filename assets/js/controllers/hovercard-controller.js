@@ -10,21 +10,33 @@ export default class extends ApplicationController {
   static targets = ['container'];
 
   show() {
+    if (!this.containerTarget) {
+      return;
+    }
     if (this.containerTarget.innerHTML) {
       this.containerTarget.classList.remove('hidden');
     } else {
-      axios.get(this.data.get('url')).then((response) => {
-        this.containerTarget.innerHTML = response.data;
-        maximizeZIndex(fitIntoViewport(this.containerTarget.children[0]));
-      });
+      axios
+        .get(this.data.get('url'))
+        .then((response) => {
+          this.containerTarget.innerHTML = response.data;
+          maximizeZIndex(fitIntoViewport(this.containerTarget.children[0]));
+        })
+        .catch(() => {
+          this.containerTarget.remove();
+        });
     }
   }
 
   hide() {
-    this.containerTarget.classList.add('hidden');
+    if (this.containerTarget) {
+      this.containerTarget.classList.add('hidden');
+    }
   }
 
   disconnect() {
-    this.containerTarget.innerHTML = '';
+    if (this.containerTarget) {
+      this.containerTarget.innerHTML = '';
+    }
   }
 }

@@ -8,6 +8,9 @@ Custom Markdown-related functions.
 # Standard Library
 from functools import partial
 
+# Django
+from django.urls import resolve, reverse
+
 # Third Party Libraries
 import bleach
 from bleach import Cleaner  # type: ignore
@@ -32,6 +35,7 @@ ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
     "img",
     "p",
     "pre",
+    "span",
     "table",
     "tbody",
     "td",
@@ -41,7 +45,9 @@ ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
 ]
 
 ALLOWED_ATTRIBUTES = bleach.ALLOWED_ATTRIBUTES.copy()
-ALLOWED_ATTRIBUTES.update({"img": ["alt", "src"], "a": ["rel", "target", "href"]})
+ALLOWED_ATTRIBUTES.update(
+    {"img": ["alt", "src"], "a": ["rel", "target", "href",], "span": ["data-target"]}
+)
 
 ADDITIONAL_TLDS = """app audio auto bar bargains best bid bike blog bot
                      car center cern cheap click cloud codes coffee college
@@ -69,6 +75,23 @@ def set_link_target(attrs, new=False):
     return attrs
 
 
+def set_mention_hovercard(attrs, new=False):
+    """Re-inserts hovercard attrs as these otherwise mess up
+    markdown pre-rendering"""
+    href = attrs.get((None, "href"))
+    if href:
+        if match := resolve(href):
+            if match.url_name == "activities" and match.app_name == "users":
+                attrs[(None, "data-controller")] = "hovercard"
+                attrs[(None, "data-hovercard-url")] = reverse(
+                    "users:hovercard", kwargs=match.kwargs
+                )
+                attrs[
+                    (None, "data-action")
+                ] = "mouseenter->hovercard#show mouseleave->hovercard#hide"
+    return attrs
+
+
 def markdownify(content):
     """
     Drop-in replacement to default MarkdownX markdownify function.
@@ -78,12 +101,20 @@ def markdownify(content):
 
     """
     return cleaner.clean(
-        default_markdownify(linkify_hashtags(linkify_mentions(content)))
+        default_markdownify(
+            linkify_hashtags(linkify_mentions(content, with_hovercard_attrs=False))
+        )
     )
 
 
 cleaner = Cleaner(
     tags=ALLOWED_TAGS,
     attributes=ALLOWED_ATTRIBUTES,
-    filters=[partial(LinkifyFilter, callbacks=[set_link_target], url_re=URL_RE)],
+    filters=[
+        partial(
+            LinkifyFilter,
+            callbacks=[set_link_target, set_mention_hovercard],
+            url_re=URL_RE,
+        )
+    ],
 )

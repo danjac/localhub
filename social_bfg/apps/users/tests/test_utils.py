@@ -20,12 +20,12 @@ class TestLinkifyMentions:
     def test_linkify(self):
         content = "hello @danjac"
         replaced = linkify_mentions(content)
-        assert replaced == 'hello <a href="/people/danjac/">@danjac</a>'
+        assert 'href="/people/danjac/"' in replaced
 
     def test_linkify_unicode(self):
         content = "hello @kesämies"
         replaced = linkify_mentions(content)
-        assert replaced == 'hello <a href="/people/kesamies/">@kesämies</a>'
+        assert 'href="/people/kesamies/"' in replaced
 
 
 class TestExtractMentions:
