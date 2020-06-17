@@ -18,7 +18,6 @@ urlpatterns = [
     path("following/", views.following_user_list_view, name="following_list"),
     path("followers/", views.follower_user_list_view, name="follower_list"),
     path("blocked/", views.blocked_user_list_view, name="blocked_list"),
-    re_path(USERNAME_RE + "hovercard/$", views.user_hovercard_view, name="hovercard"),
     re_path(
         USERNAME_RE + "likes/$", views.user_activity_likes_view, name="activity_likes"
     ),
@@ -37,6 +36,7 @@ urlpatterns = [
         views.user_comment_mentions_view,
         name="comment_mentions",
     ),
+    re_path(USERNAME_RE + r"hovercard/$", views.user_hovercard_view, name="hovercard"),
     re_path(USERNAME_RE + r"follow/$", views.user_follow_view, name="follow"),
     re_path(USERNAME_RE + r"unfollow/$", views.user_unfollow_view, name="unfollow"),
     re_path(USERNAME_RE + r"block/$", views.user_block_view, name="block"),
