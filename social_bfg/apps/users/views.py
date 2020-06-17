@@ -11,7 +11,7 @@ from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DeleteView, ListView, View
+from django.views.generic import DeleteView, DetailView, ListView, View
 
 # Third Party Libraries
 from rules.contrib.views import PermissionRequiredMixin
@@ -194,6 +194,14 @@ class BaseUserActivityStreamView(SingleUserMixin, BaseActivityStreamView):
 
 class BaseUserCommentListView(SingleUserMixin, BaseCommentListView):
     ...
+
+
+class UserHovercardView(BaseUserQuerySetMixin, MemberQuerySetMixin, DetailView):
+    template_name = "users/hovercard.html"
+    context_object_name = "user_obj"
+
+
+user_hovercard_view = UserHovercardView.as_view()
 
 
 class UserStreamView(BaseUserActivityStreamView):

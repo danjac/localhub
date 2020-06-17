@@ -1,0 +1,26 @@
+{# Copyright (c) 2020 by Dan Jacob #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% load i18n %}
+{% load account %}
+{% load users %}
+
+<div class="absolute bg-white shadow-lg rounded">
+  <div class="flex flex-wrap items-center">
+    {% if user_obj.avatar %}
+    <div class="inline-block mr-3">
+      {% avatar user_obj "64" css_class="mr-1" show_placeholder=False %}
+    </div>
+    {% endif %}
+    {% user_display user_obj as display_name %}
+    <div class="inline-block mr-3 text-lg">
+      {% if user_obj.username == display_name %}
+      @{{ display_name }}
+      {% else %}
+      {{ display_name }}
+      (@{{ user_obj.username }})
+      {% endif %}
+    </div>
+    <span class="inline-block tag mr-3">{{ user_obj.role_display }}</span>
+  </div>
+</div>
