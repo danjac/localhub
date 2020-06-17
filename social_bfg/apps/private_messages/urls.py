@@ -2,10 +2,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
-from django.urls import path
+from django.urls import path, re_path
 
 # Social-BFG
-from social_bfg.apps.users.urls import user_path
+from social_bfg.apps.users.urls import USERNAME_RE
 
 # Local
 from . import views
@@ -40,8 +40,8 @@ urlpatterns = [
         views.message_remove_bookmark_view,
         name="message_remove_bookmark",
     ),
-    user_path(
-        r"~send/$",
+    re_path(
+        USERNAME_RE + "~send/$",
         views.message_recipient_create_view,
         name="message_create_recipient",
     ),

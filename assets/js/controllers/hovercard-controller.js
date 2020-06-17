@@ -9,41 +9,39 @@ import ApplicationController from './application-controller';
 export default class extends ApplicationController {
   static targets = ['container'];
 
+  connect() {
+    this.fetched = false;
+    this.notFound = false;
+  }
+
   show(event) {
-    if (!this.containerTarget) {
+    if (this.notFound) {
       return;
     }
     event.stopPropagation();
 
-    if (this.containerTarget.innerHTML) {
+    if (this.fetched) {
       this.showContainer();
     } else {
       axios
         .get(this.data.get('url'))
         .then((response) => {
+          this.fetched = true;
           this.containerTarget.innerHTML = response.data;
           this.showContainer();
         })
         .catch(() => {
-          this.containerTarget.remove();
+          this.notFound = true;
         });
     }
   }
 
   hide() {
-    if (this.containerTarget) {
-      this.containerTarget.classList.add('hidden');
-    }
+    this.containerTarget.classList.add('hidden');
   }
 
   showContainer() {
     this.containerTarget.classList.remove('hidden');
     maximizeZIndex(fitIntoViewport(this.containerTarget.children[0]));
-  }
-
-  disconnect() {
-    if (this.containerTarget) {
-      this.containerTarget.innerHTML = '';
-    }
   }
 }
