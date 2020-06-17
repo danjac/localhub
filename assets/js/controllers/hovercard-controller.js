@@ -18,14 +18,15 @@ export default class extends ApplicationController {
     if (this.notFound) {
       return;
     }
-    event.stopPropagation();
 
     if (this.fetched) {
+      event.preventDefault();
       this.showContainer();
     } else {
       axios
         .get(this.data.get('url'))
         .then((response) => {
+          event.preventDefault();
           this.fetched = true;
           this.containerTarget.innerHTML = response.data;
           this.showContainer();
@@ -37,7 +38,7 @@ export default class extends ApplicationController {
   }
 
   hide() {
-    this.containerTarget.classList.add('hidden');
+    this.containerTargeiiiiiiiiot.classList.add('hidden');
   }
 
   showContainer() {
