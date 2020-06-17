@@ -27,14 +27,11 @@
   <li class="breadcrumb-item">{% trans "Comment" %}</li>
 </ul>
 
-{% render_comment request user comment is_detail=True include_content_object=True %}
+{% render_comment request user comment is_detail=True include_content_object=True css_class="mb-3" %}
 
-{% if replies %}
-<h2 class="font-semibold text-center border-b pb-1 my-3">{% trans "Replies" %}</h2>
 {% for reply in replies %}
 {% render_comment request user reply include_content_object=False include_parent=False css_class="mb-3" %}
 {% endfor %}
-{% endif %}
 
 {% include "flags/includes/flags.html" %}
 
