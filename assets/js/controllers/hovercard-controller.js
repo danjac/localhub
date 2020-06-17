@@ -13,13 +13,14 @@ export default class extends ApplicationController {
     if (!this.containerTarget) {
       return;
     }
+    event.stopPropagation();
+
     if (this.containerTarget.innerHTML) {
       this.containerTarget.classList.remove('hidden');
     } else {
       axios
         .get(this.data.get('url'))
         .then((response) => {
-          event.stopPropagation();
           this.containerTarget.innerHTML = response.data;
           maximizeZIndex(fitIntoViewport(this.containerTarget.children[0]));
         })
