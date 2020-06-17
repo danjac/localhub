@@ -9,13 +9,11 @@
 {% block user_content %}
 
 {% if paginator.count %}
-<div class="notification mb-3">
-  <strong>
+<div class="notification font-bold mb-3">
   {% blocktrans count counter=paginator.count %}1 Activity{% plural %}{{ counter }} Activities{% endblocktrans %}
   {% if num_likes %}
   / {% blocktrans count counter=num_likes %}1 Like{% plural %}{{ counter }} Likes{% endblocktrans %}
   {% endif %}
-</strong>
 </div>
 {% endif %}
 
