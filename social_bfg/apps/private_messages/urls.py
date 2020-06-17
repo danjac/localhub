@@ -41,7 +41,7 @@ urlpatterns = [
         name="message_remove_bookmark",
     ),
     re_path(
-        USERNAME_RE + "~send/$",
+        USERNAME_RE + r"~send/$",
         views.message_recipient_create_view,
         name="message_create_recipient",
     ),
