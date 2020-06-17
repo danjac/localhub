@@ -9,7 +9,7 @@ import ApplicationController from './application-controller';
 export default class extends ApplicationController {
   static targets = ['container'];
 
-  show() {
+  show(event) {
     if (!this.containerTarget) {
       return;
     }
@@ -19,6 +19,7 @@ export default class extends ApplicationController {
       axios
         .get(this.data.get('url'))
         .then((response) => {
+          event.stopPropagation();
           this.containerTarget.innerHTML = response.data;
           maximizeZIndex(fitIntoViewport(this.containerTarget.children[0]));
         })
