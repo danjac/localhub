@@ -9,6 +9,7 @@ Custom Markdown-related functions.
 from functools import partial
 
 # Django
+from django.http import Http404
 from django.urls import resolve, reverse
 
 # Third Party Libraries
@@ -75,20 +76,22 @@ def set_link_target(attrs, new=False):
     return attrs
 
 
-def set_mention_hovercard(attrs, new=False):
+def set_mention_attrs(attrs, new=False):
     """Re-inserts hovercard attrs as these otherwise mess up
     markdown pre-rendering"""
-    href = attrs.get((None, "href"))
-    if href:
-        if match := resolve(href):
-            if match.url_name == "activities" and match.app_name == "users":
-                attrs[(None, "data-controller")] = "hovercard"
-                attrs[(None, "data-hovercard-url")] = reverse(
-                    "users:hovercard", kwargs=match.kwargs
-                )
-                attrs[
-                    (None, "data-action")
-                ] = "mouseenter->hovercard#show mouseleave->hovercard#hide"
+    if href := attrs.get((None, "href")):
+        try:
+            match = resolve(href)
+        except Http404:
+            return attrs
+        if match.url_name == "activities" and match.app_name == "users":
+            attrs[(None, "data-controller")] = "hovercard"
+            attrs[(None, "data-hovercard-url")] = reverse(
+                "users:hovercard", kwargs=match.kwargs
+            )
+            attrs[
+                (None, "data-action")
+            ] = "mouseenter->hovercard#show mouseleave->hovercard#hide"
     return attrs
 
 
@@ -113,7 +116,7 @@ cleaner = Cleaner(
     filters=[
         partial(
             LinkifyFilter,
-            callbacks=[set_link_target, set_mention_hovercard],
+            callbacks=[set_link_target, set_mention_attrs],
             url_re=URL_RE,
         )
     ],

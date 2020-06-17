@@ -19,3 +19,14 @@ class TestMarkdownifySafe:
             force_str(markdownify(content))
             == "&lt;script&gt;alert('howdy');&lt;/script&gt;"
         )
+
+    def test_markdownify_with_mention(self):
+        content = "hello @danjac"
+        md = force_str(markdownify(content))
+        assert 'data-controller="hovercard"' in md
+
+    def test_markdownify_with_links(self):
+        content = "Reddit: http://reddit.com"
+        md = force_str(markdownify(content))
+        assert "nofollow" in md
+        assert 'target="_blank"' in md
