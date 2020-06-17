@@ -87,7 +87,7 @@ def set_mention_attrs(attrs, new=False):
         if match.url_name == "activities" and match.app_name == "users":
             attrs[(None, "data-controller")] = "hovercard"
             attrs[(None, "data-hovercard-url")] = reverse(
-                "users:hovercard", kwargs=match.kwargs
+                "users:preview", kwargs=match.kwargs
             )
             attrs[
                 (None, "data-action")

@@ -196,14 +196,14 @@ class BaseUserCommentListView(SingleUserMixin, BaseCommentListView):
     ...
 
 
-class UserHovercardView(MemberQuerySetMixin, UserQuerySetMixin, DetailView):
-    template_name = "users/hovercard.html"
+class UserPreviewView(MemberQuerySetMixin, UserQuerySetMixin, DetailView):
+    template_name = "users/preview.html"
     context_object_name = "user_obj"
     slug_field = "username"
     slug_url_kwarg = "username"
 
 
-user_hovercard_view = UserHovercardView.as_view()
+user_preview_view = UserPreviewView.as_view()
 
 
 class UserStreamView(BaseUserActivityStreamView):

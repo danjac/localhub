@@ -28,6 +28,11 @@ export default class extends ApplicationController {
         .then((response) => {
           event.preventDefault();
           this.fetched = true;
+          if (!this.hasContainerTarget) {
+            const div = document.createElement('div');
+            div.setAttribute('data-target', `${this.identifier}.container`);
+            this.element.appendChild(div);
+          }
           this.containerTarget.innerHTML = response.data;
           this.showContainer();
         })
@@ -38,12 +43,16 @@ export default class extends ApplicationController {
   }
 
   hide() {
-    this.containerTarget.classList.add('hidden');
+    if (this.hasContainerTarget) {
+      this.containerTarget.classList.add('hidden');
+    }
   }
 
   showContainer() {
-    this.containerTarget.classList.remove('hidden');
-    maximizeZIndex(fitIntoViewport(this.containerTarget.children[0]));
+    if (this.hasContainerTarget) {
+      this.containerTarget.classList.remove('hidden');
+      maximizeZIndex(fitIntoViewport(this.containerTarget.children[0]));
+    }
   }
 
   get isTouchDevice() {

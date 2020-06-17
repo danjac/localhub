@@ -43,15 +43,14 @@ def linkify_mentions(content, css_class=None, with_hovercard_attrs=True):
         for mention in settings.SOCIAL_BFG_MENTIONS_RE.findall(token):
             username = slugify_unicode(mention)
             url = reverse("users:activities", args=[username])
-            hovercard_url = reverse("users:hovercard", args=[username])
+            preview_url = reverse("users:preview", args=[username])
             actions = (
                 'data-action="mouseenter->hovercard#show mouseleave->hovercard#hide"'
             )
-            hovercard_attrs = f'data-controller="hovercard" data-hovercard-url={hovercard_url} {actions} '
+            hovercard_attrs = f'data-controller="hovercard" data-hovercard-url={preview_url} {actions} '
             start = "<a " + (hovercard_attrs if with_hovercard_attrs else "")
             token = token.replace(
-                "@" + mention,
-                f'{start}href="{url}"{css_class}>@{mention}<span data-target="hovercard.container"></span></a>',
+                "@" + mention, f'{start}href="{url}"{css_class}>@{mention}</a>',
             )
 
         rv.append(token)

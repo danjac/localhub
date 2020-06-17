@@ -25,10 +25,10 @@ from ..factories import UserFactory
 pytestmark = pytest.mark.django_db
 
 
-class TestUserHovercardView:
+class TestUserPreviewView:
     def test_get(self, client, member):
         user = MembershipFactory(community=member.community).member
-        response = client.get(reverse("users:hovercard", args=[user.username]))
+        response = client.get(reverse("users:preview", args=[user.username]))
         assert response.status_code == 200
 
 
