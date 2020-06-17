@@ -3,17 +3,19 @@
 
 import axios from 'axios';
 
+import { maximizeZIndex, fitIntoViewport } from '@/utils/dom-helpers';
 import ApplicationController from './application-controller';
 
 export default class extends ApplicationController {
-  targets = ['container'];
+  static targets = ['container'];
 
   show() {
     if (this.containerTarget.innerHTML) {
       this.containerTarget.classList.remove('hidden');
     } else {
-      axios.get(this.data.url).then((response) => {
+      axios.get(this.data.get('url')).then((response) => {
         this.containerTarget.innerHTML = response.data;
+        maximizeZIndex(fitIntoViewport(this.containerTarget.children[0]));
       });
     }
   }

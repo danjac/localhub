@@ -29,9 +29,9 @@ variables:
 
 .docker_config:
   before_script:
-    - docker-compose version
+    # - docker-compose version
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
-    - docker info
+    # - docker info
 
 build:
   extends: .docker_config

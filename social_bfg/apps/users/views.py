@@ -196,9 +196,11 @@ class BaseUserCommentListView(SingleUserMixin, BaseCommentListView):
     ...
 
 
-class UserHovercardView(BaseUserQuerySetMixin, MemberQuerySetMixin, DetailView):
+class UserHovercardView(MemberQuerySetMixin, UserQuerySetMixin, DetailView):
     template_name = "users/hovercard.html"
     context_object_name = "user_obj"
+    slug_field = "username"
+    slug_url_kwarg = "username"
 
 
 user_hovercard_view = UserHovercardView.as_view()

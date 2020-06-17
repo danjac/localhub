@@ -6,7 +6,7 @@
 {% user_display profile as profile_name %}
 <div class="flex rounded-full items-center text-sm pr-3 bg-gray-300 {% if css_class %} {{ css_class }}{% endif %}"
      data-controller="hovercard"
-     data-hovercard-url=""
+     data-hovercard-url="{% url 'users:hovercard' profile.username %}"
      data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
   <div data-target="hovercard.container"></div>
   {% avatar profile "16" css_class="mr-2 h-4 w-4 text-xs" %}

@@ -5,22 +5,27 @@
 {% load account %}
 {% load users %}
 
-<div class="absolute bg-white shadow-lg rounded">
-  <div class="flex flex-wrap items-center">
+<div class="absolute bg-white shadow-lg rounded border px-3 py-1">
+  <div class="flex flex-wrap items-center mb-2">
     {% if user_obj.avatar %}
     <div class="inline-block mr-3">
       {% avatar user_obj "64" css_class="mr-1" show_placeholder=False %}
     </div>
     {% endif %}
     {% user_display user_obj as display_name %}
-    <div class="inline-block mr-3 text-lg">
-      {% if user_obj.username == display_name %}
-      @{{ display_name }}
-      {% else %}
-      {{ display_name }}
-      (@{{ user_obj.username }})
-      {% endif %}
+    <div>
+      <a class="inline-block mr-3 text-lg"
+         href="{{ user_obj.get_absolute_url }}">
+        {% if user_obj.username == display_name %}
+        @{{ display_name }}
+        {% else %}
+        {{ display_name }}
+        (@{{ user_obj.username }})
+        {% endif %}
+      </a>
+      <div>
+        <span class="inline-block tag mr-3">{{ user_obj.role_display }}</span>
+      </div>
     </div>
-    <span class="inline-block tag mr-3">{{ user_obj.role_display }}</span>
   </div>
 </div>
