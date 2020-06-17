@@ -16,13 +16,13 @@ export default class extends ApplicationController {
     event.stopPropagation();
 
     if (this.containerTarget.innerHTML) {
-      this.containerTarget.classList.remove('hidden');
+      this.showContainer();
     } else {
       axios
         .get(this.data.get('url'))
         .then((response) => {
           this.containerTarget.innerHTML = response.data;
-          maximizeZIndex(fitIntoViewport(this.containerTarget.children[0]));
+          this.showContainer();
         })
         .catch(() => {
           this.containerTarget.remove();
@@ -34,6 +34,11 @@ export default class extends ApplicationController {
     if (this.containerTarget) {
       this.containerTarget.classList.add('hidden');
     }
+  }
+
+  showContainer() {
+    this.containerTarget.classList.remove('hidden');
+    maximizeZIndex(fitIntoViewport(this.containerTarget.children[0]));
   }
 
   disconnect() {
