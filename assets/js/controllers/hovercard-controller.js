@@ -15,7 +15,7 @@ export default class extends ApplicationController {
   }
 
   show(event) {
-    if (this.notFound) {
+    if (this.notFound || this.isTouchDevice) {
       return;
     }
 
@@ -44,5 +44,9 @@ export default class extends ApplicationController {
   showContainer() {
     this.containerTarget.classList.remove('hidden');
     maximizeZIndex(fitIntoViewport(this.containerTarget.children[0]));
+  }
+
+  get isTouchDevice() {
+    return 'ontouchstart' in document.documentElement;
   }
 }
