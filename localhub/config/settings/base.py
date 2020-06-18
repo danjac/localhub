@@ -182,6 +182,7 @@ class Base(Configuration):
     MARKDOWNX_MARKDOWN_EXTENSIONS = [
         "pymdownx.extra",
         "pymdownx.emoji",
+        "codehilite",
         "localhub.markdown.extensions:NewTabExtension",
         "localhub.markdown.extensions:SafeImageExtension",
     ]

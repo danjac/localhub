@@ -36,6 +36,7 @@ ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
     "img",
     "p",
     "pre",
+    "div",
     "span",
     "table",
     "tbody",
