@@ -342,8 +342,16 @@ a.btn-secondary {
   @apply rounded bg-gray-900 text-white px-1 text-xs;
 }
 
+.tag:hover {
+  @apply bg-gray-700;
+}
+
 .tag-primary {
-  @apply bg-blue-800;
+  @apply bg-blue-900;
+}
+
+.tag-primary:hover {
+  @apply bg-blue-700;
 }
 
 .text-muted {
