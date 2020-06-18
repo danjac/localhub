@@ -14,20 +14,21 @@ from django.http import HttpResponse
 import pytest
 from PIL import Image
 
+# Localhub
 # Social-BFG
-from social_bfg.apps.comments.factories import CommentFactory
-from social_bfg.apps.communities.factories import CommunityFactory, MembershipFactory
-from social_bfg.apps.communities.models import Membership
-from social_bfg.apps.events.factories import EventFactory
-from social_bfg.apps.invites.factories import InviteFactory
-from social_bfg.apps.join_requests.factories import JoinRequestFactory
-from social_bfg.apps.likes.factories import LikeFactory
-from social_bfg.apps.notifications.factories import NotificationFactory
-from social_bfg.apps.photos.factories import PhotoFactory
-from social_bfg.apps.polls.factories import PollFactory
-from social_bfg.apps.posts.factories import PostFactory
-from social_bfg.apps.private_messages.factories import MessageFactory
-from social_bfg.apps.users.factories import UserFactory
+from localhub.apps.comments.factories import CommentFactory
+from localhub.apps.communities.factories import CommunityFactory, MembershipFactory
+from localhub.apps.communities.models import Membership
+from localhub.apps.events.factories import EventFactory
+from localhub.apps.invites.factories import InviteFactory
+from localhub.apps.join_requests.factories import JoinRequestFactory
+from localhub.apps.likes.factories import LikeFactory
+from localhub.apps.notifications.factories import NotificationFactory
+from localhub.apps.photos.factories import PhotoFactory
+from localhub.apps.polls.factories import PollFactory
+from localhub.apps.posts.factories import PostFactory
+from localhub.apps.private_messages.factories import MessageFactory
+from localhub.apps.users.factories import UserFactory
 
 
 @pytest.fixture
@@ -187,4 +188,4 @@ def fake_image():
 
 @pytest.fixture
 def send_webpush_mock(mocker):
-    return mocker.patch("social_bfg.apps.notifications.tasks.send_webpush")
+    return mocker.patch("localhub.apps.notifications.tasks.send_webpush")

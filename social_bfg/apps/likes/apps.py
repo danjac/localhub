@@ -1,6 +1,0 @@
-# Django
-from django.apps import AppConfig
-
-
-class LikesConfig(AppConfig):
-    name = "social_bfg.apps.likes"

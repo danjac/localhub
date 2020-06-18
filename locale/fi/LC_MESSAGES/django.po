@@ -18,151 +18,151 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: social_bfg/apps/activities/forms.py:26
+#: localhub/apps/activities/forms.py:26
 msgid "Title"
 msgstr "Otsikko"
 
-#: social_bfg/apps/activities/forms.py:27
-#: social_bfg/apps/activities/forms.py:43
+#: localhub/apps/activities/forms.py:27
+#: localhub/apps/activities/forms.py:43
 msgid "#tags"
 msgstr "#taggit"
 
-#: social_bfg/apps/activities/forms.py:28
+#: localhub/apps/activities/forms.py:28
 msgid "@mentions"
 msgstr "@huomautukset"
 
-#: social_bfg/apps/activities/forms.py:34
+#: localhub/apps/activities/forms.py:34
 msgid "#tags can also be added to title and description."
 msgstr "voidaan liittää #taggit otsikkoon tai kuvaukseen"
 
-#: social_bfg/apps/activities/forms.py:35
+#: localhub/apps/activities/forms.py:35
 msgid "@mentions can also be added to title and description."
 msgstr "voidaan liittää @huomaukset otsikkoon tai kuvaukseen"
 
-#: social_bfg/apps/activities/notifications.py:14
+#: localhub/apps/activities/notifications.py:14
 #, python-format
 msgid "%(actor)s has deleted your %(object)s"
 msgstr "%(actor)s on poistanut sinun %(object)s"
 
-#: social_bfg/apps/activities/notifications.py:15
+#: localhub/apps/activities/notifications.py:15
 #, python-format
 msgid "%(actor)s has edited your %(object)s"
 msgstr "%(actor)s on muokkaanut sinun %(object)s"
 
-#: social_bfg/apps/activities/notifications.py:16
+#: localhub/apps/activities/notifications.py:16
 #, python-format
 msgid "%(actor)s has flagged this %(object)s"
 msgstr "%(actor)s on hälyttänyt sinun %(object)s:sta"
 
-#: social_bfg/apps/activities/notifications.py:17
+#: localhub/apps/activities/notifications.py:17
 #, python-format
 msgid "%(actor)s has liked your %(object)s"
 msgstr "%(actor)s on tykkäänyt sinun %(object)s:sta"
 
-#: social_bfg/apps/activities/notifications.py:18
+#: localhub/apps/activities/notifications.py:18
 #, python-format
 msgid "%(actor)s has mentioned you in their %(object)s"
 msgstr "%(actor)s on merkinnyt sinut %(object)s:ssa"
 
-#: social_bfg/apps/activities/notifications.py:21
+#: localhub/apps/activities/notifications.py:21
 #, python-format
 msgid "%(actor)s has submitted or updated their %(object)s for review"
 msgstr "%(actor)s on lähettänyt %(object)s:n tarkistettavaksi"
 
-#: social_bfg/apps/activities/notifications.py:23
+#: localhub/apps/activities/notifications.py:23
 #, python-format
 msgid "%(actor)s has submitted a new %(object)s"
 msgstr "%(actor)s on lähettänyt %(object)s:n"
 
-#: social_bfg/apps/activities/notifications.py:27
+#: localhub/apps/activities/notifications.py:27
 #, python-format
 msgid ""
 "Someone has submitted or updated a new %(object)s containing tags you are "
 "following"
 msgstr "Joku on lähettänyt %(object)s:n, jossa on sinun seuraamia taggeja"
 
-#: social_bfg/apps/activities/notifications.py:30
+#: localhub/apps/activities/notifications.py:30
 #, python-format
 msgid "%(actor)s has reshared your %(object)s"
 msgstr "%(actor)s on jakaanut sinun %(object)s:n"
 
-#: social_bfg/apps/activities/views/generic.py:73
-#: social_bfg/apps/activities/views/generic.py:333
+#: localhub/apps/activities/views/generic.py:73
+#: localhub/apps/activities/views/generic.py:333
 #, python-format
 msgid "Your %(model)s has been published"
 msgstr ""
 
-#: social_bfg/apps/activities/views/generic.py:75
+#: localhub/apps/activities/views/generic.py:75
 #, python-format
 msgid "Your %(model)s has been saved to your Private Stash"
 msgstr ""
 
-#: social_bfg/apps/activities/views/generic.py:83
+#: localhub/apps/activities/views/generic.py:83
 #, python-format
 msgid "Submit %(model)s"
 msgstr "Lähetä %(model)s"
 
-#: social_bfg/apps/activities/views/generic.py:118
+#: localhub/apps/activities/views/generic.py:118
 #, python-format
 msgid "This %(model)s has been flagged to the moderators"
 msgstr ""
 
-#: social_bfg/apps/activities/views/generic.py:141
+#: localhub/apps/activities/views/generic.py:141
 #, python-format
 msgid "Your %(model)s has been posted"
 msgstr ""
 
-#: social_bfg/apps/activities/views/generic.py:170
-#: social_bfg/apps/comments/views.py:48
+#: localhub/apps/activities/views/generic.py:170
+#: localhub/apps/comments/views.py:48
 #, python-format
 msgid "Your %(model)s has been updated"
 msgstr ""
 
-#: social_bfg/apps/activities/views/generic.py:195
+#: localhub/apps/activities/views/generic.py:195
 msgid "Tags have been updated"
 msgstr ""
 
-#: social_bfg/apps/activities/views/generic.py:312
+#: localhub/apps/activities/views/generic.py:312
 #, python-format
 msgid "You have reshared this %(model)s"
 msgstr ""
 
-#: social_bfg/apps/activities/views/generic.py:353
+#: localhub/apps/activities/views/generic.py:353
 #, python-format
 msgid "The %(model)s has been pinned to the top of the activity stream"
 msgstr ""
 
-#: social_bfg/apps/activities/views/generic.py:373
+#: localhub/apps/activities/views/generic.py:373
 #, python-format
 msgid "The %(model)s has been unpinned from the top of the activity stream"
 msgstr ""
 
-#: social_bfg/apps/activities/views/generic.py:389
+#: localhub/apps/activities/views/generic.py:389
 #, python-format
 msgid "You have added this %(model)s to your bookmarks"
 msgstr ""
 
-#: social_bfg/apps/activities/views/generic.py:405
+#: localhub/apps/activities/views/generic.py:405
 #, python-format
 msgid "You have removed this %(model)s from your bookmarks"
 msgstr ""
 
-#: social_bfg/apps/activities/views/generic.py:421
+#: localhub/apps/activities/views/generic.py:421
 #, python-format
 msgid "You have liked this %(model)s"
 msgstr ""
 
-#: social_bfg/apps/activities/views/generic.py:439
+#: localhub/apps/activities/views/generic.py:439
 #, python-format
 msgid "You have stopped liking this %(model)s"
 msgstr ""
 
-#: social_bfg/apps/activities/views/generic.py:456
+#: localhub/apps/activities/views/generic.py:456
 #, python-format
 msgid "You have deleted this %(model)s"
 msgstr ""
 
-#: social_bfg/apps/comments/forms.py:16
+#: localhub/apps/comments/forms.py:16
 #: templates/activities/includes/actions.html:42
 #: templates/activities/includes/info.html:13
 #: templates/comments/comment_detail.html:27
@@ -176,61 +176,61 @@ msgid_plural "Comments"
 msgstr[0] "Komentti"
 msgstr[1] "Komentti"
 
-#: social_bfg/apps/comments/notifications.py:17
+#: localhub/apps/comments/notifications.py:17
 #, python-format
 msgid "%(actor)s has deleted this comment"
 msgstr ""
 
-#: social_bfg/apps/comments/notifications.py:18
+#: localhub/apps/comments/notifications.py:18
 #, python-format
 msgid "%(actor)s has flagged this comment"
 msgstr "%(actor)s on merkinnyt tämän komentin"
 
-#: social_bfg/apps/comments/notifications.py:19
+#: localhub/apps/comments/notifications.py:19
 #, python-format
 msgid "%(actor)s has liked your comment"
 msgstr "%(actor)s on tykkäänyt tämästä komentista"
 
-#: social_bfg/apps/comments/notifications.py:20
+#: localhub/apps/comments/notifications.py:20
 #, python-format
 msgid "%(actor)s has mentioned you in their comment"
 msgstr "%(actor)s on merkinnyt sinut komentissaan"
 
-#: social_bfg/apps/comments/notifications.py:23
+#: localhub/apps/comments/notifications.py:23
 #, python-format
 msgid "%(actor)s has submitted or updated a comment for review"
 msgstr "%(actor)s on lähettänyt komentin tarkistettavaksi"
 
-#: social_bfg/apps/comments/notifications.py:25
+#: localhub/apps/comments/notifications.py:25
 #, python-format
 msgid "%(actor)s has submitted a comment on one of your posts"
 msgstr ""
 
-#: social_bfg/apps/comments/notifications.py:28
+#: localhub/apps/comments/notifications.py:28
 #, python-format
 msgid "%(actor)s has made a comment on a post you've commented on"
 msgstr ""
 
-#: social_bfg/apps/comments/notifications.py:30
+#: localhub/apps/comments/notifications.py:30
 #, python-format
 msgid "%(actor)s has replied to your comment"
 msgstr "%(actor)s on vastannut komenttiisi"
 
-#: social_bfg/apps/comments/notifications.py:31
+#: localhub/apps/comments/notifications.py:31
 #, python-format
 msgid "%(actor)s has submitted a new comment"
 msgstr "%(actor)s on lähettänyt uuden komentin"
 
-#: social_bfg/apps/comments/views.py:72
+#: localhub/apps/comments/views.py:72
 msgid "This comment has been flagged to the moderators"
 msgstr "Tämä komentti on merkitty välittäjille"
 
-#: social_bfg/apps/comments/views.py:95
+#: localhub/apps/comments/views.py:95
 #, python-format
 msgid "You have replied to this %(model)s"
 msgstr "Olet vastaanut tämän %(model)s:iin"
 
-#: social_bfg/apps/comments/views.py:109
+#: localhub/apps/comments/views.py:109
 #: templates/comments/comment_form.html:22
 #: templates/comments/includes/comment.html:152
 #: templates/private_messages/includes/message.html:77
@@ -238,104 +238,104 @@ msgstr "Olet vastaanut tämän %(model)s:iin"
 msgid "Reply"
 msgstr "Vastaa"
 
-#: social_bfg/apps/comments/views.py:222
+#: localhub/apps/comments/views.py:222
 msgid "You have bookmarked this comment"
 msgstr "Olet vastaanut komentin kirjanmerkkeihin"
 
-#: social_bfg/apps/comments/views.py:240
+#: localhub/apps/comments/views.py:240
 msgid "You have removed this comment from your bookmarks"
 msgstr "Olet poistanut komentin kirjanmerkeista"
 
-#: social_bfg/apps/comments/views.py:259
+#: localhub/apps/comments/views.py:259
 msgid "You have liked this comment"
 msgstr "Olet tykkäänyt tästä komentista"
 
-#: social_bfg/apps/comments/views.py:278
+#: localhub/apps/comments/views.py:278
 msgid "You have stopped liking this comment"
 msgstr "Et enää tykkää tästä komentista"
 
-#: social_bfg/apps/comments/views.py:296
+#: localhub/apps/comments/views.py:296
 msgid "You have deleted this comment"
 msgstr "Olet poistanut tämän komentin"
 
-#: social_bfg/apps/communities/emails.py:16
+#: localhub/apps/communities/emails.py:16
 #, python-format
 msgid "Your membership of community %(community)s has been terminated"
 msgstr "%(community)s - yhteisön jäsennys on päättynyt"
 
-#: social_bfg/apps/communities/forms.py:41
+#: localhub/apps/communities/forms.py:41
 msgid "Logo will be rendered in PNG format."
 msgstr "Logo esitetään PNG-muodossa."
 
-#: social_bfg/apps/communities/forms.py:42
+#: localhub/apps/communities/forms.py:42
 msgid "Summary shown in Communities page"
 msgstr "Yhteenveto Yhteisöiden sivu"
 
-#: social_bfg/apps/communities/forms.py:43
+#: localhub/apps/communities/forms.py:43
 msgid "Text shown in Login and other pages to non-members."
 msgstr ""
 
-#: social_bfg/apps/communities/forms.py:45
+#: localhub/apps/communities/forms.py:45
 msgid "Longer description of site shown to members in Description page."
 msgstr ""
 
-#: social_bfg/apps/communities/forms.py:48
+#: localhub/apps/communities/forms.py:48
 msgid "Terms and conditions, code of conduct and other membership terms."
 msgstr "Käyttöehdot, menettelyohjeet and muut säännöt ja ehdot."
 
-#: social_bfg/apps/communities/forms.py:51
+#: localhub/apps/communities/forms.py:51
 msgid ""
 "Any posts containing these tags in their description will be automatically "
 "hidden by default."
 msgstr "Postaukset jossa on nämä tagit olennaisesti piilotetaan."
 
-#: social_bfg/apps/communities/forms.py:55
+#: localhub/apps/communities/forms.py:55
 msgid ""
 "Will add domain to notification emails from this site, e.g. "
 "notifications@this-domain.com. If left empty will use the site domain by "
 "default."
 msgstr ""
 
-#: social_bfg/apps/communities/forms.py:59
+#: localhub/apps/communities/forms.py:59
 msgid "This community is currently live."
 msgstr "Yhteisö nyt julkinen"
 
-#: social_bfg/apps/communities/forms.py:60
+#: localhub/apps/communities/forms.py:60
 msgid "Community is visible to non-members in Communities page"
 msgstr ""
 
-#: social_bfg/apps/communities/forms.py:62
+#: localhub/apps/communities/forms.py:62
 msgid ""
 "Users can send requests to join this community. If disabled they will only "
 "be able to join if an admin sends them an invite."
 msgstr ""
 
-#: social_bfg/apps/communities/forms.py:67
+#: localhub/apps/communities/forms.py:67
 msgid ""
 "Join requests from these email domains will be automatically rejected. "
 "Separate with spaces."
 msgstr ""
 
-#: social_bfg/apps/communities/forms.py:71
+#: localhub/apps/communities/forms.py:71
 msgid ""
 "Join requests from these email addresses will be automatically rejected. "
 "Separate with spaces."
 msgstr ""
 
-#: social_bfg/apps/communities/forms.py:82
+#: localhub/apps/communities/forms.py:82
 msgid "Access"
 msgstr ""
 
-#: social_bfg/apps/communities/forms.py:83
+#: localhub/apps/communities/forms.py:83
 msgid "About this community"
 msgstr "Yhteisön kuvaus"
 
-#: social_bfg/apps/communities/forms.py:84
+#: localhub/apps/communities/forms.py:84
 msgid "Terms and conditions"
 msgstr "Käyttöehdot"
 
-#: social_bfg/apps/communities/forms.py:86
-#: social_bfg/apps/join_requests/apps.py:11
+#: localhub/apps/communities/forms.py:86
+#: localhub/apps/join_requests/apps.py:11
 #: templates/communities/community_form.html:21
 #: templates/communities/community_list.html:67
 #: templates/includes/forms/search_form.html:59
@@ -348,11 +348,11 @@ msgstr "Käyttöehdot"
 msgid "Join Requests"
 msgstr "Liitymispyynnöt"
 
-#: social_bfg/apps/communities/models.py:27
+#: localhub/apps/communities/models.py:27
 msgid "This is not a valid domain"
 msgstr ""
 
-#: social_bfg/apps/communities/models.py:167
+#: localhub/apps/communities/models.py:167
 #: templates/communities/community_list.html:7
 #: templates/communities/community_list.html:11
 #: templates/includes/forms/search_form.html:54
@@ -361,108 +361,108 @@ msgstr ""
 msgid "Communities"
 msgstr "Yhteisöt"
 
-#: social_bfg/apps/communities/models.py:237
+#: localhub/apps/communities/models.py:237
 #: templates/communities/membership_list.html:39
 msgid "Member"
 msgstr "Jäsen"
 
-#: social_bfg/apps/communities/models.py:238
+#: localhub/apps/communities/models.py:238
 #: templates/users/detail/base.html:47
 msgid "Moderator"
 msgstr "Välittäjä"
 
-#: social_bfg/apps/communities/models.py:239
+#: localhub/apps/communities/models.py:239
 #: templates/users/detail/base.html:45
 msgid "Admin"
 msgstr "Järjestelmänvalvooja"
 
-#: social_bfg/apps/communities/views.py:60
+#: localhub/apps/communities/views.py:60
 msgid "You must be a member of this community"
 msgstr ""
 
-#: social_bfg/apps/communities/views.py:65
+#: localhub/apps/communities/views.py:65
 msgid "No community is available for this domain"
 msgstr ""
 
-#: social_bfg/apps/communities/views.py:203
+#: localhub/apps/communities/views.py:203
 msgid "Community settings have been updated"
 msgstr ""
 
-#: social_bfg/apps/communities/views.py:337
+#: localhub/apps/communities/views.py:337
 msgid "Membership has been updated"
 msgstr ""
 
-#: social_bfg/apps/communities/views.py:357
+#: localhub/apps/communities/views.py:357
 #, python-format
 msgid "You have deleted the membership for %(user)s"
 msgstr ""
 
-#: social_bfg/apps/communities/views.py:385
+#: localhub/apps/communities/views.py:385
 #, python-format
 msgid "You have left the community %(community)s"
 msgstr ""
 
-#: social_bfg/apps/events/forms.py:26
+#: localhub/apps/events/forms.py:26
 msgid "Event starts"
 msgstr "Tapahtuma alkaa"
 
-#: social_bfg/apps/events/forms.py:32
+#: localhub/apps/events/forms.py:32
 msgid "Event ends"
 msgstr "Tapahtuma päättyy"
 
-#: social_bfg/apps/events/forms.py:36
+#: localhub/apps/events/forms.py:36
 msgid "Leave empty if it's an all-day event"
 msgstr ""
 
-#: social_bfg/apps/events/forms.py:40
+#: localhub/apps/events/forms.py:40
 msgid "Repeat until"
 msgstr "Toista päivämäärään asti"
 
-#: social_bfg/apps/events/forms.py:47
+#: localhub/apps/events/forms.py:47
 msgid "Remove event from map"
 msgstr "Poista tapahatuma kartasta"
 
-#: social_bfg/apps/events/forms.py:51
+#: localhub/apps/events/forms.py:51
 msgid "Add event to map if address provided"
 msgstr "Lisää tapahtuma kartaan jos osoite on saatavilla"
 
-#: social_bfg/apps/events/forms.py:104 templates/events/includes/event.html:71
+#: localhub/apps/events/forms.py:104 templates/events/includes/event.html:71
 msgid "Location"
 msgstr "Sijainti"
 
-#: social_bfg/apps/events/forms.py:122
+#: localhub/apps/events/forms.py:122
 msgid "Will repeat from the start date onwards"
 msgstr ""
 
-#: social_bfg/apps/events/forms.py:125
+#: localhub/apps/events/forms.py:125
 msgid "Start and end times will be shown in this timezone"
 msgstr ""
 
-#: social_bfg/apps/events/forms.py:143
+#: localhub/apps/events/forms.py:143
 msgid "Recalculate position on map"
 msgstr ""
 
-#: social_bfg/apps/events/forms.py:179
+#: localhub/apps/events/forms.py:179
 msgid "Unable to locate address on map"
 msgstr ""
 
-#: social_bfg/apps/events/models.py:377
+#: localhub/apps/events/models.py:377
 msgid "Same time every day"
 msgstr ""
 
-#: social_bfg/apps/events/models.py:378
+#: localhub/apps/events/models.py:378
 msgid "Same day of the week at the same time"
 msgstr ""
 
-#: social_bfg/apps/events/models.py:381
+#: localhub/apps/events/models.py:381
 msgid "First day of the month at the same time"
 msgstr ""
 
-#: social_bfg/apps/events/models.py:383
+#: localhub/apps/events/models.py:383
 msgid "Same date and time every year"
 msgstr ""
 
-#: social_bfg/apps/events/models.py:385
+#: localhub/apps/events/models.py:385
 #: templates/activities/includes/links.html:8
 #: templates/comments/includes/comment.html:200
 #: templates/markdownx/widget.html:48 templates/markdownx/widget.html:170
@@ -470,804 +470,804 @@ msgstr ""
 msgid "Link"
 msgstr "Linkki"
 
-#: social_bfg/apps/events/models.py:387
+#: localhub/apps/events/models.py:387
 msgid "Starts on (UTC)"
 msgstr ""
 
-#: social_bfg/apps/events/models.py:404
+#: localhub/apps/events/models.py:404
 msgid "City or town"
 msgstr "Kaupunki"
 
-#: social_bfg/apps/events/models.py:433
+#: localhub/apps/events/models.py:433
 msgid "End date cannot be before start date"
 msgstr ""
 
-#: social_bfg/apps/events/models.py:436
+#: localhub/apps/events/models.py:436
 msgid "End date must be same as start date if repeating"
 msgstr ""
 
-#: social_bfg/apps/events/models.py:440
+#: localhub/apps/events/models.py:440
 msgid "Repeat until date cannot be set if not a repeating event"
 msgstr ""
 
-#: social_bfg/apps/events/models.py:444
+#: localhub/apps/events/models.py:444
 msgid "Repeat until date cannot be before start date"
 msgstr ""
 
-#: social_bfg/apps/events/notifications.py:22
+#: localhub/apps/events/notifications.py:22
 #, python-format
 msgid "%(actor)s is attending your event"
 msgstr ""
 
-#: social_bfg/apps/events/notifications.py:23
+#: localhub/apps/events/notifications.py:23
 #, python-format
 msgid "%(actor)s has canceled an event"
 msgstr ""
 
-#: social_bfg/apps/events/views.py:47
+#: localhub/apps/events/views.py:47
 msgid "This event has been canceled"
 msgstr ""
 
-#: social_bfg/apps/events/views.py:67
+#: localhub/apps/events/views.py:67
 msgid "You are now attending this event"
 msgstr ""
 
-#: social_bfg/apps/events/views.py:80
+#: localhub/apps/events/views.py:80
 msgid "You are no longer attending this event"
 msgstr ""
 
-#: social_bfg/apps/flags/models.py:49
+#: localhub/apps/flags/models.py:49
 msgid "Spam"
 msgstr "Roskaposti"
 
-#: social_bfg/apps/flags/models.py:50
+#: localhub/apps/flags/models.py:50
 msgid "Abuse"
 msgstr "Solvaus"
 
-#: social_bfg/apps/flags/models.py:51
+#: localhub/apps/flags/models.py:51
 msgid "Breach of community rules"
 msgstr "Yhteisön sääntöjen rikkomus"
 
-#: social_bfg/apps/flags/models.py:52
+#: localhub/apps/flags/models.py:52
 msgid "Illegal activity"
 msgstr ""
 
-#: social_bfg/apps/flags/models.py:53
+#: localhub/apps/flags/models.py:53
 msgid "Pornography"
 msgstr "Pornografia"
 
-#: social_bfg/apps/flags/models.py:54
+#: localhub/apps/flags/models.py:54
 msgid "Breach of copyright"
 msgstr ""
 
-#: social_bfg/apps/hashtags/validators.py:25
+#: localhub/apps/hashtags/validators.py:25
 msgid "All tokens must be valid #tags"
 msgstr ""
 
-#: social_bfg/apps/hashtags/views.py:201
+#: localhub/apps/hashtags/views.py:201
 #, python-format
 msgid "You are now following #%(object)s"
 msgstr ""
 
-#: social_bfg/apps/hashtags/views.py:212
+#: localhub/apps/hashtags/views.py:212
 #, python-format
 msgid "You are no longer following #%(object)s"
 msgstr ""
 
-#: social_bfg/apps/hashtags/views.py:231
+#: localhub/apps/hashtags/views.py:231
 #, python-format
 msgid "You are now blocking #%(object)s"
 msgstr ""
 
-#: social_bfg/apps/hashtags/views.py:242
+#: localhub/apps/hashtags/views.py:242
 #, python-format
 msgid "You are no longer blocking #%(object)s"
 msgstr ""
 
-#: social_bfg/apps/invites/emails.py:20
+#: localhub/apps/invites/emails.py:20
 msgid "Invitation to join"
 msgstr ""
 
-#: social_bfg/apps/invites/forms.py:26
+#: localhub/apps/invites/forms.py:26
 msgid "A user with this email address already belongs to this community"
 msgstr ""
 
-#: social_bfg/apps/invites/forms.py:32
+#: localhub/apps/invites/forms.py:32
 msgid "An invitation has already been sent to this email address"
 msgstr ""
 
-#: social_bfg/apps/invites/models.py:44
-#: social_bfg/apps/join_requests/models.py:41
+#: localhub/apps/invites/models.py:44
+#: localhub/apps/join_requests/models.py:41
 msgid "Pending"
 msgstr ""
 
-#: social_bfg/apps/invites/models.py:45
-#: social_bfg/apps/join_requests/models.py:42
+#: localhub/apps/invites/models.py:45
+#: localhub/apps/join_requests/models.py:42
 msgid "Accepted"
 msgstr ""
 
-#: social_bfg/apps/invites/models.py:46
-#: social_bfg/apps/join_requests/models.py:43
+#: localhub/apps/invites/models.py:46
+#: localhub/apps/join_requests/models.py:43
 msgid "Rejected"
 msgstr ""
 
-#: social_bfg/apps/invites/views.py:69
+#: localhub/apps/invites/views.py:69
 #, python-format
 msgid "Your invitation has been re-sent to %(email)s"
 msgstr ""
 
-#: social_bfg/apps/invites/views.py:102
+#: localhub/apps/invites/views.py:102
 #, python-format
 msgid "You are now a member of %(community)s"
 msgstr ""
 
-#: social_bfg/apps/invites/views.py:146
+#: localhub/apps/invites/views.py:146
 #, python-format
 msgid "Your invitation has been sent to %(email)s"
 msgstr ""
 
-#: social_bfg/apps/invites/views.py:169
+#: localhub/apps/invites/views.py:169
 msgid "You have deleted this invite"
 msgstr ""
 
-#: social_bfg/apps/join_requests/emails.py:27
+#: localhub/apps/join_requests/emails.py:27
 #, python-format
 msgid "%s | Someone has requested to join this community"
 msgstr ""
 
-#: social_bfg/apps/join_requests/emails.py:41
+#: localhub/apps/join_requests/emails.py:41
 msgid "Your request has been accepted"
 msgstr ""
 
-#: social_bfg/apps/join_requests/emails.py:50
+#: localhub/apps/join_requests/emails.py:50
 msgid "Your request has been rejected"
 msgstr ""
 
-#: social_bfg/apps/join_requests/forms.py:29
+#: localhub/apps/join_requests/forms.py:29
 msgid "You have already requested to join this community"
 msgstr ""
 
-#: social_bfg/apps/join_requests/forms.py:34
+#: localhub/apps/join_requests/forms.py:34
 msgid "Sorry, we cannot accept your application to join at this time."
 msgstr ""
 
-#: social_bfg/apps/join_requests/models.py:58
+#: localhub/apps/join_requests/models.py:58
 msgid "Introduction"
 msgstr ""
 
-#: social_bfg/apps/join_requests/models.py:60
+#: localhub/apps/join_requests/models.py:60
 msgid ""
 "Tell us a little bit about yourself and why you would like to join this "
 "community (Optional)."
 msgstr ""
 
-#: social_bfg/apps/join_requests/views.py:66
+#: localhub/apps/join_requests/views.py:66
 #, python-format
 msgid "Join request for %(sender)s has been accepted"
 msgstr ""
 
-#: social_bfg/apps/join_requests/views.py:74
+#: localhub/apps/join_requests/views.py:74
 msgid "User already belongs to this community"
 msgstr ""
 
-#: social_bfg/apps/join_requests/views.py:99
+#: localhub/apps/join_requests/views.py:99
 #, python-format
 msgid "Join request for %(sender)s has been rejected"
 msgstr ""
 
-#: social_bfg/apps/join_requests/views.py:122
+#: localhub/apps/join_requests/views.py:122
 msgid "Your request has been sent to the community admins"
 msgstr ""
 
-#: social_bfg/apps/join_requests/views.py:167
+#: localhub/apps/join_requests/views.py:167
 #, python-format
 msgid "Your join request for %(community)s has been deleted"
 msgstr ""
 
-#: social_bfg/apps/join_requests/views.py:170
+#: localhub/apps/join_requests/views.py:170
 #, python-format
 msgid "Join request for %(sender)s has been deleted"
 msgstr ""
 
-#: social_bfg/apps/photos/forms.py:25
+#: localhub/apps/photos/forms.py:25
 msgid "Extract GPS data from image if available"
 msgstr ""
 
-#: social_bfg/apps/photos/forms.py:29
+#: localhub/apps/photos/forms.py:29
 msgid "Clear GPS data from image"
 msgstr ""
 
-#: social_bfg/apps/photos/forms.py:69
+#: localhub/apps/photos/forms.py:69
 msgid "Additional Information"
 msgstr ""
 
-#: social_bfg/apps/photos/forms.py:79 templates/photos/includes/photo.html:47
+#: localhub/apps/photos/forms.py:79 templates/photos/includes/photo.html:47
 msgid "Original URL"
 msgstr ""
 
-#: social_bfg/apps/photos/forms.py:86
+#: localhub/apps/photos/forms.py:86
 msgid "Re-extract GPS data from image if available"
 msgstr ""
 
-#: social_bfg/apps/photos/models.py:18
+#: localhub/apps/photos/models.py:18
 msgid "Attribution"
 msgstr ""
 
-#: social_bfg/apps/photos/models.py:19
+#: localhub/apps/photos/models.py:19
 msgid "Attribution ShareAlike"
 msgstr ""
 
-#: social_bfg/apps/photos/models.py:20
+#: localhub/apps/photos/models.py:20
 msgid "Attribution NoDerivs"
 msgstr ""
 
-#: social_bfg/apps/photos/models.py:21
+#: localhub/apps/photos/models.py:21
 msgid "Attribution NonCommercial"
 msgstr ""
 
-#: social_bfg/apps/photos/models.py:24
+#: localhub/apps/photos/models.py:24
 msgid "Attribution NonCommercial ShareAlike"
 msgstr ""
 
-#: social_bfg/apps/photos/models.py:28
+#: localhub/apps/photos/models.py:28
 msgid "Attribution NonCommercial NoDerivs"
 msgstr ""
 
-#: social_bfg/apps/photos/models.py:46 social_bfg/apps/photos/models.py:69
+#: localhub/apps/photos/models.py:46 localhub/apps/photos/models.py:69
 msgid "Photo"
 msgstr ""
 
-#: social_bfg/apps/photos/models.py:48
+#: localhub/apps/photos/models.py:48
 msgid ""
 "For best results, photos should be no larger than 1MB. If the image is too "
 "large it will not be accepted."
 msgstr ""
 
-#: social_bfg/apps/polls/models.py:48
+#: localhub/apps/polls/models.py:48
 msgid "Poll"
 msgstr ""
 
-#: social_bfg/apps/polls/notifications.py:22
+#: localhub/apps/polls/notifications.py:22
 #, python-format
 msgid "%(actor)s has voted in your poll"
 msgstr ""
 
-#: social_bfg/apps/polls/views.py:46
+#: localhub/apps/polls/views.py:46
 msgid "Thanks for voting!"
 msgstr ""
 
-#: social_bfg/apps/posts/forms.py:70 templates/events/includes/event.html:83
+#: localhub/apps/posts/forms.py:70 templates/events/includes/event.html:83
 msgid "URL"
 msgstr ""
 
-#: social_bfg/apps/posts/forms.py:76
+#: localhub/apps/posts/forms.py:76
 msgid ""
 "You can attach an image and/or description from the webpage to this post by "
 "clicking the Download button on the right."
 msgstr ""
 
-#: social_bfg/apps/posts/models.py:37
+#: localhub/apps/posts/models.py:37
 msgid "Post"
 msgstr ""
 
-#: social_bfg/apps/posts/views.py:25
+#: localhub/apps/posts/views.py:25
 msgid "No URL provided"
 msgstr ""
 
-#: social_bfg/apps/posts/views.py:27
+#: localhub/apps/posts/views.py:27
 msgid "Invalid or inaccessible URL"
 msgstr ""
 
-#: social_bfg/apps/posts/views.py:29
+#: localhub/apps/posts/views.py:29
 msgid "Unable to fetch meta content from page"
 msgstr ""
 
-#: social_bfg/apps/private_messages/apps.py:11
+#: localhub/apps/private_messages/apps.py:11
 msgid "Private Messages"
 msgstr ""
 
-#: social_bfg/apps/private_messages/forms.py:30
+#: localhub/apps/private_messages/forms.py:30
 msgid "Use @mention format to find and add a recipient"
 msgstr ""
 
-#: social_bfg/apps/private_messages/forms.py:56
+#: localhub/apps/private_messages/forms.py:56
 msgid "You can only select one recipient at a time"
 msgstr ""
 
-#: social_bfg/apps/private_messages/forms.py:65
+#: localhub/apps/private_messages/forms.py:65
 msgid "No active member found matching this name"
 msgstr ""
 
-#: social_bfg/apps/private_messages/notifications.py:18
+#: localhub/apps/private_messages/notifications.py:18
 #, python-format
 msgid "%(sender)s has sent you a message"
 msgstr ""
 
-#: social_bfg/apps/private_messages/notifications.py:19
+#: localhub/apps/private_messages/notifications.py:19
 #, python-format
 msgid "%(sender)s has replied to your message"
 msgstr ""
 
-#: social_bfg/apps/private_messages/notifications.py:20
+#: localhub/apps/private_messages/notifications.py:20
 #, python-format
 msgid "%(sender)s has sent you a follow-up to their message"
 msgstr ""
 
-#: social_bfg/apps/private_messages/views.py:68
+#: localhub/apps/private_messages/views.py:68
 #, python-format
 msgid "Your message has been sent to %(recipient)s"
 msgstr ""
 
-#: social_bfg/apps/private_messages/views.py:110
+#: localhub/apps/private_messages/views.py:110
 #, python-format
 msgid "Send reply to %(recipient)s"
 msgstr ""
 
-#: social_bfg/apps/private_messages/views.py:126
+#: localhub/apps/private_messages/views.py:126
 #, python-format
 msgid "Send follow-up to %(recipient)s"
 msgstr ""
 
-#: social_bfg/apps/private_messages/views.py:155
+#: localhub/apps/private_messages/views.py:155
 #, python-format
 msgid "Send message to %(recipient)s"
 msgstr ""
 
-#: social_bfg/apps/private_messages/views.py:310
+#: localhub/apps/private_messages/views.py:310
 msgid "You have bookmarked this message"
 msgstr ""
 
-#: social_bfg/apps/private_messages/views.py:328
+#: localhub/apps/private_messages/views.py:328
 msgid "You have removed this message from your bookmarks"
 msgstr ""
 
-#: social_bfg/apps/private_messages/views.py:351
+#: localhub/apps/private_messages/views.py:351
 msgid "You have deleted this message"
 msgstr ""
 
-#: social_bfg/apps/users/forms.py:64
+#: localhub/apps/users/forms.py:64
 msgid "Send me an email when I receive a new Message or Notification"
 msgstr ""
 
-#: social_bfg/apps/users/forms.py:67
+#: localhub/apps/users/forms.py:67
 msgid "Show external images embedded in Markdown and OpenGraph content"
 msgstr ""
 
-#: social_bfg/apps/users/forms.py:70
+#: localhub/apps/users/forms.py:70
 msgid "Show sensitive content by default in public feeds"
 msgstr ""
 
-#: social_bfg/apps/users/forms.py:73
+#: localhub/apps/users/forms.py:73
 msgid "Show embedded content such as Youtube videos and tweets"
 msgstr ""
 
-#: social_bfg/apps/users/forms.py:75
+#: localhub/apps/users/forms.py:75
 msgid "Timezone"
 msgstr ""
 
-#: social_bfg/apps/users/forms.py:80
+#: localhub/apps/users/forms.py:80
 msgid ""
 "Filters only apply to other people's activities, not your own. Filters are "
 "mutually exclusive and may cancel each other out."
 msgstr ""
 
-#: social_bfg/apps/users/forms.py:84
+#: localhub/apps/users/forms.py:84
 msgid ""
 "You can remove sensitive content completely from your feeds by blocking the "
 "relevant tags."
 msgstr ""
 
-#: social_bfg/apps/users/forms.py:106
+#: localhub/apps/users/forms.py:106
 msgid "Content Preferences"
 msgstr ""
 
-#: social_bfg/apps/users/models.py:253
+#: localhub/apps/users/models.py:253
 msgid "Limited to only content from people I'm following"
 msgstr ""
 
-#: social_bfg/apps/users/models.py:254
+#: localhub/apps/users/models.py:254
 msgid "Limited to only tags I'm following"
 msgstr ""
 
-#: social_bfg/apps/users/models.py:256
+#: localhub/apps/users/models.py:256
 msgid "Full name"
 msgstr "Koko nimi"
 
-#: social_bfg/apps/users/notifications.py:15
+#: localhub/apps/users/notifications.py:15
 #, python-format
 msgid "%(actor)s has started following you"
 msgstr ""
 
-#: social_bfg/apps/users/notifications.py:16
+#: localhub/apps/users/notifications.py:16
 #, python-format
 msgid "%(actor)s has just joined this community"
 msgstr ""
 
-#: social_bfg/apps/users/notifications.py:17
+#: localhub/apps/users/notifications.py:17
 #, python-format
 msgid "%(actor)s has updated their profile"
 msgstr ""
 
-#: social_bfg/apps/users/validators.py:25
+#: localhub/apps/users/validators.py:25
 msgid "All tokens must be valid @mentions"
 msgstr ""
 
-#: social_bfg/apps/users/views.py:493
+#: localhub/apps/users/views.py:493
 msgid "Your details have been updated"
 msgstr ""
 
-#: social_bfg/apps/users/views.py:550
+#: localhub/apps/users/views.py:550
 #, python-format
 msgid "You are now following %(object)s"
 msgstr ""
 
-#: social_bfg/apps/users/views.py:563
+#: localhub/apps/users/views.py:563
 #, python-format
 msgid "You are no longer following %(object)s"
 msgstr ""
 
-#: social_bfg/apps/users/views.py:578
+#: localhub/apps/users/views.py:578
 #, python-format
 msgid "You are now blocking %(object)s"
 msgstr ""
 
-#: social_bfg/apps/users/views.py:589
+#: localhub/apps/users/views.py:589
 #, python-format
 msgid "You are no longer blocking %(object)s"
 msgstr ""
 
-#: social_bfg/forms/widgets.py:93
+#: localhub/forms/widgets.py:93
 msgid "DD/MM/YYYY"
 msgstr ""
 
-#: social_bfg/forms/widgets.py:106
+#: localhub/forms/widgets.py:106
 msgid "HH:MM"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:15 templates/includes/sidebar.html:182
+#: localhub/utils/emojis.py:15 templates/includes/sidebar.html:182
 #: templates/users/list/base.html:8 templates/users/list/base.html:14
 msgid "People"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:18
+#: localhub/utils/emojis.py:18
 msgid "Thumbs Up"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:23
+#: localhub/utils/emojis.py:23
 msgid "Thumbs Down"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:28
+#: localhub/utils/emojis.py:28
 msgid "Heart"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:33
+#: localhub/utils/emojis.py:33
 msgid "Clap"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:38
+#: localhub/utils/emojis.py:38
 msgid "Smile"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:43
+#: localhub/utils/emojis.py:43
 msgid "Wink"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:47
+#: localhub/utils/emojis.py:47
 msgid "Joy"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:49
+#: localhub/utils/emojis.py:49
 msgid "Laughing"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:54
+#: localhub/utils/emojis.py:54
 msgid "Thinking"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:58
+#: localhub/utils/emojis.py:58
 msgid "Sob"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:60
+#: localhub/utils/emojis.py:60
 msgid "Heart Eyes"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:65
+#: localhub/utils/emojis.py:65
 msgid "Smirk"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:70
+#: localhub/utils/emojis.py:70
 msgid "Blush"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:75
+#: localhub/utils/emojis.py:75
 msgid "Confused"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:80
+#: localhub/utils/emojis.py:80
 msgid "Disappointed"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:85
+#: localhub/utils/emojis.py:85
 msgid "No Mouth"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:90
+#: localhub/utils/emojis.py:90
 msgid "Innocent"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:95
+#: localhub/utils/emojis.py:95
 msgid "Neutral Face"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:100
+#: localhub/utils/emojis.py:100
 msgid "Fearful"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:105
+#: localhub/utils/emojis.py:105
 msgid "Sweat"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:110
+#: localhub/utils/emojis.py:110
 msgid "Angry"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:115
+#: localhub/utils/emojis.py:115
 msgid "Rage"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:120
+#: localhub/utils/emojis.py:120
 msgid "Astonished"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:125
+#: localhub/utils/emojis.py:125
 msgid "Stuck Out Tongue"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:130
+#: localhub/utils/emojis.py:130
 msgid "Open Mouth"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:135
+#: localhub/utils/emojis.py:135
 msgid "Satisfied"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:140
+#: localhub/utils/emojis.py:140
 msgid "Scream"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:145
+#: localhub/utils/emojis.py:145
 msgid "Sunglasses"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:150
+#: localhub/utils/emojis.py:150
 msgid "Fire"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:155
+#: localhub/utils/emojis.py:155
 msgid "Tada"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:160
+#: localhub/utils/emojis.py:160
 msgid "See No Evil"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:165
+#: localhub/utils/emojis.py:165
 msgid "Point Up"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:170
+#: localhub/utils/emojis.py:170
 msgid "Wave"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:175
+#: localhub/utils/emojis.py:175
 msgid "Raised Hands"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:180
+#: localhub/utils/emojis.py:180
 msgid "Pray"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:185
+#: localhub/utils/emojis.py:185
 msgid "Metal"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:190
+#: localhub/utils/emojis.py:190
 msgid "Alien"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:195
+#: localhub/utils/emojis.py:195
 msgid "Angel"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:199
+#: localhub/utils/emojis.py:199
 msgid "Man"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:201
+#: localhub/utils/emojis.py:201
 msgid "Woman"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:206
+#: localhub/utils/emojis.py:206
 msgid "Baby"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:211
+#: localhub/utils/emojis.py:211
 msgid "Detective"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:216
+#: localhub/utils/emojis.py:216
 msgid "Mask"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:221
+#: localhub/utils/emojis.py:221
 msgid "Poop"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:226
+#: localhub/utils/emojis.py:226
 msgid "Skull"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:230
+#: localhub/utils/emojis.py:230
 msgid "Zap"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:231
+#: localhub/utils/emojis.py:231
 msgid "ZZZ"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:235
+#: localhub/utils/emojis.py:235
 msgid "Objects"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:238
+#: localhub/utils/emojis.py:238
 msgid "Airplane"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:243
+#: localhub/utils/emojis.py:243
 msgid "Bomb"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:248
+#: localhub/utils/emojis.py:248
 msgid "Bulb"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:252
+#: localhub/utils/emojis.py:252
 msgid "Bus"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:254
+#: localhub/utils/emojis.py:254
 msgid "Car"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:259
+#: localhub/utils/emojis.py:259
 msgid "Rocket"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:264
+#: localhub/utils/emojis.py:264
 msgid "Taxi"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:269
+#: localhub/utils/emojis.py:269
 msgid "Train"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:274
+#: localhub/utils/emojis.py:274
 msgid "Checkered Flag"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:279
+#: localhub/utils/emojis.py:279
 msgid "Banana"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:284
+#: localhub/utils/emojis.py:284
 msgid "Cake"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:289
+#: localhub/utils/emojis.py:289
 msgid "Beer"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:294
+#: localhub/utils/emojis.py:294
 msgid "Wine Glass"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:299
+#: localhub/utils/emojis.py:299
 msgid "Coffee"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:303
+#: localhub/utils/emojis.py:303
 msgid "Tea"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:305
+#: localhub/utils/emojis.py:305
 msgid "Cookie"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:310
+#: localhub/utils/emojis.py:310
 msgid "Eggplant"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:315 templates/events/calendar.html:9
+#: localhub/utils/emojis.py:315 templates/events/calendar.html:9
 #: templates/events/calendar.html:26 templates/events/event_list.html:12
 #: templates/includes/sidebar.html:80
 msgid "Calendar"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:320
+#: localhub/utils/emojis.py:320
 msgid "Watch"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:325
+#: localhub/utils/emojis.py:325
 msgid "Hourglass"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:330
+#: localhub/utils/emojis.py:330
 msgid "Computer"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:335
+#: localhub/utils/emojis.py:335
 msgid "Headphones"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:340
+#: localhub/utils/emojis.py:340
 msgid "Microphone"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:345
+#: localhub/utils/emojis.py:345
 msgid "Violin"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:350
+#: localhub/utils/emojis.py:350
 msgid "Birthday"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:355
+#: localhub/utils/emojis.py:355
 msgid "Gift"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:360
+#: localhub/utils/emojis.py:360
 msgid "Santa"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:367
+#: localhub/utils/emojis.py:367
 msgid "Places"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:370
+#: localhub/utils/emojis.py:370
 msgid "Finland"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:374
+#: localhub/utils/emojis.py:374
 msgid "Japan"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:375
+#: localhub/utils/emojis.py:375
 msgid "UK"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:376
+#: localhub/utils/emojis.py:376
 msgid "USA"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:380
+#: localhub/utils/emojis.py:380
 msgid "Nature"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:382
+#: localhub/utils/emojis.py:382
 msgid "Cat"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:383
+#: localhub/utils/emojis.py:383
 msgid "Dog"
 msgstr ""
 
-#: social_bfg/utils/emojis.py:385
+#: localhub/utils/emojis.py:385
 msgid "Rainbow"
 msgstr ""
 
-#: social_bfg/views/parent.py:99
+#: localhub/views/parent.py:99
 #, python-format
 msgid "No %(object_name)s found"
 msgstr ""
@@ -3051,7 +3051,7 @@ msgstr ""
 
 #: templates/includes/footer.html:7
 msgid ""
-"Powered by <b>Social-BFG</b>, an open-source social network platform.\n"
+"Powered by <b>Localhub</b>, an open-source social network platform.\n"
 "  <a class=\"underline text-white\"\n"
 "     href=\"https://gitlab.com/danjac/localhub/\">Open software</a> licensed "
 "under\n"

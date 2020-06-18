@@ -4,4 +4,4 @@ set -o errexit
 set -o nounset
 
 
-celery -A social_bfg.config.celery_app worker -l INFO
+celery -A localhub.config.celery_app worker -l INFO
