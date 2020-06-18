@@ -30,7 +30,7 @@ export default class extends ApplicationController {
           this.fetched = true;
           if (!this.hasContainerTarget) {
             const div = document.createElement('div');
-            div.classList.add('inline');
+            div.classList.add('inline-block');
             div.setAttribute('data-target', `${this.identifier}.container`);
             this.element.appendChild(div);
           }

@@ -8,7 +8,7 @@
      data-controller="hovercard"
      data-hovercard-url="{% url 'users:preview' profile.username %}"
      data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
-  <div class="inline hidden" data-target="hovercard.container"></div>
+  <div class="inline-block hidden" data-target="hovercard.container"></div>
   {% avatar profile "16" css_class="mr-2 h-4 w-4 text-xs" %}
   <a title="{{ profile_name }}"
      class="truncate text-gray-900"
