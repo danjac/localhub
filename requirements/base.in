@@ -21,6 +21,7 @@ ipython
 micawber
 pillow
 psycopg2-binary
+pygments
 pymdown-extensions
 pyopenssl
 pytz

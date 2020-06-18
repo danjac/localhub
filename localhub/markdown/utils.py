@@ -10,7 +10,7 @@ from functools import partial
 
 # Django
 from django.http import Http404
-from django.urls import resolve, reverse
+from django.urls import resolve
 
 # Third Party Libraries
 import bleach
@@ -20,7 +20,7 @@ from markdownx.utils import markdownify as default_markdownify
 
 # Localhub
 from localhub.apps.hashtags.utils import linkify_hashtags
-from localhub.apps.users.utils import linkify_mentions
+from localhub.apps.users.utils import get_preview_attrs, linkify_mentions
 
 ALLOWED_TAGS = bleach.ALLOWED_TAGS + [
     "abbr",
@@ -67,7 +67,7 @@ ADDITIONAL_TLDS = """app audio auto bar bargains best bid bike blog bot
 URL_RE = build_url_re(TLDS + ADDITIONAL_TLDS)
 
 
-def set_link_target(attrs, new=False):
+def external_link_attrs(attrs, new=False):
     # ignore any internal links
     href = attrs.get((None, "href"))
     if href and href.startswith("http"):
@@ -76,22 +76,21 @@ def set_link_target(attrs, new=False):
     return attrs
 
 
-def set_mention_attrs(attrs, new=False):
-    """Re-inserts hovercard attrs as these otherwise mess up
+def user_mention_preview_attrs(attrs, new=False):
+    """Re-inserts preview attrs as these otherwise mess up
     markdown pre-rendering"""
     if href := attrs.get((None, "href")):
         try:
             match = resolve(href)
         except Http404:
             return attrs
-        if match.url_name == "activities" and match.app_name == "users":
-            attrs[(None, "data-controller")] = "hovercard"
-            attrs[(None, "data-hovercard-url")] = reverse(
-                "users:preview", kwargs=match.kwargs
-            )
-            attrs[
-                (None, "data-action")
-            ] = "mouseenter->hovercard#show mouseleave->hovercard#hide"
+        if (
+            match.url_name == "activities"
+            and match.app_name == "users"
+            and "username" in match.kwargs
+        ):
+            for k, v in get_preview_attrs(match.kwargs["username"]):
+                attrs[(None, k)] = v
     return attrs
 
 
@@ -105,7 +104,7 @@ def markdownify(content):
     """
     return cleaner.clean(
         default_markdownify(
-            linkify_hashtags(linkify_mentions(content, with_hovercard_attrs=False))
+            linkify_hashtags(linkify_mentions(content, with_preview_attrs=False))
         )
     )
 
@@ -116,7 +115,7 @@ cleaner = Cleaner(
     filters=[
         partial(
             LinkifyFilter,
-            callbacks=[set_link_target, set_mention_attrs],
+            callbacks=[external_link_attrs, user_mention_preview_attrs],
             url_re=URL_RE,
         )
     ],

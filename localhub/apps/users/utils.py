@@ -31,7 +31,7 @@ def extract_mentions(content):
     )
 
 
-def linkify_mentions(content, css_class=None, with_hovercard_attrs=True):
+def linkify_mentions(content, css_class=None, with_preview_attrs=True):
     """
     Replace all @mentions in the text with links to user profile page.
     """
@@ -41,18 +41,29 @@ def linkify_mentions(content, css_class=None, with_hovercard_attrs=True):
     css_class = f' class="{css_class}"' if css_class else ""
     for token in tokens:
         for mention in settings.LOCALHUB_MENTIONS_RE.findall(token):
-            username = slugify_unicode(mention)
-            url = reverse("users:activities", args=[username])
-            preview_url = reverse("users:preview", args=[username])
-            actions = (
-                'data-action="mouseenter->hovercard#show mouseleave->hovercard#hide"'
-            )
-            hovercard_attrs = f'data-controller="hovercard" data-hovercard-url={preview_url} {actions} '
-            start = "<a " + (hovercard_attrs if with_hovercard_attrs else "")
+            if with_preview_attrs:
+                preview_attrs = " ".join(
+                    [f'{k}="{v}"' for k, v in get_preview_attrs(mention)]
+                )
+            else:
+                preview_attrs = ""
+            url = reverse("users:activities", args=[mention])
             token = token.replace(
-                "@" + mention, f'{start}href="{url}"{css_class}>@{mention}</a>',
+                "@" + mention,
+                f'<a {preview_attrs} href="{url}"{css_class}>@{mention}</a>',
             )
 
         rv.append(token)
 
     return " ".join(rv)
+
+
+def get_preview_attrs(username):
+    return [
+        ("data-action", "mouseenter->hovercard#show mouseleave->hovercard#hide"),
+        ("data-controller", "hovercard"),
+        (
+            "data-hovercard-url",
+            reverse("users:preview", args=[slugify_unicode(username)]),
+        ),
+    ]

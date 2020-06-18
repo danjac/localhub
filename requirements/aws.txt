@@ -5,9 +5,9 @@
 #
 #    pip-compile-multi
 #
-asgiref==3.2.8            # via django
-boto3==1.14.3             # via -r aws.in
-botocore==1.17.3          # via boto3, s3transfer
+asgiref==3.2.9            # via django
+boto3==1.14.5             # via -r aws.in
+botocore==1.17.5          # via boto3, s3transfer
 django-storages==1.9.1    # via -r aws.in
 django==3.0.7             # via django-storages
 docutils==0.15.2          # via botocore
