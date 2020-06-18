@@ -5,7 +5,6 @@
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.factories import CommunityFactory
 
 pytestmark = pytest.mark.django_db

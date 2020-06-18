@@ -6,7 +6,6 @@ from django.urls import reverse
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.models import Membership
 
 # Local

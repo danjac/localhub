@@ -19,7 +19,6 @@ from model_utils.models import TimeStampedModel
 from sorl.thumbnail import ImageField
 
 # Localhub
-# Social-BFG
 from localhub.apps.hashtags.utils import extract_hashtags
 from localhub.db.search.mixins import SearchQuerySetMixin
 from localhub.markdown.fields import MarkdownField

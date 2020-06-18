@@ -5,7 +5,6 @@
 from django.urls import path
 
 # Localhub
-# Social-BFG
 from localhub.apps.users.urls import user_re_path
 
 # Local

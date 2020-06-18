@@ -6,7 +6,6 @@
 from django.urls import path
 
 # Localhub
-# Social-BFG
 from localhub.apps.activities.urls.generic import create_activity_urls
 
 # Local

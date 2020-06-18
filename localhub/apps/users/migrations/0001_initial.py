@@ -14,7 +14,6 @@ import sorl.thumbnail.fields
 import timezone_field.fields
 
 # Localhub
-# Social-BFG
 import localhub.db.fields
 import localhub.markdown.fields
 

@@ -8,7 +8,6 @@ from django.utils import timezone
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.bookmarks.factories import BookmarkFactory
 from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.flags.factories import FlagFactory

@@ -5,7 +5,6 @@
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.notifications.factories import NotificationFactory
 from localhub.apps.notifications.signals import notification_read
 

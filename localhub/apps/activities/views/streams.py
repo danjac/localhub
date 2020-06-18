@@ -18,7 +18,6 @@ from django.views.generic.dates import (
 )
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.views import CommunityRequiredMixin
 from localhub.apps.notifications.models import Notification
 from localhub.pagination import PresetCountPaginator

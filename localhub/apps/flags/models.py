@@ -12,7 +12,6 @@ from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.models import Community
 from localhub.apps.notifications.decorators import notify
 from localhub.apps.notifications.models import Notification

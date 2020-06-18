@@ -11,7 +11,6 @@ import model_utils.fields
 import sorl.thumbnail.fields
 
 # Localhub
-# Social-BFG
 import localhub.apps.hashtags.fields
 import localhub.apps.users.fields
 import localhub.markdown.fields

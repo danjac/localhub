@@ -8,7 +8,6 @@ from django.conf import settings
 from markdownx.widgets import MarkdownxWidget
 
 # Localhub
-# Social-BFG
 from localhub.forms.widgets import TypeaheadMixin
 
 

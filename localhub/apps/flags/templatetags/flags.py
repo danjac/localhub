@@ -5,7 +5,6 @@
 from django import template
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.models import Membership
 
 # Local

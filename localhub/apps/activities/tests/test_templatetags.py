@@ -8,7 +8,6 @@ from django.utils import timezone
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.posts.factories import PostFactory
 
 # Local

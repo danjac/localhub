@@ -9,7 +9,6 @@ from django.test import override_settings
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.join_requests.models import JoinRequest
 from localhub.apps.users.factories import UserFactory
 

@@ -5,7 +5,6 @@
 from django.conf import settings
 
 # Localhub
-# Social-BFG
 from localhub.apps.activities.views.generic import BaseActivityListView
 
 # Local

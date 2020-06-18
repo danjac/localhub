@@ -11,7 +11,6 @@ from django.utils.translation import gettext as _
 from django.views.generic import DetailView, ListView
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.views import (
     CommunityAdminRequiredMixin,
     CommunityRequiredMixin,

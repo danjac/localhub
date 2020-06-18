@@ -8,7 +8,6 @@ from django.urls import reverse
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.posts.factories import PostFactory
 
 # Local

@@ -9,7 +9,6 @@ Rulesets for the activities app and subclassed models.
 import rules
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.rules import is_member, is_moderator
 
 

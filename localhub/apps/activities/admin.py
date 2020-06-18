@@ -6,7 +6,6 @@
 from django.contrib import admin
 
 # Localhub
-# Social-BFG
 from localhub.markdown.admin import MarkdownFieldMixin
 
 

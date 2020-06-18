@@ -5,7 +5,6 @@
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.communities.models import Membership
 from localhub.apps.posts.factories import PostFactory

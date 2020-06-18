@@ -6,7 +6,6 @@
 from django import template
 
 # Localhub
-# Social-BFG
 from localhub.utils.http import is_https
 
 # Local

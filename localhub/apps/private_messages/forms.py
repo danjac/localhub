@@ -8,7 +8,6 @@ from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.utils.translation import gettext_lazy as _
 
 # Localhub
-# Social-BFG
 from localhub.apps.users.forms import MentionsField
 from localhub.apps.users.utils import extract_mentions
 

@@ -13,7 +13,6 @@ from model_utils.fields import MonitorField
 from model_utils.models import TimeStampedModel
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.models import Community
 from localhub.db.search.mixins import SearchQuerySetMixin
 

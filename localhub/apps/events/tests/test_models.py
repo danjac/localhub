@@ -15,7 +15,6 @@ import pytest
 import pytz
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.users.factories import UserFactory
 

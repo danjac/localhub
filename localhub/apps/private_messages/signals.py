@@ -5,7 +5,6 @@
 from django.dispatch import receiver
 
 # Localhub
-# Social-BFG
 from localhub.apps.notifications.signals import notification_read
 
 # Local

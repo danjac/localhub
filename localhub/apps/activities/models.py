@@ -15,7 +15,6 @@ from taggit.managers import TaggableManager
 from taggit.models import Tag
 
 # Localhub
-# Social-BFG
 from localhub.apps.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from localhub.apps.comments.models import Comment, CommentAnnotationsQuerySetMixin
 from localhub.apps.communities.models import Community

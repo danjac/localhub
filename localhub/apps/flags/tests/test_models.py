@@ -10,7 +10,6 @@ import factory
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.comments.factories import CommentFactory
 from localhub.apps.posts.factories import PostFactory
 

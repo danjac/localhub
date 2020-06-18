@@ -9,7 +9,6 @@ import pytest
 from pywebpush import WebPushException
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.factories import CommunityFactory, MembershipFactory
 from localhub.apps.communities.models import Community
 from localhub.apps.users.factories import UserFactory

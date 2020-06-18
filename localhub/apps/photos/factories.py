@@ -10,7 +10,6 @@ import factory
 from factory import DjangoModelFactory, Faker, LazyFunction, SubFactory
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.factories import CommunityFactory
 from localhub.apps.users.factories import UserFactory
 

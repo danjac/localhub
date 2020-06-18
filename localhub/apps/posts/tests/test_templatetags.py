@@ -5,7 +5,6 @@
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.users.factories import UserFactory
 
 # Local

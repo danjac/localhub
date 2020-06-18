@@ -9,7 +9,6 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 # Localhub
-# Social-BFG
 from localhub.apps.activities.forms import ActivityForm
 from localhub.forms import ClearableImageInput, FormHelper
 from localhub.utils.exif import Exif

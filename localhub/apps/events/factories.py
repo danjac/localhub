@@ -12,7 +12,6 @@ from factory import DjangoModelFactory, Faker, LazyFunction, SubFactory
 from factory.fuzzy import FuzzyDateTime
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.factories import CommunityFactory
 from localhub.apps.users.factories import UserFactory
 

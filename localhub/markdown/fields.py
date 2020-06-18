@@ -20,7 +20,6 @@ from django.utils.safestring import mark_safe
 from markdownx.models import MarkdownxField
 
 # Localhub
-# Social-BFG
 from localhub.apps.hashtags.utils import extract_hashtags
 from localhub.apps.users.utils import extract_mentions
 

@@ -11,7 +11,6 @@ from django.urls import reverse
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.comments.factories import CommentFactory
 from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.events.factories import EventFactory

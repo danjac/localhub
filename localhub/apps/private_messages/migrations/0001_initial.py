@@ -10,7 +10,6 @@ from django.db import migrations, models
 import model_utils.fields
 
 # Localhub
-# Social-BFG
 import localhub.markdown.fields
 
 

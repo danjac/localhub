@@ -17,7 +17,6 @@ import rules
 from rules.contrib.views import PermissionRequiredMixin
 
 # Localhub
-# Social-BFG
 from localhub.apps.invites.models import Invite
 from localhub.apps.join_requests.models import JoinRequest
 from localhub.views import SearchMixin, SuccessDeleteView, SuccessUpdateView

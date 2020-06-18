@@ -9,7 +9,6 @@ from django.urls import reverse
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.bookmarks.factories import BookmarkFactory
 from localhub.apps.bookmarks.models import Bookmark
 from localhub.apps.comments.models import Comment

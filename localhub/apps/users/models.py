@@ -19,7 +19,6 @@ from taggit.models import Tag
 from timezone_field import TimeZoneField
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.models import Membership
 from localhub.apps.notifications.decorators import notify
 from localhub.apps.notifications.models import Notification

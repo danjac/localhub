@@ -5,7 +5,6 @@
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.utils.exif import Exif
 
 # Local

@@ -18,7 +18,6 @@ from rules.contrib.views import PermissionRequiredMixin
 from taggit.models import Tag, TaggedItem
 
 # Localhub
-# Social-BFG
 from localhub.apps.activities.utils import get_activity_models
 from localhub.apps.activities.views.streams import BaseActivityStreamView
 from localhub.apps.communities.views import CommunityRequiredMixin

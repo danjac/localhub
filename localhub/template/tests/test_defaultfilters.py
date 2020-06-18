@@ -10,7 +10,6 @@ from django.urls import NoReverseMatch, reverse
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.posts.models import Post
 
 # Local

@@ -11,7 +11,6 @@ from django.db import models
 from model_utils.models import TimeStampedModel
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.models import Community
 from localhub.apps.notifications.decorators import notify
 from localhub.apps.notifications.models import Notification

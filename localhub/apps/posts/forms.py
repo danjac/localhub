@@ -6,7 +6,6 @@ from django import forms
 from django.utils.translation import gettext as _
 
 # Localhub
-# Social-BFG
 from localhub.apps.activities.forms import ActivityForm
 
 # Local

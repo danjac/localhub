@@ -10,7 +10,6 @@ import pytest
 from taggit.models import Tag
 
 # Localhub
-# Social-BFG
 from localhub.apps.bookmarks.factories import BookmarkFactory
 from localhub.apps.comments.factories import CommentFactory
 from localhub.apps.communities.factories import CommunityFactory, MembershipFactory

@@ -5,7 +5,6 @@
 import rules
 
 # Localhub
-# Social-BFG
 from localhub.apps.activities.rules import (
     is_activity_community_member,
     is_activity_community_moderator,

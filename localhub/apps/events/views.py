@@ -18,7 +18,6 @@ from django.views.generic.detail import SingleObjectMixin
 import pytz
 
 # Localhub
-# Social-BFG
 from localhub.apps.activities.views.generic import (
     ActivityCreateView,
     ActivityListView,

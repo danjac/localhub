@@ -7,7 +7,6 @@ from django.conf import settings
 from django.views.generic import ListView
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.views import (
     CommunityModeratorRequiredMixin,
     CommunityRequiredMixin,

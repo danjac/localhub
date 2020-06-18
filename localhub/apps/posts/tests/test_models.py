@@ -6,7 +6,6 @@ import pytest
 from taggit.models import Tag
 
 # Localhub
-# Social-BFG
 from localhub.apps.comments.factories import CommentFactory
 from localhub.apps.comments.models import Comment
 from localhub.apps.communities.factories import CommunityFactory, MembershipFactory

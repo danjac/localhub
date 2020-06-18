@@ -6,7 +6,6 @@
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.flags.factories import FlagFactory
 from localhub.apps.invites.factories import InviteFactory
 from localhub.apps.join_requests.factories import JoinRequestFactory

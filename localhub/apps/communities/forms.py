@@ -6,7 +6,6 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 # Localhub
-# Social-BFG
 from localhub.forms import ClearableImageInput, FormHelper, TypeaheadInput
 
 # Local

@@ -5,7 +5,6 @@ from django.utils.encoding import force_str
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.posts.factories import PostFactory
 
 pytestmark = pytest.mark.django_db

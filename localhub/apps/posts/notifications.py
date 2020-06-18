@@ -3,7 +3,6 @@
 
 
 # Localhub
-# Social-BFG
 from localhub.apps.activities.notifications import ActivityAdapter
 from localhub.apps.notifications.decorators import register
 

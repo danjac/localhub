@@ -7,7 +7,6 @@ from django.conf import settings
 from django.urls import reverse
 
 # Localhub
-# Social-BFG
 from localhub.utils.text import slugify_unicode
 
 

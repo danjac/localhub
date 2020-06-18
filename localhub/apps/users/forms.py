@@ -10,7 +10,6 @@ from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
 from django.utils.translation import gettext_lazy as _
 
 # Localhub
-# Social-BFG
 from localhub.forms import FormHelper
 from localhub.forms.widgets import BaseTypeaheadInput, ClearableImageInput
 

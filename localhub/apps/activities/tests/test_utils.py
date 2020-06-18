@@ -11,7 +11,6 @@ from django.utils import timezone
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.events.factories import EventFactory
 from localhub.apps.events.models import Event
 from localhub.apps.photos.factories import PhotoFactory

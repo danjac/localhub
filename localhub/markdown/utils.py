@@ -19,7 +19,6 @@ from bleach.linkifier import TLDS, LinkifyFilter, build_url_re
 from markdownx.utils import markdownify as default_markdownify
 
 # Localhub
-# Social-BFG
 from localhub.apps.hashtags.utils import linkify_hashtags
 from localhub.apps.users.utils import linkify_mentions
 

@@ -9,7 +9,6 @@ import pytest
 from allauth.account.models import EmailAddress
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.factories import CommunityFactory, MembershipFactory
 from localhub.apps.communities.models import Membership
 from localhub.apps.private_messages.factories import MessageFactory

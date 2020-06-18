@@ -7,7 +7,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand, CommandError
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.models import Community, Membership
 
 

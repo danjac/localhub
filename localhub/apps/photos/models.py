@@ -9,7 +9,6 @@ from django.utils.translation import gettext_lazy as _
 from sorl.thumbnail import ImageField
 
 # Localhub
-# Social-BFG
 from localhub.apps.activities.models import Activity
 from localhub.db.search.indexer import SearchIndexer
 

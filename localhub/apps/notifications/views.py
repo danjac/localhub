@@ -12,7 +12,6 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, TemplateView, View
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.views import CommunityRequiredMixin
 from localhub.views import SuccessActionView, SuccessDeleteView, SuccessView
 

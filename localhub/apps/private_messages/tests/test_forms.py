@@ -8,7 +8,6 @@ from django.core.exceptions import ImproperlyConfigured
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.users.factories import UserFactory
 

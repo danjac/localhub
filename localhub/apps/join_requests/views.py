@@ -16,7 +16,6 @@ from django.views.generic import DetailView, ListView
 from rules.contrib.views import PermissionRequiredMixin
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.models import Membership
 from localhub.apps.communities.views import (
     CommunityAdminRequiredMixin,

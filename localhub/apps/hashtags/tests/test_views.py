@@ -11,7 +11,6 @@ from pytest_django.asserts import assertTemplateUsed
 from taggit.models import Tag
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.factories import CommunityFactory, MembershipFactory
 from localhub.apps.events.factories import EventFactory
 from localhub.apps.photos.factories import PhotoFactory

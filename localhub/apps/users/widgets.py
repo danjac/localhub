@@ -6,7 +6,6 @@
 from django.conf import settings
 
 # Localhub
-# Social-BFG
 from localhub.forms.widgets import BaseTypeaheadInput
 
 

@@ -8,7 +8,6 @@ from django.utils.translation import gettext as _
 from django.views.generic import View
 
 # Localhub
-# Social-BFG
 from localhub.utils.http import URLResolver
 from localhub.utils.scraper import HTMLScraper
 

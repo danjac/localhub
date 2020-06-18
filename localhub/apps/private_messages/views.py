@@ -15,7 +15,6 @@ from django.views.generic import DetailView, ListView
 from rules.contrib.views import PermissionRequiredMixin
 
 # Localhub
-# Social-BFG
 from localhub.apps.bookmarks.models import Bookmark
 from localhub.apps.communities.views import CommunityRequiredMixin
 from localhub.views import (

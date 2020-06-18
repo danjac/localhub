@@ -10,7 +10,6 @@ from django.utils.translation import gettext_lazy as _
 import pytz
 
 # Localhub
-# Social-BFG
 from localhub.apps.activities.forms import ActivityForm
 from localhub.forms import CalendarField, CalendarWidget, FormHelper
 from localhub.utils.geocode import geocode

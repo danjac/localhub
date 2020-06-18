@@ -30,7 +30,6 @@ from icalendar import Event as CalendarEvent
 from timezone_field import TimeZoneField
 
 # Localhub
-# Social-BFG
 from localhub.apps.activities.models import Activity, ActivityManager, ActivityQuerySet
 from localhub.apps.notifications.decorators import notify
 from localhub.db.functions import DateAdd, MonthAdd, YearAdd

@@ -15,7 +15,6 @@ from model_utils.models import TimeStampedModel
 from pywebpush import WebPushException, webpush
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.models import Community
 from localhub.db.generic import get_generic_related_exists
 from localhub.db.utils import boolean_value

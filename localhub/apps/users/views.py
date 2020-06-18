@@ -17,7 +17,6 @@ from django.views.generic import DeleteView, DetailView, ListView, View
 from rules.contrib.views import PermissionRequiredMixin
 
 # Localhub
-# Social-BFG
 from localhub.apps.activities.utils import get_activity_models
 from localhub.apps.activities.views.streams import BaseActivityStreamView
 from localhub.apps.comments.models import Comment

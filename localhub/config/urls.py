@@ -9,7 +9,6 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 # Localhub
-# Social-BFG
 from localhub.apps.activities.views.streams import activity_stream_view
 from localhub.apps.communities.views import (
     community_list_view,

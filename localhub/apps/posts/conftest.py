@@ -5,7 +5,6 @@
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.utils.http import URLResolver
 from localhub.utils.scraper import HTMLScraper
 

@@ -15,7 +15,6 @@ import pytest
 from PIL import Image
 
 # Localhub
-# Social-BFG
 from localhub.apps.comments.factories import CommentFactory
 from localhub.apps.communities.factories import CommunityFactory, MembershipFactory
 from localhub.apps.communities.models import Membership

@@ -5,7 +5,6 @@
 import rules
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.rules import is_member
 
 rules.add_perm("private_messages.create_message", is_member)

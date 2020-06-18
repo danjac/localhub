@@ -11,7 +11,6 @@ from django.utils.encoding import force_str
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.likes.factories import LikeFactory
 from localhub.apps.likes.models import Like

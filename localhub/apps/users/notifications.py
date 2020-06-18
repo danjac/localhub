@@ -6,7 +6,6 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
 # Localhub
-# Social-BFG
 from localhub.apps.notifications.adapter import Adapter, Mailer, Webpusher
 from localhub.apps.notifications.decorators import register
 

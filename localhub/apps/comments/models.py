@@ -16,7 +16,6 @@ from django.utils import timezone
 from model_utils.models import TimeStampedModel
 
 # Localhub
-# Social-BFG
 from localhub.apps.bookmarks.models import Bookmark, BookmarkAnnotationsQuerySetMixin
 from localhub.apps.communities.models import Community, Membership
 from localhub.apps.flags.models import Flag, FlagAnnotationsQuerySetMixin

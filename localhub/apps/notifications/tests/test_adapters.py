@@ -5,7 +5,6 @@
 import pytest
 
 # Localhub
-# Social-BFG
 from localhub.apps.posts.notifications import PostAdapter
 
 # Local

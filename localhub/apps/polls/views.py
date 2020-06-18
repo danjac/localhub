@@ -12,7 +12,6 @@ from django.views.generic.base import TemplateResponseMixin
 from rules.contrib.views import PermissionRequiredMixin
 
 # Localhub
-# Social-BFG
 from localhub.apps.activities.views.generic import (
     ActivityCreateView,
     ActivityDetailView,

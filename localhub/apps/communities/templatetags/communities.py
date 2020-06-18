@@ -6,7 +6,6 @@
 from django import template
 
 # Localhub
-# Social-BFG
 from localhub.apps.flags.templatetags import flags
 from localhub.apps.invites.templatetags import invites
 from localhub.apps.join_requests.templatetags import join_requests
