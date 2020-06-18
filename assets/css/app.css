@@ -15,9 +15,9 @@ a:hover {
   @apply text-blue-600;
 }
 
-a[target='_blank']:visited {
-  @apply text-purple-700;
-}
+/*a[target='_blank']:visited {*/
+/*@apply text-purple-700;*/
+/*}*/
 
 blockquote {
   @apply text-gray-800 border-l-4 border-gray-200 pl-3 italic whitespace-normal break-words;
