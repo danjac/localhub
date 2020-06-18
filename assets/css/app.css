@@ -339,7 +339,7 @@ a.btn-secondary {
 }
 
 .tag {
-  @apply rounded bg-gray-600 text-white px-1 text-xs;
+  @apply rounded bg-gray-900 text-white px-1 text-xs;
 }
 
 .tag-primary {
@@ -347,7 +347,7 @@ a.btn-secondary {
 }
 
 .text-muted {
-  @apply text-gray-600;
+  @apply text-gray-300;
 }
 
 @tailwind utilities;
