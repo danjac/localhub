@@ -42,7 +42,7 @@ ol {
 }
 
 .breadcrumbs {
-  @apply text-sm flex flex-wrap text-gray-500;
+  @apply text-sm flex flex-wrap text-gray-600;
 }
 
 .breadcrumb-item:not(:last-child) {
