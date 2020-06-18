@@ -339,11 +339,11 @@ a.btn-secondary {
 }
 
 .tag {
-  @apply rounded bg-gray-900 text-white px-1 text-xs;
+  @apply rounded bg-indigo-900 text-white px-1 text-xs;
 }
 
 .tag:hover {
-  @apply bg-gray-700;
+  @apply bg-indigo-700;
 }
 
 .tag-primary {
