@@ -47,7 +47,7 @@ def linkify_mentions(content, css_class=None, with_preview_attrs=True):
                 )
             else:
                 preview_attrs = ""
-            url = reverse("users:activities", args=[mention])
+            url = reverse("users:activities", args=[slugify_unicode(mention)])
             token = token.replace(
                 "@" + mention,
                 f'<a {preview_attrs} href="{url}"{css_class}>@{mention}</a>',

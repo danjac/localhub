@@ -193,6 +193,12 @@ a.btn-secondary {
 .markdownx-preview p {
   @apply py-1;
 }
+
+.markdown-content code,
+.markdown-preview code {
+  @apply italic bg-gray-100 p-1;
+}
+
 .message {
   @apply text-white;
 }
