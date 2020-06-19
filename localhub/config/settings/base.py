@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Standard Library
-import os
 import pathlib
 import re
 
@@ -232,7 +231,7 @@ class Base(Configuration):
 
     @property
     def BASE_DIR(self):
-        return str(pathlib.Path(__file__).parents[3])
+        return pathlib.Path(__file__).parents[3]
 
     @property
     def INSTALLED_APPS(self):
@@ -251,22 +250,22 @@ class Base(Configuration):
 
     @property
     def MEDIA_ROOT(self):
-        return os.path.join(self.BASE_DIR, "media")
+        return self.BASE_DIR / "media"
 
     @property
     def STATIC_ROOT(self):
-        return os.path.join(self.BASE_DIR, "static")
+        return self.BASE_DIR / "static"
 
     @property
     def STATICFILES_DIRS(self):
-        return [os.path.join(self.BASE_DIR, "assets")]
+        return [self.BASE_DIR / "assets"]
 
     @property
     def TEMPLATES(self):
         return [
             {
                 "BACKEND": "django.template.backends.django.DjangoTemplates",
-                "DIRS": [os.path.join(self.BASE_DIR, "templates")],
+                "DIRS": [self.BASE_DIR / "templates"],
                 "APP_DIRS": True,
                 "OPTIONS": {
                     "debug": self.DEBUG,
@@ -309,7 +308,7 @@ class Base(Configuration):
 
     @property
     def LOCALE_PATHS(self):
-        return [os.path.join(self.BASE_DIR, "locale")]
+        return [self.BASE_DIR / "locale"]
 
     @property
     def LOGIN_REDIRECT_URL(self):
