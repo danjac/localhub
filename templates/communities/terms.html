@@ -11,27 +11,29 @@
 
 {% block content %}
 
-<h1 class="page-header mb-3">{% trans "Terms & Conditions" %}</h1>
+<div class="flex-wrap lg:flex items-center lg:justify-between mb-3">
+  <h1 class="page-header">{% trans "Terms & Conditions" %}</h1>
 
-{% has_perm "communities.manage_community" user community as can_manage %}
-{% if can_manage or community.description %}
-<div class="page-nav">
-  {% if community.description %}
-  <a class="page-nav-item"
-     href="{% url 'communities:community_detail' %}">
-    {% blocktrans with community_name=community.name %}
-    About {{ community.name }}
-    {% endblocktrans %}
-  </a>
-  {% endif %}
-  {% if can_manage %}
-  <a class="page-nav-item"
-     href="{% url "communities:community_update" %}">
-    {% trans "Community Settings" %}
-  </a>
+  {% has_perm "communities.manage_community" user community as can_manage %}
+  {% if can_manage or community.description %}
+  <div class="page-nav mt-3 lg:mt-0">
+    {% if community.description %}
+    <a class="page-nav-item"
+       href="{% url 'communities:community_detail' %}">
+      {% blocktrans with community_name=community.name %}
+      About {{ community.name }}
+      {% endblocktrans %}
+    </a>
+    {% endif %}
+    {% if can_manage %}
+    <a class="page-nav-item"
+       href="{% url "communities:community_update" %}">
+      {% trans "Community Settings" %}
+    </a>
+    {% endif %}
+  </div>
   {% endif %}
 </div>
-{% endif %}
 
 <div class="markdown-content">
   {{ community.terms.markdown|strip_external_images:user|lazify }}

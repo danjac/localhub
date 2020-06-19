@@ -11,26 +11,28 @@
 
 {% block content %}
 
-<h1 class="page-header mb-3">{{ community.name }}</h1>
+<div class="flex-wrap lg:flex items-center lg:justify-between mb-3">
+  <h1 class="page-header">{{ community.name }}</h1>
 
-{% has_perm "communities.manage_community" user community as can_manage %}
-{% if community.terms or can_manage %}
-<div class="page-nav mb-3">
-  {% if community.terms %}
-  <a class="page-nav-item"
-     href="{% url 'communities:community_terms' %}">
-    {% trans "Terms" %}
-  </a>
-  {% endif %}
+  {% has_perm "communities.manage_community" user community as can_manage %}
+  {% if community.terms or can_manage %}
+  <div class="page-nav mt-3 lg:mt-0">
+    {% if community.terms %}
+    <a class="page-nav-item"
+       href="{% url 'communities:community_terms' %}">
+      {% trans "Terms" %}
+    </a>
+    {% endif %}
 
-  {% if can_manage %}
-  <a class="page-nav-item"
-     href="{% url "communities:community_update" %}">
-    {% trans "Community Settings" %}
-  </a>
+    {% if can_manage %}
+    <a class="page-nav-item"
+       href="{% url "communities:community_update" %}">
+      {% trans "Community Settings" %}
+    </a>
+    {% endif %}
+  </div>
   {% endif %}
 </div>
-{% endif %}
 
 <div class="markdown-content">
   {{ community.description.markdown|strip_external_images:user|lazify }}

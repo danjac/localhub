@@ -27,7 +27,7 @@
   <h1 class="page-header">{% trans "Calendar" %}</h1>
 
   {% if not current_date %}
-  <div class="page-nav">
+  <div class="page-nav mt-3 lg:mt-0">
     {% has_perm 'activities.create_activity' user community as can_create_activity %}
     {% if can_create_activity %}
     <a class="page-nav-item"
