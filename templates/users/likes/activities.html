@@ -10,7 +10,7 @@
 
 
 {% if paginator.count %}
-<div class="notification mb-3">
+<div class="notification font-bold mb-3">
 
   {% if is_current_user %}
   You have received
@@ -19,15 +19,15 @@
   {% endif %}
 
   {% blocktrans count counter=num_likes %}
-  <strong>1 like</strong> for
+  1 like for
   {% plural %}
-  <strong>{{ counter }} likes</strong> for
+  {{ counter }} likes for
   {% endblocktrans %}
 
   {% blocktrans count counter=paginator.count %}
-  <strong>1 activity</strong>.
+  1 activity.
   {% plural %}
-  <strong>{{ counter }} activities</strong>.
+  {{ counter }} activities.
   {% endblocktrans %}
 
 </div>

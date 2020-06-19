@@ -42,10 +42,10 @@
 {% endif %}
 
 {% if not community.allow_join_requests %}
-<p class="notification my-4">
+<div class="notification font-bold my-4">
   {% url 'communities:community_update' as settings_url %}
   {% blocktrans %}Join requests are currently disabled for this community. You can re-enable them <a href="{{ settings_url }}">in your community settings</a>.{% endblocktrans %}
-</p>
+</div>
 {% endif %}
 
 {% if object_list %}

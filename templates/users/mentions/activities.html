@@ -9,20 +9,18 @@
 {% block mentions_content %}
 
 {% if paginator.count %}
-<div class="notification mb-3">
-
+<div class="notification font-bold mb-3">
   {% if is_current_user %}
-
   {% blocktrans count counter=paginator.count %}
-  You have been mentioned in <strong>1 activity</strong>
+  You have been mentioned in 1 activity
   {% plural %}
-  You have been mentioned in <strong>{{ counter }} activities</strong>
+  You have been mentioned in {{ counter }} activities
   {% endblocktrans %}
   {% else %}
   {% blocktrans count counter=paginator.count %}
-  {{ display_name }} has been mentioned in <strong>1 activity</strong>
+  {{ display_name }} has been mentioned in 1 activity
   {% plural %}
-  {{ display_name }} has been mentioned in <strong>{{ counter }} activities</strong>
+  {{ display_name }} has been mentioned in {{ counter }} activities
   {% endblocktrans %}
   {% endif %}
 </div>

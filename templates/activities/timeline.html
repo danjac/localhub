@@ -54,12 +54,12 @@
 
 {% if selected_dates %}
 {% spaceless %}
-<div class="notification mb-3">
+<div class="notification font-bold mb-3">
 
   {% blocktrans count counter=paginator.count %}
-  <strong>One activity</strong> was posted
+  One activity was posted
   {% plural %}
-  A total of <strong>{{ counter }} activities</strong> were posted
+  A total of {{ counter }} activities were posted
   {% endblocktrans %}
   {% with num_months=selected_months|length num_years=selected_years|length %}
   {% if num_months < 2 and num_years == 1 %}

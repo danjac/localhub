@@ -45,11 +45,11 @@
 
 {% with total=paginator.count %}
 {% if total %}
-<div class="notification">
+<div class="notification font-bold mb-3">
   {% blocktrans with name=tag.name count counter=total %}
-  <strong>One activity</strong> has been tagged with <strong>#{{ name }}</strong>.
+  One activity has been tagged with #{{ name }}.
   {% plural %}
-  <strong>{{ total }} activities</strong> have been tagged with <strong>#{{ name }}</strong>.
+  {{ total }} activities have been tagged with #{{ name }}.
   {% endblocktrans %}
 </div>
 {% endif %}
