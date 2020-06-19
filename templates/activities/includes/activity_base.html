@@ -49,7 +49,7 @@
             {% if object.url %}
             {{ object.url|linkify:object.title }}
             {% else %}
-            {{ object.title|linkify_hashtags|linkify_mentions }}
+            {{ object.title|linkify_hashtags:"mr-1"|linkify_mentions:"mr-1" }}
             {% endif %}
           </span>
           {% endblock %}
@@ -116,12 +116,12 @@
         {% endif %}
         {% if object.hashtags %}
         <div class="mr-2">
-          {{ object.hashtags|linkify_hashtags }}
+          {{ object.hashtags|linkify_hashtags:"mr-1" }}
         </div>
         {% endif %}
         {% if object.mentions %}
         <div class="">
-          {{ object.mentions|linkify_mentions }}
+          {{ object.mentions|linkify_mentions:"mr-1" }}
         </div>
         {% endif %}
       </div>
