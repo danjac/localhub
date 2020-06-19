@@ -65,21 +65,21 @@
   {% if num_months < 2 and num_years == 1 %}
   {% with earliest=selected_dates|first|date:"E Y" %}
   {% blocktrans %}
-  in <b>{{ earliest }}</b>.
+  in <u>{{ earliest }}</u>.
   {% endblocktrans %}
   {% endwith %}
 
   {% elif num_years == 1 %}
   {% with earliest=selected_dates|first|date:"E" latest=selected_dates|last|date:"E Y" %}
   {% blocktrans %}
-  from <b>{{ earliest }}</b> to <b>{{ latest }}</b>.
+  from <u>{{ earliest }}</u> to <u>{{ latest }}</u>.
   {% endblocktrans %}
   {% endwith %}
 
   {% else %}
   {% with earliest=selected_dates|first|date:"E Y" latest=selected_dates|last|date:"E Y" %}
   {% blocktrans %}
-  from <b>{{ earliest }}</b> to <b>{{ latest }}</b>.
+  from <u>{{ earliest }}</u> to <u>{{ latest }}</u>.
   {% endblocktrans %}
   {% endwith %}
   {% endif %}
