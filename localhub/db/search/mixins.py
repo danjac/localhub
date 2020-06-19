@@ -16,6 +16,8 @@ class SearchQuerySetMixin:
         """
         if not search_term:
             return self.none()
+        # use this line in Django 3.1+:
+        # query = SearchQuery(search_term, search_type="websearch")
         query = SearchQuery(search_term)
         return self.annotate(
             **{
