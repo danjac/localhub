@@ -5,19 +5,19 @@
 {% load i18n %}
 {% load rules %}
 
+{% block activity_list_nav_items %}
+<a class="page-nav-item"
+   href="{% url 'events:calendar' %}">{% trans "Calendar" %}</a>
+<a class="page-nav-item"
+   href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
+<a class="page-nav-item"
+   href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
+<a class="page-nav-item"
+   href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
+{% endblock activity_list_nav_items %}
+
+
 {% block activity_list_header %}
-
-<div class="page-nav mb-3">
-  <a class="page-nav-item"
-     href="{% url 'events:calendar' %}">{% trans "Calendar" %}</a>
-  <a class="page-nav-item"
-     href="{% url 'posts:list' %}">{% trans "Posts" %}</a>
-  <a class="page-nav-item"
-     href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
-  <a class="page-nav-item"
-     href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
-</div>
-
 {% has_perm 'activities.create_activity' user community as can_create_activity %}
 {% if can_create_activity %}
 {% url 'events:create' as submit_url %}

@@ -11,58 +11,62 @@
 
 {% block content %}
 
-{% with list_url=view.model|resolve_url:"list" model_name_plural=view.model|verbose_name_plural|title model_name=view.model|verbose_name|title %}
-<ul class="breadcrumbs mb-3">
+<div class="flex-wrap lg:flex items-center lg:justify-between mb-3">
 
-  {% if object %}
+  {% with list_url=view.model|resolve_url:"list" model_name_plural=view.model|verbose_name_plural|title model_name=view.model|verbose_name|title %}
+  <ul class="breadcrumbs">
 
-  {% if object.published %}
-  <li class="breadcrumb-item">
-    <a href="{{ list_url }}">{{ model_name_plural }}</a>
-  </li>
-  {% else %}
-  <li class="breadcrumb-item">
-    <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
-  </li>
+    {% if object %}
+
+    {% if object.published %}
+    <li class="breadcrumb-item">
+      <a href="{{ list_url }}">{{ model_name_plural }}</a>
+    </li>
+    {% else %}
+    <li class="breadcrumb-item">
+      <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
+    </li>
+    {% endif %}
+
+    <li class="breadcrumb-item">
+      <a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a>
+    </li>
+
+    <li class="breadcrumb-item">
+      {% blocktrans %}Edit {{ model_name }}{% endblocktrans %}
+    </li>
+
+    {% else %}
+
+    {% if view.is_private %}
+    <li class="breadcrumb-item">
+      <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
+    </li>
+    {% else %}
+    <li class="breadcrumb-item">
+      <a href="{{ list_url }}">{{ model_name_plural }}</a>
+    </li>
+    {% endif %}
+    <li class="breadcrumb-item">
+      {% blocktrans %}Submit {{ model_name }}{% endblocktrans %}
+    </li>
+    {% endif %}
+
+  </ul>
+  {% endwith %}
+
+
+  {% if submit_actions %}
+  <div class="page-nav mt-3 lg:mt-0">
+    {% block actions %}
+    {% for url, label in submit_actions %}
+    <a class="page-nav-item"
+       href="{{ url }}">{{ label }}</a>
+    {% endfor %}
+    {% endblock actions %}
+  </div>
   {% endif %}
-
-  <li class="breadcrumb-item">
-    <a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:60 }}</a>
-  </li>
-
-  <li class="breadcrumb-item">
-    {% blocktrans %}Edit {{ model_name }}{% endblocktrans %}
-  </li>
-
-  {% else %}
-
-  {% if view.is_private %}
-  <li class="breadcrumb-item">
-    <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
-  </li>
-  {% else %}
-  <li class="breadcrumb-item">
-    <a href="{{ list_url }}">{{ model_name_plural }}</a>
-  </li>
-  {% endif %}
-  <li class="breadcrumb-item">
-       {% blocktrans %}Submit {{ model_name }}{% endblocktrans %}
-  </li>
-  {% endif %}
-
-</ul>
-{% endwith %}
-
-
-{% if submit_actions %}
-<div class="page-nav mb-3">
-  {% block actions %}
-  {% for url, label in submit_actions %}
-  <a class="page-nav-item" href="{{ url }}">{{ label }}</a>
-  {% endfor %}
-  {% endblock actions %}
 </div>
-{% endif %}
 
 
 {% block form %}

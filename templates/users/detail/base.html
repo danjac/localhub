@@ -27,26 +27,51 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 {% enddismissable %}
 {% endif %}
 
-<h1 class="page-header flex flex-wrap items-center mb-3">
-  {% if user_obj.avatar %}
-  <div class="inline-block mr-3">
-    {% avatar user_obj "64" css_class="mr-1" show_placeholder=False %}
-  </div>
-  {% endif %}
-  <div class="inline-block mr-3">
-    {% if user_obj.username == display_name %}
-    @{{ display_name }}
-    {% else %}
-    {{ display_name }}
-    (@{{ user_obj.username }})
+<div class="flex-wrap lg:flex items-center lg:justify-between mb-3">
+  <h1 class="page-header flex flex-wrap items-center">
+    {% if user_obj.avatar %}
+    <div class="inline-block mr-3">
+      {% avatar user_obj "64" css_class="mr-1" show_placeholder=False %}
+    </div>
+    {% endif %}
+    <div class="inline-block mr-3">
+      {% if user_obj.username == display_name %}
+      @{{ display_name }}
+      {% else %}
+      {{ display_name }}
+      (@{{ user_obj.username }})
+      {% endif %}
+    </div>
+    {% if membership.is_admin %}
+    <span class="inline-block tag mr-3">{% trans "Admin" %}</span>
+    {% elif membership.is_moderator %}
+    <span class="inline-block tag">{% trans "Moderator" %}</span>
+    {% endif %}
+  </h1>
+  <div class="page-nav mt-3 lg:mt-0">
+    {% if is_current_user %}
+    <a class="page-nav-item"
+       href="{% url 'user_update' %}">
+      {% trans "Settings" %}
+    </a>
+    {% endif %}
+
+    {% if not is_blocked %}
+    <a class="page-nav-item"
+       href="{% url 'users:activity_likes' user_obj.username %}">
+      {% trans "Likes" %}
+    </a>
+    <a class="page-nav-item"
+       href="{% url 'users:activity_mentions' user_obj.username %}">
+      {% trans "Mentions" %}
+    </a>
+    {% endif %}
+    {% if can_view_membership %}
+    <a class="page-nav-item"
+       href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
     {% endif %}
   </div>
-  {% if membership.is_admin %}
-  <span class="inline-block tag mr-3">{% trans "Admin" %}</span>
-  {% elif membership.is_moderator %}
-  <span class="inline-block tag">{% trans "Moderator" %}</span>
-  {% endif %}
-</h1>
+</div>
 
 {% if not is_blocked %}
 <p class="mb-3 text-sm">
@@ -151,29 +176,6 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
   </div>
   {% endif %}
 
-  <div class="page-nav">
-    {% if is_current_user %}
-    <a class="page-nav-item"
-       href="{% url 'user_update' %}">
-      {% trans "Settings" %}
-    </a>
-    {% endif %}
-
-    {% if not is_blocked %}
-    <a class="page-nav-item"
-       href="{% url 'users:activity_likes' user_obj.username %}">
-      {% trans "Likes" %}
-    </a>
-    <a class="page-nav-item"
-       href="{% url 'users:activity_mentions' user_obj.username %}">
-      {% trans "Mentions" %}
-    </a>
-    {% endif %}
-    {% if can_view_membership %}
-    <a class="page-nav-item"
-       href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
-    {% endif %}
-  </div>
 </div>
 
 

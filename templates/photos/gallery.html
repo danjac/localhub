@@ -10,24 +10,27 @@
 
 {% block content %}
 
-<h1 class="page-header mb-3">{% trans "Gallery" %}</h1>
+<div class="flex-wrap lg:flex items-center lg:justify-between mb-3 border-b border-gray-500 pb-2">
 
-<div class="page-nav border-b border-gray-500 mb-3 pb-2">
-  {% has_perm 'activities.create_activity' user community as can_create_activity %}
-  {% if can_create_activity %}
-  <a class="page-nav-item"
-     href="{% url 'photos:create' %}">
-    {% trans "Submit Photo" %}
-  </a>
-  {% endif %}
-  <a class="page-nav-item"
-     href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
+  <h1 class="page-header">{% trans "Gallery" %}</h1>
+  <div class="page-nav">
+    {% has_perm 'activities.create_activity' user community as can_create_activity %}
+    {% if can_create_activity %}
+    <a class="page-nav-item"
+       href="{% url 'photos:create' %}">
+      {% trans "Submit Photo" %}
+    </a>
+    {% endif %}
+    <a class="page-nav-item"
+       href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
+  </div>
 </div>
 
 {% if page_obj.number > 1 %}
 {% include "includes/pagination.html" with css_class="mt-1 mb-3" %}
 {% endif %}
 
+{% if object_list %}
 <div class="flex flex-wrap justify-between">
   {% for photo in object_list %}
   <div class="mb-3">
@@ -44,9 +47,9 @@
       {% endif %}
     </a>
   </div>
-  {% empty %}
-  {% include "includes/empty.html" %}
   {% endfor %}
 </div>
-{% include "includes/pagination.html" %}
+{% else %}
+{% include "includes/empty.html" %}
+{% endif %}
 {% endblock %}

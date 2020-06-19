@@ -5,16 +5,16 @@
 {% load i18n %}
 {% load rules %}
 
-{% block activity_list_header %}
-
-<div class="page-nav mb-3">
+{% block activity_list_nav_items %}
   <a class="page-nav-item"
      href="{% url 'events:list' %}">{% trans "Events" %}</a>
   <a class="page-nav-item"
      href="{% url 'photos:list' %}">{% trans "Photos" %}</a>
   <a class="page-nav-item"
      href="{% url 'polls:list' %}">{% trans "Polls" %}</a>
-</div>
+{% endblock activity_list_nav_items %}
+
+{% block activity_list_header %}
 
 {% has_perm 'activities.create_activity' user community as can_create_activity %}
 {% if can_create_activity %}

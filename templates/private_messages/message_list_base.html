@@ -9,24 +9,26 @@
 
 
 {% block content %}
-<h1 class="page-header mb-3">{% trans "Messages" %}</h1>
+<div class="flex-wrap lg:flex items-center lg:justify-between mb-3">
+  <h1 class="page-header">{% trans "Messages" %}</h1>
 
-{% has_perm "private_messages.create_message" user community as can_create_message %}
-{% get_unread_message_count user community as unread_messages %}
-{% if can_create_message or unread_messages %}
-<div class="page-nav mb-3">
-  <a href="{% url 'private_messages:message_create'%}"
-     class="page-nav-item">{% trans "Send Message" %}</a>
-  {% if unread_messages %}
-  <a class="page-nav-item"
-     href="{% url 'private_messages:mark_all_read' %}"
-     data-turbolinks="false"
-     data-controller="ajax"
-     data-action="ajax#post"
-     data-ajax-redirect="{{ request.get_full_path }}">{% trans "Mark All As Read" %}</a>
+  {% has_perm "private_messages.create_message" user community as can_create_message %}
+  {% get_unread_message_count user community as unread_messages %}
+  {% if can_create_message or unread_messages %}
+  <div class="page-nav">
+    <a href="{% url 'private_messages:message_create'%}"
+       class="page-nav-item">{% trans "Send Message" %}</a>
+    {% if unread_messages %}
+    <a class="page-nav-item"
+       href="{% url 'private_messages:mark_all_read' %}"
+       data-turbolinks="false"
+       data-controller="ajax"
+       data-action="ajax#post"
+       data-ajax-redirect="{{ request.get_full_path }}">{% trans "Mark All As Read" %}</a>
+    {% endif %}
+  </div>
   {% endif %}
 </div>
-{% endif %}
 
 
 {% with search=view.search_query %}

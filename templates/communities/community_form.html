@@ -8,17 +8,19 @@
 {% block subtitle %} / {% trans "Site Settings" %}{% endblock %}
 
 {% block content %}
-<h1 class="page-header mb-3">{% trans "Site Settings" %}</h1>
+<div class="flex-wrap lg:flex items-center lg:justify-between mb-3">
+  <h1 class="page-header">{% trans "Site Settings" %}</h1>
 
-<div class="page-nav mb-3">
-  <a class="page-nav-item"
-     href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
-  <a class="page-nav-item"
-     href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
-  <a class="page-nav-item"
-     href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
-  <a class="page-nav-item"
-     href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
+  <div class="page-nav mt-3 lg:mt-0">
+    <a class="page-nav-item"
+       href="{% url 'user_update' %}">{% trans "My Settings" %}</a>
+    <a class="page-nav-item"
+       href="{% url 'communities:membership_list' %}">{% trans "Memberships" %}</a>
+    <a class="page-nav-item"
+       href="{% url 'invites:list' %}">{% trans "Invites" %}</a>
+    <a class="page-nav-item"
+       href="{% url 'join_requests:list' %}">{% trans "Join Requests" %}</a>
+  </div>
 </div>
 
 {% include "includes/forms/ajax_form.html" with submit_btn=_("Save Settings") %}

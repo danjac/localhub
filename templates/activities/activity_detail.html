@@ -13,44 +13,46 @@
 {% block content %}
 {% with object|verbose_name|title as object_name %}
 
-{% block breadcrumbs %}
-<ul class="breadcrumbs mb-3">
-  {% if object.published %}
-  <li class="breadcrumb-item">
-    <a href="{{ object|resolve_url:"list" }}">
-      {{ object|verbose_name_plural|title }}
-    </a>
-  </li>
-  {% else %}
-  <li class="breadcrumb-item">
-    <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
-  </li>
+<div class="flex-wrap lg:flex items-center lg:justify-between mb-3">
+  {% block breadcrumbs %}
+  <ul class="breadcrumbs">
+    {% if object.published %}
+    <li class="breadcrumb-item">
+      <a href="{{ object|resolve_url:"list" }}">
+        {{ object|verbose_name_plural|title }}
+      </a>
+    </li>
+    {% else %}
+    <li class="breadcrumb-item">
+      <a href="{% url 'activities:private' %}">{% trans "Private Stash" %}</a>
+    </li>
+    {% endif %}
+    <li class="breadcrumb-item">
+      {{ object.title|truncatechars:60 }}
+    </li>
+  </ul>
+  {% endblock breadcrumbs %}
+
+  {% if comments.number == 1 %}
+  {% if object.deleted %}
+  <p class="toast text-center my-2">
+    {% blocktrans %}
+    This {{ object_name }} has been removed by a community moderator.
+    {% endblocktrans %}
+  </p>
   {% endif %}
-  <li class="breadcrumb-item">
-    {{ object.title|truncatechars:60 }}
-  </li>
-</ul>
-{% endblock breadcrumbs %}
 
-{% if comments.number == 1 %}
-{% if object.deleted %}
-<p class="toast text-center my-2">
-  {% blocktrans %}
-  This {{ object_name }} has been removed by a community moderator.
-  {% endblocktrans %}
-</p>
-{% endif %}
-
-{% has_perm "activities.create_activity" user community as can_create_activity %}
-{% if can_create_activity %}
-<div class="page-nav mb-3">
-  {% with action=object.published|yesno:"create,create_private" %}
-  <a href="{{ object|resolve_url:action }}">
-    {% blocktrans %}Submit New {{ object_name }}{% endblocktrans %}
-  </a>
-  {% endwith %}
+  {% has_perm "activities.create_activity" user community as can_create_activity %}
+  {% if can_create_activity %}
+  <div class="page-nav mt-3 lg:mt-0">
+    {% with action=object.published|yesno:"create,create_private" %}
+    <a href="{{ object|resolve_url:action }}">
+      {% blocktrans %}Submit New {{ object_name }}{% endblocktrans %}
+    </a>
+    {% endwith %}
+  </div>
+  {% endif %}
 </div>
-{% endif %}
 
 {% block activities_detail_content %}
 {% render_activity request user object is_detail=True reshares=reshares %}

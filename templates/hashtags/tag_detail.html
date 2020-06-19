@@ -9,37 +9,39 @@
 
 {% block content %}
 
-<ul class="breadcrumbs mb-3">
-  <li class="breadcrumb-item"><a href="{% url 'hashtags:list' %}">{% trans "Tags" %}</a></li>
-  <li class="breadcrumb-item">{{ tag.name }}</li>
-</ul>
+<div class="flex-wrap lg:flex items-center lg:justify-between mb-3">
+  <ul class="breadcrumbs">
+    <li class="breadcrumb-item"><a href="{% url 'hashtags:list' %}">{% trans "Tags" %}</a></li>
+    <li class="breadcrumb-item">{{ tag.name }}</li>
+  </ul>
 
-{% has_perm "users.follow_tag" user as can_follow_tag %}
-{% has_perm "users.block_tag" user as can_block_tag %}
+  {% has_perm "users.follow_tag" user as can_follow_tag %}
+  {% has_perm "users.block_tag" user as can_block_tag %}
 
-{% if can_follow_tag or can_block_tag %}
-<div class="page-nav mb-3">
-  {% if can_follow_tag %}
-  <span data-controller="ajax"
-        data-ajax-replace
-        class="page-nav-item">
-    {% with user.following_tags.all|contains:tag as is_following %}
-    {% include "hashtags/includes/follow.html" with object=tag %}
-    {% endwith %}
-  </span>
-  {% endif %}
+  {% if can_follow_tag or can_block_tag %}
+  <div class="page-nav mt-3 lg:mt-0">
+    {% if can_follow_tag %}
+    <span data-controller="ajax"
+          data-ajax-replace
+          class="page-nav-item">
+      {% with user.following_tags.all|contains:tag as is_following %}
+      {% include "hashtags/includes/follow.html" with object=tag %}
+      {% endwith %}
+    </span>
+    {% endif %}
 
-  {% if can_block_tag %}
-  <span data-controller="ajax"
-        data-ajax-replace
-        class="page-nav-item">
-    {% with user.blocked_tags.all|contains:tag as is_blocked %}
-    {% include "hashtags/includes/block.html" with object=tag %}
-    {% endwith %}
-  </span>
+    {% if can_block_tag %}
+    <span data-controller="ajax"
+          data-ajax-replace
+          class="page-nav-item">
+      {% with user.blocked_tags.all|contains:tag as is_blocked %}
+      {% include "hashtags/includes/block.html" with object=tag %}
+      {% endwith %}
+    </span>
+    {% endif %}
+  </div>
   {% endif %}
 </div>
-{% endif %}
 
 {% with total=paginator.count %}
 {% if total %}

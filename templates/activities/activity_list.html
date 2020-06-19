@@ -9,11 +9,19 @@
 
 {% block content %}
 
-<h1 class="font-semibold text-lg mb-3">{{ view.model|verbose_name_plural|title }}</h1>
+<div class="flex-wrap lg:flex items-center lg:justify-between mb-3">
+  <h1 class="font-semibold text-lg">{{ view.model|verbose_name_plural|title }}</h1>
+  {% block activity_list_nav %}
+  <div class="page-nav">
+    {% block activity_list_nav_items %}{% endblock %}
+  </div>
+  {% endblock %}
+</div>
 
 {% if page_obj.number == 1 %}
 {% block activity_list_header %}{% endblock %}
 {% endif %}
+
 
 {% if paginator.count or view.search_query %}
 {% include "includes/forms/search_form.html" with selector=True %}
