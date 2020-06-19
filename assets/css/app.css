@@ -278,7 +278,7 @@ a.btn-secondary {
 }
 
 .tabs {
-  @apply flex items-center border-b border-indigo-900 overflow-x-auto;
+  @apply flex items-center border-b border-gray-500 overflow-x-auto;
 }
 
 @screen md {
@@ -288,7 +288,7 @@ a.btn-secondary {
 }
 
 .tab-item {
-  @apply block p-1 text-center border-t border-r border-l rounded-t border-indigo-900 text-indigo-900 px-4;
+  @apply block p-1 text-center border-t border-r border-l rounded-t border-gray-500 text-indigo-900 px-4;
 }
 
 .tab-item:md {
@@ -296,11 +296,11 @@ a.btn-secondary {
 }
 
 .tab-item.active {
-  @apply bg-indigo-900 text-white font-bold;
+  @apply bg-blue-900 text-white font-bold;
 }
 
 .tab-item:hover {
-  @apply bg-indigo-700 text-white;
+  @apply bg-blue-700 text-white;
 }
 
 .tab-item:not(:last-child) {
