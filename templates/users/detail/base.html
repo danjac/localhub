@@ -28,6 +28,7 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 {% endif %}
 
 <div class="flex-wrap lg:flex items-center lg:justify-between mb-3">
+
   <h1 class="page-header flex flex-wrap items-center">
     {% if user_obj.avatar %}
     <div class="inline-block mr-3">
@@ -48,28 +49,84 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
     <span class="inline-block tag">{% trans "Moderator" %}</span>
     {% endif %}
   </h1>
-  <div class="page-nav mt-3 lg:mt-0">
-    {% if is_current_user %}
-    <a class="page-nav-item"
-       href="{% url 'user_update' %}">
-      {% trans "Settings" %}
-    </a>
+
+  <div class="flex flex-wrap mt-3 lg:mt-0">
+    {% if not is_current_user %}
+    <div class="text-sm mr-3"
+         data-controller="dropdown"
+         data-action="click@window->dropdown#close keydown@window->dropdown#close">
+      <button class="btn btn-dropdown"
+              data-action="dropdown#toggle">
+        {% trans "Actions..." %}<i class="icon icon-caret"></i>
+      </button>
+      <div class="dropdown-menu mt-1 hidden"
+           data-target="dropdown.menu">
+
+        {% if can_create_message and not is_blocked %}
+        <a class="dropdown-menu-item"
+           href="{% url 'private_messages:message_create_recipient' user_obj.username %}">{% trans "Send Message" %}</a>
+        {% endif %}
+
+        {% if not is_blocked and can_follow_user %}
+        <div data-controller="ajax"
+             data-ajax-replace
+             class="dropdown-menu-item-container">
+          {% include "users/includes/follow.html" with object=user_obj %}
+        </div>
+        {% endif %}
+
+        {% if can_block_user %}
+        {% with redirect_url=user_obj.get_absolute_url %}
+        {% if is_blocking %}
+        <a class="dropdown-menu-item line-through"
+           href="{% url 'users:unblock' user_obj.username %}"
+           data-turbolinks="false"
+           data-controller="ajax"
+           data-target="ajax.button"
+           data-action="ajax#post toggle#toggle"
+           data-ajax-redirect="{{ redirect_url }}">
+          {% trans "Block" %}
+        </a>
+        {% else %}
+        <a href="{% url 'users:block' user_obj.username %}"
+           class="dropdown-menu-item"
+           data-turbolinks="false"
+           data-controller="ajax"
+           data-target="ajax.button"
+           data-action="ajax#post toggle#toggle"
+           data-ajax-redirect="{{ redirect_url }}">
+          {% trans "Block" %}
+        </a>
+        {% endif %}
+        {% endwith %}
+        {% endif %}
+      </div>
+    </div>
     {% endif %}
 
-    {% if not is_blocked %}
-    <a class="page-nav-item"
-       href="{% url 'users:activity_likes' user_obj.username %}">
-      {% trans "Likes" %}
-    </a>
-    <a class="page-nav-item"
-       href="{% url 'users:activity_mentions' user_obj.username %}">
-      {% trans "Mentions" %}
-    </a>
-    {% endif %}
-    {% if can_view_membership %}
-    <a class="page-nav-item"
-       href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
-    {% endif %}
+    <div class="page-nav">
+      {% if is_current_user %}
+      <a class="page-nav-item"
+         href="{% url 'user_update' %}">
+        {% trans "Settings" %}
+      </a>
+      {% endif %}
+
+      {% if not is_blocked %}
+      <a class="page-nav-item"
+         href="{% url 'users:activity_likes' user_obj.username %}">
+        {% trans "Likes" %}
+      </a>
+      <a class="page-nav-item"
+         href="{% url 'users:activity_mentions' user_obj.username %}">
+        {% trans "Mentions" %}
+      </a>
+      {% endif %}
+      {% if can_view_membership %}
+      <a class="page-nav-item"
+         href="{% url 'communities:membership_detail' membership.id %}">{% trans "Membership" %}</a>
+      {% endif %}
+    </div>
   </div>
 </div>
 
@@ -120,63 +177,6 @@ You can edit your profile in <a href="{{ user_settings_url }}">your settings</a>
 </div>
 {% endcollapsable %}
 {% endif %}
-
-
-<div class="flex flex-wrap mb-3">
-  {% if not is_current_user %}
-  <div class="text-sm mr-3"
-       data-controller="dropdown"
-       data-action="click@window->dropdown#close keydown@window->dropdown#close">
-    <button class="btn btn-dropdown"
-            data-action="dropdown#toggle">
-      {% trans "Actions..." %}<i class="icon icon-caret"></i>
-    </button>
-    <div class="dropdown-menu mt-1 hidden"
-         data-target="dropdown.menu">
-
-      {% if can_create_message and not is_blocked %}
-      <a class="dropdown-menu-item"
-         href="{% url 'private_messages:message_create_recipient' user_obj.username %}">{% trans "Send Message" %}</a>
-      {% endif %}
-
-      {% if not is_blocked and can_follow_user %}
-      <div data-controller="ajax"
-           data-ajax-replace
-           class="dropdown-menu-item-container">
-        {% include "users/includes/follow.html" with object=user_obj %}
-      </div>
-      {% endif %}
-
-      {% if can_block_user %}
-      {% with redirect_url=user_obj.get_absolute_url %}
-      {% if is_blocking %}
-      <a class="dropdown-menu-item line-through"
-         href="{% url 'users:unblock' user_obj.username %}"
-         data-turbolinks="false"
-         data-controller="ajax"
-         data-target="ajax.button"
-         data-action="ajax#post toggle#toggle"
-         data-ajax-redirect="{{ redirect_url }}">
-        {% trans "Block" %}
-      </a>
-      {% else %}
-      <a href="{% url 'users:block' user_obj.username %}"
-         class="dropdown-menu-item"
-         data-turbolinks="false"
-         data-controller="ajax"
-         data-target="ajax.button"
-         data-action="ajax#post toggle#toggle"
-         data-ajax-redirect="{{ redirect_url }}">
-        {% trans "Block" %}
-      </a>
-      {% endif %}
-      {% endwith %}
-      {% endif %}
-    </div>
-  </div>
-  {% endif %}
-
-</div>
 
 
 {% if not is_blocked %}
