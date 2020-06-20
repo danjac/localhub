@@ -13,7 +13,6 @@ os.environ.setdefault("DJANGO_CONFIGURATION", "Local")
 
 # https://django-configurations.readthedocs.io/en/stable/cookbook/#celery
 
-
 configurations.setup()
 
 app = Celery("localhub")
