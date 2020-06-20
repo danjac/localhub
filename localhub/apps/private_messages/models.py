@@ -360,7 +360,7 @@ class Message(TimeStampedModel):
         """Returns *final* non-HTML/markdown abbreviated version of message.
 
         Args:
-            length (int, optional): abbreviated max length (default: 30)
+            length (int, optional): abbreviated max character length (default: 30)
 
         Returns:
             str
