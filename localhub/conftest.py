@@ -14,20 +14,20 @@ from django.http import HttpResponse
 import pytest
 from PIL import Image
 
-# Localhub
-from localhub.apps.comments.factories import CommentFactory
-from localhub.apps.communities.factories import CommunityFactory, MembershipFactory
-from localhub.apps.communities.models import Membership
-from localhub.apps.events.factories import EventFactory
-from localhub.apps.invites.factories import InviteFactory
-from localhub.apps.join_requests.factories import JoinRequestFactory
-from localhub.apps.likes.factories import LikeFactory
-from localhub.apps.notifications.factories import NotificationFactory
-from localhub.apps.photos.factories import PhotoFactory
-from localhub.apps.polls.factories import PollFactory
-from localhub.apps.posts.factories import PostFactory
-from localhub.apps.private_messages.factories import MessageFactory
-from localhub.apps.users.factories import UserFactory
+# Local
+from .apps.comments.factories import CommentFactory
+from .apps.communities.factories import CommunityFactory, MembershipFactory
+from .apps.communities.models import Membership
+from .apps.events.factories import EventFactory
+from .apps.invites.factories import InviteFactory
+from .apps.join_requests.factories import JoinRequestFactory
+from .apps.likes.factories import LikeFactory
+from .apps.notifications.factories import NotificationFactory
+from .apps.photos.factories import PhotoFactory
+from .apps.polls.factories import PollFactory
+from .apps.posts.factories import PostFactory
+from .apps.private_messages.factories import MessageFactory
+from .apps.users.factories import UserFactory
 
 
 @pytest.fixture
