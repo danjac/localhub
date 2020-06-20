@@ -33,8 +33,6 @@ export default class extends ApplicationController {
   ];
 
   connect() {
-    // we can listen to other calendar components, to change the start date
-    // to match the current month selected by the notifier input.
     if (this.data.has('listen')) {
       this.bus.sub(EVENT_NOTIFY_ON_UPDATE, ({ detail: { startDate, notify } }) => {
         if (notify === this.data.get('listen')) {
