@@ -418,13 +418,13 @@ class TestMessageModel:
         assert message.get_other_user(message.sender) == message.recipient
         assert message.get_other_user(message.recipient) == message.sender
 
-    def test_abbreviate_with_markdown(self):
+    def test_abbreviated_with_markdown(self):
         message = Message(message="Hello\nthis is a *test*")
-        assert message.abbreviate() == "Hello this is a test"
+        assert message.abbreviated() == "Hello this is a test"
 
-    def test_abbreviate_long_message(self):
+    def test_abbreviated_long_message(self):
         message = Message(message="this is a test with more content")
-        assert message.abbreviate(length=12) == "...more content"
+        assert message.abbreviated(length=12) == "...more content"
 
     def test_get_all_replies(self):
 

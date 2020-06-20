@@ -35,7 +35,7 @@ class MessageWebpusher(MessageHeadersMixin, Webpusher):
         }
 
     def get_body(self):
-        return self.adapter.object.abbreviate()
+        return self.adapter.object.abbreviated()
 
 
 @register(Message)

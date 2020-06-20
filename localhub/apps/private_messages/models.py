@@ -356,7 +356,7 @@ class Message(TimeStampedModel):
     def get_notifications(self):
         return get_generic_related_queryset(self, Notification)
 
-    def abbreviate(self, length=30):
+    def abbreviated(self, length=30):
         """Returns *final* non-HTML/markdown abbreviated version of message.
 
         Args:
