@@ -40,9 +40,9 @@ build:
     paths:
       - assets
   script:
-    - docker-compose -f docker-compose.deploy.yml build
-    - docker-compose -f docker-compose.deploy.yml push
-    - docker-compose -f docker-compose.deploy.yml run webpack yarn build
+    - docker-compose -f deploy.yml build
+    - docker-compose -f deploy.yml push
+    - docker-compose -f deploy.yml run webpack yarn build
   only:
     - release
 
@@ -50,9 +50,9 @@ test_django:
   extends: .docker_config
   stage: test
   script:
-    - docker-compose -f docker-compose.deploy.yml pull
-    - docker-compose -f docker-compose.deploy.yml run -e DJANGO_CONFIGURATION=Testing django ./manage.py validate_templates
-    - docker-compose -f docker-compose.deploy.yml run django pytest
+    - docker-compose -f deploy.yml pull
+    - docker-compose -f deploy.yml run -e DJANGO_CONFIGURATION=Testing django ./manage.py validate_templates
+    - docker-compose -f deploy.yml run django pytest
   only:
     - release
 
@@ -63,8 +63,8 @@ deploy_assets:
   dependencies:
     - build
   script:
-    - docker-compose -f docker-compose.deploy.yml pull
-    - docker-compose -f docker-compose.deploy.yml run -e DJANGO_CONFIGURATION=Deployment -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
+    - docker-compose -f deploy.yml pull
+    - docker-compose -f deploy.yml run -e DJANGO_CONFIGURATION=Deployment -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
   only:
     - release
 

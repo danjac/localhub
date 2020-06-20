@@ -5,5 +5,5 @@
 
 # shortcut to run pytest under docker compose
 
-docker-compose exec django pytest $@
+docker-compose -f local.yml exec django pytest $@
 

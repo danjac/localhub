@@ -5,5 +5,5 @@
 
 # shortcut to run Django manage commands under docker compose
 
-docker-compose exec django ./manage.py $@
+docker-compose -f local.yml exec django ./manage.py $@
 
