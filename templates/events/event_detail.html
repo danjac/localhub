@@ -21,6 +21,7 @@
     <a href="{% url 'events:calendar' %}?day={{ starts.day }}&month={{ starts.month }}&year={{ starts.year }}">
       {{ starts|date:"d F Y" }}
     </a>
+  </li>
   <li class="breadcrumb-item">
     {{ object.title|truncatechars:60 }}
   </li>
