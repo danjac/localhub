@@ -308,7 +308,7 @@ class Base(Configuration):
 
     @property
     def LOCALE_PATHS(self):
-        return [self.BASE_DIR / "lang"]
+        return [self.BASE_DIR / "i18n"]
 
     @property
     def LOGIN_REDIRECT_URL(self):
