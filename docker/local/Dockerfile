@@ -21,13 +21,13 @@ RUN pip install -r requirements/local.txt
 
 WORKDIR /app
 
-COPY ./scripts/entrypoint /entrypoint
+COPY ./docker/local/scripts/entrypoint /entrypoint
 RUN chmod +x /entrypoint
 
-COPY ./scripts/start-django /start-django
+COPY ./docker/local/scripts/start-django /start-django
 RUN chmod +x /start-django
 
-COPY ./scripts/start-celeryworker /start-celeryworker
+COPY ./docker/local/scripts/start-celeryworker /start-celeryworker
 RUN chmod +x /start-celeryworker
 
 ENTRYPOINT ["/entrypoint"]

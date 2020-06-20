@@ -2,8 +2,8 @@ build:
   config:
     DJANGO_CONFIGURATION: Heroku
   docker:
-    web: Dockerfile.heroku
-    worker: Dockerfile.heroku
+    web: docker/heroku/Dockerfile
+    worker: docker/heroku/Dockerfile
 
 release:
   command:
