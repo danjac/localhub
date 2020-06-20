@@ -20,12 +20,12 @@ You should have docker and docker-compose installed on your development machine.
 
 This script should (re)build your docker environment as needed and start up the containers in a detached mode:
 
-> ./scripts/startup
+> ./scripts/start-docker
 
 To run Django commands through docker:
 
-> ./scripts/manage [command...]
+> ./scripts/docker-manage [command...]
 
 To run unit tests:
 
-> ./scripts/runtests [options...]
+> ./scripts/docker-runtests [options...]
