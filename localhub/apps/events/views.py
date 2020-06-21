@@ -224,7 +224,7 @@ class EventCalendarView(
             data["events"] = [
                 event
                 for event in self.object_list
-                if event.matches_date(match_datetime, exact_date=True)
+                if event.matches_date(match_datetime)
             ]
             return data
 

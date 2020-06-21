@@ -648,7 +648,7 @@ class Event(Activity):
             )
         )
 
-    def matches_date(self, dt, exact_date=False):
+    def matches_date(self, dt):
         """Checks if event has a date matching this date. Useful e.g.
         for scrolling through a list of dates.
 
@@ -665,7 +665,7 @@ class Event(Activity):
         )
 
         # if non-repeating then must always be an exact match.
-        if exact_date or not self.is_repeating():
+        if not self.is_repeating():
             return exact_match
 
         # matches IF:
