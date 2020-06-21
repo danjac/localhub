@@ -1,4 +1,5 @@
 factory-boy
+nplusone
 pytest
 pytest-cov
 pytest-django
