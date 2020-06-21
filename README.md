@@ -24,8 +24,8 @@ This script should (re)build your docker environment as needed and start up the 
 
 To run Django commands through docker:
 
-> ./scripts/docker-manage [command...]
+> ./scripts/manage [command...]
 
 To run unit tests:
 
-> ./scripts/docker-runtests [options...]
+> ./scripts/runtests [options...]
