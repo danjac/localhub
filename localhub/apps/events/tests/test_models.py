@@ -340,6 +340,13 @@ class TestEventModel:
         event = Event(starts=now - timedelta(days=30))
         assert not event.matches_date(now)
 
+    def test_matches_date_if_repeats_daily_and_exact_date(self):
+        now = timezone.now()
+        event = EventFactory(
+            starts=now - timedelta(days=30), repeats=Event.RepeatChoices.DAILY,
+        )
+        assert not event.matches_date(now, exact_date=True)
+
     def test_matches_date_if_repeats_daily(self):
         now = timezone.now()
         event = EventFactory(
