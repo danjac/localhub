@@ -27,7 +27,7 @@ services:
   webpack:
     build:
       context: .
-      dockerfile: Dockerfile.webpack
+      dockerfile: webpack.dockerfile
       cache_from:
         - '${CI_REGISTRY_IMAGE-deploy}/webpack:${CI_COMMIT_SHORT_SHA-deploy}'
     image: '${CI_REGISTRY_IMAGE-deploy}/webpack:${CI_COMMIT_SHORT_SHA-deploy}'
@@ -38,7 +38,7 @@ services:
   django: &django
     build:
       context: .
-      dockerfile: Dockerfile.deploy
+      dockerfile: deploy.dockerfile
       cache_from:
         - '${CI_REGISTRY_IMAGE-deploy}/django:${CI_COMMIT_SHORT_SHA-deploy}'
     image: '${CI_REGISTRY_IMAGE-deploy}/django:${CI_COMMIT_SHORT_SHA-deploy}'

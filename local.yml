@@ -39,7 +39,7 @@ services:
   webpack:
     build:
       context: .
-      dockerfile: Dockerfile.webpack
+      dockerfile: webpack.dockerfile
     privileged: true
     command: yarn run dev
     volumes:
@@ -49,7 +49,7 @@ services:
   django: &django
     build:
       context: .
-      dockerfile: Dockerfile.local
+      dockerfile: local.dockerfile
     env_file: .env
     restart: on-failure
     privileged: true
