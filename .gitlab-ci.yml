@@ -49,8 +49,8 @@ test_django:
   stage: test
   script:
     - docker-compose -f deploy.yml pull
-    - docker-compose -f deploy.yml run -e DJANGO_CONFIGURATION=Testing django ./manage.py validate_templates
-    - docker-compose -f deploy.yml run django pytest
+    - docker-compose -f deploy.yml run -e DJANGO_CONFIGURATION=Testing -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_CONFIGURATION=Testing django ./manage.py validate_templates
+    - docker-compose -f deploy.yml run -e DJANGO_SECRET_KEY=${SECRET_KEY} django pytest
   only:
     - release
 
