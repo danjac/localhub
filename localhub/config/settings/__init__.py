@@ -1,7 +1,5 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
-# Standard Library
-import logging
 
 # Third Party Libraries
 from configurations import values
@@ -22,12 +20,6 @@ class Testing(Base):
 
     SITE_ID = 1
 
-    THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + [
-        "nplusone.ext.django",
-    ]
-
-    NPLUSONE_RAISE = True
-
 
 class Local(DockerMixin, Base):
 
@@ -37,12 +29,10 @@ class Local(DockerMixin, Base):
 
     THIRD_PARTY_APPS = Base.THIRD_PARTY_APPS + [
         "debug_toolbar",
-        "nplusone.ext.django",
     ]
 
     MIDDLEWARE = Base.MIDDLEWARE + [
         "debug_toolbar.middleware.DebugToolbarMiddleware",
-        "nplusone.ext.django.NPlusOneMiddleware",
     ]
 
     DEBUG_TOOLBAR_CONFIG = {
@@ -51,16 +41,6 @@ class Local(DockerMixin, Base):
     }
 
     SITE_ID = 1
-
-    LOGGING = {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "handlers": {"console": {"class": "logging.StreamHandler"}},
-        "loggers": {
-            "root": {"handlers": ["console"], "level": "DEBUG"},
-            "nplusone": {"handlers": ["console"], "level": "WARN"},
-        },
-    }
 
 
 class Production(Base):
@@ -87,15 +67,6 @@ class Production(Base):
     MIDDLEWARE = Base.MIDDLEWARE + [
         "localhub.middleware.http.HttpResponseNotAllowedMiddleware",
     ]
-
-    NPLUSONE_LOGGER = logging.getLogger("nplusone")
-    NPLUSONE_LOG_LEVEL = logging.WARN
-
-    @property
-    def LOGGING(self):
-        logging = super().LOGGING
-        logging["loggers"]["nplusone"] = {"handlers": ["console"], "level": "WARN"}
-        return logging
 
 
 class Deployment(AWSMixin, Production):
