@@ -315,5 +315,14 @@ class Base(Configuration):
         return self.LOCALHUB_HOME_PAGE_URL
 
     @property
+    def LOGGING(self):
+        return {
+            "version": 1,
+            "disable_existing_loggers": False,
+            "handlers": {"console": {"class": "logging.StreamHandler"}},
+            "loggers": {"root": {"handlers": ["console"], "level": "INFO"}},
+        }
+
+    @property
     def LOCALHUB_LONG_PAGE_SIZE(self):
         return self.LOCALHUB_DEFAULT_PAGE_SIZE * 2

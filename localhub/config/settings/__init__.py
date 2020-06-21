@@ -91,6 +91,12 @@ class Production(Base):
     NPLUSONE_LOGGER = logging.getLogger("nplusone")
     NPLUSONE_LOG_LEVEL = logging.WARN
 
+    @property
+    def LOGGING(self):
+        logging = super().LOGGING
+        logging["loggers"]["nplusone"] = {"handlers": ["console"], "level": "WARN"}
+        return logging
+
 
 class Deployment(AWSMixin, Production):
     """Settings for running tasks in the deployment pipeline."""
@@ -105,11 +111,3 @@ class Heroku(DockerMixin, AWSMixin, MailgunMixin, Production):
 
     # This is required for Heroku SSL.
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-    # Stream logging to stdout: use `heroku log` to view
-    LOGGING = {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "handlers": {"console": {"class": "logging.StreamHandler"}},
-        "loggers": {"root": {"handlers": ["console"], "level": "INFO"}},
-    }
