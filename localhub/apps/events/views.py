@@ -196,7 +196,7 @@ class EventCalendarView(
         if self.current_day:
             qs = qs.for_date(
                 self.current_day, self.current_month, self.current_year
-            ).with_common_annotations()
+            ).with_common_annotations(self.request.user, self.request.community)
         else:
             qs = qs.for_month(self.current_month, self.current_year)
         return qs
