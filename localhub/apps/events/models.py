@@ -572,7 +572,7 @@ class Event(Activity):
         """Returns next_date if repeating, otherwise starts.
 
         Note that this must be used with the with_next_date() QuerySet
-        method. If this is present the start date will be used.
+        method. If this is not present the starts value will be used.
         """
         if not self.is_repeating() or not hasattr(self, "next_date"):
             return self.starts
@@ -585,16 +585,11 @@ class Event(Activity):
         """Returns the next_date plus ends time (must be same date as the start date)
 
         Note that this must be used with the with_next_date() QuerySet
-        method.
+        method. If this is not present the ends value will be used.
         """
 
-        if not self.ends or not self.is_repeating():
+        if not self.ends or not self.is_repeating() or not hasattr(self, "next_date"):
             return self.ends
-
-        if not hasattr(self, "next_date"):
-            raise AttributeError(
-                "next_date not present: must be used with EventQuerySet.with_next_date()"
-            )
 
         return self.ends.replace(
             day=self.next_date.day,
