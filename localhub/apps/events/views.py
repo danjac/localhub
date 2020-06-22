@@ -194,7 +194,9 @@ class EventCalendarView(
             .order_by("next_date")
         )
         if self.current_day:
-            qs = qs.for_date(self.current_day, self.current_month, self.current_year)
+            qs = qs.for_date(
+                self.current_day, self.current_month, self.current_year
+            ).with_common_annotations()
         else:
             qs = qs.for_month(self.current_month, self.current_year)
         return qs
