@@ -65,9 +65,5 @@ services:
 
   celeryworker:
     <<: *django
-    depends_on:
-      - postgres
-      - mailhog
-      - redis
     ports: []
     command: /start-celeryworker
