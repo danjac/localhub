@@ -56,7 +56,6 @@ services:
     environment: *default-env
     depends_on:
       - postgres
-      - mailhog
       - redis
     volumes:
       - .:/app
