@@ -12,6 +12,7 @@ export default class extends ApplicationController {
   connect() {
     this.fetched = false;
     this.notFound = false;
+    this.source = null;
   }
 
   show(event) {
@@ -23,8 +24,9 @@ export default class extends ApplicationController {
       event.preventDefault();
       this.showContainer();
     } else {
+      this.source = axios.CancelToken.source();
       axios
-        .get(this.data.get('url'))
+        .get(this.data.get('url'), { cancelToken: this.source.token })
         .then((response) => {
           event.preventDefault();
           this.fetched = true;
@@ -37,8 +39,13 @@ export default class extends ApplicationController {
           this.containerTarget.innerHTML = response.data;
           this.showContainer();
         })
-        .catch(() => {
-          this.notFound = true;
+        .catch((err) => {
+          if (!axios.isCancel(thrown)) {
+            this.notFound = true;
+          }
+        })
+        .finally(() => {
+          this.source = null;
         });
     }
   }
@@ -46,6 +53,9 @@ export default class extends ApplicationController {
   hide() {
     if (this.hasContainerTarget) {
       this.containerTarget.classList.add('hidden');
+    }
+    if (this.source) {
+      this.source.cancel();
     }
   }
 
