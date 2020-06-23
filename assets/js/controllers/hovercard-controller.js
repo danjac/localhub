@@ -40,7 +40,7 @@ export default class extends ApplicationController {
           this.showContainer();
         })
         .catch((err) => {
-          if (!axios.isCancel(thrown)) {
+          if (!axios.isCancel(err)) {
             this.notFound = true;
           }
         })
