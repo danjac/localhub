@@ -3,51 +3,60 @@
 
 import axios from 'axios';
 
-import { maximizeZIndex, fitIntoViewport } from '@/utils/dom-helpers';
+import { isTouchDevice, maximizeZIndex, fitIntoViewport } from '@/utils/dom-helpers';
 import ApplicationController from './application-controller';
+
+// cached URL results - if we have more than one card on a page with identical URL,
+// then fetch the same result from here instead of making another round-trip to the server.
+const cache = {};
 
 export default class extends ApplicationController {
   static targets = ['container'];
 
   connect() {
-    this.fetched = false;
-    this.notFound = false;
     this.source = null;
+    this.isTouchDevice = isTouchDevice();
   }
 
   show(event) {
-    if (this.notFound || this.isTouchDevice) {
+    const url = this.data.get('url');
+
+    let html = cache[url];
+
+    if (html === null || this.isTouchDevice) {
       return;
     }
 
-    if (this.fetched) {
+    if (html) {
       event.preventDefault();
-      this.showContainer();
-    } else {
-      this.source = axios.CancelToken.source();
-      axios
-        .get(this.data.get('url'), { cancelToken: this.source.token })
-        .then((response) => {
-          event.preventDefault();
-          this.fetched = true;
-          if (!this.hasContainerTarget) {
-            const div = document.createElement('div');
-            div.classList.add('inline-block');
-            div.setAttribute('data-target', `${this.identifier}.container`);
-            this.element.appendChild(div);
-          }
-          this.containerTarget.innerHTML = response.data;
-          this.showContainer();
-        })
-        .catch((err) => {
-          if (!axios.isCancel(err)) {
-            this.notFound = true;
-          }
-        })
-        .finally(() => {
-          this.source = null;
-        });
+      this.showContainer(html);
+      return;
     }
+
+    this.source = axios.CancelToken.source();
+
+    axios
+      .get(url, { cancelToken: this.source.token })
+      .then((response) => {
+        event.preventDefault();
+        if (!this.hasContainerTarget) {
+          const div = document.createElement('div');
+          div.classList.add('inline-block');
+          div.setAttribute('data-target', `${this.identifier}.container`);
+          this.element.appendChild(div);
+        }
+        this.containerTarget.innerHTML = response.data;
+        cache[url] = html = response.data;
+        this.showContainer(html);
+      })
+      .catch((err) => {
+        if (!axios.isCancel(err)) {
+          cache[url] = null;
+        }
+      })
+      .finally(() => {
+        this.source = null;
+      });
   }
 
   hide() {
@@ -59,14 +68,15 @@ export default class extends ApplicationController {
     }
   }
 
-  showContainer() {
-    if (this.hasContainerTarget) {
-      this.containerTarget.classList.remove('hidden');
-      maximizeZIndex(fitIntoViewport(this.containerTarget.children[0]));
+  showContainer(html) {
+    if (!this.hasContainerTarget) {
+      const div = document.createElement('div');
+      div.classList.add('inline-block');
+      div.setAttribute('data-target', `${this.identifier}.container`);
+      this.element.appendChild(div);
     }
-  }
-
-  get isTouchDevice() {
-    return 'ontouchstart' in document.documentElement;
+    this.containerTarget.innerHTML = html;
+    this.containerTarget.classList.remove('hidden');
+    maximizeZIndex(fitIntoViewport(this.containerTarget.children[0]));
   }
 }

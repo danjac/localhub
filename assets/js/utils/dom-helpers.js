@@ -34,6 +34,10 @@ export function maxZIndex() {
   );
 }
 
+export function isTouchDevice() {
+  return 'ontouchstart' in document.documentElement;
+}
+
 export function maximizeZIndex(el) {
   // makes the z-index of this element highest in DOM, to ensure it is not overlapped by other
   // elements. Useful for modals, popup menus and tooltips, etc.
