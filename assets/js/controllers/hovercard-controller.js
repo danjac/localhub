@@ -29,7 +29,7 @@ export default class extends ApplicationController {
 
     if (html) {
       event.preventDefault();
-      this.showContainer(html);
+      this.render(html);
       return;
     }
 
@@ -39,15 +39,8 @@ export default class extends ApplicationController {
       .get(url, { cancelToken: this.source.token })
       .then((response) => {
         event.preventDefault();
-        if (!this.hasContainerTarget) {
-          const div = document.createElement('div');
-          div.classList.add('inline-block');
-          div.setAttribute('data-target', `${this.identifier}.container`);
-          this.element.appendChild(div);
-        }
-        this.containerTarget.innerHTML = response.data;
         cache[url] = html = response.data;
-        this.showContainer(html);
+        this.render(html);
       })
       .catch((err) => {
         if (!axios.isCancel(err)) {
@@ -68,7 +61,7 @@ export default class extends ApplicationController {
     }
   }
 
-  showContainer(html) {
+  render(html) {
     if (!this.hasContainerTarget) {
       const div = document.createElement('div');
       div.classList.add('inline-block');
