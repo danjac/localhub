@@ -13,7 +13,7 @@
 {% block content %}
 {% with object|verbose_name|title as object_name %}
 
-<div class="flex-wrap lg:flex items-center lg:justify-between mb-3">
+<div class="lg:flex lg:items-center lg:justify-between mb-3">
   {% block breadcrumbs %}
   <ul class="breadcrumbs">
     {% if object.published %}
@@ -33,15 +33,6 @@
   </ul>
   {% endblock breadcrumbs %}
 
-  {% if comments.number == 1 %}
-  {% if object.deleted %}
-  <p class="toast text-center my-2">
-    {% blocktrans %}
-    This {{ object_name }} has been removed by a community moderator.
-    {% endblocktrans %}
-  </p>
-  {% endif %}
-
   {% has_perm "activities.create_activity" user community as can_create_activity %}
   {% if can_create_activity %}
   <div class="page-nav mt-3 lg:mt-0">
@@ -53,6 +44,15 @@
   </div>
   {% endif %}
 </div>
+
+{% if comments.number == 1 %}
+{% if object.deleted %}
+<p class="toast text-center my-3">
+  {% blocktrans %}
+  This {{ object_name }} has been removed by a community moderator.
+  {% endblocktrans %}
+</p>
+{% endif %}
 
 {% block activities_detail_content %}
 {% render_activity request user object is_detail=True reshares=reshares %}
