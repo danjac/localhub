@@ -55,33 +55,6 @@ CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 ROOT_URLCONF = "localhub.config.urls"
 WSGI_APPLICATION = "localhub.config.wsgi.application"
 
-DJANGO_APPS = [
-    "django.forms",
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.sites",
-    "django.contrib.messages",
-    "django.contrib.postgres",
-    "django.contrib.staticfiles",
-]
-
-THIRD_PARTY_APPS = [
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.google",
-    "django_extensions",
-    "djcelery_email",
-    "markdownx",
-    "micawber.contrib.mcdjango",
-    "rules.apps.AutodiscoverRulesConfig",
-    "sorl.thumbnail",
-    "taggit",
-    "widget_tweaks",
-]
-
 LOCAL_APPS = [
     "localhub.apps.activities.apps.ActivitiesConfig",
     "localhub.apps.bookmarks.apps.BookmarksConfig",
@@ -101,7 +74,32 @@ LOCAL_APPS = [
     "localhub.apps.users.apps.UsersConfig",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
+INSTALLED_APPS = [
+    # grappelli must go before django-admin
+    "grappelli",
+    "django.forms",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.sites",
+    "django.contrib.messages",
+    "django.contrib.postgres",
+    "django.contrib.staticfiles",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "django_extensions",
+    "djcelery_email",
+    "markdownx",
+    "micawber.contrib.mcdjango",
+    "rules.apps.AutodiscoverRulesConfig",
+    "sorl.thumbnail",
+    "taggit",
+    "widget_tweaks",
+] + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -228,6 +226,10 @@ MICAWBER_TEMPLATE_EXTENSIONS = [("oembed_no_urlize", {"urlize_all": False})]
 # https://celery.readthedocs.io/en/latest/userguide/configuration.html
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL = REDIS_URL
 CELERY_TASK_SERIALIZER = CELERY_RESULT_SERIALIZER = "json"
+
+# https://django-grappelli.readthedocs.io/en/latest/customization.html
+
+GRAPPELLI_ADMIN_TITLE = env.str("ADMIN_TITLE", default="Localhub Admin")
 
 # https://django-taggit.readthedocs.io/en/latest/getting_started.html
 

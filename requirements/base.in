@@ -8,6 +8,7 @@ django-celery-email
 django-countries
 django-environ
 django-extensions
+django-grappelli
 django-markdownx
 django-model-utils
 django-redis
