@@ -2,13 +2,11 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Standard Library
-import re
 import socket
 from email.utils import getaddresses
 
 # Django
 from django.contrib import messages
-from django.urls import reverse_lazy
 
 # Third Party Libraries
 import environ
@@ -244,18 +242,6 @@ VAPID_ADMIN_EMAIL = env.str("VAPID_ADMIN_EMAIL", default=None)
 WEBPUSH_ENABLED = env.bool("WEBPUSH_ENABLED", default=True)
 
 GEOLOCATOR_USER_AGENT = env.str("GEOLOCATOR_USER_AGENT", default="localhub.locator")
-
-LOCALHUB_HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")
-LOCALHUB_HASHTAGS_TYPEAHEAD_CONFIG = (
-    "#",
-    reverse_lazy("hashtags:autocomplete_list"),
-)
-
-LOCALHUB_MENTIONS_RE = re.compile(r"(?:^|\s)[＠ @]{1}([^\s#<>!.?[\]|{}]+)")
-LOCALHUB_MENTIONS_TYPEAHEAD_CONFIG = (
-    "@",
-    reverse_lazy("users:autocomplete_list"),
-)
 
 MEDIA_URL = env.str("MEDIA_URL", default="/media/")
 STATIC_URL = env.str("STATIC_URL", default="/static/")
