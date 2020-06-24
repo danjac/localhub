@@ -3,6 +3,7 @@
 
 
 # Django
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
@@ -10,6 +11,7 @@ from django.http import Http404, HttpResponse
 from django.template.response import TemplateResponse
 from django.urls import resolve
 from django.utils.functional import cached_property
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DeleteView, DetailView, ListView, View
 
@@ -210,7 +212,7 @@ class UserPreviewView(MemberQuerySetMixin, UserQuerySetMixin, DetailView):
     def get_object_url(self):
         """Allow a different object url e.g. to message or comment tabs."""
         url = self.request.GET.get("object_url")
-        if url:
+        if url and url_has_allowed_host_and_scheme(url, settings.ALLOWED_URLS):
             try:
                 resolve(url)
                 return url
