@@ -13,6 +13,7 @@ from django.views.generic import ListView, TemplateView, View
 
 # Localhub
 from localhub.apps.communities.views import CommunityRequiredMixin
+from localhub.config.app_settings import LONG_PAGE_SIZE
 from localhub.views import SuccessActionView, SuccessDeleteView, SuccessView
 
 # Local
@@ -37,7 +38,7 @@ class NotificationSuccessRedirectMixin:
 
 
 class NotificationListView(NotificationQuerySetMixin, ListView):
-    paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
+    paginate_by = LONG_PAGE_SIZE
     template_name = "notifications/notification_list.html"
     model = Notification
 

@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
-from django.conf import settings
 from django.urls import reverse
 
 # Third Party Libraries
@@ -14,13 +13,14 @@ from localhub.apps.events.factories import EventFactory
 from localhub.apps.polls.factories import AnswerFactory, PollFactory
 from localhub.apps.posts.factories import PostFactory
 from localhub.apps.users.factories import UserFactory
+from localhub.config.app_settings import HOME_PAGE_URL
 
 pytestmark = pytest.mark.django_db
 
 
 class TestActivityStreamView:
     def test_get_if_non_member(self, client, login_user, community):
-        response = client.get(settings.LOCALHUB_HOME_PAGE_URL)
+        response = client.get(HOME_PAGE_URL)
         assert response.url == reverse("community_welcome")
 
     def test_get_if_member(self, client, member):
@@ -33,7 +33,7 @@ class TestActivityStreamView:
             answer = AnswerFactory(poll=poll)
             answer.voters.add(UserFactory())
 
-        response = client.get(settings.LOCALHUB_HOME_PAGE_URL)
+        response = client.get(HOME_PAGE_URL)
         assert response.status_code == 200
         assert len(response.context["object_list"]) == 4
 

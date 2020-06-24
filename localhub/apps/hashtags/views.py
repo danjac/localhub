@@ -6,7 +6,6 @@ import operator
 from functools import reduce
 
 # Django
-from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
 from django.template.response import TemplateResponse
@@ -21,6 +20,7 @@ from taggit.models import Tag, TaggedItem
 from localhub.apps.activities.utils import get_activity_models
 from localhub.apps.activities.views.streams import BaseActivityStreamView
 from localhub.apps.communities.views import CommunityRequiredMixin
+from localhub.config.app_settings import DEFAULT_PAGE_SIZE, LONG_PAGE_SIZE
 from localhub.views import ParentObjectMixin, SearchMixin, SuccessActionView
 
 
@@ -83,9 +83,7 @@ class TagAutocompleteListView(BaseTagListView):
         return (
             super()
             .get_queryset()
-            .filter(name__istartswith=search_term)[
-                : settings.LOCALHUB_DEFAULT_PAGE_SIZE
-            ]
+            .filter(name__istartswith=search_term)[:DEFAULT_PAGE_SIZE]
         )
 
 
@@ -94,7 +92,7 @@ tag_autocomplete_list_view = TagAutocompleteListView.as_view()
 
 class TagListView(SearchMixin, BaseTagListView):
     template_name = "hashtags/list/all.html"
-    paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
+    paginate_by = LONG_PAGE_SIZE
     exclude_unused_tags = True
 
     def get_queryset(self):

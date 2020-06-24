@@ -3,7 +3,6 @@
 
 
 # Django
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
@@ -26,6 +25,11 @@ from localhub.apps.communities.rules import is_member
 from localhub.apps.communities.views import CommunityRequiredMixin
 from localhub.apps.likes.models import Like
 from localhub.apps.private_messages.models import Message
+from localhub.config.app_settings import (
+    DEFAULT_PAGE_SIZE,
+    HOME_PAGE_URL,
+    LONG_PAGE_SIZE,
+)
 from localhub.views import (
     ParentObjectMixin,
     SearchMixin,
@@ -271,7 +275,7 @@ class UserMessageListView(SingleUserMixin, ListView):
     """
 
     template_name = "users/detail/messages.html"
-    paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
+    paginate_by = DEFAULT_PAGE_SIZE
 
     def get_queryset(self):
         if self.is_blocked:
@@ -408,7 +412,7 @@ user_comment_mentions_view = UserCommentMentionsView.as_view()
 
 
 class BaseUserListView(UserQuerySetMixin, ListView):
-    paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
+    paginate_by = LONG_PAGE_SIZE
 
     def get_queryset(self):
         return super().get_queryset().order_by("name", "username")
@@ -489,7 +493,7 @@ class UserAutocompleteListView(BaseUserListView):
                     Q(username__istartswith=search_term)
                     | Q(name__istartswith=search_term)
                 )
-            )[: settings.LOCALHUB_DEFAULT_PAGE_SIZE]
+            )[:DEFAULT_PAGE_SIZE]
         return qs.none()
 
 
@@ -527,7 +531,7 @@ user_update_view = UserUpdateView.as_view()
 
 class UserDeleteView(CurrentUserMixin, PermissionRequiredMixin, DeleteView):
     permission_required = "users.delete_user"
-    success_url = settings.LOCALHUB_HOME_PAGE_URL
+    success_url = HOME_PAGE_URL
     template_name = "users/user_confirm_delete.html"
 
 
@@ -536,7 +540,7 @@ user_delete_view = UserDeleteView.as_view()
 
 class UserDeleteView(CurrentUserMixin, PermissionRequiredMixin, DeleteView):
     permission_required = "users.delete_user"
-    success_url = settings.LOCALHUB_HOME_PAGE_URL
+    success_url = HOME_PAGE_URL
     template_name = "users/user_confirm_delete.html"
 
 
@@ -621,7 +625,7 @@ user_unblock_view = UserUnblockView.as_view()
 
 class UserDeleteView(CurrentUserMixin, PermissionRequiredMixin, DeleteView):
     permission_required = "users.delete_user"
-    success_url = settings.LOCALHUB_HOME_PAGE_URL
+    success_url = HOME_PAGE_URL
     template_name = "users/user_confirm_delete.html"
 
 

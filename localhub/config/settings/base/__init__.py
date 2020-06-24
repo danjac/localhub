@@ -15,6 +15,9 @@ import environ
 import pymdownx
 import pymdownx.emoji
 
+# Localhub
+from localhub.config.app_settings import HOME_PAGE_URL
+
 env = environ.Env()
 
 root = environ.Path("/app")
@@ -151,7 +154,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LOGIN_URL = "account_login"
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = HOME_PAGE_URL
 
 ACCOUNT_USER_DISPLAY = "localhub.apps.users.utils.user_display"
 ACCOUNT_EMAIL_REQUIRED = True
@@ -240,10 +243,6 @@ VAPID_ADMIN_EMAIL = env.str("VAPID_ADMIN_EMAIL", default=None)
 
 WEBPUSH_ENABLED = env.bool("WEBPUSH_ENABLED", default=True)
 
-LOCALHUB_DEFAULT_PAGE_SIZE = 12
-LOCALHUB_LONG_PAGE_SIZE = 24
-
-LOCALHUB_HOME_PAGE_URL = reverse_lazy("activity_stream")
 GEOLOCATOR_USER_AGENT = env.str("GEOLOCATOR_USER_AGENT", default="localhub.locator")
 
 LOCALHUB_HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")

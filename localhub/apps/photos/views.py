@@ -1,11 +1,9 @@
 # Copyright (c) 2020 by Dan Jacob
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-# Django
-from django.conf import settings
-
 # Localhub
 from localhub.apps.activities.views.generic import BaseActivityListView
+from localhub.config.app_settings import DEFAULT_PAGE_SIZE
 
 # Local
 from .models import Photo
@@ -14,7 +12,7 @@ from .models import Photo
 class PhotoGalleryView(BaseActivityListView):
     model = Photo
     template_name = "photos/gallery.html"
-    paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
+    paginate_by = DEFAULT_PAGE_SIZE
 
     def get_queryset(self):
         return (

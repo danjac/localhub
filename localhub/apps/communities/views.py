@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
@@ -19,6 +18,11 @@ from rules.contrib.views import PermissionRequiredMixin
 # Localhub
 from localhub.apps.invites.models import Invite
 from localhub.apps.join_requests.models import JoinRequest
+from localhub.config.app_settings import (
+    DEFAULT_PAGE_SIZE,
+    HOME_PAGE_URL,
+    LONG_PAGE_SIZE,
+)
 from localhub.views import SearchMixin, SuccessDeleteView, SuccessUpdateView
 
 # Local
@@ -94,7 +98,7 @@ class CommunityListView(LoginRequiredMixin, SearchMixin, ListView):
     TBD: list invites (matching email)
     """
 
-    paginate_by = settings.LOCALHUB_DEFAULT_PAGE_SIZE
+    paginate_by = DEFAULT_PAGE_SIZE
     template_name = "communities/community_list.html"
 
     def get_queryset(self):
@@ -232,7 +236,7 @@ class CommunityWelcomeView(BaseCommunityDetailView):
 
     def get(self, request):
         if rules.test_rule("communities.is_member", request.user, request.community):
-            return HttpResponseRedirect(settings.LOCALHUB_HOME_PAGE_URL)
+            return HttpResponseRedirect(HOME_PAGE_URL)
         return super().get(request)
 
     def get_context_data(self, **kwargs):
@@ -286,7 +290,7 @@ class CommunityNotFoundView(TemplateView):
 
     def get(self, request):
         if request.community.active:
-            return HttpResponseRedirect(settings.LOCALHUB_HOME_PAGE_URL)
+            return HttpResponseRedirect(HOME_PAGE_URL)
         return super().get(request)
 
 
@@ -303,7 +307,7 @@ class MembershipQuerySetMixin(CommunityRequiredMixin):
 class MembershipListView(
     CommunityAdminRequiredMixin, MembershipQuerySetMixin, SearchMixin, ListView,
 ):
-    paginate_by = settings.LOCALHUB_LONG_PAGE_SIZE
+    paginate_by = LONG_PAGE_SIZE
     model = Membership
 
     def get_queryset(self):
@@ -350,7 +354,7 @@ class BaseMembershipDeleteView(
 class MembershipDeleteView(BaseMembershipDeleteView):
     def get_success_url(self):
         if self.object.member == self.request.user:
-            return settings.LOCALHUB_HOME_PAGE_URL
+            return HOME_PAGE_URL
         return reverse("communities:membership_list")
 
     def get_success_message(self):
@@ -387,7 +391,7 @@ class MembershipLeaveView(BaseMembershipDeleteView):
         )
 
     def get_success_url(self):
-        return settings.LOCALHUB_HOME_PAGE_URL
+        return HOME_PAGE_URL
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()

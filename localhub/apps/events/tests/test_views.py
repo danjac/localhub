@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
-from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import force_str
@@ -14,6 +13,7 @@ import pytest
 from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.likes.factories import LikeFactory
 from localhub.apps.likes.models import Like
+from localhub.config.app_settings import HOME_PAGE_URL
 
 # Local
 from ..factories import EventFactory
@@ -94,7 +94,7 @@ class TestEventDeleteView:
 
     def test_post(self, client, event_for_member):
         response = client.post(reverse("events:delete", args=[event_for_member.id]))
-        assert response.url == settings.LOCALHUB_HOME_PAGE_URL
+        assert response.url == HOME_PAGE_URL
         assert Event.objects.count() == 0
 
 
