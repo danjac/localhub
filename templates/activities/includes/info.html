@@ -42,14 +42,14 @@
 {% with num_reshares=reshares.count %}
 
 {% if num_reshares %}
-<div class="mr-2">
+<div class="flex items-center mb-3">
 
   <span class="text-xs text-muted mr-2">
     {% trans "Reshares" %}
   </span>
 
   {% for reshare in reshares %}
-  {% include "users/includes/chip.html" with css_class="w-24" profile=reshare.owner profile_url=reshare.get_absolute_url %}&nbsp;
+  {% include "users/includes/chip.html" with css_class="mr-2" profile=reshare.owner profile_url=reshare.get_absolute_url %}&nbsp;
   {% endfor %}
 </div>
 {% endif %}
