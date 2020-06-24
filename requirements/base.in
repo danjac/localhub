@@ -5,8 +5,8 @@ dj-database-url
 django
 django-allauth
 django-celery-email
-django-configurations
 django-countries
+django-environ
 django-extensions
 django-markdownx
 django-model-utils

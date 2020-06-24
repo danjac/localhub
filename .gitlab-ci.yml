@@ -49,8 +49,8 @@ test_django:
   stage: test
   script:
     - docker-compose -f deploy.yml pull
-    - docker-compose -f deploy.yml run -e DJANGO_CONFIGURATION=Testing -e DJANGO_SECRET_KEY=${SECRET_KEY} django ./manage.py validate_templates
-    - docker-compose -f deploy.yml run -e DJANGO_SECRET_KEY=${SECRET_KEY} django pytest
+    - docker-compose -f deploy.yml run -e DJANGO_SETTINGS_MODULE=localhub.config.settings.test -e SECRET_KEY=${SECRET_KEY} django ./manage.py validate_templates
+    - docker-compose -f deploy.yml run -e SECRET_KEY=${SECRET_KEY} django pytest
   only:
     - release
 
@@ -62,7 +62,7 @@ deploy_assets:
     - build
   script:
     - docker-compose -f deploy.yml pull
-    - docker-compose -f deploy.yml run -e DJANGO_CONFIGURATION=Deployment -e DATABASE_URL=${DATABASE_URL} -e DJANGO_SECRET_KEY=${SECRET_KEY} -e DJANGO_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e DJANGO_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e DJANGO_AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
+    - docker-compose -f deploy.yml run -e DJANGO_SETTINGS_MODULE=localhub.config.settings.deploy -e DATABASE_URL=${DATABASE_URL} -e SECRET_KEY=${SECRET_KEY} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_STORAGE_BUCKET_NAME=${AWS_BUCKET_NAME} django ./manage.py collectstatic --noinput
   only:
     - release
 

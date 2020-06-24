@@ -5,15 +5,9 @@
 import os
 
 # Third Party Libraries
-import configurations  # noqa
 from celery import Celery
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "localhub.config.settings")
-os.environ.setdefault("DJANGO_CONFIGURATION", "Local")
-
-# https://django-configurations.readthedocs.io/en/stable/cookbook/#celery
-
-configurations.setup()
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "localhub.config.settings.local")
 
 app = Celery("localhub")
 app.config_from_object("django.conf:settings", namespace="CELERY")
