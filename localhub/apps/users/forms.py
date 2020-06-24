@@ -3,7 +3,6 @@
 
 # Django
 from django import forms
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserChangeForm as BaseUserChangeForm
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
@@ -14,13 +13,14 @@ from localhub.forms import FormHelper
 from localhub.forms.widgets import BaseTypeaheadInput, ClearableImageInput
 
 # Local
+from .app_settings import MENTIONS_TYPEAHEAD_CONFIG
 from .validators import validate_mentions
 
 User = get_user_model()
 
 
 class MentionsTypeaheadInput(BaseTypeaheadInput):
-    typeahead_configs = [settings.LOCALHUB_MENTIONS_TYPEAHEAD_CONFIG]
+    typeahead_configs = [MENTIONS_TYPEAHEAD_CONFIG]
 
 
 class MentionsField(forms.CharField):

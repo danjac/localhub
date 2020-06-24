@@ -6,11 +6,11 @@ import json
 
 # Django
 from django import forms
-from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 # Localhub
 from localhub.apps.hashtags.app_settings import HASHTAGS_TYPEAHEAD_CONFIG
+from localhub.apps.users.app_settings import MENTIONS_TYPEAHEAD_CONFIG
 
 
 class ClearableImageInput(forms.ClearableFileInput):
@@ -72,7 +72,7 @@ class TypeaheadInput(BaseTypeaheadInput):
 
     typeahead_configs = [
         HASHTAGS_TYPEAHEAD_CONFIG,
-        settings.LOCALHUB_MENTIONS_TYPEAHEAD_CONFIG,
+        MENTIONS_TYPEAHEAD_CONFIG,
     ]
 
     tokenize_input = False

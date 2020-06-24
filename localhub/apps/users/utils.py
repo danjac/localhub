@@ -3,11 +3,13 @@
 
 
 # Django
-from django.conf import settings
 from django.urls import reverse
 
 # Localhub
 from localhub.utils.text import slugify_unicode
+
+# Local
+from .app_settings import MENTIONS_RE
 
 
 def user_display(user):
@@ -26,7 +28,7 @@ def extract_mentions(content):
         [
             mention
             for token in content.split(" ")
-            for mention in settings.LOCALHUB_MENTIONS_RE.findall(token)
+            for mention in MENTIONS_RE.findall(token)
         ]
     )
 
@@ -40,7 +42,7 @@ def linkify_mentions(content, css_class=None, with_preview_attrs=True):
     rv = []
     css_class = f' class="{css_class}"' if css_class else ""
     for token in tokens:
-        for mention in settings.LOCALHUB_MENTIONS_RE.findall(token):
+        for mention in MENTIONS_RE.findall(token):
             if with_preview_attrs:
                 preview_attrs = " ".join(
                     [f'{k}="{v}"' for k, v in get_preview_attrs(mention)]
