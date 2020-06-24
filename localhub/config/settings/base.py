@@ -31,11 +31,9 @@ REDIS_URL = env.str("REDIS_URL")
 
 CACHES = {"default": env.cache("REDIS_URL")}
 
-EMAIL_CONFIG = env.email_url(
-    "EMAIL_URL", backend="djcelery_email.backends.CeleryEmailBackend"
-)
-
-vars().update(EMAIL_CONFIG)
+EMAIL_HOST = env.str("EMAIL_HOST", default="localhost")
+EMAIL_PORT = env.int("EMAIL_PORT", default=25)
+EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
 
 ATOMIC_REQUESTS = True
 
