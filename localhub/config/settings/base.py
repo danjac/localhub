@@ -4,6 +4,7 @@
 # Standard Library
 import re
 import socket
+from email.utils import getaddresses
 
 # Django
 from django.contrib import messages
@@ -40,7 +41,7 @@ ATOMIC_REQUESTS = True
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 
-ADMINS = env.list("ADMINS", cast=tuple, default=[])
+ADMINS = getaddresses(env.list("ADMINS", default=[]))
 
 SESSION_COOKIE_DOMAIN = env.str("SESSION_COOKIE_DOMAIN", default=None)
 CSRF_COOKIE_DOMAIN = env.str("CSRF_COOKIE_DOMAIN", default=None)
