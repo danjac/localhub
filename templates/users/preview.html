@@ -15,7 +15,7 @@
     {% user_display user_obj as display_name %}
     <div>
       <a class="inline-block mr-3 text-lg"
-         href="{{ user_obj.get_absolute_url }}">
+         href="{{ object_url }}">
         {% if user_obj.username == display_name %}
         @{{ display_name }}
         {% else %}

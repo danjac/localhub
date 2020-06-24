@@ -20,8 +20,10 @@ export default class extends ApplicationController {
 
   show(event) {
     const url = this.data.get('url');
+    const objectUrl = this.data.get('object-url');
+    const cacheKey = objectUrl ? url + '|' + objectUrl : url;
 
-    let html = cache[url];
+    let html = cache[cacheKey];
 
     if (html === null || this.isTouchDevice) {
       return;
@@ -35,16 +37,22 @@ export default class extends ApplicationController {
 
     this.source = axios.CancelToken.source();
 
+    const params = {};
+
+    if (objectUrl) {
+      params['object_url'] = objectUrl;
+    }
+
     axios
-      .get(url, { cancelToken: this.source.token })
+      .get(url, { cancelToken: this.source.token, params })
       .then((response) => {
         event.preventDefault();
-        cache[url] = html = response.data;
+        cache[cacheKey] = html = response.data;
         this.render(html);
       })
       .catch((err) => {
         if (!axios.isCancel(err)) {
-          cache[url] = null;
+          cache[cacheKey] = null;
         }
       })
       .finally(() => {

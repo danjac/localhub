@@ -4,13 +4,16 @@
 {% load account %}
 {% load users %}
 {% user_display profile as profile_name %}
+{% with object_url=profile_url|default:profile.get_absolute_url %}
 <div class="flex rounded-full items-center text-sm pr-3 bg-gray-300 {% if css_class %} {{ css_class }}{% endif %}"
      data-controller="hovercard"
      data-hovercard-url="{% url 'users:preview' profile.username %}"
+     data-hovercard-object-url="{{ object_url }}"
      data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
   <div class="inline-block hidden"
        data-target="hovercard.container"></div>
   {% avatar profile "16" css_class="mr-2 h-4 w-4 text-xs" %}
   <a class="truncate text-gray-900"
-     href="{{ profile_url|default:profile.get_absolute_url }}">{{ profile.username }}</a>
+     href="{{ object_url }}">{{ profile.username }}</a>
 </div>
+{% endwith %}
