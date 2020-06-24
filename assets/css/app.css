@@ -345,7 +345,7 @@ a.btn-secondary {
 }
 
 .tag {
-  @apply rounded bg-indigo-900 text-white px-1 text-xs;
+  @apply rounded bg-indigo-900 text-white px-1 text-xs tracking-tight leading-tight;
 }
 
 .tag:hover {
