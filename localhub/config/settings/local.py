@@ -11,13 +11,6 @@ TEMPLATES[0]["OPTIONS"]["debug"] = True
 
 SITE_ID = 1
 
-INSTALLED_APPS += ["debug_toolbar"]
+INSTALLED_APPS += ["silk"]
 
-MIDDLEWARE += [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
-]
-
-DEBUG_TOOLBAR_CONFIG = {
-    "DISABLE_PANELS": ["debug_toolbar.panels.redirects.RedirectsPanel"],
-    "SHOW_TEMPLATE_CONTEXT": True,
-}
+MIDDLEWARE = ["silk.middleware.SilkyMiddleware"] + MIDDLEWARE
