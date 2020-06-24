@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Standard Library
+import pathlib
 import socket
 from email.utils import getaddresses
 
@@ -18,9 +19,9 @@ from localhub.config.app_settings import HOME_PAGE_URL
 
 env = environ.Env()
 
-root = environ.Path("/app")
-
 DEBUG = False
+
+BASE_DIR = pathlib.Path("/app")
 
 SECRET_KEY = env("SECRET_KEY")
 
@@ -176,7 +177,7 @@ LANGUAGES = [
 ]
 LANGUAGE_COOKIE_DOMAIN = env.str("LANGUAGE_COOKIE_DOMAIN", default=None)
 
-LOCALE_PATHS = [str(root.path("i18n"))]
+LOCALE_PATHS = [BASE_DIR / "i18n"]
 
 TIME_ZONE = "UTC"
 
@@ -248,14 +249,14 @@ GEOLOCATOR_USER_AGENT = env.str("GEOLOCATOR_USER_AGENT", default="localhub.locat
 MEDIA_URL = env.str("MEDIA_URL", default="/media/")
 STATIC_URL = env.str("STATIC_URL", default="/static/")
 
-MEDIA_ROOT = str(root.path("media"))
-STATIC_ROOT = str(root.path("static"))
-STATICFILES_DIRS = [str(root.path("assets"))]
+MEDIA_ROOT = BASE_DIR / "media"
+STATIC_ROOT = BASE_DIR / "static"
+STATICFILES_DIRS = [BASE_DIR / "assets"]
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [str(root.path("templates"))],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "debug": False,
