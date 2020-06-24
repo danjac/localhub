@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Local
-from .base import env
+from . import env
 
 DEFAULT_FILE_STORAGE = "localhub.config.storages.MediaStorage"
 STATICFILES_STORAGE = "localhub.config.storages.StaticStorage"

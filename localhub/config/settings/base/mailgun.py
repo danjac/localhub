@@ -2,8 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Local
-# Mailgun configuration
-from .base import INSTALLED_APPS, env
+from . import INSTALLED_APPS, env
 
 CELERY_EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
