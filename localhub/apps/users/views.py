@@ -212,7 +212,7 @@ class UserPreviewView(MemberQuerySetMixin, UserQuerySetMixin, DetailView):
     def get_object_url(self):
         """Allow a different object url e.g. to message or comment tabs."""
         url = self.request.GET.get("object_url")
-        if url and url_has_allowed_host_and_scheme(url, settings.ALLOWED_URLS):
+        if url and url_has_allowed_host_and_scheme(url, settings.ALLOWED_HOSTS):
             try:
                 resolve(url)
                 return url
