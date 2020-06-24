@@ -33,7 +33,7 @@
 
 {% block object_list %}
 {% for object in object_list %}
-{% render_activity request user object css_class="mt-2" %}
+{% render_activity request user object css_class="mt-3" %}
 {% empty %}
 {% include "includes/empty.html" %}
 {% endfor %}

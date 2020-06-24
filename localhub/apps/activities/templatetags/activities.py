@@ -82,7 +82,9 @@ def is_oembed_url(user, url):
 
 
 @register.inclusion_tag("activities/includes/activity_tag.html")
-def render_activity(request, user, object, is_pinned=False, **extra_context):
+def render_activity(
+    request, user, object, is_pinned=False, css_class=None, **extra_context
+):
     """Renders a single activity. Determines the correct include template
     based on object type.
 
@@ -91,6 +93,7 @@ def render_activity(request, user, object, is_pinned=False, **extra_context):
         user (User)
         object (Activity)
         is_pinned (bool, optional): if the "pinned" template is shown
+        css_class (str, optional): css class for the activity
         **extra_context: additional template variables
 
     Returns:
@@ -117,6 +120,7 @@ def render_activity(request, user, object, is_pinned=False, **extra_context):
         "object_type": model_name,
         "is_content_sensitive": is_content_sensitive,
         "template_name": template,
+        "activity_css_class": css_class,
         model_name: object,
         **extra_context,
     }

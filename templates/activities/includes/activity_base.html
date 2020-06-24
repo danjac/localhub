@@ -9,10 +9,9 @@
 
 {% has_perm "communities.moderate_community" user community as can_moderate_community %}
 
-
 <article role="{{ object_type }}"
          id="{{ object_type }}-{{ object.id }}"
-         class="card{% if css_class %} {{ css_class }}{% endif %}"
+         class="card{% if activity_css_class %} {{ activity_css_class }}{% endif %}"
          data-controller="clipboard{% if is_content_sensitive %} toggle{% endif %}"
          data-clipboard-message="{% trans 'Markdown content has been copied' %}">
   {% block header %}
@@ -31,8 +30,8 @@
 
       {% if object.is_reshare %}
 
-      <div class="mb-3 tracking-tight pb-4 border-b border-gray-500">
-        {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner verb="reshared" css_class="mt-3" %}
+      <div class="my-3 tracking-tight pb-4 border-b border-gray-500">
+        {% include "includes/timesince.html" with timestamp=object.published|default:object.created owner=object.owner verb="reshared" %}
       </div>
       {% endif %}
 
