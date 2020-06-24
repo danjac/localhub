@@ -148,7 +148,7 @@ class Webpusher:
         """
         Sends a webpush notification to registered browsers through celery.
         """
-        if settings.LOCALHUB_WEBPUSH_ENABLED:
+        if settings.WEBPUSH_ENABLED:
             from . import tasks
 
             try:

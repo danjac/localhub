@@ -7,7 +7,7 @@ from django.conf import settings
 # Third Party Libraries
 import geopy
 
-geolocator = geopy.Nominatim(user_agent=settings.LOCALHUB_GEOLOCATOR_USER_AGENT)
+geolocator = geopy.Nominatim(user_agent=settings.GEOLOCATOR_USER_AGENT)
 
 
 def geocode(street_address=None, locality=None, postal_code=None, country=None):

@@ -59,8 +59,8 @@ class NotificationListView(NotificationQuerySetMixin, ListView):
                 .filter(is_read=False)
                 .exists(),
                 "webpush_settings": {
-                    "public_key": settings.LOCALHUB_VAPID_PUBLIC_KEY,
-                    "enabled": settings.LOCALHUB_WEBPUSH_ENABLED,
+                    "public_key": settings.VAPID_PUBLIC_KEY,
+                    "enabled": settings.WEBPUSH_ENABLED,
                 },
             }
         )
@@ -174,7 +174,7 @@ class ServiceWorkerView(TemplateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data["vapid_public_key"] = settings.LOCALHUB_VAPID_PUBLIC_KEY
+        data["vapid_public_key"] = settings.VAPID_PUBLIC_KEY
         return data
 
 

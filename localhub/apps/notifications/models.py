@@ -188,11 +188,11 @@ class PushSubscription(models.Model):
         }
 
         vapid_creds = {}
-        if settings.LOCALHUB_VAPID_PRIVATE_KEY:
-            vapid_creds["vapid_private_key"] = settings.LOCALHUB_VAPID_PRIVATE_KEY
-        if settings.LOCALHUB_VAPID_ADMIN_EMAIL:
+        if settings.VAPID_PRIVATE_KEY:
+            vapid_creds["vapid_private_key"] = settings.VAPID_PRIVATE_KEY
+        if settings.VAPID_ADMIN_EMAIL:
             vapid_creds["vapid_claims"] = {
-                "sub": f"mailto:{settings.LOCALHUB_VAPID_ADMIN_EMAIL}"
+                "sub": f"mailto:{settings.VAPID_ADMIN_EMAIL}"
             }
 
         try:

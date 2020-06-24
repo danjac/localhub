@@ -234,19 +234,17 @@ TAGGIT_CASE_INSENSITIVE = True
 
 # https://web-push-codelab.glitch.me/
 
-LOCALHUB_VAPID_PUBLIC_KEY = env.str("VAPID_PUBLIC_KEY", default=None)
-LOCALHUB_VAPID_PRIVATE_KEY = env.str("VAPID_PRIVATE_KEY", default=None)
-LOCALHUB_VAPID_ADMIN_EMAIL = env.str("VAPID_ADMIN_EMAIL", default=None)
+VAPID_PUBLIC_KEY = env.str("VAPID_PUBLIC_KEY", default=None)
+VAPID_PRIVATE_KEY = env.str("VAPID_PRIVATE_KEY", default=None)
+VAPID_ADMIN_EMAIL = env.str("VAPID_ADMIN_EMAIL", default=None)
 
-LOCALHUB_WEBPUSH_ENABLED = env.bool("WEBPUSH_ENABLED", default=True)
+WEBPUSH_ENABLED = env.bool("WEBPUSH_ENABLED", default=True)
 
 LOCALHUB_DEFAULT_PAGE_SIZE = 12
 LOCALHUB_LONG_PAGE_SIZE = 24
 
 LOCALHUB_HOME_PAGE_URL = reverse_lazy("activity_stream")
-LOCALHUB_GEOLOCATOR_USER_AGENT = env.str(
-    "GEOLOCATOR_USER_AGENT", default="localhub.locator"
-)
+GEOLOCATOR_USER_AGENT = env.str("GEOLOCATOR_USER_AGENT", default="localhub.locator")
 
 LOCALHUB_HASHTAGS_RE = re.compile(r"(?:^|\s)[＃#]{1}(\w+)")
 LOCALHUB_HASHTAGS_TYPEAHEAD_CONFIG = (
