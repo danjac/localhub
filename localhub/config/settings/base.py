@@ -111,6 +111,7 @@ MIDDLEWARE = [
     "django.middleware.gzip.GZipMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "localhub.middleware.http.HttpResponseNotAllowedMiddleware",
 ]
 
 # base Django admin URL (should be something obscure in production)
