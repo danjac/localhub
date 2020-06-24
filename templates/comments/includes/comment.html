@@ -43,6 +43,9 @@
       {% if comment.is_blocked %}
       <span class="tag tag-primary">{% trans "Blocked" %}</span>
       {% endif %}
+      {% if not include_content_object and can_moderate_community and comment.is_flagged %}
+      <span class="tag bg-warning mr-2">{% trans "Flagged" %}</span>
+      {% endif %}
     </div>
   </div>
   {% if comment.is_blocked %}

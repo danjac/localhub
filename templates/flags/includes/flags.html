@@ -5,13 +5,19 @@
 
 {% if flags %}
 
-<h2 class="my-3 border-t border-gray-500 pt-3 font-semibold">{% trans "Flags" %}</h2>
+<div class="my-3 border-t border-gray-500 pt-3 flex lg:justify-between">
+  <h2 class="font-semibold">{% trans "Flags" %}</h2>
+  <div class="page-nav mt-3 lg:mt-0">
+    <a class="page-nav-item"
+       href="{% url 'flags:list' %}">{% trans "See All Flags" %}</a>
+  </div>
+</div>
 
 <table class="table-auto-scroll text-sm mb-3">
   <thead>
     <tr class="bg-gray-300">
-      <th class="text-left border px-2 py-2">{% trans "Flagged by" %}</th>
-      <th class="text-left border px-2 py-2">{% trans "Reason" %}</th>
+      <th class="text-left border px-2 py-2">{% trans "Who/When" %}</th>
+      <th class="text-left border px-2 py-2">{% trans "Why" %}</th>
       <th class="text-left border px-2 py-2">{% trans "Actions" %}</th>
     </tr>
   </thead>
