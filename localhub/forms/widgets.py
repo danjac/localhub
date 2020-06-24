@@ -9,6 +9,9 @@ from django import forms
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
+# Localhub
+from localhub.apps.hashtags.app_settings import HASHTAGS_TYPEAHEAD_CONFIG
+
 
 class ClearableImageInput(forms.ClearableFileInput):
     template_name = "includes/forms/widgets/clearable_image.html"
@@ -68,7 +71,7 @@ class TypeaheadInput(BaseTypeaheadInput):
     """Default typeahead implementation, with all urls enabled"""
 
     typeahead_configs = [
-        settings.LOCALHUB_HASHTAGS_TYPEAHEAD_CONFIG,
+        HASHTAGS_TYPEAHEAD_CONFIG,
         settings.LOCALHUB_MENTIONS_TYPEAHEAD_CONFIG,
     ]
 

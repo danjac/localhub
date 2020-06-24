@@ -4,17 +4,17 @@
 
 # Django
 from django import forms
-from django.conf import settings
 
 # Localhub
 from localhub.forms.widgets import BaseTypeaheadInput
 
 # Local
+from .app_settings import HASHTAGS_TYPEAHEAD_CONFIG
 from .validators import validate_hashtags
 
 
 class HashtagsTypeaheadInput(BaseTypeaheadInput):
-    typeahead_configs = [settings.LOCALHUB_HASHTAGS_TYPEAHEAD_CONFIG]
+    typeahead_configs = [HASHTAGS_TYPEAHEAD_CONFIG]
 
 
 class HashtagsField(forms.CharField):

@@ -3,9 +3,11 @@
 
 
 # Django
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
+
+# Local
+from .app_settings import HASHTAGS_RE
 
 
 def validate_hashtags(value):
@@ -21,5 +23,5 @@ def validate_hashtags(value):
         return
 
     for token in value.split():
-        if not settings.LOCALHUB_HASHTAGS_RE.match(token):
+        if not HASHTAGS_RE.match(token):
             raise ValidationError(_("All tokens must be valid #tags"))

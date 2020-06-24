@@ -8,11 +8,12 @@ from django.conf import settings
 from markdownx.widgets import MarkdownxWidget
 
 # Localhub
+from localhub.apps.hashtags.app_settings import HASHTAGS_TYPEAHEAD_CONFIG
 from localhub.forms.widgets import TypeaheadMixin
 
 
 class TypeaheadMarkdownWidget(TypeaheadMixin, MarkdownxWidget):
     typeahead_configs = (
-        settings.LOCALHUB_HASHTAGS_TYPEAHEAD_CONFIG,
+        HASHTAGS_TYPEAHEAD_CONFIG,
         settings.LOCALHUB_MENTIONS_TYPEAHEAD_CONFIG,
     )
