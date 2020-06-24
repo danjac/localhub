@@ -289,9 +289,20 @@ class EventQuerySet(ActivityQuerySet):
         if date_to is None:
             # fetch all those for a specific date
             non_repeats_q = non_repeats_q & models.Q(
-                starts__day=date_from.day,
-                starts__month=date_from.month,
-                starts__year=date_from.year,
+                models.Q(
+                    starts__day=date_from.day,
+                    starts__month=date_from.month,
+                    starts__year=date_from.year,
+                    ends__isnull=True,
+                )
+                | models.Q(
+                    starts__day__lte=date_from.day,
+                    starts__month__lte=date_from.month,
+                    starts__year__lte=date_from.year,
+                    ends__day__gte=date_from.day,
+                    ends__month__gte=date_from.month,
+                    ends__year__gte=date_from.year,
+                )
             )
             # any that have already started BEFORE the date_from
             # and so will have started repeating, plus any
@@ -635,7 +646,7 @@ class Event(Activity):
                 self.published,
                 not (self.deleted),
                 not (self.canceled),
-                not (self.has_started()),
+                not (self.has_started() and self.has_ended()),
             )
         )
 
@@ -657,7 +668,7 @@ class Event(Activity):
 
         # if non-repeating then must always be an exact match.
         if not self.is_repeating():
-            return exact_match
+            return exact_match or (self.ends and self.starts < dt and self.ends > dt)
 
         # matches IF:
         # 1) has already started repeating (dt > starts)
