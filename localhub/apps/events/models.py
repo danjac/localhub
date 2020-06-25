@@ -319,6 +319,9 @@ class EventQuerySet(ActivityQuerySet):
                 )
             )
         else:
+            # if non-repeating, check either that this is a single-day event
+            # falling inside the range, or has multiple dates, in which
+            # case we fall back to checking each day with match_date()
             non_repeats_q = non_repeats_q & models.Q(
                 models.Q(starts__range=(date_from, date_to), ends__isnull=True)
                 | models.Q(ends__isnull=False)
