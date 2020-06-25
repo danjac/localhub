@@ -668,7 +668,7 @@ class Event(Activity):
 
         # if non-repeating then must always be an exact match.
         if not self.is_repeating():
-            return exact_match or (self.ends and self.starts <= dt and self.ends >= dt)
+            return exact_match or (self.ends and self.starts < dt and self.ends > dt)
 
         # matches IF:
         # 1) has already started repeating (dt > starts)
