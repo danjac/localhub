@@ -58,17 +58,6 @@ class TestEventManager:
         qs = Event.objects.for_dates(now)
         assert qs.count() == 1
 
-    def test_for_dates_if_non_repeating_event_matches_between(self):
-        """For a specific date, returns if date falls between the two dates.
-        """
-        now = timezone.now()
-        EventFactory(
-            starts=now - datetime.timedelta(days=3),
-            ends=now + datetime.timedelta(days=3),
-        )
-        qs = Event.objects.for_dates(now)
-        assert qs.count() == 1
-
     def test_for_dates_if_non_repeating_event_and_within_date_range_matches(self,):
         """Should fall into range
         """
@@ -344,14 +333,6 @@ class TestEventModel:
     def test_matches_date_if_non_repeating_and_matches_today(self):
         now = timezone.now()
         event = Event(starts=now)
-        assert event.matches_date(now)
-
-    def test_matches_date_if_non_repeating_and_between_dates(self):
-        now = timezone.now()
-        event = Event(
-            starts=now - datetime.timedelta(days=3),
-            ends=now + datetime.timedelta(days=3),
-        )
         assert event.matches_date(now)
 
     def test_matches_date_if_non_repeating_and_not_matching_today(self):
