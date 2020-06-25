@@ -50,6 +50,22 @@ class TestEventManager:
         qs = Event.objects.for_date(day=now.day, month=now.month, year=now.year,)
         assert qs.count() == 1
 
+    def test_for_date_if_starts_before(self,):
+        """Should match date.
+        """
+        now = timezone.now()
+        EventFactory(starts=now - timedelta(days=3))
+        qs = Event.objects.for_date(day=now.day, month=now.month, year=now.year,)
+        assert qs.count() == 0
+
+    def test_for_date_if_starts_before_and_ends_after(self,):
+        """Should match date.
+        """
+        now = timezone.now()
+        EventFactory(starts=now - timedelta(days=3), ends=now + timedelta(days=3))
+        qs = Event.objects.for_date(day=now.day, month=now.month, year=now.year,)
+        assert qs.count() == 1
+
     def test_for_dates_if_non_repeating_event_matches(self):
         """For a specific date, returns if start date matches this date.
         """
@@ -79,8 +95,16 @@ class TestEventManager:
         """
         now = timezone.now()
         EventFactory(starts=now - timedelta(days=30))
-        qs = Event.objects.for_dates(now - timedelta(days=3), now + timedelta(days=3),)
+        qs = Event.objects.for_dates(now - timedelta(days=3), now + timedelta(days=3))
         assert qs.count() == 0
+
+    def test_for_dates_if_non_repeating_event_and_starts_before_today(self):
+        """Should fall into range
+        """
+        now = timezone.now()
+        EventFactory(starts=now - timedelta(days=30), ends=now + timedelta(days=30))
+        qs = Event.objects.for_dates(now - timedelta(days=3), now + timedelta(days=3))
+        assert qs.count() == 1
 
     def test_for_dates_if_non_repeating_range_and_start_date_is_first_date(self):
         """Should be inclusive
@@ -339,6 +363,11 @@ class TestEventModel:
         now = timezone.now()
         event = Event(starts=now - timedelta(days=30))
         assert not event.matches_date(now)
+
+    def test_matches_date_if_non_repeating_and_date_between(self):
+        now = timezone.now()
+        event = Event(starts=now - timedelta(days=3), ends=now + timedelta(days=3))
+        assert event.matches_date(now)
 
     def test_matches_date_if_repeats_daily(self):
         now = timezone.now()
