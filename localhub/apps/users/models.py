@@ -145,7 +145,7 @@ class UserQuerySet(SearchQuerySetMixin, models.QuerySet):
         )
 
     def with_role(self, community):
-        """Adds annotations "role", "joined" and "role_display" for users for this community.
+        """Adds annotations "role" and "role_display" for users for this community.
         Use in conjunction with for_community.
 
         Args:
@@ -301,7 +301,7 @@ class User(TrackerModelMixin, AbstractUser):
 
         indexes = [
             GinIndex(fields=["search_document"]),
-            models.Index(fields=["name", "username", "email"]),
+            models.Index(fields=["name", "username"]),
         ]
 
     def get_absolute_url(self):
