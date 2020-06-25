@@ -635,7 +635,7 @@ class Event(Activity):
                 self.published,
                 not (self.deleted),
                 not (self.canceled),
-                not (self.has_started()),
+                not (self.has_started() and self.has_ended()),
             )
         )
 
