@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
+from django.conf import settings
 from django.urls import reverse
 
 # Third Party Libraries
@@ -11,7 +12,6 @@ import pytest
 from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.likes.factories import LikeFactory
 from localhub.apps.likes.models import Like
-from localhub.config.app_settings import HOME_PAGE_URL
 
 # Local
 from ..factories import PhotoFactory
@@ -65,7 +65,7 @@ class TestPhotoDeleteView:
 
     def test_post(self, client, photo_for_member):
         response = client.post(reverse("photos:delete", args=[photo_for_member.id]))
-        assert response.url == HOME_PAGE_URL
+        assert response.url == settings.HOME_PAGE_URL
         assert Photo.objects.count() == 0
 
 

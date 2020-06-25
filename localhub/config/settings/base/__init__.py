@@ -8,14 +8,12 @@ from email.utils import getaddresses
 
 # Django
 from django.contrib import messages
+from django.urls import reverse_lazy
 
 # Third Party Libraries
 import environ
 import pymdownx
 import pymdownx.emoji
-
-# Localhub
-from localhub.config.app_settings import HOME_PAGE_URL
 
 env = environ.Env()
 
@@ -118,6 +116,11 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "localhub.middleware.http.HttpResponseNotAllowedMiddleware",
 ]
+
+DEFAULT_PAGE_SIZE = 12
+LONG_PAGE_SIZE = 24
+
+HOME_PAGE_URL = reverse_lazy("activity_stream")
 
 # base Django admin URL (should be something obscure in production)
 

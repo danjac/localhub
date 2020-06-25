@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
+from django.conf import settings
 from django.urls import reverse
 
 # Third Party Libraries
@@ -19,7 +20,6 @@ from localhub.apps.likes.models import Like
 from localhub.apps.notifications.factories import NotificationFactory
 from localhub.apps.notifications.models import Notification
 from localhub.apps.users.factories import UserFactory
-from localhub.config.app_settings import HOME_PAGE_URL
 
 # Local
 from ..factories import PostFactory
@@ -197,7 +197,7 @@ class TestPostDeleteView:
 
     def test_post(self, client, post_for_member):
         response = client.post(reverse("posts:delete", args=[post_for_member.id]))
-        assert response.url == HOME_PAGE_URL
+        assert response.url == settings.HOME_PAGE_URL
         assert Post.objects.count() == 0
 
     def test_post_if_private(self, client, member):
@@ -214,7 +214,7 @@ class TestPostDeleteView:
             owner=MembershipFactory(community=moderator.community).member,
         )
         response = client.post(reverse("posts:delete", args=[post.id]))
-        assert response.url == HOME_PAGE_URL
+        assert response.url == settings.HOME_PAGE_URL
         assert Post.objects.deleted().count() == 1
 
         assert send_webpush_mock.delay.called
@@ -270,7 +270,7 @@ class TestPostPinView:
             owner=MembershipFactory(community=moderator.community).member,
         )
         response = client.post(reverse("posts:pin", args=[post.id]),)
-        assert response.url == HOME_PAGE_URL
+        assert response.url == settings.HOME_PAGE_URL
 
         already_pinned.refresh_from_db()
         post.refresh_from_db()
@@ -288,7 +288,7 @@ class TestPostUnpinView:
             is_pinned=True,
         )
         response = client.post(reverse("posts:unpin", args=[post.id]))
-        assert response.url == HOME_PAGE_URL
+        assert response.url == settings.HOME_PAGE_URL
 
         post.refresh_from_db()
         assert not post.is_pinned

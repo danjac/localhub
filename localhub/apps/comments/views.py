@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
+from django.conf import settings
 from django.db import IntegrityError
 from django.urls import reverse
 from django.utils import timezone
@@ -17,7 +18,6 @@ from localhub.apps.bookmarks.models import Bookmark
 from localhub.apps.communities.views import CommunityRequiredMixin
 from localhub.apps.flags.views import BaseFlagCreateView
 from localhub.apps.likes.models import Like
-from localhub.config.app_settings import DEFAULT_PAGE_SIZE
 from localhub.views import (
     ParentObjectMixin,
     SearchMixin,
@@ -131,7 +131,7 @@ comment_reply_view = CommentReplyView.as_view()
 
 
 class BaseCommentListView(CommentQuerySetMixin, ListView):
-    paginate_by = DEFAULT_PAGE_SIZE
+    paginate_by = settings.DEFAULT_PAGE_SIZE
 
     def get_queryset(self):
         return (

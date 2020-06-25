@@ -3,6 +3,7 @@
 
 
 # Django
+from django.conf import settings
 from django.views.generic import ListView
 
 # Localhub
@@ -10,7 +11,6 @@ from localhub.apps.communities.views import (
     CommunityModeratorRequiredMixin,
     CommunityRequiredMixin,
 )
-from localhub.config.app_settings import LONG_PAGE_SIZE
 from localhub.views import ParentObjectMixin, SuccessCreateView, SuccessDeleteView
 
 # Local
@@ -45,7 +45,7 @@ class BaseFlagCreateView(
 
 
 class FlagListView(FlagQuerySetMixin, ListView):
-    paginate_by = LONG_PAGE_SIZE
+    paginate_by = settings.LONG_PAGE_SIZE
     model = Flag
 
     def get_queryset(self):

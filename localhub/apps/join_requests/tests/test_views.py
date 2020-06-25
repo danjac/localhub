@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
+from django.conf import settings
 from django.urls import reverse
 
 # Third Party Libraries
@@ -11,7 +12,6 @@ import pytest
 from localhub.apps.communities.factories import MembershipFactory
 from localhub.apps.communities.models import Membership
 from localhub.apps.users.factories import UserFactory
-from localhub.config.app_settings import HOME_PAGE_URL
 
 # Local
 from ..factories import JoinRequestFactory
@@ -49,7 +49,7 @@ class TestJoinRequestDeleteView:
 
     def test_post_if_sender_no_other_requests(self, client, join_request, login_user):
         response = client.post(reverse("join_requests:delete", args=[join_request.id]))
-        assert response.url == HOME_PAGE_URL
+        assert response.url == settings.HOME_PAGE_URL
         assert JoinRequest.objects.count() == 0
 
     def test_post_if_sender_has_other_requests(self, client, join_request, login_user):

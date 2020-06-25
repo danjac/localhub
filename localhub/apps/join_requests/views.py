@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Case, IntegerField, Value, When
@@ -20,7 +21,6 @@ from localhub.apps.communities.views import (
     CommunityAdminRequiredMixin,
     CommunityRequiredMixin,
 )
-from localhub.config.app_settings import HOME_PAGE_URL, LONG_PAGE_SIZE
 from localhub.views import (
     SearchMixin,
     SuccessActionView,
@@ -159,7 +159,7 @@ class JoinRequestDeleteView(PermissionRequiredMixin, SuccessDeleteView):
         if self.is_sender:
             if JoinRequest.objects.for_sender(self.request.user).exists():
                 return reverse("join_requests:sent_list")
-            return HOME_PAGE_URL
+            return settings.HOME_PAGE_URL
         return reverse("join_requests:list")
 
     def get_success_message(self):
@@ -191,7 +191,7 @@ join_request_detail_view = JoinRequestDetailView.as_view()
 class JoinRequestListView(
     JoinRequestQuerySetMixin, JoinRequestAdminMixin, SearchMixin, ListView
 ):
-    paginate_by = LONG_PAGE_SIZE
+    paginate_by = settings.LONG_PAGE_SIZE
     model = JoinRequest
 
     @cached_property
@@ -247,7 +247,7 @@ class SentJoinRequestListView(LoginRequiredMixin, ListView):
     """
 
     model = JoinRequest
-    paginate_by = LONG_PAGE_SIZE
+    paginate_by = settings.LONG_PAGE_SIZE
     template_name = "join_requests/sent_joinrequest_list.html"
 
     def get_queryset(self):

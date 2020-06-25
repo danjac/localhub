@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from django.db.models import F
@@ -16,7 +17,6 @@ from rules.contrib.views import PermissionRequiredMixin
 # Localhub
 from localhub.apps.bookmarks.models import Bookmark
 from localhub.apps.communities.views import CommunityRequiredMixin
-from localhub.config.app_settings import DEFAULT_PAGE_SIZE
 from localhub.views import (
     ParentObjectMixin,
     SearchMixin,
@@ -202,7 +202,7 @@ message_create_view = MessageCreateView.as_view()
 
 
 class BaseMessageListView(SearchMixin, ListView):
-    paginate_by = DEFAULT_PAGE_SIZE
+    paginate_by = settings.DEFAULT_PAGE_SIZE
 
 
 class InboxView(RecipientQuerySetMixin, BaseMessageListView):

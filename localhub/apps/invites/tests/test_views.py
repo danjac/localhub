@@ -1,4 +1,5 @@
 # Django
+from django.conf import settings
 from django.urls import reverse
 
 # Third Party Libraries
@@ -6,7 +7,6 @@ import pytest
 
 # Localhub
 from localhub.apps.communities.models import Membership
-from localhub.config.app_settings import HOME_PAGE_URL
 
 # Local
 from ..factories import InviteFactory
@@ -83,7 +83,7 @@ class TestInviteRejectView:
 
         assert not Invite.objects.pending().for_user(login_user).exists()
 
-        assert response.url == HOME_PAGE_URL
+        assert response.url == settings.HOME_PAGE_URL
         assert len(mailoutbox) == 0
 
     def test_post_if_other_invites(self, client, invite, login_user, mailoutbox):

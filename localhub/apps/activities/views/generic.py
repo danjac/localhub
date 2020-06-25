@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
+from django.conf import settings
 from django.db import IntegrityError
 from django.urls import reverse
 from django.utils import timezone
@@ -17,7 +18,6 @@ from localhub.apps.comments.forms import CommentForm
 from localhub.apps.communities.views import CommunityRequiredMixin
 from localhub.apps.flags.views import BaseFlagCreateView
 from localhub.apps.likes.models import Like
-from localhub.config.app_settings import DEFAULT_PAGE_SIZE, HOME_PAGE_URL
 from localhub.pagination import PresetCountPaginator
 from localhub.template.defaultfilters import resolve_url
 from localhub.views import (
@@ -200,7 +200,7 @@ class ActivityUpdateTagsView(ActivityUpdateView):
 
 class BaseActivityListView(ActivityQuerySetMixin, ActivityTemplateMixin, ListView):
     allow_empty = True
-    paginate_by = DEFAULT_PAGE_SIZE
+    paginate_by = settings.DEFAULT_PAGE_SIZE
 
 
 class ActivityListView(SearchMixin, BaseActivityListView):
@@ -233,7 +233,7 @@ class ActivityListView(SearchMixin, BaseActivityListView):
 
 class ActivityDetailView(ActivityQuerySetMixin, ActivityTemplateMixin, DetailView):
     paginator_class = PresetCountPaginator
-    paginate_by = DEFAULT_PAGE_SIZE
+    paginate_by = settings.DEFAULT_PAGE_SIZE
     page_kwarg = "page"
 
     def get(self, request, *args, **kwargs):
@@ -348,7 +348,7 @@ activity_publish_view = ActivityPublishView.as_view()
 
 class ActivityPinView(BaseActivityActionView):
     permission_required = "activities.pin_activity"
-    success_url = HOME_PAGE_URL
+    success_url = settings.HOME_PAGE_URL
     success_message = _(
         "The %(model)s has been pinned to the top of the activity stream"
     )
@@ -367,7 +367,7 @@ class ActivityPinView(BaseActivityActionView):
 
 class ActivityUnpinView(BaseActivityActionView):
     permission_required = "activities.pin_activity"
-    success_url = HOME_PAGE_URL
+    success_url = settings.HOME_PAGE_URL
     success_message = _(
         "The %(model)s has been unpinned from the top of the activity stream"
     )
@@ -482,7 +482,7 @@ class ActivityDeleteView(
 
     def get_success_url(self):
         if self.object.deleted or self.object.published:
-            return HOME_PAGE_URL
+            return settings.HOME_PAGE_URL
         return reverse("activities:private")
 
     def post(self, request, *args, **kwargs):

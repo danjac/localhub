@@ -5,6 +5,7 @@
 import itertools
 
 # Django
+from django.conf import settings
 from django.http import Http404
 from django.utils.formats import date_format
 from django.utils.functional import cached_property
@@ -19,7 +20,6 @@ from django.views.generic.dates import (
 # Localhub
 from localhub.apps.communities.views import CommunityRequiredMixin
 from localhub.apps.notifications.models import Notification
-from localhub.config.app_settings import DEFAULT_PAGE_SIZE, LONG_PAGE_SIZE
 from localhub.pagination import PresetCountPaginator
 from localhub.views import SearchMixin
 
@@ -36,7 +36,7 @@ class BaseActivityStreamView(CommunityRequiredMixin, TemplateView):
     allow_empty = True
     ordering = ("-published", "-created")
 
-    paginate_by = DEFAULT_PAGE_SIZE
+    paginate_by = settings.DEFAULT_PAGE_SIZE
     paginator_class = PresetCountPaginator
     page_kwarg = "page"
 
@@ -157,7 +157,7 @@ activity_search_view = ActivitySearchView.as_view()
 
 class TimelineView(YearMixin, MonthMixin, DateMixin, BaseActivityStreamView):
     template_name = "activities/timeline.html"
-    paginate_by = LONG_PAGE_SIZE
+    paginate_by = settings.LONG_PAGE_SIZE
     month_format = "%B"
 
     @property

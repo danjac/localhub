@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Django
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -14,7 +15,6 @@ from localhub.apps.communities.views import (
     CommunityAdminRequiredMixin,
     CommunityRequiredMixin,
 )
-from localhub.config.app_settings import HOME_PAGE_URL, LONG_PAGE_SIZE
 from localhub.views import (
     SearchMixin,
     SuccessActionView,
@@ -95,7 +95,7 @@ class InviteAcceptView(BaseInviteRecipientActionView):
             self.object.is_accepted()
             and self.request.community == self.object.community
         ):
-            return HOME_PAGE_URL
+            return settings.HOME_PAGE_URL
         return reverse("invites:received_list")
 
     def get_success_message(self):
@@ -119,7 +119,7 @@ class InviteRejectView(BaseInviteRecipientActionView):
     def get_success_url(self):
         if Invite.objects.pending().for_user(self.request.user).exists():
             return reverse("invites:received_list")
-        return HOME_PAGE_URL
+        return settings.HOME_PAGE_URL
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -189,7 +189,7 @@ class InviteListView(
     """
 
     model = Invite
-    paginate_by = LONG_PAGE_SIZE
+    paginate_by = settings.LONG_PAGE_SIZE
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -238,7 +238,7 @@ class ReceivedInviteListView(InviteRecipientQuerySetMixin, ListView):
     """
 
     template_name = "invites/received_invite_list.html"
-    paginate_by = LONG_PAGE_SIZE
+    paginate_by = settings.LONG_PAGE_SIZE
 
     def get_queryset(self):
         return super().get_queryset().order_by("-created")
