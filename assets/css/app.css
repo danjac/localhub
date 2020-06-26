@@ -160,9 +160,9 @@ a.btn-secondary {
   @apply border-red-300;
 }
 
-.leaflet-tile-pane {
-  filter: grayscale(100%);
-}
+/*.leaflet-tile-pane {*/
+/*filter: grayscale(100%);*/
+/*}*/
 
 .markdownx-preview {
   @apply bg-gray-100 border border-gray-500 p-5;
