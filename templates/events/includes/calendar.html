@@ -26,7 +26,7 @@
   <div class="flex flex-wrap">
     {% for day, is_past, events in slots %}
     {% with num_events=events|length %}
-    <div class="calendar-item text-xs{% if day == today.day and is_current_month %} bg-blue-100{% elif num_events %} bg-gray-100{% endif %}{% if num_events %} cursor-pointer{% endif %}"
+    <div class="calendar-item text-xs{% if not day %} bg-gray-200{% elif day == today.day and is_current_month %} bg-blue-100{% elif num_events %} bg-gray-100{% endif %}{% if num_events %} cursor-pointer{% endif %}"
          {% if num_events %}
          data-controller="linkify"
          data-action="click->linkify#fetch"

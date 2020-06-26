@@ -324,7 +324,7 @@ class EventQuerySet(ActivityQuerySet):
             # case we fall back to checking each day with match_date()
             non_repeats_q = non_repeats_q & models.Q(
                 models.Q(starts__range=(date_from, date_to), ends__isnull=True)
-                | models.Q(ends__isnull=False)
+                | models.Q(starts__lte=date_to, ends__isnull=False)
             )
             # any that have already started BEFORE the date_from
             # OR will start with the range
